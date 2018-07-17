@@ -24,7 +24,6 @@ Content-Type: application/json
 #### Response
 ```
 HTTP/1.1 200
-Cache-Control: max-age=0, private, must-revalidate
 Content-Type: application/json
 
 {

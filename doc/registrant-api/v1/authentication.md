@@ -43,7 +43,6 @@ Content-type: application/json
 #### Response
 ```
 HTTP/1.1 201
-Cache-Control: max-age=0, private, must-revalidate
 Content-Type: application.json
 
 
@@ -76,7 +75,6 @@ Content-type: application/json
 #### Response
 ```
 HTTP/1.1 201
-Cache-Control: max-age=0, private, must-revalidate
 Content-Type: application.json
 
 
