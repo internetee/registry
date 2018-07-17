@@ -21,7 +21,6 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 564
 Content-Type: application/json
 
 {
@@ -77,7 +76,6 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 564
 Content-Type: application/json
 
 {

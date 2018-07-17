@@ -29,7 +29,6 @@ Values in brackets represent values that come from the id card certificate.
 ```
 POST /repp/v1/auth/token HTTP/1.1
 Accept: application/json
-Content-length: 0
 Content-type: application/json
 
 {
@@ -45,7 +44,6 @@ Content-type: application/json
 ```
 HTTP/1.1 201
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 0
 Content-Type: application.json
 
 
@@ -72,7 +70,6 @@ Values in brackets represent values that come from the id card certificate
 ```
 POST /repp/v1/auth/token HTTP/1.1
 Accept: application/json
-Content-length: 0
 Content-type: application/json
 ```
 
@@ -80,7 +77,6 @@ Content-type: application/json
 ```
 HTTP/1.1 201
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 0
 Content-Type: application.json
 
 

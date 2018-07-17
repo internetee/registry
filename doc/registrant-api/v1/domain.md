@@ -25,7 +25,6 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 808
 Content-Type: application/json
 
 {
@@ -108,7 +107,6 @@ Returns a single domain object.
 GET repp/v1/registrant/domains/98d1083a-8863-4153-93e4-caee4a013535 HTTP/1.1
 Accept: application/json
 Authorization: Bearer Z2l0bGFiOmdoeXQ5ZTRmdQ==
-Content-Length: 0
 Content-Type: application/json
 ```
 
