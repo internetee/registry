@@ -47,9 +47,8 @@ Content-Type: application/json
   "force_delete_at": null,
   "statuses": [
     "clientUpdateProhibited",
-    "serverUpdateProhibited",
-    "serverTransferProhibited",
-    "serverDeleteProhibited",
+    "clientDeleteProhibited",
+    "clientTransferProhibited"
   ],
   "reserved": false,
   "status_notes": {},
