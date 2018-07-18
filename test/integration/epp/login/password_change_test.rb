@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppLoginCredentialsTest < ActionDispatch::IntegrationTest
+class EppLoginPasswordChangeTest < ActionDispatch::IntegrationTest
   def test_password_change
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
