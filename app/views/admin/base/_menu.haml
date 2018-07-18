@@ -41,4 +41,4 @@
 
   - if signed_in?
     %ul.nav.navbar-nav.navbar-right
-      %li= link_to t(:log_out, user: current_admin_user), destroy_admin_user_session_path, method: :delete, class: 'navbar-link'
+      %li= link_to t('.sign_out'), destroy_admin_user_session_path, method: :delete, class: 'navbar-link'

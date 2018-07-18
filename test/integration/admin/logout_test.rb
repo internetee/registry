@@ -7,7 +7,7 @@ class AdminAreaLogoutTest < ActionDispatch::IntegrationTest
 
   def test_logout
     visit admin_root_url
-    click_on 'Log out'
+    click_on 'Sign out'
 
     assert_text 'Signed out successfully'
     assert_current_path new_admin_user_session_path
