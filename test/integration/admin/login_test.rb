@@ -25,7 +25,7 @@ class AdminAreaLoginTest < ActionDispatch::IntegrationTest
     assert_current_path new_admin_user_session_path
   end
 
-  def test_retry_with_correct_credentials
+  def test_retry_with_correct_username_and_password
     visit new_admin_user_session_url
     fill_in 'admin_user_username', with: @user.username
     fill_in 'admin_user_password', with: 'wrong'
