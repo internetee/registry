@@ -15,12 +15,11 @@ Returns a bearer token to be used for further API requests. Tokens are valid for
 
 Values in brackets represent values that come from the id card certificate.
 
-| Field name        | Required | Type   | Allowed values              | Description                                       |
-| ----------------- | -------- | ----   | --------------              | -----------                                       |
-| ident             | true     | String |                             | Identity code of the user (`serialNumber`)        |
-| first_name        | true     | String |                             | Name of the customer (`GN`)                       |
-| last_name         | true     | String |                             | Name of the customer (`SN`)                       |
-| country           | true     | String | 'ee'                        | Code of the country that issued the id card (`C`) |
+| Field name        | Required | Type   | Allowed values | Description                                |
+| ----------------- | -------- | ----   | -------------- | -----------                                |
+| ident             | true     | String |                | Identity code of the user (`serialNumber`) |
+| first_name        | true     | String |                | Name of the customer (`GN`)                |
+| last_name         | true     | String |                | Name of the customer (`SN`)                |
 
 
 #### Request
@@ -33,7 +32,6 @@ Content-type: application/json
   "ident": "30110100103",
   "first_name": "Jan",
   "last_name": "Tamm",
-  "country": "ee",
 }
 ```
 

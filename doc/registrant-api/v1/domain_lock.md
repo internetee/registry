@@ -46,9 +46,9 @@ Content-Type: application/json
   "pending_json": {},
   "force_delete_at": null,
   "statuses": [
-    "clientUpdateProhibited",
-    "clientDeleteProhibited",
-    "clientTransferProhibited"
+    "serverUpdateProhibited",
+    "serverDeleteProhibited",
+    "serverTransferProhibited"
   ],
   "reserved": false,
   "status_notes": {},
