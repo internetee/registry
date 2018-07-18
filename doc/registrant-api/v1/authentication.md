@@ -21,7 +21,7 @@ Values in brackets represent values that come from the id card certificate.
 | first_name        | true     | String |                             | Name of the customer (`GN`)                       |
 | last_name         | true     | String |                             | Name of the customer (`SN`)                       |
 | country           | true     | String | 'ee'                        | Code of the country that issued the id card (`C`) |
-| issuing authority | true     | String | 'AS Sertifitseerimiskeskus' |                                                   |
+| issuing_authority | true     | String | 'AS Sertifitseerimiskeskus' |                                                   |
 |                   |          |        |                             |                                                   |
 
 
@@ -36,7 +36,7 @@ Content-type: application/json
   "first_name": "Jan",
   "last_name": "Tamm",
   "country": "ee",
-  "issuing authority": "AS Sertifitseerimiskeskus"
+  "issuing_authority": "AS Sertifitseerimiskeskus"
 }
 ```
 
