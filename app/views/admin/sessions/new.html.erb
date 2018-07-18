@@ -1,7 +1,7 @@
 <div class="row">
     <%= form_for resource, as: resource_name, url: session_path(resource_name),
                  html: { class: 'col-md-6 form-signin center-block text-center' } do |f| %>
-        <h2 class="form-signin-heading text-center">Eesti Interneti SA</h2>
+        <h1 class="form-signin-heading text-center"><%= t '.header_html' %></h1>
 
         <hr>
 
