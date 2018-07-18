@@ -9,9 +9,9 @@ class AdminAreaLoginTest < ActionDispatch::IntegrationTest
     visit new_admin_user_session_url
     fill_in 'admin_user_username', with: @user.username
     fill_in 'admin_user_password', with: 'testtest'
-    click_button 'Log in'
+    click_button 'Sign in'
 
-    assert_text 'Log out'
+    assert_text 'Signed in successfully'
     assert_current_path admin_root_path
   end
 
@@ -19,9 +19,26 @@ class AdminAreaLoginTest < ActionDispatch::IntegrationTest
     visit new_admin_user_session_url
     fill_in 'admin_user_username', with: @user.username
     fill_in 'admin_user_password', with: 'wrong'
-    click_button 'Log in'
+    click_button 'Sign in'
 
-    assert_text 'Authorization error'
+    assert_text 'Invalid Username or password'
     assert_current_path new_admin_user_session_path
+  end
+
+  def test_retry_with_correct_credentials
+    visit new_admin_user_session_url
+    fill_in 'admin_user_username', with: @user.username
+    fill_in 'admin_user_password', with: 'wrong'
+    click_button 'Sign in'
+
+    assert_text 'Invalid Username or password'
+    assert_current_path new_admin_user_session_path
+
+    fill_in 'admin_user_username', with: @user.username
+    fill_in 'admin_user_password', with: 'testtest'
+    click_button 'Sign in'
+
+    assert_text 'Signed in successfully'
+    assert_current_path admin_root_path
   end
 end

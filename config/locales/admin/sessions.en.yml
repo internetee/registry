@@ -1,0 +1,6 @@
+en:
+  admin:
+    sessions:
+      new:
+        sign_in_btn: Sign in
+        remember_checkbox: Remember me
