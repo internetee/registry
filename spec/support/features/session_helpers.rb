@@ -6,7 +6,7 @@ module Features
       fill_in 'admin_user[username]', with: user.username
       fill_in 'admin_user[password]', with: user.password
 
-      click_button 'Log in'
+      click_button 'Sign in'
     end
 
     def sign_in_to_registrar_area(user: create(:api_user))
