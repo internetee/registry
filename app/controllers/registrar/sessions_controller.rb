@@ -91,7 +91,7 @@ class Registrar
         @user = find_user_by_idc_and_allowed(response.user_id_code)
       else
         @user = find_user_by_idc(response.user_id_code)
-      end  
+      end
 
       if @user.persisted?
         session[:user_id_code] = response.user_id_code

@@ -1,0 +1,6 @@
+<tr>
+    <td><%= link_to domain.name, registrant_domain_path(domain) %></td>
+    <td><%= link_to domain.registrar, registrant_registrar_path(domain.registrar) %></td>
+    <td><%= l domain.valid_to %></td>
+    <td><%= domain.roles.join(", ") %></td>
+</tr>

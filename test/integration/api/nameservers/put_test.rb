@@ -41,11 +41,12 @@ class APINameserversPutTest < ActionDispatch::IntegrationTest
     assert_equal nameserver_hash, nameservers(:metro_ns1).reload.attributes
   end
 
-  def test_returns_new_nameserver_record
+  def test_returns_new_nameserver_record_and_affected_domain
     request_params = { format: :json, data: { type: 'nameserver', id: 'ns1.bestnames.test',
                                               attributes: { hostname: 'ns55.bestnames.test',
                                                             ipv4: ['192.0.2.55'],
                                                             ipv6: ['2001:db8::55'] } } }
+
     put '/repp/v1/registrar/nameservers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_response 200
@@ -53,7 +54,8 @@ class APINameserversPutTest < ActionDispatch::IntegrationTest
                             id: 'ns55.bestnames.test',
                             attributes: { hostname: 'ns55.bestnames.test',
                                           ipv4: ['192.0.2.55'],
-                                          ipv6: ['2001:db8::55'] } } }),
+                                          ipv6: ['2001:db8::55'] }},
+                    affected_domains: ["airport.test", "shop.test"] }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
