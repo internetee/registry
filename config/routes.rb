@@ -235,5 +235,6 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: redirect('admin/login')
+  # To prevent users seeing the default welcome message "Welcome aboard" from Rails
+  root to: redirect('admin/sign_in')
 end
