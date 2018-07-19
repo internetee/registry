@@ -99,6 +99,7 @@ Rails.application.routes.draw do
   namespace :registrant do
     root 'domains#index'
 
+    # POST /registrant/sign_in is not used
     devise_for :users, path: '', class_name: 'RegistrantUser'
     devise_scope :registrant_user do
       get 'login/mid' => 'sessions#login_mid'
