@@ -1,0 +1,8 @@
+en:
+  registrant:
+    sessions:
+      new:
+        header: Log in
+        hint:  >-
+          Access currently available only to Estonian citizens and e-residents with Estonian ID-card
+          or Mobile-ID.
