@@ -122,18 +122,6 @@ Rails.application.routes.draw do
 
     resources :domain_update_confirms, only: %i[show update]
     resources :domain_delete_confirms, only: %i[show update]
-
-    devise_scope :user do
-      get 'login' => 'sessions#login'
-      get 'login/mid' => 'sessions#login_mid'
-      post 'login/mid' => 'sessions#mid'
-      post 'login/mid_status' => 'sessions#mid_status'
-
-      post 'sessions' => 'sessions#create'
-      post 'mid' => 'sessions#mid'
-      post 'id' => 'sessions#id'
-      get 'logout' => '/devise/sessions#destroy'
-    end
   end
 
   # ADMIN ROUTES
