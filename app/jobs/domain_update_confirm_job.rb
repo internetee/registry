@@ -23,7 +23,9 @@ class DomainUpdateConfirmJob < Que::Job
                                         registrant: domain.registrant).deliver_now
 
         domain.poll_message!(:poll_pending_update_rejected_by_registrant)
-        domain.clean_pendings_lowlevel
+
+        domain.preclean_pendings
+        domain.clean_pendings!
       end
       destroy # it's best to destroy the job in the same transaction
     end

@@ -132,14 +132,20 @@ class Registrar < ActiveRecord::Base
   # Audit log is needed, therefore no raw SQL
   def replace_nameservers(hostname, new_attributes)
     transaction do
+      domain_list = []
+
       nameservers.where(hostname: hostname).find_each do |original_nameserver|
         new_nameserver = Nameserver.new
         new_nameserver.domain = original_nameserver.domain
         new_nameserver.attributes = new_attributes
         new_nameserver.save!
 
+        domain_list << original_nameserver.domain.name
+
         original_nameserver.destroy!
       end
+
+      domain_list.uniq.sort
     end
   end
 

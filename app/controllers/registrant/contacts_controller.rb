@@ -1,11 +1,14 @@
 class Registrant::ContactsController < RegistrantController
   helper_method :domain_ids
+
   def show
-    @contact      = Contact.where(id: contacts).find_by(id: params[:id])
+    @contact = Contact.where(id: contacts).find_by(id: params[:id])
     @current_user = current_user
 
     authorize! :read, @contact
   end
+
+  private
 
   def contacts
     begin

@@ -101,6 +101,8 @@ Rails.application.routes.draw do
   namespace :registrant do
     root 'domains#index'
 
+    resources :registrars, only: :show
+    resources :contacts, only: :show
     resources :domains, only: %i[index show] do
       collection do
         get :download_list
@@ -111,8 +113,8 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :domain_update_confirms
-    resources :domain_delete_confirms
+    resources :domain_update_confirms, only: %i[show update]
+    resources :domain_delete_confirms, only: %i[show update]
 
     devise_scope :user do
       get 'login' => 'sessions#login'
@@ -125,28 +127,7 @@ Rails.application.routes.draw do
       post 'id' => 'sessions#id'
       get 'logout' => '/devise/sessions#destroy'
     end
-
-    resources :domains do
-      resources :registrant_verifications
-      collection do
-        post 'update', as: 'update'
-        post 'destroy', as: 'destroy'
-        get 'renew'
-        get 'edit'
-        get 'info'
-        get 'delete'
-      end
-    end
-
-    resources :registrars do
-      collection do
-        get :search
-      end
-    end
-
-    resources :contacts
   end
-
 
   # ADMIN ROUTES
   namespace :admin do

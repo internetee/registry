@@ -1,3 +1,26 @@
+12.07.2018
+* Implemented JavaScript testing framework to catch web UI problems [#900](https://github.com/internetee/registry/issues/900)
+
+10.07.2018
+* Nameserver bulk change returns list of affected doamins [#835](https://github.com/internetee/registry/issues/835)
+
+26.06.2018
+* Whois data is updated now on pendingUpdate status removal [#757](https://github.com/internetee/registry/issues/757)
+* Portal for registrars displays control code for MID authentication [#893](https://github.com/internetee/registry/issues/893)
+* Changed date format in Directo invoice XML [#890](https://github.com/internetee/registry/pull/890)
+* Registrant portal UI improvements [#888](https://github.com/internetee/registry/issues/888)
+* Removed unused mailer code [#882](https://github.com/internetee/registry/pull/882)
+* Sprocets gem update to 3.7.2 [#892](https://github.com/internetee/registry/issues/892)
+* Replased Warden test helpers with Devise [#889](https://github.com/internetee/registry/issues/889)
+* Removed dev rake task [#872](https://github.com/internetee/registry/pull/872)
+* Spring gem removed [#856](https://github.com/internetee/registry/issues/856)
+* Dcker conf changes [#881](https://github.com/internetee/registry/pull/881)
+* Fixed Estonia in the country drop-down [#877](https://github.com/internetee/registry/issues/877)
+* Codeclimate conf improvements [#854](https://github.com/internetee/registry/pull/854)
+* Removed codeclimate badge from README [#876](https://github.com/internetee/registry/issues/876)
+* added UUID for contact objects [#873](https://github.com/internetee/registry/pull/873)
+* backported Rails 5 API [#868](https://github.com/internetee/registry/issues/868)
+
 20.06.2018
 * Bulk change function for technical contact replacement [#662](https://github.com/internetee/registry/issues/662)
 * Removed vatcode and totalvat elements from directo request in attempt to fix invoice sending issue [#844](https://github.com/internetee/registry/issues/844)
