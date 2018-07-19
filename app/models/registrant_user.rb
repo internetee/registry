@@ -52,6 +52,16 @@ class RegistrantUser < User
       u
     end
 
+    def find_or_create_by_api_data(api_data = {})
+      estonian_ident = "EE-#{api_data[:ident]}"
+
+      user = find_or_create_by(registrant_ident: estonian_ident)
+      user.username = "#{api_data[:first_name]}, #{api_data[:last_name]}"
+      user.save
+
+      user
+    end
+
     def find_or_create_by_mid_data(response)
       u = where(registrant_ident: "#{response.user_country}-#{response.user_id_code}").first_or_create
       u.username = "#{response.user_givenname} #{response.user_surname}"
