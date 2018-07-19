@@ -171,8 +171,16 @@ class Registrar
       render text: t('registrar.authorization.ip_not_allowed', ip: request.ip)
     end
 
+    def current_ability
+      @current_ability ||= Ability.new(current_registrar_user, request.remote_ip)
+    end
+
     def after_sign_in_path_for(_resource_or_scope)
-      registrar_root_path
+      if can?(:show, :poll)
+        registrar_poll_path
+      else
+        registrar_root_path
+      end
     end
 
     def after_sign_out_path_for(_resource_or_scope)

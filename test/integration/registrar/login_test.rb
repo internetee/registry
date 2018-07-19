@@ -12,7 +12,7 @@ class RegistrarAreaLoginTest < ActionDispatch::IntegrationTest
     click_button 'Login'
 
     assert_text 'Log out'
-    assert_current_path registrar_root_path
+    assert_current_path registrar_poll_path
   end
 
   def test_wrong_password
