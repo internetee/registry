@@ -22,7 +22,9 @@ Rails.application.routes.draw do
   namespace :registrar do
     root 'dashboard#show'
 
-    devise_for :users, path: '', path_names: { sign_in: 'login', sign_out: 'logout' },
+    # /registrar/sessions path is hardcoded in Apache config for certificate-based authentication
+    # See https://github.com/internetee/registry/blob/master/README.md#installation
+    devise_for :users, path: 'sessions', path_names: { sign_in: 'login', sign_out: 'logout' },
                class_name: 'ApiUser'
     devise_scope :registrar_user do
       get 'login/mid' => 'sessions#login_mid'
