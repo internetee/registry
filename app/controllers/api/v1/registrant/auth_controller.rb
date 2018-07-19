@@ -5,21 +5,30 @@ module Api
   module V1
     module Registrant
       class AuthController < ActionController::API
+        rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
+          error = {}
+          error[parameter_missing_exception.param] = ['parameter is required']
+          response = { errors: [error] }
+          render json: response, status: :unprocessable_entity
+        end
+
         def eid
-          login_params = set_eid_params
+          user = RegistrantUser.find_or_create_by_api_data(eid_params)
+          token = create_token(user)
 
-          user = RegistrantUser.find_or_create_by_api_data(login_params)
-
-          unless user.valid?
-            render json: user.errors, status: :bad_request
-          else
-            token = create_token(user)
+          if token
             render json: token
+          else
+            render json: { error: 'Cannot create generate session token'}
           end
         end
 
-        def set_eid_params
-          params.permit(:ident, :first_name, :last_name)
+        private
+
+        def eid_params
+          [:ident, :first_name, :last_name].each_with_object(params) do |key, obj|
+            obj.require(key)
+          end
         end
 
         def create_token(user)

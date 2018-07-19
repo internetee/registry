@@ -28,6 +28,17 @@ class RegistrantApiAuthenticationTest < ApplicationSystemTestCase
   end
 
   def test_request_returns_existing_user
+    assert_no_changes User.count do
+      post '/api/v1/registrant/auth/eid', @user_hash
+    end
+  end
 
+  def test_request_documented_parameters_are_required
+    params = { foo: :bar, test: :test }
+
+    post '/api/v1/registrant/auth/eid', params
+    json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal({errors: [{ident: ['parameter is required']}]}, json)
+    assert_equal(422, response.status)
   end
 end

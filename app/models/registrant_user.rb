@@ -53,10 +53,14 @@ class RegistrantUser < User
     end
 
     def find_or_create_by_api_data(api_data = {})
+      return false unless api_data[:ident]
+      return false unless api_data[:first_name]
+      return false unless api_data[:last_name]
+
       estonian_ident = "EE-#{api_data[:ident]}"
 
       user = find_or_create_by(registrant_ident: estonian_ident)
-      user.username = "#{api_data[:first_name]}, #{api_data[:last_name]}"
+      user.username = "#{api_data[:first_name]} #{api_data[:last_name]}"
       user.save
 
       user
