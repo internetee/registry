@@ -1,5 +1,5 @@
 require 'rails5_api_controller_backport'
-require 'auth_token'
+require 'auth_token/auth_token_creator'
 
 module Api
   module V1
@@ -32,8 +32,8 @@ module Api
         end
 
         def create_token(user)
-          token = AuthToken.new
-          hash = token.generate_token(user)
+          token_creator = AuthTokenCreator.create_with_defaults(user)
+          hash = token_creator.token_in_hash
           hash
         end
       end

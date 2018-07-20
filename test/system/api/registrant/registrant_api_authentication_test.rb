@@ -4,7 +4,7 @@ class RegistrantApiAuthenticationTest < ApplicationSystemTestCase
   def setup
     super
 
-    @user_hash = {ident: "37010100049", first_name: 'Adam', last_name: 'Baker'}
+    @user_hash = {ident: '37010100049', first_name: 'Adam', last_name: 'Baker'}
     @existing_user = RegistrantUser.find_or_create_by_api_data(@user_hash)
   end
 
@@ -15,9 +15,9 @@ class RegistrantApiAuthenticationTest < ApplicationSystemTestCase
 
   def test_request_creates_user_when_one_does_not_exist
     params = {
-      ident: "30110100103",
-      first_name: "John",
-      last_name: "Smith",
+      ident: '30110100103',
+      first_name: 'John',
+      last_name: 'Smith',
     }
 
     post '/api/v1/registrant/auth/eid', params
