@@ -28,7 +28,7 @@ class AuthTokenCreator
     encryptor.encrypt
     encryptor.key = key
     encrypted_bytes = encryptor.update(hashable) + encryptor.final
-    Base64.encode64(encrypted_bytes)
+    Base64.urlsafe_encode64(encrypted_bytes)
   end
 
   def token_in_hash

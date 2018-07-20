@@ -15,7 +15,7 @@ class AuthTokenDecryptorTest < ActiveSupport::TestCase
 
     # this token corresponds to:
     # {:user_ident=>"US-1234", :user_username=>"Registrant User", :expires_at=>"2010-07-05 02:15:00 UTC"}
-    @access_token = "q27NWIsKD5snWj9vZzJ0RcOYvgocEyu7H9yCaDjfmGi54sogovpBeALMPWTZ\nHMcdFQzSiq6b4cI0p5tO0/5UEOHic2jRzNW7mkhi+bn+Y2W9l9TJV0IdiTj9\nbaf+JvlbyaJh6+/eXIm0tuV5E8Ra9Q==\n"
+    @access_token = "q27NWIsKD5snWj9vZzJ0RcOYvgocEyu7H9yCaDjfmGi54sogovpBeALMPWTZHMcdFQzSiq6b4cI0p5tO0_5UEOHic2jRzNW7mkhi-bn-Y2Wlnw7jhMpxw6VwJR8QEoDzjkcNxnKBN6OKF4nssa60ZQ=="
   end
 
   def teardown
@@ -61,7 +61,7 @@ class AuthTokenDecryptorTest < ActiveSupport::TestCase
   def test_returns_false_for_non_existing_user
     # This token was created from an admin user and @key. Decrypted, it corresponds to:
     # {:user_ident=>nil, :user_username=>"test", :expires_at=>"2010-07-05 00:15:00 UTC"}
-    other_token = "rMkjgpyRcj2xOnHVwvvQ5RAS0yQepUSrw3XM5BrwM4TMH+h+TBeLve9InC/z\naPneMMnCs0NHQHt1EpH95A2YhX5P3HsyYITRErDmtlzUf21e185q/CUkW5NG\nWa4rar+6\n"
+    other_token = "rMkjgpyRcj2xOnHVwvvQ5RAS0yQepUSrw3XM5BrwM4TMH-h-TBeLve9InC_zaPneMMnCs0NHQHt1EpH95A2Yhdk6Ge6HQ-4gN5L0THDywCO2vHKGucPxbd6g6wOSaOnR"
 
     decryptor = AuthTokenDecryptor.new(other_token, @key)
     decryptor.decrypt_token

@@ -22,7 +22,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :registrant do
         post 'auth/eid', to: 'auth#eid'
-        post 'auth/username', to: 'auth#username'
+
+        resources :domains, only: [:index]
       end
     end
   end

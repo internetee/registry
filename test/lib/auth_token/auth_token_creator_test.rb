@@ -15,6 +15,7 @@ class AuthTokenCreatorTest < ActiveSupport::TestCase
   def test_hashable_is_constructed_as_expected
     expected_hashable = { user_ident: 'US-1234', user_username: 'Registrant User',
                           expires_at: '2010-07-05 00:30:00 UTC' }.to_json
+
     assert_equal(expected_hashable, @token_creator.hashable)
   end
 
@@ -23,7 +24,7 @@ class AuthTokenCreatorTest < ActiveSupport::TestCase
     encryptor.decrypt
     encryptor.key = @random_bytes
 
-    base64_decoded = Base64.decode64(@token_creator.encrypted_token)
+    base64_decoded = Base64.urlsafe_decode64(@token_creator.encrypted_token)
     result = encryptor.update(base64_decoded) + encryptor.final
 
     hashable = { user_ident: 'US-1234', user_username: 'Registrant User',

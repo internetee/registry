@@ -18,11 +18,11 @@ class AuthTokenDecryptor
     decipher.decrypt
     decipher.key = key
 
-    base64_decoded = Base64.decode64(token)
+    base64_decoded = Base64.urlsafe_decode64(token)
     plain = decipher.update(base64_decoded) + decipher.final
 
     @decrypted_data = JSON.parse(plain, symbolize_names: true)
-  rescue OpenSSL::Cipher::CipherError
+  rescue OpenSSL::Cipher::CipherError, ArgumentError
     false
   end
 
