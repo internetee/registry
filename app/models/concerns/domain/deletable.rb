@@ -15,7 +15,8 @@ module Concerns::Domain::Deletable
   end
 
   def deletion_time_span
-    Time.zone.now.to_i..deletion_deadline.to_i
+    range_params = [Time.zone.now.to_i, deletion_deadline.to_i].sort
+    Range.new(*range_params)
   end
 
   def deletion_deadline

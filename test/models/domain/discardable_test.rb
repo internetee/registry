@@ -20,7 +20,7 @@ class DomainDiscardableTest < ActiveSupport::TestCase
   def test_discarding_a_domain_schedules_deletion_at_random_time
     @domain.discard
     other_domain = domains(:airport)
-    other_domain.delete_at = Time.zone.parse('2010-07-05 10:00')
+    other_domain.delete_at = Time.zone.parse('2010-07-04')
     other_domain.discard
 
     background_job = QueJob.find_by("args->>0 = '#{@domain.id}'", job_class: DomainDeleteJob.name)
