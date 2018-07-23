@@ -46,7 +46,7 @@ class RegistrantUser < User
         user_data[:last_name] = parse_str.scan(/,SN=([^,]+)/).flatten.first
       end
 
-      find_or_create_by_certificate_data(user_data)
+      find_or_create_by_user_data(user_data)
     end
 
     def find_or_create_by_api_data(user_data = {})
@@ -57,26 +57,26 @@ class RegistrantUser < User
       user_data.each { |k, v| v.upcase! if v.is_a?(String) }
       user_data[:country_code] ||= "EE"
 
-      find_or_create_by_certificate_data(user_data)
+      find_or_create_by_user_data(user_data)
     end
 
     def find_or_create_by_mid_data(response)
       user_data = { first_name: response.user_givenname, last_name: response.user_surname,
                     ident: response.user_id_code, country_code: response.user_country }
 
-      find_or_create_by_certificate_data(user_data)
+      find_or_create_by_user_data(user_data)
     end
 
     private
 
-    def find_or_create_by_certificate_data(opts = {})
-      return unless opts[:first_name]
-      return unless opts[:last_name]
-      return unless opts[:ident]
-      return unless opts[:country_code]
+    def find_or_create_by_user_data(user_data = {})
+      return unless user_data[:first_name]
+      return unless user_data[:last_name]
+      return unless user_data[:ident]
+      return unless user_data[:country_code]
 
-      user = find_or_create_by(registrant_ident: "#{opts[:country_code]}-#{opts[:ident]}")
-      user.username = "#{opts[:first_name]} #{opts[:last_name]}"
+      user = find_or_create_by(registrant_ident: "#{user_data[:country_code]}-#{user_data[:ident]}")
+      user.username = "#{user_data[:first_name]} #{user_data[:last_name]}"
       user.save
 
       user
