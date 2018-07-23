@@ -35,6 +35,11 @@ class AuthTokenDecryptorTest < ActiveSupport::TestCase
     refute(faulty_decryptor.decrypt_token)
   end
 
+  def test_decrypt_token_return_false_when_token_is_nil
+    faulty_decryptor = AuthTokenDecryptor.new(nil, @key)
+    refute(faulty_decryptor.decrypt_token)
+  end
+
   def test_valid_returns_true_for_valid_token
     decryptor = AuthTokenDecryptor.new(@access_token, @key)
     decryptor.decrypt_token

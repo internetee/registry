@@ -18,7 +18,7 @@ class AuthTokenDecryptor
     decipher.decrypt
     decipher.key = key
 
-    base64_decoded = Base64.urlsafe_decode64(token)
+    base64_decoded = Base64.urlsafe_decode64(token.to_s)
     plain = decipher.update(base64_decoded) + decipher.final
 
     @decrypted_data = JSON.parse(plain, symbolize_names: true)
