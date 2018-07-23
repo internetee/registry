@@ -26,9 +26,12 @@ module Api
         private
 
         def eid_params
-          [:ident, :first_name, :last_name].each_with_object(params) do |key, obj|
+          required_params = [:ident, :first_name, :last_name]
+          required_params.each_with_object(params) do |key, obj|
             obj.require(key)
           end
+
+          params.permit(required_params)
         end
 
         def create_token(user)
