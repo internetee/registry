@@ -7,11 +7,11 @@ module Api
       class DomainsController < BaseController
         def index
           registrant = ::Registrant.find_by(ident: current_user.registrant_ident)
-          unless registrant
-            render json: Domain.all
-          else
+          if registrant
             domains = Domain.where(registrant_id: registrant.id)
             render json: domains
+          else
+            render json: []
           end
         end
       end

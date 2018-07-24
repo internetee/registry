@@ -7,6 +7,13 @@ module Api
       class BaseController < ActionController::API
         before_action :authenticate
 
+        rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
+          error = {}
+          error[parameter_missing_exception.param] = ['parameter is required']
+          response = { errors: [error] }
+          render json: response, status: :unprocessable_entity
+        end
+
         private
 
         def bearer_token
@@ -22,7 +29,7 @@ module Api
           if decryptor.valid?
             sign_in decryptor.user
           else
-            render json: { error: 'Not authorized' }, status: 403
+            render json: { error: 'Not authorized' }, status: 401
           end
         end
       end

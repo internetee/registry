@@ -14,9 +14,12 @@ class RegistrantApiDomainsTest < ApplicationSystemTestCase
     assert_equal(200, response.status)
   end
 
-  def test_root_returns_403_without_authorization
+  def test_root_returns_401_without_authorization
     get '/api/v1/registrant/domains', {}, {}
-    assert_equal(403, response.status)
+    assert_equal(401, response.status)
+    json_body = JSON.parse(response.body, symbolize_names: true)
+
+    assert_equal({error: 'Not authorized'}, json_body)
   end
 
   private

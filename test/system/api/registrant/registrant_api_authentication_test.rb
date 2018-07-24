@@ -33,6 +33,20 @@ class RegistrantApiAuthenticationTest < ApplicationSystemTestCase
     end
   end
 
+  def test_request_returns_401_from_a_not_whitelisted_ip
+    params = { foo: :bar, test: :test }
+    @original_whitelist_ip = ENV['registrant_api_auth_allowed_ips']
+    ENV['registrant_api_auth_allowed_ips'] = '1.2.3.4'
+
+    post '/api/v1/registrant/auth/eid', params
+    assert_equal(401, response.status)
+    json_body = JSON.parse(response.body, symbolize_names: true)
+
+    assert_equal({error: 'Not authorized'}, json_body)
+
+    ENV['registrant_api_auth_allowed_ips'] = @original_whitelist_ip
+  end
+
   def test_request_documented_parameters_are_required
     params = { foo: :bar, test: :test }
 

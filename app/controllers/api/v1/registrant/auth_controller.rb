@@ -5,6 +5,8 @@ module Api
   module V1
     module Registrant
       class AuthController < ActionController::API
+        before_action :check_ip_whitelist
+
         rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
           error = {}
           error[parameter_missing_exception.param] = ['parameter is required']
@@ -38,6 +40,14 @@ module Api
           token_creator = AuthTokenCreator.create_with_defaults(user)
           hash = token_creator.token_in_hash
           hash
+        end
+
+        def check_ip_whitelist
+          allowed_ips = ENV['registrant_api_auth_allowed_ips'].to_s.split(',').map(&:strip)
+
+          unless allowed_ips.include?(request.ip) || Rails.env.development?
+            render json: { error: 'Not authorized' }, status: 401
+          end
         end
       end
     end
