@@ -7,12 +7,12 @@ module Admin
     end
 
     def new
-      @api_user = ApiUser.find(params[:api_user_id])
+      @api_user = APIUser.find(params[:api_user_id])
       @certificate = Certificate.new(api_user: @api_user)
     end
 
     def create
-      @api_user = ApiUser.find(params[:api_user_id])
+      @api_user = APIUser.find(params[:api_user_id])
 
       crt = certificate_params[:crt].open.read if certificate_params[:crt]
       csr = certificate_params[:csr].open.read if certificate_params[:csr]
@@ -73,7 +73,7 @@ module Admin
     end
 
     def set_api_user
-      @api_user = ApiUser.find(params[:api_user_id])
+      @api_user = APIUser.find(params[:api_user_id])
     end
 
     def certificate_params

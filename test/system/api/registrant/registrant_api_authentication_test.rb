@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrantApiAuthenticationTest < ApplicationSystemTestCase
+class RegistrantAPIAuthenticationTest < ApplicationSystemTestCase
   def setup
     super
 

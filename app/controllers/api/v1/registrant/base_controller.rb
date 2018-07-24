@@ -1,7 +1,7 @@
 require 'rails5_api_controller_backport'
 require 'auth_token/auth_token_decryptor'
 
-module Api
+module API
   module V1
     module Registrant
       class BaseController < ActionController::API

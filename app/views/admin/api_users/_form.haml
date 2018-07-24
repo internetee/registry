@@ -38,7 +38,7 @@
           = f.label :role, nil, class: 'required'
         .col-md-7
           = select_tag 'api_user[roles][]',
-            options_for_select(ApiUser::ROLES.map {|x| [x, x] }, @api_user.roles.try(:first)),
+            options_for_select(APIUser::ROLES.map {|x| [x, x] }, @api_user.roles.try(:first)),
             class: 'form-control selectize'
           .checkbox
             %label{for: 'api_user_active'}

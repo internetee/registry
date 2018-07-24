@@ -1,7 +1,7 @@
 require 'rails5_api_controller_backport'
 require 'auth_token/auth_token_creator'
 
-module Api
+module API
   module V1
     module Registrant
       class AuthController < ActionController::API

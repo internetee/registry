@@ -10,7 +10,7 @@ class Ability
     case @user.class.to_s
     when 'AdminUser'
       @user.roles&.each { |role| send(role) }
-    when 'ApiUser'
+    when 'APIUser'
       @user.roles&.each { |role| send(role) }
       when 'RegistrantUser'
       static_registrant
@@ -94,7 +94,7 @@ class Ability
     can :manage, ContactVersion
     can :manage, Billing::Price
     can :manage, User
-    can :manage, ApiUser
+    can :manage, APIUser
     can :manage, AdminUser
     can :manage, Certificate
     can :manage, Keyrelay

@@ -316,10 +316,10 @@ RSpec.describe Domain do
           @api_user = create(:api_user)
           @user.id.should == 1
           @api_user.id.should == 2
-          ::PaperTrail.whodunnit = '2-ApiUser: testuser'
+          ::PaperTrail.whodunnit = '2-APIUser: testuser'
 
           @domain = create(:domain)
-          @domain.creator_str.should == '2-ApiUser: testuser'
+          @domain.creator_str.should == '2-APIUser: testuser'
 
           @domain.creator.should == @api_user
           @domain.creator.should_not == @user

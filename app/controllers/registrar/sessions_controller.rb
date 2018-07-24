@@ -26,7 +26,7 @@ class Registrar
         @depp_user.errors.add(:base, :webserver_client_cert_directive_should_be_required)
       end
 
-      @api_user = ApiUser.find_by(username: params[:depp_user][:tag], password: params[:depp_user][:password])
+      @api_user = APIUser.find_by(username: params[:depp_user][:tag], password: params[:depp_user][:password])
 
       unless @api_user
         @depp_user.errors.add(:base, t(:no_such_user))
@@ -53,7 +53,7 @@ class Registrar
     end
 
     def id
-      @user = ApiUser.find_by_idc_data_and_allowed(request.env['SSL_CLIENT_S_DN'], request.ip)
+      @user = APIUser.find_by_idc_data_and_allowed(request.env['SSL_CLIENT_S_DN'], request.ip)
 
       if @user
         sign_in(@user, event: :authentication)
@@ -150,12 +150,12 @@ class Registrar
 
     def find_user_by_idc(idc)
       return User.new unless idc
-      ApiUser.find_by(identity_code: idc) || User.new
+      APIUser.find_by(identity_code: idc) || User.new
     end
 
     def find_user_by_idc_and_allowed(idc)
       return User.new unless idc
-      possible_users = ApiUser.where(identity_code: idc) || User.new
+      possible_users = APIUser.where(identity_code: idc) || User.new
       possible_users.each do |selected_user|
         if selected_user.registrar.white_ips.registrar_area.include_ip?(request.ip)
           return selected_user

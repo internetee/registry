@@ -34,7 +34,7 @@ module Versions
     end
 
     def user_from_id_role_username(str)
-      user = ApiUser.find_by(id: $1) if str =~ /^(\d+)-(ApiUser:|api-)/
+      user = APIUser.find_by(id: $1) if str =~ /^(\d+)-(APIUser:|api-)/
       unless user.present?
         user = AdminUser.find_by(id: $1) if str =~ /^(\d+)-AdminUser:/
         unless user.present?

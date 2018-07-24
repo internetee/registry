@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'auth_token/auth_token_creator'
 
-class RegistrantApiDomainsTest < ApplicationSystemTestCase
+class RegistrantAPIDomainsTest < ApplicationSystemTestCase
   def setup
     super
 

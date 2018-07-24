@@ -4,7 +4,7 @@ module Repp
     prefix :repp
 
     http_basic do |username, password|
-      @current_user ||= ApiUser.find_by(username: username, password: password)
+      @current_user ||= APIUser.find_by(username: username, password: password)
       if @current_user
         true
       else
