@@ -131,7 +131,7 @@ namespace :import do
     ips = []
     temp = []
 
-    existing_ids = APIUser.pluck(:legacy_id)
+    existing_ids = ApiUser.pluck(:legacy_id)
     existing_ips = WhiteIp.pluck(:ipv4)
 
     Legacy::Registrar.all.each do |x|
@@ -143,7 +143,7 @@ namespace :import do
         if y.try(:cert) != 'pki'
 
           if y.try(:cert) == 'idkaart'
-            id_users << APIUser.new({
+            id_users << ApiUser.new({
               username: y.try(:password) ? y.try(:password) : y.try(:password),
               password: ('a'..'z').to_a.shuffle.first(8).join,
               identity_code: y.try(:password) ? y.try(:password) : y.try(:password),
@@ -152,7 +152,7 @@ namespace :import do
               legacy_id: y.try(:id)
               })
           else
-            temp << APIUser.new({
+            temp << ApiUser.new({
               username: x.handle.try(:strip),
               password: y.try(:password) ? y.try(:password) : ('a'..'z').to_a.shuffle.first(8).join,
               registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
@@ -181,8 +181,8 @@ namespace :import do
       end
     end
 
-    APIUser.import id_users, validate: false
-    APIUser.import users, validate: false
+    ApiUser.import id_users, validate: false
+    ApiUser.import users, validate: false
 
     if ips
       WhiteIp.import ips, validate: false

@@ -1,16 +1,16 @@
 require 'rails_helper'
 
-RSpec.describe APIUser do
+RSpec.describe ApiUser do
   context 'with invalid attribute' do
     before do
-      @api_user = APIUser.new
+      @api_user = ApiUser.new
     end
 
     it 'should not be valid' do
       @api_user.valid?
       @api_user.errors.full_messages.should match_array([
         "Password Password is missing",
-        "Password is too short (minimum is #{APIUser.min_password_length} characters)",
+        "Password is too short (minimum is #{ApiUser.min_password_length} characters)",
         "Registrar Registrar is missing",
         "Username Username is missing",
         "Roles is missing"

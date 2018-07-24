@@ -95,6 +95,6 @@ class Registrant::SessionsController < Devise::SessionsController
 
   def find_user_by_idc(idc)
     return User.new unless idc
-    APIUser.find_by(identity_code: idc) || User.new
+    ApiUser.find_by(identity_code: idc) || User.new
   end
 end

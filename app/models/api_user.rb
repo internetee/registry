@@ -1,6 +1,6 @@
 require 'open3'
 
-class APIUser < User
+class ApiUser < User
   include EppErrors
 
   def epp_code_map

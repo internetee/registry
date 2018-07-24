@@ -12,7 +12,7 @@ class Registrar
     private
 
     def new_user
-      @new_user ||= APIUser.find(params[:new_user_id])
+      @new_user ||= ApiUser.find(params[:new_user_id])
     end
   end
 end

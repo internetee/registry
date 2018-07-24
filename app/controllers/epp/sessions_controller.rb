@@ -7,7 +7,7 @@ class Epp::SessionsController < EppController
 
   def login
     success = true
-    @api_user = APIUser.find_by(login_params)
+    @api_user = ApiUser.find_by(login_params)
 
     webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
     if webclient_request && !Rails.env.test? && !Rails.env.development?

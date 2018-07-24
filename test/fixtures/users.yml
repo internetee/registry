@@ -1,7 +1,7 @@
 api_bestnames:
   username: test_bestnames
   password: testtest
-  type: APIUser
+  type: ApiUser
   registrar: bestnames
   active: true
   roles:
@@ -10,7 +10,7 @@ api_bestnames:
 api_goodnames:
   username: test_goodnames
   password: testtest
-  type: APIUser
+  type: ApiUser
   registrar: goodnames
   active: true
   roles:
