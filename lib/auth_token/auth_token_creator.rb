@@ -6,20 +6,20 @@ class AuthTokenCreator
   attr_reader :expires_at
 
   def self.create_with_defaults(user)
-    self.new(user, Rails.application.config.secret_key_base, Time.now + DEFAULT_VALIDITY)
+    new(user, Rails.application.config.secret_key_base, Time.now + DEFAULT_VALIDITY)
   end
 
   def initialize(user, key, expires_at)
     @user = user
     @key = key
-    @expires_at = expires_at.utc.strftime("%F %T %Z")
+    @expires_at = expires_at.utc.strftime('%F %T %Z')
   end
 
   def hashable
     {
       user_ident: user.registrant_ident,
       user_username: user.username,
-      expires_at: expires_at
+      expires_at: expires_at,
     }.to_json
   end
 
@@ -35,7 +35,7 @@ class AuthTokenCreator
     {
       access_token: encrypted_token,
       expires_at: expires_at,
-      type: 'Bearer'
+      type: 'Bearer',
     }
   end
 end

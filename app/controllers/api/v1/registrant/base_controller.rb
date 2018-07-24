@@ -19,7 +19,7 @@ module API
         def bearer_token
           pattern = /^Bearer /
           header  = request.headers['Authorization']
-          header.gsub(pattern, '') if header && header.match(pattern)
+          header.gsub(pattern, '') if header&.match(pattern)
         end
 
         def authenticate
@@ -29,7 +29,7 @@ module API
           if decryptor.valid?
             sign_in decryptor.user
           else
-            render json: { error: 'Not authorized' }, status: 401
+            render json: { error: 'Not authorized' }, status: :unauthorized
           end
         end
       end

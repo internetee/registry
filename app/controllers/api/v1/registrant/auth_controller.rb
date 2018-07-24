@@ -21,14 +21,14 @@ module API
           if token
             render json: token
           else
-            render json: { error: 'Cannot create generate session token'}
+            render json: { error: 'Cannot create generate session token' }
           end
         end
 
         private
 
         def eid_params
-          required_params = [:ident, :first_name, :last_name]
+          required_params = %i[ident first_name last_name]
           required_params.each_with_object(params) do |key, obj|
             obj.require(key)
           end
@@ -44,10 +44,9 @@ module API
 
         def check_ip_whitelist
           allowed_ips = ENV['registrant_api_auth_allowed_ips'].to_s.split(',').map(&:strip)
+          return if allowed_ips.include?(request.ip) || Rails.env.development?
 
-          unless allowed_ips.include?(request.ip) || Rails.env.development?
-            render json: { error: 'Not authorized' }, status: 401
-          end
+          render json: { error: 'Not authorized' }, status: :unauthorized
         end
       end
     end

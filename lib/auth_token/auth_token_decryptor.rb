@@ -5,7 +5,7 @@ class AuthTokenDecryptor
   attr_reader :user
 
   def self.create_with_defaults(token)
-    self.new(token, Rails.application.config.secret_key_base)
+    new(token, Rails.application.config.secret_key_base)
   end
 
   def initialize(token, key)
