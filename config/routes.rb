@@ -18,6 +18,14 @@ Rails.application.routes.draw do
 
   mount Repp::API => '/'
 
+  namespace :api do
+    namespace :v1 do
+      namespace :registrant do
+        resources :domains, only: [:index, :show], param: :uuid
+      end
+    end
+  end
+
   # REGISTRAR ROUTES
   namespace :registrar do
     resource :dashboard
