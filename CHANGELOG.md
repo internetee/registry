@@ -1,3 +1,10 @@
+26.07.2018
+* Grape (1.0.3), mustermann (1.0.2), multi_json (1.13.1) gem updates [#912](https://github.com/internetee/registry/issues/912)
+* Capybara (3.3.1), mini_mime (0.1.3), nokogiri (1.8), rack (1.6.0), xpath (3.1) gem updates [#980](https://github.com/internetee/registry/issues/908)
+* Webmock (3.4.2), addressable (2.5.2), hashdiff (0.3.7), public_suffix (3.0.2) gem updates [#907](https://github.com/internetee/registry/issues/907)
+* fixed typo in assertions filename [#920](https://github.com/internetee/registry/issues/920)
+* regenerate structure.sql [#915](https://github.com/internetee/registry/issues/915)
+
 12.07.2018
 * Implemented JavaScript testing framework to catch web UI problems [#900](https://github.com/internetee/registry/issues/900)
 
