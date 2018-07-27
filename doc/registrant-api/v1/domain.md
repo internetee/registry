@@ -157,5 +157,5 @@ Content-Type: application/json
 HTTP/1.1 404
 Content-Type: application/json
 
-{ "error": "Domain not found" }
+{ "errors": ["Domain not found"] }
 ```
