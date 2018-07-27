@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppLoginSessionLimitTest < ActionDispatch::IntegrationTest
+class EppLoginSessionLimitTest < ApplicationIntegrationTest
   setup do
     travel_to Time.zone.parse('2010-07-05')
     EppSession.delete_all

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainUpdateTest < ActionDispatch::IntegrationTest
+class EppDomainUpdateTest < ApplicationIntegrationTest
   def test_update_domain
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
