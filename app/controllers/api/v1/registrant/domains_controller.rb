@@ -4,12 +4,15 @@ module Api
   module V1
     module Registrant
       class DomainsController < ActionController::API
-        def index
-          render json: { success: true }
-        end
 
         def show
-          render json: { success: true }
+          @domain = Domain.find_by(uuid: params[:uuid])
+
+          if @domain
+            render json: @domain
+          else
+            render json: { errors: ["Domain not found"] }, status: :not_found
+          end
         end
       end
     end

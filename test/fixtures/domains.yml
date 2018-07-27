@@ -45,7 +45,7 @@ metro:
 hospital:
   name: hospital.test
   registrar: goodnames
-  registrant: william
+  registrant: john
   transfer_code: 23118v2
   valid_to: 2010-07-05
   period: 1
