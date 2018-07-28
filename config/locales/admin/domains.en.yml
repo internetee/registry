@@ -13,8 +13,8 @@ en:
         reset_btn: Reset
 
       edit:
+        header: "Edit: %{domain}"
         add_new_status_btn: Add new status
-        back_btn: Back to domain
 
       force_delete_dialog:
         title: Force delete
