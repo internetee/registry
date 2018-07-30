@@ -19,7 +19,7 @@ class RegistrantApiDomainsTest < ActionDispatch::IntegrationTest
     assert_equal(401, response.status)
     json_body = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal({error: 'Not authorized'}, json_body)
+    assert_equal({ errors: ['Not authorized'] }, json_body)
   end
 
   private

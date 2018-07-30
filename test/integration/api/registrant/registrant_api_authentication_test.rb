@@ -42,7 +42,7 @@ class RegistrantApiAuthenticationTest < ActionDispatch::IntegrationTest
     assert_equal(401, response.status)
     json_body = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal({error: 'Not authorized'}, json_body)
+    assert_equal({ errors: ['Not authorized'] }, json_body)
 
     ENV['registrant_api_auth_allowed_ips'] = @original_whitelist_ip
   end
@@ -52,7 +52,7 @@ class RegistrantApiAuthenticationTest < ActionDispatch::IntegrationTest
 
     post '/api/v1/registrant/auth/eid', params
     json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal({errors: [{ident: ['parameter is required']}]}, json)
+    assert_equal({ errors: [{ ident: ['parameter is required'] }] }, json)
     assert_equal(422, response.status)
   end
 end
