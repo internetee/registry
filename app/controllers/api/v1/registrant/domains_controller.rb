@@ -5,7 +5,20 @@ module Api
     module Registrant
       class DomainsController < BaseController
         def index
-          @domains = associated_domains(current_user)
+          limit = params[:limit] || 200
+          offset = params[:offset] || 0
+
+          if limit.to_i > 200 || limit.to_i < 1
+            render(json: { errors: [{ limit: ['parameter is out of range'] }] },
+                   status: :bad_request) && return
+          end
+
+          if offset.to_i.negative?
+            render(json: { errors: [{ offset: ['parameter is out of range'] }] },
+                   status: :bad_request) && return
+          end
+
+          @domains = associated_domains(current_user).limit(limit).offset(offset)
           render json: @domains
         end
 
@@ -16,7 +29,7 @@ module Api
           if @domain
             render json: @domain
           else
-            render json: { errors: ["Domain not found"] }, status: :not_found
+            render json: { errors: ['Domain not found'] }, status: :not_found
           end
         end
 
@@ -27,7 +40,7 @@ module Api
 
           BusinessRegistryCache.fetch_associated_domains(ident, country_code)
         rescue Soap::Arireg::NotAvailableError => error
-          Rails.logger.fatal("[EXCEPTION] #{error.to_s}")
+          Rails.logger.fatal("[EXCEPTION] #{error}")
           user.domains
         end
       end
