@@ -620,7 +620,7 @@ CREATE TABLE public.contacts (
     ident character varying,
     ident_type character varying,
     auth_info character varying NOT NULL,
-    name character varying,
+    name character varying NOT NULL,
     org_name character varying,
     registrar_id integer NOT NULL,
     creator_str character varying,
@@ -4756,4 +4756,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180612042953');
 INSERT INTO schema_migrations (version) VALUES ('20180613030330');
 
 INSERT INTO schema_migrations (version) VALUES ('20180613045614');
+
+INSERT INTO schema_migrations (version) VALUES ('20180801114403');
 

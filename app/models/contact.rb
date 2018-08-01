@@ -282,7 +282,7 @@ class Contact < ActiveRecord::Base
   end
 
   def to_s
-    name || '[no name]'
+    name
   end
 
   def validate_html
