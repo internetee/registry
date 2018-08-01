@@ -24,6 +24,7 @@ Rails.application.routes.draw do
         post 'auth/eid', to: 'auth#eid'
 
         resources :domains, only: [:index]
+        resources :contacts, only: %i[index show]
       end
     end
   end
