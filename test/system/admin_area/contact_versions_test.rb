@@ -18,8 +18,8 @@ class ContactVersionsTest < ApplicationSystemTestCase
 
   def create_contact_with_history
     sql = <<-SQL.squish
-      INSERT INTO contacts (id, code, email, auth_info, registrar_id)
-      VALUES (75, 'test_code', 'test@inbox.test', '8b4d462aa04194ca78840a', #{@registrar.id});
+      INSERT INTO contacts (id, name, code, email, auth_info, registrar_id)
+      VALUES (75, 'test_name', 'test_code', 'test@inbox.test', '8b4d462aa04194ca78840a', #{@registrar.id});
 
       INSERT INTO log_contacts (item_type, item_id, event, whodunnit, object,
       object_changes, created_at, session, children, ident_updated_at, uuid)
