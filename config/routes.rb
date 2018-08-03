@@ -113,8 +113,9 @@ Rails.application.routes.draw do
     root 'domains#index'
 
     resources :registrars, only: :show
-    resources :contacts, only: :show
     resources :domains, only: %i[index show] do
+      resources :contacts, only: %i[show]
+
       collection do
         get :download_list
       end

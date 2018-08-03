@@ -1,0 +1,28 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <%= t '.header' %>
+    </div>
+
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt><%= Registrant.human_attribute_name :name %></dt>
+            <dd><%= registrant.name %></dd>
+
+            <dt><%= Registrant.human_attribute_name :code %></dt>
+            <dd><%= registrant.code %></dd>
+
+            <dt><%= Registrant.human_attribute_name :ident %></dt>
+            <dd><%= registrant.ident %></dd>
+
+            <dt><%= Registrant.human_attribute_name :email %></dt>
+            <dd><%= registrant.email %></dd>
+
+            <dt><%= Registrant.human_attribute_name :phone %></dt>
+            <dd><%= registrant.phone %></dd>
+        </dl>
+    </div>
+
+    <div class="panel-footer text-right">
+        <%= link_to t('.view_details_btn'), registrant_domain_contact_path(domain, registrant) %>
+    </div>
+</div>

@@ -8,12 +8,12 @@ en:
 
       download_list:
         registrant: Registrant
+
+      show:
+        admin_contacts: Administrative contacts
+        tech_contacts: Technical contacts
+
       partials:
-        owner:
-          title: Registrant
-
-        admin_contacts:
-          title: Admin. contacts
-
-        tech_contacts:
-          title: Tech. contacts
+        registrant:
+          header: Registrant
+          view_details_btn: View details
