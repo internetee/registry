@@ -31,7 +31,7 @@ module Api
           if @contact
             render json: @contact
           else
-            render json: { errors: ['Contact not found'] }, status: :not_found
+            render json: { errors: [{ base: ['Contact not found'] }] }, status: :not_found
           end
         end
 

@@ -50,7 +50,7 @@ class RegistrantApiContactsTest < ActionDispatch::IntegrationTest
     assert_equal(401, response.status)
     json_body = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal({ errors: ['Not authorized'] }, json_body)
+    assert_equal({ errors: [base: ['Not authorized']] }, json_body)
   end
 
   def test_details_returns_401_without_authorization
@@ -58,7 +58,7 @@ class RegistrantApiContactsTest < ActionDispatch::IntegrationTest
     assert_equal(401, response.status)
     json_body = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal({ errors: ['Not authorized'] }, json_body)
+    assert_equal({ errors: [base: ['Not authorized']] }, json_body)
   end
 
   def test_details_returns_404_for_non_existent_contact
@@ -66,7 +66,7 @@ class RegistrantApiContactsTest < ActionDispatch::IntegrationTest
     assert_equal(404, response.status)
     json_body = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal({ errors: ['Contact not found'] }, json_body)
+    assert_equal({ errors: [base: ['Contact not found']] }, json_body)
   end
 
   private
