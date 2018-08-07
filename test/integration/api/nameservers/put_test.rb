@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class APINameserversPutTest < ActionDispatch::IntegrationTest
+class APINameserversPutTest < ApplicationIntegrationTest
   def test_replaces_registrar_nameservers
     old_nameserver_ids = [nameservers(:shop_ns1).id,
                           nameservers(:airport_ns1).id,

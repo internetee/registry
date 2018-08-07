@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppLogoutTest < ActionDispatch::IntegrationTest
+class EppLogoutTest < ApplicationIntegrationTest
   def test_success_response
     post '/epp/session/logout', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert Nokogiri::XML(response.body).at_css('result[code="1500"]')

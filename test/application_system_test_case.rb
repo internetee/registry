@@ -3,7 +3,7 @@ require 'test_helper'
 require 'database_cleaner'
 require 'selenium/webdriver'
 
-class ApplicationSystemTestCase < ActionDispatch::IntegrationTest; end
+ApplicationSystemTestCase = Class.new(ApplicationIntegrationTest)
 
 class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
   self.use_transactional_fixtures = false
