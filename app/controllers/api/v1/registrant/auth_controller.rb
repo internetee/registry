@@ -21,7 +21,7 @@ module Api
           if token
             render json: token
           else
-            render json: { error: 'Cannot create generate session token' }
+            render json: { errors: [{ base: ['Cannot create generate session token'] }] }
           end
         end
 
@@ -46,7 +46,7 @@ module Api
           allowed_ips = ENV['registrant_api_auth_allowed_ips'].to_s.split(',').map(&:strip)
           return if allowed_ips.include?(request.ip) || Rails.env.development?
 
-          render json: { errors: ['Not authorized'] }, status: :unauthorized
+          render json: { errors: [{ base: ['Not authorized'] }] }, status: :unauthorized
         end
       end
     end
