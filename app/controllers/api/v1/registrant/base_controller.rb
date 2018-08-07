@@ -29,7 +29,7 @@ module Api
           if decryptor.valid?
             sign_in decryptor.user
           else
-            render json: { errors: ['Not authorized'] }, status: :unauthorized
+            render json: { errors: [{base: ['Not authorized']}] }, status: :unauthorized
           end
         end
       end
