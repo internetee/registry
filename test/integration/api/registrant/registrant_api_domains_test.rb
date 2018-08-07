@@ -35,7 +35,7 @@ class RegistrantApiDomainsTest < ActionDispatch::IntegrationTest
     assert_equal(404, response.status)
 
     response_json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal({errors: ['Domain not found']}, response_json)
+    assert_equal({ errors: [base: ['Domain not found']] }, response_json)
   end
 
   def test_root_returns_domain_list
@@ -89,7 +89,7 @@ class RegistrantApiDomainsTest < ActionDispatch::IntegrationTest
     assert_equal(401, response.status)
     json_body = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal({ errors: ['Not authorized'] }, json_body)
+    assert_equal({ errors: [base: ['Not authorized']] }, json_body)
   end
 
   private

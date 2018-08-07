@@ -29,7 +29,7 @@ module Api
           if @domain
             render json: @domain
           else
-            render json: { errors: ['Domain not found'] }, status: :not_found
+            render json: { errors: [{ base: ['Domain not found'] }] }, status: :not_found
           end
         end
 
