@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'auth_token/auth_token_creator'
 
-class RegistrantApiContactsTest < ActionDispatch::IntegrationTest
+class RegistrantApiContactsTest < ApplicationIntegrationTest
   def setup
     super
 
