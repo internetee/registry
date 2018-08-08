@@ -912,7 +912,8 @@ CREATE TABLE public.domains (
     statuses_backup character varying[] DEFAULT '{}'::character varying[],
     upid integer,
     up_date timestamp without time zone,
-    uuid uuid DEFAULT public.gen_random_uuid() NOT NULL
+    uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    locked_by_registrant_at timestamp without time zone
 );
 
 
@@ -4756,4 +4757,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180612042953');
 INSERT INTO schema_migrations (version) VALUES ('20180613030330');
 
 INSERT INTO schema_migrations (version) VALUES ('20180613045614');
+
+INSERT INTO schema_migrations (version) VALUES ('20180808064402');
 
