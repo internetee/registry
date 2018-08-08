@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainTransferQueryTest < ActionDispatch::IntegrationTest
+class EppDomainTransferQueryTest < ApplicationIntegrationTest
   def test_returns_domain_transfer_details
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     xml_doc = Nokogiri::XML(response.body)

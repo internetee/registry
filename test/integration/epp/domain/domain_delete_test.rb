@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainDeleteTest < ActionDispatch::IntegrationTest
+class EppDomainDeleteTest < ApplicationIntegrationTest
   def test_bypasses_domain_and_registrant_and_contacts_validation
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
