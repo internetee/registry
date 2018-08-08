@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class APIDomainTransfersTest < ActionDispatch::IntegrationTest
+class APIDomainTransfersTest < ApplicationIntegrationTest
   setup do
     @domain = domains(:shop)
     @new_registrar = registrars(:goodnames)

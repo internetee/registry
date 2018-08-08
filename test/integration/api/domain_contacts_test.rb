@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class APIDomainContactsTest < ActionDispatch::IntegrationTest
+class APIDomainContactsTest < ApplicationIntegrationTest
   def test_replace_all_tech_contacts_of_the_current_registrar
     patch '/repp/v1/domains/contacts', { current_contact_id: 'william-001',
                                          new_contact_id: 'john-001' },
