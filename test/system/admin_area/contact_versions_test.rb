@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ContactVersionsTest < ActionDispatch::IntegrationTest
+class ContactVersionsTest < ApplicationSystemTestCase
   def setup
     super
 

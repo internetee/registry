@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AdminAreaDeleteRegistrarTest < ActionDispatch::IntegrationTest
+class AdminAreaDeleteRegistrarTest < ApplicationSystemTestCase
   setup do
     sign_in users(:admin)
   end

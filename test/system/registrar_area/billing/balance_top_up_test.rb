@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BalanceTopUpTest < ActionDispatch::IntegrationTest
+class BalanceTopUpTest < ApplicationSystemTestCase
   setup do
     sign_in users(:api_bestnames)
   end

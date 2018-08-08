@@ -11,9 +11,7 @@ require 'minitest/mock'
 require 'capybara/rails'
 require 'capybara/minitest'
 require 'webmock/minitest'
-require 'support/rails5_assetions' # Remove once upgraded to Rails 5
-
-require 'application_system_test_case'
+require 'support/rails5_assertions' # Remove once upgraded to Rails 5
 
 Setting.address_processing = false
 Setting.registry_country_code = 'US'
@@ -29,7 +27,7 @@ class ActiveSupport::TestCase
   end
 end
 
-class ActionDispatch::IntegrationTest
+class ApplicationIntegrationTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
   include Capybara::Minitest::Assertions
   include AbstractController::Translation
@@ -41,3 +39,5 @@ class ActionDispatch::IntegrationTest
     Capybara.use_default_driver
   end
 end
+
+require 'application_system_test_case'

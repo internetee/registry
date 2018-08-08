@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrarAreaTechContactBulkChangeTest < ActionDispatch::IntegrationTest
+class RegistrarAreaTechContactBulkChangeTest < ApplicationSystemTestCase
   setup do
     sign_in users(:api_bestnames)
   end

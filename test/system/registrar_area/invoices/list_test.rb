@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ListInvoicesTest < ActionDispatch::IntegrationTest
+class ListInvoicesTest < ApplicationSystemTestCase
   def setup
     super
 

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AdminAreaEditRegistrarTest < ActionDispatch::IntegrationTest
+class AdminAreaEditRegistrarTest < ApplicationSystemTestCase
   setup do
     sign_in users(:admin)
     @registrar = registrars(:bestnames)

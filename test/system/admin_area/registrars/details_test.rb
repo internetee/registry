@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AdminAreaRegistrarDetailsTest < ActionDispatch::IntegrationTest
+class AdminAreaRegistrarDetailsTest < ApplicationSystemTestCase
   include ActionView::Helpers::NumberHelper
 
   setup do

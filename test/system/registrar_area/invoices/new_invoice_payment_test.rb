@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class NewInvoicePaymentTest < ActionDispatch::IntegrationTest
+class NewInvoicePaymentTest < ApplicationSystemTestCase
   def setup
     super
 

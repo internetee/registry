@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PaymentReturnTest < ActionDispatch::IntegrationTest
+class PaymentReturnTest < ApplicationSystemTestCase
   def setup
     super
 

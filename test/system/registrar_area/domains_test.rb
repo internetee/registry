@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrarDomainsTest < ActionDispatch::IntegrationTest
+class RegistrarDomainsTest < ApplicationSystemTestCase
   def test_downloads_domain_list_as_csv
     sign_in users(:api_bestnames)
     travel_to Time.zone.parse('2010-07-05 10:30')

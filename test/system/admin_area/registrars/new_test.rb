@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AdminAreaNewRegistrarTest < ActionDispatch::IntegrationTest
+class AdminAreaNewRegistrarTest < ApplicationSystemTestCase
   setup do
     sign_in users(:admin)
   end

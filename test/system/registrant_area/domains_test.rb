@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrantDomainsTest < ActionDispatch::IntegrationTest
+class RegistrantDomainsTest < ApplicationSystemTestCase
   setup do
     sign_in users(:registrant)
 

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrarAreaNameserverBulkChangeTest < ActionDispatch::IntegrationTest
+class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
   setup do
     sign_in users(:api_goodnames)
   end

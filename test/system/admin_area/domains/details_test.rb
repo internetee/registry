@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AdminAreaDomainDetailsTest < ActionDispatch::IntegrationTest
+class AdminAreaDomainDetailsTest < ApplicationSystemTestCase
   setup do
     sign_in users(:admin)
     @domain = domains(:shop)

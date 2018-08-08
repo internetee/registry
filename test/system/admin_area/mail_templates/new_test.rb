@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AdminAreaNewMailTemplateTest < ActionDispatch::IntegrationTest
+class AdminAreaNewMailTemplateTest < ApplicationSystemTestCase
   setup do
     sign_in users(:admin)
   end

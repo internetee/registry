@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AdminAreaDomainForceDeleteTest < ActionDispatch::IntegrationTest
+class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
   include ActionMailer::TestHelper
 
   setup do

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrarAreaBulkTransferTest < ActionDispatch::IntegrationTest
+class RegistrarAreaBulkTransferTest < ApplicationSystemTestCase
   setup do
     sign_in users(:api_goodnames)
   end

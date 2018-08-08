@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrantLayoutTest < ActionDispatch::IntegrationTest
+class RegistrantLayoutTest < ApplicationSystemTestCase
   def setup
     super
     sign_in(users(:registrant))
