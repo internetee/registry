@@ -3,11 +3,6 @@ require 'test_helper'
 class ContactTest < ActiveSupport::TestCase
   setup do
     @contact = contacts(:john)
-    @original_address_processing_setting = Setting.address_processing
-  end
-
-  def teardown
-    Setting.address_processing = @original_address_processing_setting
   end
 
   def test_valid_fixture
