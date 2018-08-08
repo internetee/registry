@@ -12,7 +12,7 @@ class AdminAreaSignInTest < ApplicationSystemTestCase
     click_button 'Sign in'
 
     assert_text 'Signed in successfully'
-    assert_current_path admin_root_path
+    assert_current_path admin_domains_path
   end
 
   def test_wrong_password
@@ -39,6 +39,6 @@ class AdminAreaSignInTest < ApplicationSystemTestCase
     click_button 'Sign in'
 
     assert_text 'Signed in successfully'
-    assert_current_path admin_root_path
+    assert_current_path admin_domains_path
   end
 end

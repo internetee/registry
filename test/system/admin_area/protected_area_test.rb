@@ -17,6 +17,6 @@ class AdminAreaProtectedAreaTest < ApplicationSystemTestCase
     sign_in users(:admin)
     visit new_admin_user_session_url
     assert_text 'You are already signed in'
-    assert_current_path admin_root_path
+    assert_current_path admin_domains_path
   end
 end
