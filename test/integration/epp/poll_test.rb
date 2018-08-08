@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppPollTest < ActionDispatch::IntegrationTest
+class EppPollTest < ApplicationIntegrationTest
   def test_messages
     post '/epp/command/poll', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert_equal '1301', Nokogiri::XML(response.body).at_css('result')[:code]
