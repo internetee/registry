@@ -51,5 +51,6 @@ class RegistryLockTest < JavaScriptApplicationSystemTestCase
     end
 
     assert_text('Registry lock could not be removed')
+    refute @domain.locked_by_registrant?
   end
 end
