@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="form-signin col-md-6 center-block text-center">
+        <h2 class="form-signin-heading text-center">
+            <%= t(:log_in) %>
+        </h2>
+        <hr/>
+        <%= form_for @depp_user, url: registrar_user_session_path, html: { class: 'form-signin' } do |f| %>
+            <%= render 'registrar/shared/errors', object: f.object %>
+            <% error_class = f.object.errors.any? ? 'has-error' : '' %>
+            <div class="<%= error_class %>">
+                <%= f.text_field :tag, class: 'form-control', placeholder: t(:username), required: true %>
+                <%= f.password_field :password, class: 'form-control', autocomplete: 'off', placeholder: t(:password), required: true %>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">
+                <%= t '.login_btn' %>
+            </button>
+        <% end %>
+        <hr/>
+        <%= link_to '/registrar/login/mid', id: 'login-with-mobile-id-btn' do %>
+            <%= image_tag 'mid.gif' %>
+        <% end %>
+        <%= link_to '/registrar/id', method: :post do %>
+            <%= image_tag 'id_card.gif' %>
+        <% end %>
+    </div>
+</div>
