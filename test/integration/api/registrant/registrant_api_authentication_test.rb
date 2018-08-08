@@ -1,10 +1,10 @@
 require 'test_helper'
 
-class RegistrantApiAuthenticationTest < ActionDispatch::IntegrationTest
+class RegistrantApiAuthenticationTest < ApplicationIntegrationTest
   def setup
     super
 
-    @user_hash = {ident: '37010100049', first_name: 'Adam', last_name: 'Baker'}
+    @user_hash = { ident: '37010100049', first_name: 'Adam', last_name: 'Baker' }
     @existing_user = RegistrantUser.find_or_create_by_api_data(@user_hash)
   end
 
