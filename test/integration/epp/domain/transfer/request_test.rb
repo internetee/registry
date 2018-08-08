@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
+class EppDomainTransferRequestTest < ApplicationIntegrationTest
   setup do
     @domain = domains(:shop)
     @new_registrar = registrars(:goodnames)
