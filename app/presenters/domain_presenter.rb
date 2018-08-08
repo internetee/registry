@@ -52,18 +52,29 @@ class DomainPresenter
   def force_delete_toggle_btn
     if !domain.force_delete_scheduled?
       view.content_tag(:a, view.t('admin.domains.force_delete_toggle_btn.schedule'),
-                       class: 'btn btn-default',
                        data: {
                          toggle: 'modal',
                          target: '.domain-edit-force-delete-dialog',
-                       }
+                       },
+                       class: 'dropdown-item'
       )
     else
       view.link_to(view.t('admin.domains.force_delete_toggle_btn.cancel'),
                    view.admin_domain_force_delete_path(domain),
                    method: :delete,
                    data: { confirm: view.t('admin.domains.force_delete_toggle_btn.cancel_confirm') },
-                   class: 'btn btn-primary')
+                   class: 'dropdown-item')
+    end
+  end
+
+
+  def remove_registry_lock_btn
+    if domain.locked_by_registrant?
+      view.link_to(view.t('admin.domains.registry_lock_delete.btn'),
+                   view.admin_domain_registry_lock_path(domain),
+                   method: :delete,
+                   data: { confirm: view.t('admin.domains.registry_lock_delete.confirm') },
+                   class: 'dropdown-item')
     end
   end
 

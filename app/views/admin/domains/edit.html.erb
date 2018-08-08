@@ -6,12 +6,22 @@
             Edit: <%= domain.name %>
         </h1>
     </div>
-    <div class="col-sm-7">
-        <h1 class="text-right text-center-xs">
-            <%= link_to t('.add_new_status_btn'), '#', class: 'btn btn-primary js-add-status' %>
-            <%= domain.force_delete_toggle_btn %>
+    <div class="col-sm-7 text-right">
+        <div class="btn-group">
             <%= link_to t('.back_btn'), [:admin, @domain], class: 'btn btn-default' %>
-        </h1>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Actions
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><%= domain.force_delete_toggle_btn %></li>
+                <li><%= domain.remove_registry_lock_btn %></li>
+                <div class="divider"></div>
+                <li><%= link_to t('.add_new_status_btn'), '#', class: 'js-add-status' %></li>
+            </ul>
+        </div>
     </div>
 </div>
 <hr>

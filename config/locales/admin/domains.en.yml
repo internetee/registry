@@ -23,6 +23,12 @@ en:
         close_btn: Close dialog
         submit_btn: Force delete domain
 
+      registry_lock_delete:
+        btn: Remove registry lock
+        confirm: Are you sure you want to remove registry lock that was set by registrant?
+        success: Registry lock removed
+        error: Registry lock could not be removed
+
       versions:
         time: Time
         registrant: Registrant
@@ -34,6 +40,7 @@ en:
           outzone_time: Outzone time
           delete_time: Delete time
           force_delete_time: Force delete time
+          locked_by_registrant_at: Registry lock time
 
         admin_contacts:
           title: Admin. contacts
