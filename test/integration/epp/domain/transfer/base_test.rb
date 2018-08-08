@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainTransferBaseTest < ActionDispatch::IntegrationTest
+class EppDomainTransferBaseTest < ApplicationIntegrationTest
   def test_non_existent_domain
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
