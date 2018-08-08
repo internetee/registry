@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AdminAreaLoginTest < ActionDispatch::IntegrationTest
+class AdminAreaSignInTest < ApplicationSystemTestCase
   def setup
     @user = users(:admin)
   end

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrarAreaSignInTest < JavaScriptApplicationSystemTestCase
+class RegistrarAreaMobileIDSignInTest < JavaScriptApplicationSystemTestCase
   def setup
     super
     WebMock.allow_net_connect!
@@ -10,7 +10,7 @@ class RegistrarAreaSignInTest < JavaScriptApplicationSystemTestCase
     @user.save
   end
 
-  def test_mobile_id_sign_in_page
+  def test_valid_phone_number
     mock_client = Minitest::Mock.new
     mock_client.expect(:authenticate,
                        OpenStruct.new(user_id_code: '1234', challenge_id: '1234'),

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AdminAreaNewApiUserTest < ActionDispatch::IntegrationTest
+class AdminAreaNewApiUserTest < ApplicationSystemTestCase
   setup do
     sign_in users(:admin)
   end

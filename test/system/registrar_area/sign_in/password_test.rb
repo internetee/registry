@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrarAreaLoginTest < ActionDispatch::IntegrationTest
+class RegistrarAreaPasswordSignInTest < ApplicationSystemTestCase
   def setup
     @user = users(:api_bestnames)
   end

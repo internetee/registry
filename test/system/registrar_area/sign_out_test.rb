@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrarAreaLogoutTest < ActionDispatch::IntegrationTest
+class RegistrarAreaSignOutTest < ApplicationSystemTestCase
   def setup
     sign_in users(:api_bestnames)
   end

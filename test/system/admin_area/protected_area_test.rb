@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AdminAreaProtectedAreaTest < ActionDispatch::IntegrationTest
+class AdminAreaProtectedAreaTest < ApplicationSystemTestCase
   def test_anonymous_user_is_asked_to_authenticate_when_navigating_to_protected_area
     visit admin_domains_url
     assert_text 'You need to sign in before continuing'
