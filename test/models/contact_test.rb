@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ContactTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @contact = contacts(:john)
     @original_address_processing_setting = Setting.address_processing
   end
