@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class RegistrarAreaSignOutTest < ApplicationSystemTestCase
-  def setup
+  setup do
     sign_in users(:api_bestnames)
   end
 

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class RegistrarAreaPasswordSignInTest < ApplicationSystemTestCase
-  def setup
+  setup do
     @user = users(:api_bestnames)
   end
 

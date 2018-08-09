@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class AdminAreaSignOutTest < ApplicationSystemTestCase
-  def setup
+  setup do
     sign_in users(:admin)
   end
 
