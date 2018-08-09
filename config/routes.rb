@@ -22,9 +22,8 @@ Rails.application.routes.draw do
   namespace :registrar do
     root 'dashboard#show'
 
-    # /registrar/sessions path is hardcoded in Apache config for certificate-based authentication
-    # See https://github.com/internetee/registry/blob/master/README.md#installation
-    devise_for :users, path: 'sessions', class_name: 'ApiUser'
+    devise_for :users, path: '', class_name: 'ApiUser', skip: %i[sessions]
+
     devise_scope :registrar_user do
       get 'login/mid' => 'sessions#login_mid'
       post 'login/mid' => 'sessions#mid'
@@ -94,6 +93,18 @@ Rails.application.routes.draw do
     put  'pay/return/:bank'       => 'payments#back'
     post 'pay/callback/:bank'     => 'payments#callback', as: 'response_payment_with'
     get  'pay/go/:bank'           => 'payments#pay',   as: 'payment_with'
+  end
+
+  scope :registrar do
+    devise_scope :registrar_user do
+      get 'sign_in', to: 'registrar/sessions#new', as: :new_registrar_user_session
+
+      # /registrar/sessions path is hardcoded in Apache config for certificate-based authentication
+      # See https://github.com/internetee/registry/blob/master/README.md#installation
+      post 'sessions', to: 'registrar/sessions#create', as: :registrar_user_session
+
+      delete 'sign_out', to: 'registrar/sessions#destroy', as: :destroy_registrar_user_session
+    end
   end
 
   namespace :registrant do
