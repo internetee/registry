@@ -27,3 +27,4 @@ admin:
 registrant:
   type: RegistrantUser
   registrant_ident: US-1234
+  username: Registrant User

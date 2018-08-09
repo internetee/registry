@@ -32,34 +32,56 @@ class RegistrantUser < User
       return false if issuer_organization != ACCEPTED_ISSUER
 
       idc_data.force_encoding('UTF-8')
+      user_data = {}
 
       # handling here new and old mode
       if idc_data.starts_with?("/")
-        identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
-        country       = idc_data.scan(/^\/C=(.{2})/).flatten.first
-        first_name    = idc_data.scan(%r{/GN=(.+)/serialNumber}).flatten.first
-        last_name     = idc_data.scan(%r{/SN=(.+)/GN}).flatten.first
+        user_data[:ident] = idc_data.scan(/serialNumber=(\d+)/).flatten.first
+        user_data[:country_code] = idc_data.scan(/^\/C=(.{2})/).flatten.first
+        user_data[:first_name] = idc_data.scan(%r{/GN=(.+)/serialNumber}).flatten.first
+        user_data[:last_name] = idc_data.scan(%r{/SN=(.+)/GN}).flatten.first
       else
         parse_str = "," + idc_data
-        identity_code = parse_str.scan(/,serialNumber=(\d+)/).flatten.first
-        country       = parse_str.scan(/,C=(.{2})/).flatten.first
-        first_name    = parse_str.scan(/,GN=([^,]+)/).flatten.first
-        last_name     = parse_str.scan(/,SN=([^,]+)/).flatten.first
+        user_data[:ident] = parse_str.scan(/,serialNumber=(\d+)/).flatten.first
+        user_data[:country_code] = parse_str.scan(/,C=(.{2})/).flatten.first
+        user_data[:first_name] = parse_str.scan(/,GN=([^,]+)/).flatten.first
+        user_data[:last_name] = parse_str.scan(/,SN=([^,]+)/).flatten.first
       end
 
-      u = where(registrant_ident: "#{country}-#{identity_code}").first_or_create
-      u.username = "#{first_name} #{last_name}"
-      u.save
+      find_or_create_by_user_data(user_data)
+    end
 
-      u
+    def find_or_create_by_api_data(user_data = {})
+      return false unless user_data[:ident]
+      return false unless user_data[:first_name]
+      return false unless user_data[:last_name]
+
+      user_data.each_value { |v| v.upcase! if v.is_a?(String) }
+      user_data[:country_code] ||= 'EE'
+
+      find_or_create_by_user_data(user_data)
     end
 
     def find_or_create_by_mid_data(response)
-      u = where(registrant_ident: "#{response.user_country}-#{response.user_id_code}").first_or_create
-      u.username = "#{response.user_givenname} #{response.user_surname}"
-      u.save
+      user_data = { first_name: response.user_givenname, last_name: response.user_surname,
+                    ident: response.user_id_code, country_code: response.user_country }
 
-      u
+      find_or_create_by_user_data(user_data)
+    end
+
+    private
+
+    def find_or_create_by_user_data(user_data = {})
+      return unless user_data[:first_name]
+      return unless user_data[:last_name]
+      return unless user_data[:ident]
+      return unless user_data[:country_code]
+
+      user = find_or_create_by(registrant_ident: "#{user_data[:country_code]}-#{user_data[:ident]}")
+      user.username = "#{user_data[:first_name]} #{user_data[:last_name]}"
+      user.save
+
+      user
     end
   end
 end
