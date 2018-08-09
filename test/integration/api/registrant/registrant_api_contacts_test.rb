@@ -50,6 +50,17 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
     assert_equal('william@inbox.test', contact[:email])
   end
 
+  def test_root_returns_503_when_business_registry_is_not_available
+    raise_not_available = -> (a, b) { raise Soap::Arireg::NotAvailableError.new({}) }
+    BusinessRegistryCache.stub :fetch_by_ident_and_cc, raise_not_available do
+      get '/api/v1/registrant/contacts', {}, @auth_headers
+
+      assert_equal(503, response.status)
+      response_json = JSON.parse(response.body, symbolize_names: true)
+      assert_equal({ errors: [base: ['Business Registry not available']] }, response_json)
+    end
+  end
+
   def test_get_contact_details_by_uuid_returns_404_for_non_existent_contact
     get '/api/v1/registrant/contacts/nonexistent-uuid', {}, @auth_headers
     assert_equal(404, response.status)
