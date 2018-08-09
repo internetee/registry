@@ -12,8 +12,8 @@ module Features
     def sign_in_to_registrar_area(user: create(:api_user))
       visit new_registrar_user_session_url
 
-      fill_in 'depp_user_tag', with: user.username
-      fill_in 'depp_user_password', with: user.plain_text_password
+      fill_in 'registrar_user_username', with: user.username
+      fill_in 'registrar_user_password', with: user.plain_text_password
 
       click_button 'Login'
     end
