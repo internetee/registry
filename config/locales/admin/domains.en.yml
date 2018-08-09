@@ -13,6 +13,7 @@ en:
         reset_btn: Reset
 
       edit:
+        header: "Edit: %{domain}"
         add_new_status_btn: Add new status
         keep_btn: Remove deleteCandidate status
         keep_btn_confirm: Are you sure you want to remove deleteCandidate status?
@@ -51,3 +52,5 @@ en:
         schedule: Schedule force delete
         cancel: Cancel force delete
         cancel_confirm: Are you sure you want cancel force delete procedure?
+        unable_to_cancel: >
+          Force delete procedure cannot be cancelled while a domain has deleteCandidate status

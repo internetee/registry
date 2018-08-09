@@ -73,16 +73,8 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
     assert @domain.force_delete_scheduled?
   end
 
-  def test_cancelling_force_delete_on_a_discarded_domain
+  def test_force_delete_cannot_be_cancelled_when_a_domain_is_discarded
     @domain.discard
-    @domain.schedule_force_delete
-    @domain.cancel_force_delete
-    @domain.reload
-    assert_not @domain.force_delete_scheduled?
-    assert_nil @domain.force_delete_at
-  end
-
-  def test_cancelling_force_delete_requires_a_domain_to_be_discarded
     @domain.schedule_force_delete
     assert_raises StandardError do
       @domain.cancel_force_delete
@@ -91,7 +83,6 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
 
   def test_cancelling_force_delete_bypasses_validation
     @domain = domains(:invalid)
-    @domain.discard
     @domain.schedule_force_delete
     @domain.cancel_force_delete
     assert_not @domain.force_delete_scheduled?
@@ -106,7 +97,6 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
       DomainStatus::PENDING_DELETE,
       DomainStatus::SERVER_MANUAL_INZONE
     ]
-    @domain.discard
     @domain.statuses = @domain.statuses + statuses
     @domain.schedule_force_delete
 
@@ -117,7 +107,6 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
   end
 
   def test_cancelling_force_delete_restores_statuses_that_a_domain_had_before_force_delete
-    @domain.discard
     @domain.statuses_before_force_delete = ['test1', DomainStatus::DELETE_CANDIDATE]
 
     @domain.cancel_force_delete

@@ -16,7 +16,9 @@ module Concerns::Domain::ForceDelete
   end
 
   def cancel_force_delete
-    raise 'Domain must be discarded before cancelling force delete procedure' unless discarded?
+    if discarded?
+      raise StandardError, 'Force delete procedure cannot be cancelled while a domain is discarded'
+    end
 
     restore_statuses_before_force_delete
     remove_force_delete_statuses

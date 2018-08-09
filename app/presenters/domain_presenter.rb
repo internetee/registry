@@ -58,12 +58,17 @@ class DomainPresenter
                          target: '.domain-edit-force-delete-dialog',
                        }
       )
-    else
+    elsif !domain.discarded?
       view.link_to(view.t('admin.domains.force_delete_toggle_btn.cancel'),
                    view.admin_domain_force_delete_path(domain),
                    method: :delete,
                    data: { confirm: view.t('admin.domains.force_delete_toggle_btn.cancel_confirm') },
                    class: 'btn btn-primary')
+    else
+      view.content_tag(:button, view.t('admin.domains.force_delete_toggle_btn.cancel'),
+                       class: 'btn btn-default ',
+                       title: view.t('admin.domains.force_delete_toggle_btn.unable_to_cancel'),
+                       disabled: true)
     end
   end
 

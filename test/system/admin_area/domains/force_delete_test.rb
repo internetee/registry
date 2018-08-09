@@ -44,7 +44,6 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
   end
 
   def test_cancels_scheduled_domain_force_delete
-    @domain.discard
     @domain.schedule_force_delete
 
     visit edit_admin_domain_url(@domain)
@@ -54,5 +53,14 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     refute @domain.force_delete_scheduled?
     assert_current_path edit_admin_domain_path(@domain)
     assert_text 'Force delete procedure has been cancelled'
+  end
+
+  def test_force_delete_cannot_be_cancelled_when_a_domain_is_discarded
+    @domain.discard
+    @domain.schedule_force_delete
+
+    visit edit_admin_domain_url(@domain)
+    assert_no_button 'Cancel force delete'
+    assert_no_link 'Cancel force delete'
   end
 end
