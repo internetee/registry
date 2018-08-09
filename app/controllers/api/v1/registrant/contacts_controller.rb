@@ -1,6 +1,3 @@
-require 'rails5_api_controller_backport'
-require 'auth_token/auth_token_decryptor'
-
 module Api
   module V1
     module Registrant
@@ -39,7 +36,20 @@ module Api
 
         def set_contacts_pool
           country_code, ident = current_user.registrant_ident.to_s.split '-'
-          @contacts_pool = Contact.where(country_code: country_code, ident: ident)
+          associated_domain_ids = begin
+            BusinessRegistryCache.fetch_by_ident_and_cc(ident, country_code).associated_domain_ids
+          end
+
+          available_contacts_ids = begin
+            DomainContact.where(domain_id: associated_domain_ids).pluck(:contact_id) |
+              Domain.where(id: associated_domain_ids).pluck(:registrant_id)
+          end
+
+          @contacts_pool = Contact.where(id: available_contacts_ids)
+        rescue Soap::Arireg::NotAvailableError => error
+          Rails.logger.fatal("[EXCEPTION] #{error}")
+          render json: { errors: [{ base: ["Business Registry Not Available"] }] },
+                 status: :service_unavailable and return
         end
       end
     end

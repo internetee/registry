@@ -5,8 +5,19 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
   def setup
     super
 
+    @original_registry_time = Setting.days_to_keep_business_registry_cache
+    Setting.days_to_keep_business_registry_cache = 1
+    travel_to Time.zone.parse('2010-07-05')
+
     @user = users(:registrant)
     @auth_headers = { 'HTTP_AUTHORIZATION' => auth_token }
+  end
+
+  def teardown
+    super
+
+    Setting.days_to_keep_business_registry_cache = @original_registry_time
+    travel_back
   end
 
   def test_root_returns_domain_list
@@ -14,10 +25,10 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
     assert_equal(200, response.status)
 
     json_body = JSON.parse(response.body, symbolize_names: true)
-    assert_equal(2, json_body.count)
+    assert_equal(5, json_body.count)
     array_of_contact_codes = json_body.map { |x| x[:code] }
     assert(array_of_contact_codes.include?('william-001'))
-    assert(array_of_contact_codes.include?('william-002'))
+    assert(array_of_contact_codes.include?('jane-001'))
   end
 
   def test_root_accepts_limit_and_offset_parameters
@@ -28,7 +39,23 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
 
     get '/api/v1/registrant/contacts', {}, @auth_headers
     response_json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal(2, response_json.count)
+    assert_equal(5, response_json.count)
+  end
+
+  def test_get_contact_details_by_uuid
+    get '/api/v1/registrant/contacts/0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb', {}, @auth_headers
+    assert_equal(200, response.status)
+
+    contact = JSON.parse(response.body, symbolize_names: true)
+    assert_equal('william@inbox.test', contact[:email])
+  end
+
+  def test_get_contact_details_by_uuid_returns_404_for_non_existent_contact
+    get '/api/v1/registrant/contacts/nonexistent-uuid', {}, @auth_headers
+    assert_equal(404, response.status)
+
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal({ errors: [{ base: ['Contact not found'] }] }, response_json)
   end
 
   def test_root_does_not_accept_limit_higher_than_200
