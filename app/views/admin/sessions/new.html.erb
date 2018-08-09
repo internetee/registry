@@ -14,7 +14,6 @@
         <%= f.label :password, class: 'sr-only' %>
         <%= f.password_field :password, placeholder: AdminUser.human_attribute_name(:password),
                              required: true,
-                             autocomplete: 'off',
                              class: 'form-control' %>
 
         <% if devise_mapping.rememberable? -%>
