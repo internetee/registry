@@ -2,6 +2,6 @@ en:
   registrar:
     sessions:
       new:
-        login_btn: Login
+        submit_btn: Login
       login_mid:
         login_btn: Login

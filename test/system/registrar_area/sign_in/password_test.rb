@@ -7,8 +7,8 @@ class RegistrarAreaPasswordSignInTest < ApplicationSystemTestCase
 
   def test_correct_username_and_password
     visit new_registrar_user_session_url
-    fill_in 'depp_user_tag', with: @user.username
-    fill_in 'depp_user_password', with: 'testtest'
+    fill_in 'registrar_user_username', with: @user.username
+    fill_in 'registrar_user_password', with: 'testtest'
     click_button 'Login'
 
     assert_text 'Log out'
@@ -17,8 +17,8 @@ class RegistrarAreaPasswordSignInTest < ApplicationSystemTestCase
 
   def test_wrong_password
     visit new_registrar_user_session_url
-    fill_in 'depp_user_tag', with: @user.username
-    fill_in 'depp_user_password', with: 'wrong'
+    fill_in 'registrar_user_username', with: @user.username
+    fill_in 'registrar_user_password', with: 'wrong'
     click_button 'Login'
 
     assert_text 'No such user'
@@ -29,8 +29,8 @@ class RegistrarAreaPasswordSignInTest < ApplicationSystemTestCase
     @user.update!(active: false)
 
     visit new_registrar_user_session_url
-    fill_in 'depp_user_tag', with: @user.username
-    fill_in 'depp_user_password', with: 'testtest'
+    fill_in 'registrar_user_username', with: @user.username
+    fill_in 'registrar_user_password', with: 'testtest'
     click_button 'Login'
 
     assert_text 'User is not active'

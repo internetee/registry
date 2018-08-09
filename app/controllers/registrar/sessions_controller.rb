@@ -3,12 +3,8 @@ class Registrar
     before_action :check_ip_restriction
     helper_method :depp_controller?
 
-    def new
-      @depp_user = Depp::User.new
-    end
-
     def create
-      @depp_user = Depp::User.new(params[:depp_user].merge(pki: !(Rails.env.development? || Rails.env.test?)))
+      @depp_user = Depp::User.new(depp_user_params)
 
       if @depp_user.pki && request.env['HTTP_SSL_CLIENT_S_DN_CN'].blank?
         @depp_user.errors.add(:base, :webserver_missing_user_name_directive)
@@ -26,12 +22,12 @@ class Registrar
         @depp_user.errors.add(:base, :webserver_client_cert_directive_should_be_required)
       end
 
-      @api_user = ApiUser.find_by(username: params[:depp_user][:tag],
-                                  plain_text_password: params[:depp_user][:password])
+      @api_user = ApiUser.find_by(username: sign_in_params[:username],
+                                  plain_text_password: sign_in_params[:password])
 
       unless @api_user
         @depp_user.errors.add(:base, t(:no_such_user))
-        render :new and return
+        show_error and return
       end
 
       if @depp_user.pki
@@ -45,10 +41,10 @@ class Registrar
           sign_in_and_redirect(:registrar_user, @api_user)
         else
           @depp_user.errors.add(:base, :not_active)
-          render :new
+          show_error and return
         end
       else
-        render :new
+        show_error and return
       end
     end
 
@@ -189,6 +185,17 @@ class Registrar
 
     def user_for_paper_trail
       current_registrar_user ? current_registrar_user.id_role_username : 'anonymous'
+    end
+
+    def depp_user_params
+      params = sign_in_params
+      params[:tag] = params.delete(:username)
+      params.merge!(pki: !(Rails.env.development? || Rails.env.test?))
+      params
+    end
+
+    def show_error
+      redirect_to new_registrar_user_session_url, alert: @depp_user.errors.full_messages.first
     end
   end
 end
