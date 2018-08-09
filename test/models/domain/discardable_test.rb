@@ -1,13 +1,13 @@
 require 'test_helper'
 
 class DomainDiscardableTest < ActiveSupport::TestCase
-  def setup
+  setup do
     travel_to Time.zone.parse('2010-07-05 10:30')
     @domain = domains(:shop)
     @domain.delete_at = Time.zone.parse('2010-07-05 10:00')
   end
 
-  def teardown
+  teardown do
     travel_back
   end
 

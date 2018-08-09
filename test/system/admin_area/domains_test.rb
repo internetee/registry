@@ -1,12 +1,12 @@
 require 'test_helper'
 
 class AdminDomainsTestTest < ApplicationSystemTestCase
-  def setup
+  setup do
     sign_in users(:admin)
     @domain = domains(:shop)
   end
 
-  def teardown
+  teardown do
     travel_back
   end
 
