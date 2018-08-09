@@ -26,7 +26,7 @@ class RegistryLockTest < JavaScriptApplicationSystemTestCase
     click_link_or_button('Actions')
     assert(page.has_link?('Remove registry lock'))
 
-    accept_confirm('Are you sure you want to remove registry lock that was set by registrant?') do
+    accept_confirm('Are you sure you want to remove registry lock?') do
       click_link_or_button('Remove registry lock')
     end
 

@@ -14,6 +14,11 @@ class DomainPresenter
       html += " #{label}"
     end
 
+    if domain.locked_by_registrant?
+      label = view.content_tag(:span, 'registryLock', class: 'label label-danger')
+      html += " #{label}"
+    end
+
     html.html_safe
   end
 

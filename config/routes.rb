@@ -23,7 +23,9 @@ Rails.application.routes.draw do
       namespace :registrant do
         post 'auth/eid', to: 'auth#eid'
 
-        resources :domains, only: [:index]
+        resources :domains, only: [:index], param: :uuid do
+          resource :registry_lock, only: [:create, :destroy]
+        end
       end
     end
   end

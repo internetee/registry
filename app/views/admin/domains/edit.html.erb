@@ -1,12 +1,12 @@
 <% domain = DomainPresenter.new(domain: @domain, view: self) %>
 
 <div class="row">
-    <div class="col-sm-5">
+    <div class="col-sm-8">
         <h1 class="text-center-xs">
-            Edit: <%= domain.name %>
+            Edit: <%= domain.name_with_status %>
         </h1>
     </div>
-    <div class="col-sm-7 text-right">
+    <div class="col-sm-4 text-right">
         <div class="btn-group">
             <%= link_to t('.back_btn'), [:admin, @domain], class: 'btn btn-default' %>
         </div>
