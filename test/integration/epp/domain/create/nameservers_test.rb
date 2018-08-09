@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainCreateNameserversTest < ActionDispatch::IntegrationTest
+class EppDomainCreateNameserversTest < ApplicationIntegrationTest
   # Glue record requirement
   def test_nameserver_ip_address_is_required_if_hostname_is_under_the_same_domain
     request_xml = <<-XML

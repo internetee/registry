@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainDeleteTest < ActionDispatch::IntegrationTest
+class EppDomainDeleteTest < ApplicationIntegrationTest
   def setup
     @domain = domains(:shop)
   end

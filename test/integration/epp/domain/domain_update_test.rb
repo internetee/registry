@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainUpdateTest < ActionDispatch::IntegrationTest
+class EppDomainUpdateTest < ApplicationIntegrationTest
   def setup
     @domain = domains(:shop)
   end

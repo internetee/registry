@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainRenewTest < ActionDispatch::IntegrationTest
+class EppDomainRenewTest < ApplicationIntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
