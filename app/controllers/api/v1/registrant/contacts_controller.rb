@@ -48,7 +48,7 @@ module Api
           @contacts_pool = Contact.where(id: available_contacts_ids)
         rescue Soap::Arireg::NotAvailableError => error
           Rails.logger.fatal("[EXCEPTION] #{error}")
-          render json: { errors: [{ base: ["Business Registry not available"] }] },
+          render json: { errors: [{ base: ['Business Registry not available'] }] },
                  status: :service_unavailable and return
         end
       end
