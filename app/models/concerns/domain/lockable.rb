@@ -15,15 +15,11 @@ module Concerns::Domain::Lockable
   end
 
   def registry_lockable?
-    (statuses & [
-       DomainStatus::PENDING_DELETE_CONFIRMATION,
-       DomainStatus::PENDING_CREATE,
-       DomainStatus::PENDING_UPDATE,
-       DomainStatus::PENDING_DELETE,
-       DomainStatus::PENDING_RENEW,
-       DomainStatus::PENDING_TRANSFER,
-       DomainStatus::FORCE_DELETE,
-     ]).empty?
+    (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION,
+                 DomainStatus::PENDING_CREATE, DomainStatus::PENDING_UPDATE,
+                 DomainStatus::PENDING_DELETE, DomainStatus::PENDING_RENEW,
+                 DomainStatus::PENDING_TRANSFER, DomainStatus::FORCE_DELETE
+                ]).empty?
   end
 
   def locked_by_registrant?
