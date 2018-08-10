@@ -27,11 +27,9 @@ module Concerns
       def locked_by_registrant?
         return false unless locked_by_registrant_at
 
-        lock_statuses = [
-          DomainStatus::SERVER_UPDATE_PROHIBITED,
-          DomainStatus::SERVER_DELETE_PROHIBITED,
-          DomainStatus::SERVER_TRANSFER_PROHIBITED,
-        ]
+        lock_statuses = [DomainStatus::SERVER_UPDATE_PROHIBITED,
+                         DomainStatus::SERVER_DELETE_PROHIBITED,
+                         DomainStatus::SERVER_TRANSFER_PROHIBITED]
 
         (statuses & lock_statuses).count == 3
       end
