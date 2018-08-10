@@ -8,16 +8,16 @@ module Api
           if @domain.apply_registry_lock
             render json: @domain
           else
-            render json: { errors: [{ base: 'Domain cannot be locked' }] },
+            render json: { errors: [{ base: ['Domain cannot be locked'] }] },
                    status: :unprocessable_entity
           end
         end
 
-        def delete
+        def destroy
           if @domain.remove_registry_lock
             render json: @domain
           else
-            render json: { errors: [{ base: 'Domain cannot be unlocked' }] },
+            render json: { errors: [{ base: ['Domain cannot be unlocked'] }] },
                    status: :unprocessable_entity
           end
         end
@@ -25,7 +25,8 @@ module Api
         private
 
         def set_domain
-          @domain = Domain.find_by(uuid: params[:domain_uuid])
+          domain_pool = associated_domains(current_user)
+          @domain = domain_pool.find_by(uuid: params[:domain_uuid])
 
           return if @domain
           render json: { errors: [{ base: ['Domain not found'] }] },

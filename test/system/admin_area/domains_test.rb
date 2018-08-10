@@ -25,5 +25,6 @@ class AdminDomainsTestTest < ApplicationSystemTestCase
 
     visit admin_domain_path(lockable_domain)
     assert_text 'Registry lock time 2010-07-05 00:30'
+    assert_text 'registryLock'
   end
 end

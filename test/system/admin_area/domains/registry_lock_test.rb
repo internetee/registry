@@ -16,6 +16,7 @@ class RegistryLockTest < JavaScriptApplicationSystemTestCase
 
   def test_does_not_have_link_when_domain_is_not_locked
     visit edit_admin_domain_path(@domain)
+    click_link_or_button('Actions')
     refute(page.has_link?('Remove registry lock'))
   end
 
@@ -26,7 +27,7 @@ class RegistryLockTest < JavaScriptApplicationSystemTestCase
     click_link_or_button('Actions')
     assert(page.has_link?('Remove registry lock'))
 
-    accept_confirm('Are you sure you want to remove registry lock?') do
+    accept_confirm('Are you sure you want to remove the registry lock?') do
       click_link_or_button('Remove registry lock')
     end
 
@@ -46,7 +47,7 @@ class RegistryLockTest < JavaScriptApplicationSystemTestCase
     click_link_or_button('Actions')
     assert(page.has_link?('Remove registry lock'))
 
-    accept_confirm('Are you sure you want to remove registry lock that was set by registrant?') do
+    accept_confirm('Are you sure you want to remove the registry lock?') do
       click_link_or_button('Remove registry lock')
     end
 
