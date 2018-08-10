@@ -74,10 +74,10 @@ class DomainPresenter
 
   def remove_registry_lock_btn
     return unless domain.locked_by_registrant?
-    view.link_to(view.t('admin.domains.registry_lock_delete.btn'),
+    view.link_to(view.t('admin.domains.registry_lock.destroy.btn'),
                  view.admin_domain_registry_lock_path(domain),
                  method: :delete,
-                 data: { confirm: view.t('admin.domains.registry_lock_delete.confirm') },
+                 data: { confirm: view.t('admin.domains.registry_lock.destroy.confirm') },
                  class: 'dropdown-item')
   end
 

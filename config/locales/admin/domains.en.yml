@@ -23,12 +23,12 @@ en:
         close_btn: Close dialog
         submit_btn: Force delete domain
 
-      registry_lock_delete:
-        btn: Remove registry lock
-        banner: Domain has a registry lock set by registrant.
-        confirm: Are you sure you want to remove the registry lock?
-        success: Registry lock removed
-        error: Registry lock could not be removed
+      registry_lock:
+        destroy:
+          btn: Remove registry lock
+          confirm: Are you sure you want to remove the registry lock?
+          success: Registry lock removed
+          error: Registry lock could not be removed
 
       versions:
         time: Time

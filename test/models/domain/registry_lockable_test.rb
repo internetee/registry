@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DomainLockableTest < ActiveSupport::TestCase
+class DomainRegistryLockableTest < ActiveSupport::TestCase
   def setup
     super
 
