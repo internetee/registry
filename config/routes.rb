@@ -26,6 +26,7 @@ Rails.application.routes.draw do
         resources :domains, only: %i[index show], param: :uuid do
           resource :registry_lock, only: %i[create destroy]
         end
+        resources :contacts, only: %i[index show], param: :uuid
       end
     end
   end
