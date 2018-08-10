@@ -111,6 +111,8 @@ Rails.application.routes.draw do
 
       # /registrar/sessions path is hardcoded in Apache config for certificate-based authentication
       # See https://github.com/internetee/registry/blob/master/README.md#installation
+      # Client certificate is asked only on login form submission, therefore the path must be
+      # different from the one in `new_registrar_user_session` route
       post 'sessions', to: 'registrar/sessions#create', as: :registrar_user_session
 
       delete 'sign_out', to: 'registrar/sessions#destroy', as: :destroy_registrar_user_session
