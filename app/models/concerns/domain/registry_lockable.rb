@@ -12,7 +12,8 @@ module Concerns
           statuses << DomainStatus::SERVER_DELETE_PROHIBITED
           statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
           self.locked_by_registrant_at = Time.zone.now
-          save
+
+          save!
         end
       end
 
@@ -20,8 +21,7 @@ module Concerns
         (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION,
                      DomainStatus::PENDING_CREATE, DomainStatus::PENDING_UPDATE,
                      DomainStatus::PENDING_DELETE, DomainStatus::PENDING_RENEW,
-                     DomainStatus::PENDING_TRANSFER, DomainStatus::FORCE_DELETE
-                    ]).empty?
+                     DomainStatus::PENDING_TRANSFER, DomainStatus::FORCE_DELETE]).empty?
       end
 
       def locked_by_registrant?
@@ -45,7 +45,7 @@ module Concerns
           statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
           self.locked_by_registrant_at = nil
 
-          save
+          save!
         end
       end
     end
