@@ -1,5 +1,3 @@
-require 'rails5_api_controller_backport'
-
 module Api
   module V1
     module Registrant
