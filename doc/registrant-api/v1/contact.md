@@ -1,4 +1,4 @@
-## GET /repp/v1/registrant/contacts
+## GET /api/v1/registrant/contacts
 Returns contacts of the current registrar.
 
 
@@ -11,7 +11,7 @@ Returns contacts of the current registrar.
 
 #### Request
 ```
-GET /repp/v1/registrant/contacts?limit=1 HTTP/1.1
+GET /api/v1/registrant/contacts?limit=1 HTTP/1.1
 Accept: application/json
 Authorization: Bearer Z2l0bGFiOmdoeXQ5ZTRmdQ==
 Content-Type: application/json
@@ -59,13 +59,13 @@ Content-Type: application/json
 }
 ```
 
-## GET /repp/v1/registrant/contacts/$UUID
+## GET /api/v1/registrant/contacts/$UUID
 Returns contacts of the current registrar.
 
 
 #### Request
 ```
-GET /repp/v1/registrant/contacts/84c62f3d-e56f-40fa-9ca4-dc0137778949 HTTP/1.1
+GET /api/v1/registrant/contacts/84c62f3d-e56f-40fa-9ca4-dc0137778949 HTTP/1.1
 Accept: application/json
 Authorization: Bearer Z2l0bGFiOmdoeXQ5ZTRmdQ==
 Content-Type: application/json
@@ -107,7 +107,7 @@ Content-Type: application/json
 }
 ```
 
-## PUT/PATCH /repp/v1/registrant/contacts/$UUID
+## PATCH /api/v1/registrant/contacts/$UUID
 
 Update contact details for a contact.
 
@@ -127,7 +127,7 @@ Update contact details for a contact.
 
 #### Request
 ```
-PUT /repp/v1/registrant/contacts/84c62f3d-e56f-40fa-9ca4-dc0137778949 HTTP/1.1
+PATCH /api/v1/registrant/contacts/84c62f3d-e56f-40fa-9ca4-dc0137778949 HTTP/1.1
 Authorization: Bearer Z2l0bGFiOmdoeXQ5ZTRmdQ==
 Accept: application/json
 Content-type: application/json
