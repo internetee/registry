@@ -7,7 +7,7 @@ authentication. API client should perform authentication with eID according to
 the approriate documentation, and then pass on values from the webserver's
 certificate to the API server.
 
-## POST /repp/v1/registrant/auth/eid
+## POST /api/v1/registrant/auth/eid
 
 Returns a bearer token to be used for further API requests. Tokens are valid for 2 hours since their creation.
 
@@ -24,7 +24,7 @@ Values in brackets represent values that come from the id card certificate.
 
 #### Request
 ```
-POST /repp/v1/auth/token HTTP/1.1
+POST /api/v1/auth/token HTTP/1.1
 Accept: application/json
 Content-type: application/json
 
@@ -48,7 +48,7 @@ Content-Type: application.json
 }
 ```
 
-## POST /repp/v1/auth/username -- NOT IMPLEMENTED
+## POST /api/v1/auth/username -- NOT IMPLEMENTED
 
 #### Paramaters
 
@@ -62,7 +62,7 @@ Values in brackets represent values that come from the id card certificate
 
 #### Request
 ```
-POST /repp/v1/auth/token HTTP/1.1
+POST /api/v1/auth/token HTTP/1.1
 Accept: application/json
 Content-type: application/json
 ```
