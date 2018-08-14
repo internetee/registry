@@ -1,12 +1,12 @@
 # Domain locks
 
-## POST repp/v1/registrant/domains/$UUID/registry_lock
+## POST api/v1/registrant/domains/$UUID/registry_lock
 
 Set a registry lock on a domain.
 
 #### Request
 ```
-POST repp/v1/registrant/domains/98d1083a-8863-4153-93e4-caee4a013535/registry_lock HTTP/1.1
+POST api/v1/registrant/domains/98d1083a-8863-4153-93e4-caee4a013535/registry_lock HTTP/1.1
 Accept: application/json
 Authorization: Bearer Z2l0bGFiOmdoeXQ5ZTRmdQ==
 Content-Type: application/json
@@ -82,13 +82,13 @@ Content-Type: application/json
 
 ```
 
-## DELETE repp/v1/registrant/domains/$UUID/registry_lock
+## DELETE api/v1/registrant/domains/$UUID/registry_lock
 
 Remove a registry lock.
 
 #### Request
 ```
-DELETE repp/v1/registrant/domains/98d1083a-8863-4153-93e4-caee4a013535/registry_lock HTTP/1.1
+DELETE api/v1/registrant/domains/98d1083a-8863-4153-93e4-caee4a013535/registry_lock HTTP/1.1
 Accept: application/json
 Authorization: Bearer Z2l0bGFiOmdoeXQ5ZTRmdQ==
 Content-Type: application/json
