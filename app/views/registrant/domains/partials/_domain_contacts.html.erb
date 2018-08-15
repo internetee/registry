@@ -1,11 +1,12 @@
 <% panel_class = errors ? 'panel-danger' : 'panel-default' %>
 <div class="<%= panel_class %> panel">
     <div class="panel-heading">
-        <%= header %>
+        <%= t ".header_#{domain_contacts.model_name.plural.underscore}" %>
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover table-bordered table-condensed">
+        <table class="table table-hover table-bordered table-condensed
+            <%= domain_contacts.model_name.plural.dasherize %>">
             <thead>
                 <tr>
                     <th class="col-xs-4"><%= Contact.human_attribute_name :name %></th>
@@ -15,15 +16,9 @@
             </thead>
 
             <tbody>
-                <% contacts.each do |contact| %>
-                    <tr>
-                        <td>
-                            <%= link_to contact, registrant_domain_contact_path(domain, contact) %>
-                        </td>
-                        <td><%= contact.code %></td>
-                        <td><%= contact.email %></td>
-                    </tr>
-                <% end %>
+                <%= render partial: 'registrant/domains/partials/domain_contact',
+                           collection: domain_contacts,
+                           locals: { domain: domain } %>
             </tbody>
 
             <% if errors %>

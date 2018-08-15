@@ -19,20 +19,18 @@
 
 <div class="row">
     <div class="col-md-12">
-        <%= render 'registrant/domains/partials/contacts',
-                   header: t('.tech_contacts'),
+        <%= render 'registrant/domains/partials/domain_contacts',
                    domain: @domain,
-                   contacts: @domain.tech_contacts,
+                   domain_contacts: @domain.tech_domain_contacts,
                    errors: @domain.errors.messages[:tech_contacts] %>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <%= render 'registrant/domains/partials/contacts',
-                   header: t('.admin_contacts'),
+        <%= render 'registrant/domains/partials/domain_contacts',
                    domain: @domain,
-                   contacts: @domain.admin_contacts,
+                   domain_contacts: @domain.admin_domain_contacts,
                    errors: @domain.errors.messages[:admin_contacts] %>
     </div>
 </div>
