@@ -9,6 +9,8 @@ john:
   code: john-001
   auth_info: cacb5b
   uuid: eb2f2766-b44c-4e14-9f16-32ab1a7cb957
+  created_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+  updated_at: <%= Time.zone.parse('2010-07-06').to_s(:db) %>
 
 william: &william
   name: William
