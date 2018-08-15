@@ -14,7 +14,7 @@ class Deposit
     minimum_deposit = [0.01, Setting.minimum_deposit].max
     return if amount >= minimum_deposit
     errors.add(:amount, I18n.t(:is_too_small_minimum_deposit_is, amount: minimum_deposit,
-                               currency: 'EUR'))
+                                                                 currency: 'EUR'))
   end
 
   def initialize(attributes = {})
@@ -28,8 +28,8 @@ class Deposit
   end
 
   def amount
-    return BigDecimal.new('0.0') if @amount.blank?
-    BigDecimal.new(@amount, 10)
+    return BigDecimal('0.0') if @amount.blank?
+    BigDecimal(@amount, 10)
   end
 
   def issue_prepayment_invoice
