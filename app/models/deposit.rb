@@ -29,7 +29,7 @@ class Deposit
 
   def amount
     return BigDecimal('0.0') if @amount.blank?
-    BigDecimal(@amount, 10)
+    BigDecimal(@amount.to_s.gsub(/,/, '.'), 10)
   end
 
   def issue_prepayment_invoice

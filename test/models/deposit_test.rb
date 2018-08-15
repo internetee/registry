@@ -40,8 +40,8 @@ class DepositTest < ActiveSupport::TestCase
     @deposit.amount = "12.00"
     assert_equal(BigDecimal.new("12.00"), @deposit.amount)
 
-    @deposit.amount = "12,00"
-    assert_equal(BigDecimal.new("12.00"), @deposit.amount)
+    @deposit.amount = "12,11"
+    assert_equal(BigDecimal.new("12.11"), @deposit.amount)
   end
 
   def test_amount_is_converted_from_float
