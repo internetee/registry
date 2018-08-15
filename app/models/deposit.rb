@@ -11,9 +11,9 @@ class Deposit
   validate :validate_amount
 
   def validate_amount
-    minimum_deposit = [0.01, Setting.minimum_deposit].max
-    return if amount >= minimum_deposit
-    errors.add(:amount, I18n.t(:is_too_small_minimum_deposit_is, amount: minimum_deposit,
+    minimum_allowed_amount = [0.01, Setting.minimum_deposit].max
+    return if amount >= minimum_allowed_amount
+    errors.add(:amount, I18n.t(:is_too_small_minimum_deposit_is, amount: minimum_allowed_amount,
                                                                  currency: 'EUR'))
   end
 
