@@ -8,7 +8,7 @@ class AuthTokenCreatorTest < ActiveSupport::TestCase
 
     @user = users(:registrant)
     time = Time.zone.parse('2010-07-05 00:30:00 +0000')
-    @random_bytes = SecureRandom.random_bytes(64)
+    @random_bytes = SecureRandom.random_bytes(32)
     @token_creator = AuthTokenCreator.new(@user, @random_bytes, time)
   end
 

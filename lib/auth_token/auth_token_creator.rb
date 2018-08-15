@@ -26,7 +26,10 @@ class AuthTokenCreator
   def encrypted_token
     encryptor = OpenSSL::Cipher::AES.new(256, :CBC)
     encryptor.encrypt
-    encryptor.key = key
+
+    # OpenSSL used to automatically shrink oversized keys, it does not do that any longer.
+    # See: https://github.com/ruby/openssl/issues/116
+    encryptor.key = key[0..31]
     encrypted_bytes = encryptor.update(hashable) + encryptor.final
     Base64.urlsafe_encode64(encrypted_bytes)
   end
