@@ -25,7 +25,7 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
     assert_equal(200, response.status)
 
     json_body = JSON.parse(response.body, symbolize_names: true)
-    assert_equal(5, json_body.count)
+    assert_equal(4, json_body.count)
     array_of_contact_codes = json_body.map { |x| x[:code] }
     assert(array_of_contact_codes.include?('william-001'))
     assert(array_of_contact_codes.include?('jane-001'))
@@ -39,7 +39,7 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
 
     get '/api/v1/registrant/contacts', {}, @auth_headers
     response_json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal(5, response_json.count)
+    assert_equal(4, response_json.count)
   end
 
   def test_get_contact_details_by_uuid

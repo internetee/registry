@@ -29,6 +29,17 @@ class Registrant::ContactsController < RegistrantController
   end
 
   def domain
-    Domain.find(params[:domain_id])
+    current_user_domains.find(params[:domain_id])
+  end
+
+  def current_user_domains
+    ident_cc, ident = @current_user.registrant_ident.split '-'
+    begin
+      BusinessRegistryCache.fetch_associated_domains ident, ident_cc
+    rescue Soap::Arireg::NotAvailableError => error
+      flash[:notice] = I18n.t(error.json[:message])
+      Rails.logger.fatal("[EXCEPTION] #{error.to_s}")
+      current_user.domains
+    end
   end
 end

@@ -60,7 +60,7 @@ jack:
   name: Jack
   email: jack@inbox.test
   phone: '+555.555'
-  ident: 1234
+  ident: 12345
   ident_type: org
   registrar: goodnames
   ident_country_code: US

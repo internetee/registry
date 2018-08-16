@@ -55,4 +55,12 @@ class RegistrantAreaDomainDetailsTest < ApplicationSystemTestCase
       assert_css '.tech-domain-contact', count: 2
     end
   end
+
+  def test_registrant_user_cannot_access_domains_of_other_users
+    suppress(ActiveRecord::RecordNotFound) do
+      visit registrant_domain_url(domains(:metro))
+      assert_response :not_found
+      assert_no_text 'metro.test'
+    end
+  end
 end
