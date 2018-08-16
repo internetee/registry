@@ -4,13 +4,17 @@ class Deposit
   extend ActiveModel::Naming
   include DisableHtml5Validation
 
-  attr_accessor :amount, :description, :registrar, :registrar_id
+  attr_accessor :description, :registrar, :registrar_id
+  attr_writer :amount
 
   validates :amount, :registrar, presence: true
   validate :validate_amount
+
   def validate_amount
-    return if BigDecimal.new(amount) >= Setting.minimum_deposit
-    errors.add(:amount, I18n.t(:is_too_small_minimum_deposit_is, amount: Setting.minimum_deposit, currency: 'EUR'))
+    minimum_allowed_amount = [0.01, Setting.minimum_deposit].max
+    return if amount >= minimum_allowed_amount
+    errors.add(:amount, I18n.t(:is_too_small_minimum_deposit_is, amount: minimum_allowed_amount,
+                                                                 currency: 'EUR'))
   end
 
   def initialize(attributes = {})
@@ -24,10 +28,12 @@ class Deposit
   end
 
   def amount
-    BigDecimal.new(@amount.to_s.sub(/,/, '.'))
+    return BigDecimal('0.0') if @amount.blank?
+    BigDecimal(@amount.to_s.tr(',', '.'), 10)
   end
 
   def issue_prepayment_invoice
-    valid? && registrar.issue_prepayment_invoice(amount, description)
+    return unless valid?
+    registrar.issue_prepayment_invoice(amount, description)
   end
 end
