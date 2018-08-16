@@ -613,7 +613,7 @@ CREATE TABLE public.contacts (
     id integer NOT NULL,
     code character varying NOT NULL,
     phone character varying,
-    email character varying,
+    email character varying NOT NULL,
     fax character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -4756,4 +4756,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180612042953');
 INSERT INTO schema_migrations (version) VALUES ('20180613030330');
 
 INSERT INTO schema_migrations (version) VALUES ('20180613045614');
+
+INSERT INTO schema_migrations (version) VALUES ('20180816123540');
 
