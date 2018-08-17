@@ -10,12 +10,12 @@ class Registrar
       @deposit = Deposit.new(deposit_params.merge(registrar: current_registrar_user.registrar))
       @invoice = @deposit.issue_prepayment_invoice
 
-      if @invoice&.persisted?
+      if @invoice
         flash[:notice] = t(:please_pay_the_following_invoice)
         redirect_to [:registrar, @invoice]
       else
-        flash.now[:alert] = t(:failed_to_create_record)
-        render 'new'
+        flash[:alert] = @deposit.errors.full_messages.join(', ')
+        redirect_to new_registrar_deposit_path
       end
     end
 
