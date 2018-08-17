@@ -35,6 +35,14 @@ class RegistrantApiDomainRegistryLockTest < ApplicationIntegrationTest
     assert(@domain.locked_by_registrant?)
   end
 
+  def test_locking_a_domain_leaves_paper_trail
+    post '/api/v1/registrant/domains/2df2c1a1-8f6a-490a-81be-8bdf29866880/registry_lock',
+         {}, @auth_headers
+
+    @domain.reload
+    assert_equal(@domain.updator, @user)
+  end
+
   def test_cannot_lock_a_domain_in_pending_state
     @domain.statuses << DomainStatus::PENDING_UPDATE
     @domain.save
@@ -77,7 +85,7 @@ class RegistrantApiDomainRegistryLockTest < ApplicationIntegrationTest
 
     response_json = JSON.parse(response.body, symbolize_names: true)
     assert_equal(422, response.status)
-    assert_equal({ errors: [{ base: ['Domain cannot be unlocked'] }] }, response_json)
+    assert_equal({ errors: [{ base: ['Domain not locked'] }] }, response_json)
   end
 
   def test_returns_404_when_domain_is_not_found

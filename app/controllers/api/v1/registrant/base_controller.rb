@@ -6,6 +6,7 @@ module Api
     module Registrant
       class BaseController < ActionController::API
         before_action :authenticate
+        before_action :set_paper_trail_whodunnit
 
         rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
           error = {}
@@ -40,6 +41,12 @@ module Api
           else
             render json: { errors: [{base: ['Not authorized']}] }, status: :unauthorized
           end
+        end
+
+        # This controller does not inherit from ApplicationController,
+        # so user_for_paper_trail method is not usable.
+        def set_paper_trail_whodunnit
+          ::PaperTrail.whodunnit = current_user.id_role_username
         end
       end
     end
