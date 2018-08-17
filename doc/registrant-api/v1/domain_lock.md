@@ -139,12 +139,12 @@ Content-Type: application/json
 #### Response for failure
 
 ```
-HTTP/1.1 400
+HTTP/1.1 422
 Content-Type: application/json
 
 {
   "errors": [
-    { "base": "domain cannot be unlocked" }
+    { "base": "Domain is not locked" }
   ]
 }
 

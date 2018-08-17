@@ -17,7 +17,7 @@ module Api
           if @domain.remove_registry_lock
             render json: @domain
           else
-            render json: { errors: [{ base: ['Domain not locked'] }] },
+            render json: { errors: [{ base: ['Domain is not locked'] }] },
                    status: :unprocessable_entity
           end
         end

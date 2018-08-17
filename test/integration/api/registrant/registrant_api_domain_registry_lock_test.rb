@@ -85,7 +85,7 @@ class RegistrantApiDomainRegistryLockTest < ApplicationIntegrationTest
 
     response_json = JSON.parse(response.body, symbolize_names: true)
     assert_equal(422, response.status)
-    assert_equal({ errors: [{ base: ['Domain not locked'] }] }, response_json)
+    assert_equal({ errors: [{ base: ['Domain is not locked'] }] }, response_json)
   end
 
   def test_returns_404_when_domain_is_not_found
