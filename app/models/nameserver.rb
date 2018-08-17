@@ -100,7 +100,7 @@ class Nameserver < ActiveRecord::Base
 
   def check_puny_symbols
     regexp = /(\A|\.)..--/
-    errors.add(:hostname, :invalid) if hostname =~ regexp
+    errors.add(:hostname, :invalid) if hostname.match?(regexp)
   end
 
   def validate_ipv4_format
