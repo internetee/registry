@@ -36,11 +36,9 @@ module Versions
     def user_from_id_role_username(str)
       registrar = Registrar.find_by(name: str)
       user = registrar.api_users.first if registrar
-      str_match = str.match(/^(\d+)-(ApiUser:|api-|AdminUser:)/)
 
-      if str_match
-        user ||= User.find_by(id: str_match[1])
-      end
+      str_match = str.match(/^(\d+)-(ApiUser:|api-|AdminUser:)/)
+      user ||= User.find_by(id: str_match[1]) if str_match
 
       user
     end
