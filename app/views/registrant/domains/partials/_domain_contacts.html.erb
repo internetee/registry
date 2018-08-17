@@ -1,5 +1,4 @@
-<% panel_class = errors ? 'panel-danger' : 'panel-default' %>
-<div class="<%= panel_class %> panel">
+<div class="panel panel-default">
     <div class="panel-heading">
         <%= t ".header_#{domain_contacts.model_name.plural.underscore}" %>
     </div>
@@ -20,16 +19,6 @@
                            collection: domain_contacts,
                            locals: { domain: domain } %>
             </tbody>
-
-            <% if errors %>
-                <tfoot>
-                    <% errors.each do |error| %>
-                        <tr>
-                            <td colspan="3"><%= error %></td>
-                        </tr>
-                    <% end %>
-                </tfoot>
-            <% end %>
         </table>
     </div>
 </div>

@@ -21,8 +21,7 @@
     <div class="col-md-12">
         <%= render 'registrant/domains/partials/domain_contacts',
                    domain: @domain,
-                   domain_contacts: @domain.tech_domain_contacts,
-                   errors: @domain.errors.messages[:tech_contacts] %>
+                   domain_contacts: @domain.tech_domain_contacts %>
     </div>
 </div>
 
@@ -30,8 +29,7 @@
     <div class="col-md-12">
         <%= render 'registrant/domains/partials/domain_contacts',
                    domain: @domain,
-                   domain_contacts: @domain.admin_domain_contacts,
-                   errors: @domain.errors.messages[:admin_contacts] %>
+                   domain_contacts: @domain.admin_domain_contacts %>
     </div>
 </div>
 
