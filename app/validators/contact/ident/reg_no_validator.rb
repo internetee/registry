@@ -10,7 +10,9 @@ class Contact::Ident::RegNoValidator < ActiveModel::EachValidator
 
     return unless format
 
-    record.errors.add(attribute, :invalid_reg_no, country: record.country) unless value =~ format
+    unless value.match?(format)
+      record.errors.add(attribute, :invalid_reg_no, country: record.country)
+    end
   end
 
   private
