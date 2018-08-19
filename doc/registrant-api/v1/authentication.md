@@ -38,7 +38,7 @@ Content-type: application/json
 #### Response
 ```
 HTTP/1.1 201
-Content-Type: application.json
+Content-Type: application/json
 
 
 {
@@ -70,7 +70,7 @@ Content-type: application/json
 #### Response
 ```
 HTTP/1.1 201
-Content-Type: application.json
+Content-Type: application/json
 
 
 {
