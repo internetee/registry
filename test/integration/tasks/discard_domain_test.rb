@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DiscardDomainTaskTest < ActiveSupport::TestCase
+class DiscardDomainTaskTest < TaskTestCase
   setup do
     travel_to Time.zone.parse('2010-07-05 08:00')
     @domain = domains(:shop)
