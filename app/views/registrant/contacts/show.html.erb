@@ -5,7 +5,18 @@
 </ol>
 
 <div class="page-header">
-    <h1><%= @contact.name %></h1>
+    <div class="row">
+        <div class="col-md-6">
+            <h1><%= @contact %></h1>
+        </div>
+
+        <% if @contact.managed_by?(current_registrant_user) %>
+            <div class="col-md-6 text-right">
+                <%= link_to t('.edit_btn'), edit_registrant_domain_contact_path(domain, @contact),
+                            class: 'btn btn-primary' %>
+            </div>
+        <% end %>
+    </div>
 </div>
 
 <div class="row">

@@ -32,6 +32,63 @@ module Api
           end
         end
 
+        def update
+          contact = @contacts_pool.find_by!(uuid: params[:uuid])
+          contact.name = params[:name] if params[:name].present?
+          contact.email = params[:email] if params[:email].present?
+          contact.phone = params[:phone] if params[:phone].present?
+
+          if Setting.address_processing && params[:address]
+            address = Contact::Address.new(params[:address][:street],
+                                           params[:address][:zip],
+                                           params[:address][:city],
+                                           params[:address][:state],
+                                           params[:address][:country_code])
+            contact.address = address
+          end
+
+          if !Setting.address_processing && params[:address]
+            error_msg = 'Address processing is disabled and therefore cannot be updated'
+            render json: { errors: [{ address: [error_msg] }] }, status: :bad_request and return
+          end
+
+          if ENV['fax_enabled'] == 'true'
+            contact.fax = params[:fax] if params[:fax].present?
+          end
+
+          if ENV['fax_enabled'] != 'true' && params[:fax]
+            error_msg = 'Fax processing is disabled and therefore cannot be updated'
+            render json: { errors: [{ address: [error_msg] }] }, status: :bad_request and return
+          end
+
+          contact.transaction do
+            contact.save!
+            action = current_registrant_user.actions.create!(contact: contact, operation: :update)
+            contact.registrar.notify(action)
+          end
+
+          render json: { id: contact.uuid,
+                         name: contact.name,
+                         code: contact.code,
+                         ident: {
+                           code: contact.ident,
+                           type: contact.ident_type,
+                           country_code: contact.ident_country_code,
+                         },
+                         email: contact.email,
+                         phone: contact.phone,
+                         fax: contact.fax,
+                         address: {
+                           street: contact.street,
+                           zip: contact.zip,
+                           city: contact.city,
+                           state: contact.state,
+                           country_code: contact.country_code,
+                         },
+                         auth_info: contact.auth_info,
+                         statuses: contact.statuses }
+        end
+
         private
 
         def set_contacts_pool

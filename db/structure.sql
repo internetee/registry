@@ -371,6 +371,38 @@ ALTER SEQUENCE public.accounts_id_seq OWNED BY public.accounts.id;
 
 
 --
+-- Name: actions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE public.actions (
+    id integer NOT NULL,
+    user_id integer,
+    operation character varying NOT NULL,
+    created_at timestamp without time zone,
+    contact_id integer
+);
+
+
+--
+-- Name: actions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.actions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: actions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.actions_id_seq OWNED BY public.actions.id;
+
+
+--
 -- Name: bank_statements; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2006,7 +2038,8 @@ CREATE TABLE public.notifications (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
-    updator_str character varying
+    updator_str character varying,
+    action_id integer
 );
 
 
@@ -2490,6 +2523,13 @@ ALTER TABLE ONLY public.accounts ALTER COLUMN id SET DEFAULT nextval('public.acc
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.actions ALTER COLUMN id SET DEFAULT nextval('public.actions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.bank_statements ALTER COLUMN id SET DEFAULT nextval('public.bank_statements_id_seq'::regclass);
 
 
@@ -2871,6 +2911,14 @@ ALTER TABLE ONLY public.account_activities
 
 ALTER TABLE ONLY public.accounts
     ADD CONSTRAINT accounts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY public.actions
+    ADD CONSTRAINT actions_pkey PRIMARY KEY (id);
 
 
 --
@@ -4058,6 +4106,30 @@ ALTER TABLE ONLY public.domain_transfers
 
 
 --
+-- Name: fk_rails_8c6b5c12eb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.actions
+    ADD CONSTRAINT fk_rails_8c6b5c12eb FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: fk_rails_8f9734b530; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT fk_rails_8f9734b530 FOREIGN KEY (action_id) REFERENCES public.actions(id);
+
+
+--
+-- Name: fk_rails_a5ae3c203d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.actions
+    ADD CONSTRAINT fk_rails_a5ae3c203d FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
+
+
+--
 -- Name: fk_rails_adff2dc8e3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4776,6 +4848,16 @@ INSERT INTO schema_migrations (version) VALUES ('20180823212823');
 INSERT INTO schema_migrations (version) VALUES ('20180824092855');
 
 INSERT INTO schema_migrations (version) VALUES ('20180824102834');
+
+INSERT INTO schema_migrations (version) VALUES ('20180824215326');
+
+INSERT INTO schema_migrations (version) VALUES ('20180825153657');
+
+INSERT INTO schema_migrations (version) VALUES ('20180825193437');
+
+INSERT INTO schema_migrations (version) VALUES ('20180825232819');
+
+INSERT INTO schema_migrations (version) VALUES ('20180826162821');
 
 INSERT INTO schema_migrations (version) VALUES ('20181002090319');
 

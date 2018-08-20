@@ -1,0 +1,51 @@
+<div class="form-group">
+    <div class="col-md-2 control-label">
+        <%= f.label :street %>
+    </div>
+
+    <div class="col-md-4">
+        <%= f.text_field :street, required: true, class: 'form-control' %>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-md-2 control-label">
+        <%= f.label :zip %>
+    </div>
+
+    <div class="col-md-4">
+        <%= f.text_field :zip, required: true, class: 'form-control' %>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-md-2 control-label">
+        <%= f.label :city %>
+    </div>
+
+    <div class="col-md-4">
+        <%= f.text_field :city, required: true, class: 'form-control' %>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-md-2 control-label">
+        <%= f.label :state %>
+    </div>
+
+    <div class="col-md-4">
+        <%= f.text_field :state, class: 'form-control' %>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-md-2 control-label">
+        <%= f.label :country_code, 'Country' %>
+    </div>
+
+    <div class="col-md-4">
+        <%= f.select :country_code, SortedCountry.all_options(f.object.country_code), {},
+                     required: true,
+                     class: 'form-control' %>
+    </div>
+</div>

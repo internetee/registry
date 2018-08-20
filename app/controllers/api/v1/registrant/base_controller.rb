@@ -8,6 +8,8 @@ module Api
         before_action :authenticate
         before_action :set_paper_trail_whodunnit
 
+        rescue_from ActiveRecord::RecordNotFound, with: :show_not_found_error
+        rescue_from ActiveRecord::RecordInvalid, with: :show_invalid_record_error
         rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
           error = {}
           error[parameter_missing_exception.param] = ['parameter is required']
@@ -48,6 +50,14 @@ module Api
         # so user_for_paper_trail method is not usable.
         def set_paper_trail_whodunnit
           ::PaperTrail.whodunnit = current_registrant_user.id_role_username
+        end
+
+        def show_not_found_error
+          render json: { errors: [{ base: ['Not found'] }] }, status: :not_found
+        end
+
+        def show_invalid_record_error(exception)
+          render json: { errors: exception.record.errors }, status: :bad_request
         end
       end
     end

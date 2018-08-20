@@ -1,0 +1,5 @@
+contact_update:
+  operation: update
+  contact: john
+  created_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+  user: registrant

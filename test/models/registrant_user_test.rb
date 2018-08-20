@@ -35,4 +35,14 @@ class RegistrantUserTest < ActiveSupport::TestCase
     assert_equal('1234', @user.ident)
     assert_equal('US', @user.country_code)
   end
+
+  def test_first_name_from_username
+    user = RegistrantUser.new(username: 'John Doe')
+    assert_equal 'John', user.first_name
+  end
+
+  def test_last_name_from_username
+    user = RegistrantUser.new(username: 'John Doe')
+    assert_equal 'Doe', user.last_name
+  end
 end

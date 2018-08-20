@@ -56,6 +56,14 @@ class RegistrantUser < User
     username
   end
 
+  def first_name
+    username.split.first
+  end
+
+  def last_name
+    username.split.second
+  end
+
   class << self
     def find_or_create_by_idc_data(idc_data, issuer_organization)
       return false if idc_data.blank?

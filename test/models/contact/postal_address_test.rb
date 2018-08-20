@@ -21,4 +21,13 @@ class ContactPostalAddressTest < ActiveSupport::TestCase
     @contact.country_code = 'invalid'
     assert @contact.valid?
   end
+
+  def test_state_is_optional_when_address_is_enabled
+    Setting.address_processing = true
+    contact = contacts(:william)
+    assert contact.valid?
+
+    contact.state = ''
+    assert contact.valid?
+  end
 end
