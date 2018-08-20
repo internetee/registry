@@ -3,7 +3,8 @@ module Concerns::Domain::Discardable
 
   class_methods do
     def discard_domains
-      domains = where('delete_at < ? AND ? != ALL(statuses) AND ? != ALL(statuses)',
+      domains = where('delete_at < ? AND ? != ALL(coalesce(statuses, array[]::varchar[])) AND' \
+        ' ? != ALL(COALESCE(statuses, array[]::varchar[]))',
                       Time.zone.now,
                       DomainStatus::SERVER_DELETE_PROHIBITED,
                       DomainStatus::DELETE_CANDIDATE)
