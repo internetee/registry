@@ -9,7 +9,10 @@ module Concerns::Domain::Discardable
                       DomainStatus::SERVER_DELETE_PROHIBITED,
                       DomainStatus::DELETE_CANDIDATE)
 
-      domains.map(&:discard)
+      domains.each do |domain|
+        domain.discard
+        yield domain if block_given?
+      end
     end
   end
 
