@@ -74,6 +74,7 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
   end
 
   def test_force_delete_cannot_be_cancelled_when_a_domain_is_discarded
+    @domain.delete_at = Time.zone.parse('2010-07-05 10:00')
     @domain.discard
     @domain.schedule_force_delete
     assert_raises StandardError do
