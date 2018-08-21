@@ -16,6 +16,7 @@ class RegistrarAreaProtectedAreaTest < ApplicationSystemTestCase
   def test_authenticated_user_is_not_asked_to_authenticate_again
     sign_in users(:api_bestnames)
     visit new_registrar_user_session_url
+
     assert_text 'You are already signed in'
     assert_current_path registrar_poll_path
   end
