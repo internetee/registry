@@ -84,7 +84,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resource :poll do
+    resource :poll, only: %i[show destroy] do
       collection do
         post 'confirm_keyrelay'
         post 'confirm_transfer'
