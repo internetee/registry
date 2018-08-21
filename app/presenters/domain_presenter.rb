@@ -50,29 +50,42 @@ class DomainPresenter
   end
 
   def force_delete_toggle_btn
-    if !domain.force_delete_scheduled?
-      view.content_tag(:a, view.t('admin.domains.force_delete_toggle_btn.schedule'),
-                       class: 'btn btn-default',
-                       data: {
-                         toggle: 'modal',
-                         target: '.domain-edit-force-delete-dialog',
-                       }
-      )
-    elsif !domain.discarded?
-      view.link_to(view.t('admin.domains.force_delete_toggle_btn.cancel'),
-                   view.admin_domain_force_delete_path(domain),
-                   method: :delete,
-                   data: { confirm: view.t('admin.domains.force_delete_toggle_btn.cancel_confirm') },
-                   class: 'btn btn-primary')
+    return inactive_schedule_force_delete_btn if domain.discarded?
+
+    if domain.force_delete_scheduled?
+      cancel_force_delete_btn
     else
-      view.content_tag(:button, view.t('admin.domains.force_delete_toggle_btn.cancel'),
-                       class: 'btn btn-default ',
-                       title: view.t('admin.domains.force_delete_toggle_btn.unable_to_cancel'),
-                       disabled: true)
+      schedule_force_delete_btn
     end
   end
 
   private
+
+  def schedule_force_delete_btn
+    view.content_tag(:a, view.t('admin.domains.force_delete_toggle_btn.schedule'),
+                     class: 'btn btn-default',
+                     data: {
+                         toggle: 'modal',
+                         target: '.domain-edit-force-delete-dialog',
+                     })
+  end
+
+  def cancel_force_delete_btn
+    view.link_to view.t('admin.domains.force_delete_toggle_btn.cancel'),
+                 view.admin_domain_force_delete_path(domain),
+                 method: :delete,
+                 data: {
+                     confirm: view.t('admin.domains.force_delete_toggle_btn.cancel_confirm'),
+                 },
+                 class: 'btn btn-primary'
+  end
+
+  def inactive_schedule_force_delete_btn
+    view.content_tag :button, view.t('admin.domains.force_delete_toggle_btn.schedule'),
+                     title: view.t('admin.domains.force_delete_toggle_btn.unable_to_schedule'),
+                     disabled: true,
+                     class: 'btn btn-default'
+  end
 
   attr_reader :domain
   attr_reader :view

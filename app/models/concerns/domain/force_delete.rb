@@ -6,6 +6,10 @@ module Concerns::Domain::ForceDelete
   end
 
   def schedule_force_delete
+    if discarded?
+      raise StandardError, 'Force delete procedure cannot be scheduled while a domain is discarded'
+    end
+
     preserve_current_statuses_for_force_delete
     add_force_delete_statuses
     self.force_delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc
@@ -16,10 +20,6 @@ module Concerns::Domain::ForceDelete
   end
 
   def cancel_force_delete
-    if discarded?
-      raise StandardError, 'Force delete procedure cannot be cancelled while a domain is discarded'
-    end
-
     restore_statuses_before_force_delete
     remove_force_delete_statuses
     self.force_delete_at = nil
