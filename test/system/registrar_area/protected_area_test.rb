@@ -10,6 +10,8 @@ class RegistrarAreaProtectedAreaTest < ApplicationSystemTestCase
   def test_authenticated_user_can_access_protected_area
     sign_in users(:api_bestnames)
     visit registrar_domains_url
+
+    assert_no_text 'You need to sign in before continuing'
     assert_current_path registrar_domains_path
   end
 
