@@ -31,6 +31,7 @@ class ApiUser < User
 
   SUPER = 'super'
   EPP = 'epp'
+  BILLING = 'billing'
 
   ROLES = %w(super epp billing) # should not match to admin roles
 

@@ -31,7 +31,7 @@ Rails.application.routes.draw do
 
   # REGISTRAR ROUTES
   namespace :registrar do
-    root 'dashboard#show'
+    root 'polls#show'
 
     devise_for :users, path: '', class_name: 'ApiUser', skip: %i[sessions]
 

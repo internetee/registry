@@ -173,9 +173,9 @@ class Registrar
 
     def after_sign_in_path_for(_resource_or_scope)
       if can?(:show, :poll)
-        registrar_poll_path
-      else
         registrar_root_path
+      else
+        registrar_profile_path
       end
     end
 

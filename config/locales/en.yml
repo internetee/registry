@@ -717,7 +717,6 @@ en:
   mail_templates: Mail Templates
   failure: "It was not saved"
   contact_is_not_valid: 'Contact %{value} is not valid, please fix the invalid contact'
-  welcome_to_eis_registrar_portal: 'Welcome to EIS Registrar portal'
   next: 'Next'
   previous: 'Previous'
   personal_domain_verification_url: 'Personal domain verification url'
