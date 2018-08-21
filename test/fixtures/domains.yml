@@ -42,6 +42,16 @@ metro:
   period_unit: m
   uuid: ef97cb80-333b-4893-b9df-163f2b452798
 
+hospital:
+  name: hospital.test
+  registrar: goodnames
+  registrant: john
+  transfer_code: 23118v2
+  valid_to: 2010-07-05
+  period: 1
+  period_unit: m
+  uuid: 5edda1a5-3548-41ee-8b65-6d60daf85a37
+
 invalid:
   name: invalid.test
   transfer_code: 1438d6
