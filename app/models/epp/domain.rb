@@ -625,7 +625,7 @@ class Epp::Domain < Domain
       )
 
       if dt.pending?
-        registrar.messages.create!(
+        registrar.notifications.create!(
           body: I18n.t('transfer_requested'),
           attached_obj_id: dt.id,
           attached_obj_type: dt.class.to_s
@@ -727,7 +727,7 @@ class Epp::Domain < Domain
 
       return false unless valid?
 
-      registrar.messages.create!(
+      registrar.notifications.create!(
         body: 'Key Relay action completed successfully.',
         attached_obj_type: kr.class.to_s,
         attached_obj_id: kr.id

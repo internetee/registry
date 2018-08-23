@@ -8,7 +8,7 @@ class DomainDeleteJob < Que::Job
 
     domain.destroy
     bye_bye = domain.versions.last
-    domain.registrar.messages.create!(
+    domain.registrar.notifications.create!(
         body: "#{I18n.t(:domain_deleted)}: #{domain.name}",
         attached_obj_id: bye_bye.id,
         attached_obj_type: bye_bye.class.to_s

@@ -251,10 +251,10 @@ RSpec.describe Domain do
       @domain.statuses = DomainStatus::OK # restore
     end
 
-    it 'should add poll message to registrar' do
+    it 'should notify registrar' do
       domain = create(:domain, name: 'testpollmessage123.ee')
-      domain.poll_message!(:poll_pending_update_confirmed_by_registrant)
-      domain.registrar.messages.first.body.should == 'Registrant confirmed domain update: testpollmessage123.ee'
+      domain.notify_registrar(:poll_pending_update_confirmed_by_registrant)
+      domain.registrar.notifications.first.body.should == 'Registrant confirmed domain update: testpollmessage123.ee'
     end
 
     context 'about registrant update confirm' do

@@ -9,12 +9,12 @@ class Epp::PollsController < EppController
   private
 
   def req_poll
-    @message = current_user.queued_messages.last
+    @notification = current_user.queued_notifications.last
 
-    render_epp_response 'epp/poll/poll_no_messages' and return unless @message
-    if @message.attached_obj_type && @message.attached_obj_id
+    render_epp_response 'epp/poll/poll_no_messages' and return unless @notification
+    if @notification.attached_obj_type && @notification.attached_obj_id
       begin
-        @object = Object.const_get(@message.attached_obj_type).find(@message.attached_obj_id)
+        @object = Object.const_get(@notification.attached_obj_type).find(@notification.attached_obj_id)
       rescue => problem
         # the data model might be inconsistent; or ...
         # this could happen if the registrar does not dequeue messages, and then the domain was deleted
@@ -28,7 +28,7 @@ class Epp::PollsController < EppController
       end
     end
 
-    if @message.attached_obj_type == 'Keyrelay'
+    if @notification.attached_obj_type == 'Keyrelay'
       render_epp_response 'epp/poll/poll_keyrelay'
     else
       render_epp_response 'epp/poll/poll_req'
@@ -36,9 +36,9 @@ class Epp::PollsController < EppController
   end
 
   def ack_poll
-    @message = current_user.queued_messages.find_by(id: params[:parsed_frame].css('poll').first['msgID'])
+    @notification = current_user.queued_notifications.find_by(id: params[:parsed_frame].css('poll').first['msgID'])
 
-    unless @message
+    unless @notification
       epp_errors << {
         code: '2303',
         msg: I18n.t('message_was_not_found'),
@@ -47,7 +47,7 @@ class Epp::PollsController < EppController
       handle_errors and return
     end
 
-    handle_errors(@message) and return unless @message.dequeue
+    handle_errors(@notification) and return unless @notification.dequeue
     render_epp_response 'epp/poll/poll_ack'
   end
 
@@ -56,6 +56,6 @@ class Epp::PollsController < EppController
   end
 
   def resource
-    @message
+    @notification
   end
 end

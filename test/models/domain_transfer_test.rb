@@ -14,7 +14,7 @@ class DomainTransferTest < ActiveSupport::TestCase
   def test_notifies_old_registrar_on_approval
     old_registrar = @domain_transfer.old_registrar
 
-    assert_difference -> { old_registrar.messages.count } do
+    assert_difference -> { old_registrar.notifications.count } do
       @domain_transfer.approve
     end
 
@@ -24,9 +24,9 @@ class DomainTransferTest < ActiveSupport::TestCase
     id = @domain_transfer.id
     class_name = @domain_transfer.class.name
 
-    message = old_registrar.messages.last
-    assert_equal body, message.body
-    assert_equal id, message.attached_obj_id
-    assert_equal class_name, message.attached_obj_type
+    notification = old_registrar.notifications.last
+    assert_equal body, notification.body
+    assert_equal id, notification.attached_obj_id
+    assert_equal class_name, notification.attached_obj_type
   end
 end

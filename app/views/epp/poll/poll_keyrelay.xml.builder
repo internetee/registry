@@ -10,9 +10,9 @@ xml.epp(
       xml.msg 'Command completed successfully; ack to dequeue'
     end
 
-    xml.tag!('msgQ', 'count' => current_user.queued_messages.count, 'id' => @message.id) do
-      xml.qDate @message.created_at.try(:iso8601)
-      xml.msg @message.body
+    xml.tag!('msgQ', 'count' => current_user.queued_notifications.count, 'id' => @notification.id) do
+      xml.qDate @notification.created_at.try(:iso8601)
+      xml.msg @notification.body
     end
 
     xml.resData do

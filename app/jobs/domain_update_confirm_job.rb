@@ -8,7 +8,7 @@ class DomainUpdateConfirmJob < Que::Job
       case action
       when RegistrantVerification::CONFIRMED
         old_registrant = domain.registrant
-        domain.poll_message!(:poll_pending_update_confirmed_by_registrant)
+        domain.notify_registrar(:poll_pending_update_confirmed_by_registrant)
         raise_errors!(domain)
 
         domain.apply_pending_update!
@@ -22,7 +22,7 @@ class DomainUpdateConfirmJob < Que::Job
                                         registrar: domain.registrar,
                                         registrant: domain.registrant).deliver_now
 
-        domain.poll_message!(:poll_pending_update_rejected_by_registrant)
+        domain.notify_registrar(:poll_pending_update_rejected_by_registrant)
 
         domain.preclean_pendings
         domain.clean_pendings!

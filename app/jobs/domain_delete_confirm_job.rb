@@ -7,13 +7,13 @@ class DomainDeleteConfirmJob < Que::Job
 
       case action
       when RegistrantVerification::CONFIRMED
-        domain.poll_message!(:poll_pending_delete_confirmed_by_registrant)
+        domain.notify_registrar(:poll_pending_delete_confirmed_by_registrant)
         domain.apply_pending_delete!
         raise_errors!(domain)
 
       when RegistrantVerification::REJECTED
         domain.statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
-        domain.poll_message!(:poll_pending_delete_rejected_by_registrant)
+        domain.notify_registrar(:poll_pending_delete_rejected_by_registrant)
 
         domain.cancel_pending_delete
         domain.save(validate: false)

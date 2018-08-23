@@ -73,8 +73,8 @@ class DomainTransfer < ActiveRecord::Base
     old_contacts_codes = domain.contacts.pluck(:code).sort.uniq.join(', ')
     old_registrant_code = domain.registrant.code
 
-    old_registrar.messages.create!(
-      body: I18n.t('messages.texts.domain_transfer',
+    old_registrar.notifications.create!(
+      body: I18n.t('notifications.texts.domain_transfer',
                    domain_name: domain.name,
                    old_contacts_codes: old_contacts_codes,
                    old_registrant_code: old_registrant_code),

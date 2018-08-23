@@ -43,7 +43,7 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
   def test_notifies_old_registrar
     @old_registrar = @domain.registrar
 
-    assert_difference -> { @old_registrar.messages.count } do
+    assert_difference -> { @old_registrar.notifications.count } do
       post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
   end
