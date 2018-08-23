@@ -8,16 +8,30 @@ class RegistrantUser < User
   delegate :can?, :cannot?, to: :ability
 
   def ident
-    registrant_ident.to_s.split("-").last
+    registrant_ident.to_s.split('-').last
+  end
+
+  def country_code
+    registrant_ident.to_s.split('-').first
   end
 
   def domains
-    ident_cc, ident = registrant_ident.to_s.split '-'
-    Domain.includes(:registrar, :registrant).where(contacts: {
-                                                       ident_type: 'priv',
-                                                       ident: ident, #identity_code,
-                                                       ident_country_code: ident_cc #country_code
-                                                   })
+    Domain.includes(:registrar, :registrant).where(
+      contacts: {
+        ident_type: 'priv',
+        ident: ident,
+        ident_country_code: country_code
+      }
+    )
+  end
+
+  def contacts
+    Contact.where(ident_type: 'priv', ident: ident, ident_country_code: country_code)
+  end
+
+  def administrated_domains
+    Domain.joins(:domain_contacts)
+      .where(domain_contacts: { contact_id: contacts, type: AdminDomainContact })
   end
 
   def to_s

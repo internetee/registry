@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'auth_token/auth_token_creator'
 
-class RegistrantApiDomainRegistryLockTest < ApplicationIntegrationTest
+class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
   def setup
     super
 

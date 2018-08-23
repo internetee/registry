@@ -25,7 +25,7 @@ module Api
         private
 
         def set_domain
-          domain_pool = associated_domains(current_user)
+          domain_pool = current_user.administrated_domains
           @domain = domain_pool.find_by(uuid: params[:domain_uuid])
 
           return if @domain
