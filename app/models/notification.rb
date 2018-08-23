@@ -6,7 +6,7 @@ class Notification < ActiveRecord::Base
 
   scope :queued, -> { where(queued: true) }
 
-  validates :body, presence: true
+  validates :text, presence: true
 
   def dequeue
     self.queued = false

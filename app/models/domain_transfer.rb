@@ -74,7 +74,7 @@ class DomainTransfer < ActiveRecord::Base
     old_registrant_code = domain.registrant.code
 
     old_registrar.notifications.create!(
-      body: I18n.t('notifications.texts.domain_transfer',
+      text: I18n.t('notifications.texts.domain_transfer',
                    domain_name: domain.name,
                    old_contacts_codes: old_contacts_codes,
                    old_registrant_code: old_registrant_code),

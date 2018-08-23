@@ -18,14 +18,14 @@ class DomainTransferTest < ActiveSupport::TestCase
       @domain_transfer.approve
     end
 
-    body = 'Transfer of domain shop.test has been approved.' \
+    text = 'Transfer of domain shop.test has been approved.' \
       ' It was associated with registrant john-001' \
       ' and contacts acme-ltd-001, jane-001, william-001.'
     id = @domain_transfer.id
     class_name = @domain_transfer.class.name
 
     notification = old_registrar.notifications.last
-    assert_equal body, notification.body
+    assert_equal text, notification.text
     assert_equal id, notification.attached_obj_id
     assert_equal class_name, notification.attached_obj_type
   end

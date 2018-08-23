@@ -23,7 +23,7 @@ class DomainDeleteConfirmJobTest < ActiveSupport::TestCase
 
     last_registrar_notification = @domain.registrar.notifications.last
     assert_equal(last_registrar_notification.attached_obj_id, @domain.id)
-    assert_equal(last_registrar_notification.body, 'Registrant rejected domain deletion: shop.test')
+    assert_equal(last_registrar_notification.text, 'Registrant rejected domain deletion: shop.test')
   end
 
   def test_accepted_registrant_verification_notifies_registrar
@@ -31,6 +31,6 @@ class DomainDeleteConfirmJobTest < ActiveSupport::TestCase
 
     last_registrar_notification = @domain.registrar.notifications.last
     assert_equal(last_registrar_notification.attached_obj_id, @domain.id)
-    assert_equal(last_registrar_notification.body, 'Registrant confirmed domain deletion: shop.test')
+    assert_equal(last_registrar_notification.text, 'Registrant confirmed domain deletion: shop.test')
   end
 end

@@ -9,8 +9,8 @@ class NotificationTest < ActiveSupport::TestCase
     assert @notification.valid?
   end
 
-  def test_invalid_without_body
-    @notification.body = nil
+  def test_invalid_without_text
+    @notification.text = ''
     assert @notification.invalid?
   end
 

@@ -12,7 +12,7 @@ xml.epp(
 
     xml.tag!('msgQ', 'count' => current_user.queued_notifications.count, 'id' => @notification.id) do
       xml.qDate @notification.created_at.try(:iso8601)
-      xml.msg @notification.body
+      xml.msg @notification.text
     end
 
     xml.resData do

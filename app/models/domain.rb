@@ -272,7 +272,7 @@ class Domain < ActiveRecord::Base
 
   def notify_registrar(message_key)
     registrar.notifications.create!(
-      body: "#{I18n.t(message_key)}: #{name}",
+      text: "#{I18n.t(message_key)}: #{name}",
       attached_obj_id: id,
       attached_obj_type: self.class.to_s
     )

@@ -6,7 +6,7 @@ module Admin
 
         domain.transaction do
           domain.schedule_force_delete
-          domain.registrar.notifications.create!(body: t('force_delete_set_on_domain',
+          domain.registrar.notifications.create!(text: t('force_delete_set_on_domain',
                                                          domain_name: domain.name))
 
           if notify_by_email?
