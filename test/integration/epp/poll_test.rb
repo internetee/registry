@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class EppPollTest < ApplicationIntegrationTest
-  def test_return_first_message_when_queue_is_not_empty
+  # Deliberately does not conform to RFC5730, which requires the first message to be returned
+  def test_return_latest_message_when_queue_is_not_empty
     message = messages(:domain_deleted)
 
     request_xml =
