@@ -57,7 +57,7 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
     get '/api/v1/registrant/domains', {}, @auth_headers
     response_json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal(5, response_json.count)
+    assert_equal(4, response_json.count)
   end
 
   def test_root_does_not_accept_limit_higher_than_200
