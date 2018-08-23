@@ -44,8 +44,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
   end
 
   def test_cancels_scheduled_domain_force_delete
-    @domain.update_attribute(:statuses, [DomainStatus::FORCE_DELETE])
-    assert @domain.force_delete_scheduled?
+    @domain.schedule_force_delete
 
     visit edit_admin_domain_url(@domain)
     click_link_or_button 'Cancel force delete'
@@ -54,5 +53,13 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     refute @domain.force_delete_scheduled?
     assert_current_path edit_admin_domain_path(@domain)
     assert_text 'Force delete procedure has been cancelled'
+  end
+
+  def test_force_delete_procedure_cannot_be_scheduled_on_a_discarded_domain
+    @domain.discard
+
+    visit edit_admin_domain_url(@domain)
+    assert_no_button 'Schedule force delete'
+    assert_no_link 'Schedule force delete'
   end
 end

@@ -63,10 +63,7 @@ Content-Type: application/json
       ],
       "reserved": false,
       "status_notes": {
-      },
-      "statuses_backup": [
-
-      ]
+      }
     }
   ],
   "total_number_of_records": 2
