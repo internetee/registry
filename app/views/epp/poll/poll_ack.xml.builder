@@ -4,7 +4,7 @@ xml.epp_head do
       xml.msg 'Command completed successfully'
     end
 
-    xml.tag!('msgQ', 'count' => current_user.queued_notifications.count, 'id' => @notification.id)
+    xml.tag!('msgQ', 'count' => current_user.unread_notifications.count, 'id' => @notification.id)
 
     render('epp/shared/trID', builder: xml)
   end

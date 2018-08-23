@@ -1,15 +1,15 @@
 greeting:
   text: Welcome!
-  queued: true
+  read: false
   registrar: bestnames
 
 domain_deleted:
   text: Your domain has been deleted
-  queued: true
+  read: false
   registrar: bestnames
   created_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
 
 farewell:
   text: Good bye!
-  queued: true
+  read: false
   registrar: goodnames

@@ -44,7 +44,7 @@ class EppPollTest < ApplicationIntegrationTest
     assert_equal 1, response_xml.css('result').size
   end
 
-  def test_dequeue_notification
+  def test_mark_as_read
     notification = notifications(:greeting)
 
     request_xml = <<-XML
@@ -60,14 +60,14 @@ class EppPollTest < ApplicationIntegrationTest
     notification.reload
     response_xml = Nokogiri::XML(response.body)
 
-    assert_not notification.queued?
+    assert notification.read?
     assert_equal 1000.to_s, response_xml.at_css('result')[:code]
     assert_equal 1, response_xml.css('result').size
     assert_equal 1.to_s, response_xml.at_css('msgQ')[:count]
     assert_equal notification.id.to_s, response_xml.at_css('msgQ')[:id]
   end
 
-  def test_notification_of_other_registrars_cannot_be_dequeued
+  def test_notification_of_other_registrars_cannot_be_marked_as_read
     notification = notifications(:farewell)
 
     request_xml = <<-XML
@@ -82,7 +82,7 @@ class EppPollTest < ApplicationIntegrationTest
     response_xml = Nokogiri::XML(response.body)
     notification.reload
 
-    assert notification.queued?
+    assert_not notification.read?
     assert_equal 2303.to_s, response_xml.at_css('result')[:code]
   end
 

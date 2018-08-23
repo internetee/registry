@@ -9,7 +9,7 @@ class Epp::PollsController < EppController
   private
 
   def req_poll
-    @notification = current_user.queued_notifications.last
+    @notification = current_user.unread_notifications.last
 
     render_epp_response 'epp/poll/poll_no_messages' and return unless @notification
     if @notification.attached_obj_type && @notification.attached_obj_id
@@ -36,7 +36,7 @@ class Epp::PollsController < EppController
   end
 
   def ack_poll
-    @notification = current_user.queued_notifications.find_by(id: params[:parsed_frame].css('poll').first['msgID'])
+    @notification = current_user.unread_notifications.find_by(id: params[:parsed_frame].css('poll').first['msgID'])
 
     unless @notification
       epp_errors << {
@@ -47,7 +47,7 @@ class Epp::PollsController < EppController
       handle_errors and return
     end
 
-    handle_errors(@notification) and return unless @notification.dequeue
+    handle_errors(@notification) and return unless @notification.mark_as_read
     render_epp_response 'epp/poll/poll_ack'
   end
 

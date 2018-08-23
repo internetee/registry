@@ -79,8 +79,8 @@ class ApiUser < User
     username
   end
 
-  def queued_notifications
-    registrar.notifications.queued
+  def unread_notifications
+    registrar.notifications.unread
   end
 
   def registrar_pki_ok?(crt, cn)

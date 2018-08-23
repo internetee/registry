@@ -19,9 +19,9 @@ class NotificationTest < ActiveSupport::TestCase
     assert @notification.invalid?
   end
 
-  def test_dequeue
-    @notification.dequeue
+  def test_mark_as_read
+    @notification.mark_as_read
     @notification.reload
-    assert_not @notification.queued?
+    assert @notification.read?
   end
 end

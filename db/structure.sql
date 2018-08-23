@@ -2002,7 +2002,7 @@ CREATE TABLE public.notifications (
     text character varying NOT NULL,
     attached_obj_type character varying,
     attached_obj_id integer,
-    queued boolean,
+    read boolean,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
@@ -4764,4 +4764,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180823161237');
 INSERT INTO schema_migrations (version) VALUES ('20180823163548');
 
 INSERT INTO schema_migrations (version) VALUES ('20180823174331');
+
+INSERT INTO schema_migrations (version) VALUES ('20180823212823');
 
