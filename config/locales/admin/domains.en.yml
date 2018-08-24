@@ -50,7 +50,7 @@ en:
 
       force_delete_toggle_btn:
         schedule: Schedule force delete
+        unable_to_schedule: >
+          Force delete procedure cannot be scheduled while a domain has deleteCandidate status
         cancel: Cancel force delete
         cancel_confirm: Are you sure you want cancel force delete procedure?
-        unable_to_cancel: >
-          Force delete procedure cannot be cancelled while a domain has deleteCandidate status

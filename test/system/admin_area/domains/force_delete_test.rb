@@ -55,13 +55,11 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     assert_text 'Force delete procedure has been cancelled'
   end
 
-  def test_force_delete_cannot_be_cancelled_when_a_domain_is_discarded
-    @domain.delete_at = Time.zone.parse('2010-07-05 10:00')
+  def test_force_delete_procedure_cannot_be_scheduled_on_a_discarded_domain
     @domain.discard
-    @domain.schedule_force_delete
 
     visit edit_admin_domain_url(@domain)
-    assert_no_button 'Cancel force delete'
-    assert_no_link 'Cancel force delete'
+    assert_no_button 'Schedule force delete'
+    assert_no_link 'Schedule force delete'
   end
 end
