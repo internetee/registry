@@ -1,4 +1,4 @@
-# Domain locks
+# Registry lock
 
 ## POST api/v1/registrant/domains/$UUID/registry_lock
 
@@ -59,12 +59,12 @@ Content-Type: application/json
 #### Response for failure
 
 ```
-HTTP/1.1 400
+HTTP/1.1 422
 Content-Type: application/json
 
 {
   "errors": [
-    { "base": "domain cannot be locked" }
+    { "base": "Domain cannot be locked" }
   ]
 }
 
@@ -76,11 +76,23 @@ Content-Type: application/json
 
 {
   "errors": [
-    { "base": "domain does not exist" }
+    { "base": "Domain not found" }
   ]
 }
 
 ```
+```
+HTTP/1.1 401
+Content-Type: application/json
+
+{
+  "errors": [
+    { "base": ["Only administrative contacts can manage registry locks"] }
+  ]
+}
+
+```
+
 
 ## DELETE api/v1/registrant/domains/$UUID/registry_lock
 
@@ -156,7 +168,19 @@ Content-Type: application/json
 
 {
   "errors": [
-    { "base": "domain does not exist" }
+    { "base": "Domain not found" }
+  ]
+}
+
+```
+
+```
+HTTP/1.1 401
+Content-Type: application/json
+
+{
+  "errors": [
+    { "base": ["Only administrative contacts can manage registry locks"] }
   ]
 }
 
