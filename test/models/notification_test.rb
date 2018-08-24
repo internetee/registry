@@ -21,10 +21,10 @@ class NotificationTest < ActiveSupport::TestCase
 
   def test_unread_by_default
     notification = Notification.new(registrar: registrars(:bestnames), text: 'test')
-    assert_not notification.read?
+    assert notification.unread?
 
     notification.save!
-    assert_not notification.read?
+    assert notification.unread?
   end
 
   def test_honor_given_read_state

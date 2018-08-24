@@ -13,6 +13,10 @@ class Notification < ActiveRecord::Base
     save
   end
 
+  def unread?
+    !read?
+  end
+
   # Needed for EPP log
   def name
     "-"

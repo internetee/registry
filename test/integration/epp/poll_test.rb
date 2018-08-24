@@ -82,7 +82,7 @@ class EppPollTest < ApplicationIntegrationTest
     response_xml = Nokogiri::XML(response.body)
     notification.reload
 
-    assert_not notification.read?
+    assert notification.unread?
     assert_equal 2303.to_s, response_xml.at_css('result')[:code]
   end
 
