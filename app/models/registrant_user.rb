@@ -16,22 +16,30 @@ class RegistrantUser < User
   end
 
   def domains
-    Domain.includes(:registrar, :registrant).where(
-      contacts: {
-        ident_type: 'priv',
-        ident: ident,
-        ident_country_code: country_code
-      }
-    )
+    Domain.uniq
+      .joins(:contacts)
+      .where(contacts: { ident_type: 'priv', ident: ident, ident_country_code: country_code })
   end
 
   def contacts
     Contact.where(ident_type: 'priv', ident: ident, ident_country_code: country_code)
   end
 
+  # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can be
+  # removed.
+  # https://guides.rubyonrails.org/active_record_querying.html#or-conditions
   def administrated_domains
-    Domain.joins(:domain_contacts)
-      .where(domain_contacts: { contact_id: contacts, type: AdminDomainContact })
+    domains_where_is_administrative_contact = begin
+      Domain.joins(:domain_contacts)
+        .where(domain_contacts: { contact_id: contacts, type: [AdminDomainContact] })
+    end
+
+    domains_where_is_registrar = Domain.where(registrant_id: contacts)
+
+    Domain.from(
+      "(#{domains_where_is_registrar.to_sql} UNION " \
+      "#{domains_where_is_administrative_contact.to_sql}) AS domains"
+    )
   end
 
   def to_s

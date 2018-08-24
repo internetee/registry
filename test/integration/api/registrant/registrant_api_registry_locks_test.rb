@@ -99,6 +99,16 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
     assert_equal({ errors: [{ base: ['Domain not found'] }] }, response_json)
   end
 
+  def test_technical_contact_cannot_lock_a_domain
+    post '/api/v1/registrant/domains/647bcc48-8d5e-4a04-8ce5-2a3cd17b6eab/registry_lock',
+         {}, @auth_headers
+
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal(401, response.status)
+    assert_equal({ errors: [{ base: ['Only administrative contacts can manage registry locks'] }] },
+                 response_json)
+  end
+
   private
 
   def auth_token
