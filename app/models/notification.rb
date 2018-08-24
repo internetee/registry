@@ -2,7 +2,7 @@ class Notification < ActiveRecord::Base
   include Versions # version/notification_version.rb
   belongs_to :registrar, required: true
 
-  before_create -> { self.read = false }
+  before_create -> { self.read = false; true }
 
   scope :unread, -> { where(read: false) }
 
