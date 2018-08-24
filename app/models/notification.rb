@@ -1,6 +1,6 @@
 class Notification < ActiveRecord::Base
   include Versions # version/notification_version.rb
-  belongs_to :registrar, required: true
+  belongs_to :registrar
 
   scope :unread, -> { where(read: false) }
 
