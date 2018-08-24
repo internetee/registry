@@ -1,5 +1,5 @@
 class RegistrantUser < User
-  ACCEPTED_ISSUER = 'AS Sertifitseerimiskeskus'
+  ACCEPTED_ISSUER = 'AS Sertifitseerimiskeskus'.freeze
   attr_accessor :idc_data
 
   def ability
@@ -17,8 +17,8 @@ class RegistrantUser < User
 
   def domains
     Domain.uniq
-      .joins(:contacts)
-      .where(contacts: { ident_type: 'priv', ident: ident, ident_country_code: country_code })
+          .joins(:contacts)
+          .where(contacts: { ident_type: 'priv', ident: ident, ident_country_code: country_code })
   end
 
   def contacts
@@ -31,7 +31,7 @@ class RegistrantUser < User
   def administrated_domains
     domains_where_is_administrative_contact = begin
       Domain.joins(:domain_contacts)
-        .where(domain_contacts: { contact_id: contacts, type: [AdminDomainContact] })
+            .where(domain_contacts: { contact_id: contacts, type: [AdminDomainContact] })
     end
 
     domains_where_is_registrar = Domain.where(registrant_id: contacts)
@@ -55,13 +55,13 @@ class RegistrantUser < User
       user_data = {}
 
       # handling here new and old mode
-      if idc_data.starts_with?("/")
+      if idc_data.starts_with?('/')
         user_data[:ident] = idc_data.scan(/serialNumber=(\d+)/).flatten.first
         user_data[:country_code] = idc_data.scan(/^\/C=(.{2})/).flatten.first
         user_data[:first_name] = idc_data.scan(%r{/GN=(.+)/serialNumber}).flatten.first
         user_data[:last_name] = idc_data.scan(%r{/SN=(.+)/GN}).flatten.first
       else
-        parse_str = "," + idc_data
+        parse_str = ',' + idc_data
         user_data[:ident] = parse_str.scan(/,serialNumber=(\d+)/).flatten.first
         user_data[:country_code] = parse_str.scan(/,C=(.{2})/).flatten.first
         user_data[:first_name] = parse_str.scan(/,GN=([^,]+)/).flatten.first
