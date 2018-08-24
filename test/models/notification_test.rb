@@ -32,4 +32,11 @@ class NotificationTest < ActiveSupport::TestCase
     @notification.reload
     assert @notification.read?
   end
+
+  def test_read_notification_cannot_be_marked_as_read_again
+    @notification.mark_as_read
+    assert_raises do
+      @notification.mark_as_read
+    end
+  end
 end

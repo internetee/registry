@@ -9,6 +9,7 @@ class Notification < ActiveRecord::Base
   after_initialize :set_defaults
 
   def mark_as_read
+    raise 'Read notification cannot be marked as read again' if read?
     self.read = true
     save
   end
