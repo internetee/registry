@@ -38,8 +38,8 @@ module Api
           return if current_user.administrated_domains.include?(@domain)
 
           render json: { errors: [
-                           { base: ['Only administrative contacts can manage registry locks'] }
-                         ] },
+            { base: ['Only administrative contacts can manage registry locks'] }
+          ] },
                  status: :unauthorized and return
         end
       end
