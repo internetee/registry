@@ -19,6 +19,19 @@ class NotificationTest < ActiveSupport::TestCase
     assert @notification.invalid?
   end
 
+  def test_unread_by_default
+    notification = Notification.new(registrar: registrars(:bestnames), text: 'test')
+    assert_not notification.read?
+
+    notification.save!
+    assert_not notification.read?
+  end
+
+  def test_honor_given_read_state
+    notification = Notification.new(read: true)
+    assert notification.read?
+  end
+
   def test_mark_as_read
     @notification.mark_as_read
     @notification.reload

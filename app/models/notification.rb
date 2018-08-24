@@ -2,11 +2,11 @@ class Notification < ActiveRecord::Base
   include Versions # version/notification_version.rb
   belongs_to :registrar, required: true
 
-  before_create -> { self.read = false; true }
-
   scope :unread, -> { where(read: false) }
 
   validates :text, presence: true
+
+  after_initialize :set_defaults
 
   def mark_as_read
     self.read = true
@@ -16,5 +16,11 @@ class Notification < ActiveRecord::Base
   # Needed for EPP log
   def name
     "-"
+  end
+
+  private
+
+  def set_defaults
+    self.read = false if read.nil?
   end
 end
