@@ -13,8 +13,8 @@ en:
         reset_btn: Reset
 
       edit:
+        header: "Edit: %{domain}"
         add_new_status_btn: Add new status
-        back_btn: Back to domain
 
       force_delete_dialog:
         title: Force delete
@@ -33,7 +33,6 @@ en:
         general:
           outzone_time: Outzone time
           delete_time: Delete time
-          force_delete_time: Force delete time
 
         admin_contacts:
           title: Admin. contacts
@@ -46,5 +45,7 @@ en:
 
       force_delete_toggle_btn:
         schedule: Schedule force delete
+        unable_to_schedule: >
+          Force delete procedure cannot be scheduled while a domain has deleteCandidate status
         cancel: Cancel force delete
         cancel_confirm: Are you sure you want cancel force delete procedure?
