@@ -5,8 +5,7 @@ class EppPollTest < ApplicationIntegrationTest
   def test_return_latest_notification_when_queue_is_not_empty
     notification = notifications(:domain_deleted)
 
-    request_xml =
-      <<-XML
+    request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
         <command>
@@ -15,8 +14,8 @@ class EppPollTest < ApplicationIntegrationTest
       </epp>
     XML
     post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    xml_doc = Nokogiri::XML(response.body)
 
+    xml_doc = Nokogiri::XML(response.body)
     assert_equal 1301.to_s, xml_doc.at_css('result')[:code]
     assert_equal 1, xml_doc.css('result').size
     assert_equal 2.to_s, xml_doc.at_css('msgQ')[:count]
@@ -28,8 +27,7 @@ class EppPollTest < ApplicationIntegrationTest
   def test_no_notifications
     registrars(:bestnames).notifications.delete_all(:delete_all)
 
-    request_xml =
-      <<-XML
+    request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
         <command>
@@ -38,8 +36,8 @@ class EppPollTest < ApplicationIntegrationTest
       </epp>
     XML
     post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    xml_doc = Nokogiri::XML(response.body)
 
+    xml_doc = Nokogiri::XML(response.body)
     assert_equal 1300.to_s, xml_doc.at_css('result')[:code]
     assert_equal 1, xml_doc.css('result').size
   end
@@ -58,8 +56,8 @@ class EppPollTest < ApplicationIntegrationTest
 
     post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     notification.reload
-    xml_doc = Nokogiri::XML(response.body)
 
+    xml_doc = Nokogiri::XML(response.body)
     assert notification.read?
     assert_equal 1000.to_s, xml_doc.at_css('result')[:code]
     assert_equal 1, xml_doc.css('result').size
@@ -79,9 +77,9 @@ class EppPollTest < ApplicationIntegrationTest
       </epp>
     XML
     post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    xml_doc = Nokogiri::XML(response.body)
     notification.reload
 
+    xml_doc = Nokogiri::XML(response.body)
     assert notification.unread?
     assert_equal 2303.to_s, xml_doc.at_css('result')[:code]
   end
@@ -96,8 +94,8 @@ class EppPollTest < ApplicationIntegrationTest
       </epp>
     XML
     post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    xml_doc = Nokogiri::XML(response.body)
 
+    xml_doc = Nokogiri::XML(response.body)
     assert_equal 2303.to_s, xml_doc.at_css('result')[:code]
   end
 end
