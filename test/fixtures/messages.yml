@@ -2,3 +2,9 @@ greeting:
   body: Welcome!
   queued: true
   registrar: bestnames
+
+domain_deleted:
+  body: Your domain has been deleted
+  queued: true
+  registrar: bestnames
+  created_at: <%= Time.zone.parse('2010-07-05') %>
