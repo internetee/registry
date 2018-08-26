@@ -15,14 +15,14 @@ class EppPollTest < ApplicationIntegrationTest
       </epp>
     XML
     post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    response_xml = Nokogiri::XML(response.body)
+    xml_doc = Nokogiri::XML(response.body)
 
-    assert_equal 1301.to_s, response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
-    assert_equal 2.to_s, response_xml.at_css('msgQ')[:count]
-    assert_equal notification.id.to_s, response_xml.at_css('msgQ')[:id]
-    assert_equal Time.zone.parse('2010-07-05').iso8601, response_xml.at_css('msgQ qDate').text
-    assert_equal 'Your domain has been deleted', response_xml.at_css('msgQ msg').text
+    assert_equal 1301.to_s, xml_doc.at_css('result')[:code]
+    assert_equal 1, xml_doc.css('result').size
+    assert_equal 2.to_s, xml_doc.at_css('msgQ')[:count]
+    assert_equal notification.id.to_s, xml_doc.at_css('msgQ')[:id]
+    assert_equal Time.zone.parse('2010-07-05').iso8601, xml_doc.at_css('msgQ qDate').text
+    assert_equal 'Your domain has been deleted', xml_doc.at_css('msgQ msg').text
   end
 
   def test_no_notifications
@@ -38,10 +38,10 @@ class EppPollTest < ApplicationIntegrationTest
       </epp>
     XML
     post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    response_xml = Nokogiri::XML(response.body)
+    xml_doc = Nokogiri::XML(response.body)
 
-    assert_equal 1300.to_s, response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
+    assert_equal 1300.to_s, xml_doc.at_css('result')[:code]
+    assert_equal 1, xml_doc.css('result').size
   end
 
   def test_mark_as_read
@@ -58,13 +58,13 @@ class EppPollTest < ApplicationIntegrationTest
 
     post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     notification.reload
-    response_xml = Nokogiri::XML(response.body)
+    xml_doc = Nokogiri::XML(response.body)
 
     assert notification.read?
-    assert_equal 1000.to_s, response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
-    assert_equal 1.to_s, response_xml.at_css('msgQ')[:count]
-    assert_equal notification.id.to_s, response_xml.at_css('msgQ')[:id]
+    assert_equal 1000.to_s, xml_doc.at_css('result')[:code]
+    assert_equal 1, xml_doc.css('result').size
+    assert_equal 1.to_s, xml_doc.at_css('msgQ')[:count]
+    assert_equal notification.id.to_s, xml_doc.at_css('msgQ')[:id]
   end
 
   def test_notification_of_other_registrars_cannot_be_marked_as_read
@@ -79,11 +79,11 @@ class EppPollTest < ApplicationIntegrationTest
       </epp>
     XML
     post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    response_xml = Nokogiri::XML(response.body)
+    xml_doc = Nokogiri::XML(response.body)
     notification.reload
 
     assert notification.unread?
-    assert_equal 2303.to_s, response_xml.at_css('result')[:code]
+    assert_equal 2303.to_s, xml_doc.at_css('result')[:code]
   end
 
   def test_notification_not_found
@@ -96,8 +96,8 @@ class EppPollTest < ApplicationIntegrationTest
       </epp>
     XML
     post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    response_xml = Nokogiri::XML(response.body)
+    xml_doc = Nokogiri::XML(response.body)
 
-    assert_equal 2303.to_s, response_xml.at_css('result')[:code]
+    assert_equal 2303.to_s, xml_doc.at_css('result')[:code]
   end
 end
