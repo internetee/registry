@@ -10,7 +10,7 @@ class Registrar
     private
 
     def available_contacts
-      current_user.registrar.contacts.order(:name).pluck(:name, :code)
+      current_registrar_user.registrar.contacts.order(:name).pluck(:name, :code)
     end
 
     def default_tab

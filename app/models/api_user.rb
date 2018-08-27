@@ -2,11 +2,12 @@ require 'open3'
 
 class ApiUser < User
   include EppErrors
+  devise :database_authenticatable, :trackable, :timeoutable, authentication_keys: [:username]
 
   def epp_code_map
     {
       '2306' => [ # Parameter policy error
-        [:password, :blank]
+        %i[plain_text_password blank]
       ]
     }
   end
@@ -19,8 +20,8 @@ class ApiUser < User
   belongs_to :registrar
   has_many :certificates
 
-  validates :username, :password, :registrar, :roles, presence: true
-  validates :password, length: { minimum: min_password_length }
+  validates :username, :plain_text_password, :registrar, :roles, presence: true
+  validates :plain_text_password, length: { minimum: min_password_length }
   validates :username, uniqueness: true
 
   delegate :code, :name, to: :registrar, prefix: true
@@ -30,6 +31,7 @@ class ApiUser < User
 
   SUPER = 'super'
   EPP = 'epp'
+  BILLING = 'billing'
 
   ROLES = %w(super epp billing) # should not match to admin roles
 

@@ -1,6 +1,6 @@
 # Domain related actions
 
-## GET /repp/v1/registrant/domains
+## GET /api/v1/registrant/domains
 
 Returns domains of the current registrant.
 
@@ -15,7 +15,7 @@ Returns domains of the current registrant.
 
 #### Request
 ```
-GET repp/v1/registrant/domains?limit=1&details=true HTTP/1.1
+GET api/v1/registrant/domains?limit=1&details=true HTTP/1.1
 Accept: application/json
 Authorization: Bearer Z2l0bGFiOmdoeXQ5ZTRmdQ==
 Content-Type: application/json
@@ -70,14 +70,14 @@ Content-Type: application/json
 }
 ```
 
-## GET repp/v1/registrant/domains
+## GET api/v1/registrant/domains
 
 Returns domain names with offset.
 
 
 #### Request
 ```
-GET repp/v1/registrant/domains?offset=1 HTTP/1.1
+GET api/v1/registrant/domains?offset=1 HTTP/1.1
 Accept: application/json
 Authorization: Bearer Z2l0bGFiOmdoeXQ5ZTRmdQ==
 Content-Type: application/json
@@ -96,14 +96,14 @@ Content-Type: application/json
 }
 ```
 
-## GET repp/v1/registrant/domains/$UUID
+## GET api/v1/registrant/domains/$UUID
 
 Returns a single domain object.
 
 
 #### Request
 ```
-GET repp/v1/registrant/domains/98d1083a-8863-4153-93e4-caee4a013535 HTTP/1.1
+GET api/v1/registrant/domains/98d1083a-8863-4153-93e4-caee4a013535 HTTP/1.1
 Accept: application/json
 Authorization: Bearer Z2l0bGFiOmdoeXQ5ZTRmdQ==
 Content-Type: application/json

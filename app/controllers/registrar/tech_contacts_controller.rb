@@ -8,7 +8,8 @@ class Registrar
       request = Net::HTTP::Patch.new(uri)
       request.set_form_data(current_contact_id: params[:current_contact_id],
                             new_contact_id: params[:new_contact_id])
-      request.basic_auth(current_user.username, current_user.password)
+      request.basic_auth(current_registrar_user.username,
+                         current_registrar_user.plain_text_password)
 
       if Rails.env.test?
         response = Net::HTTP.start(uri.hostname, uri.port,
