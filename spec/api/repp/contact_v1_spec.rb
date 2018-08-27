@@ -45,6 +45,6 @@ RSpec.describe Repp::ContactV1, db: true do
   end
 
   def http_auth_key
-    ActionController::HttpAuthentication::Basic.encode_credentials(user.username, user.password)
+    ActionController::HttpAuthentication::Basic.encode_credentials(user.username, user.plain_text_password)
   end
 end

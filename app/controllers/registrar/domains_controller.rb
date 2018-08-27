@@ -16,11 +16,11 @@ class Registrar
       end
 
       if params[:statuses_contains]
-        domains = current_user.registrar.domains.includes(:registrar, :registrant).where(
+        domains = current_registrar_user.registrar.domains.includes(:registrar, :registrant).where(
           "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
         )
       else
-        domains = current_user.registrar.domains.includes(:registrar, :registrant)
+        domains = current_registrar_user.registrar.domains.includes(:registrar, :registrant)
       end
 
       normalize_search_parameters do
@@ -142,7 +142,7 @@ class Registrar
     def search_contacts
       authorize! :create, Depp::Domain
 
-      scope = current_user.registrar.contacts.limit(10)
+      scope = current_registrar_user.registrar.contacts.limit(10)
       if params[:query].present?
         escaped_str = ActiveRecord::Base.connection.quote_string params[:query]
         scope = scope.where("name ilike '%#{escaped_str}%' OR code ilike '%#{escaped_str}%' ")
@@ -159,7 +159,7 @@ class Registrar
 
 
     def contacts
-      current_user.registrar.contacts
+      current_registrar_user.registrar.contacts
     end
 
     def normalize_search_parameters

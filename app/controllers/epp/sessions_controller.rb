@@ -81,7 +81,7 @@ class Epp::SessionsController < EppController
 
     if success
       if params[:parsed_frame].css('newPW').first
-        unless @api_user.update(password: params[:parsed_frame].css('newPW').first.text)
+        unless @api_user.update(plain_text_password: params[:parsed_frame].css('newPW').first.text)
           response.headers['X-EPP-Returncode'] = '2500'
           handle_errors(@api_user) and return
         end
@@ -128,7 +128,7 @@ class Epp::SessionsController < EppController
   def login_params
     user = params[:parsed_frame].css('clID').first.text
     pw = params[:parsed_frame].css('pw').first.text
-    { username: user, password: pw }
+    { username: user, plain_text_password: pw }
   end
 
   private

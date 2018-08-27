@@ -2,6 +2,8 @@ class RegistrantUser < User
   ACCEPTED_ISSUER = 'AS Sertifitseerimiskeskus'.freeze
   attr_accessor :idc_data
 
+  devise :database_authenticatable, :trackable, :timeoutable
+
   def ability
     @ability ||= Ability.new(self)
   end

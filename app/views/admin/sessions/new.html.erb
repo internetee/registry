@@ -1,0 +1,29 @@
+<div class="row">
+    <%= form_for resource, as: resource_name, url: session_path(resource_name),
+                 html: { class: 'col-md-6 form-signin center-block text-center' } do |f| %>
+        <h1 class="form-signin-heading text-center"><%= t '.header_html' %></h1>
+
+        <hr>
+
+        <%= f.label :username, class: 'sr-only' %>
+        <%= f.text_field :username, placeholder: AdminUser.human_attribute_name(:username),
+                         required: true,
+                         autofocus: true,
+                         class: 'form-control' %>
+
+        <%= f.label :password, class: 'sr-only' %>
+        <%= f.password_field :password, placeholder: AdminUser.human_attribute_name(:password),
+                             required: true,
+                             class: 'form-control' %>
+
+        <% if devise_mapping.rememberable? -%>
+            <div class="checkbox">
+                <label><%= f.check_box :remember_me %> <%= t '.remember_checkbox' %> %></label>
+            </div>
+        <% end -%>
+
+        <%= f.submit t('.sign_in_btn'), class: 'btn btn-lg btn-primary btn-block' %>
+    <% end %>
+</div>
+
+<%= render 'links' %>
