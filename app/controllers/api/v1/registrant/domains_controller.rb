@@ -16,12 +16,12 @@ module Api
                    status: :bad_request) && return
           end
 
-          @domains = associated_domains(current_user).limit(limit).offset(offset)
+          @domains = associated_domains(current_registrant_user).limit(limit).offset(offset)
           render json: @domains
         end
 
         def show
-          domain_pool = associated_domains(current_user)
+          domain_pool = associated_domains(current_registrant_user)
           @domain = domain_pool.find_by(uuid: params[:uuid])
 
           if @domain

@@ -35,7 +35,7 @@ module Api
         private
 
         def set_contacts_pool
-          country_code, ident = current_user.registrant_ident.to_s.split '-'
+          country_code, ident = current_registrant_user.registrant_ident.to_s.split '-'
           associated_domain_ids = begin
             BusinessRegistryCache.fetch_by_ident_and_cc(ident, country_code).associated_domain_ids
           end

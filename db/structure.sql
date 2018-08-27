@@ -909,7 +909,7 @@ CREATE TABLE public.domains (
     statuses character varying[],
     reserved boolean DEFAULT false,
     status_notes public.hstore,
-    statuses_backup character varying[] DEFAULT '{}'::character varying[],
+    statuses_before_force_delete character varying[] DEFAULT '{}'::character varying[],
     upid integer,
     up_date timestamp without time zone,
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL
@@ -2282,7 +2282,7 @@ ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 CREATE TABLE public.users (
     id integer NOT NULL,
     username character varying,
-    password character varying,
+    plain_text_password character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     email character varying,
@@ -4747,6 +4747,8 @@ INSERT INTO schema_migrations (version) VALUES ('20180327151906');
 
 INSERT INTO schema_migrations (version) VALUES ('20180331200125');
 
+INSERT INTO schema_migrations (version) VALUES ('20180422154642');
+
 INSERT INTO schema_migrations (version) VALUES ('20180612042234');
 
 INSERT INTO schema_migrations (version) VALUES ('20180612042625');
@@ -4756,6 +4758,8 @@ INSERT INTO schema_migrations (version) VALUES ('20180612042953');
 INSERT INTO schema_migrations (version) VALUES ('20180613030330');
 
 INSERT INTO schema_migrations (version) VALUES ('20180613045614');
+
+INSERT INTO schema_migrations (version) VALUES ('20180713154915');
 
 INSERT INTO schema_migrations (version) VALUES ('20180816123540');
 

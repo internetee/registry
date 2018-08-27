@@ -4,7 +4,7 @@ class Registrar
 
     def index
       params[:q] ||= {}
-      account = current_user.registrar.cash_account
+      account = current_registrar_user.registrar.cash_account
 
       ca_cache = params[:q][:created_at_lteq]
       begin
