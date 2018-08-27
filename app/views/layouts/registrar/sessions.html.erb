@@ -13,12 +13,11 @@
     <%= stylesheet_link_tag 'registrar-manifest', media: 'all' %>
     <%= javascript_include_tag 'registrar-manifest' %>
 </head>
-<body>
+<body class="<%= body_css_class %>">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <%= link_to registrar_root_path, class: 'navbar-brand',
-                            id: 'registrar-home-btn' do %>
+                <%= link_to new_registrar_user_session_path, class: 'navbar-brand' do %>
                     <%= t(:registrar_head_title) %>
                     <% if unstable_env.present? %>
                         <div class="text-center">

@@ -21,7 +21,7 @@
           %dd= @api_user.username
 
           %dt= t(:password)
-          %dd= @api_user.password
+          %dd= @api_user.plain_text_password
 
           %dt= t(:registrar_name)
           %dd= link_to(@api_user.registrar, admin_registrar_path(@api_user.registrar))

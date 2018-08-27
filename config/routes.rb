@@ -31,8 +31,17 @@ Rails.application.routes.draw do
 
   # REGISTRAR ROUTES
   namespace :registrar do
-    resource :dashboard
-    root 'dashboard#show'
+    root 'polls#show'
+
+    devise_for :users, path: '', class_name: 'ApiUser', skip: %i[sessions]
+
+    devise_scope :registrar_user do
+      get 'login/mid' => 'sessions#login_mid'
+      post 'login/mid' => 'sessions#mid'
+      post 'login/mid_status' => 'sessions#mid_status'
+      post 'id' => 'sessions#id'
+      post 'mid' => 'sessions#mid'
+    end
 
     resources :invoices do
       member do
@@ -44,18 +53,6 @@ Rails.application.routes.draw do
 
     resources :deposits
     resources :account_activities
-
-    devise_scope :user do
-      get 'login' => 'sessions#login'
-      get 'login/mid' => 'sessions#login_mid'
-      post 'login/mid' => 'sessions#mid'
-      post 'login/mid_status' => 'sessions#mid_status'
-
-      post 'sessions' => 'sessions#create'
-      post 'id' => 'sessions#id'
-      post 'mid' => 'sessions#mid'
-      delete 'logout', to: '/devise/sessions#destroy', as: :destroy_user_session
-    end
 
     put 'current_user/switch/:new_user_id', to: 'current_user#switch', as: :switch_current_user
     resource :profile, controller: :profile, only: :show
@@ -87,7 +84,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resource :poll do
+    resource :poll, only: %i[show destroy] do
       collection do
         post 'confirm_keyrelay'
         post 'confirm_transfer'
@@ -109,8 +106,32 @@ Rails.application.routes.draw do
     get  'pay/go/:bank'           => 'payments#pay',   as: 'payment_with'
   end
 
+  scope :registrar do
+    devise_scope :registrar_user do
+      get 'sign_in', to: 'registrar/sessions#new', as: :new_registrar_user_session
+
+      # /registrar/sessions path is hardcoded in Apache config for certificate-based authentication
+      # See https://github.com/internetee/registry/blob/master/README.md#installation
+      # Client certificate is asked only on login form submission, therefore the path must be
+      # different from the one in `new_registrar_user_session` route
+      post 'sessions', to: 'registrar/sessions#create', as: :registrar_user_session
+
+      delete 'sign_out', to: 'registrar/sessions#destroy', as: :destroy_registrar_user_session
+    end
+  end
+
   namespace :registrant do
     root 'domains#index'
+
+    # POST /registrant/sign_in is not used
+    devise_for :users, path: '', class_name: 'RegistrantUser'
+    devise_scope :registrant_user do
+      get 'login/mid' => 'sessions#login_mid'
+      post 'login/mid' => 'sessions#mid'
+      post 'login/mid_status' => 'sessions#mid_status'
+      post 'mid' => 'sessions#mid'
+      post 'id' => 'sessions#id'
+    end
 
     resources :registrars, only: :show
     resources :contacts, only: :show
@@ -126,22 +147,13 @@ Rails.application.routes.draw do
 
     resources :domain_update_confirms, only: %i[show update]
     resources :domain_delete_confirms, only: %i[show update]
-
-    devise_scope :user do
-      get 'login' => 'sessions#login'
-      get 'login/mid' => 'sessions#login_mid'
-      post 'login/mid' => 'sessions#mid'
-      post 'login/mid_status' => 'sessions#mid_status'
-
-      post 'sessions' => 'sessions#create'
-      post 'mid' => 'sessions#mid'
-      post 'id' => 'sessions#id'
-      get 'logout' => '/devise/sessions#destroy'
-    end
   end
 
   # ADMIN ROUTES
   namespace :admin do
+    root 'dashboard#show'
+    devise_for :users, path: '', class_name: 'AdminUser'
+
     resources :keyrelays
     resources :zonefiles
     resources :zones, controller: 'dns/zones', except: %i[show destroy]
@@ -243,26 +255,14 @@ Rails.application.routes.draw do
     end
 
     resources :delayed_jobs
-
-    resource :dashboard
-
     resources :epp_logs
     resources :repp_logs
 
-    devise_scope :user do
-      get 'login' => 'sessions#login'
-      post 'sessions' => 'sessions#create'
-      get 'logout' => '/devise/sessions#destroy'
-    end
-
-    authenticate :user do
+    authenticate :admin_user do
       mount Que::Web, at: 'que'
     end
-
-    root 'dashboards#show'
   end
 
-  devise_for :users
-
-  root to: redirect('admin/login')
+  # To prevent users seeing the default welcome message "Welcome aboard" from Rails
+  root to: redirect('admin/sign_in')
 end

@@ -31,8 +31,6 @@ class Ability
   end
 
   def epp # Registrar/api_user dynamic role
-    can :view, :registrar_dashboard
-
     if @user.registrar.api_ip_white?(@ip)
       can :manage, :poll
       can :manage, Depp::Contact
@@ -71,7 +69,6 @@ class Ability
   end
 
   def billing # Registrar/api_user dynamic role
-    can :view, :registrar_dashboard
     can(:manage, Invoice) { |i| i.buyer_id == @user.registrar_id }
     can :manage, :deposit
     can :read, AccountActivity

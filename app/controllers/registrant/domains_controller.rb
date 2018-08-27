@@ -54,13 +54,13 @@ class Registrant::DomainsController < RegistrantController
   end
 
   def domains
-    ident_cc, ident = @current_user.registrant_ident.split '-'
+    ident_cc, ident = current_registrant_user.registrant_ident.split '-'
     begin
       BusinessRegistryCache.fetch_associated_domains ident, ident_cc
     rescue Soap::Arireg::NotAvailableError => error
       flash[:notice] = I18n.t(error.json[:message])
       Rails.logger.fatal("[EXCEPTION] #{error.to_s}")
-      current_user.domains
+      current_registrant_user.domains
     end
   end
 
