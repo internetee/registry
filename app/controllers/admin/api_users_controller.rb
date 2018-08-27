@@ -32,7 +32,10 @@ module Admin
     end
 
     def update
-      params[:api_user].delete(:password) if params[:api_user][:password].blank?
+      if params[:api_user][:plain_text_password].blank?
+        params[:api_user].delete(:plain_text_password)
+      end
+
       if @api_user.update(api_user_params)
         flash[:notice] = I18n.t('record_updated')
         redirect_to [:admin, @api_user]
@@ -59,7 +62,7 @@ module Admin
     end
 
     def api_user_params
-      params.require(:api_user).permit(:username, :password, :active,
+      params.require(:api_user).permit(:username, :plain_text_password, :active,
                                        :registrar_id, :registrar_typeahead,
                                        :identity_code, { roles: [] })
     end

@@ -1,0 +1,7 @@
+en:
+  admin:
+    sessions:
+      new:
+        header_html: Eesti Interneti SA<br>Admin portal
+        sign_in_btn: Sign in
+        remember_checkbox: Remember me

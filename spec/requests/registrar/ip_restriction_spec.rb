@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe 'Registrar area IP restriction', settings: false do
   before do
-    @original_registrar_ip_whitelist_enabled = Setting.registrar_ip_whitelist_enabled
+    @original_registrar_ip_whitelist_enabled_setting = Setting.registrar_ip_whitelist_enabled
   end
 
   after do
-    Setting.registrar_ip_whitelist_enabled = @original_registrar_ip_whitelist_enabled
+    Setting.registrar_ip_whitelist_enabled = @original_registrar_ip_whitelist_enabled_setting
   end
 
   context 'when authenticated' do
@@ -22,12 +22,11 @@ RSpec.describe 'Registrar area IP restriction', settings: false do
       context 'when ip is allowed' do
         let!(:white_ip) { create(:white_ip,
                                  ipv4: '127.0.0.1',
-                                 registrar: controller.current_user.registrar,
+                                 registrar: controller.current_registrar_user.registrar,
                                  interfaces: [WhiteIp::REGISTRAR]) }
 
         specify do
           get registrar_root_url
-          follow_redirect!
           expect(response).to be_success
         end
       end
@@ -35,13 +34,12 @@ RSpec.describe 'Registrar area IP restriction', settings: false do
       context 'when ip is not allowed' do
         it 'signs the user out' do
           get registrar_root_url
-          follow_redirect!
-          expect(controller.current_user).to be_nil
+          expect(controller.current_registrar_user).to be_nil
         end
 
         it 'redirects to login url' do
           get registrar_root_url
-          expect(response).to redirect_to(registrar_login_url)
+          expect(response).to redirect_to(new_registrar_user_session_url)
         end
       end
     end
@@ -49,7 +47,6 @@ RSpec.describe 'Registrar area IP restriction', settings: false do
     context 'when IP restriction is disabled' do
       specify do
         get registrar_root_url
-        follow_redirect!
         expect(response).to be_success
       end
     end
@@ -67,14 +64,14 @@ RSpec.describe 'Registrar area IP restriction', settings: false do
                                  interfaces: [WhiteIp::REGISTRAR]) }
 
         specify do
-          get registrar_login_path
+          get new_registrar_user_session_path
           expect(response).to be_success
         end
       end
 
       context 'when ip is not allowed' do
         specify do
-          get registrar_login_path
+          get new_registrar_user_session_path
           expect(response.body).to match "Access denied"
         end
       end
@@ -82,7 +79,7 @@ RSpec.describe 'Registrar area IP restriction', settings: false do
 
     context 'when IP restriction is disabled' do
       specify do
-        get registrar_login_path
+        get new_registrar_user_session_path
         expect(response).to be_success
       end
     end
