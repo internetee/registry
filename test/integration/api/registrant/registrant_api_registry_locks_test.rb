@@ -109,6 +109,18 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
                  response_json)
   end
 
+  def test_registrant_can_lock_a_domain
+    post '/api/v1/registrant/domains/1b3ee442-e8fe-4922-9492-8fcb9dccc69c/registry_lock',
+         {}, @auth_headers
+
+    assert_equal(200, response.status)
+    response_json = JSON.parse(response.body, symbolize_names: true)
+
+    assert(response_json[:statuses].include?(DomainStatus::SERVER_DELETE_PROHIBITED))
+    assert(response_json[:statuses].include?(DomainStatus::SERVER_TRANSFER_PROHIBITED))
+    assert(response_json[:statuses].include?(DomainStatus::SERVER_UPDATE_PROHIBITED))
+  end
+
   private
 
   def auth_token

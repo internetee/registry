@@ -13,10 +13,10 @@ class RegistrantUserTest < ActiveSupport::TestCase
 
   def test_domains_returns_an_list_of_distinct_domains_associated_with_a_specific_id_code
     domain_names = @user.domains.pluck(:name)
-    assert_equal(3, domain_names.length)
+    assert_equal(4, domain_names.length)
 
-    # User is a registrant, but not a contact for the domain.
-    refute(domain_names.include?('shop.test'))
+    # User is a registrant, but not a contact for the domain. Should be included in the list.
+    assert(domain_names.include?('shop.test'))
   end
 
   def test_administered_domains_returns_a_list_of_domains
