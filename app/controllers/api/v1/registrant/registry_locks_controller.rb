@@ -35,7 +35,7 @@ module Api
         end
 
         def authorized_to_manage_locks?
-          return if current_user.administrated_domains.include?(@domain)
+          return if current_user.administered_domains.include?(@domain)
 
           render json: { errors: [
             { base: ['Only administrative contacts can manage registry locks'] }

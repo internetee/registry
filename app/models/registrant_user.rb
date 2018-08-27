@@ -28,7 +28,7 @@ class RegistrantUser < User
   # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can be
   # removed.
   # https://guides.rubyonrails.org/active_record_querying.html#or-conditions
-  def administrated_domains
+  def administered_domains
     domains_where_is_administrative_contact = begin
       Domain.joins(:domain_contacts)
             .where(domain_contacts: { contact_id: contacts, type: [AdminDomainContact] })

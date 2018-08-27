@@ -19,8 +19,8 @@ class RegistrantUserTest < ActiveSupport::TestCase
     refute(domain_names.include?('shop.test'))
   end
 
-  def test_administrated_domains_returns_a_list_of_domains
-    domain_names = @user.administrated_domains.pluck(:name)
+  def test_administered_domains_returns_a_list_of_domains
+    domain_names = @user.administered_domains.pluck(:name)
     assert_equal(3, domain_names.length)
 
     # User is a tech contact for the domain.
