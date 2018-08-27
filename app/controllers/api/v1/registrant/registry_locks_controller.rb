@@ -26,7 +26,7 @@ module Api
         private
 
         def set_domain
-          domain_pool = current_user.domains
+          domain_pool = current_registrant_user.domains
           @domain = domain_pool.find_by(uuid: params[:domain_uuid])
 
           return if @domain
@@ -35,7 +35,7 @@ module Api
         end
 
         def authorized_to_manage_locks?
-          return if current_user.administered_domains.include?(@domain)
+          return if current_registrant_user.administered_domains.include?(@domain)
 
           render json: { errors: [
             { base: ['Only administrative contacts can manage registry locks'] }

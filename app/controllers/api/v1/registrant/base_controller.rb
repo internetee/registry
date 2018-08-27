@@ -37,7 +37,7 @@ module Api
           decryptor.decrypt_token
 
           if decryptor.valid?
-            sign_in decryptor.user
+            sign_in(:registrant_user, decryptor.user)
           else
             render json: { errors: [{ base: ['Not authorized'] }] },
                    status: :unauthorized
@@ -47,7 +47,7 @@ module Api
         # This controller does not inherit from ApplicationController,
         # so user_for_paper_trail method is not usable.
         def set_paper_trail_whodunnit
-          ::PaperTrail.whodunnit = current_user.id_role_username
+          ::PaperTrail.whodunnit = current_registrant_user.id_role_username
         end
       end
     end
