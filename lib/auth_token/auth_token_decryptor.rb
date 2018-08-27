@@ -16,7 +16,10 @@ class AuthTokenDecryptor
   def decrypt_token
     decipher = OpenSSL::Cipher::AES.new(256, :CBC)
     decipher.decrypt
-    decipher.key = key
+
+    # OpenSSL used to automatically shrink oversized keys, it does not do that any longer.
+    # See: https://github.com/ruby/openssl/issues/116
+    decipher.key = key[0..31]
 
     base64_decoded = Base64.urlsafe_decode64(token.to_s)
     plain = decipher.update(base64_decoded) + decipher.final

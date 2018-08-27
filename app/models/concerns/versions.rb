@@ -34,16 +34,12 @@ module Versions
     end
 
     def user_from_id_role_username(str)
-      user = ApiUser.find_by(id: $1) if str =~ /^(\d+)-(ApiUser:|api-)/
-      unless user.present?
-        user = AdminUser.find_by(id: $1) if str =~ /^(\d+)-AdminUser:/
-        unless user.present?
-          # on import we copied Registrar name, which may eql code
-          registrar = Registrar.find_by(name: str)
-          # assume each registrar has only one user
-          user = registrar.api_users.first if registrar
-        end
-      end
+      registrar = Registrar.find_by(name: str)
+      user = registrar.api_users.first if registrar
+
+      str_match = str.match(/^(\d+)-(ApiUser:|api-|AdminUser:)/)
+      user ||= User.find_by(id: str_match[1]) if str_match
+
       user
     end
 
