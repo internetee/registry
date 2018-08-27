@@ -40,4 +40,12 @@ class DiscardDomainTaskTest < TaskTestCase
     @domain.reload
     refute @domain.discarded?
   end
+
+  def test_show_results
+    @domain.update!(delete_at: Time.zone.parse('2010-07-05 07:59'))
+    $stdout = StringIO.new
+
+    Rake::Task['domain:discard'].execute
+    assert_equal "shop.test is discarded\nDiscarded total: 1\n", $stdout.string
+  end
 end
