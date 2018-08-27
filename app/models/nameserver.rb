@@ -100,18 +100,18 @@ class Nameserver < ActiveRecord::Base
 
   def check_puny_symbols
     regexp = /(\A|\.)..--/
-    errors.add(:hostname, :invalid) if hostname =~ regexp
+    errors.add(:hostname, :invalid) if hostname.match?(regexp)
   end
 
   def validate_ipv4_format
     ipv4.to_a.each do |ip|
-      errors.add(:ipv4, :invalid) unless ip =~ IPV4_REGEXP
+      errors.add(:ipv4, :invalid) unless ip.match?(IPV4_REGEXP)
     end
   end
 
   def validate_ipv6_format
     ipv6.to_a.each do |ip|
-      errors.add(:ipv6, :invalid) unless ip =~ IPV6_REGEXP
+      errors.add(:ipv6, :invalid) unless ip.match?(IPV6_REGEXP)
     end
   end
 end
