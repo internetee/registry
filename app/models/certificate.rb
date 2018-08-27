@@ -87,14 +87,14 @@ class Certificate < ActiveRecord::Base
     -extensions usr_cert -notext -md sha256 \
     -in #{csr_file.path} -out #{crt_file.path} -key '#{ENV['ca_key_password']}' -batch")
 
-    if err.match(/Data Base Updated/)
+    if err.match?(/Data Base Updated/)
       crt_file.rewind
       self.crt = crt_file.read
       self.md5 = OpenSSL::Digest::MD5.new(parsed_crt.to_der).to_s
       save!
     else
       logger.error('FAILED TO CREATE CLIENT CERTIFICATE')
-      if err.match(/TXT_DB error number 2/)
+      if err.match?(/TXT_DB error number 2/)
         errors.add(:base, I18n.t('failed_to_create_crt_csr_already_signed'))
         logger.error('CSR ALREADY SIGNED')
       else

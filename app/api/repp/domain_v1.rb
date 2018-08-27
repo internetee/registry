@@ -29,7 +29,7 @@ module Repp
       # example: curl -u registrar1:password localhost:3000/repp/v1/domains/1/transfer_info -H "Auth-Code: authinfopw1"
       get '/:id/transfer_info', requirements: { id: /.*/ } do
         ident = params[:id]
-        domain = ident =~ /\A[0-9]+\z/ ? Domain.find_by(id: ident) : Domain.find_by_idn(ident)
+        domain = ident.match?(/\A[0-9]+\z/) ? Domain.find_by(id: ident) : Domain.find_by_idn(ident)
 
         error! I18n.t('errors.messages.epp_domain_not_found'), 404 unless domain
         error! I18n.t('errors.messages.epp_authorization_error'), 401 unless domain.transfer_code.eql? request.headers['Auth-Code']

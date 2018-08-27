@@ -22,7 +22,7 @@ class DomainNameValidator < ActiveModel::EachValidator
       # it's punycode
       if value[2] == '-' && value[3] == '-'
         regexp = /\Axn--[a-zA-Z0-9-]{0,59}\.#{general_domains}\z/
-        return false unless value =~ regexp
+        return false unless value.match?(regexp)
         value = SimpleIDN.to_unicode(value).mb_chars.downcase.strip
       end
 
