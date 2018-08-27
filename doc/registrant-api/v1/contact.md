@@ -148,7 +148,7 @@ Content-type: application/json
 
 ```
 HTTP/1.1 200
-Content-Type: application.json
+Content-Type: application/json
 
 {
   "uuid": "84c62f3d-e56f-40fa-9ca4-dc0137778949",
@@ -184,7 +184,7 @@ Content-Type: application.json
 ### Response on failure
 ```
 HTTP/1.1 400
-Content-Type: application.json
+Content-Type: application/json
 
 {
   "errors": [

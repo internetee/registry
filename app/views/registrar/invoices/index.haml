@@ -4,8 +4,8 @@
 = render 'shared/title', name: t(:your_account)
 
 = t(:your_current_account_balance_is,
-  balance: currency(current_user.registrar.cash_account.balance),
-  currency: current_user.registrar.cash_account.currency)
+  balance: currency(current_registrar_user.registrar.cash_account.balance),
+  currency: current_registrar_user.registrar.cash_account.currency)
 
 %h1= t(:invoices)
 .row

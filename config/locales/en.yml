@@ -135,16 +135,6 @@ en:
             registrar:
               blank: 'Registrar is missing'
 
-        api_user:
-          attributes:
-            username:
-              blank: 'Username is missing'
-              taken: 'Username already exists'
-            password:
-              blank: 'Password is missing'
-            registrar:
-              blank: 'Registrar is missing'
-
         dnskey:
           attributes:
             alg:
@@ -400,7 +390,6 @@ en:
   invoices: 'Invoices'
   no_such_user: 'No such user'
   phone_no: 'Phone number'
-  log_in_with_mid: 'Log in with mobile-id'
   confirmation_sms_was_sent_to_your_phone_verification_code_is: 'Confirmation sms was sent to your phone. Verification code is %{code}.'
   user_signature_is_invalid: 'User signature is invalid'
   session_timeout: 'Session timeout'
@@ -432,7 +421,6 @@ en:
               blank: "Password can't be blank"
 
   username: 'Username'
-  log_in: 'Log in'
   domains: 'Domains'
   register: 'Register'
   contacts: 'Contacts'
@@ -728,7 +716,6 @@ en:
   mail_templates: Mail Templates
   failure: "It was not saved"
   contact_is_not_valid: 'Contact %{value} is not valid, please fix the invalid contact'
-  welcome_to_eis_registrar_portal: 'Welcome to EIS Registrar portal'
   next: 'Next'
   previous: 'Previous'
   personal_domain_verification_url: 'Personal domain verification url'
@@ -740,7 +727,6 @@ en:
   test_registrar: "Test registrar"
   verified_confirm: 'Verified status is for cases when current registrant is the one applying for the update. Legal document signed by the registrant is required. Are you sure this update is properly verified with the registrant?'
   verified: 'Verified'
-  only_estonian_residets_can_signin: "Access currently available only to Estonian citizens and e-residents with Estonian ID-card or Mobile-ID."
   deleted: 'Deleted'
   cant_match_version: 'Impossible match version with request'
   user_not_authenticated: "user not authenticated"
