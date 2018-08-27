@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="form-signin col-md-6 center-block text-center">
+        <h2 class="form-signin-heading text-center">
+            <%= t '.header' %>
+        </h2>
+        <hr/>
+        <div class="row">
+            <%= t '.hint' %>
+        </div>
+        <br/>
+        <%= link_to '/registrant/login/mid' do %>
+            <%= image_tag 'mid.gif' %>
+        <% end %>
+        <%= link_to '/registrant/id', method: :post do %>
+            <%= image_tag 'id_card.gif' %>
+        <% end %>
+    </div>
+</div>

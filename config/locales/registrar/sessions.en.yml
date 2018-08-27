@@ -1,7 +1,9 @@
 en:
   registrar:
     sessions:
-      login:
-        login_btn: Login
+      new:
+        header_html: Eesti Interneti SA<br>Registrar Portal
+        submit_btn: Login
       login_mid:
-        login_btn: Login
+        header: Log in with mobile-id
+        submit_btn: Login

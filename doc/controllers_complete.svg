@@ -433,14 +433,6 @@
 <path fill="none" stroke="black" d="M-467.5,-480.5C-467.5,-480.5 -344.5,-480.5 -344.5,-480.5 -338.5,-480.5 -332.5,-486.5 -332.5,-492.5 -332.5,-492.5 -332.5,-681.5 -332.5,-681.5 -332.5,-687.5 -338.5,-693.5 -344.5,-693.5 -344.5,-693.5 -467.5,-693.5 -467.5,-693.5 -473.5,-693.5 -479.5,-687.5 -479.5,-681.5 -479.5,-681.5 -479.5,-492.5 -479.5,-492.5 -479.5,-486.5 -473.5,-480.5 -467.5,-480.5"/>
 <text text-anchor="middle" x="-406" y="-678.3" font-family="Times,serif" font-size="14.00">ApplicationController</text>
 <polyline fill="none" stroke="black" points="-479.5,-670.5 -332.5,-670.5 "/>
-<text text-anchor="start" x="-471.5" y="-655.3" font-family="Times,serif" font-size="14.00">admin_request?</text>
-<text text-anchor="start" x="-471.5" y="-640.3" font-family="Times,serif" font-size="14.00">after_sign_in_path_for</text>
-<text text-anchor="start" x="-471.5" y="-625.3" font-family="Times,serif" font-size="14.00">after_sign_out_path_for</text>
-<text text-anchor="start" x="-471.5" y="-610.3" font-family="Times,serif" font-size="14.00">api_user_log_str</text>
-<text text-anchor="start" x="-471.5" y="-595.3" font-family="Times,serif" font-size="14.00">current_root_url</text>
-<text text-anchor="start" x="-471.5" y="-565.3" font-family="Times,serif" font-size="14.00">registrant_request?</text>
-<text text-anchor="start" x="-471.5" y="-550.3" font-family="Times,serif" font-size="14.00">registrar_request?</text>
-<text text-anchor="start" x="-471.5" y="-535.3" font-family="Times,serif" font-size="14.00">user_for_paper_trail</text>
 <polyline fill="none" stroke="black" points="-479.5,-527.5 -332.5,-527.5 "/>
 <polyline fill="none" stroke="black" points="-479.5,-503.5 -332.5,-503.5 "/>
 <text text-anchor="start" x="-471.5" y="-488.3" font-family="Times,serif" font-size="14.00">_layout</text>

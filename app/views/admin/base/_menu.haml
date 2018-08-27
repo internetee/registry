@@ -39,6 +39,6 @@
           %li= link_to t('.repp_log'), admin_repp_logs_path(created_after: 'today')
           %li= link_to t('.que'), '/admin/que'
 
-  - if signed_in?
-    %ul.nav.navbar-nav.navbar-right
-      %li= link_to t(:log_out, user: current_user), '/admin/logout'
+  %ul.nav.navbar-nav.navbar-right
+    %li= link_to t('.sign_out'), destroy_admin_user_session_path, method: :delete,
+    class: 'navbar-link'
