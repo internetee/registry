@@ -14,7 +14,7 @@
         <%= stylesheet_link_tag 'registrant-manifest', media: 'all' %>
         <%= favicon_link_tag 'favicon.ico' %>
     </head>
-    <body>
+    <body class="<%= body_css_class %>">
         <!-- Fixed navbar
         -->
         <nav class="navbar navbar-default navbar-fixed-top">
@@ -37,7 +37,7 @@
                         <% end %>
                     <% end %>
                 </div>
-                <% if current_user %>
+                <% if current_registrant_user %>
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav public-nav">
                             <% if can? :view, Depp::Domain %>
@@ -54,9 +54,9 @@
                             <% end %>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <% if user_signed_in? %>
+                            <% if registrant_user_signed_in? %>
                                 <li>
-                                    <%= link_to t(:log_out, user: current_user), '/registrant/logout' %>
+                                    <%= link_to t(:log_out, user: current_registrant_user), destroy_registrant_user_session_path, method: :delete %>
                                 </li>
                             <% end %>
                         </ul>

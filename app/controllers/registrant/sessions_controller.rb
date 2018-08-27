@@ -1,8 +1,7 @@
 class Registrant::SessionsController < Devise::SessionsController
   layout 'registrant/application'
 
-  def login
-  end
+  def new; end
 
   def id
     id_code, id_issuer = request.env['SSL_CLIENT_S_DN'], request.env['SSL_CLIENT_I_DN_O']
@@ -10,11 +9,10 @@ class Registrant::SessionsController < Devise::SessionsController
 
     @user = RegistrantUser.find_or_create_by_idc_data(id_code, id_issuer)
     if @user
-      sign_in(@user, event: :authentication)
-      redirect_to registrant_root_url
+      sign_in_and_redirect(:registrant_user, @user, event: :authentication)
     else
       flash[:alert] = t('login_failed_check_id_card')
-      redirect_to registrant_login_url
+      redirect_to new_registrant_user_session_url
     end
   end
 
@@ -68,7 +66,7 @@ class Registrant::SessionsController < Devise::SessionsController
     when 'USER_AUTHENTICATED'
       @user = RegistrantUser.find_by(registrant_ident: "#{session[:user_country]}-#{session[:user_id_code]}")
 
-      sign_in @user
+      sign_in(:registrant_user, @user)
       flash[:notice] = t(:welcome)
       flash.keep(:notice)
       render js: "window.location = '#{registrant_root_path}'"
@@ -96,5 +94,19 @@ class Registrant::SessionsController < Devise::SessionsController
   def find_user_by_idc(idc)
     return User.new unless idc
     ApiUser.find_by(identity_code: idc) || User.new
+  end
+
+  private
+
+  def after_sign_in_path_for(_resource_or_scope)
+    registrant_root_path
+  end
+
+  def after_sign_out_path_for(_resource_or_scope)
+    new_registrant_user_session_path
+  end
+
+  def user_for_paper_trail
+    current_registrant_user.present? ? current_registrant_user.id_role_username : 'anonymous'
   end
 end

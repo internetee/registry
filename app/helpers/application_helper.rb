@@ -89,4 +89,8 @@ module ApplicationHelper
     types.delete('ddoc')
     ".#{types.join(',.')}"
   end
+
+  def body_css_class
+    [controller_path.split('/').map!(&:dasherize), action_name.dasherize, 'page'].join('-')
+  end
 end

@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    attributes:
+      api_user:
+        plain_text_password: Password
+    errors:
+      models:
+        api_user:
+          attributes:
+            username:
+              blank: 'Username is missing'
+              taken: 'Username already exists'
+            plain_text_password:
+              blank: 'Password is missing'
+            registrar:
+              blank: 'Registrar is missing'

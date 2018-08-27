@@ -10,7 +10,7 @@
     = csrf_meta_tags
     = stylesheet_link_tag 'admin-manifest', media: 'all'
     = favicon_link_tag 'favicon.ico'
-  %body{:style => env_style}
+  %body{:style => env_style, class: body_css_class}
     .navbar.navbar-inverse.navbar-static-top{role: "navigation"}
       .container
         .navbar-header
@@ -19,7 +19,7 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          = link_to admin_dashboard_path, class: 'navbar-brand' do
+          = link_to admin_root_path, class: 'navbar-brand' do
             = ENV['app_name']
             - if unstable_env.present?
               .text-center

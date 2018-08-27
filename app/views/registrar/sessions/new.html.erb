@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="form-signin col-md-6 center-block text-center">
+        <h1 class="form-signin-heading text-center"><%= t '.header_html' %></h1>
+
+        <hr>
+
+        <%= form_for resource, as: resource_name, url: session_path(resource_name) do |f| %>
+            <%= f.text_field :username, placeholder: ApiUser.human_attribute_name(:username),
+                             autofocus: true,
+                             required: true,
+                             class: 'form-control' %>
+            <%= f.password_field :password,
+                                 placeholder: ApiUser.human_attribute_name(:password),
+                                 required: true,
+                                 class: 'form-control' %>
+
+            <%= f.submit t('.submit_btn'), class: 'btn btn-lg btn-primary btn-block' %>
+        <% end %>
+
+        <hr>
+
+        <%= link_to '/registrar/login/mid', id: 'login-with-mobile-id-btn' do %>
+            <%= image_tag 'mid.gif' %>
+        <% end %>
+
+        <%= link_to '/registrar/id', method: :post do %>
+            <%= image_tag 'id_card.gif' %>
+        <% end %>
+    </div>
+</div>
