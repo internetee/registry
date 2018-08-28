@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class DomainForceDeleteTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @domain = domains(:shop)
   end
 
@@ -74,7 +74,7 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
   end
 
   def test_force_delete_cannot_be_scheduled_when_a_domain_is_discarded
-    @domain.discard
+    @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
     assert_raises StandardError do
       @domain.schedule_force_delete
     end

@@ -21,8 +21,8 @@ class ContactVersionsTest < ApplicationSystemTestCase
       VALUES (75, 'test_registrar', 'test123', 'test@test.com', 'EE', 'TEST123',
       'test123', 'en');
 
-      INSERT INTO contacts (id, name, code, auth_info, registrar_id)
-      VALUES (75, 'test_name', 'test_code', '8b4d462aa04194ca78840a', 75);
+      INSERT INTO contacts (id, name, code, email, auth_info, registrar_id)
+      VALUES (75, 'test_name', 'test_code', 'test@inbox.test', '8b4d462aa04194ca78840a', 75);
 
       INSERT INTO log_contacts (item_type, item_id, event, whodunnit, object,
       object_changes, created_at, session, children, ident_updated_at, uuid)

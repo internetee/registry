@@ -14,7 +14,7 @@ william: &william
   name: William
   email: william@inbox.test
   phone: '+555.555'
-  fax: +555.555
+  fax: '+666.6'
   ident: 1234
   ident_type: priv
   ident_country_code: US

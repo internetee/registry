@@ -1,7 +1,7 @@
 module Admin
   class DomainsController < BaseController
-    load_and_authorize_resource
-    before_action :set_domain, only: [:show, :edit, :update, :zonefile]
+    before_action :set_domain, only: %i[show edit update keep]
+    authorize_resource
     helper_method :force_delete_templates
 
     def index
@@ -33,7 +33,8 @@ module Admin
     end
 
     def show
-      @domain.valid?
+      # Validation is needed to warn users
+      @domain.validate
     end
 
     def edit
@@ -58,6 +59,11 @@ module Admin
     def versions
       @domain = Domain.where(id: params[:domain_id]).includes({ versions: :item }).first
       @versions = @domain.versions
+    end
+
+    def keep
+      @domain.keep
+      redirect_to edit_admin_domain_url(@domain), notice: t('.kept')
     end
 
     private
