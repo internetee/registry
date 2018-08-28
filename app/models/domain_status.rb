@@ -153,13 +153,11 @@ class DomainStatus < ActiveRecord::Base
       [
         ['Hold', SERVER_HOLD],
         ['ManualInzone', SERVER_MANUAL_INZONE],
-        # [''],
         ['RenewProhibited', SERVER_RENEW_PROHIBITED],
         ['TransferProhibited', SERVER_TRANSFER_PROHIBITED],
         ['RegistrantChangeProhibited', SERVER_REGISTRANT_CHANGE_PROHIBITED],
         ['AdminChangeProhibited', SERVER_ADMIN_CHANGE_PROHIBITED],
         ['TechChangeProhibited', SERVER_TECH_CHANGE_PROHIBITED],
-        # [''],
         ['UpdateProhibited', SERVER_UPDATE_PROHIBITED],
         ['DeleteProhibited', SERVER_DELETE_PROHIBITED]
       ]
@@ -171,11 +169,11 @@ class DomainStatus < ActiveRecord::Base
         INACTIVE,
         FORCE_DELETE,
         PENDING_CREATE,
-        #PENDING_DELETE,
         PENDING_RENEW,
         PENDING_TRANSFER,
         PENDING_UPDATE,
-        PENDING_DELETE_CONFIRMATION
+        PENDING_DELETE_CONFIRMATION,
+        DELETE_CANDIDATE,
       ]
     end
   end

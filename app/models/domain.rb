@@ -4,6 +4,7 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::Expirable
   include Concerns::Domain::Activatable
   include Concerns::Domain::ForceDelete
+  include Concerns::Domain::Discardable
   include Concerns::Domain::Deletable
   include Concerns::Domain::Transferable
 
@@ -246,13 +247,6 @@ class Domain < ActiveRecord::Base
   def server_holdable?
     return false if statuses.include?(DomainStatus::SERVER_HOLD)
     return false if statuses.include?(DomainStatus::SERVER_MANUAL_INZONE)
-    true
-  end
-
-  def delete_candidateable?
-    return false if delete_at > Time.zone.now
-    return false if statuses.include?(DomainStatus::DELETE_CANDIDATE)
-    return false if statuses.include?(DomainStatus::SERVER_DELETE_PROHIBITED)
     true
   end
 
@@ -611,10 +605,6 @@ class Domain < ActiveRecord::Base
 
   def self.outzone_candidates
     where("#{attribute_alias(:outzone_time)} < ?", Time.zone.now)
-  end
-
-  def self.delete_candidates
-    where("#{attribute_alias(:delete_time)} < ?", Time.zone.now)
   end
 
   def self.uses_zone?(zone)

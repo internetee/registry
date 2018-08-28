@@ -840,22 +840,6 @@ RSpec.describe Domain do
     end
   end
 
-  describe '::delete_candidates', db: true do
-    before :example do
-      travel_to Time.zone.parse('05.07.2010 00:00')
-
-      create(:zone, origin: 'ee')
-
-      create(:domain, id: 1, delete_time: Time.zone.parse('04.07.2010 23:59'))
-      create(:domain, id: 2, delete_time: Time.zone.parse('05.07.2010 00:00'))
-      create(:domain, id: 3, delete_time: Time.zone.parse('05.07.2010 00:01'))
-    end
-
-    it 'returns domains with delete time in the past' do
-      expect(described_class.delete_candidates.ids).to eq([1])
-    end
-  end
-
   describe '::uses_zone?', db: true do
     let!(:zone) { create(:zone, origin: 'domain.tld') }
 
