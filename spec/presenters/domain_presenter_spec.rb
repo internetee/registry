@@ -44,7 +44,7 @@ RSpec.describe DomainPresenter do
     subject(:delete_date) { presenter.delete_date }
 
     context 'when present' do
-      let(:domain) { instance_double(Domain, delete_time: '05.07.2010') }
+      let(:domain) { instance_double(Domain, delete_at: '05.07.2010') }
 
       it 'returns localized date' do
         expect(view).to receive(:l).with('05.07.2010', format: :date).and_return('delete date')
@@ -53,7 +53,7 @@ RSpec.describe DomainPresenter do
     end
 
     context 'when absent' do
-      let(:domain) { instance_double(Domain, delete_time: nil) }
+      let(:domain) { instance_double(Domain, delete_at: nil) }
 
       specify { expect(delete_date).to be_nil }
     end

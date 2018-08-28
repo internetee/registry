@@ -30,7 +30,7 @@ class DomainPresenter
   end
 
   def delete_date
-    view.l(domain.delete_time, format: :date) if domain.delete_time
+    view.l(domain.delete_at, format: :date) if domain.delete_at
   end
 
   def force_delete_date
@@ -57,6 +57,15 @@ class DomainPresenter
     else
       schedule_force_delete_btn
     end
+  end
+
+  def keep_btn
+    return unless domain.discarded?
+
+    view.link_to view.t('admin.domains.edit.keep_btn'), view.keep_admin_domain_path(@domain),
+                 method: :patch,
+                 data: { confirm: view.t('admin.domains.edit.keep_btn_confirm') },
+                 class: 'btn btn-default'
   end
 
   private

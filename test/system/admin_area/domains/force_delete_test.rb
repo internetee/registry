@@ -56,7 +56,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
   end
 
   def test_force_delete_procedure_cannot_be_scheduled_on_a_discarded_domain
-    @domain.discard
+    @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
 
     visit edit_admin_domain_url(@domain)
     assert_no_button 'Schedule force delete'
