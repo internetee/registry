@@ -24,7 +24,7 @@ william: &william
   street: Main Street
   zip: 12345
   city: New York
-  state: New York
+  state: New York State
   country_code: US
   statuses:
     - ok
