@@ -43,9 +43,6 @@ class DomainVersionsTest < ApplicationSystemTestCase
 
   def delete_objects_once_done
     ActiveRecord::Base.connection.execute('DELETE FROM log_domains where item_id = 54')
-    Domain.destroy_all
-    Contact.destroy_all
-    Registrar.destroy_all
   end
 
   def test_removed_fields_are_not_causing_errors_in_index_view

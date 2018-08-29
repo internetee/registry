@@ -39,9 +39,6 @@ class ContactVersionsTest < ApplicationSystemTestCase
 
   def delete_objects_once_done
     ActiveRecord::Base.connection.execute('DELETE from log_contacts where item_id = 75')
-    Domain.destroy_all
-    Contact.destroy_all
-    Registrar.destroy_all
   end
 
   def test_removed_fields_are_not_causing_errors_in_index_view
