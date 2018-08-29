@@ -16,12 +16,6 @@ xml.epp_head do
     end
 
     if @notification.action&.contact
-      # render(partial: 'epp/poll/contact',
-      #        locals: {
-      #          builder: xml,
-      #          contact: @notification.action.contact,
-      #          address_processing: Setting.address_processing
-      #        })
       render(partial: 'epp/poll/action',
              locals: {
                builder: xml,
