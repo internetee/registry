@@ -1,10 +1,15 @@
 require 'test_helper'
 
 class EppDomainTransferRequestTest < ApplicationIntegrationTest
-  setup do
+  def setup
     @domain = domains(:shop)
     @new_registrar = registrars(:goodnames)
+    @original_transfer_wait_time = Setting.transfer_wait_time
     Setting.transfer_wait_time = 0
+  end
+
+  def teardown
+    Setting.transfer_wait_time = @original_transfer_wait_time
   end
 
   def test_transfers_domain_at_once
@@ -75,14 +80,17 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
     assert_equal '2304', Nokogiri::XML(response.body).at_css('result')[:code]
   end
 
-  def test_discarded_domain
-    @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
+  def test_discarded_domain_cannot_be_transferred
+    travel_to Time.zone.parse('2010-07-05 10:30')
+    @domain.delete_at = Time.zone.parse('2010-07-05 10:00')
+    @domain.discard
 
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
 
     assert_equal registrars(:bestnames), @domain.registrar
     assert_equal '2105', Nokogiri::XML(response.body).at_css('result')[:code]
+    travel_back
   end
 
   def test_same_registrar
