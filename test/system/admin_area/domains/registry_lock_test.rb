@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistryLockTest < JavaScriptApplicationSystemTestCase
+class AdminAreaRegistryLockTest < JavaScriptApplicationSystemTestCase
   def setup
     super
     WebMock.allow_net_connect!
