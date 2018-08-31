@@ -23,7 +23,9 @@ Rails.application.routes.draw do
       namespace :registrant do
         post 'auth/eid', to: 'auth#eid'
 
-        resources :domains, only: %i[index show], param: :uuid
+        resources :domains, only: %i[index show], param: :uuid do
+          resource :registry_lock, only: %i[create destroy]
+        end
         resources :contacts, only: %i[index show], param: :uuid
       end
     end
@@ -195,6 +197,7 @@ Rails.application.routes.draw do
       resources :pending_updates
       resources :pending_deletes
       resource :force_delete, controller: 'domains/force_delete', only: %i[create destroy]
+      resource :registry_lock, controller: 'domains/registry_lock', only: :destroy
 
       member do
         patch :keep

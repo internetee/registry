@@ -1,5 +1,5 @@
 class RegistrantUser < User
-  ACCEPTED_ISSUER = 'AS Sertifitseerimiskeskus'
+  ACCEPTED_ISSUER = 'AS Sertifitseerimiskeskus'.freeze
   attr_accessor :idc_data
 
   devise :database_authenticatable, :trackable, :timeoutable
@@ -10,16 +10,46 @@ class RegistrantUser < User
   delegate :can?, :cannot?, to: :ability
 
   def ident
-    registrant_ident.to_s.split("-").last
+    registrant_ident.to_s.split('-').last
   end
 
+  def country_code
+    registrant_ident.to_s.split('-').first
+  end
+
+  # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can be
+  # removed.
+  # https://guides.rubyonrails.org/active_record_querying.html#or-conditions
   def domains
-    ident_cc, ident = registrant_ident.to_s.split '-'
-    Domain.includes(:registrar, :registrant).where(contacts: {
-                                                       ident_type: 'priv',
-                                                       ident: ident, #identity_code,
-                                                       ident_country_code: ident_cc #country_code
-                                                   })
+    domains_where_is_contact = begin
+      Domain.joins(:domain_contacts)
+            .where(domain_contacts: { contact_id: contacts })
+    end
+
+    domains_where_is_registrant = Domain.where(registrant_id: contacts)
+
+    Domain.from(
+      "(#{domains_where_is_registrant.to_sql} UNION " \
+      "#{domains_where_is_contact.to_sql}) AS domains"
+    )
+  end
+
+  def contacts
+    Contact.where(ident_type: 'priv', ident: ident, ident_country_code: country_code)
+  end
+
+  def administered_domains
+    domains_where_is_administrative_contact = begin
+      Domain.joins(:domain_contacts)
+            .where(domain_contacts: { contact_id: contacts, type: [AdminDomainContact] })
+    end
+
+    domains_where_is_registrant = Domain.where(registrant_id: contacts)
+
+    Domain.from(
+      "(#{domains_where_is_registrant.to_sql} UNION " \
+      "#{domains_where_is_administrative_contact.to_sql}) AS domains"
+    )
   end
 
   def to_s
@@ -35,13 +65,13 @@ class RegistrantUser < User
       user_data = {}
 
       # handling here new and old mode
-      if idc_data.starts_with?("/")
+      if idc_data.starts_with?('/')
         user_data[:ident] = idc_data.scan(/serialNumber=(\d+)/).flatten.first
         user_data[:country_code] = idc_data.scan(/^\/C=(.{2})/).flatten.first
         user_data[:first_name] = idc_data.scan(%r{/GN=(.+)/serialNumber}).flatten.first
         user_data[:last_name] = idc_data.scan(%r{/SN=(.+)/GN}).flatten.first
       else
-        parse_str = "," + idc_data
+        parse_str = ',' + idc_data
         user_data[:ident] = parse_str.scan(/,serialNumber=(\d+)/).flatten.first
         user_data[:country_code] = parse_str.scan(/,C=(.{2})/).flatten.first
         user_data[:first_name] = parse_str.scan(/,GN=([^,]+)/).flatten.first

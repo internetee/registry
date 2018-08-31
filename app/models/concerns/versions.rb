@@ -37,7 +37,7 @@ module Versions
       registrar = Registrar.find_by(name: str)
       user = registrar.api_users.first if registrar
 
-      str_match = str.match(/^(\d+)-(ApiUser:|api-|AdminUser:)/)
+      str_match = str.match(/^(\d+)-(ApiUser:|api-|AdminUser:|RegistrantUser:)/)
       user ||= User.find_by(id: str_match[1]) if str_match
 
       user
