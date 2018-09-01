@@ -14,6 +14,11 @@ class DomainPresenter
       html += " #{label}"
     end
 
+    if domain.locked_by_registrant?
+      label = view.content_tag(:span, 'registryLock', class: 'label label-danger')
+      html += " #{label}"
+    end
+
     html.html_safe
   end
 
@@ -59,20 +64,30 @@ class DomainPresenter
     end
   end
 
+  def remove_registry_lock_btn
+    return unless domain.locked_by_registrant?
+
+    view.link_to(view.t('admin.domains.registry_lock.destroy.btn'),
+                 view.admin_domain_registry_lock_path(domain),
+                 method: :delete,
+                 data: { confirm: view.t('admin.domains.registry_lock.destroy.confirm') },
+                 class: 'dropdown-item')
+  end
+
   def keep_btn
     return unless domain.discarded?
 
     view.link_to view.t('admin.domains.edit.keep_btn'), view.keep_admin_domain_path(@domain),
                  method: :patch,
                  data: { confirm: view.t('admin.domains.edit.keep_btn_confirm') },
-                 class: 'btn btn-default'
+                 class: 'dropdown-item'
   end
 
   private
 
   def schedule_force_delete_btn
     view.content_tag(:a, view.t('admin.domains.force_delete_toggle_btn.schedule'),
-                     class: 'btn btn-default',
+                     class: 'dropdown-item',
                      data: {
                          toggle: 'modal',
                          target: '.domain-edit-force-delete-dialog',
@@ -86,14 +101,14 @@ class DomainPresenter
                  data: {
                      confirm: view.t('admin.domains.force_delete_toggle_btn.cancel_confirm'),
                  },
-                 class: 'btn btn-primary'
+                 class: 'dropdown-item'
   end
 
   def inactive_schedule_force_delete_btn
     view.content_tag :button, view.t('admin.domains.force_delete_toggle_btn.schedule'),
                      title: view.t('admin.domains.force_delete_toggle_btn.unable_to_schedule'),
                      disabled: true,
-                     class: 'btn btn-default'
+                     class: 'dropdown-item'
   end
 
   attr_reader :domain

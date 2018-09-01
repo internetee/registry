@@ -1,62 +1,38 @@
+require 'test_helper'
+
 class RegistrantUserTest < ActiveSupport::TestCase
   def setup
     super
+
+    @user = users(:registrant)
   end
 
   def teardown
     super
   end
 
-  def test_find_or_create_by_api_data_creates_a_user
-    user_data = {
-      ident: '37710100070',
-      first_name: 'JOHN',
-      last_name: 'SMITH'
-    }
+  def test_domains_returns_an_list_of_distinct_domains_associated_with_a_specific_id_code
+    domain_names = @user.domains.pluck(:name)
+    assert_equal(4, domain_names.length)
 
-    RegistrantUser.find_or_create_by_api_data(user_data)
-
-    user = User.find_by(registrant_ident: 'EE-37710100070')
-    assert_equal('JOHN SMITH', user.username)
+    # User is a registrant, but not a contact for the domain. Should be included in the list.
+    assert(domain_names.include?('shop.test'))
   end
 
-  def test_find_or_create_by_api_data_creates_a_user_after_upcasing_input
-    user_data = {
-      ident: '37710100070',
-      first_name: 'John',
-      last_name: 'Smith'
-    }
+  def test_administered_domains_returns_a_list_of_domains
+    domain_names = @user.administered_domains.pluck(:name)
+    assert_equal(3, domain_names.length)
 
-    RegistrantUser.find_or_create_by_api_data(user_data)
-
-    user = User.find_by(registrant_ident: 'EE-37710100070')
-    assert_equal('JOHN SMITH', user.username)
+    # User is a tech contact for the domain.
+    refute(domain_names.include?('library.test'))
   end
 
-  def test_find_or_create_by_mid_data_creates_a_user
-    user_data = OpenStruct.new(user_country: 'EE', user_id_code: '37710100070',
-                              user_givenname: 'JOHN', user_surname: 'SMITH')
-
-    RegistrantUser.find_or_create_by_mid_data(user_data)
-    user = User.find_by(registrant_ident: 'EE-37710100070')
-    assert_equal('JOHN SMITH', user.username)
+  def test_contacts_returns_an_list_of_contacts_associated_with_a_specific_id_code
+    assert_equal(1, @user.contacts.count)
   end
 
-  def test_find_or_create_by_idc_with_legacy_header_creates_a_user
-    header = '/C=EE/O=ESTEID/OU=authentication/CN=SMITH,JOHN,37710100070/SN=SMITH/GN=JOHN/serialNumber=37710100070'
-
-    RegistrantUser.find_or_create_by_idc_data(header, RegistrantUser::ACCEPTED_ISSUER)
-
-    user = User.find_by(registrant_ident: 'EE-37710100070')
-    assert_equal('JOHN SMITH', user.username)
-  end
-
-  def test_find_or_create_by_idc_with_rfc2253_header_creates_a_user
-    header = 'serialNumber=37710100070,GN=JOHN,SN=SMITH,CN=SMITH\\,JOHN\\,37710100070,OU=authentication,O=ESTEID,C=EE'
-
-    RegistrantUser.find_or_create_by_idc_data(header, RegistrantUser::ACCEPTED_ISSUER)
-
-    user = User.find_by(registrant_ident: 'EE-37710100070')
-    assert_equal('JOHN SMITH', user.username)
+  def test_ident_and_country_code_helper_methods
+    assert_equal('1234', @user.ident)
+    assert_equal('US', @user.country_code)
   end
 end

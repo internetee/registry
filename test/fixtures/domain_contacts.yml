@@ -28,10 +28,35 @@ airport_william_tech:
   contact: william
   type: TechDomainContact
 
-library_john:
+library_acme_admin:
+  domain: library
+  contact: acme_ltd
+  type: AdminDomainContact
+
+library_john_tech:
   domain: library
   contact: john
+  type: TechDomainContact
+
+metro_jack_admin:
+  domain: metro
+  contact: jack
   type: AdminDomainContact
+
+metro_jack_tech:
+  domain: metro
+  contact: jack
+  type: TechDomainContact
+
+hospital_john_admin:
+  domain: hospital
+  contact: john
+  type: AdminDomainContact
+
+hospital_john_tech:
+  domain: hospital
+  contact: john
+  type: TechDomainContact
 
 invalid_invalid_admin:
   domain: invalid
