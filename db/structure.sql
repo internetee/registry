@@ -904,7 +904,7 @@ CREATE TABLE public.domains (
     delete_at timestamp without time zone,
     registrant_verification_asked_at timestamp without time zone,
     registrant_verification_token character varying,
-    pending_json json,
+    pending_json jsonb,
     force_delete_at timestamp without time zone,
     statuses character varying[],
     reserved boolean DEFAULT false,
@@ -912,7 +912,8 @@ CREATE TABLE public.domains (
     statuses_before_force_delete character varying[] DEFAULT '{}'::character varying[],
     upid integer,
     up_date timestamp without time zone,
-    uuid uuid DEFAULT public.gen_random_uuid() NOT NULL
+    uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    locked_by_registrant_at timestamp without time zone
 );
 
 
@@ -4762,6 +4763,8 @@ INSERT INTO schema_migrations (version) VALUES ('20180613045614');
 
 INSERT INTO schema_migrations (version) VALUES ('20180713154915');
 
+INSERT INTO schema_migrations (version) VALUES ('20180808064402');
+
 INSERT INTO schema_migrations (version) VALUES ('20180816123540');
 
 INSERT INTO schema_migrations (version) VALUES ('20180823161237');
@@ -4771,6 +4774,8 @@ INSERT INTO schema_migrations (version) VALUES ('20180823163548');
 INSERT INTO schema_migrations (version) VALUES ('20180823174331');
 
 INSERT INTO schema_migrations (version) VALUES ('20180823212823');
+
+INSERT INTO schema_migrations (version) VALUES ('20180824092855');
 
 INSERT INTO schema_migrations (version) VALUES ('20180824102834');
 

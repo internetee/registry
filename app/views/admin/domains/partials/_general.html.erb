@@ -33,6 +33,9 @@
 
             <dt><%= Domain.human_attribute_name :force_delete_at %></dt>
             <dd><%= l @domain.force_delete_at %></dd>
+
+            <dt><%= t('.locked_by_registrant_at') %></dt>
+            <dd><%= l(@domain.locked_by_registrant_at) %></dd>
         </dl>
     </div>
 </div>

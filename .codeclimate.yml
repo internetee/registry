@@ -27,3 +27,4 @@ exclude_patterns:
   - "vendor/"
   - "test/"
   - "spec/"
+  - "CHANGELOG.md"

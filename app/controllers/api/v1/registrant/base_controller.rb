@@ -6,6 +6,7 @@ module Api
     module Registrant
       class BaseController < ActionController::API
         before_action :authenticate
+        before_action :set_paper_trail_whodunnit
 
         rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
           error = {}
@@ -22,15 +23,31 @@ module Api
           header.gsub(pattern, '') if header&.match(pattern)
         end
 
+        def associated_domains(user)
+          country_code, ident = user.registrant_ident.split('-')
+
+          BusinessRegistryCache.fetch_associated_domains(ident, country_code)
+        rescue Soap::Arireg::NotAvailableError => error
+          Rails.logger.fatal("[EXCEPTION] #{error}")
+          user.domains
+        end
+
         def authenticate
           decryptor = AuthTokenDecryptor.create_with_defaults(bearer_token)
           decryptor.decrypt_token
 
           if decryptor.valid?
-            sign_in decryptor.user
+            sign_in(:registrant_user, decryptor.user)
           else
-            render json: { errors: [{base: ['Not authorized']}] }, status: :unauthorized
+            render json: { errors: [{ base: ['Not authorized'] }] },
+                   status: :unauthorized
           end
+        end
+
+        # This controller does not inherit from ApplicationController,
+        # so user_for_paper_trail method is not usable.
+        def set_paper_trail_whodunnit
+          ::PaperTrail.whodunnit = current_registrant_user.id_role_username
         end
       end
     end

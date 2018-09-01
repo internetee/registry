@@ -30,17 +30,6 @@ module Api
             render json: { errors: [{ base: ['Domain not found'] }] }, status: :not_found
           end
         end
-
-        private
-
-        def associated_domains(user)
-          country_code, ident = user.registrant_ident.split('-')
-
-          BusinessRegistryCache.fetch_associated_domains(ident, country_code)
-        rescue Soap::Arireg::NotAvailableError => error
-          Rails.logger.fatal("[EXCEPTION] #{error}")
-          user.domains
-        end
       end
     end
   end
