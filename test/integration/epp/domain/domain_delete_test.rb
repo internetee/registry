@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class EppDomainDeleteTest < ApplicationIntegrationTest
+  def setup
+    @domain = domains(:shop)
+  end
+
   def test_bypasses_domain_and_registrant_and_contacts_validation
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -27,7 +31,9 @@ class EppDomainDeleteTest < ApplicationIntegrationTest
   end
 
   def test_discarded_domain_cannot_be_deleted
-    domains(:shop).discard
+    travel_to Time.zone.parse('2010-07-05 10:30')
+    @domain.delete_at = Time.zone.parse('2010-07-05 10:00')
+    @domain.discard
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -51,5 +57,6 @@ class EppDomainDeleteTest < ApplicationIntegrationTest
       post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
     assert_equal '2105', Nokogiri::XML(response.body).at_css('result')[:code]
+    travel_back
   end
 end

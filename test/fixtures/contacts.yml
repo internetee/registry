@@ -17,7 +17,7 @@ william: &william
   email: william@inbox.test
   phone: '+555.555'
   fax: '+666.6'
-  ident: 1234
+  ident: 12345
   ident_type: priv
   ident_country_code: US
   registrar: bestnames
@@ -36,7 +36,7 @@ jane:
   name: Jane
   email: jane@mail.test
   phone: '+555.555'
-  ident: 1234
+  ident: 123456
   ident_type: priv
   ident_country_code: US
   registrar: bestnames
@@ -48,7 +48,7 @@ acme_ltd:
   name: Acme Ltd
   email: acme@outlook.test
   phone: '+555.555'
-  ident: 1234
+  ident: 1234567
   ident_type: org
   registrar: bestnames
   ident_country_code: US
@@ -60,7 +60,7 @@ jack:
   name: Jack
   email: jack@inbox.test
   phone: '+555.555'
-  ident: 12345
+  ident: 12345678
   ident_type: org
   registrar: goodnames
   ident_country_code: US

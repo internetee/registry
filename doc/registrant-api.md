@@ -7,5 +7,5 @@ Main communication specification through Registrant API:
 
 [Authentication](registrant-api/v1/authentication.md)
 [Domains](registrant-api/v1/domain.md)
-[Domain Lock](registrant-api/v1/domain_lock.md)
+[Registry Lock](registrant-api/v1/registry_lock.md)
 [Contacts](registrant-api/v1/contact.md)

@@ -5,15 +5,28 @@
     <li><%= link_to @domain, admin_domain_path(@domain) %></li>
 </ol>
 
+
 <div class="page-header">
     <div class="row">
-        <div class="col-sm-4">
-            <h1><%= t '.header', domain: domain.name %></h1>
+        <div class="col-sm-8">
+            <h1 class="text-center-xs">
+                <%= t '.header' %> <%= domain.name_with_status %>
+            </h1>
         </div>
-
-        <div class="col-sm-8 text-right">
-            <%= link_to t('.add_new_status_btn'), '#', class: 'btn btn-primary js-add-status' %>
-            <%= domain.force_delete_toggle_btn %>
+        <div class="col-sm-4 text-right">
+            <div class="btn-group">
+                <button class="btn btn-primary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Actions
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><%= domain.force_delete_toggle_btn %></li>
+                    <li><%= domain.remove_registry_lock_btn %></li>
+                    <li><%= domain.keep_btn %></li>
+                    <div class="divider"></div>
+                    <li><%= link_to t('.add_new_status_btn'), '#', class: 'js-add-status' %></li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

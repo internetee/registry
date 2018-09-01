@@ -298,50 +298,6 @@ RSpec.describe Domain do
         @domain.registrant_update_confirmable?('123').should == false
       end
     end
-
-    context 'with versioning' do
-      it 'should not have one version' do
-        with_versioning do
-          @domain.versions.size.should == 0
-          @domain.name = 'new-test-name.ee'
-          @domain.save
-          @domain.errors.full_messages.should match_array([])
-          @domain.versions.size.should == 1
-        end
-      end
-
-      it 'should return api_creator when created by api user' do
-        with_versioning do
-          @user = create(:admin_user)
-          @api_user = create(:api_user)
-          @user.id.should == 1
-          @api_user.id.should == 2
-          ::PaperTrail.whodunnit = '2-ApiUser: testuser'
-
-          @domain = create(:domain)
-          @domain.creator_str.should == '2-ApiUser: testuser'
-
-          @domain.creator.should == @api_user
-          @domain.creator.should_not == @user
-        end
-      end
-
-      it 'should return api_creator when created by api user' do
-        with_versioning do
-          @user = create(:admin_user, id: 1000)
-          @api_user = create(:api_user, id: 2000)
-          @user.id.should == 1000
-          @api_user.id.should == 2000
-          ::PaperTrail.whodunnit = '1000-AdminUser: testuser'
-
-          @domain = create(:domain)
-          @domain.creator_str.should == '1000-AdminUser: testuser'
-
-          @domain.creator.should == @user
-          @domain.creator.should_not == @api_user
-        end
-      end
-    end
   end
 
   it 'validates domain name' do
@@ -836,22 +792,6 @@ RSpec.describe Domain do
 
     it 'returns domains with outzone time in the past' do
       expect(described_class.outzone_candidates.ids).to eq([1])
-    end
-  end
-
-  describe '::delete_candidates', db: true do
-    before :example do
-      travel_to Time.zone.parse('05.07.2010 00:00')
-
-      create(:zone, origin: 'ee')
-
-      create(:domain, id: 1, delete_time: Time.zone.parse('04.07.2010 23:59'))
-      create(:domain, id: 2, delete_time: Time.zone.parse('05.07.2010 00:00'))
-      create(:domain, id: 3, delete_time: Time.zone.parse('05.07.2010 00:01'))
-    end
-
-    it 'returns domains with delete time in the past' do
-      expect(described_class.delete_candidates.ids).to eq([1])
     end
   end
 

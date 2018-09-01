@@ -13,8 +13,13 @@ en:
         reset_btn: Reset
 
       edit:
-        header: "Edit: %{domain}"
+        header: "Edit:"
         add_new_status_btn: Add new status
+        keep_btn: Remove deleteCandidate status
+        keep_btn_confirm: Are you sure you want to remove deleteCandidate status?
+
+      keep:
+        kept: deleteCandidate status has been removed
 
       force_delete_dialog:
         title: Force delete
@@ -22,6 +27,13 @@ en:
         email_template: Email template
         close_btn: Close dialog
         submit_btn: Force delete domain
+
+      registry_lock:
+        destroy:
+          btn: Remove registry lock
+          confirm: Are you sure you want to remove the registry lock?
+          success: Registry lock removed
+          error: Registry lock could not be removed
 
       versions:
         time: Time
@@ -33,6 +45,8 @@ en:
         general:
           outzone_time: Outzone time
           delete_time: Delete time
+          force_delete_time: Force delete time
+          locked_by_registrant_at: Registry lock time
 
         admin_contacts:
           title: Admin. contacts

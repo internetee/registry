@@ -47,7 +47,7 @@ module Admin
     def destroy
       @mail_template = MailTemplate.find(params[:id])
       if @mail_template.destroy
-        redirect_to admin_mail_templates_path, notise: t(:deleted)
+        redirect_to admin_mail_templates_path, notice: t(:deleted)
       else
         flash.now[:alert] = I18n.t(:failure)
         render 'show'
