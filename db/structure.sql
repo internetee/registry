@@ -2007,8 +2007,7 @@ CREATE TABLE public.notifications (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
-    updator_str character varying,
-    text_tag character varying
+    updator_str character varying
 );
 
 
@@ -4778,6 +4777,4 @@ INSERT INTO schema_migrations (version) VALUES ('20180823212823');
 INSERT INTO schema_migrations (version) VALUES ('20180824092855');
 
 INSERT INTO schema_migrations (version) VALUES ('20180824102834');
-
-INSERT INTO schema_migrations (version) VALUES ('20180825153657');
 
