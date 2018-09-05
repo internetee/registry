@@ -22,13 +22,16 @@ class WhoisRecordTest < ActiveSupport::TestCase
       registrant_kind: 'priv',
       email: 'john@inbox.test',
       expire: '2010-07-05',
-      nameservers: ['ns1.bestnames.test', 'ns2.bestnames.test'],
       registrar_address: 'Main Street, New York, New York, 12345',
       dnssec_keys: [],
     }
 
     expected_partial_hash.each do |key, value|
       assert_equal(value, @record.generated_json[key])
+    end
+
+    ['ns1.bestnames.test', 'ns2.bestnames.test'].each do |item|
+      assert(@record.generated_json[:nameservers].include?(item))
     end
   end
 
