@@ -39,6 +39,19 @@ class Invoice < ActiveRecord::Base
   attribute :vat_rate, ::Type::VATRate.new
   attr_readonly :vat_rate
 
+  class << self
+    def invoice_registrars_eligible_to_auto_invoice
+      Registrar.registrars_eligible_to_auto_invoice.each do |registrar|
+        registrar.invoice(registrar.top_up_amount)
+        yield(registrar, registrar.top_up_amount) if block_given?
+      end
+    end
+
+    def unpaid_automatically_generated
+      where(generated_automatically: true)
+    end
+  end
+
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
 

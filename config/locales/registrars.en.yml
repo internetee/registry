@@ -1,5 +1,11 @@
 en:
   activerecord:
+    attributes:
+      registrar:
+        auto_account_top_up_activated: Activated
+        auto_account_top_up_low_balance_threshold: Low balance threshold
+        auto_account_top_up_amount: Top-up amount
+        auto_account_top_up_iban: IBAN
     errors:
       models:
         registrar:

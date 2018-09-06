@@ -1,0 +1,10 @@
+<div class="page-header">
+    <h1><%= t '.header' %></h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <%= render 'registrar/settings/auto_account_top_up/for_settings',
+                   registrar: @registrar if show_auto_account_top_up? %>
+    </div>
+</div>

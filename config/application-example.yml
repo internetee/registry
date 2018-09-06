@@ -135,6 +135,10 @@ payments_every_pay_seller_account: 'EUR3D1'
 payments_every_pay_api_user: 'api_user'
 payments_every_pay_api_key: 'api_key'
 
+auto_account_top_up: 'false'
+e_invoice_provider_wsdl:
+e_invoice_provider_secret_key:
+
 user_session_timeout: '3600' # 1 hour
 secure_session_cookies: 'false' # true|false
 same_site_session_cookies: 'false' # false|strict|lax
@@ -153,6 +157,7 @@ test:
   release_domains_to_auction: 'false'
   auction_api_allowed_ips: ''
   action_mailer_default_host: 'registry.test'
+  auto_account_top_up: 'true'
 
 # Airbrake // Errbit:
 airbrake_host: "https://your-errbit-host.ee"

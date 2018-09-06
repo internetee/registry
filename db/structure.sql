@@ -1082,6 +1082,7 @@ CREATE TABLE public.invoices (
     total numeric(10,2) NOT NULL,
     in_directo boolean DEFAULT false,
     buyer_vat_no character varying,
+    auto_generated boolean DEFAULT false NOT NULL,
     issue_date date NOT NULL
 );
 
@@ -2203,7 +2204,11 @@ CREATE TABLE public.registrars (
     reference_no character varying NOT NULL,
     test_registrar boolean DEFAULT false,
     language character varying NOT NULL,
-    vat_rate numeric(4,3)
+    vat_rate numeric(4,3),
+    auto_account_top_up_activated boolean DEFAULT false NOT NULL,
+    auto_account_top_up_low_balance_threshold numeric(10,2),
+    auto_account_top_up_amount numeric(10,2),
+    auto_account_top_up_iban character varying
 );
 
 
@@ -4866,6 +4871,8 @@ INSERT INTO schema_migrations (version) VALUES ('20180824102834');
 
 INSERT INTO schema_migrations (version) VALUES ('20180824215326');
 
+INSERT INTO schema_migrations (version) VALUES ('20180825153657');
+
 INSERT INTO schema_migrations (version) VALUES ('20180825193437');
 
 INSERT INTO schema_migrations (version) VALUES ('20180825232819');
@@ -4891,6 +4898,10 @@ INSERT INTO schema_migrations (version) VALUES ('20181017154143');
 INSERT INTO schema_migrations (version) VALUES ('20181017205123');
 
 INSERT INTO schema_migrations (version) VALUES ('20181022100114');
+
+INSERT INTO schema_migrations (version) VALUES ('20181023115645');
+
+INSERT INTO schema_migrations (version) VALUES ('20181023122522');
 
 INSERT INTO schema_migrations (version) VALUES ('20181108154921');
 

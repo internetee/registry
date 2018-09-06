@@ -1,0 +1,17 @@
+en:
+  registrar:
+    settings:
+      auto_account_top_up:
+        for_settings:
+          header: Auto account top-up
+          edit_btn: Edit
+
+        edit:
+          header: Auto account top-up
+
+        form:
+          iban_hint: Normalized automatically
+          submit_btn: Update
+
+        update:
+          updated: Settings are updated

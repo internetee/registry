@@ -1,0 +1,30 @@
+<div class="panel panel-default panel-auto-account-top-up">
+    <div class="panel-heading"><%= t '.header' %></div>
+
+    <table class="table">
+        <tr>
+            <td><%= Registrar.human_attribute_name :auto_account_top_up_activated %></td>
+            <td><%= registrar.auto_account_top_up_activated %></td>
+        </tr>
+
+        <tr>
+            <td><%= Registrar.human_attribute_name :auto_account_top_up_low_balance_threshold %></td>
+            <td><%= number_to_currency registrar.auto_account_top_up_low_balance_threshold %></td>
+        </tr>
+
+        <tr>
+            <td><%= Registrar.human_attribute_name :auto_account_top_up_amount %></td>
+            <td><%= number_to_currency registrar.auto_account_top_up_amount %></td>
+        </tr>
+
+        <tr>
+            <td><%= Registrar.human_attribute_name :auto_account_top_up_iban %></td>
+            <td><%= registrar.auto_account_top_up_iban %></td>
+        </tr>
+    </table>
+
+    <div class="panel-footer text-right">
+        <%= link_to t('.edit_btn'), edit_registrar_settings_auto_account_top_up_path,
+                    class: 'btn btn-primary btn-sm' %>
+    </div>
+</div>

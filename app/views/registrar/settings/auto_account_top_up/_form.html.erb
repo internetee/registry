@@ -1,0 +1,55 @@
+<%= form_for @registrar, url: registrar_settings_auto_account_top_up_path, method: :patch, html: { class: 'form-horizontal' } do |f| %>
+    <%= render 'form_errors', target: @registrar %>
+
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-3">
+            <div class="checkbox">
+                <label>
+                    <%= f.check_box :auto_account_top_up_activated %>
+                    <%= Registrar.human_attribute_name :auto_account_top_up_activated %>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label :auto_account_top_up_low_balance_threshold, class: 'col-sm-3 control-label' %>
+
+        <div class="col-sm-2">
+            <div class="input-group">
+                <%= f.money_field :auto_account_top_up_low_balance_threshold, required: true,
+                                  autofocus: true,
+                                  class: 'form-control' %>
+                <div class="input-group-addon"><%= Money::default_currency.symbol %></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label :auto_account_top_up_amount, class: 'col-sm-3 control-label' %>
+
+        <div class="col-sm-2">
+            <div class="input-group">
+                <%= f.money_field :auto_account_top_up_amount, class: 'form-control', required: true %>
+                <div class="input-group-addon"><%= Money::default_currency.symbol %></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label :auto_account_top_up_iban, class: 'col-sm-3 control-label' %>
+
+        <div class="col-sm-4">
+            <%= f.text_field :auto_account_top_up_iban, class: 'form-control', required: true %>
+            <span class="help-block"><%= t '.iban_hint' %></span>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-2">
+            <%= f.submit t('.submit_btn'), class: 'btn btn-success' %>
+        </div>
+    </div>
+<% end %>

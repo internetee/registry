@@ -3,6 +3,7 @@ en:
     profile:
       show:
         header: My profile
+        settings_link: Settings
 
       linked_users:
         header: Linked users

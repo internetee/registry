@@ -99,6 +99,7 @@ gem 'active_model-errors_details' # Backport from Rails 5, https://github.com/ra
 gem 'airbrake'
 
 gem 'company_register', github: 'internetee/company_register', branch: :master
+gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 
 group :development do
   # deploy

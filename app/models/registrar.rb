@@ -1,5 +1,6 @@
 class Registrar < ActiveRecord::Base
   include Versions # version/registrar_version.rb
+  include Concerns::Registrar::AutoAccountTopUp
 
   has_many :domains, dependent: :restrict_with_error
   has_many :contacts, dependent: :restrict_with_error
@@ -49,8 +50,8 @@ class Registrar < ActiveRecord::Base
     end
   end
 
-  def issue_prepayment_invoice(amount, description = nil)
-    invoices.create(
+  def issue_prepayment_invoice(amount, description = nil, auto_generated: false)
+    invoices.create!(
       issue_date: Time.zone.today,
       due_date: (Time.zone.now + Setting.days_to_keep_invoices_active.days).to_date,
       description: description,
@@ -82,6 +83,7 @@ class Registrar < ActiveRecord::Base
       buyer_url: website,
       buyer_email: email,
       reference_no: reference_no,
+      auto_generated: auto_generated,
       items_attributes: [
         {
           description: 'prepayment',
