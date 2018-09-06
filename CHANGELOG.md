@@ -1,3 +1,7 @@
+06.09.2018
+* Bug: registrant confirmation does not require authentication any more [#969](https://github.com/internetee/registry/issues/969)
+* Whois JSON tests order independent [#965](https://github.com/internetee/registry/issues/965) 
+
 04.09.2018
 * New registrant portal API [#902](https://github.com/internetee/registry/issues/902)
 * Registry lock in Registrant API [#927](https://github.com/internetee/registry/issues/927)
