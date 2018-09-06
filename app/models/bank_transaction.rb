@@ -79,13 +79,23 @@ class BankTransaction < ActiveRecord::Base
   end
 
   def create_activity(registrar, invoice)
-    create_account_activity(
-      account: registrar.cash_account,
-      invoice: invoice,
-      sum: invoice.subtotal,
-      currency: currency,
-      description: description,
-      activity_type: AccountActivity::ADD_CREDIT
-    )
+    ActiveRecord::Base.transaction do
+      create_account_activity!(account: registrar.cash_account,
+                               invoice: invoice,
+                               sum: invoice.subtotal,
+                               currency: currency,
+                               description: description,
+                               activity_type: AccountActivity::ADD_CREDIT)
+      reset_pending_registrar_balance_reload
+    end
+  end
+
+  private
+
+  def reset_pending_registrar_balance_reload
+    return unless registrar.settings['balance_auto_reload']
+
+    registrar.settings['balance_auto_reload'].delete('pending')
+    registrar.save!
   end
 end

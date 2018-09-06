@@ -16,6 +16,16 @@ GIT
       rails (>= 4.1.0)
 
 GIT
+  remote: https://github.com/internetee/e_invoice.git
+  revision: 7817bbefd4ed0b140ed781172bd64a856b622273
+  branch: master
+  specs:
+    e_invoice (0.1.0)
+      builder (~> 3.2)
+      nokogiri
+      savon
+
+GIT
   remote: https://github.com/internetee/epp-xml.git
   revision: 5dd542e67ef26d58365f30e553254d6db809277d
   specs:
@@ -456,6 +466,7 @@ DEPENDENCIES
   database_cleaner
   devise (~> 4.0)
   digidoc_client!
+  e_invoice!
   epp (= 1.5.0)!
   epp-xml (= 1.1.0)!
   factory_bot_rails

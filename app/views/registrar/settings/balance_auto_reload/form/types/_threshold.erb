@@ -1,0 +1,40 @@
+<p><%= t '.description' %></p>
+
+<%= form_for type, as: :type, url: registrar_settings_balance_auto_reload_path, method: :patch,
+             html: { class: 'form-horizontal' } do |f| %>
+    <%= render 'form_errors', target: type %>
+
+    <div class="form-group">
+        <%= f.label :amount, class: 'col-md-2 control-label' %>
+
+        <div class="col-md-2">
+            <div class="input-group">
+                <%= f.money_field :amount, required: true, autofocus: true, class: 'form-control' %>
+                <div class="input-group-addon"><%= Money::default_currency.symbol %></div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <span class="help-block"><%= t '.amount_hint', min_amount: f.object.min_amount %></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label :threshold, class: 'col-md-2 control-label' %>
+
+        <div class="col-md-2">
+            <div class="input-group">
+                <%= f.money_field :threshold, required: true, class: 'form-control' %>
+                <div class="input-group-addon"><%= Money::default_currency.symbol %></div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <div class="col-md-offset-3 col-md-2">
+            <%= f.submit t('.submit_btn'), class: 'btn btn-success' %>
+        </div>
+    </div>
+<% end %>

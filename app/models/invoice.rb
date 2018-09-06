@@ -98,6 +98,11 @@ class Invoice < ActiveRecord::Base
     generator.as_pdf
   end
 
+  def to_e_invoice
+    generator = Invoice::EInvoiceGenerator.new(self)
+    generator.generate
+  end
+
   private
 
   def apply_default_buyer_vat_no

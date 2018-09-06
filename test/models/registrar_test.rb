@@ -176,6 +176,12 @@ class RegistrarTest < ActiveSupport::TestCase
     assert_equal vat_country, registrar.vat_country
   end
 
+  def test_returns_iban_for_e_invoice_delivery_channel
+    iban = 'GB33BUKB20201555555555'
+    registrar = Registrar.new(iban: iban)
+    assert_equal iban, registrar.e_invoice_iban
+  end
+
   private
 
   def valid_registrar

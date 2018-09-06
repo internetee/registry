@@ -1,0 +1,19 @@
+en:
+  registrar:
+    settings:
+      balance_auto_reload:
+        edit:
+          header: Balance Auto-Reload
+
+        form:
+          types:
+            threshold:
+              description: Automatically reload your balance when it drops to a minimum threshold
+              amount_hint: must be greater than or equal to %{min_amount}
+              submit_btn: Save
+
+        update:
+          saved: Balance Auto-Reload setting has been updated
+
+        destroy:
+          disabled: Balance Auto-Reload setting has been disabled

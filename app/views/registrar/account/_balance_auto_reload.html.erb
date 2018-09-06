@@ -1,0 +1,30 @@
+<div class="panel panel-default balance-auto-reload">
+    <div class="panel-heading">
+        <%= t '.header' %>
+    </div>
+
+    <div class="panel-body">
+        <% if setting %>
+            <span class="label label-success"><%= t '.enabled' %></span>
+            <%= t '.enabled_state_details', amount: number_to_currency(setting['type']['amount']),
+                  threshold: number_to_currency(setting['type']['threshold']) %>
+        <% else %>
+            <span class="text-muted"><%= t '.disabled' %></span>
+        <% end %>
+    </div>
+
+    <div class="panel-footer text-right">
+        <% if !setting %>
+            <%= link_to t('.enable_btn'), edit_registrar_settings_balance_auto_reload_path,
+                        class: 'btn btn-default btn-sm' %>
+        <% else %>
+            <%= link_to t('.disable_btn'), registrar_settings_balance_auto_reload_path,
+                        method: :delete, class: 'btn btn-default btn-sm' %>
+        <% end %>
+
+        <% if setting %>
+            <%= link_to t('.edit_btn'), edit_registrar_settings_balance_auto_reload_path,
+                        class: 'btn btn-default btn-sm' %>
+        <% end %>
+    </div>
+</div>

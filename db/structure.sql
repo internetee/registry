@@ -2201,7 +2201,8 @@ CREATE TABLE public.registrars (
     test_registrar boolean DEFAULT false,
     language character varying NOT NULL,
     vat_rate numeric(4,3),
-    iban character varying
+    iban character varying,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -4962,6 +4963,8 @@ INSERT INTO schema_migrations (version) VALUES ('20190328151516');
 INSERT INTO schema_migrations (version) VALUES ('20190328151838');
 
 INSERT INTO schema_migrations (version) VALUES ('20190415120246');
+
+INSERT INTO schema_migrations (version) VALUES ('20190426174225');
 
 INSERT INTO schema_migrations (version) VALUES ('20190510090240');
 

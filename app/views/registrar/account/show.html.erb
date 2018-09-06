@@ -13,3 +13,11 @@
         <%= render 'linked_users', linked_users: current_registrar_user.linked_users %>
     </div>
 </div>
+
+<% if can?(:manage, :balance_auto_reload) %>
+    <div class="row">
+        <div class="col-sm-6">
+            <%= render 'balance_auto_reload', setting: balance_auto_reload_setting %>
+        </div>
+    </div>
+<% end %>
