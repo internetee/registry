@@ -1,3 +1,22 @@
+04.09.2018
+* New registrant portal API [#902](https://github.com/internetee/registry/issues/902)
+* Registry lock in Registrant API [#927](https://github.com/internetee/registry/issues/927)
+* Password encryption for EPP [#914](https://github.com/internetee/registry/issues/914)
+* Registrar: 0 amount invoices invalidated [#651](https://github.com/internetee/registry/issues/651)
+* Ruby upgrade to 2.4 [#938](https://github.com/internetee/registry/issues/938)
+* Admin: removig deleteCandidate status removes Que job as well [#790](https://github.com/internetee/registry/issues/790)
+* Admin: Cancel force delete no possible with deleteCandidate status set [#791](https://github.com/internetee/registry/issues/791)
+* Contact tests added [#930](https://github.com/internetee/registry/issues/930)
+* Change test structure [#924](https://github.com/internetee/registry/issues/924)
+* Grape gem update to 1.1.0 (CVE-2018-3769) [#934](https://github.com/internetee/registry/pull/934)
+* Remove changelog from codeclimate analysis [#961](https://github.com/internetee/registry/issues/961)
+* Remove dead code [#925](https://github.com/internetee/registry/issues/925)
+* Quote value in fixture [#937](https://github.com/internetee/registry/issues/937)
+* Generate <body> CSS class for every action [#939](https://github.com/internetee/registry/issues/939)
+* Add TaskTestCase [#941](https://github.com/internetee/registry/issues/941)
+* Set NOT NULL constraint for contact.email field [#936](https://github.com/internetee/registry/issues/936)
+* Remove duplicate fixture [#946](https://github.com/internetee/registry/issues/946)
+
 26.07.2018
 * Grape (1.0.3), mustermann (1.0.2), multi_json (1.13.1) gem updates [#912](https://github.com/internetee/registry/issues/912)
 * Capybara (3.3.1), mini_mime (0.1.3), nokogiri (1.8), rack (1.6.0), xpath (3.1) gem updates [#980](https://github.com/internetee/registry/issues/908)
