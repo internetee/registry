@@ -3,7 +3,8 @@ class Registrar
     protect_from_forgery except: [:back, :callback]
 
     skip_authorization_check # actually anyone can pay, no problems at all
-    skip_before_action :authenticate_user!, :check_ip_restriction, only: [:back, :callback]
+    skip_before_action :authenticate_registrar_user!, :check_ip_restriction,
+                       only: [:back, :callback]
     before_action :check_supported_payment_method
 
     def pay
