@@ -115,7 +115,7 @@ class Registrar
           sign_in(:registrar_user, @user)
           flash[:notice] = t(:welcome)
           flash.keep(:notice)
-          render js: "window.location = '#{registrar_root_url}'"
+          render js: "window.location = '#{after_sign_in_path_for(@user)}'"
         when 'NOT_VALID'
           render json: { message: t(:user_signature_is_invalid) }, status: :bad_request
         when 'EXPIRED_TRANSACTION'
