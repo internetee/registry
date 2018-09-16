@@ -2092,8 +2092,6 @@ CREATE TABLE public.prices (
     price_cents integer NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    creator_str character varying,
-    updator_str character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     duration interval,
@@ -4853,4 +4851,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200908131554'),
 ('20200910085157');
 
+
+INSERT INTO schema_migrations (version) VALUES ('20180916133911');
 
