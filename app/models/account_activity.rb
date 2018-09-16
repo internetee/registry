@@ -1,5 +1,3 @@
-require 'csv'
-
 class AccountActivity < ActiveRecord::Base
   include Versions
   belongs_to :account, required: true
