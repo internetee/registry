@@ -1,5 +1,4 @@
 class Invoice < ActiveRecord::Base
-  include Versions
   belongs_to :seller, class_name: 'Registrar'
   belongs_to :buyer, class_name: 'Registrar'
   has_one  :account_activity

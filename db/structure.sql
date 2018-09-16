@@ -308,8 +308,6 @@ CREATE TABLE public.account_activities (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     description character varying,
-    creator_str character varying,
-    updator_str character varying,
     activity_type character varying,
     price_id integer
 );
@@ -345,9 +343,7 @@ CREATE TABLE public.accounts (
     balance numeric(10,2) DEFAULT 0.0 NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    currency character varying,
-    creator_str character varying,
-    updator_str character varying
+    currency character varying
 );
 
 
@@ -980,9 +976,7 @@ CREATE TABLE public.invoice_items (
     amount integer,
     price numeric(10,2),
     created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    creator_str character varying,
-    updator_str character varying
+    updated_at timestamp without time zone
 );
 
 
@@ -1047,8 +1041,6 @@ CREATE TABLE public.invoices (
     buyer_phone character varying,
     buyer_url character varying,
     buyer_email character varying,
-    creator_str character varying,
-    updator_str character varying,
     number integer,
     cancelled_at timestamp without time zone,
     total numeric(10,2) NOT NULL,
@@ -1152,82 +1144,6 @@ CREATE SEQUENCE public.legal_documents_id_seq
 --
 
 ALTER SEQUENCE public.legal_documents_id_seq OWNED BY public.legal_documents.id;
-
-
---
--- Name: log_account_activities; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.log_account_activities (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_account_activities_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.log_account_activities_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_account_activities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.log_account_activities_id_seq OWNED BY public.log_account_activities.id;
-
-
---
--- Name: log_accounts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.log_accounts (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.log_accounts_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.log_accounts_id_seq OWNED BY public.log_accounts.id;
 
 
 --
@@ -1536,82 +1452,6 @@ CREATE SEQUENCE public.log_domains_id_seq
 --
 
 ALTER SEQUENCE public.log_domains_id_seq OWNED BY public.log_domains.id;
-
-
---
--- Name: log_invoice_items; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.log_invoice_items (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_invoice_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.log_invoice_items_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_invoice_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.log_invoice_items_id_seq OWNED BY public.log_invoice_items.id;
-
-
---
--- Name: log_invoices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.log_invoices (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.log_invoices_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.log_invoices_id_seq OWNED BY public.log_invoices.id;
 
 
 --
@@ -2624,20 +2464,6 @@ ALTER TABLE ONLY public.legal_documents ALTER COLUMN id SET DEFAULT nextval('pub
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.log_account_activities ALTER COLUMN id SET DEFAULT nextval('public.log_account_activities_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_accounts ALTER COLUMN id SET DEFAULT nextval('public.log_accounts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.log_bank_statements ALTER COLUMN id SET DEFAULT nextval('public.log_bank_statements_id_seq'::regclass);
 
 
@@ -2688,20 +2514,6 @@ ALTER TABLE ONLY public.log_domain_contacts ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.log_domains ALTER COLUMN id SET DEFAULT nextval('public.log_domains_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_invoice_items ALTER COLUMN id SET DEFAULT nextval('public.log_invoice_items_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_invoices ALTER COLUMN id SET DEFAULT nextval('public.log_invoices_id_seq'::regclass);
 
 
 --
@@ -3027,22 +2839,6 @@ ALTER TABLE ONLY public.legal_documents
 
 
 --
--- Name: log_account_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.log_account_activities
-    ADD CONSTRAINT log_account_activities_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.log_accounts
-    ADD CONSTRAINT log_accounts_pkey PRIMARY KEY (id);
-
-
---
 -- Name: log_bank_statements_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3104,22 +2900,6 @@ ALTER TABLE ONLY public.log_domain_contacts
 
 ALTER TABLE ONLY public.log_domains
     ADD CONSTRAINT log_domains_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_invoice_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.log_invoice_items
-    ADD CONSTRAINT log_invoice_items_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.log_invoices
-    ADD CONSTRAINT log_invoices_pkey PRIMARY KEY (id);
 
 
 --
@@ -3608,34 +3388,6 @@ CREATE INDEX index_legal_documents_on_documentable_type_and_documentable_id ON p
 
 
 --
--- Name: index_log_account_activities_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_account_activities_on_item_type_and_item_id ON public.log_account_activities USING btree (item_type, item_id);
-
-
---
--- Name: index_log_account_activities_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_account_activities_on_whodunnit ON public.log_account_activities USING btree (whodunnit);
-
-
---
--- Name: index_log_accounts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_accounts_on_item_type_and_item_id ON public.log_accounts USING btree (item_type, item_id);
-
-
---
--- Name: index_log_accounts_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_accounts_on_whodunnit ON public.log_accounts USING btree (whodunnit);
-
-
---
 -- Name: index_log_bank_statements_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3745,34 +3497,6 @@ CREATE INDEX index_log_domains_on_item_type_and_item_id ON public.log_domains US
 --
 
 CREATE INDEX index_log_domains_on_whodunnit ON public.log_domains USING btree (whodunnit);
-
-
---
--- Name: index_log_invoice_items_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_invoice_items_on_item_type_and_item_id ON public.log_invoice_items USING btree (item_type, item_id);
-
-
---
--- Name: index_log_invoice_items_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_invoice_items_on_whodunnit ON public.log_invoice_items USING btree (whodunnit);
-
-
---
--- Name: index_log_invoices_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_invoices_on_item_type_and_item_id ON public.log_invoices USING btree (item_type, item_id);
-
-
---
--- Name: index_log_invoices_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_invoices_on_whodunnit ON public.log_invoices USING btree (whodunnit);
 
 
 --
@@ -4767,4 +4491,20 @@ INSERT INTO schema_migrations (version) VALUES ('20180808064402');
 INSERT INTO schema_migrations (version) VALUES ('20180816123540');
 
 INSERT INTO schema_migrations (version) VALUES ('20180824092855');
+
+INSERT INTO schema_migrations (version) VALUES ('20180915211729');
+
+INSERT INTO schema_migrations (version) VALUES ('20180916120528');
+
+INSERT INTO schema_migrations (version) VALUES ('20180916122359');
+
+INSERT INTO schema_migrations (version) VALUES ('20180916122456');
+
+INSERT INTO schema_migrations (version) VALUES ('20180916122713');
+
+INSERT INTO schema_migrations (version) VALUES ('20180916122843');
+
+INSERT INTO schema_migrations (version) VALUES ('20180916123045');
+
+INSERT INTO schema_migrations (version) VALUES ('20180916123150');
 
