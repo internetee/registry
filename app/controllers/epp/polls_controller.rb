@@ -9,7 +9,7 @@ class Epp::PollsController < EppController
   private
 
   def req_poll
-    @notification = current_user.unread_notifications.last
+    @notification = current_user.unread_notifications.order('created_at DESC').take
 
     render_epp_response 'epp/poll/poll_no_messages' and return unless @notification
     if @notification.attached_obj_type && @notification.attached_obj_id
