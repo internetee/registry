@@ -7,7 +7,7 @@ domain_deleted:
   text: Your domain has been deleted
   read: false
   registrar: bestnames
-  created_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+  created_at: <%= Time.zone.parse('2010-07-05') %>
 
 farewell:
   text: Good bye!

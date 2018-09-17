@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.tag!('msgQ', 'count' => current_user.unread_notifications.count, 'id' => @notification.id) do
-      xml.qDate @notification.created_at.try(:iso8601)
+      xml.qDate @notification.created_at.utc.xmlschema
       xml.msg @notification.text
     end
 

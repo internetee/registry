@@ -1,5 +1,5 @@
 class Registrant::DomainUpdateConfirmsController < RegistrantController
-  skip_before_action :authenticate_user!, only: %i[show update]
+  skip_before_action :authenticate_registrant_user!, only: %i[show update]
   skip_authorization_check only: %i[show update]
 
   def show
