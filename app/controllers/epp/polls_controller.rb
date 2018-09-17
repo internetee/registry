@@ -9,7 +9,7 @@ class Epp::PollsController < EppController
   private
 
   def req_poll
-    @message = current_user.queued_messages.last
+    @message = current_user.queued_messages.order('created_at DESC').take
 
     render_epp_response 'epp/poll/poll_no_messages' and return unless @message
     if @message.attached_obj_type && @message.attached_obj_id

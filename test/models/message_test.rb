@@ -18,4 +18,10 @@ class MessageTest < ActiveSupport::TestCase
     @message.registrar = nil
     assert @message.invalid?
   end
+
+  def test_dequeue
+    @message.dequeue
+    @message.reload
+    assert_not @message.queued?
+  end
 end
