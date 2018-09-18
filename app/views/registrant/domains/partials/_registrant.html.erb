@@ -6,7 +6,9 @@
     <div class="panel-body">
         <dl class="dl-horizontal">
             <dt><%= Registrant.human_attribute_name :name %></dt>
-            <dd><%= registrant.name %></dd>
+            <dd>
+                <%= link_to registrant.name, registrant_domain_contact_path(domain, registrant) %>
+            </dd>
 
             <dt><%= Registrant.human_attribute_name :code %></dt>
             <dd><%= registrant.code %></dd>
@@ -20,9 +22,5 @@
             <dt><%= Registrant.human_attribute_name :phone %></dt>
             <dd><%= registrant.phone %></dd>
         </dl>
-    </div>
-
-    <div class="panel-footer text-right">
-        <%= link_to t('.view_details_btn'), registrant_domain_contact_path(domain, registrant) %>
     </div>
 </div>

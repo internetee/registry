@@ -12,7 +12,6 @@ en:
       partials:
         registrant:
           header: Registrant
-          view_details_btn: View details
 
         domain_contacts:
           header_admin_domain_contacts: Administrative contacts
