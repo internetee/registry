@@ -17,10 +17,6 @@ describe Invoice do
         "Seller name is missing",
       ])
     end
-
-    it 'should not have any versions' do
-      @invoice.versions.should == []
-    end
   end
 
   context 'with valid attributes' do
@@ -54,16 +50,6 @@ describe Invoice do
       create(:invoice, created_at: Time.zone.now - 35.days, due_date: Time.zone.now - 30.days)
       Invoice.cancel_overdue_invoices
       Invoice.where(cancelled_at: nil).count.should == 1
-    end
-
-    it 'should have one version' do
-      with_versioning do
-        @invoice.versions.should == []
-        @invoice.buyer_name = 'New name'
-        @invoice.save
-        @invoice.errors.full_messages.should match_array([])
-        @invoice.versions.size.should == 1
-      end
     end
   end
 end
