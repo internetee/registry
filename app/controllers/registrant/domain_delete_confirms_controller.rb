@@ -1,5 +1,5 @@
 class Registrant::DomainDeleteConfirmsController < RegistrantController
-  skip_before_action :authenticate_user!, only: [:show, :update]
+  skip_before_action :authenticate_registrant_user!, only: [:show, :update]
   skip_authorization_check only: [:show, :update]
 
   def show
