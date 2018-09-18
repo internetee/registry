@@ -26,12 +26,11 @@ class RegistrantAreaDomainDetailsTest < ApplicationSystemTestCase
 
   def test_registrant
     visit registrant_domain_url(@domain)
-    assert_text 'Name John'
+    assert_link 'John', href: registrant_domain_contact_path(@domain, @domain.registrant)
     assert_text 'Code john-001'
     assert_text 'Ident 1234'
     assert_text 'Email john@inbox.test'
     assert_text 'Phone +555.555'
-    assert_link 'View details', href: registrant_domain_contact_path(@domain, @domain.registrant)
   end
 
   def test_admin_contacts
