@@ -28,7 +28,7 @@ module Admin
     end
 
     def destroy
-      if @certificate.destroy
+      if @certificate.revoke! && @certificate.destroy
         flash[:notice] = I18n.t('record_deleted')
         redirect_to admin_api_user_path(@api_user)
       else
