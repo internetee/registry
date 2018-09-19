@@ -14,5 +14,6 @@ class AdminAreaRegistrarDetailsTest < ApplicationSystemTestCase
     assert_text 'VAT number US12345'
     assert_text 'VAT rate 5.0%'
     assert_text 'Language English'
+    assert_text 'billing@bestnames.test'
   end
 end
