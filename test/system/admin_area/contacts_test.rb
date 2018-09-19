@@ -20,6 +20,6 @@ class AdminContactsTest < ApplicationSystemTestCase
     visit admin_contact_path(@contact)
 
     assert_text('Street Main Street City New York Postcode 12345 ' \
-                'State New York Country United States of America')
+                'State New York State Country United States of America')
   end
 end
