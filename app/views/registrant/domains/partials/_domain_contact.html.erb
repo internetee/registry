@@ -1,0 +1,7 @@
+<% contact = domain_contact.contact %>
+
+<tr class="<%= domain_contact.model_name.singular.dasherize %>">
+    <td><%= link_to contact, registrant_domain_contact_path(domain, contact) %></td>
+    <td><%= contact.code %></td>
+    <td><%= contact.email %></td>
+</tr>

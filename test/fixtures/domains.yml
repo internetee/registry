@@ -4,7 +4,11 @@ shop:
   registrar: bestnames
   registrant: john
   transfer_code: 65078d5
-  valid_to: 2010-07-05
+  registered_at: <%= Time.zone.parse('2010-07-04').to_s(:db) %>
+  valid_to: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+  outzone_at: <%= Time.zone.parse('2010-07-06').to_s(:db) %>
+  delete_at: <%= Time.zone.parse('2010-07-07').to_s(:db) %>
+  force_delete_at: <%= Time.zone.parse('2010-07-08').to_s(:db) %>
   period: 1
   period_unit: m
   uuid: 1b3ee442-e8fe-4922-9492-8fcb9dccc69c
