@@ -1,5 +1,5 @@
 en:
-  messages:
+  notifications:
     texts:
       domain_transfer: >-
         Transfer of domain %{domain_name} has been approved.
