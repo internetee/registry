@@ -1,23 +1,35 @@
-<%= render 'shared/title', name: @domain.name %>
+<ol class="breadcrumb">
+    <li><%= link_to t('registrant.domains.index.header'), registrant_domains_path %></li>
+</ol>
+
+<div class="page-header">
+    <h1><%= @domain %></h1>
+</div>
 
 <div class="row">
     <div class="col-md-6">
         <%= render 'registrant/domains/partials/general' %>
     </div>
+
     <div class="col-md-6">
-        <%= render 'registrant/domains/partials/owner' %>
+        <%= render partial: 'registrant/domains/partials/registrant',
+                   locals: { registrant: @domain.registrant, domain: @domain } %>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <%= render 'registrant/domains/partials/tech_contacts' %>
+        <%= render 'registrant/domains/partials/domain_contacts',
+                   domain: @domain,
+                   domain_contacts: @domain.tech_domain_contacts %>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <%= render 'registrant/domains/partials/admin_contacts' %>
+        <%= render 'registrant/domains/partials/domain_contacts',
+                   domain: @domain,
+                   domain_contacts: @domain.admin_domain_contacts %>
     </div>
 </div>
 

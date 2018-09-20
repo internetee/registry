@@ -1,16 +1,16 @@
 greeting:
-  body: Welcome!
-  queued: true
+  text: Welcome!
+  read: false
   registrar: bestnames
   created_at: <%= Time.zone.parse('2010-07-04') %>
 
 domain_deleted:
-  body: Your domain has been deleted
-  queued: true
+  text: Your domain has been deleted
+  read: false
   registrar: bestnames
   created_at: <%= Time.zone.parse('2010-07-05') %>
 
 farewell:
-  body: Good bye!
-  queued: true
+  text: Good bye!
+  read: false
   registrar: goodnames

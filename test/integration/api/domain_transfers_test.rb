@@ -47,7 +47,7 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
   def test_notifies_old_registrar
     @old_registrar = @domain.registrar
 
-    assert_difference -> { @old_registrar.messages.count } do
+    assert_difference -> { @old_registrar.notifications.count } do
       post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
   end

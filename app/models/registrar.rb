@@ -4,7 +4,7 @@ class Registrar < ActiveRecord::Base
   has_many :domains, dependent: :restrict_with_error
   has_many :contacts, dependent: :restrict_with_error
   has_many :api_users, dependent: :restrict_with_error
-  has_many :messages
+  has_many :notifications
   has_many :invoices, foreign_key: 'buyer_id'
   has_many :accounts, dependent: :destroy
   has_many :nameservers, through: :domains

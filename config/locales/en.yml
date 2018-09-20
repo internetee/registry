@@ -474,7 +474,6 @@ en:
   message: 'Message'
   message_no: 'Message #%{id}'
   queue_date: 'Queue date'
-  messages_in_queue: 'Messages in queue'
   you_have_no_new_messages: 'You have no new messages'
   message_id: 'Message ID'
   trStatus: 'Status'

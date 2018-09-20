@@ -1653,44 +1653,6 @@ ALTER SEQUENCE public.log_keyrelays_id_seq OWNED BY public.log_keyrelays.id;
 
 
 --
--- Name: log_messages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.log_messages (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.log_messages_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.log_messages_id_seq OWNED BY public.log_messages.id;
-
-
---
 -- Name: log_nameservers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1726,6 +1688,44 @@ CREATE SEQUENCE public.log_nameservers_id_seq
 --
 
 ALTER SEQUENCE public.log_nameservers_id_seq OWNED BY public.log_nameservers.id;
+
+
+--
+-- Name: log_notifications; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE public.log_notifications (
+    id integer NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    object_changes json,
+    created_at timestamp without time zone,
+    session character varying,
+    children json,
+    uuid character varying
+);
+
+
+--
+-- Name: log_notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.log_notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.log_notifications_id_seq OWNED BY public.log_notifications.id;
 
 
 --
@@ -1956,43 +1956,6 @@ ALTER SEQUENCE public.mail_templates_id_seq OWNED BY public.mail_templates.id;
 
 
 --
--- Name: messages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.messages (
-    id integer NOT NULL,
-    registrar_id integer NOT NULL,
-    body character varying NOT NULL,
-    attached_obj_type character varying,
-    attached_obj_id integer,
-    queued boolean,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    creator_str character varying,
-    updator_str character varying
-);
-
-
---
--- Name: messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.messages_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.messages_id_seq OWNED BY public.messages.id;
-
-
---
 -- Name: nameservers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2028,6 +1991,43 @@ CREATE SEQUENCE public.nameservers_id_seq
 --
 
 ALTER SEQUENCE public.nameservers_id_seq OWNED BY public.nameservers.id;
+
+
+--
+-- Name: notifications; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE public.notifications (
+    id integer NOT NULL,
+    registrar_id integer NOT NULL,
+    text character varying NOT NULL,
+    attached_obj_type character varying,
+    attached_obj_id integer,
+    read boolean NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    creator_str character varying,
+    updator_str character varying
+);
+
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
@@ -2715,14 +2715,14 @@ ALTER TABLE ONLY public.log_keyrelays ALTER COLUMN id SET DEFAULT nextval('publi
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.log_messages ALTER COLUMN id SET DEFAULT nextval('public.log_messages_id_seq'::regclass);
+ALTER TABLE ONLY public.log_nameservers ALTER COLUMN id SET DEFAULT nextval('public.log_nameservers_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.log_nameservers ALTER COLUMN id SET DEFAULT nextval('public.log_nameservers_id_seq'::regclass);
+ALTER TABLE ONLY public.log_notifications ALTER COLUMN id SET DEFAULT nextval('public.log_notifications_id_seq'::regclass);
 
 
 --
@@ -2771,14 +2771,14 @@ ALTER TABLE ONLY public.mail_templates ALTER COLUMN id SET DEFAULT nextval('publ
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.messages ALTER COLUMN id SET DEFAULT nextval('public.messages_id_seq'::regclass);
+ALTER TABLE ONLY public.nameservers ALTER COLUMN id SET DEFAULT nextval('public.nameservers_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.nameservers ALTER COLUMN id SET DEFAULT nextval('public.nameservers_id_seq'::regclass);
+ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('public.notifications_id_seq'::regclass);
 
 
 --
@@ -3131,19 +3131,19 @@ ALTER TABLE ONLY public.log_keyrelays
 
 
 --
--- Name: log_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.log_messages
-    ADD CONSTRAINT log_messages_pkey PRIMARY KEY (id);
-
-
---
 -- Name: log_nameservers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY public.log_nameservers
     ADD CONSTRAINT log_nameservers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: log_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY public.log_notifications
+    ADD CONSTRAINT log_notifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -3195,19 +3195,19 @@ ALTER TABLE ONLY public.mail_templates
 
 
 --
--- Name: messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.messages
-    ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
-
-
---
 -- Name: nameservers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY public.nameservers
     ADD CONSTRAINT nameservers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -3790,20 +3790,6 @@ CREATE INDEX index_log_keyrelays_on_whodunnit ON public.log_keyrelays USING btre
 
 
 --
--- Name: index_log_messages_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_messages_on_item_type_and_item_id ON public.log_messages USING btree (item_type, item_id);
-
-
---
--- Name: index_log_messages_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_messages_on_whodunnit ON public.log_messages USING btree (whodunnit);
-
-
---
 -- Name: index_log_nameservers_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3815,6 +3801,20 @@ CREATE INDEX index_log_nameservers_on_item_type_and_item_id ON public.log_namese
 --
 
 CREATE INDEX index_log_nameservers_on_whodunnit ON public.log_nameservers USING btree (whodunnit);
+
+
+--
+-- Name: index_log_notifications_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_log_notifications_on_item_type_and_item_id ON public.log_notifications USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_notifications_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_log_notifications_on_whodunnit ON public.log_notifications USING btree (whodunnit);
 
 
 --
@@ -3874,17 +3874,17 @@ CREATE INDEX index_log_users_on_whodunnit ON public.log_users USING btree (whodu
 
 
 --
--- Name: index_messages_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_messages_on_registrar_id ON public.messages USING btree (registrar_id);
-
-
---
 -- Name: index_nameservers_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_nameservers_on_domain_id ON public.nameservers USING btree (domain_id);
+
+
+--
+-- Name: index_notifications_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_notifications_on_registrar_id ON public.notifications USING btree (registrar_id);
 
 
 --
@@ -4102,7 +4102,7 @@ ALTER TABLE ONLY public.account_activities
 -- Name: messages_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.messages
+ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT messages_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
 
 
@@ -4766,5 +4766,15 @@ INSERT INTO schema_migrations (version) VALUES ('20180808064402');
 
 INSERT INTO schema_migrations (version) VALUES ('20180816123540');
 
+INSERT INTO schema_migrations (version) VALUES ('20180823161237');
+
+INSERT INTO schema_migrations (version) VALUES ('20180823163548');
+
+INSERT INTO schema_migrations (version) VALUES ('20180823174331');
+
+INSERT INTO schema_migrations (version) VALUES ('20180823212823');
+
 INSERT INTO schema_migrations (version) VALUES ('20180824092855');
+
+INSERT INTO schema_migrations (version) VALUES ('20180824102834');
 

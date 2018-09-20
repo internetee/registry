@@ -13,7 +13,7 @@
             <dt><%= t(:registered_at) %></dt>
             <dd><%= l(@domain.registered_at) %></dd>
 
-            <dt><%= t(:registrar_name) %></dt>
+            <dt><%= Registrar.model_name.human %></dt>
             <dd><%= link_to(@domain.registrar, registrant_registrar_path(@domain.registrar)) %></dd>
 
             <dt><%= Domain.human_attribute_name :transfer_code %></dt>

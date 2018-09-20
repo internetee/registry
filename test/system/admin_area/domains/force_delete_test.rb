@@ -22,7 +22,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
   end
 
   def test_notifies_registrar
-    assert_difference '@domain.registrar.messages.size' do
+    assert_difference '@domain.registrar.notifications.size' do
       visit edit_admin_domain_url(@domain)
       click_link_or_button 'Force delete domain'
     end

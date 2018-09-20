@@ -1,6 +1,8 @@
 en:
   registrant:
     contacts:
+      contact_index: Contacts
+
       show:
         general:
           header: General

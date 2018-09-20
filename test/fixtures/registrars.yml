@@ -41,3 +41,4 @@ complete:
   language: en
   vat_no: US12345
   vat_rate: 0.05
+  billing_email: billing@bestnames.test

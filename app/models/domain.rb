@@ -265,9 +265,9 @@ class Domain < ActiveRecord::Base
     true
   end
 
-  def poll_message!(message_key)
-    registrar.messages.create!(
-      body: "#{I18n.t(message_key)}: #{name}",
+  def notify_registrar(message_key)
+    registrar.notifications.create!(
+      text: "#{I18n.t(message_key)}: #{name}",
       attached_obj_id: id,
       attached_obj_type: self.class.to_s
     )

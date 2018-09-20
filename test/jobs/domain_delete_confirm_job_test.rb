@@ -18,19 +18,19 @@ class DomainDeleteConfirmJobTest < ActiveSupport::TestCase
     super
   end
 
-  def test_rejected_registrant_verification_polls_a_message
+  def test_rejected_registrant_verification_notifies_registrar
     DomainDeleteConfirmJob.enqueue(@domain.id, RegistrantVerification::REJECTED)
 
-    last_registrar_message = @domain.registrar.messages.last
-    assert_equal(last_registrar_message.attached_obj_id, @domain.id)
-    assert_equal(last_registrar_message.body, 'Registrant rejected domain deletion: shop.test')
+    last_registrar_notification = @domain.registrar.notifications.last
+    assert_equal(last_registrar_notification.attached_obj_id, @domain.id)
+    assert_equal(last_registrar_notification.text, 'Registrant rejected domain deletion: shop.test')
   end
 
-  def test_accepted_registrant_verification_polls_a_message
+  def test_accepted_registrant_verification_notifies_registrar
     DomainDeleteConfirmJob.enqueue(@domain.id, RegistrantVerification::CONFIRMED)
 
-    last_registrar_message = @domain.registrar.messages.last
-    assert_equal(last_registrar_message.attached_obj_id, @domain.id)
-    assert_equal(last_registrar_message.body, 'Registrant confirmed domain deletion: shop.test')
+    last_registrar_notification = @domain.registrar.notifications.last
+    assert_equal(last_registrar_notification.attached_obj_id, @domain.id)
+    assert_equal(last_registrar_notification.text, 'Registrant confirmed domain deletion: shop.test')
   end
 end
