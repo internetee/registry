@@ -4,8 +4,10 @@ class InvoiceMailer < ApplicationMailer
   def invoice_email(invoice_id, html, billing_email)
     @invoice = Invoice.find_by(id: invoice_id)
     billing_email ||= @invoice.billing_email
+    logger.info "Billing email from form: #{billing_email}"
+    logger.info "Billing email from invoice database: #{@invoice.billing_email || nil}"
     return unless @invoice
-    return if whitelist_blocked?(@invoice.billing_email)
+    return if whitelist_blocked?(billing_email)
 
     kit = PDFKit.new(html)
     pdf = kit.to_pdf
