@@ -1,4 +1,4 @@
-21.09.2018
+26.09.2018
 * EPP: datetime in poll messages is not UTC as required by RFC5730 [#948](https://github.com/internetee/registry/issues/948)
 * BUG: user_session_timeout is now always respected [#966](https://github.com/internetee/registry/issues/966)
 * BUG: fixed method name in registrar portal's billing [#971](https://github.com/internetee/registry/pull/971)
