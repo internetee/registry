@@ -127,6 +127,7 @@ class Certificate < ActiveRecord::Base
 
     self.class.update_registry_crl
     self.class.reload_apache
+    self
   end
 
   class << self
