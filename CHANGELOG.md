@@ -1,3 +1,19 @@
+21.09.2018
+* EPP: datetime in poll messages is not UTC as required by RFC5730 [#948](https://github.com/internetee/registry/issues/948)
+* BUG: user_session_timeout is now always respected [#966](https://github.com/internetee/registry/issues/966)
+* BUG: fixed method name in registrar portal's billing [#971](https://github.com/internetee/registry/pull/971)
+* RubyZip gem update to 1.2.2 (https://nvd.nist.gov/vuln/detail/CVE-2018-1000544) [#987](https://github.com/internetee/registry/pull/987)
+* Rubocop gem update to 0.5.8 [#963](https://github.com/internetee/registry/pull/963)
+* Money gem update to 6.12.0 [#968](https://github.com/internetee/registry/pull/968)
+* Admin: Removing PKI certs revoke the cert first [#887](https://github.com/internetee/registry/issues/887)
+* Admin: removed duplicate billing email field from registrar profile [#967](https://github.com/internetee/registry/issues/967)
+* Removed duplicate require function [#979](https://github.com/internetee/registry/issues/979)
+* Improved EPP poll tests [#943](https://github.com/internetee/registry/issues/943)
+* Refactored EPP poll messages [#703](https://github.com/internetee/registry/issues/703)
+* Registrant portal small improvements [#932](https://github.com/internetee/registry/issues/932)
+* Fixed invoice mailer whitelist for staging env enablig invoice forwarding to an email [#989](https://github.com/internetee/registry/issues/989)
+* Removed unused domain delete views [#951](https://github.com/internetee/registry/issues/951)
+
 12.09.2018
 * Bug: user with billing access only can now login to the portal for Regsitrars [#973](https://github.com/internetee/registry/issues/973)
 
