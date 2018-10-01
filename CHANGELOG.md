@@ -1,4 +1,4 @@
-26.09.2018
+02.10.2018
 * EPP: datetime in poll messages is not UTC as required by RFC5730 [#948](https://github.com/internetee/registry/issues/948)
 * BUG: user_session_timeout is now always respected [#966](https://github.com/internetee/registry/issues/966)
 * BUG: fixed method name in registrar portal's billing [#971](https://github.com/internetee/registry/pull/971)
@@ -13,6 +13,7 @@
 * Registrant portal small improvements [#932](https://github.com/internetee/registry/issues/932)
 * Fixed invoice mailer whitelist for staging env enablig invoice forwarding to an email [#989](https://github.com/internetee/registry/issues/989)
 * Removed unused domain delete views [#951](https://github.com/internetee/registry/issues/951)
+* Removed unused generator [#990](https://github.com/internetee/registry/issues/990)
 
 12.09.2018
 * Bug: user with billing access only can now login to the portal for Regsitrars [#973](https://github.com/internetee/registry/issues/973)
