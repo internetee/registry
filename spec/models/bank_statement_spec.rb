@@ -36,7 +36,7 @@ describe BankStatement do
     end
 
     it 'should not bind transactions with invalid match data' do
-      r = create(:registrar, reference_no: 'RF7086666663')
+      r = create(:registrar, reference_no: '1234')
 
       create(:account, registrar: r, account_type: 'cash', balance: 0)
 
@@ -50,7 +50,7 @@ describe BankStatement do
         }),
         create(:bank_transaction, {
           sum: 240.0,
-          reference_no: 'RF7086666663',
+          reference_no: '1234',
           description: 'Invoice no. 4948934'
         })
       ])

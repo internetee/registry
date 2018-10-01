@@ -35,7 +35,7 @@ describe BankTransaction do
     end
 
     it 'should not bind transaction with mismatching sums' do
-      r = create(:registrar, reference_no: 'RF7086666663')
+      r = create(:registrar)
       invoice = r.issue_prepayment_invoice(200, 'add some money')
 
       bt = create(:bank_transaction, { sum: 10 })
@@ -45,7 +45,7 @@ describe BankTransaction do
     end
 
     it 'should not bind transaction with cancelled invoice' do
-      r = create(:registrar, reference_no: 'RF7086666663')
+      r = create(:registrar)
       invoice = r.issue_prepayment_invoice(200, 'add some money')
       invoice.cancel
 
