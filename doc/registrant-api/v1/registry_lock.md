@@ -49,6 +49,10 @@ Content-Type: application/json
     "serverDeleteProhibited",
     "serverTransferProhibited"
   ],
+  "nameservers": [
+    "ns1.bestnames.test",
+    "ns2.bestnames.test"
+  ],
   "reserved": false,
   "status_notes": {},
   "statuses_backup": []
@@ -139,6 +143,10 @@ Content-Type: application/json
   "force_delete_at": null,
   "statuses": [
     "ok"
+  ],
+  "nameservers": [
+    "ns1.bestnames.test",
+    "ns2.bestnames.test"
   ],
   "reserved": false,
   "status_notes": {},
