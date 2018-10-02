@@ -1,3 +1,5 @@
+require 'serializers/registrant_api/domain'
+
 module Api
   module V1
     module Registrant
@@ -7,7 +9,8 @@ module Api
 
         def create
           if @domain.apply_registry_lock
-            render json: @domain
+            serializer = Serializers::RegistrantApi::Domain.new(@domain)
+            render json: serializer.to_json
           else
             render json: { errors: [{ base: ['Domain cannot be locked'] }] },
                    status: :unprocessable_entity
@@ -16,7 +19,8 @@ module Api
 
         def destroy
           if @domain.remove_registry_lock
-            render json: @domain
+            serializer = Serializers::RegistrantApi::Domain.new(@domain)
+            render json: serializer.to_json
           else
             render json: { errors: [{ base: ['Domain is not locked'] }] },
                    status: :unprocessable_entity

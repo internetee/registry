@@ -47,8 +47,6 @@ class SerializersRegistrantApiDomainTest < ApplicationIntegrationTest
               registrant_verification_token pending_json force_delete_at statuses
               locked_by_registrant_at reserved status_notes nameservers]
 
-    pp @json
-
     assert_equal(keys, @json.keys & keys)
   end
 end

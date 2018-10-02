@@ -77,6 +77,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
 
     response_json = JSON.parse(response.body, symbolize_names: true)
     assert(response_json[:statuses].include?(DomainStatus::OK))
+    refute(response_json[:locked_by_registrant_at])
     @domain.reload
     refute(@domain.locked_by_registrant?)
   end
@@ -119,6 +120,19 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
     assert(response_json[:statuses].include?(DomainStatus::SERVER_DELETE_PROHIBITED))
     assert(response_json[:statuses].include?(DomainStatus::SERVER_TRANSFER_PROHIBITED))
     assert(response_json[:statuses].include?(DomainStatus::SERVER_UPDATE_PROHIBITED))
+  end
+
+  def test_locking_domains_returns_serialized_domain_object
+    post '/api/v1/registrant/domains/1b3ee442-e8fe-4922-9492-8fcb9dccc69c/registry_lock',
+         {}, @auth_headers
+
+    assert_equal(200, response.status)
+    response_json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_equal('Best Names', response_json[:registrar])
+    assert_equal(['ns1.bestnames.test', 'ns2.bestnames.test'].to_set,
+                 response_json[:nameservers].to_set)
+    assert_equal(Time.zone.parse('2010-07-05'), response_json[:locked_by_registrant_at])
   end
 
   private
