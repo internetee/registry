@@ -50,8 +50,8 @@ module Serializers
         array_of_nameservers = Array.new
 
         @domain.nameservers.map do |nameserver|
-          array_of_nameservers << { hostname: nameserver.hostname, ipv4: nameserver.ipv4,
-                                   ipv6: nameserver.ipv6 }
+          array_of_nameservers.push({ hostname: nameserver.hostname, ipv4: nameserver.ipv4,
+                                      ipv6: nameserver.ipv6 })
         end
 
         array_of_nameservers
