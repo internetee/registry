@@ -31,15 +31,3 @@ not_in_use:
   country_code: US
   accounting_customer_code: any
   language: en
-
-complete:
-  name: Complete Names
-  reg_no: 123456
-  code: completenames
-  email: completenames@example.com
-  country_code: US
-  accounting_customer_code: US0001
-  language: en
-  vat_no: US12345
-  vat_rate: 0.05
-  billing_email: billing@bestnames.test
