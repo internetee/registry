@@ -25,12 +25,24 @@ class SerializersRegistrantApiDomainTest < ApplicationIntegrationTest
   end
 
   def test_returns_registrar_name
-    assert_equal('Best Names', @json[:registrar])
+    assert_equal({name: 'Best Names', website: 'bestnames.test' }, @json[:registrar])
   end
 
   def test_returns_nameserver_hostnames_or_an_empty_array
-    expected_nameservers = ['ns1.bestnames.test', 'ns2.bestnames.test']
-    assert_equal(expected_nameservers.to_set, @json[:nameservers].to_set)
+    expected_nameserver_1 = {
+      hostname: 'ns1.bestnames.test',
+      ipv4: ['192.0.2.2'],
+      ipv6: ['2001:db8::2']
+    }
+
+    expected_nameserver_2 = {
+      hostname: 'ns2.bestnames.test',
+      ipv4: ['192.0.2.0', '192.0.2.3', '192.0.2.1'],
+      ipv6: ['2001:db8::1']
+    }
+
+    assert(@json[:nameservers].include?(expected_nameserver_1))
+    assert(@json[:nameservers].include?(expected_nameserver_2))
 
     other_domain = domains(:hospital)
     other_serializer = Serializers::RegistrantApi::Domain.new(other_domain)

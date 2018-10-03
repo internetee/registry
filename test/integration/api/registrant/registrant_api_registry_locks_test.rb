@@ -129,8 +129,10 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
     assert_equal(200, response.status)
     response_json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal('Best Names', response_json[:registrar])
-    assert_equal(['ns1.bestnames.test', 'ns2.bestnames.test'].to_set,
+    assert_equal({ name: 'Best Names', website: 'bestnames.test' }, response_json[:registrar])
+    assert_equal(
+      [{hostname: 'ns1.bestnames.test', ipv4: ['192.0.2.1'], ipv6: ['2001:db8::1']},
+       {hostname: 'ns2.bestnames.test', ipv4: ['192.0.2.2'], ipv6: ['2001:db8::2']}].to_set,
                  response_json[:nameservers].to_set)
     assert_equal(Time.zone.parse('2010-07-05'), response_json[:locked_by_registrant_at])
   end

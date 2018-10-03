@@ -11,7 +11,10 @@ module Serializers
         {
           id: @domain.uuid,
           name: @domain.name,
-          registrar: @domain.registrar.name,
+          registrar: {
+            name: @domain.registrar.name,
+            website: @domain.registrar.website,
+          },
           registered_at: @domain.registered_at,
           valid_to: @domain.valid_to,
           created_at: @domain.created_at,
@@ -37,8 +40,21 @@ module Serializers
           locked_by_registrant_at: @domain.locked_by_registrant_at,
           reserved: @domain.reserved,
           status_notes: @domain.status_notes,
-          nameservers: @domain.nameservers.map(&:hostname),
+          nameservers: nameservers,
         }
+      end
+
+      private
+
+      def nameservers
+        array_of_nameservers = Array.new
+
+        @domain.nameservers.map do |nameserver|
+          array_of_nameservers << { hostname: nameserver.hostname, ipv4: nameserver.ipv4,
+                                   ipv6: nameserver.ipv6 }
+        end
+
+        array_of_nameservers
       end
     end
   end

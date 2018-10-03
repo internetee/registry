@@ -21,7 +21,10 @@ Content-Type: application/json
 {
   "id": "98d1083a-8863-4153-93e4-caee4a013535",
   "name": "domain0.ee",
-  "registrar": "Best Names",
+  "registrar": {
+     "name": "Best Names",
+     "website": "example.com"
+  },
   "registered_at": "2015-09-09T09:11:14.861Z",
   "valid_to": "2016-09-09T09:11:14.861Z",
   "registrant_id": 1,
@@ -50,8 +53,16 @@ Content-Type: application/json
     "serverTransferProhibited"
   ],
   "nameservers": [
-    "ns1.bestnames.test",
-    "ns2.bestnames.test"
+    {
+      "hostname": "ns1.bestnames.test",
+      "ipv4": ["173.245.58.41"],
+      "ipv6": ["2400:cb00:2049:1::adf5:3a33"]
+    },
+    {
+      "hostname": "ns1.bestnames.test",
+      "ipv4": ["173.245.58.51"],
+      "ipv6": ["2400:cb00:2049:1::adf5:3b29"]
+    },
   ],
   "reserved": false,
   "status_notes": {},
@@ -118,7 +129,10 @@ Content-Type: application/json
 {
   "id": "98d1083a-8863-4153-93e4-caee4a013535",
   "name": "domain0.ee",
-  "registrar": "Best Names",
+  "registrar": {
+     "name": "Best Names",
+     "website": "example.com"
+  },
   "registered_at": "2015-09-09T09:11:14.861Z",
   "valid_to": "2016-09-09T09:11:14.861Z",
   "registrant_id": 1,
@@ -145,8 +159,16 @@ Content-Type: application/json
     "ok"
   ],
   "nameservers": [
-    "ns1.bestnames.test",
-    "ns2.bestnames.test"
+    {
+      "hostname": "ns1.bestnames.test",
+      "ipv4": ["173.245.58.41"],
+      "ipv6": ["2400:cb00:2049:1::adf5:3a33"]
+    },
+    {
+      "hostname": "ns1.bestnames.test",
+      "ipv4": ["173.245.58.51"],
+      "ipv6": ["2400:cb00:2049:1::adf5:3b29"]
+    },
   ],
   "reserved": false,
   "status_notes": {},

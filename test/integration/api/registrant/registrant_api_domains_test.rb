@@ -30,7 +30,7 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
 
     assert_equal('hospital.test', domain[:name])
     assert_equal('5edda1a5-3548-41ee-8b65-6d60daf85a37', domain[:id])
-    assert_equal('Good Names', domain[:registrar])
+    assert_equal({ name: 'Good Names', website: nil }, domain[:registrar])
     assert_equal([], domain[:nameservers])
     assert(domain.has_key?(:locked_by_registrant_at))
   end
@@ -52,7 +52,7 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
     assert(array_of_domain_names.include?('hospital.test'))
 
     array_of_domain_registrars = response_json.map { |x| x[:registrar] }
-    assert(array_of_domain_registrars.include?('Good Names'))
+    assert(array_of_domain_registrars.include?({name: 'Good Names', website: nil}))
   end
 
   def test_root_accepts_limit_and_offset_parameters
