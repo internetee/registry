@@ -31,6 +31,7 @@ not_in_use:
   code: any
   email: any@example.com
   country_code: US
+  vat_no: any
   accounting_customer_code: any
   language: en
   reference_no: 39
