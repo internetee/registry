@@ -48,6 +48,7 @@ metro:
 
 hospital:
   name: hospital.test
+  name_dirty: hospital.test
   registrar: goodnames
   registrant: john
   transfer_code: 23118v2

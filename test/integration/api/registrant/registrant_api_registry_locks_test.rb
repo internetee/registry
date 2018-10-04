@@ -77,6 +77,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
 
     response_json = JSON.parse(response.body, symbolize_names: true)
     assert(response_json[:statuses].include?(DomainStatus::OK))
+    refute(response_json[:locked_by_registrant_at])
     @domain.reload
     refute(@domain.locked_by_registrant?)
   end
@@ -119,6 +120,26 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
     assert(response_json[:statuses].include?(DomainStatus::SERVER_DELETE_PROHIBITED))
     assert(response_json[:statuses].include?(DomainStatus::SERVER_TRANSFER_PROHIBITED))
     assert(response_json[:statuses].include?(DomainStatus::SERVER_UPDATE_PROHIBITED))
+  end
+
+  def test_locking_domains_returns_serialized_domain_object
+    post '/api/v1/registrant/domains/1b3ee442-e8fe-4922-9492-8fcb9dccc69c/registry_lock',
+         {}, @auth_headers
+
+    assert_equal(200, response.status)
+    response_json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_equal({ name: 'Best Names', website: 'bestnames.test' }, response_json[:registrar])
+    assert_equal({name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}, response_json[:registrant])
+    assert_equal([{name: 'Jane', id: '9db3de62-2414-4487-bee2-d5c155567768'}], response_json[:admin_contacts])
+    assert_equal([{name: 'William', id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb'},
+                  {name: 'Acme Ltd', id: 'f1dd365c-5be9-4b3d-a44e-3fa002465e4d'}],
+                 response_json[:tech_contacts])
+    assert_equal(
+      [{hostname: 'ns1.bestnames.test', ipv4: ['192.0.2.1'], ipv6: ['2001:db8::1']},
+       {hostname: 'ns2.bestnames.test', ipv4: ['192.0.2.2'], ipv6: ['2001:db8::2']}].to_set,
+                 response_json[:nameservers].to_set)
+    assert_equal(Time.zone.parse('2010-07-05'), response_json[:locked_by_registrant_at])
   end
 
   private

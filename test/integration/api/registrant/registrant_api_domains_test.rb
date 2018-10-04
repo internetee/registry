@@ -27,7 +27,17 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
     assert_equal(200, response.status)
 
     domain = JSON.parse(response.body, symbolize_names: true)
+
     assert_equal('hospital.test', domain[:name])
+    assert_equal('5edda1a5-3548-41ee-8b65-6d60daf85a37', domain[:id])
+    assert_equal({name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}, domain[:registrant])
+    assert_equal([{name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}],
+                 domain[:admin_contacts])
+    assert_equal([{name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}],
+                 domain[:tech_contacts])
+    assert_equal({ name: 'Good Names', website: nil }, domain[:registrar])
+    assert_equal([], domain[:nameservers])
+    assert(domain.has_key?(:locked_by_registrant_at))
   end
 
   def test_get_non_existent_domain_details_by_uuid
@@ -45,6 +55,9 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
     response_json = JSON.parse(response.body, symbolize_names: true)
     array_of_domain_names = response_json.map { |x| x[:name] }
     assert(array_of_domain_names.include?('hospital.test'))
+
+    array_of_domain_registrars = response_json.map { |x| x[:registrar] }
+    assert(array_of_domain_registrars.include?({name: 'Good Names', website: nil}))
   end
 
   def test_root_accepts_limit_and_offset_parameters
