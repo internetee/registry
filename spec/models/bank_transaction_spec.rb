@@ -34,27 +34,6 @@ describe BankTransaction do
       @bank_transaction.errors.full_messages.should match_array([])
     end
 
-    it 'should not bind transaction with mismatching sums' do
-      r = create(:registrar)
-      invoice = r.issue_prepayment_invoice(200, 'add some money')
-
-      bt = create(:bank_transaction, { sum: 10 })
-      bt.bind_invoice(invoice.number)
-
-      bt.errors.full_messages.should match_array(["Invoice and transaction sums do not match"])
-    end
-
-    it 'should not bind transaction with cancelled invoice' do
-      r = create(:registrar)
-      invoice = r.issue_prepayment_invoice(200, 'add some money')
-      invoice.cancel
-
-      bt = create(:bank_transaction, { sum: 240 })
-      bt.bind_invoice(invoice.number)
-
-      bt.errors.full_messages.should match_array(["Cannot bind cancelled invoice"])
-    end
-
     it 'should have one version' do
       with_versioning do
         @bank_transaction.versions.should == []
