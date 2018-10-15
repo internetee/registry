@@ -1,3 +1,8 @@
+15.10.2018
+* Nokogiri update 1.8.5 [#1007](https://github.com/internetee/registry/pull/1007)
+* Registrant API: added admin, tech and registrar contacts to domain info response [#991](https://github.com/internetee/registry/issues/991)
+* Registrant API: added registry lock date to domain info response [#996](https://github.com/internetee/registry/issues/996)
+
 02.10.2018
 * EPP: datetime in poll messages is not UTC as required by RFC5730 [#948](https://github.com/internetee/registry/issues/948)
 * BUG: user_session_timeout is now always respected [#966](https://github.com/internetee/registry/issues/966)
