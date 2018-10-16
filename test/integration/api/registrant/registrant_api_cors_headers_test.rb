@@ -18,4 +18,10 @@ class RegistrantApiCorsHeadersTest < ApplicationIntegrationTest
                response.headers['Access-Control-Allow-Headers'])
     assert_equal('3600', response.headers['Access-Control-Max-Age'])
   end
+
+  def test_returns_empty_body
+    options '/api/v1/registrant/auth/eid', {}
+
+    assert_equal('', response.body)
+  end
 end

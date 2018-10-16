@@ -5,7 +5,7 @@ module Api
 
     def cors_preflight_check
       set_access_control_headers
-      render json: { status: :ok }
+      render text: ''
     end
 
     def set_access_control_headers
