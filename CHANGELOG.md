@@ -1,6 +1,7 @@
 15.10.2018
 * Nokogiri update 1.8.5 [#1007](https://github.com/internetee/registry/pull/1007)
 * Registrant API: added admin, tech and registrar contacts to domain info response [#991](https://github.com/internetee/registry/issues/991)
+* Registrant API: added nameserver and registrar details to domain info response [#1000](https://github.com/internetee/registry/issues/1000)
 * Registrant API: added registry lock date to domain info response [#996](https://github.com/internetee/registry/issues/996)
 
 02.10.2018
