@@ -29,6 +29,9 @@ Rails.application.routes.draw do
         resources :contacts, only: %i[index show], param: :uuid
       end
     end
+
+    match '*all', controller: 'cors', action: 'cors_preflight_check', via: [:options],
+      as: 'cors_preflight_check'
   end
 
   # REGISTRAR ROUTES
