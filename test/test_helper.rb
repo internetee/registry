@@ -28,6 +28,13 @@ class ActiveSupport::TestCase
   end
 end
 
+# Allows testing OPTIONS request just like GET or POST
+module ActionDispatch::Integration::RequestHelpers
+  def options(path, parameters = nil, headers_or_env = nil)
+    process :options, path, parameters, headers_or_env
+  end
+end
+
 class ApplicationIntegrationTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
   include Capybara::Minitest::Assertions
