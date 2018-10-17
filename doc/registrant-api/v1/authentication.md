@@ -4,14 +4,14 @@
 
 For specified partners the API allows for use of data from mobile ID for
 authentication. API client should perform authentication with eID according to
-the approriate documentation, and then pass on values from the webserver's
+the appropriate documentation, and then pass on values from the web server's
 certificate to the API server.
 
 ## POST /api/v1/registrant/auth/eid
 
 Returns a bearer token to be used for further API requests. Tokens are valid for 2 hours since their creation.
 
-#### Paramaters
+#### Parameters
 
 Values in brackets represent values that come from the id card certificate.
 
@@ -24,7 +24,7 @@ Values in brackets represent values that come from the id card certificate.
 
 #### Request
 ```
-POST /api/v1/auth/token HTTP/1.1
+POST /api/v1/registrant/auth/token HTTP/1.1
 Accept: application/json
 Content-type: application/json
 
@@ -48,9 +48,9 @@ Content-Type: application/json
 }
 ```
 
-## POST /api/v1/auth/username -- NOT IMPLEMENTED
+## POST /api/v1/registrant/auth/username -- NOT IMPLEMENTED
 
-#### Paramaters
+#### Parameters
 
 Values in brackets represent values that come from the id card certificate
 
@@ -62,7 +62,7 @@ Values in brackets represent values that come from the id card certificate
 
 #### Request
 ```
-POST /api/v1/auth/token HTTP/1.1
+POST /api/v1/registrant/auth/token HTTP/1.1
 Accept: application/json
 Content-type: application/json
 ```
@@ -82,7 +82,7 @@ Content-Type: application/json
 
 ## Implementation notes:
 
-We do not need to store the session data at all, instead we can levarage AES encryption and use
+We do not need to store the session data at all, instead we can leverage AES encryption and use
 Rails secret as the key. General approximation:
 
 ```ruby
@@ -101,7 +101,7 @@ class AuthenticationToken
 
     {
       token: base64_encoded,
-      expires_in = values[:expires_in]
+      expires_in: values[:expires_in],
       type: "Bearer"
     }
   end
