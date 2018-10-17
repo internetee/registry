@@ -5,6 +5,7 @@ module Api
   module V1
     module Registrant
       class AuthController < ActionController::API
+        before_action :set_cors_header
         before_action :check_ip_whitelist
 
         rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
@@ -26,6 +27,10 @@ module Api
         end
 
         private
+
+        def set_cors_header
+          response.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
+        end
 
         def eid_params
           required_params = %i[ident first_name last_name]
