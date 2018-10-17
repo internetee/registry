@@ -1,0 +1,5 @@
+en:
+  admin:
+    invoices:
+      cancel:
+        cancelled: Invoice has been cancelled

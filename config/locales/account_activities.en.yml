@@ -1,0 +1,5 @@
+en:
+  activerecord:
+    attributes:
+      account_activity:
+        created_at: Receipt date

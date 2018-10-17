@@ -22,7 +22,7 @@ if @cron_group == 'registry'
   end
 
   every :day, at: '12:10am' do
-    runner 'Invoice.cancel_overdue_invoices'
+    rake 'invoices:cancel_overdue'
   end
 
   # TODO

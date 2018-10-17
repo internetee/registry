@@ -1,16 +1,16 @@
 class Invoice < ActiveRecord::Base
   include Versions
+  include Concerns::Invoice::Cancellable
+  include Concerns::Invoice::Payable
+
   belongs_to :seller, class_name: 'Registrar'
   belongs_to :buyer, class_name: 'Registrar'
   has_one  :account_activity
-  has_many :invoice_items
+  has_many :items, class_name: 'InvoiceItem', dependent: :destroy
   has_many :directo_records, as: :item, class_name: 'Directo'
 
-  accepts_nested_attributes_for :invoice_items
+  accepts_nested_attributes_for :items
 
-  scope :unbinded, lambda {
-    where('id NOT IN (SELECT invoice_id FROM account_activities where invoice_id IS NOT NULL)')
-  }
   scope :all_columns,                    ->{select("invoices.*")}
   scope :sort_due_date_column,           ->{all_columns.select("CASE WHEN invoices.cancelled_at is not null THEN
                                                                 (invoices.cancelled_at + interval '100 year') ELSE
@@ -24,11 +24,14 @@ class Invoice < ActiveRecord::Base
   scope :sort_by_sort_receipt_date_asc,  ->{sort_receipt_date_column.order("sort_receipt_date ASC")}
   scope :sort_by_sort_receipt_date_desc, ->{sort_receipt_date_column.order("sort_receipt_date DESC")}
 
+  scope :overdue, -> { unpaid.non_cancelled.where('due_date < ?', Time.zone.today) }
+
   attr_accessor :billing_email
   validates :billing_email, email_format: { message: :invalid }, allow_blank: true
 
+  validates :issue_date, presence: true
   validates :due_date, :currency, :seller_name,
-            :seller_iban, :buyer_name, :invoice_items, presence: true
+            :seller_iban, :buyer_name, :items, presence: true
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
 
@@ -54,35 +57,6 @@ class Invoice < ActiveRecord::Base
     errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
     logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
     false
-  end
-
-  class << self
-    def cancel_overdue_invoices
-      STDOUT << "#{Time.zone.now.utc} - Cancelling overdue invoices\n" unless Rails.env.test?
-
-      cr_at = Time.zone.now - Setting.days_to_keep_overdue_invoices_active.days
-      invoices = Invoice.unbinded.where(
-        'due_date < ? AND cancelled_at IS NULL', cr_at
-      )
-
-      unless Rails.env.test?
-        invoices.each do |m|
-          STDOUT << "#{Time.zone.now.utc} Invoice.cancel_overdue_invoices: ##{m.id}\n"
-        end
-      end
-
-      count = invoices.update_all(cancelled_at: Time.zone.now)
-
-      STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} overdue invoices\n" unless Rails.env.test?
-    end
-  end
-
-  def binded?
-    account_activity.present?
-  end
-
-  def receipt_date
-    account_activity.try(:created_at)
   end
 
   def to_s
@@ -119,25 +93,6 @@ class Invoice < ActiveRecord::Base
     "invoice-#{number}.pdf"
   end
 
-  def cancel
-    if binded?
-      errors.add(:base, I18n.t('cannot_cancel_paid_invoice'))
-      return false
-    end
-
-    if cancelled?
-      errors.add(:base, I18n.t('cannot_cancel_cancelled_invoice'))
-      return false
-    end
-
-    self.cancelled_at = Time.zone.now
-    save
-  end
-
-  def cancelled?
-    cancelled_at.present?
-  end
-
   def forward(html)
     return false unless valid?
     return false unless billing_email.present?
@@ -146,12 +101,8 @@ class Invoice < ActiveRecord::Base
     true
   end
 
-  def items
-    invoice_items
-  end
-
   def subtotal
-    invoice_items.map(&:item_sum_without_vat).reduce(:+)
+    items.map(&:item_sum_without_vat).reduce(:+)
   end
 
   def vat_amount
@@ -162,6 +113,10 @@ class Invoice < ActiveRecord::Base
   def total
     calculate_total unless total?
     read_attribute(:total)
+  end
+
+  def each
+    items.each { |item| yield item }
   end
 
   private

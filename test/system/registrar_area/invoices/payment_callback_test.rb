@@ -12,8 +12,8 @@ class PaymentCallbackTest < ApplicationSystemTestCase
     @invoice = invoices(:for_payments_test)
     invoice_item = invoice_items(:one)
 
-    @invoice.invoice_items << invoice_item
-    @invoice.invoice_items << invoice_item
+    @invoice.items << invoice_item
+    @invoice.items << invoice_item
     @user.registrar.invoices << @invoice
   end
 

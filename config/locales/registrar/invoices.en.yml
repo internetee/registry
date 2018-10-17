@@ -9,3 +9,6 @@ en:
       payment_complete: Credit Card payment Complete
       index:
         reset_btn: Reset
+
+      cancel:
+        cancelled: Invoice has been cancelled

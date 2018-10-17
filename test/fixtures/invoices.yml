@@ -1,5 +1,5 @@
-DEFAULTS: &DEFAULTS
-  created_at: <%= Date.parse '2010-07-05' %>
+one:
+  issue_date: <%= Date.parse '2010-07-05' %>
   due_date: <%= Date.parse '2010-07-06' %>
   currency: EUR
   seller_name: John Doe
@@ -10,30 +10,15 @@ DEFAULTS: &DEFAULTS
   total: 16.50
   reference_no: 13
 
-valid:
-  <<: *DEFAULTS
-
-exported:
-  <<: *DEFAULTS
-  in_directo: true
-
-cancelled:
-  <<: *DEFAULTS
-  cancelled_at: <%= Date.parse '2010-07-05' %>
-
-paid:
-  <<: *DEFAULTS
-  total: 1
-
-outstanding:
-  <<: *DEFAULTS
-  due_date: <%= Date.parse '2010-07-04' %>
-
-overdue:
-  <<: *DEFAULTS
-  due_date: <%= Date.parse '2010-07-03' %>
-
 for_payments_test:
-  <<: *DEFAULTS
-  total: 12.00
   number: 1
+  issue_date: <%= Date.parse '2010-07-05' %>
+  due_date: <%= Date.parse '2010-07-06' %>
+  currency: EUR
+  seller_name: John Doe
+  seller_iban: 1234
+  buyer: bestnames
+  buyer_name: Jane Doe
+  vat_rate: 0.1
+  reference_no: 13
+  total: 12.00

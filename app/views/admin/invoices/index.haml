@@ -16,18 +16,18 @@
             %th{class: 'col-xs-3'}
               = sort_link(@q, :sort_receipt_date, "Receipt date")
         %tbody
-          - @invoices.each do |x|
+          - @invoices.each do |invoice|
             %tr
-              %td= link_to(x, [:admin, x])
-              %td= link_to(x.buyer_name, admin_registrar_path(x.buyer_id))
-              - if x.cancelled?
+              %td= link_to(invoice, [:admin, invoice])
+              %td= link_to(invoice.buyer_name, admin_registrar_path(invoice.buyer_id))
+              - if invoice.cancelled?
                 %td.text-grey= t(:cancelled)
               - else
-                %td= l(x.due_date, format: :date_long)
+                %td= l invoice.due_date
 
-              - if x.binded?
-                %td= l(x.receipt_date, format: :date_long)
-              - elsif x.cancelled?
+              - if invoice.paid?
+                %td= l invoice.receipt_date
+              - elsif invoice.cancelled?
                 %td.text-grey= t(:cancelled)
               - else
                 %td.text-danger= t(:unpaid)
