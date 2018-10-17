@@ -5,6 +5,7 @@ module Api
   module V1
     module Registrant
       class BaseController < ActionController::API
+        before_action :set_cors_header
         before_action :authenticate
         before_action :set_paper_trail_whodunnit
 
@@ -16,6 +17,10 @@ module Api
         end
 
         private
+
+        def set_cors_header
+          response.headers['Access-Control-Allow-Origin'] = '*'
+        end
 
         def bearer_token
           pattern = /^Bearer /

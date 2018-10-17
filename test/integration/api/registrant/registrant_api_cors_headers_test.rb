@@ -24,4 +24,12 @@ class RegistrantApiCorsHeadersTest < ApplicationIntegrationTest
 
     assert_equal('', response.body)
   end
+
+  def test_it_returns_cors_headers_for_other_requests
+    post '/api/v1/registrant/auth/eid', {}
+    assert_equal('*', response.headers['Access-Control-Allow-Origin'])
+
+    get '/api/v1/registrant/contacts', {}
+    assert_equal('*', response.headers['Access-Control-Allow-Origin'])
+  end
 end
