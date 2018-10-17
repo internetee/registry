@@ -19,7 +19,7 @@ module Api
         private
 
         def set_cors_header
-          response.headers['Access-Control-Allow-Origin'] = '*'
+          response.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
         end
 
         def bearer_token
