@@ -5,3 +5,4 @@ en:
         Transfer of domain %{domain_name} has been approved.
         It was associated with registrant %{old_registrant_code}
         and contacts %{old_contacts_codes}.
+      contact_update: Contact %{contact} has been updated by registrant

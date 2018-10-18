@@ -1,0 +1,64 @@
+<%= form_for [:registrant, domain, @contact], html: { class: 'form-horizontal' } do |f| %>
+    <% if @errors.present? %>
+        <%= render 'api_errors', errors: @errors %>
+    <% end %>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= f.label :name %>
+        </div>
+
+        <div class="col-md-4">
+            <%= f.text_field :name, required: true, autofocus: true, class: 'form-control' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= f.label :email %>
+        </div>
+
+        <div class="col-md-4">
+            <%= f.email_field :email, required: true, class: 'form-control' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= f.label :phone %>
+        </div>
+
+        <div class="col-md-4">
+            <%= f.text_field :phone, required: true, class: 'form-control' %>
+        </div>
+    </div>
+
+    <% if Contact.address_processing? %>
+        <div class="panel panel-default">
+            <div class="panel-heading"><%= t '.address' %></div>
+            <div class="panel-body">
+                <%= render 'registrant/contacts/form/address', f: f %>
+            </div>
+        </div>
+    <% end %>
+
+    <% if fax_enabled? %>
+        <div class="form-group">
+            <div class="col-md-2 control-label">
+                <%= f.label :fax %>
+            </div>
+
+            <div class="col-md-4">
+                <%= f.text_field :fax, class: 'form-control' %>
+            </div>
+        </div>
+    <% end %>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-md-6 text-right">
+            <%= button_tag t('.submit_btn'), class: 'btn btn-success' %>
+        </div>
+    </div>
+<% end %>

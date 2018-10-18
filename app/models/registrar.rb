@@ -157,6 +157,11 @@ class Registrar < ActiveRecord::Base
     end
   end
 
+  def notify(action)
+    text = I18n.t("notifications.texts.#{action.notification_key}", contact: action.contact.code)
+    notifications.create!(text: text)
+  end
+
   private
 
   def set_defaults

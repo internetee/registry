@@ -1,6 +1,8 @@
 class Notification < ActiveRecord::Base
   include Versions # version/notification_version.rb
+
   belongs_to :registrar
+  belongs_to :action
 
   scope :unread, -> { where(read: false) }
 
@@ -20,7 +22,7 @@ class Notification < ActiveRecord::Base
 
   # Needed for EPP log
   def name
-    "-"
+    ''
   end
 
   private

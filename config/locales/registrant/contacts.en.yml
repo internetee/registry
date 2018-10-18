@@ -4,6 +4,7 @@ en:
       contact_index: Contacts
 
       show:
+        edit_btn: Edit
         general:
           header: General
 
@@ -18,3 +19,14 @@ en:
         domains:
           header: Domains
           all: All roles
+
+      edit:
+        header: Edit contact
+
+      update:
+        updated: Contact has been successfully updated
+
+      form:
+        address: Address
+        submit_btn: Update contact
+

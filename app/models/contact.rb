@@ -526,4 +526,20 @@ class Contact < ActiveRecord::Base
 
     domain_names
   end
+
+  def address=(address)
+    self.street = address.street
+    self.zip = address.zip
+    self.city = address.city
+    self.state = address.state
+    self.country_code = address.country_code
+  end
+
+  def address
+    Address.new(street, zip, city, state, country_code)
+  end
+
+  def managed_by?(registrant_user)
+    ident == registrant_user.ident
+  end
 end

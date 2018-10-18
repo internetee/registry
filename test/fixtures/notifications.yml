@@ -4,8 +4,8 @@ greeting:
   registrar: bestnames
   created_at: <%= Time.zone.parse('2010-07-04') %>
 
-domain_deleted:
-  text: Your domain has been deleted
+complete:
+  text: Your domain has been updated
   read: false
   registrar: bestnames
   created_at: <%= Time.zone.parse('2010-07-05') %>

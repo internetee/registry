@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <schema targetNamespace="urn:ietf:params:xml:ns:changePoll-1.0"
+         xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
+         xmlns:epp="urn:ietf:params:xml:ns:epp-1.0"
+         xmlns:changePoll="urn:ietf:params:xml:ns:changePoll-1.0"
+         xmlns="http://www.w3.org/2001/XMLSchema"
+         elementFormDefault="qualified">
+  
+  <!--
+  Import common element types.
+  -->
+  <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"/>
+  <import namespace="urn:ietf:params:xml:ns:epp-1.0"/>
+  
+  
+   <annotation>
+     <documentation>
+       Extensible Provisioning Protocol v1.0
+       Change Poll Mapping Schema.
+     </documentation>
+   </annotation>
+
+   <!--
+    Change element.
+   -->
+   <element name="changeData" type="changePoll:changeDataType"/>
+   
+   <!--
+    Attributes associated with the change.
+   -->
+   <complexType name="changeDataType">
+     <sequence>
+       <element name="operation" type="changePoll:operationType"/>
+       <element name="date" type="dateTime"/>
+       <element name="svTRID" type="epp:trIDStringType"/>
+       <element name="who" type="changePoll:whoType"/>
+       <element name="caseId" type="changePoll:caseIdType"
+         minOccurs="0"/>
+       <element name="reason" type="eppcom:reasonType" 
+         minOccurs="0"/>
+     </sequence>
+    <attribute name="state" type="changePoll:stateType" 
+      default="after"/>
+   </complexType>
+ 
+   <!--
+    Enumerated list of operations, with extensibility via "custom".
+   -->
+   <simpleType name="operationEnum">
+     <restriction base="token">
+       <enumeration value="create"/>
+       <enumeration value="delete"/>
+       <enumeration value="renew"/>
+       <enumeration value="transfer"/>
+       <enumeration value="update"/>
+       <enumeration value="restore"/>
+       <enumeration value="autoRenew"/>
+       <enumeration value="autoDelete"/>
+       <enumeration value="autoPurge"/>
+       <enumeration value="custom"/>
+     </restriction>
+   </simpleType>
+   
+   <!--
+    Enumerated of state of the object in the poll message.
+   -->
+   <simpleType name="stateType">
+     <restriction base="token">
+       <enumeration value="before"/>
+       <enumeration value="after"/>
+     </restriction>
+   </simpleType>
+   
+   <!--
+    Transform operation type
+   -->
+  <complexType name="operationType">
+    <simpleContent>
+      <extension base="changePoll:operationEnum">
+        <attribute name="op" type="token"/>
+      </extension>
+    </simpleContent>
+  </complexType>
+  
+   <!--
+    Case identifier type
+   -->
+  <complexType name="caseIdType">
+    <simpleContent>
+      <extension base="token">
+        <attribute name="type" type="changePoll:caseTypeEnum" 
+          use="required"/>
+        <attribute name="name" type="token" 
+          use="optional"/>        
+      </extension>
+    </simpleContent>
+  </complexType>
+  
+   <!--
+    Enumerated list of case identifier types
+   -->
+   <simpleType name="caseTypeEnum">
+     <restriction base="token">
+       <enumeration value="udrp"/>
+       <enumeration value="urs"/>
+       <enumeration value="custom"/>
+     </restriction>
+   </simpleType>
+  
+   <!--
+    Who type
+   -->
+  <simpleType name="whoType">
+    <restriction base="normalizedString">
+      <minLength value="1"/>
+      <maxLength value="255"/>
+    </restriction>
+  </simpleType>
+      
+ <!--
+ End of schema.
+ -->
+ </schema>

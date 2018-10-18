@@ -34,4 +34,18 @@ class ContactTest < ActiveSupport::TestCase
     @contact.phone = '+123.4'
     assert @contact.valid?
   end
+
+  def test_address
+    address = Contact::Address.new('new street', '83746', 'new city', 'new state', 'EE')
+    @contact.address = address
+    @contact.save!
+    @contact.reload
+
+    assert_equal 'new street', @contact.street
+    assert_equal '83746', @contact.zip
+    assert_equal 'new city', @contact.city
+    assert_equal 'new state', @contact.state
+    assert_equal 'EE', @contact.country_code
+    assert_equal address, @contact.address
+  end
 end

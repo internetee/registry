@@ -14,6 +14,15 @@ xml.epp_head do
         xml << render('epp/domains/partials/transfer', builder: xml, dt: @object)
       end if @object
     end
+
+    if @notification.action&.contact
+      render(partial: 'epp/poll/action',
+             locals: {
+               builder: xml,
+               action: @notification.action
+             })
+    end
+
     render('epp/shared/trID', builder: xml)
   end
 end

@@ -1,0 +1,7 @@
+<div class="alert alert-danger">
+    <ul>
+        <% errors.each_value do |errors| %>
+            <li><%= errors.join('<br>') %></li>
+        <% end %>
+    </ul>
+</div>
