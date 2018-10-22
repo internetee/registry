@@ -12782,6 +12782,49 @@ RESPONSE:
 </epp>
 ```
 
+### Unread notification of contact update
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+  <command>
+    <poll op="req"/>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
+  <response>
+    <result code="1301">
+      <msg>Command completed successfully; ack to dequeue</msg>
+    </result>
+    <msgQ count="3" id="481605495">
+      <qDate>2018-09-19T19:03:21Z</qDate>
+      <msg>Contact has been updated</msg>
+    </msgQ>
+    <extension>
+      <changePoll:changeData xmlns:changePoll="https://epp.tld.ee/schema/changePoll-1.0.xsd">
+        <changePoll:operation>update</changePoll:operation>
+        <changePoll:date>2010-07-04T21:00:00Z</changePoll:date>
+        <changePoll:svTRID>146211577</changePoll:svTRID>
+        <changePoll:who>Registrant User</changePoll:who>
+      </changePoll:changeData>
+    </extension>
+    <trID>
+      <svTRID>ccReg-0684472903</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
 ### EPP Helper in context of Domain generates valid transfer xml  
 
 REQUEST:
