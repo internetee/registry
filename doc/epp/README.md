@@ -9,12 +9,13 @@
 
 ## Supported protocols
 
-[RFC5730 - EPP](http://tools.ietf.org/html/rfc5730)  
-[RFC5731 - Domain Mapping](http://tools.ietf.org/html/rfc5731)  
-[RFC5733 - Contact Mapping](http://tools.ietf.org/html/rfc5733)  
-[RFC5734 - Transport over TCP](http://tools.ietf.org/html/rfc5734)  
-[RFC5910 - DNSSEC Mapping](http://tools.ietf.org/html/rfc5910)  
-[RFC3735 - Guidelines for Extending the EPP](http://tools.ietf.org/html/rfc3735)
+- [RFC5730 - EPP](http://tools.ietf.org/html/rfc5730)  
+- [RFC5731 - Domain Mapping](http://tools.ietf.org/html/rfc5731)  
+- [RFC5733 - Contact Mapping](http://tools.ietf.org/html/rfc5733)  
+- [RFC5734 - Transport over TCP](http://tools.ietf.org/html/rfc5734)  
+- [RFC5910 - DNSSEC Mapping](http://tools.ietf.org/html/rfc5910)  
+- [RFC3735 - Guidelines for Extending the EPP](http://tools.ietf.org/html/rfc3735)
+- [Change Poll Draft v0.8](https://tools.ietf.org/html/draft-ietf-regext-change-poll-08)
 
 ## XML schemas
 
@@ -26,6 +27,7 @@
 * [host-1.0.xsd](/lib/schemas/host-1.0.xsd)
 * [keyrelay-1.0.xsd](/lib/schemas/keyrelay-1.0.xsd)
 * [secDNS-1.1.xsd](/lib/schemas/secDNS-1.1.xsd)
+* [changePoll-1.0.xsd](/lib/schemas/changePoll-1.0.xsd)
 
 ### .ee-specific
 * [all-ee-1.0.xsd](/lib/schemas/all-ee-1.0.xsd)
