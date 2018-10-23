@@ -98,6 +98,7 @@ gem 'activerecord-import', '0.7.0' # for inserting dummy data
 gem 'pdfkit', '0.6.2'
 gem 'jquery-ui-rails', '5.0.5'
 gem 'active_model-errors_details' # Backport from Rails 5, https://github.com/rails/rails/pull/18322
+gem 'airbrake'
 
 group :development do
   # deploy
@@ -119,10 +120,6 @@ group :development, :test do
   gem 'railroady',     '1.3.0'  # to generate database diagrams
   gem 'autodoc'
   gem 'puma'
-end
-
-group :staging do
-  gem 'airbrake'
 end
 
 group :test do
