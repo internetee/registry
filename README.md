@@ -44,7 +44,7 @@ Manual demo install and database setup:
     cp config/application-example.yml config/application.yml # and edit it
     cp config/database-example.yml config/database.yml # and edit it
     bundle exec rake db:setup:all # for production, please follow deployment howto
-    bundle exec rake:bootstrap
+    bundle exec rake bootstrap
     bundle exec rake assets:precompile
 
 ### Apache with patched mod_epp (Debian 7/Ubuntu 14.04 LTS)
