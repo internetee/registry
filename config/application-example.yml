@@ -152,3 +152,8 @@ same_site_session_cookies: 'false' # false|strict|lax
 test:
   payments_seb_bank_certificate: 'test/fixtures/files/seb_bank_cert.pem'
   payments_seb_seller_private: 'test/fixtures/files/seb_seller_key.pem'
+
+# Airbrake // Errbit:
+airbrake_host: "https://your-errbit-host.ee"
+airbrake_project_id: "1"
+airbrake_project_key: "api_key"
