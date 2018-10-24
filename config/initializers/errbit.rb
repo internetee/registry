@@ -17,7 +17,6 @@ Airbrake.configure do |config|
   config.project_id = ENV['airbrake_project_id']
   config.project_key = ENV['airbrake_project_key']
 
-  # Uncomment for Rails apps
-   config.environment = Rails.env
-   config.ignore_environments = %w(development test)
+  config.environment = Rails.env
+  config.ignore_environments = %w(development test)
 end
