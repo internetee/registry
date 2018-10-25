@@ -155,5 +155,6 @@ test:
 
 # Airbrake // Errbit:
 airbrake_host: "https://your-errbit-host.ee"
+# airbrake_env: "staging", defaults to Rails.env
 airbrake_project_id: "1"
 airbrake_project_key: "api_key"
