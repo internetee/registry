@@ -236,9 +236,6 @@ Rails.application.routes.draw do
     resources :registrars do
       resources :api_users
       resources :white_ips
-      collection do
-        get :search
-      end
     end
 
     resources :registrants, controller: 'contacts'
