@@ -2,13 +2,15 @@
     function trimTextFields() {
         let selector = 'input[type=text], input[type=search], input[type=email], textarea';
         let textFields = document.querySelectorAll(selector);
-        let listener = function () {
+        let changeListener = function () {
             this.value = this.value.trim();
         };
 
-        for (let field of textFields) {
-            field.addEventListener('change', listener);
-        }
+        textFields.forEach(
+            function (field, currentIndex, listObj) {
+                field.addEventListener('change', changeListener);
+            }
+        );
     }
 
     trimTextFields();
