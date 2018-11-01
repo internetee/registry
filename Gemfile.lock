@@ -59,7 +59,6 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    SyslogLogger (2.0)
     actionmailer (4.2.11)
       actionpack (= 4.2.11)
       actionview (= 4.2.11)
@@ -445,7 +444,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  SyslogLogger (= 2.0)
   active_model-errors_details
   activerecord-import (= 0.7.0)
   airbrake

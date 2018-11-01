@@ -49,6 +49,7 @@ Rails.application.configure do
   config.log_tags = [:subdomain, :uuid, :remote_ip]
 
   # Use a different logger for distributed setups.
+  require 'syslog/logger'
   config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new(ENV['app_name'] || 'registry'))
 
   # Use a different cache store in production.
