@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'serializers/registrant_api/domain'
 
-class SerializersRegistrantApiDomainTest < ApplicationIntegrationTest
+class SerializersRegistrantApiDomainTest < ActiveSupport::TestCase
   def setup
     @domain = domains(:airport)
     @serializer = Serializers::RegistrantApi::Domain.new(@domain)

@@ -1,3 +1,5 @@
+require 'serializers/registrant_api/contact'
+
 module Api
   module V1
     module Registrant
@@ -19,7 +21,12 @@ module Api
           end
 
           @contacts = @contacts_pool.limit(limit).offset(offset)
-          render json: @contacts
+          serialized_contacts = @contacts.map do |item|
+            serializer = Serializers::RegistrantApi::Contact.new(item)
+            serializer.to_json
+          end
+
+          render json: serialized_contacts
         end
 
         def show
@@ -67,26 +74,8 @@ module Api
             contact.registrar.notify(action)
           end
 
-          render json: { id: contact.uuid,
-                         name: contact.name,
-                         code: contact.code,
-                         ident: {
-                           code: contact.ident,
-                           type: contact.ident_type,
-                           country_code: contact.ident_country_code,
-                         },
-                         email: contact.email,
-                         phone: contact.phone,
-                         fax: contact.fax,
-                         address: {
-                           street: contact.street,
-                           zip: contact.zip,
-                           city: contact.city,
-                           state: contact.state,
-                           country_code: contact.country_code,
-                         },
-                         auth_info: contact.auth_info,
-                         statuses: contact.statuses }
+          serializer = Serializers::RegistrantApi::Contact.new(contact)
+          render json: serializer.to_json
         end
 
         private
