@@ -238,7 +238,7 @@ GEM
       activesupport (>= 3.0.0)
     libxml-ruby (3.0.0)
     liquid (3.0.6)
-    loofah (2.2.2)
+    loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.0)
@@ -508,4 +508,4 @@ DEPENDENCIES
   whenever (= 0.9.4)
 
 BUNDLED WITH
-   1.16.6
+   1.17.1
