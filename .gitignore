@@ -1,6 +1,7 @@
 /log
 /tmp
 /public/system
+/public/assets
 /coverage/
 /.bundle
 /vendor/bundle
