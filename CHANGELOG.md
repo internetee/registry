@@ -1,3 +1,17 @@
+05.11.2018
+* Registrants contact update and new change poll messages [#849](https://github.com/internetee/registry/issues/849)
+* Update Ruby to 2.4.5 [#1030](https://github.com/internetee/registry/pull/1030)
+* Upgrade Loofah to 2.2.3 - CVE-2018-16468 [#1032](https://github.com/internetee/registry/pull/1032)
+* BUG: mID auth now also works with IE11 [#982](https://github.com/internetee/registry/issues/982)
+* BUG: Creating admin user works again after initial deploy [#1019](https://github.com/internetee/registry/issues/1019)
+* Same serializer for all contact requests [#1034](https://github.com/internetee/registry/pull/1034)
+* Added handling of OPTIONS request to /api namespace [#1010](https://github.com/internetee/registry/pull/1010)
+* Return Access-Control-Allow-Origin for all requests [#1012](https://github.com/internetee/registry/pull/1012)
+* Documentation fix [#1005](https://github.com/internetee/registry/pull/1005)
+* Elliminate mystery guest [#1001](https://github.com/internetee/registry/pull/1001)
+* Git-ignore assets [#1025](https://github.com/internetee/registry/pull/1025)
+* Remove dead code [#1027](https://github.com/internetee/registry/pull/1027)
+
 15.10.2018
 * Nokogiri update 1.8.5 [#1007](https://github.com/internetee/registry/pull/1007)
 * Registrant API: added admin, tech and registrar contacts to domain info response [#991](https://github.com/internetee/registry/issues/991)
