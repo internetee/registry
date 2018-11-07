@@ -1,6 +1,5 @@
 shop:
   name: shop.test
   domain: shop
-  body: WHOIS text
   json:
     name: shop.test
