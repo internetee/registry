@@ -52,22 +52,18 @@ class WhoisRecord < ActiveRecord::Base
 
     h[:email] = registrant.email
     h[:registrant_changed]          = registrant.updated_at.try(:to_s, :iso8601)
+    h[:registrant_disclosed_attributes] = registrant.disclosed_attributes
 
     h[:admin_contacts] = []
-    domain.admin_contacts.each do |ac|
-      h[:admin_contacts] << {
-          name: ac.name,
-          email: ac.email,
-          changed: ac.updated_at.try(:to_s, :iso8601)
-      }
+
+    domain.admin_contacts.each do |contact|
+      h[:admin_contacts] << contact_json_hash(contact)
     end
+
     h[:tech_contacts] = []
-    domain.tech_contacts.each do |tc|
-      h[:tech_contacts] << {
-          name: tc.name,
-          email: tc.email,
-          changed: tc.updated_at.try(:to_s, :iso8601)
-      }
+
+    domain.tech_contacts.each do |contact|
+      h[:tech_contacts] << contact_json_hash(contact)
     end
 
     # update registar triggers when adding new attributes
@@ -108,5 +104,14 @@ class WhoisRecord < ActiveRecord::Base
 
   def disclaimer_text
     Setting.registry_whois_disclaimer
+  end
+
+  def contact_json_hash(contact)
+    {
+      name: contact.name,
+      email: contact.email,
+      changed: contact.updated_at.try(:to_s, :iso8601),
+      disclosed_attributes: contact.disclosed_attributes,
+    }
   end
 end

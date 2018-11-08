@@ -6,7 +6,7 @@ class ContactTest < ActiveSupport::TestCase
   end
 
   def test_valid_fixture
-    assert @contact.valid?
+    assert @contact.valid?, proc { @contact.errors.full_messages }
   end
 
   def test_invalid_without_email

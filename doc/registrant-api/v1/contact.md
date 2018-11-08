@@ -91,13 +91,14 @@ Content-Type: application/json
   "auth_info": "password",
   "statuses": [
     "ok"
-  ]
+  ],
+  "disclosed_attributes": ["name"]
 }
 ```
 
 ## PATCH /api/v1/registrant/contacts/$UUID
 
-Update contact details for a contact.
+Update contact.
 
 #### Parameters
 
@@ -112,6 +113,7 @@ Update contact details for a contact.
 | address[city]         | false    | String |                | New city name                                             |
 | address[state]        | false    | String |                | New state name                                            |
 | address[country_code] | false    | String |                | New country code in 2 letter format (ISO 3166-1 alpha-2)  |
+| disclosed_attributes  | false    | Array  |                | Possible values: "name", "email"
 
 
 #### Request
@@ -132,7 +134,8 @@ Content-type: application/json
     "city":"New City",
     "state":"New state",
     "country_code":"LV"
-  }
+  },
+  "disclosed_attributes": ["name"]
 }
 
 ```

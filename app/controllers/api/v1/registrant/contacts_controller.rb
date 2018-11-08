@@ -45,6 +45,22 @@ module Api
           contact.email = params[:email] if params[:email].present?
           contact.phone = params[:phone] if params[:phone].present?
 
+          # Needed to support passing empty array, which otherwise gets parsed to nil
+          # https://github.com/rails/rails/pull/13157
+          reparsed_request_json = ActiveSupport::JSON.decode(request.body.string)
+                                                     .with_indifferent_access
+          disclosed_attributes = reparsed_request_json[:disclosed_attributes]
+
+          if disclosed_attributes
+            if contact.org?
+              error_msg = "Legal person's data cannot be concealed. Please remove this parameter."
+              render json: { errors: [{ disclosed_attributes: [error_msg] }] }, status: :bad_request
+              return
+            end
+
+            contact.disclosed_attributes = disclosed_attributes
+          end
+
           if Setting.address_processing && params[:address]
             address = Contact::Address.new(params[:address][:street],
                                            params[:address][:zip],
