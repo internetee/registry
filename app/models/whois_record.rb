@@ -33,7 +33,6 @@ class WhoisRecord < ActiveRecord::Base
 
     registrant = domain.registrant
 
-    @disclosed = []
     h[:disclaimer] = disclaimer_text if disclaimer_text.present?
     h[:name]       = domain.name
     h[:status]     = domain.statuses.map { |x| status_map[x] || x }
@@ -52,12 +51,10 @@ class WhoisRecord < ActiveRecord::Base
     end
 
     h[:email] = registrant.email
-    @disclosed << [:email, registrant.email]
     h[:registrant_changed]          = registrant.updated_at.try(:to_s, :iso8601)
 
     h[:admin_contacts] = []
     domain.admin_contacts.each do |ac|
-      @disclosed << [:email, ac.email]
       h[:admin_contacts] << {
           name: ac.name,
           email: ac.email,
@@ -66,7 +63,6 @@ class WhoisRecord < ActiveRecord::Base
     end
     h[:tech_contacts] = []
     domain.tech_contacts.each do |tc|
-      @disclosed << [:email, tc.email]
       h[:tech_contacts] << {
           name: tc.name,
           email: tc.email,
@@ -88,7 +84,6 @@ class WhoisRecord < ActiveRecord::Base
     h[:dnssec_changed] = domain.dnskeys.pluck(:updated_at).max.try(:to_s, :iso8601) rescue nil
 
 
-    h[:disclosed] = @disclosed
     h
   end
 
