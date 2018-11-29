@@ -1,0 +1,4 @@
+one:
+  domain: auction.test
+  status: <%= Auction.statuses[:no_bids] %>
+  uuid: 1b3ee442-e8fe-4922-9492-8fcb9dccc69c

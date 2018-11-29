@@ -8,6 +8,7 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::Deletable
   include Concerns::Domain::Transferable
   include Concerns::Domain::RegistryLockable
+  include Concerns::Domain::Releasable
 
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
@@ -580,6 +581,10 @@ class Domain < ActiveRecord::Base
     hash['valid_from'] = hash['registered_at'] # API v1 requirement
     hash.delete('statuses_before_force_delete')
     hash
+  end
+
+  def domain_name
+    DNS::DomainName.new(name)
   end
 
   def self.to_csv

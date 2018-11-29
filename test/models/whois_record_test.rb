@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class WhoisRecordTest < ActiveSupport::TestCase
+  fixtures 'whois_records'
+
   def setup
     super
 

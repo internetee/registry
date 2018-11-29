@@ -147,11 +147,15 @@ user_session_timeout: '3600' # 1 hour
 secure_session_cookies: 'false' # true|false
 same_site_session_cookies: 'false' # false|strict|lax
 
+release_domains_to_auction: 'true'
+auction_api_allowed_ips: '' # 192.0.2.0, 192.0.2.1
 
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:
   payments_seb_bank_certificate: 'test/fixtures/files/seb_bank_cert.pem'
   payments_seb_seller_private: 'test/fixtures/files/seb_seller_key.pem'
+  release_domains_to_auction: 'false'
+  auction_api_allowed_ips: ''
 
 # Airbrake // Errbit:
 airbrake_host: "https://your-errbit-host.ee"
