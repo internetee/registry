@@ -16,7 +16,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :test
   config.active_support.test_order = :random
 
-  config.active_support.deprecation = :raise
+  config.active_support.deprecation = :stderr
   config.logger = ActiveSupport::Logger.new(nil)
 
   config.action_view.raise_on_missing_translations = true
