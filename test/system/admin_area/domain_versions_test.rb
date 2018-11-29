@@ -17,9 +17,9 @@ class DomainVersionsTest < ApplicationSystemTestCase
   def create_domain_with_history
     sql = <<-SQL.squish
       INSERT INTO registrars (id, name, reg_no, email, country_code, code,
-      accounting_customer_code, language)
+      accounting_customer_code, language, reference_no)
       VALUES (54, 'test_registrar', 'test123', 'test@test.com', 'EE', 'TEST123',
-      'test123', 'en');
+      'test123', 'en', '1234');
 
       INSERT INTO contacts (id, code, email, auth_info, registrar_id)
       VALUES (54, 'test_code', 'test@inbox.test', '8b4d462aa04194ca78840a', 54);

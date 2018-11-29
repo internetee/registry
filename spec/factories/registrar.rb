@@ -11,6 +11,7 @@ FactoryBot.define do
     country_code 'US'
     accounting_customer_code 'test'
     language 'en'
+    sequence(:reference_no) { |n| "1234#{n}" }
 
     factory :registrar_with_unlimited_balance do
       after :create do |registrar|

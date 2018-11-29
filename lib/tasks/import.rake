@@ -97,7 +97,6 @@ namespace :import do
     puts "-----> Generating reference numbers"
 
     Registrar.all.each do |x|
-      x.send(:generate_iso_11649_reference_no)
       x.save(validate: false)
     end
 

@@ -47,6 +47,24 @@
                         <%= f.email_field :billing_email, class: 'form-control' %>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <% if f.object.new_record? %>
+                        <div class="col-md-offset-4 col-md-8">
+                            <%= t '.no_reference_no_hint' %>
+                        </div>
+                    <% else %>
+                        <div class="col-md-4 control-label">
+                            <%= f.label :reference_no %>
+                        </div>
+
+                        <div class="col-md-7">
+                            <%= f.text_field :reference_no, disabled: true,
+                                             title: t('.disabled_reference_no_hint'),
+                                             class: 'form-control' %>
+                        </div>
+                    <% end %>
+                </div>
             </div>
         </div>
     </div>

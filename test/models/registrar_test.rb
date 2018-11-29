@@ -6,7 +6,7 @@ class RegistrarTest < ActiveSupport::TestCase
   end
 
   def test_valid
-    assert @registrar.valid?
+    assert @registrar.valid?, proc { @registrar.errors.full_messages }
   end
 
   def test_invalid_without_name
@@ -55,8 +55,28 @@ class RegistrarTest < ActiveSupport::TestCase
     assert_equal 'Main Street, New York, New York, 12345', @registrar.address
   end
 
-  def test_reference_number_generation
-    @registrar.validate
-    refute_empty @registrar.reference_no
+  def test_validates_reference_number_format
+    @registrar.reference_no = '1'
+    assert @registrar.invalid?
+
+    @registrar.reference_no = '11'
+    assert @registrar.valid?
+
+    @registrar.reference_no = '1' * 20
+    assert @registrar.valid?
+
+    @registrar.reference_no = '1' * 21
+    assert @registrar.invalid?
+
+    @registrar.reference_no = '1a'
+    assert @registrar.invalid?
+  end
+
+  def test_disallows_non_unique_reference_numbers
+    registrars(:bestnames).update!(reference_no: '1234')
+
+    assert_raises ActiveRecord::RecordNotUnique do
+      registrars(:goodnames).update!(reference_no: '1234')
+    end
   end
 end

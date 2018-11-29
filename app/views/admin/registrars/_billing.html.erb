@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <%= t '.header' %>
     </div>
+
     <div class="panel-body">
         <dl class="dl-horizontal">
             <dt><%= Registrar.human_attribute_name :vat_no %></dt>
@@ -15,6 +16,9 @@
 
             <dt><%= Registrar.human_attribute_name :billing_email %></dt>
             <dd><%= registrar.billing_email %></dd>
+
+            <dt><%= Registrar.human_attribute_name :reference_no %></dt>
+            <dd><%= registrar.reference_no %></dd>
         </dl>
     </div>
 </div>

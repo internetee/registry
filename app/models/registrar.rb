@@ -14,9 +14,10 @@ class Registrar < ActiveRecord::Base
   delegate :balance, to: :cash_account, allow_nil: true
 
   validates :name, :reg_no, :country_code, :email, :code, presence: true
-  validates :name, :reference_no, :code, uniqueness: true
+  validates :name, :code, uniqueness: true
   validates :accounting_customer_code, presence: true
   validates :language, presence: true
+  validates :reference_no, format: Billing::ReferenceNo::REGEXP
   validate :forbid_special_code
 
   validates :vat_rate, presence: true, if: 'foreign_vat_payer? && vat_no.blank?'
@@ -29,7 +30,6 @@ class Registrar < ActiveRecord::Base
 
   attribute :vat_rate, ::Type::VATRate.new
   after_initialize :set_defaults
-  before_validation :generate_iso_11649_reference_no
 
   validates :email, :billing_email,
     email_format: { message: :invalid },
@@ -165,27 +165,6 @@ class Registrar < ActiveRecord::Base
 
   def forbid_special_code
     errors.add(:code, :forbidden) if code == 'CID'
-  end
-
-  def generate_iso_11649_reference_no
-    return if reference_no.present?
-
-    loop do
-      base = nil
-      loop do
-        base = SecureRandom.random_number.to_s.last(8)
-        break if base.to_i != 0 && base.length == 8
-      end
-
-      control_base = (base + '2715' + '00').to_i
-      reminder = control_base % 97
-      check_digits = 98 - reminder
-
-      check_digits = check_digits < 10 ? "0#{check_digits}" : check_digits.to_s
-
-      self.reference_no = "RF#{check_digits}#{base}"
-      break unless self.class.exists?(reference_no: reference_no)
-    end
   end
 
   def home_vat_payer?
