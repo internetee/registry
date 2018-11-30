@@ -31,7 +31,7 @@ class BankTransaction < ActiveRecord::Base
   end
 
   def registrar
-    @registrar ||= Registrar.find_by(reference_no: reference_no)
+    @registrar ||= Invoice.find_by(reference_no: reference_no)&.buyer
   end
 
 

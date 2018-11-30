@@ -12,6 +12,7 @@ bestnames:
   language: en
   billing_email: billing@example.com
   website: bestnames.test
+  reference_no: 13
 
 goodnames:
   name: Good Names
@@ -22,6 +23,7 @@ goodnames:
   vat_no: DE123456789
   accounting_customer_code: goodnames
   language: en
+  reference_no: 26
 
 not_in_use:
   name: any
@@ -29,5 +31,7 @@ not_in_use:
   code: any
   email: any@example.com
   country_code: US
+  vat_no: any
   accounting_customer_code: any
   language: en
+  reference_no: 39

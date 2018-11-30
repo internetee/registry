@@ -9,6 +9,7 @@ FactoryBot.define do
     seller_street { 'Paldiski mnt. 123' }
     vat_rate 0.2
     buyer { FactoryBot.create(:registrar) }
+    sequence(:reference_no) { |n| "1234#{n}" }
 
     after :build do |invoice|
       invoice.invoice_items << FactoryBot.create_pair(:invoice_item)

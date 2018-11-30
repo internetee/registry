@@ -8,6 +8,7 @@ DEFAULTS: &DEFAULTS
   buyer_name: Jane Doe
   vat_rate: 0.1
   total: 16.50
+  reference_no: 13
 
 valid:
   <<: *DEFAULTS
