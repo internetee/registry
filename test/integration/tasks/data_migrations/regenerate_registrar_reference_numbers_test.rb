@@ -11,6 +11,17 @@ class RegenerateRegistrarReferenceNumbersTaskTest < ActiveSupport::TestCase
     assert_not registrar.reference_no.start_with?('RF')
   end
 
+  def test_bypasses_registrar_validation
+    registrar = registrars(:invalid)
+    registrar.update_column(:reference_no, 'RF1111')
+    assert registrar.invalid?
+
+    capture_io { run_task }
+    registrar.reload
+
+    assert_not registrar.reference_no.start_with?('RF')
+  end
+
   def test_does_not_regenerate_when_the_task_is_run_again
     registrar = registrars(:bestnames)
     registrar.update!(reference_no: '1111')

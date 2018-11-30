@@ -35,3 +35,14 @@ not_in_use:
   accounting_customer_code: any
   language: en
   reference_no: 39
+
+invalid:
+  name: ""
+  reg_no: any
+  code: another
+  email: any
+  country_code: US
+  vat_no: any
+  accounting_customer_code: any
+  language: en
+  reference_no: 42
