@@ -5,7 +5,7 @@ class RegistrarTest < ActiveSupport::TestCase
     @registrar = registrars(:bestnames)
   end
 
-  def test_valid
+  def test_default_fixture_is_valid
     assert @registrar.valid?, proc { @registrar.errors.full_messages }
   end
 
