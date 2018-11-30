@@ -11,7 +11,7 @@ source 'https://rubygems.org'
 
 gem 'SyslogLogger', '2.0', require: 'syslog/logger'
 gem 'iso8601',      '0.8.6' # for dates and times
-gem 'rails',        '4.2.10' # when update, all initializers eis_custom files needs check/update
+gem 'rails',        '4.2.11' # when update, all initializers eis_custom files needs check/update
 gem 'rest-client'
 gem 'uglifier'
 
