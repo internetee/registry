@@ -9,6 +9,10 @@ class RegistrarTest < ActiveSupport::TestCase
     assert @registrar.valid?, proc { @registrar.errors.full_messages }
   end
 
+  def test_invalid_fixture_is_invalid
+    assert registrars(:invalid).invalid?
+  end
+
   def test_invalid_without_name
     @registrar.name = ''
     assert @registrar.invalid?
