@@ -1,3 +1,6 @@
+06.12.2018
+* Use Estonian reference number format instead of ISO 11649 [#998](https://github.com/internetee/registry/pull/998)
+
 05.11.2018
 * Registrants contact update and new change poll messages [#849](https://github.com/internetee/registry/issues/849)
 * Update Ruby to 2.4.5 [#1030](https://github.com/internetee/registry/pull/1030)
