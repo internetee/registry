@@ -3,7 +3,7 @@ class WhoisRecord < ActiveRecord::Base
   belongs_to :domain
   belongs_to :registrar
 
-  validates :domain, :name, :body, :json, presence: true
+  validates :domain, :name, :json, presence: true
 
   before_validation :populate
   after_save :update_whois_server
@@ -87,23 +87,15 @@ class WhoisRecord < ActiveRecord::Base
     h
   end
 
-  def generated_body
-    template_name = domain.discarded? ? 'whois_discarded.erb' : 'whois.erb'
-    template = Rails.root.join("app/views/for_models/#{template_name}".freeze)
-    ERB.new(template.read, nil, "-").result(binding)
-  end
-
   def populate
     return if domain_id.blank?
     self.json = generated_json
-    self.body = generated_body
     self.name = json['name']
     self.registrar_id = domain.registrar_id if domain # for faster registrar updates
   end
 
   def update_whois_server
     wd = Whois::Record.find_or_initialize_by(name: name)
-    wd.body = body
     wd.json = json
     wd.save
   end
