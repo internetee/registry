@@ -1,7 +1,14 @@
 06.12.2018
 * Use Estonian reference number format instead of ISO 11649 [#998](https://github.com/internetee/registry/pull/998)
-rails
-rack
+* Rails upgrade to 4.2.11 (CVE-2018-16476) [#1045](https://github.com/internetee/registry/pull/1045)
+* Rack gem upgrade to 1.6.11 (CVE-2018-16471) [#1036](https://github.com/internetee/registry/pull/1036)
+* Removed override that reset transfer_wait_time oparam on every reboot [#1041](https://github.com/internetee/registry/pull/1041)
+* Regenerated structure.sql [#1014](https://github.com/internetee/registry/pull/1014)
+* Improved WhoisRecord tests [#1039](https://github.com/internetee/registry/pull/1039)
+* Deprecated custom test case for rake tasks [#1043](https://github.com/internetee/registry/pull/1043)
+* Removed SyslogLogger gem [#1033](https://github.com/internetee/registry/pull/1033)
+* Removed unused JSON key [#1038](https://github.com/internetee/registry/pull/1038)
+* Removed unused `whois_records.body` DB column [#1037](https://github.com/internetee/registry/pull/1037)
 
 
 05.11.2018
