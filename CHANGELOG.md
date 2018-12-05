@@ -1,5 +1,8 @@
 06.12.2018
 * Use Estonian reference number format instead of ISO 11649 [#998](https://github.com/internetee/registry/pull/998)
+rails
+rack
+
 
 05.11.2018
 * Registrants contact update and new change poll messages [#849](https://github.com/internetee/registry/issues/849)
