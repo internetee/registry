@@ -22,8 +22,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   def test_update_contact
     patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name',
                                                            email: 'new-email@coldmail.test',
-                                                           phone: '+666.6' },
-          'HTTP_AUTHORIZATION' => auth_token
+                                                           phone: '+666.6' }.to_json,
+          'HTTP_AUTHORIZATION' => auth_token,
+          'Accept' => Mime::JSON,
+          'Content-Type' => Mime::JSON.to_s
     assert_response :ok
     @contact.reload
     assert_equal 'new name', @contact.name
@@ -33,8 +35,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
 
   def test_notify_registrar
     assert_difference -> { @contact.registrar.notifications.count } do
-      patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name' },
-            'HTTP_AUTHORIZATION' => auth_token
+      patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name' }.to_json,
+            'HTTP_AUTHORIZATION' => auth_token,
+            'Accept' => Mime::JSON,
+            'Content-Type' => Mime::JSON.to_s
     end
     notification = @contact.registrar.notifications.last
     assert_equal 'Contact john-001 has been updated by registrant', notification.text
@@ -44,8 +48,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     ENV['fax_enabled'] = 'true'
     @contact = contacts(:william)
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { 'fax' => '+777.7' },
-          'HTTP_AUTHORIZATION' => auth_token
+    patch api_v1_registrant_contact_path(@contact.uuid), { fax: '+777.7' }.to_json,
+          'HTTP_AUTHORIZATION' => auth_token,
+          'Accept' => Mime::JSON,
+          'Content-Type' => Mime::JSON.to_s
 
     assert_response :ok
     @contact.reload
@@ -55,8 +61,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   def test_fax_cannot_be_updated_when_disabled
     ENV['fax_enabled'] = 'false'
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { 'fax' => '+823.7' },
-          'HTTP_AUTHORIZATION' => auth_token
+    patch api_v1_registrant_contact_path(@contact.uuid), { fax: '+823.7' }.to_json,
+          'HTTP_AUTHORIZATION' => auth_token,
+          'Accept' => Mime::JSON,
+          'Content-Type' => Mime::JSON.to_s
 
     assert_response :bad_request
     @contact.reload
@@ -70,12 +78,14 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   def test_update_address_when_enabled
     Setting.address_processing = true
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { 'address[city]' => 'new city',
-                                                           'address[street]' => 'new street',
-                                                           'address[zip]' => '92837',
-                                                           'address[country_code]' => 'RU',
-                                                           'address[state]' => 'new state' },
-          'HTTP_AUTHORIZATION' => auth_token
+    patch api_v1_registrant_contact_path(@contact.uuid), { address: { city: 'new city',
+                                                                      street: 'new street',
+                                                                      zip: '92837',
+                                                                      country_code: 'RU',
+                                                                      state: 'new state' } }.to_json,
+          'HTTP_AUTHORIZATION' => auth_token,
+          'Accept' => Mime::JSON,
+          'Content-Type' => Mime::JSON.to_s
 
     assert_response :ok
     @contact.reload
@@ -87,8 +97,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @contact = contacts(:william)
     Setting.address_processing = true
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { 'name' => 'any' },
-          'HTTP_AUTHORIZATION' => auth_token
+    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'any' }.to_json,
+          'HTTP_AUTHORIZATION' => auth_token,
+          'Accept' => Mime::JSON,
+          'Content-Type' => Mime::JSON.to_s
 
     assert_response :ok
   end
@@ -98,8 +110,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @original_address = @contact.address
     Setting.address_processing = false
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { 'address[city]' => 'new city' },
-          'HTTP_AUTHORIZATION' => auth_token
+    patch api_v1_registrant_contact_path(@contact.uuid), { address: { city: 'new city' } }.to_json,
+          'HTTP_AUTHORIZATION' => auth_token,
+          'Accept' => Mime::JSON,
+          'Content-Type' => Mime::JSON.to_s
 
     @contact.reload
     assert_response :bad_request
@@ -111,8 +125,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_return_contact_details
-    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name' },
-          'HTTP_AUTHORIZATION' => auth_token
+    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name' }.to_json,
+          'HTTP_AUTHORIZATION' => auth_token,
+          'Accept' => Mime::JSON,
+          'Content-Type' => Mime::JSON.to_s
     assert_equal ({ id: @contact.uuid,
                     name: 'new name',
                     code: @contact.code,
@@ -136,8 +152,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_errors
-    patch api_v1_registrant_contact_path(@contact.uuid), { phone: 'invalid' },
-          'HTTP_AUTHORIZATION' => auth_token
+    patch api_v1_registrant_contact_path(@contact.uuid), { phone: 'invalid' }.to_json,
+          'HTTP_AUTHORIZATION' => auth_token,
+          'Accept' => Mime::JSON,
+          'Content-Type' => Mime::JSON.to_s
 
     assert_response :bad_request
     assert_equal ({ errors: { phone: ['Phone nr is invalid'] } }), JSON.parse(response.body,
@@ -147,8 +165,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   def test_contact_of_another_user_cannot_be_updated
     @contact = contacts(:jack)
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'any' },
-          'HTTP_AUTHORIZATION' => auth_token
+    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'any' }.to_json,
+          'HTTP_AUTHORIZATION' => auth_token,
+          'Accept' => Mime::JSON,
+          'Content-Type' => Mime::JSON.to_s
 
     assert_response :not_found
     @contact.reload
