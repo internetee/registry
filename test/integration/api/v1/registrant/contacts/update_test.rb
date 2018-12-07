@@ -20,17 +20,22 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_update_contact
-    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name',
-                                                           email: 'new-email@coldmail.test',
-                                                           phone: '+666.6' }.to_json,
+    @contact.update!(name: 'John',
+                     email: 'john@shop.test',
+                     phone: '+111.1')
+
+    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'William',
+                                                           email: 'william@shop.test',
+                                                           phone: '+222.2' }.to_json,
           'HTTP_AUTHORIZATION' => auth_token,
           'Accept' => Mime::JSON,
           'Content-Type' => Mime::JSON.to_s
     assert_response :ok
     @contact.reload
-    assert_equal 'new name', @contact.name
-    assert_equal 'new-email@coldmail.test', @contact.email
-    assert_equal '+666.6', @contact.phone
+
+    assert_equal 'William', @contact.name
+    assert_equal 'william@shop.test', @contact.email
+    assert_equal '+222.2', @contact.phone
   end
 
   def test_notify_registrar
