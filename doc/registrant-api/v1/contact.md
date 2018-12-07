@@ -53,7 +53,7 @@ Content-Type: application/json
 ```
 
 ## GET /api/v1/registrant/contacts/$UUID
-Returns contacts of the current registrar.
+Returns contact details.
 
 
 #### Request
@@ -138,35 +138,7 @@ Content-type: application/json
 ```
 #### Response on success
 
-```
-HTTP/1.1 200
-Content-Type: application/json
-
-{
-  "id":"84c62f3d-e56f-40fa-9ca4-dc0137778949",
-  "name":"Karson Kessler",
-  "code":"REGISTRAR2:SH022086480",
-  "ident":{
-    "code":"37605030299",
-    "type":"priv",
-    "country_code":"EE"
-  },
-  "email":"foo@bar.baz",
-  "phone":"+372.12345671",
-  "fax":"+372.12345672",
-  "address":{
-    "street":"Main Street 123",
-    "zip":"22222",
-    "city":"New City",
-    "state":"New state",
-    "country_code":"LV"
-  },
-  "auth_info":"password",
-  "statuses":[
-    "ok"
-  ]
-}
-```
+Same as for [GET /api/v1/registrant/contacts/$UUID](#get-apiv1registrantcontactsuuid).
 
 ### Response on failure
 ```
