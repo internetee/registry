@@ -35,8 +35,8 @@ en:
 
         billing:
           header: Billing
-          no_reference_no_hint: Reference number will be generated automatically
-          disabled_reference_no_hint: Reference number cannot be changed
+          no_reference_number_hint: Reference number will be generated automatically
+          disabled_reference_number_hint: Reference number cannot be changed
 
         preferences:
           header: Preferences

@@ -39,12 +39,13 @@ class WhoisRecordTest < ActiveSupport::TestCase
   end
 
   def test_generates_json_with_registrant
-    registrant = contacts(:john).becomes(Registrant)
-    registrant.update!(name: 'John', kind: 'priv', email: 'john@shop.test',
-                       updated_at: Time.zone.parse('2010-07-05'))
+    contact = contacts(:john)
+    contact.update!(name: 'John', kind: 'priv', email: 'john@shop.test',
+                    updated_at: Time.zone.parse('2010-07-05'),
+                    disclosed_attributes: %w[name])
 
     domain = domains(:shop)
-    domain.update!(registrant: registrant)
+    domain.update!(registrant: contact.becomes(Registrant))
 
     whois_record = whois_records(:shop)
     whois_record.update!(json: {})
@@ -54,12 +55,14 @@ class WhoisRecordTest < ActiveSupport::TestCase
     assert_equal 'priv', generated_json[:registrant_kind]
     assert_equal 'john@shop.test', generated_json[:email]
     assert_equal '2010-07-05T00:00:00+03:00', generated_json[:registrant_changed]
+    assert_equal %w[name], generated_json[:registrant_disclosed_attributes]
   end
 
   def test_generates_json_with_admin_contacts
     contact = contacts(:john)
     contact.update!(name: 'John', email: 'john@shop.test',
-                    updated_at: Time.zone.parse('2010-07-05'))
+                    updated_at: Time.zone.parse('2010-07-05'),
+                    disclosed_attributes: %w[name])
 
     domain = domains(:shop)
     domain.admin_contacts = [contact]
@@ -71,12 +74,14 @@ class WhoisRecordTest < ActiveSupport::TestCase
     assert_equal 'John', admin_contact_json[:name]
     assert_equal 'john@shop.test', admin_contact_json[:email]
     assert_equal '2010-07-05T00:00:00+03:00', admin_contact_json[:changed]
+    assert_equal %w[name], admin_contact_json[:disclosed_attributes]
   end
 
   def test_generates_json_with_tech_contacts
     contact = contacts(:john)
     contact.update!(name: 'John', email: 'john@shop.test',
-                    updated_at: Time.zone.parse('2010-07-05'))
+                    updated_at: Time.zone.parse('2010-07-05'),
+                    disclosed_attributes: %w[name])
 
     domain = domains(:shop)
     domain.tech_contacts = [contact]
@@ -88,5 +93,6 @@ class WhoisRecordTest < ActiveSupport::TestCase
     assert_equal 'John', tech_contact_json[:name]
     assert_equal 'john@shop.test', tech_contact_json[:email]
     assert_equal '2010-07-05T00:00:00+03:00', tech_contact_json[:changed]
+    assert_equal %w[name], tech_contact_json[:disclosed_attributes]
   end
 end

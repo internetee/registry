@@ -26,3 +26,5 @@ en:
               not_uniq: 'not uniq'
             country_code:
               invalid: Country code is not valid, should be in ISO_3166-1 alpha 2 format (%{value})
+            disclosed_attributes:
+              invalid: contain unsupported attribute(s)

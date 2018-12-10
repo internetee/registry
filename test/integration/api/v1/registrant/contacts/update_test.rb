@@ -129,6 +129,51 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
                                                                       symbolize_names: true)
   end
 
+  def test_disclose_private_persons_data
+    @contact.update!(ident_type: Contact::PRIV,
+                     disclosed_attributes: %w[])
+
+    patch api_v1_registrant_contact_path(@contact.uuid), { disclosed_attributes: %w[name] }.to_json,
+          'HTTP_AUTHORIZATION' => auth_token,
+          'Accept' => Mime::JSON,
+          'Content-Type' => Mime::JSON.to_s
+    @contact.reload
+
+    assert_response :ok
+    assert_equal %w[name], @contact.disclosed_attributes
+  end
+
+  def test_conceal_private_persons_data
+    @contact.update!(ident_type: Contact::PRIV, disclosed_attributes: %w[name])
+
+    patch api_v1_registrant_contact_path(@contact.uuid), { disclosed_attributes: [] }.to_json,
+          { 'HTTP_AUTHORIZATION' => auth_token,
+            'Accept' => Mime::JSON,
+            'Content-Type' => Mime::JSON.to_s }
+
+    @contact.reload
+
+    assert_response :ok
+    assert_empty @contact.disclosed_attributes
+  end
+
+  def test_legal_persons_data_cannot_be_concealed
+    @contact.update!(ident_type: Contact::ORG,
+                     disclosed_attributes: %w[])
+
+    assert_no_changes -> { @contact.disclosed_attributes } do
+      patch api_v1_registrant_contact_path(@contact.uuid), { disclosed_attributes: %w[name] }.to_json,
+            'HTTP_AUTHORIZATION' => auth_token,
+            'Accept' => Mime::JSON,
+            'Content-Type' => Mime::JSON.to_s
+      @contact.reload
+    end
+    assert_response :bad_request
+    error_msg = "Legal person's data cannot be concealed. Please remove this parameter."
+    assert_equal ({ errors: [{ disclosed_attributes: [error_msg] }] }),
+                 JSON.parse(response.body, symbolize_names: true)
+  end
+
   def test_return_contact_details
     patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name' }.to_json,
           'HTTP_AUTHORIZATION' => auth_token,
@@ -153,7 +198,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
                       country_code: @contact.country_code,
                     },
                     auth_info: @contact.auth_info,
-                    statuses: @contact.statuses }), JSON.parse(response.body, symbolize_names: true)
+                    statuses: @contact.statuses,
+                    disclosed_attributes: @contact.disclosed_attributes }),
+                 JSON.parse(response.body, symbolize_names: true)
   end
 
   def test_errors

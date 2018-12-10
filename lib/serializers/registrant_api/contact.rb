@@ -28,7 +28,8 @@ module Serializers
             country_code: contact.country_code,
           },
           auth_info: contact.auth_info,
-          statuses: contact.statuses
+          statuses: contact.statuses,
+          disclosed_attributes: contact.disclosed_attributes,
         }
       end
     end

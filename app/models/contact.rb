@@ -4,6 +4,7 @@ class Contact < ActiveRecord::Base
   include UserEvents
   include Concerns::Contact::Transferable
   include Concerns::Contact::Identical
+  include Concerns::Contact::Disclosable
 
   belongs_to :original, class_name: self.name
   belongs_to :registrar, required: true

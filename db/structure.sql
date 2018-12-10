@@ -671,7 +671,8 @@ CREATE TABLE public.contacts (
     ident_updated_at timestamp without time zone,
     upid integer,
     up_date timestamp without time zone,
-    uuid uuid DEFAULT public.gen_random_uuid() NOT NULL
+    uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL
 );
 
 
@@ -4860,4 +4861,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180826162821');
 INSERT INTO schema_migrations (version) VALUES ('20181001090536');
 
 INSERT INTO schema_migrations (version) VALUES ('20181002090319');
+
+INSERT INTO schema_migrations (version) VALUES ('20181108154921');
 
