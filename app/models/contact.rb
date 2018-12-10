@@ -70,7 +70,11 @@ class Contact < ActiveRecord::Base
 
   ORG = 'org'
   PRIV = 'priv'
+
+  # For foreign private persons who has no national identification number
   BIRTHDAY = 'birthday'.freeze
+
+  # From old registry software ("Fred"). No new contact can be created with this status
   PASSPORT = 'passport'
 
   attr_accessor :deliver_emails
