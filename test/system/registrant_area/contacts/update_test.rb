@@ -34,8 +34,9 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
   def test_update_contact
     stub_auth_request
 
-    request_body = { name: 'new name', email: 'new@inbox.test', phone: '+666.6' }
-    headers = { 'Authorization' => 'Bearer test-access-token' }
+    request_body = { name: 'new name', email: 'new@inbox.test', phone: '+666.6' }.to_json
+    headers = { 'Content-Type' => Mime::JSON,
+                'Authorization' => 'Bearer test-access-token' }
     url = "https://api.test/api/v1/registrant/contacts/#{@contact.uuid}"
     update_request_stub = stub_request(:patch, url).with(body: request_body, headers: headers)
                             .to_return(body: '{}', status: 200)
@@ -104,17 +105,18 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
     Setting.address_processing = true
     stub_auth_request
 
-    request_body = { email: 'john@inbox.test',
-                     name: 'John',
+    request_body = { name: 'John',
+                     email: 'john@inbox.test',
                      phone: '+555.555',
                      address: {
+                       city: 'new city',
                        street: 'new street',
                        zip: '93742',
-                       city: 'new city',
+                       country_code: 'AT',
                        state: 'new state',
-                       country_code: 'AT'
-                     } }
-    headers = { 'Authorization' => 'Bearer test-access-token' }
+                     } }.to_json
+    headers = { 'Content-type' => 'application/json',
+                'Authorization' => 'Bearer test-access-token' }
     url = "https://api.test/api/v1/registrant/contacts/#{@contact.uuid}"
     update_request_stub = stub_request(:patch, url).with(body: request_body, headers: headers)
                             .to_return(body: '{}', status: 200)
