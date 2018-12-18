@@ -9,6 +9,8 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @original_business_registry_cache_setting = Setting.days_to_keep_business_registry_cache
     @original_fax_enabled_setting = ENV['fax_enabled']
 
+    @current_user = users(:registrant)
+
     Setting.days_to_keep_business_registry_cache = 1
     travel_to Time.zone.parse('2010-07-05')
   end
@@ -214,16 +216,17 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
                                                                               symbolize_names: true)
   end
 
-  def test_contact_of_another_user_cannot_be_updated
-    @contact = contacts(:jack)
+  def test_unmanaged_contact_cannot_be_updated
+    @current_user.update!(registrant_ident: 'US-1234')
+    @contact.update!(ident: '12345')
 
     patch api_v1_registrant_contact_path(@contact.uuid), { name: 'any' }.to_json,
           'HTTP_AUTHORIZATION' => auth_token,
           'Accept' => Mime::JSON,
           'Content-Type' => Mime::JSON.to_s
+    @contact.reload
 
     assert_response :not_found
-    @contact.reload
     assert_not_equal 'any', @contact.name
   end
 
@@ -244,7 +247,7 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   private
 
   def auth_token
-    token_creator = AuthTokenCreator.create_with_defaults(users(:registrant))
+    token_creator = AuthTokenCreator.create_with_defaults(@current_user)
     hash = token_creator.token_in_hash
     "Bearer #{hash[:access_token]}"
   end
