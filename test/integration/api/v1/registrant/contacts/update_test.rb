@@ -160,7 +160,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_legal_persons_disclosed_attributes_cannot_be_changed
+    business_registry_caches(:one).update!(associated_businesses: %w[1234])
     @contact.update!(ident_type: Contact::ORG,
+                     ident: '1234',
                      disclosed_attributes: %w[])
 
     assert_no_changes -> { @contact.disclosed_attributes } do
