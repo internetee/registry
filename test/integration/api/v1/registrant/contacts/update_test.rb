@@ -159,19 +159,22 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_empty @contact.disclosed_attributes
   end
 
-  def test_legal_persons_data_cannot_be_concealed
+  def test_legal_persons_disclosed_attributes_cannot_be_changed
     @contact.update!(ident_type: Contact::ORG,
                      disclosed_attributes: %w[])
 
     assert_no_changes -> { @contact.disclosed_attributes } do
-      patch api_v1_registrant_contact_path(@contact.uuid), { disclosed_attributes: %w[name] }.to_json,
+      patch api_v1_registrant_contact_path(@contact.uuid), { disclosed_attributes: %w[name] }
+                                                             .to_json,
             'HTTP_AUTHORIZATION' => auth_token,
             'Accept' => Mime::JSON,
             'Content-Type' => Mime::JSON.to_s
       @contact.reload
     end
     assert_response :bad_request
-    error_msg = "Legal person's data cannot be concealed. Please remove this parameter."
+
+    error_msg = "Legal person's data is visible by default and cannot be concealed." \
+                ' Please remove this parameter.'
     assert_equal ({ errors: [{ disclosed_attributes: [error_msg] }] }),
                  JSON.parse(response.body, symbolize_names: true)
   end
@@ -220,14 +223,14 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @current_user.update!(registrant_ident: 'US-1234')
     @contact.update!(ident: '12345')
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'any' }.to_json,
+    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name' }.to_json,
           'HTTP_AUTHORIZATION' => auth_token,
           'Accept' => Mime::JSON,
           'Content-Type' => Mime::JSON.to_s
     @contact.reload
 
     assert_response :not_found
-    assert_not_equal 'any', @contact.name
+    assert_not_equal 'new name', @contact.name
   end
 
   def test_non_existent_contact

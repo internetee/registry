@@ -53,7 +53,8 @@ module Api
 
           if disclosed_attributes
             if contact.org?
-              error_msg = "Legal person's data cannot be concealed. Please remove this parameter."
+              error_msg = "Legal person's data is visible by default and cannot be concealed." \
+                          ' Please remove this parameter.'
               render json: { errors: [{ disclosed_attributes: [error_msg] }] }, status: :bad_request
               return
             end
