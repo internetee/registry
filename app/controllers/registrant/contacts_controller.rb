@@ -106,13 +106,15 @@ class Registrant::ContactsController < RegistrantController
 
   def normalize_address_attributes_for_api(params)
     normalized = params
+    address_parts = {}
 
     Contact.address_attribute_names.each do |attr|
       attr = attr.to_sym
-      normalized["address[#{attr}]"] = params[attr]
+      address_parts[attr] = params[attr]
       normalized.delete(attr)
     end
 
+    normalized[:address] = address_parts
     normalized
   end
 
@@ -120,7 +122,8 @@ class Registrant::ContactsController < RegistrantController
     uri = URI.parse("#{ENV['registrant_api_base_url']}/api/v1/registrant/contacts/#{uuid}")
     request = Net::HTTP::Patch.new(uri)
     request['Authorization'] = "Bearer #{access_token}"
-    request.form_data = contact_update_api_params
+    request['Content-type'] = 'application/json'
+    request.body = contact_update_api_params.to_json
 
     Net::HTTP.start(uri.hostname, uri.port, use_ssl: (uri.scheme == 'https')) do |http|
       http.request(request)

@@ -9,6 +9,8 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @original_business_registry_cache_setting = Setting.days_to_keep_business_registry_cache
     @original_fax_enabled_setting = ENV['fax_enabled']
 
+    @current_user = users(:registrant)
+
     Setting.days_to_keep_business_registry_cache = 1
     travel_to Time.zone.parse('2010-07-05')
   end
@@ -157,19 +159,24 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_empty @contact.disclosed_attributes
   end
 
-  def test_legal_persons_data_cannot_be_concealed
+  def test_legal_persons_disclosed_attributes_cannot_be_changed
+    business_registry_caches(:one).update!(associated_businesses: %w[1234])
     @contact.update!(ident_type: Contact::ORG,
+                     ident: '1234',
                      disclosed_attributes: %w[])
 
     assert_no_changes -> { @contact.disclosed_attributes } do
-      patch api_v1_registrant_contact_path(@contact.uuid), { disclosed_attributes: %w[name] }.to_json,
+      patch api_v1_registrant_contact_path(@contact.uuid), { disclosed_attributes: %w[name] }
+                                                             .to_json,
             'HTTP_AUTHORIZATION' => auth_token,
             'Accept' => Mime::JSON,
             'Content-Type' => Mime::JSON.to_s
       @contact.reload
     end
     assert_response :bad_request
-    error_msg = "Legal person's data cannot be concealed. Please remove this parameter."
+
+    error_msg = "Legal person's data is visible by default and cannot be concealed." \
+                ' Please remove this parameter.'
     assert_equal ({ errors: [{ disclosed_attributes: [error_msg] }] }),
                  JSON.parse(response.body, symbolize_names: true)
   end
@@ -214,17 +221,18 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
                                                                               symbolize_names: true)
   end
 
-  def test_contact_of_another_user_cannot_be_updated
-    @contact = contacts(:jack)
+  def test_unmanaged_contact_cannot_be_updated
+    @current_user.update!(registrant_ident: 'US-1234')
+    @contact.update!(ident: '12345')
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'any' }.to_json,
+    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name' }.to_json,
           'HTTP_AUTHORIZATION' => auth_token,
           'Accept' => Mime::JSON,
           'Content-Type' => Mime::JSON.to_s
+    @contact.reload
 
     assert_response :not_found
-    @contact.reload
-    assert_not_equal 'any', @contact.name
+    assert_not_equal 'new name', @contact.name
   end
 
   def test_non_existent_contact
@@ -244,7 +252,7 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   private
 
   def auth_token
-    token_creator = AuthTokenCreator.create_with_defaults(users(:registrant))
+    token_creator = AuthTokenCreator.create_with_defaults(@current_user)
     hash = token_creator.token_in_hash
     "Bearer #{hash[:access_token]}"
   end
