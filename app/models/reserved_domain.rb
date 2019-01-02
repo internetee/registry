@@ -19,10 +19,6 @@ class ReservedDomain < ActiveRecord::Base
       where(name: name)
     end
 
-    def any_of_domains names
-      where(name: names)
-    end
-
     def new_password_for name
       record = by_domain(name).first
       return unless record
