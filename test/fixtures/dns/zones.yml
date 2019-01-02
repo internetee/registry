@@ -1,2 +1,4 @@
-test:
+# https://github.com/rails/rails/issues/9516 requires this file to be under "dns" folder
+
+one:
   origin: test
