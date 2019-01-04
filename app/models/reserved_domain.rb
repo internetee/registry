@@ -6,9 +6,6 @@ class ReservedDomain < ActiveRecord::Base
 
   validates :name, domain_name: true, uniqueness: true
 
-
-
-
   class << self
     def pw_for(domain_name)
       name_in_ascii = SimpleIDN.to_ascii(domain_name)
@@ -19,10 +16,6 @@ class ReservedDomain < ActiveRecord::Base
       where(name: name)
     end
 
-    def any_of_domains names
-      where(name: names)
-    end
-
     def new_password_for name
       record = by_domain(name).first
       return unless record
@@ -31,8 +24,6 @@ class ReservedDomain < ActiveRecord::Base
       record.save
     end
   end
-
-
 
   def name= val
     super SimpleIDN.to_unicode(val)
@@ -53,17 +44,17 @@ class ReservedDomain < ActiveRecord::Base
     wr.json = @json = generate_json # we need @json to bind to class
     wr.save
   end
+
   alias_method :update_whois_record, :generate_data
 
   def generate_json
     h = HashWithIndifferentAccess.new
-    h[:name]       = self.name
-    h[:status]     = ['Reserved']
+    h[:name] = self.name
+    h[:status] = ['Reserved']
     h
   end
 
   def remove_data
     UpdateWhoisRecordJob.enqueue name, 'reserved'
   end
-
 end

@@ -5,3 +5,6 @@ en:
         title: Reserved domains
         new_btn: New reserved domain
         reset_btn: Reset
+
+      form:
+        password_hint: Generated automatically if left blank

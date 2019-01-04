@@ -2241,7 +2241,7 @@ CREATE TABLE public.reserved_domains (
     updator_str character varying,
     legacy_id integer,
     name character varying,
-    password character varying
+    password character varying NOT NULL
 );
 
 
@@ -4863,4 +4863,6 @@ INSERT INTO schema_migrations (version) VALUES ('20181001090536');
 INSERT INTO schema_migrations (version) VALUES ('20181002090319');
 
 INSERT INTO schema_migrations (version) VALUES ('20181108154921');
+
+INSERT INTO schema_migrations (version) VALUES ('20190102144032');
 
