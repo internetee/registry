@@ -793,23 +793,32 @@ class Epp::Domain < Domain
 
       result = []
 
-      domain_names.each do |domain_name|
-        domain_name.strip!
-        domain_name.downcase!
-        unless DomainNameValidator.validate_format(domain_name)
-          result << { name: domain_name, avail: 0, reason: 'invalid format' }
+      domain_names.each do |domain_name_as_string|
+        domain_name_as_string.strip!
+        domain_name_as_string.downcase!
+
+        unless DomainNameValidator.validate_format(domain_name_as_string)
+          result << { name: domain_name_as_string, avail: 0, reason: 'invalid format' }
           next
         end
 
-        if ReservedDomain.pw_for(domain_name).present?
-          result << { name: domain_name, avail: 0, reason: I18n.t('errors.messages.epp_domain_reserved') }
+        if ReservedDomain.pw_for(domain_name_as_string).present?
+          result << { name: domain_name_as_string, avail: 0, reason: I18n.t('errors.messages.epp_domain_reserved') }
           next
         end
 
-        if Domain.find_by_idn domain_name
-          result << { name: domain_name, avail: 0, reason: 'in use' }
+        domain_name = DNS::DomainName.new(domain_name_as_string)
+
+        if domain_name.unavailable?
+          reason = domain_name.unavailability_reason
+          result << { name: domain_name_as_string, avail: 0, reason: I18n.t("errors.messages.epp_domain_#{reason}") }
+          next
+        end
+
+        if Domain.find_by_idn domain_name_as_string
+          result << { name: domain_name_as_string, avail: 0, reason: 'in use' }
         else
-          result << { name: domain_name, avail: 1 }
+          result << { name: domain_name_as_string, avail: 1 }
         end
       end
 

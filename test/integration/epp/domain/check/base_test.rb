@@ -88,6 +88,29 @@ class EppDomainCheckBaseTest < ApplicationIntegrationTest
     assert_equal 'in use', response_xml.at_xpath('//domain:reason', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
   end
 
+  def test_domain_is_unavailable_when_blocked
+    assert_equal 'blocked.test', blocked_domains(:one).name
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <check>
+            <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>blocked.test</domain:name>
+            </domain:check>
+          </check>
+        </command>
+      </epp>
+    XML
+
+    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
+    assert_equal 'Blocked', response_xml.at_xpath('//domain:reason', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
+  end
+
   def test_domain_is_unavailable_when_reserved
     assert_equal 'reserved.test', reserved_domains(:one).name
 
