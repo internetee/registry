@@ -802,11 +802,6 @@ class Epp::Domain < Domain
           next
         end
 
-        if ReservedDomain.pw_for(domain_name_as_string).present?
-          result << { name: domain_name_as_string, avail: 0, reason: I18n.t('errors.messages.epp_domain_reserved') }
-          next
-        end
-
         domain_name = DNS::DomainName.new(domain_name_as_string)
 
         if domain_name.unavailable?
