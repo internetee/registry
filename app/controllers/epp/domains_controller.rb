@@ -87,8 +87,8 @@ class Epp::DomainsController < EppController
   def check
     authorize! :check, Epp::Domain
 
-    names = params[:parsed_frame].css('name').map(&:text)
-    @domains = Epp::Domain.check_availability(names)
+    domain_names = params[:parsed_frame].css('name').map(&:text)
+    @domains = Epp::Domain.check_availability(domain_names)
     render_epp_response '/epp/domains/check'
   end
 

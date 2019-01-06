@@ -788,31 +788,32 @@ class Epp::Domain < Domain
       }
     end
 
-    def check_availability(domains)
-      domains = [domains] if domains.is_a?(String)
+    def check_availability(domain_names)
+      domain_names = [domain_names] if domain_names.is_a?(String)
 
-      res = []
-      domains.each do |x|
-        x.strip!
-        x.downcase!
-        unless DomainNameValidator.validate_format(x)
-          res << { name: x, avail: 0, reason: 'invalid format' }
+      result = []
+
+      domain_names.each do |domain_name|
+        domain_name.strip!
+        domain_name.downcase!
+        unless DomainNameValidator.validate_format(domain_name)
+          result << { name: domain_name, avail: 0, reason: 'invalid format' }
           next
         end
 
-        if ReservedDomain.pw_for(x).present?
-          res << { name: x, avail: 0, reason: I18n.t('errors.messages.epp_domain_reserved') }
+        if ReservedDomain.pw_for(domain_name).present?
+          result << { name: domain_name, avail: 0, reason: I18n.t('errors.messages.epp_domain_reserved') }
           next
         end
 
-        if Domain.find_by_idn x
-          res << { name: x, avail: 0, reason: 'in use' }
+        if Domain.find_by_idn domain_name
+          result << { name: domain_name, avail: 0, reason: 'in use' }
         else
-          res << { name: x, avail: 1 }
+          result << { name: domain_name, avail: 1 }
         end
       end
 
-      res
+      result
     end
   end
 
