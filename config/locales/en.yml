@@ -198,6 +198,7 @@ en:
       blank: 'is missing'
       epp_domain_registered: in use
       epp_domain_blocked: Blocked
+      epp_domain_zone_with_same_origin: Zone with the same origin exists
       epp_obj_does_not_exist: 'Object does not exist'
       epp_authorization_error: 'Authorization error'
       epp_id_taken: 'Contact id already exists'

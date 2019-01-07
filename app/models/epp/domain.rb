@@ -805,8 +805,8 @@ class Epp::Domain < Domain
         domain_name = DNS::DomainName.new(domain_name_as_string)
 
         if domain_name.unavailable?
-          reason = domain_name.unavailability_reason
-          result << { name: domain_name_as_string, avail: 0, reason: I18n.t("errors.messages.epp_domain_#{reason}") }
+          reason = I18n.t("errors.messages.epp_domain_#{domain_name.unavailability_reason}")
+          result << { name: domain_name_as_string, avail: 0, reason: reason }
           next
         end
 

@@ -7,7 +7,7 @@ module DNS
     end
 
     def unavailable?
-      registered? || blocked?
+      registered? || blocked? || zone_with_same_origin?
     end
 
     def unavailability_reason
@@ -15,6 +15,8 @@ module DNS
         :registered
       elsif blocked?
         :blocked
+      elsif zone_with_same_origin?
+        :zone_with_same_origin
       end
     end
 
@@ -28,6 +30,10 @@ module DNS
 
     def blocked?
       BlockedDomain.where(name: name).any?
+    end
+
+    def zone_with_same_origin?
+      DNS::Zone.where(origin: name).any?
     end
   end
 end
