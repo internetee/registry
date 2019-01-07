@@ -196,6 +196,7 @@ en:
   errors:
     messages:
       blank: 'is missing'
+      epp_domain_registered: in use
       epp_domain_blocked: Blocked
       epp_obj_does_not_exist: 'Object does not exist'
       epp_authorization_error: 'Authorization error'

@@ -810,11 +810,7 @@ class Epp::Domain < Domain
           next
         end
 
-        if Domain.find_by_idn domain_name_as_string
-          result << { name: domain_name_as_string, avail: 0, reason: 'in use' }
-        else
-          result << { name: domain_name_as_string, avail: 1 }
-        end
+        result << { name: domain_name_as_string, avail: 1 }
       end
 
       result

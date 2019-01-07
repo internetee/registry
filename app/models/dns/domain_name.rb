@@ -7,16 +7,24 @@ module DNS
     end
 
     def unavailable?
-      blocked?
+      registered? || blocked?
     end
 
     def unavailability_reason
-      :blocked if blocked?
+      if registered?
+        :registered
+      elsif blocked?
+        :blocked
+      end
     end
 
     private
 
     attr_reader :name
+
+    def registered?
+      Domain.find_by_idn(name)
+    end
 
     def blocked?
       BlockedDomain.where(name: name).any?
