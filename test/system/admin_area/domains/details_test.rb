@@ -13,7 +13,7 @@ class AdminAreaDomainDetailsTest < ApplicationSystemTestCase
     visit admin_domain_url(@domain)
     assert_no_css 'span.label.label-warning', text: 'deleteCandidate'
 
-    @domain.discard
+    @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
 
     visit admin_domain_url(@domain)
     assert_css 'span.label.label-warning', text: 'deleteCandidate'

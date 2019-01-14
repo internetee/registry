@@ -81,9 +81,7 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
   end
 
   def test_discarded_domain_cannot_be_transferred
-    travel_to Time.zone.parse('2010-07-05 10:30')
-    @domain.delete_at = Time.zone.parse('2010-07-05 10:00')
-    @domain.discard
+    @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
 
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload

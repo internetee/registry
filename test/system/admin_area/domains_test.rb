@@ -29,8 +29,7 @@ class AdminDomainsTestTest < ApplicationSystemTestCase
   end
 
   def test_keep_a_domain
-    @domain.delete_at = Time.zone.parse('2010-07-05 10:00')
-    @domain.discard
+    @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
 
     visit edit_admin_domain_url(@domain)
     click_link_or_button 'Remove deleteCandidate status'

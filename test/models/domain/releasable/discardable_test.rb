@@ -50,4 +50,46 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
 
     assert_not @domain.discarded?
   end
+
+  def test_discarding_a_domain_schedules_deletion_at_random_time
+    travel_to Time.zone.parse('2010-07-05 10:30')
+    @domain.update_columns(delete_at: Time.zone.parse('2010-07-05 10:00'))
+    Domain.release_domains
+
+    other_domain = domains(:airport)
+    other_domain.update_columns(delete_at: Time.zone.parse('2010-07-05 10:00'))
+    Domain.release_domains
+
+    background_job = QueJob.find_by("args->>0 = '#{@domain.id}'", job_class: DomainDeleteJob.name)
+    other_background_job = QueJob.find_by("args->>0 = '#{other_domain.id}'",
+                                          job_class: DomainDeleteJob.name)
+    assert_not_equal background_job.run_at, other_background_job.run_at
+  end
+
+  def test_discarding_a_domain_bypasses_validation
+    travel_to Time.zone.parse('2010-07-05 10:30')
+    domain = domains(:invalid)
+    domain.update_columns(delete_at: Time.zone.parse('2010-07-05 10:00'))
+
+    Domain.release_domains
+    domain.reload
+
+    assert domain.discarded?
+  end
+
+  def test_keeping_a_domain_bypasses_validation
+    domain = domains(:invalid)
+    domain.update_columns(statuses: [DomainStatus::DELETE_CANDIDATE])
+
+    domain.keep
+    domain.reload
+
+    assert_not domain.discarded?
+  end
+
+  def test_keeping_a_domain_cancels_domain_deletion
+    @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
+    @domain.keep
+    assert_nil QueJob.find_by("args->>0 = '#{@domain.id}'", job_class: DomainDeleteJob.name)
+  end
 end
