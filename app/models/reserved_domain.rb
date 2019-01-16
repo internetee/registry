@@ -6,6 +6,8 @@ class ReservedDomain < ActiveRecord::Base
 
   validates :name, domain_name: true, uniqueness: true
 
+  alias_attribute :registration_code, :password
+
   class << self
     def pw_for(domain_name)
       name_in_ascii = SimpleIDN.to_ascii(domain_name)
