@@ -4,7 +4,7 @@ create_one_month:
   operation_category: create
   valid_from: 2010-07-05
   valid_to: 2010-07-05
-  zone: test
+  zone: one
 
 renew_one_month:
   duration: 1 month
@@ -12,15 +12,14 @@ renew_one_month:
   operation_category: renew
   valid_from: 2010-07-05
   valid_to: 2010-07-05
-  zone: test
+  zone: one
 
 create_one_year:
   duration: 1 year
   price_cents: 1000
   operation_category: create
   valid_from: 2010-07-05
-  valid_to: 2010-07-05
-  zone: test
+  zone: one
 
 renew_one_year:
   duration: 1 year
@@ -28,4 +27,4 @@ renew_one_year:
   operation_category: renew
   valid_from: 2010-07-05
   valid_to: 2010-07-05
-  zone: test
+  zone: one
