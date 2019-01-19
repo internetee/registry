@@ -91,11 +91,6 @@ class Registrant::SessionsController < Devise::SessionsController
     end
   end
 
-  def find_user_by_idc(idc)
-    return User.new unless idc
-    ApiUser.find_by(identity_code: idc) || User.new
-  end
-
   private
 
   def after_sign_in_path_for(_resource_or_scope)
