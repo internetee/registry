@@ -4,10 +4,15 @@ class Registrant::SessionsController < Devise::SessionsController
   def new; end
 
   def id
-    id_code, id_issuer = request.env['SSL_CLIENT_S_DN'], request.env['SSL_CLIENT_I_DN_O']
-    id_code, id_issuer = 'test', RegistrantUser::ACCEPTED_ISSUER if Rails.env.development?
+    client_certificate_subject = request.env['SSL_CLIENT_S_DN']
+    client_certificate_issuer = request.env['SSL_CLIENT_I_DN_O']
 
-    @user = RegistrantUser.find_or_create_by_idc_data(id_code, id_issuer)
+    if Rails.env.development?
+      client_certificate_subject = 'test'
+      client_certificate_issuer = RegistrantUser::ACCEPTED_ISSUER
+    end
+
+    @user = RegistrantUser.find_or_create_by_idc_data(client_certificate_subject, client_certificate_issuer)
     if @user
       sign_in_and_redirect(:registrant_user, @user, event: :authentication)
     else
