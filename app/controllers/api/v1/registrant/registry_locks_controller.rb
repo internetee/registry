@@ -3,7 +3,7 @@ require 'serializers/registrant_api/domain'
 module Api
   module V1
     module Registrant
-      class RegistryLocksController < BaseController
+      class RegistryLocksController < ::Api::V1::Registrant::BaseController
         before_action :set_domain
         before_action :authorized_to_manage_locks?
 

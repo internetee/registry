@@ -3,7 +3,7 @@ require 'serializers/registrant_api/domain'
 module Api
   module V1
     module Registrant
-      class DomainsController < BaseController
+      class DomainsController < ::Api::V1::Registrant::BaseController
         def index
           limit = params[:limit] || 200
           offset = params[:offset] || 0
