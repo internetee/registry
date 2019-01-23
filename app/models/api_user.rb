@@ -47,13 +47,6 @@ class ApiUser < User
   end
 
   class << self
-    def find_by_idc_data(idc_data)
-      return false if idc_data.blank?
-      identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
-
-      find_by(identity_code: identity_code)
-    end
-
     def find_by_idc_data_and_allowed(idc_data, ip)
       return false if idc_data.blank?
       identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
