@@ -1,8 +1,7 @@
 class RegistrantUser < User
-  ACCEPTED_ISSUER = 'AS Sertifitseerimiskeskus'.freeze
   attr_accessor :idc_data
 
-  devise :database_authenticatable, :trackable, :timeoutable
+  devise :trackable, :timeoutable, :id_card_authenticatable
 
   def ability
     @ability ||= Ability.new(self)
@@ -56,30 +55,6 @@ class RegistrantUser < User
   end
 
   class << self
-    def find_or_create_by_idc_data(idc_data, issuer_organization)
-      return false if idc_data.blank?
-      return false if issuer_organization != ACCEPTED_ISSUER
-
-      idc_data.force_encoding('UTF-8')
-      user_data = {}
-
-      # handling here new and old mode
-      if idc_data.starts_with?('/')
-        user_data[:ident] = idc_data.scan(/serialNumber=(\d+)/).flatten.first
-        user_data[:country_code] = idc_data.scan(/^\/C=(.{2})/).flatten.first
-        user_data[:first_name] = idc_data.scan(%r{/GN=(.+)/serialNumber}).flatten.first
-        user_data[:last_name] = idc_data.scan(%r{/SN=(.+)/GN}).flatten.first
-      else
-        parse_str = ',' + idc_data
-        user_data[:ident] = parse_str.scan(/,serialNumber=(\d+)/).flatten.first
-        user_data[:country_code] = parse_str.scan(/,C=(.{2})/).flatten.first
-        user_data[:first_name] = parse_str.scan(/,GN=([^,]+)/).flatten.first
-        user_data[:last_name] = parse_str.scan(/,SN=([^,]+)/).flatten.first
-      end
-
-      find_or_create_by_user_data(user_data)
-    end
-
     def find_or_create_by_api_data(user_data = {})
       return false unless user_data[:ident]
       return false unless user_data[:first_name]
@@ -96,6 +71,16 @@ class RegistrantUser < User
                     ident: response.user_id_code, country_code: response.user_country }
 
       find_or_create_by_user_data(user_data)
+    end
+
+    def find_by_id_card(id_card)
+      registrant_ident = "#{id_card.country_code}-#{id_card.personal_code}"
+      username = [id_card.first_name, id_card.last_name].join("\s")
+
+      user = find_or_initialize_by(registrant_ident: registrant_ident)
+      user.username = username
+      user.save!
+      user
     end
 
     private

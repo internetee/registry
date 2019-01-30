@@ -46,7 +46,10 @@ Rails.application.routes.draw do
       get 'login/mid' => 'sessions#login_mid'
       post 'login/mid' => 'sessions#mid'
       post 'login/mid_status' => 'sessions#mid_status'
-      post 'id' => 'sessions#id'
+
+      # /registrar/id path is hardcoded in Apache config for authentication with Estonian ID-card
+      post 'id' => 'sessions#id_card', as: :id_card_sign_in
+
       post 'mid' => 'sessions#mid'
     end
 
@@ -137,7 +140,11 @@ Rails.application.routes.draw do
       post 'login/mid' => 'sessions#mid'
       post 'login/mid_status' => 'sessions#mid_status'
       post 'mid' => 'sessions#mid'
-      post 'id' => 'sessions#id'
+
+      # /registrant/id path is hardcoded in Apache config for authentication with Estonian ID-card
+      # Client certificate is asked only on login form submission, therefore the path must be different from the one in
+      # `new_registrant_user_session_path` route, in case some other auth type will be implemented
+      post 'id' => 'sessions#create', as: :id_card_sign_in
     end
 
     resources :registrars, only: :show

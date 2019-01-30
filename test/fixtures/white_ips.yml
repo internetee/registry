@@ -1,0 +1,6 @@
+one:
+  registrar: bestnames
+  ipv4: 127.0.0.1
+  interfaces:
+    - <%= WhiteIp::REGISTRAR %>
+    - <%= WhiteIp::API %>

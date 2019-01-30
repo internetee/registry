@@ -585,7 +585,6 @@ en:
   pending_delete_expired_notification_subject: "Domeeni %{name} kustutamise taotlus on tühistatud / %{name} deletion cancelled"
   delete_confirmation_subject: "Domeeni %{name} kustutatud / %{name} deleted"
   whois: WHOIS
-  login_failed_check_id_card: 'Log in failed, check ID card'
   not_valid_domain_verification_title: Domain verification not available
   not_valid_domain_verification_body: This could mean your verification has been expired or done already.<br><br>Please contact us if you think something is wrong.
   upload_crt: 'Upload CRT'
