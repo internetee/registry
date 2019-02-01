@@ -45,9 +45,9 @@ xml.epp_head do
         xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
 
         if @domain.updated_at > @domain.created_at
-          upID = @domain.updator.try(:registrar)
-          upID = upID.code if upID.present?
-          xml.tag!('domain:upID', upID) if upID.present?
+          updator = @domain.updator.try(:registrar)
+          updator = updator.code if updator.present?
+          xml.tag!('domain:upID', updator) if updator.present?
           xml.tag!('domain:upDate', @domain.updated_at.try(:iso8601))
         end
 
