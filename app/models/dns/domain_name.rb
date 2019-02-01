@@ -57,10 +57,6 @@ module DNS
       name
     end
 
-    private
-
-    attr_reader :name
-
     def registered?
       Domain.find_by_idn(name)
     end
@@ -68,6 +64,18 @@ module DNS
     def blocked?
       BlockedDomain.where(name: name).any?
     end
+
+    def reserved?
+      ReservedDomain.where(name: name).any?
+    end
+
+    def to_s
+      name
+    end
+
+    private
+
+    attr_reader :name
 
     def zone_with_same_origin?
       DNS::Zone.where(origin: name).any?
