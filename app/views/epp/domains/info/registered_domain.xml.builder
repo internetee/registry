@@ -34,8 +34,6 @@ xml.epp_head do
           end
         end
 
-        ## TODO Find out what this domain:host is all about
-
         xml.tag!('domain:clID', @domain.registrar.code)
 
         xml.tag!('domain:crID', @domain.cr_id)
@@ -43,15 +41,12 @@ xml.epp_head do
 
         if @domain.updated_at > @domain.created_at
           upID =  @domain.updator.try(:registrar)
-          upID =  upID.code if upID.present?             # Did updator return a kind of User that has a registrar?
-          xml.tag!('domain:upID', upID) if upID.present? # optional upID
+          upID =  upID.code if upID.present?
+          xml.tag!('domain:upID', upID) if upID.present?
           xml.tag!('domain:upDate', @domain.updated_at.try(:iso8601))
         end
 
         xml.tag!('domain:exDate', @domain.valid_to.iso8601)
-
-        # TODO Make domain transferrable
-        #xml.tag!('domain:trDate', @domain.transferred_at) if @domain.transferred_at
 
         if can? :view_password, @domain, @password
           xml.tag!('domain:authInfo') do
@@ -65,7 +60,6 @@ xml.epp_head do
       ds_data  = Setting.ds_data_allowed  ? @domain.dnskeys.find_all { |key| key.ds_digest.present? } : []
       key_data = Setting.key_data_allowed ? @domain.dnskeys.find_all { |key| key.public_key.present? } : []
 
-      # is there any reason to include <extension> without <secDNS:infData>
       xml.extension do
         def tag_key_data(xml, key)
           xml.tag!('secDNS:keyData') do
