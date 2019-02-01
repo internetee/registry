@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('domain:infData', 'xmlns:domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd') do
+      xml.tag! 'domain:infData', 'xmlns:domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd' do
         xml.tag!('domain:name', @domain.name)
         xml.tag!('domain:roid', @domain.roid)
         @domain.statuses.each do |s|
@@ -27,8 +27,13 @@ xml.epp_head do
             @nameservers.each do |x|
               xml.tag!('domain:hostAttr') do
                 xml.tag!('domain:hostName', x.hostname)
-                x.ipv4.each{|ip| xml.tag!('domain:hostAddr', ip, 'ip' => 'v4') } if x.ipv4.present?
-                x.ipv6.each{|ip| xml.tag!('domain:hostAddr', ip, 'ip' => 'v6') } if x.ipv6.present?
+                if x.ipv4.present?
+                  x.ipv4.each { |ip| xml.tag!('domain:hostAddr', ip, 'ip' => 'v4') }
+                end
+
+                if x.ipv6.present?
+                  x.ipv6.each { |ip| xml.tag!('domain:hostAddr', ip, 'ip' => 'v6') }
+                end
               end
             end
           end
@@ -40,8 +45,8 @@ xml.epp_head do
         xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
 
         if @domain.updated_at > @domain.created_at
-          upID =  @domain.updator.try(:registrar)
-          upID =  upID.code if upID.present?
+          upID = @domain.updator.try(:registrar)
+          upID = upID.code if upID.present?
           xml.tag!('domain:upID', upID) if upID.present?
           xml.tag!('domain:upDate', @domain.updated_at.try(:iso8601))
         end
@@ -57,8 +62,10 @@ xml.epp_head do
     end
 
     if @domain.dnskeys.any?
-      ds_data  = Setting.ds_data_allowed  ? @domain.dnskeys.find_all { |key| key.ds_digest.present? } : []
-      key_data = Setting.key_data_allowed ? @domain.dnskeys.find_all { |key| key.public_key.present? } : []
+      ds_data = Setting.ds_data_allowed ?
+                    @domain.dnskeys.find_all { |key| key.ds_digest.present? } : []
+      key_data = Setting.key_data_allowed ?
+                     @domain.dnskeys.find_all { |key| key.public_key.present? } : []
 
       xml.extension do
         def tag_key_data(xml, key)
