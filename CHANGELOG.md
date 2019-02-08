@@ -1,3 +1,13 @@
+11.02.2019
+* EPP: domain:check responds now with avail 0 for blocked domainnames and second level zones served by the registry and 1 for reserved domains [#1065](https://github.com/internetee/registry/pull/1065)
+* REPP: Added contact data disclosing option for private registrants (will be available on new registrants' portal to be realeased in q1 2019) [#992](https://github.com/internetee/registry/issues/992)
+* Autotests for domain:create added [#1066](https://github.com/internetee/registry/pull/1066)
+* Updated check, create and info autotests for auction integration [#1062](https://github.com/internetee/registry/pull/1062)
+* PW value for reserved domains is now required in DB level as well [#1063](https://github.com/internetee/registry/pull/1063)
+* Switched tests to js content type [#1052](https://github.com/internetee/registry/pull/1052)
+* Regenerated whois schema.rb [#1054](https://github.com/internetee/registry/pull/1054)
+* Updated Codeclimate's eslint [#1068](https://github.com/internetee/registry/pull/1068)
+
 06.12.2018
 * Use Estonian reference number format instead of ISO 11649 [#998](https://github.com/internetee/registry/pull/998)
 * Rails upgrade to 4.2.11 (CVE-2018-16476) [#1045](https://github.com/internetee/registry/pull/1045)
