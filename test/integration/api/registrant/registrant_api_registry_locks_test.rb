@@ -5,20 +5,9 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
   def setup
     super
 
-    @original_registry_time = Setting.days_to_keep_business_registry_cache
-    Setting.days_to_keep_business_registry_cache = 1
-    travel_to Time.zone.parse('2010-07-05')
-
     @user = users(:registrant)
     @domain = domains(:airport)
     @auth_headers = { 'HTTP_AUTHORIZATION' => auth_token }
-  end
-
-  def teardown
-    super
-
-    Setting.days_to_keep_business_registry_cache = @original_registry_time
-    travel_back
   end
 
   def test_can_lock_a_not_locked_domain
@@ -101,11 +90,19 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
   end
 
   def test_technical_contact_cannot_lock_a_domain
-    post '/api/v1/registrant/domains/647bcc48-8d5e-4a04-8ce5-2a3cd17b6eab/registry_lock',
-         {}, @auth_headers
+    domain = domains(:shop)
+    contact = contacts(:john)
+    domain.update!(registrant: contacts(:william).becomes(Registrant))
+    domain.tech_contacts = [contact]
+    domain.admin_contacts.clear
+    assert_equal 'US-1234', @user.registrant_ident
+    assert_equal '1234', contact.ident
+    assert_equal 'US', contact.ident_country_code
 
+    post api_v1_registrant_domain_registry_lock_path(domain.uuid), nil, @auth_headers
+
+    assert_response :unauthorized
     response_json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal(401, response.status)
     assert_equal({ errors: [{ base: ['Only administrative contacts can manage registry locks'] }] },
                  response_json)
   end
@@ -123,6 +120,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
   end
 
   def test_locking_domains_returns_serialized_domain_object
+    travel_to Time.zone.parse('2010-07-05')
     assert_equal 'Best Names', @domain.registrar.name
     assert_equal 'https://bestnames.test', @domain.registrar.website
 

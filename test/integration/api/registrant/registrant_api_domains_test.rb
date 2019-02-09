@@ -5,21 +5,10 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
   def setup
     super
 
-    @original_registry_time = Setting.days_to_keep_business_registry_cache
-    Setting.days_to_keep_business_registry_cache = 1
-    travel_to Time.zone.parse('2010-07-05')
-
     @domain = domains(:hospital)
     @registrant = @domain.registrant
     @user = users(:registrant)
     @auth_headers = { 'HTTP_AUTHORIZATION' => auth_token }
-  end
-
-  def teardown
-    super
-
-    Setting.days_to_keep_business_registry_cache = @original_registry_time
-    travel_back
   end
 
   def test_get_domain_details_by_uuid

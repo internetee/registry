@@ -83,12 +83,11 @@ key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
 epp_hostname: 'registry.gitlab.eu'
 repp_url: 'https://repp.gitlab.eu/repp/v1/'
 
-# Estonian Business Registry
-# http://www.rik.ee/en/e-business-registry/xml-service
-arireg_username:
-arireg_password:
-arireg_wsdl:  'https://demo-ariregxml.rik.ee:447/testariport/?wsdl'
-arireg_host: 'http://demo-ariregxml.rik.ee:81/'
+# Estonian Company Register
+company_register_username:
+company_register_password:
+company_register_cache_period_days: '2'
+company_register_test_mode: 'true' # Requests in test mode are free of charge
 
 # Mobile-ID and ID-card login
 # https://www.id.ee/?id=35760 General how-to

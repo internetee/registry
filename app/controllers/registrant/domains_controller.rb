@@ -1,22 +1,24 @@
 class Registrant::DomainsController < RegistrantController
   def index
     authorize! :view, :registrant_domains
+
     params[:q] ||= {}
     normalize_search_parameters do
-      @q = domains.search(params[:q])
+      @q = current_user_domains.search(params[:q])
       @domains = @q.result.page(params[:page])
     end
+
     @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
   end
 
   def show
-    @domain = domains.find(params[:id])
+    @domain = current_user_domains.find(params[:id])
     authorize! :read, @domain
   end
 
   def domain_verification_url
     authorize! :view, :registrant_domains
-    dom = domains.find(params[:id])
+    dom = current_user_domains.find(params[:id])
     if (dom.statuses.include?(DomainStatus::PENDING_UPDATE) || dom.statuses.include?(DomainStatus::PENDING_DELETE_CONFIRMATION)) &&
       dom.pending_json.present?
 
@@ -34,7 +36,7 @@ class Registrant::DomainsController < RegistrantController
     authorize! :view, :registrant_domains
     params[:q] ||= {}
     normalize_search_parameters do
-      @q = domains.search(params[:q])
+      @q = current_user_domains.search(params[:q])
       @domains = @q
     end
 
@@ -48,21 +50,6 @@ class Registrant::DomainsController < RegistrantController
   end
 
   private
-
-  def set_domain
-    @domain = domains.find(params[:id])
-  end
-
-  def domains
-    ident_cc, ident = current_registrant_user.registrant_ident.split '-'
-    begin
-      BusinessRegistryCache.fetch_associated_domains ident, ident_cc
-    rescue Soap::Arireg::NotAvailableError => error
-      flash[:notice] = I18n.t(error.json[:message])
-      Rails.logger.fatal("[EXCEPTION] #{error.to_s}")
-      current_registrant_user.domains
-    end
-  end
 
   def normalize_search_parameters
     ca_cache = params[:q][:valid_to_lteq]

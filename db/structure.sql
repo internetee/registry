@@ -599,40 +599,6 @@ ALTER SEQUENCE public.blocked_domains_id_seq OWNED BY public.blocked_domains.id;
 
 
 --
--- Name: business_registry_caches; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.business_registry_caches (
-    id integer NOT NULL,
-    ident character varying,
-    ident_country_code character varying,
-    retrieved_on timestamp without time zone,
-    associated_businesses character varying[],
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: business_registry_caches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.business_registry_caches_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: business_registry_caches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.business_registry_caches_id_seq OWNED BY public.business_registry_caches.id;
-
-
---
 -- Name: certificates; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2598,13 +2564,6 @@ ALTER TABLE ONLY public.blocked_domains ALTER COLUMN id SET DEFAULT nextval('pub
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.business_registry_caches ALTER COLUMN id SET DEFAULT nextval('public.business_registry_caches_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.certificates ALTER COLUMN id SET DEFAULT nextval('public.certificates_id_seq'::regclass);
 
 
@@ -2999,14 +2958,6 @@ ALTER TABLE ONLY public.banklink_transactions
 
 ALTER TABLE ONLY public.blocked_domains
     ADD CONSTRAINT blocked_domains_pkey PRIMARY KEY (id);
-
-
---
--- Name: business_registry_caches_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.business_registry_caches
-    ADD CONSTRAINT business_registry_caches_pkey PRIMARY KEY (id);
 
 
 --
@@ -3506,13 +3457,6 @@ CREATE INDEX index_accounts_on_registrar_id ON public.accounts USING btree (regi
 --
 
 CREATE INDEX index_blocked_domains_on_name ON public.blocked_domains USING btree (name);
-
-
---
--- Name: index_business_registry_caches_on_ident; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_business_registry_caches_on_ident ON public.business_registry_caches USING btree (ident);
 
 
 --
@@ -4984,6 +4928,8 @@ INSERT INTO schema_migrations (version) VALUES ('20190102114702');
 INSERT INTO schema_migrations (version) VALUES ('20190102115333');
 
 INSERT INTO schema_migrations (version) VALUES ('20190102144032');
+
+INSERT INTO schema_migrations (version) VALUES ('20190209150026');
 
 INSERT INTO schema_migrations (version) VALUES ('20190311111718');
 

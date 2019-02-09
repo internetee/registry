@@ -13,43 +13,34 @@ class RegistrantUser < User
     registrant_ident.to_s.split('-').last
   end
 
-  def country_code
-    registrant_ident.to_s.split('-').first
+  def country
+    alpha2_code = registrant_ident.to_s.split('-').first
+    Country.new(alpha2_code)
   end
 
-  # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can be
-  # removed.
-  # https://guides.rubyonrails.org/active_record_querying.html#or-conditions
-  def domains
-    domains_where_is_contact = begin
-      Domain.joins(:domain_contacts)
-            .where(domain_contacts: { contact_id: contacts })
-    end
-
-    domains_where_is_registrant = Domain.where(registrant_id: contacts)
-
-    Domain.from(
-      "(#{domains_where_is_registrant.to_sql} UNION " \
-      "#{domains_where_is_contact.to_sql}) AS domains"
-    )
+  def companies(company_register = CompanyRegister::Client.new)
+    company_register.representation_rights(citizen_personal_code: ident,
+                                           citizen_country_code: country.alpha3)
   end
 
   def contacts
-    Contact.where(ident_type: 'priv', ident: ident, ident_country_code: country_code)
+    Contact.registrant_user_contacts(self)
+  end
+
+  def direct_contacts
+    Contact.registrant_user_direct_contacts(self)
+  end
+
+  def domains
+    Domain.registrant_user_domains(self)
+  end
+
+  def direct_domains
+    Domain.registrant_user_direct_domains(self)
   end
 
   def administered_domains
-    domains_where_is_administrative_contact = begin
-      Domain.joins(:domain_contacts)
-            .where(domain_contacts: { contact_id: contacts, type: [AdminDomainContact] })
-    end
-
-    domains_where_is_registrant = Domain.where(registrant_id: contacts)
-
-    Domain.from(
-      "(#{domains_where_is_registrant.to_sql} UNION " \
-      "#{domains_where_is_administrative_contact.to_sql}) AS domains"
-    )
+    Domain.registrant_user_administered_domains(self)
   end
 
   def to_s

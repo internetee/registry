@@ -18,7 +18,7 @@ module Api
                    status: :bad_request) && return
           end
 
-          @domains = associated_domains(current_registrant_user).limit(limit).offset(offset)
+          @domains = current_user_domains.limit(limit).offset(offset)
 
           serialized_domains = @domains.map do |item|
             serializer = Serializers::RegistrantApi::Domain.new(item)
@@ -29,8 +29,7 @@ module Api
         end
 
         def show
-          domain_pool = associated_domains(current_registrant_user)
-          @domain = domain_pool.find_by(uuid: params[:uuid])
+          @domain = current_user_domains.find_by(uuid: params[:uuid])
 
           if @domain
             serializer = Serializers::RegistrantApi::Domain.new(@domain)
@@ -38,6 +37,14 @@ module Api
           else
             render json: { errors: [{ base: ['Domain not found'] }] }, status: :not_found
           end
+        end
+
+        private
+
+        def current_user_domains
+          current_registrant_user.domains
+        rescue CompanyRegister::NotAvailableError
+          current_registrant_user.direct_domains
         end
       end
     end

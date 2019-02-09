@@ -405,7 +405,6 @@ en:
   sim_error: 'SIM application error'
   internal_error: 'Internal error'
   client_side_status_editing_error: 'Parameter value policy error. Client-side object status management not supported'
-  business_registry_service_not_available: "Business Registry service Ärireg is not available"
 
   # DEPP
   activemodel:

@@ -263,6 +263,28 @@ class Contact < ActiveRecord::Base
         state
       )
     end
+
+    def registrant_user_contacts(registrant_user)
+      # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can
+      # be removed.
+      from("(#{registrant_user_direct_contacts(registrant_user).to_sql} UNION " \
+        "#{registrant_user_indirect_contacts(registrant_user).to_sql}) AS contacts")
+    end
+
+    def registrant_user_direct_contacts(registrant_user)
+      where(ident_type: PRIV, ident: registrant_user.ident, ident_country_code: registrant_user
+                                                                                  .country.alpha2)
+    end
+
+    private
+
+    def registrant_user_indirect_contacts(registrant_user)
+      ident = registrant_user.companies.collect(&:registration_number)
+
+      where(ident_type: ORG,
+            ident: ident,
+            ident_country_code: registrant_user.country.alpha2)
+    end
   end
 
   def roid
@@ -431,7 +453,6 @@ class Contact < ActiveRecord::Base
 
     # fetch domains
     domains  = Domain.where("domains.id IN (#{filter_sql})")
-    domains = domains.where("domains.id" => params[:leave_domains]) if params[:leave_domains]
     domains = domains.includes(:registrar).page(page).per(per)
 
     if sorts.first == "registrar_name".freeze
