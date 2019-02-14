@@ -1,9 +1,34 @@
 class Epp::DomainsController < EppController
-  before_action :find_domain, only: [:info, :renew, :update, :transfer, :delete]
-  before_action :find_password, only: [:info, :update, :transfer, :delete]
+  before_action :find_domain, only: %i[renew update transfer delete]
+  before_action :find_password, only: %i[update transfer delete]
+  skip_authorization_check only: :info
 
   def info
+    if Domain.release_to_auction
+      domain_name = DNS::DomainName.new(params[:parsed_frame].at_css('name').text.strip.downcase)
+
+      if domain_name.at_auction?
+        @name = domain_name
+        @status = 'At auction'
+        render_epp_response '/epp/domains/info_auction'
+        return
+      elsif domain_name.awaiting_payment?
+        @name = domain_name
+        @status = 'Awaiting payment'
+        render_epp_response '/epp/domains/info_auction'
+        return
+      elsif domain_name.pending_registration?
+        @name = domain_name
+        @status = 'Reserved'
+        render_epp_response '/epp/domains/info_auction'
+        return
+      end
+    end
+
+    find_domain
+    find_password
     authorize! :info, @domain, @password
+
     @hosts = params[:parsed_frame].css('name').first['hosts'] || 'all'
 
     case @hosts
@@ -20,6 +45,36 @@ class Epp::DomainsController < EppController
 
   def create
     authorize! :create, Epp::Domain
+
+    if Domain.release_to_auction
+      request_domain_name = params[:parsed_frame].css('name').text.strip.downcase
+      domain_name = DNS::DomainName.new(request_domain_name)
+
+      if domain_name.at_auction?
+        throw :epp_error,
+              code: '2306',
+              msg: 'Parameter value policy error: domain is at auction'
+      elsif domain_name.awaiting_payment?
+        throw :epp_error,
+              code: '2003',
+              msg: 'Required parameter missing; reserved>pw element required for reserved domains'
+      elsif domain_name.pending_registration?
+        registration_code = params[:parsed_frame].css('reserved > pw').text
+
+        if registration_code.empty?
+          throw :epp_error,
+                code: '2003',
+                msg: 'Required parameter missing; reserved>pw element is required'
+        end
+
+        unless domain_name.available_with_code?(registration_code)
+          throw :epp_error,
+                code: '2202',
+                msg: 'Invalid authorization information; invalid reserved>pw value'
+        end
+      end
+    end
+
     @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
     handle_errors(@domain) and return if @domain.errors.any?
     @domain.valid?
@@ -37,6 +92,12 @@ class Epp::DomainsController < EppController
           activity_type: AccountActivity::CREATE,
           price: @domain_pricelist
         })
+
+        if Domain.release_to_auction && domain_name.pending_registration?
+          active_auction = Auction.find_by(domain: domain_name.to_s,
+                                           status: Auction.statuses[:payment_received])
+          active_auction.domain_registered!
+        end
 
         render_epp_response '/epp/domains/create'
       else

@@ -403,6 +403,39 @@ ALTER SEQUENCE public.actions_id_seq OWNED BY public.actions.id;
 
 
 --
+-- Name: auctions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE public.auctions (
+    id integer NOT NULL,
+    domain character varying NOT NULL,
+    status character varying NOT NULL,
+    uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    registration_code character varying
+);
+
+
+--
+-- Name: auctions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.auctions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: auctions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.auctions_id_seq OWNED BY public.auctions.id;
+
+
+--
 -- Name: bank_statements; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2531,6 +2564,13 @@ ALTER TABLE ONLY public.actions ALTER COLUMN id SET DEFAULT nextval('public.acti
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.auctions ALTER COLUMN id SET DEFAULT nextval('public.auctions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.bank_statements ALTER COLUMN id SET DEFAULT nextval('public.bank_statements_id_seq'::regclass);
 
 
@@ -2920,6 +2960,14 @@ ALTER TABLE ONLY public.accounts
 
 ALTER TABLE ONLY public.actions
     ADD CONSTRAINT actions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auctions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY public.auctions
+    ADD CONSTRAINT auctions_pkey PRIMARY KEY (id);
 
 
 --
@@ -3323,6 +3371,14 @@ ALTER TABLE ONLY public.domains
 
 
 --
+-- Name: uniq_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY public.auctions
+    ADD CONSTRAINT uniq_uuid UNIQUE (uuid);
+
+
+--
 -- Name: unique_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3352,6 +3408,14 @@ ALTER TABLE ONLY public.registrars
 
 ALTER TABLE ONLY public.registrars
     ADD CONSTRAINT unique_reference_no UNIQUE (reference_no);
+
+
+--
+-- Name: unique_registration_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY public.auctions
+    ADD CONSTRAINT unique_registration_code UNIQUE (registration_code);
 
 
 --
@@ -4863,6 +4927,38 @@ INSERT INTO schema_migrations (version) VALUES ('20181001090536');
 INSERT INTO schema_migrations (version) VALUES ('20181002090319');
 
 INSERT INTO schema_migrations (version) VALUES ('20181108154921');
+
+INSERT INTO schema_migrations (version) VALUES ('20181129150515');
+
+INSERT INTO schema_migrations (version) VALUES ('20181212105100');
+
+INSERT INTO schema_migrations (version) VALUES ('20181212145456');
+
+INSERT INTO schema_migrations (version) VALUES ('20181212145914');
+
+INSERT INTO schema_migrations (version) VALUES ('20181213113115');
+
+INSERT INTO schema_migrations (version) VALUES ('20181217144701');
+
+INSERT INTO schema_migrations (version) VALUES ('20181217144845');
+
+INSERT INTO schema_migrations (version) VALUES ('20181220094738');
+
+INSERT INTO schema_migrations (version) VALUES ('20181220095053');
+
+INSERT INTO schema_migrations (version) VALUES ('20181223153407');
+
+INSERT INTO schema_migrations (version) VALUES ('20181226211337');
+
+INSERT INTO schema_migrations (version) VALUES ('20181227155537');
+
+INSERT INTO schema_migrations (version) VALUES ('20181227172042');
+
+INSERT INTO schema_migrations (version) VALUES ('20181230231015');
+
+INSERT INTO schema_migrations (version) VALUES ('20190102114702');
+
+INSERT INTO schema_migrations (version) VALUES ('20190102115333');
 
 INSERT INTO schema_migrations (version) VALUES ('20190102144032');
 

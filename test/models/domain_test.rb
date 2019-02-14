@@ -12,4 +12,9 @@ class DomainTest < ActiveSupport::TestCase
   def test_invalid_fixture_is_invalid
     assert domains(:invalid).invalid?
   end
+
+  def test_domain_name
+    domain = Domain.new(name: 'shop.test')
+    assert_equal 'shop.test', domain.domain_name.to_s
+  end
 end

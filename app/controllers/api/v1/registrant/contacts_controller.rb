@@ -3,7 +3,7 @@ require 'serializers/registrant_api/contact'
 module Api
   module V1
     module Registrant
-      class ContactsController < BaseController
+      class ContactsController < ::Api::V1::Registrant::BaseController
         before_action :set_contacts_pool
 
         def index

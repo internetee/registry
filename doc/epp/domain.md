@@ -41,7 +41,8 @@ Domain name mapping protocol short version:
         <eis:legalDocument>    1        Base64 encoded document.
                                           Attribute: type="pdf/asice/sce/adoc/asics/scs/edoc/adoc/bdoc/ddoc/zip/rar/gz/tar/7z"
         <eis:reserved>         0-1
-          <eis:pw>             0-1      Required if registering a reserved domain
+          <eis:pw>             0-1      Required if registering a reserved or won domain
+                                        
     <clTRID>                   0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-citizen-as-a-registrant-creates-a-domain)

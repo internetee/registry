@@ -198,7 +198,10 @@ en:
       blank: 'is missing'
       epp_domain_registered: in use
       epp_domain_blocked: Blocked
+      epp_domain_reserved: 'Domain name is reserved'
       epp_domain_zone_with_same_origin: Zone with the same origin exists
+      epp_domain_at_auction: Domain is at auction
+      epp_domain_awaiting_payment: Awaiting payment
       epp_obj_does_not_exist: 'Object does not exist'
       epp_authorization_error: 'Authorization error'
       epp_id_taken: 'Contact id already exists'

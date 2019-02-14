@@ -28,6 +28,8 @@ Rails.application.routes.draw do
         end
         resources :contacts, only: %i[index show update], param: :uuid
       end
+
+      resources :auctions, only: %i[index show update], param: :uuid
     end
 
     match '*all', controller: 'cors', action: 'cors_preflight_check', via: [:options],
