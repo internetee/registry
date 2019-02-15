@@ -6,6 +6,7 @@ class Auction < ActiveRecord::Base
     payment_received: 'payment_received',
     payment_not_received: 'payment_not_received',
     domain_registered: 'domain_registered',
+    domain_not_registered: 'domain_not_registered',
   }
 
   PENDING_STATUSES = [statuses[:started],
@@ -36,6 +37,15 @@ class Auction < ActiveRecord::Base
 
   def mark_as_payment_not_received
     self.status = self.class.statuses[:payment_not_received]
+
+    transaction do
+      save!
+      restart
+    end
+  end
+
+  def mark_as_domain_not_registered
+    self.status = self.class.statuses[:domain_not_registered]
 
     transaction do
       save!

@@ -15,7 +15,8 @@ class AuctionTest < ActiveSupport::TestCase
                     'awaiting_payment' => 'awaiting_payment',
                     'payment_received' => 'payment_received',
                     'payment_not_received' => 'payment_not_received',
-                    'domain_registered' => 'domain_registered' }), Auction.statuses
+                    'domain_registered' => 'domain_registered',
+                    'domain_not_registered' => 'domain_not_registered' }), Auction.statuses
   end
 
   def test_selling_domain_starts_new_auction
@@ -88,6 +89,27 @@ class AuctionTest < ActiveSupport::TestCase
 
     assert_difference 'Auction.count' do
       @auction.mark_as_payment_not_received
+    end
+
+    new_auction = Auction.last
+    assert_equal 'auction.test', new_auction.domain
+    assert new_auction.started?
+  end
+
+  def test_marking_as_domain_not_registered
+    @auction.update!(status: Auction.statuses[:payment_received])
+
+    @auction.mark_as_domain_not_registered
+    @auction.reload
+
+    assert @auction.domain_not_registered?
+  end
+
+  def test_restarts_an_auction_when_domain_is_not_registered
+    @auction.update!(domain: 'auction.test', status: Auction.statuses[:domain_not_registered])
+
+    assert_difference 'Auction.count' do
+      @auction.mark_as_domain_not_registered
     end
 
     new_auction = Auction.last

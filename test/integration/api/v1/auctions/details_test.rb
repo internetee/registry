@@ -23,4 +23,10 @@ class ApiV1AuctionDetailsTest < ActionDispatch::IntegrationTest
                     'status' => Auction.statuses[:no_bids] }), ActiveSupport::JSON
                                                                  .decode(response.body)
   end
+
+  def test_auction_not_found
+    assert_raises ActiveRecord::RecordNotFound do
+      get api_v1_auction_path('non-existing-uuid'), nil, 'Content-Type' => Mime::JSON.to_s
+    end
+  end
 end

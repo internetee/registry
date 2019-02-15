@@ -46,7 +46,7 @@ Updates auction.
 ### Parameters
 | Field name | Required | Type    | Allowed values                                              | Description              |
 | ---------- | -------- | ----    | --------------                                              | -----------              |
-| status     | no       | String  | "awaiting_payment", "no_bids", "payment_received", "payment_not_received"
+| status     | no       | String  | "awaiting_payment", "no_bids", "payment_received", "payment_not_received", "domain_not_registered"
 
 ## Request
 ```
