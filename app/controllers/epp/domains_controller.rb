@@ -10,17 +10,17 @@ class Epp::DomainsController < EppController
       if domain_name.at_auction?
         @name = domain_name
         @status = 'At auction'
-        render_epp_response '/epp/domains/info_auction'
+        render_epp_response '/epp/domains/info/unregistered_domain'
         return
       elsif domain_name.awaiting_payment?
         @name = domain_name
         @status = 'Awaiting payment'
-        render_epp_response '/epp/domains/info_auction'
+        render_epp_response '/epp/domains/info/unregistered_domain'
         return
       elsif domain_name.pending_registration?
         @name = domain_name
         @status = 'Reserved'
-        render_epp_response '/epp/domains/info_auction'
+        render_epp_response '/epp/domains/info/unregistered_domain'
         return
       end
     end
@@ -42,16 +42,14 @@ class Epp::DomainsController < EppController
       end
 
       render_epp_response '/epp/domains/info/registered_domain'
-    else
-      if domain_name.blocked?
-        @name = domain_name
-        @status = 'Blocked'
-        render_epp_response '/epp/domains/info/unregistered_domain'
-      elsif domain_name.reserved?
-        @name = domain_name
-        @status = 'Reserved'
-        render_epp_response '/epp/domains/info/unregistered_domain'
-      end
+    elsif domain_name.blocked?
+      @name = domain_name
+      @status = 'Blocked'
+      render_epp_response '/epp/domains/info/unregistered_domain'
+    elsif domain_name.reserved?
+      @name = domain_name
+      @status = 'Reserved'
+      render_epp_response '/epp/domains/info/unregistered_domain'
     end
   end
 

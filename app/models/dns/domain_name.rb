@@ -53,10 +53,6 @@ module DNS
       Whois::Record.refresh(self)
     end
 
-    def to_s
-      name
-    end
-
     def registered?
       Domain.find_by_idn(name)
     end
