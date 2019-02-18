@@ -89,6 +89,15 @@ class ApiV1AuctionUpdateTest < ActionDispatch::IntegrationTest
     assert DNS::DomainName.new('auction.test').at_auction?
   end
 
+  def test_restarts_an_auction_when_domain_is_not_registered
+    @auction.update!(domain: 'auction.test', status: Auction.statuses[:payment_received])
+
+    patch api_v1_auction_path(@auction.uuid), { status: Auction.statuses[:domain_not_registered] }
+                                                .to_json, 'Content-Type' => Mime::JSON.to_s
+
+    assert DNS::DomainName.new('auction.test').at_auction?
+  end
+
   def test_inaccessible_when_ip_address_is_not_allowed
     ENV['auction_api_allowed_ips'] = ''
 
@@ -96,5 +105,12 @@ class ApiV1AuctionUpdateTest < ActionDispatch::IntegrationTest
           'Content-Type' => Mime::JSON.to_s
 
     assert_response :unauthorized
+  end
+
+  def test_auction_not_found
+    assert_raises ActiveRecord::RecordNotFound do
+      patch api_v1_auction_path('non-existing-uuid'), { status: Auction.statuses[:no_bids] }.to_json,
+            'Content-Type' => Mime::JSON.to_s
+    end
   end
 end

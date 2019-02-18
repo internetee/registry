@@ -8,12 +8,12 @@ module Api
       end
 
       def show
-        auction = Auction.find_by(uuid: params[:uuid])
+        auction = Auction.find_by!(uuid: params[:uuid])
         render json: serializable_hash(auction)
       end
 
       def update
-        auction = Auction.find_by(uuid: params[:uuid])
+        auction = Auction.find_by!(uuid: params[:uuid])
 
         case params[:status]
         when Auction.statuses[:awaiting_payment]
@@ -24,6 +24,8 @@ module Api
           auction.mark_as_payment_received
         when Auction.statuses[:payment_not_received]
           auction.mark_as_payment_not_received
+        when Auction.statuses[:domain_not_registered]
+          auction.mark_as_domain_not_registered
         else
           raise "Invalid status #{params[:status]}"
         end
