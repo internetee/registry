@@ -15,6 +15,7 @@ class ReferenceNoBaseTest < ActiveSupport::TestCase
   def test_generates_check_digit_for_a_given_base
     assert_equal 3, Billing::ReferenceNo::Base.new('1').check_digit
     assert_equal 7, Billing::ReferenceNo::Base.new('1234567891234567891').check_digit
+    assert_equal 0, Billing::ReferenceNo::Base.new('773423').check_digit
   end
 
   def test_returns_string_representation

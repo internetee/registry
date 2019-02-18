@@ -26,8 +26,8 @@ module Billing
         next_number = number
 
         loop do
-          next_number = next_number.next
           return next_number if next_number.to_s.end_with?('0')
+          next_number = next_number.next
         end
       end
 
