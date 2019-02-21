@@ -20,7 +20,7 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
     travel_back
   end
 
-  def test_root_returns_domain_list
+  def test_root_returns_contact_list
     get '/api/v1/registrant/contacts', {}, @auth_headers
     assert_equal(200, response.status)
 
