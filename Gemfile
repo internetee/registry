@@ -33,7 +33,7 @@ gem 'haml-rails', '0.9.0' # haml for views
 gem 'nokogiri'
 
 # style
-gem 'bootstrap-sass', '3.3.5.1' # bootstrap style
+gem 'bootstrap-sass', '~> 3.4'
 gem 'sass-rails',     '5.0.6'   # sass style
 
 # js
