@@ -12,7 +12,7 @@ class SerializersRegistrantApiContactTest < ActiveSupport::TestCase
     assert_equal(@contact.uuid, @json[:id])
   end
 
-  def test_returns_indent_as_separate_object
+  def test_returns_ident_as_separate_object
     expected_ident = { code: @contact.ident, type: @contact.ident_type,
                         country_code: @contact.ident_country_code }
     assert_equal(expected_ident, @json[:ident])
