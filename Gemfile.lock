@@ -212,7 +212,7 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httpclient (2.8.3)
-    httpi (2.4.2)
+    httpi (2.4.4)
       rack
       socksify
     i18n (0.9.5)
@@ -370,12 +370,12 @@ GEM
     sassc (2.0.0)
       ffi (~> 1.9.6)
       rake
-    savon (2.11.1)
+    savon (2.12.0)
       akami (~> 1.2)
       builder (>= 2.1.2)
       gyoku (~> 1.2)
       httpi (~> 2.3)
-      nokogiri (>= 1.4.0)
+      nokogiri (>= 1.8.1)
       nori (~> 2.4)
       wasabi (~> 3.4)
     sdoc (0.4.1)
@@ -508,4 +508,4 @@ DEPENDENCIES
   whenever (= 0.9.4)
 
 BUNDLED WITH
-   1.17.1
+   1.17.3
