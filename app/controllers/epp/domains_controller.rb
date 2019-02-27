@@ -4,43 +4,53 @@ class Epp::DomainsController < EppController
   skip_authorization_check only: :info
 
   def info
-    if Domain.release_to_auction
-      domain_name = DNS::DomainName.new(params[:parsed_frame].at_css('name').text.strip.downcase)
+    domain_name = DNS::DomainName.new(params[:parsed_frame].at_css('name').text.strip.downcase)
 
+    if Domain.release_to_auction
       if domain_name.at_auction?
         @name = domain_name
         @status = 'At auction'
-        render_epp_response '/epp/domains/info_auction'
+        render_epp_response '/epp/domains/info/unregistered_domain'
         return
       elsif domain_name.awaiting_payment?
         @name = domain_name
         @status = 'Awaiting payment'
-        render_epp_response '/epp/domains/info_auction'
+        render_epp_response '/epp/domains/info/unregistered_domain'
         return
       elsif domain_name.pending_registration?
         @name = domain_name
         @status = 'Reserved'
-        render_epp_response '/epp/domains/info_auction'
+        render_epp_response '/epp/domains/info/unregistered_domain'
         return
       end
     end
 
-    find_domain
-    find_password
-    authorize! :info, @domain, @password
+    if domain_name.registered?
+      find_domain
+      find_password
+      authorize! :info, @domain, @password
 
-    @hosts = params[:parsed_frame].css('name').first['hosts'] || 'all'
+      @hosts = params[:parsed_frame].css('name').first['hosts'] || 'all'
 
-    case @hosts
-    when 'del'
-      @nameservers = @domain.delegated_nameservers.sort
-    when 'sub'
-      @nameservers = @domain.subordinate_nameservers.sort
-    when 'all'
-      @nameservers = @domain.nameservers.sort
+      case @hosts
+      when 'del'
+        @nameservers = @domain.delegated_nameservers.sort
+      when 'sub'
+        @nameservers = @domain.subordinate_nameservers.sort
+      when 'all'
+        @nameservers = @domain.nameservers.sort
+      end
+
+      render_epp_response '/epp/domains/info/registered_domain'
+    elsif domain_name.blocked?
+      @name = domain_name
+      @status = 'Blocked'
+      render_epp_response '/epp/domains/info/unregistered_domain'
+    elsif domain_name.reserved?
+      @name = domain_name
+      @status = 'Reserved'
+      render_epp_response '/epp/domains/info/unregistered_domain'
     end
-
-    render_epp_response '/epp/domains/info'
   end
 
   def create

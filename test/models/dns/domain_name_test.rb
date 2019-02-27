@@ -111,4 +111,16 @@ class DNS::DomainNameTest < ActiveSupport::TestCase
     domain_name = DNS::DomainName.new('shop.test')
     assert_equal 'shop.test', domain_name.to_s
   end
+
+  def test_blocked
+    assert_equal 'blocked.test', blocked_domains(:one).name
+    assert DNS::DomainName.new('blocked.test').blocked?
+    assert_not DNS::DomainName.new('nonblocked .test').blocked?
+  end
+
+  def test_reserved
+    assert_equal 'reserved.test', reserved_domains(:one).name
+    assert DNS::DomainName.new('reserved.test').reserved?
+    assert_not DNS::DomainName.new('unreserved.test').reserved?
+  end
 end
