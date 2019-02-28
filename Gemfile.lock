@@ -184,7 +184,7 @@ GEM
       thor (~> 0.14)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
-    grape (1.1.0)
+    grape (1.2.3)
       activesupport
       builder
       mustermann-grape (~> 1.0.0)
@@ -261,7 +261,7 @@ GEM
       money (~> 6.12.0)
       railties (>= 3.0)
     multi_json (1.13.1)
-    mustermann (1.0.2)
+    mustermann (1.0.3)
     mustermann-grape (1.0.0)
       mustermann (~> 1.0.0)
     netrc (0.11.0)
