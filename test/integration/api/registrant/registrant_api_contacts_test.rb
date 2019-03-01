@@ -32,14 +32,6 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
     assert_equal 'john@inbox.test', response_json[:email]
   end
 
-  def test_get_contact_details_by_uuid_returns_404_for_non_existent_contact
-    get '/api/v1/registrant/contacts/nonexistent-uuid', {}, @auth_headers
-    assert_equal(404, response.status)
-
-    response_json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal({ errors: [{ base: ['Contact not found'] }] }, response_json)
-  end
-
   def test_root_does_not_accept_limit_higher_than_200
     get '/api/v1/registrant/contacts', { 'limit' => 400, 'offset' => 0 }, @auth_headers
     assert_equal(400, response.status)
@@ -60,22 +52,6 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
     json_body = JSON.parse(response.body, symbolize_names: true)
 
     assert_equal({ errors: [base: ['Not authorized']] }, json_body)
-  end
-
-  def test_details_returns_401_without_authorization
-    get '/api/v1/registrant/contacts/c0a191d5-3793-4f0b-8f85-491612d0293e', {}, {}
-    assert_equal(401, response.status)
-    json_body = JSON.parse(response.body, symbolize_names: true)
-
-    assert_equal({ errors: [base: ['Not authorized']] }, json_body)
-  end
-
-  def test_details_returns_404_for_non_existent_contact
-    get '/api/v1/registrant/contacts/some-random-uuid', {}, @auth_headers
-    assert_equal(404, response.status)
-    json_body = JSON.parse(response.body, symbolize_names: true)
-
-    assert_equal({ errors: [base: ['Contact not found']] }, json_body)
   end
 
   private

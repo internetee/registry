@@ -19,19 +19,15 @@ module Api
           end
 
           contacts = current_user_contacts.limit(limit).offset(offset)
-          serialized_contacts = contacts.map do |item|
-            serializer = Serializers::RegistrantApi::Contact.new(item)
-            serializer.to_json
-          end
-
+          serialized_contacts = contacts.collect { |contact| serialize_contact(contact) }
           render json: serialized_contacts
         end
 
         def show
-          @contact = current_user_contacts.find_by(uuid: params[:uuid])
+          contact = current_user_contacts.find_by(uuid: params[:uuid])
 
-          if @contact
-            render json: @contact
+          if contact
+            render json: serialize_contact(contact)
           else
             render json: { errors: [{ base: ['Contact not found'] }] }, status: :not_found
           end
@@ -89,8 +85,7 @@ module Api
             contact.registrar.notify(action)
           end
 
-          serializer = Serializers::RegistrantApi::Contact.new(contact)
-          render json: serializer.to_json
+          render json: serialize_contact(contact)
         end
 
         private
@@ -99,6 +94,10 @@ module Api
           current_registrant_user.contacts
         rescue CompanyRegister::NotAvailableError
           current_registrant_user.direct_contacts
+        end
+
+        def serialize_contact(contact)
+          Serializers::RegistrantApi::Contact.new(contact).to_json
         end
       end
     end

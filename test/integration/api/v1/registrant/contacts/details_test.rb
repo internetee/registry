@@ -13,6 +13,52 @@ class RegistrantApiV1ContactDetailsTest < ActionDispatch::IntegrationTest
     @user = users(:registrant)
   end
 
+  def test_returns_contact_details
+    get api_v1_registrant_contact_path(@contact.uuid), nil, 'HTTP_AUTHORIZATION' => auth_token,
+        'Content-Type' => Mime::JSON.to_s
+
+    assert_response :ok
+    assert_equal ({ id: @contact.uuid,
+                    name: @contact.name,
+                    code: @contact.code,
+                    fax: @contact.fax,
+                    ident: {
+                      code: @contact.ident,
+                      type: @contact.ident_type,
+                      country_code: @contact.ident_country_code,
+                    },
+                    email: @contact.email,
+                    phone: @contact.phone,
+                    address: {
+                      street: @contact.street,
+                      zip: @contact.zip,
+                      city: @contact.city,
+                      state: @contact.state,
+                      country_code: @contact.country_code,
+                    },
+                    auth_info: @contact.auth_info,
+                    statuses: @contact.statuses,
+                    disclosed_attributes: @contact.disclosed_attributes }),
+                 JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def test_non_existent_contact
+    get api_v1_registrant_contact_path('non-existent'), nil, 'HTTP_AUTHORIZATION' => auth_token,
+        'Content-Type' => Mime::JSON.to_s
+
+    assert_response :not_found
+    assert_equal({ errors: [base: ['Contact not found']] }, JSON.parse(response.body,
+                                                                       symbolize_names: true))
+  end
+
+  def test_anonymous_user
+    get api_v1_registrant_contact_path(@contact.uuid), nil, 'Content-Type' => Mime::JSON.to_s
+
+    assert_response :unauthorized
+    assert_equal({ errors: [base: ['Not authorized']] }, JSON.parse(response.body,
+                                                                    symbolize_names: true))
+  end
+
   def test_returns_direct_contact_when_company_register_is_unavailable
     assert_equal '1234', @contact.ident
     assert_equal Contact::PRIV, @contact.ident_type
@@ -25,7 +71,7 @@ class RegistrantApiV1ContactDetailsTest < ActionDispatch::IntegrationTest
     end
 
     response_json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal '1234', response_json[:ident]
+    assert_equal '1234', response_json[:ident][:code]
   end
 
   def test_unmanaged_contact_cannot_be_accessed
