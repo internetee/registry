@@ -123,13 +123,16 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
   end
 
   def test_locking_domains_returns_serialized_domain_object
+    assert_equal 'Best Names', @domain.registrar.name
+    assert_equal 'https://bestnames.test', @domain.registrar.website
+
     post '/api/v1/registrant/domains/1b3ee442-e8fe-4922-9492-8fcb9dccc69c/registry_lock',
          {}, @auth_headers
 
     assert_equal(200, response.status)
     response_json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal({ name: 'Best Names', website: 'bestnames.test' }, response_json[:registrar])
+    assert_equal({ name: 'Best Names', website: 'https://bestnames.test' }, response_json[:registrar])
     assert_equal({name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}, response_json[:registrant])
     assert_equal([{name: 'Jane', id: '9db3de62-2414-4487-bee2-d5c155567768'}], response_json[:admin_contacts])
     assert_equal([{name: 'William', id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb'},

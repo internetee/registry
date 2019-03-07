@@ -25,7 +25,10 @@ class SerializersRegistrantApiDomainTest < ActiveSupport::TestCase
   end
 
   def test_returns_registrar_name
-    assert_equal({name: 'Best Names', website: 'bestnames.test' }, @json[:registrar])
+    assert_equal 'Best Names', @domain.registrar.name
+    assert_equal 'https://bestnames.test', @domain.registrar.website
+
+    assert_equal({name: 'Best Names', website: 'https://bestnames.test' }, @json[:registrar])
   end
 
   def test_returns_registrant_name_and_uuid
