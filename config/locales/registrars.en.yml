@@ -6,3 +6,6 @@ en:
           attributes:
             code:
               forbidden: is forbidden
+            vat_rate:
+              present: >-
+                must be blank when a registrar is VAT-registered in the same country as registry

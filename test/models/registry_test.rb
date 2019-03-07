@@ -1,20 +1,12 @@
 require 'test_helper'
 
 class RegistryTest < ActiveSupport::TestCase
-  setup do
-    @registry = Registry.send(:new)
-  end
+  def test_returns_current_registry
+    Setting.registry_vat_prc = 0.2
+    Setting.registry_country_code = 'US'
 
-  def test_implements_singleton
-    assert_equal Registry.instance.object_id, Registry.instance.object_id
-  end
-
-  def test_vat_rate
-    original_vat_prc = Setting.registry_vat_prc
-    Setting.registry_vat_prc = 0.25
-
-    assert_equal BigDecimal(25), @registry.vat_rate
-
-    Setting.registry_vat_prc = original_vat_prc
+    registry = Registry.current
+    assert_equal 20, registry.vat_rate
+    assert_equal Country.new(:us), registry.vat_country
   end
 end

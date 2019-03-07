@@ -28,16 +28,12 @@ class Invoice < ActiveRecord::Base
 
   validates :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :items, presence: true
-  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
-            allow_nil: true
 
   before_create :set_invoice_number
-  before_create :apply_default_vat_rate, unless: :vat_rate?
   before_create :calculate_total, unless: :total?
   before_create :apply_default_buyer_vat_no, unless: :buyer_vat_no?
 
   attribute :vat_rate, ::Type::VATRate.new
-  attr_readonly :vat_rate
 
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
@@ -85,7 +81,6 @@ class Invoice < ActiveRecord::Base
   end
 
   def vat_amount
-    return 0 unless vat_rate
     subtotal * vat_rate / 100
   end
 
@@ -104,10 +99,6 @@ class Invoice < ActiveRecord::Base
   end
 
   private
-
-  def apply_default_vat_rate
-    self.vat_rate = buyer.effective_vat_rate
-  end
 
   def apply_default_buyer_vat_no
     self.buyer_vat_no = buyer.vat_no

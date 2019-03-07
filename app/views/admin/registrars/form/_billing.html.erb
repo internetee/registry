@@ -21,12 +21,14 @@
                     <div class="col-md-4 control-label">
                         <%= f.label :vat_rate %>
                     </div>
-                    <div class="col-md-3">
-                        <div class="input-group">
+                    <div class="col-md-8">
+                        <div class="col-md-4 input-group">
                             <%= f.number_field :vat_rate, min: 0, max: 99.9, step: 0.1,
                                                class: 'form-control' %>
                             <div class="input-group-addon">%</div>
                         </div>
+                        <span class="help-block"><%= t '.vat_rate_hint', registry_vat_rate:
+                            number_to_percentage(registry_vat_rate, precision: 1) %></span>
                     </div>
                 </div>
 

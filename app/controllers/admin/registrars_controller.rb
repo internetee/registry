@@ -2,6 +2,7 @@ module Admin
   class RegistrarsController < BaseController
     load_and_authorize_resource
     before_action :set_registrar, only: [:show, :edit, :update, :destroy]
+    helper_method :registry_vat_rate
 
     def index
       @q = Registrar.joins(:accounts).ordered.search(params[:q])
@@ -73,6 +74,10 @@ module Admin
                                         :accounting_customer_code,
                                         :billing_email,
                                         :language)
+    end
+
+    def registry_vat_rate
+      Registry.current.vat_rate
     end
   end
 end
