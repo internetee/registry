@@ -154,4 +154,10 @@ class InvoiceTest < ActiveSupport::TestCase
 
     assert_equal 1, iteration_count
   end
+
+  def test_returns_combined_seller_address
+    invoice = Invoice.new(seller_street: 'street', seller_city: 'city', seller_state: 'state',
+                          seller_zip: nil)
+    assert_equal 'street, city, state', invoice.seller_address
+  end
 end
