@@ -11,7 +11,7 @@ bestnames:
   accounting_customer_code: bestnames
   language: en
   billing_email: billing@example.com
-  website: bestnames.test
+  website:  https://bestnames.test
   reference_no: 13
 
 goodnames:
