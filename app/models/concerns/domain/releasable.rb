@@ -35,8 +35,10 @@ module Concerns
 
       def release
         if release_to_auction
-          domain_name.sell_at_auction
-          destroy!
+          transaction do
+            domain_name.sell_at_auction
+            destroy!
+          end
         else
           discard
         end

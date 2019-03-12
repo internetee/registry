@@ -1,6 +1,9 @@
 require 'test_helper'
 
 class DomainReleasableAuctionableTest < ActiveSupport::TestCase
+  # Needed for `test_updates_whois` test because of `after_commit :update_whois_record` in Domain
+  self.use_transactional_fixtures = false
+
   setup do
     @domain = domains(:shop)
     Domain.release_to_auction = true
@@ -26,6 +29,16 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
     assert_difference 'Domain.count', -1 do
       Domain.release_domains
     end
+  end
+
+  def test_updates_whois
+    assert_equal 'shop.test', @domain.name
+    @domain.update!(delete_at: Time.zone.parse('2010-07-05 07:59'))
+    travel_to Time.zone.parse('2010-07-05 08:00')
+
+    Domain.release_domains
+
+    assert Whois::Record.find_by(name: 'shop.test')
   end
 
   def test_ignores_domains_with_delete_at_in_the_future_or_now
