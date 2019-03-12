@@ -8,6 +8,10 @@ module Whois
 
     def self.refresh(domain_name)
       if domain_name.at_auction?
+        # Remove original record since `Domain#update_whois_record` callback is disabled when
+        # domain is at auction
+        find_by(name: domain_name.to_s).try(:destroy!)
+
         create!(name: domain_name, json: { name: domain_name.to_s,
                                            status: 'AtAuction',
                                            disclaimer: disclaimer })
