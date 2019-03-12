@@ -129,7 +129,8 @@ payments_lhv_bank_certificate: 'eyp_pub.pem'
 payments_lhv_seller_private: 'kaupmees_priv.pem'
 payments_lhv_seller_account: 'testvpos'
 
-# You should list other payment intermediaries here. Each one of them needs their own class in /app/models/payments/
+# You should list other payment intermediaries here. Each one of them needs their own class in
+# /app/models/payment_orders/
 payments_intermediaries: >
   every_pay
 
