@@ -29,7 +29,7 @@ class Whois::RecordTest < ActiveSupport::TestCase
     whois_record = Whois::Record.last
     assert_equal 'some.test', whois_record.name
     assert_equal ({ 'name' => 'some.test',
-                    'status' => 'AtAuction',
+                    'status' => ['AtAuction'],
                     'disclaimer' => 'disclaimer' }), whois_record.json
   end
 
@@ -45,7 +45,7 @@ class Whois::RecordTest < ActiveSupport::TestCase
     whois_record = Whois::Record.find_by(name: 'some.test')
     assert_equal 'some.test', whois_record.name
     assert_equal ({ 'name' => 'some.test',
-                    'status' => 'PendingRegistration',
+                    'status' => ['PendingRegistration'],
                     'disclaimer' => 'disclaimer' }), whois_record.json
   end
 
@@ -61,7 +61,7 @@ class Whois::RecordTest < ActiveSupport::TestCase
     whois_record = Whois::Record.find_by(name: 'some.test')
     assert_equal 'some.test', whois_record.name
     assert_equal ({ 'name' => 'some.test',
-                    'status' => 'PendingRegistration',
+                    'status' => ['PendingRegistration'],
                     'disclaimer' => 'disclaimer' }), whois_record.json
   end
 end
