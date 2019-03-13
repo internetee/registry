@@ -8,12 +8,16 @@ module Whois
 
     def self.refresh(domain_name)
       if domain_name.at_auction?
+        # Remove original record since `Domain#update_whois_record` callback is disabled when
+        # domain is at auction
+        find_by(name: domain_name.to_s).try(:destroy!)
+
         create!(name: domain_name, json: { name: domain_name.to_s,
-                                           status: 'AtAuction',
+                                           status: ['AtAuction'],
                                            disclaimer: disclaimer })
       elsif domain_name.awaiting_payment? || domain_name.pending_registration?
         find_by(name: domain_name.to_s).update!(json: { name: domain_name.to_s,
-                                                        status: 'PendingRegistration',
+                                                        status: ['PendingRegistration'],
                                                         disclaimer: disclaimer })
       else
         find_by(name: domain_name.to_s).destroy!
