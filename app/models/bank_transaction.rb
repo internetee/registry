@@ -41,9 +41,7 @@ class BankTransaction < ActiveRecord::Base
     return unless registrar
     return unless invoice_num
     return unless invoice
-
-    return if invoice.binded?
-    return if invoice.cancelled?
+    return unless invoice.payable?
 
     return if invoice.total != sum
     create_activity(registrar, invoice)
@@ -62,7 +60,7 @@ class BankTransaction < ActiveRecord::Base
       return
     end
 
-    if invoice.binded?
+    if invoice.paid?
       errors.add(:base, I18n.t('invoice_is_already_binded'))
       return
     end

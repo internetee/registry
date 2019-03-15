@@ -33,13 +33,8 @@ module Admin
     end
 
     def cancel
-      if @invoice.cancel
-        flash[:notice] = t(:record_updated)
-        redirect_to([:admin, @invoice])
-      else
-        flash.now[:alert] = t(:failed_to_update_record)
-        render :show
-      end
+      @invoice.cancel
+      redirect_to [:admin, @invoice], notice: t('.cancelled')
     end
 
     def forward

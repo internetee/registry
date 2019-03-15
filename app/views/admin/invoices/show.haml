@@ -4,11 +4,11 @@
       = @invoice
   .col-sm-8
     %h1.text-right.text-center-xs
-      - unless @invoice.binded?
+      - if @invoice.unpaid?
         = link_to(t(:payment_received), new_admin_bank_statement_path(invoice_id: @invoice.id), class: 'btn btn-default')
       = link_to(t(:download), admin_invoice_download_pdf_path(@invoice), class: 'btn btn-default')
       = link_to(t(:forward), admin_invoice_forward_path(@invoice), class: 'btn btn-default')
-      - if !@invoice.cancelled? && !@invoice.binded?
+      - if @invoice.cancellable?
         = link_to(t(:cancel), cancel_admin_invoice_path(@invoice), method: :patch, class: 'btn btn-warning')
       = link_to(t(:back), admin_invoices_path, class: 'btn btn-default')
 %hr

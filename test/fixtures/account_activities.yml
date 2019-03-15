@@ -1,7 +1,5 @@
-DEFAULTS: &DEFAULTS
-  account_id: 1
-
 one:
-  <<: *DEFAULTS
-  invoice: paid
+  account: cash
+  invoice: one
   bank_transaction: one
+  created_at: <%= Time.zone.parse('2010-07-05 10:00') %>

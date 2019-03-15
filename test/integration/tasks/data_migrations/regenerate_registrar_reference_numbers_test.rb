@@ -35,7 +35,7 @@ class RegenerateRegistrarReferenceNumbersTaskTest < ActiveSupport::TestCase
   def test_keeps_iso_reference_number_on_the_invoice_unchanged
     registrar = registrars(:bestnames)
     registrar.update_column(:reference_no, 'RF1111')
-    invoice = registrar.invoices.first
+    invoice = invoices(:one)
     invoice.update!(reference_no: 'RF2222')
 
     capture_io { run_task }

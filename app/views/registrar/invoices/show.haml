@@ -1,7 +1,7 @@
 - content_for :actions do
   = link_to(t(:download), download_pdf_registrar_invoice_path(@invoice), class: 'btn btn-default')
   = link_to(t(:forward), forward_registrar_invoice_path(@invoice), class: 'btn btn-default')
-  - if !@invoice.cancelled? && !@invoice.binded?
+  - if @invoice.cancellable?
     = link_to(t(:cancel), cancel_registrar_invoice_path(@invoice), method: :patch, class: 'btn btn-warning')
   = link_to(t(:back), registrar_invoices_path, class: 'btn btn-default')
 = render 'shared/title', name: @invoice.to_s
@@ -15,6 +15,6 @@
 .row
   .col-md-12= render 'registrar/invoices/partials/items'
 
-- if !@invoice.cancelled? && !@invoice.binded?
+- if @invoice.payable?
   .row.semifooter
     .col-md-6-offset-6.text-right= render 'registrar/invoices/partials/banklinks', locals: { payment_channels: PaymentOrders::PAYMENT_METHODS }

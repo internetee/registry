@@ -4,6 +4,12 @@ cash:
   currency: EUR
   registrar: bestnames
 
+two:
+  account_type: cash
+  balance: 100
+  currency: EUR
+  registrar: goodnames
+
 not_in_use_cash:
   account_type: cash
   balance: 0

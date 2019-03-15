@@ -1,13 +1,6 @@
 one:
   description: Acme services
   price: 5
-  amount: 1
+  quantity: 1
   unit: pc
-  invoice: valid
-
-two:
-  description: Acme services
-  price: 5
-  amount: 2
-  unit: pc
-  invoice: valid
+  invoice: one

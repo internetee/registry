@@ -6,17 +6,17 @@
       %tr
         %th{class: 'col-xs-4'}= t(:description)
         %th{class: 'col-xs-2'}= t(:unit)
-        %th{class: 'col-xs-2'}= t(:amount)
+        %th{class: 'col-xs-2'}= InvoiceItem.human_attribute_name :quantity
         %th{class: 'col-xs-2'}= t(:price)
         %th{class: 'col-xs-2'}= t(:total)
     %tbody
-      - @invoice.items.each do |x|
+      - @invoice.each do |invoice_item|
         %tr
-          %td= t(x.description)
-          %td= x.unit
-          %td= currency(x.amount)
-          %td= currency(x.price)
-          %td= currency(x.item_sum_without_vat)
+          %td= invoice_item.description
+          %td= invoice_item.unit
+          %td= invoice_item.quantity
+          %td= currency(invoice_item.price)
+          %td= currency(invoice_item.item_sum_without_vat)
     %tfoot
       %tr
         %th{colspan: 3}

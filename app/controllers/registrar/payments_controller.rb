@@ -29,7 +29,7 @@ class Registrar
       if @payment.valid_response_from_intermediary? && @payment.settled_payment?
         @payment.complete_transaction
 
-        if invoice.binded?
+        if invoice.paid?
           flash[:notice] = t(:pending_applied)
         else
           flash[:alert] = t(:something_wrong)

@@ -149,21 +149,21 @@
           %hr
           %dl.dl-horizontal
             %dt= t(:issue_date)
-            %dd= l(@invoice.created_at, format: :date_long)
+            %dd= l @invoice.issue_date
 
             - if @invoice.cancelled?
-              %dt= t(:cancel_date)
-              %dd= l(@invoice.cancelled_at, format: :date_long)
+              %dt= Invoice.human_attribute_name :cancelled_at
+              %dd= l @invoice.cancelled_at,
 
             %dt= t(:due_date)
             - if @invoice.cancelled?
               %dd= t(:cancelled)
             - else
-              %dd= l(@invoice.due_date, format: :date_long)
+              %dd= l @invoice.due_date
 
-            %dt= t(:receipt_date)
-            - if @invoice.binded?
-              %dd= l(@invoice.receipt_date, format: :date_long)
+            %dt= Invoice.human_attribute_name :receipt_date
+            - if @invoice.paid?
+              %dd= l @invoice.receipt_date
             - elsif @invoice.cancelled?
               %dd= t(:cancelled)
             - else
@@ -173,7 +173,7 @@
             %dd= @invoice.seller_contact_name
 
             %dt= t(:payment_term)
-            %dd= t(@invoice.payment_term)
+            %dd Prepayment
           
             %dt= t(:invoice_number)
             %dd= @invoice.number
@@ -224,17 +224,17 @@
                 %tr
                   %th{class: 'col-xs-4'}= t(:description)
                   %th{class: 'col-xs-2'}= t(:unit)
-                  %th{class: 'col-xs-1'}= t(:amount)
+                  %th{class: 'col-xs-1'}= InvoiceItem.human_attribute_name :quantity
                   %th{class: 'col-xs-3'}= t(:price)
                   %th{class: 'col-xs-2'}= t(:total)
               %tbody
-                - @invoice.items.each do |x|
+                - @invoice.each do |invoice_item|
                   %tr
-                    %td= t(x.description)
-                    %td= x.unit
-                    %td= currency(x.amount)
-                    %td= currency(x.price)
-                    %td= "#{currency(x.item_sum_without_vat)} #{@invoice.currency}"
+                    %td= invoice_item.description
+                    %td= invoice_item.unit
+                    %td= invoice_item.quantity
+                    %td= currency(invoice_item.price)
+                    %td= "#{currency(invoice_item.item_sum_without_vat)} #{@invoice.currency}"
               %tfoot
                 %tr
                   %th{colspan: 3}

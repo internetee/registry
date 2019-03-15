@@ -44,7 +44,7 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'activity_type')
             %th{class: 'col-xs-3'}
-              = sort_link(@q, 'created_at', t(:receipt_date))
+              = sort_link(@q, 'created_at', AccountActivity.human_attribute_name(:created_at))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'sum')
         %tbody

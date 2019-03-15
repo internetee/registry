@@ -10,8 +10,8 @@ class BankLinkTest < ActiveSupport::TestCase
     @invoice = invoices(:for_payments_test)
     invoice_item = invoice_items(:one)
 
-    @invoice.invoice_items << invoice_item
-    @invoice.invoice_items << invoice_item
+    @invoice.items << invoice_item
+    @invoice.items << invoice_item
 
     travel_to '2018-04-01 00:30 +0300'
     create_new_bank_link

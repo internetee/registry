@@ -2,7 +2,7 @@ require 'test_helper'
 
 class BankTransactionTest < ActiveSupport::TestCase
   def test_matches_against_invoice_reference_number
-    invoices(:valid).update!(number: '2222', total: 10, reference_no: '1111')
+    invoices(:one).update!(account_activity: nil, number: '2222', total: 10, reference_no: '1111')
     transaction = BankTransaction.new(description: 'invoice #2222', sum: 10, reference_no: '1111')
 
     assert_difference 'AccountActivity.count' do
@@ -20,7 +20,7 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_underpayment_is_not_matched_with_invoice
-    invoices(:valid).update!(number: '2222', total: 10)
+    invoices(:one).update!(account_activity: nil, number: '2222', total: 10)
     transaction = BankTransaction.new(sum: 9)
 
     assert_no_difference 'AccountActivity.count' do
@@ -30,7 +30,7 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_overpayment_is_not_matched_with_invoice
-    invoices(:valid).update!(number: '2222', total: 10)
+    invoices(:one).update!(account_activity: nil, number: '2222', total: 10)
     transaction = BankTransaction.new(sum: 11)
 
     assert_no_difference 'AccountActivity.count' do
@@ -40,7 +40,7 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_cancelled_invoice_is_not_matched
-    invoices(:valid).update!(number: '2222', total: 10, cancelled_at: '2010-07-05')
+    invoices(:one).update!(account_activity: nil, number: '2222', total: 10, cancelled_at: '2010-07-05')
     transaction = BankTransaction.new(sum: 10)
 
     assert_no_difference 'AccountActivity.count' do

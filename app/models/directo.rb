@@ -3,7 +3,7 @@ class Directo < ActiveRecord::Base
   belongs_to :item, polymorphic: true
 
   def self.send_receipts
-    new_trans = Invoice.where(in_directo: false).where(cancelled_at: nil)
+    new_trans = Invoice.where(in_directo: false).non_cancelled
     total     = new_trans.count
     counter   = 0
     Rails.logger.info("[DIRECTO] Will try to send #{total} invoices")
@@ -26,7 +26,7 @@ class Directo < ActiveRecord::Base
             xml.invoice(
                 "SalesAgent"  => Setting.directo_sales_agent,
                 "Number"      => num,
-                "InvoiceDate" => invoice.created_at.strftime("%Y-%m-%d"),
+                "InvoiceDate" => invoice.issue_date.strftime("%Y-%m-%d"),
                 "PaymentTerm" => Setting.directo_receipt_payment_term,
                 "Currency"    => invoice.currency,
                 "CustomerCode"=> invoice.buyer.accounting_customer_code
