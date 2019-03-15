@@ -107,8 +107,8 @@ class EppDomainInfoBaseTest < ApplicationIntegrationTest
                                      'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')
   end
 
-  def test_blocked_domain
-    assert_equal 'blocked.test', blocked_domains(:one).name
+  def test_returns_not_found_error_when_domain_is_not_registered
+    assert DNS::DomainName.new('not-registered.test').not_registered?
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -116,7 +116,7 @@ class EppDomainInfoBaseTest < ApplicationIntegrationTest
         <command>
           <info>
             <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-              <domain:name>blocked.test</domain:name>
+              <domain:name>not-registered.test</domain:name>
             </domain:info>
           </info>
         </command>
@@ -126,34 +126,7 @@ class EppDomainInfoBaseTest < ApplicationIntegrationTest
     post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
-    assert_equal 'blocked.test', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
-    assert_equal 'Blocked', response_xml.at_xpath('//domain:status', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['s']
-  end
-
-  def test_reserved_domain
-    assert_equal 'reserved.test', reserved_domains(:one).name
-
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-        <command>
-          <info>
-            <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-              <domain:name>reserved.test</domain:name>
-            </domain:info>
-          </info>
-        </command>
-      </epp>
-    XML
-
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
-    assert_equal 'reserved.test', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
-    assert_equal 'Reserved', response_xml.at_xpath('//domain:status', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['s']
+    assert_equal '2303', response_xml.at_css('result')[:code]
+    assert_equal 'Domain not found', response_xml.at_css('result msg').text
   end
 end
