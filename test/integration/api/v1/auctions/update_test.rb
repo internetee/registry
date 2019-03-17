@@ -80,24 +80,6 @@ class ApiV1AuctionUpdateTest < ActionDispatch::IntegrationTest
     assert_nil response_json['registration_code']
   end
 
-  def test_restarts_an_auction_when_the_payment_is_not_received
-    @auction.update!(domain: 'auction.test', status: Auction.statuses[:awaiting_payment])
-
-    patch api_v1_auction_path(@auction.uuid), { status: Auction.statuses[:payment_not_received] }
-                                                .to_json, 'Content-Type' => Mime::JSON.to_s
-
-    assert DNS::DomainName.new('auction.test').at_auction?
-  end
-
-  def test_restarts_an_auction_when_domain_is_not_registered
-    @auction.update!(domain: 'auction.test', status: Auction.statuses[:payment_received])
-
-    patch api_v1_auction_path(@auction.uuid), { status: Auction.statuses[:domain_not_registered] }
-                                                .to_json, 'Content-Type' => Mime::JSON.to_s
-
-    assert DNS::DomainName.new('auction.test').at_auction?
-  end
-
   def test_inaccessible_when_ip_address_is_not_allowed
     ENV['auction_api_allowed_ips'] = ''
 

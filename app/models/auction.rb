@@ -14,19 +14,17 @@ class Auction < ActiveRecord::Base
                       statuses[:payment_received]].freeze
   private_constant :PENDING_STATUSES
 
-  def self.sell(domain_name)
-    create!(domain: domain_name.to_s, status: statuses[:started])
-  end
-
   def self.pending(domain_name)
     find_by(domain: domain_name.to_s, status: PENDING_STATUSES)
   end
 
+  def start
+    self.status = self.class.statuses[:started]
+    save!
+  end
+
   def mark_as_no_bids
-    transaction do
-      DNS::DomainName.new(domain).update_whois
-      no_bids!
-    end
+    no_bids!
   end
 
   def mark_as_payment_received
@@ -57,14 +55,15 @@ class Auction < ActiveRecord::Base
     payment_received? && registration_code_matches?(registration_code)
   end
 
+  def restart
+    new_auction = self.class.new(domain: domain)
+    new_auction.start
+  end
+
   private
 
   def generate_registration_code
     self.registration_code = SecureRandom.hex
-  end
-
-  def restart
-    self.class.create!(domain: domain, status: self.class.statuses[:started])
   end
 
   def registration_code_matches?(code)

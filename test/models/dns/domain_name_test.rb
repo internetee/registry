@@ -71,22 +71,13 @@ class DNS::DomainNameTest < ActiveSupport::TestCase
     assert_equal :awaiting_payment, domain_name.unavailability_reason
   end
 
-  def test_sell_at_auction
-    domain_name = DNS::DomainName.new('new-auction.test')
+  def test_sells_at_auction
+    domain_name = DNS::DomainName.new('shop.test')
     assert_not domain_name.at_auction?
 
     domain_name.sell_at_auction
 
     assert domain_name.at_auction?
-  end
-
-  def test_selling_at_auction_updates_whois
-    domain_name = DNS::DomainName.new('new-auction.test')
-    assert_not domain_name.at_auction?
-
-    domain_name.sell_at_auction
-
-    assert Whois::Record.find_by(name: 'new-auction.test')
   end
 
   def test_at_auction
@@ -122,5 +113,16 @@ class DNS::DomainNameTest < ActiveSupport::TestCase
     assert_equal 'reserved.test', reserved_domains(:one).name
     assert DNS::DomainName.new('reserved.test').reserved?
     assert_not DNS::DomainName.new('unreserved.test').reserved?
+  end
+
+  def test_updates_whois_from_auction
+    auction = 'auction'
+    whois_record_mock = Minitest::Mock.new
+    whois_record_mock.expect(:update_from_auction, nil, [auction])
+    domain_name = DNS::DomainName.new('domain.test', whois_record_mock)
+
+    domain_name.update_whois_from_auction(auction)
+
+    whois_record_mock.verify
   end
 end

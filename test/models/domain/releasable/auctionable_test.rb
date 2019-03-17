@@ -31,16 +31,6 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
     end
   end
 
-  def test_updates_whois
-    assert_equal 'shop.test', @domain.name
-    @domain.update!(delete_at: Time.zone.parse('2010-07-05 07:59'))
-    travel_to Time.zone.parse('2010-07-05 08:00')
-
-    Domain.release_domains
-
-    assert Whois::Record.find_by(name: 'shop.test')
-  end
-
   def test_ignores_domains_with_delete_at_in_the_future_or_now
     @domain.update!(delete_at: Time.zone.parse('2010-07-05 08:00'))
     travel_to Time.zone.parse('2010-07-05 08:00')

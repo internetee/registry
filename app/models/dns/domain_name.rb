@@ -2,8 +2,11 @@ module DNS
   # Namespace is needed, because a class with the same name is defined by `domain_name` gem,
   # a dependency of `actionmailer`,
   class DomainName
-    def initialize(name)
+    attr_reader :whois_record
+
+    def initialize(name, whois_record = nil)
       @name = name
+      @whois_record = whois_record || Whois::Record.find_by(name: name)
     end
 
     def available?
@@ -33,8 +36,9 @@ module DNS
     end
 
     def sell_at_auction
-      Auction.sell(self)
-      update_whois
+      auction = Auction.new
+      auction.domain = name
+      auction.start
     end
 
     def at_auction?
@@ -49,10 +53,6 @@ module DNS
       pending_auction&.payment_received?
     end
 
-    def update_whois
-      Whois::Record.refresh(self)
-    end
-
     def registered?
       Domain.find_by_idn(name)
     end
@@ -65,6 +65,10 @@ module DNS
       ReservedDomain.where(name: name).any?
     end
 
+    def update_whois_from_auction(auction)
+      whois_record.update_from_auction(auction)
+    end
+
     def to_s
       name
     end
@@ -73,12 +77,12 @@ module DNS
 
     attr_reader :name
 
-    def zone_with_same_origin?
-      DNS::Zone.where(origin: name).any?
-    end
-
     def pending_auction
       Auction.pending(self)
+    end
+
+    def zone_with_same_origin?
+      DNS::Zone.where(origin: name).any?
     end
   end
 end
