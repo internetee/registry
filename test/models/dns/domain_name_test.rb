@@ -71,8 +71,8 @@ class DNS::DomainNameTest < ActiveSupport::TestCase
     assert_equal :awaiting_payment, domain_name.unavailability_reason
   end
 
-  def test_sell_at_auction
-    domain_name = DNS::DomainName.new('new-auction.test')
+  def test_sells_at_auction
+    domain_name = DNS::DomainName.new('shop.test')
     assert_not domain_name.at_auction?
 
     domain_name.sell_at_auction
@@ -81,12 +81,15 @@ class DNS::DomainNameTest < ActiveSupport::TestCase
   end
 
   def test_selling_at_auction_updates_whois
+    travel_to Time.zone.parse('2010-07-05 10:00')
+    @whois_record = whois_records(:one)
+    @whois_record.update!(name: 'new-auction.test', updated_at: '2010-07-04')
     domain_name = DNS::DomainName.new('new-auction.test')
-    assert_not domain_name.at_auction?
 
     domain_name.sell_at_auction
+    @whois_record.reload
 
-    assert Whois::Record.find_by(name: 'new-auction.test')
+    assert_equal Time.zone.parse('2010-07-05 10:00'), @whois_record.updated_at
   end
 
   def test_at_auction

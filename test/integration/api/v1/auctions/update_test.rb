@@ -5,6 +5,8 @@ class ApiV1AuctionUpdateTest < ActionDispatch::IntegrationTest
 
   setup do
     @auction = auctions(:one)
+    @whois_record = whois_records(:one)
+    @whois_record.update!(name: 'auction.test')
 
     @original_auction_api_allowed_ips_setting = ENV['auction_api_allowed_ips']
     ENV['auction_api_allowed_ips'] = '127.0.0.1'
@@ -36,9 +38,6 @@ class ApiV1AuctionUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_marks_as_no_bids
-    assert_equal 'auction.test', @auction.domain
-    whois_records(:one).update!(name: 'auction.test')
-
     patch api_v1_auction_path(@auction.uuid), { status: Auction.statuses[:no_bids] }
                                                 .to_json, 'Content-Type' => Mime::JSON.to_s
     @auction.reload
@@ -57,6 +56,13 @@ class ApiV1AuctionUpdateTest < ActionDispatch::IntegrationTest
                                                 .to_json, 'Content-Type' => Mime::JSON.to_s
     @auction.reload
     assert @auction.payment_not_received?
+  end
+
+  def test_marks_as_domain_not_registered
+    patch api_v1_auction_path(@auction.uuid), { status: Auction.statuses[:domain_not_registered] }
+                                                .to_json, 'Content-Type' => Mime::JSON.to_s
+    @auction.reload
+    assert @auction.domain_not_registered?
   end
 
   def test_reveals_registration_code_when_payment_is_received
@@ -80,22 +86,16 @@ class ApiV1AuctionUpdateTest < ActionDispatch::IntegrationTest
     assert_nil response_json['registration_code']
   end
 
-  def test_restarts_an_auction_when_the_payment_is_not_received
-    @auction.update!(domain: 'auction.test', status: Auction.statuses[:awaiting_payment])
+  def test_updates_whois
+    travel_to Time.zone.parse('2010-07-05 10:00')
+    assert_equal 'auction.test', @auction.domain
+    @whois_record.update!(updated_at: '2010-07-04')
 
-    patch api_v1_auction_path(@auction.uuid), { status: Auction.statuses[:payment_not_received] }
+    patch api_v1_auction_path(@auction.uuid), { status: Auction.statuses[:payment_received] }
                                                 .to_json, 'Content-Type' => Mime::JSON.to_s
+    @whois_record.reload
 
-    assert DNS::DomainName.new('auction.test').at_auction?
-  end
-
-  def test_restarts_an_auction_when_domain_is_not_registered
-    @auction.update!(domain: 'auction.test', status: Auction.statuses[:payment_received])
-
-    patch api_v1_auction_path(@auction.uuid), { status: Auction.statuses[:domain_not_registered] }
-                                                .to_json, 'Content-Type' => Mime::JSON.to_s
-
-    assert DNS::DomainName.new('auction.test').at_auction?
+    assert_equal Time.zone.parse('2010-07-05 10:00'), @whois_record.updated_at
   end
 
   def test_inaccessible_when_ip_address_is_not_allowed

@@ -33,8 +33,10 @@ module DNS
     end
 
     def sell_at_auction
-      Auction.sell(self)
-      update_whois
+      auction = Auction.new
+      auction.domain = name
+      auction.start
+      update_whois_from_auction(auction)
     end
 
     def at_auction?
@@ -47,10 +49,6 @@ module DNS
 
     def pending_registration?
       pending_auction&.payment_received?
-    end
-
-    def update_whois
-      Whois::Record.refresh(self)
     end
 
     def registered?
@@ -91,6 +89,11 @@ module DNS
 
     def pending_auction
       Auction.pending(self)
+    end
+
+    def update_whois_from_auction(auction)
+      whois_record = Whois::Record.find_by!(name: name)
+      whois_record.update_from_auction(auction)
     end
   end
 end
