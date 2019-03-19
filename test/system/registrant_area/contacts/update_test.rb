@@ -7,18 +7,14 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
     sign_in users(:registrant)
 
     @original_address_processing_setting = Setting.address_processing
-    @original_business_registry_cache_setting = Setting.days_to_keep_business_registry_cache
     @original_fax_enabled_setting = ENV['fax_enabled']
     @original_registrant_api_base_url_setting = ENV['registrant_api_base_url']
 
     ENV['registrant_api_base_url'] = 'https://api.test'
-    Setting.days_to_keep_business_registry_cache = 1
-    travel_to Time.zone.parse('2010-07-05')
   end
 
   teardown do
     Setting.address_processing = @original_address_processing_setting
-    Setting.days_to_keep_business_registry_cache = @original_business_registry_cache_setting
     ENV['fax_enabled'] = @original_fax_enabled_setting
     ENV['registrant_api_base_url'] = @original_registrant_api_base_url_setting
   end
@@ -90,7 +86,11 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
 
   def test_form_is_pre_populated_with_address_when_enabled
     Setting.address_processing = true
-    @contact = contacts(:william)
+    @contact.update!(street: 'Main Street',
+                     zip: '12345',
+                     city: 'New York',
+                     state: 'New York State',
+                     country_code: 'US')
 
     visit edit_registrant_domain_contact_url(@domain, @contact)
 
@@ -143,9 +143,10 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
 
   def test_unmanaged_contact_cannot_be_updated
     @contact.update!(ident: '12345')
-    visit registrant_domain_contact_url(@domain, @contact)
-    assert_no_button 'Edit'
-    assert_no_link 'Edit'
+
+    assert_raises ActiveRecord::RecordNotFound do
+      visit registrant_domain_contact_url(@domain, @contact)
+    end
   end
 
   def test_fail_gracefully

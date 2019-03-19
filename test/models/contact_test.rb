@@ -9,6 +9,14 @@ class ContactTest < ActiveSupport::TestCase
     assert @contact.valid?, proc { @contact.errors.full_messages }
   end
 
+  def test_private_entity
+    assert_equal 'priv', Contact::PRIV
+  end
+
+  def test_legal_entity
+    assert_equal 'org', Contact::ORG
+  end
+
   def test_invalid_without_email
     @contact.email = ''
     assert @contact.invalid?
@@ -47,5 +55,28 @@ class ContactTest < ActiveSupport::TestCase
     assert_equal 'new state', @contact.state
     assert_equal 'EE', @contact.country_code
     assert_equal address, @contact.address
+  end
+
+  def test_returns_registrant_user_direct_contacts
+    assert_equal Contact::PRIV, @contact.ident_type
+    assert_equal '1234', @contact.ident
+    assert_equal 'US', @contact.ident_country_code
+    registrant_user = RegistrantUser.new(registrant_ident: 'US-1234')
+
+    registrant_user.stub(:companies, []) do
+      assert_equal [@contact], Contact.registrant_user_contacts(registrant_user)
+      assert_equal [@contact], Contact.registrant_user_direct_contacts(registrant_user)
+    end
+  end
+
+  def test_returns_registrant_user_indirect_contacts
+    @contact.update!(ident_type: Contact::ORG)
+    assert_equal '1234', @contact.ident
+    assert_equal 'US', @contact.ident_country_code
+    registrant_user = RegistrantUser.new(registrant_ident: 'US-1234')
+
+    registrant_user.stub(:companies, [OpenStruct.new(registration_number: '1234')]) do
+      assert_equal [@contact], Contact.registrant_user_contacts(registrant_user)
+    end
   end
 end

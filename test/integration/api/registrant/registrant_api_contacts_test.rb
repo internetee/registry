@@ -5,33 +5,15 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
   def setup
     super
 
-    @original_registry_time = Setting.days_to_keep_business_registry_cache
-    Setting.days_to_keep_business_registry_cache = 1
-    travel_to Time.zone.parse('2010-07-05')
-
+    @contact = contacts(:john)
     @user = users(:registrant)
     @auth_headers = { 'HTTP_AUTHORIZATION' => auth_token }
   end
 
-  def teardown
-    super
-
-    Setting.days_to_keep_business_registry_cache = @original_registry_time
-    travel_back
-  end
-
-  def test_root_returns_contact_list
-    get '/api/v1/registrant/contacts', {}, @auth_headers
-    assert_equal(200, response.status)
-
-    json_body = JSON.parse(response.body, symbolize_names: true)
-    assert_equal(4, json_body.count)
-    array_of_contact_codes = json_body.map { |x| x[:code] }
-    assert(array_of_contact_codes.include?('william-001'))
-    assert(array_of_contact_codes.include?('jane-001'))
-  end
-
   def test_root_accepts_limit_and_offset_parameters
+    contacts(:william).update!(ident: '1234', ident_type: 'priv', ident_country_code: 'US')
+    assert_equal 3, @user.contacts.size
+
     get '/api/v1/registrant/contacts', { 'limit' => 1, 'offset' => 0 }, @auth_headers
     response_json = JSON.parse(response.body, symbolize_names: true)
     assert_equal(200, response.status)
@@ -39,26 +21,15 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
 
     get '/api/v1/registrant/contacts', {}, @auth_headers
     response_json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal(4, response_json.count)
+    assert_equal(3, response_json.count)
   end
 
   def test_get_contact_details_by_uuid
-    get '/api/v1/registrant/contacts/0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb', {}, @auth_headers
-    assert_equal(200, response.status)
+    get api_v1_registrant_contact_path(@contact.uuid), nil, @auth_headers
 
-    contact = JSON.parse(response.body, symbolize_names: true)
-    assert_equal('william@inbox.test', contact[:email])
-  end
-
-  def test_root_returns_503_when_business_registry_is_not_available
-    raise_not_available = -> (a, b) { raise Soap::Arireg::NotAvailableError.new({}) }
-    BusinessRegistryCache.stub :fetch_by_ident_and_cc, raise_not_available do
-      get '/api/v1/registrant/contacts', {}, @auth_headers
-
-      assert_equal(503, response.status)
-      response_json = JSON.parse(response.body, symbolize_names: true)
-      assert_equal({ errors: [base: ['Business Registry not available']] }, response_json)
-    end
+    assert_response :ok
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal 'john@inbox.test', response_json[:email]
   end
 
   def test_get_contact_details_by_uuid_returns_404_for_non_existent_contact

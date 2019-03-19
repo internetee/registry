@@ -3,14 +3,12 @@ require 'test_helper'
 class RegistrantAreaContactDetailsTest < ApplicationSystemTestCase
   setup do
     sign_in users(:registrant)
+    @domain = domains(:shop)
     @contact = contacts(:john)
-
-    Setting.days_to_keep_business_registry_cache = 1
-    travel_to Time.zone.parse('2010-07-05')
   end
 
   def test_general_data
-    visit registrant_domain_contact_url(domains(:shop), @contact)
+    visit registrant_domain_contact_url(@domain, @contact)
     assert_text 'Code john-001'
     assert_text 'Name John'
 
@@ -30,6 +28,14 @@ class RegistrantAreaContactDetailsTest < ApplicationSystemTestCase
       visit registrant_domain_contact_url(domains(:metro), @contact)
       assert_response :not_found
       assert_no_text 'Name John'
+    end
+  end
+
+  def test_unmanaged_contact_cannot_be_accessed
+    @contact.update!(ident: '12345')
+
+    assert_raises ActiveRecord::RecordNotFound do
+      visit registrant_domain_contact_url(@domain, @contact)
     end
   end
 end

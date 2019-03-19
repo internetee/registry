@@ -30,15 +30,6 @@ module Api
           header.gsub(pattern, '') if header&.match(pattern)
         end
 
-        def associated_domains(user)
-          country_code, ident = user.registrant_ident.split('-')
-
-          BusinessRegistryCache.fetch_associated_domains(ident, country_code)
-        rescue Soap::Arireg::NotAvailableError => error
-          Rails.logger.fatal("[EXCEPTION] #{error}")
-          user.domains
-        end
-
         def authenticate
           decryptor = AuthTokenDecryptor.create_with_defaults(bearer_token)
           decryptor.decrypt_token

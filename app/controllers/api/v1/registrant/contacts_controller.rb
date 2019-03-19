@@ -4,8 +4,6 @@ module Api
   module V1
     module Registrant
       class ContactsController < ::Api::V1::Registrant::BaseController
-        before_action :set_contacts_pool
-
         def index
           limit = params[:limit] || 200
           offset = params[:offset] || 0
@@ -20,8 +18,8 @@ module Api
                    status: :bad_request) && return
           end
 
-          @contacts = @contacts_pool.limit(limit).offset(offset)
-          serialized_contacts = @contacts.map do |item|
+          contacts = current_user_contacts.limit(limit).offset(offset)
+          serialized_contacts = contacts.map do |item|
             serializer = Serializers::RegistrantApi::Contact.new(item)
             serializer.to_json
           end
@@ -30,7 +28,7 @@ module Api
         end
 
         def show
-          @contact = @contacts_pool.find_by(uuid: params[:uuid])
+          @contact = current_user_contacts.find_by(uuid: params[:uuid])
 
           if @contact
             render json: @contact
@@ -40,7 +38,7 @@ module Api
         end
 
         def update
-          contact = @contacts_pool.find_by!(uuid: params[:uuid])
+          contact = current_user_contacts.find_by!(uuid: params[:uuid])
           contact.name = params[:name] if params[:name].present?
           contact.email = params[:email] if params[:email].present?
           contact.phone = params[:phone] if params[:phone].present?
@@ -97,22 +95,10 @@ module Api
 
         private
 
-        def set_contacts_pool
-          country_code, ident = current_registrant_user.registrant_ident.to_s.split '-'
-          associated_domain_ids = begin
-            BusinessRegistryCache.fetch_by_ident_and_cc(ident, country_code).associated_domain_ids
-          end
-
-          available_contacts_ids = begin
-            DomainContact.where(domain_id: associated_domain_ids).pluck(:contact_id) |
-              Domain.where(id: associated_domain_ids).pluck(:registrant_id)
-          end
-
-          @contacts_pool = Contact.where(id: available_contacts_ids)
-        rescue Soap::Arireg::NotAvailableError => error
-          Rails.logger.fatal("[EXCEPTION] #{error}")
-          render json: { errors: [{ base: ['Business Registry not available'] }] },
-                 status: :service_unavailable and return
+        def current_user_contacts
+          current_registrant_user.contacts
+        rescue CompanyRegister::NotAvailableError
+          current_registrant_user.direct_contacts
         end
       end
     end

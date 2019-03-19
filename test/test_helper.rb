@@ -16,6 +16,16 @@ require 'support/task_test_case'
 Setting.address_processing = false
 Setting.registry_country_code = 'US'
 
+class CompanyRegisterClientStub
+  Company = Struct.new(:registration_number)
+
+  def representation_rights(citizen_personal_code:, citizen_country_code:)
+    [Company.new('1234567')]
+  end
+end
+
+CompanyRegister::Client = CompanyRegisterClientStub
+
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
 

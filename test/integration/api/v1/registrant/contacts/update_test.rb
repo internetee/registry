@@ -6,18 +6,13 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @contact = contacts(:john)
 
     @original_address_processing_setting = Setting.address_processing
-    @original_business_registry_cache_setting = Setting.days_to_keep_business_registry_cache
     @original_fax_enabled_setting = ENV['fax_enabled']
 
-    @current_user = users(:registrant)
-
-    Setting.days_to_keep_business_registry_cache = 1
-    travel_to Time.zone.parse('2010-07-05')
+    @user = users(:registrant)
   end
 
   teardown do
     Setting.address_processing = @original_address_processing_setting
-    Setting.days_to_keep_business_registry_cache = @original_business_registry_cache_setting
     ENV['fax_enabled'] = @original_fax_enabled_setting
   end
 
@@ -52,8 +47,8 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_update_fax_when_enabled
+    @contact.update!(fax: '+666.6')
     ENV['fax_enabled'] = 'true'
-    @contact = contacts(:william)
 
     patch api_v1_registrant_contact_path(@contact.uuid), { fax: '+777.7' }.to_json,
           'HTTP_AUTHORIZATION' => auth_token,
@@ -101,7 +96,7 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_address_is_optional_when_enabled
-    @contact = contacts(:william)
+    @contact.update!(street: 'any', zip: 'any', city: 'any', state: 'any', country_code: 'US')
     Setting.address_processing = true
 
     patch api_v1_registrant_contact_path(@contact.uuid), { name: 'any' }.to_json,
@@ -113,18 +108,18 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_address_cannot_be_updated_when_disabled
-    @contact = contacts(:william)
-    @original_address = @contact.address
+    @contact.update!(street: 'old street')
     Setting.address_processing = false
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { address: { city: 'new city' } }.to_json,
+    patch api_v1_registrant_contact_path(@contact.uuid), { address: { street: 'new street' } }
+                                                           .to_json,
           'HTTP_AUTHORIZATION' => auth_token,
           'Accept' => Mime::JSON,
           'Content-Type' => Mime::JSON.to_s
-
     @contact.reload
+
     assert_response :bad_request
-    assert_equal @original_address, @contact.address
+    assert_not_equal 'new street', @contact.street
 
     error_msg = 'Address processing is disabled and therefore cannot be updated'
     assert_equal ({ errors: [{ address: [error_msg] }] }), JSON.parse(response.body,
@@ -160,10 +155,15 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_legal_persons_disclosed_attributes_cannot_be_changed
-    business_registry_caches(:one).update!(associated_businesses: %w[1234])
-    @contact.update!(ident_type: Contact::ORG,
-                     ident: '1234',
-                     disclosed_attributes: %w[])
+    @contact = contacts(:acme_ltd)
+
+    # contacts(:acme_ltd).ident
+    assert_equal '1234567', @contact.ident
+
+    assert_equal Contact::ORG, @contact.ident_type
+    assert_equal 'US', @contact.ident_country_code
+    @contact.update!(disclosed_attributes: %w[])
+    assert_equal 'US-1234', @user.registrant_ident
 
     assert_no_changes -> { @contact.disclosed_attributes } do
       patch api_v1_registrant_contact_path(@contact.uuid), { disclosed_attributes: %w[name] }
@@ -222,7 +222,7 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_unmanaged_contact_cannot_be_updated
-    @current_user.update!(registrant_ident: 'US-1234')
+    assert_equal 'US-1234', @user.registrant_ident
     @contact.update!(ident: '12345')
 
     patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name' }.to_json,
@@ -252,7 +252,7 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   private
 
   def auth_token
-    token_creator = AuthTokenCreator.create_with_defaults(@current_user)
+    token_creator = AuthTokenCreator.create_with_defaults(@user)
     hash = token_creator.token_in_hash
     "Bearer #{hash[:access_token]}"
   end

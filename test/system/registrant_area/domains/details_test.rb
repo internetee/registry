@@ -4,9 +4,6 @@ class RegistrantAreaDomainDetailsTest < ApplicationSystemTestCase
   setup do
     sign_in users(:registrant)
     @domain = domains(:shop)
-
-    Setting.days_to_keep_business_registry_cache = 1
-    travel_to Time.zone.parse('2010-07-05')
   end
 
   def test_general_data

@@ -9,6 +9,15 @@ GIT
       request_store (~> 1.1.0)
 
 GIT
+  remote: https://github.com/internetee/company_register.git
+  revision: da7130542304fc543c90d54cd037d019a777c526
+  branch: master
+  specs:
+    company_register (0.1.0)
+      activesupport
+      savon
+
+GIT
   remote: https://github.com/internetee/data-migrate.git
   revision: 35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81
   ref: 35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81
@@ -456,6 +465,7 @@ DEPENDENCIES
   capybara
   coderay (= 1.1.0)
   coffee-rails (= 4.1.0)
+  company_register!
   countries
   daemons-rails (= 1.2.1)
   data_migrate!

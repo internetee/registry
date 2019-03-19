@@ -3,7 +3,7 @@
     <!-- Used by Mobile-ID login -->
     <% type = (flash[:notice]) ? 'bg-success' : 'bg-danger' %>
     <% type = 'bg-warning' if flash[:warning] %>
-    <div class="<%= type %> alert">
+    <div class="<%= type %> alert<%= ' alert-info' if flash[:notice].present? %>">
         <%= flash[:notice] || flash[:alert] || flash[:warning] %>
     </div>
 </div>

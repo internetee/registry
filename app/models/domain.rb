@@ -205,6 +205,56 @@ class Domain < ActiveRecord::Base
     def nameserver_required?
       Setting.nameserver_required
     end
+
+    def registrant_user_domains(registrant_user)
+      # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can
+      # be removed.
+      from(
+        "(#{registrant_user_domains_by_registrant(registrant_user).to_sql} UNION " \
+        "#{registrant_user_domains_by_contact(registrant_user).to_sql}) AS domains"
+      )
+    end
+
+    def registrant_user_direct_domains(registrant_user)
+      # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can
+      # be removed.
+      from(
+        "(#{registrant_user_direct_domains_by_registrant(registrant_user).to_sql} UNION " \
+        "#{registrant_user_direct_domains_by_contact(registrant_user).to_sql}) AS domains"
+      )
+    end
+
+    def registrant_user_administered_domains(registrant_user)
+      # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can
+      # be removed.
+      from(
+        "(#{registrant_user_domains_by_registrant(registrant_user).to_sql} UNION " \
+        "#{registrant_user_domains_by_admin_contact(registrant_user).to_sql}) AS domains"
+      )
+    end
+
+    private
+
+    def registrant_user_domains_by_registrant(registrant_user)
+      where(registrant: registrant_user.contacts)
+    end
+
+    def registrant_user_domains_by_contact(registrant_user)
+      joins(:domain_contacts).where(domain_contacts: { contact_id: registrant_user.contacts })
+    end
+
+    def registrant_user_domains_by_admin_contact(registrant_user)
+      joins(:domain_contacts).where(domain_contacts: { contact_id: registrant_user.contacts,
+                                                       type: [AdminDomainContact] })
+    end
+
+    def registrant_user_direct_domains_by_registrant(registrant_user)
+      where(registrant: registrant_user.direct_contacts)
+    end
+
+    def registrant_user_direct_domains_by_contact(registrant_user)
+      joins(:domain_contacts).where(domain_contacts: { contact_id: registrant_user.direct_contacts })
+    end
   end
 
   def name=(value)
