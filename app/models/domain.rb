@@ -79,7 +79,6 @@ class Domain < ActiveRecord::Base
     self.status_notes = {} if status_notes.nil?
   end
 
-  before_create -> { self.reserved = in_reserved_list?; nil }
   before_save :manage_automatic_statuses
   before_save :touch_always_version
   def touch_always_version

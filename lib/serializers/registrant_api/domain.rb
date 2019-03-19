@@ -43,7 +43,6 @@ module Serializers
           force_delete_date: domain.force_delete_date,
           statuses: domain.statuses,
           locked_by_registrant_at: domain.locked_by_registrant_at,
-          reserved: domain.reserved,
           status_notes: domain.status_notes,
           nameservers: nameservers,
         }
