@@ -51,7 +51,7 @@ gem 'liquid',           '3.0.6'   # for email templates
 
 # rights
 gem 'cancancan', '1.11.0' # autharization
-gem 'devise',    '4.4.3'  # authenitcation
+gem 'devise', '~> 4.0'
 
 gem 'grape'
 gem 'jbuilder', '2.2.16'  # json api
