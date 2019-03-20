@@ -123,4 +123,22 @@ class DNS::DomainNameTest < ActiveSupport::TestCase
     assert DNS::DomainName.new('reserved.test').reserved?
     assert_not DNS::DomainName.new('unreserved.test').reserved?
   end
+
+  def test_registered_when_domain_exists
+    assert Domain.exists?(name: 'shop.test')
+
+    domain_name = DNS::DomainName.new('shop.test')
+
+    assert domain_name.registered?
+    refute domain_name.not_registered?
+  end
+
+  def test_not_registered_when_domain_does_not_exist
+    assert_not Domain.exists?(name: 'not-registered.test')
+
+    domain_name = DNS::DomainName.new('not-registered.test')
+
+    assert domain_name.not_registered?
+    assert_not domain_name.registered?
+  end
 end

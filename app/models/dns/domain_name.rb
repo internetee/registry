@@ -57,6 +57,10 @@ module DNS
       Domain.find_by_idn(name)
     end
 
+    def not_registered?
+      !registered?
+    end
+
     def blocked?
       BlockedDomain.where(name: name).any?
     end
