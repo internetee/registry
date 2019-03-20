@@ -48,15 +48,22 @@ class Registrar
       end
     end
 
-    def id
-      @user = ApiUser.find_by_idc_data_and_allowed(request.env['SSL_CLIENT_S_DN'], request.ip)
+    def id_card
+      self.resource = warden.authenticate!(auth_options)
 
-      if @user
-        sign_in_and_redirect(:registrar_user, @user, event: :authentication)
-      else
-        flash[:alert] = t('no_such_user')
-        redirect_to new_registrar_user_session_url
+      restricted_ip = Authorization::RestrictedIP.new(request.ip)
+      ip_allowed = restricted_ip.can_access_registrar_area?(resource.registrar)
+
+      unless ip_allowed
+        render text: t('registrar.authorization.ip_not_allowed', ip: request.ip)
+        warden.logout(:registrar_user)
+        return
       end
+
+      set_flash_message!(:notice, :signed_in)
+      sign_in(resource_name, resource)
+      yield resource if block_given?
+      respond_with resource, location: after_sign_in_path_for(resource)
     end
 
     def login_mid

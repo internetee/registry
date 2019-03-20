@@ -280,4 +280,10 @@ Devise.setup do |config|
   # When using OmniAuth, Devise cannot automatically set OmniAuth path,
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
+
+  require 'devise/models/id_card_authenticatable'
+  require 'devise/strategies/id_card_authenticatable'
+
+  routes = [nil, :new, :destroy]
+  config.add_module :id_card_authenticatable, strategy: true, route: { session: routes }
 end

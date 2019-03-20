@@ -1,21 +1,6 @@
 class Registrant::SessionsController < Devise::SessionsController
   layout 'registrant/application'
 
-  def new; end
-
-  def id
-    id_code, id_issuer = request.env['SSL_CLIENT_S_DN'], request.env['SSL_CLIENT_I_DN_O']
-    id_code, id_issuer = 'test', RegistrantUser::ACCEPTED_ISSUER if Rails.env.development?
-
-    @user = RegistrantUser.find_or_create_by_idc_data(id_code, id_issuer)
-    if @user
-      sign_in_and_redirect(:registrant_user, @user, event: :authentication)
-    else
-      flash[:alert] = t('login_failed_check_id_card')
-      redirect_to new_registrant_user_session_url
-    end
-  end
-
   def login_mid
     @user = User.new
   end
@@ -89,11 +74,6 @@ class Registrant::SessionsController < Devise::SessionsController
     else
       render json: { message: t(:internal_error) }, status: :bad_request
     end
-  end
-
-  def find_user_by_idc(idc)
-    return User.new unless idc
-    ApiUser.find_by(identity_code: idc) || User.new
   end
 
   private

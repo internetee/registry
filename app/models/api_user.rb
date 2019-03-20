@@ -2,7 +2,8 @@ require 'open3'
 
 class ApiUser < User
   include EppErrors
-  devise :database_authenticatable, :trackable, :timeoutable, authentication_keys: [:username]
+  devise :database_authenticatable, :trackable, :timeoutable, :id_card_authenticatable,
+         authentication_keys: [:username]
 
   def epp_code_map
     {
@@ -47,26 +48,9 @@ class ApiUser < User
   end
 
   class << self
-    def find_by_idc_data(idc_data)
-      return false if idc_data.blank?
-      identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
-
-      find_by(identity_code: identity_code)
+    def find_by_id_card(id_card)
+      find_by(identity_code: id_card.personal_code)
     end
-
-    def find_by_idc_data_and_allowed(idc_data, ip)
-      return false if idc_data.blank?
-      identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
-
-      return false if ip.blank?
-      possible_users = where(identity_code: identity_code)
-      possible_users.each do |selected_user|
-        if selected_user.registrar.white_ips.registrar_area.include_ip?(ip)
-          return selected_user
-        end
-      end
-    end
-
   end
 
   def registrar_typeahead

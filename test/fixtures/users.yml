@@ -1,6 +1,7 @@
 api_bestnames:
   username: test_bestnames
   plain_text_password: testtest
+  identity_code: 1234
   type: ApiUser
   registrar: bestnames
   active: true
