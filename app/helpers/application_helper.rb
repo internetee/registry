@@ -47,8 +47,11 @@ module ApplicationHelper
     return 'unknown'     if model.updator.blank?
     return model.updator if model.updator.is_a? String
 
-    # can be api user or some other user
-    link_to(model.updator, ['admin', model.updator])
+    if model.updator.kind_of?(RegistrantUser)
+      model.updator
+    else
+      link_to(model.updator, ['admin', model.updator])
+    end
   end
 
   def currency(amount)
