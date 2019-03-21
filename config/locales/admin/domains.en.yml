@@ -12,6 +12,13 @@ en:
       search_form:
         reset_btn: Reset
 
+      form:
+        pending_delete: &pending_delete
+          accept_btn: Accept
+          reject_btn: Reject
+
+        pending_update: *pending_delete
+
       edit:
         header: "Edit:"
         add_new_status_btn: Add new status

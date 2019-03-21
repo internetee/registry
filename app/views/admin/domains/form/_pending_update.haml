@@ -1,8 +1,8 @@
 - if (status == DomainStatus::PENDING_UPDATE && f.object.pending_json.present?)
-  = link_to(t(:apply_pending), admin_domain_pending_update_path(f.object.id, f.object.id),
+  = link_to(t('.accept_btn'), admin_domain_pending_update_path(f.object.id, f.object.id),
     method: :patch, data: { confirm: t(:are_you_sure) },
     class: 'btn btn-danger btn-xs')
 
-  = link_to(t(:delete_pending), admin_domain_pending_update_path(f.object.id, f.object.id), 
+  = link_to(t('.reject_btn'), admin_domain_pending_update_path(f.object.id, f.object.id),
     method: :delete, data: { confirm: t(:are_you_sure) },
     class: 'btn btn-danger btn-xs')
