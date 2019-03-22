@@ -69,6 +69,10 @@ module DNS
       ReservedDomain.where(name: name).any?
     end
 
+    def auctionable?
+      !not_auctionable?
+    end
+
     def to_s
       name
     end
@@ -76,6 +80,10 @@ module DNS
     private
 
     attr_reader :name
+
+    def not_auctionable?
+      blocked? || reserved?
+    end
 
     def zone_with_same_origin?
       DNS::Zone.where(origin: name).any?

@@ -141,4 +141,22 @@ class DNS::DomainNameTest < ActiveSupport::TestCase
     assert domain_name.not_registered?
     assert_not domain_name.registered?
   end
+
+  def test_auctionable_when_not_blocked_or_reserved
+    domain_name = DNS::DomainName.new('shop.test')
+    assert_not domain_name.blocked?
+    assert_not domain_name.reserved?
+
+    assert domain_name.auctionable?
+  end
+
+  def test_not_auctionable_when_blocked
+    assert_equal 'blocked.test', blocked_domains(:one).name
+    assert_not DNS::DomainName.new('blocked.test').auctionable?
+  end
+
+  def test_not_auctionable_when_reserved
+    assert_equal 'reserved.test', reserved_domains(:one).name
+    assert_not DNS::DomainName.new('reserved.test').auctionable?
+  end
 end
