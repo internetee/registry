@@ -4,7 +4,7 @@ namespace :domains do
     depending on `release_domains_to_auction` setting
   TEXT
 
-  task :release do
+  task release: :environment do
     released_domain_count = 0
 
     Domain.release_domains do |domain|
