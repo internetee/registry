@@ -1,8 +1,8 @@
 - if status == DomainStatus::PENDING_DELETE_CONFIRMATION
-  = link_to(t(:accept_delete), admin_domain_pending_delete_path(f.object.id, f.object.id),
+  = link_to(t('.accept_btn'), admin_domain_pending_delete_path(f.object.id, f.object.id),
     method: :patch, data: { confirm: t(:are_you_sure) },
     class: 'btn btn-danger btn-xs')
 
-  = link_to(t(:reject_delete), admin_domain_pending_delete_path(f.object.id, f.object.id),
+  = link_to(t('.reject_btn'), admin_domain_pending_delete_path(f.object.id, f.object.id),
     method: :delete, data: { confirm: t(:are_you_sure) },
     class: 'btn btn-danger btn-xs')
