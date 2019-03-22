@@ -38,10 +38,6 @@ if @cron_group == 'registry'
     runner 'Certificate.update_crl'
   end
 
-  every 42.minutes do
-    runner 'DomainCron.destroy_delete_candidates'
-  end
-
   every 45.minutes do
     runner 'DomainCron.start_expire_period'
   end

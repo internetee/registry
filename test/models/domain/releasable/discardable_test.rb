@@ -15,6 +15,16 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
     assert @domain.discarded?
   end
 
+  def test_discards_domains_with_scheduled_force_delete_procedure
+    @domain.update!(force_delete_date: '2010-07-05')
+    travel_to Time.zone.parse('2010-07-05')
+
+    Domain.release_domains
+    @domain.reload
+
+    assert @domain.discarded?
+  end
+
   def test_ignores_domains_with_delete_at_in_the_future_or_now
     @domain.update!(delete_at: Time.zone.parse('2010-07-05 08:00'))
     travel_to Time.zone.parse('2010-07-05 08:00')
