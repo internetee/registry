@@ -7,7 +7,10 @@ class RegistrantAreaDomainDetailsTest < ApplicationSystemTestCase
   end
 
   def test_general_data
+    @domain.update_columns(force_delete_date: '2010-07-08', statuses: [DomainStatus::FORCE_DELETE])
+
     visit registrant_domain_url(@domain)
+
     assert_text 'Name shop.test'
     assert_text "Registered at #{l Time.zone.parse('2010-07-04')}"
     assert_link 'Best Names', href: registrant_registrar_path(@domain.registrar)
@@ -18,7 +21,7 @@ class RegistrantAreaDomainDetailsTest < ApplicationSystemTestCase
     assert_text "Valid to #{l Time.zone.parse('2010-07-05')}"
     assert_text "Outzone at #{l Time.zone.parse('2010-07-06')}"
     assert_text "Delete at #{l Time.zone.parse('2010-07-07')}"
-    assert_text "Force delete at #{l Time.zone.parse('2010-07-08')}"
+    assert_text "Force delete date #{l Date.parse('2010-07-08')}"
   end
 
   def test_registrant

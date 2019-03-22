@@ -84,7 +84,7 @@ class DomainCron
 
     c = 0
 
-    Domain.where('force_delete_at <= ?', Time.zone.now.end_of_day.utc).each do |x|
+    Domain.where('force_delete_date <= ?', Time.zone.now.end_of_day.utc).each do |x|
       DomainDeleteJob.enqueue(x.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
       STDOUT << "#{Time.zone.now.utc} DomainCron.destroy_delete_candidates: job added by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
       c += 1

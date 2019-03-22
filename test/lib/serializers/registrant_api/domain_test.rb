@@ -73,7 +73,7 @@ class SerializersRegistrantApiDomainTest < ActiveSupport::TestCase
               registrant tech_contacts admin_contacts transfer_code name_dirty name_puny period
               period_unit creator_str updator_str legacy_id legacy_registrar_id legacy_registrant_id
               outzone_at delete_at registrant_verification_asked_at
-              registrant_verification_token pending_json force_delete_at statuses
+              registrant_verification_token pending_json force_delete_date statuses
               locked_by_registrant_at reserved status_notes nameservers]
 
     assert_equal(keys, @json.keys & keys)

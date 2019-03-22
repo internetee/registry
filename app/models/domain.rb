@@ -501,7 +501,7 @@ class Domain < ActiveRecord::Base
           when DomainStatus::PENDING_DELETE
             self.delete_at = nil
           when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
-            self.outzone_at = Time.zone.now if self.force_delete_at.present?
+            self.outzone_at = Time.zone.now if force_delete_scheduled?
           when DomainStatus::DomainStatus::EXPIRED # removal causes server hold to set
             self.outzone_at = self.expire_time + 15.day
           when DomainStatus::DomainStatus::SERVER_HOLD # removal causes server hold to set
