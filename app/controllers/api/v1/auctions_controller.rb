@@ -30,6 +30,12 @@ module Api
           raise "Invalid status #{params[:status]}"
         end
 
+        if auction.payment_not_received? || auction.domain_not_registered?
+          update_whois_from_auction(Auction.pending(auction.domain))
+        else
+          update_whois_from_auction(auction)
+        end
+
         render json: serializable_hash_for_update_action(auction)
       end
 
@@ -43,6 +49,11 @@ module Api
         hash = serializable_hash(auction)
         hash[:registration_code] = auction.registration_code if auction.payment_received?
         hash
+      end
+
+      def update_whois_from_auction(auction)
+        whois_record = Whois::Record.find_by!(name: auction.domain)
+        whois_record.update_from_auction(auction)
       end
     end
   end

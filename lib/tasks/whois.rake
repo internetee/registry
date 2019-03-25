@@ -6,6 +6,21 @@ namespace :whois do
     print "-----> Regenerate Registry whois_records table and sync with whois server..."
     ActiveRecord::Base.uncached do
 
+      # Must be on top
+      print "\n-----> Update whois_records for auctions"
+      Auction.pluck('DISTINCT domain').each do |domain|
+        pending_auction = Auction.pending(domain)
+
+        if pending_auction
+          Whois::Record.transaction do
+            whois_record = Whois::Record.find_or_create_by!(name: domain)
+            whois_record.update_from_auction(pending_auction)
+          end
+        else
+          Whois::Record.find_by(name: domain)&.destroy!
+        end
+      end
+
       print "\n-----> Update domains whois_records"
       Domain.find_in_batches.each do |group|
         UpdateWhoisRecordJob.enqueue group.map(&:name), 'domain'
@@ -20,7 +35,6 @@ namespace :whois do
       ReservedDomain.find_in_batches.each do |group|
         UpdateWhoisRecordJob.enqueue group.map(&:name), 'reserved'
       end
-
     end
     puts "\n-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
@@ -32,7 +46,7 @@ namespace :whois do
       puts "\n------------------------ Create #{whois_db} ---------------------------------------\n"
       ActiveRecord::Base.clear_all_connections!
       conf = ActiveRecord::Base.configurations
-      
+
       ActiveRecord::Base.connection.create_database(conf[whois_db]['database'].to_sym, conf[whois_db])
     rescue => e
       puts "\n#{e}"

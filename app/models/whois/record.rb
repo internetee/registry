@@ -6,21 +6,17 @@ module Whois
       Setting.registry_whois_disclaimer
     end
 
-    def self.refresh(domain_name)
-      if domain_name.at_auction?
-        # Remove original record since `Domain#update_whois_record` callback is disabled when
-        # domain is at auction
-        find_by(name: domain_name.to_s).try(:destroy!)
-
-        create!(name: domain_name, json: { name: domain_name.to_s,
-                                           status: ['AtAuction'],
-                                           disclaimer: disclaimer })
-      elsif domain_name.awaiting_payment? || domain_name.pending_registration?
-        find_by(name: domain_name.to_s).update!(json: { name: domain_name.to_s,
-                                                        status: ['PendingRegistration'],
-                                                        disclaimer: disclaimer })
-      else
-        find_by(name: domain_name.to_s).destroy!
+    def update_from_auction(auction)
+      if auction.started?
+        update!(json: { name: auction.domain,
+                        status: ['AtAuction'],
+                        disclaimer: self.class.disclaimer })
+      elsif auction.no_bids?
+        destroy!
+      elsif auction.awaiting_payment? || auction.payment_received?
+        update!(json: { name: auction.domain,
+                        status: ['PendingRegistration'],
+                        disclaimer: self.class.disclaimer })
       end
     end
   end

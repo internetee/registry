@@ -19,15 +19,13 @@ class AuctionTest < ActiveSupport::TestCase
                     'domain_not_registered' => 'domain_not_registered' }), Auction.statuses
   end
 
-  def test_selling_domain_starts_new_auction
-    domain_name = DNS::DomainName.new('shop.test')
+  def test_starts_an_auction
+    assert_not @auction.started?
 
-    assert_difference 'Auction.count' do
-      Auction.sell(domain_name)
-    end
-    auction = Auction.last
-    assert_equal domain_name.to_s, auction.domain
-    assert auction.started?
+    @auction.start
+    @auction.reload
+
+    assert @auction.started?
   end
 
   def test_pending
@@ -84,16 +82,12 @@ class AuctionTest < ActiveSupport::TestCase
     assert_nil @auction.registration_code
   end
 
-  def test_restarts_an_auction_when_payment_is_not_received
-    @auction.update!(domain: 'auction.test', status: Auction.statuses[:awaiting_payment])
+  def test_marking_as_payment_not_received_restarts_an_auction
+    @auction.update!(status: Auction.statuses[:awaiting_payment])
 
     assert_difference 'Auction.count' do
       @auction.mark_as_payment_not_received
     end
-
-    new_auction = Auction.last
-    assert_equal 'auction.test', new_auction.domain
-    assert new_auction.started?
   end
 
   def test_marking_as_domain_not_registered
@@ -105,16 +99,12 @@ class AuctionTest < ActiveSupport::TestCase
     assert @auction.domain_not_registered?
   end
 
-  def test_restarts_an_auction_when_domain_is_not_registered
-    @auction.update!(domain: 'auction.test', status: Auction.statuses[:domain_not_registered])
+  def test_marking_as_domain_not_registered_restarts_an_auction
+    @auction.update!(status: Auction.statuses[:payment_received])
 
     assert_difference 'Auction.count' do
       @auction.mark_as_domain_not_registered
     end
-
-    new_auction = Auction.last
-    assert_equal 'auction.test', new_auction.domain
-    assert new_auction.started?
   end
 
   def test_domain_registrable
@@ -139,5 +129,17 @@ class AuctionTest < ActiveSupport::TestCase
     assert_not @auction.domain_registrable?('wrong')
     assert_not @auction.domain_registrable?(nil)
     assert_not @auction.domain_registrable?('')
+  end
+
+  def test_restarts_an_auction
+    assert_equal 'auction.test', @auction.domain
+
+    assert_difference 'Auction.count' do
+      @auction.restart
+    end
+
+    new_auction = Auction.last
+    assert_equal 'auction.test', new_auction.domain
+    assert new_auction.started?
   end
 end
