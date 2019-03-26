@@ -1,3 +1,6 @@
+26.03.2019
+* Fixed invoice PDF download for admin and registrar portals [#1128](https://github.com/internetee/registry/pull/1128)
+
 25.03.2019
 * New API for domain auctions [#874](https://github.com/internetee/registry/issues/874)
 * Improved EPP domain info and check request handling of reserved, blocked and auctioned domains [#597](https://github.com/internetee/registry/issues/597)
