@@ -1,0 +1,48 @@
+<p>Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt</p>
+
+<p>Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et füüsiline isik isikukoodiga <%= @registrant.id_code %> on surnud ja sellest on möödunud vähemalt 6 kuud.</p>
+
+<p>Kuna surnud isik ei saa olla domeeni registreerijaks, algas domeeni <%= @domain.name %> suhtes <%= @redemption_grace_period %> päevane kustutusmenetlus. Menetluse käigus on domeen internetis kättesaadav.</p>
+
+<p>Domeeni suhtes õigust omaval isikul on võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @registrar.name %> domeeni üleandmise taotlus, millele tuleb lisada pärimisõiguse tõend. Dokumentatsioon tuleb esitada registripidajale <%= @redemption_grace_period %> päeva jooksul.</p>
+
+<p>Kui üleandmine ei ole <%= @redemption_grace_period %> päeva jooksul toimunud, läheb domeen <%= @domain.name %> <%= @domain.force_delete_date %> domeenioksjonile .ee oksjonikeskkonda. Juhul kui domeenile <%= @domain.name %> ei tehta oksjonil 24h möödudes pakkumist, domeen vabaneb ja on registreerimiseks vabalt kättesaadav kõigile huvilistele. Muude võimalike oksjoni tulemuste kohta loe siit.</p>
+
+<p>Lisaküsimuste korral võtke palun ühendust oma registripidajaga:</p>
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+
+<hr>
+
+<p>Dear registrant/administrative contact of <%= @domain.name %> domain</p>
+
+<p>Estonian Internet Foundation (EIF) has learned that the natural person with identification code <%= @registrant.id_code %> has been deceased more than 6 months.</p>
+
+<p>The registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar <%= @registrar.name %>.The application must be submitted together with succession evidence certifying the acquisition of the domain. The relevant documents should be submitted to the registrar within <%= @redemption_grace_period %> days.</p>
+
+<p>As a deceased natural person can not be the registrant of a domain, a <%= @redemption_grace_period %>-day deletion process of <%= @domain.name %> domain has started.  The domain will remain available on the Internet during the deletion process.</p>
+
+<p>If the transfer is not made within <%= @redemption_grace_period %> days, the domain <%= @domain.name %> will go to domain auction on <%= @domain.force_delete_date %> in the .ee auction environment. If no offer is made for the domain <%= @domain.name %> at auction within 24 hours, the domain will be released and made freely available for registration to anyone interested on a first-come, first-served basis. Read more about other potential auction results here.</p>
+
+<p>Should you have additional questions, please contact your registrar:</p>
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+
+<%= render 'mailers/shared/signatures/signature.en.html' %>
+
+<hr>
+
+<p>Уважаемый регистрант/административный контакт домена <%= @domain.name %></p>
+
+<p>Целевому учреждению Eesti Internet (EIS) стало известно, что физическое лицо с личным кодом <%= @registrant.id_code %> умерло, и с момента смерти прошло не менее 6 месяцев.</p>
+
+<p>Поскольку умершее лицо не может являться регистрантом домена, начат <%= @redemption_grace_period %>-дневный процесс удаления домена <%= @domain.name %>. До завершения процесса домен доступен в Интернете.</p>
+
+<p>Лицо, обладающее правом на домен, может подать регистратору <%= @registrar.name %> домена <%= @domain.name %> ходатайство о передаче, представив справку о праве наследования. Документы должны быть представлены регистратору в течение <%= @redemption_grace_period %> дней.</p>
+
+<p>Если передача не состоится в течение <%= @redemption_grace_period %> дней, <%= @domain.force_delete_date %> домен <%= @domain.name %> отправится на доменный аукцион в аукционной среде .ee. Если в течение 24 часов в отношении домена <%= @domain.name %> не поступит предложений, домен освободится и станет доступным для всех желающих по принципу «кто раньше». О других возможных результатах аукциона читайте здесь.</p>
+
+<p>В случае возникновения дополнительных вопросов свяжитесь, пожалуйста, со своим регистратором:</p>
+<%= render 'mailers/shared/registrar/registrar.ru.html', registrar: @registrar %>
+
+<%= render 'mailers/shared/signatures/signature.ru.html' %>

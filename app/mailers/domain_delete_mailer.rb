@@ -1,4 +1,8 @@
 class DomainDeleteMailer < ApplicationMailer
+  def self.force_delete_templates
+    %w[private_person legal_person]
+  end
+
   def confirm(domain:, registrar:, registrant:)
     @domain = DomainPresenter.new(domain: domain, view: view_context)
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
@@ -13,7 +17,6 @@ class DomainDeleteMailer < ApplicationMailer
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
     @registrant = RegistrantPresenter.new(registrant: registrant, view: view_context)
 
-    @force_delete_set_date = Time.zone.now
     @redemption_grace_period = Setting.redemption_grace_period
 
     subject = default_i18n_subject(domain_name: domain.name)

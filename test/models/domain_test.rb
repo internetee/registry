@@ -70,4 +70,13 @@ class DomainTest < ActiveSupport::TestCase
       assert_not_includes Domain.registrant_user_administered_domains(registrant_user), @domain
     end
   end
+
+  def test_returns_primary_contact_emails
+    assert_equal 'john@inbox.test', @domain.registrant.email
+    assert_equal 'john@inbox.test', contacts(:john).email
+    assert_equal 'william@inbox.test', contacts(:william).email
+    @domain.admin_contacts = [contacts(:john), contacts(:william)]
+
+    assert_equal %w[john@inbox.test william@inbox.test], @domain.primary_contact_emails
+  end
 end

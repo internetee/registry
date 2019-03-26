@@ -1,69 +1,42 @@
 Domeen <%= @domain.name %> on aegunud
-Lugupeetud .ee domeeni kasutaja
 
-Domeeninimi <%= @domain.name %> on aegunud ja ei ole alates <%= @domain.on_hold_date %> internetis kättesaadav. 
-Alates <%= @domain.delete_date %> on domeen <%= @domain.name %> avatud registreerimiseks kõigile huvilistele.
+Lugupeetud .ee domeeni registreerija/halduskontakt
+
+Domeeninimi <%= @domain.name %> on aegunud ja ei ole alates <%= @domain.on_hold_date %> internetis kättesaadav. Domeen <%= @domain.name %> on <%= @domain.delete_date %> domeenioksjonil .ee https://oksjon.internet.ee. Juhul kui domeenile <%= @domain.name %> ei tehta oksjonil 24h möödudes pakkumist, domeen vabaneb ja on registreerimiseks vabalt kättesaadav kõigile huvilistele. Muude võimalike oksjoni tulemuste kohta loe siit https://www.internet.ee/domeenid/domeenide-oksjonikeskkonna-kasutajatingimused#3-oksjonikeskkonna-enampakkumisel-osalemise-tingimused.
 
 Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja poole:
-
 <%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
 
-Domeeni <%= @domain.name %> kohta on registris järgmised andmed:
+Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist https://registrant.internet.ee/registrant/.
 
-Registreerija: <%= @domain.registrant_name %>
-Halduskontakt: <%= @domain.admin_contact_names %>
-Tehniline kontakt: <%= @domain.tech_contact_names %>
-Nimeserverid: <%= @domain.nameserver_names %>
-
-Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist. <%= ENV['registrant_url'] %>.
-
-Parimate soovidega
-Eesti Interneti Sihtasutus
+<%= render 'mailers/shared/signatures/signature.et.text' %>
 
 --------------------------------------
 
-The <%= @domain.name %> domain has expired
-Dear user of .ee domain,
+Domain <%= @domain.name %> has expired
 
-The domain name <%= @domain.name %> has expired and will not be available on the Internet from <%= @domain.on_hold_date %>. 
-From <%= @domain.delete_date %>, the <%= @domain.name %> domain will be available for registration on a first come first served basis.
+Dear registrant/administrative contact of .ee domain,
 
-To renew the domain registration, please contact your registrar:
+The domain name <%= @domain.name %> has expired and since <%= @domain.on_hold_date %> is no longer available on the Internet. The domain <%= @domain.name %> will be available for domain auction on <%= @domain.delete_date %> in the .ee auction portal at https://auction.internet.ee. If no offer is made for the domain <%= @domain.name %> at auction within 24 hours, the domain will be released and made freely available for registration to anyone interested on a first-come, first-served basis. Read more about other potential auction results at https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment.
 
+To renew your domain registration, please contact your registrar:
 <%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
 
-The following data for the <%= @domain.name %> domain have been entered into the registry:
+You can find an overview of all your domains at the registrant's portal https://registrant.internet.ee/registrant/.
 
-Registrant: <%= @domain.registrant_name %>
-Administrative contact: <%= @domain.admin_contact_names %>
-Technical contact: <%= @domain.tech_contact_names %>
-Name servers: <%= @domain.nameserver_names %>
-
-You can find an overview of all your domains at the registrant's portal. <%= ENV['registrant_url'] %>.
-
-Best Regards,
-Estonian Internet Foundation
+<%= render 'mailers/shared/signatures/signature.en.text' %>
 
 --------------------------------------
 
-Домен <%= @domain.name %> устарел
-Уважаемый пользователь домена .ee
+Срок действия домена <%= @domain.name %> истек
 
-Доменное имя <%= @domain.name %> устарело и с <%= @domain.on_hold_date %> недоступно в Интернете. 
-С <%= @domain.delete_date %> домен <%= @domain.name %> доступен для регистрации всем желающим по принципу "first come, first served".
+Уважаемый регистрант/административный контакт домена .ee
 
-Для продления регистрации домена просим обратиться к своему регистратору:
+Срок действия доменного имени <%= @domain.name %> истек, и с <%= @domain.on_hold_date %> оно больше не доступно в интернете. <%= @domain.delete_date %> домен <%= @domain.name %> будет представлен на доменном аукционе в аукционной среде .ee https://oksjon.internet.ee. Если в течение 24 часов в отношении домена <%= @domain.name %> не поступит предложений, домен освободится и станет доступным для всех желающих по принципу «кто раньше». О других возможных результатах аукциона читайте по ссылке https://www.internet.ee/domeny/dogovor-pol-zovatelya-aukcionnoj-sredy#3-usloviya-uchastiya-v-aukcione.
 
+Для продления регистрации домена обратитесь, пожалуйста, к своему регистратору:
 <%= render 'mailers/shared/registrar/registrar.ru.text', registrar: @registrar %>
 
-Относительно домена <%= @domain.name %> в реестр внесены следующие данные:
+Обзор всех связанных с вами доменов можете получить на портале регистратора https://registrant.internet.ee/registrant/
 
-Регистрант: <%= @domain.registrant_name %>
-Административный контакт: <%= @domain.admin_contact_names %>
-Технический контакт: <%= @domain.tech_contact_names %>
-Серверы доменных имен: <%= @domain.nameserver_names %>
-
-Обзор всех связанных с Вами доменов можете получить на портале регистранта. <%= ENV['registrant_url'] %>.
-
-С наилучшими пожеланиями
-Целевое учреждение Eesti Internet
+<%= render 'mailers/shared/signatures/signature.ru.text' %>

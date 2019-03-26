@@ -42,18 +42,6 @@ class DomainPresenter
     view.l(domain.force_delete_at, format: :date) if domain.force_delete_at
   end
 
-  def admin_contact_names
-    domain.admin_contact_names.join(', ')
-  end
-
-  def tech_contact_names
-    domain.tech_contact_names.join(', ')
-  end
-
-  def nameserver_names
-    domain.nameserver_hostnames.join(', ')
-  end
-
   def force_delete_toggle_btn
     return inactive_schedule_force_delete_btn if domain.discarded?
 

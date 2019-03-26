@@ -597,24 +597,8 @@ class Domain < ActiveRecord::Base
     end
   end
 
-  def admin_contact_names
-    admin_contacts.names
-  end
-
-  def admin_contact_emails
-    admin_contacts.emails
-  end
-
-  def tech_contact_names
-    tech_contacts.names
-  end
-
-  def nameserver_hostnames
-    nameservers.hostnames
-  end
-
   def primary_contact_emails
-    (admin_contact_emails << registrant_email).uniq
+    (admin_contacts.emails + [registrant.email]).uniq
   end
 
   def new_registrant_email

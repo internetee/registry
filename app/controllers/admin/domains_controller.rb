@@ -107,7 +107,7 @@ module Admin
     end
 
     def force_delete_templates
-      %w(removed_company death)
+      DomainDeleteMailer.force_delete_templates
     end
   end
 end
