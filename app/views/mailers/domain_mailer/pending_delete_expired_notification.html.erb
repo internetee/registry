@@ -1,6 +1,6 @@
 Tere
 <br><br>
-Domeeni <%= @domain.name %> kustutamise taotlust ei kinnitatud tähtaegselt registreerija <%= @domain.registrant_name %> poolt. Domeeni <%= @domain.name %> kustutamine on sellest tulenevalt tühistatud.
+Domeeni <%= @domain.name %> kustutamise taotlust ei kinnitatud tähtaegselt registreerija <%= @domain.registrant.name %> poolt. Domeeni <%= @domain.name %> kustutamine on sellest tulenevalt tühistatud.
 <br><br>
 Lugupidamisega<br>
 Eesti Interneti Sihtasutus
@@ -9,7 +9,7 @@ Eesti Interneti Sihtasutus
 <br><br>
 Hi,
 <br><br>
-Domain <%= @domain.name %> deletion was not approved in time by the registrant <%= @domain.registrant_name %>. Thus the deletion of domain <%= @domain.name %> is cancelled.
+Domain <%= @domain.name %> deletion was not approved in time by the registrant <%= @domain.registrant.name %>. Thus the deletion of domain <%= @domain.name %> is cancelled.
 <br><br>
 Best Regards,<br>
 Estonian Internet Foundation

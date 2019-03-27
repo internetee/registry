@@ -23,7 +23,7 @@ class RegistrantChangeMailer < ApplicationMailer
 
   def confirmed(domain:, old_registrant:)
     @domain = domain
-    recipients = [domain.registrant_email, old_registrant.email]
+    recipients = [domain.registrant.email, old_registrant.email]
     subject = default_i18n_subject(domain_name: domain.name)
 
     mail(to: recipients, subject: subject)

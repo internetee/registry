@@ -7,13 +7,13 @@
       %dd= link_to(@domain.registrant, [:admin, @domain.registrant])
 
       %dt= t(:id)
-      %dd= @domain.registrant_code
+      %dd= @domain.registrant.code
 
       %dt= t(:identity_code)
-      %dd= @domain.registrant_ident
+      %dd= @domain.registrant.ident
 
       %dt= t(:email)
-      %dd= @domain.registrant_email
+      %dd= @domain.registrant.email
 
       %dt= t(:phone)
-      %dd= @domain.registrant_phone
+      %dd= @domain.registrant.phone

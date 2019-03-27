@@ -29,7 +29,7 @@
           %p= t('.registrant') + ':'
         .column-values
           %p= @domain.name
-          %p= "#{@domain.registrant_name} (#{@domain.registrant.ident})"
+          %p= "#{@domain.registrant.name} (#{@domain.registrant.ident})"
         
     .row
       .col-md-12.text-center

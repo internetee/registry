@@ -46,7 +46,7 @@ RSpec.describe 'EPP domain:update' do
       end
 
       it 'keeps same registrant' do
-        expect { request; domain.reload }.to_not change { domain.registrant_code }
+        expect { request; domain.reload }.to_not change { domain.registrant.code }
       end
 
       it 'does not ask for confirmation' do
@@ -91,7 +91,7 @@ RSpec.describe 'EPP domain:update' do
       end
 
       it 'does not change registrant without confirmation' do
-        expect { request; domain.reload }.to_not change { domain.registrant_code }
+        expect { request; domain.reload }.to_not change { domain.registrant.code }
       end
 
       it 'asks for confirmation' do
@@ -147,7 +147,7 @@ RSpec.describe 'EPP domain:update' do
       end
 
       it 'keeps same registrant' do
-        expect { request; domain.reload }.to_not change { domain.registrant_code }
+        expect { request; domain.reload }.to_not change { domain.registrant.code }
       end
 
       it 'does not ask for confirmation' do
@@ -192,7 +192,7 @@ RSpec.describe 'EPP domain:update' do
       end
 
       it 'changes registrant without confirmation' do
-        expect { request; domain.reload }.to change { domain.registrant_code }.from('OLD-CODE').to('NEW-CODE')
+        expect { request; domain.reload }.to change { domain.registrant.code }.from('OLD-CODE').to('NEW-CODE')
       end
 
       it 'does not ask for confirmation' do
