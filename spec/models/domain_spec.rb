@@ -132,7 +132,7 @@ RSpec.describe Domain do
       old_valid_to = Time.zone.now - 10.days
       @domain.valid_to = old_valid_to
       @domain.statuses = [DomainStatus::EXPIRED]
-      @domain.outzone_at, @domain.delete_at = nil, nil
+      @domain.outzone_at, @domain.delete_date = nil, nil
       @domain.save
 
       DomainCron.start_expire_period
@@ -711,8 +711,8 @@ RSpec.describe Domain do
       expect(domain.outzone_at).to eq(Time.zone.parse('06.07.2010 10:30'))
     end
 
-    it 'sets :delete_at to :outzone_at + redemption grace period' do
-      expect(domain.delete_at).to eq(Time.zone.parse('08.07.2010 10:30'))
+    it 'sets :delete_date to :outzone_at + redemption grace period' do
+      expect(domain.delete_date).to eq(Date.parse('08.07.2010'))
     end
   end
 

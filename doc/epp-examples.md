@@ -10690,7 +10690,7 @@ RESPONSE:
 </epp>
 ```
 
-### EPP Domain with valid domain renews a domain when outzone_at or delete_at is nil for some reason  
+### EPP Domain with valid domain renews a domain when outzone_at or delete_date is nil for some reason  
 
 REQUEST:
 

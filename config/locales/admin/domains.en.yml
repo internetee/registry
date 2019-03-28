@@ -51,7 +51,6 @@ en:
       partials:
         general:
           outzone_time: Outzone time
-          delete_time: Delete time
           locked_by_registrant_at: Registry lock time
 
         admin_contacts:

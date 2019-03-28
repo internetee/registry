@@ -20,7 +20,7 @@ class RegistrantAreaDomainDetailsTest < ApplicationSystemTestCase
 
     assert_text "Valid to #{l Time.zone.parse('2010-07-05')}"
     assert_text "Outzone at #{l Time.zone.parse('2010-07-06')}"
-    assert_text "Delete at #{l Time.zone.parse('2010-07-07')}"
+    assert_text "Delete date #{l Date.parse('2010-07-07')}"
     assert_text "Force delete date #{l Date.parse('2010-07-08')}"
   end
 

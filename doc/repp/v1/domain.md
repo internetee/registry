@@ -52,7 +52,7 @@ Content-Type: application/json
       "legacy_registrar_id": null,
       "legacy_registrant_id": null,
       "outzone_at": "2016-09-24T09:11:14.861Z",
-      "delete_at": "2016-10-24T09:11:14.861Z",
+      "delete_date": "2016-10-24",
       "registrant_verification_asked_at": null,
       "registrant_verification_token": null,
       "pending_json": {

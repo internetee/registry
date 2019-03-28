@@ -399,7 +399,7 @@ class Domain < ActiveRecord::Base
   def cancel_pending_delete
     statuses.delete DomainStatus::PENDING_DELETE_CONFIRMATION
     statuses.delete DomainStatus::PENDING_DELETE
-    self.delete_at = nil
+    self.delete_date = nil
   end
 
   def pricelist(operation_category, period_i = nil, unit = nil)
@@ -459,7 +459,7 @@ class Domain < ActiveRecord::Base
 
   def set_graceful_expired
     self.outzone_at = expire_time + self.class.expire_warning_period
-    self.delete_at = outzone_at + self.class.redemption_grace_period
+    self.delete_date = outzone_at + self.class.redemption_grace_period
     self.statuses |= [DomainStatus::EXPIRED]
   end
 
@@ -484,7 +484,7 @@ class Domain < ActiveRecord::Base
       unless update.include? s
         case s
           when DomainStatus::PENDING_DELETE
-            self.delete_at = nil
+            self.delete_date = nil
           when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
             self.outzone_at = Time.zone.now if force_delete_scheduled?
           when DomainStatus::DomainStatus::EXPIRED # removal causes server hold to set

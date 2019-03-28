@@ -22,7 +22,7 @@ module Concerns::Domain::Expirable
   def expirable?
     return false if expire_time > Time.zone.now
 
-    if statuses.include?(DomainStatus::EXPIRED) && outzone_at.present? && delete_at.present?
+    if statuses.include?(DomainStatus::EXPIRED) && outzone_at.present? && delete_date.present?
       return false
     end
 

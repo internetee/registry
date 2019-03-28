@@ -932,7 +932,7 @@ CREATE TABLE public.domains (
     legacy_registrar_id integer,
     legacy_registrant_id integer,
     outzone_at timestamp without time zone,
-    delete_at timestamp without time zone,
+    delete_date date,
     registrant_verification_asked_at timestamp without time zone,
     registrant_verification_token character varying,
     pending_json jsonb,
@@ -3540,10 +3540,10 @@ CREATE INDEX index_domain_transfers_on_domain_id ON public.domain_transfers USIN
 
 
 --
--- Name: index_domains_on_delete_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_domains_on_delete_date; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_domains_on_delete_at ON public.domains USING btree (delete_at);
+CREATE INDEX index_domains_on_delete_date ON public.domains USING btree (delete_date);
 
 
 --
@@ -4938,6 +4938,10 @@ INSERT INTO schema_migrations (version) VALUES ('20190319133036');
 INSERT INTO schema_migrations (version) VALUES ('20190322152123');
 
 INSERT INTO schema_migrations (version) VALUES ('20190322152529');
+
+INSERT INTO schema_migrations (version) VALUES ('20190328151516');
+
+INSERT INTO schema_migrations (version) VALUES ('20190328151838');
 
 INSERT INTO schema_migrations (version) VALUES ('20190415120246');
 

@@ -6,8 +6,8 @@ class ReleaseDomainsTaskTest < ActiveSupport::TestCase
   end
 
   def test_output
-    @domain.update!(delete_at: Time.zone.parse('2010-07-05 07:59'))
-    travel_to Time.zone.parse('2010-07-05 08:00')
+    @domain.update!(delete_date: '2010-07-04')
+    travel_to Time.zone.parse('2010-07-05')
     assert_output("shop.test is released\nReleased total: 1\n") { run_task }
   end
 
