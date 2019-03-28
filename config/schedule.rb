@@ -18,7 +18,7 @@ if @cron_group == 'registry'
   end
 
   every 6.months, at: '12:01am' do
-    runner 'Contact.destroy_orphans'
+    rake 'contacts:archive'
   end
 
   every :day, at: '12:10am' do

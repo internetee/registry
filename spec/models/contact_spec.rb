@@ -185,34 +185,6 @@ RSpec.describe Contact do
   end
 end
 
-describe Contact, '.destroy_orphans' do
-  before do
-    create(:zone, origin: 'ee')
-    @contact_1 = create(:contact, code: 'asd12')
-    @contact_2 = create(:contact, code: 'asd13')
-  end
-
-  it 'destroys orphans' do
-    Contact.find_orphans.count.should == 2
-    Contact.destroy_orphans
-    Contact.find_orphans.count.should == 0
-  end
-
-  it 'should find one orphan' do
-    create(:domain, registrant: Registrant.find(@contact_1.id))
-    Contact.find_orphans.count.should == 1
-    Contact.find_orphans.last.should == @contact_2
-  end
-
-  it 'should find no orphans' do
-    create(:domain, registrant: Registrant.find(@contact_1.id), admin_contacts: [@contact_2])
-    cc = Contact.count
-    Contact.find_orphans.count.should == 0
-    Contact.destroy_orphans
-    Contact.count.should == cc
-  end
-end
-
 RSpec.describe Contact do
   it { is_expected.to alias_attribute(:kind, :ident_type) }
 
