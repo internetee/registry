@@ -3,21 +3,23 @@ require 'test_helper'
 class DomainForceDeleteTest < ActiveSupport::TestCase
   setup do
     @domain = domains(:shop)
+    @original_redemption_grace_period = Setting.redemption_grace_period
   end
 
-  def test_schedule_force_delete
-    @original_redemption_grace_period = Setting.redemption_grace_period
+  teardown do
+    Setting.redemption_grace_period = @original_redemption_grace_period
+  end
+
+  def test_schedules_force_delete
+    assert_not @domain.force_delete_scheduled?
     Setting.redemption_grace_period = 30
-    travel_to Time.zone.parse('2010-07-05 00:00')
+    travel_to Time.zone.parse('2010-07-05')
 
     @domain.schedule_force_delete
     @domain.reload
 
     assert @domain.force_delete_scheduled?
-    assert_equal Time.zone.parse('2010-08-04 03:00'), @domain.force_delete_at
-
-    travel_back
-    Setting.redemption_grace_period = @original_redemption_grace_period
+    assert_equal Date.parse('2010-08-05'), @domain.force_delete_date
   end
 
   def test_scheduling_force_delete_adds_corresponding_statuses
@@ -78,6 +80,17 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
     assert_raises StandardError do
       @domain.schedule_force_delete
     end
+  end
+
+  def test_cancels_force_delete
+    @domain.update_columns(statuses: [DomainStatus::FORCE_DELETE], force_delete_date: '2010-07-05')
+    assert @domain.force_delete_scheduled?
+
+    @domain.cancel_force_delete
+    @domain.reload
+
+    assert_not @domain.force_delete_scheduled?
+    assert_nil @domain.force_delete_date
   end
 
   def test_cancelling_force_delete_bypasses_validation

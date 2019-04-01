@@ -71,7 +71,7 @@ Content-Type: application/json
   "pending_json":{
 
   },
-  "force_delete_at":null,
+  "force_delete_date":null,
   "statuses":[
     "serverUpdateProhibited",
     "serverDeleteProhibited",
@@ -216,7 +216,7 @@ Content-Type: application/json
   "pending_json":{
 
   },
-  "force_delete_at":null,
+  "force_delete_date":null,
   "statuses":[
     "ok"
   ],

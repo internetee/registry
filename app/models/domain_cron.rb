@@ -78,18 +78,4 @@ class DomainCron
     STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{marked} of #{real} domains\n" unless Rails.env.test?
     marked
   end
-
-  def self.destroy_delete_candidates
-    STDOUT << "#{Time.zone.now.utc} - Destroying domains\n" unless Rails.env.test?
-
-    c = 0
-
-    Domain.where('force_delete_at <= ?', Time.zone.now.end_of_day.utc).each do |x|
-      DomainDeleteJob.enqueue(x.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
-      STDOUT << "#{Time.zone.now.utc} DomainCron.destroy_delete_candidates: job added by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
-      c += 1
-    end
-
-    STDOUT << "#{Time.zone.now.utc} - Job destroy added for #{c} domains\n" unless Rails.env.test?
-  end
 end

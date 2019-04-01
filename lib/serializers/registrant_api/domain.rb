@@ -40,7 +40,7 @@ module Serializers
           registrant_verification_asked_at: domain.registrant_verification_asked_at,
           registrant_verification_token: domain.registrant_verification_token,
           pending_json: domain.pending_json,
-          force_delete_at: domain.force_delete_at,
+          force_delete_date: domain.force_delete_date,
           statuses: domain.statuses,
           locked_by_registrant_at: domain.locked_by_registrant_at,
           reserved: domain.reserved,

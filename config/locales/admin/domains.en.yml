@@ -52,7 +52,6 @@ en:
         general:
           outzone_time: Outzone time
           delete_time: Delete time
-          force_delete_time: Force delete time
           locked_by_registrant_at: Registry lock time
 
         admin_contacts:

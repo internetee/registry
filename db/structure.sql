@@ -936,7 +936,7 @@ CREATE TABLE public.domains (
     registrant_verification_asked_at timestamp without time zone,
     registrant_verification_token character varying,
     pending_json jsonb,
-    force_delete_at timestamp without time zone,
+    force_delete_date date,
     statuses character varying[],
     reserved boolean DEFAULT false,
     status_notes public.hstore,
@@ -4934,4 +4934,8 @@ INSERT INTO schema_migrations (version) VALUES ('20190209150026');
 INSERT INTO schema_migrations (version) VALUES ('20190311111718');
 
 INSERT INTO schema_migrations (version) VALUES ('20190312211614');
+
+INSERT INTO schema_migrations (version) VALUES ('20190322152123');
+
+INSERT INTO schema_migrations (version) VALUES ('20190322152529');
 

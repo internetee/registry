@@ -12,8 +12,7 @@ module Concerns::Domain::ForceDelete
 
     preserve_current_statuses_for_force_delete
     add_force_delete_statuses
-    self.force_delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc
-                             .beginning_of_day
+    self.force_delete_date = Time.zone.today + Setting.redemption_grace_period.days + 1.day
     stop_all_pending_actions
     allow_deletion
     save(validate: false)
@@ -22,7 +21,7 @@ module Concerns::Domain::ForceDelete
   def cancel_force_delete
     restore_statuses_before_force_delete
     remove_force_delete_statuses
-    self.force_delete_at = nil
+    self.force_delete_date = nil
     save(validate: false)
   end
 

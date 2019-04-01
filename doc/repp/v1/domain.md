@@ -57,7 +57,7 @@ Content-Type: application/json
       "registrant_verification_token": null,
       "pending_json": {
       },
-      "force_delete_at": null,
+      "force_delete_date": null,
       "statuses": [
         "ok"
       ],

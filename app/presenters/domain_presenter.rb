@@ -39,7 +39,7 @@ class DomainPresenter
   end
 
   def force_delete_date
-    view.l(domain.force_delete_at, format: :date) if domain.force_delete_at
+    view.l(domain.force_delete_date) if domain.force_delete_scheduled?
   end
 
   def admin_contact_names

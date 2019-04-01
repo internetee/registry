@@ -63,16 +63,16 @@ RSpec.describe DomainPresenter do
     subject(:force_delete_date) { presenter.force_delete_date }
 
     context 'when present' do
-      let(:domain) { instance_double(Domain, force_delete_at: '05.07.2010') }
+      let(:domain) { instance_double(Domain, force_delete_date: '05.07.2010', force_delete_scheduled?: true) }
 
       it 'returns localized date' do
-        expect(view).to receive(:l).with('05.07.2010', format: :date).and_return('delete date')
+        expect(view).to receive(:l).with('05.07.2010').and_return('delete date')
         expect(force_delete_date).to eq('delete date')
       end
     end
 
     context 'when absent' do
-      let(:domain) { instance_double(Domain, force_delete_at: nil) }
+      let(:domain) { instance_double(Domain, force_delete_date: nil, force_delete_scheduled?: false) }
 
       specify { expect(force_delete_date).to be_nil }
     end

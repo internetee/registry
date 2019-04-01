@@ -40,6 +40,15 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
     assert_not @domain.domain_name.at_auction?
   end
 
+  def test_sells_domains_with_scheduled_force_delete_procedure_at_auction
+    @domain.update!(force_delete_date: '2010-07-05')
+    travel_to Time.zone.parse('2010-07-05')
+
+    Domain.release_domains
+
+    assert @domain.domain_name.at_auction?
+  end
+
   def test_deletes_registered_domain
     @domain.update!(delete_at: Time.zone.parse('2010-07-05 07:59'))
     travel_to Time.zone.parse('2010-07-05 08:00')
