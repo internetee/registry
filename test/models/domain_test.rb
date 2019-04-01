@@ -77,6 +77,6 @@ class DomainTest < ActiveSupport::TestCase
     assert_equal 'william@inbox.test', contacts(:william).email
     @domain.admin_contacts = [contacts(:john), contacts(:william)]
 
-    assert_equal %w[john@inbox.test william@inbox.test], @domain.primary_contact_emails
+    assert_equal %w[john@inbox.test william@inbox.test].sort, @domain.primary_contact_emails.sort
   end
 end
