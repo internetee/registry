@@ -1,3 +1,12 @@
+01.04.2019
+* Updated expire email for auction changes [#1127](https://github.com/internetee/registry/issues/1127)
+* Force delete domains are being released again [#1119](https://github.com/internetee/registry/issues/1119)
+* Auction API now creates WHOIS record if it happens to be missing for an auctioned domain [#1133](https://github.com/internetee/registry/issues/1133)
+* Force delete date saved as date instead of datetime [#253](https://github.com/internetee/registry/issues/253)
+* Fixed PDF invoice download in registrar and admin portals [#1128](https://github.com/internetee/registry/pull/1128)
+* Fixed DeleteCandidate status setting issue for ForceDelete domains [#812](https://github.com/internetee/registry/issues/812)
+* Autotest fix [#1138](https://github.com/internetee/registry/pull/1138)
+
 26.03.2019
 * Fixed invoice PDF download for admin and registrar portals [#1128](https://github.com/internetee/registry/pull/1128)
 
