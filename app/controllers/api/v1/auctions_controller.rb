@@ -52,7 +52,10 @@ module Api
       end
 
       def update_whois_from_auction(auction)
-        whois_record = Whois::Record.find_by!(name: auction.domain)
+        whois_record = Whois::Record.find_or_create_by(name: auction.domain) do |record|
+          record.json = {}
+        end
+
         whois_record.update_from_auction(auction)
       end
     end

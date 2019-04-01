@@ -98,6 +98,19 @@ class ApiV1AuctionUpdateTest < ActionDispatch::IntegrationTest
     assert_equal Time.zone.parse('2010-07-05 10:00'), @whois_record.updated_at
   end
 
+  def test_creates_whois_record_if_does_not_exist
+    travel_to Time.zone.parse('2010-07-05 10:00')
+    assert_equal 'auction.test', @auction.domain
+    @whois_record.delete
+
+    patch api_v1_auction_path(@auction.uuid), { status: Auction.statuses[:payment_received] }
+                                                .to_json, 'Content-Type' => Mime::JSON.to_s
+
+    new_whois_record = Whois::Record.find_by(name: @auction.domain)
+    assert_equal Time.zone.parse('2010-07-05 10:00'), new_whois_record.updated_at
+    assert_equal ['PendingRegistration'], new_whois_record.json['status']
+  end
+
   def test_inaccessible_when_ip_address_is_not_allowed
     ENV['auction_api_allowed_ips'] = ''
 
