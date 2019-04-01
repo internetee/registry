@@ -5,6 +5,7 @@
 * Force delete date saved as date instead of datetime [#253](https://github.com/internetee/registry/issues/253)
 * Fixed PDF invoice download in registrar and admin portals [#1128](https://github.com/internetee/registry/pull/1128)
 * Fixed DeleteCandidate status setting issue for ForceDelete domains [#812](https://github.com/internetee/registry/issues/812)
+* Autotest fix [#1138](https://github.com/internetee/registry/pull/1138)
 
 26.03.2019
 * Fixed invoice PDF download for admin and registrar portals [#1128](https://github.com/internetee/registry/pull/1128)
