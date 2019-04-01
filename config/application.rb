@@ -77,6 +77,9 @@ module DomainNameRegistry
     config.action_mailer.perform_deliveries = true
     config.action_mailer.raise_delivery_errors = true
 
+    # Override "spec/mailers/previews" that RSpec sets
+    config.action_mailer.preview_path = "#{Rails.root}/test/mailers/previews"
+
     config.action_mailer.smtp_settings = {
       address:              ENV['smtp_address'],
       port:                 ENV['smtp_port'],

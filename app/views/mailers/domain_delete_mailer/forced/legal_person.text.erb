@@ -1,0 +1,48 @@
+Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt
+
+Eesti Interneti Sihtasutusele on saanud teatavaks, et juriidiline isik registrikoodiga <%= @registrant.reg_no %> on äriregistrist kustutatud.
+
+Kuna äriregistrist kustutatud juriidiline isik ei saa olla domeeni registreerijaks, algas domeeni <%= @domain.name %> suhtes <%= @redemption_grace_period %> päevane kustutusmenetlus. Menetluse käigus on domeen internetis kättesaadav.
+
+Domeeni suhtes õigust omaval isikul on võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @registrar.name %> domeeni üleandmise taotlus koos seda tõendava dokumendiga.
+
+Kui üleandmine ei ole <%= @redemption_grace_period %> päeva jooksul toimunud, läheb domeen <%= @domain.name %> <%= @domain.force_delete_date %> domeenioksjonile .ee oksjonikeskkonda. Juhul kui domeenile <%= @domain.name %> ei tehta oksjonil 24h möödudes pakkumist, domeen vabaneb ja on registreerimiseks vabalt kättesaadav kõigile huvilistele. Muude võimalike oksjoni tulemuste kohta loe siit.
+
+Lisaküsimuste korral võtke palun ühendust oma registripidajaga:
+<%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
+
+<%= render 'mailers/shared/signatures/signature.et.text' %>
+
+--------------------------------------
+
+Dear registrant/administrative contact of .ee domain,
+
+Estonian Internet Foundation has learned that the legal person with registry code <%= @registrant.reg_no %> has been deleted from the Business Registry.
+
+As a terminated legal person cannot be the registrant of a domain, a <%= @redemption_grace_period %>-day deletion process has started for the <%= @domain.name %> domain. The domain will remain available on the Internet during the deletion process.
+
+The registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar <%= @registrar.name %> with legal documentation.
+
+If the transfer is not made within <%= @redemption_grace_period %> days, the domain <%= @domain.name %> will go to domain auction on <%= @domain.force_delete_date %> in the .ee auction portal. If no offer is made for the domain <%= @domain.name %> at auction within 24 hours, the domain will be released and made freely available for registration to anyone interested on a first-come, first-served basis. Read more about other potential auction results here.
+
+Should you have additional questions, please contact your registrar:
+<%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
+
+<%= render 'mailers/shared/signatures/signature.en.text' %>
+
+--------------------------------------
+
+Уважаемый регистрант/административный контакт домена .ee
+
+Целевому учреждению Eesti Internet (EIS) стало известно, что юридическое лицо с регистрационным кодом <%= @registrant.reg_no %> удалено из коммерческого реестра.
+
+Поскольку удаленное из коммерческого регистра юридическое лицо не может являться регистрантом домена, начат <%= @redemption_grace_period %>-дневный процесс удаления домена <%= @domain.name %>. До завершения процесса домен доступен в Интернете.
+
+Лицо, обладающее правом на домен, может подать регистратору <%= @registrar.name %> домена <%= @domain.name %> ходатайство о передаче домена, представив вместе с ходатайством подтверждающие документы. Документы должны быть представлены регистратору в течение <%= @redemption_grace_period %> дней.
+
+Если передача не состоится в течение <%= @redemption_grace_period %> дней, <%= @domain.force_delete_date %> домен <%= @domain.name %> отправится на доменный аукцион в аукционной среде .ee. Если в течение 24 часов в отношении домена <%= @domain.name %> не поступит предложений, домен освободится и станет доступным для всех желающих по принципу «кто раньше». О других возможных результатах аукциона читайте здесь.
+
+В случае возникновения дополнительных вопросов свяжитесь, пожалуйста, со своим регистратором:
+<%= render 'mailers/shared/registrar/registrar.ru.text', registrar: @registrar %>
+
+<%= render 'mailers/shared/signatures/signature.ru.text' %>

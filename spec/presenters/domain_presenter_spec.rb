@@ -78,42 +78,6 @@ RSpec.describe DomainPresenter do
     end
   end
 
-  describe '#admin_contact_names' do
-    let(:domain) { instance_double(Domain) }
-
-    before :example do
-      expect(domain).to receive(:admin_contact_names).and_return(%w(test1 test2 test3))
-    end
-
-    it 'returns admin contact names' do
-      expect(presenter.admin_contact_names).to eq('test1, test2, test3')
-    end
-  end
-
-  describe '#tech_contact_names' do
-    let(:domain) { instance_double(Domain) }
-
-    before :example do
-      expect(domain).to receive(:tech_contact_names).and_return(%w(test1 test2 test3))
-    end
-
-    it 'returns technical contact names' do
-      expect(presenter.tech_contact_names).to eq('test1, test2, test3')
-    end
-  end
-
-  describe '#nameserver_names' do
-    let(:domain) { instance_double(Domain) }
-
-    before :example do
-      expect(domain).to receive(:nameserver_hostnames).and_return(%w(test1 test2 test3))
-    end
-
-    it 'returns nameserver names' do
-      expect(presenter.nameserver_names).to eq('test1, test2, test3')
-    end
-  end
-
   domain_delegatable_attributes = %i(
     name
     transfer_code

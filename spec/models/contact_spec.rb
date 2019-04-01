@@ -240,16 +240,6 @@ end
 RSpec.describe Contact do
   it { is_expected.to alias_attribute(:kind, :ident_type) }
 
-  describe '::names' do
-    before :example do
-      expect(described_class).to receive(:pluck).with(:name).and_return('names')
-    end
-
-    it 'returns names' do
-      expect(described_class.names).to eq('names')
-    end
-  end
-
   describe '::emails' do
     before :example do
       expect(described_class).to receive(:pluck).with(:email).and_return('emails')

@@ -1,4 +1,7 @@
 en:
   domain_expire_mailer:
     expired:
-      subject: The %{domain_name} domain has expired
+      subject: >-
+        Domeen %{domain_name} on aegunud
+        / Domain %{domain_name} has expired
+        / Срок действия домена %{domain_name} истек
