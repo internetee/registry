@@ -802,7 +802,7 @@ class Epp::Domain < Domain
           next
         end
 
-        domain_name = DNS::DomainName.new(domain_name_as_string)
+        domain_name = DNS::DomainName.new(SimpleIDN.to_unicode(domain_name_as_string))
 
         if domain_name.unavailable?
           reason = I18n.t("errors.messages.epp_domain_#{domain_name.unavailability_reason}")

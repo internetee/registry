@@ -24,7 +24,7 @@ class Epp::DomainsController < EppController
 
     if Domain.release_to_auction
       request_domain_name = params[:parsed_frame].css('name').text.strip.downcase
-      domain_name = DNS::DomainName.new(request_domain_name)
+      domain_name = DNS::DomainName.new(SimpleIDN.to_unicode(request_domain_name))
 
       if domain_name.at_auction?
         throw :epp_error,
