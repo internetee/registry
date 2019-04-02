@@ -2,3 +2,8 @@ one:
   domain: auction.test
   status: <%= Auction.statuses[:no_bids] %>
   uuid: 1b3ee442-e8fe-4922-9492-8fcb9dccc69c
+
+idn:
+  domain: "püramiid.test"
+  status: <%= Auction.statuses[:no_bids] %>
+  uuid: d05455cd-67c9-431e-bdbc-03487da9cbfa
