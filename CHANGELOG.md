@@ -1,3 +1,6 @@
+02.04.2019
+* Fixed IDN domain handling for EPP domain check and create requests [#1140](https://github.com/internetee/registry/pull/1140)
+
 01.04.2019
 * Updated expire email for auction changes [#1127](https://github.com/internetee/registry/issues/1127)
 * Force delete domains are being released again [#1119](https://github.com/internetee/registry/issues/1119)
