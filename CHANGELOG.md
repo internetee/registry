@@ -1,3 +1,8 @@
+04.04.2019
+* Removed unused rake tasks [#1121](https://github.com/internetee/registry/pull/1121)
+* Convert specs to tests [#1144](https://github.com/internetee/registry/pull/1144)
+* Comment update for extra legaldoc removal code [#1145](https://github.com/internetee/registry/pull/1145)
+
 02.04.2019
 * Fixed IDN domain handling for EPP domain check and create requests [#1140](https://github.com/internetee/registry/pull/1140)
 
