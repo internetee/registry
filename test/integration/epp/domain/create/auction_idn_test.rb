@@ -15,7 +15,7 @@ class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
     Domain.release_to_auction = false
   end
 
-  def test_registers_domain_with_ascii_idn_cannot_be_registered_without_registration_code
+  def test_domain_with_ascii_idn_cannot_be_registered_without_registration_code
     @idn_auction.update!(status: Auction.statuses[:payment_received],
                         registration_code: "auction001")
 
@@ -53,7 +53,7 @@ class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
                  response_xml.at_css('result msg').text
   end
 
-  def test_registers_domain_with_unicode_idn_cannot_be_registered_without_registration_code
+  def test_domain_with_unicode_idn_cannot_be_registered_without_registration_code
     @idn_auction.update!(status: Auction.statuses[:payment_received],
                         registration_code: "auction001")
 
@@ -91,7 +91,7 @@ class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
                  response_xml.at_css('result msg').text
   end
 
-  def test_registers_domain_with_ascii_idn_cannot_be_registered_without_winning_the_auction
+  def test_domain_with_ascii_idn_cannot_be_registered_without_winning_the_auction
     @idn_auction.started!
 
     request_xml = <<-XML
@@ -128,7 +128,7 @@ class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
                  response_xml.at_css('result msg').text
   end
 
-  def test_registers_domain_with_unicode_idn_cannot_be_registered_without_winning_the_auction
+  def test_domain_with_unicode_idn_cannot_be_registered_without_winning_the_auction
     @idn_auction.started!
 
     request_xml = <<-XML
@@ -165,7 +165,7 @@ class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
                  response_xml.at_css('result msg').text
   end
 
-  def test_registers_domain_with_unicode_idn_cannot_be_registered_without_winning_the_auction
+  def test_domain_with_unicode_idn_cannot_be_registered_without_winning_the_auction
     @idn_auction.started!
 
     request_xml = <<-XML
