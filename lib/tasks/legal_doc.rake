@@ -23,9 +23,8 @@ namespace :legal_doc do
     puts "-----> Hash generated for #{count} rows in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
-
-  # Starting point is Domain legal docs
-  # then inside it checking the same domains and connected contacts
+  # Temporary workaround
+  # https://github.com/internetee/registry/issues/336
   desc 'Remove duplicates'
   task remove_duplicates: :environment do
     LegalDocument.remove_duplicates
