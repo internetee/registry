@@ -41,10 +41,6 @@ describe Keyrelay do
         "Only one parameter allowed: relative or absolute"
       ])
     end
-
-    it 'should not have any versions' do
-      @keyrelay.versions.should == []
-    end
   end
 
   context 'with valid attributes' do
@@ -61,16 +57,6 @@ describe Keyrelay do
       @keyrelay = create(:keyrelay)
       @keyrelay.valid?
       @keyrelay.errors.full_messages.should match_array([])
-    end
-
-    it 'should have one version' do
-      with_versioning do
-        @keyrelay.versions.should == []
-        @keyrelay.auth_info_pw = 'newpw'
-        @keyrelay.save
-        @keyrelay.errors.full_messages.should match_array([])
-        @keyrelay.versions.size.should == 1
-      end
     end
 
     it 'is in pending status' do

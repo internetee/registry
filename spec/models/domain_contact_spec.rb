@@ -49,18 +49,6 @@ describe DomainContact do
     it 'should have Tech name' do
       @domain_contact.name.should == 'Tech'
     end
-
-    it 'should have one version' do
-      @domain_contact = create(:domain_contact)
-
-      with_versioning do
-        @domain_contact.versions.reload.should == []
-        @domain_contact.contact = create(:contact)
-        @domain_contact.save!
-        @domain_contact.errors.full_messages.should match_array([])
-        @domain_contact.versions.size.should == 1
-      end
-    end
   end
 
   context 'with valid attributes with tech domain contact' do
@@ -82,18 +70,6 @@ describe DomainContact do
     it 'should have Tech name' do
       @domain_contact.name.should == 'Tech'
     end
-
-    it 'should have one version' do
-      @domain_contact = create(:domain_contact)
-
-      with_versioning do
-        @domain_contact.versions.reload.should == []
-        @domain_contact.contact = create(:contact)
-        @domain_contact.save!
-        @domain_contact.errors.full_messages.should match_array([])
-        @domain_contact.versions.size.should == 1
-      end
-    end
   end
 
   context 'with valid attributes with admin domain contact' do
@@ -114,16 +90,6 @@ describe DomainContact do
 
     it 'should have Tech name' do
       @domain_contact.name.should == 'Admin'
-    end
-
-    it 'should have one version' do
-      with_versioning do
-        @domain_contact.versions.reload.should == []
-        @domain_contact.contact = create(:contact)
-        @domain_contact.save
-        @domain_contact.errors.full_messages.should match_array([])
-        @domain_contact.versions.size.should == 1
-      end
     end
   end
 end

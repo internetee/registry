@@ -17,10 +17,6 @@ RSpec.describe ApiUser do
       ])
     end
 
-    it 'should not have any versions' do
-      @api_user.versions.should == []
-    end
-
     it 'should be active by default' do
       @api_user.active.should == true
     end
@@ -40,16 +36,6 @@ RSpec.describe ApiUser do
       @api_user = create(:api_user)
       @api_user.valid?
       @api_user.errors.full_messages.should match_array([])
-    end
-
-    it 'should have one version' do
-      with_versioning do
-        @api_user.versions.should == []
-        @api_user.username = 'newusername'
-        @api_user.save
-        @api_user.errors.full_messages.should match_array([])
-        @api_user.versions.size.should == 1
-      end
     end
   end
 
