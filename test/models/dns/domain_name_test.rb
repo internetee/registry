@@ -92,6 +92,20 @@ class DNS::DomainNameTest < ActiveSupport::TestCase
     assert_equal Time.zone.parse('2010-07-05 10:00'), @whois_record.updated_at
   end
 
+  def test_selling_at_auction_creates_whois_record
+    travel_to Time.zone.parse('2010-07-05 10:00')
+    domain_name = DNS::DomainName.new('new-auction.test')
+
+    domain_name.sell_at_auction
+
+    whois_record = Whois::Record.find_by(name: 'new-auction.test')
+    assert whois_record
+
+    assert_equal Time.zone.parse('2010-07-05 10:00'), whois_record.updated_at
+    assert_equal Time.zone.parse('2010-07-05 10:00'), whois_record.created_at
+    assert_equal ['AtAuction'], whois_record.json['status']
+  end
+
   def test_at_auction
     domain_name = DNS::DomainName.new('auction.test')
     auctions(:one).update!(domain: 'auction.test', status: Auction.statuses[:started])
