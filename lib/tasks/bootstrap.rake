@@ -1,5 +1,5 @@
 desc 'Bootstraps production-like environment'
-task :bootstrap do
+task bootstrap: :environment do
   AdminUser.create!(
     username: 'admin',
     email: 'admin@domain.tld',
