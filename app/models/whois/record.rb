@@ -17,6 +17,8 @@ module Whois
         update!(json: { name: auction.domain,
                         status: ['PendingRegistration'],
                         disclaimer: self.class.disclaimer })
+      else
+        raise "Unknown status: #{auction.status}"
       end
     end
   end
