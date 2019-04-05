@@ -1,4 +1,5 @@
-05.04.2019
+08.04.2019
+* Fixed forceDelete email messages [#1147](https://github.com/internetee/registry/pull/1147)
 * Removed unused rake tasks [#1121](https://github.com/internetee/registry/pull/1121)
 * Do not load the whole environment for rake tasks [#1122](https://github.com/internetee/registry/pull/1122)
 * Removed delegations [#1131](https://github.com/internetee/registry/pull/1131)
