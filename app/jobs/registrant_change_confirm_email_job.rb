@@ -4,10 +4,10 @@ class RegistrantChangeConfirmEmailJob < Que::Job
     new_registrant = Registrant.find(new_registrant_id)
 
     log(domain)
-    RegistrantChangeMailer.confirm(domain: domain,
-                                   registrar: domain.registrar,
-                                   current_registrant: domain.registrant,
-                                   new_registrant: new_registrant).deliver_now
+    RegistrantChangeMailer.confirmation_request(domain: domain,
+                                                registrar: domain.registrar,
+                                                current_registrant: domain.registrant,
+                                                new_registrant: new_registrant).deliver_now
   end
 
   private

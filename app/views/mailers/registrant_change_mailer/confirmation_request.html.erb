@@ -12,7 +12,7 @@ Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatak
 <br><br>
 Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan:<br>
 
-<%= link_to @confirm_url, @confirm_url %>
+<%= link_to @confirmation_url, @confirmation_url %>
 <br><br>
 Lugupidamisega<br>
 Eesti Interneti Sihtasutus
@@ -32,7 +32,7 @@ New registrant:<br>
 The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automaticcally rejected if it is not approved nor rejected before.
 <br><br>
 To confirm the update please visit this website, once again review the data and press approve:<br>
-<%= link_to @confirm_url, @confirm_url %>
+<%= link_to @confirmation_url, @confirmation_url %>
 <br><br>
 Best Regards,<br>
 Estonian Internet Foundation

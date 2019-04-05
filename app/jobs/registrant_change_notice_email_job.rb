@@ -3,10 +3,10 @@ class RegistrantChangeNoticeEmailJob < Que::Job
     domain = Domain.find(domain_id)
     new_registrant = Registrant.find(new_registrant_id)
     log(domain, new_registrant)
-    RegistrantChangeMailer.notice(domain: domain,
-                                  registrar: domain.registrar,
-                                  current_registrant: domain.registrant,
-                                  new_registrant: new_registrant).deliver_now
+    RegistrantChangeMailer.notification(domain: domain,
+                                        registrar: domain.registrar,
+                                        current_registrant: domain.registrant,
+                                        new_registrant: new_registrant).deliver_now
   end
 
   private

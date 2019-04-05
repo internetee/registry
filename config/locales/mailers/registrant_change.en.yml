@@ -1,14 +1,14 @@
 en:
   registrant_change_mailer:
-    confirm:
+    confirmation_request:
       subject: Kinnitustaotlus domeeni %{domain_name} registreerija vahetuseks / Application for approval for registrant change of %{domain_name}
-    notice:
+    notification:
       subject: Domeeni %{domain_name} registreerija vahetus protseduur on algatatud / %{domain_name} registrant change
-    rejected:
-      subject: Domeeni %{domain_name} registreerija vahetuse taotlus tagasi lükatud / %{domain_name} registrant change declined
-    confirmed:
+    accepted:
       subject: >-
         Domeeni %{domain_name} registreerija vahetus teostatud
         / Registrant change of %{domain_name} has been finished
+    rejected:
+      subject: Domeeni %{domain_name} registreerija vahetuse taotlus tagasi lükatud / %{domain_name} registrant change declined
     expired:
       subject: Domeeni %{domain_name} registreerija vahetuse taotlus on tühistatud / %{domain_name} registrant change cancelled

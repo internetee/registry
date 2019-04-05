@@ -6,31 +6,31 @@ class RegistrantChangeMailerPreview < ActionMailer::Preview
   end
 
   def confirmation_request
-    RegistrantChangeMailer.confirm(domain: @domain,
-                                   registrar: @domain.registrar,
-                                   current_registrant: @domain.registrant,
-                                   new_registrant: @new_registrant)
+    RegistrantChangeMailer.confirmation_request(domain: @domain,
+                                                registrar: @domain.registrar,
+                                                current_registrant: @domain.registrant,
+                                                new_registrant: @new_registrant)
   end
 
   def notification
-    RegistrantChangeMailer.notice(domain: @domain,
-                                  registrar: @domain.registrar,
-                                  current_registrant: @domain.registrant,
-                                  new_registrant: @new_registrant)
+    RegistrantChangeMailer.notification(domain: @domain,
+                                        registrar: @domain.registrar,
+                                        current_registrant: @domain.registrant,
+                                        new_registrant: @new_registrant)
   end
 
-  def confirmation_accepted
-    RegistrantChangeMailer.confirmed(domain: @domain,
-                                     old_registrant: @domain.registrar)
+  def accepted
+    RegistrantChangeMailer.accepted(domain: @domain,
+                                    old_registrant: @domain.registrar)
   end
 
-  def confirmation_rejected
+  def rejected
     RegistrantChangeMailer.rejected(domain: @domain,
                                     registrar: @domain.registrar,
                                     registrant: @domain.registrant)
   end
 
-  def confirmation_expired
+  def expired
     RegistrantChangeMailer.expired(domain: @domain,
                                    registrar: @domain.registrar,
                                    registrant: @domain.registrant)
