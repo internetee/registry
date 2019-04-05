@@ -1,6 +1,6 @@
 Tere
 <br><br>
-Domeeni <%= @domain.name %> kustutamise taotlus on registreerija <%= @domain.registrant_name %> poolt tagasi lükatud.
+Domeeni <%= @domain.name %> kustutamise taotlus on registreerija <%= @domain.registrant.name %> poolt tagasi lükatud.
 <br><br>
 Lugupidamisega<br>
 Eesti Interneti Sihtasutus
@@ -9,7 +9,7 @@ Eesti Interneti Sihtasutus
 <br><br>
 Hi,
 <br><br>
-Domain <%= @domain.name %> deletion was rejected by the registrant <%= @domain.registrant_name %>.
+Domain <%= @domain.name %> deletion was rejected by the registrant <%= @domain.registrant.name %>.
 <br><br>
 Best Regards,<br>
 Estonian Internet Foundation

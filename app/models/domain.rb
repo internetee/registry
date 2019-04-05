@@ -59,20 +59,6 @@ class Domain < ActiveRecord::Base
   has_many :legal_documents, as: :documentable
   accepts_nested_attributes_for :legal_documents, reject_if: proc { |attrs| attrs[:body].blank? }
 
-  delegate :name,    to: :registrant, prefix: true
-  delegate :code,    to: :registrant, prefix: true
-  delegate :ident,   to: :registrant, prefix: true
-  delegate :email,   to: :registrant, prefix: true
-  delegate :phone,   to: :registrant, prefix: true
-  delegate :street,  to: :registrant, prefix: true
-  delegate :city,    to: :registrant, prefix: true
-  delegate :zip,     to: :registrant, prefix: true
-  delegate :state,   to: :registrant, prefix: true
-  delegate :country, to: :registrant, prefix: true
-
-  delegate :name,   to: :registrar, prefix: true
-  delegate :street, to: :registrar, prefix: true
-
   after_initialize do
     self.pending_json = {} if pending_json.blank?
     self.statuses = [] if statuses.nil?

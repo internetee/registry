@@ -30,7 +30,7 @@
           %p= t(:new_pending_registrant) + ':'
         .column-values
           %p= @domain.name
-          %p= "#{@domain.registrant_name} (#{@domain.registrant.ident})"
+          %p= "#{@domain.registrant.name} (#{@domain.registrant.ident})"
           %p= "#{@domain.pending_registrant.try(:name)} (#{@domain.pending_registrant.try(:ident)})" 
         
     .row

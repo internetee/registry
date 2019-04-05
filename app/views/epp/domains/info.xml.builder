@@ -12,7 +12,7 @@ xml.epp_head do
           xml.tag!('domain:status', 's' => s)
         end
 
-        xml.tag!('domain:registrant', @domain.registrant_code)
+        xml.tag!('domain:registrant', @domain.registrant.code)
 
         @domain.tech_contacts.each do |tc|
           xml.tag!('domain:contact', tc.code, 'type' => 'tech')

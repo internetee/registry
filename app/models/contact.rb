@@ -59,7 +59,6 @@ class Contact < ActiveRecord::Base
     return nil unless deliver_emails == true
     emails = []
     emails << [email, email_was]
-    # emails << domains.map(&:registrant_email) if domains.present?
     emails = emails.flatten.uniq
     emails.each do |e|
       ContactMailer.email_updated(email_was, e, id, deliver_emails).deliver

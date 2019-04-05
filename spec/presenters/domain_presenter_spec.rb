@@ -81,9 +81,8 @@ RSpec.describe DomainPresenter do
   domain_delegatable_attributes = %i(
     name
     transfer_code
-    registrant_name
+    registrant
     registrant_id
-    registrant_code
   )
 
   domain_delegatable_attributes.each do |attribute_name|

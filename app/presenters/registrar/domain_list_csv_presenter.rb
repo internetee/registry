@@ -34,8 +34,8 @@ class Registrar::DomainListCSVPresenter
     row = []
     row[0] = domain.name
     row[1] = domain.transfer_code
-    row[2] = domain.registrant_name
-    row[3] = domain.registrant_code
+    row[2] = domain.registrant.name
+    row[3] = domain.registrant.code
     row[4] = domain.expire_date
     row
 

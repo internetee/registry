@@ -12,7 +12,7 @@ class DomainDeleteConfirmEmailJob < Que::Job
 
   def log(domain)
     message = "Send DomainDeleteMailer#confirm email for domain #{domain.name} (##{domain.id})" \
-    " to #{domain.registrant_email}"
+    " to #{domain.registrant.email}"
     logger.info(message)
   end
 

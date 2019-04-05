@@ -47,7 +47,7 @@ RSpec.describe 'EPP domain:update' do
       end
 
       it 'changes registrant' do
-        expect { request; domain.reload }.to change { domain.registrant_code }.from('old-code').to('new-code')
+        expect { request; domain.reload }.to change { domain.registrant.code }.from('old-code').to('new-code')
       end
 
       it 'does not send confirmation email' do
@@ -90,7 +90,7 @@ RSpec.describe 'EPP domain:update' do
       end
 
       it 'does not change registrant' do
-        expect { request; domain.reload }.to_not change { domain.registrant_code }
+        expect { request; domain.reload }.to_not change { domain.registrant.code }
       end
 
       it 'sends confirmation and notice emails' do
@@ -139,7 +139,7 @@ RSpec.describe 'EPP domain:update' do
       end
 
       it 'changes registrant' do
-        expect { request; domain.reload }.to change { domain.registrant_code }.from('old-code').to('new-code')
+        expect { request; domain.reload }.to change { domain.registrant.code }.from('old-code').to('new-code')
       end
 
       it 'does not send confirmation email' do
@@ -182,7 +182,7 @@ RSpec.describe 'EPP domain:update' do
       end
 
       it 'changes registrant' do
-        expect { request; domain.reload }.to change { domain.registrant_code }.from('old-code').to('new-code')
+        expect { request; domain.reload }.to change { domain.registrant.code }.from('old-code').to('new-code')
       end
 
       it 'does not send confirmation email' do
