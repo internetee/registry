@@ -1,6 +1,7 @@
-04.04.2019
+05.04.2019
 * Removed unused rake tasks [#1121](https://github.com/internetee/registry/pull/1121)
 * Do not load the whole environment for rake tasks [#1122](https://github.com/internetee/registry/pull/1122)
+* Removed delegations [#1131](https://github.com/internetee/registry/pull/1131)
 * Convert specs to tests [#1144](https://github.com/internetee/registry/pull/1144)
 * Comment update for extra legaldoc removal code [#1145](https://github.com/internetee/registry/pull/1145)
 
