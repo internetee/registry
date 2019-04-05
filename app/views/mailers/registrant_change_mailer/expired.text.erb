@@ -5,9 +5,7 @@ Domeeni <%= @domain.name %> registreerija <%= @registrant.name %> ei kinnitanud 
 Küsimuste korral palun võtke ühendust oma registripidajaga:
 
 <%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
-
-Lugupidamisega
-Eesti Interneti Sihtasutus
+<%= render 'mailers/shared/signatures/signature.et.text' %>
 
 --------------------------------------
 
@@ -19,5 +17,4 @@ Please contact to your registrar if you have any questions:
 
 <%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
 
-Best Regards,
-Estonian Internet Foundation
+<%= render 'mailers/shared/signatures/signature.en.text' %>

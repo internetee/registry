@@ -13,8 +13,7 @@ Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiakse lõpule
 
 Juhul kui <%= @current_registrant.name %> lükkab omanikuvahetuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.
 
-Lugupidamisega
-Eesti Interneti Sihtasutus
+<%= render 'mailers/shared/signatures/signature.et.text' %>
 
 --------------------------------------
 
@@ -33,5 +32,4 @@ The registrant change procedure will be completed only after the current registr
 
 Change request will be cancelled in case <%= @current_registrant.name %> rejects or does not approve it in <%= Setting.expire_pending_confirmation %> hours.
 
-Best Regards,
-Estonian Internet Foundation
+<%= render 'mailers/shared/signatures/signature.en.text' %>

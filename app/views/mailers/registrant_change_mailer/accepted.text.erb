@@ -9,9 +9,7 @@ Domeeni <%= domain.name %> registreerija vahetuse taotlus on kinnitatud ning and
 Uue registreerija andmed:
 <%= render 'mailers/shared/registrant/registrant.et.text', registrant: new_registrant %>
 
-Lugupidamisega
-Eesti Interneti Sihtasutus
-
+<%= render 'mailers/shared/signatures/signature.et.text' %>
 --------------------------------------
 
 Hi,
@@ -21,5 +19,4 @@ Process for changing registrant of the domain <%= domain.name %> has been approv
 New registrant:
 <%= render 'mailers/shared/registrant/registrant.en.text', registrant: new_registrant %>
 
-Best Regards,
-Estonian Internet Foundation
+<%= render 'mailers/shared/signatures/signature.en.text' %>

@@ -11,8 +11,7 @@ Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatak
 Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan:
 <%= @confirmation_url %>
 
-Lugupidamisega
-Eesti Interneti Sihtasutus
+<%= render 'mailers/shared/signatures/signature.et.text' %>
 
 --------------------------------------
 
@@ -29,5 +28,4 @@ The application will remain in pending status for <%= Setting.expire_pending_con
 To confirm the update please visit this website, once again review the data and press approve:
 <%= @confirmation_url %>
 
-Best Regards,
-Estonian Internet Foundation
+<%= render 'mailers/shared/signatures/signature.en.text' %>
