@@ -6,7 +6,7 @@ Kuna surnud isik ei saa olla domeeni registreerijaks, algas domeeni <%= @domain.
 
 Domeeni suhtes õigust omaval isikul on võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @registrar.name %> domeeni üleandmise taotlus, millele tuleb lisada pärimisõiguse tõend. Dokumentatsioon tuleb esitada registripidajale <%= @redemption_grace_period %> päeva jooksul.
 
-Kui üleandmine ei ole <%= @redemption_grace_period %> päeva jooksul toimunud, läheb domeen <%= @domain.name %> <%= @domain.force_delete_date %> domeenioksjonile .ee oksjonikeskkonda. Juhul kui domeenile <%= @domain.name %> ei tehta oksjonil 24h möödudes pakkumist, domeen vabaneb ja on registreerimiseks vabalt kättesaadav kõigile huvilistele. Muude võimalike oksjoni tulemuste kohta loe siit.
+Kui üleandmine ei ole <%= @redemption_grace_period %> päeva jooksul toimunud, läheb domeen <%= @domain.name %> <%= @domain.force_delete_date %> domeenioksjonile .ee oksjonikeskkonda https://auction.internet.ee. Juhul kui domeenile <%= @domain.name %> ei tehta oksjonil 24h möödudes pakkumist, domeen vabaneb ja on registreerimiseks vabalt kättesaadav kõigile huvilistele. Muude võimalike oksjoni tulemuste kohta loe https://www.internet.ee/domeenid/domeenide-oksjonikeskkonna-kasutajatingimused#3-oksjonikeskkonna-enampakkumisel-osalemise-tingimused.
 
 Lisaküsimuste korral võtke palun ühendust oma registripidajaga:
 <%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
@@ -23,7 +23,7 @@ The registrant holding a right to the domain name <%= @domain.name %> can submit
 
 As a deceased natural person can not be the registrant of a domain, a <%= @redemption_grace_period %>-day deletion process of <%= @domain.name %> domain has started.  The domain will remain available on the Internet during the deletion process.
 
-If the transfer is not made within <%= @redemption_grace_period %> days, the domain <%= @domain.name %> will go to domain auction on <%= @domain.force_delete_date %> in the .ee auction environment. If no offer is made for the domain <%= @domain.name %> at auction within 24 hours, the domain will be released and made freely available for registration to anyone interested on a first-come, first-served basis. Read more about other potential auction results here.
+If the transfer is not made within <%= @redemption_grace_period %> days, the domain <%= @domain.name %> will go to domain auction on <%= @domain.force_delete_date %> in the .ee auction environment at https://auction.internet.ee. If no offer is made for the domain <%= @domain.name %> at auction within 24 hours, the domain will be released and made freely available for registration to anyone interested on a first-come, first-served basis. Read more about other potential auction results at https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment.
 
 Should you have additional questions, please contact your registrar:
 <%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
@@ -40,7 +40,7 @@ Should you have additional questions, please contact your registrar:
 
 Лицо, обладающее правом на домен, может подать регистратору <%= @registrar.name %> домена <%= @domain.name %> ходатайство о передаче, представив справку о праве наследования. Документы должны быть представлены регистратору в течение <%= @redemption_grace_period %> дней.
 
-Если передача не состоится в течение <%= @redemption_grace_period %> дней, <%= @domain.force_delete_date %> домен <%= @domain.name %> отправится на доменный аукцион в аукционной среде .ee. Если в течение 24 часов в отношении домена <%= @domain.name %> не поступит предложений, домен освободится и станет доступным для всех желающих по принципу «кто раньше». О других возможных результатах аукциона читайте здесь.
+Если передача не состоится в течение <%= @redemption_grace_period %> дней, <%= @domain.force_delete_date %> домен <%= @domain.name %> отправится на доменный аукцион в аукционной среде .ee https://auction.internet.ee. Если в течение 24 часов в отношении домена <%= @domain.name %> не поступит предложений, домен освободится и станет доступным для всех желающих по принципу «кто раньше». О других возможных результатах аукциона читайте по ссылке https://www.internet.ee/domeny/dogovor-pol-zovatelya-aukcionnoj-sredy#3-usloviya-uchastiya-v-aukcione.
 
 В случае возникновения дополнительных вопросов свяжитесь, пожалуйста, со своим регистратором:
 <%= render 'mailers/shared/registrar/registrar.ru.text', registrar: @registrar %>
