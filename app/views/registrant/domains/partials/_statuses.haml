@@ -12,7 +12,7 @@
           %tr
             %td
               - if [DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION].include?(status) && @domain.pending_json.present?
-                = link_to(status, domain_verification_url_registrant_domain_url(@domain.id))
+                = link_to(status, confirmation_registrant_domain_path(@domain))
               - else
                 = status
             %td= @domain.status_notes[status]

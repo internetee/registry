@@ -62,4 +62,15 @@ class RegistrantAreaDomainDetailsTest < ApplicationSystemTestCase
       assert_no_text 'metro.test'
     end
   end
+
+  def test_confirmation_url
+    @domain.update!(registrant_verification_token: 'a01',
+                    pending_json: { new_registrant_email: 'any' },
+                    statuses: [DomainStatus::PENDING_UPDATE])
+
+    visit registrant_domain_url(@domain)
+    click_on 'pendingUpdate'
+
+    assert_field nil, with: registrant_domain_update_confirm_url(@domain, token: 'a01')
+  end
 end

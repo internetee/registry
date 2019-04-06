@@ -16,3 +16,5 @@ en:
         domain_contacts:
           header_admin_domain_contacts: Administrative contacts
           header_tech_domain_contacts: Technical contacts
+      confirmation:
+        header: Personal domain verification url
