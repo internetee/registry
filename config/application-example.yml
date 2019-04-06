@@ -21,7 +21,6 @@ smtp_openssl_verify_mode: 'peer' # 'none', 'peer', 'client_once','fail_if_no_pee
 smtp_enable_starttls_auto: 'true' # 'false'
 # If your mail server requires authentication, please change.
 smtp_authentication: 'plain' # 'plain', 'login', 'cram_md5'
-registrant_url: 'https://registrant.example.com' # for valid email body registrant links
 
 #
 # ADMIN server
@@ -143,12 +142,17 @@ same_site_session_cookies: 'false' # false|strict|lax
 release_domains_to_auction: 'true'
 auction_api_allowed_ips: '' # 192.0.2.0, 192.0.2.1
 
+action_mailer_default_protocol: # default: http
+action_mailer_default_host:
+action_mailer_default_port: # default: no port (80)
+
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:
   payments_seb_bank_certificate: 'test/fixtures/files/seb_bank_cert.pem'
   payments_seb_seller_private: 'test/fixtures/files/seb_seller_key.pem'
   release_domains_to_auction: 'false'
   auction_api_allowed_ips: ''
+  action_mailer_default_host: 'registry.test'
 
 # Airbrake // Errbit:
 airbrake_host: "https://your-errbit-host.ee"

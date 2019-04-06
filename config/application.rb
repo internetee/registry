@@ -69,9 +69,9 @@ module DomainNameRegistry
       g.test_framework nil
     end
 
-    registrant_portal_uri = URI.parse(ENV['registrant_url'])
-    config.action_mailer.default_url_options = { host: registrant_portal_uri.host,
-                                                 protocol: registrant_portal_uri.scheme }
+    config.action_mailer.default_url_options = { protocol: ENV['action_mailer_default_protocol'],
+                                                 host: ENV['action_mailer_default_host'],
+                                                 port: ENV['action_mailer_default_port'] }
 
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.perform_deliveries = true
