@@ -1,0 +1,6 @@
+en:
+  contact_mailer:
+    email_changed:
+      subject: >-
+        Teie domeenide kontakt epostiaadress on muutunud
+        / Contact e-mail addresses of your domains have changed [%{contact_code}]

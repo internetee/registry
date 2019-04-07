@@ -20,10 +20,7 @@ Kontaktandmed:<br>
 <br><br>
 Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
 <%= render 'mailers/shared/registrar/registrar.et.html', registrar: registrar %>
-<br><br>
-Lugupidamisega<br>
-Eesti Interneti Sihtasutus
-<br><br>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
 <hr>
 <br><br>
 Hi <%= contact.name %>
@@ -44,6 +41,4 @@ Contact information:<br>
 <br><br>
 In case of problems please turn to your registrar:
 <%= render 'mailers/shared/registrar/registrar.en.html', registrar: registrar %>
-<br><br>
-Best Regards,<br>
-Estonian Internet Foundation
+<%= render 'mailers/shared/signatures/signature.en.html' %>
