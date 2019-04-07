@@ -7,8 +7,14 @@ en:
       go_to_intermediary: 'Go to intermediary'
       pay_by_credit_card: Pay by credit card
       payment_complete: Credit Card payment Complete
+
       index:
+        header: Invoices
         reset_btn: Reset
+
+      show:
+        download_btn: Download
+        deliver_btn: Send
 
       cancel:
         cancelled: Invoice has been cancelled

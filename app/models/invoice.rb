@@ -26,9 +26,6 @@ class Invoice < ActiveRecord::Base
 
   scope :overdue, -> { unpaid.non_cancelled.where('due_date < ?', Time.zone.today) }
 
-  attr_accessor :billing_email
-  validates :billing_email, email_format: { message: :invalid }, allow_blank: true
-
   validates :issue_date, presence: true
   validates :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :items, presence: true
@@ -84,23 +81,6 @@ class Invoice < ActiveRecord::Base
     "Order nr. #{number}"
   end
 
-  def pdf(html)
-    kit = PDFKit.new(html)
-    kit.to_pdf
-  end
-
-  def pdf_name
-    "invoice-#{number}.pdf"
-  end
-
-  def forward(html)
-    return false unless valid?
-    return false unless billing_email.present?
-
-    InvoiceMailer.invoice_email(id, html, billing_email).deliver
-    true
-  end
-
   def subtotal
     items.map(&:item_sum_without_vat).reduce(:+)
   end
@@ -117,6 +97,11 @@ class Invoice < ActiveRecord::Base
 
   def each
     items.each { |item| yield item }
+  end
+
+  def as_pdf
+    generator = PdfGenerator.new(self)
+    generator.as_pdf
   end
 
   private

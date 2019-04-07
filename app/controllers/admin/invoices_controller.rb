@@ -2,8 +2,6 @@ module Admin
   class InvoicesController < BaseController
     load_and_authorize_resource
 
-    before_action :set_invoice, only: [:forward, :download_pdf]
-
     def new
       @deposit = Deposit.new
     end
@@ -28,43 +26,22 @@ module Admin
       @invoices = @q.result.page(params[:page])
     end
 
-    def show
-      @invoice = Invoice.find(params[:id])
-    end
+    def show; end
 
     def cancel
       @invoice.cancel
       redirect_to [:admin, @invoice], notice: t('.cancelled')
     end
 
-    def forward
-      @invoice.billing_email = @invoice.buyer.billing_email
-
-      return unless request.post?
-
-      @invoice.billing_email = params[:invoice][:billing_email]
-
-      if @invoice.forward(render_to_string('registrar/invoices/pdf', layout: false))
-        flash[:notice] = t(:invoice_forwared)
-        redirect_to([:admin, @invoice])
-      else
-        flash.now[:alert] = t(:failed_to_forward_invoice)
-      end
-    end
-
-    def download_pdf
-      pdf = @invoice.pdf(render_to_string('registrar/invoices/pdf', layout: false))
-      send_data pdf, filename: @invoice.pdf_name
+    def download
+      filename = "invoice-#{@invoice.number}.pdf"
+      send_data @invoice.as_pdf, filename: filename
     end
 
     private
 
     def deposit_params
       params.require(:deposit).permit(:amount, :description, :registrar_id)
-    end
-
-    def set_invoice
-      @invoice = Invoice.find(params[:invoice_id])
     end
   end
 end

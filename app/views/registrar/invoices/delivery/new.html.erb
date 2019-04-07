@@ -1,0 +1,25 @@
+<ol class="breadcrumb">
+    <li><%= link_to t('registrar.invoices.index.header'), registrar_invoices_path %></li>
+    <li><%= link_to @invoice, registrar_invoice_path(@invoice) %></li>
+</ol>
+
+<div class="page-header">
+    <h1><%= t '.header' %></h1>
+</div>
+
+<%= form_tag(registrar_invoice_delivery_path(@invoice)) do %>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="form-group">
+                <%= label_tag :recipient %>
+                <%= email_field_tag :recipient, @recipient, required: true, autofocus: true,
+                                    class: 'form-control' %>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-right">
+                    <%= submit_tag t('.submit_btn'), class: 'btn btn-warning' %>
+                </div>
+            </div>
+        </div>
+    </div>
+<% end %>

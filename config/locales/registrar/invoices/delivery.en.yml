@@ -1,0 +1,10 @@
+en:
+  registrar:
+    invoices:
+      delivery:
+        new:
+          header: Send invoice
+          submit_btn: Send
+
+        create:
+          delivered: Invoice has been sent

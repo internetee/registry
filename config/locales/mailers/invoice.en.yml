@@ -1,0 +1,4 @@
+en:
+  invoice_mailer:
+    invoice_email:
+      subject: Invoice no. %{invoice_number}

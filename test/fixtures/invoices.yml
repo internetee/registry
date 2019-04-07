@@ -9,6 +9,7 @@ one:
   vat_rate: 0.1
   total: 16.50
   reference_no: 13
+  number: 1
 
 for_payments_test:
   number: 1
