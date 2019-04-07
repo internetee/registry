@@ -13,7 +13,6 @@ class ContactMailer < ApplicationMailer
 
     return unless email || @contact
     return if delivery_off?(@contact, should_deliver)
-    return if whitelist_blocked?(email)
 
     begin
       mail(to: format(email), subject: "#{I18n.t(:contact_email_update_subject)} [#{@contact.code}]")
