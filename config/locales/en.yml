@@ -675,7 +675,6 @@ en:
   contact_is_not_valid: 'Contact %{value} is not valid, please fix the invalid contact'
   next: 'Next'
   previous: 'Previous'
-  personal_domain_verification_url: 'Personal domain verification url'
   available_verification_url_not_found: 'Available verification url not found, for domain.'
   add_reserved_domain: 'Add domain to reserved list'
   add_blocked_domain: 'Add domain to blocked list'

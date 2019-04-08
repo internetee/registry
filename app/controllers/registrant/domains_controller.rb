@@ -16,19 +16,19 @@ class Registrant::DomainsController < RegistrantController
     authorize! :read, @domain
   end
 
-  def domain_verification_url
+  def confirmation
     authorize! :view, :registrant_domains
-    dom = current_user_domains.find(params[:id])
-    if (dom.statuses.include?(DomainStatus::PENDING_UPDATE) || dom.statuses.include?(DomainStatus::PENDING_DELETE_CONFIRMATION)) &&
-      dom.pending_json.present?
+    domain = current_user_domains.find(params[:id])
 
-      @domain = dom
-      confirm_path = get_confirm_path(dom.statuses)
-      @verification_url = "#{confirm_path}/#{@domain.id}?token=#{@domain.registrant_verification_token}"
+    if (domain.statuses.include?(DomainStatus::PENDING_UPDATE) ||
+        domain.statuses.include?(DomainStatus::PENDING_DELETE_CONFIRMATION)) &&
+        domain.pending_json.present?
 
+      @domain = domain
+      @confirmation_url = confirmation_url(domain)
     else
       flash[:warning] = I18n.t('available_verification_url_not_found')
-      redirect_to registrant_domain_path(dom.id)
+      redirect_to registrant_domain_path(domain)
     end
   end
 
@@ -63,11 +63,11 @@ class Registrant::DomainsController < RegistrantController
     params[:q][:valid_to_lteq] = ca_cache
   end
 
-  def get_confirm_path(statuses)
-    if statuses.include?(DomainStatus::PENDING_UPDATE)
-      "#{ENV['registrant_url']}/registrant/domain_update_confirms"
-    elsif statuses.include?(DomainStatus::PENDING_DELETE_CONFIRMATION)
-      "#{ENV['registrant_url']}/registrant/domain_delete_confirms"
+  def confirmation_url(domain)
+    if domain.statuses.include?(DomainStatus::PENDING_UPDATE)
+      registrant_domain_update_confirm_url(token: domain.registrant_verification_token)
+    elsif domain.statuses.include?(DomainStatus::PENDING_DELETE_CONFIRMATION)
+      registrant_domain_delete_confirm_url(token: domain.registrant_verification_token)
     end
   end
 end

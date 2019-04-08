@@ -156,7 +156,7 @@ Rails.application.routes.draw do
       end
 
       member do
-        get 'domain_verification_url'
+        get 'confirmation'
       end
     end
 
