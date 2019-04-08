@@ -61,7 +61,6 @@ Content-Type: application/json
       "statuses": [
         "ok"
       ],
-      "reserved": false,
       "status_notes": {
       }
     }

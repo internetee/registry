@@ -97,7 +97,6 @@ Content-Type: application/json
       ]
     }
   ],
-  "reserved":false,
   "status_notes":{
 
   },
@@ -240,7 +239,6 @@ Content-Type: application/json
       ]
     }
   ],
-  "reserved":false,
   "status_notes":{
 
   },

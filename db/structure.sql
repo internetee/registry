@@ -938,7 +938,6 @@ CREATE TABLE public.domains (
     pending_json jsonb,
     force_delete_date date,
     statuses character varying[],
-    reserved boolean DEFAULT false,
     status_notes public.hstore,
     statuses_before_force_delete character varying[] DEFAULT '{}'::character varying[],
     upid integer,
@@ -4934,6 +4933,8 @@ INSERT INTO schema_migrations (version) VALUES ('20190209150026');
 INSERT INTO schema_migrations (version) VALUES ('20190311111718');
 
 INSERT INTO schema_migrations (version) VALUES ('20190312211614');
+
+INSERT INTO schema_migrations (version) VALUES ('20190319133036');
 
 INSERT INTO schema_migrations (version) VALUES ('20190322152123');
 
