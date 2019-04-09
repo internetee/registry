@@ -8,6 +8,9 @@ john:
   registrar: bestnames
   code: john-001
   auth_info: cacb5b
+  statuses:
+    - ok
+    - linked
   uuid: eb2f2766-b44c-4e14-9f16-32ab1a7cb957
   created_at: <%= Time.zone.parse('2010-07-05') %>
   updated_at: <%= Time.zone.parse('2010-07-06') %>
@@ -79,7 +82,7 @@ not_in_use:
   name: Useless
   email: useless@inbox.test
   registrar: bestnames
-  code: useless-001
+  code: not-in-use
   auth_info: e75a2a
   uuid: ca613cc5-a8dc-48c1-8d32-d3c6a0b6c952
 
