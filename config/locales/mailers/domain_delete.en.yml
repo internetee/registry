@@ -1,6 +1,6 @@
 en:
   domain_delete_mailer:
-    confirm:
+    confirmation:
       subject: Kinnitustaotlus domeeni %{domain_name} kustutamiseks .ee registrist / Application for approval for deletion of %{domain_name}
     forced:
       subject: >-

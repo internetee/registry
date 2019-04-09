@@ -15,9 +15,9 @@ class DomainDeleteMailerTest < ActiveSupport::TestCase
   def test_delivers_domain_delete_confirmation_email
     assert_equal 'shop.test', @domain.name
 
-    email = DomainDeleteMailer.confirm(domain: @domain,
-                                       registrar: @domain.registrar,
-                                       registrant: @domain.registrant).deliver_now
+    email = DomainDeleteMailer.confirmation(domain: @domain,
+                                            registrar: @domain.registrar,
+                                            registrant: @domain.registrant).deliver_now
 
     assert_emails 1
     assert_equal 'Kinnitustaotlus domeeni shop.test kustutamiseks .ee registrist' \

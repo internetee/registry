@@ -3,10 +3,10 @@ class DomainDeleteMailer < ApplicationMailer
     %w[private_person legal_person]
   end
 
-  def confirm(domain:, registrar:, registrant:)
+  def confirmation(domain:, registrar:, registrant:)
     @domain = DomainPresenter.new(domain: domain, view: view_context)
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
-    @confirm_url = confirm_url(domain)
+    @confirmation_url = confirmation_url(domain)
 
     subject = default_i18n_subject(domain_name: domain.name)
     mail(to: registrant.email, subject: subject)
@@ -28,7 +28,7 @@ class DomainDeleteMailer < ApplicationMailer
 
   private
 
-  def confirm_url(domain)
+  def confirmation_url(domain)
     registrant_domain_delete_confirm_url(domain, token: domain.registrant_verification_token)
   end
 end
