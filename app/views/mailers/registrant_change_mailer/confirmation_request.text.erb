@@ -9,10 +9,9 @@ Uue registreerija andmed:
 
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ei kinnita või tagasi lükka.
 Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan:
-<%= @confirm_url %>
+<%= @confirmation_url %>
 
-Lugupidamisega
-Eesti Interneti Sihtasutus
+<%= render 'mailers/shared/signatures/signature.et.text' %>
 
 --------------------------------------
 
@@ -27,7 +26,6 @@ New registrant:
 
 The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automaticcally rejected if it is not approved nor rejected before.
 To confirm the update please visit this website, once again review the data and press approve:
-<%= @confirm_url %>
+<%= @confirmation_url %>
 
-Best Regards,
-Estonian Internet Foundation
+<%= render 'mailers/shared/signatures/signature.en.text' %>

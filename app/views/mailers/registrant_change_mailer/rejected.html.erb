@@ -5,11 +5,7 @@ Domeeni <%= @domain.name %> registreerija <%= @registrant.name %> on domeeni reg
 Küsimuste korral võtke palun ühendust oma registripidajaga:
 
 <%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
-
-<br><br>
-Lugupidamisega<br>
-Eesti Interneti Sihtasutus
-<br><br>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
 <hr>
 <br><br>
 Hi,
@@ -19,7 +15,4 @@ Registrant change for the domain <%= @domain.name %> was rejected by the registr
 Please contact your registrar if you have any questions:
 
 <%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
-
-<br><br>
-Best Regards,<br>
-Estonian Internet Foundation
+<%= render 'mailers/shared/signatures/signature.en.html' %>

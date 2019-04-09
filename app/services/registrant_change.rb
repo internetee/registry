@@ -11,7 +11,7 @@ class RegistrantChange
   private
 
   def notify_registrant
-    RegistrantChangeMailer.confirmed(domain: domain, old_registrant: old_registrant).deliver_now
+    RegistrantChangeMailer.accepted(domain: domain, old_registrant: old_registrant).deliver_now
   end
 
   attr_reader :domain

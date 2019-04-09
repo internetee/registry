@@ -7,7 +7,7 @@ RSpec.describe RegistrantChange do
     let(:message) { instance_spy(ActionMailer::MessageDelivery) }
 
     before :example do
-      allow(RegistrantChangeMailer).to receive(:confirmed)
+      allow(RegistrantChangeMailer).to receive(:accepted)
                                            .with(domain: domain, old_registrant: old_registrant)
                                            .and_return(message)
       described_class.new(domain: domain, old_registrant: old_registrant).confirm

@@ -12,10 +12,11 @@ class RegistrantChangeMailerTest < ActiveSupport::TestCase
     assert_equal 'shop.test', @domain.name
     assert_equal 'john@inbox.test', @domain.registrant.email
 
-    email = RegistrantChangeMailer.confirm(domain: @domain,
-                                           registrar: @domain.registrar,
-                                           current_registrant: @domain.registrant,
-                                           new_registrant: @domain.registrant).deliver_now
+    email = RegistrantChangeMailer.confirmation_request(domain: @domain,
+                                                        registrar: @domain.registrar,
+                                                        current_registrant: @domain.registrant,
+                                                        new_registrant: @domain.registrant)
+              .deliver_now
 
     assert_emails 1
     assert_equal ['john@inbox.test'], email.to
@@ -28,10 +29,10 @@ class RegistrantChangeMailerTest < ActiveSupport::TestCase
     assert_equal 'shop.test', @domain.name
     assert_equal 'william@inbox.test', new_registrant.email
 
-    email = RegistrantChangeMailer.notice(domain: @domain,
-                                          registrar: @domain.registrar,
-                                          current_registrant: @domain.registrant,
-                                          new_registrant: new_registrant).deliver_now
+    email = RegistrantChangeMailer.notification(domain: @domain,
+                                                registrar: @domain.registrar,
+                                                current_registrant: @domain.registrant,
+                                                new_registrant: new_registrant).deliver_now
 
     assert_emails 1
     assert_equal ['william@inbox.test'], email.to
@@ -45,8 +46,8 @@ class RegistrantChangeMailerTest < ActiveSupport::TestCase
     assert_equal 'john@inbox.test', @domain.registrant.email
     assert_equal 'william@inbox.test', new_registrant.email
 
-    email = RegistrantChangeMailer.confirmed(domain: @domain,
-                                             old_registrant: new_registrant).deliver_now
+    email = RegistrantChangeMailer.accepted(domain: @domain,
+                                            old_registrant: new_registrant).deliver_now
 
     assert_emails 1
     assert_equal %w[john@inbox.test william@inbox.test], email.to
