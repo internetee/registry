@@ -9,8 +9,7 @@ Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuest
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ise ei kinnita või tagasi lükka.
 <%= @confirmation_url %>
 
-Lugupidamisega
-Eesti Interneti Sihtasutus
+<%= render 'mailers/shared/signatures/signature.et.text' %>
 
 --------------------------------------
 
@@ -25,5 +24,4 @@ To confirm the update please visit this website, once again review the data and 
 
 The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automatically rejected if it is not approved nor rejected before.
 
-Best Regards,
-Estonian Internet Foundation
+<%= render 'mailers/shared/signatures/signature.en.text' %>
