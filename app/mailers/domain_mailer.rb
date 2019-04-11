@@ -17,7 +17,6 @@ class DomainMailer < ApplicationMailer
       return
     end
 
-    return if whitelist_blocked?(@domain.registrant.email)
     mail(to: format(@domain.registrant.email),
          subject: "#{I18n.t(:pending_delete_rejected_notification_subject,
          name: @domain.name)} [#{@domain.name}]")
@@ -29,7 +28,6 @@ class DomainMailer < ApplicationMailer
     return if delivery_off?(@domain, should_deliver)
     # no delivery off control, driggered by cron, no epp request
 
-    return if whitelist_blocked?(@domain.registrant.email)
     mail(to: format(@domain.registrant.email),
          subject: "#{I18n.t(:pending_delete_expired_notification_subject,
          name: @domain.name)} [#{@domain.name}]")
@@ -40,7 +38,6 @@ class DomainMailer < ApplicationMailer
     return unless @domain
     return if delivery_off?(@domain, should_deliver)
 
-    return if whitelist_blocked?(@domain.registrant.email)
     mail(to: format(@domain.registrant.email),
          subject: "#{I18n.t(:delete_confirmation_subject,
          name: @domain.name)} [#{@domain.name}]")

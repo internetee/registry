@@ -22,13 +22,6 @@ smtp_enable_starttls_auto: 'true' # 'false'
 # If your mail server requires authentication, please change.
 smtp_authentication: 'plain' # 'plain', 'login', 'cram_md5'
 registrant_url: 'https://registrant.example.com' # for valid email body registrant links
-# Staging env does not send any emails unless they are whitelisted
-whitelist_emails_for_staging: >
-  test@example.org,
-  old@example.org,
-  new@example.org,
-  old@example.com,
-  new@example.com
 
 #
 # ADMIN server
