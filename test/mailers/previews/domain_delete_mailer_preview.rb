@@ -12,4 +12,11 @@ class DomainDeleteMailerPreview < ActionMailer::Preview
   end
 
   define_forced_templates
+
+  def confirmation
+    domain = Domain.first
+    DomainDeleteMailer.confirmation(domain: domain,
+                                    registrar: domain.registrar,
+                                    registrant: domain.registrant)
+  end
 end
