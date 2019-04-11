@@ -548,4 +548,8 @@ class Contact < ActiveRecord::Base
   def managed_by?(registrant_user)
     ident == registrant_user.ident
   end
+
+  def registrant?
+    registrant_domains.any?
+  end
 end

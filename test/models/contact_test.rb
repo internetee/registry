@@ -79,4 +79,20 @@ class ContactTest < ActiveSupport::TestCase
       assert_equal [@contact], Contact.registrant_user_contacts(registrant_user)
     end
   end
+
+  def test_contact_is_a_registrant
+    assert_equal @contact.becomes(Registrant), domains(:shop).registrant
+    assert @contact.registrant?
+
+    make_contact_free_of_domains_where_it_acts_as_a_registrant(@contact)
+    assert_not @contact.registrant?
+  end
+
+  private
+
+  def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)
+    other_contact = contacts(:william)
+    assert_not_equal other_contact, contact
+    Domain.update_all(registrant_id: other_contact)
+  end
 end
