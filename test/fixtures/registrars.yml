@@ -10,7 +10,7 @@ bestnames:
   country_code: US
   accounting_customer_code: bestnames
   language: en
-  billing_email: billing@example.com
+  billing_email: billing@bestnames.test
   website:  https://bestnames.test
   reference_no: 13
 

@@ -6,8 +6,14 @@ class RegistrarAreaInvoicesIntegrationTest < ApplicationIntegrationTest
     sign_in users(:api_bestnames)
   end
 
-  def test_download_invoice_pdf
-    get download_pdf_registrar_invoice_path(@invoice)
+  def test_downloads_invoice
+    assert_equal 1, @invoice.number
+
+    get download_registrar_invoice_path(@invoice)
+
     assert_response :ok
+    assert_equal 'application/pdf', response.headers['Content-Type']
+    assert_equal 'attachment; filename="invoice-1.pdf"', response.headers['Content-Disposition']
+    assert_not_empty response.body
   end
 end

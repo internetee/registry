@@ -1,5 +1,12 @@
 en:
   admin:
     invoices:
+      index:
+        header: Invoices
+
+      show:
+        download_btn: Download
+        deliver_btn: Send
+
       cancel:
         cancelled: Invoice has been cancelled

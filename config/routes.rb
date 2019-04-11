@@ -53,10 +53,11 @@ Rails.application.routes.draw do
       post 'mid' => 'sessions#mid'
     end
 
-    resources :invoices do
+    resources :invoices, except: %i[new create edit update destroy] do
+      resource :delivery, controller: 'invoices/delivery', only: %i[new create]
+
       member do
-        get 'download_pdf'
-        match 'forward', via: [:post, :get]
+        get 'download'
         patch 'cancel'
       end
     end
@@ -199,10 +200,13 @@ Rails.application.routes.draw do
       patch 'bind', on: :member
     end
 
-    resources :invoices do
-      get 'download_pdf'
-      patch 'cancel', on: :member
-      match 'forward', via: [:post, :get]
+    resources :invoices, except: %i[edit update destroy] do
+      resource :delivery, controller: 'invoices/delivery', only: %i[new create]
+
+      member do
+        get 'download'
+        patch 'cancel'
+      end
     end
 
     resources :domains, except: %i[new create destroy] do
