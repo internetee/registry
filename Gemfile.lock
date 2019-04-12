@@ -42,18 +42,6 @@ GIT
       libxml-ruby
 
 GIT
-  remote: https://github.com/prehnRA/que-mailer.git
-  revision: 32156f258993348b50a7db2a41eed1bdb0bf4fab
-  branch: master
-  specs:
-    que_mailer (0.0.2)
-      actionmailer (>= 4.0)
-      activesupport (>= 4.0)
-      pg (~> 0)
-      que (~> 0.6)
-      rails (>= 4.0)
-
-GIT
   remote: https://github.com/tarmotalu/digidoc_client.git
   revision: 1645e83a5a548addce383f75703b0275c5310c32
   ref: 1645e83a5a548addce383f75703b0275c5310c32
@@ -497,7 +485,6 @@ DEPENDENCIES
   puma
   que (= 0.10.0)
   que-web (= 0.4.0)
-  que_mailer!
   railroady (= 1.3.0)
   rails (= 4.2.11.1)
   rails-settings-cached (= 0.4.1)
