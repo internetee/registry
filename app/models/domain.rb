@@ -167,7 +167,7 @@ class Domain < ActiveRecord::Base
     errors.add(:statuses, :taken)
   end
 
-  attr_accessor :registrant_typeahead, :update_me, :deliver_emails,
+  attr_accessor :registrant_typeahead, :update_me,
     :epp_pending_update, :epp_pending_delete, :reserved_pw
 
   def subordinate_nameservers

@@ -1,15 +1,10 @@
 Tere
 <br><br>
 Domeeni <%= @domain.name %> kustutamise taotlus on registreerija poolt kinnitatud. Domeen <%= @domain.name %> on peatatud ja kustub registrist.
-<br><br>
-Lugupidamisega<br>
-Eesti Interneti Sihtasutus
-<br><br>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
 <hr>
 <br><br>
 Hi,
 <br><br>
 Domain <%= @domain.name %> deletion is confirmed by the registrant. Domain <%= @domain.name %> is suspended and will be deleted.
-<br><br>
-Best Regards,<br>
-Estonian Internet Foundation
+<%= render 'mailers/shared/signatures/signature.en.html' %>

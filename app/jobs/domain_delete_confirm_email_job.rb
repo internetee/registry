@@ -3,9 +3,9 @@ class DomainDeleteConfirmEmailJob < Que::Job
     domain = Domain.find(domain_id)
 
     log(domain)
-    DomainDeleteMailer.confirmation(domain: domain,
-                                    registrar: domain.registrar,
-                                    registrant: domain.registrant).deliver_now
+    DomainDeleteMailer.confirmation_request(domain: domain,
+                                            registrar: domain.registrar,
+                                            registrant: domain.registrant).deliver_now
   end
 
   private

@@ -3,13 +3,34 @@ class DomainDeleteMailer < ApplicationMailer
     %w[private_person legal_person]
   end
 
-  def confirmation(domain:, registrar:, registrant:)
+  def confirmation_request(domain:, registrar:, registrant:)
     @domain = DomainPresenter.new(domain: domain, view: view_context)
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
     @confirmation_url = confirmation_url(domain)
 
     subject = default_i18n_subject(domain_name: domain.name)
     mail(to: registrant.email, subject: subject)
+  end
+
+  def accepted(domain)
+    @domain = domain
+
+    subject = default_i18n_subject(domain: domain.name)
+    mail(to: domain.registrant.email, subject: subject)
+  end
+
+  def rejected(domain)
+    @domain = domain
+
+    subject = default_i18n_subject(domain: domain.name)
+    mail(to: domain.registrant.email, subject: subject)
+  end
+
+  def expired(domain)
+    @domain = domain
+
+    subject = default_i18n_subject(domain: domain.name)
+    mail(to: domain.registrant.email, subject: subject)
   end
 
   def forced(domain:, registrar:, registrant:, template_name:)

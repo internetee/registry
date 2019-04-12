@@ -1,15 +1,12 @@
 Tere
-<br><br>
+
 Domeeni <%= @domain.name %> kustutamise taotlus on registreerija <%= @domain.registrant.name %> poolt tagasi lükatud.
-<br><br>
-Lugupidamisega<br>
-Eesti Interneti Sihtasutus
-<br><br>
-<hr>
-<br><br>
+
+<%= render 'mailers/shared/signatures/signature.et.text' %>
+--------------------------------------
+
 Hi,
-<br><br>
+
 Domain <%= @domain.name %> deletion was rejected by the registrant <%= @domain.registrant.name %>.
-<br><br>
-Best Regards,<br>
-Estonian Internet Foundation
+
+<%= render 'mailers/shared/signatures/signature.en.text' %>

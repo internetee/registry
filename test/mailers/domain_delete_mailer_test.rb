@@ -12,18 +12,54 @@ class DomainDeleteMailerTest < ActiveSupport::TestCase
     assert_equal %w[private_person legal_person], DomainDeleteMailer.force_delete_templates
   end
 
-  def test_delivers_domain_delete_confirmation_email
+  def test_delivers_confirmation_request_email
     assert_equal 'shop.test', @domain.name
     assert_equal 'john@inbox.test', @domain.registrant.email
 
-    email = DomainDeleteMailer.confirmation(domain: @domain,
-                                            registrar: @domain.registrar,
-                                            registrant: @domain.registrant).deliver_now
+    email = DomainDeleteMailer.confirmation_request(domain: @domain,
+                                                    registrar: @domain.registrar,
+                                                    registrant: @domain.registrant).deliver_now
 
     assert_emails 1
     assert_equal ['john@inbox.test'], email.to
     assert_equal 'Kinnitustaotlus domeeni shop.test kustutamiseks .ee registrist' \
                  ' / Application for approval for deletion of shop.test', email.subject
+  end
+
+  def test_delivers_accepted_email
+    assert_equal 'shop.test', @domain.name
+    assert_equal 'john@inbox.test', @domain.registrant.email
+
+    email = DomainDeleteMailer.accepted(@domain).deliver_now
+
+    assert_emails 1
+    assert_equal ['john@inbox.test'], email.to
+    assert_equal 'Domeeni shop.test kustutatud' \
+                 ' / shop.test deleted', email.subject
+  end
+
+  def test_delivers_rejected_email
+    assert_equal 'shop.test', @domain.name
+    assert_equal 'john@inbox.test', @domain.registrant.email
+
+    email = DomainDeleteMailer.rejected(@domain).deliver_now
+
+    assert_emails 1
+    assert_equal ['john@inbox.test'], email.to
+    assert_equal 'Domeeni shop.test kustutamise taotlus tagasi lükatud' \
+                 ' / shop.test deletion declined', email.subject
+  end
+
+  def test_delivers_expired_email
+    assert_equal 'shop.test', @domain.name
+    assert_equal 'john@inbox.test', @domain.registrant.email
+
+    email = DomainDeleteMailer.expired(@domain).deliver_now
+
+    assert_emails 1
+    assert_equal ['john@inbox.test'], email.to
+    assert_equal 'Domeeni shop.test kustutamise taotlus on tühistatud' \
+                 ' / shop.test deletion cancelled', email.subject
   end
 
   def test_delivers_domain_force_delete_email

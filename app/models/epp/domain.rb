@@ -483,8 +483,6 @@ class Epp::Domain < Domain
       registrant_verification_asked!(frame.to_s, current_user.id)
     end
 
-    self.deliver_emails = true # turn on email delivery for epp
-
     errors.empty? && super(at)
   end
 
@@ -511,7 +509,7 @@ class Epp::Domain < Domain
     preclean_pendings
     statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
     statuses.delete(DomainStatus::PENDING_DELETE)
-    DomainMailer.delete_confirmation(id, deliver_emails).deliver
+    DomainDeleteMailer.accepted(self).deliver_now
     clean_pendings!
     set_pending_delete!
     true
