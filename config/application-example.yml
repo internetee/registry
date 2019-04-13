@@ -145,6 +145,7 @@ auction_api_allowed_ips: '' # 192.0.2.0, 192.0.2.1
 action_mailer_default_protocol: # default: http
 action_mailer_default_host:
 action_mailer_default_port: # default: no port (80)
+action_mailer_default_from: # no-reply@example.com
 
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:
@@ -153,6 +154,7 @@ test:
   release_domains_to_auction: 'false'
   auction_api_allowed_ips: ''
   action_mailer_default_host: 'registry.test'
+  action_mailer_default_from: 'no-reply@registry.test'
 
 # Airbrake // Errbit:
 airbrake_host: "https://your-errbit-host.ee"

@@ -90,6 +90,7 @@ module DomainNameRegistry
       domain:               ENV['smtp_domain'],
       openssl_verify_mode:  ENV['smtp_openssl_verify_mode']
     }
+    config.action_mailer.default_options = { from: ENV['action_mailer_default_from'] }
 
     config.action_view.default_form_builder = 'DefaultFormBuilder'
     config.secret_key_base = Figaro.env.secret_key_base

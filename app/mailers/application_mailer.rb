@@ -1,6 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
   append_view_path Rails.root.join('app', 'views', 'mailers')
-  default from: 'noreply@internet.ee'
   layout 'mailer'
 
   # turn on delivery on specific (epp) request only, thus rake tasks does not deliver anything
