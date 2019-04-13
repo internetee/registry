@@ -92,6 +92,9 @@ module DomainNameRegistry
     }
     config.action_mailer.default_options = { from: ENV['action_mailer_default_from'] }
 
+    require "#{Rails.root}/app/mailers/interceptors/punycode_interceptor"
+    ActionMailer::Base.register_interceptor(PunycodeInterceptor)
+
     config.action_view.default_form_builder = 'DefaultFormBuilder'
     config.secret_key_base = Figaro.env.secret_key_base
   end
