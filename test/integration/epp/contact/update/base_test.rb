@@ -48,7 +48,7 @@ class EppContactUpdateBaseTest < ActionDispatch::IntegrationTest
     assert_equal '+123.4', @contact.phone
   end
 
-  def test_notifies_a_contact_when_an_email_is_changed
+  def test_notifies_contact_by_email_when_email_is_changed
     assert_equal 'john-001', @contact.code
     assert_not_equal 'new@inbox.test', @contact.email
 
@@ -76,7 +76,7 @@ class EppContactUpdateBaseTest < ActionDispatch::IntegrationTest
     assert_emails 1
   end
 
-  def test_skips_notifying_a_contact_when_an_email_is_not_changed
+  def test_skips_notifying_contact_when_email_is_not_changed
     assert_equal 'john-001', @contact.code
     assert_equal 'john@inbox.test', @contact.email
 
