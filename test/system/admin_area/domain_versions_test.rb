@@ -29,12 +29,11 @@ class DomainVersionsTest < ApplicationSystemTestCase
       VALUES (54, 54, '2018-06-23T12:14:02.732+03:00', 54, 'transfer_code');
 
       INSERT INTO log_domains (item_type, item_id, event, whodunnit, object,
-      object_changes, created_at, nameserver_ids, tech_contact_ids,
-      admin_contact_ids, session, children)
+      object_changes, created_at, session, children)
       VALUES ('Domain', 54, 'update', '1-AdminUser',
       '{"id": 54, "registrar_id": 54, "valid_to": "2018-07-23T12:14:05.583+03:00", "registrant_id": 54, "transfer_code": "transfer_code", "valid_from": "2017-07-23T12:14:05.583+03:00"}',
       '{"foo": "bar", "other_made_up_field": "value"}',
-      '2018-04-23 15:50:48.113491', '{}', '{}', '{}', '2018-04-23 12:44:56',
+      '2018-04-23 15:50:48.113491', '2018-04-23 12:44:56',
       '{"null_fracdmin_contacts":[108],"tech_contacts":[109],"nameservers":[],"dnskeys":[],"legal_documents":[null],"registrant":[1]}'
       )
     SQL

@@ -87,8 +87,7 @@ class LegalDocument < ActiveRecord::Base
 
       contact_ids = DomainVersion.where(item_id: orig_legal.documentable_id).distinct.
           pluck("object->>'registrant_id'", "object_changes->>'registrant_id'",
-                "children->>'tech_contacts'", "children->>'admin_contacts'",
-                "tech_contact_ids", "admin_contact_ids").flatten.uniq
+                "children->>'tech_contacts'", "children->>'admin_contacts'").flatten.uniq
       contact_ids = contact_ids.map{|id|
         case id
           when Hash

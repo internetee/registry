@@ -1539,9 +1539,6 @@ CREATE TABLE public.log_domains (
     object jsonb,
     object_changes json,
     created_at timestamp without time zone,
-    nameserver_ids text[] DEFAULT '{}'::text[],
-    tech_contact_ids text[] DEFAULT '{}'::text[],
-    admin_contact_ids text[] DEFAULT '{}'::text[],
     session character varying,
     children json,
     uuid character varying
@@ -4939,4 +4936,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190319133036');
 INSERT INTO schema_migrations (version) VALUES ('20190322152123');
 
 INSERT INTO schema_migrations (version) VALUES ('20190322152529');
+
+INSERT INTO schema_migrations (version) VALUES ('20190415120246');
 
