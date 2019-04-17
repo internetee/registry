@@ -66,6 +66,7 @@ class DomainDeleteMailerTest < ActiveSupport::TestCase
     assert_equal 'shop.test', @domain.name
     assert_equal 'john@inbox.test', @domain.registrant.email
     assert_equal 'jane@mail.test', @domain.admin_contacts.first.email
+    assert_equal 'legal@registry.test', ENV['action_mailer_force_delete_from']
 
     email = DomainDeleteMailer.forced(domain: @domain,
                                       registrar: @domain.registrar,
@@ -74,6 +75,7 @@ class DomainDeleteMailerTest < ActiveSupport::TestCase
                                                        .first).deliver_now
 
     assert_emails 1
+    assert_equal ['legal@registry.test'], email.from
     assert_equal %w[jane@mail.test john@inbox.test], email.to
     assert_equal 'Domeen shop.test on kustutusmenetluses' \
                  ' / Domain shop.test is in deletion process' \
