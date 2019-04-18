@@ -145,8 +145,6 @@ class Epp::Contact < Contact
       self.legal_document_id = doc.id
     end
 
-    self.deliver_emails = true # turn on email delivery for epp
-
     ident_frame = frame.css('ident').first
 
     # https://github.com/internetee/registry/issues/576
@@ -175,7 +173,17 @@ class Epp::Contact < Contact
     self.upid = current_user.registrar.id if current_user.registrar
     self.up_date = Time.zone.now
 
-    super(at)
+    self.attributes = at
+
+    email_changed = email_changed?
+    old_email = email_was
+    updated = save
+
+    if updated && email_changed
+      ContactMailer.email_changed(contact: self, old_email: old_email).deliver_now
+    end
+
+    updated
   end
 
   def statuses_attrs(frame, action)

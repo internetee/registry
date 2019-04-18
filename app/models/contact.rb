@@ -45,7 +45,6 @@ class Contact < ActiveRecord::Base
 
   before_validation :to_upcase_country_code
   before_validation :strip_email
-  before_update :manage_emails
 
   composed_of :identifier,
               class_name: 'Contact::Ident',
@@ -53,18 +52,6 @@ class Contact < ActiveRecord::Base
                                                                                 type: type,
                                                                                 country_code: country_code) },
               mapping: [%w[ident code], %w[ident_type type], %w[ident_country_code country_code]]
-
-  def manage_emails
-    return nil unless email_changed?
-    return nil unless deliver_emails == true
-    emails = []
-    emails << [email, email_was]
-    emails = emails.flatten.uniq
-    emails.each do |e|
-      ContactMailer.email_updated(email_was, e, id, deliver_emails).deliver
-    end
-  end
-
 
   after_save :update_related_whois_records
 
@@ -76,8 +63,6 @@ class Contact < ActiveRecord::Base
 
   # From old registry software ("Fred"). No new contact can be created with this status
   PASSPORT = 'passport'
-
-  attr_accessor :deliver_emails
 
   #
   # STATUSES
