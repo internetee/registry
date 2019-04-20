@@ -38,7 +38,6 @@ class Invoice < ActiveRecord::Base
   before_create :apply_default_buyer_vat_no, unless: :buyer_vat_no?
 
   attribute :vat_rate, ::Type::VATRate.new
-  attr_readonly :vat_rate
 
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first

@@ -58,12 +58,10 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   def test_serializes_and_deserializes_vat_rate
-    invoice = @invoice.dup
-    invoice.items = @invoice.items
-    invoice.vat_rate = BigDecimal('25.5')
-    invoice.save!
-    invoice.reload
-    assert_equal BigDecimal('25.5'), invoice.vat_rate
+    @invoice.vat_rate = BigDecimal('25.5')
+    @invoice.save!
+    @invoice.reload
+    assert_equal BigDecimal('25.5'), @invoice.vat_rate
   end
 
   def test_vat_rate_defaults_to_effective_vat_rate_of_a_registrar
@@ -78,13 +76,6 @@ class InvoiceTest < ActiveSupport::TestCase
     end
 
     assert_equal BigDecimal(55), invoice.vat_rate
-  end
-
-  def test_vat_rate_cannot_be_updated
-    @invoice.vat_rate = BigDecimal(21)
-    @invoice.save!
-    @invoice.reload
-    refute_equal BigDecimal(21), @invoice.vat_rate
   end
 
   def test_calculates_vat_amount
