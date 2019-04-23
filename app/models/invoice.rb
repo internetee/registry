@@ -26,7 +26,6 @@ class Invoice < ActiveRecord::Base
 
   scope :overdue, -> { unpaid.non_cancelled.where('due_date < ?', Time.zone.today) }
 
-  validates :issue_date, presence: true
   validates :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :items, presence: true
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },

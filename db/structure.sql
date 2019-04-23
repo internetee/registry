@@ -1082,7 +1082,7 @@ CREATE TABLE public.invoices (
     total numeric(10,2) NOT NULL,
     in_directo boolean DEFAULT false,
     buyer_vat_no character varying,
-    issue_date date
+    issue_date date NOT NULL
 );
 
 
@@ -4933,6 +4933,8 @@ INSERT INTO schema_migrations (version) VALUES ('20190209150026');
 INSERT INTO schema_migrations (version) VALUES ('20190311111718');
 
 INSERT INTO schema_migrations (version) VALUES ('20190312211614');
+
+INSERT INTO schema_migrations (version) VALUES ('20190315172802');
 
 INSERT INTO schema_migrations (version) VALUES ('20190319133036');
 
