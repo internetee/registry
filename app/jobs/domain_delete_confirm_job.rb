@@ -19,7 +19,13 @@ class DomainDeleteConfirmJob < Que::Job
         domain.save(validate: false)
         raise_errors!(domain)
 
-        DomainMailer.pending_delete_rejected_notification(domain_id, true).deliver
+        if domain.registrant_verification_token.blank?
+          Rails.logger.warn "EMAIL NOT DELIVERED: registrant_verification_token is missing for #{domain.name}"
+        elsif domain.registrant_verification_asked_at.blank?
+          Rails.logger.warn "EMAIL NOT DELIVERED: registrant_verification_asked_at is missing for #{domain.name}"
+        else
+          DomainDeleteMailer.rejected(domain).deliver_now
+        end
       end
 
       destroy # it's best to destroy the job in the same transaction

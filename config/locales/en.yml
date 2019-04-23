@@ -575,9 +575,6 @@ en:
   maximum_total: 'Maximum total'
   unimplemented_object_service: 'Unimplemented object service'
   object_status_prohibits_operation: 'Object status prohibits operation'
-  pending_delete_rejected_notification_subject: "Domeeni %{name} kustutamise taotlus tagasi lükatud / %{name} deletion declined"
-  pending_delete_expired_notification_subject: "Domeeni %{name} kustutamise taotlus on tühistatud / %{name} deletion cancelled"
-  delete_confirmation_subject: "Domeeni %{name} kustutatud / %{name} deleted"
   whois: WHOIS
   not_valid_domain_verification_title: Domain verification not available
   not_valid_domain_verification_body: This could mean your verification has been expired or done already.<br><br>Please contact us if you think something is wrong.

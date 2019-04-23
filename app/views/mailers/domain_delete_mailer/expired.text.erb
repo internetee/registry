@@ -2,14 +2,11 @@ Tere
 
 Domeeni <%= @domain.name %> kustutamise taotlust ei kinnitatud tähtaegselt registreerija <%= @domain.registrant.name %> poolt. Domeeni <%= @domain.name %> kustutamine on sellest tulenevalt tühistatud.
 
-Lugupidamisega
-Eesti Interneti Sihtasutus
-
+<%= render 'mailers/shared/signatures/signature.et.text' %>
 --------------------------------------
 
 Hi,
 
 Domain <%= @domain.name %> deletion was not approved in time by the registrant <%= @domain.registrant.name %>. Thus the deletion of domain <%= @domain.name %> is cancelled.
 
-Best Regards,
-Estonian Internet Foundation
+<%= render 'mailers/shared/signatures/signature.en.text' %>
