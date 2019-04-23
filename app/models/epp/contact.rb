@@ -179,7 +179,7 @@ class Epp::Contact < Contact
     old_email = email_was
     updated = save
 
-    if updated && email_changed
+    if updated && email_changed && registrant?
       ContactMailer.email_changed(contact: self, old_email: old_email).deliver_now
     end
 
