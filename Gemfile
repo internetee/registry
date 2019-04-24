@@ -85,9 +85,6 @@ gem 'uuidtools', '2.1.5' # For unique IDs (used by the epp gem)
 gem 'que',           '0.10.0'
 gem 'daemons-rails', '1.2.1'
 gem 'que-web',       '0.4.0'
-gem 'que_mailer',
-    github: 'prehnRA/que-mailer',
-    branch: 'master'
 
 # for importing legacy db
 gem 'activerecord-import', '0.7.0' # for inserting dummy data
