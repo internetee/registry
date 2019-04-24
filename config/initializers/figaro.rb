@@ -12,4 +12,5 @@ Figaro.require_keys(%w[
   bank_statement_import_dir
   time_zone
   action_mailer_default_host
+  action_mailer_default_from
 ])

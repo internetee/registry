@@ -1,6 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
   append_view_path Rails.root.join('app', 'views', 'mailers')
-  default from: 'noreply@internet.ee'
   layout 'mailer'
 
   def format(email)
