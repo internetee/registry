@@ -2,8 +2,6 @@ module Billing
   class Price < ActiveRecord::Base
     include Concerns::Billing::Price::Expirable
 
-    self.auto_html5_validation = false
-
     belongs_to :zone, class_name: 'DNS::Zone', required: true
     has_many :account_activities
 

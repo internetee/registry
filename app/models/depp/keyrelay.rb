@@ -1,6 +1,5 @@
 module Depp
   class Keyrelay
-    include DisableHtml5Validation
     attr_accessor :current_user, :epp_xml
 
     def initialize(args = {})

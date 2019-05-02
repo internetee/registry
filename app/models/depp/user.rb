@@ -3,7 +3,6 @@ module Depp
     include ActiveModel::Validations
     include ActiveModel::Conversion
     extend ActiveModel::Naming
-    include DisableHtml5Validation
 
     attr_accessor :tag, :password, :pki
 

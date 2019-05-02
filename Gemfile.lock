@@ -205,7 +205,6 @@ GEM
       haml (~> 4.0)
       nokogiri (>= 1.6.0)
       ruby_parser (~> 3.5)
-    html5_validators (1.2.2)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httpclient (2.8.3)
@@ -467,7 +466,6 @@ DEPENDENCIES
   grape
   haml-rails (= 0.9.0)
   html2haml (= 2.1.0)
-  html5_validators (= 1.2.2)
   isikukood
   iso8601 (= 0.8.6)
   jbuilder (= 2.2.16)
