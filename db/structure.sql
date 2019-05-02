@@ -1064,7 +1064,7 @@ CREATE TABLE public.invoices (
     seller_url character varying,
     seller_email character varying,
     seller_contact_name character varying,
-    buyer_id integer,
+    buyer_id integer NOT NULL,
     buyer_name character varying NOT NULL,
     buyer_reg_no character varying,
     buyer_country_code character varying,
@@ -4070,6 +4070,22 @@ ALTER TABLE ONLY public.domains
 
 
 --
+-- Name: fk_rails_242b91538b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.invoices
+    ADD CONSTRAINT fk_rails_242b91538b FOREIGN KEY (buyer_id) REFERENCES public.registrars(id);
+
+
+--
+-- Name: fk_rails_3717aa7c47; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.invoices
+    ADD CONSTRAINT fk_rails_3717aa7c47 FOREIGN KEY (seller_id) REFERENCES public.registrars(id);
+
+
+--
 -- Name: fk_rails_59c422f73d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4940,4 +4956,10 @@ INSERT INTO schema_migrations (version) VALUES ('20190322152123');
 INSERT INTO schema_migrations (version) VALUES ('20190322152529');
 
 INSERT INTO schema_migrations (version) VALUES ('20190415120246');
+
+INSERT INTO schema_migrations (version) VALUES ('20190502184706');
+
+INSERT INTO schema_migrations (version) VALUES ('20190502190002');
+
+INSERT INTO schema_migrations (version) VALUES ('20190502190215');
 
