@@ -41,7 +41,8 @@ class DomainDeleteMailer < ApplicationMailer
     @redemption_grace_period = Setting.redemption_grace_period
 
     subject = default_i18n_subject(domain_name: domain.name)
-    mail(to: domain.primary_contact_emails,
+    mail(from: forced_email_from,
+         to: domain.primary_contact_emails,
          subject: subject,
          template_path: 'mailers/domain_delete_mailer/forced',
          template_name: template_name)
@@ -51,5 +52,9 @@ class DomainDeleteMailer < ApplicationMailer
 
   def confirmation_url(domain)
     registrant_domain_delete_confirm_url(domain, token: domain.registrant_verification_token)
+  end
+
+  def forced_email_from
+    ENV['action_mailer_force_delete_from'] || self.class.default[:from]
   end
 end

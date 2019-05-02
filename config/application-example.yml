@@ -146,6 +146,7 @@ action_mailer_default_protocol: # default: http
 action_mailer_default_host:
 action_mailer_default_port: # default: no port (80)
 action_mailer_default_from: # no-reply@example.com
+action_mailer_force_delete_from: # `From` header for `DomainDeleteMailer#forced` email
 
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:
@@ -155,6 +156,7 @@ test:
   auction_api_allowed_ips: ''
   action_mailer_default_host: 'registry.test'
   action_mailer_default_from: 'no-reply@registry.test'
+  action_mailer_force_delete_from: 'legal@registry.test'
 
 # Airbrake // Errbit:
 airbrake_host: "https://your-errbit-host.ee"
