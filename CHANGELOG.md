@@ -1,3 +1,7 @@
+02.05.2019
+* From address is now configurable for force delete auto email messages [#1164](https://github.com/internetee/registry/issues/1164)
+* Encode domain part of email addresses to punycode [#1168](https://github.com/internetee/registry/pull/1168)
+
 29.04.2019
 * Nokogiri gem update to version 1.10.3 (CVE-2019-11068) [#1176](https://github.com/internetee/registry/pull/1176)
 * Default email sender is now configurable [#243](https://github.com/internetee/registry/issues/243)
