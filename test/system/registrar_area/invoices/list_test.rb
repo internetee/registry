@@ -17,7 +17,6 @@ class ListInvoicesTest < ApplicationSystemTestCase
   def test_show_invoices_of_current_registrar
     registrar = registrars(:bestnames)
     @user.update!(registrar: registrar)
-    @invoice.update!(seller: registrar)
 
     visit registrar_invoices_url
 
@@ -27,7 +26,6 @@ class ListInvoicesTest < ApplicationSystemTestCase
   def test_do_not_show_invoices_of_other_registrars
     registrar = registrars(:goodnames)
     @user.update!(registrar: registrar)
-    @invoice.update!(seller: registrar)
 
     visit registrar_invoices_url
 

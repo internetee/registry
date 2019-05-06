@@ -3,7 +3,6 @@ class Invoice < ActiveRecord::Base
   include Concerns::Invoice::Cancellable
   include Concerns::Invoice::Payable
 
-  belongs_to :seller, class_name: 'Registrar'
   belongs_to :buyer, class_name: 'Registrar'
   has_one  :account_activity
   has_many :items, class_name: 'InvoiceItem', dependent: :destroy

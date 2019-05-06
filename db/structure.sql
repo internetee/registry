@@ -1048,7 +1048,6 @@ CREATE TABLE public.invoices (
     description character varying,
     reference_no character varying NOT NULL,
     vat_rate numeric(4,3),
-    seller_id integer,
     seller_name character varying NOT NULL,
     seller_reg_no character varying,
     seller_iban character varying NOT NULL,
@@ -3617,13 +3616,6 @@ CREATE INDEX index_invoices_on_buyer_id ON public.invoices USING btree (buyer_id
 
 
 --
--- Name: index_invoices_on_seller_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_invoices_on_seller_id ON public.invoices USING btree (seller_id);
-
-
---
 -- Name: index_keyrelays_on_accepter_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4075,14 +4067,6 @@ ALTER TABLE ONLY public.domains
 
 ALTER TABLE ONLY public.invoices
     ADD CONSTRAINT fk_rails_242b91538b FOREIGN KEY (buyer_id) REFERENCES public.registrars(id);
-
-
---
--- Name: fk_rails_3717aa7c47; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.invoices
-    ADD CONSTRAINT fk_rails_3717aa7c47 FOREIGN KEY (seller_id) REFERENCES public.registrars(id);
 
 
 --
@@ -4962,4 +4946,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190502184706');
 INSERT INTO schema_migrations (version) VALUES ('20190502190002');
 
 INSERT INTO schema_migrations (version) VALUES ('20190502190215');
+
+INSERT INTO schema_migrations (version) VALUES ('20190506102959');
 
