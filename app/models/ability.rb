@@ -99,7 +99,6 @@ class Ability
     can :manage, LegalDocument
     can :manage, BankStatement
     can :manage, BankTransaction
-    can :manage, MailTemplate
     can :manage, Invoice
     can :manage, WhiteIp
     can :manage, AccountActivity

@@ -232,7 +232,6 @@ GEM
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     libxml-ruby (3.0.0)
-    liquid (3.0.6)
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -480,7 +479,6 @@ DEPENDENCIES
   jquery-rails (= 4.0.4)
   jquery-ui-rails (= 5.0.5)
   kaminari (= 0.16.3)
-  liquid (= 3.0.6)
   mina (= 0.3.1)
   money-rails
   nokogiri
