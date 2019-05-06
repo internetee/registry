@@ -1,0 +1,28 @@
+<tr>
+    <td><%= link_to invoice, admin_invoice_path(invoice) %></td>
+    <td><%= link_to invoice.registrar, admin_registrar_path(invoice.registrar) %></td>
+
+    <% if invoice.cancelled? %>
+        <td class="text-grey">
+            <%= t(:cancelled) %>
+        </td>
+    <% else %>
+        <td>
+            <%= l invoice.due_date %>
+        </td>
+    <% end %>
+
+    <% if invoice.paid? %>
+        <td>
+            <%= l invoice.receipt_date %>
+        </td>
+    <% elsif invoice.cancelled? %>
+        <td class="text-grey">
+            <%= t(:cancelled) %>
+        </td>
+    <% else %>
+        <td class="text-danger">
+            <%= t(:unpaid) %>
+        </td>
+    <% end %>
+</tr>

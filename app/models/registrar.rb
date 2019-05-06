@@ -5,7 +5,7 @@ class Registrar < ActiveRecord::Base
   has_many :contacts, dependent: :restrict_with_error
   has_many :api_users, dependent: :restrict_with_error
   has_many :notifications
-  has_many :invoices, foreign_key: 'buyer_id'
+  has_many :invoices
   has_many :accounts, dependent: :destroy
   has_many :nameservers, through: :domains
   has_many :whois_records
@@ -13,7 +13,9 @@ class Registrar < ActiveRecord::Base
 
   delegate :balance, to: :cash_account, allow_nil: true
 
-  validates :name, :reg_no, :country_code, :email, :code, presence: true
+  validates :name, :reg_no, :email, :code, presence: true
+  validates :address_street, :address_zip, :address_city, :address_state, :address_country_code,
+            presence: true
   validates :name, :code, uniqueness: true
   validates :accounting_customer_code, presence: true
   validates :language, presence: true
@@ -61,23 +63,14 @@ class Registrar < ActiveRecord::Base
       seller_bank: Setting.registry_bank,
       seller_swift: Setting.registry_swift,
       seller_vat_no: Setting.registry_vat_no,
-      seller_country_code: Setting.registry_country_code,
-      seller_state: Setting.registry_state,
-      seller_street: Setting.registry_street,
-      seller_city: Setting.registry_city,
-      seller_zip: Setting.registry_zip,
+      seller_address: Registry.instance.billing_address,
       seller_phone: Setting.registry_phone,
       seller_url: Setting.registry_url,
       seller_email: Setting.registry_email,
       seller_contact_name: Setting.registry_invoice_contact,
-      buyer: self,
       buyer_name: name,
       buyer_reg_no: reg_no,
-      buyer_country_code: country_code,
-      buyer_state: state,
-      buyer_street: street,
-      buyer_city: city,
-      buyer_zip: zip,
+      buyer_address: billing_address,
       buyer_phone: phone,
       buyer_url: website,
       buyer_email: email,
@@ -103,16 +96,8 @@ class Registrar < ActiveRecord::Base
     cash_account.account_activities.create!(args)
   end
 
-  def address
-    [street, city, state, zip].reject(&:blank?).compact.join(', ')
-  end
-
   def to_s
     name
-  end
-
-  def country
-    Country.new(country_code)
   end
 
   def code=(code)
@@ -157,6 +142,26 @@ class Registrar < ActiveRecord::Base
     notifications.create!(text: text)
   end
 
+  def address=(address)
+    self.address_street = address.street
+    self.address_zip = address.street
+    self.address_city = address.street
+    self.address_state = address.street
+    self.address_country_code = address.street
+  end
+
+  def address
+    Address.new(street: address_street,
+                zip: address_zip,
+                city: address_city,
+                state: address_state,
+                country: Country.new(address_country_code).to_s)
+  end
+
+  def billing_address
+    address
+  end
+
   private
 
   def set_defaults
@@ -168,7 +173,7 @@ class Registrar < ActiveRecord::Base
   end
 
   def home_vat_payer?
-    country == Registry.instance.legal_address_country
+    Country.new(address_country_code) == Registry.instance.legal_address_country
   end
 
   def foreign_vat_payer?

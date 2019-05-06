@@ -23,7 +23,7 @@ class RegistrarAreaInvoicesTest < ApplicationSystemTestCase
   end
 
   def test_invoice_delivery_form_is_pre_populated_with_billing_email_of_a_registrar
-    assert_equal 'billing@bestnames.test', @invoice.buyer.billing_email
+    assert_equal 'billing@bestnames.test', @invoice.registrar.billing_email
     visit new_registrar_invoice_delivery_url(@invoice)
     assert_field 'Recipient', with: 'billing@bestnames.test'
   end

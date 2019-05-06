@@ -4,8 +4,10 @@ one:
   currency: EUR
   seller_name: John Doe
   seller_iban: 1234
-  buyer: bestnames
+  seller_address: Main Street 1, 1234, NY, NY State, United States
+  registrar: bestnames
   buyer_name: Jane Doe
+  buyer_address: Main Street 2, 1234, NY, NY State, United States
   vat_rate: 0.1
   total: 16.50
   reference_no: 13
@@ -18,8 +20,10 @@ for_payments_test:
   currency: EUR
   seller_name: John Doe
   seller_iban: 1234
-  buyer: bestnames
+  seller_address: Main Street 1, 1234, NY, NY State, United States
+  registrar: bestnames
   buyer_name: Jane Doe
+  buyer_address: Main Street 2, 1234, NY, NY State, United States
   vat_rate: 0.1
   reference_no: 13
   total: 12.00

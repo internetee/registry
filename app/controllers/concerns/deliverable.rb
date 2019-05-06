@@ -7,7 +7,7 @@ module Deliverable
 
   def new
     authorize! :manage, @invoice
-    @recipient = @invoice.buyer.billing_email
+    @recipient = @invoice.registrar.billing_email
   end
 
   def create

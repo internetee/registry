@@ -65,7 +65,7 @@ class InvoiceTest < ActiveSupport::TestCase
     registrar = registrars(:bestnames)
     invoice = @invoice.dup
     invoice.vat_rate = nil
-    invoice.buyer = registrar
+    invoice.registrar = registrar
     invoice.items = @invoice.items
 
     registrar.stub(:effective_vat_rate, BigDecimal(55)) do
@@ -127,7 +127,7 @@ class InvoiceTest < ActiveSupport::TestCase
     registrar.vat_no = 'US1234'
     invoice = @invoice.dup
     invoice.buyer_vat_no = nil
-    invoice.buyer = registrar
+    invoice.registrar = registrar
     invoice.items = @invoice.items
     invoice.save!
     assert_equal 'US1234', invoice.buyer_vat_no
@@ -150,9 +150,48 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 1, iteration_count
   end
 
-  def test_returns_combined_seller_address
-    invoice = Invoice.new(seller_street: 'street', seller_city: 'city', seller_state: 'state',
-                          seller_zip: nil)
-    assert_equal 'street, city, state', invoice.seller_address
+  def test_returns_seller
+    invoice = Invoice.new(seller_name: 'seller name',
+                          seller_reg_no: 'seller reg number',
+                          seller_vat_no: 'seller vat number',
+                          seller_address: 'seller address',
+                          seller_email: 'seller email',
+                          seller_phone: 'seller phone',
+                          seller_url: 'seller website',
+                          seller_contact_name: 'seller contact person',
+                          seller_iban: 'seller iban',
+                          seller_swift: 'seller swift',
+                          seller_bank: 'seller bank')
+
+    assert_equal 'seller name', invoice.seller.name
+    assert_equal 'seller reg number', invoice.seller.registration_number
+    assert_equal 'seller vat number', invoice.seller.vat_number
+    assert_equal 'seller address', invoice.seller.address
+    assert_equal 'seller email', invoice.seller.email
+    assert_equal 'seller phone', invoice.seller.phone
+    assert_equal 'seller website', invoice.seller.website
+    assert_equal 'seller contact person', invoice.seller.contact_person
+
+    assert_equal 'seller iban', invoice.seller.bank_account.iban
+    assert_equal 'seller swift', invoice.seller.bank_account.swift
+    assert_equal 'seller bank', invoice.seller.bank_account.bank_name
+  end
+
+  def test_returns_buyer
+    invoice = Invoice.new(buyer_name: 'buyer name',
+                          buyer_reg_no: 'buyer reg number',
+                          buyer_vat_no: 'buyer vat number',
+                          buyer_address: 'buyer address',
+                          buyer_email: 'buyer email',
+                          buyer_phone: 'buyer phone',
+                          buyer_url: 'buyer website')
+
+    assert_equal 'buyer name', invoice.buyer.name
+    assert_equal 'buyer reg number', invoice.buyer.registration_number
+    assert_equal 'buyer vat number', invoice.buyer.vat_number
+    assert_equal 'buyer address', invoice.buyer.address
+    assert_equal 'buyer email', invoice.buyer.email
+    assert_equal 'buyer phone', invoice.buyer.phone
+    assert_equal 'buyer website', invoice.buyer.website
   end
 end

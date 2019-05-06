@@ -3,11 +3,11 @@ bestnames:
   reg_no: 1234
   code: bestnames
   email: info@bestnames.test
-  street: Main Street
-  zip: 12345
-  city: New York
-  state: New York
-  country_code: US
+  address_street: Main Street 1
+  address_zip: 1234
+  address_city: NY
+  address_state: NY State
+  address_country_code: US
   accounting_customer_code: bestnames
   language: en
   billing_email: billing@bestnames.test
@@ -19,18 +19,26 @@ goodnames:
   reg_no: 12345
   code: goodnames
   email: info@goodnames.test
-  country_code: DE
+  address_street: Main Street 1
+  address_zip: 1234
+  address_city: NY
+  address_state: NY State
+  address_country_code: US
   vat_no: DE123456789
   accounting_customer_code: goodnames
   language: en
   reference_no: 26
 
 not_in_use:
-  name: any
+  name: Not in use
   reg_no: any
   code: any
   email: any@example.com
-  country_code: US
+  address_street: Main Street 1
+  address_zip: 1234
+  address_city: NY
+  address_state: NY State
+  address_country_code: US
   vat_no: any
   accounting_customer_code: any
   language: en
@@ -41,7 +49,11 @@ invalid:
   reg_no: any
   code: another
   email: any
-  country_code: US
+  address_street: Main Street 1
+  address_zip: 1234
+  address_city: NY
+  address_state: NY State
+  address_country_code: US
   vat_no: any
   accounting_customer_code: any
   language: en

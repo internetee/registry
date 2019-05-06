@@ -33,6 +33,10 @@ en:
         create_btn: Create registrar
         update_btn: Update registrar
 
+        address:
+          header: Address
+          hint: Used as a billing address
+
         billing:
           header: Billing
           no_reference_number_hint: Reference number will be generated automatically

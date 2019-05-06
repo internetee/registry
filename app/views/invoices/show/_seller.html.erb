@@ -1,0 +1,38 @@
+<h2><%= t '.header' %></h2>
+
+<hr/>
+
+<dl class="dl-horizontal">
+    <dt><%= Invoice::Seller.human_attribute_name :name %></dt>
+    <dd><%= seller.name %></dd>
+
+    <dt><%= Invoice::Seller.human_attribute_name :registration_number %></dt>
+    <dd><%= seller.registration_number %></dd>
+
+    <dt><%= Invoice::Seller.human_attribute_name :vat_number %></dt>
+    <dd><%= seller.vat_number %></dd>
+
+    <dt><%= BankAccount.human_attribute_name :iban %></dt>
+    <dd><%= seller.bank_account.iban %></dd>
+
+    <dt><%= BankAccount.human_attribute_name :bank_name %></dt>
+    <dd><%= seller.bank_account.bank_name %></dd>
+
+    <dt><%= BankAccount.human_attribute_name :swift %></dt>
+    <dd><%= seller.bank_account.swift %></dd>
+
+    <dt><%= Invoice::Seller.human_attribute_name :address %></dt>
+    <dd><%= seller.address %></dd>
+
+    <dt><%= Invoice::Seller.human_attribute_name :email %></dt>
+    <dd><%= seller.email %></dd>
+
+    <dt><%= Invoice::Seller.human_attribute_name :phone %></dt>
+    <dd><%= seller.phone %></dd>
+
+    <dt><%= Invoice::Seller.human_attribute_name :website %></dt>
+    <dd><%= seller.website %></dd>
+
+    <dt><%= Invoice::Seller.human_attribute_name :contact_person %></dt>
+    <dd><%= seller.contact_person %></dd>
+</dl>

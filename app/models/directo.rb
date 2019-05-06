@@ -29,7 +29,7 @@ class Directo < ActiveRecord::Base
                 "InvoiceDate" => invoice.issue_date.strftime("%Y-%m-%d"),
                 "PaymentTerm" => Setting.directo_receipt_payment_term,
                 "Currency"    => invoice.currency,
-                "CustomerCode"=> invoice.buyer.accounting_customer_code
+                "CustomerCode"=> invoice.registrar.accounting_customer_code
             ){
               xml.line(
                   "ProductID"      => Setting.directo_receipt_product_name,

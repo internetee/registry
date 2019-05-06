@@ -31,7 +31,7 @@ class BankTransaction < ActiveRecord::Base
   end
 
   def registrar
-    @registrar ||= Invoice.find_by(reference_no: reference_no)&.buyer
+    @registrar ||= Invoice.find_by(reference_no: reference_no)&.registrar
   end
 
 
@@ -75,7 +75,7 @@ class BankTransaction < ActiveRecord::Base
       return
     end
 
-    create_activity(invoice.buyer, invoice)
+    create_activity(invoice.registrar, invoice)
   end
 
   def create_activity(registrar, invoice)

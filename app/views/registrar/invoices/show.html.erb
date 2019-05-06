@@ -1,0 +1,35 @@
+<% content_for :actions do %>
+    <%= link_to(t('.download_btn'), download_registrar_invoice_path(@invoice), class: 'btn btn-default') %>
+    <%= link_to(t('.deliver_btn'), new_registrar_invoice_delivery_path(@invoice), class: 'btn btn-default') %>
+    <% if @invoice.cancellable? %>
+        <%= link_to(t(:cancel), cancel_registrar_invoice_path(@invoice), method: :patch, class: 'btn btn-warning') %>
+    <% end %>
+    <%= link_to(t(:back), registrar_invoices_path, class: 'btn btn-default') %>
+<% end %>
+<%= render 'shared/title', name: @invoice.to_s %>
+<%= render 'shared/full_errors', object: @invoice %>
+<div class="row">
+    <div class="col-md-6">
+        <%= render 'invoices/show/details' %>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <%= render 'invoices/show/seller', seller: @invoice.seller %>
+    </div>
+    <div class="col-md-6">
+        <%= render 'invoices/show/buyer', buyer: @invoice.buyer %>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'invoices/show/items' %>
+    </div>
+</div>
+<% if @invoice.payable? %>
+    <div class="row semifooter">
+        <div class="col-md-6-offset-6 text-right">
+            <%= render 'banklinks', locals: { payment_channels: PaymentOrders::PAYMENT_METHODS } %>
+        </div>
+    </div>
+<% end %>

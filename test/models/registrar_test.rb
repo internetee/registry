@@ -5,8 +5,8 @@ class RegistrarTest < ActiveSupport::TestCase
     @registrar = registrars(:bestnames)
   end
 
-  def test_default_fixture_is_valid
-    assert @registrar.valid?, proc { @registrar.errors.full_messages }
+  def test_valid_registrar_is_valid
+    assert valid_registrar.valid?, proc { valid_registrar.errors.full_messages }
   end
 
   def test_invalid_fixture_is_invalid
@@ -33,11 +33,6 @@ class RegistrarTest < ActiveSupport::TestCase
     assert @registrar.invalid?
   end
 
-  def test_invalid_without_country_code
-    @registrar.country_code = ''
-    assert @registrar.invalid?
-  end
-
   def test_invalid_without_language
     @registrar.language = ''
     assert @registrar.invalid?
@@ -53,10 +48,6 @@ class RegistrarTest < ActiveSupport::TestCase
     Setting.default_language = 'en'
     registrar = Registrar.new(language: 'de')
     assert_equal 'de', registrar.language
-  end
-
-  def test_full_address
-    assert_equal 'Main Street, New York, New York, 12345', @registrar.address
   end
 
   def test_validates_reference_number_format
@@ -95,5 +86,45 @@ class RegistrarTest < ActiveSupport::TestCase
     assert_equal Date.parse('2010-07-15'), invoice.due_date
 
     Setting.days_to_keep_invoices_active = @original_days_to_keep_invoices_active_setting
+  end
+
+  def test_invalid_without_address
+    registrar = valid_registrar
+    address_parts = %i[street zip city state country_code]
+
+    address_parts.each do |address_part|
+      attribute_name = "address_#{address_part}"
+      registrar.public_send("#{attribute_name}=", '')
+      assert registrar.invalid?, "#{attribute_name} should be required"
+      registrar.public_send("#{attribute_name}=", 'some')
+    end
+  end
+
+  def test_returns_address
+    registrar = Registrar.new(address_street: 'Main Street 1',
+                              address_zip: '1234',
+                              address_city: 'NY',
+                              address_state: 'NY State',
+                              address_country_code: 'DE')
+
+    assert_equal Address.new(street: 'Main Street 1', zip: '1234', city: 'NY', state: 'NY State',
+                             country: 'Germany'), registrar.address
+  end
+
+  def test_returns_billing_address
+    registrar = Registrar.new(address_street: 'Main Street 1',
+                              address_zip: '1234',
+                              address_city: 'NY',
+                              address_state: 'NY State',
+                              address_country_code: 'DE')
+
+    assert_equal Address.new(street: 'Main Street 1', zip: '1234', city: 'NY', state: 'NY State',
+                             country: 'Germany'), registrar.billing_address
+  end
+
+  private
+
+  def valid_registrar
+    registrars(:bestnames)
   end
 end

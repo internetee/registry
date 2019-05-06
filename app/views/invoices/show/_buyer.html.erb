@@ -1,0 +1,23 @@
+<h2><%= t '.header' %></h2>
+
+<hr/>
+
+<dl class="dl-horizontal">
+    <dt><%= Invoice::Buyer.human_attribute_name :name %></dt>
+    <dd><%= buyer.name %></dd>
+
+    <dt><%= Invoice::Buyer.human_attribute_name :registration_number %></dt>
+    <dd><%= buyer.registration_number %></dd>
+
+    <dt><%= Invoice::Buyer.human_attribute_name :address %></dt>
+    <dd><%= buyer.address %></dd>
+
+    <dt><%= Invoice::Buyer.human_attribute_name :phone %></dt>
+    <dd><%= buyer.phone %></dd>
+
+    <dt><%= Invoice::Buyer.human_attribute_name :website %></dt>
+    <dd><%= buyer.website %></dd>
+
+    <dt><%= Invoice::Buyer.human_attribute_name :email %></dt>
+    <dd><%= buyer.email %></dd>
+</dl>

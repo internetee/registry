@@ -1,10 +1,17 @@
 class Invoice < ActiveRecord::Base
+  class Buyer < Company; end
+
+  class Seller < Company
+    attr_accessor :contact_person
+    attr_accessor :bank_account
+  end
+
   include Versions
   include Concerns::Invoice::Cancellable
   include Concerns::Invoice::Payable
 
   belongs_to :seller, class_name: 'Registrar'
-  belongs_to :buyer, class_name: 'Registrar'
+  belongs_to :registrar
   has_one  :account_activity
   has_many :items, class_name: 'InvoiceItem', dependent: :destroy
   has_many :directo_records, as: :item, class_name: 'Directo'
@@ -34,7 +41,7 @@ class Invoice < ActiveRecord::Base
   before_create :set_invoice_number
   before_create :apply_default_vat_rate, unless: :vat_rate?
   before_create :calculate_total, unless: :total?
-  before_create :apply_default_buyer_vat_no, unless: :buyer_vat_no?
+  before_create :apply_default_vat_no, unless: :buyer_vat_no?
 
   attribute :vat_rate, ::Type::VATRate.new
   attr_readonly :vat_rate
@@ -57,22 +64,6 @@ class Invoice < ActiveRecord::Base
 
   def to_s
     I18n.t('invoice_no', no: number)
-  end
-
-  def seller_address
-    [seller_street, seller_city, seller_state, seller_zip].reject(&:blank?).compact.join(', ')
-  end
-
-  def buyer_address
-    [buyer_street, buyer_city, buyer_state, buyer_zip].reject(&:blank?).compact.join(', ')
-  end
-
-  def seller_country
-    Country.new(seller_country_code)
-  end
-
-  def buyer_country
-    Country.new(buyer_country_code)
   end
 
 # order is used for directo/banklink description
@@ -103,14 +94,40 @@ class Invoice < ActiveRecord::Base
     generator.as_pdf
   end
 
+  def seller
+    bank_account = BankAccount.new(iban: seller_iban,
+                                   swift: seller_swift,
+                                   bank_name: seller_bank)
+
+    Seller.new(name: seller_name,
+               registration_number: seller_reg_no,
+               vat_number: seller_vat_no,
+               address: seller_address,
+               email: seller_email,
+               phone: seller_phone,
+               website: seller_url,
+               contact_person: seller_contact_name,
+               bank_account: bank_account)
+  end
+
+  def buyer
+    Buyer.new(name: buyer_name,
+              registration_number: buyer_reg_no,
+              vat_number: buyer_vat_no,
+              address: buyer_address,
+              email: buyer_email,
+              phone: buyer_phone,
+              website: buyer_url)
+  end
+
   private
 
   def apply_default_vat_rate
-    self.vat_rate = buyer.effective_vat_rate
+    self.vat_rate = registrar.effective_vat_rate
   end
 
-  def apply_default_buyer_vat_no
-    self.buyer_vat_no = buyer.vat_no
+  def apply_default_vat_no
+    self.buyer_vat_no = registrar.vat_no
   end
 
   def calculate_total

@@ -1,0 +1,53 @@
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-8">
+            <h1><%= t '.header' %></h1>
+        </div>
+
+        <div class="col-sm-4 text-right">
+            <%= link_to t(:add_deposit), new_registrar_deposit_path, class: 'btn btn-primary' %>
+            <%= link_to t(:account_activity), registrar_account_activities_path,
+                        class: 'btn btn-default' %>
+        </div>
+    </div>
+</div>
+
+<p>
+    <%= t(:your_current_account_balance_is,
+          balance: currency(current_registrar_user.registrar.cash_account.balance),
+          currency: current_registrar_user.registrar.cash_account.currency) %>
+</p>
+
+<div class="row">
+    <div class="col-md-12">
+        <hr/>
+        <%= render 'search_form' %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-xs-3"><%= Invoice.human_attribute_name :number %></th>
+                        <th class="col-xs-3"><%= Invoice.human_attribute_name :receipt_date %></th>
+                        <th class="col-xs-3"><%= Invoice.human_attribute_name :due_date %></th>
+                        <th class="col-xs-3"><%= Invoice.human_attribute_name :total %></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <%= render @invoices %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= paginate @invoices %>
+    </div>
+</div>

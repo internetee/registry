@@ -1,0 +1,45 @@
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-10">
+            <h1><%= t '.header' %></h1>
+        </div>
+
+        <div class="col-sm-2 text-right">
+            <%= link_to t('.new_btn'), new_admin_invoice_path, class: 'btn btn-primary' %>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-xs-3"><%= sort_link @q, :number %></th>
+                        <th class="col-xs-3">
+                            <%= sort_link @q, :buyer_name, Registrar.model_name.human %>
+                        </th>
+                        <th class="col-xs-3">
+                            <%= sort_link @q, :sort_due_date,
+                                          Invoice.human_attribute_name(:due_date) %>
+                        </th>
+                        <th class="col-xs-3">
+                            <%= sort_link @q, :sort_receipt_date,
+                                          Invoice.human_attribute_name(:receipt_date) %>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%= render @invoices %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= paginate @invoices %>
+    </div>
+</div>

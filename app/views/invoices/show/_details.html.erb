@@ -1,0 +1,73 @@
+<h4>
+    <%= t(:details) %>
+</h4>
+<hr/>
+<dl class="dl-horizontal">
+    <dt><%= Invoice.human_attribute_name :issue_date %></dt>
+    <dd><%= l @invoice.issue_date %></dd>
+
+    <% if @invoice.cancelled? %>
+        <dt>
+            <%= Invoice.human_attribute_name :cancelled_at %>
+        </dt>
+        <dd>
+            <%= l @invoice.cancelled_at %>
+        </dd>
+    <% end %>
+
+    <dt>
+        <%= Invoice.human_attribute_name :due_date %>
+    </dt>
+
+    <% if @invoice.cancelled? %>
+        <dd class="text-grey">
+            <%= t(:cancelled) %>
+        </dd>
+    <% else %>
+        <dd>
+            <%= l @invoice.due_date %>
+        </dd>
+    <% end %>
+
+    <dt>
+        <%= Invoice.human_attribute_name :receipt_date %>
+    </dt>
+
+    <% if @invoice.paid? %>
+        <dd>
+            <%= l @invoice.receipt_date %>
+        </dd>
+    <% elsif @invoice.cancelled? %>
+        <dd class="text-grey">
+            <%= t(:cancelled) %>
+        </dd>
+    <% else %>
+        <dd class="text-danger">
+            <%= t(:unpaid) %>
+        </dd>
+    <% end %>
+    <dt>
+        <%= Invoice.human_attribute_name :payment_term %>
+    </dt>
+    <dd>Prepayment</dd>
+    <dt>
+        <%= Invoice.human_attribute_name :number %>
+    </dt>
+    <dd>
+        <%= @invoice.number %>
+    </dd>
+    <% if @invoice.description.present? %>
+        <dt>
+            <%= t(:description) %>
+        </dt>
+        <dd>
+            <%= @invoice.description %>
+        </dd>
+    <% end %>
+    <dt>
+        <%= Invoice.human_attribute_name :reference_no %>
+    </dt>
+    <dd>
+        <%= @invoice.reference_no %>
+    </dd>
+</dl>

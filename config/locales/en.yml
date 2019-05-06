@@ -289,7 +289,6 @@ en:
   failed_to_update_contact: 'Failed to update contact'
   contact_updated: 'Contact updated'
   search: 'Search'
-  reg_no: 'Reg. no'
   status: 'Status'
   contact: 'Contact'
   starting_balance: 'Starting balance'
@@ -390,7 +389,6 @@ en:
   crt_revoked: 'CRT (revoked)'
   contact_org_error: 'Parameter value policy error. Org must be blank'
   contact_fax_error: 'Parameter value policy error. Fax must be blank'
-  invoices: 'Invoices'
   no_such_user: 'No such user'
   phone_no: 'Phone number'
   confirmation_sms_was_sent_to_your_phone_verification_code_is: 'Confirmation sms was sent to your phone. Verification code is %{code}.'
@@ -485,22 +483,12 @@ en:
   add_deposit: 'Add deposit'
   please_pay_the_following_invoice: 'Please pay the following invoice'
   invoice_no: 'Invoice no. %{no}'
-  invoice_number: Invoice no.
-  seller: 'Seller'
   unpaid: 'Unpaid'
   your_current_account_balance_is: 'Your current account balance is %{balance} %{currency}'
   billing: 'Billing'
   your_account: 'Your account'
-  issue_date: 'Issue date'
-  due_date: 'Due date'
-  payment_term: 'Payment term'
   iban: 'IBAN'
-  bank: 'Bank'
-  swift: 'Swift'
   issuer: 'Issuer'
-  items: 'Items'
-  buyer: 'Buyer'
-  unit: 'Unit'
   price: 'Price'
   total: 'Total'
   paid_at: 'Paid at'
@@ -526,7 +514,6 @@ en:
   document_no: 'Document no'
   import_file: 'Import file'
   bind_invoices: 'Bind invoices'
-  url: 'URL'
   binded: 'Binded'
   not_binded: 'Not binded'
   binded_invoice: 'Binded invoice'
@@ -558,7 +545,6 @@ en:
   registrant_head_title: 'EIS Registrant'
   registrant_head_title_sufix: ' - EIS Registrant'
   bind_manually: 'Bind manually'
-  client: 'Client'
   you_have_a_new_invoice: 'You have a new invoice.'
   sincerely: 'Sincerely'
   expiry: 'Expiry'
@@ -694,3 +680,7 @@ en:
     ipv4: IPv4
     ipv6: IPv6
     reference_no: Reference number
+    reg_no: Registration number
+    iban: IBAN
+    vat_number: VAT number
+    swift: SWIFT

@@ -10,6 +10,8 @@ en:
 
       index:
         header: Invoices
+
+      search_form:
         reset_btn: Reset
 
       show:

@@ -69,7 +69,7 @@ class Ability
   end
 
   def billing # Registrar/api_user dynamic role
-    can(:manage, Invoice) { |i| i.buyer_id == @user.registrar_id }
+    can(:manage, Invoice) { |i| i.registrar == @user.registrar }
     can :manage, :deposit
     can :read, AccountActivity
   end

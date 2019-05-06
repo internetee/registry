@@ -148,14 +148,14 @@
             Details
           %hr
           %dl.dl-horizontal
-            %dt= t(:issue_date)
+            %dt= Invoice.human_attribute_name :issue_date
             %dd= l @invoice.issue_date
 
             - if @invoice.cancelled?
               %dt= Invoice.human_attribute_name :cancelled_at
               %dd= l @invoice.cancelled_at
 
-            %dt= t(:due_date)
+            %dt= Invoice.human_attribute_name :due_date
             - if @invoice.cancelled?
               %dd= t(:cancelled)
             - else
@@ -169,13 +169,13 @@
             - else
               %dd{class: 'text-danger'}= t(:unpaid)
 
-            %dt= t(:issuer)
-            %dd= @invoice.seller_contact_name
+            %dt= Invoice::Seller.human_attribute_name :contact_person
+            %dd= @invoice.seller.contact_person
 
-            %dt= t(:payment_term)
+            %dt= Invoice.human_attribute_name :payment_term
             %dd Prepayment
           
-            %dt= t(:invoice_number)
+            %dt= Invoice.human_attribute_name :number
             %dd= @invoice.number
 
             - if @invoice.description.present?
@@ -186,34 +186,29 @@
             %dd= @invoice.reference_no
 
         .col-md-6.right
-          %h4= t(:client)
+          %h4= t('.buyer')
           %hr
           %dl.dl-horizontal
-            %dt= t(:name)
-            %dd= @invoice.buyer_name
+            %dt= Invoice::Buyer.human_attribute_name :name
+            %dd= @invoice.buyer.name
 
-            %dt= t(:reg_no)
-            %dd= @invoice.buyer_reg_no
+            %dt= Invoice::Buyer.human_attribute_name :registration_number
+            %dd= @invoice.buyer.registration_number
 
-            - if @invoice.buyer_address.present?
-              %dt= t(:address)
-              %dd= @invoice.buyer_address
+            %dt= Invoice::Buyer.human_attribute_name :address
+            %dd= @invoice.buyer.address
 
-            - if @invoice.buyer_country.present?
-              %dt= t(:country)
-              %dd= @invoice.buyer_country
+            - if @invoice.buyer.email.present?
+              %dt= Invoice::Buyer.human_attribute_name :email
+              %dd= @invoice.buyer.email
 
-            - if @invoice.buyer_phone.present?
-              %dt= t(:phone)
-              %dd= @invoice.buyer_phone
+            - if @invoice.buyer.phone.present?
+              %dt= Invoice::Buyer.human_attribute_name :phone
+              %dd= @invoice.buyer.phone
 
-            - if @invoice.buyer_phone.present?
-              %dt= t(:url)
-              %dd= @invoice.buyer_url
-
-            - if @invoice.buyer_email.present?
-              %dt= t(:email)
-              %dd= @invoice.buyer_email
+            - if @invoice.buyer.website.present?
+              %dt= Invoice::Buyer.human_attribute_name :website
+              %dd= @invoice.buyer.website
 
       .clear
       .row.pull-down
@@ -222,11 +217,11 @@
             %table.table.table-hover.table-condensed
               %thead
                 %tr
-                  %th{class: 'col-xs-4'}= t(:description)
-                  %th{class: 'col-xs-2'}= t(:unit)
+                  %th{class: 'col-xs-4'}= InvoiceItem.human_attribute_name :description
+                  %th{class: 'col-xs-2'}= InvoiceItem.human_attribute_name :unit
                   %th{class: 'col-xs-1'}= InvoiceItem.human_attribute_name :quantity
-                  %th{class: 'col-xs-3'}= t(:price)
-                  %th{class: 'col-xs-2'}= t(:total)
+                  %th{class: 'col-xs-3'}= InvoiceItem.human_attribute_name :price
+                  %th{class: 'col-xs-2'}= InvoiceItem.human_attribute_name :total
               %tbody
                 - @invoice.each do |invoice_item|
                   %tr
@@ -246,40 +241,38 @@
                   %td= number_to_currency @invoice.vat_amount
                 %tr
                   %th.no-border{colspan: 3}
-                  %th= t(:total)
+                  %th= Invoice.human_attribute_name :total
                   %td= number_to_currency @invoice.total
 
       #footer
         %hr
         .row
           .col-md-3.left
-            = @invoice.seller_name
+            = @invoice.seller.name
             %br
-            = @invoice.seller_address
+            = @invoice.seller.address
             %br
-            = @invoice.seller_country
+            = "#{Invoice::Seller.human_attribute_name :registration_number} #{@invoice.seller.registration_number}"
             %br
-            = "#{t('reg_no')} #{@invoice.seller_reg_no}"
-            %br
-            = "#{Registrar.human_attribute_name :vat_no} #{@invoice.seller_vat_no}"
+            = "#{Invoice::Seller.human_attribute_name :vat_number} #{@invoice.seller.vat_number}"
 
           .col-md-3.left
-            = @invoice.seller_phone
+            = @invoice.seller.phone
             %br
-            = @invoice.seller_email
+            = @invoice.seller.email
             %br
-            = @invoice.seller_url
+            = @invoice.seller.website
 
           .col-md-3.text-right.left
-            = t(:bank)
+            = BankAccount.human_attribute_name :bank_name
             %br
-            = t(:iban)
+            = BankAccount.human_attribute_name :iban
             %br
-            = t(:swift)
+            = BankAccount.human_attribute_name :swift
 
           .col-md-3.left
-            = @invoice.seller_bank
+            = @invoice.seller.bank_account.bank_name
             %br
-            = @invoice.seller_iban
+            = @invoice.seller.bank_account.iban
             %br
-            = @invoice.seller_swift
+            = @invoice.seller.bank_account.swift

@@ -22,7 +22,7 @@
           - if can? :view, Billing::Price
             %li= link_to t('.prices'), admin_prices_path
           %li= link_to t(:bank_statements), admin_bank_statements_path
-          %li= link_to t(:invoices), admin_invoices_path
+          %li= link_to t('.invoices'), admin_invoices_path
           %li= link_to t(:account_activities), admin_account_activities_path(created_after: 'today')
           %li.divider
           %li.dropdown-header= t('.archive')

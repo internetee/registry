@@ -1,0 +1,16 @@
+en:
+  invoice:
+    pdf:
+      seller: Seller
+      buyer: Buyer
+
+  invoices:
+    show:
+      seller:
+        header: Seller
+
+      buyer:
+        header: Buyer
+
+      items:
+        header: Items

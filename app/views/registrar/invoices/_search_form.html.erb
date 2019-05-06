@@ -1,0 +1,50 @@
+<%= search_form_for @q, url: [:registrar, :invoices], html: { style: 'margin-bottom: 0;' } do |f| %>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <%= f.label t(:minimum_invoice_no) %>
+                <%= f.search_field :number_gteq, class: 'form-control', placeholder: t(:minimum_invoice_no), autocomplete: 'off' %>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <%= f.label t(:maximum_invoice_no) %>
+                <%= f.search_field :number_lteq, class: 'form-control', placeholder: t(:maximum_invoice_no), autocomplete: 'off' %>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <%= f.label t(:due_date_from) %>
+                <%= f.search_field :due_date_gteq, value: params[:q][:due_date_gteq], class: 'form-control js-datepicker', placeholder: t(:due_date_from) %>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <%= f.label t(:due_date_until) %>
+                <%= f.search_field :due_date_lteq, value: params[:q][:due_date_lteq], class: 'form-control js-datepicker', placeholder: t(:due_date_until) %>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <%= f.label t(:minimum_total) %>
+                <%= f.search_field :total_gteq, class: 'form-control', placeholder: t(:minimum_total), autocomplete: 'off' %>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <%= f.label t(:maximum_total) %>
+                <%= f.search_field :total_lteq, class: 'form-control', placeholder: t(:maximum_total), autocomplete: 'off' %>
+            </div>
+        </div>
+        <div class="col-md-3" style="padding-top: 25px;">
+            <button class="btn btn-default">
+                &nbsp;
+                <span class="glyphicon glyphicon-search"></span>
+                &nbsp;
+            </button>
+            <%= link_to t('.reset_btn'), registrar_invoices_path, class: 'btn btn-default' %>
+        </div>
+    </div>
+<% end %>

@@ -1,0 +1,20 @@
+<tr class="invoice">
+    <td><%= link_to invoice, registrar_invoice_path(invoice) %></td>
+
+    <% if invoice.paid? %>
+        <td>
+            <%= l invoice.receipt_date %>
+        </td>
+    <% elsif invoice.cancelled? %>
+        <td class="text-grey">
+            <%= t(:cancelled) %>
+        </td>
+    <% else %>
+        <td class="text-danger">
+            <%= t(:unpaid) %>
+        </td>
+    <% end %>
+
+    <td><%= l invoice.due_date %></td>
+    <td><%= number_to_currency invoice.total %></td>
+</tr>

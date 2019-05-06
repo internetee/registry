@@ -3,6 +3,7 @@ en:
     invoices:
       index:
         header: Invoices
+        new_btn: New invoice
 
       show:
         download_btn: Download

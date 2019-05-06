@@ -1064,7 +1064,7 @@ CREATE TABLE public.invoices (
     seller_url character varying,
     seller_email character varying,
     seller_contact_name character varying,
-    buyer_id integer,
+    registrar_id integer NOT NULL,
     buyer_name character varying NOT NULL,
     buyer_reg_no character varying,
     buyer_country_code character varying,
@@ -1082,7 +1082,9 @@ CREATE TABLE public.invoices (
     total numeric(10,2) NOT NULL,
     in_directo boolean DEFAULT false,
     buyer_vat_no character varying,
-    issue_date date NOT NULL
+    issue_date date NOT NULL,
+    buyer_address character varying DEFAULT ''::character varying NOT NULL,
+    seller_address character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -2188,11 +2190,11 @@ CREATE TABLE public.registrars (
     phone character varying,
     email character varying NOT NULL,
     billing_email character varying,
-    country_code character varying NOT NULL,
-    state character varying,
-    city character varying,
-    street character varying,
-    zip character varying,
+    address_country_code character varying NOT NULL,
+    address_state character varying NOT NULL,
+    address_city character varying NOT NULL,
+    address_street character varying NOT NULL,
+    address_zip character varying NOT NULL,
     code character varying NOT NULL,
     website character varying,
     accounting_customer_code character varying NOT NULL,
@@ -3610,10 +3612,10 @@ CREATE INDEX index_invoice_items_on_invoice_id ON public.invoice_items USING btr
 
 
 --
--- Name: index_invoices_on_buyer_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_invoices_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_invoices_on_buyer_id ON public.invoices USING btree (buyer_id);
+CREATE INDEX index_invoices_on_registrar_id ON public.invoices USING btree (registrar_id);
 
 
 --
@@ -4067,6 +4069,14 @@ ALTER TABLE ONLY public.domains
 
 ALTER TABLE ONLY public.domains
     ADD CONSTRAINT domains_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
+
+
+--
+-- Name: fk_rails_242b91538b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.invoices
+    ADD CONSTRAINT fk_rails_242b91538b FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
 
 
 --
@@ -4944,4 +4954,18 @@ INSERT INTO schema_migrations (version) VALUES ('20190328151516');
 INSERT INTO schema_migrations (version) VALUES ('20190328151838');
 
 INSERT INTO schema_migrations (version) VALUES ('20190415120246');
+
+INSERT INTO schema_migrations (version) VALUES ('20190506135836');
+
+INSERT INTO schema_migrations (version) VALUES ('20190507122835');
+
+INSERT INTO schema_migrations (version) VALUES ('20190508091835');
+
+INSERT INTO schema_migrations (version) VALUES ('20190508101415');
+
+INSERT INTO schema_migrations (version) VALUES ('20190508101552');
+
+INSERT INTO schema_migrations (version) VALUES ('20190508101809');
+
+INSERT INTO schema_migrations (version) VALUES ('20190508122705');
 
