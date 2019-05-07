@@ -2,7 +2,6 @@ module Depp
   class Domain
     include ActiveModel::Conversion
     extend ActiveModel::Naming
-    include DisableHtml5Validation
 
     attr_accessor :name, :current_user, :epp_xml
 
