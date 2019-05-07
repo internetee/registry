@@ -14,8 +14,8 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
   end
 
   def test_sells_domain_at_auction
-    @domain.update!(delete_at: Time.zone.parse('2010-07-05 07:59'))
-    travel_to Time.zone.parse('2010-07-05 08:00')
+    @domain.update!(delete_date: '2010-07-04')
+    travel_to Time.zone.parse('2010-07-05')
 
     Domain.release_domains
 
@@ -50,17 +50,17 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
   end
 
   def test_deletes_registered_domain
-    @domain.update!(delete_at: Time.zone.parse('2010-07-05 07:59'))
-    travel_to Time.zone.parse('2010-07-05 08:00')
+    @domain.update!(delete_date: '2010-07-04')
+    travel_to Time.zone.parse('2010-07-05')
 
     assert_difference 'Domain.count', -1 do
       Domain.release_domains
     end
   end
 
-  def test_ignores_domains_with_delete_at_in_the_future_or_now
-    @domain.update!(delete_at: Time.zone.parse('2010-07-05 08:00'))
-    travel_to Time.zone.parse('2010-07-05 08:00')
+  def test_ignores_domains_with_delete_date_in_the_future
+    @domain.update!(delete_date: '2010-07-06')
+    travel_to Time.zone.parse('2010-07-05')
 
     assert_no_difference 'Domain.count' do
       Domain.release_domains
@@ -69,9 +69,8 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
   end
 
   def test_ignores_domains_with_server_delete_prohibited_status
-    @domain.update!(delete_at: Time.zone.parse('2010-07-05 07:59'),
-                    statuses: [DomainStatus::SERVER_DELETE_PROHIBITED])
-    travel_to Time.zone.parse('2010-07-05 08:00')
+    @domain.update!(delete_date: '2010-07-04', statuses: [DomainStatus::SERVER_DELETE_PROHIBITED])
+    travel_to Time.zone.parse('2010-07-05')
 
     assert_no_difference 'Domain.count' do
       Domain.release_domains

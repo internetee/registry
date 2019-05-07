@@ -36,7 +36,7 @@ module Serializers
           legacy_registrar_id: domain.legacy_registrar_id,
           legacy_registrant_id: domain.legacy_registrant_id,
           outzone_at: domain.outzone_at,
-          delete_at: domain.delete_at,
+          delete_date: domain.delete_date,
           registrant_verification_asked_at: domain.registrant_verification_asked_at,
           registrant_verification_token: domain.registrant_verification_token,
           pending_json: domain.pending_json,

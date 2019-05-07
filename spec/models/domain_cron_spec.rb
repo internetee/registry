@@ -31,7 +31,7 @@ RSpec.describe DomainCron do
     old_valid_to = Time.zone.now - 10.days
     @domain.valid_to = old_valid_to
     @domain.statuses = [DomainStatus::EXPIRED]
-    @domain.outzone_at, @domain.delete_at = nil, nil
+    @domain.outzone_at, @domain.delete_date = nil, nil
     @domain.save
 
     described_class.start_expire_period

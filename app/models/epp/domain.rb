@@ -549,7 +549,7 @@ class Epp::Domain < Domain
       msg: I18n.t(:object_status_prohibits_operation)
     } unless pending_deletable?
 
-    self.delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc.beginning_of_day
+    self.delete_date = Time.zone.today + Setting.redemption_grace_period.days + 1.day
     set_pending_delete
     set_server_hold if server_holdable?
     save(validate: false)
@@ -576,7 +576,7 @@ class Epp::Domain < Domain
 
     self.expire_time = renewed_expire_time
     self.outzone_at = nil
-    self.delete_at = nil
+    self.delete_date = nil
     self.period = period
     self.period_unit = unit
 

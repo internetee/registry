@@ -5,9 +5,9 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
     @domain = domains(:shop)
   end
 
-  def test_discards_domains_with_past_delete_at
-    @domain.update!(delete_at: Time.zone.parse('2010-07-05 07:59'))
-    travel_to Time.zone.parse('2010-07-05 08:00')
+  def test_discards_domains_with_past_delete_date
+    @domain.update!(delete_date: '2010-07-04')
+    travel_to Time.zone.parse('2010-07-05')
 
     Domain.release_domains
     @domain.reload
@@ -25,9 +25,9 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
     assert @domain.discarded?
   end
 
-  def test_ignores_domains_with_delete_at_in_the_future_or_now
-    @domain.update!(delete_at: Time.zone.parse('2010-07-05 08:00'))
-    travel_to Time.zone.parse('2010-07-05 08:00')
+  def test_ignores_domains_with_delete_date_in_the_future
+    @domain.update!(delete_date: '2010-07-06')
+    travel_to Time.zone.parse('2010-07-05')
 
     Domain.release_domains
     @domain.reload
@@ -36,8 +36,8 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
   end
 
   def test_ignores_already_discarded_domains
-    @domain.update!(delete_at: Time.zone.parse('2010-07-05 07:59'))
-    travel_to Time.zone.parse('2010-07-05 08:00')
+    @domain.update!(delete_date:'2010-07-05')
+    travel_to Time.zone.parse('2010-07-05')
 
     Domain.release_domains
 
@@ -51,9 +51,8 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
   end
 
   def test_ignores_domains_with_server_delete_prohibited_status
-    @domain.update!(delete_at: Time.zone.parse('2010-07-05 07:59'),
-                    statuses: [DomainStatus::SERVER_DELETE_PROHIBITED])
-    travel_to Time.zone.parse('2010-07-05 08:00')
+    @domain.update!(delete_date: '2010-07-04', statuses: [DomainStatus::SERVER_DELETE_PROHIBITED])
+    travel_to Time.zone.parse('2010-07-05')
 
     Domain.release_domains
     @domain.reload
@@ -62,12 +61,13 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
   end
 
   def test_discarding_a_domain_schedules_deletion_at_random_time
-    travel_to Time.zone.parse('2010-07-05 10:30')
-    @domain.update_columns(delete_at: Time.zone.parse('2010-07-05 10:00'))
+    travel_to Time.zone.parse('2010-07-05')
+
+    @domain.update_columns(delete_date: '2010-07-05')
     Domain.release_domains
 
     other_domain = domains(:airport)
-    other_domain.update_columns(delete_at: Time.zone.parse('2010-07-05 10:00'))
+    other_domain.update_columns(delete_date: '2010-07-05')
     Domain.release_domains
 
     background_job = QueJob.find_by("args->>0 = '#{@domain.id}'", job_class: DomainDeleteJob.name)
@@ -77,9 +77,9 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
   end
 
   def test_discarding_a_domain_bypasses_validation
-    travel_to Time.zone.parse('2010-07-05 10:30')
     domain = domains(:invalid)
-    domain.update_columns(delete_at: Time.zone.parse('2010-07-05 10:00'))
+    domain.update_columns(delete_date: '2010-07-04')
+    travel_to Time.zone.parse('2010-07-05')
 
     Domain.release_domains
     domain.reload

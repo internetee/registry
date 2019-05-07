@@ -15,16 +15,16 @@ module Concerns
 
         def releasable_domains
           if release_to_auction
-            where('(delete_at < ? OR force_delete_date <= ?)' \
+            where('(delete_date <= ? OR force_delete_date <= ?)' \
               ' AND ? != ALL(coalesce(statuses, array[]::varchar[]))',
-                  Time.zone.now,
+                  Time.zone.today,
                   Time.zone.today,
                   DomainStatus::SERVER_DELETE_PROHIBITED)
           else
-            where('(delete_at < ? OR force_delete_date <= ?)' \
+            where('(delete_date <= ? OR force_delete_date <= ?)' \
               ' AND ? != ALL(coalesce(statuses, array[]::varchar[])) AND' \
                   ' ? != ALL(COALESCE(statuses, array[]::varchar[]))',
-                  Time.zone.now,
+                  Time.zone.today,
                   Time.zone.today,
                   DomainStatus::SERVER_DELETE_PROHIBITED,
                   DomainStatus::DELETE_CANDIDATE)
