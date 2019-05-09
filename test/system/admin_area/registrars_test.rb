@@ -15,7 +15,7 @@ class AdminRegistrarsSystemTest < ApplicationSystemTestCase
     click_on 'New registrar'
 
     fill_in 'Name', with: 'New name'
-    fill_in 'Reg no', with: '55555555'
+    fill_in 'Registration number', with: '55555555'
     fill_in 'Contact e-mail', with: 'any@registrar.test'
     select 'United States', from: 'Country'
     fill_in 'Accounting customer code', with: 'test'
