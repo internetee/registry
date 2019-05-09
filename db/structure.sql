@@ -1055,11 +1055,6 @@ CREATE TABLE public.invoices (
     seller_bank character varying,
     seller_swift character varying,
     seller_vat_no character varying,
-    seller_country_code character varying,
-    seller_state character varying,
-    seller_street character varying,
-    seller_city character varying,
-    seller_zip character varying,
     seller_phone character varying,
     seller_url character varying,
     seller_email character varying,
@@ -4944,4 +4939,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190328151516');
 INSERT INTO schema_migrations (version) VALUES ('20190328151838');
 
 INSERT INTO schema_migrations (version) VALUES ('20190415120246');
+
+INSERT INTO schema_migrations (version) VALUES ('20190509104457');
 
