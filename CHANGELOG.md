@@ -1,3 +1,7 @@
+07.05.2019
+* Set domains.delete_at column type to date [#1173](https://github.com/internetee/registry/pull/1173)
+* Removed "html5_validators" gem [#367](https://github.com/internetee/registry/issues/367)
+
 02.05.2019
 * From address is now configurable for force delete auto email messages [#1164](https://github.com/internetee/registry/issues/1164)
 * Encode domain part of email addresses to punycode [#1168](https://github.com/internetee/registry/pull/1168)
