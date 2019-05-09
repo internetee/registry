@@ -1062,11 +1062,6 @@ CREATE TABLE public.invoices (
     buyer_id integer,
     buyer_name character varying NOT NULL,
     buyer_reg_no character varying,
-    buyer_country_code character varying,
-    buyer_state character varying,
-    buyer_street character varying,
-    buyer_city character varying,
-    buyer_zip character varying,
     buyer_phone character varying,
     buyer_url character varying,
     buyer_email character varying,
@@ -4941,4 +4936,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190328151838');
 INSERT INTO schema_migrations (version) VALUES ('20190415120246');
 
 INSERT INTO schema_migrations (version) VALUES ('20190509104457');
+
+INSERT INTO schema_migrations (version) VALUES ('20190509112438');
 
