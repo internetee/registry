@@ -42,6 +42,9 @@ module Concerns
           transaction do
             domain_name.sell_at_auction if domain_name.auctionable?
             destroy!
+            registrar.notifications.create!(text: "#{I18n.t(:domain_deleted)}: #{name}",
+                                            attached_obj_id: id,
+                                            attached_obj_type: self.class)
           end
         else
           discard

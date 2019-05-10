@@ -58,6 +58,15 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
     end
   end
 
+  def test_notifies_registrar
+    @domain.update!(delete_date: '2010-07-04')
+    travel_to Time.zone.parse('2010-07-05')
+
+    assert_difference -> { @domain.registrar.notifications.count } do
+      Domain.release_domains
+    end
+  end
+
   def test_ignores_domains_with_delete_date_in_the_future
     @domain.update!(delete_date: '2010-07-06')
     travel_to Time.zone.parse('2010-07-05')
