@@ -2188,11 +2188,11 @@ CREATE TABLE public.registrars (
     phone character varying,
     email character varying NOT NULL,
     billing_email character varying,
-    country_code character varying NOT NULL,
-    state character varying,
-    city character varying,
-    street character varying,
-    zip character varying,
+    address_country_code character varying NOT NULL,
+    address_state character varying,
+    address_city character varying,
+    address_street character varying,
+    address_zip character varying,
     code character varying NOT NULL,
     website character varying,
     accounting_customer_code character varying NOT NULL,
@@ -4944,4 +4944,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190328151516');
 INSERT INTO schema_migrations (version) VALUES ('20190328151838');
 
 INSERT INTO schema_migrations (version) VALUES ('20190415120246');
+
+INSERT INTO schema_migrations (version) VALUES ('20190510090240');
 

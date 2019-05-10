@@ -5,8 +5,8 @@ class RegistrarTest < ActiveSupport::TestCase
     @registrar = registrars(:bestnames)
   end
 
-  def test_default_fixture_is_valid
-    assert @registrar.valid?, proc { @registrar.errors.full_messages }
+  def test_valid_registrar_is_valid
+    assert valid_registrar.valid?, proc { valid_registrar.errors.full_messages }
   end
 
   def test_invalid_fixture_is_invalid
@@ -14,33 +14,33 @@ class RegistrarTest < ActiveSupport::TestCase
   end
 
   def test_invalid_without_name
-    @registrar.name = ''
-    assert @registrar.invalid?
+    registrar = valid_registrar
+    registrar.name = ''
+    assert registrar.invalid?
   end
 
   def test_invalid_without_reg_no
-    @registrar.reg_no = ''
-    assert @registrar.invalid?
+    registrar = valid_registrar
+    registrar.reg_no = ''
+    assert registrar.invalid?
   end
 
   def test_invalid_without_email
-    @registrar.email = ''
-    assert @registrar.invalid?
+    registrar = valid_registrar
+    registrar.email = ''
+    assert registrar.invalid?
   end
 
   def test_invalid_without_accounting_customer_code
-    @registrar.accounting_customer_code = ''
-    assert @registrar.invalid?
-  end
-
-  def test_invalid_without_country_code
-    @registrar.country_code = ''
-    assert @registrar.invalid?
+    registrar = valid_registrar
+    registrar.accounting_customer_code = ''
+    assert registrar.invalid?
   end
 
   def test_invalid_without_language
-    @registrar.language = ''
-    assert @registrar.invalid?
+    registrar = valid_registrar
+    registrar.language = ''
+    assert registrar.invalid?
   end
 
   def test_has_default_language
@@ -56,7 +56,9 @@ class RegistrarTest < ActiveSupport::TestCase
   end
 
   def test_full_address
-    assert_equal 'Main Street, New York, New York, 12345', @registrar.address
+    registrar = Registrar.new(address_street: 'Main Street 1', address_zip: '1234',
+                              address_city: 'NY', address_state: 'NY State')
+    assert_equal 'Main Street 1, NY, NY State, 1234', registrar.address
   end
 
   def test_validates_reference_number_format
@@ -95,5 +97,11 @@ class RegistrarTest < ActiveSupport::TestCase
     assert_equal Date.parse('2010-07-15'), invoice.due_date
 
     Setting.days_to_keep_invoices_active = @original_days_to_keep_invoices_active_setting
+  end
+
+  private
+
+  def valid_registrar
+    registrars(:bestnames)
   end
 end

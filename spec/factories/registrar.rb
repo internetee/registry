@@ -3,12 +3,12 @@ FactoryBot.define do
     sequence(:name) { |n| "test#{n}" }
     sequence(:code) { |n| "test#{n}" }
     sequence(:reg_no) { |n| "test#{n}" }
-    street 'test'
-    city 'test'
-    state 'test'
-    zip 'test'
     email 'test@test.com'
-    country_code 'US'
+    address_street 'test'
+    address_zip 'test'
+    address_city 'test'
+    address_state 'test'
+    address_country_code 'US'
     accounting_customer_code 'test'
     language 'en'
     sequence(:reference_no) { |n| "1234#{n}" }

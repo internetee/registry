@@ -1,0 +1,59 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <div class="pull-left">
+                    <%= t '.header' %>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :street %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.text_field :address_street, class: 'form-control' %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :city %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.text_field :address_city, class: 'form-control' %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :state %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.text_field :address_state, class: 'form-control' %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :zip %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.text_field :address_zip, class: 'form-control' %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :address_country_code, t(:country) %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.select :address_country_code, SortedCountry.all_options(f.object.address_country_code), {}, class: 'form-control' %>
+                    </div>
+                </div>
+
+                <p class="text-muted"><%= t '.hint' %></p>
+            </div>
+        </div>
+    </div>
+</div>
