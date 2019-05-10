@@ -70,7 +70,6 @@ class WhoisRecord < ActiveRecord::Base
     h[:registrar]         = domain.registrar.name
     h[:registrar_website] = domain.registrar.website
     h[:registrar_phone]   = domain.registrar.phone
-    h[:registrar_address] = domain.registrar.address
     h[:registrar_changed] = domain.registrar.updated_at.try(:to_s, :iso8601)
 
     h[:nameservers]         = domain.nameservers.hostnames.uniq.select(&:present?)
