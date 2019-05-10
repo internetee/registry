@@ -15,7 +15,7 @@ class RegistrarVATTest < ActiveSupport::TestCase
 
   def test_apply_vat_rate_from_registry_when_registrar_is_local_vat_payer
     Setting.registry_country_code = 'US'
-    @registrar.country_code = 'US'
+    @registrar.address_country_code = 'US'
 
     Registry.instance.stub(:vat_rate, BigDecimal('5.5')) do
       assert_equal BigDecimal('5.5'), @registrar.effective_vat_rate
@@ -32,13 +32,13 @@ class RegistrarVATTest < ActiveSupport::TestCase
 
   def test_apply_vat_rate_from_registrar_when_registrar_is_foreign_vat_payer
     Setting.registry_country_code = 'US'
-    @registrar.country_code = 'DE'
+    @registrar.address_country_code = 'DE'
     @registrar.vat_rate = BigDecimal('5.6')
     assert_equal BigDecimal('5.6'), @registrar.effective_vat_rate
   end
 
   def test_require_vat_rate_when_registrar_is_foreign_vat_payer_and_vat_no_is_absent
-    @registrar.country_code = 'DE'
+    @registrar.address_country_code = 'DE'
     @registrar.vat_no = ''
 
     @registrar.vat_rate = ''
@@ -50,7 +50,7 @@ class RegistrarVATTest < ActiveSupport::TestCase
   end
 
   def test_require_no_vat_rate_when_registrar_is_foreign_vat_payer_and_vat_no_is_present
-    @registrar.country_code = 'DE'
+    @registrar.address_country_code = 'DE'
     @registrar.vat_no = 'valid'
 
     @registrar.vat_rate = 1
@@ -61,7 +61,7 @@ class RegistrarVATTest < ActiveSupport::TestCase
   end
 
   def test_vat_rate_validation
-    @registrar.country_code = 'DE'
+    @registrar.address_country_code = 'DE'
     @registrar.vat_no = ''
 
     @registrar.vat_rate = -1
@@ -78,7 +78,7 @@ class RegistrarVATTest < ActiveSupport::TestCase
   end
 
   def test_serializes_and_deserializes_vat_rate
-    @registrar.country_code = 'DE'
+    @registrar.address_country_code = 'DE'
     @registrar.vat_rate = BigDecimal('25.5')
     @registrar.save!
     @registrar.reload

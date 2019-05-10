@@ -28,23 +28,23 @@
 
 <div class="row">
     <div class="col-md-6">
-        <%= render 'details', registrar: @registrar %>
+        <%= render 'admin/registrars/show/details', registrar: @registrar %>
     </div>
     <div class="col-md-6">
-        <%= render 'contacts', registrar: @registrar %>
-        <%= render 'billing', registrar: @registrar %>
-        <%= render 'preferences', registrar: registrar %>
+        <%= render 'admin/registrars/show/contacts', registrar: @registrar %>
+        <%= render 'admin/registrars/show/billing', registrar: @registrar %>
+        <%= render 'admin/registrars/show/preferences', registrar: registrar %>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <%= render 'users', registrar: @registrar %>
+        <%= render 'admin/registrars/show/users', registrar: @registrar %>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <%= render 'white_ips', registrar: @registrar %>
+        <%= render 'admin/registrars/show/white_ips', registrar: @registrar %>
     </div>
 </div>

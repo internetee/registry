@@ -15,7 +15,7 @@
             <dd><%= registrar.code %></dd>
 
             <dt><%= Registrar.human_attribute_name :balance %></dt>
-            <dd><%= registrar.balance %></dd>
+            <dd><%= number_to_currency registrar.balance %></dd>
 
             <dt><%= Registrar.human_attribute_name :website %></dt>
             <dd><%= registrar.website %></dd>

@@ -13,7 +13,7 @@
         %h3.panel-title= t(:general)
       .panel-body
         %dl.dl-horizontal
-          %dt= t(:name)
+          %dt= Registrar.human_attribute_name :name
           %dd= @registrar.name
 
           %dt= Registrar.human_attribute_name :reg_no
@@ -22,7 +22,7 @@
           %dt= Registrar.human_attribute_name :vat_no
           %dd= @registrar.vat_no
 
-          %dt= t(:id)
+          %dt= Registrar.human_attribute_name :code
           %dd= @registrar.code
 
   .col-md-6
@@ -31,14 +31,14 @@
         %h3.panel-title= t(:contact)
       .panel-body
         %dl.dl-horizontal
-          %dt= t(:country)
+          %dt= Registrar.human_attribute_name :country
           %dd= @registrar.country
 
-          %dt= t(:address)
+          %dt= Registrar.human_attribute_name :address
           %dd= @registrar.address
 
-          %dt= t(:contact_phone)
+          %dt= Registrar.human_attribute_name :phone
           %dd= @registrar.phone
 
-          %dt= t(:contact_email)
+          %dt= Registrar.human_attribute_name :email
           %dd= @registrar.email

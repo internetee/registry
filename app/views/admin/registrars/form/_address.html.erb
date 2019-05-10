@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <div class="pull-left">
+                    <%= t '.header' %>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :street, for: :registrar_address_street %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.text_field :address_street, required: true, class: 'form-control' %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :city, for: :registrar_address_city %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.text_field :address_city, required: true, class: 'form-control' %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :state, for: :registrar_address_state %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.text_field :address_state, required: true, class: 'form-control' %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :zip, for: :registrar_address_zip %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.text_field :address_zip, required: true, class: 'form-control' %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :country, for: :registrar_address_country_code %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.select :address_country_code,
+                                     SortedCountry.all_options(f.object.address_country_code), {},
+                                     required: true, class: 'form-control' %>
+                    </div>
+                </div>
+
+                <p class="text-muted"><%= t '.hint' %></p>
+            </div>
+        </div>
+    </div>
+</div>

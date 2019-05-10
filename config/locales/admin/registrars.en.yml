@@ -13,11 +13,28 @@ en:
         delete_btn: Delete
         delete_btn_confirm: Are you sure you want delete registrar?
 
+        details:
+          header: Details
+
+        contacts:
+          header: Contacts
+
+        billing:
+          header: Billing
+
+        preferences:
+          header: Preferences
+
+        users:
+          header: API Users
+          new_btn: New API user
+
+        white_ips:
+          header: Whitelisted IPs
+          new_btn: New whitelisted IP
+
       edit:
         header: Edit registrar
-
-      billing:
-        header: Billing
 
       create:
         created: Registrar has been successfully created
@@ -33,6 +50,10 @@ en:
         create_btn: Create registrar
         update_btn: Update registrar
 
+        address:
+          header: Address
+          hint: Used as a billing address
+
         billing:
           header: Billing
           no_reference_number_hint: Reference number will be generated automatically
@@ -40,20 +61,3 @@ en:
 
         preferences:
           header: Preferences
-
-      details:
-        header: Details
-
-      contacts:
-        header: Contacts
-
-      preferences:
-        header: Preferences
-
-      users:
-        header: API Users
-        new_btn: New API user
-
-      white_ips:
-        header: Whitelisted IPs
-        new_btn: New whitelisted IP

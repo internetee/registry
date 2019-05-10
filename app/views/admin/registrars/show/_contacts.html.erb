@@ -5,16 +5,16 @@
 
     <div class="panel-body">
         <dl class="dl-horizontal">
-            <dt><%= t(:country) %></dt>
+            <dt><%= Registrar.human_attribute_name :country %></dt>
             <dd><%= @registrar.country %></dd>
 
-            <dt><%= t(:address) %></dt>
+            <dt><%= Registrar.human_attribute_name :address %></dt>
             <dd><%= @registrar.address %></dd>
 
-            <dt><%= t(:contact_phone) %></dt>
+            <dt><%= Registrar.human_attribute_name :phone %></dt>
             <dd><%= @registrar.phone %></dd>
 
-            <dt><%= t(:contact_email) %></dt>
+            <dt><%= Registrar.human_attribute_name :email %></dt>
             <dd><%= @registrar.email %></dd>
         </dl>
     </div>

@@ -13,8 +13,10 @@ class Registrar < ActiveRecord::Base
 
   delegate :balance, to: :cash_account, allow_nil: true
 
-  validates :name, :reg_no, :country_code, :email, :code, presence: true
+  validates :name, :reg_no, :email, :code, presence: true
   validates :name, :code, uniqueness: true
+  validates :address_street, :address_zip, :address_city, :address_state, :address_country_code,
+            presence: true
   validates :accounting_customer_code, presence: true
   validates :language, presence: true
   validates :reference_no, format: Billing::ReferenceNo::REGEXP
@@ -73,11 +75,11 @@ class Registrar < ActiveRecord::Base
       buyer: self,
       buyer_name: name,
       buyer_reg_no: reg_no,
-      buyer_country_code: country_code,
-      buyer_state: state,
-      buyer_street: street,
-      buyer_city: city,
-      buyer_zip: zip,
+      buyer_country_code: address_country_code,
+      buyer_state: address_state,
+      buyer_street: address_street,
+      buyer_city: address_city,
+      buyer_zip: address_zip,
       buyer_phone: phone,
       buyer_url: website,
       buyer_email: email,
@@ -104,7 +106,7 @@ class Registrar < ActiveRecord::Base
   end
 
   def address
-    [street, city, state, zip].reject(&:blank?).compact.join(', ')
+    [address_street, address_city, address_state, address_zip].reject(&:blank?).compact.join(', ')
   end
 
   def to_s
@@ -112,7 +114,7 @@ class Registrar < ActiveRecord::Base
   end
 
   def country
-    Country.new(country_code)
+    Country.new(address_country_code)
   end
 
   def code=(code)
