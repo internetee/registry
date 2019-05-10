@@ -1,5 +1,6 @@
 10.05.2019
 * Domain deleted poll messages are being sent again [#1196](https://github.com/internetee/registry/issues/1196)
+* Registrar address is now required on adding new registrar [#1195](https://github.com/internetee/registry/pull/1195)
 * Registrar postal address is removed from WHOIS records in db [#1193](https://github.com/internetee/registry/issues/1193)
 
 07.05.2019
