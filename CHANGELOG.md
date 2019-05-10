@@ -1,3 +1,7 @@
+10.05.2019
+* Domain deleted poll messages are being sent again [#1196](https://github.com/internetee/registry/issues/1196)
+* Registrar postal address is removed from WHOIS records in db [#1193](https://github.com/internetee/registry/issues/1193)
+
 07.05.2019
 * Set domains.delete_at column type to date [#1173](https://github.com/internetee/registry/pull/1173)
 * Removed "html5_validators" gem [#367](https://github.com/internetee/registry/issues/367)
