@@ -9,21 +9,25 @@ class AdminRegistrarsSystemTest < ApplicationSystemTestCase
   end
 
   def test_creates_new_registrar
-    assert_nil Registrar.find_by(name: 'New name')
+    assert_nil Registrar.find_by(name: 'Acme Ltd')
 
     visit admin_registrars_path
     click_on 'New registrar'
 
-    fill_in 'Name', with: 'New name'
-    fill_in 'Reg no', with: '55555555'
-    fill_in 'Contact e-mail', with: 'any@registrar.test'
+    fill_in 'Name', with: 'Acme Ltd'
+    fill_in 'Reg no', with: '1234'
+    fill_in 'Contact e-mail', with: 'any@acme.test'
+    fill_in 'Street', with: 'any'
+    fill_in 'City', with: 'any'
+    fill_in 'State / Province', with: 'any'
+    fill_in 'Zip', with: 'any'
     select 'United States', from: 'Country'
     fill_in 'Accounting customer code', with: 'test'
     fill_in 'Code', with: 'test'
     click_on 'Create registrar'
 
     assert_text 'Registrar has been successfully created'
-    assert_text 'New name'
+    assert_text 'Acme Ltd'
   end
 
   def test_updates_registrar

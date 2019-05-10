@@ -55,12 +55,6 @@ class RegistrarTest < ActiveSupport::TestCase
     assert_equal 'de', registrar.language
   end
 
-  def test_full_address
-    registrar = Registrar.new(address_street: 'Main Street 1', address_zip: '1234',
-                              address_city: 'NY', address_state: 'NY State')
-    assert_equal 'Main Street 1, NY, NY State, 1234', registrar.address
-  end
-
   def test_validates_reference_number_format
     @registrar.reference_no = '1'
     assert @registrar.invalid?
@@ -97,6 +91,24 @@ class RegistrarTest < ActiveSupport::TestCase
     assert_equal Date.parse('2010-07-15'), invoice.due_date
 
     Setting.days_to_keep_invoices_active = @original_days_to_keep_invoices_active_setting
+  end
+
+  def test_invalid_without_address
+    registrar = valid_registrar
+    address_parts = %i[street zip city state country_code]
+
+    address_parts.each do |address_part|
+      attribute_name = "address_#{address_part}"
+      registrar.public_send("#{attribute_name}=", '')
+      assert registrar.invalid?, "#{attribute_name} should be required"
+      registrar.public_send("#{attribute_name}=", 'some')
+    end
+  end
+
+  def test_full_address
+    registrar = Registrar.new(address_street: 'Main Street 1', address_zip: '1234',
+                              address_city: 'NY', address_state: 'NY State')
+    assert_equal 'Main Street 1, NY, NY State, 1234', registrar.address
   end
 
   private

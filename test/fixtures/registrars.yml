@@ -19,6 +19,10 @@ goodnames:
   reg_no: 12345
   code: goodnames
   email: info@goodnames.test
+  address_street: Main Street 1
+  address_zip: 1234
+  address_city: NY
+  address_state: NY State
   address_country_code: US
   vat_no: DE123456789
   accounting_customer_code: goodnames
@@ -30,6 +34,10 @@ not_in_use:
   reg_no: any
   code: any
   email: any@example.com
+  address_street: Main Street 1
+  address_zip: 1234
+  address_city: NY
+  address_state: NY State
   address_country_code: US
   vat_no: any
   accounting_customer_code: any
@@ -41,6 +49,10 @@ invalid:
   reg_no: any
   code: another
   email: any
+  address_street: Main Street 1
+  address_zip: 1234
+  address_city: NY
+  address_state: NY State
   address_country_code: US
   vat_no: any
   accounting_customer_code: any

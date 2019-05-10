@@ -13,8 +13,10 @@ class Registrar < ActiveRecord::Base
 
   delegate :balance, to: :cash_account, allow_nil: true
 
-  validates :name, :reg_no, :address_country_code, :email, :code, presence: true
+  validates :name, :reg_no, :email, :code, presence: true
   validates :name, :code, uniqueness: true
+  validates :address_street, :address_zip, :address_city, :address_state, :address_country_code,
+            presence: true
   validates :accounting_customer_code, presence: true
   validates :language, presence: true
   validates :reference_no, format: Billing::ReferenceNo::REGEXP

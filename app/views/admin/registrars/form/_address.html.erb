@@ -9,46 +9,48 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-4 control-label">
-                        <%= f.label :street %>
+                        <%= f.label :street, for: :registrar_address_street %>
                     </div>
                     <div class="col-md-7">
-                        <%= f.text_field :address_street, class: 'form-control' %>
+                        <%= f.text_field :address_street, required: true, class: 'form-control' %>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-md-4 control-label">
-                        <%= f.label :city %>
+                        <%= f.label :city, for: :registrar_address_city %>
                     </div>
                     <div class="col-md-7">
-                        <%= f.text_field :address_city, class: 'form-control' %>
+                        <%= f.text_field :address_city, required: true, class: 'form-control' %>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-md-4 control-label">
-                        <%= f.label :state %>
+                        <%= f.label :state, for: :registrar_address_state %>
                     </div>
                     <div class="col-md-7">
-                        <%= f.text_field :address_state, class: 'form-control' %>
+                        <%= f.text_field :address_state, required: true, class: 'form-control' %>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-md-4 control-label">
-                        <%= f.label :zip %>
+                        <%= f.label :zip, for: :registrar_address_zip %>
                     </div>
                     <div class="col-md-7">
-                        <%= f.text_field :address_zip, class: 'form-control' %>
+                        <%= f.text_field :address_zip, required: true, class: 'form-control' %>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-md-4 control-label">
-                        <%= f.label :address_country_code, t(:country) %>
+                        <%= f.label :country, for: :registrar_address_country_code %>
                     </div>
                     <div class="col-md-7">
-                        <%= f.select :address_country_code, SortedCountry.all_options(f.object.address_country_code), {}, class: 'form-control' %>
+                        <%= f.select :address_country_code,
+                                     SortedCountry.all_options(f.object.address_country_code), {},
+                                     required: true, class: 'form-control' %>
                     </div>
                 </div>
 
