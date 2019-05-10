@@ -21,7 +21,6 @@ class WhoisRecordTest < ActiveSupport::TestCase
       disclaimer: expected_disclaimer_text,
       name: 'shop.test',
       expire: '2010-07-05',
-      registrar_address: 'Main Street, New York, New York, 12345',
       dnssec_keys: [],
     }
 
