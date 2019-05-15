@@ -3,7 +3,13 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-4">
-        <%= render 'linked_users', linked_users: linked_users %>
+    <div class="col-sm-5">
+        <%= render 'details', registrar: current_registrar_user.registrar %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-5">
+        <%= render 'linked_users', linked_users: current_registrar_user.linked_users %>
     </div>
 </div>

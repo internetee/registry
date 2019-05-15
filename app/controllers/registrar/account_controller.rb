@@ -2,16 +2,23 @@ class Registrar
   class AccountController < BaseController
     skip_authorization_check
 
-    helper_method :linked_users
+    def show; end
 
-    def show
-      @user = current_registrar_user
+    def edit
+      @registrar = current_registrar_user.registrar
+    end
+
+    def update
+      @registrar = current_registrar_user.registrar
+      @registrar.update!(registrar_params)
+
+      redirect_to registrar_account_path, notice: t('.saved')
     end
 
     private
 
-    def linked_users
-      current_registrar_user.linked_users
+    def registrar_params
+      params.require(:registrar).permit(:billing_email)
     end
   end
 end

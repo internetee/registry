@@ -1,0 +1,21 @@
+<%= form_for @registrar, url: registrar_account_path, method: :patch, html: { class: 'form-horizontal' } do |f| %>
+    <%= render 'form_errors', target: @registrar %>
+
+    <div class="form-group">
+        <div class="col-sm-2 control-label">
+            <%= f.label :billing_email %>
+        </div>
+
+        <div class="col-sm-4">
+            <%= f.email_field :billing_email, autofocus: true, class: 'form-control' %>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-6 text-right">
+            <%= f.submit t('.submit_btn'), class: 'btn btn-success' %>
+        </div>
+    </div>
+<% end %>
