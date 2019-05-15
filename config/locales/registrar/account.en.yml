@@ -1,8 +1,8 @@
 en:
   registrar:
-    profile:
+    account:
       show:
-        header: My profile
+        header: Your account
 
       linked_users:
         header: Linked users

@@ -182,7 +182,7 @@ class Registrar
       if can?(:show, :poll)
         registrar_root_path
       else
-        registrar_profile_path
+        registrar_account_path
       end
     end
 

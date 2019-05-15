@@ -66,7 +66,7 @@ Rails.application.routes.draw do
     resources :account_activities
 
     put 'current_user/switch/:new_user_id', to: 'current_user#switch', as: :switch_current_user
-    resource :profile, controller: :profile, only: :show
+    resource :account, controller: :account, only: :show
 
     resources :domains do
       collection do

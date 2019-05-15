@@ -1,5 +1,5 @@
 class Registrar
-  class ProfileController < BaseController
+  class AccountController < BaseController
     skip_authorization_check
 
     helper_method :linked_users
