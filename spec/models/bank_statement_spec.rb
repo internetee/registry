@@ -6,14 +6,6 @@ describe BankStatement do
       @bank_statement = BankStatement.new
     end
 
-    it 'should not be valid' do
-      @bank_statement.valid?
-      @bank_statement.errors.full_messages.should match_array([
-        "Bank code is missing",
-        "Iban is missing"
-      ])
-    end
-
     it 'should not have any versions' do
       @bank_statement.versions.should == []
     end
@@ -22,17 +14,6 @@ describe BankStatement do
   context 'with valid attributes' do
     before do
       @bank_statement = create(:bank_statement)
-    end
-
-    it 'should be valid' do
-      @bank_statement.valid?
-      @bank_statement.errors.full_messages.should match_array([])
-    end
-
-    it 'should be valid twice' do
-      @bank_statement = create(:bank_statement)
-      @bank_statement.valid?
-      @bank_statement.errors.full_messages.should match_array([])
     end
 
     it 'should not bind transactions with invalid match data' do
