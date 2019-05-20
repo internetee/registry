@@ -3,6 +3,7 @@ module Admin
     load_and_authorize_resource
     before_action :set_registrar, only: [:show, :edit, :update, :destroy]
     helper_method :registry_vat_rate
+    helper_method :iban_max_length
 
     def index
       @q = Registrar.joins(:accounts).ordered.search(params[:q])
@@ -79,6 +80,10 @@ module Admin
 
     def registry_vat_rate
       Registry.current.vat_rate
+    end
+
+    def iban_max_length
+      Iban.max_length
     end
   end
 end

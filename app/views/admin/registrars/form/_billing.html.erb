@@ -73,7 +73,7 @@
                         <%= f.label :iban %>
                     </div>
                     <div class="col-md-7">
-                        <%= f.text_field :iban, class: 'form-control' %>
+                        <%= f.text_field :iban, maxlength: iban_max_length, class: 'form-control' %>
                     </div>
                 </div>
             </div>
