@@ -1,3 +1,10 @@
+21.05.2019
+* Zip and State in registrar addresses are now optional [#1206](https://github.com/internetee/registry/issues/1206)
+* Vat is now always applied - 0% vs NULL [#1031](https://github.com/internetee/registry/issues/1031)
+* Updated Papertrail gem to 4.2.0 [#1094](https://github.com/internetee/registry/pull/1094)
+* Converted some specs to tests [#1204](https://github.com/internetee/registry/pull/1204)
+* Enhanced InvoiceItem methods [#1209](https://github.com/internetee/registry/pull/1209)
+
 10.05.2019
 * Domain deleted poll messages are being sent again [#1196](https://github.com/internetee/registry/issues/1196)
 * Registrar address is now required on adding new registrar [#1195](https://github.com/internetee/registry/pull/1195)
