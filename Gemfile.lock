@@ -1,14 +1,4 @@
 GIT
-  remote: https://github.com/airblade/paper_trail.git
-  revision: a453811226ec4ea59753ba6b827e390ced2fc140
-  ref: a453811226ec4ea59753ba6b827e390ced2fc140
-  specs:
-    paper_trail (4.0.0.beta3)
-      activerecord (>= 3.0, < 6.0)
-      activesupport (>= 3.0, < 6.0)
-      request_store (~> 1.1.0)
-
-GIT
   remote: https://github.com/internetee/company_register.git
   revision: da7130542304fc543c90d54cd037d019a777c526
   branch: master
@@ -266,6 +256,10 @@ GEM
     nori (2.6.0)
     open4 (1.3.4)
     orm_adapter (0.5.0)
+    paper_trail (4.2.0)
+      activerecord (>= 3.0, < 6.0)
+      activesupport (>= 3.0, < 6.0)
+      request_store (~> 1.1)
     pdfkit (0.6.2)
     pg (0.19.0)
     polyamorous (1.3.1)
@@ -323,7 +317,8 @@ GEM
       i18n
       polyamorous (~> 1.1)
     rdoc (4.3.0)
-    request_store (1.1.0)
+    request_store (1.4.1)
+      rack (>= 1.4)
     responders (2.4.1)
       actionpack (>= 4.2.0, < 6.0)
       railties (>= 4.2.0, < 6.0)
@@ -476,7 +471,7 @@ DEPENDENCIES
   mina (= 0.3.1)
   money-rails
   nokogiri
-  paper_trail!
+  paper_trail (~> 4.0)
   pdfkit (= 0.6.2)
   pg (= 0.19.0)
   pry (= 0.10.1)

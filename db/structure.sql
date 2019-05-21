@@ -2363,7 +2363,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 CREATE TABLE public.versions (
     id integer NOT NULL,
-    depricated_table_but_somehow_paper_trail_tests_fails_without_it text
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object text,
+    created_at timestamp without time zone,
+    object_changes jsonb
 );
 
 
@@ -3981,6 +3987,13 @@ CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_
 
 
 --
+-- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING btree (item_type, item_id);
+
+
+--
 -- Name: index_whois_records_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4926,6 +4939,10 @@ INSERT INTO schema_migrations (version) VALUES ('20190102115333');
 INSERT INTO schema_migrations (version) VALUES ('20190102144032');
 
 INSERT INTO schema_migrations (version) VALUES ('20190209150026');
+
+INSERT INTO schema_migrations (version) VALUES ('20190302091059');
+
+INSERT INTO schema_migrations (version) VALUES ('20190302111152');
 
 INSERT INTO schema_migrations (version) VALUES ('20190311111718');
 

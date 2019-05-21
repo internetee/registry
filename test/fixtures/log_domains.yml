@@ -1,0 +1,8 @@
+one:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:shop) %>
+  item_type: Domain
+  event: update
+  object:
+    registrant_id: <%= ActiveRecord::FixtureSet.identify(:john) %>
+    updated_at: <%= Time.zone.parse('2010-07-05') %>
+  created_at: <%= Time.zone.parse('2010-07-05') %>

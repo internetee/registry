@@ -1,16 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe AdminUser do
-  context 'with invalid attribute' do
-    before do
-      @admin_user = described_class.new
-    end
-
-    it 'should not have any versions' do
-      @admin_user.versions.should == []
-    end
-  end
-
   context 'with valid attributes' do
     before do
       @admin_user = create(:admin_user)

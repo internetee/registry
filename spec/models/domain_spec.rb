@@ -33,10 +33,6 @@ RSpec.describe Domain do
       @domain = Domain.new
     end
 
-    it 'should not have any versions' do
-      @domain.versions.should == []
-    end
-
     it 'should not have whois body' do
       @domain.whois_record.should == nil
     end
@@ -488,21 +484,6 @@ RSpec.describe Domain do
 
     expect(d.statuses.count).to eq(1)
     expect(d.statuses.first).to eq(DomainStatus::CLIENT_DELETE_PROHIBITED)
-  end
-
-  with_versioning do
-    context 'when saved' do
-      before(:each) do
-        domain = create(:domain, nameservers_attributes: [attributes_for(:nameserver),
-                                                          attributes_for(:nameserver)])
-      end
-
-      it 'creates domain version' do
-        expect(DomainVersion.count).to eq(1)
-        expect(ContactVersion.count).to eq(3)
-        expect(NameserverVersion.count).to eq(2)
-      end
-    end
   end
 end
 

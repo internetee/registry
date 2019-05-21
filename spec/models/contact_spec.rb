@@ -5,16 +5,6 @@ RSpec.describe Contact do
     create(:zone, origin: 'ee')
   end
 
-  context 'about class' do
-    it 'should have versioning enabled?' do
-      Contact.paper_trail_enabled_for_model?.should == true
-    end
-
-    it 'should have custom log prexied table name for versions table' do
-      ContactVersion.table_name.should == 'log_contacts'
-    end
-  end
-
   context 'with invalid attribute' do
     before :example do
       @contact = Contact.new
@@ -26,10 +16,6 @@ RSpec.describe Contact do
 
     it 'should not have updater' do
       @contact.updator.should == nil
-    end
-
-    it 'should not have any versions' do
-      @contact.versions.should == []
     end
 
     it 'should not accept long code' do
@@ -64,16 +50,6 @@ RSpec.describe Contact do
   context 'with valid attributes' do
     before :example do
       @contact = create(:contact)
-    end
-
-    it 'should have one version' do
-      with_versioning do
-        @contact.versions.reload.should == []
-        @contact.name = 'New name'
-        @contact.save
-        @contact.errors.full_messages.should match_array([])
-        @contact.versions.size.should == 1
-      end
     end
 
     it 'should not overwrite code' do

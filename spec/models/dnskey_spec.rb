@@ -34,10 +34,6 @@ describe Dnskey do
       @dnskey.errors.full_messages.should match_array([
       ])
     end
-
-    it 'should not have any versions' do
-      @dnskey.versions.should == []
-    end
   end
 
   context 'with valid attributes' do
@@ -65,15 +61,6 @@ describe Dnskey do
       @dnskey.valid?
       @dnskey.errors.full_messages.should match_array([])
     end
-
-    # TODO: figure out why not working
-    # it 'should have one version' do
-      # with_versioning do
-        # @dnskey.versions.should == []
-        # @dnskey.touch_with_version
-        # @dnskey.versions.size.should == 1
-      # end
-    # end
 
     it 'generates correct DS digest and DS key tag for ria.ee' do
       d = create(:domain, name: 'ria.ee', dnskeys: [@dnskey])

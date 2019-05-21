@@ -1,0 +1,5 @@
+one:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:john) %>
+  item_type: Contact
+  event: update
+  created_at: <%= Time.zone.parse('2010-07-05') %>
