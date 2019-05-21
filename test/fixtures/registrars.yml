@@ -4,9 +4,7 @@ bestnames:
   code: bestnames
   email: info@bestnames.test
   address_street: Main Street 1
-  address_zip: 1234
   address_city: NY
-  address_state: NY State
   address_country_code: US
   accounting_customer_code: bestnames
   language: en
@@ -20,9 +18,7 @@ goodnames:
   code: goodnames
   email: info@goodnames.test
   address_street: Main Street 1
-  address_zip: 1234
   address_city: NY
-  address_state: NY State
   address_country_code: US
   vat_no: DE123456789
   accounting_customer_code: goodnames
@@ -35,9 +31,7 @@ not_in_use:
   code: any
   email: any@example.com
   address_street: Main Street 1
-  address_zip: 1234
   address_city: NY
-  address_state: NY State
   address_country_code: US
   vat_no: any
   accounting_customer_code: any
@@ -50,9 +44,7 @@ invalid:
   code: another
   email: any
   address_street: Main Street 1
-  address_zip: 1234
   address_city: NY
-  address_state: NY State
   address_country_code: US
   vat_no: any
   accounting_customer_code: any

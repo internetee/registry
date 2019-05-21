@@ -93,16 +93,22 @@ class RegistrarTest < ActiveSupport::TestCase
     Setting.days_to_keep_invoices_active = @original_days_to_keep_invoices_active_setting
   end
 
-  def test_invalid_without_address
+  def test_invalid_without_address_street
     registrar = valid_registrar
-    address_parts = %i[street zip city state country_code]
+    registrar.address_street = ''
+    assert registrar.invalid?
+  end
 
-    address_parts.each do |address_part|
-      attribute_name = "address_#{address_part}"
-      registrar.public_send("#{attribute_name}=", '')
-      assert registrar.invalid?, "#{attribute_name} should be required"
-      registrar.public_send("#{attribute_name}=", 'some')
-    end
+  def test_invalid_without_address_city
+    registrar = valid_registrar
+    registrar.address_city = ''
+    assert registrar.invalid?
+  end
+
+  def test_invalid_without_address_country_code
+    registrar = valid_registrar
+    registrar.address_country_code = ''
+    assert registrar.invalid?
   end
 
   def test_full_address

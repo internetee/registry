@@ -5,9 +5,7 @@ FactoryBot.define do
     sequence(:reg_no) { |n| "test#{n}" }
     email 'test@test.com'
     address_street 'test'
-    address_zip 'test'
     address_city 'test'
-    address_state 'test'
     address_country_code 'US'
     accounting_customer_code 'test'
     language 'en'
