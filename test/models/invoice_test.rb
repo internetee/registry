@@ -33,64 +33,17 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_not Invoice.overdue.include?(@invoice), 'Should not return non-overdue invoice'
   end
 
-  def test_optional_vat_rate
-    @invoice.vat_rate = nil
-    assert @invoice.valid?
-  end
-
-  def test_vat_rate_validation
-    @invoice.vat_rate = -1
-    assert @invoice.invalid?
-
-    @invoice.vat_rate = 0
-    assert @invoice.valid?
-
-    @invoice.vat_rate = 99.9
-    assert @invoice.valid?
-
-    @invoice.vat_rate = 100
-    assert @invoice.invalid?
-  end
-
   def test_serializes_and_deserializes_vat_rate
-    invoice = @invoice.dup
-    invoice.items = @invoice.items
-    invoice.vat_rate = BigDecimal('25.5')
-    invoice.save!
-    invoice.reload
-    assert_equal BigDecimal('25.5'), invoice.vat_rate
-  end
-
-  def test_vat_rate_defaults_to_effective_vat_rate_of_a_registrar
-    registrar = registrars(:bestnames)
-    invoice = @invoice.dup
-    invoice.vat_rate = nil
-    invoice.buyer = registrar
-    invoice.items = @invoice.items
-
-    registrar.stub(:effective_vat_rate, BigDecimal(55)) do
-      invoice.save!
-    end
-
-    assert_equal BigDecimal(55), invoice.vat_rate
-  end
-
-  def test_vat_rate_cannot_be_updated
-    @invoice.vat_rate = BigDecimal(21)
+    @invoice.vat_rate = BigDecimal('25.5')
     @invoice.save!
     @invoice.reload
-    refute_equal BigDecimal(21), @invoice.vat_rate
+    assert_equal BigDecimal('25.5'), @invoice.vat_rate
   end
 
   def test_calculates_vat_amount
     invoice_item = InvoiceItem.new(price: 25, quantity: 2)
     invoice = Invoice.new(vat_rate: 10, items: [invoice_item, invoice_item.dup])
     assert_equal 10, invoice.vat_amount
-  end
-
-  def test_vat_amount_is_zero_when_vat_rate_is_blank
-    @invoice.vat_rate = nil
-    assert_equal 0, @invoice.vat_amount
   end
 
   def test_calculates_subtotal

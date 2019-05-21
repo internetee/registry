@@ -52,10 +52,15 @@ en:
 
         address:
           header: Address
-          hint: Used as a billing address
+          country_hint: Affects VAT rate calculation
+          hint: This address is used as a billing address
 
         billing:
           header: Billing
+          vat_rate_hint: >-
+            Applies to new invoices.
+            Leave blank if a registrar is VAT-registered;
+            registry's rate of %{registry_vat_rate} will be applied in this case.
           no_reference_number_hint: Reference number will be generated automatically
           disabled_reference_number_hint: Reference number cannot be changed
 

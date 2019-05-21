@@ -22,9 +22,9 @@ class Registrar < ActiveRecord::Base
   validates :reference_no, format: Billing::ReferenceNo::REGEXP
   validate :forbid_special_code
 
-  validates :vat_rate, presence: true, if: 'foreign_vat_payer? && vat_no.blank?'
-  validates :vat_rate, absence: true, if: :home_vat_payer?
-  validates :vat_rate, absence: true, if: 'foreign_vat_payer? && vat_no?'
+  validates :vat_rate, presence: true, if: 'vat_liable_in_foreign_country? && vat_no.blank?'
+  validates :vat_rate, absence: true, if: :vat_liable_locally?
+  validates :vat_rate, absence: true, if: 'vat_liable_in_foreign_country? && vat_no?'
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
 
@@ -52,7 +52,9 @@ class Registrar < ActiveRecord::Base
   end
 
   def issue_prepayment_invoice(amount, description = nil)
-    invoices.create(
+    vat_rate = ::Invoice::VatRateCalculator.new(registrar: self).calculate
+
+    invoices.create!(
       issue_date: Time.zone.today,
       due_date: (Time.zone.now + Setting.days_to_keep_invoices_active.days).to_date,
       description: description,
@@ -84,6 +86,7 @@ class Registrar < ActiveRecord::Base
       buyer_url: website,
       buyer_email: email,
       reference_no: reference_no,
+      vat_rate: vat_rate,
       items_attributes: [
         {
           description: 'prepayment',
@@ -146,12 +149,16 @@ class Registrar < ActiveRecord::Base
     end
   end
 
-  def effective_vat_rate
-    if home_vat_payer?
-      Registry.instance.vat_rate
-    else
-      vat_rate
-    end
+  def vat_country=(country)
+    self.address_country_code = country.alpha2
+  end
+
+  def vat_country
+    country
+  end
+
+  def vat_liable_locally?(registry = Registry.current)
+    vat_country == registry.vat_country
   end
 
   def notify(action)
@@ -169,11 +176,7 @@ class Registrar < ActiveRecord::Base
     errors.add(:code, :forbidden) if code == 'CID'
   end
 
-  def home_vat_payer?
-    country == Registry.instance.legal_address_country
-  end
-
-  def foreign_vat_payer?
-    !home_vat_payer?
+  def vat_liable_in_foreign_country?
+    !vat_liable_locally?
   end
 end

@@ -111,9 +111,82 @@ class RegistrarTest < ActiveSupport::TestCase
     assert_equal 'Main Street 1, NY, NY State, 1234', registrar.address
   end
 
+  def test_invalid_with_vat_rate_when_registrar_is_vat_liable_locally
+    registrar = registrar_with_local_vat_liability
+
+    registrar.vat_rate = 1
+
+    assert registrar.invalid?
+    assert_includes registrar.errors.full_messages_for(:vat_rate),
+                    'VAT rate must be blank when a registrar is VAT-registered in the same' \
+                    ' country as registry'
+  end
+
+  def test_invalid_with_vat_rate_when_registrar_is_vat_liable_in_foreign_country_and_vat_no_is_present
+    registrar = registrar_with_foreign_vat_liability
+
+    registrar.vat_no = 'valid'
+    registrar.vat_rate = 1
+
+    assert registrar.invalid?
+  end
+
+  def test_invalid_without_vat_rate_when_registrar_is_vat_liable_in_foreign_country_and_vat_no_is_absent
+    registrar = registrar_with_foreign_vat_liability
+
+    registrar.vat_no = ''
+    registrar.vat_rate = ''
+
+    assert registrar.invalid?
+  end
+
+  def test_vat_rate_validation
+    registrar = registrar_with_foreign_vat_liability
+
+    registrar.vat_rate = -1
+    assert registrar.invalid?
+
+    registrar.vat_rate = 0
+    assert registrar.valid?
+
+    registrar.vat_rate = 99.9
+    assert registrar.valid?
+
+    registrar.vat_rate = 100
+    assert registrar.invalid?
+  end
+
+  def test_serializes_and_deserializes_vat_rate
+    @registrar.address_country_code = 'DE'
+    @registrar.vat_rate = BigDecimal('25.5')
+    @registrar.save!
+    @registrar.reload
+    assert_equal BigDecimal('25.5'), @registrar.vat_rate
+  end
+
+  def test_aliases_vat_country_to_country
+    vat_country = Country.new(:us)
+    registrar = Registrar.new(vat_country: vat_country)
+    assert_equal vat_country, registrar.vat_country
+  end
+
   private
 
   def valid_registrar
     registrars(:bestnames)
+  end
+
+  def registrar_with_local_vat_liability
+    registrar = valid_registrar
+    registrar.vat_country = Country.new(:us)
+    Registry.current.vat_country = Country.new(:us)
+    registrar
+  end
+
+  def registrar_with_foreign_vat_liability
+    registrar = valid_registrar
+    registrar.vat_country = Country.new(:gb)
+    Registry.current.vat_country = Country.new(:us)
+    registrar
   end
 end
