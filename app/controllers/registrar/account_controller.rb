@@ -1,6 +1,7 @@
 class Registrar
   class AccountController < BaseController
     skip_authorization_check
+    helper_method :iban_max_length
 
     def show; end
 
@@ -19,6 +20,10 @@ class Registrar
 
     def registrar_params
       params.require(:registrar).permit(:billing_email, :iban)
+    end
+
+    def iban_max_length
+      Iban.max_length
     end
   end
 end

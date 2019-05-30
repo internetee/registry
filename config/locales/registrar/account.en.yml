@@ -8,6 +8,7 @@ en:
         header: Edit your account
 
       form:
+        iban_hint: Required for sending e-invoices to the bank
         submit_btn: Save changes
 
       update:
