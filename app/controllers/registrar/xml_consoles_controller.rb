@@ -2,13 +2,12 @@ class Registrar
   class XmlConsolesController < DeppController
     authorize_resource class: false
 
-    def show
-    end
+    def show; end
 
     def create
       begin
         @result = depp_current_user.server.request(params[:payload])
-      rescue
+      rescue StandardError
         @result = 'CONNECTION ERROR - Is the EPP server running?'
       end
       render :show

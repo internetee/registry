@@ -12,7 +12,7 @@ class Ability
       @user.roles&.each { |role| send(role) }
     when 'ApiUser'
       @user.roles&.each { |role| send(role) }
-      when 'RegistrantUser'
+    when 'RegistrantUser'
       static_registrant
     end
 
@@ -37,7 +37,7 @@ class Ability
       # can :manage, Depp::Keyrelay # TODO: Keyrelay is disabled for now
       # can :confirm, :keyrelay # TODO: Keyrelay is disabled for now
       can :manage, :xml_console
-      can :manage,   Depp::Domain
+      can :manage, Depp::Domain
     end
 
     # REPP
@@ -55,7 +55,7 @@ class Ability
     can(:update,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
     can(:transfer, Epp::Domain) { |d, pw| d.transfer_code == pw }
     can(:view_password, Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
-    can(:delete,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
+    can(:delete, Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
 
     # Epp::Contact
     can(:info, Epp::Contact)           { |c, pw| c.registrar_id == @user.registrar_id || pw.blank? ? true : c.auth_info == pw }

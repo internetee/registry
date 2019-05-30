@@ -11,11 +11,11 @@ class Epp::PollsController < EppController
   def req_poll
     @notification = current_user.unread_notifications.order('created_at DESC').take
 
-    render_epp_response 'epp/poll/poll_no_messages' and return unless @notification
+    render_epp_response('epp/poll/poll_no_messages') && return unless @notification
     if @notification.attached_obj_type && @notification.attached_obj_id
       begin
         @object = Object.const_get(@notification.attached_obj_type).find(@notification.attached_obj_id)
-      rescue => problem
+      rescue StandardError => e
         # the data model might be inconsistent; or ...
         # this could happen if the registrar does not dequeue messages, and then the domain was deleted
 
@@ -23,7 +23,7 @@ class Epp::PollsController < EppController
         # JOIN domains ON attached_obj_id::INTEGER = domains.id
         # WHERE attached_obj_type = 'Epp::Domain' AND name IS NULL;
 
-        Rails.logger.error 'orphan message, error ignored: ' + problem.to_s
+        Rails.logger.error 'orphan message, error ignored: ' + e.to_s
         # now we should dequeue or delete the messages avoid duplicate log alarms
       end
     end
@@ -42,12 +42,12 @@ class Epp::PollsController < EppController
       epp_errors << {
         code: '2303',
         msg: I18n.t('message_was_not_found'),
-        value: { obj: 'msgID', val: params[:parsed_frame].css('poll').first['msgID'] }
+        value: { obj: 'msgID', val: params[:parsed_frame].css('poll').first['msgID'] },
       }
-      handle_errors and return
+      handle_errors && return
     end
 
-    handle_errors(@notification) and return unless @notification.mark_as_read
+    handle_errors(@notification) && return unless @notification.mark_as_read
     render_epp_response 'epp/poll/poll_ack'
   end
 

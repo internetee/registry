@@ -19,26 +19,27 @@ module Depp
       client_key = File.read(ENV['key_path'])
       port = ENV['epp_port'] || '700'
 
-      @server_cache ||= Epp::Server.new({
+      @server_cache ||= Epp::Server.new(
         server: ENV['epp_hostname'],
         tag: tag,
         password: password,
         port: port,
         cert: OpenSSL::X509::Certificate.new(client_cert),
         key: OpenSSL::PKey::RSA.new(client_key)
-      })
+      )
     end
 
     def request(xml)
       Nokogiri::XML(server.request(xml)).remove_namespaces!
-      rescue EppErrorResponse => e
-        Nokogiri::XML(e.response_xml.to_s).remove_namespaces!
+    rescue EppErrorResponse => e
+      Nokogiri::XML(e.response_xml.to_s).remove_namespaces!
     end
 
     private
 
     def validate_existance_in_server
       return if errors.any?
+
       res = server.open_connection
       unless Nokogiri::XML(res).css('greeting')
         errors.add(:base, :failed_to_open_connection_to_epp_server)
@@ -55,12 +56,11 @@ module Depp
       end
 
       server.close_connection
-
-      rescue OpenSSL::SSL::SSLError => e
-        Rails.logger.error "INVALID CERT: #{e}"
-        Rails.logger.error "INVALID CERT DEBUG INFO: epp_hostname: #{ENV['epp_hostname']}," \
-          "port: #{ENV['epp_port']}, cert_path: #{ENV['cert_path']}, key_path: #{ENV['key_path']}"
-        errors.add(:base, :invalid_cert)
+    rescue OpenSSL::SSL::SSLError => e
+      Rails.logger.error "INVALID CERT: #{e}"
+      Rails.logger.error "INVALID CERT DEBUG INFO: epp_hostname: #{ENV['epp_hostname']}," \
+        "port: #{ENV['epp_port']}, cert_path: #{ENV['cert_path']}, key_path: #{ENV['key_path']}"
+      errors.add(:base, :invalid_cert)
     end
   end
 end

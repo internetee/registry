@@ -1,7 +1,7 @@
 module Admin
   class AdminUsersController < BaseController
     load_and_authorize_resource
-    before_action :set_user, only: [:show, :edit, :update, :destroy]
+    before_action :set_user, only: %i[show edit update destroy]
 
     def index
       @q = AdminUser.search(params[:q])
@@ -12,11 +12,9 @@ module Admin
       @admin_user = AdminUser.new
     end
 
-    def show;
-    end
+    def show; end
 
-    def edit;
-    end
+    def edit; end
 
     def create
       @admin_user = AdminUser.new(admin_user_params)
@@ -34,7 +32,7 @@ module Admin
       params[:admin_user].delete(:password) if params[:admin_user][:password].blank?
       params[:admin_user].delete(:password_confirmation) if params[:admin_user][:password_confirmation].blank?
 
-      if @admin_user.update_attributes(admin_user_params)
+      if @admin_user.update(admin_user_params)
         flash[:notice] = I18n.t('record_updated')
         redirect_to [:admin, @admin_user]
       else
@@ -61,7 +59,7 @@ module Admin
 
     def admin_user_params
       params.require(:admin_user).permit(:username,
-                                         :password, :password_confirmation, :identity_code, :email, :country_code, { roles: [] })
+                                         :password, :password_confirmation, :identity_code, :email, :country_code, roles: [])
     end
   end
 end

@@ -3,18 +3,18 @@ module Depp
     include ActiveModel::Model
 
     attr_accessor :id, :name, :email, :phone, :org_name,
-      :ident, :ident_type, :ident_country_code,
-      :street, :city, :zip, :state, :country_code,
-      :password, :legal_document, :statuses, :code
+                  :ident, :ident_type, :ident_country_code,
+                  :street, :city, :zip, :state, :country_code,
+                  :password, :legal_document, :statuses, :code
 
-    DISABLED = 'Disabled'
-    DISCLOSURE_TYPES = [DISABLED, '1', '0']
-    TYPES = %w( org priv birthday )
+    DISABLED = 'Disabled'.freeze
+    DISCLOSURE_TYPES = [DISABLED, '1', '0'].freeze
+    TYPES = %w[org priv birthday].freeze
     SELECTION_TYPES = [
       ['Business code', 'org'],
       ['Personal identification code', 'priv'],
-      ['Birthday', 'birthday']
-    ]
+      %w[Birthday birthday],
+    ].freeze
 
     class << self
       attr_reader :epp_xml, :user
@@ -34,10 +34,10 @@ module Depp
           org_name: params[:org_name],
 
           # address
-          street:       params[:street],
-          city:         params[:city],
-          zip:          params[:zip],
-          state:        params[:state],
+          street: params[:street],
+          city: params[:city],
+          zip: params[:zip],
+          state: params[:state],
           country_code: params[:country_code]
         )
       end
@@ -61,10 +61,10 @@ module Depp
           org_name: res.css('postalInfo org').text,
 
           # address
-          street:       res.css('postalInfo addr street').text,
-          city:         res.css('postalInfo addr city').text,
-          zip:          res.css('postalInfo addr pc').text,
-          state:        res.css('postalInfo addr sp').text,
+          street: res.css('postalInfo addr street').text,
+          city: res.css('postalInfo addr city').text,
+          zip: res.css('postalInfo addr pc').text,
+          state: res.css('postalInfo addr sp').text,
           country_code: res.css('postalInfo addr cc').text,
 
           # authInfo
@@ -94,14 +94,14 @@ module Depp
         res.each do |_r|
           id = res.css('id').try(:text)
           reason = res.css('reason').present? ? res.css('reason').text : I18n.t(:available)
-          @contacts << { id: id, reason: reason  }
+          @contacts << { id: id, reason: reason }
         end
         @contacts
       end
 
       def contact_id_from_xml(data)
         id = data.css('epp response resData creData id').text
-        id.blank? ? nil : id
+        id.presence
       end
 
       def construct_create_disclosure_xml(cph, flag)
@@ -117,6 +117,7 @@ module Depp
 
       def extract_disclosure_hash(cpd) # cpd = contact_params[:disclose]
         return {} unless cpd
+
         cpd = cpd.delete_if { |k, v| v if v != '1' && k == 'flag' }
         cpd
       end
@@ -126,9 +127,10 @@ module Depp
         data.css('disclose').each do |d|
           flag = d.attributes['flag'].value
           next unless flag
+
           hash[flag] = {}
           d.children.each do |c|
-            hash[flag][c.name] = flag if %w( name email fax voice addr org_name ).include?(c.name)
+            hash[flag][c.name] = flag if %w[name email fax voice addr org_name].include?(c.name)
           end
         end
         hash
@@ -136,6 +138,7 @@ module Depp
 
       def type_string(type_code)
         return '' if type_code.blank?
+
         t = SELECTION_TYPES.select { |tp| tp.second == type_code }
         t.try(:first).try(:first)
       end
@@ -146,10 +149,10 @@ module Depp
         id: { value: code },
         postalInfo: {
           name: { value: name },
-          org:  { value: org_name },
+          org: { value: org_name },
         },
         voice: { value: phone },
-        email: { value: email }
+        email: { value: email },
       }
 
       if ::Contact.address_processing?
@@ -179,7 +182,7 @@ module Depp
       self.email = params[:email]
       self.phone = params[:phone]
 
-      self.org_name     = params[:org_name]
+      self.org_name = params[:org_name]
 
       if ::Contact.address_processing?
         self.street = params[:street]
@@ -194,14 +197,14 @@ module Depp
         chg: {
           postalInfo: {
             name: { value: name },
-            org:  { value: org_name },
+            org: { value: org_name },
           },
           voice: { value: phone },
           email: { value: email },
           authInfo: {
-            pw: { value: password }
-          }
-        }
+            pw: { value: password },
+          },
+        },
       }
 
       if ::Contact.address_processing?
@@ -210,7 +213,7 @@ module Depp
           city: { value: city },
           sp: { value: state },
           pc: { value: zip },
-          cc: { value: country_code }
+          cc: { value: country_code },
         }
       end
 
@@ -223,7 +226,7 @@ module Depp
       delete_xml = Contact.epp_xml.delete(
         {
           id: { value: id },
-          authInfo: { pw: { value: password } }
+          authInfo: { pw: { value: password } },
         },
         extension_xml(:delete)
       )
@@ -236,11 +239,11 @@ module Depp
 
       case action
       when :create
-        ident = ident_xml[:_anonymus].try(:first) 
+        ident = ident_xml[:_anonymus].try(:first)
       when :update
         # detect if any ident has changed, nb! ident and self.ident is not always same
-        if !(ident == self.ident && ident == self.ident_type && ident_country_code == self.ident_country_code)
-          ident = ident_xml[:_anonymus].try(:first) 
+        unless ident == self.ident && ident == ident_type && ident_country_code == ident_country_code
+          ident = ident_xml[:_anonymus].try(:first)
         end
       end
 
@@ -253,8 +256,8 @@ module Depp
     def ident_xml
       {
         _anonymus: [
-          ident: { value: ident, attrs: { type: ident_type, cc: ident_country_code } }
-        ]
+          ident: { value: ident, attrs: { type: ident_type, cc: ident_country_code } },
+        ],
       }
     end
 
@@ -264,8 +267,8 @@ module Depp
       type = legal_document.original_filename.split('.').last.downcase
       {
         _anonymus: [
-          legalDocument: { value: Base64.encode64(legal_document.read), attrs: { type: type } }
-        ]
+          legalDocument: { value: Base64.encode64(legal_document.read), attrs: { type: type } },
+        ],
       }
     end
 

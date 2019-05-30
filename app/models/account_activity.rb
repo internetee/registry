@@ -5,9 +5,9 @@ class AccountActivity < ActiveRecord::Base
   belongs_to :invoice
   belongs_to :price, class_name: 'Billing::Price'
 
-  CREATE = 'create'
-  RENEW = 'renew'
-  ADD_CREDIT = 'add_credit'
+  CREATE = 'create'.freeze
+  RENEW = 'renew'.freeze
+  ADD_CREDIT = 'add_credit'.freeze
 
   after_create :update_balance
   def update_balance
@@ -21,12 +21,12 @@ class AccountActivity < ActiveRecord::Base
     end
 
     def to_csv
-      attributes = %w(description activity_type created_at sum)
+      attributes = %w[description activity_type created_at sum]
 
       CSV.generate(headers: true) do |csv|
-        csv << %w(registrar description activity_type receipt_date sum)
+        csv << %w[registrar description activity_type receipt_date sum]
 
-        all.each do |x|
+        all.find_each do |x|
           attrs  = [x.account.registrar.try(:code)]
           attrs += attributes.map { |attr| x.send(attr) }
           csv << attrs

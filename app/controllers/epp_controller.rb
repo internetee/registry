@@ -16,17 +16,17 @@ class EppController < ApplicationController
   helper_method :resource
 
   def validate_against_schema
-    return if ['hello', 'error', 'keyrelay'].include?(params[:action])
+    return if %w[hello error keyrelay].include?(params[:action])
+
     schema.validate(params[:nokogiri_frame]).each do |error|
       epp_errors << {
         code: 2001,
-        msg: error
+        msg: error,
       }
       response.headers['X-EPP-Returncode'] = '2200'
     end
-    handle_errors and return if epp_errors.any?
+    handle_errors && return if epp_errors.any?
   end
-
 
   def catch_epp_errors
     err = catch(:epp_error) do
@@ -34,10 +34,10 @@ class EppController < ApplicationController
       nil
     end
     return unless err
+
     @errors = [err]
     handle_errors
   end
-
 
   rescue_from StandardError do |e|
     @errors ||= []
@@ -46,14 +46,14 @@ class EppController < ApplicationController
       if @errors.blank?
         @errors = [{
           msg: t('errors.messages.epp_authorization_error'),
-          code: '2201'
+          code: '2201',
         }]
       end
     else
       if @errors.blank?
         @errors = [{
           msg: 'Internal error.',
-          code: '2400'
+          code: '2400',
         }]
       end
 
@@ -88,6 +88,7 @@ class EppController < ApplicationController
 
   def current_user
     return unless signed_in?
+
     epp_session.user
   end
 
@@ -106,12 +107,12 @@ class EppController < ApplicationController
 
     if params[:parsed_frame].at_css('update')
       @errors.each_with_index do |errors, index|
-        if errors[:code] == '2304' &&
-            errors[:value].present? &&
-            errors[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
-            errors[:value][:obj] == 'status'
-          @errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
-        end
+        next unless errors[:code] == '2304' &&
+                    errors[:value].present? &&
+                    errors[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
+                    errors[:value][:obj] == 'status'
+
+        @errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
       end
     end
 
@@ -119,7 +120,7 @@ class EppController < ApplicationController
     if @errors.blank?
       @errors << {
         code: '1',
-        msg: 'handle_errors was executed when there were actually no errors'
+        msg: 'handle_errors was executed when there were actually no errors',
       }
     end
 
@@ -145,22 +146,23 @@ class EppController < ApplicationController
   # VALIDATION
   def latin_only
     return true if params['frame'].blank?
-    if params['frame'].match?(/\A[\p{Latin}\p{Z}\p{P}\p{S}\p{Cc}\p{Cf}\w_\'\+\-\.\(\)\/]*\Z/i)
+    if params['frame'].match?(%r{\A[\p{Latin}\p{Z}\p{P}\p{S}\p{Cc}\p{Cf}\w_\'\+\-\.\(\)/]*\Z}i)
       return true
     end
 
     epp_errors << {
       msg: 'Parameter value policy error. Allowed only Latin characters.',
-      code: '2306'
+      code: '2306',
     }
 
-    handle_errors and return false
+    handle_errors && (return false)
   end
 
   # VALIDATION
   def validate_request
     validation_method = "validate_#{params[:action]}"
     return unless respond_to?(validation_method, true)
+
     send(validation_method)
 
     # validate legal document's type here because it may be in most of the requests
@@ -169,7 +171,7 @@ class EppController < ApplicationController
       requires_attribute('extdata > legalDocument', 'type', values: LegalDocument::TYPES, policy: true)
     end
 
-    handle_errors and return if epp_errors.any?
+    handle_errors && return if epp_errors.any?
   end
 
   # let's follow grape's validations: https://github.com/intridea/grape/#parameter-validation-and-coercion
@@ -185,21 +187,24 @@ class EppController < ApplicationController
     options = selectors.extract_options!
     allow_blank = options[:allow_blank] ||= false # allow_blank is false by default
 
-    el, missing = nil, nil
+    el = nil
+    missing = nil
     selectors.each do |selector|
       full_selector = [@prefix, selector].compact.join(' ')
       attr = selector.split('>').last.strip.underscore
       el = params[:parsed_frame].css(full_selector).first
 
-      if allow_blank
-        missing = el.nil?
-      else
-        missing = el.present? ? el.text.blank? : true
-      end
+      missing = if allow_blank
+                  el.nil?
+                else
+                  el.present? ? el.text.blank? : true
+                end
+      next unless missing
+
       epp_errors << {
         code: '2003',
-        msg: I18n.t('errors.messages.required_parameter_missing', key: "#{full_selector} [#{attr}]")
-      } if missing
+        msg: I18n.t('errors.messages.required_parameter_missing', key: "#{full_selector} [#{attr}]"),
+      }
     end
 
     missing ? false : el # return last selector if it was present
@@ -219,24 +224,24 @@ class EppController < ApplicationController
     unless attribute
       epp_errors << {
         code: '2003',
-        msg: I18n.t('errors.messages.required_parameter_missing', key: attribute_selector)
+        msg: I18n.t('errors.messages.required_parameter_missing', key: attribute_selector),
       }
       return
     end
 
     return if options[:values].include?(attribute)
 
-    if options[:policy]
-      epp_errors << {
-        code: '2306',
-        msg: I18n.t('attribute_is_invalid', attribute: attribute_selector)
-      }
-    else
-      epp_errors << {
-        code: '2004',
-        msg: I18n.t('parameter_value_range_error', key: attribute_selector)
-      }
-    end
+    epp_errors << if options[:policy]
+                    {
+                      code: '2306',
+                      msg: I18n.t('attribute_is_invalid', attribute: attribute_selector),
+                    }
+                  else
+                    {
+                      code: '2004',
+                      msg: I18n.t('parameter_value_range_error', key: attribute_selector),
+                    }
+                  end
   end
 
   def optional_attribute(element_selector, attribute_selector, options)
@@ -249,7 +254,7 @@ class EppController < ApplicationController
 
     epp_errors << {
       code: '2306',
-      msg: I18n.t('attribute_is_invalid', attribute: attribute_selector)
+      msg: I18n.t('attribute_is_invalid', attribute: attribute_selector),
     }
   end
 
@@ -259,7 +264,7 @@ class EppController < ApplicationController
 
     epp_errors << {
       code: '2306',
-      msg: I18n.t(:exactly_one_parameter_required, params: full_selectors.join(' OR '))
+      msg: I18n.t(:exactly_one_parameter_required, params: full_selectors.join(' OR ')),
     }
   end
 
@@ -269,14 +274,15 @@ class EppController < ApplicationController
 
     epp_errors << {
       code: '2306',
-      msg: I18n.t(:mutally_exclusive_params, params: full_selectors.join(', '))
+      msg: I18n.t(:mutally_exclusive_params, params: full_selectors.join(', ')),
     }
   end
 
   def optional(selector, *validations)
     full_selector = [@prefix, selector].compact.join(' ')
     el = params[:parsed_frame].css(full_selector).first
-    return unless el&.text.present?
+    return if el&.text.blank?
+
     value = el.text
 
     validations.each do |x|
@@ -313,10 +319,12 @@ class EppController < ApplicationController
 
   def xml_attrs_present?(ph, attributes) # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
     attributes.each do |x|
+      next if has_attribute(ph, x)
+
       epp_errors << {
         code: '2003',
-        msg: I18n.t('errors.messages.required_parameter_missing', key: x.last)
-      } unless has_attribute(ph, x)
+        msg: I18n.t('errors.messages.required_parameter_missing', key: x.last),
+      }
     end
     epp_errors.empty?
   end
@@ -332,12 +340,10 @@ class EppController < ApplicationController
     frame = params[:raw_frame] || params[:frame]
 
     # filter pw
-    if request_command == 'login' && frame.present?
-      frame.gsub!(/pw>.+<\//, 'pw>[FILTERED]</')
-    end
-    trimmed_request = frame.gsub(/<eis:legalDocument([^>]+)>([^<])+<\/eis:legalDocument>/, "<eis:legalDocument>[FILTERED]</eis:legalDocument>") if frame.present?
+    frame.gsub!(%r{pw>.+</}, 'pw>[FILTERED]</') if request_command == 'login' && frame.present?
+    trimmed_request = frame.gsub(%r{<eis:legalDocument([^>]+)>([^<])+</eis:legalDocument>}, '<eis:legalDocument>[FILTERED]</eis:legalDocument>') if frame.present?
 
-    ApiLog::EppLog.create({
+    ApiLog::EppLog.create(
       request: trimmed_request,
       request_command: request_command,
       request_successful: epp_errors.empty?,
@@ -347,11 +353,11 @@ class EppController < ApplicationController
       api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_user.try(:registrar).try(:to_s),
       ip: request.ip,
       uuid: request.uuid
-    })
+    )
   end
 
   def resource
-    name = self.class.to_s.sub("Epp::","").sub("Controller","").underscore.singularize
+    name = self.class.to_s.sub('Epp::', '').sub('Controller', '').underscore.singularize
     instance_variable_get("@#{name}")
   end
 
@@ -366,7 +372,7 @@ class EppController < ApplicationController
   end
 
   def ensure_session_id_passed
-    raise 'EPP session id is empty' unless epp_session_id.present?
+    raise 'EPP session id is empty' if epp_session_id.blank?
   end
 
   def update_epp_session
@@ -379,10 +385,10 @@ class EppController < ApplicationController
 
       epp_errors << {
         msg: t('session_timeout'),
-        code: '2201'
+        code: '2201',
       }
 
-      handle_errors and return
+      handle_errors && return
     else
       epp_session.update_column(:updated_at, Time.zone.now)
     end
@@ -396,6 +402,7 @@ class EppController < ApplicationController
   def iptables_counter_update
     return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
     return if current_user.blank?
+
     counter_update(current_user.registrar_code, ENV['iptables_server_ip'])
   end
 

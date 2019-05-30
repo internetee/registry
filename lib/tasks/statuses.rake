@@ -3,501 +3,500 @@ task statuses: [:environment] do
   statuses = {
     'ok': [
     ],
-    'inactive': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'inactive': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'clientDeleteProhibited': [
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'clientDeleteProhibited': %w[
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'serverDeleteProhibited': [
-      'clientDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'serverDeleteProhibited': %w[
+      clientDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'clientHold': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'clientHold': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'serverHold': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'serverHold': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'clientRenewProhibited': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingTransfer',
-      'pendingUpdate',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'clientRenewProhibited': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingTransfer
+      pendingUpdate
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'serverRenewProhibited': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingTransfer',
-      'pendingUpdate',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'serverRenewProhibited': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingTransfer
+      pendingUpdate
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'clientTransferProhibited': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingRenew',
-      'pendingUpdate',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'clientTransferProhibited': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingRenew
+      pendingUpdate
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'serverTransferProhibited': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingRenew',
-      'pendingUpdate',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'serverTransferProhibited': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingRenew
+      pendingUpdate
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'clientUpdateProhibited': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingRenew',
-      'pendingTransfer',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'clientUpdateProhibited': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      serverUpdateProhibited
+      inactive
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingRenew
+      pendingTransfer
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'serverUpdateProhibited': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'inactive',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingRenew',
-      'pendingTransfer',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'serverUpdateProhibited': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      inactive
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingRenew
+      pendingTransfer
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'pendingCreate': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'pendingCreate': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'pendingDelete': [
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'pendingDeleteConfirmation',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'pendingDelete': %w[
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      pendingDeleteConfirmation
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'pendingRenew': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
-
+    'pendingRenew': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'pendingTransfer': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'pendingTransfer': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'pendingUpdate': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'inactive',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'pendingUpdate': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      inactive
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'serverManualInzone': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingRenew',
-      'pendingTransfer',
-      'pendingUpdate',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'serverManualInzone': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingRenew
+      pendingTransfer
+      pendingUpdate
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'serverRegistrantChangeProhibited': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingRenew',
-      'pendingTransfer',
-      'pendingUpdate',
-      'serverManualInzone',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'serverRegistrantChangeProhibited': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingRenew
+      pendingTransfer
+      pendingUpdate
+      serverManualInzone
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'serverAdminChangeProhibited': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingRenew',
-      'pendingTransfer',
-      'pendingUpdate',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'serverAdminChangeProhibited': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingRenew
+      pendingTransfer
+      pendingUpdate
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'serverTechChangeProhibited': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingRenew',
-      'pendingTransfer',
-      'pendingUpdate',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'serverTechChangeProhibited': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingRenew
+      pendingTransfer
+      pendingUpdate
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'serverForceDelete': [
-      'clientHold',
-      'serverHold',
-      'inactive',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'deleteCandidate',
-      'expired'
+    'serverForceDelete': %w[
+      clientHold
+      serverHold
+      inactive
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      deleteCandidate
+      expired
     ],
-    'deleteCandidate': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingRenew',
-      'pendingTransfer',
-      'pendingUpdate',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate',
-      'expired'
+    'deleteCandidate': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingRenew
+      pendingTransfer
+      pendingUpdate
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+      expired
     ],
-    'expired': [
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientHold',
-      'serverHold',
-      'clientRenewProhibited',
-      'serverRenewProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'inactive',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingDeleteConfirmation',
-      'pendingRenew',
-      'pendingTransfer',
-      'pendingUpdate',
-      'serverManualInzone',
-      'serverRegistrantChangeProhibited',
-      'serverAdminChangeProhibited',
-      'serverTechChangeProhibited',
-      'serverForceDelete',
-      'deleteCandidate'
-    ]
+    'expired': %w[
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientHold
+      serverHold
+      clientRenewProhibited
+      serverRenewProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      inactive
+      pendingCreate
+      pendingDelete
+      pendingDeleteConfirmation
+      pendingRenew
+      pendingTransfer
+      pendingUpdate
+      serverManualInzone
+      serverRegistrantChangeProhibited
+      serverAdminChangeProhibited
+      serverTechChangeProhibited
+      serverForceDelete
+      deleteCandidate
+    ],
   }
 
   puts "\nDomain status can be with other statuses map\n"
-  puts "---------------------------------------------"
+  puts '---------------------------------------------'
   statuses.each do |s, _v|
     puts "\n#{s} =>"
     statuses[s].map { |u| puts "  #{u}" }
@@ -506,117 +505,117 @@ task statuses: [:environment] do
 
   contact_statuses = {
     'ok': [
-      'linked'
+      'linked',
     ],
     'linked': [
-      'ok'
+      'ok',
     ],
-    'clientDeleteProhibited': [
-      'linked',
-      'serverDeleteProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'pendingCreate',
-      'pendingTransfer',
-      'pendingUpdate'
+    'clientDeleteProhibited': %w[
+      linked
+      serverDeleteProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      pendingCreate
+      pendingTransfer
+      pendingUpdate
     ],
-    'serverDeleteProhibited': [
-      'linked',
-      'clientDeleteProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'pendingCreate',
-      'pendingTransfer',
-      'pendingUpdate'
+    'serverDeleteProhibited': %w[
+      linked
+      clientDeleteProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      pendingCreate
+      pendingTransfer
+      pendingUpdate
     ],
-    'clientTransferProhibited': [
-      'linked',
-      'serverDeleteProhibited',
-      'clientDeleteProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingUpdate'
+    'clientTransferProhibited': %w[
+      linked
+      serverDeleteProhibited
+      clientDeleteProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      pendingCreate
+      pendingDelete
+      pendingUpdate
     ],
-    'serverTransferProhibited': [
-      'linked',
-      'serverDeleteProhibited',
-      'clientDeleteProhibited',
-      'clientTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingUpdate'
+    'serverTransferProhibited': %w[
+      linked
+      serverDeleteProhibited
+      clientDeleteProhibited
+      clientTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+      pendingCreate
+      pendingDelete
+      pendingUpdate
     ],
-    'clientUpdateProhibited': [
-      'linked',
-      'serverDeleteProhibited',
-      'clientDeleteProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'serverUpdateProhibited',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingTransfer'
+    'clientUpdateProhibited': %w[
+      linked
+      serverDeleteProhibited
+      clientDeleteProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      serverUpdateProhibited
+      pendingCreate
+      pendingDelete
+      pendingTransfer
     ],
-    'serverUpdateProhibited': [
-      'linked',
-      'serverDeleteProhibited',
-      'clientDeleteProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'pendingCreate',
-      'pendingDelete',
-      'pendingTransfer'
+    'serverUpdateProhibited': %w[
+      linked
+      serverDeleteProhibited
+      clientDeleteProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      pendingCreate
+      pendingDelete
+      pendingTransfer
     ],
-    'pendingCreate': [
-      'linked',
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited'
+    'pendingCreate': %w[
+      linked
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
     ],
-    'pendingDelete': [
-      'linked',
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited'
+    'pendingDelete': %w[
+      linked
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
     ],
-    'pendingTransfer': [
-      'linked',
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited'
+    'pendingTransfer': %w[
+      linked
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
     ],
-    'pendingUpdate': [
-      'linked',
-      'clientDeleteProhibited',
-      'serverDeleteProhibited',
-      'clientTransferProhibited',
-      'serverTransferProhibited',
-      'clientUpdateProhibited',
-      'serverUpdateProhibited'
-    ]
+    'pendingUpdate': %w[
+      linked
+      clientDeleteProhibited
+      serverDeleteProhibited
+      clientTransferProhibited
+      serverTransferProhibited
+      clientUpdateProhibited
+      serverUpdateProhibited
+    ],
   }
 
   puts "\n\nContact status can be with other statuses map\n"
-  puts "---------------------------------------------"
+  puts '---------------------------------------------'
   contact_statuses.each do |s, _v|
     puts "\n#{s} =>"
     contact_statuses[s].map { |u| puts "  #{u}" }

@@ -41,6 +41,6 @@ class AuthTokenDecryptor
   end
 
   def still_valid?
-    decrypted_data[:expires_at] > Time.now
+    decrypted_data[:expires_at] > Time.now.in_time_zone
   end
 end

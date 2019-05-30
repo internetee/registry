@@ -4,6 +4,7 @@ class Registrant::DomainUpdateConfirmsController < RegistrantController
 
   def show
     return if params[:confirmed] || params[:rejected]
+
     @domain = Domain.find(params[:id])
     @domain = nil unless @domain.registrant_update_confirmable?(params[:token])
   end

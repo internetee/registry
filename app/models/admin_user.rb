@@ -7,7 +7,7 @@ class AdminUser < User
   validates :password_confirmation, presence: true, if: :encrypted_password_changed?
   validate :validate_identity_code, if: -> { country_code == 'EE' }
 
-  ROLES = %w(user customer_service admin) # should not match to api_users roles
+  ROLES = %w[user customer_service admin].freeze # should not match to api_users roles
 
   devise :database_authenticatable, :trackable, :validatable, :timeoutable,
          authentication_keys: [:username]
@@ -27,7 +27,8 @@ class AdminUser < User
   private
 
   def validate_identity_code
-    return unless identity_code.present?
+    return if identity_code.blank?
+
     code = Isikukood.new(identity_code)
     errors.add(:identity_code, :invalid) unless code.valid?
   end

@@ -8,6 +8,7 @@ class Epp::Contact < Contact
 
   def manage_permissions
     return unless update_prohibited? || delete_prohibited?
+
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
   end
@@ -36,8 +37,7 @@ class Epp::Contact < Contact
         at[:country_code] = f.css('postalInfo addr cc').text if f.css('postalInfo addr cc').present?
       end
 
-      at[:auth_info]    = f.css('authInfo pw').text            if f.css('authInfo pw').present?
-
+      at[:auth_info] = f.css('authInfo pw').text if f.css('authInfo pw').present?
 
       at.merge!(ident_attrs(f.css('ident').first)) if new_record
       at
@@ -60,7 +60,7 @@ class Epp::Contact < Contact
       {
         ident: ident_frame.text,
         ident_type: ident_frame.attr('type'),
-        ident_country_code: ident_frame.attr('cc')
+        ident_country_code: ident_frame.attr('cc'),
       }
     end
 
@@ -80,7 +80,7 @@ class Epp::Contact < Contact
 
       [{
         body: legal_frame.text,
-        document_type: legal_frame.attr('type')
+        document_type: legal_frame.attr('type'),
       }]
     end
 
@@ -89,50 +89,50 @@ class Epp::Contact < Contact
 
       res = []
       codes.each do |x|
-        contact = find_by_epp_code(x)
-        if contact
-          res << { code: contact.code, avail: 0, reason: 'in use' }
-        else
-          res << { code: x, avail: 1 }
-        end
+        contact = find_by(epp_code: x)
+        res << if contact
+                 { code: contact.code, avail: 0, reason: 'in use' }
+               else
+                 { code: x, avail: 1 }
+               end
       end
 
       res
     end
-
   end
   delegate :ident_attr_valid?, to: :class
 
   def epp_code_map
     {
       '2003' => [ # Required parameter missing
-        [:name,   :blank],
-        [:email,  :blank],
-        [:phone,  :blank],
-        [:city,   :blank],
-        [:zip,    :blank],
-        [:street, :blank],
-        [:country_code, :blank]
+        %i[name blank],
+        %i[email blank],
+        %i[phone blank],
+        %i[city blank],
+        %i[zip blank],
+        %i[street blank],
+        %i[country_code blank],
       ],
       '2005' => [ # Value syntax error
-        [:name, :invalid],
-        [:phone, :invalid],
-        [:email, :invalid],
-        [:country_code, :invalid],
-        [:code, :invalid],
-        [:code, :too_long_contact_code]
+        %i[name invalid],
+        %i[phone invalid],
+        %i[email invalid],
+        %i[country_code invalid],
+        %i[code invalid],
+        %i[code too_long_contact_code],
       ],
       '2302' => [ # Object exists
-        [:code, :epp_id_taken]
+        %i[code epp_id_taken],
       ],
       '2305' => [ # Association exists
-        [:domains, :exist]
-      ]
+        %i[domains exist],
+      ],
     }
   end
 
   def update_attributes(frame, current_user)
     return super if frame.blank?
+
     at = {}.with_indifferent_access
     at.deep_merge!(self.class.attrs_from(frame.css('chg'), new_record: false))
 
@@ -141,7 +141,7 @@ class Epp::Contact < Contact
     end
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
-      frame.css("legalDocument").first.content = doc.path if doc&.persisted?
+      frame.css('legalDocument').first.content = doc.path if doc&.persisted?
       self.legal_document_id = doc.id
     end
 
@@ -195,7 +195,7 @@ class Epp::Contact < Contact
         if statuses.include?(status)
           to_destroy << status
         else
-          add_epp_error('2303', 'status', status, [:contact_statuses, :not_found])
+          add_epp_error('2303', 'status', status, %i[contact_statuses not_found])
         end
       end
 
@@ -210,7 +210,7 @@ class Epp::Contact < Contact
 
     frame.css('status').each do |status|
       unless Contact::CLIENT_STATUSES.include?(status['s'])
-        add_epp_error('2303', 'status', status['s'], [:domain_statuses, :not_found])
+        add_epp_error('2303', 'status', status['s'], %i[domain_statuses not_found])
         next
       end
 
@@ -224,33 +224,33 @@ class Epp::Contact < Contact
     return unless legal_document_data
 
     legal_documents.create(
-        document_type: legal_document_data[:type],
-        body: legal_document_data[:body]
+      document_type: legal_document_data[:type],
+      body: legal_document_data[:body]
     )
   end
 
-  def add_legal_file_to_new frame
+  def add_legal_file_to_new(frame)
     legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
     return unless legal_document_data
 
     doc = LegalDocument.create(
-        documentable_type: Contact,
-        document_type:     legal_document_data[:type],
-        body:              legal_document_data[:body]
+      documentable_type: Contact,
+      document_type: legal_document_data[:type],
+      body: legal_document_data[:body]
     )
     self.legal_documents = [doc]
 
-    frame.css("legalDocument").first.content = doc.path if doc&.persisted?
+    frame.css('legalDocument').first.content = doc.path if doc&.persisted?
     self.legal_document_id = doc.id
   end
 
   private
 
   def report_valid_ident_error
-    throw :epp_error, { code: '2308', msg: I18n.t('epp.contacts.errors.valid_ident') }
+    throw :epp_error, code: '2308', msg: I18n.t('epp.contacts.errors.valid_ident')
   end
 
   def report_ident_update_error
-    throw :epp_error, { code: '2308', msg: I18n.t('epp.contacts.errors.ident_update') }
+    throw :epp_error, code: '2308', msg: I18n.t('epp.contacts.errors.ident_update')
   end
 end

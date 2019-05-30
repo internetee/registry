@@ -24,7 +24,7 @@ class SortedCountry
           %w[Lithuania LT],
           ['Russian Federation', 'RU'],
           %w[Sweden SE],
-          ['United States', 'US']
+          ['United States', 'US'],
         ]
     end
 

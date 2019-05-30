@@ -7,7 +7,6 @@ module Admin
       @keyrelays = @q.result.page(params[:page])
     end
 
-    def show;
-    end
+    def show; end
   end
 end

@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 
-ENV["RAILS_ENV"] ||= "production"
+ENV['RAILS_ENV'] ||= 'production'
 
-root = File.expand_path(File.dirname(__FILE__))
+root = __dir__
 root = File.dirname(root) until File.exist?(File.join(root, 'config'))
 Dir.chdir(root)
 
-require File.join(root, "config", "environment")
+require File.join(root, 'config', 'environment')
 
 # from que gem rake task
 if defined?(::Rails) && Rails.respond_to?(:application)
@@ -26,7 +26,7 @@ Que.mode          = :async
 # the rake task in tasks/safe_shutdown.rb.
 
 stop = false
-%w( INT ).each do |signal|
+%w[INT].each do |signal|
   trap(signal) { stop = true }
 end
 

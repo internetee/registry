@@ -3,9 +3,8 @@ namespace :whois do
   task regenerate: :environment do
     start = Time.zone.now.to_f
 
-    print "-----> Regenerate Registry whois_records table and sync with whois server..."
+    print '-----> Regenerate Registry whois_records table and sync with whois server...'
     ActiveRecord::Base.uncached do
-
       # Must be on top
       print "\n-----> Update whois_records for auctions"
       Auction.pluck('DISTINCT domain').each do |domain|

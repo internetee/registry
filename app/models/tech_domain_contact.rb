@@ -18,6 +18,6 @@ class TechDomainContact < DomainContact
       end
     end
 
-    return affected_domains.sort, skipped_domains.sort
+    [affected_domains.sort, skipped_domains.sort]
   end
 end

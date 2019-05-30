@@ -16,7 +16,6 @@ module Admin
       contacts = contacts.filter_by_states(params[:statuses_contains].join(',')) if params[:statuses_contains]
       contacts = contacts.where("ident_country_code is null or ident_country_code=''") if params[:only_no_country_code].eql?('1')
 
-
       normalize_search_parameters do
         @q = contacts.search(search_params)
         @contacts = @q.result.uniq.page(params[:page])
@@ -29,8 +28,7 @@ module Admin
       render json: Contact.search_by_query(params[:q])
     end
 
-    def edit
-    end
+    def edit; end
 
     def update
       cp = ignore_empty_statuses
@@ -52,7 +50,7 @@ module Admin
 
     def contact_params
       if params[:contact]
-        params.require(:contact).permit({ statuses: [], status_notes_array: [] })
+        params.require(:contact).permit(statuses: [], status_notes_array: [])
       else
         { statuses: [] }
       end
@@ -72,7 +70,7 @@ module Admin
         # updated at
         end_time = params[:q][:updated_at_gteq].try(:to_date)
         params[:q][:updated_at_lteq] = end_time.try(:end_of_day)
-      rescue
+      rescue StandardError
         logger.warn('Invalid date')
       end
 

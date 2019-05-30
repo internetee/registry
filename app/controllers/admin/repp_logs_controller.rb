@@ -8,8 +8,8 @@ module Admin
       @q.sorts = 'id desc' if @q.sorts.empty?
 
       @repp_logs = @q.result
-      @repp_logs = @repp_logs.where("extract(epoch from created_at) >= extract(epoch from ?::timestamp)", Time.parse(params[:q][:created_at_gteq])) if params[:q][:created_at_gteq].present?
-      @repp_logs = @repp_logs.where("extract(epoch from created_at) <= extract(epoch from ?::timestamp)", Time.parse(params[:q][:created_at_lteq])) if params[:q][:created_at_lteq].present?
+      @repp_logs = @repp_logs.where('extract(epoch from created_at) >= extract(epoch from ?::timestamp)', Time.parse(params[:q][:created_at_gteq]).in_time_zone) if params[:q][:created_at_gteq].present?
+      @repp_logs = @repp_logs.where('extract(epoch from created_at) <= extract(epoch from ?::timestamp)', Time.parse(params[:q][:created_at_lteq]).in_time_zone) if params[:q][:created_at_lteq].present?
       @repp_logs = @repp_logs.page(params[:page])
     end
 
@@ -24,13 +24,10 @@ module Admin
 
         default_date = params[:created_after]
 
-        if !['today', 'tomorrow', 'yesterday'].include?(default_date)
-          default_date = 'today'
-        end
+        default_date = 'today' unless %w[today tomorrow yesterday].include?(default_date)
 
-        params[:q][:created_at_gteq] = Date.send(default_date).strftime("%Y-%m-%d")
+        params[:q][:created_at_gteq] = Date.send(default_date).strftime('%Y-%m-%d')
       end
-
     end
   end
 end

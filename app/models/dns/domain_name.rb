@@ -52,7 +52,7 @@ module DNS
     end
 
     def registered?
-      Domain.find_by_idn(name)
+      Domain.find_by(idn: name)
     end
 
     def not_registered?

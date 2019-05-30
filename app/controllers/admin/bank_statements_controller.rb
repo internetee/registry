@@ -2,7 +2,7 @@ module Admin
   class BankStatementsController < BaseController
     load_and_authorize_resource
 
-    before_action :set_bank_statement, only: [:show, :download_import_file, :bind_invoices]
+    before_action :set_bank_statement, only: %i[show download_import_file bind_invoices]
 
     def index
       @q = BankStatement.search(params[:q])
@@ -22,13 +22,15 @@ module Admin
         iban: Setting.registry_iban
       )
       @invoice = Invoice.find_by(id: params[:invoice_id])
-      @bank_transaction = @bank_statement.bank_transactions.build(
-        description: @invoice.to_s,
-        sum: @invoice.total,
-        reference_no: @invoice.reference_no,
-        paid_at: Time.zone.now.to_date,
-        currency: 'EUR'
-      ) if @invoice
+      if @invoice
+        @bank_transaction = @bank_statement.bank_transactions.build(
+          description: @invoice.to_s,
+          sum: @invoice.total,
+          reference_no: @invoice.reference_no,
+          paid_at: Time.zone.now.to_date,
+          currency: 'EUR'
+        )
+      end
     end
 
     def create
@@ -81,9 +83,9 @@ module Admin
     end
 
     def bank_statement_params
-      params.require(:bank_statement).permit(:th6_file, :bank_code, :iban, bank_transactions_attributes: [
-        :description, :sum, :currency, :reference_no, :paid_at
-      ])
+      params.require(:bank_statement).permit(:th6_file, :bank_code, :iban, bank_transactions_attributes: %i[
+                                               description sum currency reference_no paid_at
+                                             ])
     end
   end
 end

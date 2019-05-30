@@ -10,6 +10,7 @@ class Epp::Domain < Domain
     return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer || is_renewal
     return unless update_prohibited? || delete_prohibited?
+
     stat = (statuses & (DomainStatus::UPDATE_PROHIBIT_STATES + DomainStatus::DELETE_PROHIBIT_STATES)).first
     add_epp_error('2304', 'status', stat, I18n.t(:object_status_prohibits_operation))
     false
@@ -20,8 +21,8 @@ class Epp::Domain < Domain
     return true if is_transfer
 
     ok = true
-    active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
-    active_techs = tech_domain_contacts.select { |x| !x.marked_for_destruction? }
+    active_admins = admin_domain_contacts.reject { |x| x.marked_for_destruction? }
+    active_techs = tech_domain_contacts.reject { |x| x.marked_for_destruction? }
 
     # bullet workaround
     ac = active_admins.map { |x| Contact.find(x.contact_id) }
@@ -56,73 +57,70 @@ class Epp::Domain < Domain
   def epp_code_map
     {
       '2002' => [ # Command use error
-        [:base, :domain_already_belongs_to_the_querying_registrar]
+        %i[base domain_already_belongs_to_the_querying_registrar],
       ],
       '2003' => [ # Required parameter missing
-        [:registrant, :blank],
-        [:registrar, :blank],
-        [:base, :required_parameter_missing_reserved]
+        %i[registrant blank],
+        %i[registrar blank],
+        %i[base required_parameter_missing_reserved],
       ],
       '2004' => [ # Parameter value range error
         [:dnskeys, :out_of_range,
          {
            min: Setting.dnskeys_min_count,
-           max: Setting.dnskeys_max_count
-         }
-        ],
+           max: Setting.dnskeys_max_count,
+         }],
         [:admin_contacts, :out_of_range,
          {
            min: Setting.admin_contacts_min_count,
-           max: Setting.admin_contacts_max_count
-         }
-        ],
+           max: Setting.admin_contacts_max_count,
+         }],
         [:tech_contacts, :out_of_range,
          {
            min: Setting.tech_contacts_min_count,
-           max: Setting.tech_contacts_max_count
-         }
-        ]
+           max: Setting.tech_contacts_max_count,
+         }]
       ],
       '2005' => [ # Parameter value syntax error
         [:name_dirty, :invalid, { obj: 'name', val: name_dirty }],
-        [:puny_label, :too_long, { obj: 'name', val: name_puny }]
+        [:puny_label, :too_long, { obj: 'name', val: name_puny }],
       ],
       '2201' => [ # Authorisation error
-        [:transfer_code, :wrong_pw]
+        %i[transfer_code wrong_pw],
       ],
       '2202' => [
-        [:base, :invalid_auth_information_reserved]
+        %i[base invalid_auth_information_reserved],
       ],
       '2302' => [ # Object exists
         [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
         [:name_dirty, :reserved, { value: { obj: 'name', val: name_dirty } }],
-        [:name_dirty, :blocked, { value: { obj: 'name', val: name_dirty } }]
+        [:name_dirty, :blocked, { value: { obj: 'name', val: name_dirty } }],
       ],
       '2304' => [ # Object status prohibits operation
-        [:base, :domain_status_prohibits_operation]
+        %i[base domain_status_prohibits_operation],
       ],
       '2306' => [ # Parameter policy error
-        [:base, :ds_data_with_key_not_allowed],
-        [:base, :ds_data_not_allowed],
-        [:base, :key_data_not_allowed],
-        [:period, :not_a_number],
-        [:period, :not_an_integer],
-        [:registrant, :cannot_be_missing]
+        %i[base ds_data_with_key_not_allowed],
+        %i[base ds_data_not_allowed],
+        %i[base key_data_not_allowed],
+        %i[period not_a_number],
+        %i[period not_an_integer],
+        %i[registrant cannot_be_missing],
       ],
       '2308' => [
         [:base, :domain_name_blocked, { value: { obj: 'name', val: name_dirty } }],
         [:nameservers, :out_of_range,
          {
            min: Setting.ns_min_count,
-           max: Setting.ns_max_count
-         }
-        ],
-      ]
+           max: Setting.ns_max_count,
+         }],
+      ],
     }
   end
 
   def attach_default_contacts
     return if registrant.blank?
+
     regt = Registrant.find(registrant.id) # temp for bullet
     tech_contacts << regt if tech_domain_contacts.blank?
     admin_contacts << regt if admin_domain_contacts.blank? && !regt.org?
@@ -133,19 +131,21 @@ class Epp::Domain < Domain
 
     registrant_frame = frame.css('registrant').first
     code = registrant_frame.try(:text)
-    if code.present?
-      if action == 'chg' && registrant_change_prohibited?
-        add_epp_error('2304', "status", DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
-      end
-      regt = Registrant.find_by(code: code)
-      if regt
-        at[:registrant_id] = regt.id
+    if registrant_frame
+      if code.present?
+        if action == 'chg' && registrant_change_prohibited?
+          add_epp_error('2304', "status", DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+        end
+        regt = Registrant.find_by(code: code)
+        if regt
+          at[:registrant_id] = regt.id
+        else
+          add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
+        end
       else
-        add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
+        add_epp_error('2306', nil, nil, [:registrant, :cannot_be_missing])
       end
-    else
-      add_epp_error('2306', nil, nil, [:registrant, :cannot_be_missing])
-    end if registrant_frame
+    end
 
 
     at[:name] = frame.css('name').text if new_record?
@@ -153,7 +153,7 @@ class Epp::Domain < Domain
     at[:registered_at] = Time.zone.now if new_record?
 
     period = frame.css('period').text
-    at[:period] = (period.to_i == 0) ? 1 : period.to_i
+    at[:period] = period.to_i == 0 ? 1 : period.to_i
 
     at[:period_unit] = Epp::Domain.parse_period_unit_from_frame(frame) || 'y'
 
@@ -167,32 +167,31 @@ class Epp::Domain < Domain
     pw = frame.css('authInfo > pw').text
     at[:transfer_code] = pw if pw.present?
 
-    if new_record?
-      dnskey_frame = frame.css('extension create')
+    dnskey_frame = if new_record?
+      frame.css('extension create')
     else
-      dnskey_frame = frame
-    end
+      frame
+                   end
 
     at[:dnskeys_attributes] = dnskeys_attrs(dnskey_frame, action)
 
     at
   end
 
-
   # Adding legal doc to domain and
   # if something goes wrong - raise Rollback error
-  def add_legal_file_to_new frame
+  def add_legal_file_to_new(frame)
     legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
     return unless legal_document_data
 
     doc = LegalDocument.create(
-        documentable_type: Domain,
-        document_type:     legal_document_data[:type],
-        body:              legal_document_data[:body]
-    )
+      documentable_type: Domain,
+      document_type: legal_document_data[:type],
+      body: legal_document_data[:body]
+      )
     self.legal_documents = [doc]
 
-    frame.css("legalDocument").first.content = doc.path if doc&.persisted?
+    frame.css('legalDocument').first.content = doc.path if doc&.persisted?
     self.legal_document_id = doc.id
   end
 
@@ -202,13 +201,13 @@ class Epp::Domain < Domain
     if action == 'rem'
       to_destroy = []
       ns_list.each do |ns_attrs|
-        nameserver = nameservers.find_by_hash_params(ns_attrs).first
+        nameserver = nameservers.find_by(hash_params: ns_attrs).first
         if nameserver.blank?
-          add_epp_error('2303', 'hostAttr', ns_attrs[:hostname], [:nameservers, :not_found])
+          add_epp_error('2303', 'hostAttr', ns_attrs[:hostname], %i[nameservers not_found])
         else
           to_destroy << {
             id: nameserver.id,
-            _destroy: 1
+            _destroy: 1,
           }
         end
       end
@@ -225,7 +224,7 @@ class Epp::Domain < Domain
       host_attr = {
         hostname: x.css('hostName').first.try(:text),
         ipv4: x.css('hostAddr[ip="v4"]').map(&:text).compact,
-        ipv6: x.css('hostAddr[ip="v6"]').map(&:text).compact
+        ipv6: x.css('hostAddr[ip="v6"]').map(&:text).compact,
       }
 
       res << host_attr.delete_if { |_k, v| v.blank? }
@@ -272,13 +271,13 @@ class Epp::Domain < Domain
       domain_contact_id = dcontacts.find_by(contact_id: at[:contact_id]).try(:id)
 
       unless domain_contact_id
-        add_epp_error('2303', 'contact', at[:contact_code_cache], [:domain_contacts, :not_found])
+        add_epp_error('2303', 'contact', at[:contact_code_cache], %i[domain_contacts not_found])
         next
       end
 
       destroy_attrs << {
         id: domain_contact_id,
-        _destroy: 1
+        _destroy: 1,
       }
     end
 
@@ -290,22 +289,22 @@ class Epp::Domain < Domain
     frame.css('contact').each do |x|
       next if x['type'] != type
 
-      c = Epp::Contact.find_by_epp_code(x.text)
+      c = Epp::Contact.find_by(epp_code: x.text)
       unless c
-        add_epp_error('2303', 'contact', x.text, [:domain_contacts, :not_found])
+        add_epp_error('2303', 'contact', x.text, %i[domain_contacts not_found])
         next
       end
 
       if action != 'rem'
         if x['type'] == 'admin' && c.org?
-          add_epp_error('2306', 'contact', x.text, [:domain_contacts, :admin_contact_can_be_only_private_person])
+          add_epp_error('2306', 'contact', x.text, %i[domain_contacts admin_contact_can_be_only_private_person])
           next
         end
       end
 
       attrs << {
         contact_id: c.id,
-        contact_code_cache: c.code
+        contact_code_cache: c.code,
       }
     end
 
@@ -315,6 +314,7 @@ class Epp::Domain < Domain
   def dnskeys_attrs(frame, action)
     keys = []
     return keys if frame.blank?
+
     inf_data = DnsSecKeys.new(frame)
 
     if  action == 'rem' &&
@@ -331,7 +331,7 @@ class Epp::Domain < Domain
       end
       if action == 'rem'
         keys = inf_data.mark_destroy(dnskeys)
-        add_epp_error('2303', nil, nil, [:dnskeys, :not_found]) if keys.include? nil
+        add_epp_error('2303', nil, nil, %i[dnskeys not_found]) if keys.include? nil
       end
     end
     errors.any? ? [] : keys
@@ -367,13 +367,12 @@ class Epp::Domain < Domain
 
     private
 
-    KEY_INTERFACE = {flags: 'flags', protocol: 'protocol', alg: 'alg', public_key: 'pubKey' }
+    KEY_INTERFACE = { flags: 'flags', protocol: 'protocol', alg: 'alg', public_key: 'pubKey' }.freeze
     DS_INTERFACE  =
-        { ds_key_tag:     'keyTag',
-          ds_alg:         'alg',
-          ds_digest_type: 'digestType',
-          ds_digest:      'digest'
-        }
+      { ds_key_tag: 'keyTag',
+        ds_alg: 'alg',
+        ds_digest_type: 'digestType',
+        ds_digest: 'digest'},.freeze
 
     def xm_copy(frame, map)
       result = {}
@@ -391,7 +390,7 @@ class Epp::Domain < Domain
       frame.css('dsData').each do |ds_data|
         key = ds_data.css('keyData')
         ds = xm_copy ds_data, DS_INTERFACE
-        ds.merge(key_data_from key) if key.present?
+        ds.merge(key_data_from(key)) if key.present?
         @ds_data << ds
       end
     end
@@ -421,7 +420,7 @@ class Epp::Domain < Domain
         if statuses.include?(x)
           to_destroy << x
         else
-          add_epp_error('2303', 'status', x, [:domain_statuses, :not_found])
+          add_epp_error('2303', 'status', x, %i[domain_statuses not_found])
         end
       end
 
@@ -436,7 +435,7 @@ class Epp::Domain < Domain
 
     frame.css('status').each do |x|
       unless DomainStatus::CLIENT_STATUSES.include?(x['s'])
-        add_epp_error('2303', 'status', x['s'], [:domain_statuses, :not_found])
+        add_epp_error('2303', 'status', x['s'], %i[domain_statuses not_found])
         next
       end
 
@@ -445,7 +444,6 @@ class Epp::Domain < Domain
 
     status_list
   end
-
 
   def update(frame, current_user, verify = true)
     return super if frame.blank?
@@ -457,7 +455,7 @@ class Epp::Domain < Domain
     at.deep_merge!(attrs_from(frame.css('rem'), current_user, 'rem'))
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
-      frame.css("legalDocument").first.content = doc.path if doc&.persisted?
+      frame.css('legalDocument').first.content = doc.path if doc&.persisted?
       self.legal_document_id = doc.id
     end
 
@@ -479,7 +477,7 @@ class Epp::Domain < Domain
     if !same_registrant_as_current && errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
        frame.css('registrant').present? &&
-       frame.css('registrant').attr('verified').to_s.downcase != 'yes'
+       !frame.css('registrant').attr('verified').to_s.casecmp('yes').zero?
       registrant_verification_asked!(frame.to_s, current_user.id)
     end
 
@@ -491,11 +489,12 @@ class Epp::Domain < Domain
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
 
-    self.statuses.delete(DomainStatus::PENDING_UPDATE)
+    statuses.delete(DomainStatus::PENDING_UPDATE)
     self.upid = user.registrar.id if user.registrar
     self.up_date = Time.zone.now
 
     return unless update(frame, user, false)
+
     clean_pendings!
 
     save!
@@ -528,11 +527,11 @@ class Epp::Domain < Domain
     check_discarded
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
-      frame.css("legalDocument").first.content = doc.path if doc&.persisted?
+      frame.css('legalDocument').first.content = doc.path if doc&.persisted?
     end
 
     if Setting.request_confirmation_on_domain_deletion_enabled &&
-       frame.css('delete').children.css('delete').attr('verified').to_s.downcase != 'yes'
+       !frame.css('delete').children.css('delete').attr('verified').to_s.casecmp('yes').zero?
 
       registrant_verification_asked!(frame.to_s, user_id)
       pending_delete!
@@ -544,10 +543,12 @@ class Epp::Domain < Domain
   end
 
   def set_pending_delete!
-    throw :epp_error, {
-      code: '2304',
-      msg: I18n.t(:object_status_prohibits_operation)
-    } unless pending_deletable?
+    unless pending_deletable?
+      throw :epp_error, {
+        code: '2304',
+        msg: I18n.t(:object_status_prohibits_operation)
+      }
+    end
 
     self.delete_date = Time.zone.today + Setting.redemption_grace_period.days + 1.day
     set_pending_delete
@@ -599,6 +600,7 @@ class Epp::Domain < Domain
       return transfers.last if transfers.any?
     when 'request'
       return pending_transfer if pending_transfer
+
       return query_transfer(frame, current_user)
     when 'approve'
       return approve_transfer(frame, current_user) if pending_transfer
@@ -611,7 +613,7 @@ class Epp::Domain < Domain
     if current_user.registrar == registrar
       throw :epp_error, {
         code: '2002',
-        msg: I18n.t(:domain_already_belongs_to_the_querying_registrar)
+        msg: I18n.t(:domain_already_belongs_to_the_querying_registrar),
       }
     end
 
@@ -649,7 +651,7 @@ class Epp::Domain < Domain
     if current_user.registrar != pt.old_registrar
       throw :epp_error, {
         msg: I18n.t('transfer_can_be_approved_only_by_current_registrar'),
-        code: '2304'
+        code: '2304',
       }
     end
 
@@ -675,7 +677,7 @@ class Epp::Domain < Domain
     if current_user.registrar != pt.old_registrar
       throw :epp_error, {
         msg: I18n.t('transfer_can_be_rejected_only_by_current_registrar'),
-        code: '2304'
+        code: '2304',
       }
     end
 
@@ -693,7 +695,7 @@ class Epp::Domain < Domain
 
   def keyrelay(parsed_frame, requester)
     if registrar == requester
-      errors.add(:base, :domain_already_belongs_to_the_querying_registrar) and return false
+      errors.add(:base, :domain_already_belongs_to_the_querying_registrar) && (return false)
     end
 
     abs_datetime = parsed_frame.css('absolute').text
@@ -740,7 +742,7 @@ class Epp::Domain < Domain
   def validate_exp_dates(cur_exp_date)
     begin
       return if cur_exp_date.to_date == valid_to.to_date
-    rescue
+    rescue StandardError
       add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
       return
     end
@@ -751,10 +753,12 @@ class Epp::Domain < Domain
 
 
   def can_be_deleted?
-    begin
-      errors.add(:base, :domain_status_prohibits_operation)
-      return false
-    end if (statuses & [DomainStatus::CLIENT_DELETE_PROHIBITED, DomainStatus::SERVER_DELETE_PROHIBITED]).any?
+    if (statuses & [DomainStatus::CLIENT_DELETE_PROHIBITED, DomainStatus::SERVER_DELETE_PROHIBITED]).any?
+      begin
+        errors.add(:base, :domain_status_prohibits_operation)
+        return false
+      end
+    end
 
     true
   end
@@ -770,19 +774,20 @@ class Epp::Domain < Domain
   class << self
     def parse_period_unit_from_frame(parsed_frame)
       p = parsed_frame.css('period').first
-      return nil unless p
+      return unless p
+
       p[:unit]
     end
 
     def parse_legal_document_from_frame(parsed_frame)
       ld = parsed_frame.css('legalDocument').first
-      return nil unless ld
-      return nil if ld.text.starts_with?(ENV['legal_documents_dir']) # escape reloading
-      return nil if ld.text.starts_with?('/home/') # escape reloading
+      return unless ld
+      return if ld.text.starts_with?(ENV['legal_documents_dir']) # escape reloading
+      return if ld.text.starts_with?('/home/') # escape reloading
 
       {
         body: ld.text,
-        type: ld['type']
+        type: ld['type'],
       }
     end
 

@@ -1,6 +1,7 @@
 class DurationIso8601Validator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return if self.class.validate(value)
+
     record.errors[attribute] << (options[:message] || record.errors.generate_message(attribute, :unknown_pattern))
   end
 
@@ -11,7 +12,7 @@ class DurationIso8601Validator < ActiveModel::EachValidator
 
       begin
         ISO8601::Duration.new(value)
-      rescue => _e
+      rescue StandardError => _e
         return false
       end
 
@@ -24,7 +25,7 @@ class DurationIso8601Validator < ActiveModel::EachValidator
       {
         code: '2005',
         msg: I18n.t(:unknown_expiry_relative_pattern),
-        value: { obj: obj, val: value }
+        value: { obj: obj, val: value },
       }
     end
   end

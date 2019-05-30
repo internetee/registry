@@ -25,7 +25,7 @@ class Registrar < ActiveRecord::Base
   validates :vat_rate, absence: true, if: :vat_liable_locally?
   validates :vat_rate, absence: true, if: 'vat_liable_in_foreign_country? && vat_no?'
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
-            allow_nil: true
+                       allow_nil: true
 
   validate :forbid_special_code
 
@@ -33,14 +33,15 @@ class Registrar < ActiveRecord::Base
   after_initialize :set_defaults
 
   validates :email, :billing_email,
-    email_format: { message: :invalid },
-    allow_blank: true, if: proc { |c| c.email_changed? }
+            email_format: { message: :invalid },
+            allow_blank: true, if: proc { |c| c.email_changed? }
 
-  WHOIS_TRIGGERS = %w(name email phone street city state zip)
+  WHOIS_TRIGGERS = %w[name email phone street city state zip].freeze
 
   after_commit :update_whois_records
   def update_whois_records
     return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present?
+
     RegenerateRegistrarWhoisesJob.enqueue id
   end
 
@@ -91,8 +92,8 @@ class Registrar < ActiveRecord::Base
           description: 'prepayment',
           unit: 'piece',
           quantity: 1,
-          price: amount
-        }
+          price: amount,
+        },
       ]
     )
   end
@@ -125,6 +126,7 @@ class Registrar < ActiveRecord::Base
 
   def api_ip_white?(ip)
     return true unless Setting.api_ip_whitelist_enabled
+
     white_ips.api.pluck(:ipv4, :ipv6).flatten.include?(ip)
   end
 

@@ -4,10 +4,10 @@ class DomainTransfer < ActiveRecord::Base
   belongs_to :old_registrar, class_name: 'Registrar'
   belongs_to :new_registrar, class_name: 'Registrar'
 
-  PENDING = 'pending'
-  CLIENT_APPROVED = 'clientApproved'
-  CLIENT_REJECTED = 'clientRejected'
-  SERVER_APPROVED = 'serverApproved'
+  PENDING = 'pending'.freeze
+  CLIENT_APPROVED = 'clientApproved'.freeze
+  CLIENT_REJECTED = 'clientRejected'.freeze
+  SERVER_APPROVED = 'serverApproved'.freeze
 
   before_create :set_wait_until
 
@@ -33,6 +33,7 @@ class DomainTransfer < ActiveRecord::Base
   def set_wait_until
     wait_time = Setting.transfer_wait_time
     return if wait_time == 0
+
     self.wait_until = transfer_requested_at + wait_time.hours
   end
 

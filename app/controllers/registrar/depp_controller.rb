@@ -11,7 +11,7 @@ class Registrar
     before_action :authenticate_user
 
     def authenticate_user
-      redirect_to new_registrar_user_session_url and return unless depp_current_user
+      redirect_to(new_registrar_user_session_url) && return unless depp_current_user
     end
 
     def depp_controller?
@@ -19,7 +19,8 @@ class Registrar
     end
 
     def depp_current_user
-      return nil unless current_registrar_user
+      return unless current_registrar_user
+
       @depp_current_user ||= Depp::User.new(
         tag: current_registrar_user.username,
         password: current_registrar_user.plain_text_password

@@ -14,10 +14,10 @@ module Admin
         end
 
         flash[:notice] = t('.saved')
-        redirect_to [:admin, :settings]
+        redirect_to %i[admin settings]
       else
-        flash[:alert] = @errors.values.uniq.join(", ")
-        render "admin/settings/index"
+        flash[:alert] = @errors.values.uniq.join(', ')
+        render 'admin/settings/index'
       end
     end
 
@@ -30,7 +30,7 @@ module Admin
         settings[k] = v
         settings[k] = v.to_i if Setting.integer_settings.include?(k.to_sym)
         settings[k] = v.to_f if Setting.float_settings.include?(k.to_sym)
-        settings[k] = (v == 'true' ? true : false) if Setting.boolean_settings.include?(k.to_sym)
+        settings[k] = (v == 'true') if Setting.boolean_settings.include?(k.to_sym)
       end
 
       settings

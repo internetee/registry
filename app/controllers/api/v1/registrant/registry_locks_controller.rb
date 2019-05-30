@@ -32,17 +32,18 @@ module Api
           @domain = domain_pool.find_by(uuid: params[:domain_uuid])
 
           return if @domain
-          render json: { errors: [{ base: ['Domain not found'] }] },
-                 status: :not_found and return
+
+          render(json: { errors: [{ base: ['Domain not found'] }] },
+                 status: :not_found) && return
         end
 
         def authorized_to_manage_locks?
           return if current_registrant_user.administered_domains.include?(@domain)
 
-          render json: { errors: [
-            { base: ['Only administrative contacts can manage registry locks'] }
-          ] },
-                 status: :unauthorized and return
+          render(json: { errors: [
+                   { base: ['Only administrative contacts can manage registry locks'] },
+                 ] },
+                 status: :unauthorized) && return
         end
 
         def serialized_domain(domain)

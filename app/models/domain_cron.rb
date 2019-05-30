@@ -1,5 +1,4 @@
 class DomainCron
-
   def self.clean_expired_pendings
     STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?
 
@@ -15,9 +14,7 @@ class DomainCron
         next
       end
       count += 1
-      if domain.pending_update?
-        RegistrantChangeExpiredEmailJob.enqueue(domain.id)
-      end
+      RegistrantChangeExpiredEmailJob.enqueue(domain.id) if domain.pending_update?
       if domain.pending_delete? || domain.pending_delete_confirmation?
         DomainDeleteMailer.expired(domain).deliver_now
       end
@@ -42,6 +39,7 @@ class DomainCron
 
     domains.each do |domain|
       next unless domain.expirable?
+
       real += 1
       domain.set_graceful_expired
       STDOUT << "#{Time.zone.now.utc} DomainCron.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
@@ -69,10 +67,11 @@ class DomainCron
 
     domains.each do |domain|
       next unless domain.server_holdable?
+
       real += 1
       domain.statuses << DomainStatus::SERVER_HOLD
       STDOUT << "#{Time.zone.now.utc} DomainCron.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-      domain.save(validate: false) and marked += 1
+      domain.save(validate: false) && (marked += 1)
     end
 
     STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{marked} of #{real} domains\n" unless Rails.env.test?

@@ -12,6 +12,7 @@ class Action < ActiveRecord::Base
 
   def notification_key
     raise 'Action object is missing' unless contact
+
     "contact_#{operation}".to_sym
   end
 end

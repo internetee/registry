@@ -7,7 +7,7 @@ class Registrant::SessionsController < Devise::SessionsController
 
   def mid
     phone = params[:user][:phone]
-    endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
+    endpoint = (ENV['sk_digi_doc_service_endpoint']).to_s
     client = Digidoc::Client.new(endpoint)
     client.logger = Rails.application.config.logger unless Rails.env.test?
 
@@ -31,7 +31,7 @@ class Registrant::SessionsController < Devise::SessionsController
       session[:mid_session_code] = client.session_code
 
       render json: {
-        message: t(:confirmation_sms_was_sent_to_your_phone_verification_code_is, { code: response.challenge_id })
+        message: t(:confirmation_sms_was_sent_to_your_phone_verification_code_is, code: response.challenge_id),
       }, status: :ok
     else
       render json: { message: t(:no_such_user) }, status: :unauthorized
@@ -39,7 +39,7 @@ class Registrant::SessionsController < Devise::SessionsController
   end
 
   def mid_status
-    endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
+    endpoint = (ENV['sk_digi_doc_service_endpoint']).to_s
     client = Digidoc::Client.new(endpoint)
     client.logger = Rails.application.config.logger unless Rails.env.test?
     client.session_code = session[:mid_session_code]

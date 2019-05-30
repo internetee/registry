@@ -22,7 +22,7 @@ class Registrant::DomainsController < RegistrantController
 
     if (domain.statuses.include?(DomainStatus::PENDING_UPDATE) ||
         domain.statuses.include?(DomainStatus::PENDING_DELETE_CONFIRMATION)) &&
-        domain.pending_json.present?
+       domain.pending_json.present?
 
       @domain = domain
       @confirmation_url = confirmation_url(domain)
@@ -56,7 +56,7 @@ class Registrant::DomainsController < RegistrantController
     begin
       end_time = params[:q][:valid_to_lteq].try(:to_date)
       params[:q][:valid_to_lteq] = end_time.try(:end_of_day)
-    rescue
+    rescue StandardError
       logger.warn('Invalid date')
     end
     yield

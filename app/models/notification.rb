@@ -12,6 +12,7 @@ class Notification < ActiveRecord::Base
 
   def mark_as_read
     raise 'Read notification cannot be marked as read again' if read?
+
     self.read = true
     save
   end

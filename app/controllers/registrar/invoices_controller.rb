@@ -28,8 +28,8 @@ class Registrar
     private
 
     def normalize_search_parameters
-      params[:q][:total_gteq].gsub!(',', '.') if params[:q][:total_gteq]
-      params[:q][:total_lteq].gsub!(',', '.') if params[:q][:total_lteq]
+      params[:q][:total_gteq]&.tr!(',', '.')
+      params[:q][:total_lteq]&.tr!(',', '.')
       yield
     end
   end

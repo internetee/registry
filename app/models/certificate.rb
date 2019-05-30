@@ -5,15 +5,15 @@ class Certificate < ActiveRecord::Base
 
   belongs_to :api_user
 
-  SIGNED = 'signed'
-  UNSIGNED = 'unsigned'
-  EXPIRED = 'expired'
-  REVOKED = 'revoked'
-  VALID = 'valid'
+  SIGNED = 'signed'.freeze
+  UNSIGNED = 'unsigned'.freeze
+  EXPIRED = 'expired'.freeze
+  REVOKED = 'revoked'.freeze
+  VALID = 'valid'.freeze
 
-  API = 'api'
-  REGISTRAR = 'registrar'
-  INTERFACES = [API, REGISTRAR]
+  API = 'api'.freeze
+  REGISTRAR = 'registrar'.freeze
+  INTERFACES = [API, REGISTRAR].freeze
 
   scope 'api', -> { where(interface: API) }
   scope 'registrar', -> { where(interface: REGISTRAR) }
@@ -21,6 +21,7 @@ class Certificate < ActiveRecord::Base
   validate :validate_csr_and_crt_presence
   def validate_csr_and_crt_presence
     return if csr.try(:scrub).present? || crt.try(:scrub).present?
+
     errors.add(:base, I18n.t(:crt_or_csr_must_be_present))
   end
 
@@ -28,21 +29,21 @@ class Certificate < ActiveRecord::Base
   def validate_csr_and_crt
     parsed_crt
     parsed_csr
-    rescue OpenSSL::X509::RequestError, OpenSSL::X509::CertificateError
-      errors.add(:base, I18n.t(:invalid_csr_or_crt))
+  rescue OpenSSL::X509::RequestError, OpenSSL::X509::CertificateError
+    errors.add(:base, I18n.t(:invalid_csr_or_crt))
   end
 
   before_create :parse_metadata
   def parse_metadata
     if crt
       pc = parsed_crt.try(:subject).try(:to_s) || ''
-      cn = pc.scan(/\/CN=(.+)/).flatten.first
+      cn = pc.scan(%r{/CN=(.+)}).flatten.first
       self.common_name = cn.split('/').first
       self.md5 = OpenSSL::Digest::MD5.new(parsed_crt.to_der).to_s
       self.interface = API
     elsif csr
       pc = parsed_csr.try(:subject).try(:to_s) || ''
-      cn = pc.scan(/\/CN=(.+)/).flatten.first
+      cn = pc.scan(%r{/CN=(.+)}).flatten.first
       self.common_name = cn.split('/').first
       self.interface = REGISTRAR
     end
@@ -194,12 +195,13 @@ class Certificate < ActiveRecord::Base
 
     def reload_apache
       STDOUT << "#{Time.zone.now.utc} - Reloading apache\n" unless Rails.env.test?
-      _out, _err, _st = Open3.capture3("sudo /etc/init.d/apache2 reload")
+      _out, _err, _st = Open3.capture3('sudo /etc/init.d/apache2 reload')
       STDOUT << "#{Time.zone.now.utc} - Apache reloaded\n" unless Rails.env.test?
     end
 
     def parse_md_from_string(crt)
-      return nil if crt.blank?
+      return if crt.blank?
+
       crt = crt.split(' ').join("\n")
       crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
       crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")

@@ -6,8 +6,8 @@ xml.epp_head do
 
     xml.resData do
       xml.tag!('contact:creData', 'xmlns:contact' => 'https://epp.tld.ee/schema/contact-ee-1.1.xsd') do
-         xml.tag!('contact:id', @contact.code)
-         xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
+        xml.tag!('contact:id', @contact.code)
+        xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
       end
     end
 

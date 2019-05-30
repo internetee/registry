@@ -8,7 +8,7 @@ module Repp
       get 'balance' do
         @response = {
           balance: current_user.registrar.cash_account.balance,
-          currency: current_user.registrar.cash_account.currency
+          currency: current_user.registrar.cash_account.currency,
         }
       end
     end

@@ -12,6 +12,7 @@ class Deposit
   def validate_amount
     minimum_allowed_amount = [0.01, Setting.minimum_deposit].max
     return if amount >= minimum_allowed_amount
+
     errors.add(:amount, I18n.t(:is_too_small_minimum_deposit_is, amount: minimum_allowed_amount,
                                                                  currency: 'EUR'))
   end
@@ -28,11 +29,13 @@ class Deposit
 
   def amount
     return BigDecimal('0.0') if @amount.blank?
+
     BigDecimal(@amount.to_s.tr(',', '.'), 10)
   end
 
   def issue_prepayment_invoice
     return unless valid?
+
     registrar.issue_prepayment_invoice(amount, description)
   end
 end

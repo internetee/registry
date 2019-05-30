@@ -8,22 +8,20 @@ module Admin
       begin
         end_time = params[:q][:created_at_lteq].try(:to_date)
         params[:q][:created_at_lteq] = end_time.try(:end_of_day)
-      rescue
+      rescue StandardError
         logger.warn('Invalid date')
       end
 
       balance_params = params[:q].deep_dup
 
-      if balance_params[:created_at_gteq]
-        balance_params.delete('created_at_gteq')
-      end
+      balance_params.delete('created_at_gteq') if balance_params[:created_at_gteq]
 
       @q = AccountActivity.includes(:invoice, account: :registrar).search(params[:q])
       @b = AccountActivity.search(balance_params)
       @q.sorts = 'id desc' if @q.sorts.empty?
 
       @account_activities = @q.result.page(params[:page]).per(params[:results_per_page])
-      sort = @account_activities.orders.map(&:to_sql).join(",")
+      sort = @account_activities.orders.map(&:to_sql).join(',')
 
       # can do here inline SQL as it's our
       if params[:page] && params[:page].to_i > 1
@@ -49,13 +47,10 @@ module Admin
 
         default_date = params[:created_after]
 
-        if !['today', 'tomorrow', 'yesterday'].include?(default_date)
-          default_date = 'today'
-        end
+        default_date = 'today' unless %w[today tomorrow yesterday].include?(default_date)
 
-        params[:q][:created_at_gteq] = Date.send(default_date).strftime("%Y-%m-%d")
+        params[:q][:created_at_gteq] = Date.send(default_date).strftime('%Y-%m-%d')
       end
-
     end
   end
 end

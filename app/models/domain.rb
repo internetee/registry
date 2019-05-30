@@ -10,7 +10,7 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::RegistryLockable
   include Concerns::Domain::Releasable
 
-  has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
+  has_paper_trail class_name: 'DomainVersion', meta: { children: :children_log }
 
   attr_accessor :roles
 
@@ -28,14 +28,13 @@ class Domain < ActiveRecord::Base
   # TODO: should we user validates_associated :registrant here?
 
   has_many :admin_domain_contacts
-  accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: true, reject_if: :admin_change_prohibited?
+  accepts_nested_attributes_for :admin_domain_contacts, allow_destroy: true, reject_if: :admin_change_prohibited?
   has_many :tech_domain_contacts
   accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true, reject_if: :tech_change_prohibited?
 
   def registrant_change_prohibited?
     statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
   end
-
 
   # NB! contacts, admin_contacts, tech_contacts are empty for a new record
   has_many :domain_contacts, dependent: :destroy
@@ -74,6 +73,7 @@ class Domain < ActiveRecord::Base
   before_update :manage_statuses
   def manage_statuses
     return unless registrant_id_changed? # rollback has not yet happened
+
     pending_update! if registrant_verification_asked?
     true
   end
@@ -100,63 +100,65 @@ class Domain < ActiveRecord::Base
     end
 
     return if ReservedDomain.pw_for(name) == reserved_pw
+
     errors.add(:base, :invalid_auth_information_reserved)
   end
 
   validate :status_is_consistant
   def status_is_consistant
-      has_error = (statuses.include?(DomainStatus::SERVER_HOLD) && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
-      unless has_error
-        if (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::PENDING_DELETE, DomainStatus::FORCE_DELETE]).any?
-          has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
-        end
+    has_error = (statuses.include?(DomainStatus::SERVER_HOLD) && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
+    unless has_error
+      if (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::PENDING_DELETE, DomainStatus::FORCE_DELETE]).any?
+        has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
       end
-      errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
+    end
+    errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
   end
 
   attr_accessor :is_admin
 
-  validate :check_permissions, :unless => :is_admin
+  validate :check_permissions, unless: :is_admin
   def check_permissions
     return unless force_delete_scheduled?
+
     errors.add(:base, I18n.t(:object_status_prohibits_operation))
     false
   end
 
   validates :nameservers, domain_nameserver: {
     min: -> { Setting.ns_min_count },
-    max: -> { Setting.ns_max_count }
+    max: -> { Setting.ns_max_count },
   }
 
   validates :dnskeys, object_count: {
     min: -> { Setting.dnskeys_min_count },
-    max: -> { Setting.dnskeys_max_count }
+    max: -> { Setting.dnskeys_max_count },
   }
 
   validates :admin_domain_contacts, object_count: {
     min: -> { Setting.admin_contacts_min_count },
-    max: -> { Setting.admin_contacts_max_count }
+    max: -> { Setting.admin_contacts_max_count },
   }
 
   validates :tech_domain_contacts, object_count: {
     min: -> { Setting.tech_contacts_min_count },
-    max: -> { Setting.tech_contacts_max_count }
+    max: -> { Setting.tech_contacts_max_count },
   }
 
   validates :nameservers, uniqueness_multi: {
-    attribute: 'hostname'
+    attribute: 'hostname',
   }
 
   validates :tech_domain_contacts, uniqueness_multi: {
-    attribute: 'contact_code_cache'
+    attribute: 'contact_code_cache',
   }
 
   validates :admin_domain_contacts, uniqueness_multi: {
-    attribute: 'contact_code_cache'
+    attribute: 'contact_code_cache',
   }
 
   validates :dnskeys, uniqueness_multi: {
-    attribute: 'public_key'
+    attribute: 'public_key',
   }
 
   validate :validate_nameserver_ips
@@ -164,18 +166,19 @@ class Domain < ActiveRecord::Base
   validate :statuses_uniqueness
   def statuses_uniqueness
     return if statuses.uniq == statuses
+
     errors.add(:statuses, :taken)
   end
 
   attr_accessor :registrant_typeahead, :update_me,
-    :epp_pending_update, :epp_pending_delete, :reserved_pw
+                :epp_pending_update, :epp_pending_delete, :reserved_pw
 
   def subordinate_nameservers
     nameservers.select { |x| x.hostname.end_with?(name) }
   end
 
   def delegated_nameservers
-    nameservers.select { |x| !x.hostname.end_with?(name) }
+    nameservers.reject { |x| x.hostname.end_with?(name) }
   end
 
   def admin_change_prohibited?
@@ -253,10 +256,10 @@ class Domain < ActiveRecord::Base
   # find by internationalized domain name
   # internet domain name => ascii or puny, but db::domains.name is unicode
   def self.find_by_idn(name)
-    domain = self.find_by_name name
+    domain = find_by name: name
     if domain.blank? && name.include?('-')
       unicode = SimpleIDN.to_unicode name # we have no index on domains.name_puny
-      domain = self.find_by_name unicode
+      domain = find_by name: unicode
     end
     domain
   end
@@ -284,6 +287,7 @@ class Domain < ActiveRecord::Base
   def server_holdable?
     return false if statuses.include?(DomainStatus::SERVER_HOLD)
     return false if statuses.include?(DomainStatus::SERVER_MANUAL_INZONE)
+
     true
   end
 
@@ -298,6 +302,7 @@ class Domain < ActiveRecord::Base
     return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
                                           DomainStatus::PENDING_TRANSFER, DomainStatus::PENDING_DELETE,
                                           DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION)
+
     true
   end
 
@@ -327,9 +332,11 @@ class Domain < ActiveRecord::Base
 
   def pending_update!
     return true if pending_update?
+
     self.epp_pending_update = true # for epp
 
     return true unless registrant_verification_asked?
+
     pending_json_cache = pending_json
     token = registrant_verification_token
     asked_at = registrant_verification_asked_at
@@ -363,6 +370,7 @@ class Domain < ActiveRecord::Base
     return false unless pending_update?
     return false unless registrant_verification_asked?
     return false unless registrant_verification_token == token
+
     true
   end
 
@@ -370,6 +378,7 @@ class Domain < ActiveRecord::Base
     return false unless pending_delete?
     return false unless registrant_verification_asked?
     return false unless registrant_verification_token == token
+
     true
   end
 
@@ -386,10 +395,12 @@ class Domain < ActiveRecord::Base
 
   def pending_delete!
     return true if pending_delete?
+
     self.epp_pending_delete = true # for epp
 
     # TODO: if this were to ever return true, that would be wrong. EPP would report sucess pending
     return true unless registrant_verification_asked?
+
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
@@ -454,6 +465,7 @@ class Domain < ActiveRecord::Base
   def pending_registrant
     return '' if pending_json.blank?
     return '' if pending_json['new_registrant_id'].blank?
+
     Registrant.find_by(id: pending_json['new_registrant_id'])
   end
 
@@ -481,17 +493,17 @@ class Domain < ActiveRecord::Base
   def admin_status_update(update)
     # check for deleted status
     statuses.each do |s|
-      unless update.include? s
-        case s
-          when DomainStatus::PENDING_DELETE
-            self.delete_date = nil
-          when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
-            self.outzone_at = Time.zone.now if force_delete_scheduled?
-          when DomainStatus::DomainStatus::EXPIRED # removal causes server hold to set
-            self.outzone_at = self.expire_time + 15.day
-          when DomainStatus::DomainStatus::SERVER_HOLD # removal causes server hold to set
-            self.outzone_at = nil
-        end
+      next if update.include? s
+
+      case s
+      when DomainStatus::PENDING_DELETE
+        self.delete_date = nil
+      when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
+        self.outzone_at = Time.zone.now if force_delete_scheduled?
+      when DomainStatus::DomainStatus::EXPIRED # removal causes server hold to set
+        self.outzone_at = expire_time + 15.days
+      when DomainStatus::DomainStatus::SERVER_HOLD # removal causes server hold to set
+        self.outzone_at = nil
       end
     end
   end
@@ -503,7 +515,7 @@ class Domain < ActiveRecord::Base
   def set_pending_update
     if pending_update_prohibited?
       logger.info "DOMAIN STATUS UPDATE ISSUE ##{id}: PENDING_UPDATE not allowed to set. [#{statuses}]"
-      return nil
+      return
     end
     statuses << DomainStatus::PENDING_UPDATE
   end
@@ -532,7 +544,7 @@ class Domain < ActiveRecord::Base
   def set_pending_delete
     if pending_delete_prohibited?
       logger.info "DOMAIN STATUS UPDATE ISSUE ##{id}: PENDING_DELETE not allowed to set. [#{statuses}]"
-      return nil
+      return
     end
     statuses << DomainStatus::PENDING_DELETE
   end
@@ -543,7 +555,7 @@ class Domain < ActiveRecord::Base
   end
 
   def manage_automatic_statuses
-    if !self.class.nameserver_required?
+    unless self.class.nameserver_required?
       deactivate if nameservers.reject(&:marked_for_destruction?).empty?
       activate if nameservers.reject(&:marked_for_destruction?).size >= Setting.ns_min_count
     end
@@ -565,8 +577,8 @@ class Domain < ActiveRecord::Base
     log[:tech_contacts]  = tech_contact_ids
     log[:nameservers]    = nameserver_ids
     log[:dnskeys]        = dnskey_ids
-    log[:legal_documents]= [legal_document_id]
-    log[:registrant]     = [registrant_id]
+    log[:legal_documents] = [legal_document_id]
+    log[:registrant] = [registrant_id]
     log
   end
 
@@ -609,7 +621,7 @@ class Domain < ActiveRecord::Base
   def self.to_csv
     CSV.generate do |csv|
       csv << column_names
-      all.each do |domain|
+      all.find_each do |domain|
         csv << domain.attributes.values_at(*column_names)
       end
     end
@@ -633,6 +645,6 @@ class Domain < ActiveRecord::Base
   end
 
   def self.uses_zone?(zone)
-    exists?(["name ILIKE ?", "%.#{zone.origin}"])
+    exists?(['name ILIKE ?', "%.#{zone.origin}"])
   end
 end

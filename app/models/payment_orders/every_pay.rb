@@ -1,9 +1,9 @@
 module PaymentOrders
   class EveryPay < Base
-    USER       = ENV['payments_every_pay_api_user'].freeze
-    KEY        = ENV['payments_every_pay_api_key'].freeze
-    ACCOUNT_ID = ENV['payments_every_pay_seller_account'].freeze
-    SUCCESSFUL_PAYMENT = %w(settled authorized).freeze
+    USER       = ENV['payments_every_pay_api_user']
+    KEY        = ENV['payments_every_pay_api_key']
+    ACCOUNT_ID = ENV['payments_every_pay_seller_account']
+    SUCCESSFUL_PAYMENT = %w[settled authorized].freeze
 
     def form_fields
       base_json = base_params
@@ -20,6 +20,7 @@ module PaymentOrders
 
     def valid_response_from_intermediary?
       return false unless response
+
       valid_hmac? && valid_amount? && valid_account?
     end
 
@@ -32,8 +33,8 @@ module PaymentOrders
 
       transaction = BankTransaction.find_by(
         description: invoice.order,
-        currency:    invoice.currency,
-        iban:        invoice.seller_iban
+        currency: invoice.currency,
+        iban: invoice.seller_iban
       )
 
       transaction.sum = response[:amount]
@@ -56,7 +57,7 @@ module PaymentOrders
         amount: number_with_precision(invoice.total, precision: 2),
         order_reference: SecureRandom.hex(15),
         transaction_type: 'charge',
-        hmac_fields: ''
+        hmac_fields: '',
       }.with_indifferent_access
     end
 
@@ -74,7 +75,7 @@ module PaymentOrders
     end
 
     def valid_amount?
-      invoice.total == BigDecimal.new(response[:amount])
+      invoice.total == BigDecimal(response[:amount])
     end
 
     def valid_account?

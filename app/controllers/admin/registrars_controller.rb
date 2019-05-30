@@ -1,7 +1,7 @@
 module Admin
   class RegistrarsController < BaseController
     load_and_authorize_resource
-    before_action :set_registrar, only: [:show, :edit, :update, :destroy]
+    before_action :set_registrar, only: %i[show edit update destroy]
     helper_method :registry_vat_rate
 
     def index
@@ -29,8 +29,7 @@ module Admin
       end
     end
 
-    def edit;
-    end
+    def edit; end
 
     def update
       if @registrar.update(registrar_params)

@@ -12,40 +12,40 @@ module Admin
       search_params = params[:q].deep_dup
 
       if search_params[:registrant].present?
-        registrants = Contact.where("name ilike ?", "%#{search_params[:registrant].strip}%")
+        registrants = Contact.where('name ilike ?', "%#{search_params[:registrant].strip}%")
         search_params.delete(:registrant)
       end
 
       if search_params[:registrar].present?
-        registrars = Registrar.where("name ilike ?", "%#{search_params[:registrar].strip}%")
+        registrars = Registrar.where('name ilike ?', "%#{search_params[:registrar].strip}%")
         search_params.delete(:registrar)
       end
 
-      whereS = "1=1"
+      whereS = '1=1'
 
       search_params.each do |key, value|
         next if value.empty?
-        case key
-          when 'event'
-            whereS += " AND event = '#{value}'"
-          when 'name'
-            whereS += " AND (object->>'name' ~* '#{value}' OR object_changes->>'name' ~* '#{value}')"
-          else
-            whereS += create_where_string(key, value)
-        end
+
+        whereS += case key
+                  when 'event'
+                    " AND event = '#{value}'"
+                  when 'name'
+                    " AND (object->>'name' ~* '#{value}' OR object_changes->>'name' ~* '#{value}')"
+                  else
+                    create_where_string(key, value)
+                  end
       end
 
-      whereS += "  AND object->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrants.present?
-      whereS += "  AND 1=0" if registrants == []
-      whereS += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrars.present?
-      whereS += "  AND 1=0" if registrars == []
+      whereS += "  AND object->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id}'" }.join ','})" if registrants.present?
+      whereS += '  AND 1=0' if registrants == []
+      whereS += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id}'" }.join ','})" if registrars.present?
+      whereS += '  AND 1=0' if registrars == []
 
       versions = DomainVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
       @q = versions.search(params[:q])
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
-      render "admin/domain_versions/archive"
-
+      render 'admin/domain_versions/archive'
     end
 
     def show

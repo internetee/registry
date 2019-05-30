@@ -23,6 +23,7 @@ module Repp
       end
 
       next if Rails.env.test? || Rails.env.development?
+
       message = 'Certificate mismatch! Cert common name should be:'
       request_name = env['HTTP_SSL_CLIENT_S_DN_CN']
 
@@ -41,7 +42,7 @@ module Repp
     end
 
     after do
-      ApiLog::ReppLog.create({
+      ApiLog::ReppLog.create(
         request_path: request.path,
         request_method: request.request_method,
         request_params: request.params.except('route_info').to_json,
@@ -51,7 +52,7 @@ module Repp
         api_user_registrar: current_user.try(:registrar).try(:to_s),
         ip: request.ip,
         uuid: request.try(:uuid)
-      })
+      )
     end
 
     mount Repp::DomainV1

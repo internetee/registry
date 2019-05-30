@@ -1,7 +1,7 @@
 module Admin
   class ApiUsersController < BaseController
     load_and_authorize_resource
-    before_action :set_api_user, only: [:show, :edit, :update, :destroy]
+    before_action :set_api_user, only: %i[show edit update destroy]
 
     def index
       @q = ApiUser.includes(:registrar).search(params[:q])
@@ -25,11 +25,9 @@ module Admin
       end
     end
 
-    def show;
-    end
+    def show; end
 
-    def edit;
-    end
+    def edit; end
 
     def update
       if params[:api_user][:plain_text_password].blank?
@@ -64,7 +62,7 @@ module Admin
     def api_user_params
       params.require(:api_user).permit(:username, :plain_text_password, :active,
                                        :registrar_id, :registrar_typeahead,
-                                       :identity_code, { roles: [] })
+                                       :identity_code, roles: [])
     end
   end
 end

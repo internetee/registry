@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "action_view"
-require "action_controller"
-require "action_controller/log_subscriber"
+require 'action_view'
+require 'action_controller'
+require 'action_controller/log_subscriber'
 
 module ActionController
   # API Controller is a lightweight version of <tt>ActionController::Base</tt>,
@@ -110,34 +110,34 @@ module ActionController
     end
 
     MODULES = [
-        AbstractController::Rendering,
+      AbstractController::Rendering,
 
-        UrlFor,
-        Redirecting,
-        ApiRendering,
-        Renderers::All,
-        ConditionalGet,
-        BasicImplicitRender,
-        StrongParameters,
+      UrlFor,
+      Redirecting,
+      ApiRendering,
+      Renderers::All,
+      ConditionalGet,
+      BasicImplicitRender,
+      StrongParameters,
 
-        ForceSSL,
-        DataStreaming,
+      ForceSSL,
+      DataStreaming,
 
-        # Before callbacks should also be executed as early as possible, so
-        # also include them at the bottom.
-        AbstractController::Callbacks,
+      # Before callbacks should also be executed as early as possible, so
+      # also include them at the bottom.
+      AbstractController::Callbacks,
 
-        # Append rescue at the bottom to wrap as much as possible.
-        Rescue,
+      # Append rescue at the bottom to wrap as much as possible.
+      Rescue,
 
-        # Add instrumentations hooks at the bottom, to ensure they instrument
-        # all the methods properly.
-        Instrumentation,
+      # Add instrumentations hooks at the bottom, to ensure they instrument
+      # all the methods properly.
+      Instrumentation,
 
-        # Params wrapper should come before instrumentation so they are
-        # properly showed in logs
-        ParamsWrapper
-    ]
+      # Params wrapper should come before instrumentation so they are
+      # properly showed in logs
+      ParamsWrapper,
+    ].freeze
 
     MODULES.each do |mod|
       include mod

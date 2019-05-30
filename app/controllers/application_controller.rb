@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
   def comma_support_for(parent_key, key)
     return if params[parent_key].blank?
     return if params[parent_key][key].blank?
+
     params[parent_key][key].sub!(/,/, '.')
   end
 

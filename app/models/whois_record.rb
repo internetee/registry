@@ -1,4 +1,4 @@
-require "erb"
+require 'erb'
 class WhoisRecord < ActiveRecord::Base
   belongs_to :domain
   belongs_to :registrar
@@ -10,7 +10,7 @@ class WhoisRecord < ActiveRecord::Base
   after_destroy :destroy_whois_record
 
   def self.find_by_name(name)
-    WhoisRecord.where("lower(name) = ?", name.downcase)
+    WhoisRecord.where('lower(name) = ?', name.downcase)
   end
 
   def generated_json
@@ -28,7 +28,7 @@ class WhoisRecord < ActiveRecord::Base
     end
 
     status_map = {
-        'ok' => 'ok (paid and in zone)'
+      'ok' => 'ok (paid and in zone)',
     }
 
     registrant = domain.registrant
@@ -51,7 +51,7 @@ class WhoisRecord < ActiveRecord::Base
     end
 
     h[:email] = registrant.email
-    h[:registrant_changed]          = registrant.updated_at.try(:to_s, :iso8601)
+    h[:registrant_changed] = registrant.updated_at.try(:to_s, :iso8601)
     h[:registrant_disclosed_attributes] = registrant.disclosed_attributes
 
     h[:admin_contacts] = []
@@ -75,15 +75,19 @@ class WhoisRecord < ActiveRecord::Base
     h[:nameservers]         = domain.nameservers.hostnames.uniq.select(&:present?)
     h[:nameservers_changed] = domain.nameservers.pluck(:updated_at).max.try(:to_s, :iso8601)
 
-    h[:dnssec_keys]    = domain.dnskeys.map{|key| "#{key.flags} #{key.protocol} #{key.alg} #{key.public_key}" }
-    h[:dnssec_changed] = domain.dnskeys.pluck(:updated_at).max.try(:to_s, :iso8601) rescue nil
-
+    h[:dnssec_keys]    = domain.dnskeys.map { |key| "#{key.flags} #{key.protocol} #{key.alg} #{key.public_key}" }
+    h[:dnssec_changed] = begin
+                           domain.dnskeys.pluck(:updated_at).max.try(:to_s, :iso8601)
+                         rescue StandardError
+                           nil
+                         end
 
     h
   end
 
   def populate
     return if domain_id.blank?
+
     self.json = generated_json
     self.name = json['name']
     self.registrar_id = domain.registrar_id if domain # for faster registrar updates

@@ -4,8 +4,10 @@ module Concerns
       extend ActiveSupport::Concern
 
       included do
-        scope :unpaid, -> { where('id NOT IN (SELECT invoice_id FROM account_activities WHERE' \
-                              ' invoice_id IS NOT NULL)') }
+        scope :unpaid, lambda {
+                         where('id NOT IN (SELECT invoice_id FROM account_activities WHERE' \
+                              ' invoice_id IS NOT NULL)')
+                       }
       end
 
       def payable?

@@ -22,15 +22,14 @@ xml.epp(
           xml.tag!('keyrelay:paDate', @object.pa_date.try(:iso8601))
 
           xml.tag!('keyrelay:keyData') do
-            xml.tag!('secDNS:flags',  @object.key_data_flags)
-            xml.tag!('secDNS:protocol',  @object.key_data_protocol)
-            xml.tag!('secDNS:alg',  @object.key_data_alg)
-            xml.tag!('secDNS:pubKey',  @object.key_data_public_key)
+            xml.tag!('secDNS:flags', @object.key_data_flags)
+            xml.tag!('secDNS:protocol', @object.key_data_protocol)
+            xml.tag!('secDNS:alg', @object.key_data_alg)
+            xml.tag!('secDNS:pubKey', @object.key_data_public_key)
           end
 
-
           xml.tag!('keyrelay:authInfo') do
-            xml.tag!('domain:pw',  @object.auth_info_pw)
+            xml.tag!('domain:pw', @object.auth_info_pw)
           end
 
           xml.tag!('keyrelay:expiry') do

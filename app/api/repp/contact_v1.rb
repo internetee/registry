@@ -7,7 +7,7 @@ module Repp
       params do
         optional :limit, type: Integer, values: (1..200).to_a, desc: 'How many contacts to show'
         optional :offset, type: Integer, desc: 'Contact number to start at'
-        optional :details, type: String, values: %w(true false), desc: 'Whether to include details'
+        optional :details, type: String, values: %w[true false], desc: 'Whether to include details'
       end
 
       get '/' do
@@ -27,7 +27,7 @@ module Repp
 
         @response = {
           contacts: contacts,
-          total_number_of_records: current_user.registrar.contacts.count
+          total_number_of_records: current_user.registrar.contacts.count,
         }
       end
     end

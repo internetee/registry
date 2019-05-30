@@ -7,9 +7,7 @@ module EppErrors
       attr = attr.to_s.split('.')[0].to_sym
       next if attr == :epp_errors
 
-      if self.class.reflect_on_association(attr)
-        epp_errors << collect_child_errors(attr)
-      end
+      epp_errors << collect_child_errors(attr) if self.class.reflect_on_association(attr)
 
       if self.class.reflect_on_aggregation(attr)
         aggregation = send(attr)
@@ -31,6 +29,7 @@ module EppErrors
     errors.each do |err|
       code, value = find_epp_code_and_value(err)
       next unless code
+
       msg = attr.to_sym == :base ? err : "#{err} [#{attr}]"
       epp_errors << { code: code, msg: msg, value: value }
     end
@@ -39,15 +38,17 @@ module EppErrors
 
   def collect_child_errors(attr)
     macro = self.class.reflect_on_association(attr).macro
-    multi = [:has_and_belongs_to_many, :has_many]
+    multi = %i[has_and_belongs_to_many has_many]
     # single = [:belongs_to, :has_one]
 
     epp_errors = []
-    send(attr).each do |x|
-      x.errors.messages.each do |attribute, errors|
-        epp_errors << x.collect_parent_errors(attribute, errors)
+    if multi.include?(macro)
+      send(attr).each do |x|
+        x.errors.messages.each do |attribute, errors|
+          epp_errors << x.collect_parent_errors(attribute, errors)
+        end
       end
-    end if multi.include?(macro)
+    end
 
     epp_errors
   end
@@ -65,9 +66,7 @@ module EppErrors
           message = aggregation.errors.generate_message(attr, error_detail[:error], error_detail)
           message = aggregation.errors.full_message(attr, message)
 
-          if attr != :base
-            message = "#{aggregation.model_name.human} #{message.camelize(:lower)}"
-          end
+          message = "#{aggregation.model_name.human} #{message.camelize(:lower)}" if attr != :base
 
           epp_errors << { code: epp_code, msg: message }
         end

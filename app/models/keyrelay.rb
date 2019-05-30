@@ -11,7 +11,7 @@ class Keyrelay < ActiveRecord::Base
 
   delegate :name, to: :domain, prefix: true
 
-  validates :domain, :key_data_public_key, :key_data_flags, :key_data_protocol, 
+  validates :domain, :key_data_public_key, :key_data_flags, :key_data_protocol,
             :key_data_alg, :auth_info_pw, presence: true
   validates :expiry_relative, duration_iso8601: true
 
@@ -22,17 +22,17 @@ class Keyrelay < ActiveRecord::Base
   def epp_code_map
     {
       '2005' => [
-        [:expiry_relative, :unknown_pattern, { value: { obj: 'relative', val: expiry_relative } }]
+        [:expiry_relative, :unknown_pattern, { value: { obj: 'relative', val: expiry_relative } }],
       ],
       '2003' => [
         # TODO: Remove only_one_parameter_allowed and other params that are validated in controller?
         [:base, :only_one_parameter_allowed, { param_1: 'relative', param_2: 'absolute' }],
-        [:key_data_public_key, :blank],
-        [:key_data_flags, :blank],
-        [:key_data_protocol, :blank],
-        [:key_data_alg, :blank],
-        [:auth_info_pw, :blank]
-      ]
+        %i[key_data_public_key blank],
+        %i[key_data_flags blank],
+        %i[key_data_protocol blank],
+        %i[key_data_alg blank],
+        %i[auth_info_pw blank],
+      ],
     }
   end
 
@@ -46,16 +46,17 @@ class Keyrelay < ActiveRecord::Base
 
   def status
     if Time.zone.now > expiry
-      return 'expired'
+      'expired'
     else
-      return 'pending'
+      'pending'
     end
   end
 
   private
 
   def validate_expiry_relative_xor_expiry_absolute
-    return  if expiry_relative.blank? ^ expiry_absolute.blank?
+    return if expiry_relative.blank? ^ expiry_absolute.blank?
+
     errors.add(:base, I18n.t(:only_one_parameter_allowed, param_1: 'relative', param_2: 'absolute'))
   end
 end

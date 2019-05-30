@@ -5,9 +5,9 @@ class Epp::KeyrelaysController < EppController
     # keyrelay temp turned off
     @domain = find_domain
 
-    handle_errors(@domain) and return unless @domain
-    handle_errors(@domain) and return unless @domain.authenticate(params[:parsed_frame].css('pw').text)
-    handle_errors(@domain) and return unless @domain.keyrelay(params[:parsed_frame], current_user.registrar)
+    handle_errors(@domain) && return unless @domain
+    handle_errors(@domain) && return unless @domain.authenticate(params[:parsed_frame].css('pw').text)
+    handle_errors(@domain) && return unless @domain.keyrelay(params[:parsed_frame], current_user.registrar)
 
     render_epp_response '/epp/shared/success'
   end
@@ -36,7 +36,7 @@ class Epp::KeyrelaysController < EppController
     epp_errors << {
       code: '2307',
       msg: I18n.t(:unimplemented_object_service),
-      value: { obj: 'name', val: domain_name }
+      value: { obj: 'name', val: domain_name },
     }
     nil
     # end of keyrelay temp turned off
@@ -44,12 +44,12 @@ class Epp::KeyrelaysController < EppController
     # domain = Epp::Domain.includes(:registrant).find_by(name: domain_name)
 
     # unless domain
-      # epp_errors << {
-        # code: '2303',
-        # msg: I18n.t('errors.messages.epp_domain_not_found'),
-        # value: { obj: 'name', val: domain_name }
-      # }
-      # return nil
+    # epp_errors << {
+    # code: '2303',
+    # msg: I18n.t('errors.messages.epp_domain_not_found'),
+    # value: { obj: 'name', val: domain_name }
+    # }
+    # return nil
     # end
 
     # domain

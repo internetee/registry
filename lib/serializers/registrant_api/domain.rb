@@ -7,7 +7,7 @@ module Serializers
         @domain = domain
       end
 
-      def to_json
+      def to_json(_opts)
         {
           id: domain.uuid,
           name: domain.name,

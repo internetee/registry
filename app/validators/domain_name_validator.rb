@@ -10,6 +10,7 @@ class DomainNameValidator < ActiveModel::EachValidator
   class << self
     def validate_format(value)
       return true unless value
+
       value = value.mb_chars.downcase.strip
 
       origins = DNS::Zone.origins
@@ -23,6 +24,7 @@ class DomainNameValidator < ActiveModel::EachValidator
       if value[2] == '-' && value[3] == '-'
         regexp = /\Axn--[a-zA-Z0-9-]{0,59}\.#{general_domains}\z/
         return false unless value.match?(regexp)
+
         value = SimpleIDN.to_unicode(value).mb_chars.downcase.strip
       end
 
@@ -34,6 +36,7 @@ class DomainNameValidator < ActiveModel::EachValidator
     def validate_blocked(value)
       return true unless value
       return false if BlockedDomain.where(name: value).count.positive?
+
       DNS::Zone.where(origin: value).count.zero?
     end
   end

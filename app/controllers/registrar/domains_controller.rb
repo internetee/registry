@@ -10,18 +10,16 @@ class Registrar
       params[:q].delete_if { |_k, v| v.blank? }
       if params[:q].length == 1 && params[:q][:name_matches].present?
         @domain = Domain.find_by(name: params[:q][:name_matches])
-        if @domain
-          redirect_to info_registrar_domains_url(domain_name: @domain.name) and return
-        end
+        redirect_to(info_registrar_domains_url(domain_name: @domain.name)) && return if @domain
       end
 
-      if params[:statuses_contains]
-        domains = current_registrar_user.registrar.domains.includes(:registrar, :registrant).where(
-          "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
-        )
-      else
-        domains = current_registrar_user.registrar.domains.includes(:registrar, :registrant)
-      end
+      domains = if params[:statuses_contains]
+                  current_registrar_user.registrar.domains.includes(:registrar, :registrant).where(
+                    'statuses @> ?::varchar[]', "{#{params[:statuses_contains].join(',')}}"
+                  )
+                else
+                  current_registrar_user.registrar.domains.includes(:registrar, :registrant)
+                end
 
       normalize_search_parameters do
         @q = domains.search(params[:q])
@@ -61,7 +59,7 @@ class Registrar
         render 'info'
       else
         flash[:alert] = @data.css('msg').text
-        redirect_to registrar_domains_url and return
+        redirect_to(registrar_domains_url) && return
       end
     end
 
@@ -69,7 +67,7 @@ class Registrar
       authorize! :check, Depp::Domain
       if params[:domain_name]
         @data = @domain.check(params[:domain_name])
-        render 'check_index' and return unless response_ok?
+        render('check_index') && return unless response_ok?
       else
         render 'check_index'
       end
@@ -132,7 +130,7 @@ class Registrar
       authorize! :renew, Depp::Domain
       if params[:domain_name] && params[:cur_exp_date]
         @data = @domain.renew(params)
-        render 'renew_index' and return unless response_ok?
+        render('renew_index') && return unless response_ok?
       else
         params[:period] = Depp::Domain.default_period
         render 'renew_index'
@@ -157,7 +155,6 @@ class Registrar
       @domain = Depp::Domain.new(current_user: depp_current_user)
     end
 
-
     def contacts
       current_registrar_user.registrar.contacts
     end
@@ -167,7 +164,7 @@ class Registrar
       begin
         end_time = params[:q][:valid_to_lteq].try(:to_date)
         params[:q][:valid_to_lteq] = end_time.try(:end_of_day)
-      rescue
+      rescue StandardError
         logger.warn('Invalid date')
       end
 

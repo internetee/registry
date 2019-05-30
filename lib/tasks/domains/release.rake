@@ -1,5 +1,5 @@
 namespace :domains do
-  desc <<~TEXT.gsub("\n", "\s")
+  desc <<~TEXT.tr("\n", "\s")
     Releases domains with past `delete_date` by either sending them to the auction or discarding,
     depending on `release_domains_to_auction` setting
   TEXT

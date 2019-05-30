@@ -1,9 +1,10 @@
 class Registrant::DomainDeleteConfirmsController < RegistrantController
-  skip_before_action :authenticate_registrant_user!, only: [:show, :update]
-  skip_authorization_check only: [:show, :update]
+  skip_before_action :authenticate_registrant_user!, only: %i[show update]
+  skip_authorization_check only: %i[show update]
 
   def show
     return if params[:confirmed] || params[:rejected]
+
     @domain = Domain.find(params[:id])
     @domain = nil unless @domain.registrant_delete_confirmable?(params[:token])
   end

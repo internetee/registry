@@ -22,7 +22,7 @@ class Registrar
 
       if params[:statuses_contains]
         contacts = current_registrar_user.registrar.contacts.includes(:registrar).where(
-          "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+          'contacts.statuses @> ?::varchar[]', "{#{params[:statuses_contains].join(',')}}"
         )
       else
         contacts = current_registrar_user.registrar.contacts.includes(:registrar)
@@ -60,7 +60,6 @@ class Registrar
           send_data pdf, filename: 'contacts.pdf'
         end
       end
-
     end
 
     def new
@@ -70,12 +69,12 @@ class Registrar
 
     def show
       authorize! :view, Depp::Contact
-      @contact = Depp::Contact.find_by_id(params[:id])
+      @contact = Depp::Contact.find_by(id: params[:id])
     end
 
     def edit
       authorize! :edit, Depp::Contact
-      @contact = Depp::Contact.find_by_id(params[:id])
+      @contact = Depp::Contact.find_by(id: params[:id])
     end
 
     def create
@@ -93,7 +92,7 @@ class Registrar
       authorize! :edit, Depp::Contact
       @contact = Depp::Contact.new(params[:depp_contact])
 
-      if @contact.update_attributes(params[:depp_contact])
+      if @contact.update(params[:depp_contact])
         redirect_to registrar_contact_url(@contact.id)
       else
         render 'edit'
@@ -102,7 +101,7 @@ class Registrar
 
     def delete
       authorize! :delete, Depp::Contact
-      @contact = Depp::Contact.find_by_id(params[:id])
+      @contact = Depp::Contact.find_by(id: params[:id])
     end
 
     def destroy
@@ -127,7 +126,7 @@ class Registrar
       begin
         end_time = params[:q][:valid_to_lteq].try(:to_date)
         params[:q][:valid_to_lteq] = end_time.try(:end_of_day)
-      rescue
+      rescue StandardError
         logger.warn('Invalid date')
       end
 

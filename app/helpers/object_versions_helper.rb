@@ -2,9 +2,7 @@ module ObjectVersionsHelper
   def attach_existing_fields(version, new_object)
     version.object_changes.to_h.each do |key, value|
       method_name = "#{key}=".to_sym
-      if new_object.respond_to?(method_name)
-        new_object.public_send(method_name, value.last)
-      end
+      new_object.public_send(method_name, value.last) if new_object.respond_to?(method_name)
     end
   end
 

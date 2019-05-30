@@ -17,13 +17,13 @@ class Registrar::DomainListCSVPresenter
   private
 
   def header
-    columns = %w(
+    columns = %w[
       domain_name
       transfer_code
       registrant_name
       registrant_code
       expire_time
-    )
+    ]
 
     columns.map! { |column| view.t("registrar.domains.index.csv.#{column}") }
 

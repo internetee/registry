@@ -13,6 +13,7 @@ module Concerns
 
       def cancel
         raise 'Invoice cannot be cancelled' unless cancellable?
+
         update!(cancelled_at: Time.zone.now)
       end
 

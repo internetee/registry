@@ -6,7 +6,7 @@ class AuthTokenCreator
   attr_reader :expires_at
 
   def self.create_with_defaults(user)
-    new(user, Rails.application.config.secret_key_base, Time.now + DEFAULT_VALIDITY)
+    new(user, Rails.application.config.secret_key_base, Time.now.in_time_zone + DEFAULT_VALIDITY)
   end
 
   def initialize(user, key, expires_at)

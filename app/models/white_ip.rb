@@ -8,15 +8,16 @@ class WhiteIp < ActiveRecord::Base
   validate :validate_ipv4_and_ipv6
   def validate_ipv4_and_ipv6
     return if ipv4.present? || ipv6.present?
+
     errors.add(:base, I18n.t(:ipv4_or_ipv6_must_be_present))
   end
 
-  API = 'api'
-  REGISTRAR = 'registrar'
-  INTERFACES = [API, REGISTRAR]
+  API = 'api'.freeze
+  REGISTRAR = 'registrar'.freeze
+  INTERFACES = [API, REGISTRAR].freeze
 
-  scope :api, -> { where("interfaces @> ?::varchar[]", "{#{API}}") }
-  scope :registrar_area, -> { where("interfaces @> ?::varchar[]", "{#{REGISTRAR}}") }
+  scope :api, -> { where('interfaces @> ?::varchar[]', "{#{API}}") }
+  scope :registrar_area, -> { where('interfaces @> ?::varchar[]', "{#{REGISTRAR}}") }
 
   def interfaces=(interfaces)
     super(interfaces.reject(&:blank?))

@@ -7,7 +7,7 @@ module Serializers
         @contact = contact
       end
 
-      def to_json
+      def to_json(_opts)
         {
           id: contact.uuid,
           name: contact.name,

@@ -8,9 +8,9 @@ class BankStatement < ActiveRecord::Base
 
   validates :bank_code, :iban, presence: true
 
-  FULLY_BINDED = 'fully_binded'
-  PARTIALLY_BINDED = 'partially_binded'
-  NOT_BINDED = 'not_binded'
+  FULLY_BINDED = 'fully_binded'.freeze
+  PARTIALLY_BINDED = 'partially_binded'.freeze
+  NOT_BINDED = 'not_binded'.freeze
 
   def import
     import_th6_file && save
@@ -22,6 +22,7 @@ class BankStatement < ActiveRecord::Base
     th6_file.open.each_line do |row|
       bt_params = parse_th6_row(row)
       next unless bt_params
+
       bank_transactions.build(bt_params)
     end
 
@@ -45,8 +46,8 @@ class BankStatement < ActiveRecord::Base
       buyer_name: row[83, 35].strip,
       document_no: row[118, 8].strip,
       description: row[126, 140].strip,
-      sum: BigDecimal.new(row[268, 12].strip) / BigDecimal.new('100.0'),
-      reference_no: row[280, 35].strip
+      sum: BigDecimal(row[268, 12].strip) / BigDecimal('100.0'),
+      reference_no: row[280, 35].strip,
     }
   end
 

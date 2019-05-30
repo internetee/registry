@@ -31,7 +31,7 @@ module Concerns::Domain::Transferable
       DomainStatus::PENDING_TRANSFER,
       DomainStatus::FORCE_DELETE,
       DomainStatus::SERVER_TRANSFER_PROHIBITED,
-      DomainStatus::CLIENT_TRANSFER_PROHIBITED
+      DomainStatus::CLIENT_TRANSFER_PROHIBITED,
     ]).empty?
   end
 
@@ -52,6 +52,7 @@ module Concerns::Domain::Transferable
 
   def transfer_registrant(new_registrar)
     return if registrant.registrar == new_registrar
+
     self.registrant = registrant.transfer(new_registrar).becomes(Registrant)
   end
 
@@ -60,13 +61,13 @@ module Concerns::Domain::Transferable
     contacts.each do |contact|
       next if copied_ids.include?(contact.id) || contact.registrar == new_registrar
 
-      if registrant_id_was == contact.id # registrant was copied previously, do not copy it again
-        oc = OpenStruct.new(id: registrant_id)
-      else
-        oc = contact.transfer(new_registrar)
-      end
+      oc = if registrant_id_was == contact.id # registrant was copied previously, do not copy it again
+             OpenStruct.new(id: registrant_id)
+           else
+             contact.transfer(new_registrar)
+           end
 
-      domain_contacts.where(contact_id: contact.id).update_all({ contact_id: oc.id }) # n+1 workaround
+      domain_contacts.where(contact_id: contact.id).update_all(contact_id: oc.id) # n+1 workaround
       copied_ids << contact.id
     end
   end

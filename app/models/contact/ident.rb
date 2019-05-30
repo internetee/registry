@@ -17,17 +17,17 @@ class Contact::Ident
   def self.epp_code_map
     {
       '2003' => [
-        [:code, :blank],
-        [:type, :blank],
-        [:country_code, :blank]
+        %i[code blank],
+        %i[type blank],
+        %i[country_code blank],
       ],
       '2005' => [
-        [:base, :mismatch],
-        [:code, :invalid_national_id],
-        [:code, :invalid_reg_no],
-        [:code, :invalid_iso8601_date],
-        [:country_code, :invalid_iso31661_alpha2]
-      ]
+        %i[base mismatch],
+        %i[code invalid_national_id],
+        %i[code invalid_reg_no],
+        %i[code invalid_iso8601_date],
+        %i[country_code invalid_iso31661_alpha2],
+      ],
     }
   end
 
@@ -68,7 +68,5 @@ class Contact::Ident
   private
 
   # https://github.com/rails/rails/issues/1513
-  def validation_context=(_value)
-    ;
-  end
+  def validation_context=(_value); end
 end

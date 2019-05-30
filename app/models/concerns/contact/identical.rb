@@ -10,14 +10,14 @@ module Concerns::Contact::Identical
     ident_type
     ident_country_code
     org_name
-  ]
+  ].freeze
   private_constant :IDENTIFIABLE_ATTRIBUTES
 
   def identical(registrar)
     self.class.where(identifiable_hash)
-      .where(["statuses = ?::character varying[]", "{#{read_attribute(:statuses).join(',')}}"])
-      .where(registrar: registrar)
-      .where.not(id: id).take
+        .where(['statuses = ?::character varying[]', "{#{self[:statuses].join(',')}}"])
+        .where(registrar: registrar)
+        .where.not(id: id).take
   end
 
   private
@@ -25,9 +25,7 @@ module Concerns::Contact::Identical
   def identifiable_hash
     attributes = IDENTIFIABLE_ATTRIBUTES
 
-    if self.class.address_processing?
-      attributes += self.class.address_attribute_names
-    end
+    attributes += self.class.address_attribute_names if self.class.address_processing?
 
     slice(*attributes)
   end

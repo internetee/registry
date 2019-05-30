@@ -17,30 +17,30 @@ class Dnskey < ActiveRecord::Base
     end
   }
 
-  ALGORITHMS = Depp::Dnskey::ALGORITHMS.map {|pair| pair[1].to_s}.freeze # IANA numbers, single authority list
-  PROTOCOLS = %w(3)
-  FLAGS = %w(0 256 257) # 256 = ZSK, 257 = KSK
-  DS_DIGEST_TYPE = [1,2]
+  ALGORITHMS = Depp::Dnskey::ALGORITHMS.map { |pair| pair[1].to_s }.freeze # IANA numbers, single authority list
+  PROTOCOLS = %w[3].freeze
+  FLAGS = %w[0 256 257].freeze # 256 = ZSK, 257 = KSK
+  DS_DIGEST_TYPE = [1, 2].freeze
 
   def epp_code_map
     {
       '2005' => [
         [:alg, :invalid, { value: { obj: 'alg', val: alg }, values: ALGORITHMS.join(', ') }],
         [:protocol, :invalid, { value: { obj: 'protocol', val: protocol }, values: PROTOCOLS.join(', ') }],
-        [:flags, :invalid, { value: { obj: 'flags', val: flags }, values: FLAGS.join(', ') }]
+        [:flags, :invalid, { value: { obj: 'flags', val: flags }, values: FLAGS.join(', ') }],
       ],
       '2302' => [
-        [:public_key, :taken, { value: { obj: 'pubKey', val: public_key } }]
+        [:public_key, :taken, { value: { obj: 'pubKey', val: public_key } }],
       ],
       '2303' => [
-        [:base, :dnskey_not_found, { value: { obj: 'pubKey', val: public_key } }]
+        [:base, :dnskey_not_found, { value: { obj: 'pubKey', val: public_key } }],
       ],
       '2306' => [
-        [:alg, :blank],
-        [:protocol, :blank],
-        [:flags, :blank],
-        [:public_key, :blank]
-      ]
+        %i[alg blank],
+        %i[protocol blank],
+        %i[flags blank],
+        %i[public_key blank],
+      ],
     }
   end
 
@@ -51,25 +51,29 @@ class Dnskey < ActiveRecord::Base
   def validate_algorithm
     return if alg.blank?
     return if ALGORITHMS.include?(alg.to_s)
+
     errors.add(:alg, :invalid, values: ALGORITHMS.join(', '))
   end
 
   def validate_protocol
     return if protocol.blank?
     return if PROTOCOLS.include?(protocol.to_s)
+
     errors.add(:protocol, :invalid, values: PROTOCOLS.join(', '))
   end
 
   def validate_flags
     return if flags.blank?
     return if FLAGS.include?(flags.to_s)
+
     errors.add(:flags, :invalid, values: FLAGS.join(', '))
   end
 
   def generate_digest
     return unless flags == 257 || flags == 256 # require ZoneFlag, but optional SecureEntryPoint
+
     self.ds_alg = alg
-    self.ds_digest_type = Setting.ds_digest_type if self.ds_digest_type.blank? || !DS_DIGEST_TYPE.include?(ds_digest_type)
+    self.ds_digest_type = Setting.ds_digest_type if ds_digest_type.blank? || !DS_DIGEST_TYPE.include?(ds_digest_type)
 
     flags_hex = self.class.int_to_hex(flags)
     protocol_hex = self.class.int_to_hex(protocol)
@@ -78,9 +82,9 @@ class Dnskey < ActiveRecord::Base
     hex = [domain.name_in_wire_format, flags_hex, protocol_hex, alg_hex, public_key_hex].join
     bin = self.class.hex_to_bin(hex)
 
-    if self.ds_digest_type == 1
+    if ds_digest_type == 1
       self.ds_digest = Digest::SHA1.hexdigest(bin).upcase
-    elsif self.ds_digest_type == 2
+    elsif ds_digest_type == 2
       self.ds_digest = Digest::SHA256.hexdigest(bin).upcase
     end
   end
@@ -91,17 +95,18 @@ class Dnskey < ActiveRecord::Base
 
   def generate_ds_key_tag
     return unless flags == 257 || flags == 256 # require ZoneFlag, but optional SecureEntryPoint
-    pk = public_key.gsub(' ', '')
+
+    pk = public_key.delete(' ')
     wire_format = [flags, protocol, alg].pack('S!>CC')
     wire_format += Base64.decode64(pk)
 
     c = 0
     wire_format.each_byte.with_index do |b, i|
-      if i.even?
-        c += b << 8
-      else
-        c += b
-      end
+      c += if i.even?
+             b << 8
+           else
+             b
+           end
     end
 
     self.ds_key_tag = ((c & 0xFFFF) + (c >> 16)) & 0xFFFF

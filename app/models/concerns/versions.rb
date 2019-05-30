@@ -22,15 +22,17 @@ module Versions
     end
 
     def creator
-      return nil if creator_str.blank?
+      return if creator_str.blank?
+
       creator = user_from_id_role_username creator_str
-      creator.present? ? creator : creator_str
+      creator.presence || creator_str
     end
 
     def updator
-      return nil if updator_str.blank?
+      return if updator_str.blank?
+
       updator = user_from_id_role_username updator_str
-      updator.present? ? updator : updator_str
+      updator.presence || updator_str
     end
 
     def user_from_id_role_username(str)
@@ -56,16 +58,16 @@ module Versions
   module ClassMethods
     def all_versions_for(ids, time)
       ver_klass    = paper_trail_version_class
-      from_history = ver_klass.where(item_id: ids.to_a).
-          order(:item_id).
-          preceding(time + 1, true).
-          select("distinct on (item_id) #{ver_klass.table_name}.*").
-          map do |ver|
-            o = new(ver.object)
-            o.version_loader = ver
-            ver.object_changes.to_h.each { |k, v| o.public_send("#{k}=", v[-1]) }
-            o
-          end
+      from_history = ver_klass.where(item_id: ids.to_a)
+                              .order(:item_id)
+                              .preceding(time + 1, true)
+                              .select("distinct on (item_id) #{ver_klass.table_name}.*")
+                              .map do |ver|
+        o = new(ver.object)
+        o.version_loader = ver
+        ver.object_changes.to_h.each { |k, v| o.public_send("#{k}=", v[-1]) }
+        o
+      end
       not_in_history = where(id: (ids.to_a - from_history.map(&:id)))
 
       from_history + not_in_history

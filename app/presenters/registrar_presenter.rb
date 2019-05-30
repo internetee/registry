@@ -4,21 +4,13 @@ class RegistrarPresenter
     @view = view
   end
 
-  def name
-    registrar.name
-  end
+  delegate :name, to: :registrar
 
-  def email
-    registrar.email
-  end
+  delegate :email, to: :registrar
 
-  def phone
-    registrar.phone
-  end
+  delegate :phone, to: :registrar
 
-  def website
-    registrar.website
-  end
+  delegate :website, to: :registrar
 
   def language
     view.available_languages.key(registrar.language.to_sym)

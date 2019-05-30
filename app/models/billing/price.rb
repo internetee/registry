@@ -6,8 +6,8 @@ module Billing
     has_many :account_activities
 
     validates :price, :valid_from, :operation_category, :duration, presence: true
-    validates :operation_category, inclusion: { in: Proc.new { |price| price.class.operation_categories } }
-    validates :duration, inclusion: { in: Proc.new { |price| price.class.durations } }
+    validates :operation_category, inclusion: { in: proc { |price| price.class.operation_categories } }
+    validates :duration, inclusion: { in: proc { |price| price.class.durations } }
 
     alias_attribute :effect_time, :valid_from
     alias_attribute :expire_time, :valid_to
@@ -59,6 +59,7 @@ module Billing
     def self.price_for(zone, operation_category, duration)
       lists = valid.where(zone: zone, operation_category: operation_category, duration: duration)
       return lists.first if lists.count == 1
+
       lists.order(valid_from: :desc).first
     end
 
@@ -78,6 +79,7 @@ module Billing
 
     def init_values
       return unless new_record?
+
       self.valid_from = Time.zone.now.beginning_of_year unless valid_from
     end
   end

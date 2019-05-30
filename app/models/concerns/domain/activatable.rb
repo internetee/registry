@@ -15,6 +15,7 @@ module Concerns::Domain::Activatable
 
   def deactivate
     return if inactive?
+
     statuses << DomainStatus::INACTIVE
   end
 end

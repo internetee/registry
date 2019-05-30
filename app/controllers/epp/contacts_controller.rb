@@ -1,6 +1,6 @@
 class Epp::ContactsController < EppController
-  before_action :find_contact,  only: [:info, :update, :delete]
-  before_action :find_password, only: [:info, :update, :delete]
+  before_action :find_contact,  only: %i[info update delete]
+  before_action :find_password, only: %i[info update delete]
   helper_method :address_processing?
 
   def info
@@ -44,7 +44,7 @@ class Epp::ContactsController < EppController
 
     frame = params[:parsed_frame]
 
-    if @contact.update_attributes(frame, current_user)
+    if @contact.update(frame, current_user)
       if !address_processing? && address_given?
         @response_code = 1100
         @response_description = t('epp.contacts.completed_without_address')
@@ -84,15 +84,15 @@ class Epp::ContactsController < EppController
   def find_contact
     code = params[:parsed_frame].css('id').text.strip.upcase
 
-    @contact = Epp::Contact.find_by_epp_code(code)
+    @contact = Epp::Contact.find_by(epp_code: code)
 
     if @contact.blank?
       epp_errors << {
         code: '2303',
         msg: t('errors.messages.epp_obj_does_not_exist'),
-        value: { obj: 'id', val: code }
+        value: { obj: 'id', val: code },
       }
-      fail CanCan::AccessDenied
+      raise CanCan::AccessDenied
     end
     @contact
   end
@@ -116,7 +116,7 @@ class Epp::ContactsController < EppController
     required_attributes = [
       'postalInfo > name',
       'voice',
-      'email'
+      'email',
     ]
 
     address_attributes = [
@@ -134,21 +134,21 @@ class Epp::ContactsController < EppController
     if ident.present? && ident.attr('type').blank?
       epp_errors << {
         code: '2003',
-        msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'type')
+        msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'type'),
       }
     end
 
     if ident.present? && ident.text != 'birthday' && ident.attr('cc').blank?
       epp_errors << {
         code: '2003',
-        msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'cc')
+        msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'cc'),
       }
     end
     # if ident.present? && ident.attr('cc').blank?
-      # epp_errors << {
-        # code: '2003',
-        # msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'cc')
-      # }
+    # epp_errors << {
+    # code: '2003',
+    # msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'cc')
+    # }
     # end
     contact_org_disabled
     fax_disabled
@@ -178,30 +178,32 @@ class Epp::ContactsController < EppController
 
     epp_errors << {
       code: '2306',
-      msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]"
+      msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]",
     }
   end
 
   def fax_disabled
     return true if ENV['fax_enabled'] == 'true'
     return true if params[:parsed_frame].css('fax').text.blank?
+
     epp_errors << {
       code: '2306',
-      msg: "#{I18n.t(:contact_fax_error)}: fax [fax]"
+      msg: "#{I18n.t(:contact_fax_error)}: fax [fax]",
     }
   end
 
   def status_editing_disabled
     return true if Setting.client_status_editing_enabled
     return true if params[:parsed_frame].css('status').empty?
+
     epp_errors << {
       code: '2306',
-      msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
+      msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]",
     }
   end
 
   def address_given?
-    params[:parsed_frame].css('postalInfo addr').size != 0
+    !params[:parsed_frame].css('postalInfo addr').empty?
   end
 
   def address_processing?

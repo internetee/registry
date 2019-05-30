@@ -6,7 +6,6 @@ class User < ActiveRecord::Base
   attr_accessor :phone
 
   def id_role_username
-    "#{self.id}-#{self.class}: #{self.username}"
+    "#{id}-#{self.class}: #{username}"
   end
-
 end

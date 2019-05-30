@@ -1,12 +1,11 @@
 class UpdateWhoisRecordJob < Que::Job
-
   def run(names, type)
     ::PaperTrail.whodunnit = "job - #{self.class.name} - #{type}"
 
     klass = case type
-      when 'reserved'then ReservedDomain
-      when 'blocked' then BlockedDomain
-      when 'domain'  then Domain
+            when 'reserved'then ReservedDomain
+            when 'blocked' then BlockedDomain
+            when 'domain'  then Domain
     end
 
     Array(names).each do |name|
@@ -19,8 +18,6 @@ class UpdateWhoisRecordJob < Que::Job
     end
   end
 
-
-
   def update_domain(domain)
     domain.whois_record ? domain.whois_record.save : domain.create_whois_record
   end
@@ -32,7 +29,6 @@ class UpdateWhoisRecordJob < Que::Job
   def update_blocked(record)
     update_reserved(record)
   end
-
 
   # 1. deleting own
   # 2. trying to regenerate reserved in order domain is still in the list

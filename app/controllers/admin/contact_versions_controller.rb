@@ -11,23 +11,23 @@ module Admin
       @versions = @q.result.page(params[:page])
       search_params = params[:q].deep_dup
 
-      whereS = "1=1"
+      whereS = '1=1'
 
       search_params.each do |key, value|
         next if value.empty?
-        case key
-          when 'event'
-            whereS += " AND event = '#{value}'"
-          else
-            whereS += create_where_string(key, value)
-        end
+
+        whereS += case key
+                  when 'event'
+                    " AND event = '#{value}'"
+                  else
+                    create_where_string(key, value)
+                  end
       end
 
       versions = ContactVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
       @q = versions.search(params[:q])
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
-
     end
 
     def show

@@ -1,7 +1,7 @@
 module Admin
   class ReservedDomainsController < BaseController
     load_and_authorize_resource
-    before_action :set_domain, only: [:edit, :update]
+    before_action :set_domain, only: %i[edit update]
 
     def index
       params[:q] ||= {}
@@ -15,11 +15,9 @@ module Admin
       @domain = ReservedDomain.new
     end
 
-    def edit
-    end
+    def edit; end
 
     def create
-
       @domain = ReservedDomain.new(reserved_domain_params)
 
       if @domain.save
@@ -29,22 +27,18 @@ module Admin
         flash.now[:alert] = I18n.t('failed_to_add_domain')
         render 'new'
       end
-
     end
 
     def update
-
       if @domain.update(reserved_domain_params)
         flash[:notice] = I18n.t('domain_updated')
       else
         flash.now[:alert] = I18n.t('failed_to_update_domain')
       end
       render 'edit'
-
     end
 
     def delete
-
       if ReservedDomain.find(params[:id]).destroy
         flash[:notice] = I18n.t('domain_deleted')
         redirect_to admin_reserved_domains_path
@@ -52,7 +46,6 @@ module Admin
         flash.now[:alert] = I18n.t('failed_to_delete_domain')
         redirect_to admin_reserved_domains_path
       end
-
     end
 
     private

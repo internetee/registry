@@ -15,19 +15,17 @@ module Admin
       def index
         @search = OpenStruct.new(search_params)
 
-        unless @search.status
-          @search.status = self.class.default_status
-        end
+        @search.status = self.class.default_status unless @search.status
 
         prices = ::Billing::Price.all
 
-        if @search.status.present?
-          prices = ::Billing::Price.send(@search.status)
-        end
+        prices = ::Billing::Price.send(@search.status) if @search.status.present?
 
         @q = prices.search(params[:q])
-        @q.sorts = ['zone_id asc', 'duration asc', 'operation_category asc',
-                    'valid_from desc', 'valid_to asc'] if @q.sorts.empty?
+        if @q.sorts.empty?
+          @q.sorts = ['zone_id asc', 'duration asc', 'operation_category asc',
+                      'valid_from desc', 'valid_to asc']
+        end
         @prices = @q.result.page(params[:page])
       end
 
@@ -35,8 +33,7 @@ module Admin
         @price = ::Billing::Price.new
       end
 
-      def edit
-      end
+      def edit; end
 
       def create
         @price = ::Billing::Price.new(price_params)
@@ -50,7 +47,7 @@ module Admin
       end
 
       def update
-        if @price.update_attributes(price_params)
+        if @price.update(price_params)
           flash[:notice] = t('.updated')
           redirect_to_index
         else
@@ -100,11 +97,11 @@ module Admin
       end
 
       def operation_categories
-        ::Billing::Price::operation_categories
+        ::Billing::Price.operation_categories
       end
 
       def durations
-        durations = ::Billing::Price::durations
+        durations = ::Billing::Price.durations
         durations.collect { |duration| [duration.sub('mon', 'month'), duration] }
       end
 

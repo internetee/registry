@@ -6,13 +6,13 @@ module Repp
       resource :contacts do
         patch '/' do
           current_contact = current_user.registrar.contacts
-                                .find_by(code: params[:current_contact_id])
+                                        .find_by(code: params[:current_contact_id])
           new_contact = current_user.registrar.contacts.find_by(code: params[:new_contact_id])
 
           unless current_contact
             error!({ error: { type: 'invalid_request_error',
                               param: 'current_contact_id',
-                              message: "No such contact: #{params[:current_contact_id]}"} },
+                              message: "No such contact: #{params[:current_contact_id]}" } },
                    :bad_request)
           end
 
@@ -38,7 +38,7 @@ module Repp
           end
 
           affected_domains, skipped_domains = TechDomainContact
-                                                  .replace(current_contact, new_contact)
+                                              .replace(current_contact, new_contact)
           @response = { affected_domains: affected_domains, skipped_domains: skipped_domains }
         end
       end

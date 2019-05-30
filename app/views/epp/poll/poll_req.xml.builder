@@ -10,16 +10,18 @@ xml.epp_head do
     end
 
     if @notification.attached_obj_type == 'DomainTransfer'
-      xml.resData do
-        xml << render('epp/domains/partials/transfer', builder: xml, dt: @object)
-      end if @object
+      if @object
+        xml.resData do
+          xml << render('epp/domains/partials/transfer', builder: xml, dt: @object)
+        end
+      end
     end
 
     if @notification.action&.contact
       render(partial: 'epp/poll/action',
              locals: {
                builder: xml,
-               action: @notification.action
+               action: @notification.action,
              })
     end
 

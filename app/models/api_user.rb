@@ -8,8 +8,8 @@ class ApiUser < User
   def epp_code_map
     {
       '2306' => [ # Parameter policy error
-        %i[plain_text_password blank]
-      ]
+        %i[plain_text_password blank],
+      ],
     }
   end
 
@@ -30,11 +30,11 @@ class ApiUser < User
   alias_attribute :login, :username
   attr_accessor :registrar_typeahead
 
-  SUPER = 'super'
-  EPP = 'epp'
-  BILLING = 'billing'
+  SUPER = 'super'.freeze
+  EPP = 'epp'.freeze
+  BILLING = 'billing'.freeze
 
-  ROLES = %w(super epp billing) # should not match to admin roles
+  ROLES = %w[super epp billing].freeze # should not match to admin roles
 
   def ability
     @ability ||= Ability.new(self)
@@ -44,6 +44,7 @@ class ApiUser < User
   after_initialize :set_defaults
   def set_defaults
     return unless new_record?
+
     self.active = true unless active_changed?
   end
 
@@ -71,6 +72,7 @@ class ApiUser < User
 
   def registrar_pki_ok?(crt, cn)
     return false if crt.blank? || cn.blank?
+
     crt = crt.split(' ').join("\n")
     crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
     crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
@@ -81,6 +83,7 @@ class ApiUser < User
 
   def api_pki_ok?(crt, cn)
     return false if crt.blank? || cn.blank?
+
     crt = crt.split(' ').join("\n")
     crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
     crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
@@ -91,11 +94,11 @@ class ApiUser < User
 
   def linked_users
     self.class.where(identity_code: identity_code)
-      .where("identity_code IS NOT NULL AND identity_code != ''")
-      .where.not(id: id)
+        .where("identity_code IS NOT NULL AND identity_code != ''")
+        .where.not(id: id)
   end
 
   def linked_with?(another_api_user)
-    another_api_user.identity_code == self.identity_code
+    another_api_user.identity_code == identity_code
   end
 end

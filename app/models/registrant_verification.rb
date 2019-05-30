@@ -2,12 +2,12 @@
 # Registrant postgres user can access this table directly.
 class RegistrantVerification < ActiveRecord::Base
   # actions
-  CONFIRMED = 'confirmed'
-  REJECTED  = 'rejected'
-  
+  CONFIRMED = 'confirmed'.freeze
+  REJECTED  = 'rejected'.freeze
+
   # action types
-  DOMAIN_REGISTRANT_CHANGE = 'domain_registrant_change'
-  DOMAIN_DELETE = 'domain_delete'
+  DOMAIN_REGISTRANT_CHANGE = 'domain_registrant_change'.freeze
+  DOMAIN_DELETE = 'domain_delete'.freeze
 
   belongs_to :domain
 

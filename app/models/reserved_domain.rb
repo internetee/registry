@@ -14,11 +14,11 @@ class ReservedDomain < ActiveRecord::Base
       by_domain(domain_name).first.try(:password) || by_domain(name_in_ascii).first.try(:password)
     end
 
-    def by_domain name
+    def by_domain(name)
       where(name: name)
     end
 
-    def new_password_for name
+    def new_password_for(name)
       record = by_domain(name).first
       return unless record
 
@@ -27,12 +27,12 @@ class ReservedDomain < ActiveRecord::Base
     end
   end
 
-  def name= val
+  def name=(val)
     super SimpleIDN.to_unicode(val)
   end
 
   def fill_empty_passwords
-    regenerate_password if self.password.blank?
+    regenerate_password if password.blank?
   end
 
   def regenerate_password
@@ -51,7 +51,7 @@ class ReservedDomain < ActiveRecord::Base
 
   def generate_json
     h = HashWithIndifferentAccess.new
-    h[:name] = self.name
+    h[:name] = name
     h[:status] = ['Reserved']
     h
   end

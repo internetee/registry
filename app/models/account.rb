@@ -6,7 +6,7 @@ class Account < ActiveRecord::Base
 
   validates :account_type, presence: true
 
-  CASH = 'cash'
+  CASH = 'cash'.freeze
 
   def activities
     account_activities

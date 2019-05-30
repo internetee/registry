@@ -11,14 +11,15 @@ class DomainContact < ActiveRecord::Base
   def epp_code_map
     {
       '2302' => [
-        [:contact_code_cache, :taken, { value: { obj: 'contact', val: contact_code_cache } }]
-      ]
+        [:contact_code_cache, :taken, { value: { obj: 'contact', val: contact_code_cache } }],
+      ],
     }
   end
 
   def name
     return 'Tech'  if type == 'TechDomainContact'
     return 'Admin' if type == 'AdminDomainContact'
+
     ''
   end
 

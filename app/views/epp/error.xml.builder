@@ -3,37 +3,38 @@ xml.epp_head do
     @errors.each do |x|
       xml.result('code' => x[:code]) do
         xml.msg(x[:msg], 'lang' => 'en')
-        model_name = resource ? resource.model_name.singular.sub('epp_','') : controller.controller_name.singularize
+        model_name = resource ? resource.model_name.singular.sub('epp_', '') : controller.controller_name.singularize
 
-        xml.value("xmlns:#{model_name}" => "https://epp.tld.ee/schema/#{model_name}-eis-1.0.xsd") do
-          value = x[:value][:val]
-          attrs = {}
-          attrs["s"] = value if x[:value][:obj] == "status"
+        if x[:value]
+          xml.value("xmlns:#{model_name}" => "https://epp.tld.ee/schema/#{model_name}-eis-1.0.xsd") do
+            value = x[:value][:val]
+            attrs = {}
+            attrs['s'] = value if x[:value][:obj] == 'status'
 
-          if (val = value).respond_to?(:each)
-            val.each do |el|
-              if el.kind_of?(Array)
-                xml.tag!("#{model_name}:#{x[:value][:obj]}") do
-                  xml.tag!("#{model_name}:#{el[0]}", el[1], attrs)
+            if (val = value).respond_to?(:each)
+              val.each do |el|
+                if el.is_a?(Array)
+                  xml.tag!("#{model_name}:#{x[:value][:obj]}") do
+                    xml.tag!("#{model_name}:#{el[0]}", el[1], attrs)
+                  end
+                else
+                  xml.tag!("#{model_name}:#{x[:value][:obj]}", el, attrs)
                 end
-              else
-                xml.tag!("#{model_name}:#{x[:value][:obj]}", el, attrs)
               end
+            else
+              xml.tag!("#{model_name}:#{x[:value][:obj]}", val, attrs)
             end
-          else
-            xml.tag!("#{model_name}:#{x[:value][:obj]}", val, attrs)
           end
-        end if x[:value]
+        end
 
-        x[:ext_values].each do |y|
+        x[:ext_values]&.each do |y|
           xml.extValue do
             xml.value do
               # xml.tag!()
               xml.reason y.to_s
             end
           end
-        end if x[:ext_values]
-
+        end
       end
     end
 

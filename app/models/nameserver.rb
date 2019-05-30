@@ -5,10 +5,10 @@ class Nameserver < ActiveRecord::Base
   HOSTNAME_REGEXP = /\A(([a-zA-Z0-9]|[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9][a-zA-ZäöüõšžÄÖÜÕŠŽ0-9\-]
     *[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9])\.)
     *([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]
-    *[A-Za-z0-9])\z/x
+    *[A-Za-z0-9])\z/x.freeze
 
   IPV4_REGEXP = /\A(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}
-    ([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\z/x
+    ([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\z/x.freeze
 
   IPV6_REGEXP = /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|
     ([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|
@@ -18,7 +18,7 @@ class Nameserver < ActiveRecord::Base
     :((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|
     ::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|
     1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|
-    1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/x
+    1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/x.freeze
 
   belongs_to :domain, required: true
 
@@ -36,18 +36,18 @@ class Nameserver < ActiveRecord::Base
 
   def epp_code_map
     {
-        '2302' => [
-            [:hostname, :taken, { value: { obj: 'hostAttr', val: {'hostName': hostname} } }]
-        ],
-        '2005' => [
-            [:hostname, :invalid, { value: { obj: 'hostAttr', val: hostname } }],
-            [:hostname, :puny_to_long, { value: { obj: 'hostAttr', val: hostname } }],
-            [:ipv4, :invalid, { value: { obj: 'hostAddr', val: ipv4 } }],
-            [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }]
-        ],
-        '2003' => [
-            [:ipv4, :blank]
-        ]
+      '2302' => [
+        [:hostname, :taken, { value: { obj: 'hostAttr', val: { 'hostName': hostname } } }],
+      ],
+      '2005' => [
+        [:hostname, :invalid, { value: { obj: 'hostAttr', val: hostname } }],
+        [:hostname, :puny_to_long, { value: { obj: 'hostAttr', val: hostname } }],
+        [:ipv4, :invalid, { value: { obj: 'hostAddr', val: ipv4 } }],
+        [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }],
+      ],
+      '2003' => [
+        %i[ipv4 blank],
+      ],
     }
   end
 
@@ -61,7 +61,7 @@ class Nameserver < ActiveRecord::Base
   end
 
   class << self
-    def find_by_hash_params params
+    def find_by_hash_params(params)
       params = params.with_indifferent_access
       rel = all
       rel = rel.where(hostname: params[:hostname])
@@ -81,6 +81,7 @@ class Nameserver < ActiveRecord::Base
 
   def glue_record_required?
     return unless hostname? && domain
+
     hostname.end_with?(domain.name)
   end
 

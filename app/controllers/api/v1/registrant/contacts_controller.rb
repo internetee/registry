@@ -67,7 +67,7 @@ module Api
 
           if !Setting.address_processing && params[:address]
             error_msg = 'Address processing is disabled and therefore cannot be updated'
-            render json: { errors: [{ address: [error_msg] }] }, status: :bad_request and return
+            render(json: { errors: [{ address: [error_msg] }] }, status: :bad_request) && return
           end
 
           if ENV['fax_enabled'] == 'true'
@@ -76,7 +76,7 @@ module Api
 
           if ENV['fax_enabled'] != 'true' && params[:fax]
             error_msg = 'Fax processing is disabled and therefore cannot be updated'
-            render json: { errors: [{ address: [error_msg] }] }, status: :bad_request and return
+            render(json: { errors: [{ address: [error_msg] }] }, status: :bad_request) && return
           end
 
           contact.transaction do

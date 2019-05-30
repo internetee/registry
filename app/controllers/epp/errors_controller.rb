@@ -1,5 +1,5 @@
 class Epp::ErrorsController < EppController
-  skip_authorization_check 
+  skip_authorization_check
 
   def error
     epp_errors << { code: params[:code], msg: params[:msg] }

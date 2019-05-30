@@ -32,7 +32,6 @@ class DomainDeleteConfirmJob < Que::Job
     end
   end
 
-
   def raise_errors!(domain)
     throw "domain #{domain.name} failed with errors #{domain.errors.full_messages}" if domain.errors.any?
   end

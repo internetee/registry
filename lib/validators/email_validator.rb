@@ -1,6 +1,6 @@
 class EmailValidator
   def self.regexp
-    Devise::email_regexp
+    Devise.email_regexp
   end
 
   def initialize(email)

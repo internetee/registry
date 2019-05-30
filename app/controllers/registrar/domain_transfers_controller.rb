@@ -4,8 +4,7 @@ class Registrar
       authorize! :transfer, Depp::Domain
     end
 
-    def new
-    end
+    def new; end
 
     def create
       if params[:batch_file].present?
@@ -23,7 +22,6 @@ class Registrar
         request.body = { data: { domainTransfers: domain_transfers } }.to_json
         request.basic_auth(current_registrar_user.username,
                            current_registrar_user.plain_text_password)
-
 
         if Rails.env.test?
           response = Net::HTTP.start(uri.hostname, uri.port,

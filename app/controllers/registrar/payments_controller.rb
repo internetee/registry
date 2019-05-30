@@ -1,10 +1,10 @@
 class Registrar
   class PaymentsController < BaseController
-    protect_from_forgery except: [:back, :callback]
+    protect_from_forgery except: %i[back callback]
 
     skip_authorization_check # actually anyone can pay, no problems at all
     skip_before_action :authenticate_registrar_user!, :check_ip_restriction,
-                       only: [:back, :callback]
+                       only: %i[back callback]
     before_action :check_supported_payment_method
 
     def pay
@@ -16,7 +16,7 @@ class Registrar
         ),
         response_url: registrar_response_payment_with_url(
           bank, invoice_id: invoice
-        )
+        ),
       }
       @payment = ::PaymentOrders.create_with_type(bank, invoice, opts)
       @payment.create_transaction
@@ -49,16 +49,16 @@ class Registrar
         @payment.complete_transaction
       end
 
-      render status: 200, json: { status: 'ok' }
+      render status: :ok, json: { status: 'ok' }
     end
 
     private
 
     def check_supported_payment_method
       return if supported_payment_method?
-      raise StandardError.new("Not supported payment method")
-    end
 
+      raise StandardError, 'Not supported payment method'
+    end
 
     def supported_payment_method?
       PaymentOrders::PAYMENT_METHODS.include?(params[:bank])

@@ -52,22 +52,22 @@ class Epp::DomainsController < EppController
     end
 
     @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
-    handle_errors(@domain) and return if @domain.errors.any?
+    handle_errors(@domain) && (return) if @domain.errors.any?
     @domain.valid?
     @domain.errors.delete(:name_dirty) if @domain.errors[:puny_label].any?
-    handle_errors(@domain) and return if @domain.errors.any?
-    handle_errors and return unless balance_ok?('create') # loads pricelist in this method
+    handle_errors(@domain) && (return) if @domain.errors.any?
+    handle_errors && (return) unless balance_ok?('create') # loads pricelist in this method
 
     ActiveRecord::Base.transaction do
       @domain.add_legal_file_to_new(params[:parsed_frame])
 
       if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
-        current_user.registrar.debit!({
-          sum: @domain_pricelist.price.amount,
+        current_user.registrar.debit!(
+                                        sum: @domain_pricelist.price.amount,
           description: "#{I18n.t('create')} #{@domain.name}",
           activity_type: AccountActivity::CREATE,
-          price: @domain_pricelist
-        })
+          price: @domain_pricelist,
+                                      )
 
         if Domain.release_to_auction && domain_name.pending_registration?
           active_auction = Auction.find_by(domain: domain_name.to_s,
@@ -94,7 +94,7 @@ class Epp::DomainsController < EppController
       else
         handle_errors(@domain)
       end
-    rescue => e
+    rescue StandardError => e
       if @domain.errors.any?
         handle_errors(@domain)
       else
@@ -108,7 +108,7 @@ class Epp::DomainsController < EppController
     # all includes for bullet
     @domain = Epp::Domain.where(id: @domain.id).includes(nameservers: :versions).first
 
-    handle_errors(@domain) and return unless @domain.can_be_deleted?
+    handle_errors(@domain) && (return) unless @domain.can_be_deleted?
 
     if @domain.epp_destroy(params[:parsed_frame], current_user.id)
       if @domain.epp_pending_delete.present?
@@ -133,7 +133,7 @@ class Epp::DomainsController < EppController
     authorize! :renew, @domain
 
     period_element = params[:parsed_frame].css('period').text
-    period = (period_element.to_i == 0) ? 1 : period_element.to_i
+    period = period_element.to_i == 0 ? 1 : period_element.to_i
     period_unit = Epp::Domain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y'
 
     balance_ok?('renew', period, period_unit) # loading pricelist
@@ -150,15 +150,15 @@ class Epp::DomainsController < EppController
         if success
           unless balance_ok?('renew', period, period_unit)
             handle_errors
-            fail ActiveRecord::Rollback
+            raise ActiveRecord::Rollback
           end
 
-          current_user.registrar.debit!({
+          current_user.registrar.debit!(
                                           sum: @domain_pricelist.price.amount,
                                           description: "#{I18n.t('renew')} #{@domain.name}",
                                           activity_type: AccountActivity::RENEW,
-                                          price: @domain_pricelist
-                                        })
+                                          price: @domain_pricelist,
+                                        )
 
           render_epp_response '/epp/domains/renew'
         else
@@ -176,10 +176,9 @@ class Epp::DomainsController < EppController
     action = params[:parsed_frame].css('transfer').first[:op]
 
     if @domain.non_transferable?
-      throw :epp_error, {
+      throw :epp_error, 
         code: '2304',
-        msg: I18n.t(:object_status_prohibits_operation)
-      }
+        msg: I18n.t(:object_status_prohibits_operation),
     end
 
     @domain_transfer = @domain.transfer(params[:parsed_frame], action, current_user)
@@ -189,7 +188,7 @@ class Epp::DomainsController < EppController
     else
       epp_errors << {
         code: '2303',
-        msg: I18n.t('no_transfers_found')
+        msg: I18n.t('no_transfers_found'),
       }
       handle_errors
     end
@@ -215,15 +214,13 @@ class Epp::DomainsController < EppController
     @prefix = nil
     requires 'extension > extdata > legalDocument'
 
-    optional_attribute 'period', 'unit', values: %w(d m y)
+    optional_attribute 'period', 'unit', values: %w[d m y]
 
     status_editing_disabled
   end
 
   def validate_update
-    if element_count('update > chg > registrant') > 0
-      requires 'extension > extdata > legalDocument'
-    end
+    requires 'extension > extdata > legalDocument' if element_count('update > chg > registrant') > 0
 
     @prefix = 'update > update >'
     requires 'name'
@@ -247,7 +244,7 @@ class Epp::DomainsController < EppController
     @prefix = 'renew > renew >'
     requires 'name', 'curExpDate'
 
-    optional_attribute 'period', 'unit', values: %w(d m y)
+    optional_attribute 'period', 'unit', values: %w[d m y]
   end
 
   def validate_transfer
@@ -256,7 +253,7 @@ class Epp::DomainsController < EppController
       epp_errors << {
         code: '2307',
         msg: I18n.t(:unimplemented_object_service),
-        value: { obj: 'period' }
+        value: { obj: 'period' },
       }
     end
 
@@ -271,15 +268,15 @@ class Epp::DomainsController < EppController
 
   def find_domain
     domain_name = params[:parsed_frame].css('name').text.strip.downcase
-    @domain = Epp::Domain.find_by_idn domain_name
+    @domain = Epp::Domain.find_by idn: domain_name
 
     unless @domain
       epp_errors << {
         code: '2303',
         msg: I18n.t('errors.messages.epp_domain_not_found'),
-        value: { obj: 'name', val: domain_name }
+        value: { obj: 'name', val: domain_name },
       }
-      fail CanCan::AccessDenied
+      raise CanCan::AccessDenied
     end
 
     @domain
@@ -292,9 +289,10 @@ class Epp::DomainsController < EppController
   def status_editing_disabled
     return true if Setting.client_status_editing_enabled
     return true if params[:parsed_frame].css('status').empty?
+
     epp_errors << {
       code: '2306',
-      msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
+      msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]",
     }
   end
 
@@ -303,15 +301,15 @@ class Epp::DomainsController < EppController
     if @domain_pricelist.try(:price) # checking if price list is not found
       if current_user.registrar.balance < @domain_pricelist.price.amount
         epp_errors << {
-            code: '2104',
-            msg: I18n.t('billing_failure_credit_balance_low')
+          code: '2104',
+            msg: I18n.t('billing_failure_credit_balance_low'),
         }
         return false
       end
     else
       epp_errors << {
-          code: '2104',
-          msg: I18n.t(:active_price_missing_for_this_operation)
+        code: '2104',
+          msg: I18n.t(:active_price_missing_for_this_operation),
       }
       return false
     end

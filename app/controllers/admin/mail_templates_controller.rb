@@ -36,7 +36,7 @@ module Admin
     def update
       @mail_template = MailTemplate.find(params[:id])
 
-      if @mail_template.update_attributes(mail_template_params)
+      if @mail_template.update(mail_template_params)
         redirect_to [:admin, @mail_template]
       else
         flash.now[:alert] = I18n.t(:failure)

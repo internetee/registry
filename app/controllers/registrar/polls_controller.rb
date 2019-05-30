@@ -7,8 +7,8 @@ class Registrar
       if Rails.env.test? # Stub for depp server request
         @data = Object.new
 
-        def @data.css(key)
-          ; [];
+        def @data.css(_key)
+          []
         end
       else
         @data = depp_current_user.request(@ex.poll)
@@ -17,8 +17,8 @@ class Registrar
 
     def destroy
       @data = depp_current_user.request(@ex.poll(poll: {
-        value: '', attrs: { op: 'ack', msgID: params[:id] }
-      }))
+                                                   value: '', attrs: { op: 'ack', msgID: params[:id] }
+                                                 }))
 
       @results = @data.css('result')
 

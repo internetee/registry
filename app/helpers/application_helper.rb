@@ -1,11 +1,13 @@
 module ApplicationHelper
   def unstable_env
-    return nil if Rails.env.production?
+    return if Rails.env.production?
+
     Rails.env
   end
 
   def env_style
     return '' if unstable_env.nil?
+
     "background-image: url(#{image_path(unstable_env.to_s + '.png')});"
   end
 
@@ -23,12 +25,12 @@ module ApplicationHelper
     case ident_type
     when 'birthday'
       "#{ident} [#{ident_country_code} #{ident_type}]"
+    else
+      if ident.present?
+        "#{ident} [#{ident_country_code} #{ident_type}]"
       else
-        if ident.present?
-          "#{ident} [#{ident_country_code} #{ident_type}]"
-        else
-          "[#{ident_country_code} #{ident_type}]"
-        end
+        "[#{ident_country_code} #{ident_type}]"
+      end
 
     end
   end
@@ -47,7 +49,7 @@ module ApplicationHelper
     return 'unknown'     if model.updator.blank?
     return model.updator if model.updator.is_a? String
 
-    if model.updator.kind_of?(RegistrantUser)
+    if model.updator.is_a?(RegistrantUser)
       model.updator
     else
       link_to(model.updator, ['admin', model.updator])
@@ -56,7 +58,7 @@ module ApplicationHelper
 
   def currency(amount)
     amount ||= 0
-    format("%01.2f", amount.round(2)).sub(/\./, ',')
+    format('%01.2f', amount.round(2)).sub(/\./, ',')
   end
 
   def plain_username(username)
@@ -66,19 +68,19 @@ module ApplicationHelper
 
   def custom_sort_link(title, param_name)
     sort = params.fetch(:sort, {})[param_name]
-    order = {"asc"=>"desc", "desc"=>"asc"}[sort] || "asc"
-
+    order = { 'asc' => 'desc', 'desc' => 'asc' }[sort] || 'asc'
 
     if params.fetch(:sort, {}).include?(param_name)
-      title += (sort == "asc" ? " ▲" : " ▼")
+      title += (sort == 'asc' ? ' ▲' : ' ▼')
     end
 
-    link_to(title, url_for(sort: {param_name => order}), class: "sort_link #{order}")
+    link_to(title, url_for(sort: { param_name => order }), class: "sort_link #{order}")
   end
 
   def changing_css_class(version, *attrs)
     return unless version
-    css_class = "text-warning"
+
+    css_class = 'text-warning'
 
     if attrs.size == 1
       version.object_changes.to_h[attrs.first] && css_class

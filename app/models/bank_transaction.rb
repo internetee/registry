@@ -13,9 +13,9 @@ class BankTransaction < ActiveRecord::Base
 
   def binded_invoice
     return unless binded?
+
     account_activity.invoice
   end
-
 
   def invoice_num
     return @invoice_no if defined?(@invoice_no)
@@ -34,7 +34,6 @@ class BankTransaction < ActiveRecord::Base
     @registrar ||= Invoice.find_by(reference_no: reference_no)&.buyer
   end
 
-
   # For successful binding, reference number, invoice id and sum must match with the invoice
   def autobind_invoice
     return if binded?
@@ -44,6 +43,7 @@ class BankTransaction < ActiveRecord::Base
     return unless invoice.payable?
 
     return if invoice.total != sum
+
     create_activity(registrar, invoice)
   end
 

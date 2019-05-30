@@ -7,12 +7,12 @@ module Devise
 
       def authenticate!
         resource = mapping.to
-        user = resource.find_by_id_card(id_card)
+        user = resource.find_by(id_card: id_card)
 
         if user
           success!(user)
         else
-          fail
+          raise
         end
       end
 

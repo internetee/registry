@@ -5,14 +5,13 @@ class BlockedDomain < ActiveRecord::Base
 
   validates :name, domain_name: true, uniqueness: true
 
-
   class << self
-    def by_domain name
+    def by_domain(name)
       where(name: name)
     end
   end
 
-  def name= val
+  def name=(val)
     super SimpleIDN.to_unicode(val)
   end
 
@@ -28,7 +27,7 @@ class BlockedDomain < ActiveRecord::Base
 
   def generate_json
     h = HashWithIndifferentAccess.new
-    h[:name]       = self.name
+    h[:name]       = name
     h[:status]     = ['Blocked']
     h
   end

@@ -11,18 +11,22 @@ class Invoice < ActiveRecord::Base
 
   accepts_nested_attributes_for :items
 
-  scope :all_columns,                    ->{select("invoices.*")}
-  scope :sort_due_date_column,           ->{all_columns.select("CASE WHEN invoices.cancelled_at is not null THEN
-                                                                (invoices.cancelled_at + interval '100 year') ELSE
-                                                                 invoices.due_date END AS sort_due_date")}
-  scope :sort_by_sort_due_date_asc,      ->{sort_due_date_column.order("sort_due_date ASC")}
-  scope :sort_by_sort_due_date_desc,     ->{sort_due_date_column.order("sort_due_date DESC")}
-  scope :sort_receipt_date_column,       ->{all_columns.includes(:account_activity).references(:account_activity).select(%Q{
-                                            CASE WHEN account_activities.created_at is not null THEN account_activities.created_at
-                                            WHEN invoices.cancelled_at is not null THEN invoices.cancelled_at + interval '100 year'
-                                            ELSE NULL END AS sort_receipt_date })}
-  scope :sort_by_sort_receipt_date_asc,  ->{sort_receipt_date_column.order("sort_receipt_date ASC")}
-  scope :sort_by_sort_receipt_date_desc, ->{sort_receipt_date_column.order("sort_receipt_date DESC")}
+  scope :all_columns,                    -> { select('invoices.*') }
+  scope :sort_due_date_column,           lambda {
+                                           all_columns.select("CASE WHEN invoices.cancelled_at is not null THEN
+                                                               (invoices.cancelled_at + interval '100 year') ELSE
+                                                                invoices.due_date END AS sort_due_date")
+                                         }
+  scope :sort_by_sort_due_date_asc,      -> { sort_due_date_column.order('sort_due_date ASC') }
+  scope :sort_by_sort_due_date_desc,     -> { sort_due_date_column.order('sort_due_date DESC') }
+  scope :sort_receipt_date_column,       lambda {
+                                           all_columns.includes(:account_activity).references(:account_activity).select(%(
+                                           CASE WHEN account_activities.created_at is not null THEN account_activities.created_at
+                                           WHEN invoices.cancelled_at is not null THEN invoices.cancelled_at + interval '100 year'
+                                           ELSE NULL END AS sort_receipt_date ))
+                                         }
+  scope :sort_by_sort_receipt_date_asc,  -> { sort_receipt_date_column.order('sort_receipt_date ASC') }
+  scope :sort_by_sort_receipt_date_desc, -> { sort_receipt_date_column.order('sort_receipt_date DESC') }
 
   scope :overdue, -> { unpaid.non_cancelled.where('due_date < ?', Time.zone.today) }
 
@@ -38,11 +42,11 @@ class Invoice < ActiveRecord::Base
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
 
-    if last_no && last_no >= Setting.invoice_number_min.to_i
-      self.number = last_no + 1
-    else
-      self.number = Setting.invoice_number_min.to_i
-    end
+    self.number = if last_no && last_no >= Setting.invoice_number_min.to_i
+                    last_no + 1
+                  else
+                    Setting.invoice_number_min.to_i
+                  end
 
     return if number <= Setting.invoice_number_max.to_i
 
@@ -71,7 +75,7 @@ class Invoice < ActiveRecord::Base
     Country.new(buyer_country_code)
   end
 
-# order is used for directo/banklink description
+  # order is used for directo/banklink description
   def order
     "Order nr. #{number}"
   end
@@ -86,7 +90,7 @@ class Invoice < ActiveRecord::Base
 
   def total
     calculate_total unless total?
-    read_attribute(:total)
+    self[:total]
   end
 
   def each
