@@ -18,7 +18,7 @@ class Registrar
     private
 
     def registrar_params
-      params.require(:registrar).permit(:billing_email)
+      params.require(:registrar).permit(:billing_email, :iban)
     end
   end
 end
