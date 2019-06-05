@@ -5,7 +5,7 @@ namespace :data_migrations do
     Invoice.transaction do
       Invoice.where(vat_rate: nil).find_each do |invoice|
         vat_rate = Invoice::VatRateCalculator.new(registrar: invoice.buyer).calculate
-        invoice.update_columns(vat_rate: vat_rate)
+        invoice.update!(vat_rate: vat_rate)
 
         processed_invoice_count += 1
       end
