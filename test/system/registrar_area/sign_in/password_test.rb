@@ -17,10 +17,10 @@ class RegistrarAreaPasswordSignInTest < ApplicationSystemTestCase
     assert_current_path registrar_root_path
   end
 
-  def test_after_successful_sign_in_billing_user_sees_profile
+  def test_after_successful_sign_in_billing_user_sees_account
     @user.update!(roles: [ApiUser::BILLING])
     login_with_correct_credentials
-    assert_current_path registrar_profile_path
+    assert_current_path registrar_account_path
   end
 
   def test_wrong_password

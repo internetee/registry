@@ -1,0 +1,22 @@
+en:
+  registrar:
+    account:
+      show:
+        header: Your account
+
+      edit:
+        header: Edit your account
+
+      form:
+        submit_btn: Save changes
+
+      update:
+        saved: Your account has been updated
+
+      details:
+        header: Details
+        edit_btn: Edit
+
+      linked_users:
+        header: Linked users
+        switch_btn: Switch

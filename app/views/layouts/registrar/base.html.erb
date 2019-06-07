@@ -24,7 +24,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <%= link_to can?(:show, :poll) ? registrar_root_path : registrar_profile_path,
+                    <%= link_to can?(:show, :poll) ? registrar_root_path : registrar_account_path,
                                 class: 'navbar-brand' do %>
                         <%= t(:registrar_head_title) %>
                         <% if unstable_env.present? %>

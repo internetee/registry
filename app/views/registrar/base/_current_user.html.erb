@@ -1,5 +1,4 @@
 <% current_user_presenter = UserPresenter.new(user: current_registrar_user, view: self) %>
-<%= link_to current_user_presenter.login_with_role, registrar_profile_path, id: 'registrar-profile-btn',
-            class: 'navbar-link' %>
+<%= link_to current_user_presenter.login_with_role, registrar_account_path, class: 'navbar-link' %>
 <span class="text-muted">|</span>
 <%= link_to t('.sign_out'), destroy_registrar_user_session_path, method: :delete, class: 'navbar-link' %>

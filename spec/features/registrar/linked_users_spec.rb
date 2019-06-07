@@ -10,7 +10,7 @@ RSpec.feature 'Registrar area linked users', settings: false do
   end
 
   scenario 'switches current user to a linked one' do
-    visit registrar_profile_path
+    visit registrar_account_path
     click_link_or_button 'switch-current-user-2-btn'
     expect(page).to have_text('You are now signed in as a user "new-user-name"')
   end

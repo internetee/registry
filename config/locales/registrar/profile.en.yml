@@ -1,9 +1,0 @@
-en:
-  registrar:
-    profile:
-      show:
-        header: My profile
-
-      linked_users:
-        header: Linked users
-        switch_btn: Switch
