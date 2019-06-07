@@ -1,3 +1,6 @@
+07.06.2019
+* Registrar: option to set defailt biling e-mail in profile view [#1202](https://github.com/internetee/registry/pull/1202)
+
 21.05.2019
 * Zip and State in registrar addresses are now optional [#1206](https://github.com/internetee/registry/issues/1206)
 * Vat is now always applied - 0% vs NULL [#1031](https://github.com/internetee/registry/issues/1031)
