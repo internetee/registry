@@ -222,6 +222,7 @@ task deploy: :environment do
 
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
+    invoke :'data_migration'
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
     to :launch do
@@ -230,6 +231,18 @@ task deploy: :environment do
       invoke :que_restart if que_restart
     end
   end
+end
+
+# data_migrate=some_data_migration mina deploy env 
+desc 'Run data migrations if any set with ENV[data_migrate]'
+task data_migration: :environment do
+        if ENV['data_migrate']
+                queue! %(echo "Running data migration #{ENV['data_migrate']}")
+                queue! %[cd #{current}]
+                queue! %[bundle exec rake data_migrations:#{ENV['data_migrate']} RAILS_ENV=#{rails_env}]
+        else
+                puts "No data migration specified"
+        end
 end
 
 desc 'Loads current commit hash'
