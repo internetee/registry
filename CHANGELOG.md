@@ -1,5 +1,5 @@
 07.06.2019
-* Registrar: option to set defailt biling e-mail in profile view [#1202](https://github.com/internetee/registry/pull/1202)
+* Registrar: option to set default biling e-mail in profile view [#1202](https://github.com/internetee/registry/pull/1202)
 * Updated Capybara gem to 3.22.0 [#1215](https://github.com/internetee/registry/pull/1215)
 * Updated Webmock gem to 3.6.0 [#1216](https://github.com/internetee/registry/pull/1216)
 
