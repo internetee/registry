@@ -1,3 +1,7 @@
+12.06.2019
+* Option to add regsitrar IBAN information to registrar portal and admin [#1203](https://github.com/internetee/registry/pull/1203)
+* Allow running data_migration rake task specified in env variable in mina deploy job [#1213](https://github.com/internetee/registry/pull/1213)
+
 07.06.2019
 * Registrar: option to set default biling e-mail in profile view [#1202](https://github.com/internetee/registry/pull/1202)
 * Updated Capybara gem to 3.22.0 [#1215](https://github.com/internetee/registry/pull/1215)
