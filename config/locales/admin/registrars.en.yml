@@ -63,6 +63,7 @@ en:
             registry's rate of %{registry_vat_rate} will be applied in this case.
           no_reference_number_hint: Reference number will be generated automatically
           disabled_reference_number_hint: Reference number cannot be changed
+          iban_hint: Used for e-invoices
 
         preferences:
           header: Preferences

@@ -2200,7 +2200,8 @@ CREATE TABLE public.registrars (
     reference_no character varying NOT NULL,
     test_registrar boolean DEFAULT false,
     language character varying NOT NULL,
-    vat_rate numeric(4,3)
+    vat_rate numeric(4,3),
+    iban character varying
 );
 
 
@@ -4965,6 +4966,8 @@ INSERT INTO schema_migrations (version) VALUES ('20190415120246');
 INSERT INTO schema_migrations (version) VALUES ('20190510090240');
 
 INSERT INTO schema_migrations (version) VALUES ('20190510102549');
+
+INSERT INTO schema_migrations (version) VALUES ('20190515113153');
 
 INSERT INTO schema_migrations (version) VALUES ('20190520093231');
 

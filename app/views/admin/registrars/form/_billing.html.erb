@@ -67,6 +67,16 @@
                         </div>
                     <% end %>
                 </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :iban %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.text_field :iban, maxlength: iban_max_length, class: 'form-control' %>
+                        <span class="help-block"><%= t '.iban_hint' %></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

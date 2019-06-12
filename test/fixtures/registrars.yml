@@ -11,6 +11,7 @@ bestnames:
   billing_email: billing@bestnames.test
   website:  https://bestnames.test
   reference_no: 13
+  iban: GB33BUKB20201555555555
 
 goodnames:
   name: Good Names
