@@ -1047,7 +1047,7 @@ CREATE TABLE public.invoices (
     currency character varying NOT NULL,
     description character varying,
     reference_no character varying NOT NULL,
-    vat_rate numeric(4,3),
+    vat_rate numeric(4,3) NOT NULL,
     seller_id integer,
     seller_name character varying NOT NULL,
     seller_reg_no character varying,
@@ -4968,6 +4968,8 @@ INSERT INTO schema_migrations (version) VALUES ('20190510090240');
 INSERT INTO schema_migrations (version) VALUES ('20190510102549');
 
 INSERT INTO schema_migrations (version) VALUES ('20190515113153');
+
+INSERT INTO schema_migrations (version) VALUES ('20190516161439');
 
 INSERT INTO schema_migrations (version) VALUES ('20190520093231');
 
