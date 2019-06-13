@@ -1,3 +1,6 @@
+13.06.2019
+* Set Invoice.vat_rate in db to not null [#1205](https://github.com/internetee/registry/pull/1205)
+
 12.06.2019
 * Option to add regsitrar IBAN information to registrar portal and admin [#1203](https://github.com/internetee/registry/pull/1203)
 * Allow running data_migration rake task specified in env variable in mina deploy job [#1213](https://github.com/internetee/registry/pull/1213)
