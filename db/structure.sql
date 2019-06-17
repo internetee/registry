@@ -773,7 +773,6 @@ CREATE TABLE public.dnskeys (
     protocol integer,
     alg integer,
     public_key text,
-    delegation_signer_id integer,
     ds_key_tag character varying,
     ds_alg integer,
     ds_digest_type integer,
@@ -3461,13 +3460,6 @@ CREATE INDEX index_directos_on_item_type_and_item_id ON public.directos USING bt
 
 
 --
--- Name: index_dnskeys_on_delegation_signer_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_dnskeys_on_delegation_signer_id ON public.dnskeys USING btree (delegation_signer_id);
-
-
---
 -- Name: index_dnskeys_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4930,4 +4922,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190516161439');
 INSERT INTO schema_migrations (version) VALUES ('20190520093231');
 
 INSERT INTO schema_migrations (version) VALUES ('20190617120112');
+
+INSERT INTO schema_migrations (version) VALUES ('20190617121716');
 
