@@ -517,55 +517,6 @@ ALTER SEQUENCE public.bank_transactions_id_seq OWNED BY public.bank_transactions
 
 
 --
--- Name: banklink_transactions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.banklink_transactions (
-    id integer NOT NULL,
-    vk_service character varying,
-    vk_version character varying,
-    vk_snd_id character varying,
-    vk_rec_id character varying,
-    vk_stamp character varying,
-    vk_t_no character varying,
-    vk_amount numeric(10,2),
-    vk_curr character varying,
-    vk_rec_acc character varying,
-    vk_rec_name character varying,
-    vk_snd_acc character varying,
-    vk_snd_name character varying,
-    vk_ref character varying,
-    vk_msg character varying,
-    vk_t_datetime timestamp without time zone,
-    vk_mac character varying,
-    vk_encoding character varying,
-    vk_lang character varying,
-    vk_auto character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
--- Name: banklink_transactions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.banklink_transactions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: banklink_transactions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.banklink_transactions_id_seq OWNED BY public.banklink_transactions.id;
-
-
---
 -- Name: blocked_domains; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2490,13 +2441,6 @@ ALTER TABLE ONLY public.bank_transactions ALTER COLUMN id SET DEFAULT nextval('p
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.banklink_transactions ALTER COLUMN id SET DEFAULT nextval('public.banklink_transactions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.blocked_domains ALTER COLUMN id SET DEFAULT nextval('public.blocked_domains_id_seq'::regclass);
 
 
@@ -2868,14 +2812,6 @@ ALTER TABLE ONLY public.bank_statements
 
 ALTER TABLE ONLY public.bank_transactions
     ADD CONSTRAINT bank_transactions_pkey PRIMARY KEY (id);
-
-
---
--- Name: banklink_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.banklink_transactions
-    ADD CONSTRAINT banklink_transactions_pkey PRIMARY KEY (id);
 
 
 --
@@ -4871,4 +4807,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190617120112');
 INSERT INTO schema_migrations (version) VALUES ('20190617121716');
 
 INSERT INTO schema_migrations (version) VALUES ('20190617121949');
+
+INSERT INTO schema_migrations (version) VALUES ('20190617122505');
 
