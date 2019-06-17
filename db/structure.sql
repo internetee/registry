@@ -1186,44 +1186,6 @@ ALTER SEQUENCE public.log_bank_statements_id_seq OWNED BY public.log_bank_statem
 
 
 --
--- Name: log_bank_transactions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.log_bank_transactions (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_bank_transactions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.log_bank_transactions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_bank_transactions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.log_bank_transactions_id_seq OWNED BY public.log_bank_transactions.id;
-
-
---
 -- Name: log_blocked_domains; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2553,13 +2515,6 @@ ALTER TABLE ONLY public.log_bank_statements ALTER COLUMN id SET DEFAULT nextval(
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.log_bank_transactions ALTER COLUMN id SET DEFAULT nextval('public.log_bank_transactions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.log_blocked_domains ALTER COLUMN id SET DEFAULT nextval('public.log_blocked_domains_id_seq'::regclass);
 
 
@@ -2940,14 +2895,6 @@ ALTER TABLE ONLY public.log_accounts
 
 ALTER TABLE ONLY public.log_bank_statements
     ADD CONSTRAINT log_bank_statements_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_bank_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.log_bank_transactions
-    ADD CONSTRAINT log_bank_transactions_pkey PRIMARY KEY (id);
 
 
 --
@@ -3534,20 +3481,6 @@ CREATE INDEX index_log_bank_statements_on_item_type_and_item_id ON public.log_ba
 --
 
 CREATE INDEX index_log_bank_statements_on_whodunnit ON public.log_bank_statements USING btree (whodunnit);
-
-
---
--- Name: index_log_bank_transactions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_bank_transactions_on_item_type_and_item_id ON public.log_bank_transactions USING btree (item_type, item_id);
-
-
---
--- Name: index_log_bank_transactions_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_bank_transactions_on_whodunnit ON public.log_bank_transactions USING btree (whodunnit);
 
 
 --
@@ -4809,4 +4742,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190617121716');
 INSERT INTO schema_migrations (version) VALUES ('20190617121949');
 
 INSERT INTO schema_migrations (version) VALUES ('20190617122505');
+
+INSERT INTO schema_migrations (version) VALUES ('20190617122726');
 
