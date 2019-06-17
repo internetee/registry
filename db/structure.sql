@@ -728,35 +728,6 @@ ALTER SEQUENCE public.delegation_signers_id_seq OWNED BY public.delegation_signe
 
 
 --
--- Name: depricated_versions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.depricated_versions (
-    id integer NOT NULL,
-    created_at timestamp without time zone
-);
-
-
---
--- Name: depricated_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.depricated_versions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: depricated_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.depricated_versions_id_seq OWNED BY public.depricated_versions.id;
-
-
---
 -- Name: directos; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2588,13 +2559,6 @@ ALTER TABLE ONLY public.delegation_signers ALTER COLUMN id SET DEFAULT nextval('
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.depricated_versions ALTER COLUMN id SET DEFAULT nextval('public.depricated_versions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.directos ALTER COLUMN id SET DEFAULT nextval('public.directos_id_seq'::regclass);
 
 
@@ -2985,14 +2949,6 @@ ALTER TABLE ONLY public.contacts
 
 ALTER TABLE ONLY public.delegation_signers
     ADD CONSTRAINT delegation_signers_pkey PRIMARY KEY (id);
-
-
---
--- Name: depricated_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.depricated_versions
-    ADD CONSTRAINT depricated_versions_pkey PRIMARY KEY (id);
 
 
 --
@@ -4972,4 +4928,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190515113153');
 INSERT INTO schema_migrations (version) VALUES ('20190516161439');
 
 INSERT INTO schema_migrations (version) VALUES ('20190520093231');
+
+INSERT INTO schema_migrations (version) VALUES ('20190617120112');
 
