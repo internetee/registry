@@ -695,39 +695,6 @@ ALTER SEQUENCE public.contacts_id_seq OWNED BY public.contacts.id;
 
 
 --
--- Name: delegation_signers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.delegation_signers (
-    id integer NOT NULL,
-    domain_id integer,
-    key_tag character varying,
-    alg integer,
-    digest_type integer,
-    digest character varying
-);
-
-
---
--- Name: delegation_signers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.delegation_signers_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: delegation_signers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.delegation_signers_id_seq OWNED BY public.delegation_signers.id;
-
-
---
 -- Name: directos; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2551,13 +2518,6 @@ ALTER TABLE ONLY public.contacts ALTER COLUMN id SET DEFAULT nextval('public.con
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.delegation_signers ALTER COLUMN id SET DEFAULT nextval('public.delegation_signers_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.directos ALTER COLUMN id SET DEFAULT nextval('public.directos_id_seq'::regclass);
 
 
@@ -2940,14 +2900,6 @@ ALTER TABLE ONLY public.certificates
 
 ALTER TABLE ONLY public.contacts
     ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
-
-
---
--- Name: delegation_signers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.delegation_signers
-    ADD CONSTRAINT delegation_signers_pkey PRIMARY KEY (id);
 
 
 --
@@ -3443,13 +3395,6 @@ CREATE INDEX index_contacts_on_registrar_id ON public.contacts USING btree (regi
 --
 
 CREATE INDEX index_contacts_on_registrar_id_and_ident_type ON public.contacts USING btree (registrar_id, ident_type);
-
-
---
--- Name: index_delegation_signers_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_delegation_signers_on_domain_id ON public.delegation_signers USING btree (domain_id);
 
 
 --
@@ -4924,4 +4869,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190520093231');
 INSERT INTO schema_migrations (version) VALUES ('20190617120112');
 
 INSERT INTO schema_migrations (version) VALUES ('20190617121716');
+
+INSERT INTO schema_migrations (version) VALUES ('20190617121949');
 
