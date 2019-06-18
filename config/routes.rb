@@ -115,6 +115,10 @@ Rails.application.routes.draw do
     put  'pay/return/:bank'       => 'payments#back'
     post 'pay/callback/:bank'     => 'payments#callback', as: 'response_payment_with'
     get  'pay/go/:bank'           => 'payments#pay',   as: 'payment_with'
+
+    namespace :settings do
+      resource :balance_auto_reload, controller: :balance_auto_reload, only: %i[edit update destroy]
+    end
   end
 
   scope :registrar do

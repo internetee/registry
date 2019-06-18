@@ -21,3 +21,12 @@ en:
       linked_users:
         header: Linked users
         switch_btn: Switch
+
+      balance_auto_reload:
+        header: Balance Auto-Reload
+        enabled: Enabled
+        enabled_state_details: Reload %{amount} when your balance drops to %{threshold}
+        disabled: Disabled
+        enable_btn: Enable
+        disable_btn: Disable
+        edit_btn: Edit

@@ -72,6 +72,7 @@ class Ability
     can(:manage, Invoice) { |i| i.buyer_id == @user.registrar_id }
     can :manage, :deposit
     can :read, AccountActivity
+    can :manage, :balance_auto_reload
   end
 
   def customer_service # Admin/admin_user dynamic role

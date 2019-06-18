@@ -135,6 +135,10 @@ payments_every_pay_seller_account: 'EUR3D1'
 payments_every_pay_api_user: 'api_user'
 payments_every_pay_api_key: 'api_key'
 
+e_invoice_provider_name: 'omniva'
+e_invoice_provider_password:
+e_invoice_provider_test_mode: 'false'
+
 user_session_timeout: '3600' # 1 hour
 secure_session_cookies: 'false' # true|false
 same_site_session_cookies: 'false' # false|strict|lax

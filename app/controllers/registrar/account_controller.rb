@@ -2,6 +2,7 @@ class Registrar
   class AccountController < BaseController
     skip_authorization_check
     helper_method :iban_max_length
+    helper_method :balance_auto_reload_setting
 
     def show; end
 
@@ -24,6 +25,10 @@ class Registrar
 
     def iban_max_length
       Iban.max_length
+    end
+
+    def balance_auto_reload_setting
+      current_registrar_user.registrar.settings['balance_auto_reload']
     end
   end
 end

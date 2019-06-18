@@ -165,6 +165,10 @@ class Registrar < ActiveRecord::Base
     notifications.create!(text: text)
   end
 
+  def e_invoice_iban
+    iban
+  end
+
   private
 
   def set_defaults
