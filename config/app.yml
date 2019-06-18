@@ -1,0 +1,74 @@
+# config/app.yml for rails-settings-cached
+defaults: &defaults
+  admin_contacts_min_count: 1
+  admin_contacts_max_count: 10
+  tech_contacts_min_count: 1
+  tech_contacts_max_count: 10
+  orphans_contacts_in_months: 6
+  expire_pending_confirmation: 48
+
+  ds_digest_type: 2
+  ds_data_allowed: false
+  key_data_allowed: true
+
+  dnskeys_min_count: 0
+  dnskeys_max_count: 9
+  ns_min_count: 2
+  ns_max_count: 11
+
+  transfer_wait_time: 0
+  request_confrimation_on_registrant_change_enabled: true
+  request_confirmation_on_domain_deletion_enabled: true
+  address_processing: true
+  default_language: en
+  nameserver_required: false
+
+  client_side_status_editing_enabled: false
+
+  invoice_number_min: 131050
+  invoice_number_max: 149999
+  directo_monthly_number_min:  309901
+  directo_monthly_number_max:  309999
+  directo_monthly_number_last: 309901
+  days_to_keep_invoices_active: 30
+  minimum_deposit: 0.0
+  directo_receipt_payment_term: R
+  directo_receipt_product_name: ETTEM06
+  directo_sales_agent: JAANA
+
+  days_to_renew_domain_before_expire: 90
+  expire_warning_period: 15
+  redemption_grace_period: 30
+  expiration_reminder_mail: 2
+
+  registrar_ip_whitelist_enabled: false
+  api_ip_whitelist_enabled: false
+
+  registry_juridical_name: "Eesti Interneti SA"
+  registry_reg_no: "90010019"
+  registry_email: "info@internet.ee"
+  registry_billing_email: "info@internet.ee"
+  registry_phone: "+372 727 1000"
+  registry_country_code: "EE"
+  registry_state: "Harjumaa"
+  registry_street: "Paldiski mnt 80"
+  registry_city: "Tallinn"
+  registry_zip: "10617"
+  registry_vat_no: "EE101286464"
+  registry_url: "www.internet.ee"
+  registry_vat_prc: 0.2
+  registry_iban: "EE557700771000598731"
+  registry_bank: "LHV Pank"
+  registry_bank_code: "689"
+  registry_swift: "LHVBEE22"
+  registry_invoice_contact: "Martti Õigus"
+  registry_whois_disclaimer: "Search results may not be used for commercial, advertising, recompilation, repackaging, redistribution, reuse, obscuring or other similar activities."
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

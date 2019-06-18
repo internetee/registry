@@ -21,7 +21,10 @@ gem 'pg',                        '0.19.0'
 gem 'ransack',                   '1.5.1' # for searching
 gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and RFC 3696
 gem 'paper_trail', '~> 4.0'
-gem 'rails-settings-cached',     '0.4.1' # for settings
+
+# 0.7.3 is the latest for Rails 4.2, however, it is absent on Rubygems server
+# https://github.com/huacnlee/rails-settings-cached/issues/165
+gem 'rails-settings-cached', '0.7.2'
 
 # html-xml
 gem 'haml-rails', '0.9.0' # haml for views
