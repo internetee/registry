@@ -517,55 +517,6 @@ ALTER SEQUENCE public.bank_transactions_id_seq OWNED BY public.bank_transactions
 
 
 --
--- Name: banklink_transactions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.banklink_transactions (
-    id integer NOT NULL,
-    vk_service character varying,
-    vk_version character varying,
-    vk_snd_id character varying,
-    vk_rec_id character varying,
-    vk_stamp character varying,
-    vk_t_no character varying,
-    vk_amount numeric(10,2),
-    vk_curr character varying,
-    vk_rec_acc character varying,
-    vk_rec_name character varying,
-    vk_snd_acc character varying,
-    vk_snd_name character varying,
-    vk_ref character varying,
-    vk_msg character varying,
-    vk_t_datetime timestamp without time zone,
-    vk_mac character varying,
-    vk_encoding character varying,
-    vk_lang character varying,
-    vk_auto character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
--- Name: banklink_transactions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.banklink_transactions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: banklink_transactions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.banklink_transactions_id_seq OWNED BY public.banklink_transactions.id;
-
-
---
 -- Name: blocked_domains; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -695,68 +646,6 @@ ALTER SEQUENCE public.contacts_id_seq OWNED BY public.contacts.id;
 
 
 --
--- Name: delegation_signers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.delegation_signers (
-    id integer NOT NULL,
-    domain_id integer,
-    key_tag character varying,
-    alg integer,
-    digest_type integer,
-    digest character varying
-);
-
-
---
--- Name: delegation_signers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.delegation_signers_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: delegation_signers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.delegation_signers_id_seq OWNED BY public.delegation_signers.id;
-
-
---
--- Name: depricated_versions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.depricated_versions (
-    id integer NOT NULL,
-    created_at timestamp without time zone
-);
-
-
---
--- Name: depricated_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.depricated_versions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: depricated_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.depricated_versions_id_seq OWNED BY public.depricated_versions.id;
-
-
---
 -- Name: directos; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -802,7 +691,6 @@ CREATE TABLE public.dnskeys (
     protocol integer,
     alg integer,
     public_key text,
-    delegation_signer_id integer,
     ds_key_tag character varying,
     ds_alg integer,
     ds_digest_type integer,
@@ -2554,13 +2442,6 @@ ALTER TABLE ONLY public.bank_transactions ALTER COLUMN id SET DEFAULT nextval('p
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.banklink_transactions ALTER COLUMN id SET DEFAULT nextval('public.banklink_transactions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.blocked_domains ALTER COLUMN id SET DEFAULT nextval('public.blocked_domains_id_seq'::regclass);
 
 
@@ -2576,20 +2457,6 @@ ALTER TABLE ONLY public.certificates ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.contacts ALTER COLUMN id SET DEFAULT nextval('public.contacts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.delegation_signers ALTER COLUMN id SET DEFAULT nextval('public.delegation_signers_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.depricated_versions ALTER COLUMN id SET DEFAULT nextval('public.depricated_versions_id_seq'::regclass);
 
 
 --
@@ -2949,14 +2816,6 @@ ALTER TABLE ONLY public.bank_transactions
 
 
 --
--- Name: banklink_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.banklink_transactions
-    ADD CONSTRAINT banklink_transactions_pkey PRIMARY KEY (id);
-
-
---
 -- Name: blocked_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2978,22 +2837,6 @@ ALTER TABLE ONLY public.certificates
 
 ALTER TABLE ONLY public.contacts
     ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
-
-
---
--- Name: delegation_signers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.delegation_signers
-    ADD CONSTRAINT delegation_signers_pkey PRIMARY KEY (id);
-
-
---
--- Name: depricated_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.depricated_versions
-    ADD CONSTRAINT depricated_versions_pkey PRIMARY KEY (id);
 
 
 --
@@ -3492,24 +3335,10 @@ CREATE INDEX index_contacts_on_registrar_id_and_ident_type ON public.contacts US
 
 
 --
--- Name: index_delegation_signers_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_delegation_signers_on_domain_id ON public.delegation_signers USING btree (domain_id);
-
-
---
 -- Name: index_directos_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_directos_on_item_type_and_item_id ON public.directos USING btree (item_type, item_id);
-
-
---
--- Name: index_dnskeys_on_delegation_signer_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_dnskeys_on_delegation_signer_id ON public.dnskeys USING btree (delegation_signer_id);
 
 
 --
@@ -4975,4 +4804,12 @@ INSERT INTO schema_migrations (version) VALUES ('20190515113153');
 INSERT INTO schema_migrations (version) VALUES ('20190516161439');
 
 INSERT INTO schema_migrations (version) VALUES ('20190520093231');
+
+INSERT INTO schema_migrations (version) VALUES ('20190617120112');
+
+INSERT INTO schema_migrations (version) VALUES ('20190617121716');
+
+INSERT INTO schema_migrations (version) VALUES ('20190617121949');
+
+INSERT INTO schema_migrations (version) VALUES ('20190617122505');
 
