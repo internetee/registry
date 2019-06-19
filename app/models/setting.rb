@@ -1,5 +1,9 @@
-class Setting < RailsSettings::CachedSettings
+class Setting < RailsSettings::Base
   include Versions # version/setting_version.rb
+  source Rails.root.join('config', 'app.yml')
+
+  # When config/app.yml has changed, you need change this prefix to v2, v3 ... to expires caches
+  # cache_prefix { "v1" }
 
   def self.reload_settings!
     STDOUT << "#{Time.zone.now.utc} - Clearing settings cache\n"
