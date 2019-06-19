@@ -1,3 +1,6 @@
+18.06.2019
+* Added auto-invoicing and e-invoices integration to Omniva [#329](https://github.com/internetee/registry/issues/329)
+
 13.06.2019
 * Set Invoice.vat_rate in db to not null [#1205](https://github.com/internetee/registry/pull/1205)
 
