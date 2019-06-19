@@ -1,5 +1,0 @@
-en:
-  admin:
-    mail_templates:
-      html_body: HTML body
-      new_mail_template: New mail template

@@ -186,7 +186,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :mail_templates
     resources :account_activities
 
     resources :bank_statements do

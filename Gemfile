@@ -44,7 +44,6 @@ gem 'selectize-rails', '0.12.1' # include selectize.js for select
 gem 'kaminari',         '0.16.3'  # pagination
 gem 'coderay',          '1.1.0'   # xml console visualize
 gem 'select2-rails',    '3.5.9.3' # for autocomplete
-gem 'liquid',           '3.0.6'   # for email templates
 
 # rights
 gem 'cancancan', '1.11.0' # autharization

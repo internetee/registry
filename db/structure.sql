@@ -1833,43 +1833,6 @@ ALTER SEQUENCE public.log_white_ips_id_seq OWNED BY public.log_white_ips.id;
 
 
 --
--- Name: mail_templates; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.mail_templates (
-    id integer NOT NULL,
-    name character varying NOT NULL,
-    subject character varying,
-    "from" character varying,
-    bcc character varying,
-    cc character varying,
-    body text NOT NULL,
-    text_body text NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
--- Name: mail_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.mail_templates_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: mail_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.mail_templates_id_seq OWNED BY public.mail_templates.id;
-
-
---
 -- Name: nameservers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2673,13 +2636,6 @@ ALTER TABLE ONLY public.log_white_ips ALTER COLUMN id SET DEFAULT nextval('publi
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.mail_templates ALTER COLUMN id SET DEFAULT nextval('public.mail_templates_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.nameservers ALTER COLUMN id SET DEFAULT nextval('public.nameservers_id_seq'::regclass);
 
 
@@ -3077,14 +3033,6 @@ ALTER TABLE ONLY public.log_users
 
 ALTER TABLE ONLY public.log_white_ips
     ADD CONSTRAINT log_white_ips_pkey PRIMARY KEY (id);
-
-
---
--- Name: mail_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.mail_templates
-    ADD CONSTRAINT mail_templates_pkey PRIMARY KEY (id);
 
 
 --
@@ -4794,6 +4742,8 @@ INSERT INTO schema_migrations (version) VALUES ('20190328151838');
 INSERT INTO schema_migrations (version) VALUES ('20190415120246');
 
 INSERT INTO schema_migrations (version) VALUES ('20190426174225');
+
+INSERT INTO schema_migrations (version) VALUES ('20190506100655');
 
 INSERT INTO schema_migrations (version) VALUES ('20190510090240');
 
