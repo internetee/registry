@@ -1,3 +1,6 @@
+20.06.2019
+* test improvements [#1237](https://github.com/internetee/registry/pull/1237)
+
 19.06.2019
 * Updated rails-settings-cached gem to 0.7.2 [#1228](https://github.com/internetee/registry/issues/1228)
 * Removed unfinished and unused email template editing from admin [#1186](https://github.com/internetee/registry/pull/1186)
