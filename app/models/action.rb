@@ -1,4 +1,6 @@
 class Action < ActiveRecord::Base
+  has_paper_trail class_name: 'ActionVersion'
+
   belongs_to :user
   belongs_to :contact
 
