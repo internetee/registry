@@ -4,11 +4,8 @@ class EveryPayTest < ActiveSupport::TestCase
   def setup
     super
 
-    @invoice = invoices(:for_payments_test)
-    invoice_item = invoice_items(:one)
-
-    @invoice.items << invoice_item
-    @invoice.items << invoice_item
+    @invoice = invoices(:one)
+    @invoice.update!(total: 12)
 
     params = {
       response:
@@ -39,12 +36,6 @@ class EveryPayTest < ActiveSupport::TestCase
     @other_pay = PaymentOrders::EveryPay.new('every_pay', @invoice, {})
 
     travel_to Time.zone.parse('2018-04-01 00:30:00 +0000')
-  end
-
-  def teardown
-    super
-
-    travel_back
   end
 
   def test_form_fields

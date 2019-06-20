@@ -7,22 +7,13 @@ class BankLinkTest < ActiveSupport::TestCase
   def setup
     super
 
-    @invoice = invoices(:for_payments_test)
-    invoice_item = invoice_items(:one)
-
-    @invoice.items << invoice_item
-    @invoice.items << invoice_item
+    @invoice = invoices(:one)
+    @invoice.update!(total: 12)
 
     travel_to '2018-04-01 00:30 +0300'
     create_new_bank_link
     create_completed_bank_link
     create_cancelled_bank_link
-  end
-
-  def teardown
-    super
-
-    travel_back
   end
 
   def create_completed_bank_link
