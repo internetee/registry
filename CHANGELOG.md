@@ -1,3 +1,8 @@
+19.06.2019
+* Updated rails-settings-cached gem to 0.7.2 [#1228](https://github.com/internetee/registry/issues/1228)
+* Removed unfinished and unused email template editing from admin [#1186](https://github.com/internetee/registry/pull/1186)
+* Removed three unused DB tables [#1227](https://github.com/internetee/registry/pull/1227)
+
 18.06.2019
 * Added auto-invoicing and e-invoices integration to Omniva [#329](https://github.com/internetee/registry/issues/329)
 
