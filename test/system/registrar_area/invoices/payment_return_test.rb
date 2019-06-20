@@ -6,15 +6,8 @@ class PaymentReturnTest < ApplicationSystemTestCase
 
     @user = users(:api_bestnames)
     sign_in @user
-  end
 
-  def create_invoice_with_items
-    @invoice = invoices(:for_payments_test)
-    invoice_item = invoice_items(:one)
-
-    @invoice.items << invoice_item
-    @invoice.items << invoice_item
-    @user.registrar.invoices << @invoice
+    @invoice = invoices(:one)
   end
 
   def every_pay_request_params
@@ -65,7 +58,6 @@ class PaymentReturnTest < ApplicationSystemTestCase
   end
 
   def test_every_pay_return_creates_activity_redirects_to_invoice_path
-    create_invoice_with_items
     request_params = every_pay_request_params.merge(invoice_id: @invoice.id)
 
     post "/registrar/pay/return/every_pay", request_params
@@ -74,7 +66,6 @@ class PaymentReturnTest < ApplicationSystemTestCase
   end
 
   def test_Every_Pay_return_raises_RecordNotFound
-    create_invoice_with_items
     request_params = every_pay_request_params.merge(invoice_id: "178907")
     assert_raises(ActiveRecord::RecordNotFound) do
       post "/registrar/pay/return/every_pay", request_params
@@ -82,7 +73,6 @@ class PaymentReturnTest < ApplicationSystemTestCase
   end
 
   def test_bank_link_return_redirects_to_invoice_paths
-    create_invoice_with_items
     request_params = bank_link_request_params.merge(invoice_id: @invoice.id)
 
     post "/registrar/pay/return/seb", request_params
@@ -91,7 +81,6 @@ class PaymentReturnTest < ApplicationSystemTestCase
   end
 
   def test_bank_link_return
-    create_invoice_with_items
     request_params = bank_link_request_params.merge(invoice_id: "178907")
     assert_raises(ActiveRecord::RecordNotFound) do
       post "/registrar/pay/return/seb", request_params

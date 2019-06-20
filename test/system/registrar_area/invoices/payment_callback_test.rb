@@ -8,13 +8,30 @@ class PaymentCallbackTest < ApplicationSystemTestCase
     sign_in @user
   end
 
-  def create_invoice_with_items
-    @invoice = invoices(:for_payments_test)
-    invoice_item = invoice_items(:one)
+  def test_every_pay_callback_returns_status_200
+    invoice = payable_invoice
+    assert_matching_bank_transaction_exists(invoice)
 
-    @invoice.items << invoice_item
-    @invoice.items << invoice_item
-    @user.registrar.invoices << @invoice
+    request_params = every_pay_request_params.merge(invoice_id: invoice.id)
+    post "/registrar/pay/callback/every_pay", request_params
+
+    assert_response :ok
+  end
+
+  private
+
+  def payable_invoice
+    invoice = invoices(:one)
+    invoice.update!(account_activity: nil)
+    invoice
+  end
+
+  def assert_matching_bank_transaction_exists(invoice)
+    assert BankTransaction.find_by(
+      description: invoice.order,
+      currency: invoice.currency,
+      iban: invoice.seller_iban
+    ), 'Matching bank transaction should exist'
   end
 
   def every_pay_request_params
@@ -38,12 +55,5 @@ class PaymentCallbackTest < ApplicationSystemTestCase
       invoice_id:          "12900000",
       payment_method:      "every_pay"
     }
-  end
-
-  def test_every_pay_callback_returns_status_200
-    create_invoice_with_items
-    request_params = every_pay_request_params.merge(invoice_id: @invoice.id)
-    post "/registrar/pay/callback/every_pay", request_params
-    assert_equal(200, response.status)
   end
 end

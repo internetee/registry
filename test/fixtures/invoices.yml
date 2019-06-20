@@ -2,24 +2,11 @@ one:
   issue_date: <%= Date.parse '2010-07-05' %>
   due_date: <%= Date.parse '2010-07-06' %>
   currency: EUR
-  seller_name: John Doe
-  seller_iban: 1234
+  seller_name: Seller Ltd
+  seller_iban: US75512108001245126199
   buyer: bestnames
-  buyer_name: Jane Doe
+  buyer_name: Buyer Ltd
   vat_rate: 0.1
   total: 16.50
   reference_no: 13
   number: 1
-
-for_payments_test:
-  number: 1
-  issue_date: <%= Date.parse '2010-07-05' %>
-  due_date: <%= Date.parse '2010-07-06' %>
-  currency: EUR
-  seller_name: John Doe
-  seller_iban: 1234
-  buyer: bestnames
-  buyer_name: Jane Doe
-  vat_rate: 0.1
-  reference_no: 13
-  total: 12.00
