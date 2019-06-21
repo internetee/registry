@@ -188,7 +188,7 @@ class Contact < ActiveRecord::Base
           ver_scope << "(children->'#{type}')::jsonb <@ json_build_array(#{contact.id})::jsonb"
         end
         next if DomainVersion.where("created_at > ?", Time.now - Setting.orphans_contacts_in_months.to_i.months).where(ver_scope.join(" OR ")).any?
-        next if contact.in_use?
+        next if contact.linked?
 
         contact.destroy
         counter.next
@@ -279,7 +279,7 @@ class Contact < ActiveRecord::Base
     calculated.delete(Contact::OK)
     calculated.delete(Contact::LINKED)
     calculated << Contact::OK     if calculated.empty?# && valid?
-    calculated << Contact::LINKED if in_use?
+    calculated << Contact::LINKED if linked?
 
     calculated.uniq
   end
@@ -345,7 +345,7 @@ class Contact < ActiveRecord::Base
   # no need separate method
   # should use only in transaction
   def destroy_and_clean frame
-    if in_use?
+    if linked?
       errors.add(:domains, :exist)
       return false
     end
@@ -513,7 +513,7 @@ class Contact < ActiveRecord::Base
     Country.new(ident_country_code)
   end
 
-  def in_use?
+  def linked?
     registrant_domains.any? || domain_contacts.any?
   end
 

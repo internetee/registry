@@ -13,18 +13,23 @@ class ContactTest < ActiveSupport::TestCase
     assert contacts(:invalid).invalid?
   end
 
-  def test_in_use_if_acts_as_a_registrant
+  def test_linked_when_in_use_as_registrant
+    Domain.update_all(registrant_id: @contact)
     DomainContact.delete_all
-    assert @contact.in_use?
+
+    assert @contact.linked?
   end
 
-  def test_in_use_if_acts_as_a_domain_contact
+  def test_linked_when_in_use_as_domain_contact
     Domain.update_all(registrant_id: contacts(:william))
-    assert @contact.in_use?
+    DomainContact.update_all(contact_id: @contact)
+
+    assert @contact.linked?
   end
 
-  def test_not_in_use_if_acts_as_neither_registrant_nor_domain_contact
-    refute contacts(:not_in_use).in_use?
+  def test_unlinked_when_not_in_use_as_either_registrant_or_domain_contact
+    contact = unlinked_contact
+    assert_not contact.linked?
   end
 
   def test_managed_when_identity_codes_match
@@ -37,5 +42,13 @@ class ContactTest < ActiveSupport::TestCase
     contact = Contact.new(ident: '1234')
     user = RegistrantUser.new(registrant_ident: 'US-12345')
     assert_not contact.managed_by?(user)
+  end
+
+  private
+
+  def unlinked_contact
+    Domain.update_all(registrant_id: contacts(:william))
+    DomainContact.delete_all
+    contacts(:john)
   end
 end

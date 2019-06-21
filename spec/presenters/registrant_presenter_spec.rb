@@ -67,7 +67,7 @@ RSpec.describe RegistrantPresenter do
     zip
     id_code
     reg_no
-    in_use?
+    linked?
   )
 
   registrant_delegatable_attributes.each do |attr_name|
