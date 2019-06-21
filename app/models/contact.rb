@@ -12,6 +12,7 @@ class Contact < ActiveRecord::Base
   has_many :domains, through: :domain_contacts
   has_many :legal_documents, as: :documentable
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
+  has_many :actions, dependent: :destroy
 
   has_paper_trail class_name: "ContactVersion", meta: { children: :children_log }
 
