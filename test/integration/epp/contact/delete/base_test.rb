@@ -1,15 +1,11 @@
 require 'test_helper'
 
 class EppContactDeleteBaseTest < ActionDispatch::IntegrationTest
-  def setup
-    @contact = contacts(:john)
-  end
-
-  def test_deletes_a_contact_that_is_not_in_use
-    @contact = contacts(:not_in_use)
+  def test_deletes_contact
+    contact = deletable_contact
 
     # https://github.com/internetee/registry/issues/415
-    @contact.update_columns(code: @contact.code.upcase)
+    contact.update_columns(code: contact.code.upcase)
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -17,7 +13,7 @@ class EppContactDeleteBaseTest < ActionDispatch::IntegrationTest
         <command>
           <delete>
             <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
-              <contact:id>not-in-use</contact:id>
+              <contact:id>#{contact.code}</contact:id>
             </contact:delete>
           </delete>
         </command>
@@ -32,11 +28,12 @@ class EppContactDeleteBaseTest < ActionDispatch::IntegrationTest
     assert_equal 1, response_xml.css('result').size
   end
 
-  def test_contact_that_is_in_use_cannot_be_deleted
-    assert_equal 'john-001', @contact.code
+  def test_undeletable_cannot_be_deleted
+    contact = contacts(:john)
+    assert_not contact.deletable?
 
     # https://github.com/internetee/registry/issues/415
-    @contact.update_columns(code: @contact.code.upcase)
+    contact.update_columns(code: contact.code.upcase)
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -44,7 +41,7 @@ class EppContactDeleteBaseTest < ActionDispatch::IntegrationTest
         <command>
           <delete>
             <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
-              <contact:id>john-001</contact:id>
+              <contact:id>#{contact.code}</contact:id>
             </contact:delete>
           </delete>
         </command>
@@ -56,5 +53,13 @@ class EppContactDeleteBaseTest < ActionDispatch::IntegrationTest
     end
     response_xml = Nokogiri::XML(response.body)
     assert_equal '2305', response_xml.at_css('result')[:code]
+  end
+
+  private
+
+  def deletable_contact
+    Domain.update_all(registrant_id: contacts(:william))
+    DomainContact.delete_all
+    contacts(:john)
   end
 end

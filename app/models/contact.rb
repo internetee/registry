@@ -552,4 +552,8 @@ class Contact < ActiveRecord::Base
   def registrant?
     registrant_domains.any?
   end
+
+  def deletable?
+    !linked?
+  end
 end

@@ -44,6 +44,16 @@ class ContactTest < ActiveSupport::TestCase
     assert_not contact.managed_by?(user)
   end
 
+  def test_deletable_when_not_linked
+    contact = unlinked_contact
+    assert contact.deletable?
+  end
+
+  def test_undeletable_when_linked
+    assert @contact.linked?
+    assert_not @contact.deletable?
+  end
+
   private
 
   def unlinked_contact
