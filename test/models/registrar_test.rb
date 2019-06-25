@@ -93,6 +93,14 @@ class RegistrarTest < ActiveSupport::TestCase
     Setting.days_to_keep_invoices_active = @original_days_to_keep_invoices_active_setting
   end
 
+  def test_issues_e_invoice_along_with_invoice
+    EInvoice::Providers::TestProvider.deliveries.clear
+
+    @registrar.issue_prepayment_invoice(100)
+
+    assert_equal 1, EInvoice::Providers::TestProvider.deliveries.count
+  end
+
   def test_invalid_without_address_street
     registrar = valid_registrar
     registrar.address_street = ''

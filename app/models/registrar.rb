@@ -53,7 +53,7 @@ class Registrar < ActiveRecord::Base
   def issue_prepayment_invoice(amount, description = nil)
     vat_rate = ::Invoice::VatRateCalculator.new(registrar: self).calculate
 
-    invoices.create!(
+    invoice = invoices.create!(
       issue_date: Time.zone.today,
       due_date: (Time.zone.now + Setting.days_to_keep_invoices_active.days).to_date,
       description: description,
@@ -95,6 +95,11 @@ class Registrar < ActiveRecord::Base
         }
       ]
     )
+
+    e_invoice = invoice.to_e_invoice
+    e_invoice.deliver
+
+    invoice
   end
 
   def cash_account
