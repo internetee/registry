@@ -1,3 +1,6 @@
+25.06.2019
+* Updated pdfkit gem to 0.8.4.1 [#1240](https://github.com/internetee/registry/pull/1240)
+
 20.06.2019
 * test improvements [#1237](https://github.com/internetee/registry/pull/1237)
 
