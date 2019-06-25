@@ -1,11 +1,8 @@
 require 'test_helper'
 
-class RegistrantChangeMailerTest < ActiveSupport::TestCase
-  include ActionMailer::TestHelper
-
+class RegistrantChangeMailerTest < ActionMailer::TestCase
   setup do
     @domain = domains(:shop)
-    ActionMailer::Base.deliveries.clear
   end
 
   def test_delivers_confirmation_request_email
