@@ -1,11 +1,8 @@
 require 'test_helper'
 
-class ContactMailerTest < ActiveSupport::TestCase
-  include ActionMailer::TestHelper
-
+class ContactMailerTest < ActionMailer::TestCase
   setup do
     @contact = contacts(:john)
-    ActionMailer::Base.deliveries.clear
   end
 
   def test_delivers_email_changed_email

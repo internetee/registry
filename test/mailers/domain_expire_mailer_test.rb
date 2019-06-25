@@ -1,12 +1,6 @@
 require 'test_helper'
 
-class DomainExpireMailerTest < ActiveSupport::TestCase
-  include ActionMailer::TestHelper
-
-  setup do
-    ActionMailer::Base.deliveries.clear
-  end
-
+class DomainExpireMailerTest < ActionMailer::TestCase
   def test_delivers_domain_expiration_email
     domain = domains(:shop)
     assert_equal 'shop.test', domain.name

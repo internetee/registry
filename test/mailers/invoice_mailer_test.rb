@@ -1,11 +1,8 @@
 require 'test_helper'
 
-class InvoiceMailerTest < ActiveSupport::TestCase
-  include ActionMailer::TestHelper
-
+class InvoiceMailerTest < ActionMailer::TestCase
   setup do
     @invoice = invoices(:one)
-    ActionMailer::Base.deliveries.clear
   end
 
   def test_delivers_invoice_email

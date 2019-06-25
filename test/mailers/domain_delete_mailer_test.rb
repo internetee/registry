@@ -1,11 +1,8 @@
 require 'test_helper'
 
-class DomainDeleteMailerTest < ActiveSupport::TestCase
-  include ActionMailer::TestHelper
-
+class DomainDeleteMailerTest < ActionMailer::TestCase
   setup do
     @domain = domains(:shop)
-    ActionMailer::Base.deliveries.clear
   end
 
   def test_force_delete_templates
