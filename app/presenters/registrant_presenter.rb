@@ -8,7 +8,7 @@ class RegistrantPresenter
            :reg_no,
            :street, :city, :state, :zip, :country,
            :ident_country,
-           :in_use?,
+           :linked?,
            to: :registrant
 
   def initialize(registrant:, view:)

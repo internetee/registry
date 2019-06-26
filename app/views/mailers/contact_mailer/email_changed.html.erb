@@ -10,7 +10,7 @@ uus aadress: <%= contact.email %>
 <br><br>
 E-posti aadressile saadetakse domeeni toimingutega seotud infot, sealhulgas kinnitustaotlused omanikuvahetuse ja domeeni kustutamise korral.
 <br><br>
-<% if contact.in_use? %>
+<% if contact.linked? %>
     Muudatusega seotud domeenid:<br>
     <%= contact.domain_names_with_roles(locale: :et, line_break: '<br>') %>
 <% end %>
@@ -31,7 +31,7 @@ new address: <%= contact.email %>
 <br><br>
 E-mail addresses are used to send important information regarding your registered domains including applications for approval of registrant change and domain deletion. Please make sure that the update and contact information are correct.
 <br><br>
-<% if contact.in_use? %>
+<% if contact.linked? %>
     Domains affected by this update:<br>
     <%= contact.domain_names_with_roles(line_break: '<br>') %>
 <% end %>

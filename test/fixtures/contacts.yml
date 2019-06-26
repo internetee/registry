@@ -78,14 +78,6 @@ identical_to_william:
   auth_info: 5ab865
   uuid: c0a191d5-3793-4f0b-8f85-491612d0293e
 
-not_in_use:
-  name: Useless
-  email: useless@inbox.test
-  registrar: bestnames
-  code: not-in-use
-  auth_info: e75a2a
-  uuid: ca613cc5-a8dc-48c1-8d32-d3c6a0b6c952
-
 invalid:
   name: any
   code: invalid
