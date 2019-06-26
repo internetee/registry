@@ -1,3 +1,6 @@
+26.06.2019
+* Enable to delete contacts that have records in actions table [#1239](https://github.com/internetee/registry/pull/1239)
+
 25.06.2019
 * Updated pdfkit gem to 0.8.4.1 [#1240](https://github.com/internetee/registry/pull/1240)
 * Added ActionMailer TestCase inheritance [#1242](https://github.com/internetee/registry/pull/1242)
