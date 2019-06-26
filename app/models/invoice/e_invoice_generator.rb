@@ -69,6 +69,7 @@ class Invoice
         i.vat_amount = invoice.vat_amount
         i.total = invoice.total
         i.currency = invoice.currency
+        i.delivery_channel = %i[internet_bank portal]
       end
 
       EInvoice::EInvoice.new(date: Time.zone.today, invoice: e_invoice_invoice)
