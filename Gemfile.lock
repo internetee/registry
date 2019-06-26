@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/e_invoice.git
-  revision: 60084e2035dae0a8bce6eda960f8f5a64c4da604
+  revision: 917318bd546322408b83567745375c998619c926
   branch: master
   specs:
     e_invoice (0.1.0)
