@@ -1,3 +1,6 @@
+27.06.2019
+* Added ActionVersions to archive actions upon archival of a contact object [#1236](https://github.com/internetee/registry/pull/1236)
+
 26.06.2019
 * Enable to delete contacts that have records in actions table [#1239](https://github.com/internetee/registry/pull/1239)
 
