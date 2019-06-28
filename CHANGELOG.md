@@ -1,3 +1,6 @@
+28.06.2019
+* E-invoicing with every generated invoice [#1222](https://github.com/internetee/registry/issues/1222)
+
 27.06.2019
 * Added ActionVersions to archive actions upon archival of a contact object [#1236](https://github.com/internetee/registry/pull/1236)
 
