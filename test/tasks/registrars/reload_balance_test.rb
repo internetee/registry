@@ -5,7 +5,6 @@ class ReloadBalanceTaskTest < ActiveSupport::TestCase
 
   setup do
     @registrar = registrars(:bestnames)
-    EInvoice.provider = EInvoice::Providers::TestProvider.new
   end
 
   def test_issues_invoice_when_auto_reload_is_enabled_and_threshold_reached
