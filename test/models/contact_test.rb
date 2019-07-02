@@ -5,8 +5,12 @@ class ContactTest < ActiveSupport::TestCase
     @contact = contacts(:john)
   end
 
-  def test_valid_fixture
+  def test_valid_fixture_is_valid
     assert @contact.valid?, proc { @contact.errors.full_messages }
+  end
+
+  def test_invalid_fixture_is_invalid
+    assert contacts(:invalid).invalid?
   end
 
   def test_private_entity
@@ -88,11 +92,58 @@ class ContactTest < ActiveSupport::TestCase
     assert_not @contact.registrant?
   end
 
+  def test_linked_when_in_use_as_registrant
+    Domain.update_all(registrant_id: @contact)
+    DomainContact.delete_all
+
+    assert @contact.linked?
+  end
+
+  def test_linked_when_in_use_as_domain_contact
+    Domain.update_all(registrant_id: contacts(:william))
+    DomainContact.update_all(contact_id: @contact)
+
+    assert @contact.linked?
+  end
+
+  def test_unlinked_when_not_in_use_as_either_registrant_or_domain_contact
+    contact = unlinked_contact
+    assert_not contact.linked?
+  end
+
+  def test_managed_when_identity_codes_match
+    contact = Contact.new(ident: '1234')
+    user = RegistrantUser.new(registrant_ident: 'US-1234')
+    assert contact.managed_by?(user)
+  end
+
+  def test_unmanaged_when_identity_codes_do_not_match
+    contact = Contact.new(ident: '1234')
+    user = RegistrantUser.new(registrant_ident: 'US-12345')
+    assert_not contact.managed_by?(user)
+  end
+
+  def test_deletable_when_not_linked
+    contact = unlinked_contact
+    assert contact.deletable?
+  end
+
+  def test_undeletable_when_linked
+    assert @contact.linked?
+    assert_not @contact.deletable?
+  end
+
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)
     other_contact = contacts(:william)
     assert_not_equal other_contact, contact
     Domain.update_all(registrant_id: other_contact)
+  end
+
+  def unlinked_contact
+    Domain.update_all(registrant_id: contacts(:william))
+    DomainContact.delete_all
+    contacts(:john)
   end
 end
