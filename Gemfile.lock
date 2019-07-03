@@ -42,6 +42,15 @@ GIT
       libxml-ruby
 
 GIT
+  remote: https://github.com/internetee/lhv.git
+  revision: e211516bc5fff2139584d4da41c17511863c229d
+  tag: v0.1.0
+  specs:
+    lhv (0.1.0)
+      keystores
+      nokogiri
+
+GIT
   remote: https://github.com/tarmotalu/digidoc_client.git
   revision: 1645e83a5a548addce383f75703b0275c5310c32
   ref: 1645e83a5a548addce383f75703b0275c5310c32
@@ -231,6 +240,7 @@ GEM
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    keystores (0.4.0)
     libxml-ruby (3.0.0)
     loofah (2.2.3)
       crass (~> 1.0.2)
@@ -479,6 +489,7 @@ DEPENDENCIES
   jquery-rails (= 4.0.4)
   jquery-ui-rails (= 5.0.5)
   kaminari (= 0.16.3)
+  lhv!
   mina (= 0.3.1)
   money-rails
   nokogiri
