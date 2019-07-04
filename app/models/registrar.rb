@@ -36,6 +36,8 @@ class Registrar < ActiveRecord::Base
             allow_blank: true, if: proc { |c| c.email_changed? }
   validates :billing_email, email_format: { message: :invalid }, allow_blank: true
 
+  alias_attribute :contact_email, :email
+
   WHOIS_TRIGGERS = %w(name email phone street city state zip)
 
   after_commit :update_whois_records
