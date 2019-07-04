@@ -31,6 +31,16 @@ class RegistrarTest < ActiveSupport::TestCase
     assert registrar.invalid?
   end
 
+  def test_email_format_validation
+    registrar = valid_registrar
+
+    registrar.email = 'invalid'
+    assert registrar.invalid?
+
+    registrar.email = 'valid@email.test'
+    assert registrar.valid?
+  end
+
   def test_invalid_without_accounting_customer_code
     registrar = valid_registrar
     registrar.accounting_customer_code = ''
