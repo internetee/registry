@@ -99,5 +99,3 @@ module DomainNameRegistry
     config.secret_key_base = Figaro.env.secret_key_base
   end
 end
-
-require 'validates_email_format_of'
