@@ -176,6 +176,11 @@ class Registrar < ActiveRecord::Base
     iban
   end
 
+  def billing_email
+    return contact_email if self[:billing_email].blank?
+    self[:billing_email]
+  end
+
   private
 
   def set_defaults
