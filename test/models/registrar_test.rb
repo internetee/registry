@@ -145,6 +145,12 @@ class RegistrarTest < ActiveSupport::TestCase
     assert registrar.invalid?
   end
 
+  def test_aliases_contact_email_to_email
+    email = 'info@registrar.test'
+    registrar = Registrar.new(email: email)
+    assert_equal email, registrar.contact_email
+  end
+
   def test_full_address
     registrar = Registrar.new(address_street: 'Main Street 1', address_zip: '1234',
                               address_city: 'NY', address_state: 'NY State')
