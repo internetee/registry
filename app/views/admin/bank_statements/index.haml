@@ -1,6 +1,6 @@
 - content_for :actions do
   = link_to(t(:add), new_admin_bank_statement_path, class: 'btn btn-primary')
-  = link_to(t(:import), import_admin_bank_statements_path, class: 'btn btn-primary')
+  = link_to(t('.import_btn'), import_admin_bank_statements_path, class: 'btn btn-primary')
 = render 'shared/title', name: t(:bank_statements)
 
 .row

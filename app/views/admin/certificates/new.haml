@@ -8,7 +8,7 @@
       .form-group
         - if params[:crt]
           .col-md-4.control-label
-            = f.label :crt, t(:certificate)
+            = f.label :crt, t('.certificate_file')
           .col-md-8
             = f.file_field :crt
         - else

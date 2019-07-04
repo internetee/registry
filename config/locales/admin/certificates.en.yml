@@ -1,0 +1,5 @@
+en:
+  admin:
+    certificates:
+      new:
+        certificate_file: Certificate file

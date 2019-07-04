@@ -54,7 +54,7 @@
             %dt= t(:version)
             %dd= @csr.version
 
-            %dt= t(:subject)
+            %dt= CertificationRequest.human_attribute_name :subject
             %dd= @csr.subject
 
             %dt= t(:signature_algorithm)
@@ -78,7 +78,7 @@
               %dt= t(:version)
               %dd= @crt.version
 
-              %dt= t(:serial_number)
+              %dt= Certificate.human_attribute_name :serial_number
               %dd= @crt.serial
 
               %dt= t(:signature_algorithm)
@@ -93,8 +93,8 @@
               %dt= t(:valid_to)
               %dd= @crt.not_after
 
-              %dt= t(:subject)
+              %dt= Certificate.human_attribute_name :subject
               %dd= @crt.subject
 
-              %dt= t(:extensions)
+              %dt= Certificate.human_attribute_name :extensions
               %dd= @crt.extensions.map(&:to_s).join('<br>').html_safe

@@ -1,0 +1,5 @@
+en:
+  admin:
+    bank_statements:
+      index:
+        import_btn: Import
