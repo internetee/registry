@@ -32,9 +32,9 @@ class Registrar < ActiveRecord::Base
   attribute :vat_rate, ::Type::VATRate.new
   after_initialize :set_defaults
 
-  validates :email, :billing_email,
-    email_format: { message: :invalid },
-    allow_blank: true, if: proc { |c| c.email_changed? }
+  validates :email, email_format: { message: :invalid },
+            allow_blank: true, if: proc { |c| c.email_changed? }
+  validates :billing_email, email_format: { message: :invalid }, allow_blank: true
 
   WHOIS_TRIGGERS = %w(name email phone street city state zip)
 

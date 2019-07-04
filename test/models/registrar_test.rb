@@ -37,6 +37,22 @@ class RegistrarTest < ActiveSupport::TestCase
     assert registrar.invalid?
   end
 
+  def test_optional_billing_email
+    registrar = valid_registrar
+    registrar.billing_email = ''
+    assert registrar.valid?
+  end
+
+  def test_billing_email_format_validation
+    registrar = valid_registrar
+
+    registrar.billing_email = 'invalid'
+    assert registrar.invalid?
+
+    registrar.billing_email = 'valid@email.test'
+    assert registrar.valid?
+  end
+
   def test_invalid_without_language
     registrar = valid_registrar
     registrar.language = ''
