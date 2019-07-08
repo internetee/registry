@@ -61,6 +61,7 @@ en:
             Applies to new invoices.
             Leave blank if a registrar is VAT-registered;
             registry's rate of %{registry_vat_rate} will be applied in this case.
+          billing_email_hint: Contact email will be used for billing purposes if left blank
           no_reference_number_hint: Reference number will be generated automatically
           disabled_reference_number_hint: Reference number cannot be changed
           iban_hint: Used for e-invoices
