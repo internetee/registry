@@ -1,3 +1,6 @@
+08.07.2019
+* Invoices are not delivered to e-invoice provider when registrar has no billing email [#1255](https://github.com/internetee/registry/issues/1255)
+
 28.06.2019
 * E-invoicing with every generated invoice [#1222](https://github.com/internetee/registry/issues/1222)
 
