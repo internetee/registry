@@ -492,8 +492,7 @@ CREATE TABLE public.bank_transactions (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
-    updator_str character varying,
-    in_directo boolean DEFAULT false
+    updator_str character varying
 );
 
 
