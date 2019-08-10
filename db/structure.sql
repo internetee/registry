@@ -480,13 +480,13 @@ CREATE TABLE public.bank_transactions (
     bank_statement_id integer,
     bank_reference character varying,
     iban character varying,
-    currency character varying,
+    currency character varying NOT NULL,
     buyer_bank_code character varying,
     buyer_iban character varying,
     buyer_name character varying,
     document_no character varying,
     description character varying,
-    sum numeric(10,2),
+    sum numeric(10,2) NOT NULL,
     reference_no character varying,
     paid_at timestamp without time zone,
     created_at timestamp without time zone,
@@ -4816,4 +4816,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190617121949');
 INSERT INTO schema_migrations (version) VALUES ('20190617122505');
 
 INSERT INTO schema_migrations (version) VALUES ('20190620084334');
+
+INSERT INTO schema_migrations (version) VALUES ('20190810135623');
 
