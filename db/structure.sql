@@ -948,8 +948,8 @@ CREATE TABLE public.invoices (
     seller_zip character varying,
     seller_phone character varying,
     seller_url character varying,
-    seller_email character varying,
-    seller_contact_name character varying,
+    seller_email character varying NOT NULL,
+    seller_contact_name character varying NOT NULL,
     buyer_id integer NOT NULL,
     buyer_name character varying NOT NULL,
     buyer_reg_no character varying NOT NULL,
@@ -960,7 +960,7 @@ CREATE TABLE public.invoices (
     buyer_zip character varying,
     buyer_phone character varying,
     buyer_url character varying,
-    buyer_email character varying,
+    buyer_email character varying NOT NULL,
     creator_str character varying,
     updator_str character varying,
     number integer NOT NULL,
@@ -4834,4 +4834,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190811202042');
 INSERT INTO schema_migrations (version) VALUES ('20190811202347');
 
 INSERT INTO schema_migrations (version) VALUES ('20190811202711');
+
+INSERT INTO schema_migrations (version) VALUES ('20190811205406');
 
