@@ -3914,6 +3914,14 @@ ALTER TABLE ONLY public.domains
 
 
 --
+-- Name: fk_rails_242b91538b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.invoices
+    ADD CONSTRAINT fk_rails_242b91538b FOREIGN KEY (buyer_id) REFERENCES public.registrars(id);
+
+
+--
 -- Name: fk_rails_59c422f73d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4822,4 +4830,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190811184334');
 INSERT INTO schema_migrations (version) VALUES ('20190811195814');
 
 INSERT INTO schema_migrations (version) VALUES ('20190811202042');
+
+INSERT INTO schema_migrations (version) VALUES ('20190811202347');
 
