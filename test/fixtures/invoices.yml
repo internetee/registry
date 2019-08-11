@@ -3,9 +3,19 @@ one:
   due_date: <%= Date.parse '2010-07-06' %>
   currency: EUR
   seller_name: Seller Ltd
-  seller_iban: US75512108001245126199
+  seller_reg_no: 1234
+  seller_iban: iban
+  seller_bank: Main Bank
+  seller_swift: swift
+  seller_country_code: US
+  seller_street: Main Street 1
+  seller_city: New York
   buyer: bestnames
   buyer_name: Buyer Ltd
+  buyer_reg_no: 12345
+  buyer_country_code: GB
+  buyer_street: Main Street 2
+  buyer_city: London
   vat_rate: 0.1
   total: 16.50
   reference_no: 13
