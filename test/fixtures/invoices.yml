@@ -4,7 +4,7 @@ one:
   currency: EUR
   seller_name: Seller Ltd
   seller_reg_no: 1234
-  seller_iban: iban
+  seller_iban: US75512108001245126199
   seller_bank: Main Bank
   seller_swift: swift
   seller_country_code: US
