@@ -3199,6 +3199,14 @@ ALTER TABLE ONLY public.registrars
 
 
 --
+-- Name: unique_number; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY public.invoices
+    ADD CONSTRAINT unique_number UNIQUE (number);
+
+
+--
 -- Name: unique_reference_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
@@ -4812,4 +4820,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190620084334');
 INSERT INTO schema_migrations (version) VALUES ('20190811184334');
 
 INSERT INTO schema_migrations (version) VALUES ('20190811195814');
+
+INSERT INTO schema_migrations (version) VALUES ('20190811202042');
 
