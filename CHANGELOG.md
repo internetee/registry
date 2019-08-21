@@ -1,3 +1,6 @@
+21.08.2019
+* Nokogiri update to 1.10.4 (CVE-2019-5477) [#1266](https://github.com/internetee/registry/pull/1266)
+
 08.07.2019
 * Invoices are not delivered to e-invoice provider when registrar has no billing email [#1255](https://github.com/internetee/registry/issues/1255)
 
