@@ -1,9 +1,12 @@
+27.8.2019
+* Added some new database constraints [#1265](https://github.com/internetee/registry/pull/1265)
+
 26.08.2019
 * Introduced automatic payment processing using LHV Connect [#1232](https://github.com/internetee/registry/issues/1232)
 * removed unused script [#1261](https://github.com/internetee/registry/pull/1261)
 * removed unused factory [#1262](https://github.com/internetee/registry/pull/1262)
-* removed unused seller_it columnt from invoices db table [#1264](https://github.com/internetee/registry/pull/1264)
-* removed unused rakte tasks [#1268](https://github.com/internetee/registry/pull/1268)
+* removed unused seller_it column from invoices db table [#1264](https://github.com/internetee/registry/pull/1264)
+* removed unused rake tasks [#1268](https://github.com/internetee/registry/pull/1268)
 
 21.08.2019
 * Nokogiri update to 1.10.4 (CVE-2019-5477) [#1266](https://github.com/internetee/registry/pull/1266)
