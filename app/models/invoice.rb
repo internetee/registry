@@ -35,7 +35,7 @@ class Invoice < ActiveRecord::Base
   attribute :vat_rate, ::Type::VATRate.new
 
   def set_invoice_number
-    last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
+    last_no = Invoice.order(number: :desc).limit(1).pluck(:number).first
 
     if last_no && last_no >= Setting.invoice_number_min.to_i
       self.number = last_no + 1

@@ -936,34 +936,34 @@ CREATE TABLE public.invoices (
     reference_no character varying NOT NULL,
     vat_rate numeric(4,3) NOT NULL,
     seller_name character varying NOT NULL,
-    seller_reg_no character varying,
+    seller_reg_no character varying NOT NULL,
     seller_iban character varying NOT NULL,
-    seller_bank character varying,
-    seller_swift character varying,
+    seller_bank character varying NOT NULL,
+    seller_swift character varying NOT NULL,
     seller_vat_no character varying,
-    seller_country_code character varying,
+    seller_country_code character varying NOT NULL,
     seller_state character varying,
-    seller_street character varying,
-    seller_city character varying,
+    seller_street character varying NOT NULL,
+    seller_city character varying NOT NULL,
     seller_zip character varying,
     seller_phone character varying,
     seller_url character varying,
-    seller_email character varying,
-    seller_contact_name character varying,
-    buyer_id integer,
+    seller_email character varying NOT NULL,
+    seller_contact_name character varying NOT NULL,
+    buyer_id integer NOT NULL,
     buyer_name character varying NOT NULL,
-    buyer_reg_no character varying,
-    buyer_country_code character varying,
+    buyer_reg_no character varying NOT NULL,
+    buyer_country_code character varying NOT NULL,
     buyer_state character varying,
-    buyer_street character varying,
-    buyer_city character varying,
+    buyer_street character varying NOT NULL,
+    buyer_city character varying NOT NULL,
     buyer_zip character varying,
     buyer_phone character varying,
     buyer_url character varying,
-    buyer_email character varying,
+    buyer_email character varying NOT NULL,
     creator_str character varying,
     updator_str character varying,
-    number integer,
+    number integer NOT NULL,
     cancelled_at timestamp without time zone,
     total numeric(10,2) NOT NULL,
     in_directo boolean DEFAULT false,
@@ -3199,6 +3199,14 @@ ALTER TABLE ONLY public.registrars
 
 
 --
+-- Name: unique_number; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY public.invoices
+    ADD CONSTRAINT unique_number UNIQUE (number);
+
+
+--
 -- Name: unique_reference_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3903,6 +3911,14 @@ ALTER TABLE ONLY public.domains
 
 ALTER TABLE ONLY public.domains
     ADD CONSTRAINT domains_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
+
+
+--
+-- Name: fk_rails_242b91538b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.invoices
+    ADD CONSTRAINT fk_rails_242b91538b FOREIGN KEY (buyer_id) REFERENCES public.registrars(id);
 
 
 --
@@ -4810,4 +4826,14 @@ INSERT INTO schema_migrations (version) VALUES ('20190617122505');
 INSERT INTO schema_migrations (version) VALUES ('20190620084334');
 
 INSERT INTO schema_migrations (version) VALUES ('20190811184334');
+
+INSERT INTO schema_migrations (version) VALUES ('20190811195814');
+
+INSERT INTO schema_migrations (version) VALUES ('20190811202042');
+
+INSERT INTO schema_migrations (version) VALUES ('20190811202347');
+
+INSERT INTO schema_migrations (version) VALUES ('20190811202711');
+
+INSERT INTO schema_migrations (version) VALUES ('20190811205406');
 
