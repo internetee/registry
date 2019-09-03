@@ -1,4 +1,10 @@
-27.8.2019
+03.09.2019
+* Updated Ruby to version 2.5.5 [#1273](https://github.com/internetee/registry/pull/1273)
+* Updated bundler gem to 2.0.2 [#1278](https://github.com/internetee/registry/pull/1278)
+* Figaro cleanup [#1272](https://github.com/internetee/registry/pull/1272)
+* Removed deprecated testcase class [#1277](https://github.com/internetee/registry/pull/1277)
+
+27.08.2019
 * Added some new database constraints [#1265](https://github.com/internetee/registry/pull/1265)
 
 26.08.2019
