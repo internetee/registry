@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'application_system_test_case'
 
 class RegistrarAreaProtectedAreaTest < ApplicationSystemTestCase
   def test_anonymous_user_is_asked_to_authenticate_when_navigating_to_protected_area

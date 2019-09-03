@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'application_system_test_case'
 
 class RegistrarDomainsTest < ApplicationSystemTestCase
   def test_downloads_domain_list_as_csv

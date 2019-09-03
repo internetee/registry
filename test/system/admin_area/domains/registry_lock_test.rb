@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'application_system_test_case'
 
 class AdminAreaRegistryLockTest < JavaScriptApplicationSystemTestCase
   def setup
@@ -8,10 +8,6 @@ class AdminAreaRegistryLockTest < JavaScriptApplicationSystemTestCase
     sign_in users(:admin)
     travel_to Time.zone.parse('2010-07-05 00:30:00')
     @domain = domains(:airport)
-  end
-
-  def teardown
-    travel_back
   end
 
   def test_does_not_have_link_when_domain_is_not_locked

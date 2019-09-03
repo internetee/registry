@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'application_system_test_case'
 
 class AdminAreaSignInTest < ApplicationSystemTestCase
   setup do

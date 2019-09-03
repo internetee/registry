@@ -57,5 +57,3 @@ class ApplicationIntegrationTest < ActionDispatch::IntegrationTest
     Capybara.use_default_driver
   end
 end
-
-require 'application_system_test_case'

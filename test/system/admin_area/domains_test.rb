@@ -1,14 +1,10 @@
-require 'test_helper'
+require 'application_system_test_case'
 
 class AdminDomainsTestTest < ApplicationSystemTestCase
   setup do
     sign_in users(:admin)
     travel_to Time.zone.parse('2010-07-05 00:30:00')
     @domain = domains(:shop)
-  end
-
-  teardown do
-    travel_back
   end
 
   def test_shows_details

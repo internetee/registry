@@ -18,12 +18,6 @@ class AuthTokenDecryptorTest < ActiveSupport::TestCase
     @access_token = "q27NWIsKD5snWj9vZzJ0RcOYvgocEyu7H9yCaDjfmGi54sogovpBeALMPWTZHMcdFQzSiq6b4cI0p5tO0_5UEOHic2jRzNW7mkhi-bn-Y2Wlnw7jhMpxw6VwJR8QEoDzjkcNxnKBN6OKF4nssa60ZQ=="
   end
 
-  def teardown
-    super
-
-    travel_back
-  end
-
   def test_decrypt_token_returns_a_hash_when_token_is_valid
     decryptor = AuthTokenDecryptor.new(@access_token, @key)
 
