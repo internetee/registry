@@ -7,10 +7,6 @@ class AdminDomainsTestTest < ApplicationSystemTestCase
     @domain = domains(:shop)
   end
 
-  teardown do
-    travel_back
-  end
-
   def test_shows_details
     visit admin_domain_path(@domain)
     assert_field nil, with: @domain.transfer_code

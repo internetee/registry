@@ -88,7 +88,6 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
 
     assert_equal registrars(:bestnames), @domain.registrar
     assert_equal '2105', Nokogiri::XML(response.body).at_css('result')[:code]
-    travel_back
   end
 
   def test_same_registrar

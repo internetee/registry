@@ -49,6 +49,5 @@ class EppDomainUpdateTest < ApplicationIntegrationTest
 
     post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     assert_equal '2105', Nokogiri::XML(response.body).at_css('result')[:code]
-    travel_back
   end
 end

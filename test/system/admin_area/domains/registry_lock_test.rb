@@ -10,10 +10,6 @@ class AdminAreaRegistryLockTest < JavaScriptApplicationSystemTestCase
     @domain = domains(:airport)
   end
 
-  def teardown
-    travel_back
-  end
-
   def test_does_not_have_link_when_domain_is_not_locked
     visit edit_admin_domain_path(@domain)
     click_link_or_button('Actions')

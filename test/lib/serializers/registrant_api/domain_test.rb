@@ -21,7 +21,6 @@ class SerializersRegistrantApiDomainTest < ActiveSupport::TestCase
     new_json = serializer_for_locked_domain.to_json
 
     assert_equal(Time.zone.parse('2010-07-05 10:30'), new_json[:locked_by_registrant_at])
-    travel_back
   end
 
   def test_returns_registrar_name
