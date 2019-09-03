@@ -3,7 +3,18 @@ require 'test_helper'
 require 'database_cleaner'
 require 'selenium/webdriver'
 
-ApplicationSystemTestCase = Class.new(ApplicationIntegrationTest)
+class ApplicationSystemTestCase < ActionDispatch::IntegrationTest
+  include Capybara::DSL
+  include Capybara::Minitest::Assertions
+  include AbstractController::Translation
+  include Devise::Test::IntegrationHelpers
+
+  teardown do
+    WebMock.reset!
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
+  end
+end
 
 class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
   self.use_transactional_fixtures = false
