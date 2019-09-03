@@ -11,7 +11,6 @@ require 'capybara/rails'
 require 'capybara/minitest'
 require 'webmock/minitest'
 require 'support/rails5_assertions' # Remove once upgraded to Rails 5
-require 'support/task_test_case'
 
 Setting.address_processing = false
 Setting.registry_country_code = 'US'
