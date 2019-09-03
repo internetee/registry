@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppContactCreateBaseTest < ActionDispatch::IntegrationTest
+class EppContactCreateBaseTest < EppTestCase
   def test_creates_new_contact_with_minimum_required_parameters
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -28,9 +28,7 @@ class EppContactCreateBaseTest < ActionDispatch::IntegrationTest
       post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
 
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-
+    assert_epp_response :completed_successfully
     contact = Contact.last
     assert_not_empty contact.code
     assert_equal 'New', contact.name

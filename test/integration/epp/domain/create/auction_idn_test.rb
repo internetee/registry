@@ -1,7 +1,7 @@
 # encoding: UTF-8
 require 'test_helper'
 
-class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
+class EppDomainCreateAuctionIdnTest < EppTestCase
   def setup
     super
 
@@ -46,11 +46,7 @@ class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
 
     @idn_auction.reload
     refute @idn_auction.domain_registered?
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2003', response_xml.at_css('result')[:code]
-    assert_equal 'Required parameter missing; reserved>pw element is required',
-                 response_xml.at_css('result msg').text
+    assert_epp_response :required_parameter_missing
   end
 
   def test_domain_with_unicode_idn_cannot_be_registered_without_registration_code
@@ -84,11 +80,7 @@ class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
 
     @idn_auction.reload
     refute @idn_auction.domain_registered?
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2003', response_xml.at_css('result')[:code]
-    assert_equal 'Required parameter missing; reserved>pw element is required',
-                 response_xml.at_css('result msg').text
+    assert_epp_response :required_parameter_missing
   end
 
   def test_domain_with_ascii_idn_cannot_be_registered_without_winning_the_auction
@@ -121,11 +113,7 @@ class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
 
     @idn_auction.reload
     refute @idn_auction.domain_registered?
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2306', response_xml.at_css('result')[:code]
-    assert_equal 'Parameter value policy error: domain is at auction',
-                 response_xml.at_css('result msg').text
+    assert_epp_response :parameter_value_policy_error
   end
 
   def test_domain_with_unicode_idn_cannot_be_registered_without_winning_the_auction
@@ -195,11 +183,7 @@ class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
 
     @idn_auction.reload
     refute @idn_auction.domain_registered?
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2306', response_xml.at_css('result')[:code]
-    assert_equal 'Parameter value policy error: domain is at auction',
-                 response_xml.at_css('result msg').text
+    assert_epp_response :parameter_value_policy_error
   end
 
   def test_registers_unicode_domain_with_correct_registration_code_when_payment_is_received
@@ -235,10 +219,7 @@ class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
     @idn_auction.reload
     assert @idn_auction.domain_registered?
     assert Domain.where(name: @idn_auction.domain).exists?
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 
   def test_registers_ascii_domain_with_correct_registration_code_when_payment_is_received
@@ -274,9 +255,6 @@ class EppDomainCreateAuctionIdnTest < ApplicationIntegrationTest
     @idn_auction.reload
     assert @idn_auction.domain_registered?
     assert Domain.where(name: @idn_auction.domain).exists?
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 end

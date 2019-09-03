@@ -43,7 +43,7 @@ RSpec.describe 'EPP domain:update' do
 
       specify do
         request
-        expect(response).to have_code_of(1000)
+        expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:completed_successfully))).to be_truthy
       end
 
       it 'changes registrant' do
@@ -86,7 +86,7 @@ RSpec.describe 'EPP domain:update' do
 
       specify do
         request
-        expect(response).to have_code_of(1001)
+        expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:completed_successfully_action_pending))).to be_truthy
       end
 
       it 'does not change registrant' do
@@ -135,7 +135,7 @@ RSpec.describe 'EPP domain:update' do
 
       specify do
         request
-        expect(response).to have_code_of(1000)
+        expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:completed_successfully))).to be_truthy
       end
 
       it 'changes registrant' do
@@ -178,7 +178,7 @@ RSpec.describe 'EPP domain:update' do
 
       specify do
         request
-        expect(response).to have_code_of(1000)
+        expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:completed_successfully))).to be_truthy
       end
 
       it 'changes registrant' do

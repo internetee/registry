@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainUpdateTest < ApplicationIntegrationTest
+class EppDomainUpdateTest < EppTestCase
   def setup
     @domain = domains(:shop)
   end
@@ -27,8 +27,7 @@ class EppDomainUpdateTest < ApplicationIntegrationTest
     post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     @domain.reload
     assert_equal 'f0ff7d17b0', @domain.transfer_code
-    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 
   def test_discarded_domain_cannot_be_updated
@@ -48,6 +47,6 @@ class EppDomainUpdateTest < ApplicationIntegrationTest
     XML
 
     post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    assert_equal '2105', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_epp_response :object_is_not_eligible_for_renewal
   end
 end

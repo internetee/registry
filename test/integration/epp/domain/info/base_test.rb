@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainInfoBaseTest < ApplicationIntegrationTest
+class EppDomainInfoBaseTest < EppTestCase
   def test_returns_valid_response
     assert_equal 'john-001', contacts(:john).code
     domains(:shop).update_columns(statuses: [DomainStatus::OK],
@@ -24,8 +24,7 @@ class EppDomainInfoBaseTest < ApplicationIntegrationTest
     post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
+    assert_epp_response :completed_successfully
     assert_equal 'shop.test', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
     assert_equal 'ok', response_xml.at_xpath('//domain:status', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['s']
     assert_equal 'john-001', response_xml.at_xpath('//domain:registrant', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
@@ -125,8 +124,6 @@ class EppDomainInfoBaseTest < ApplicationIntegrationTest
 
     post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2303', response_xml.at_css('result')[:code]
-    assert_equal 'Domain not found', response_xml.at_css('result msg').text
+    assert_epp_response :object_does_not_exist
   end
 end

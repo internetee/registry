@@ -8,8 +8,6 @@ require 'support/requests/session_helpers'
 require 'support/requests/epp_helpers'
 require 'support/features/session_helpers'
 require 'support/matchers/alias_attribute'
-require 'support/matchers/epp/code'
-require 'support/matchers/epp/have_result'
 
 require 'support/capybara'
 require 'support/devise'
@@ -30,7 +28,6 @@ RSpec.configure do |config|
   config.include AbstractController::Translation, type: :feature
   config.include AbstractController::Translation, type: :mailer
   config.include Requests::EPPHelpers, epp: true
-  config.include Matchers::EPP, epp: true
   config.include Devise::Test::IntegrationHelpers, type: :feature
   config.include Devise::Test::IntegrationHelpers, type: :request
 

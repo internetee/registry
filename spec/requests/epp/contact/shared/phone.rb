@@ -4,7 +4,7 @@ RSpec.shared_examples 'EPP contact phone' do
 
     specify do
       request
-      expect(response).to have_code_of(1000)
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:completed_successfully))).to be_truthy
     end
   end
 
@@ -13,7 +13,7 @@ RSpec.shared_examples 'EPP contact phone' do
 
     specify do
       request
-      expect(response).to have_code_of(2005)
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:parameter_value_syntax_error))).to be_truthy
     end
   end
 
@@ -22,7 +22,7 @@ RSpec.shared_examples 'EPP contact phone' do
 
     specify do
       request
-      expect(response).to have_code_of(2005)
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:parameter_value_syntax_error))).to be_truthy
     end
   end
 end

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppContactUpdateBaseTest < ActionDispatch::IntegrationTest
+class EppContactUpdateBaseTest < EppTestCase
   include ActionMailer::TestHelper
 
   setup do
@@ -40,9 +40,7 @@ class EppContactUpdateBaseTest < ActionDispatch::IntegrationTest
     post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     @contact.reload
 
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
+    assert_epp_response :completed_successfully
     assert_equal 'new name', @contact.name
     assert_equal 'new-email@inbox.test', @contact.email
     assert_equal '+123.4', @contact.phone
@@ -158,8 +156,7 @@ class EppContactUpdateBaseTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2303', response_xml.at_css('result')[:code]
+    assert_epp_response :object_does_not_exist
   end
 
   private

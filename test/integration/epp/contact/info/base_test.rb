@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppContactInfoBaseTest < ActionDispatch::IntegrationTest
+class EppContactInfoBaseTest < EppTestCase
   setup do
     @contact = contacts(:john)
   end
@@ -32,8 +32,7 @@ class EppContactInfoBaseTest < ActionDispatch::IntegrationTest
     post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
+    assert_epp_response :completed_successfully
     assert_equal 'JOHN-001', response_xml.at_xpath('//contact:id', contact: xml_schema).text
     assert_equal 'ok', response_xml.at_xpath('//contact:status', contact: xml_schema)['s']
     assert_equal 'john@inbox.test', response_xml.at_xpath('//contact:email', contact: xml_schema)
@@ -62,8 +61,7 @@ class EppContactInfoBaseTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2303', response_xml.at_css('result')[:code]
+    assert_epp_response :object_does_not_exist
   end
 
   private

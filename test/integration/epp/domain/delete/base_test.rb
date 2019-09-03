@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainDeleteBaseTest < ActionDispatch::IntegrationTest
+class EppDomainDeleteBaseTest < EppTestCase
   include ActionMailer::TestHelper
 
   setup do
@@ -36,8 +36,7 @@ class EppDomainDeleteBaseTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     assert_includes Domain.find_by(name: 'invalid.test').statuses, DomainStatus::PENDING_DELETE_CONFIRMATION
-    assert_equal '1001', Nokogiri::XML(response.body).at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully_action_pending
   end
 
   def test_discarded_domain_cannot_be_deleted
@@ -65,7 +64,7 @@ class EppDomainDeleteBaseTest < ActionDispatch::IntegrationTest
     assert_no_difference 'Domain.count' do
       post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
-    assert_equal '2105', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_epp_response :object_is_not_eligible_for_renewal
   end
 
   def test_requests_registrant_confirmation_when_required
@@ -96,8 +95,7 @@ class EppDomainDeleteBaseTest < ActionDispatch::IntegrationTest
     assert @domain.registrant_verification_asked?
     assert @domain.pending_delete_confirmation?
     assert_emails 1
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1001', response_xml.at_css('result')[:code]
+    assert_epp_response :completed_successfully_action_pending
   end
 
   def test_skips_registrant_confirmation_when_not_required
@@ -128,8 +126,7 @@ class EppDomainDeleteBaseTest < ActionDispatch::IntegrationTest
     assert_not @domain.registrant_verification_asked?
     assert_not @domain.pending_delete_confirmation?
     assert_no_emails
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
+    assert_epp_response :completed_successfully
   end
 
   def test_skips_registrant_confirmation_when_required_but_already_verified_by_registrar
@@ -160,8 +157,7 @@ class EppDomainDeleteBaseTest < ActionDispatch::IntegrationTest
     assert_not @domain.registrant_verification_asked?
     assert_not @domain.pending_delete_confirmation?
     assert_no_emails
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
+    assert_epp_response :completed_successfully
   end
 
   def test_legal_document_is_required
@@ -182,10 +178,7 @@ class EppDomainDeleteBaseTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2003', response_xml.at_css('result')[:code]
-    assert_equal 'Required parameter missing: extension > extdata > legalDocument [legal_document]',
-                 response_xml.at_css('result msg').text
+    assert_epp_response :required_parameter_missing
   end
 
   def test_domain_cannot_be_deleted_when_explicitly_prohibited_by_registrar
@@ -212,9 +205,7 @@ class EppDomainDeleteBaseTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2304', response_xml.at_css('result')[:code]
-    assert_equal 'Domain status prohibits operation', response_xml.at_css('result msg').text
+    assert_epp_response :object_status_prohibits_operation
   end
 
   def test_domain_not_found
@@ -240,8 +231,6 @@ class EppDomainDeleteBaseTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2303', response_xml.at_css('result')[:code]
-    assert_equal 'Domain not found', response_xml.at_css('result msg').text
+    assert_epp_response :object_does_not_exist
   end
 end

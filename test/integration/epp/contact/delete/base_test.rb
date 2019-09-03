@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppContactDeleteBaseTest < ActionDispatch::IntegrationTest
+class EppContactDeleteBaseTest < EppTestCase
   def test_deletes_contact
     contact = deletable_contact
 
@@ -23,9 +23,7 @@ class EppContactDeleteBaseTest < ActionDispatch::IntegrationTest
     assert_difference 'Contact.count', -1 do
       post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
+    assert_epp_response :completed_successfully
   end
 
   def test_undeletable_cannot_be_deleted
@@ -51,8 +49,7 @@ class EppContactDeleteBaseTest < ActionDispatch::IntegrationTest
     assert_no_difference 'Contact.count' do
       post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2305', response_xml.at_css('result')[:code]
+    assert_epp_response :object_association_prohibits_operation
   end
 
   private

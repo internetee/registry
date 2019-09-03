@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainCreateTransferCodeTest < ApplicationIntegrationTest
+class EppDomainCreateTransferCodeTest < EppTestCase
   setup do
     travel_to Time.zone.parse('2010-07-05')
   end
@@ -28,8 +28,7 @@ class EppDomainCreateTransferCodeTest < ApplicationIntegrationTest
 
     post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     refute_empty Domain.find_by(name: 'brandnew.test').transfer_code
-    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 
   def test_honors_custom
@@ -58,7 +57,6 @@ class EppDomainCreateTransferCodeTest < ApplicationIntegrationTest
 
     post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert_equal '1058ad73', Domain.find_by(name: 'brandnew.test').transfer_code
-    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 end

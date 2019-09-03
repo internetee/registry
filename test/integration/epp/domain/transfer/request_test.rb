@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainTransferRequestTest < ApplicationIntegrationTest
+class EppDomainTransferRequestTest < EppTestCase
   def setup
     @domain = domains(:shop)
     @new_registrar = registrars(:goodnames)
@@ -14,8 +14,7 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
 
   def test_transfers_domain_at_once
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
-    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 
   def test_creates_new_domain_transfer
@@ -77,7 +76,7 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
     domains(:shop).reload
 
     assert_equal registrars(:bestnames), domains(:shop).registrar
-    assert_equal '2304', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_epp_response :object_status_prohibits_operation
   end
 
   def test_discarded_domain_cannot_be_transferred
@@ -87,15 +86,14 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
     @domain.reload
 
     assert_equal registrars(:bestnames), @domain.registrar
-    assert_equal '2105', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_epp_response :object_is_not_eligible_for_renewal
   end
 
   def test_same_registrar
     assert_no_difference -> { @domain.transfers.size } do
       post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-
-    assert_equal '2002', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_epp_response :use_error
   end
 
   def test_wrong_transfer_code
@@ -118,7 +116,9 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
     refute_equal @new_registrar, @domain.registrar
-    assert_equal '2201', Nokogiri::XML(response.body).at_css('result')[:code]
+
+    # https://github.com/internetee/registry/issues/686
+    assert_epp_response :authorization_error
   end
 
   private

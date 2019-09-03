@@ -52,7 +52,7 @@ RSpec.describe 'EPP contact:create' do
 
     specify do
       request
-      expect(epp_response).to have_result(:success)
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:completed_successfully))).to be_truthy
     end
   end
 
@@ -86,8 +86,7 @@ RSpec.describe 'EPP contact:create' do
 
     specify do
       request
-      expect(epp_response).to have_result(:required_param_missing,
-                                          'Required parameter missing: extension > extdata > ident [ident]')
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:required_parameter_missing))).to be_truthy
     end
   end
 
@@ -130,9 +129,7 @@ RSpec.describe 'EPP contact:create' do
 
     specify do
       request
-
-      message = 'Ident code does not conform to national identification number format of Germany'
-      expect(epp_response).to have_result(:param_syntax_error, message)
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:parameter_value_syntax_error))).to be_truthy
     end
   end
 
@@ -174,8 +171,7 @@ RSpec.describe 'EPP contact:create' do
 
     specify do
       request
-      expect(epp_response).to have_result(:param_syntax_error,
-                                          'Ident code does not conform to registration number format of Germany')
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:parameter_value_syntax_error))).to be_truthy
     end
   end
 
@@ -209,8 +205,7 @@ RSpec.describe 'EPP contact:create' do
 
     specify do
       request
-      expect(epp_response).to have_result(:required_param_missing,
-                                          'Required ident attribute missing: cc')
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:required_parameter_missing))).to be_truthy
     end
   end
 
@@ -244,7 +239,7 @@ RSpec.describe 'EPP contact:create' do
 
     specify do
       request
-      expect(epp_response).to have_result(:syntax_error)
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:syntax_error))).to be_truthy
     end
   end
 
@@ -285,8 +280,7 @@ RSpec.describe 'EPP contact:create' do
 
     specify do
       request
-      expect(epp_response).to have_result(:param_syntax_error,
-                                          'Ident type "priv" is invalid for Germany')
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:parameter_value_syntax_error))).to be_truthy
     end
   end
 end
