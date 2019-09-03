@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainCreateNameserversTest < ApplicationIntegrationTest
+class EppDomainCreateNameserversTest < EppTestCase
   # Glue record requirement
   def test_nameserver_ip_address_is_required_if_hostname_is_under_the_same_domain
     request_xml = <<-XML
@@ -30,6 +30,6 @@ class EppDomainCreateNameserversTest < ApplicationIntegrationTest
     assert_no_difference 'Domain.count' do
       post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-    assert_equal '2003', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_epp_response :required_parameter_missing
   end
 end

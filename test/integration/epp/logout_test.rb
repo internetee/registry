@@ -1,10 +1,9 @@
 require 'test_helper'
 
-class EppLogoutTest < ApplicationIntegrationTest
+class EppLogoutTest < EppTestCase
   def test_success_response
     post '/epp/session/logout', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
-    assert Nokogiri::XML(response.body).at_css('result[code="1500"]')
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully_ending_session
   end
 
   def test_ends_current_session
@@ -19,7 +18,7 @@ class EppLogoutTest < ApplicationIntegrationTest
 
   def test_anonymous_user
     post '/epp/session/logout', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=non-existent' }
-    assert Nokogiri::XML(response.body).at_css('result[code="2201"]')
+    assert_epp_response :authorization_error
   end
 
   private

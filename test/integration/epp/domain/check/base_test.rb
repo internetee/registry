@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainCheckBaseTest < ApplicationIntegrationTest
+class EppDomainCheckBaseTest < EppTestCase
   def test_returns_valid_response
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -18,8 +18,7 @@ class EppDomainCheckBaseTest < ApplicationIntegrationTest
     post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
+    assert_epp_response :completed_successfully
     assert_equal 'some.test', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
   end
 

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppContactCheckBaseTest < ActionDispatch::IntegrationTest
+class EppContactCheckBaseTest < EppTestCase
   setup do
     @contact = contacts(:john)
   end
@@ -24,8 +24,7 @@ class EppContactCheckBaseTest < ActionDispatch::IntegrationTest
     post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
+    assert_epp_response :completed_successfully
     assert_equal 'john-001', response_xml.at_xpath('//contact:id', contact: xml_schema).text
   end
 

@@ -45,7 +45,7 @@ RSpec.describe 'EPP contact:update' do
 
       specify do
         request
-        expect(epp_response).to have_result(:success)
+        expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:completed_successfully))).to be_truthy
       end
     end
 
@@ -78,9 +78,7 @@ RSpec.describe 'EPP contact:update' do
 
       specify do
         request
-
-        expect(epp_response).to have_result(:data_management_policy_violation,
-                                            t('epp.contacts.errors.valid_ident'))
+        expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:data_management_policy_violation))).to be_truthy
       end
     end
   end
@@ -138,7 +136,7 @@ RSpec.describe 'EPP contact:update' do
 
       specify do
         request
-        expect(epp_response).to have_result(:success)
+        expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:completed_successfully))).to be_truthy
       end
     end
 
@@ -190,9 +188,7 @@ RSpec.describe 'EPP contact:update' do
 
       specify do
         request
-
-        expect(epp_response).to have_result(:data_management_policy_violation,
-                                            t('epp.contacts.errors.ident_update'))
+        expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:data_management_policy_violation))).to be_truthy
       end
     end
   end

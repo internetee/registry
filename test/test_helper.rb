@@ -11,6 +11,7 @@ require 'capybara/rails'
 require 'capybara/minitest'
 require 'webmock/minitest'
 require 'support/rails5_assertions' # Remove once upgraded to Rails 5
+require 'support/assertions/epp_assertions'
 
 Setting.address_processing = false
 Setting.registry_country_code = 'US'
@@ -56,4 +57,8 @@ class ApplicationIntegrationTest < ActionDispatch::IntegrationTest
     Capybara.reset_sessions!
     Capybara.use_default_driver
   end
+end
+
+class EppTestCase < ActionDispatch::IntegrationTest
+  include Assertions::EppAssertions
 end

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainCreateReservedTest < ApplicationIntegrationTest
+class EppDomainCreateReservedTest < EppTestCase
   setup do
     @reserved_domain = reserved_domains(:one)
   end
@@ -34,10 +34,7 @@ class EppDomainCreateReservedTest < ApplicationIntegrationTest
     assert_difference 'Domain.count' do
       post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 
   def test_registering_reserved_domain_regenerates_registration_code
@@ -101,11 +98,7 @@ class EppDomainCreateReservedTest < ApplicationIntegrationTest
     assert_no_difference 'Domain.count' do
       post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2202', response_xml.at_css('result')[:code]
-    assert_equal 'Invalid authorization information; invalid reserved>pw value',
-                 response_xml.at_css('result msg').text
+    assert_epp_response :invalid_authorization_information
   end
 
   def test_domain_cannot_be_registered_without_registration_code
@@ -133,10 +126,6 @@ class EppDomainCreateReservedTest < ApplicationIntegrationTest
     assert_no_difference 'Domain.count' do
       post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2003', response_xml.at_css('result')[:code]
-    assert_equal 'Required parameter missing; reserved>pw element required for reserved domains',
-                 response_xml.at_css('result msg').text
+    assert_epp_response :required_parameter_missing
   end
 end

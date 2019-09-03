@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainRenewTest < ApplicationIntegrationTest
+class EppDomainRenewTest < EppTestCase
   self.use_transactional_fixtures = false
 
   setup do
@@ -26,7 +26,6 @@ class EppDomainRenewTest < ApplicationIntegrationTest
     assert_no_changes -> { domains(:invalid).valid_to } do
       post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
-    assert_equal '2304', Nokogiri::XML(response.body).at_css('result')[:code],
-                 Nokogiri::XML(response.body).css('result').text
+    assert_epp_response :object_status_prohibits_operation
   end
 end

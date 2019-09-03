@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainTransferBaseTest < ApplicationIntegrationTest
+class EppDomainTransferBaseTest < EppTestCase
   def test_non_existent_domain
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -19,6 +19,7 @@ class EppDomainTransferBaseTest < ApplicationIntegrationTest
     XML
 
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
-    assert_equal '2303', Nokogiri::XML(response.body).at_css('result')[:code]
+
+    assert_epp_response :object_does_not_exist
   end
 end

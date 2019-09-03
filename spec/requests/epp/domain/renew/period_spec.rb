@@ -51,7 +51,7 @@ RSpec.describe 'EPP domain:renew', settings: false do
 
     specify do
       request
-      expect(response).to have_code_of(1000)
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:completed_successfully))).to be_truthy
     end
   end
 
@@ -88,7 +88,7 @@ RSpec.describe 'EPP domain:renew', settings: false do
 
     specify do
       request
-      expect(response).to have_code_of(1000)
+      expect(Epp::Response.xml(response.body).code?(Epp::Response::Result::Code.key(:completed_successfully))).to be_truthy
     end
   end
 end

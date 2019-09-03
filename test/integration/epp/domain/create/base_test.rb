@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainCreateBaseTest < ApplicationIntegrationTest
+class EppDomainCreateBaseTest < EppTestCase
   def test_domain_can_be_registered_with_required_attributes_only
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -28,9 +28,6 @@ class EppDomainCreateBaseTest < ApplicationIntegrationTest
     domain = Domain.last
     assert_equal 'new.test', domain.name
     assert_equal contacts(:john).becomes(Registrant), domain.registrant
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 end

@@ -1,22 +1,27 @@
-module EPP
+module Epp
   class Response
-    attr_accessor :results
+    attr_reader :results
 
-    def self.from_xml(xml)
+    def self.xml(xml)
       xml_doc = Nokogiri::XML(xml)
-      response = new
-
       result_elements = xml_doc.css('result')
+      results = []
 
       result_elements.each do |result_element|
-        response.results << Result.new(result_element[:code].to_s, result_element.text.strip)
+        code_value = result_element[:code]
+        code = Result::Code.new(code_value)
+        results << Result.new(code: code)
       end
 
-      response
+      new(results: results)
     end
 
-    def initialize
-      @results = []
+    def initialize(results:)
+      @results = results
+    end
+
+    def code?(code)
+      results.any? { |result| result.code == code }
     end
   end
 end
