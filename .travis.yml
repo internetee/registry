@@ -1,8 +1,4 @@
 language: ruby
-rvm:
-  - 2.4
-  - 2.5
-  - 2.6
 cache: bundler
 env:
   - DB=postgresql
@@ -14,8 +10,8 @@ before_install:
   - "sudo mv -f ~/chromedriver /usr/local/share/"
   - "sudo chmod +x /usr/local/share/chromedriver"
   - "sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver"
-  - "gem update --system"
-  - "gem install bundler"
+  - "gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true"
+  - "gem install bundler -v '< 2'"
 before_script:
   - "cp config/application-example.yml config/application.yml"
   - "cp config/database-travis.yml config/database.yml"
