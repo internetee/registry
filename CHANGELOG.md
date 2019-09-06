@@ -1,6 +1,8 @@
+05.09.2019
+* Update hashdiff gem to 1.0.0 [#1287](https://github.com/internetee/registry/pull/1287)
+
 03.09.2019
 * Updated Ruby to version 2.5.5 [#1273](https://github.com/internetee/registry/pull/1273)
-* Updated bundler gem to 2.0.2 [#1278](https://github.com/internetee/registry/pull/1278)
 * Figaro cleanup [#1272](https://github.com/internetee/registry/pull/1272)
 * Removed deprecated testcase class [#1277](https://github.com/internetee/registry/pull/1277)
 
