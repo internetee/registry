@@ -81,7 +81,7 @@ class Nameserver < ActiveRecord::Base
 
   def glue_record_required?
     return unless hostname? && domain
-    hostname.end_with?(domain.name)
+    DomainName(hostname).domain == domain.name
   end
 
   def normalize_attributes

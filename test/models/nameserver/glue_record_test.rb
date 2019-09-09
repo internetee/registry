@@ -24,4 +24,12 @@ class NameserverGlueRecordTest < ActiveSupport::TestCase
     @nameserver.ipv4 = @nameserver.ipv6 = ''
     assert @nameserver.valid?
   end
+
+  def test_valid_without_ip_when_glue_record_is_not_required
+    domain = Domain.new(name: 'le.test')
+    nameserver = Nameserver.new(domain: domain, hostname: 'ns1.example.test')
+    nameserver.ipv4 = nameserver.ipv6 = nil
+
+    assert nameserver.valid?
+  end
 end
