@@ -17,15 +17,15 @@ Documentation
 -------------
 
 * [EPP documentation](/doc/epp)
-* [EPP request-response examples](/doc/epp-examples.md)
-* [REPP documentation](/doc/repp-doc.md)
+* [EPP request-response examples](/doc/epp_examples.md)
+* [REPP documentation](/doc/repp_doc.md)
 * [Database diagram](/doc/models_complete.svg)
 * [Controllers diagram](/doc/controllers_complete.svg)
 
 ### Updating documentation
 
     AUTODOC=true rspec spec/requests
-    EPP_DOC=true rspec spec/epp --tag epp --require support/epp_doc.rb --format EppDoc > doc/epp-examples.md
+    EPP_DOC=true rspec spec/epp --tag epp --require support/epp_doc.rb --format EppDoc > doc/epp_examples.md
 
 Installation
 ------------
@@ -41,8 +41,8 @@ Manual demo install and database setup:
     cd demo-registry
     rbenv local 2.2.2
     bundle
-    cp config/application-example.yml config/application.yml # and edit it
-    cp config/database-example.yml config/database.yml # and edit it
+    cp config/application.yml.sample config/application.yml # and edit it
+    cp config/database.yml.sample config/database.yml # and edit it
     bundle exec rake db:setup:all # for production, please follow deployment howto
     bundle exec rake bootstrap
     bundle exec rake assets:precompile

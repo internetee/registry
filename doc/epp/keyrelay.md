@@ -22,4 +22,4 @@ NB! Keyrelay not implemented.
                                     Required if ext:relative is not specified 
     <clTRID>               0-1      Client transaction id 
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-keyrelay-makes-a-keyrelay-request)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-keyrelay-makes-a-keyrelay-request)

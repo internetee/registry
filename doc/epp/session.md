@@ -8,7 +8,7 @@ Here are functions like login, logout, hello, poll
       <hello/>
     </epp>
 
-[EXAMPLE RESPONSE](/doc/epp-examples.md#epp-session-when-not-connected-greets-client-upon-connection)
+[EXAMPLE RESPONSE](/doc/epp_examples.md#epp-session-when-not-connected-greets-client-upon-connection)
 
 ### Login request
 
@@ -27,7 +27,7 @@ Here are functions like login, logout, hello, poll
         <extURI>             0-n      Extension URI that is going to be used in current connection. 
     <clTRID>                 0-1      Client transaction id 
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-session-when-connected-with-valid-user-logs-in-epp-user)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-session-when-connected-with-valid-user-logs-in-epp-user)
 
 ### Logout request
 
@@ -36,7 +36,7 @@ Here are functions like login, logout, hello, poll
     <logout>                1        
     <clTRID>                0-1      Client transaction id 
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-session-when-connected-with-valid-user-logs-out-epp-user)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-session-when-connected-with-valid-user-logs-out-epp-user)
 
 ### Poll request
 
@@ -46,4 +46,4 @@ Here are functions like login, logout, hello, poll
                                       Attribute: op="req / ack"  
     <clTRID>                 0-1      Client transaction id 
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-poll-queues-and-dequeues-messages)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-poll-queues-and-dequeues-messages)

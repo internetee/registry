@@ -16,7 +16,7 @@ In both serarious que requires working Registry deployment and full access to Re
 Installation at deployed server:
 
     cd /home/registry/registry/current
-    sudo cp doc/que/que-init-example /etc/init.d/que # and edit it
+    sudo cp doc/que/que_init_sample /etc/init.d/que # and edit it
     sudo chmod +x /etc/init.d/que
     sudo /etc/init.d/que          # for help and other commands
     sudo /etc/init.d/que start    # for manual start 
