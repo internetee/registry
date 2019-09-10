@@ -1,3 +1,6 @@
+09.09.2019
+* Upgrade Ruby to 2.4.7 [#1289](https://github.com/internetee/registry/pull/1289)
+
 05.09.2019
 * Update hashdiff gem to 1.0.0 [#1287](https://github.com/internetee/registry/pull/1287)
 
