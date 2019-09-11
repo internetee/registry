@@ -4,9 +4,13 @@ module Epp
     before_action :find_password, only: %i[info update transfer delete]
 
     def info
-      authorize! :info, @domain, @password
+      authorize! :info, @domain
 
       @hosts = params[:parsed_frame].css('name').first['hosts'] || 'all'
+
+      sponsoring_registrar = (@domain.registrar == current_user.registrar)
+      correct_transfer_code_provided = (@domain.transfer_code == @password)
+      @reveal_full_details = (sponsoring_registrar || correct_transfer_code_provided)
 
       case @hosts
       when 'del'
@@ -28,26 +32,38 @@ module Epp
         domain_name = DNS::DomainName.new(SimpleIDN.to_unicode(request_domain_name))
 
         if domain_name.at_auction?
-          throw :epp_error,
-                code: '2306',
-                msg: 'Parameter value policy error: domain is at auction'
+          epp_errors << {
+            code: '2306',
+            msg: 'Parameter value policy error: domain is at auction',
+          }
+          handle_errors
+          return
         elsif domain_name.awaiting_payment?
-          throw :epp_error,
-                code: '2003',
-                msg: 'Required parameter missing; reserved>pw element required for reserved domains'
+          epp_errors << {
+            code: '2003',
+            msg: 'Required parameter missing; reserved>pw element required for reserved domains',
+          }
+          handle_errors
+          return
         elsif domain_name.pending_registration?
           registration_code = params[:parsed_frame].css('reserved > pw').text
 
           if registration_code.empty?
-            throw :epp_error,
-                  code: '2003',
-                  msg: 'Required parameter missing; reserved>pw element is required'
+            epp_errors << {
+              code: '2003',
+              msg: 'Required parameter missing; reserved>pw element is required',
+            }
+            handle_errors
+            return
           end
 
           unless domain_name.available_with_code?(registration_code)
-            throw :epp_error,
-                  code: '2202',
-                  msg: 'Invalid authorization information; invalid reserved>pw value'
+            epp_errors << {
+              code: '2202',
+              msg: 'Invalid authorization information; invalid reserved>pw value',
+            }
+            handle_errors
+            return
           end
         end
       end
@@ -85,22 +101,15 @@ module Epp
 
     def update
       authorize! :update, @domain, @password
-      begin
-        if @domain.update(params[:parsed_frame], current_user)
-          if @domain.epp_pending_update.present?
-            render_epp_response '/epp/domains/success_pending'
-          else
-            render_epp_response '/epp/domains/success'
-          end
+
+      if @domain.update(params[:parsed_frame], current_user)
+        if @domain.epp_pending_update.present?
+          render_epp_response '/epp/domains/success_pending'
         else
-          handle_errors(@domain)
+          render_epp_response '/epp/domains/success'
         end
-      rescue => e
-        if @domain.errors.any?
-          handle_errors(@domain)
-        else
-          throw e
-        end
+      else
+        handle_errors(@domain)
       end
     end
 
@@ -177,13 +186,20 @@ module Epp
       action = params[:parsed_frame].css('transfer').first[:op]
 
       if @domain.non_transferable?
-        throw :epp_error, {
+        epp_errors << {
           code: '2304',
-          msg: I18n.t(:object_status_prohibits_operation)
+          msg: I18n.t(:object_status_prohibits_operation),
         }
+        handle_errors
+        return
       end
 
       @domain_transfer = @domain.transfer(params[:parsed_frame], action, current_user)
+
+      if @domain.errors[:epp_errors].any?
+        handle_errors(@domain)
+        return
+      end
 
       if @domain_transfer
         render_epp_response '/epp/domains/transfer'
@@ -272,18 +288,11 @@ module Epp
 
     def find_domain
       domain_name = params[:parsed_frame].css('name').text.strip.downcase
-      @domain = Epp::Domain.find_by_idn domain_name
 
-      unless @domain
-        epp_errors << {
-          code: '2303',
-          msg: I18n.t('errors.messages.epp_domain_not_found'),
-          value: { obj: 'name', val: domain_name }
-        }
-        fail CanCan::AccessDenied
-      end
+      domain = Epp::Domain.find_by_idn(domain_name)
+      raise ActiveRecord::RecordNotFound unless domain
 
-      @domain
+      @domain = domain
     end
 
     def find_password

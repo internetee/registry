@@ -133,32 +133,6 @@ class EppContactUpdateBaseTest < EppTestCase
     assert_no_emails
   end
 
-  def test_non_existing_contact
-    assert_nil Contact.find_by(code: 'non-existing')
-
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-        <command>
-          <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
-              <contact:id>non-existing</contact:id>
-              <contact:chg>
-                <contact:postalInfo>
-                  <contact:name>any</contact:name>
-                </contact:postalInfo>
-              </contact:chg>
-            </contact:update>
-          </update>
-        </command>
-      </epp>
-    XML
-
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-
-    assert_epp_response :object_does_not_exist
-  end
-
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)

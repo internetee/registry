@@ -207,30 +207,4 @@ class EppDomainDeleteBaseTest < EppTestCase
 
     assert_epp_response :object_status_prohibits_operation
   end
-
-  def test_domain_not_found
-    assert_nil Domain.find_by(name: 'non-existing.test')
-
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-        <command>
-          <delete>
-            <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-              <domain:name>non-existing.test</domain:name>
-            </domain:delete>
-          </delete>
-          <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-              <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
-            </eis:extdata>
-          </extension>
-        </command>
-      </epp>
-    XML
-
-    post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-
-    assert_epp_response :object_does_not_exist
-  end
 end

@@ -154,10 +154,17 @@ class Epp::Contact < Contact
                                     type: ident_frame.attr('type'),
                                     country_code: ident_frame.attr('cc'))
 
-        report_valid_ident_error if submitted_ident != identifier
+        if submitted_ident != identifier
+          add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident'))
+          return
+        end
       else
         ident_update_attempt = ident_frame.text.present? && (ident_frame.text != ident)
-        report_ident_update_error if ident_update_attempt
+
+        if ident_update_attempt
+          add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.ident_update'))
+          return
+        end
 
         identifier = Ident.new(code: ident,
                                type: ident_frame.attr('type'),
@@ -242,15 +249,5 @@ class Epp::Contact < Contact
 
     frame.css("legalDocument").first.content = doc.path if doc&.persisted?
     self.legal_document_id = doc.id
-  end
-
-  private
-
-  def report_valid_ident_error
-    throw :epp_error, { code: '2308', msg: I18n.t('epp.contacts.errors.valid_ident') }
-  end
-
-  def report_ident_update_error
-    throw :epp_error, { code: '2308', msg: I18n.t('epp.contacts.errors.ident_update') }
   end
 end

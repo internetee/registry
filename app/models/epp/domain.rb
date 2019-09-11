@@ -451,10 +451,8 @@ class Epp::Domain < Domain
     return super if frame.blank?
 
     if discarded?
-      throw :epp_error, {
-        code: '2304',
-        msg: 'Object status prohibits operation',
-      }
+      add_epp_error('2304', nil, nil, 'Object status prohibits operation')
+      return
     end
 
     at = {}.with_indifferent_access
@@ -531,10 +529,8 @@ class Epp::Domain < Domain
 
   def epp_destroy(frame, user_id)
     if discarded?
-      throw :epp_error, {
-        code: '2304',
-        msg: 'Object status prohibits operation',
-      }
+      add_epp_error('2304', nil, nil, 'Object status prohibits operation')
+      return
     end
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
@@ -554,10 +550,10 @@ class Epp::Domain < Domain
   end
 
   def set_pending_delete!
-    throw :epp_error, {
-      code: '2304',
-      msg: I18n.t(:object_status_prohibits_operation)
-    } unless pending_deletable?
+    unless pending_deletable?
+      add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
+      return
+    end
 
     self.delete_date = Time.zone.today + Setting.redemption_grace_period.days + 1.day
     set_pending_delete
@@ -601,10 +597,8 @@ class Epp::Domain < Domain
 
   def transfer(frame, action, current_user)
     if discarded?
-      throw :epp_error, {
-        code: '2106',
-        msg: 'Object is not eligible for transfer',
-      }
+      add_epp_error('2106', nil, nil, 'Object is not eligible for transfer')
+      return
     end
 
     @is_transfer = true
@@ -624,10 +618,8 @@ class Epp::Domain < Domain
 
   def query_transfer(frame, current_user)
     if current_user.registrar == registrar
-      throw :epp_error, {
-        code: '2002',
-        msg: I18n.t(:domain_already_belongs_to_the_querying_registrar)
-      }
+      add_epp_error('2002', nil, nil, I18n.t(:domain_already_belongs_to_the_querying_registrar))
+      return
     end
 
     transaction do
@@ -661,11 +653,10 @@ class Epp::Domain < Domain
 
   def approve_transfer(frame, current_user)
     pt = pending_transfer
+
     if current_user.registrar != pt.old_registrar
-      throw :epp_error, {
-        msg: I18n.t('transfer_can_be_approved_only_by_current_registrar'),
-        code: '2304'
-      }
+      add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_approved_only_by_current_registrar'))
+      return
     end
 
     transaction do
@@ -687,11 +678,10 @@ class Epp::Domain < Domain
 
   def reject_transfer(frame, current_user)
     pt = pending_transfer
+
     if current_user.registrar != pt.old_registrar
-      throw :epp_error, {
-        msg: I18n.t('transfer_can_be_rejected_only_by_current_registrar'),
-        code: '2304'
-      }
+      add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_rejected_only_by_current_registrar'))
+      return
     end
 
     transaction do

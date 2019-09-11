@@ -1,7 +1,10 @@
 module Epp
-  class BaseController < ApplicationController
-    layout false
+  class BaseController < ActionController::Base
+    class AuthorizationError < StandardError; end
+
+    check_authorization
     skip_before_action :verify_authenticity_token
+    layout false
 
     before_action :ensure_session_id_passed
     before_action :generate_svtrid
@@ -10,12 +13,49 @@ module Epp
     before_action :validate_request
     before_action :update_epp_session, if: 'signed_in?'
 
-    around_action :catch_epp_errors
+    around_action :wrap_exceptions
 
     helper_method :current_user
     helper_method :resource
 
+    rescue_from StandardError, with: :respond_with_command_failed_error
+    rescue_from AuthorizationError, with: :respond_with_authorization_error
+    rescue_from ActiveRecord::RecordNotFound, with: :respond_with_object_does_not_exist_error
+
+    protected
+
+    def respond_with_command_failed_error(exception)
+      epp_errors << {
+        code: '2400',
+        msg: 'Command failed',
+      }
+      handle_errors
+      log_exception(exception)
+    end
+
+    def respond_with_object_does_not_exist_error
+      epp_errors << {
+        code: '2303',
+        msg: 'Object does not exist',
+      }
+      handle_errors
+    end
+
+    def respond_with_authorization_error
+      epp_errors << {
+        code: '2201',
+        msg: 'Authorization error',
+      }
+      handle_errors
+    end
+
     private
+
+    def wrap_exceptions
+      yield
+    rescue CanCan::AccessDenied
+      raise AuthorizationError
+    end
 
     def validate_against_schema
       return if ['hello', 'error', 'keyrelay'].include?(params[:action])
@@ -26,47 +66,6 @@ module Epp
         }
       end
       handle_errors and return if epp_errors.any?
-    end
-
-    def catch_epp_errors
-      err = catch(:epp_error) do
-        yield
-        nil
-      end
-      return unless err
-      @errors = [err]
-      handle_errors
-    end
-
-    rescue_from StandardError do |e|
-      @errors ||= []
-
-      if e.class == CanCan::AccessDenied
-        if @errors.blank?
-          @errors = [{
-                       msg: t('errors.messages.epp_authorization_error'),
-                       code: '2201'
-                     }]
-        end
-      else
-        if @errors.blank?
-          @errors = [{
-                       msg: 'Internal error.',
-                       code: '2400'
-                     }]
-        end
-
-        if Rails.env.test? || Rails.env.development?
-          puts e.backtrace.reverse.join("\n")
-          puts "\n  BACKTRACE REVERSED!\n"
-          puts "\n  FROM-EPP-RESCUE: #{e.message}\n\n\n"
-        else
-          logger.error "FROM-EPP-RESCUE: #{e.message}"
-          logger.error e.backtrace.join("\n")
-        end
-      end
-
-      render_epp_response '/epp/error'
     end
 
     def schema
@@ -114,25 +113,13 @@ module Epp
         end
       end
 
-      # for debugging
-      if @errors.blank?
-        @errors << {
-          code: '1',
-          msg: 'handle_errors was executed when there were actually no errors'
-        }
-      end
-
       @errors.uniq!
-
-      logger.error "\nFOLLOWING ERRORS OCCURRED ON EPP QUERY:"
-      logger.error @errors.inspect
-      logger.error "\n"
 
       render_epp_response '/epp/error'
     end
 
     def render_epp_response(*args)
-      @response = render_to_string(*args)
+      @response = render_to_string(*args, formats: 'xml')
       render xml: @response
       write_to_epp_log
     end
@@ -405,6 +392,10 @@ module Epp
       rescue IOError => e
         logger.error "IPTABLES COUNTER UPDATE: cannot write #{ip} to #{counter_proc}: #{e}"
       end
+    end
+
+    def log_exception(exception)
+      notify_airbrake(exception)
     end
   end
 end

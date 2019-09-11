@@ -47,6 +47,7 @@ class EppResponseResultCodeTest < ActiveSupport::TestCase
       object_association_prohibits_operation: 2305,
       parameter_value_policy_error: 2306,
       data_management_policy_violation: 2308,
+      command_failed: 2400,
       authentication_error_server_closing_connection: 2501,
     }
     assert_equal codes, Epp::Response::Result::Code.codes
@@ -75,6 +76,7 @@ class EppResponseResultCodeTest < ActiveSupport::TestCase
       2305 => 'Object association prohibits operation',
       2306 => 'Parameter value policy error',
       2308 => 'Data management policy violation',
+      2400 => 'Command failed',
       2501 => 'Authentication error; server closing connection',
     }
     assert_equal descriptions, Epp::Response::Result::Code.default_descriptions
