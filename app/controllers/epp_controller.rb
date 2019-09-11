@@ -22,7 +22,6 @@ class EppController < ApplicationController
         code: 2001,
         msg: error
       }
-      response.headers['X-EPP-Returncode'] = '2200'
     end
     handle_errors and return if epp_errors.any?
   end
@@ -375,7 +374,6 @@ class EppController < ApplicationController
     if session_timeout_reached?
       @api_user = current_user # cache current_user for logging
       epp_session.destroy
-      response.headers['X-EPP-Returncode'] = '1500'
 
       epp_errors << {
         msg: t('session_timeout'),
