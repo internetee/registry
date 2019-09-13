@@ -228,9 +228,6 @@ GEM
     ice_nine (0.11.2)
     isikukood (0.1.2)
     iso8601 (0.8.6)
-    jbuilder (2.2.16)
-      activesupport (>= 3.0.0, < 5)
-      multi_json (~> 1.2)
     jquery-rails (4.0.4)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
@@ -488,7 +485,6 @@ DEPENDENCIES
   html2haml (= 2.1.0)
   isikukood
   iso8601 (= 0.8.6)
-  jbuilder (= 2.2.16)
   jquery-rails (= 4.0.4)
   jquery-ui-rails (= 5.0.5)
   kaminari (= 0.16.3)
