@@ -82,7 +82,6 @@ class Epp::SessionsController < EppController
     if success
       if params[:parsed_frame].css('newPW').first
         unless @api_user.update(plain_text_password: params[:parsed_frame].css('newPW').first.text)
-          response.headers['X-EPP-Returncode'] = '2500'
           handle_errors(@api_user) and return
         end
       end
@@ -93,7 +92,6 @@ class Epp::SessionsController < EppController
       epp_session.save!
       render_epp_response('login_success')
     else
-      response.headers['X-EPP-Returncode'] = '2500'
       handle_errors
     end
   end
@@ -119,7 +117,6 @@ class Epp::SessionsController < EppController
 
     @api_user = current_user # cache current_user for logging
     epp_session.destroy
-    response.headers['X-EPP-Returncode'] = '1500'
     render_epp_response('logout')
   end
 
