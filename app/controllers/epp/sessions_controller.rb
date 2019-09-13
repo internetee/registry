@@ -90,8 +90,8 @@ module Epp
         if params[:parsed_frame].css('newPW').first
           unless @api_user.update(plain_text_password: params[:parsed_frame].css('newPW').first.text)
             handle_errors(@api_user) and return
+          end
         end
-      end
 
         epp_session = EppSession.new
         epp_session.session_id = epp_session_id
@@ -100,8 +100,8 @@ module Epp
         render_epp_response('login_success')
       else
         handle_errors
+      end
     end
-  end
 
     def ip_white?
       webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
@@ -125,7 +125,7 @@ module Epp
       @api_user = current_user # cache current_user for logging
       epp_session.destroy
       render_epp_response('logout')
-  end
+    end
 
     ### HELPER METHODS ###
 

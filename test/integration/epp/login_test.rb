@@ -23,11 +23,11 @@ class EppLoginTest < EppTestCase
         </command>
       </epp>
     XML
+    post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new_session_id'
 
-    post '/epp/session/login', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
+    assert_epp_response :completed_successfully
     assert EppSession.find_by(session_id: 'new_session_id')
     assert_equal users(:api_bestnames), EppSession.find_by(session_id: 'new_session_id').user
-    assert_epp_response :completed_successfully
   end
 
   def test_already_logged_in
@@ -56,7 +56,6 @@ class EppLoginTest < EppTestCase
         </command>
       </epp>
     XML
-
     post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=any_random_string'
 
     assert_epp_response :authentication_error_server_closing_connection
@@ -85,8 +84,8 @@ class EppLoginTest < EppTestCase
         </command>
       </epp>
     XML
+    post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new_session_id'
 
-    post '/epp/session/login', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
     assert_equal 'new-password', users(:api_bestnames).plain_text_password
     assert_epp_response :completed_successfully
   end
@@ -123,7 +122,7 @@ class EppLoginTest < EppTestCase
     end
 
     assert_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
+      post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new_session_id'
     end
     assert_epp_response :completed_successfully
   end
@@ -160,7 +159,7 @@ class EppLoginTest < EppTestCase
     end
 
     assert_no_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
+      post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new_session_id'
     end
     assert_epp_response :authentication_error_server_closing_connection
   end
