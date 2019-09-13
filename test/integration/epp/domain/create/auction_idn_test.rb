@@ -146,43 +146,6 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
 
     @idn_auction.reload
     refute @idn_auction.domain_registered?
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2306', response_xml.at_css('result')[:code]
-    assert_equal 'Parameter value policy error: domain is at auction',
-                 response_xml.at_css('result msg').text
-  end
-
-  def test_domain_with_unicode_idn_cannot_be_registered_without_winning_the_auction
-    @idn_auction.started!
-
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-        <command>
-          <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-              <domain:name>püramiid.test</domain:name>
-              <domain:registrant>#{contacts(:john).code}</domain:registrant>
-            </domain:create>
-          </create>
-          <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
-            </eis:extdata>
-          </extension>
-        </command>
-      </epp>
-    XML
-
-    assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    end
-
-    refute Domain.where(name: @idn_auction.domain).exists?
-
-    @idn_auction.reload
-    refute @idn_auction.domain_registered?
     assert_epp_response :parameter_value_policy_error
   end
 
