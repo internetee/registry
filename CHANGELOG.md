@@ -5,6 +5,7 @@
 * Updated Airbrake gem to 9.4.3 and tuned the configuration [#1297](https://github.com/internetee/registry/pull/1297)
 * Updated cancancan gem to 3.0.1 [#1300](https://github.com/internetee/registry/pull/1300)
 * Updated filenames to follow Ruby name convention [#1295](https://github.com/internetee/registry/pull/1295)
+* Removed unused jbuilder gem [#1311](https://github.com/internetee/registry/pull/1311)
 * Removed mod_epp specific X-EPP-Returncode EPP response header [#1301](https://github.com/internetee/registry/pull/1301)
 * Removed a dublicate test [#1302](https://github.com/internetee/registry/pull/1302)
 * Removed disabled and unnecessary CSRF protection [#1305](https://github.com/internetee/registry/pull/1305)
