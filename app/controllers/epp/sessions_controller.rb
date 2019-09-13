@@ -79,8 +79,8 @@ module Epp
 
       if success && EppSession.limit_reached?(@api_user.registrar)
         epp_errors << {
-          msg: 'Authentication error; server closing connection (connection limit reached)',
-          code: '2501'
+          msg: 'Session limit exceeded; server closing connection (connection limit reached)',
+          code: '2502',
         }
 
         success = false
