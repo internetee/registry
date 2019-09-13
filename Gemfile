@@ -45,7 +45,7 @@ gem 'kaminari',         '0.16.3'  # pagination
 gem 'coderay',          '1.1.0'   # xml console visualize
 gem 'select2-rails',    '3.5.9.3' # for autocomplete
 gem 'cancancan'
-gem 'devise', '~> 4.0'
+gem 'devise', '~> 4.7'
 
 gem 'grape'
 gem 'jbuilder', '2.2.16'  # json api
