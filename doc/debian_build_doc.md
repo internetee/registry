@@ -7,7 +7,7 @@ however officially Debian 7 is supported and tested.
 ### Manual build
 
 * Consider using [RBENV](https://github.com/sstephenson/rbenv)
-* Compile requried [ruby version](https://github.com/internetee/registry/blob/master/.ruby-version)
+* Compile required [ruby version](https://github.com/internetee/registry/blob/master/.ruby-version)
 * [Phusion passenger](https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html)
 * [Postgresql](http://www.postgresql.org/docs/) (requires postgresql-contrib package)
 * [Mailcatcher](https://mailcatcher.me/) (optional)
@@ -80,9 +80,9 @@ iptables -A INPUT -p tcp --dport 43 -m recent --set --rsource --name whois -j AC
 
 #### EPP
 
-Configure epp server ip in applicatin.yml
+Configure epp server ip in application.yml
 iptables_server_ip: 'x.x.x.x'
-Iptables hitcounter is updated by application. For every registrar there is one recent table, where the request counters are stored, registrar handles and sources ips are "connected" with iptables rules.
+Iptables hit counter is updated by application. For every registrar there is one recent table, where the request counters are stored, registrar handles and sources ips are "connected" with iptables rules.
 
 ````
 #!/bin/bash
@@ -99,8 +99,8 @@ iptables -A INPUT -p tcp --dport 700 -j CHKLIMITS
 ````
 #### Mailcatcher for staging (optional)
 
-We recommend using mailcatcher for staging env, so that all outgoing e-mails are caught and not actualy sent out.
-The mailcatcher website explains how it should be intsalled and configured.
+We recommend using mailcatcher for staging env, so that all outgoing e-mails are caught and not actually sent out.
+The mailcatcher website explains how it should be installed and configured.
 [Mailcatcher](https://mailcatcher.me/)
 `````
 

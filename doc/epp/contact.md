@@ -47,7 +47,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
                                           Attribute: type="pdf/asice/sce/adoc/asics/scs/edoc/adoc/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                   0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)
 
 ### Contact update
 
@@ -85,7 +85,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
     <clTRID>                    0-1      Client transaction id
 
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-update-command-is-succesful)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-contact-with-valid-user-update-command-is-succesful)
 
 ### Contact delete
 
@@ -102,7 +102,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
                                          Attribute: type="pdf/asice/sce/adoc/asics/scs/edoc/adoc/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                  0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-delete-command-deletes-contact)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-contact-with-valid-user-delete-command-deletes-contact)
 
 
 ### Contact check
@@ -114,7 +114,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
         <contact:id>         1-n      Contact id
     <clTRID>                 0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-check-command-returns-info-about-contact-availability)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-contact-with-valid-user-check-command-returns-info-about-contact-availability)
 
 
 ### Contact info
@@ -128,4 +128,4 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
           <contact:pw>       1        Contact password. Attribute: roid="String"
     <clTRID>                 0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-info-command-return-info-about-contact)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-contact-with-valid-user-info-command-return-info-about-contact)

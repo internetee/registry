@@ -45,7 +45,7 @@ Domain name mapping protocol short version:
                                         
     <clTRID>                   0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-citizen-as-a-registrant-creates-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-domain-with-citizen-as-a-registrant-creates-a-domain)
 
 ### Domain update
 
@@ -95,7 +95,7 @@ Domain name mapping protocol short version:
                                              Attribute: type="pdf/asice/sce/adoc/asics/scs/edoc/adoc/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                     0-1       Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-updates-domain-and-adds-objects)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-domain-with-valid-domain-updates-domain-and-adds-objects)
 
 ### Domain delete
 
@@ -111,7 +111,7 @@ Domain name mapping protocol short version:
                                         Attribute: type="pdf/asice/sce/adoc/asics/scs/edoc/adoc/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-deletes-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-domain-with-valid-domain-deletes-domain)
 
 ### Domain info
 
@@ -125,7 +125,7 @@ Domain name mapping protocol short version:
           <domain:pw>        1        Domain transfer code. Attribute: roid="String"
     <clTRID>                 0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-returns-domain-info)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-domain-with-valid-domain-returns-domain-info)
 
 ### Domain renew
 
@@ -145,7 +145,7 @@ Domain name mapping protocol short version:
                                         Attribute: type="pdf/asice/sce/adoc/asics/scs/edoc/adoc/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-renews-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-domain-with-valid-domain-renews-a-domain)
 
 ### Domain transfer
 
@@ -162,7 +162,7 @@ Domain name mapping protocol short version:
                                         Attribute: type="pdf/asice/sce/adoc/asics/scs/edoc/adoc/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-transfers-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-domain-with-valid-domain-transfers-a-domain)
 
 ### Domain check
 
@@ -173,4 +173,4 @@ Domain name mapping protocol short version:
         <domain:name>        1        Domain name. Can contain unicode characters.
     <clTRID>                 0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-checks-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-domain-with-valid-domain-checks-a-domain)

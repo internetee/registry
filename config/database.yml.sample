@@ -1,7 +1,7 @@
 #
 # EPP, REPP, Admin and Registrar config
 #
-# Registrant example is at database-example-registrant.yml file
+# Registrant example is at database_registrant.yml.sample file
 
 default: &default
   adapter: postgresql
