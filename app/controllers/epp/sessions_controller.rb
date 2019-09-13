@@ -88,10 +88,22 @@ module Epp
 
       if success
         new_password = params[:parsed_frame].at_css('newPW')&.text
+        password_change = new_password.present?
 
-        if new_password.present?
+        if password_change
           @api_user.plain_text_password = new_password
           @api_user.save!
+        end
+
+        already_authenticated = EppSession.exists?(session_id: epp_session_id)
+
+        if already_authenticated
+          epp_errors << {
+            msg: 'Command use error; Already authenticated',
+            code: 2002,
+          }
+          handle_errors
+          return
         end
 
         epp_session = EppSession.new

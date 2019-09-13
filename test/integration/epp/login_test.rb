@@ -30,8 +30,34 @@ class EppLoginTest < EppTestCase
     assert_equal users(:api_bestnames), EppSession.find_by(session_id: 'new_session_id').user
   end
 
-  def test_already_logged_in
-    assert true # Handled by mod_epp
+  def test_user_cannot_login_again
+    session = epp_sessions(:api_bestnames)
+    user = session.user
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <login>
+            <clID>#{user.username}</clID>
+            <pw>#{user.plain_text_password}</pw>
+            <options>
+              <version>1.0</version>
+              <lang>en</lang>
+            </options>
+            <svcs>
+              <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+              <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
+              <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+              <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+            </svcs>
+          </login>
+        </command>
+      </epp>
+    XML
+    post '/epp/session/login', { frame: request_xml }, HTTP_COOKIE: "session=#{session.session_id}"
+
+    assert_epp_response :use_error
   end
 
   def test_wrong_credentials
