@@ -1,14 +1,17 @@
 require 'test_helper'
 
 class EppLoginTest < EppTestCase
-  def test_correct_credentials
+  def test_logging_in_with_correct_credentials_creates_new_session
+    user = users(:api_bestnames)
+    new_session_id = 'new-session-id'
+
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
         <command>
           <login>
-            <clID>test_bestnames</clID>
-            <pw>testtest</pw>
+            <clID>#{user.username}</clID>
+            <pw>#{user.plain_text_password}</pw>
             <options>
               <version>1.0</version>
               <lang>en</lang>
@@ -23,11 +26,13 @@ class EppLoginTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new_session_id'
-
+    assert_difference 'EppSession.count' do
+      post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{new_session_id}"
+    end
     assert_epp_response :completed_successfully
-    assert EppSession.find_by(session_id: 'new_session_id')
-    assert_equal users(:api_bestnames), EppSession.find_by(session_id: 'new_session_id').user
+    session = EppSession.last
+    assert_equal new_session_id, session.session_id
+    assert_equal user, session.user
   end
 
   def test_user_cannot_login_again
@@ -55,19 +60,25 @@ class EppLoginTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/session/login', { frame: request_xml }, HTTP_COOKIE: "session=#{session.session_id}"
 
+    assert_no_difference 'EppSession.count' do
+      post '/epp/session/login', { frame: request_xml }, HTTP_COOKIE: "session=#{session.session_id}"
+    end
     assert_epp_response :use_error
   end
 
-  def test_wrong_credentials
+  def test_user_cannot_login_with_wrong_credentials
+    user = users(:api_bestnames)
+    wrong_password = 'a' * ApiUser.min_password_length
+    assert_not_equal wrong_password, user.plain_text_password
+
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
         <command>
           <login>
-            <clID>non-existent</clID>
-            <pw>valid-but-wrong</pw>
+            <clID>#{user.username}</clID>
+            <pw>#{wrong_password}</pw>
             <options>
               <version>1.0</version>
               <lang>en</lang>
@@ -82,20 +93,26 @@ class EppLoginTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=any_random_string'
 
+    assert_no_difference 'EppSession.count' do
+      post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new-session-id'
+    end
     assert_epp_response :authentication_error_server_closing_connection
   end
 
   def test_password_change
+    user = users(:api_bestnames)
+    new_password = 'a' * ApiUser.min_password_length
+    assert_not_equal new_password, user.plain_text_password
+
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
         <command>
           <login>
-            <clID>test_bestnames</clID>
-            <pw>testtest</pw>
-            <newPW>new-password</newPW>
+            <clID>#{user.username}</clID>
+            <pw>#{user.plain_text_password}</pw>
+            <newPW>#{new_password}</newPW>
             <options>
               <version>1.0</version>
               <lang>en</lang>
@@ -110,10 +127,11 @@ class EppLoginTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new_session_id'
+    post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new-session-id'
+    user.reload
 
-    assert_equal 'new-password', users(:api_bestnames).plain_text_password
     assert_epp_response :completed_successfully
+    assert_equal new_password, user.plain_text_password
   end
 
   def test_not_reached
@@ -148,12 +166,13 @@ class EppLoginTest < EppTestCase
     end
 
     assert_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new_session_id'
+      post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=non-existent'
     end
     assert_epp_response :completed_successfully
   end
 
-  def test_reached
+  def test_user_cannot_login_when_session_limit_reached
+    user = users(:api_bestnames)
     travel_to Time.zone.parse('2010-07-05')
     EppSession.delete_all
     request_xml = <<-XML
@@ -161,8 +180,8 @@ class EppLoginTest < EppTestCase
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
         <command>
           <login>
-            <clID>test_bestnames</clID>
-            <pw>testtest</pw>
+            <clID>#{user.username}</clID>
+            <pw>#{user.plain_text_password}</pw>
             <options>
               <version>1.0</version>
               <lang>en</lang>
@@ -180,12 +199,12 @@ class EppLoginTest < EppTestCase
 
     EppSession.limit_per_registrar.times do
       EppSession.create!(session_id: SecureRandom.hex,
-                         user: users(:api_bestnames),
+                         user: user,
                          updated_at: Time.zone.parse('2010-07-05'))
     end
 
     assert_no_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new_session_id'
+      post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new-session-id'
     end
     assert_epp_response :authentication_error_server_closing_connection
   end
