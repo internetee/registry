@@ -450,7 +450,12 @@ class Epp::Domain < Domain
   def update(frame, current_user, verify = true)
     return super if frame.blank?
 
-    check_discarded
+    if discarded?
+      throw :epp_error, {
+        code: '2304',
+        msg: 'Object status prohibits operation',
+      }
+    end
 
     at = {}.with_indifferent_access
     at.deep_merge!(attrs_from(frame.css('chg'), current_user, 'chg'))
@@ -525,7 +530,12 @@ class Epp::Domain < Domain
   end
 
   def epp_destroy(frame, user_id)
-    check_discarded
+    if discarded?
+      throw :epp_error, {
+        code: '2304',
+        msg: 'Object status prohibits operation',
+      }
+    end
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc&.persisted?
@@ -590,7 +600,12 @@ class Epp::Domain < Domain
   ### TRANSFER ###
 
   def transfer(frame, action, current_user)
-    check_discarded
+    if discarded?
+      throw :epp_error, {
+        code: '2106',
+        msg: 'Object is not eligible for transfer',
+      }
+    end
 
     @is_transfer = true
 
@@ -812,17 +827,6 @@ class Epp::Domain < Domain
       end
 
       result
-    end
-  end
-
-  private
-
-  def check_discarded
-    if discarded?
-      throw :epp_error, {
-        code: '2105',
-        msg: I18n.t(:object_is_not_eligible_for_renewal),
-      }
     end
   end
 end

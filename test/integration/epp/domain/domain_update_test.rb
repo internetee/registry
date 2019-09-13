@@ -47,6 +47,6 @@ class EppDomainUpdateTest < EppTestCase
     XML
 
     post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    assert_epp_response :object_is_not_eligible_for_renewal
+    assert_epp_response :object_status_prohibits_operation
   end
 end
