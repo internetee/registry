@@ -1,3 +1,16 @@
+13.09.2019
+* Fixed bug where glue records were identified on partial string match with the domain name [#1291](https://github.com/internetee/registry/issues/1291)
+* Removed 1 second delay on erroneous epp query responses [#1299](https://github.com/internetee/registry/pull/1299)
+* Autoupdated Devise gem to 4.7.1 [#1304](https://github.com/internetee/registry/pull/1304)
+* Updated Airbrake gem to 9.4.3 and tuned the configuration [#1297](https://github.com/internetee/registry/pull/1297)
+* Updated cancancan gem to 3.0.1 [#1300](https://github.com/internetee/registry/pull/1300)
+* Updated filenames to follow Ruby name convention [#1295](https://github.com/internetee/registry/pull/1295)
+* Removed unused jbuilder gem [#1311](https://github.com/internetee/registry/pull/1311)
+* Removed mod_epp specific X-EPP-Returncode EPP response header [#1301](https://github.com/internetee/registry/pull/1301)
+* Removed a dublicate test [#1302](https://github.com/internetee/registry/pull/1302)
+* Removed disabled and unnecessary CSRF protection [#1305](https://github.com/internetee/registry/pull/1305)
+* Introduced modules [#1312](https://github.com/internetee/registry/pull/1312)
+
 09.09.2019
 * Upgrade Ruby to 2.4.7 [#1289](https://github.com/internetee/registry/pull/1289)
 
