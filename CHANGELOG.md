@@ -9,6 +9,7 @@
 * Removed mod_epp specific X-EPP-Returncode EPP response header [#1301](https://github.com/internetee/registry/pull/1301)
 * Removed a dublicate test [#1302](https://github.com/internetee/registry/pull/1302)
 * Removed disabled and unnecessary CSRF protection [#1305](https://github.com/internetee/registry/pull/1305)
+* Introduced modules [#1312](https://github.com/internetee/registry/pull/1312)
 
 09.09.2019
 * Upgrade Ruby to 2.4.7 [#1289](https://github.com/internetee/registry/pull/1289)
