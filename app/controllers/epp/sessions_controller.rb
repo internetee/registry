@@ -87,10 +87,11 @@ module Epp
       end
 
       if success
-        if params[:parsed_frame].css('newPW').first
-          unless @api_user.update(plain_text_password: params[:parsed_frame].css('newPW').first.text)
-            handle_errors(@api_user) and return
-          end
+        new_password = params[:parsed_frame].at_css('newPW')&.text
+
+        if new_password.present?
+          @api_user.plain_text_password = new_password
+          @api_user.save!
         end
 
         epp_session = EppSession.new
