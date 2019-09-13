@@ -646,34 +646,5 @@
 <polyline fill="none" stroke="black" points="-420,396 -154,396 "/>
 <text text-anchor="start" x="-412" y="411.2" font-family="Times,serif" font-size="14.00">_layout</text>
 </g>
-<!-- EppController -->
-<g id="node51" class="node"><title>EppController</title>
-<path fill="none" stroke="black" d="M-68.5,219C-68.5,219 56.5,219 56.5,219 62.5,219 68.5,213 68.5,207 68.5,207 68.5,-177 68.5,-177 68.5,-183 62.5,-189 56.5,-189 56.5,-189 -68.5,-189 -68.5,-189 -74.5,-189 -80.5,-183 -80.5,-177 -80.5,-177 -80.5,207 -80.5,207 -80.5,213 -74.5,219 -68.5,219"/>
-<text text-anchor="middle" x="-6" y="-173.8" font-family="Times,serif" font-size="14.00">EppController</text>
-<polyline fill="none" stroke="black" points="-80.5,-166 68.5,-166 "/>
-<text text-anchor="start" x="-72.5" y="-150.8" font-family="Times,serif" font-size="14.00">create_full_selectors</text>
-<text text-anchor="start" x="-72.5" y="-135.8" font-family="Times,serif" font-size="14.00">current_user</text>
-<text text-anchor="start" x="-72.5" y="-120.8" font-family="Times,serif" font-size="14.00">element_count</text>
-<text text-anchor="start" x="-72.5" y="-105.8" font-family="Times,serif" font-size="14.00">epp_errors</text>
-<text text-anchor="start" x="-72.5" y="-90.8" font-family="Times,serif" font-size="14.00">epp_session</text>
-<text text-anchor="start" x="-72.5" y="-75.8" font-family="Times,serif" font-size="14.00">exactly_one_of</text>
-<text text-anchor="start" x="-72.5" y="-60.8" font-family="Times,serif" font-size="14.00">generate_svtrid</text>
-<text text-anchor="start" x="-72.5" y="-45.8" font-family="Times,serif" font-size="14.00">handle_errors</text>
-<text text-anchor="start" x="-72.5" y="-30.8" font-family="Times,serif" font-size="14.00">has_attribute</text>
-<text text-anchor="start" x="-72.5" y="-0.8" font-family="Times,serif" font-size="14.00">latin_only</text>
-<text text-anchor="start" x="-72.5" y="14.2" font-family="Times,serif" font-size="14.00">mutually_exclusive</text>
-<text text-anchor="start" x="-72.5" y="29.2" font-family="Times,serif" font-size="14.00">optional</text>
-<text text-anchor="start" x="-72.5" y="44.2" font-family="Times,serif" font-size="14.00">optional_attribute</text>
-<text text-anchor="start" x="-72.5" y="59.2" font-family="Times,serif" font-size="14.00">params_hash</text>
-<text text-anchor="start" x="-72.5" y="74.2" font-family="Times,serif" font-size="14.00">render_epp_response</text>
-<text text-anchor="start" x="-72.5" y="89.2" font-family="Times,serif" font-size="14.00">requires</text>
-<text text-anchor="start" x="-72.5" y="104.2" font-family="Times,serif" font-size="14.00">requires_attribute</text>
-<text text-anchor="start" x="-72.5" y="134.2" font-family="Times,serif" font-size="14.00">validate_request</text>
-<text text-anchor="start" x="-72.5" y="149.2" font-family="Times,serif" font-size="14.00">write_to_epp_log</text>
-<text text-anchor="start" x="-72.5" y="164.2" font-family="Times,serif" font-size="14.00">xml_attrs_present?</text>
-<polyline fill="none" stroke="black" points="-80.5,172 68.5,172 "/>
-<polyline fill="none" stroke="black" points="-80.5,196 68.5,196 "/>
-<text text-anchor="start" x="-72.5" y="211.2" font-family="Times,serif" font-size="14.00">_layout</text>
-</g>
 </g>
 </svg>

@@ -247,10 +247,5 @@
 <ellipse fill="none" stroke="black" cx="209" cy="-54" rx="172.769" ry="18"/>
 <text text-anchor="middle" x="209" y="-50.3" font-family="Times,serif" font-size="14.00">Registrant::DomainDeleteConfirmsController</text>
 </g>
-<!-- EppController -->
-<g id="node51" class="node"><title>EppController</title>
-<ellipse fill="none" stroke="black" cx="-83" cy="366" rx="61.1893" ry="18"/>
-<text text-anchor="middle" x="-83" y="369.7" font-family="Times,serif" font-size="14.00">EppController</text>
-</g>
 </g>
 </svg>
