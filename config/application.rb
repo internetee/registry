@@ -65,7 +65,6 @@ module DomainNameRegistry
       g.javascripts false
       g.helper false
       g.template_engine :erb
-      g.jbuilder false
       g.test_framework nil
     end
 
