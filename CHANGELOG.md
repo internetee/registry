@@ -1,5 +1,6 @@
 13.09.2019
 * Fixed bug where glue records were identified on partial string match with the domain name [#1291](https://github.com/internetee/registry/issues/1291)
+* Removed 1 second delay on erroneous epp query responses [#1299](https://github.com/internetee/registry/pull/1299)
 * Updated Airbrake gem to 9.4.3 and tuned the configuration [#1297](https://github.com/internetee/registry/pull/1297)
 * Updated filenames to follow Ruby name convention [#1295](https://github.com/internetee/registry/pull/1295)
 
