@@ -182,13 +182,25 @@ module Epp
     end
 
     def transfer
-      authorize! :transfer, @domain, @password
+      authorize! :transfer, @domain
       action = params[:parsed_frame].css('transfer').first[:op]
 
       if @domain.non_transferable?
         epp_errors << {
           code: '2304',
           msg: I18n.t(:object_status_prohibits_operation),
+        }
+        handle_errors
+        return
+      end
+
+      provided_transfer_code = params[:parsed_frame].css('authInfo pw').text
+      wrong_transfer_code = provided_transfer_code != @domain.transfer_code
+
+      if wrong_transfer_code
+        epp_errors << {
+          code: '2202',
+          msg: 'Invalid authorization information',
         }
         handle_errors
         return

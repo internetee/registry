@@ -30,8 +30,7 @@ class EppDomainTransferQueryTest < EppTestCase
 
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
-    # https://github.com/internetee/registry/issues/686
-    assert_epp_response :authorization_error
+    assert_epp_response :invalid_authorization_information
   end
 
   def test_no_domain_transfer

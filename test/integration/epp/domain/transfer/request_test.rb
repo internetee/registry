@@ -115,10 +115,9 @@ class EppDomainTransferRequestTest < EppTestCase
 
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
-    refute_equal @new_registrar, @domain.registrar
 
-    # https://github.com/internetee/registry/issues/686
-    assert_epp_response :authorization_error
+    assert_epp_response :invalid_authorization_information
+    refute_equal @new_registrar, @domain.registrar
   end
 
   private
