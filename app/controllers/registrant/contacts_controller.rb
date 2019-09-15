@@ -1,6 +1,7 @@
 class Registrant::ContactsController < RegistrantController
   helper_method :domain
   helper_method :fax_enabled?
+  helper_method :domain_filter_params
   skip_authorization_check only: %i[edit update]
 
   def show
@@ -98,5 +99,9 @@ class Registrant::ContactsController < RegistrantController
     Net::HTTP.start(uri.hostname, uri.port, use_ssl: (uri.scheme == 'https')) do |http|
       http.request(request)
     end
+  end
+
+  def domain_filter_params
+    params.permit(:domain_filter)
   end
 end

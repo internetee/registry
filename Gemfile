@@ -9,7 +9,7 @@ source 'https://rubygems.org'
 
 # core
 gem 'iso8601',      '0.8.6' # for dates and times
-gem 'rails',        '4.2.11.1' # when update, all initializers eis_custom files needs check/update
+gem 'rails', '~> 5.0.7'
 gem 'rest-client'
 gem 'uglifier'
 
@@ -66,7 +66,6 @@ gem 'daemons-rails', '1.2.1'
 gem 'que-web'
 gem 'pdfkit'
 gem 'jquery-ui-rails', '5.0.5'
-gem 'active_model-errors_details' # Backport from Rails 5, https://github.com/rails/rails/pull/18322
 gem 'airbrake'
 
 gem 'company_register', github: 'internetee/company_register', branch: :master

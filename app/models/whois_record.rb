@@ -1,5 +1,5 @@
 require "erb"
-class WhoisRecord < ActiveRecord::Base
+class WhoisRecord < ApplicationRecord
   belongs_to :domain
   belongs_to :registrar
 

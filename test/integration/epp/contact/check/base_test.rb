@@ -21,7 +21,8 @@ class EppContactCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
@@ -42,7 +43,8 @@ class EppContactCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '1', response_xml.at_xpath('//contact:id', contact: xml_schema)['avail']
@@ -65,7 +67,8 @@ class EppContactCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '0', response_xml.at_xpath('//contact:id', contact: xml_schema)['avail']
@@ -88,7 +91,8 @@ class EppContactCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal 3, response_xml.xpath('//contact:cd', contact: xml_schema).size

@@ -1,4 +1,4 @@
-class DomainTransfer < ActiveRecord::Base
+class DomainTransfer < ApplicationRecord
   belongs_to :domain
 
   belongs_to :old_registrar, class_name: 'Registrar'

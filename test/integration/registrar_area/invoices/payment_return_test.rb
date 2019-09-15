@@ -60,7 +60,7 @@ class PaymentReturnTest < ApplicationIntegrationTest
   def test_every_pay_return_creates_activity_redirects_to_invoice_path
     request_params = every_pay_request_params.merge(invoice_id: @invoice.id)
 
-    post "/registrar/pay/return/every_pay", request_params
+    post "/registrar/pay/return/every_pay", params: request_params
     assert_equal(302, response.status)
     assert_redirected_to(registrar_invoice_path(@invoice))
   end
@@ -68,14 +68,14 @@ class PaymentReturnTest < ApplicationIntegrationTest
   def test_Every_Pay_return_raises_RecordNotFound
     request_params = every_pay_request_params.merge(invoice_id: "178907")
     assert_raises(ActiveRecord::RecordNotFound) do
-      post "/registrar/pay/return/every_pay", request_params
+      post "/registrar/pay/return/every_pay", params: request_params
     end
   end
 
   def test_bank_link_return_redirects_to_invoice_paths
     request_params = bank_link_request_params.merge(invoice_id: @invoice.id)
 
-    post "/registrar/pay/return/seb", request_params
+    post "/registrar/pay/return/seb", params: request_params
     assert_equal(302, response.status)
     assert_redirected_to(registrar_invoice_path(@invoice))
   end
@@ -83,7 +83,7 @@ class PaymentReturnTest < ApplicationIntegrationTest
   def test_bank_link_return
     request_params = bank_link_request_params.merge(invoice_id: "178907")
     assert_raises(ActiveRecord::RecordNotFound) do
-      post "/registrar/pay/return/seb", request_params
+      post "/registrar/pay/return/seb", params: request_params
     end
   end
 end

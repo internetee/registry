@@ -1,4 +1,4 @@
-class DomainStatus < ActiveRecord::Base
+class DomainStatus < ApplicationRecord
   include Versions # version/domain_status_version.rb
   include EppErrors
 

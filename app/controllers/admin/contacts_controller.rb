@@ -3,6 +3,7 @@ module Admin
     load_and_authorize_resource
     before_action :set_contact, only: [:show]
     helper_method :ident_types
+    helper_method :domain_filter_params
 
     def index
       params[:q] ||= {}
@@ -19,7 +20,7 @@ module Admin
 
       normalize_search_parameters do
         @q = contacts.search(search_params)
-        @contacts = @q.result.uniq.page(params[:page])
+        @contacts = @q.result.distinct.page(params[:page])
       end
 
       @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
@@ -83,6 +84,10 @@ module Admin
 
     def ident_types
       Contact::Ident.types
+    end
+
+    def domain_filter_params
+      params.permit(:domain_filter)
     end
   end
 end

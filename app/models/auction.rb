@@ -1,4 +1,4 @@
-class Auction < ActiveRecord::Base
+class Auction < ApplicationRecord
   enum status: {
     started: 'started',
     awaiting_payment: 'awaiting_payment',

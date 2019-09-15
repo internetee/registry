@@ -3,7 +3,6 @@ module Epp
     class AuthorizationError < StandardError; end
 
     check_authorization
-    skip_before_action :verify_authenticity_token
     layout false
 
     before_action :ensure_session_id_passed

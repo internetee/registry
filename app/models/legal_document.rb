@@ -1,4 +1,4 @@
-class LegalDocument < ActiveRecord::Base
+class LegalDocument < ApplicationRecord
   cattr_accessor :explicitly_write_file
   include EppErrors
   MIN_BODY_SIZE = (1.37 * 3.kilobytes).ceil

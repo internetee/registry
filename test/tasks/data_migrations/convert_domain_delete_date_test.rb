@@ -51,7 +51,7 @@ class ConvertDomainDeleteDateTaskTest < ActiveSupport::TestCase
 
   def eliminate_effect_of_all_domains_except(domain)
     Domain.connection.disable_referential_integrity do
-      Domain.delete_all("id != #{domain.id}")
+      Domain.where("id != #{domain.id}").delete_all
     end
   end
 

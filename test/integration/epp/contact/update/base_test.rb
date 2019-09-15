@@ -37,7 +37,8 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @contact.reload
 
     assert_epp_response :completed_successfully
@@ -69,7 +70,8 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_emails 1
   end
@@ -97,7 +99,8 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_no_emails
   end
@@ -128,7 +131,8 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_no_emails
   end
@@ -154,7 +158,8 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_epp_response :object_does_not_exist
   end
@@ -188,7 +193,8 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
     assert_no_changes -> { @contact.updated_at } do
-      post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_update_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :data_management_policy_violation
   end
@@ -220,7 +226,8 @@ class EppContactUpdateBaseTest < EppTestCase
         </command>
       </epp>
     XML
-    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_epp_response :completed_successfully
   end
@@ -230,6 +237,6 @@ class EppContactUpdateBaseTest < EppTestCase
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)
     other_contact = contacts(:william)
     assert_not_equal other_contact, contact
-    Domain.update_all(registrant_id: other_contact)
+    Domain.update_all(registrant_id: other_contact.id)
   end
 end

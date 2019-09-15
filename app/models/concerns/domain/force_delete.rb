@@ -35,7 +35,7 @@ module Concerns::Domain::ForceDelete
   end
 
   def preserve_current_statuses_for_force_delete
-    self.statuses_before_force_delete = statuses
+    self.statuses_before_force_delete = statuses.clone
   end
 
   def restore_statuses_before_force_delete

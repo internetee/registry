@@ -16,7 +16,8 @@ class EppContactTransferBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_transfer_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_epp_response :unimplemented
   end

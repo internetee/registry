@@ -1,4 +1,4 @@
-class Contact < ActiveRecord::Base
+class Contact < ApplicationRecord
   include Versions # version/contact_version.rb
   include EppErrors
   include UserEvents
@@ -246,10 +246,8 @@ class Contact < ActiveRecord::Base
     end
 
     def registrant_user_contacts(registrant_user)
-      # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can
-      # be removed.
-      from("(#{registrant_user_direct_contacts(registrant_user).to_sql} UNION " \
-        "#{registrant_user_indirect_contacts(registrant_user).to_sql}) AS contacts")
+      registrant_user_direct_contacts(registrant_user)
+        .or(registrant_user_indirect_contacts(registrant_user))
     end
 
     def registrant_user_direct_contacts(registrant_user)
@@ -415,7 +413,7 @@ class Contact < ActiveRecord::Base
   # if total is smaller than needed, the load more
   # we also need to sort by valid_to
   # todo: extract to drapper. Then we can remove Domain#roles
-  def all_domains(page: nil, per: nil, params: {})
+  def all_domains(page: nil, per: nil, params:)
     # compose filter sql
     filter_sql = case params[:domain_filter]
       when "Registrant".freeze

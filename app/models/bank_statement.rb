@@ -1,4 +1,4 @@
-class BankStatement < ActiveRecord::Base
+class BankStatement < ApplicationRecord
   include Versions
   has_many :bank_transactions
 

@@ -1,4 +1,4 @@
-class Domain < ActiveRecord::Base
+class Domain < ApplicationRecord
   include UserEvents
   include Versions # version/domain_version.rb
   include Concerns::Domain::Expirable
@@ -191,8 +191,6 @@ class Domain < ActiveRecord::Base
     end
 
     def registrant_user_domains(registrant_user)
-      # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can
-      # be removed.
       from(
         "(#{registrant_user_domains_by_registrant(registrant_user).to_sql} UNION " \
         "#{registrant_user_domains_by_contact(registrant_user).to_sql}) AS domains"
@@ -200,8 +198,6 @@ class Domain < ActiveRecord::Base
     end
 
     def registrant_user_direct_domains(registrant_user)
-      # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can
-      # be removed.
       from(
         "(#{registrant_user_direct_domains_by_registrant(registrant_user).to_sql} UNION " \
         "#{registrant_user_direct_domains_by_contact(registrant_user).to_sql}) AS domains"
@@ -209,8 +205,6 @@ class Domain < ActiveRecord::Base
     end
 
     def registrant_user_administered_domains(registrant_user)
-      # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can
-      # be removed.
       from(
         "(#{registrant_user_domains_by_registrant(registrant_user).to_sql} UNION " \
         "#{registrant_user_domains_by_admin_contact(registrant_user).to_sql}) AS domains"
@@ -229,7 +223,7 @@ class Domain < ActiveRecord::Base
 
     def registrant_user_domains_by_admin_contact(registrant_user)
       joins(:domain_contacts).where(domain_contacts: { contact_id: registrant_user.contacts,
-                                                       type: [AdminDomainContact] })
+                                                       type: [AdminDomainContact.name] })
     end
 
     def registrant_user_direct_domains_by_registrant(registrant_user)

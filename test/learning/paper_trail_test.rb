@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Post < ActiveRecord::Base
+class Post < ApplicationRecord
   has_paper_trail
 end
 
@@ -38,7 +38,7 @@ class PaperTrailLearningTest < ActiveSupport::TestCase
 
   def test_touch_with_version
     @record = Post.create!(title: 'any')
-    
+
     assert_difference -> { @record.versions.size } do
       @record.touch_with_version
     end

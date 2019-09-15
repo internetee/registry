@@ -10,7 +10,7 @@ class AdminAreaZonesIntegrationTest < ApplicationIntegrationTest
     new_master_nameserver = 'new.test'
     assert_not_equal new_master_nameserver, @zone.master_nameserver
 
-    patch admin_zone_path(@zone), zone: { master_nameserver: new_master_nameserver }
+    patch admin_zone_path(@zone), params: { zone: { master_nameserver: new_master_nameserver } }
     @zone.reload
 
     assert_equal new_master_nameserver, @zone.master_nameserver

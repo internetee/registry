@@ -247,7 +247,7 @@ class DomainTest < ActiveSupport::TestCase
     domain3 = domains(:library)
     domain3.update!(outzone_at: Time.zone.parse('2010-07-05 08:00:01'))
     Domain.connection.disable_referential_integrity do
-      Domain.delete_all("id NOT IN (#{[domain1.id, domain2.id, domain3.id].join(',')})")
+      Domain.where("id NOT IN (#{[domain1.id, domain2.id, domain3.id].join(',')})").delete_all
     end
 
     assert_equal [domain1.id], Domain.outzone_candidates.ids
@@ -262,7 +262,7 @@ class DomainTest < ActiveSupport::TestCase
     domain3 = domains(:library)
     domain3.update!(valid_to: Time.zone.parse('2010-07-05 08:00:01'))
     Domain.connection.disable_referential_integrity do
-      Domain.delete_all("id NOT IN (#{[domain1.id, domain2.id, domain3.id].join(',')})")
+      Domain.where("id NOT IN (#{[domain1.id, domain2.id, domain3.id].join(',')})").delete_all
     end
 
     assert_equal [domain1.id, domain2.id].sort, Domain.expired.ids.sort

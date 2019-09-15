@@ -3,6 +3,7 @@ class Registrar
     before_action :init_epp_contact
     helper_method :address_processing?
     helper_method :ident_types
+    helper_method :domain_filter_params
 
     def index
       authorize! :view, Depp::Contact
@@ -68,7 +69,7 @@ class Registrar
 
     def create
       authorize! :create, Depp::Contact
-      @contact = Depp::Contact.new(params[:depp_contact])
+      @contact = Depp::Contact.new(contact_params)
 
       if @contact.save
         redirect_to registrar_contact_url(@contact.id)
@@ -79,9 +80,9 @@ class Registrar
 
     def update
       authorize! :edit, Depp::Contact
-      @contact = Depp::Contact.new(params[:depp_contact])
+      @contact = Depp::Contact.new(contact_params)
 
-      if @contact.update_attributes(params[:depp_contact])
+      if @contact.update_attributes(contact_params)
         redirect_to registrar_contact_url(@contact.id)
       else
         render 'edit'
@@ -95,13 +96,19 @@ class Registrar
 
     def destroy
       authorize! :delete, Depp::Contact
-      @contact = Depp::Contact.new(params[:depp_contact])
+      @contact = Depp::Contact.new(contact_params_for_delete)
 
       if @contact.delete
         redirect_to registrar_contacts_url, notice: t(:destroyed)
       else
         render 'delete'
       end
+    end
+
+    protected
+
+    def domain_filter_params
+      params.permit(:domain_filter)
     end
 
     private
@@ -130,6 +137,23 @@ class Registrar
 
     def ident_types
       Contact::Ident.types
+    end
+
+    def contact_params
+      params.require(:depp_contact).permit(:id,
+                                           :name,
+                                           :email,
+                                           :phone,
+                                           :org_name,
+                                           :ident, :ident_type, :ident_country_code,
+                                           :street, :city, :zip, :state, :country_code,
+                                           :password,
+                                           :legal_document,
+                                           :code)
+    end
+
+    def contact_params_for_delete
+      params.require(:depp_contact).permit(:id, :password, :legal_document)
     end
   end
 end

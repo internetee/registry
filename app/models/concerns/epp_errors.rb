@@ -20,7 +20,7 @@ module EppErrors
       epp_errors << collect_parent_errors(attr, errors)
     end
 
-    errors[:epp_errors] = epp_errors
+    errors.add(:epp_errors, epp_errors)
     errors[:epp_errors].flatten!
   end
 

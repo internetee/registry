@@ -31,7 +31,7 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
     stub_auth_request
 
     request_body = { name: 'new name', email: 'new@inbox.test', phone: '+666.6' }.to_json
-    headers = { 'Content-Type' => Mime::JSON,
+    headers = { 'Content-Type' => Mime[:json],
                 'Authorization' => 'Bearer test-access-token' }
     url = "https://api.test/api/v1/registrant/contacts/#{@contact.uuid}"
     update_request_stub = stub_request(:patch, url).with(body: request_body, headers: headers)
@@ -115,7 +115,7 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
                        country_code: 'AT',
                        state: 'new state',
                      } }.to_json
-    headers = { 'Content-type' => 'application/json',
+    headers = { 'Content-type' => Mime[:json],
                 'Authorization' => 'Bearer test-access-token' }
     url = "https://api.test/api/v1/registrant/contacts/#{@contact.uuid}"
     update_request_stub = stub_request(:patch, url).with(body: request_body, headers: headers)
@@ -174,7 +174,7 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
     body = { ident: '1234', first_name: 'Registrant', last_name: 'User' }
     stub_request(:post, 'https://api.test/api/v1/registrant/auth/eid').with(body: body)
       .to_return(body: { access_token: 'test-access-token' }.to_json,
-                 headers: { 'Content-type' => 'application/json' },
+                 headers: { 'Content-type' => Mime[:json] },
                  status: 200)
   end
 end
