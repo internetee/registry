@@ -53,11 +53,7 @@ gem 'grape'
 gem 'isikukood' # for EE-id validation
 gem 'simpleidn', '0.0.7' # For punycode
 gem 'money-rails'
-
-# deploy
-gem 'data_migrate',
-  github: 'internetee/data-migrate',
-  ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
+gem 'data_migrate'
 gem 'whenever', '0.9.4', require: false
 
 # country listing
