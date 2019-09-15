@@ -1,8 +1,9 @@
 module Epp
   class SessionsController < BaseController
-    skip_authorization_check only: [:hello, :login, :logout]
+    skip_authorization_check only: %i[login logout]
 
     def hello
+      authorize! :send, :hello
       render_epp_response('greeting')
     end
 

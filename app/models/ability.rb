@@ -44,6 +44,7 @@ class Ability
     can(:manage, :repp)
 
     # EPP
+    can :send, :hello
     can(:create, :epp_login) # billing can establish epp connection in order to login
     # can(:create, :epp_request)
 
