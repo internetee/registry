@@ -1,3 +1,9 @@
+16.09.2019
+* Updated coffee-rails gem to 4.2 [#1320](https://github.com/internetee/registry/pull/1320)
+* Updated data_migrate gem to 5.3.2 [#1321](https://github.com/internetee/registry/pull/1321)
+* Replaced unused haml-rails gem with haml [#1315](https://github.com/internetee/registry/pull/1315)
+* Hid some methods [#1318](https://github.com/internetee/registry/pull/1318)
+
 13.09.2019
 * Fixed bug where glue records were identified on partial string match with the domain name [#1291](https://github.com/internetee/registry/issues/1291)
 * Removed 1 second delay on erroneous epp query responses [#1299](https://github.com/internetee/registry/pull/1299)
