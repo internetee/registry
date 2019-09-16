@@ -15,6 +15,8 @@ module Epp
     helper_method :current_user
     helper_method :resource
 
+    private
+
     def validate_against_schema
       return if ['hello', 'error', 'keyrelay'].include?(params[:action])
       schema.validate(params[:nokogiri_frame]).each do |error|
@@ -347,8 +349,6 @@ module Epp
       name = self.class.to_s.sub("Epp::", "").sub("Controller", "").underscore.singularize
       instance_variable_get("@#{name}")
     end
-
-    private
 
     def signed_in?
       epp_session
