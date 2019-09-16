@@ -203,12 +203,6 @@ GEM
       builder (>= 2.1.2)
     haml (4.0.7)
       tilt
-    haml-rails (0.9.0)
-      actionpack (>= 4.0.1)
-      activesupport (>= 4.0.1)
-      haml (>= 4.0.6, < 5.0)
-      html2haml (>= 1.0.1)
-      railties (>= 4.0.1)
     hashdiff (1.0.0)
     hpricot (0.8.6)
     html2haml (2.1.0)
@@ -481,7 +475,7 @@ DEPENDENCIES
   factory_bot_rails
   figaro (= 1.1.1)
   grape
-  haml-rails (= 0.9.0)
+  haml
   html2haml (= 2.1.0)
   isikukood
   iso8601 (= 0.8.6)

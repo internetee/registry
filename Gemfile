@@ -25,9 +25,6 @@ gem 'paper_trail', '~> 4.0'
 # 0.7.3 is the latest for Rails 4.2, however, it is absent on Rubygems server
 # https://github.com/huacnlee/rails-settings-cached/issues/165
 gem 'rails-settings-cached', '0.7.2'
-
-# html-xml
-gem 'haml-rails', '0.9.0' # haml for views
 gem 'nokogiri'
 
 # style
@@ -91,6 +88,7 @@ gem 'company_register', github: 'internetee/company_register', branch: :master
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'lhv', github: 'internetee/lhv', tag: 'v0.1.0'
 gem 'domain_name'
+gem 'haml'
 
 group :development do
   # deploy
