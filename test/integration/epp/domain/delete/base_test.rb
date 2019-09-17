@@ -64,7 +64,7 @@ class EppDomainDeleteBaseTest < EppTestCase
     assert_no_difference 'Domain.count' do
       post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
-    assert_epp_response :object_is_not_eligible_for_renewal
+    assert_epp_response :object_status_prohibits_operation
   end
 
   def test_requests_registrant_confirmation_when_required

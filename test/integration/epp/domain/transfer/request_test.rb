@@ -86,7 +86,7 @@ class EppDomainTransferRequestTest < EppTestCase
     @domain.reload
 
     assert_equal registrars(:bestnames), @domain.registrar
-    assert_epp_response :object_is_not_eligible_for_renewal
+    assert_epp_response :object_is_not_eligible_for_transfer
   end
 
   def test_same_registrar
