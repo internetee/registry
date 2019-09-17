@@ -6,14 +6,14 @@ class EppSession < ApplicationRecord
   class_attribute :timeout
   self.timeout = (ENV['epp_session_timeout_seconds'] || 300).to_i.seconds
 
-  class_attribute :limit_per_registrar
-  self.limit_per_registrar = (ENV['epp_session_limit_per_registrar'] || 4).to_i
+  class_attribute :sessions_per_registrar
+  self.sessions_per_registrar = (ENV['epp_session_limit_per_registrar'] || 4).to_i
 
   alias_attribute :last_access, :updated_at
 
   def self.limit_reached?(registrar)
     count = where(user_id: registrar.api_users.ids).count
-    count >= limit_per_registrar
+    count >= sessions_per_registrar
   end
 
   def self.expired

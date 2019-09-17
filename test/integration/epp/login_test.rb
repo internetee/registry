@@ -2,11 +2,11 @@ require 'test_helper'
 
 class EppLoginTest < EppTestCase
   setup do
-    @original_session_limit_per_registrar = EppSession.limit_per_registrar
+    @original_sessions_per_registrar_setting = EppSession.sessions_per_registrar
   end
 
   teardown do
-    EppSession.limit_per_registrar = @original_session_limit_per_registrar
+    EppSession.sessions_per_registrar = @original_sessions_per_registrar_setting
   end
 
   def test_logging_in_with_correct_credentials_creates_new_session
@@ -142,10 +142,10 @@ class EppLoginTest < EppTestCase
     assert_equal new_password, user.plain_text_password
   end
 
-  def test_user_cannot_login_when_session_limit_is_exceeded
+  def test_user_cannot_login_when_max_allowed_sessions_per_registrar_is_exceeded
     user = users(:api_bestnames)
     eliminate_effect_of_existing_epp_sessions
-    EppSession.limit_per_registrar = 1
+    EppSession.sessions_per_registrar = 1
     EppSession.create!(session_id: 'any', user: user)
 
     request_xml = <<-XML

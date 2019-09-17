@@ -170,7 +170,7 @@ tara_rant_redirect_uri: 'redirect_uri'
 default_email_validation_type: 'regex'
 
 
-epp_session_limit_per_registrar: '4'
+epp_sessions_per_registrar: '4'
 
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:
