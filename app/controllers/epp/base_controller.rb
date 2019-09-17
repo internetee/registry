@@ -58,7 +58,7 @@ module Epp
     end
 
     def validate_against_schema
-      return if ['hello', 'error', 'keyrelay'].include?(params[:action])
+      return if %w[hello error].include?(params[:action])
       schema.validate(params[:nokogiri_frame]).each do |error|
         epp_errors << {
           code: 2001,

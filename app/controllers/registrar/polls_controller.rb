@@ -26,21 +26,6 @@ class Registrar
       render 'show'
     end
 
-    # TODO: Keyrelay is disabled for now
-    # def confirm_keyrelay
-    #   authorize! :confirm, :keyrelay
-    #   domain_params = params[:domain]
-    #   @data = @domain.confirm_keyrelay(domain_params)
-
-    #   if response_ok?
-    #     redirect_to info_registrar_domains_url(domain_name: domain_params[:name])
-    #   else
-    #     @results = @data.css('result')
-    #     @data = depp_current_user.request(@ex.poll)
-    #     render 'show'
-    #   end
-    # end
-
     def confirm_transfer
       domain_params = params[:domain]
       @data = @domain.confirm_transfer(domain_params)

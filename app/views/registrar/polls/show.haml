@@ -10,8 +10,6 @@
           .panel-heading.clearfix
             .pull-left= t('message_no', id: msg_q['id'])
             .pull-right
-              - if @data.css('panData').any? # this is a keyrelay request
-                = link_to(t(:confirm), 'javascript: void(0);', class: 'btn btn-warning btn-xs js-keyrelay-confirm')
               - if @data.css('trnData trStatus').any? # this is a transfer request
                 - unless ['serverApproved', 'clientApproved'].include?(@data.css('trStatus').first.text)
                   = link_to(t(:confirm), 'javascript: void(0);', class: 'btn btn-warning btn-xs js-transfer-confirm')
@@ -25,53 +23,14 @@
               %dd= @data.css('qDate').text
 
               %dl.dl-horizontal
-              / keyrelay
-              - if @data.css('panData').any?
-                %dt= t(:domain_name)
-                %dd= @data.css('name').text
-
-                %dt= t(:authinfo_pw)
-                %dd= @data.css('pw').text
-
-                - if @data.css('relative').text.present?
-                  %dt= t(:expiry_relative)
-                  %dd= @data.css('relative').text
-
-                - if @data.css('absolute').text.present?
-                  %dt= t(:expiry_absolute)
-                  %dd= @data.css('absolute').text
-
-                %dt paDate
-                %dd= @data.css('paDate').text
-
-                %dt= t(:flag)
-                %dd= @data.css('flags').text
-
-                %dt= t(:protocol)
-                %dd= @data.css('protocol').text
-
-                %dt= t(:algorithm)
-                %dd= @data.css('alg').text
-
-                %dt= t(:public_key)
-                %dd= @data.css('pubKey').text
-
-                = form_tag confirm_keyrelay_registrar_poll_path, class: 'js-keyrelay-form' do
+              - if @data.css('trnData trStatus').any? # this is a transfer request
+                = form_tag confirm_transfer_registrar_poll_path, class: 'js-transfer-form' do
                   = hidden_field_tag 'domain[name]', @data.css('name').text
-                  = hidden_field_tag 'domain[dnskeys_attributes][0][flags]', @data.css('flags').text
-                  = hidden_field_tag 'domain[dnskeys_attributes][0][protocol]', @data.css('protocol').text
-                  = hidden_field_tag 'domain[dnskeys_attributes][0][alg]', @data.css('alg').text
-                  = hidden_field_tag 'domain[dnskeys_attributes][0][public_key]', @data.css('pubKey').text
 
-              - else
-                - if @data.css('trnData trStatus').any? # this is a transfer request
-                  = form_tag confirm_transfer_registrar_poll_path, class: 'js-transfer-form' do
-                    = hidden_field_tag 'domain[name]', @data.css('name').text
-
-                - @data.css('trnData').children.each do |x|
-                  - next if x.blank?
-                  %dt= t(x.name)
-                  %dd= x.text
+              - @data.css('trnData').children.each do |x|
+                - next if x.blank?
+                %dt= t(x.name)
+                %dd= x.text
 - else
   .row
     .col-sm-12
@@ -83,9 +42,6 @@
 
 :coffee
   load_listener = ->
-    $(".js-keyrelay-confirm").on "click", ->
-      $(".js-keyrelay-form").submit()
-
     $(".js-transfer-confirm").on "click", ->
       $(".js-transfer-form").submit()
   window.addEventListener 'load', load_listener

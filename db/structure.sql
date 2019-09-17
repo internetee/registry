@@ -994,49 +994,6 @@ ALTER SEQUENCE public.invoices_id_seq OWNED BY public.invoices.id;
 
 
 --
--- Name: keyrelays; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.keyrelays (
-    id integer NOT NULL,
-    domain_id integer,
-    pa_date timestamp without time zone,
-    key_data_flags character varying,
-    key_data_protocol character varying,
-    key_data_alg character varying,
-    key_data_public_key text,
-    auth_info_pw character varying,
-    expiry_relative character varying,
-    expiry_absolute timestamp without time zone,
-    requester_id integer,
-    accepter_id integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    creator_str character varying,
-    updator_str character varying
-);
-
-
---
--- Name: keyrelays_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.keyrelays_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: keyrelays_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.keyrelays_id_seq OWNED BY public.keyrelays.id;
-
-
---
 -- Name: legal_documents; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1564,44 +1521,6 @@ CREATE SEQUENCE public.log_invoices_id_seq
 --
 
 ALTER SEQUENCE public.log_invoices_id_seq OWNED BY public.log_invoices.id;
-
-
---
--- Name: log_keyrelays; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE public.log_keyrelays (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_keyrelays_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.log_keyrelays_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_keyrelays_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.log_keyrelays_id_seq OWNED BY public.log_keyrelays.id;
 
 
 --
@@ -2518,13 +2437,6 @@ ALTER TABLE ONLY public.invoices ALTER COLUMN id SET DEFAULT nextval('public.inv
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.keyrelays ALTER COLUMN id SET DEFAULT nextval('public.keyrelays_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY public.legal_documents ALTER COLUMN id SET DEFAULT nextval('public.legal_documents_id_seq'::regclass);
 
 
@@ -2617,13 +2529,6 @@ ALTER TABLE ONLY public.log_invoice_items ALTER COLUMN id SET DEFAULT nextval('p
 --
 
 ALTER TABLE ONLY public.log_invoices ALTER COLUMN id SET DEFAULT nextval('public.log_invoices_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_keyrelays ALTER COLUMN id SET DEFAULT nextval('public.log_keyrelays_id_seq'::regclass);
 
 
 --
@@ -2903,14 +2808,6 @@ ALTER TABLE ONLY public.invoices
 
 
 --
--- Name: keyrelays_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.keyrelays
-    ADD CONSTRAINT keyrelays_pkey PRIMARY KEY (id);
-
-
---
 -- Name: legal_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3020,14 +2917,6 @@ ALTER TABLE ONLY public.log_invoice_items
 
 ALTER TABLE ONLY public.log_invoices
     ADD CONSTRAINT log_invoices_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_keyrelays_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY public.log_keyrelays
-    ADD CONSTRAINT log_keyrelays_pkey PRIMARY KEY (id);
 
 
 --
@@ -3470,27 +3359,6 @@ CREATE INDEX index_invoices_on_buyer_id ON public.invoices USING btree (buyer_id
 
 
 --
--- Name: index_keyrelays_on_accepter_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_keyrelays_on_accepter_id ON public.keyrelays USING btree (accepter_id);
-
-
---
--- Name: index_keyrelays_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_keyrelays_on_domain_id ON public.keyrelays USING btree (domain_id);
-
-
---
--- Name: index_keyrelays_on_requester_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_keyrelays_on_requester_id ON public.keyrelays USING btree (requester_id);
-
-
---
 -- Name: index_legal_documents_on_checksum; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3670,20 +3538,6 @@ CREATE INDEX index_log_invoices_on_item_type_and_item_id ON public.log_invoices 
 --
 
 CREATE INDEX index_log_invoices_on_whodunnit ON public.log_invoices USING btree (whodunnit);
-
-
---
--- Name: index_log_keyrelays_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_keyrelays_on_item_type_and_item_id ON public.log_keyrelays USING btree (item_type, item_id);
-
-
---
--- Name: index_log_keyrelays_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_keyrelays_on_whodunnit ON public.log_keyrelays USING btree (whodunnit);
 
 
 --
@@ -4861,6 +4715,8 @@ INSERT INTO schema_migrations (version) VALUES ('20190811202347');
 INSERT INTO schema_migrations (version) VALUES ('20190811202711');
 
 INSERT INTO schema_migrations (version) VALUES ('20190811205406');
+
+INSERT INTO schema_migrations (version) VALUES ('20190917114907');
 
 INSERT INTO schema_migrations (version) VALUES ('20191004095229');
 

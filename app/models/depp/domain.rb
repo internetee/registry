@@ -121,16 +121,6 @@ module Depp
       }, op, Domain.construct_custom_params_hash(params)))
     end
 
-    def confirm_keyrelay(domain_params)
-      xml = epp_xml.update({
-        name: { value: domain_params[:name] }
-      }, {
-        add: Domain.create_dnskeys_hash(domain_params)
-      })
-
-      current_user.request(xml)
-    end
-
     def confirm_transfer(domain_params)
       data = current_user.request(epp_xml.info(name: { value: domain_params[:name] }))
       pw = data.css('pw').text

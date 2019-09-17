@@ -34,8 +34,6 @@ class Ability
     if @user.registrar.api_ip_white?(@ip)
       can :manage, :poll
       can :manage, Depp::Contact
-      # can :manage, Depp::Keyrelay # TODO: Keyrelay is disabled for now
-      # can :confirm, :keyrelay # TODO: Keyrelay is disabled for now
       can :manage, :xml_console
       can :manage,   Depp::Domain
     end
@@ -95,7 +93,6 @@ class Ability
     can :manage, ApiUser
     can :manage, AdminUser
     can :manage, Certificate
-    can :manage, Keyrelay
     can :manage, LegalDocument
     can :manage, BankStatement
     can :manage, BankTransaction

@@ -51,7 +51,6 @@ class Domain < ActiveRecord::Base
 
   has_many :dnskeys, dependent: :destroy
 
-  has_many :keyrelays
   has_one  :whois_record # destroyment will be done in after_commit
 
   accepts_nested_attributes_for :dnskeys, allow_destroy: true

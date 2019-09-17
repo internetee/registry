@@ -22,7 +22,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -1617,7 +1616,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -1717,7 +1715,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -1765,7 +1762,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -1849,7 +1845,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -2753,7 +2748,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -2841,7 +2835,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -2889,7 +2882,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -2968,7 +2960,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -3016,7 +3007,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -3104,7 +3094,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -3693,7 +3682,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -3805,7 +3793,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -3853,7 +3840,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -3935,7 +3921,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -3983,7 +3968,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -4078,7 +4062,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -4124,7 +4107,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -6839,7 +6821,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -6937,7 +6918,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7059,7 +7039,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7157,7 +7136,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7203,7 +7181,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7290,7 +7267,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7338,7 +7314,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7431,7 +7406,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7479,7 +7453,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7572,7 +7545,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7620,7 +7592,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7713,7 +7684,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7761,7 +7731,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7854,7 +7823,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7902,7 +7870,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -7995,7 +7962,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8043,7 +8009,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8136,7 +8101,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8184,7 +8148,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8277,7 +8240,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8325,7 +8287,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8418,7 +8379,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8466,7 +8426,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8545,7 +8504,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8647,7 +8605,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8734,7 +8691,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8834,7 +8790,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -8921,7 +8876,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -9093,7 +9047,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -9232,7 +9185,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -9399,7 +9351,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -9485,7 +9436,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -11279,7 +11229,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -11360,7 +11309,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -11991,7 +11939,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -12071,7 +12018,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -12119,7 +12065,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -12224,7 +12169,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -12272,7 +12216,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -12383,7 +12326,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -12844,7 +12786,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -12873,299 +12814,6 @@ RESPONSE:
 </epp>
 ```
 
-### EPP Keyrelay makes a keyrelay request  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
-  <command>
-    <ext:keyrelay>
-      <ext:name>domain67.ee</ext:name>
-      <ext:keyData>
-        <secDNS:flags>256</secDNS:flags>
-        <secDNS:protocol>3</secDNS:protocol>
-        <secDNS:alg>8</secDNS:alg>
-        <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
-      </ext:keyData>
-      <ext:authInfo>
-        <domain:pw>98oiewslkfkd</domain:pw>
-      </ext:authInfo>
-      <ext:expiry>
-        <ext:relative>P1M13D</ext:relative>
-      </ext:expiry>
-    </ext:keyrelay>
-    <ext:clTRID>1441791739</ext:clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
-  <response>
-    <result code="2307">
-      <msg lang="en">Unimplemented object service</msg>
-      <value xmlns:obj="urn:ietf:params:xml:ns:obj">
-        <obj:name>domain67.ee</obj:name>
-      </value>
-    </result>
-    <trID>
-      <clTRID>1441791739</clTRID>
-      <svTRID>ccReg-2567540489</svTRID>
-    </trID>
-  </response>
-</epp>
-```
-
-### EPP Keyrelay returns an error when parameters are missing  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
-  <command>
-    <ext:keyrelay>
-      <ext:name>domain67.ee</ext:name>
-      <ext:keyData>
-        <secDNS:protocol>3</secDNS:protocol>
-        <secDNS:alg>8</secDNS:alg>
-        <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
-      </ext:keyData>
-      <ext:authInfo>
-        <domain:pw>98oiewslkfkd</domain:pw>
-      </ext:authInfo>
-      <ext:expiry>
-        <ext:relative>Invalid Expiry</ext:relative>
-      </ext:expiry>
-    </ext:keyrelay>
-    <ext:clTRID>1441791740</ext:clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
-  <response>
-    <result code="2003">
-      <msg lang="en">Required parameter missing: keyrelay &gt; keyData &gt; flags [flags]</msg>
-    </result>
-    <result code="2005">
-      <msg lang="en">Expiry relative must be compatible to ISO 8601</msg>
-      <value xmlns:obj="urn:ietf:params:xml:ns:obj">
-        <obj:relative>Invalid Expiry</obj:relative>
-      </value>
-    </result>
-    <trID>
-      <clTRID>1441791740</clTRID>
-      <svTRID>ccReg-3316296442</svTRID>
-    </trID>
-  </response>
-</epp>
-```
-
-### EPP Keyrelay returns an error on invalid relative expiry  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
-  <command>
-    <ext:keyrelay>
-      <ext:name>domain67.ee</ext:name>
-      <ext:keyData>
-        <secDNS:flags>256</secDNS:flags>
-        <secDNS:protocol>3</secDNS:protocol>
-        <secDNS:alg>8</secDNS:alg>
-        <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
-      </ext:keyData>
-      <ext:authInfo>
-        <domain:pw>98oiewslkfkd</domain:pw>
-      </ext:authInfo>
-      <ext:expiry>
-        <ext:relative>Invalid Expiry</ext:relative>
-      </ext:expiry>
-    </ext:keyrelay>
-    <ext:clTRID>1441791741</ext:clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
-  <response>
-    <result code="2005">
-      <msg lang="en">Expiry relative must be compatible to ISO 8601</msg>
-      <value xmlns:obj="urn:ietf:params:xml:ns:obj">
-        <obj:relative>Invalid Expiry</obj:relative>
-      </value>
-    </result>
-    <trID>
-      <clTRID>1441791741</clTRID>
-      <svTRID>ccReg-5440105260</svTRID>
-    </trID>
-  </response>
-</epp>
-```
-
-### EPP Keyrelay returns an error on invalid absolute expiry  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
-  <command>
-    <ext:keyrelay>
-      <ext:name>domain67.ee</ext:name>
-      <ext:keyData>
-        <secDNS:flags>256</secDNS:flags>
-        <secDNS:protocol>3</secDNS:protocol>
-        <secDNS:alg>8</secDNS:alg>
-        <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
-      </ext:keyData>
-      <ext:authInfo>
-        <domain:pw>98oiewslkfkd</domain:pw>
-      </ext:authInfo>
-      <ext:expiry>
-        <ext:absolute>Invalid Absolute</ext:absolute>
-      </ext:expiry>
-    </ext:keyrelay>
-    <ext:clTRID>1441791742</ext:clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
-  <response>
-    <result code="2005">
-      <msg lang="en">Expiry absolute must be compatible to ISO 8601</msg>
-      <value xmlns:obj="urn:ietf:params:xml:ns:obj">
-        <obj:absolute>Invalid Absolute</obj:absolute>
-      </value>
-    </result>
-    <trID>
-      <clTRID>1441791742</clTRID>
-      <svTRID>ccReg-3004275558</svTRID>
-    </trID>
-  </response>
-</epp>
-```
-
-### EPP Keyrelay saves legal document with keyrelay  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
-  <command>
-    <ext:keyrelay>
-      <ext:name>domain67.ee</ext:name>
-      <ext:keyData>
-        <secDNS:flags>256</secDNS:flags>
-        <secDNS:protocol>3</secDNS:protocol>
-        <secDNS:alg>8</secDNS:alg>
-        <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
-      </ext:keyData>
-      <ext:authInfo>
-        <domain:pw>98oiewslkfkd</domain:pw>
-      </ext:authInfo>
-      <ext:expiry>
-        <ext:relative>P1D</ext:relative>
-      </ext:expiry>
-    </ext:keyrelay>
-    <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-      <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
-    </eis:extdata>
-    <ext:clTRID>1441791743</ext:clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
-  <response>
-    <result code="2307">
-      <msg lang="en">Unimplemented object service</msg>
-      <value xmlns:obj="urn:ietf:params:xml:ns:obj">
-        <obj:name>domain67.ee</obj:name>
-      </value>
-    </result>
-    <trID>
-      <clTRID>1441791743</clTRID>
-      <svTRID>ccReg-5428813077</svTRID>
-    </trID>
-  </response>
-</epp>
-```
-
-### EPP Keyrelay validates legal document types  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
-  <command>
-    <ext:keyrelay>
-      <ext:name>domain67.ee</ext:name>
-      <ext:keyData>
-        <secDNS:flags>256</secDNS:flags>
-        <secDNS:protocol>3</secDNS:protocol>
-        <secDNS:alg>8</secDNS:alg>
-        <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
-      </ext:keyData>
-      <ext:authInfo>
-        <domain:pw>98oiewslkfkd</domain:pw>
-      </ext:authInfo>
-      <ext:expiry>
-        <ext:relative>P1D</ext:relative>
-      </ext:expiry>
-    </ext:keyrelay>
-    <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-      <eis:legalDocument type="jpg">dGVzdCBmYWlsCg==</eis:legalDocument>
-    </eis:extdata>
-    <ext:clTRID>1441791744</ext:clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
-  <response>
-    <result code="2306">
-      <msg lang="en">Attribute is invalid: type</msg>
-    </result>
-    <trID>
-      <clTRID>1441791744</clTRID>
-      <svTRID>ccReg-4758328068</svTRID>
-    </trID>
-  </response>
-</epp>
-```
-
 REQUEST:
 
 ```xml
@@ -13183,7 +12831,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -13262,7 +12909,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -13337,7 +12983,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -13416,7 +13061,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -13494,7 +13138,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -13855,7 +13498,6 @@ RESPONSE:
       <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
       <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
       <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-      <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
       <svcExtension>
         <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
         <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -13901,7 +13543,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -13949,7 +13590,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -14032,7 +13672,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -14078,7 +13717,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -14126,7 +13764,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -14174,7 +13811,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -14220,7 +13856,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -14268,7 +13903,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -14346,7 +13980,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
@@ -14395,7 +14028,6 @@ REQUEST:
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
         <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
           <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
