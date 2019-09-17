@@ -144,12 +144,9 @@ class EppLoginTest < EppTestCase
 
   def test_user_cannot_login_when_session_limit_is_exceeded
     user = users(:api_bestnames)
-    travel_to Time.zone.parse('2010-07-05')
     eliminate_effect_of_existing_epp_sessions
     EppSession.limit_per_registrar = 1
-    EppSession.create!(session_id: 'any',
-                       user: user,
-                       updated_at: Time.zone.parse('2010-07-05'))
+    EppSession.create!(session_id: 'any', user: user)
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>

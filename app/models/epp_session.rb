@@ -12,7 +12,7 @@ class EppSession < ApplicationRecord
   alias_attribute :last_access, :updated_at
 
   def self.limit_reached?(registrar)
-    count = where(user_id: registrar.api_users.ids).where('updated_at >= ?', Time.zone.now - 1.second).count
+    count = where(user_id: registrar.api_users.ids).count
     count >= limit_per_registrar
   end
 
