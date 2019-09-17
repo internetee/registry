@@ -6,11 +6,10 @@ class EppSession < ApplicationRecord
   class_attribute :timeout
   self.timeout = (ENV['epp_session_timeout_seconds'] || 300).to_i.seconds
 
-  alias_attribute :last_access, :updated_at
+  class_attribute :limit_per_registrar
+  self.limit_per_registrar = (ENV['epp_session_limit_per_registrar'] || 4).to_i
 
-  def self.limit_per_registrar
-    4
-  end
+  alias_attribute :last_access, :updated_at
 
   def self.limit_reached?(registrar)
     count = where(user_id: registrar.api_users.ids).where('updated_at >= ?', Time.zone.now - 1.second).count

@@ -49,10 +49,6 @@ class EppSessionTest < ActiveSupport::TestCase
     end
   end
 
-  def test_limit_per_registrar
-    assert_equal 4, EppSession.limit_per_registrar
-  end
-
   def test_limit_is_per_registrar
     travel_to Time.zone.parse('2010-07-05')
     EppSession.delete_all
