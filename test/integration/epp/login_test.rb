@@ -1,6 +1,14 @@
 require 'test_helper'
 
 class EppLoginTest < EppTestCase
+  setup do
+    @original_session_limit_per_registrar = EppSession.limit_per_registrar
+  end
+
+  teardown do
+    EppSession.limit_per_registrar = @original_session_limit_per_registrar
+  end
+
   def test_logging_in_with_correct_credentials_creates_new_session
     user = users(:api_bestnames)
     new_session_id = 'new-session-id'
@@ -138,11 +146,10 @@ class EppLoginTest < EppTestCase
     user = users(:api_bestnames)
     travel_to Time.zone.parse('2010-07-05')
     eliminate_effect_of_existing_epp_sessions
-    EppSession.limit_per_registrar.times do
-      EppSession.create!(session_id: SecureRandom.hex,
-                         user: user,
-                         updated_at: Time.zone.parse('2010-07-05'))
-    end
+    EppSession.limit_per_registrar = 1
+    EppSession.create!(session_id: 'any',
+                       user: user,
+                       updated_at: Time.zone.parse('2010-07-05'))
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
