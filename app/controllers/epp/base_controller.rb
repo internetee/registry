@@ -368,7 +368,7 @@ module Epp
     end
 
     def session_timeout_reached?
-      timeout = 5.minutes
+      timeout = ENV['epp_session_timeout_seconds'].to_i.seconds
       epp_session.updated_at < (Time.zone.now - timeout)
     end
 
