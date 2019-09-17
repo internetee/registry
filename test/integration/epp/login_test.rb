@@ -134,10 +134,16 @@ class EppLoginTest < EppTestCase
     assert_equal new_password, user.plain_text_password
   end
 
-  def test_user_cannot_login_when_session_limit_reached
+  def test_user_cannot_login_when_session_limit_is_exceeded
     user = users(:api_bestnames)
     travel_to Time.zone.parse('2010-07-05')
-    EppSession.delete_all
+    eliminate_effect_of_existing_epp_sessions
+    EppSession.limit_per_registrar.times do
+      EppSession.create!(session_id: SecureRandom.hex,
+                         user: user,
+                         updated_at: Time.zone.parse('2010-07-05'))
+    end
+
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
@@ -160,15 +166,15 @@ class EppLoginTest < EppTestCase
       </epp>
     XML
 
-    EppSession.limit_per_registrar.times do
-      EppSession.create!(session_id: SecureRandom.hex,
-                         user: user,
-                         updated_at: Time.zone.parse('2010-07-05'))
-    end
-
     assert_no_difference 'EppSession.count' do
       post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new-session-id'
     end
     assert_epp_response :session_limit_exceeded_server_closing_connection
+  end
+
+  private
+
+  def eliminate_effect_of_existing_epp_sessions
+    EppSession.delete_all
   end
 end
