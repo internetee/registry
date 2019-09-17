@@ -158,6 +158,8 @@ lhv_keystore_alias:
 lhv_ca_file: # Needed only in dev mode
 lhv_dev_mode: 'false'
 
+epp_session_timeout_seconds: '300'
+
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:
   payments_seb_bank_certificate: 'test/fixtures/files/seb_bank_cert.pem'
