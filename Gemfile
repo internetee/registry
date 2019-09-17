@@ -98,7 +98,6 @@ group :development, :test do
   gem 'pry', '0.10.1'
 
   gem 'bullet',        '4.14.7' # for finding database optimizations
-  gem 'html2haml',     '2.1.0'
   gem 'sdoc',          '0.4.1'  # bundle exec rake doc:rails generates the API under doc/api.
   gem 'railroady',     '1.3.0'  # to generate database diagrams
   gem 'autodoc'

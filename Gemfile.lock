@@ -199,11 +199,6 @@ GEM
       tilt
     hashdiff (1.0.0)
     hpricot (0.8.6)
-    html2haml (2.1.0)
-      erubis (~> 2.7.0)
-      haml (~> 4.0)
-      nokogiri (>= 1.6.0)
-      ruby_parser (~> 3.5)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httpclient (2.8.3)
@@ -355,8 +350,6 @@ GEM
       rspec-mocks (~> 3.6.0)
       rspec-support (~> 3.6.0)
     rspec-support (3.6.0)
-    ruby_parser (3.8.4)
-      sexp_processor (~> 4.1)
     rubyzip (1.2.2)
     safe_yaml (1.0.5)
     sass (3.4.23)
@@ -386,7 +379,6 @@ GEM
     selenium-webdriver (3.13.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2)
-    sexp_processor (4.8.0)
     simplecov (0.16.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -470,7 +462,6 @@ DEPENDENCIES
   figaro (= 1.1.1)
   grape
   haml
-  html2haml (= 2.1.0)
   isikukood
   iso8601 (= 0.8.6)
   jquery-rails (= 4.0.4)
