@@ -1,3 +1,7 @@
+17.09.2019
+* Fixed error messages on deletind deletecandidate domains [#718](https://github.com/internetee/registry/issues/718)
+* Removed html2haml gem [#1316](https://github.com/internetee/registry/pull/1316)
+
 16.09.2019
 * Updated coffee-rails gem to 4.2 [#1320](https://github.com/internetee/registry/pull/1320)
 * Updated data_migrate gem to 5.3.2 [#1321](https://github.com/internetee/registry/pull/1321)
