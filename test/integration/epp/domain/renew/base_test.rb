@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainRenewTest < EppTestCase
+class EppDomainRenewBaseTest < EppTestCase
   self.use_transactional_fixtures = false
 
   def test_renews_domain
