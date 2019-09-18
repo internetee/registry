@@ -3,6 +3,11 @@ require 'test_helper'
 class EppSessionTest < ActiveSupport::TestCase
   setup do
     @epp_session = epp_sessions(:api_bestnames)
+    @original_session_timeout = EppSession.timeout
+  end
+
+  teardown do
+    EppSession.timeout = @original_session_timeout
   end
 
   def test_valid
@@ -59,5 +64,40 @@ class EppSessionTest < ActiveSupport::TestCase
     end
 
     refute EppSession.limit_reached?(registrars(:bestnames))
+  end
+
+  def test_expired_scope
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    session = epp_sessions(:api_bestnames)
+    timeout = 0.seconds
+    EppSession.timeout = timeout
+
+    session.update!(last_access: now - timeout - 1.second)
+    assert_includes EppSession.expired, session, 'Expired session should be returned'
+
+    session.update!(last_access: now - timeout)
+
+    assert_not_includes EppSession.expired, session, 'Unexpired session should not be returned'
+  end
+
+  def test_expired_when_timed_out
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    timeout = 0.seconds
+    EppSession.timeout = timeout
+    @epp_session.last_access = now - timeout - 1.second
+
+    assert @epp_session.expired?
+  end
+
+  def test_not_expired_when_not_timed_out
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    timeout = 0.seconds
+    EppSession.timeout = timeout
+    @epp_session.last_access = now - timeout
+
+    assert_not @epp_session.expired?
   end
 end
