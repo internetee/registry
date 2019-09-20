@@ -1,3 +1,9 @@
+20.09.2019
+* Fixed error on domain transfer with invalid code [#686](https://github.com/internetee/registry/issues/686)
+* EPP exceptions are now sent to Errbit [#539](https://github.com/internetee/registry/issues/539)
+* Updated jquery-rails gem to 4.3.5 [#1322](https://github.com/internetee/registry/pull/1322)
+* Added EPP renew tests [#1326](https://github.com/internetee/registry/pull/1326)
+
 17.09.2019
 * Fixed error messages on deletind deletecandidate domains [#718](https://github.com/internetee/registry/issues/718)
 * Removed html2haml gem [#1316](https://github.com/internetee/registry/pull/1316)
