@@ -43,27 +43,6 @@ class EppContactInfoBaseTest < EppTestCase
                                                                     contact: xml_schema).text
   end
 
-  def test_contact_not_found
-    assert_nil Contact.find_by(code: 'non-existing')
-
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-        <command>
-          <info>
-            <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
-              <contact:id>non-existing</contact:id>
-            </contact:info>
-          </info>
-        </command>
-      </epp>
-    XML
-
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-
-    assert_epp_response :object_does_not_exist
-  end
-
   private
 
   def xml_schema

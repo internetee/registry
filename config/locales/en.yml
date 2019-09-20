@@ -202,7 +202,6 @@ en:
       epp_domain_zone_with_same_origin: Zone with the same origin exists
       epp_domain_at_auction: Domain is at auction
       epp_domain_awaiting_payment: Awaiting payment
-      epp_obj_does_not_exist: 'Object does not exist'
       epp_authorization_error: 'Authorization error'
       epp_id_taken: 'Contact id already exists'
       epp_domain_not_found: 'Domain not found'

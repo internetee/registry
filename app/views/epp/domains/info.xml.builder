@@ -53,7 +53,7 @@ xml.epp_head do
 
         xml.tag!('domain:exDate', @domain.valid_to.iso8601)
 
-        if can? :view_password, @domain, @password
+        if @reveal_full_details
           xml.tag!('domain:authInfo') do
             xml.tag!('domain:pw', @domain.transfer_code)
           end

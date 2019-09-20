@@ -84,18 +84,7 @@ module Epp
 
     def find_contact
       code = params[:parsed_frame].css('id').text.strip.upcase
-
-      @contact = Epp::Contact.find_by_epp_code(code)
-
-      if @contact.blank?
-        epp_errors << {
-          code: '2303',
-          msg: t('errors.messages.epp_obj_does_not_exist'),
-          value: { obj: 'id', val: code }
-        }
-        fail CanCan::AccessDenied
-      end
-      @contact
+      @contact = Epp::Contact.find_by!(code: code)
     end
 
     #
