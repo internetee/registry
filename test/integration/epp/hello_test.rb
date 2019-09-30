@@ -2,14 +2,14 @@ require 'test_helper'
 
 class EppHelloTest < EppTestCase
   def test_authenticated_user_can_access
-    post '/epp/session/hello', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    get '/epp/session/hello', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal 'EPP server (EIS)', response_xml.at_css('greeting > svID').text
   end
 
   def test_anonymous_user_cannot_access
-    post '/epp/session/hello', { frame: request_xml }, 'HTTP_COOKIE' => 'session=non-existent'
+    get '/epp/session/hello', { frame: request_xml }, 'HTTP_COOKIE' => 'session=non-existent'
     assert_epp_response :authorization_error
   end
 
