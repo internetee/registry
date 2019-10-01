@@ -3,17 +3,13 @@ require_dependency 'epp_constraint'
 Rails.application.routes.draw do
   namespace(:epp, defaults: { format: :xml }) do
     match 'session/:action', controller: 'sessions', via: :all, constraints: EppConstraint.new(:session)
-    match 'session/pki/:action', controller: 'sessions', via: :all, constraints: EppConstraint.new(:session)
 
     post 'command/:action', controller: 'domains', constraints: EppConstraint.new(:domain)
     post 'command/:action', controller: 'contacts', constraints: EppConstraint.new(:contact)
     post 'command/poll',     to: 'polls#poll', constraints: EppConstraint.new(:poll)
     post 'command/keyrelay', to: 'keyrelays#keyrelay', constraints: EppConstraint.new(:keyrelay)
 
-    post 'command/:command', to: 'errors#not_found', constraints: EppConstraint.new(:not_found) # fallback route
-
     get 'error/:command', to: 'errors#error'
-    match "*command", to: 'errors#error', via: [:post, :get, :patch, :put, :delete]
   end
 
   mount Repp::API => '/'

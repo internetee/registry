@@ -365,7 +365,6 @@ en:
   request_method: 'Request method'
   response_code: 'Response code'
   request_params: 'Request params'
-  could_not_determine_object_type_check_xml_format_and_namespaces: 'Could not determine object type. Check XML format and namespaces.'
   unknown_expiry_relative_pattern: 'Expiry relative must be compatible to ISO 8601'
   unknown_expiry_absolute_pattern: 'Expiry absolute must be compatible to ISO 8601'
   mutally_exclusive_params: 'Mutually exclusive parameters: %{params}'
