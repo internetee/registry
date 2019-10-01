@@ -14,7 +14,7 @@ class EppLoginSessionLimitTest < EppTestCase
     end
 
     assert_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
+      post epp_login_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
     end
     assert_epp_response :completed_successfully
   end
@@ -27,7 +27,7 @@ class EppLoginSessionLimitTest < EppTestCase
     end
 
     assert_no_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
+      post epp_login_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
     end
     assert_epp_response :authentication_error_server_closing_connection
   end

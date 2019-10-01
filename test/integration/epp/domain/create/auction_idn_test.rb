@@ -39,7 +39,7 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
 
     refute Domain.where(name: @idn_auction.domain).exists?
@@ -73,7 +73,7 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
 
     refute Domain.where(name: @idn_auction.domain).exists?
@@ -106,7 +106,7 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
 
     refute Domain.where(name: @idn_auction.domain).exists?
@@ -139,7 +139,7 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
 
     refute Domain.where(name: @idn_auction.domain).exists?
@@ -176,7 +176,7 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
     XML
 
     assert_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
 
     @idn_auction.reload
@@ -212,7 +212,7 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
     XML
 
     assert_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
 
     @idn_auction.reload

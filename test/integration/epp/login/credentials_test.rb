@@ -24,7 +24,7 @@ class EppLoginCredentialsTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/session/login', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
+    post epp_login_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
     assert EppSession.find_by(session_id: 'new_session_id')
     assert_equal users(:api_bestnames), EppSession.find_by(session_id: 'new_session_id').user
     assert_epp_response :completed_successfully
@@ -57,7 +57,7 @@ class EppLoginCredentialsTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=any_random_string'
+    post epp_login_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=any_random_string'
 
     assert_epp_response :authentication_error_server_closing_connection
   end

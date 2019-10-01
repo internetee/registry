@@ -37,7 +37,7 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     @contact.reload
 
     assert_epp_response :completed_successfully
@@ -69,7 +69,7 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     assert_emails 1
   end
@@ -97,7 +97,7 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     assert_no_emails
   end
@@ -128,7 +128,7 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     assert_no_emails
   end
@@ -154,7 +154,7 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     assert_epp_response :object_does_not_exist
   end
@@ -188,7 +188,7 @@ class EppContactUpdateBaseTest < EppTestCase
       </epp>
     XML
     assert_no_changes -> { @contact.updated_at } do
-      post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
     assert_epp_response :data_management_policy_violation
   end
@@ -220,7 +220,7 @@ class EppContactUpdateBaseTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     assert_epp_response :completed_successfully
   end

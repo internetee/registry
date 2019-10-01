@@ -50,7 +50,7 @@ class EppBaseTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/command/info', { frame: xml_of_epp_command_that_requires_authentication },
+    post epp_info_path, { frame: xml_of_epp_command_that_requires_authentication },
          'HTTP_COOKIE' => 'session=non-existent'
 
     assert_epp_response :authorization_error
@@ -74,7 +74,7 @@ class EppBaseTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/command/info', { frame: xml_of_epp_command_that_requires_authorization },
+    post epp_info_path, { frame: xml_of_epp_command_that_requires_authorization },
          'HTTP_COOKIE' => "session=#{session.session_id}"
 
     assert_epp_response :authorization_error
@@ -83,7 +83,7 @@ class EppBaseTest < EppTestCase
   private
 
   def valid_command_path
-    epp_command_poll_path
+    epp_poll_path
   end
 
   def valid_request_xml

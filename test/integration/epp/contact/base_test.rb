@@ -14,7 +14,7 @@ class EppContactBaseTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_info_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     assert_epp_response :object_does_not_exist
   end
