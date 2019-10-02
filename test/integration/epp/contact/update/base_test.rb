@@ -133,6 +133,98 @@ class EppContactUpdateBaseTest < EppTestCase
     assert_no_emails
   end
 
+  def test_non_existing_contact
+    assert_nil Contact.find_by(code: 'non-existing')
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:id>non-existing</contact:id>
+              <contact:chg>
+                <contact:postalInfo>
+                  <contact:name>any</contact:name>
+                </contact:postalInfo>
+              </contact:chg>
+            </contact:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+
+    assert_epp_response :object_does_not_exist
+  end
+
+  def test_ident_code_cannot_be_updated
+    new_ident_code = '12345'
+    assert_not_equal new_ident_code, @contact.ident
+
+    # https://github.com/internetee/registry/issues/415
+    @contact.update_columns(code: @contact.code.upcase)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:id>#{@contact.code}</contact:id>
+              <contact:chg>
+                <contact:postalInfo>
+                </contact:postalInfo>
+              </contact:chg>
+            </contact:update>
+          </update>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:ident cc="#{@contact.ident_country_code}" type="#{@contact.ident_type}">#{new_ident_code}</eis:ident>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+    assert_no_changes -> { @contact.updated_at } do
+      post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    end
+    assert_epp_response :data_management_policy_violation
+  end
+
+  # https://github.com/internetee/registry/issues/576
+  def test_ident_type_and_ident_country_code_can_be_updated_when_absent
+    @contact.update_columns(ident: 'test', ident_type: nil, ident_country_code: nil)
+
+    # https://github.com/internetee/registry/issues/415
+    @contact.update_columns(code: @contact.code.upcase)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:id>#{@contact.code}</contact:id>
+              <contact:chg>
+                <contact:postalInfo/>
+              </contact:chg>
+            </contact:update>
+          </update>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:ident cc="US" type="priv">#{@contact.ident}</eis:ident>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+
+    assert_epp_response :completed_successfully
+  end
+
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)

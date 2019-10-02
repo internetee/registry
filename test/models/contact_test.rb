@@ -5,8 +5,8 @@ class ContactTest < ActiveSupport::TestCase
     @contact = contacts(:john)
   end
 
-  def test_valid_fixture_is_valid
-    assert @contact.valid?, proc { @contact.errors.full_messages }
+  def test_valid_contact_fixture_is_valid
+    assert valid_contact.valid?, proc { valid_contact.errors.full_messages }
   end
 
   def test_invalid_fixture_is_invalid
@@ -21,30 +21,106 @@ class ContactTest < ActiveSupport::TestCase
     assert_equal 'org', Contact::ORG
   end
 
-  def test_invalid_without_email
-    @contact.email = ''
-    assert @contact.invalid?
+  def test_invalid_without_name
+    contact = valid_contact
+    contact.name = ''
+    assert contact.invalid?
   end
 
-  def test_email_format_validation
-    @contact.email = 'invalid'
-    assert @contact.invalid?
+  def test_validates_code_format
+    contact = valid_contact.dup
+    max_length = 100
 
-    @contact.email = 'test@bestmail.test'
-    assert @contact.valid?
+    contact.code = '!invalid'
+    assert contact.invalid?
+
+    contact.code = 'a' * max_length.next
+    assert contact.invalid?
+
+    contact.code = 'foo:bar'
+    assert contact.valid?
+
+    contact.code = 'a' * max_length
+    assert contact.valid?
+  end
+
+  def test_invalid_when_code_is_already_taken
+    another_contact = valid_contact
+    contact = another_contact.dup
+
+    contact.code = another_contact.code
+    assert contact.invalid?
+
+    contact.regenerate_code
+    assert contact.valid?
+  end
+
+  def test_invalid_without_email
+    contact = valid_contact
+    contact.email = ''
+    assert contact.invalid?
+  end
+
+  def test_validates_email_format
+    contact = valid_contact
+
+    contact.email = 'invalid'
+    assert contact.invalid?
+
+    contact.email = 'valid@registrar.test'
+    assert contact.valid?
   end
 
   def test_invalid_without_phone
-    @contact.email = ''
-    assert @contact.invalid?
+    contact = valid_contact
+    contact.phone = ''
+    assert contact.invalid?
   end
 
-  def test_phone_format_validation
-    @contact.phone = '+123.'
-    assert @contact.invalid?
+  # https://en.wikipedia.org/wiki/E.164
+  def test_validates_phone_format
+    contact = valid_contact
 
-    @contact.phone = '+123.4'
-    assert @contact.valid?
+    contact.phone = '+.1'
+    assert contact.invalid?
+
+    contact.phone = '+123.'
+    assert contact.invalid?
+
+    contact.phone = '+1.123456789123456'
+    assert contact.invalid?
+
+    contact.phone = '+134.1234567891234'
+    assert contact.invalid?
+
+    contact.phone = '+000.1'
+    assert contact.invalid?
+
+    contact.phone = '+123.0'
+    assert contact.invalid?
+
+    contact.phone = '+1.2'
+    assert contact.valid?
+
+    contact.phone = '+123.4'
+    assert contact.valid?
+
+    contact.phone = '+1.12345678912345'
+    assert contact.valid?
+
+    contact.phone = '+134.123456789123'
+    assert contact.valid?
+  end
+
+  def test_valid_without_address_when_address_processing_id_disabled
+    contact = valid_contact
+
+    contact.street = ''
+    contact.city = ''
+    contact.zip = ''
+    contact.country_code = ''
+
+    assert contact.valid?
   end
 
   def test_address
@@ -133,6 +209,45 @@ class ContactTest < ActiveSupport::TestCase
     assert_not @contact.deletable?
   end
 
+  def test_normalizes_country_code
+    contact = Contact.new(country_code: 'us')
+    contact.validate
+    assert_equal 'US', contact.country_code
+  end
+
+  def test_normalizes_ident_country_code
+    contact = Contact.new(ident_country_code: 'us')
+    contact.validate
+    assert_equal 'US', contact.ident_country_code
+  end
+
+  def test_generates_code
+    contact = Contact.new(registrar: registrars(:bestnames))
+    assert_nil contact.code
+
+    contact.generate_code
+
+    assert_not_empty contact.code
+  end
+
+  def test_prohibits_code_change
+    assert_no_changes -> { @contact.code } do
+      @contact.code = 'new'
+      @contact.save!
+      @contact.reload
+    end
+  end
+
+  def test_removes_duplicate_statuses
+    contact = Contact.new(statuses: %w[ok ok])
+    assert_equal %w[ok], contact.statuses
+  end
+
+  def test_default_status
+    contact = Contact.new
+    assert_equal %w[ok], contact.statuses
+  end
+
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)
@@ -144,6 +259,10 @@ class ContactTest < ActiveSupport::TestCase
   def unlinked_contact
     Domain.update_all(registrant_id: contacts(:william))
     DomainContact.delete_all
+    contacts(:john)
+  end
+
+  def valid_contact
     contacts(:john)
   end
 end
