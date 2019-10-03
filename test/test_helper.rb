@@ -29,8 +29,6 @@ CompanyRegister::Client = CompanyRegisterClientStub
 EInvoice.provider = EInvoice::Providers::TestProvider.new
 
 class ActiveSupport::TestCase
-  include FactoryBot::Syntax::Methods
-
   ActiveRecord::Migration.check_pending!
   fixtures :all
 
