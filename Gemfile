@@ -90,7 +90,6 @@ end
 
 group :development, :test do
   gem 'capybara'
-  gem 'rspec-rails', '~> 3.6'
   gem 'selenium-webdriver'
 
   # debug

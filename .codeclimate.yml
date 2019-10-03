@@ -38,7 +38,6 @@ exclude_patterns:
   - "lib/tasks/import.rake"
   - "lib/tasks/legal_doc.rake"
   - "lib/tasks/whois.rake"
-  - "spec/"
   - "test/"
   - "vendor/"
   - "CHANGELOG.md"
