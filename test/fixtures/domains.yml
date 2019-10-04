@@ -1,5 +1,6 @@
 shop:
   name: shop.test
+  name_puny: shop.test
   name_dirty: shop.test
   registrar: bestnames
   registrant: john
@@ -15,6 +16,7 @@ shop:
 
 airport:
   name: airport.test
+  name_puny: airport.test
   name_dirty: airport.test
   registrar: bestnames
   registrant: john
@@ -26,6 +28,7 @@ airport:
 
 library:
   name: library.test
+  name_puny: library.test
   name_dirty: library.test
   registrar: bestnames
   registrant: acme_ltd
@@ -37,6 +40,7 @@ library:
 
 metro:
   name: metro.test
+  name_puny: metro.test
   name_dirty: metro.test
   registrar: goodnames
   registrant: jack
@@ -48,6 +52,7 @@ metro:
 
 hospital:
   name: hospital.test
+  name_puny: hospital.test
   name_dirty: hospital.test
   registrar: goodnames
   registrant: john
@@ -59,6 +64,8 @@ hospital:
 
 invalid:
   name: invalid.test
+  name_puny: invalid.test
+  name_dirty: invalid.test
   transfer_code: 1438d6
   valid_to: <%= Time.zone.parse('2010-07-05').utc.to_s(:db) %>
   registrar: bestnames
