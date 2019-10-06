@@ -6,7 +6,8 @@ class ContactMailerPreview < ActionMailer::Preview
                              EXISTS(SELECT 1 FROM domain_contacts WHERE domain_contacts.contact_id =
                              contacts.id)')
 
-    contact = contact.where.not(email: nil, country_code: nil, code: nil).first
+    contact = contact.where.not(email: nil, country_code: nil, ident_country_code: nil, code: nil)
+              .take
 
     ContactMailer.email_changed(contact: contact, old_email: 'old@inbox.test')
   end
