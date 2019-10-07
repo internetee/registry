@@ -20,7 +20,7 @@ plugins:
     enabled: true
   rubocop:
     enabled: true
-    channel: rubocop-0-58
+    channel: rubocop-0-74
 exclude_patterns:
   - "app/models/legacy/"
   - "app/models/version/"
