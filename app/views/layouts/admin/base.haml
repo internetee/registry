@@ -32,5 +32,5 @@
 
       .footer.text-right
         Version
-        = CURRENT_COMMIT_HASH
+        = link_to "#{CURRENT_COMMIT_HASH}", "#{CURRENT_COMMIT_REPO}/commits/#{CURRENT_COMMIT_HASH}"
     = javascript_include_tag 'admin-manifest', async: true
