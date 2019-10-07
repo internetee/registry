@@ -31,7 +31,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
             <contact:sp>       0-1      State or province
             <contact:pc>       0-1      Postal code
             <contact:cc>       1        Country code, 2 letters uppercase, in ISO_3166-1 alpha 2
-        <contact:voice>        1        Phone number in format \+ddd.d+
+        <contact:voice>        1        Phone number in E.164 format (e.g. +372.12345)
         <contact:fax>          0        Fax is not supported and must be blank or missing
         <contact:email>        1        E-mail
     <extension>                1
@@ -66,7 +66,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
               <contact:sp>      0-1      State or province
               <contact:pc>      0-1      Postal code
               <contact:cc>      1        Country code, 2 letters uppercase, in ISO_3166-1 alpha 2
-          <contact:voice>       0-1      Phone number in format \+ddd.d+
+          <contact:voice>       0-1      Phone number in E.164 format (e.g. +372.12345)
           <contact:fax>         0        Fax is not supported and must be blank or missing
           <contact:email>       0-1      E-mail
           <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
