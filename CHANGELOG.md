@@ -1,3 +1,6 @@
+07.10.2019
+* Clarified reference to proper phone nr format in EPP spec [#1343](https://github.com/internetee/registry/pull/1343)
+
 20.09.2019
 * Fixed error on domain transfer with invalid code [#686](https://github.com/internetee/registry/issues/686)
 * EPP exceptions are now sent to Errbit [#539](https://github.com/internetee/registry/issues/539)
