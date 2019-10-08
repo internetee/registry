@@ -1,5 +1,6 @@
 08.10.2019
 * Removed unused epp routes [#1335](https://github.com/internetee/registry/pull/1335)
+* Removed Rspec and coverted specs to tests [#1336](https://github.com/internetee/registry/pull/1336)
 
 07.10.2019
 * Clarified reference to proper phone nr format in EPP spec [#1343](https://github.com/internetee/registry/pull/1343)
