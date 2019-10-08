@@ -15,7 +15,7 @@ class EppConstraint
     request.params[:nokogiri_frame] ||= Nokogiri::XML(request.params[:raw_frame] || request.params[:frame])
     request.params[:parsed_frame]   ||= request.params[:nokogiri_frame].dup.remove_namespaces!
 
-    unless [:keyrelay, :poll, :session, :not_found].include?(@type)
+    unless [:keyrelay, :poll, :session].include?(@type)
       element = "//#{@type}:#{request.params[:action]}"
       return false if request.params[:nokogiri_frame].xpath("#{element}", OBJECT_TYPES[@type]).none?
     end

@@ -13,16 +13,9 @@ class EppBaseTest < EppTestCase
            constraints: EppConstraint.new(:poll)
     end
 
-    any_valid_epp_request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-        <hello/>
-      </epp>
-    XML
-
     begin
       assert_difference 'ApiLog::EppLog.count' do
-        post '/epp/command/internal_error', { frame: any_valid_epp_request_xml },
+        post '/epp/command/internal_error', { frame: valid_request_xml },
              'HTTP_COOKIE' => 'session=api_bestnames'
       end
       assert_epp_response :command_failed
@@ -33,14 +26,13 @@ class EppBaseTest < EppTestCase
     end
   end
 
-  def test_invalid_request
+  def test_validates_request_xml
     invalid_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
       </epp>
     XML
-    post '/epp/command/internal_error', { frame: invalid_xml },
-         'HTTP_COOKIE' => 'session=api_bestnames'
+    post valid_command_path, { frame: invalid_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     assert_epp_response :syntax_error
   end
@@ -86,5 +78,20 @@ class EppBaseTest < EppTestCase
          'HTTP_COOKIE' => "session=#{session.session_id}"
 
     assert_epp_response :authorization_error
+  end
+
+  private
+
+  def valid_command_path
+    epp_command_poll_path
+  end
+
+  def valid_request_xml
+    <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <hello/>
+      </epp>
+    XML
   end
 end

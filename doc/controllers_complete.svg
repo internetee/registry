@@ -123,7 +123,6 @@
 <text text-anchor="middle" x="808" y="-13.8" font-family="Times,serif" font-size="14.00">Epp::ErrorsController</text>
 <polyline fill="none" stroke="black" points="740.5,-6 875.5,-6 "/>
 <text text-anchor="start" x="748.5" y="9.2" font-family="Times,serif" font-size="14.00">error</text>
-<text text-anchor="start" x="748.5" y="24.2" font-family="Times,serif" font-size="14.00">not_found</text>
 <polyline fill="none" stroke="black" points="740.5,32 875.5,32 "/>
 <polyline fill="none" stroke="black" points="740.5,56 875.5,56 "/>
 <text text-anchor="start" x="748.5" y="71.2" font-family="Times,serif" font-size="14.00">_layout</text>
