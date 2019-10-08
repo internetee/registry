@@ -2215,8 +2215,6 @@ CREATE TABLE public.users (
     country_code character varying,
     registrar_id integer,
     active boolean,
-    csr text,
-    crt text,
     type character varying,
     registrant_ident character varying,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
@@ -4836,4 +4834,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190811202347');
 INSERT INTO schema_migrations (version) VALUES ('20190811202711');
 
 INSERT INTO schema_migrations (version) VALUES ('20190811205406');
+
+INSERT INTO schema_migrations (version) VALUES ('20191008024334');
 
