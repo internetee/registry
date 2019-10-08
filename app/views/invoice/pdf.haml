@@ -174,14 +174,14 @@
 
             %dt= t(:payment_term)
             %dd Prepayment
-          
+
             %dt= t(:invoice_number)
             %dd= @invoice.number
 
             - if @invoice.description.present?
               %dt= t(:description)
               %dd=@invoice.description
-                
+
             %dt= Invoice.human_attribute_name :reference_no
             %dd= @invoice.reference_no
 
