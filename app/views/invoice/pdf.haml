@@ -207,7 +207,7 @@
               %dt= t(:phone)
               %dd= @invoice.buyer_phone
 
-            - if @invoice.buyer_phone.present?
+            - if @invoice.buyer_url.present?
               %dt= t(:url)
               %dd= @invoice.buyer_url
 
