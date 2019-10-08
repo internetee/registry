@@ -54,8 +54,6 @@
 <text text-anchor="start" x="1236" y="-1978.8" font-family="Times,serif" font-size="14.00">country_code :string</text>
 <text text-anchor="start" x="1236" y="-1963.8" font-family="Times,serif" font-size="14.00">registrar_id :integer</text>
 <text text-anchor="start" x="1236" y="-1948.8" font-family="Times,serif" font-size="14.00">active :boolean</text>
-<text text-anchor="start" x="1236" y="-1933.8" font-family="Times,serif" font-size="14.00">csr :text</text>
-<text text-anchor="start" x="1236" y="-1918.8" font-family="Times,serif" font-size="14.00">crt :text</text>
 <text text-anchor="start" x="1236" y="-1903.8" font-family="Times,serif" font-size="14.00">type :string</text>
 <text text-anchor="start" x="1236" y="-1888.8" font-family="Times,serif" font-size="14.00">registrant_ident :string</text>
 <text text-anchor="start" x="1236" y="-1873.8" font-family="Times,serif" font-size="14.00">encrypted_password :string</text>
@@ -582,8 +580,6 @@
 <text text-anchor="start" x="612" y="-1978.8" font-family="Times,serif" font-size="14.00">country_code :string</text>
 <text text-anchor="start" x="612" y="-1963.8" font-family="Times,serif" font-size="14.00">registrar_id :integer</text>
 <text text-anchor="start" x="612" y="-1948.8" font-family="Times,serif" font-size="14.00">active :boolean</text>
-<text text-anchor="start" x="612" y="-1933.8" font-family="Times,serif" font-size="14.00">csr :text</text>
-<text text-anchor="start" x="612" y="-1918.8" font-family="Times,serif" font-size="14.00">crt :text</text>
 <text text-anchor="start" x="612" y="-1903.8" font-family="Times,serif" font-size="14.00">type :string</text>
 <text text-anchor="start" x="612" y="-1888.8" font-family="Times,serif" font-size="14.00">registrant_ident :string</text>
 <text text-anchor="start" x="612" y="-1873.8" font-family="Times,serif" font-size="14.00">encrypted_password :string</text>
@@ -1733,8 +1729,6 @@
 <text text-anchor="start" x="820" y="-1978.8" font-family="Times,serif" font-size="14.00">country_code :string</text>
 <text text-anchor="start" x="820" y="-1963.8" font-family="Times,serif" font-size="14.00">registrar_id :integer</text>
 <text text-anchor="start" x="820" y="-1948.8" font-family="Times,serif" font-size="14.00">active :boolean</text>
-<text text-anchor="start" x="820" y="-1933.8" font-family="Times,serif" font-size="14.00">csr :text</text>
-<text text-anchor="start" x="820" y="-1918.8" font-family="Times,serif" font-size="14.00">crt :text</text>
 <text text-anchor="start" x="820" y="-1903.8" font-family="Times,serif" font-size="14.00">type :string</text>
 <text text-anchor="start" x="820" y="-1888.8" font-family="Times,serif" font-size="14.00">registrant_ident :string</text>
 <text text-anchor="start" x="820" y="-1873.8" font-family="Times,serif" font-size="14.00">encrypted_password :string</text>
@@ -2057,8 +2051,6 @@
 <text text-anchor="start" x="1028" y="-1978.8" font-family="Times,serif" font-size="14.00">country_code :string</text>
 <text text-anchor="start" x="1028" y="-1963.8" font-family="Times,serif" font-size="14.00">registrar_id :integer</text>
 <text text-anchor="start" x="1028" y="-1948.8" font-family="Times,serif" font-size="14.00">active :boolean</text>
-<text text-anchor="start" x="1028" y="-1933.8" font-family="Times,serif" font-size="14.00">csr :text</text>
-<text text-anchor="start" x="1028" y="-1918.8" font-family="Times,serif" font-size="14.00">crt :text</text>
 <text text-anchor="start" x="1028" y="-1903.8" font-family="Times,serif" font-size="14.00">type :string</text>
 <text text-anchor="start" x="1028" y="-1888.8" font-family="Times,serif" font-size="14.00">registrant_ident :string</text>
 <text text-anchor="start" x="1028" y="-1873.8" font-family="Times,serif" font-size="14.00">encrypted_password :string</text>
