@@ -1,6 +1,13 @@
 if ENV['COVERAGE']
   require 'simplecov'
-  SimpleCov.command_name 'test'
+  SimpleCov.start 'rails' do
+    add_filter '/app/models/legacy/'
+    add_filter '/app/models/version/'
+    add_filter '/lib/action_controller/'
+    add_filter '/lib/core_ext/'
+    add_filter '/lib/daemons/'
+    add_filter '/lib/gem_ext/'
+  end
 end
 
 ENV['RAILS_ENV'] ||= 'test'
@@ -29,8 +36,6 @@ CompanyRegister::Client = CompanyRegisterClientStub
 EInvoice.provider = EInvoice::Providers::TestProvider.new
 
 class ActiveSupport::TestCase
-  include FactoryBot::Syntax::Methods
-
   ActiveRecord::Migration.check_pending!
   fixtures :all
 
