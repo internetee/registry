@@ -265,7 +265,7 @@ class DomainTest < ActiveSupport::TestCase
       Domain.delete_all("id NOT IN (#{[domain1.id, domain2.id, domain3.id].join(',')})")
     end
 
-    assert_equal [domain1.id, domain2.id], Domain.expired.ids
+    assert_equal [domain1.id, domain2.id].sort, Domain.expired.ids.sort
   end
 
   def test_domain_name
