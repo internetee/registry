@@ -5,14 +5,14 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   setup do
     @contact = contacts(:john)
 
-    @original_address_processing_setting = Setting.address_processing
+    @original_address_processing = Setting.address_processing
     @original_fax_enabled_setting = ENV['fax_enabled']
 
     @user = users(:registrant)
   end
 
   teardown do
-    Setting.address_processing = @original_address_processing_setting
+    Setting.address_processing = @original_address_processing
     ENV['fax_enabled'] = @original_fax_enabled_setting
   end
 

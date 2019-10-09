@@ -3,6 +3,11 @@ require 'test_helper'
 class OverdueInvoiceCancellerTest < ActiveSupport::TestCase
   setup do
     @invoice = invoices(:one)
+    @original_days_to_keep_overdue_invoices_active = Setting.days_to_keep_overdue_invoices_active
+  end
+
+  teardown do
+    Setting.days_to_keep_overdue_invoices_active = @original_days_to_keep_overdue_invoices_active
   end
 
   def test_default_delay

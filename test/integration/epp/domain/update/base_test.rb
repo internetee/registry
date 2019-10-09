@@ -3,9 +3,16 @@ require 'test_helper'
 class EppDomainUpdateBaseTest < EppTestCase
   include ActionMailer::TestHelper
 
-  def setup
+  setup do
     @domain = domains(:shop)
+    @original_registrant_change_verification =
+      Setting.request_confrimation_on_registrant_change_enabled
     ActionMailer::Base.deliveries.clear
+  end
+
+  teardown do
+    Setting.request_confrimation_on_registrant_change_enabled =
+      @original_registrant_change_verification
   end
 
   def test_update_domain

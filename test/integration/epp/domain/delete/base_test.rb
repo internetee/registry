@@ -5,12 +5,12 @@ class EppDomainDeleteBaseTest < EppTestCase
 
   setup do
     @domain = domains(:shop)
-    @original_confirmation_setting = Setting.request_confirmation_on_domain_deletion_enabled
+    @original_domain_delete_confirmation = Setting.request_confirmation_on_domain_deletion_enabled
     ActionMailer::Base.deliveries.clear
   end
 
   teardown do
-    Setting.request_confirmation_on_domain_deletion_enabled = @original_confirmation_setting
+    Setting.request_confirmation_on_domain_deletion_enabled = @original_domain_delete_confirmation
   end
 
   def test_bypasses_domain_and_registrant_and_contacts_validation

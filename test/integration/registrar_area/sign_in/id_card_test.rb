@@ -3,6 +3,11 @@ require 'test_helper'
 class RegistrarAreaIdCardSignInTest < ApplicationIntegrationTest
   setup do
     @user = users(:api_bestnames)
+    @original_registrar_area_ip_whitelist = Setting.registrar_ip_whitelist_enabled
+  end
+
+  teardown do
+    Setting.registrar_ip_whitelist_enabled = @original_registrar_area_ip_whitelist
   end
 
   def test_signs_in_a_user_when_id_card_owner_is_found
@@ -39,8 +44,6 @@ class RegistrarAreaIdCardSignInTest < ApplicationIntegrationTest
 
     get registrar_root_path
     assert_redirected_to new_registrar_user_session_path
-
-    Setting.registrar_ip_whitelist_enabled = false
   end
 
   def test_does_not_sign_in_a_user_when_certificate_is_absent

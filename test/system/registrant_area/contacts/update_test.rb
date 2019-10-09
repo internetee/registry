@@ -6,7 +6,7 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
     @contact = contacts(:john)
     sign_in users(:registrant)
 
-    @original_address_processing_setting = Setting.address_processing
+    @original_address_processing = Setting.address_processing
     @original_fax_enabled_setting = ENV['fax_enabled']
     @original_registrant_api_base_url_setting = ENV['registrant_api_base_url']
 
@@ -14,7 +14,7 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
   end
 
   teardown do
-    Setting.address_processing = @original_address_processing_setting
+    Setting.address_processing = @original_address_processing
     ENV['fax_enabled'] = @original_fax_enabled_setting
     ENV['registrant_api_base_url'] = @original_registrant_api_base_url_setting
   end

@@ -1,6 +1,14 @@
 require 'application_system_test_case'
 
 class RegistrarAreaBaseTestTest < ApplicationSystemTestCase
+  setup do
+    @original_registrar_area_ip_whitelist = Setting.registrar_ip_whitelist_enabled
+  end
+
+  teardown do
+    Setting.registrar_ip_whitelist_enabled = @original_registrar_area_ip_whitelist
+  end
+
   def test_user_cannot_access_without_ip_address_being_whitelisted
     Setting.registrar_ip_whitelist_enabled = true
     WhiteIp.delete_all

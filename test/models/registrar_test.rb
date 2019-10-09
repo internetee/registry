@@ -3,6 +3,13 @@ require 'test_helper'
 class RegistrarTest < ActiveSupport::TestCase
   setup do
     @registrar = registrars(:bestnames)
+    @original_default_language = Setting.default_language
+    @original_days_to_keep_invoices_active = Setting.days_to_keep_invoices_active
+  end
+
+  teardown do
+    Setting.default_language = @original_default_language
+    Setting.days_to_keep_invoices_active = @original_days_to_keep_invoices_active
   end
 
   def test_valid_registrar_is_valid
@@ -120,15 +127,12 @@ class RegistrarTest < ActiveSupport::TestCase
 
   def test_issues_new_invoice
     travel_to Time.zone.parse('2010-07-05')
-    @original_days_to_keep_invoices_active_setting = Setting.days_to_keep_invoices_active
     Setting.days_to_keep_invoices_active = 10
 
     invoice = @registrar.issue_prepayment_invoice(100)
 
     assert_equal Date.parse('2010-07-05'), invoice.issue_date
     assert_equal Date.parse('2010-07-15'), invoice.due_date
-
-    Setting.days_to_keep_invoices_active = @original_days_to_keep_invoices_active_setting
   end
 
   def test_issues_e_invoice_along_with_invoice

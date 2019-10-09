@@ -4,7 +4,12 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
   setup do
     @domain = domains(:shop)
     @new_registrar = registrars(:goodnames)
+    @original_transfer_wait_time = Setting.transfer_wait_time
     Setting.transfer_wait_time = 0 # Auto-approval
+  end
+
+  teardown do
+    Setting.transfer_wait_time = @original_transfer_wait_time
   end
 
   def test_returns_domain_transfers
