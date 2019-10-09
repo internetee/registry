@@ -195,23 +195,18 @@
             %dt= t(:reg_no)
             %dd= @invoice.buyer_reg_no
 
-            - @invoice.buyer_address.present?
               %dt= t(:address)
               %dd= @invoice.buyer_address
 
-            - @invoice.buyer_country.present?
               %dt= t(:country)
               %dd= @invoice.buyer_country
 
-            - @invoice.buyer_phone.present?
               %dt= t(:phone)
               %dd= @invoice.buyer_phone
 
-            - @invoice.buyer_url.present?
               %dt= t(:url)
               %dd= @invoice.buyer_url
 
-            - @invoice.buyer_email.present?
               %dt= t(:email)
               %dd= @invoice.buyer_email
 
