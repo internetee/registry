@@ -7,12 +7,12 @@ class Whois::RecordTest < ActiveSupport::TestCase
     @whois_record = whois_records(:one)
     @auction = auctions(:one)
 
-    @original_disclaimer_setting = Setting.registry_whois_disclaimer
+    @original_disclaimer = Setting.registry_whois_disclaimer
     Setting.registry_whois_disclaimer = 'disclaimer'
   end
 
   teardown do
-    Setting.registry_whois_disclaimer = @original_disclaimer_setting
+    Setting.registry_whois_disclaimer = @original_disclaimer
   end
 
   def test_reads_disclaimer_setting

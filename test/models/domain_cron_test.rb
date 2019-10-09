@@ -5,7 +5,12 @@ class DomainCronTest < ActiveSupport::TestCase
 
   setup do
     @domain = domains(:shop)
+    @original_expire_pending_confirmation = Setting.expire_pending_confirmation
     ActionMailer::Base.deliveries.clear
+  end
+
+  teardown do
+    Setting.expire_pending_confirmation = @original_expire_pending_confirmation
   end
 
   def test_clean_expired_pendings_notifies_registrant_by_email

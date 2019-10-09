@@ -5,14 +5,12 @@ class DepositTest < ActiveSupport::TestCase
     super
 
     @deposit = Deposit.new(registrar: registrars(:bestnames))
-    @minimum_deposit = Setting.minimum_deposit
+    @original_minimum_deposit = Setting.minimum_deposit
     Setting.minimum_deposit = 1.00
   end
 
-  def teardown
-    super
-
-    Setting.minimum_deposit = @minimum_deposit
+  teardown do
+    Setting.minimum_deposit = @original_minimum_deposit
   end
 
   def test_validate_amount_cannot_be_lower_than_0_01
