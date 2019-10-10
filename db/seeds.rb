@@ -2,7 +2,7 @@
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 ActiveRecord::Base.transaction do
-  AdminUser.where('username': 'admin').first_or_create!(
+  AdminUser.where(username: 'admin').first_or_create!(
     username: 'admin',
     email: 'admin@domain.tld',
     password: 'adminadmin',
@@ -12,11 +12,11 @@ ActiveRecord::Base.transaction do
     roles: ['admin']
   )
   # Required for creating registrar
-  Setting.where('var': 'registry_vat_prc').first_or_create(
+  Setting.where(var: 'registry_vat_prc').first_or_create(
     value: '0.2'
   )
   # First registrar
-  Registrar.where('name': 'Registrar First').first_or_create!(
+  Registrar.where(name: 'Registrar First').first_or_create!(
     name: 'Registrar First',
     reg_no: '90010019',
     accounting_customer_code: '1234',
