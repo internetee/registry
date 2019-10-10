@@ -12,7 +12,7 @@ end
 
 def effective_user_id
   uid = `id -u`
-  uid.delete!("\n")
+  uid.strip!
 end
 
 Dir.chdir APP_ROOT do
