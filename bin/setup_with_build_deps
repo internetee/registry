@@ -10,7 +10,7 @@ def system!(*args)
   system(*args) || abort("\n== Command #{args} failed ==")
 end
 
-def get_uid()
+def effective_user_id
   uid = `id -u`
   uid.delete!("\n")
 end
@@ -18,7 +18,7 @@ end
 Dir.chdir APP_ROOT do
   puts '== Installing application build deps =='
   sudo_prefix = ''
-  sudo_prefix = "sudo" unless get_uid == '0'
+  sudo_prefix = "sudo" unless effective_user_id == '0'
   system! "#{sudo_prefix} apt-get update && #{sudo_prefix} apt-get -y --no-install-recommends install libxml2 libxml2-dev postgresql-client postgresql-client-common libpq-dev"
 
   puts "== Installing rbenv ruby manager to #{ENV['HOME']} =="
@@ -41,15 +41,15 @@ Dir.chdir APP_ROOT do
 
   # Include RBENV in path
   ENV['PATH'] = ENV['HOME'] + "/.rbenv/bin:" + ENV['HOME'] + "/.rbenv/plugins/ruby-build/bin:" + ENV['PATH']
-  NEEDED_RUBY = `cat .ruby-version`.freeze
+  NEEDED_RUBY_VERSION = `cat .ruby-version`.freeze
 
-  if '!bundle check' == false
+  if `!bundle check` == false
     system! "#{SUDO_PREFIX} apt-get -y --no-install-recommends install libreadline-dev"
-    puts 'Installing Ruby: ' + NEEDED_RUBY
-    system!('rbenv install ' + NEEDED_RUBY)
+    puts 'Installing Ruby: ' + NEEDED_RUBY_VERSION
+    system!('rbenv install ' + NEEDED_RUBY_VERSION)
     system!('rbenv rehash')
   else
-    puts 'Ruby ' + NEEDED_RUBY + 'already installed'
+    puts 'Ruby ' + NEEDED_RUBY_VERSION + 'already installed'
   end
   puts 'Now running setup'
   exec('./bin/setup')
