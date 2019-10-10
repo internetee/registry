@@ -22,7 +22,6 @@ plugins:
     enabled: true
     channel: rubocop-0-58
 exclude_patterns:
-  - "app/models/legacy/"
   - "app/models/version/"
   - "bin/"
   - "config/"
@@ -35,7 +34,6 @@ exclude_patterns:
   - "lib/tasks/bootstrap.rake"
   - "lib/tasks/db.rake"
   - "lib/tasks/documents.rake"
-  - "lib/tasks/import.rake"
   - "lib/tasks/legal_doc.rake"
   - "lib/tasks/whois.rake"
   - "test/"
