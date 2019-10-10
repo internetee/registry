@@ -525,7 +525,7 @@ CREATE TABLE public.blocked_domains (
     updated_at timestamp without time zone,
     creator_str character varying,
     updator_str character varying,
-    name character varying
+    name character varying NOT NULL
 );
 
 
@@ -801,7 +801,7 @@ ALTER SEQUENCE public.domain_transfers_id_seq OWNED BY public.domain_transfers.i
 
 CREATE TABLE public.domains (
     id integer NOT NULL,
-    name character varying,
+    name character varying NOT NULL,
     registrar_id integer NOT NULL,
     registered_at timestamp without time zone,
     valid_to timestamp without time zone NOT NULL,
@@ -809,8 +809,8 @@ CREATE TABLE public.domains (
     transfer_code character varying NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    name_dirty character varying,
-    name_puny character varying,
+    name_dirty character varying NOT NULL,
+    name_puny character varying NOT NULL,
     period integer,
     period_unit character varying(1),
     creator_str character varying,
@@ -2030,13 +2030,13 @@ ALTER SEQUENCE public.que_jobs_job_id_seq OWNED BY public.que_jobs.job_id;
 
 CREATE TABLE public.registrant_verifications (
     id integer NOT NULL,
-    domain_name character varying,
-    verification_token character varying,
+    domain_name character varying NOT NULL,
+    verification_token character varying NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    action character varying,
-    domain_id integer,
-    action_type character varying
+    action character varying NOT NULL,
+    domain_id integer NOT NULL,
+    action_type character varying NOT NULL
 );
 
 
@@ -2123,7 +2123,7 @@ CREATE TABLE public.reserved_domains (
     creator_str character varying,
     updator_str character varying,
     legacy_id integer,
-    name character varying,
+    name character varying NOT NULL,
     password character varying NOT NULL
 );
 
@@ -2285,7 +2285,7 @@ ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 CREATE TABLE public.white_ips (
     id integer NOT NULL,
-    registrar_id integer,
+    registrar_id integer NOT NULL,
     ipv4 character varying,
     ipv6 character varying,
     interfaces character varying[],
@@ -2356,14 +2356,14 @@ ALTER SEQUENCE public.whois_records_id_seq OWNED BY public.whois_records.id;
 
 CREATE TABLE public.zones (
     id integer NOT NULL,
-    origin character varying,
-    ttl integer,
-    refresh integer,
-    retry integer,
-    expire integer,
-    minimum_ttl integer,
-    email character varying,
-    master_nameserver character varying,
+    origin character varying NOT NULL,
+    ttl integer NOT NULL,
+    refresh integer NOT NULL,
+    retry integer NOT NULL,
+    expire integer NOT NULL,
+    minimum_ttl integer NOT NULL,
+    email character varying NOT NULL,
+    master_nameserver character varying NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
@@ -3149,6 +3149,14 @@ ALTER TABLE ONLY public.settings
 
 
 --
+-- Name: uniq_blocked_domains_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY public.blocked_domains
+    ADD CONSTRAINT uniq_blocked_domains_name UNIQUE (name);
+
+
+--
 -- Name: uniq_contact_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3162,6 +3170,14 @@ ALTER TABLE ONLY public.contacts
 
 ALTER TABLE ONLY public.domains
     ADD CONSTRAINT uniq_domain_uuid UNIQUE (uuid);
+
+
+--
+-- Name: uniq_reserved_domains_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY public.reserved_domains
+    ADD CONSTRAINT uniq_reserved_domains_name UNIQUE (name);
 
 
 --
@@ -3302,13 +3318,6 @@ CREATE INDEX index_account_activities_on_invoice_id ON public.account_activities
 --
 
 CREATE INDEX index_accounts_on_registrar_id ON public.accounts USING btree (registrar_id);
-
-
---
--- Name: index_blocked_domains_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_blocked_domains_on_name ON public.blocked_domains USING btree (name);
 
 
 --
@@ -3920,6 +3929,14 @@ ALTER TABLE ONLY public.invoices
 
 
 --
+-- Name: fk_rails_36cff3de9c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.white_ips
+    ADD CONSTRAINT fk_rails_36cff3de9c FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
+
+
+--
 -- Name: fk_rails_59c422f73d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4021,6 +4038,14 @@ ALTER TABLE ONLY public.account_activities
 
 ALTER TABLE ONLY public.account_activities
     ADD CONSTRAINT fk_rails_d2cc3c2fa9 FOREIGN KEY (price_id) REFERENCES public.prices(id);
+
+
+--
+-- Name: fk_rails_f41617a0e9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registrant_verifications
+    ADD CONSTRAINT fk_rails_f41617a0e9 FOREIGN KEY (domain_id) REFERENCES public.domains(id);
 
 
 --
@@ -4834,6 +4859,22 @@ INSERT INTO schema_migrations (version) VALUES ('20190811202347');
 INSERT INTO schema_migrations (version) VALUES ('20190811202711');
 
 INSERT INTO schema_migrations (version) VALUES ('20190811205406');
+
+INSERT INTO schema_migrations (version) VALUES ('20191004095229');
+
+INSERT INTO schema_migrations (version) VALUES ('20191004103144');
+
+INSERT INTO schema_migrations (version) VALUES ('20191004105643');
+
+INSERT INTO schema_migrations (version) VALUES ('20191004105732');
+
+INSERT INTO schema_migrations (version) VALUES ('20191004110234');
+
+INSERT INTO schema_migrations (version) VALUES ('20191004154844');
+
+INSERT INTO schema_migrations (version) VALUES ('20191005162437');
+
+INSERT INTO schema_migrations (version) VALUES ('20191007123000');
 
 INSERT INTO schema_migrations (version) VALUES ('20191008024334');
 
