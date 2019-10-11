@@ -1,3 +1,6 @@
+11.10.2019
+* Fixed mailer previews for couple email templates [#1342](https://github.com/internetee/registry/pull/1342)
+
 10.10.2019
 * Added DB constraints for reserved and blocked tables [#1338](https://github.com/internetee/registry/pull/1338)
 
