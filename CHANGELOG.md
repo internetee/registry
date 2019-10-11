@@ -1,3 +1,6 @@
+10.10.2019
+* Added DB constraints for reserved and blocked tables [#1338](https://github.com/internetee/registry/pull/1338)
+
 08.10.2019
 * Removed unused epp routes [#1335](https://github.com/internetee/registry/pull/1335)
 * Removed Rspec and coverted specs to tests [#1336](https://github.com/internetee/registry/pull/1336)
