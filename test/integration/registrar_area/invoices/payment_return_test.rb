@@ -1,6 +1,6 @@
-require 'application_system_test_case'
+require 'test_helper'
 
-class PaymentReturnTest < ApplicationSystemTestCase
+class PaymentReturnTest < ApplicationIntegrationTest
   def setup
     super
 
