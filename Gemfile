@@ -80,9 +80,7 @@ end
 
 group :development, :test do
   gem 'pry', '0.10.1'
-  gem 'autodoc'
   gem 'puma'
-  gem 'sdoc', '~> 1.1'
 end
 
 group :test do
