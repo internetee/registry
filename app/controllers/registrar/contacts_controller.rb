@@ -45,8 +45,11 @@ class Registrar
           send_data raw_csv, filename: 'contacts.csv', type: "#{Mime[:csv]}; charset=utf-8"
         end
         format.pdf do
-          @contacts = contacts
-          raw_pdf = contacts.pdf(render_to_string('registrar/contacts/download_list', layout: false))
+          view = ActionView::Base.new(ActionController::Base.view_paths, contacts: contacts)
+          view.class_eval { include ::ApplicationHelper }
+          raw_html = view.render(file: 'registrar/contacts/download_list', layout: false)
+          raw_pdf = contacts.pdf(raw_html)
+
           send_data raw_pdf, filename: 'contacts.pdf'
         end
       end

@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-2"><%= t(:name) %></th>
+                            <th class="col-xs-2"><%= t('.registrant') %></th>
+                            <th class="col-xs-2"><%= t(:valid_to) %></th>
+                            <th class="col-xs-2"><%= t(:registrar_name) %></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% @domains.each do |x| %>
+                            <tr>
+                                <td><%= x.name %></td>
+                                <td><%= x.registrant %></td>
+                                <td><%= l(x.valid_to, format: :short) %></td>
+                                <td><%= x.registrar %></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

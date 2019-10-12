@@ -20,8 +20,10 @@ class Registrant::DomainsController < RegistrantController
         send_data raw_csv, filename: 'domains.csv', type: "#{Mime[:csv]}; charset=utf-8"
       end
       format.pdf do
-        @domains = domains
-        raw_pdf = domains.pdf(render_to_string('registrant/domains/download_list', layout: false))
+        view = ActionView::Base.new(ActionController::Base.view_paths, domains: domains)
+        raw_html = view.render(file: 'registrant/domains/download_list', layout: false)
+        raw_pdf = domains.pdf(raw_html)
+
         send_data raw_pdf, filename: 'domains.pdf'
       end
     end
