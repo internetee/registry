@@ -21,7 +21,7 @@ class Registrant::DomainsController < RegistrantController
       end
       format.pdf do
         view = ActionView::Base.new(ActionController::Base.view_paths, domains: domains)
-        raw_html = view.render(file: 'registrant/domains/download_list', layout: false)
+        raw_html = view.render(file: 'registrant/domains/list_pdf', layout: false)
         raw_pdf = domains.pdf(raw_html)
 
         send_data raw_pdf, filename: 'domains.pdf'

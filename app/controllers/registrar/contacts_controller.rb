@@ -47,7 +47,7 @@ class Registrar
         format.pdf do
           view = ActionView::Base.new(ActionController::Base.view_paths, contacts: contacts)
           view.class_eval { include ::ApplicationHelper }
-          raw_html = view.render(file: 'registrar/contacts/download_list', layout: false)
+          raw_html = view.render(file: 'registrar/contacts/list_pdf', layout: false)
           raw_pdf = contacts.pdf(raw_html)
 
           send_data raw_pdf, filename: 'contacts.pdf'

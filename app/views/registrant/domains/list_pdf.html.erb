@@ -15,12 +15,12 @@
                     </thead>
 
                     <tbody>
-                        <% @domains.each do |x| %>
+                        <% @domains.each do |domain| %>
                             <tr>
-                                <td><%= x.name %></td>
-                                <td><%= x.registrant %></td>
-                                <td><%= l(x.valid_to, format: :short) %></td>
-                                <td><%= x.registrar %></td>
+                                <td><%= domain.name %></td>
+                                <td><%= domain.registrant %></td>
+                                <td><%= l(domain.valid_to, format: :short) %></td>
+                                <td><%= domain.registrar %></td>
                             </tr>
                         <% end %>
                     </tbody>
