@@ -30,37 +30,26 @@ class Registrar
 
       normalize_search_parameters do
         @q = contacts.search(search_params)
-        @contacts = @q.result(distinct: :true).page(params[:page])
       end
 
-      @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
-    end
-
-    def download_list
-      authorize! :view, Depp::Contact
-
-      params[:q] ||= {}
-      params[:q].delete_if { |_k, v| v.blank? }
-      if params[:q].length == 1 && params[:q][:name_matches].present?
-        @contacts = Contact.find_by(name: params[:q][:name_matches])
-      end
-
-      contacts = current_registrar_user.registrar.contacts.includes(:registrar)
-      contacts = contacts.filter_by_states(params[:statuses_contains]) if params[:statuses_contains]
-
-      normalize_search_parameters do
-        @q = contacts.search(params[:q])
-        @contacts = @q.result
-      end
+      contacts = @q.result
 
       respond_to do |format|
-        format.csv { render text: @contacts.to_csv }
+        format.html do
+          contacts_per_page = params[:results_per_page].to_i
+          @contacts = contacts.page(params[:page])
+          @contacts = @contacts.per(contacts_per_page) if contacts_per_page.positive?
+        end
+        format.csv do
+          raw_csv = contacts.to_csv
+          send_data raw_csv, filename: 'contacts.csv', type: "#{Mime[:csv]}; charset=utf-8"
+        end
         format.pdf do
-          pdf = @contacts.pdf(render_to_string('registrar/contacts/download_list', layout: false))
-          send_data pdf, filename: 'contacts.pdf'
+          @contacts = contacts
+          raw_pdf = contacts.pdf(render_to_string('registrar/contacts/download_list', layout: false))
+          send_data raw_pdf, filename: 'contacts.pdf'
         end
       end
-
     end
 
     def new

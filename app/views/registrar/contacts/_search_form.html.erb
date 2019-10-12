@@ -83,49 +83,35 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <div class="form-group">
                 <%= label_tag t(:status) %>
                 <%= select_tag :statuses_contains, options_for_select(Contact::STATUSES, params[:statuses_contains]), { multiple: true, placeholder: t(:choose), class: 'form-control js-combobox' } %>
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form-group">
                 <%= label_tag t(:results_per_page) %>
                 <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page) %>
             </div>
         </div>
 
-        <div class="col-md-3" style="padding-top: 25px;">
+        <div class="col-md-5 text-right" style="padding-top: 25px;">
             <button class="btn btn-primary">
                 &nbsp;
                 <span class="glyphicon glyphicon-search"></span>
                 &nbsp;
             </button>
+            <%= button_tag t('.download_pdf_btn'),
+                           formaction: registrar_contacts_path(format: :pdf),
+                           name: nil,
+                           class: 'btn btn-default' %>
+            <%= button_tag t('.download_csv_btn'),
+                           formaction: registrar_contacts_path(format: :csv),
+                           name: nil,
+                           class: 'btn btn-default' %>
             <%= link_to(t('.reset_btn'), registrar_contacts_path, class: 'btn btn-default') %>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-3">
-            <div class="btn-group" role="group">
-                <button aria-expanded="false" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
-                    Download
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <%= link_to 'PDF', download_list_registrar_contacts_path(q: params[:q], format: "pdf") %>
-                    </li>
-                    <li>
-                        <%= link_to 'CSV', download_list_registrar_contacts_path(q: params[:q], format: "csv") %>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-md-3"></div>
-        <div class="col-md-3"></div>
-        <div class="col-md-3"></div>
     </div>
 <% end %>

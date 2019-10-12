@@ -87,7 +87,6 @@ Rails.application.routes.draw do
 
       collection do
         get 'check'
-        get 'download_list'
       end
     end
 
@@ -151,11 +150,6 @@ Rails.application.routes.draw do
     resources :registrars, only: :show
     resources :domains, only: %i[index show] do
       resources :contacts, only: %i[show edit update]
-
-      collection do
-        get :download_list
-      end
-
       member do
         get 'confirmation'
       end

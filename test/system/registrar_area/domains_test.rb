@@ -14,7 +14,7 @@ class RegistrarDomainsTest < ApplicationSystemTestCase
     CSV
 
     visit registrar_domains_url
-    click_button 'Download as CSV'
+    click_button 'Download CSV'
     assert_equal 'attachment; filename="Domains_2010-07-05_10.30.csv"', response_headers['Content-Disposition']
     assert_equal expected_csv, page.body
   end
