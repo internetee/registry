@@ -8,9 +8,6 @@ en:
         download_csv_btn: Download CSV
         reset_btn: Reset
 
-      list_pdf:
-        registrant: Registrant
-
       partials:
         registrant:
           header: Registrant
