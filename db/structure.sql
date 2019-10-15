@@ -1950,7 +1950,7 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 CREATE TABLE public.prices (
     id integer NOT NULL,
-    price_cents integer NOT NULL,
+    price numeric(10,2) NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     creator_str character varying,
@@ -4877,4 +4877,6 @@ INSERT INTO schema_migrations (version) VALUES ('20191005162437');
 INSERT INTO schema_migrations (version) VALUES ('20191007123000');
 
 INSERT INTO schema_migrations (version) VALUES ('20191008024334');
+
+INSERT INTO schema_migrations (version) VALUES ('20191015144353');
 

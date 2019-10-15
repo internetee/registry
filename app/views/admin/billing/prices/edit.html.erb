@@ -21,7 +21,7 @@
     <div class="alert alert-info">
         <% active_price = ::Billing::Price.price_for(@price.zone, @price.operation_category, @price.duration) %>
         <% if active_price %>
-            <%= t('active_price_for_this_operation_is', price: "#{active_price.price.amount.to_s} EUR") %>
+            <%= t('active_price_for_this_operation_is', price: "#{active_price.price} EUR") %>
         <% else %>
             <%= t('active_price_missing_for_this_operation') %>
         <% end %>

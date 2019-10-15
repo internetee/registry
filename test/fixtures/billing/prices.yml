@@ -1,6 +1,6 @@
 create_one_month:
   duration: 3 mons
-  price_cents: 100
+  price: 1
   operation_category: create
   valid_from: 2010-07-05
   valid_to: 2010-07-05
@@ -8,7 +8,7 @@ create_one_month:
 
 renew_one_month:
   duration: 1 mons
-  price_cents: 100
+  price: 1
   operation_category: renew
   valid_from: 2010-07-05
   valid_to: 2010-07-05
@@ -16,14 +16,14 @@ renew_one_month:
 
 create_one_year:
   duration: 1 year
-  price_cents: 1000
+  price: 10
   operation_category: create
   valid_from: 2010-07-05
   zone: one
 
 renew_one_year:
   duration: 1 year
-  price_cents: 1000
+  price: 10
   operation_category: renew
   valid_from: 2010-07-05
   valid_to: 2010-07-05

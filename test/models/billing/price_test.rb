@@ -24,7 +24,7 @@ class Billing::PriceTest < ActiveSupport::TestCase
     price.price = 0
     assert price.valid?, proc { price.errors.full_messages }
 
-    price.price = "1#{I18n.t('number.currency.format.separator')}1"
+    price.price = 1.1
     assert price.valid?
 
     price.price = 1

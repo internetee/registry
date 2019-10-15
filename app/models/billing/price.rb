@@ -5,13 +5,13 @@ module Billing
     belongs_to :zone, class_name: 'DNS::Zone', required: true
     has_many :account_activities
 
-    validates :price, :valid_from, :operation_category, :duration, presence: true
+    validates :valid_from, :operation_category, :duration, presence: true
+    validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
     validates :operation_category, inclusion: { in: Proc.new { |price| price.class.operation_categories } }
     validates :duration, inclusion: { in: Proc.new { |price| price.class.durations } }
 
     alias_attribute :effect_time, :valid_from
     alias_attribute :expire_time, :valid_to
-    monetize :price_cents, allow_nil: true, numericality: { greater_than_or_equal_to: 0 }
     after_initialize :init_values
 
     def self.operation_categories

@@ -80,7 +80,7 @@ module Epp
 
         if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
           current_user.registrar.debit!({
-                                          sum: @domain_pricelist.price.amount,
+                                          sum: @domain_pricelist.price,
                                           description: "#{I18n.t('create')} #{@domain.name}",
                                           activity_type: AccountActivity::CREATE,
                                           price: @domain_pricelist
@@ -162,7 +162,7 @@ module Epp
             end
 
             current_user.registrar.debit!({
-                                            sum: @domain_pricelist.price.amount,
+                                            sum: @domain_pricelist.price,
                                             description: "#{I18n.t('renew')} #{@domain.name}",
                                             activity_type: AccountActivity::RENEW,
                                             price: @domain_pricelist
@@ -321,7 +321,7 @@ module Epp
     def balance_ok?(operation, period = nil, unit = nil)
       @domain_pricelist = @domain.pricelist(operation, period.try(:to_i), unit)
       if @domain_pricelist.try(:price) # checking if price list is not found
-        if current_user.registrar.balance < @domain_pricelist.price.amount
+        if current_user.registrar.balance < @domain_pricelist.price
           epp_errors << {
             code: '2104',
             msg: I18n.t('billing_failure_credit_balance_low')

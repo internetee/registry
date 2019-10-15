@@ -97,7 +97,7 @@ class Directo < ActiveRecord::Base
                 "ProductID" => DOMAIN_TO_PRODUCT[price.zone_name],
                 "Unit" => "tk",
                 "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration.to_i} aasta#{price.duration.to_i > 1 ? 't' : ''}",
-                "UnitPriceWoVAT" => price.price.amount / price.duration.to_i
+                "UnitPriceWoVAT" => price.price / price.duration.to_i
             }
             hash["StartDate"] = (activity.created_at + (year-1).year).end_of_month.strftime(date_format) if year > 1
             hash["EndDate"] = (activity.created_at + (year-1).year + 1).end_of_month.strftime(date_format) if year > 1
@@ -120,7 +120,7 @@ class Directo < ActiveRecord::Base
                 "ProductID" => DOMAIN_TO_PRODUCT[price.zone_name],
                 "Unit" => "tk",
                 "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration.to_i} kuud",
-                "UnitPriceWoVAT" => price.price.amount,
+                "UnitPriceWoVAT" => price.price,
             }
 
             if items.has_key?(hash)
