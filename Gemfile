@@ -47,7 +47,6 @@ gem 'grape'
 # registry specfic
 gem 'isikukood' # for EE-id validation
 gem 'simpleidn', '0.0.7' # For punycode
-gem 'money-rails'
 gem 'data_migrate'
 gem 'whenever', '0.9.4', require: false
 
