@@ -10,7 +10,7 @@
         <div class="col-md-2">
             <div class="input-group">
                 <%= f.money_field :amount, required: true, autofocus: true, class: 'form-control' %>
-                <div class="input-group-addon"><%= Money::default_currency.symbol %></div>
+                <div class="input-group-addon">€</div>
             </div>
         </div>
 
@@ -25,7 +25,7 @@
         <div class="col-md-2">
             <div class="input-group">
                 <%= f.money_field :threshold, required: true, class: 'form-control' %>
-                <div class="input-group-addon"><%= Money::default_currency.symbol %></div>
+                <div class="input-group-addon">€</div>
             </div>
         </div>
     </div>
