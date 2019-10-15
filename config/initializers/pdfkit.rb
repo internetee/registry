@@ -6,7 +6,8 @@ PDFKit.configure do |config|
   config.wkhtmltopdf = installed
   config.default_options = {
     page_size: 'A4',
-    quiet: true
+    quiet: true,
+    encoding: 'utf-8',
     # :print_media_type => true
   }
 end
