@@ -47,9 +47,10 @@ class Registrar
             domain_presenters << ::DomainPresenter.new(domain: domain, view: view_context)
           end
 
-          csv = Registrar::DomainListCSVPresenter.new(domains: domain_presenters, view: view_context).to_s
+          raw_csv = Registrar::DomainListCSVPresenter.new(domains: domain_presenters,
+                                                          view: view_context).to_s
           filename = "Domains_#{l(Time.zone.now, format: :filename)}.csv"
-          send_data(csv, filename: filename)
+          send_data raw_csv, filename: filename, type: "#{Mime[:csv]}; charset=utf-8"
         end
       end
     end

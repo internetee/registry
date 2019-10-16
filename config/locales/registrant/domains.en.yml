@@ -4,10 +4,9 @@ en:
       index:
         header: Domains
         registrant: Registrant
+        download_pdf_btn: Download PDF
+        download_csv_btn: Download CSV
         reset_btn: Reset
-
-      download_list:
-        registrant: Registrant
 
       partials:
         registrant:

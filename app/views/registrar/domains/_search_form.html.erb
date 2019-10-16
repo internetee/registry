@@ -74,14 +74,14 @@
             </div>
         </div>
 
-        <div class="col-md-offset-6 col-md-4 text-right">
+        <div class="col-md-10 text-right">
             <button class="btn btn-primary search">
                 &nbsp;
                 <span class="glyphicon glyphicon-search"></span>
                 &nbsp;
             </button>
-            <%= button_tag t('.download_btn'), class: 'btn btn-primary export-domains-csv-btn',
-                           formaction: registrar_domains_path(format: 'csv') %>
+            <%= button_tag t('.download_btn'), formaction: registrar_domains_path(format: 'csv'),
+                           class: 'btn btn-default' %>
             <%= link_to t('.reset_btn'), registrar_domains_path, class: 'btn btn-default' %>
         </div>
     </div>

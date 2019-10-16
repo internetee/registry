@@ -4,11 +4,29 @@ class Registrant::DomainsController < RegistrantController
 
     params[:q] ||= {}
     normalize_search_parameters do
-      @q = current_user_domains.search(params[:q])
-      @domains = @q.result.page(params[:page])
+      @q = current_user_domains.search(search_params)
     end
 
-    @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+    domains = @q.result
+
+    respond_to do |format|
+      format.html do
+        @domains = domains.page(params[:page])
+        domains_per_page = params[:results_per_page].to_i
+        @domains = @domains.per(domains_per_page) if domains_per_page.positive?
+      end
+      format.csv do
+        raw_csv = @q.result.to_csv
+        send_data raw_csv, filename: 'domains.csv', type: "#{Mime[:csv]}; charset=utf-8"
+      end
+      format.pdf do
+        view = ActionView::Base.new(ActionController::Base.view_paths, domains: domains)
+        raw_html = view.render(file: 'registrant/domains/list_pdf', layout: false)
+        raw_pdf = domains.pdf(raw_html)
+
+        send_data raw_pdf, filename: 'domains.pdf'
+      end
+    end
   end
 
   def show
@@ -32,23 +50,6 @@ class Registrant::DomainsController < RegistrantController
     end
   end
 
-  def download_list
-    authorize! :view, :registrant_domains
-    params[:q] ||= {}
-    normalize_search_parameters do
-      @q = current_user_domains.search(params[:q])
-      @domains = @q
-    end
-
-    respond_to do |format|
-      format.csv { render text: @domains.result.to_csv }
-      format.pdf do
-        pdf = @domains.result.pdf(render_to_string('registrant/domains/download_list', layout: false))
-        send_data pdf, filename: 'domains.pdf'
-      end
-    end
-  end
-
   private
 
   def normalize_search_parameters
@@ -69,5 +70,10 @@ class Registrant::DomainsController < RegistrantController
     elsif domain.statuses.include?(DomainStatus::PENDING_DELETE_CONFIRMATION)
       registrant_domain_delete_confirm_url(token: domain.registrant_verification_token)
     end
+  end
+
+  def search_params
+    params.require(:q).permit(:name_matches, :registrant_ident_eq, :valid_to_gteq, :valid_to_lteq,
+                              :results_per_page)
   end
 end
