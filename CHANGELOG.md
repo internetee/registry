@@ -1,3 +1,7 @@
+16.10.2019
+* Contact and domain list download in portals changed - buttons in stead of dropdown [#1360](https://github.com/internetee/registry/pull/1360) 
+* limited epp routes [#1364](https://github.com/internetee/registry/pull/1364)
+
 11.10.2019
 * Fixed mailer previews for couple email templates [#1342](https://github.com/internetee/registry/pull/1342)
 * Updated ransack gem to 1.8 [#1357](https://github.com/internetee/registry/pull/1357)
