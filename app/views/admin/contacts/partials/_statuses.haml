@@ -1,5 +1,4 @@
-- panel_class = contact.errors.messages[:statuses] ? 'panel-danger' : 'panel-default'
-#contact_statuses.panel{class: panel_class}
+#contact_statuses.panel{class: 'panel-default'}
   .panel-heading.clearfix
     = t(:statuses)
   .table-responsive
@@ -13,9 +12,3 @@
           %tr
             %td= status
             %td= contact.status_notes[status]
-
-      - if contact.errors.messages[:statuses]
-        %tfoot
-          - @domain.errors.messages[:statuses].each do |s|
-            %tr
-              %td{colspan: 4}= s

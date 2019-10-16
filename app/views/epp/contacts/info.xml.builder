@@ -75,7 +75,6 @@ xml.epp_head do
           xml.tag!('contact:pw', 'No access')
           end
         end
-        # xml << render('/epp/contacts/disclosure_policy')
       end
     end
     if can? :view_full_info, @contact, @password
