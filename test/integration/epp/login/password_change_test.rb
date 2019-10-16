@@ -25,7 +25,7 @@ class EppLoginPasswordChangeTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/session/login', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
+    post epp_login_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
     assert_equal 'new-password', users(:api_bestnames).plain_text_password
     assert_epp_response :completed_successfully
   end

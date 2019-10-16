@@ -24,7 +24,7 @@ class EppDomainRenewBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_renew_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     domain.reload
 
     assert_epp_response :completed_successfully
@@ -50,7 +50,7 @@ class EppDomainRenewBaseTest < EppTestCase
     XML
 
     assert_no_changes -> { domain.valid_to } do
-      post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_renew_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
       domain.reload
     end
     assert_epp_response :object_status_prohibits_operation
@@ -77,7 +77,7 @@ class EppDomainRenewBaseTest < EppTestCase
     XML
 
     assert_no_changes -> { domain.valid_to } do
-      post '/epp/command/renew', { frame: request_xml },
+      post epp_renew_path, { frame: request_xml },
            'HTTP_COOKIE' => "session=#{session.session_id}"
       domain.reload
     end
@@ -105,7 +105,7 @@ class EppDomainRenewBaseTest < EppTestCase
     XML
 
     assert_no_difference -> { domain.valid_to } do
-      post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' =>
+      post epp_renew_path, { frame: request_xml }, 'HTTP_COOKIE' =>
         "session=#{session.session_id}"
       domain.reload
     end
@@ -132,7 +132,7 @@ class EppDomainRenewBaseTest < EppTestCase
     XML
 
     assert_no_changes -> { domain.valid_to } do
-      post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_renew_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
       domain.reload
     end
     assert_epp_response :billing_failure
@@ -158,7 +158,7 @@ class EppDomainRenewBaseTest < EppTestCase
     XML
 
     assert_no_changes -> { domain.valid_to } do
-      post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_renew_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
       domain.reload
     end
     assert_epp_response :parameter_value_policy_error

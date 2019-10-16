@@ -27,7 +27,7 @@ class EppDomainCreateBaseTest < EppTestCase
     XML
 
     assert_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
 
     assert_epp_response :completed_successfully
@@ -68,7 +68,7 @@ class EppDomainCreateBaseTest < EppTestCase
     XML
 
     assert_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
     assert_epp_response :completed_successfully
 
@@ -102,7 +102,7 @@ class EppDomainCreateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     assert_epp_response :completed_successfully
     assert_equal transfer_code, Domain.find_by(name: name).transfer_code
@@ -132,7 +132,7 @@ class EppDomainCreateBaseTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
     assert_epp_response :data_management_policy_violation
   end
@@ -161,7 +161,7 @@ class EppDomainCreateBaseTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
     assert_epp_response :invalid_authorization_information
   end
@@ -189,7 +189,7 @@ class EppDomainCreateBaseTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
     assert_epp_response :required_parameter_missing
   end
@@ -217,7 +217,7 @@ class EppDomainCreateBaseTest < EppTestCase
       </epp>
     XML
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session.session_id}"
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session.session_id}"
     end
     assert_epp_response :billing_failure
   end
@@ -245,7 +245,7 @@ class EppDomainCreateBaseTest < EppTestCase
       </epp>
     XML
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
     assert_epp_response :billing_failure
   end

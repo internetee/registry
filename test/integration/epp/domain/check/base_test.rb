@@ -15,7 +15,7 @@ class EppDomainCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
@@ -36,7 +36,7 @@ class EppDomainCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '1', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
@@ -59,7 +59,7 @@ class EppDomainCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '1', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
@@ -80,7 +80,7 @@ class EppDomainCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
@@ -103,7 +103,7 @@ class EppDomainCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
@@ -126,7 +126,7 @@ class EppDomainCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
@@ -149,7 +149,7 @@ class EppDomainCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
@@ -172,7 +172,7 @@ class EppDomainCheckBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal 3, response_xml.xpath('//domain:cd', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').size

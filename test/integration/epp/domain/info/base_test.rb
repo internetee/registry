@@ -21,7 +21,7 @@ class EppDomainInfoBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_info_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
@@ -49,7 +49,7 @@ class EppDomainInfoBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_info_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '65078d5', response_xml.at_xpath('//domain:authInfo/domain:pw', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
@@ -76,7 +76,7 @@ class EppDomainInfoBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_goodnames'
+    post epp_info_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_goodnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '65078d5', response_xml.at_xpath('//domain:authInfo/domain:pw', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
@@ -99,7 +99,7 @@ class EppDomainInfoBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_goodnames'
+    post epp_info_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_goodnames'
 
     response_xml = Nokogiri::XML(response.body)
     assert_nil response_xml.at_xpath('//domain:authInfo/domain:pw',

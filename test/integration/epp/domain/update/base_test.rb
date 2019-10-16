@@ -34,7 +34,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     @domain.reload
     assert_equal 'f0ff7d17b0', @domain.transfer_code
     assert_epp_response :completed_successfully
@@ -56,7 +56,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     assert_epp_response :object_status_prohibits_operation
   end
 
@@ -76,7 +76,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
 
     assert_epp_response :object_status_prohibits_operation
     response_xml = Nokogiri::XML(response.body)
@@ -109,7 +109,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     @domain.reload
 
     assert_epp_response :completed_successfully_action_pending
@@ -145,7 +145,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     @domain.reload
 
     assert_epp_response :completed_successfully_action_pending
@@ -179,7 +179,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     @domain.reload
 
     assert_epp_response :completed_successfully
@@ -214,7 +214,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     @domain.reload
 
     assert_epp_response :completed_successfully
@@ -250,7 +250,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     @domain.reload
 
     assert_epp_response :completed_successfully
@@ -287,7 +287,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_update_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     @domain.reload
 
     assert_epp_response :completed_successfully

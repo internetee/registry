@@ -1,14 +1,39 @@
 require_dependency 'epp_constraint'
 
 Rails.application.routes.draw do
-  namespace(:epp, defaults: { format: :xml }) do
-    match 'session/:action', controller: 'sessions', via: :all, constraints: EppConstraint.new(:session)
+  # https://github.com/internetee/epp_proxy#translation-of-epp-calls
+  namespace :epp do
+    constraints(EppConstraint.new(:session)) do
+      get 'session/hello', to: 'sessions#hello', as: 'hello'
+      post 'session/login', to: 'sessions#login', as: 'login'
+      post 'session/logout', to: 'sessions#logout', as: 'logout'
+    end
 
-    post 'command/:action', controller: 'domains', constraints: EppConstraint.new(:domain)
-    post 'command/:action', controller: 'contacts', constraints: EppConstraint.new(:contact)
-    post 'command/poll',     to: 'polls#poll', constraints: EppConstraint.new(:poll)
-    post 'command/keyrelay', to: 'keyrelays#keyrelay', constraints: EppConstraint.new(:keyrelay)
+    constraints(EppConstraint.new(:contact)) do
+      controller('contacts') do
+        post 'command/create', action: 'create', as: :create
+        post 'command/update', action: 'update', as: :update
+        post 'command/info', action: 'info', as: :info
+        post 'command/check', action: 'check', as: :check
+        post 'command/transfer', action: 'transfer', as: :transfer
+        post 'command/renew', action: 'renew', as: :renew
+        post 'command/delete', action: 'delete', as: :delete
+      end
+    end
 
+    constraints(EppConstraint.new(:domain)) do
+      controller('domains') do
+        post 'command/create', action: 'create', as: nil
+        post 'command/update', action: 'update', as: nil
+        post 'command/info', action: 'info', as: nil
+        post 'command/check', action: 'check', as: nil
+        post 'command/transfer', action: 'transfer', as: nil
+        post 'command/renew', action: 'renew', as: nil
+        post 'command/delete', action: 'delete', as: nil
+      end
+    end
+
+    post 'command/poll', to: 'polls#poll', as: 'poll', constraints: EppConstraint.new(:poll)
     get 'error/:command', to: 'errors#error'
   end
 

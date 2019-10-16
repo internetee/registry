@@ -21,7 +21,7 @@ class EppContactDeleteBaseTest < EppTestCase
     XML
 
     assert_difference 'Contact.count', -1 do
-      post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_delete_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
     assert_epp_response :completed_successfully
   end
@@ -47,7 +47,7 @@ class EppContactDeleteBaseTest < EppTestCase
     XML
 
     assert_no_difference 'Contact.count' do
-      post '/epp/command/delete', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_delete_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
     assert_epp_response :object_association_prohibits_operation
   end

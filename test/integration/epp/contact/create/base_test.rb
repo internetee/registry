@@ -29,7 +29,7 @@ class EppContactCreateBaseTest < EppTestCase
     XML
 
     assert_difference 'Contact.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
 
     assert_epp_response :completed_successfully
@@ -68,7 +68,7 @@ class EppContactCreateBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session.session_id}"
+    post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session.session_id}"
 
     contact = Contact.find_by(name: name)
     assert_equal "#{session.user.registrar.code}:#{code}".upcase, contact.code
@@ -98,7 +98,7 @@ class EppContactCreateBaseTest < EppTestCase
     XML
 
     assert_no_difference 'Contact.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     end
     assert_epp_response :required_parameter_missing
   end
