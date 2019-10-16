@@ -86,7 +86,6 @@ group :development do
 end
 
 group :development, :test do
-  gem 'capybara'
   gem 'selenium-webdriver'
 
   # debug
@@ -100,6 +99,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'capybara'
   gem 'database_cleaner'
   gem 'simplecov', require: false
   gem 'webmock'
