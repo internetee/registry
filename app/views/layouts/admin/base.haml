@@ -32,5 +32,5 @@
 
       .footer.text-right
         Version
-        = link_to "#{CURRENT_COMMIT_HASH}", "#{CURRENT_COMMIT_REPO}/commits/#{CURRENT_COMMIT_HASH}", style: 'color:#000000;'
+        = link_to "#{CURRENT_COMMIT_HASH}", "#{CURRENT_COMMIT_REPO}/commits/#{CURRENT_COMMIT_HASH}", class: 'footer-version-link'
     = javascript_include_tag 'admin-manifest', async: true
