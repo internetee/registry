@@ -227,7 +227,7 @@ GEM
       rake
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.12.2)
+    minitest (5.10.3)
     monetize (1.9.0)
       money (~> 6.12)
     money (6.12.0)
@@ -452,6 +452,7 @@ DEPENDENCIES
   kaminari (= 0.16.3)
   lhv!
   mina (= 0.3.1)
+  minitest (~> 5.10.0)
   money-rails
   nokogiri
   paper_trail (~> 4.0)
