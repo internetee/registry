@@ -20,7 +20,7 @@ class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
   self.use_transactional_fixtures = false
   DatabaseCleaner.strategy = :truncation
 
-  Capybara.register_driver(:chrome) do |_app|
+  Capybara.register_driver(:chrome) do |app|
     options = ::Selenium::WebDriver::Chrome::Options.new
 
     options.add_argument('--headless')
@@ -28,7 +28,7 @@ class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--window-size=1400,1400')
 
-    Capybara::Selenium::Driver.new(Rails.application, browser: :chrome, options: options)
+    Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
   end
 
   Capybara.register_server(:silent_puma) do |app, port, _host|
