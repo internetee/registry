@@ -31,10 +31,7 @@ class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
     Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
   end
 
-  Capybara.register_server(:silent_puma) do |app, port, _host|
-    require 'rack/handler/puma'
-    Rack::Handler::Puma.run(app, Port: port, Threads: '0:2', Silent: true)
-  end
+  Capybara.server = :puma, { Silent: true }
 
   def setup
     DatabaseCleaner.start
@@ -42,7 +39,6 @@ class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
     super
 
     Capybara.current_driver = :chrome
-    Capybara.server = :silent_puma
   end
 
   def teardown
