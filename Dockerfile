@@ -1,5 +1,4 @@
 FROM internetee/ruby:2.4
-MAINTAINER maciej.szlosarczyk@internet.ee
 
 RUN mkdir -p /opt/webapps/app/tmp/pids
 WORKDIR /opt/webapps/app
