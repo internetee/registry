@@ -86,9 +86,6 @@ group :development do
 end
 
 group :development, :test do
-  gem 'selenium-webdriver'
-
-  # debug
   gem 'pry', '0.10.1'
 
   gem 'bullet',        '4.14.7' # for finding database optimizations
@@ -102,5 +99,6 @@ group :test do
   gem 'capybara'
   gem 'database_cleaner'
   gem 'simplecov', require: false
+  gem 'webdrivers'
   gem 'webmock'
 end
