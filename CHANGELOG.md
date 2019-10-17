@@ -1,3 +1,6 @@
+17.10.2019
+* Implemented properl handling of contact transfer requests [#1363](https://github.com/internetee/registry/pull/1363)
+
 16.10.2019
 * Contact and domain list download in portals changed - buttons in stead of dropdown [#1360](https://github.com/internetee/registry/pull/1360) 
 * limited epp routes [#1364](https://github.com/internetee/registry/pull/1364)
