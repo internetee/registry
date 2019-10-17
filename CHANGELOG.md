@@ -1,5 +1,6 @@
 17.10.2019
 * Implemented properl handling of contact transfer requests [#1363](https://github.com/internetee/registry/pull/1363)
+* Test environment tuning [#1366](https://github.com/internetee/registry/pull/1366)
 
 16.10.2019
 * Contact and domain list download in portals changed - buttons in stead of dropdown [#1360](https://github.com/internetee/registry/pull/1360) 
