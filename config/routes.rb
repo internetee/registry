@@ -269,8 +269,6 @@ Rails.application.routes.draw do
       resources :white_ips
     end
 
-    resources :registrants, controller: 'contacts'
-
     resources :contacts do
       collection do
         get 'search'
