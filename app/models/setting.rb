@@ -63,7 +63,7 @@ class Setting < RailsSettings::Base
       client_side_status_editing_enabled
       registrar_ip_whitelist_enabled
       api_ip_whitelist_enabled
-      request_confrimation_on_registrant_change_enabled
+      verify_registrant_change
       request_confirmation_on_domain_deletion_enabled
       nameserver_required
       address_processing

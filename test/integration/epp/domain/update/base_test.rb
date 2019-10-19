@@ -5,14 +5,12 @@ class EppDomainUpdateBaseTest < EppTestCase
 
   setup do
     @domain = domains(:shop)
-    @original_registrant_change_verification =
-      Setting.request_confrimation_on_registrant_change_enabled
+    @original_verify_registrant_change = Setting.verify_registrant_change
     ActionMailer::Base.deliveries.clear
   end
 
   teardown do
-    Setting.request_confrimation_on_registrant_change_enabled =
-      @original_registrant_change_verification
+    Setting.verify_registrant_change = @original_verify_registrant_change
   end
 
   def test_update_domain
@@ -84,7 +82,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_requires_verification_from_current_registrant_when_provided_registrant_is_a_new_one
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.verify_registrant_change = true
     new_registrant = contacts(:william).becomes(Registrant)
     assert_not_equal new_registrant, @domain.registrant
 
@@ -120,7 +118,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_requires_verification_from_current_registrant_when_not_yet_verified_by_registrar
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.verify_registrant_change = true
     new_registrant = contacts(:william)
     assert_not_equal new_registrant, @domain.registrant
 
@@ -156,7 +154,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_skips_verification_when_provided_registrant_is_the_same_as_current_one
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.verify_registrant_change = true
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -189,7 +187,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_skips_verification_when_disabled
-    Setting.request_confrimation_on_registrant_change_enabled = false
+    Setting.verify_registrant_change = false
     new_registrant = contacts(:william).becomes(Registrant)
     assert_not_equal new_registrant, @domain.registrant
 
@@ -225,7 +223,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_skips_verification_from_current_registrant_when_already_verified_by_registrar
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.verify_registrant_change = true
     new_registrant = contacts(:william).becomes(Registrant)
     assert_not_equal new_registrant, @domain.registrant
 

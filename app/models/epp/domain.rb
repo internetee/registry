@@ -480,7 +480,7 @@ class Epp::Domain < Domain
     same_registrant_as_current = (registrant.code == frame.css('registrant').text)
 
     if !same_registrant_as_current && errors.empty? && verify &&
-       Setting.request_confrimation_on_registrant_change_enabled &&
+       Setting.verify_registrant_change &&
        frame.css('registrant').present? &&
        frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, current_user.id)

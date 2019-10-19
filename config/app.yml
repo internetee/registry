@@ -17,7 +17,7 @@ defaults: &defaults
   ns_max_count: 11
 
   transfer_wait_time: 0
-  request_confrimation_on_registrant_change_enabled: true
+  verify_registrant_change: true
   request_confirmation_on_domain_deletion_enabled: true
   address_processing: true
   default_language: en
