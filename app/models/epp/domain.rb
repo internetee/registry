@@ -23,12 +23,8 @@ class Epp::Domain < Domain
     active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
     active_techs = tech_domain_contacts.select { |x| !x.marked_for_destruction? }
 
-    # bullet workaround
-    ac = active_admins.map { |x| Contact.find(x.contact_id) }
-    tc = active_techs.map { |x| Contact.find(x.contact_id) }
-
     # validate registrant here as well
-    ([registrant] + ac + tc).each do |x|
+    ([registrant] + active_admins + active_techs).each do |x|
       unless x.valid?
         add_epp_error('2304', nil, nil, I18n.t(:contact_is_not_valid, value: x.code))
         ok = false
@@ -123,9 +119,8 @@ class Epp::Domain < Domain
 
   def attach_default_contacts
     return if registrant.blank?
-    regt = Registrant.find(registrant.id) # temp for bullet
-    tech_contacts << regt if tech_domain_contacts.blank?
-    admin_contacts << regt if admin_domain_contacts.blank? && !regt.org?
+    tech_contacts << registrant if tech_domain_contacts.blank?
+    admin_contacts << registrant if admin_domain_contacts.blank? && !registrant.org?
   end
 
   def attrs_from(frame, current_user, action = nil)
