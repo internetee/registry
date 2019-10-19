@@ -119,9 +119,6 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
     builder (3.2.3)
-    bullet (4.14.7)
-      activesupport (>= 3.0.0)
-      uniform_notifier (~> 1.9.0)
     cancancan (3.0.1)
     capybara (3.29.0)
       addressable
@@ -393,7 +390,6 @@ GEM
       unf_ext
     unf_ext (0.0.7.2)
     unicode_utils (1.4.0)
-    uniform_notifier (1.9.0)
     uuidtools (2.1.5)
     validates_email_format_of (1.6.3)
       i18n
@@ -428,7 +424,6 @@ DEPENDENCIES
   airbrake
   autodoc
   bootstrap-sass (~> 3.4)
-  bullet (= 4.14.7)
   cancancan
   capybara
   coderay (= 1.1.0)
