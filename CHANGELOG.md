@@ -1,3 +1,6 @@
+21.10.2019
+* Tuned PDFkit gem [#1367](https://github.com/internetee/registry/pull/1367)
+
 17.10.2019
 * Implemented properl handling of contact transfer requests [#1363](https://github.com/internetee/registry/pull/1363)
 * Test environment tuning [#1366](https://github.com/internetee/registry/pull/1366)
