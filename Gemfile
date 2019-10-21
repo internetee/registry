@@ -79,6 +79,7 @@ gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'lhv', github: 'internetee/lhv', tag: 'v0.1.0'
 gem 'domain_name'
 gem 'haml'
+gem 'wkhtmltopdf-binary'
 
 group :development do
   # deploy
