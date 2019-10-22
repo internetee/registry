@@ -1,7 +1,9 @@
 version: "2"
 prepare:
   fetch:
-    - "https://raw.githubusercontent.com/internetee/style-guide/master/ruby/.rubocop.yml"
+    - "https://raw.githubusercontent.com/internetee/style-guide/master/.rubocop-ruby.yml"
+    - url: "https://raw.githubusercontent.com/internetee/style-guide/master/.rubocop-rails.yml"
+      path: ".rubocop.yml"
 plugins:
   brakeman:
     enabled: true
@@ -20,7 +22,7 @@ plugins:
     enabled: true
   rubocop:
     enabled: true
-    channel: rubocop-0-58
+    channel: rubocop-0-74
 exclude_patterns:
   - "app/models/version/"
   - "bin/"
