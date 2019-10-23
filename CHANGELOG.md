@@ -1,4 +1,5 @@
 23.10.2019
+* Updated haml gem to 5.1.2 [#1384](https://github.com/internetee/registry/pull/1384)
 * Removed bullet gem [#378](https://github.com/internetee/registry/issues/378)
 * Removed duplicate route from admin [#1375](https://github.com/internetee/registry/pull/1375)
 
