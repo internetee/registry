@@ -5,7 +5,8 @@ class EppDomainCreateBaseTest < EppTestCase
     now = Time.zone.parse('2010-07-05')
     travel_to now
     name = "new.#{dns_zones(:one).origin}"
-    registrant = contacts(:john).becomes(Registrant)
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -35,6 +36,8 @@ class EppDomainCreateBaseTest < EppTestCase
     domain = Domain.find_by(name: name)
     assert_equal name, domain.name
     assert_equal registrant, domain.registrant
+    assert_equal [contact], domain.admin_contacts
+    assert_equal [contact], domain.tech_contacts
     assert_not_empty domain.transfer_code
 
     default_registration_period = 1.year + 1.day
