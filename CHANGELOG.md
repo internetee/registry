@@ -1,3 +1,6 @@
+23.10.2019
+* Removed duplicate route from admin [#1375](https://github.com/internetee/registry/pull/1375)
+
 21.10.2019
 * Tuned PDFkit gem [#1367](https://github.com/internetee/registry/pull/1367)
 * Removed some dead code [#1370](https://github.com/internetee/registry/pull/1370)
