@@ -899,7 +899,8 @@ CREATE TABLE public.invoice_items (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
-    updator_str character varying
+    updator_str character varying,
+    CONSTRAINT invoice_items_quantity_is_positive CHECK ((quantity > 0))
 );
 
 
@@ -968,7 +969,8 @@ CREATE TABLE public.invoices (
     total numeric(10,2) NOT NULL,
     in_directo boolean DEFAULT false,
     buyer_vat_no character varying,
-    issue_date date NOT NULL
+    issue_date date NOT NULL,
+    CONSTRAINT invoices_due_date_is_not_before_issue_date CHECK ((due_date >= issue_date))
 );
 
 
@@ -4877,4 +4879,8 @@ INSERT INTO schema_migrations (version) VALUES ('20191005162437');
 INSERT INTO schema_migrations (version) VALUES ('20191007123000');
 
 INSERT INTO schema_migrations (version) VALUES ('20191008024334');
+
+INSERT INTO schema_migrations (version) VALUES ('20191024153351');
+
+INSERT INTO schema_migrations (version) VALUES ('20191024160038');
 
