@@ -16,10 +16,6 @@ class Registrar
         search_params[:registrant_domains_id_not_null] = 1
       end
 
-      if search_params.length == 1 && search_params[:name_matches].present?
-        @contacts = Contact.find_by(name: search_params[:name_matches])
-      end
-
       if params[:statuses_contains]
         contacts = current_registrar_user.registrar.contacts.includes(:registrar).where(
           "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
