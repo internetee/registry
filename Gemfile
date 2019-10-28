@@ -100,4 +100,5 @@ group :test do
   gem 'simplecov', require: false
   gem 'webdrivers'
   gem 'webmock'
+  gem 'minitest', '~> 5.10.0'
 end
