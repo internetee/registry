@@ -1,3 +1,9 @@
+28.10.2019
+* Updated kaminari gem to 1.1.1 [#1392](https://github.com/internetee/registry/pull/1392)
+* Downgraded minitest to 5.10.3 due to incompatibility with Rails 5.0 [#1387](https://github.com/internetee/registry/pull/1387)
+* New db constaints to invoices and invoice_items tables [#1388](https://github.com/internetee/registry/pull/1388)
+* Removed buggy code for contact details' fast access in regitrar portal [#1386](https://github.com/internetee/registry/pull/1386) 
+
 23.10.2019
 * Updated haml gem to 5.1.2 (CVE-2017-1002201) [#1384](https://github.com/internetee/registry/pull/1384)
 * Removed bullet gem [#378](https://github.com/internetee/registry/issues/378)
