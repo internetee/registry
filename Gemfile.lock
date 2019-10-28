@@ -147,7 +147,7 @@ GEM
       unicode_utils (~> 1.4)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    crass (1.0.4)
+    crass (1.0.5)
     daemons (1.2.4)
     daemons-rails (1.2.1)
       daemons
@@ -208,12 +208,21 @@ GEM
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
     json (1.8.6)
-    kaminari (0.16.3)
-      actionpack (>= 3.0.0)
-      activesupport (>= 3.0.0)
+    kaminari (1.1.1)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.1.1)
+      kaminari-activerecord (= 1.1.1)
+      kaminari-core (= 1.1.1)
+    kaminari-actionview (1.1.1)
+      actionview
+      kaminari-core (= 1.1.1)
+    kaminari-activerecord (1.1.1)
+      activerecord
+      kaminari-core (= 1.1.1)
+    kaminari-core (1.1.1)
     keystores (0.4.0)
     libxml-ruby (3.0.0)
-    loofah (2.3.0)
+    loofah (2.3.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -449,7 +458,7 @@ DEPENDENCIES
   iso8601 (= 0.8.6)
   jquery-rails
   jquery-ui-rails (= 5.0.5)
-  kaminari (= 0.16.3)
+  kaminari
   lhv!
   mina (= 0.3.1)
   minitest (~> 5.10.0)
