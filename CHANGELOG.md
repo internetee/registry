@@ -1,3 +1,12 @@
+31.10.2019
+* Updated domain_name gem to 0.5.20190701 [#1400](https://github.com/internetee/registry/pull/1400)
+* Updated webmock gem to 3.7.6 [#1401](https://github.com/internetee/registry/pull/1401)
+* Improved setup and seed [#1352](https://github.com/internetee/registry/pull/1352)
+* Removed unimplemented keyrelay code [#715](https://github.com/internetee/registry/issues/715)
+* Removed uuidtools gem [#1390](https://github.com/internetee/registry/pull/1390)
+* Removed some unneeded code [#1397](https://github.com/internetee/registry/pull/1397)
+* Removed eis_trusted_proxies setting [#1398](https://github.com/internetee/registry/pull/1398)
+
 28.10.2019
 * Updated kaminari gem to 1.1.1 [#1392](https://github.com/internetee/registry/pull/1392)
 * Downgraded minitest to 5.10.3 due to incompatibility with Rails 5.0 [#1387](https://github.com/internetee/registry/pull/1387)
