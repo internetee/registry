@@ -27,7 +27,8 @@ GIT
 
 GIT
   remote: https://github.com/internetee/epp.git
-  revision: 1a50f2144f15a2d975337e56fb1ccaba5d956e9d
+  revision: 76f9fd487d0ca3865b6f706c5a72703951c03996
+  branch: master
   specs:
     epp (1.5.0)
       hpricot
@@ -221,7 +222,7 @@ GEM
       kaminari-core (= 1.1.1)
     kaminari-core (1.1.1)
     keystores (0.4.0)
-    libxml-ruby (3.0.0)
+    libxml-ruby (3.1.0)
     loofah (2.3.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -401,7 +402,6 @@ GEM
       unf_ext
     unf_ext (0.0.7.2)
     unicode_utils (1.4.0)
-    uuidtools (2.1.5)
     validates_email_format_of (1.6.3)
       i18n
     virtus (1.0.5)
@@ -449,7 +449,7 @@ DEPENDENCIES
   digidoc_client!
   domain_name
   e_invoice!
-  epp (= 1.5.0)!
+  epp!
   epp-xml (= 1.1.0)!
   figaro (= 1.1.1)
   grape
@@ -483,7 +483,6 @@ DEPENDENCIES
   simplecov
   simpleidn (= 0.0.7)
   uglifier
-  uuidtools (= 2.1.5)
   validates_email_format_of (= 1.6.3)
   webdrivers
   webmock
