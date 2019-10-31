@@ -1,4 +1,6 @@
 31.10.2019
+* Updated domain_name gem to 0.5.20190701 [#1400](https://github.com/internetee/registry/pull/1400)
+* Updated webmock gem to 3.7.6 [#1401](https://github.com/internetee/registry/pull/1401)
 * Improved setup and seed [#1352](https://github.com/internetee/registry/pull/1352)
 * Removed unimplemented keyrelay code [#715](https://github.com/internetee/registry/issues/715)
 * Removed uuidtools gem [#1390](https://github.com/internetee/registry/pull/1390)
