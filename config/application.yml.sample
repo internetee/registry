@@ -50,10 +50,6 @@ webclient_cert_common_name: 'webclient'
 # and returns 2306 "Parameter value policy error"
 contact_org_enabled: 'false'
 
-# Overwrite rack default trusted proxies list in order to
-# enable test external interfaces EPP/REPP from webserver network
-# eis_trusted_proxies: '1.1.1.1,2.2.2.2' #ips, separated with commas
-
 # Enable iptables counter updater
 # iptables_counter_enabled: 'true'
 # iptables_server_ip: '127.0.0.1'
