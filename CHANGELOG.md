@@ -1,3 +1,6 @@
+31.10.2019
+* Improved setup and seed [#1352](https://github.com/internetee/registry/pull/1352)
+
 28.10.2019
 * Updated kaminari gem to 1.1.1 [#1392](https://github.com/internetee/registry/pull/1392)
 * Downgraded minitest to 5.10.3 due to incompatibility with Rails 5.0 [#1387](https://github.com/internetee/registry/pull/1387)
