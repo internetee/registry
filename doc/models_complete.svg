@@ -312,28 +312,6 @@
 <ellipse fill="none" stroke="#996400" cx="3118.41" cy="-75.8258" rx="4.00002" ry="4.00002"/>
 <polygon fill="#996400" stroke="#996400" points="1846.51,-20.6629 1836.6,-15.9651 1841.51,-20.5636 1836.51,-20.4642 1836.51,-20.4642 1836.51,-20.4642 1841.51,-20.5636 1836.43,-24.9633 1846.51,-20.6629 1846.51,-20.6629"/>
 </g>
-<!-- KeyrelayVersion -->
-<g id="node18" class="node"><title>KeyrelayVersion</title>
-<path fill="none" stroke="black" d="M2384,-503.5C2384,-503.5 2490,-503.5 2490,-503.5 2496,-503.5 2502,-509.5 2502,-515.5 2502,-515.5 2502,-672.5 2502,-672.5 2502,-678.5 2496,-684.5 2490,-684.5 2490,-684.5 2384,-684.5 2384,-684.5 2378,-684.5 2372,-678.5 2372,-672.5 2372,-672.5 2372,-515.5 2372,-515.5 2372,-509.5 2378,-503.5 2384,-503.5"/>
-<text text-anchor="middle" x="2437" y="-669.3" font-family="Times,serif" font-size="14.00">KeyrelayVersion</text>
-<polyline fill="none" stroke="black" points="2372,-661.5 2502,-661.5 "/>
-<text text-anchor="start" x="2380" y="-646.3" font-family="Times,serif" font-size="14.00">id :integer</text>
-<text text-anchor="start" x="2380" y="-631.3" font-family="Times,serif" font-size="14.00">item_type :string</text>
-<text text-anchor="start" x="2380" y="-616.3" font-family="Times,serif" font-size="14.00">item_id :integer</text>
-<text text-anchor="start" x="2380" y="-601.3" font-family="Times,serif" font-size="14.00">event :string</text>
-<text text-anchor="start" x="2380" y="-586.3" font-family="Times,serif" font-size="14.00">whodunnit :string</text>
-<text text-anchor="start" x="2380" y="-571.3" font-family="Times,serif" font-size="14.00">object :json</text>
-<text text-anchor="start" x="2380" y="-556.3" font-family="Times,serif" font-size="14.00">object_changes :json</text>
-<text text-anchor="start" x="2380" y="-541.3" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
-<text text-anchor="start" x="2380" y="-526.3" font-family="Times,serif" font-size="14.00">session :string</text>
-<text text-anchor="start" x="2380" y="-511.3" font-family="Times,serif" font-size="14.00">children :json</text>
-</g>
-<!-- KeyrelayVersion&#45;&gt;VersionAssociation -->
-<g id="edge16" class="edge"><title>KeyrelayVersion&#45;&gt;VersionAssociation</title>
-<path fill="none" stroke="#b67884" d="M2381.98,-496.116C2374.23,-482.334 2366.39,-468.322 2359,-455 2261.65,-279.444 2286.74,-181.74 2118,-73 2073.91,-44.5865 1935.88,-30.3397 1843.85,-23.8191"/>
-<ellipse fill="none" stroke="#b67884" cx="2384.06" cy="-499.811" rx="4.00002" ry="4.00002"/>
-<polygon fill="#b67884" stroke="#b67884" points="1843.68,-23.8072 1834.01,-18.6287 1838.69,-23.4626 1833.7,-23.118 1833.7,-23.118 1833.7,-23.118 1838.69,-23.4626 1833.39,-27.6073 1843.68,-23.8072 1843.68,-23.8072"/>
-</g>
 <!-- AccountActivityVersion -->
 <g id="node19" class="node"><title>AccountActivityVersion</title>
 <path fill="none" stroke="black" d="M535.5,-73.5C535.5,-73.5 660.5,-73.5 660.5,-73.5 666.5,-73.5 672.5,-79.5 672.5,-85.5 672.5,-85.5 672.5,-242.5 672.5,-242.5 672.5,-248.5 666.5,-254.5 660.5,-254.5 660.5,-254.5 535.5,-254.5 535.5,-254.5 529.5,-254.5 523.5,-248.5 523.5,-242.5 523.5,-242.5 523.5,-85.5 523.5,-85.5 523.5,-79.5 529.5,-73.5 535.5,-73.5"/>
@@ -1384,52 +1362,6 @@
 <ellipse fill="none" stroke="#16b86e" cx="2070.49" cy="-1809.5" rx="4" ry="4"/>
 <polygon fill="#16b86e" stroke="#16b86e" points="2429.04,-1349.7 2432.74,-1339.38 2428.65,-1344.72 2428.25,-1339.74 2428.25,-1339.74 2428.25,-1339.74 2428.65,-1344.72 2423.76,-1340.09 2429.04,-1349.7 2429.04,-1349.7"/>
 </g>
-<!-- Keyrelay -->
-<g id="node65" class="node"><title>Keyrelay</title>
-<path fill="none" stroke="black" d="M2517,-1136C2517,-1136 2653,-1136 2653,-1136 2659,-1136 2665,-1142 2665,-1148 2665,-1148 2665,-1395 2665,-1395 2665,-1401 2659,-1407 2653,-1407 2653,-1407 2517,-1407 2517,-1407 2511,-1407 2505,-1401 2505,-1395 2505,-1395 2505,-1148 2505,-1148 2505,-1142 2511,-1136 2517,-1136"/>
-<text text-anchor="middle" x="2585" y="-1391.8" font-family="Times,serif" font-size="14.00">Keyrelay</text>
-<polyline fill="none" stroke="black" points="2505,-1384 2665,-1384 "/>
-<text text-anchor="start" x="2513" y="-1368.8" font-family="Times,serif" font-size="14.00">id :integer</text>
-<text text-anchor="start" x="2513" y="-1353.8" font-family="Times,serif" font-size="14.00">domain_id :integer</text>
-<text text-anchor="start" x="2513" y="-1338.8" font-family="Times,serif" font-size="14.00">pa_date :datetime</text>
-<text text-anchor="start" x="2513" y="-1323.8" font-family="Times,serif" font-size="14.00">key_data_flags :string</text>
-<text text-anchor="start" x="2513" y="-1308.8" font-family="Times,serif" font-size="14.00">key_data_protocol :string</text>
-<text text-anchor="start" x="2513" y="-1293.8" font-family="Times,serif" font-size="14.00">key_data_alg :string</text>
-<text text-anchor="start" x="2513" y="-1278.8" font-family="Times,serif" font-size="14.00">key_data_public_key :text</text>
-<text text-anchor="start" x="2513" y="-1263.8" font-family="Times,serif" font-size="14.00">auth_info_pw :string</text>
-<text text-anchor="start" x="2513" y="-1248.8" font-family="Times,serif" font-size="14.00">expiry_relative :string</text>
-<text text-anchor="start" x="2513" y="-1233.8" font-family="Times,serif" font-size="14.00">expiry_absolute :datetime</text>
-<text text-anchor="start" x="2513" y="-1218.8" font-family="Times,serif" font-size="14.00">requester_id :integer</text>
-<text text-anchor="start" x="2513" y="-1203.8" font-family="Times,serif" font-size="14.00">accepter_id :integer</text>
-<text text-anchor="start" x="2513" y="-1188.8" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
-<text text-anchor="start" x="2513" y="-1173.8" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>
-<text text-anchor="start" x="2513" y="-1158.8" font-family="Times,serif" font-size="14.00">creator_str :string</text>
-<text text-anchor="start" x="2513" y="-1143.8" font-family="Times,serif" font-size="14.00">updator_str :string</text>
-</g>
-<!-- Domain&#45;&gt;Keyrelay -->
-<g id="edge56" class="edge"><title>Domain&#45;&gt;Keyrelay</title>
-<path fill="none" stroke="#9c8885" d="M2091.44,-1805.22C2109.35,-1726.79 2135.37,-1652.28 2166,-1628 2218.86,-1586.1 2416.81,-1652.74 2469,-1610 2525.42,-1563.8 2548.46,-1486.47 2559.84,-1417.47"/>
-<ellipse fill="none" stroke="#9c8885" cx="2090.5" cy="-1809.41" rx="4.00001" ry="4.00001"/>
-<polygon fill="#9c8885" stroke="#9c8885" points="2559.88,-1417.23 2565.89,-1408.06 2560.66,-1412.3 2561.44,-1407.36 2561.44,-1407.36 2561.44,-1407.36 2560.66,-1412.3 2557,-1406.66 2559.88,-1417.23 2559.88,-1417.23"/>
-</g>
-<!-- Domain&#45;&gt;Keyrelay -->
-<g id="edge96" class="edge"><title>Domain&#45;&gt;Keyrelay</title>
-<path fill="none" stroke="#cb1994" d="M2108.12,-1805.22C2127.35,-1726.79 2153.37,-1652.28 2184,-1628 2236.86,-1586.1 2434.81,-1652.74 2487,-1610 2543.42,-1563.8 2566.46,-1486.47 2575.97,-1417.47"/>
-<ellipse fill="none" stroke="#cb1994" cx="2107.1" cy="-1809.42" rx="4.00001" ry="4.00001"/>
-<polygon fill="#cb1994" stroke="#cb1994" points="2576,-1417.27 2581.74,-1407.93 2576.64,-1412.32 2577.28,-1407.36 2577.28,-1407.36 2577.28,-1407.36 2576.64,-1412.32 2572.82,-1406.78 2576,-1417.27 2576,-1417.27"/>
-</g>
-<!-- Domain&#45;&gt;Keyrelay -->
-<g id="edge130" class="edge"><title>Domain&#45;&gt;Keyrelay</title>
-<path fill="none" stroke="#9a035d" d="M2124.79,-1805.22C2145.35,-1726.79 2171.37,-1652.28 2202,-1628 2254.86,-1586.1 2452.81,-1652.74 2505,-1610 2561.42,-1563.8 2584.46,-1486.47 2592.1,-1417.47"/>
-<ellipse fill="none" stroke="#9a035d" cx="2123.7" cy="-1809.44" rx="4.00001" ry="4.00001"/>
-<polygon fill="#9a035d" stroke="#9a035d" points="2592.12,-1417.31 2597.6,-1407.81 2592.62,-1412.33 2593.12,-1407.36 2593.12,-1407.36 2593.12,-1407.36 2592.62,-1412.33 2588.65,-1406.91 2592.12,-1417.31 2592.12,-1417.31"/>
-</g>
-<!-- Domain&#45;&gt;Keyrelay -->
-<g id="edge167" class="edge"><title>Domain&#45;&gt;Keyrelay</title>
-<path fill="none" stroke="#79311d" d="M2141.47,-1805.22C2163.35,-1726.79 2189.37,-1652.28 2220,-1628 2272.86,-1586.1 2470.81,-1652.74 2523,-1610 2579.42,-1563.8 2602.46,-1486.47 2608.23,-1417.47"/>
-<ellipse fill="none" stroke="#79311d" cx="2140.3" cy="-1809.46" rx="4.00001" ry="4.00001"/>
-<polygon fill="#79311d" stroke="#79311d" points="2608.24,-1417.33 2613.45,-1407.68 2608.6,-1412.34 2608.96,-1407.36 2608.96,-1407.36 2608.96,-1407.36 2608.6,-1412.34 2604.48,-1407.03 2608.24,-1417.33 2608.24,-1417.33"/>
-</g>
 <!-- Domain&#45;&gt;LegalDocument -->
 <g id="edge58" class="edge"><title>Domain&#45;&gt;LegalDocument</title>
 <path fill="none" stroke="#9aa482" d="M2200.54,-1853.91C2215.1,-1834.5 2229.26,-1814.65 2242,-1795 2286.99,-1725.62 2254.66,-1673.05 2324,-1628 2368.1,-1599.34 2759.68,-1647.05 2797,-1610 2924.76,-1483.17 2878.03,-913.337 2867.53,-687.557"/>
@@ -1994,32 +1926,6 @@
 <path fill="none" stroke="#ac2e35" d="M3953.54,-2293.14C3953.26,-2046.47 3949.16,-1651.18 3926,-1628 3883.57,-1585.53 3433.88,-1646.22 3386,-1610 3134.12,-1419.46 3404.48,-1144.59 3170,-933 3141.01,-906.838 3110.86,-943.344 3084,-915 3027.7,-855.598 3109.99,-794.504 3056,-733 3037.07,-711.437 3018.82,-729.401 2994,-715 2979.16,-706.39 2964.76,-695.629 2951.34,-684.108"/>
 <ellipse fill="none" stroke="#ac2e35" cx="3953.55" cy="-2297.48" rx="4" ry="4"/>
 <polygon fill="#ac2e35" stroke="#ac2e35" points="2951.05,-683.859 2946.53,-673.872 2947.3,-680.553 2943.55,-677.248 2943.55,-677.248 2943.55,-677.248 2947.3,-680.553 2940.58,-680.624 2951.05,-683.859 2951.05,-683.859"/>
-</g>
-<!-- Keyrelay&#45;&gt;KeyrelayVersion -->
-<g id="edge170" class="edge"><title>Keyrelay&#45;&gt;KeyrelayVersion</title>
-<path fill="none" stroke="#050edc" d="M2565.61,-1127.64C2549.2,-1018.49 2522.64,-864.878 2487,-733 2483.61,-720.454 2479.58,-707.43 2475.31,-694.616"/>
-<ellipse fill="none" stroke="#050edc" cx="2566.23" cy="-1131.8" rx="4.00001" ry="4.00001"/>
-<polygon fill="#050edc" stroke="#050edc" points="2475.22,-694.339 2476.27,-683.424 2473.61,-689.605 2472.01,-684.87 2472.01,-684.87 2472.01,-684.87 2473.61,-689.605 2467.75,-686.316 2475.22,-694.339 2475.22,-694.339"/>
-<text text-anchor="middle" x="2550" y="-820.3" font-family="Times,serif" font-size="14.00">versions</text>
-</g>
-<!-- Keyrelay&#45;&gt;KeyrelayVersion -->
-<g id="edge175" class="edge"><title>Keyrelay&#45;&gt;KeyrelayVersion</title>
-<path fill="none" stroke="#11d40d" d="M2578.63,-1127.67C2568.53,-1060.81 2545.77,-984.71 2496,-933 2476.99,-913.247 2453.31,-937.033 2437,-915 2390.84,-852.655 2395.03,-763.12 2408.39,-694.603"/>
-<ellipse fill="none" stroke="#11d40d" cx="2579.23" cy="-1131.81" rx="4.00001" ry="4.00001"/>
-<polygon fill="#11d40d" stroke="#11d40d" points="2408.42,-694.45 2414.83,-685.552 2409.42,-689.551 2410.42,-684.652 2410.42,-684.652 2410.42,-684.652 2409.42,-689.551 2406.01,-683.752 2408.42,-694.45 2408.42,-694.45"/>
-<text text-anchor="middle" x="2460" y="-820.3" font-family="Times,serif" font-size="14.00">versions</text>
-</g>
-<!-- Keyrelay&#45;&gt;LegalDocument -->
-<g id="edge171" class="edge"><title>Keyrelay&#45;&gt;LegalDocument</title>
-<path fill="none" stroke="#b41498" d="M2606.08,-1127.43C2620.12,-1066.32 2640.4,-994.948 2666,-933 2702.36,-845.04 2757.54,-751.827 2801.42,-685.618"/>
-<ellipse fill="none" stroke="#b41498" cx="2605.11" cy="-1131.7" rx="4.00001" ry="4.00001"/>
-<polygon fill="#b41498" stroke="#b41498" points="2801.44,-685.592 2810.73,-679.77 2804.21,-681.433 2806.99,-677.273 2806.99,-677.273 2806.99,-677.273 2804.21,-681.433 2803.24,-674.776 2801.44,-685.592 2801.44,-685.592"/>
-</g>
-<!-- Keyrelay&#45;&gt;LegalDocument -->
-<g id="edge176" class="edge"><title>Keyrelay&#45;&gt;LegalDocument</title>
-<path fill="none" stroke="#b6c2f7" d="M2622.53,-1127.81C2638.04,-1066.61 2658.34,-995.075 2684,-933 2720.28,-845.219 2775.31,-752.207 2816.19,-686.023"/>
-<ellipse fill="none" stroke="#b6c2f7" cx="2621.55" cy="-1131.72" rx="4.00001" ry="4.00001"/>
-<polygon fill="#b6c2f7" stroke="#b6c2f7" points="2816.35,-685.775 2825.44,-679.642 2818.98,-681.524 2821.61,-677.273 2821.61,-677.273 2821.61,-677.273 2818.98,-681.524 2817.79,-674.904 2816.35,-685.775 2816.35,-685.775"/>
 </g>
 <!-- WhiteIp&#45;&gt;WhiteIpVersion -->
 <g id="edge172" class="edge"><title>WhiteIp&#45;&gt;WhiteIpVersion</title>

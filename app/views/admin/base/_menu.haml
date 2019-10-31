@@ -6,8 +6,6 @@
       %li= link_to t(:contacts), admin_contacts_path
     - if can? :show, Registrar
       %li= link_to t(:registrars), admin_registrars_path
-    - if can? :show, Keyrelay
-      %li= link_to t(:keyrelays), admin_keyrelays_path
     - if can?(:access, :settings_menu)
       %li.dropdown
         %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}

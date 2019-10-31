@@ -5,7 +5,6 @@
 [Session related functions](session.md)  
 [Contact related functions](contact.md)  
 [Domain related functions](domain.md)  
-[Keyrelay related functions](keyrelay.md)
 
 ## Supported protocols
 
@@ -25,7 +24,6 @@
 * [epp-1.0.xsd](/lib/schemas/epp-1.0.xsd)
 * [eppcom-1.0.xsd](/lib/schemas/eppcom-1.0.xsd)
 * [host-1.0.xsd](/lib/schemas/host-1.0.xsd)
-* [keyrelay-1.0.xsd](/lib/schemas/keyrelay-1.0.xsd)
 * [secDNS-1.1.xsd](/lib/schemas/secDNS-1.1.xsd)
 * [changePoll-1.0.xsd](/lib/schemas/changePoll-1.0.xsd)
 

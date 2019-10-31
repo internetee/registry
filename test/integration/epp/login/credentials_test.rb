@@ -17,7 +17,6 @@ class EppLoginCredentialsTest < EppTestCase
               <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
               <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-              <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
             </svcs>
           </login>
         </command>
@@ -50,7 +49,6 @@ class EppLoginCredentialsTest < EppTestCase
               <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
               <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-              <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
             </svcs>
           </login>
         </command>

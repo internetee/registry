@@ -117,12 +117,9 @@ Rails.application.routes.draw do
 
     resource :poll, only: %i[show destroy] do
       collection do
-        post 'confirm_keyrelay'
         post 'confirm_transfer'
       end
     end
-
-    resource :keyrelay
 
     resource :xml_console do
       collection do
@@ -189,12 +186,9 @@ Rails.application.routes.draw do
     root 'dashboard#show'
     devise_for :users, path: '', class_name: 'AdminUser'
 
-    resources :keyrelays
     resources :zonefiles
     resources :zones, controller: 'dns/zones', except: %i[show destroy]
     resources :legal_documents
-    resources :keyrelays
-
     resources :prices, controller: 'billing/prices', except: %i[show destroy] do
       member do
         patch :expire

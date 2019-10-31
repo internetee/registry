@@ -29,11 +29,7 @@ module Epp
         end
       end
 
-      if @notification.attached_obj_type == 'Keyrelay'
-        render_epp_response 'epp/poll/poll_keyrelay'
-      else
-        render_epp_response 'epp/poll/poll_req'
-      end
+      render_epp_response 'epp/poll/poll_req'
     end
 
     def ack_poll

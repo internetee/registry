@@ -150,22 +150,6 @@ en:
               taken: 'Public key already exists'
               blank: 'Public key is missing'
 
-        keyrelay:
-          attributes:
-            base:
-              only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
-            expiry_relative:
-              unknown_pattern: 'Expiry relative must be compatible to ISO 8601'
-            key_data_public_key:
-              blank: 'Public key is missing'
-            key_data_flags:
-              blank: 'Flag is missing'
-            key_data_protocol:
-              blank: 'Protocol is missing'
-            key_data_alg:
-              blank: 'Algorithm is missing'
-            auth_info_pw:
-              blank: 'Password is missing'
         legal_document:
           attributes:
             body:
@@ -338,13 +322,11 @@ en:
   role: 'Role'
   user: 'User'
   customer_service: 'Customer service'
-  keyrelays: 'Keyrelays'
   uploaded_at: 'Uploaded at'
   expiry_relative: 'Expiry relative'
   expiry_absolute: 'Expiry absolute'
   requester: 'Requester'
   accepter: 'Accepter'
-  keyrelay_details: 'Keyrelay details'
   domain_name: 'Domain name'
   created_at: 'Created at'
   type: 'Type'
@@ -455,7 +437,6 @@ en:
   exDate: 'Valid to'
   dequeue: 'Dequeue'
   are_you_sure_you_want_to_delete_domain: 'Are you sure you want to delete domain %{domain}?'
-  keyrelay: 'Keyrelay'
   upload_key: 'Upload key'
   legal_document: 'Legal document'
   legal_document_max_size: '(max. 8MB)'
