@@ -1,3 +1,6 @@
+01.11.2019
+* Typo fixes for #1352 [#1396](https://github.com/internetee/registry/pull/1396)
+
 31.10.2019
 * Updated domain_name gem to 0.5.20190701 [#1400](https://github.com/internetee/registry/pull/1400)
 * Updated webmock gem to 3.7.6 [#1401](https://github.com/internetee/registry/pull/1401)
