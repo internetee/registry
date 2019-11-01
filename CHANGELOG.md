@@ -1,5 +1,6 @@
 01.11.2019
 * Typo fixes for #1352 [#1396](https://github.com/internetee/registry/pull/1396)
+* Updated que gem to 0.14.3 and que-web gem to 0.7.2 [#1404](https://github.com/internetee/registry/pull/1404)
 
 31.10.2019
 * Updated domain_name gem to 0.5.20190701 [#1400](https://github.com/internetee/registry/pull/1400)
