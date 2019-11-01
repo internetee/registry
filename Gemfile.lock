@@ -272,7 +272,7 @@ GEM
     puma (4.2.1)
       nio4r (~> 2.0)
     que (0.14.3)
-    que-web (0.4.0)
+    que-web (0.7.2)
       erubis
       que (~> 0.8)
       sinatra
@@ -470,7 +470,7 @@ DEPENDENCIES
   pry (= 0.10.1)
   puma
   que
-  que-web (= 0.4.0)
+  que-web
   railroady (= 1.3.0)
   rails (= 4.2.11.1)
   rails-settings-cached (= 0.7.2)
