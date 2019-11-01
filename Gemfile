@@ -61,9 +61,7 @@ gem 'digidoc_client',
 
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.1.0', github: 'internetee/epp-xml'
-
-# que
-gem 'que',           '0.10.0'
+gem 'que'
 gem 'daemons-rails', '1.2.1'
 gem 'que-web',       '0.4.0'
 gem 'pdfkit'
