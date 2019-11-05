@@ -1,0 +1,5 @@
+require 'core_monkey_patches/array'
+require 'gem_monkey_patches/builder'
+require 'gem_monkey_patches/i18n'
+require 'gem_monkey_patches/paper_trail'
+require 'gem_monkey_patches/ransack'
