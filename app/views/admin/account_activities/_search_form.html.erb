@@ -27,14 +27,14 @@
             </div>
 
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <%= f.label t(:receipt_date_from) %>
                         <%= f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control js-datepicker', placeholder: t(:receipt_date_from) %>
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <%= f.label t(:receipt_date_until) %>
                         <%= f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control js-datepicker', placeholder: t(:receipt_date_until) %>
@@ -48,12 +48,15 @@
                     </div>
                 </div>
 
-                <div class="col-md-3" style="padding-top: 25px;">
+                <div class="col-md-5 text-right" style="padding-top: 25px;">
                     <button class="btn btn-default search">
                         &nbsp;
                         <span class="glyphicon glyphicon-search"></span>
                         &nbsp;
                     </button>
+                    <%= button_tag t('.download_btn'),
+                                   formaction: admin_account_activities_path(format: 'csv'),
+                                   class: 'btn btn-default' %>
                     <%= link_to(t('.reset_btn'), admin_account_activities_path, class: 'btn btn-default') %>
                 </div>
             </div>

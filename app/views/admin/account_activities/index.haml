@@ -1,6 +1,3 @@
-- content_for :actions do
-  = link_to(t(:export_csv), url_for(params.merge(format: 'csv')), class: 'btn btn-default')
-
 = render 'shared/title', name: t(:account_activities)
 = render 'search_form'
 
