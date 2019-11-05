@@ -1,3 +1,6 @@
+04.11.2019
+* Tuned kaminari gem to solve pagination issues [#1405](https://github.com/internetee/registry/pull/1405)
+
 01.11.2019
 * Typo fixes for #1352 [#1396](https://github.com/internetee/registry/pull/1396)
 * Updated que gem to 0.14.3 and que-web gem to 0.7.2 [#1404](https://github.com/internetee/registry/pull/1404)
