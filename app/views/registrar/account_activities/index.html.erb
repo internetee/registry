@@ -5,48 +5,7 @@
 
 <%= render 'shared/title', name: t(:account_activity) %>
 
-<div class="row">
-    <div class="col-md-12">
-        <%= search_form_for @q, url: [:registrar, :account_activities], html: { style: 'margin-bottom: 0;' } do |f| %>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <%= f.label t(:activity_type) %>
-                        <%= f.select :activity_type_in, AccountActivity.types_for_select, {}, class: 'form-control js-combobox', placeholder: t(:choose), multiple: true %>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <%= f.label t(:description) %>
-                        <%= f.search_field :description_cont, class: 'form-control', placeholder: t(:description), autocomplete: 'off' %>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <%= f.label t(:receipt_date_from) %>
-                        <%= f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control js-datepicker', placeholder: t(:receipt_date_from) %>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <%= f.label t(:receipt_date_until) %>
-                        <%= f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control js-datepicker', placeholder: t(:receipt_date_until) %>
-                    </div>
-                </div>
-                <div class="col-md-6" style="padding-top: 25px;">
-                    <button class="btn btn-default">
-                        &nbsp;
-                        <span class="glyphicon glyphicon-search"></span>
-                        &nbsp;
-                    </button>
-                    <%= link_to(t('.reset_btn'), registrar_account_activities_path, class: 'btn btn-default') %>
-                </div>
-            </div>
-        <% end %>
-    </div>
-</div>
+<%= render 'search_form' %>
 
 <hr/>
 

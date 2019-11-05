@@ -1,5 +1,5 @@
 en:
   registrar:
     account_activities:
-      index:
+      search_form:
         reset_btn: Reset
