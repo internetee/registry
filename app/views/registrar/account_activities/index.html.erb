@@ -1,6 +1,5 @@
 <% content_for :actions do %>
     <%= link_to(t(:back_to_billing), registrar_invoices_path, class: 'btn btn-default') %>
-    <%= link_to(t(:export_csv), url_for(params.merge(format: 'csv')), class: 'btn btn-default') %>
 <% end %>
 
 <%= render 'shared/title', name: t(:account_activity) %>

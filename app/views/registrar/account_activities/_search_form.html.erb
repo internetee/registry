@@ -38,6 +38,9 @@
                         <span class="glyphicon glyphicon-search"></span>
                         &nbsp;
                     </button>
+                    <%= button_tag t('.download_btn'),
+                                   formaction: registrar_account_activities_path(format: 'csv'),
+                                   class: 'btn btn-default' %>
                     <%= link_to(t('.reset_btn'), registrar_account_activities_path, class: 'btn btn-default') %>
                 </div>
             </div>
