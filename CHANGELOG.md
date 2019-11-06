@@ -1,3 +1,6 @@
+05.11.2019
+* Moved gem extensions to proper directory and renamed the dirs to "moneky patces" to improve readability [#1406](https://github.com/internetee/registry/pull/1406)
+
 04.11.2019
 * Tuned kaminari gem to solve pagination issues [#1405](https://github.com/internetee/registry/pull/1405)
 
