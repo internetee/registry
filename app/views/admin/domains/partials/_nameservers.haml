@@ -1,5 +1,4 @@
-- panel_class = @domain.errors.messages[:nameservers] ? 'panel-danger' : 'panel-default'
-.panel{class: panel_class}
+.panel.panel-default
   .panel-heading.clearfix
     = t(:nameservers)
   .table-responsive
@@ -15,9 +14,3 @@
             %td= x
             %td= x.ipv4
             %td= x.ipv6
-      - if @domain.errors.messages[:nameservers]
-        %tfoot
-          - @domain.errors.messages[:nameservers].each do |x|
-            %tr
-              %td{colspan: 3}= x
-
