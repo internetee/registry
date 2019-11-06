@@ -1,3 +1,6 @@
+06.11.2019
+* Fixed account activity form filter and csv download issues in admin and registrar [#1410](https://github.com/internetee/registry/pull/1410)
+
 05.11.2019
 * Moved gem extensions to proper directory and renamed the dirs to "moneky patces" to improve readability [#1406](https://github.com/internetee/registry/pull/1406)
 
