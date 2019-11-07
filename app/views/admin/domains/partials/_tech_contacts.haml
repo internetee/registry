@@ -1,4 +1,5 @@
-- panel_class = @domain.errors.messages[:tech_contacts] ? 'panel-danger' : 'panel-default'
+- tech_contacts_invalid = @domain.errors.include?(:tech_contacts)
+- panel_class = tech_contacts_invalid ? 'panel-danger' : 'panel-default'
 #tech_contacts.panel{class: panel_class}
   .panel-heading.clearfix
     = t('.title')
@@ -15,7 +16,7 @@
             %td= link_to(tc, admin_contact_path(tc))
             %td= tc.code
             %td= tc.email
-      - if @domain.errors.messages[:tech_contacts]
+      - if tech_contacts_invalid
         %tfoot
           - @domain.errors.messages[:tech_contacts].each do |x|
             %tr
