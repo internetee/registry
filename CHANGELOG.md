@@ -1,3 +1,6 @@
+07.11.2019
+* Fixed domain details view in admin where admin and tech contacts were marked as invalid with Rails 5 [#1413](https://github.com/internetee/registry/pull/1413)
+
 06.11.2019
 * Fixed account activity form filter and csv download issues in admin and registrar [#1410](https://github.com/internetee/registry/pull/1410)
 
