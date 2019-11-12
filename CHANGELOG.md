@@ -1,3 +1,6 @@
+11.11.2019
+* Removed code for displaying errors in nameserver and dnskey data as unused [#1411](https://github.com/internetee/registry/pull/1411)
+
 07.11.2019
 * Fixed domain details view in admin where admin and tech contacts were marked as invalid with Rails 5 [#1413](https://github.com/internetee/registry/pull/1413)
 
