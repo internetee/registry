@@ -13,6 +13,9 @@ module Epp
       webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
       if webclient_request && !Rails.env.test? && !Rails.env.development?
         client_md5 = Certificate.parse_md_from_string(request.env['HTTP_SSL_CLIENT_CERT'])
+        if ENV['cert_path'].nil?
+          logger.error('webclient cert (cert_path) missing, registrar epp/repp disabled')
+        end
         server_md5 = Certificate.parse_md_from_string(File.read(ENV['cert_path']))
         if client_md5 != server_md5
           epp_errors << {
