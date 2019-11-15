@@ -1,3 +1,6 @@
+15.11.2019
+* Restored EPP exception logging to syslog [#1371](https://github.com/internetee/registry/issues/1371)
+
 11.11.2019
 * Removed code for displaying errors in nameserver and dnskey data as unused [#1411](https://github.com/internetee/registry/pull/1411)
 
