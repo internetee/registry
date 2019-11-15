@@ -8,6 +8,7 @@ require 'action_mailer/railtie'
 require 'action_view/railtie'
 require 'sprockets/railtie'
 require 'csv'
+require 'English'
 require 'rails/all'
 # require "rails/test_unit/railtie"
 

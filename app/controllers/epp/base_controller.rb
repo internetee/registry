@@ -395,6 +395,7 @@ module Epp
     end
 
     def log_exception(exception)
+      logger.error(([exception.message] + exception.backtrace).join($INPUT_RECORD_SEPARATOR))
       notify_airbrake(exception)
     end
   end
