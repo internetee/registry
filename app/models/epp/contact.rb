@@ -9,7 +9,7 @@ class Epp::Contact < Contact
   def manage_permissions
     return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
-    false
+    throw(:abort)
   end
 
   class << self

@@ -1,3 +1,5 @@
+# Built-in since Rails 5.1
+
 module ActiveSupport
   module Testing
     module Assertions

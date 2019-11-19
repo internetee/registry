@@ -1,4 +1,4 @@
-class Dnskey < ActiveRecord::Base
+class Dnskey < ApplicationRecord
   include Versions # version/dnskey_version.rb
   include EppErrors
 

@@ -1,4 +1,3 @@
-require 'rails5_api_controller_backport'
 require 'auth_token/auth_token_decryptor'
 
 module Api

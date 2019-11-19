@@ -20,7 +20,7 @@ class RegistrantApiAuthenticationTest < ApplicationIntegrationTest
       last_name: 'Smith',
     }
 
-    post '/api/v1/registrant/auth/eid', params
+    post '/api/v1/registrant/auth/eid', params: params
     assert(User.find_by(registrant_ident: 'EE-30110100103'))
 
     json = JSON.parse(response.body, symbolize_names: true)
@@ -29,7 +29,7 @@ class RegistrantApiAuthenticationTest < ApplicationIntegrationTest
 
   def test_request_returns_existing_user
     assert_no_changes User.count do
-      post '/api/v1/registrant/auth/eid', @user_hash
+      post '/api/v1/registrant/auth/eid', params: @user_hash
     end
   end
 
@@ -38,7 +38,7 @@ class RegistrantApiAuthenticationTest < ApplicationIntegrationTest
     @original_whitelist_ip = ENV['registrant_api_auth_allowed_ips']
     ENV['registrant_api_auth_allowed_ips'] = '1.2.3.4'
 
-    post '/api/v1/registrant/auth/eid', params
+    post '/api/v1/registrant/auth/eid', params: params
     assert_equal(401, response.status)
     json_body = JSON.parse(response.body, symbolize_names: true)
 
@@ -50,7 +50,7 @@ class RegistrantApiAuthenticationTest < ApplicationIntegrationTest
   def test_request_documented_parameters_are_required
     params = { foo: :bar, test: :test }
 
-    post '/api/v1/registrant/auth/eid', params
+    post '/api/v1/registrant/auth/eid', params: params
     json = JSON.parse(response.body, symbolize_names: true)
     assert_equal({ errors: [{ ident: ['parameter is required'] }] }, json)
     assert_equal(422, response.status)

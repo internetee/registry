@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include Versions # version/user_version.rb
 
   has_many :actions, dependent: :restrict_with_exception

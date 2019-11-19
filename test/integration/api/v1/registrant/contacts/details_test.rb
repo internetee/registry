@@ -14,8 +14,8 @@ class RegistrantApiV1ContactDetailsTest < ActionDispatch::IntegrationTest
   end
 
   def test_returns_contact_details
-    get api_v1_registrant_contact_path(@contact.uuid), nil, 'HTTP_AUTHORIZATION' => auth_token,
-        'Content-Type' => Mime::JSON.to_s
+    get api_v1_registrant_contact_path(@contact.uuid), as: :json,
+        headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :ok
     assert_equal ({ id: @contact.uuid,
@@ -43,8 +43,8 @@ class RegistrantApiV1ContactDetailsTest < ActionDispatch::IntegrationTest
   end
 
   def test_non_existent_contact
-    get api_v1_registrant_contact_path('non-existent'), nil, 'HTTP_AUTHORIZATION' => auth_token,
-        'Content-Type' => Mime::JSON.to_s
+    get api_v1_registrant_contact_path('non-existent'), as: :json,
+        headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :not_found
     assert_equal({ errors: [base: ['Contact not found']] }, JSON.parse(response.body,
@@ -52,7 +52,7 @@ class RegistrantApiV1ContactDetailsTest < ActionDispatch::IntegrationTest
   end
 
   def test_anonymous_user
-    get api_v1_registrant_contact_path(@contact.uuid), nil, 'Content-Type' => Mime::JSON.to_s
+    get api_v1_registrant_contact_path(@contact.uuid)
 
     assert_response :unauthorized
     assert_equal({ errors: [base: ['Not authorized']] }, JSON.parse(response.body,
@@ -66,8 +66,8 @@ class RegistrantApiV1ContactDetailsTest < ActionDispatch::IntegrationTest
     assert_equal 'US-1234', @user.registrant_ident
 
     CompanyRegister::Client.stub(:new, CompanyRegisterClientStub.new) do
-      get api_v1_registrant_contact_path(@contact.uuid), nil, 'HTTP_AUTHORIZATION' => auth_token,
-          'Content-Type' => Mime::JSON.to_s
+      get api_v1_registrant_contact_path(@contact.uuid), as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
     end
 
     response_json = JSON.parse(response.body, symbolize_names: true)
@@ -78,8 +78,8 @@ class RegistrantApiV1ContactDetailsTest < ActionDispatch::IntegrationTest
     assert_equal 'US-1234', @user.registrant_ident
     @contact.update!(ident: '12345')
 
-    get api_v1_registrant_contact_path(@contact.uuid), nil, 'HTTP_AUTHORIZATION' => auth_token,
-        'Content-Type' => Mime::JSON.to_s
+    get api_v1_registrant_contact_path(@contact.uuid), as: :json,
+        headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :not_found
     response_json = JSON.parse(response.body, symbolize_names: true)

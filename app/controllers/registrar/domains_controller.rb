@@ -2,16 +2,17 @@ class Registrar
   class DomainsController < DeppController
     before_action :init_domain, except: :new
     helper_method :contacts
+    helper_method :search_params
 
     def index
       authorize! :view, Depp::Domain
 
-      params[:q] ||= {}
-      params[:q].delete_if { |_k, v| v.blank? }
-      if params[:q].length == 1 && params[:q][:name_matches].present?
-        @domain = Domain.find_by(name: params[:q][:name_matches])
-        if @domain
-          redirect_to info_registrar_domains_url(domain_name: @domain.name) and return
+      if search_params.to_h.delete_if { |_key, value| value.blank? }.length == 1 &&
+        search_params[:name_matches].present?
+        domain = Domain.find_by(name: search_params[:name_matches])
+
+        if domain
+          redirect_to info_registrar_domains_url(domain_name: domain.name) and return
         end
       end
 
@@ -24,15 +25,15 @@ class Registrar
       end
 
       normalize_search_parameters do
-        @q = domains.search(params[:q])
+        @q = domains.search(search_params)
         @domains = @q.result.page(params[:page])
-        if @domains.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
-          # if we do not get any results, add wildcards to the name field and search again
-          n_cache = params[:q][:name_matches]
-          params[:q][:name_matches] = "%#{params[:q][:name_matches]}%"
-          @q = domains.search(params[:q])
+
+        # if we do not get any results, add wildcards to the name field and search again
+        if @domains.count == 0 && search_params[:name_matches] !~ /^%.+%$/
+          new_search_params = search_params.to_h
+          new_search_params[:name_matches] = "%#{new_search_params[:name_matches]}%"
+          @q = domains.search(new_search_params)
           @domains = @q.result.page(params[:page])
-          params[:q][:name_matches] = n_cache # we don't want to show wildcards in search form
         end
       end
 
@@ -164,17 +165,26 @@ class Registrar
     end
 
     def normalize_search_parameters
-      ca_cache = params[:q][:valid_to_lteq]
+      ca_cache = search_params[:valid_to_lteq]
       begin
-        end_time = params[:q][:valid_to_lteq].try(:to_date)
-        params[:q][:valid_to_lteq] = end_time.try(:end_of_day)
+        end_time = search_params[:valid_to_lteq].try(:to_date)
+        search_params[:valid_to_lteq] = end_time.try(:end_of_day)
       rescue
         logger.warn('Invalid date')
       end
 
       yield
 
-      params[:q][:valid_to_lteq] = ca_cache
+      search_params[:valid_to_lteq] = ca_cache
+    end
+
+    def search_params
+      params.fetch(:q, {}).permit(:name_matches,
+                                  :registrant_ident_eq,
+                                  :contacts_ident_eq,
+                                  :nameservers_hostname_eq,
+                                  :valid_to_gteq,
+                                  :valid_to_lteq)
     end
   end
 end

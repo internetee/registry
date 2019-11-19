@@ -9,7 +9,8 @@ class EppHelloTest < EppTestCase
       </epp>
     XML
 
-    get epp_hello_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=non-existent'
+    get epp_hello_path, params: { frame: request_xml },
+        headers: { 'HTTP_COOKIE' => 'session=non-existent' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal 'EPP server (EIS)', response_xml.at_css('greeting > svID').text

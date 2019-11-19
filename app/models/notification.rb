@@ -1,4 +1,4 @@
-class Notification < ActiveRecord::Base
+class Notification < ApplicationRecord
   include Versions # version/notification_version.rb
 
   belongs_to :registrar

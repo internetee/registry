@@ -33,7 +33,7 @@ module Admin
       end
 
       def notify_by_email?
-        ActiveRecord::Type::Boolean.new.type_cast_from_user(params[:notify_by_email])
+        ActiveRecord::Type::Boolean.new.cast(params[:notify_by_email])
       end
     end
   end

@@ -31,7 +31,7 @@ class CancelOverdueInvoicesTaskTest < ActiveSupport::TestCase
 
   def eliminate_effect_of_other_invoices
     Invoice.connection.disable_referential_integrity do
-      Invoice.delete_all("id != #{@invoice.id}")
+      Invoice.where("id != #{@invoice.id}").delete_all
     end
   end
 

@@ -1,4 +1,4 @@
-class Directo < ActiveRecord::Base
+class Directo < ApplicationRecord
   DOMAIN_TO_PRODUCT = {"ee" => "01EE", "com.ee" => "02COM", "pri.ee" => "03PRI", "fie.ee"=>"04FIE", "med.ee" => "05MED"}.freeze
   belongs_to :item, polymorphic: true
 

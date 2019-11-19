@@ -28,7 +28,6 @@ exclude_patterns:
   - "bin/"
   - "config/"
   - "db/"
-  - "lib/action_controller/"
   - "lib/core_monkey_patches/"
   - "lib/daemons/"
   - "lib/gem_monkey_patches/"

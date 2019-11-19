@@ -169,15 +169,15 @@ class ContactTest < ActiveSupport::TestCase
   end
 
   def test_linked_when_in_use_as_registrant
-    Domain.update_all(registrant_id: @contact)
+    Domain.update_all(registrant_id: @contact.id)
     DomainContact.delete_all
 
     assert @contact.linked?
   end
 
   def test_linked_when_in_use_as_domain_contact
-    Domain.update_all(registrant_id: contacts(:william))
-    DomainContact.update_all(contact_id: @contact)
+    Domain.update_all(registrant_id: contacts(:william).id)
+    DomainContact.update_all(contact_id: @contact.id)
 
     assert @contact.linked?
   end
@@ -253,11 +253,11 @@ class ContactTest < ActiveSupport::TestCase
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)
     other_contact = contacts(:william)
     assert_not_equal other_contact, contact
-    Domain.update_all(registrant_id: other_contact)
+    Domain.update_all(registrant_id: other_contact.id)
   end
 
   def unlinked_contact
-    Domain.update_all(registrant_id: contacts(:william))
+    Domain.update_all(registrant_id: contacts(:william).id)
     DomainContact.delete_all
     contacts(:john)
   end

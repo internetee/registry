@@ -1,4 +1,4 @@
-class Registrar < ActiveRecord::Base
+class Registrar < ApplicationRecord
   include Versions # version/registrar_version.rb
 
   has_many :domains, dependent: :restrict_with_error

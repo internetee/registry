@@ -1,6 +1,6 @@
 require 'open3'
 
-class Certificate < ActiveRecord::Base
+class Certificate < ApplicationRecord
   include Versions
 
   belongs_to :api_user

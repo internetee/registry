@@ -1,10 +1,10 @@
 # Used in Registrant portal to collect registrant verifications
 # Registrant postgres user can access this table directly.
-class RegistrantVerification < ActiveRecord::Base
+class RegistrantVerification < ApplicationRecord
   # actions
   CONFIRMED = 'confirmed'
   REJECTED  = 'rejected'
-  
+
   # action types
   DOMAIN_REGISTRANT_CHANGE = 'domain_registrant_change'
   DOMAIN_DELETE = 'domain_delete'

@@ -15,7 +15,8 @@ class EppPollTest < EppTestCase
         </command>
       </epp>
     XML
-    post epp_poll_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     xml_doc = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully_ack_to_dequeue
@@ -36,7 +37,8 @@ class EppPollTest < EppTestCase
         </command>
       </epp>
     XML
-    post epp_poll_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     xml_doc = Nokogiri::XML(response.body)
     namespace = 'https://epp.tld.ee/schema/changePoll-1.0.xsd'
@@ -60,7 +62,8 @@ class EppPollTest < EppTestCase
         </command>
       </epp>
     XML
-    post epp_poll_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_epp_response :completed_successfully_no_messages
   end
@@ -77,7 +80,8 @@ class EppPollTest < EppTestCase
       </epp>
     XML
 
-    post epp_poll_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     notification.reload
 
     xml_doc = Nokogiri::XML(response.body)
@@ -98,7 +102,8 @@ class EppPollTest < EppTestCase
         </command>
       </epp>
     XML
-    post epp_poll_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     notification.reload
 
     assert notification.unread?
@@ -114,7 +119,8 @@ class EppPollTest < EppTestCase
         </command>
       </epp>
     XML
-    post epp_poll_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_epp_response :object_does_not_exist
   end

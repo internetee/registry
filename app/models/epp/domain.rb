@@ -12,7 +12,7 @@ class Epp::Domain < Domain
     return unless update_prohibited? || delete_prohibited?
     stat = (statuses & (DomainStatus::UPDATE_PROHIBIT_STATES + DomainStatus::DELETE_PROHIBIT_STATES)).first
     add_epp_error('2304', 'status', stat, I18n.t(:object_status_prohibits_operation))
-    false
+    throw(:abort)
   end
 
   after_validation :validate_contacts

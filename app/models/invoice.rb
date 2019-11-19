@@ -1,4 +1,4 @@
-class Invoice < ActiveRecord::Base
+class Invoice < ApplicationRecord
   include Versions
   include Concerns::Invoice::Cancellable
   include Concerns::Invoice::Payable
@@ -47,7 +47,7 @@ class Invoice < ActiveRecord::Base
 
     errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
     logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
-    false
+    throw(:abort)
   end
 
   def to_s

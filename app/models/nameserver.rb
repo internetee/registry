@@ -1,4 +1,4 @@
-class Nameserver < ActiveRecord::Base
+class Nameserver < ApplicationRecord
   include Versions # version/nameserver_version.rb
   include EppErrors
 
