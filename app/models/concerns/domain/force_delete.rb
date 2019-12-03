@@ -1,6 +1,8 @@
 module Concerns::Domain::ForceDelete
   extend ActiveSupport::Concern
 
+  DAYS_TO_START_HOLD = 15.days
+
   def force_delete_scheduled?
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
@@ -23,6 +25,12 @@ module Concerns::Domain::ForceDelete
     remove_force_delete_statuses
     self.force_delete_date = nil
     save(validate: false)
+  end
+
+  def check_hold
+    if force_delete_start < valid_to && (force_delete_date + DAYS_TO_START_HOLD) > Time.zone.today
+      statuses << DomainStatus::CLIENT_HOLD
+    end
   end
 
   private
@@ -62,6 +70,7 @@ module Concerns::Domain::ForceDelete
     statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
     statuses.delete(DomainStatus::PENDING_DELETE)
     statuses.delete(DomainStatus::SERVER_MANUAL_INZONE)
+    statuses.delete(DomainStatus::CLIENT_HOLD)
   end
 
   def allow_deletion

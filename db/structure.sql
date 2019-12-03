@@ -8,6 +8,7 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
 
 --
@@ -742,7 +743,8 @@ CREATE TABLE public.domains (
     upid integer,
     up_date timestamp without time zone,
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    locked_by_registrant_at timestamp without time zone
+    locked_by_registrant_at timestamp without time zone,
+    force_delete_start timestamp without time zone
 );
 
 
@@ -4334,6 +4336,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191206183853'),
 ('20191212133136'),
 ('20191227110904'),
+('20191203083643'),
 ('20200113091254');
+
 
 
