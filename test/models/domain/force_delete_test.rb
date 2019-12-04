@@ -1,107 +1,155 @@
-module Concerns::Domain::ForceDelete
-  extend ActiveSupport::Concern
+require 'test_helper'
 
-  DAYS_TO_START_HOLD = 15.days
-
-  def force_delete_scheduled?
-    statuses.include?(DomainStatus::FORCE_DELETE)
+class NewDomainForceDeleteTest < ActiveSupport::TestCase
+  setup do
+    @domain = domains(:shop)
+    Setting.redemption_grace_period = 45
   end
 
-  def schedule_force_delete(type: :fast_track)
-    if discarded?
-      raise StandardError 'Force delete procedure cannot be scheduled while a domain is discarded'
+  def test_schedules_force_delete_fast_track
+    assert_not @domain.force_delete_scheduled?
+    travel_to Time.zone.parse('2010-07-05')
+
+    @domain.schedule_force_delete(type: :fast_track)
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+    assert_equal Date.parse('2010-08-19'), @domain.force_delete_date.to_date
+    assert_equal Date.parse('2010-07-05'), @domain.force_delete_start.to_date
+  end
+
+  def test_schedules_force_delete_soft_year_ahead
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    assert_not @domain.force_delete_scheduled?
+    travel_to Time.zone.parse('2010-07-05')
+
+    @domain.schedule_force_delete(type: :soft)
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+    assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
+    assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
+    assert (@domain.statuses.include?(DomainStatus::CLIENT_HOLD))
+  end
+
+  def test_schedules_force_delete_soft_less_than_year_ahead
+    @domain.update_columns(valid_to: Time.zone.parse('2010-08-05'),
+                           force_delete_date: nil)
+    assert_not @domain.force_delete_scheduled?
+    travel_to Time.zone.parse('2010-07-05')
+
+    @domain.schedule_force_delete(type: :soft)
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+    assert_nil @domain.force_delete_date
+    assert_nil @domain.force_delete_start
+  end
+
+  def test_scheduling_soft_force_delete_adds_corresponding_statuses
+    statuses_to_be_added = [
+      DomainStatus::FORCE_DELETE,
+      DomainStatus::SERVER_RENEW_PROHIBITED,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+    ]
+
+    @domain.schedule_force_delete(type: :soft)
+    @domain.reload
+    assert (@domain.statuses & statuses_to_be_added) == statuses_to_be_added
+  end
+
+  def test_scheduling_fast_track_force_delete_adds_corresponding_statuses
+    statuses_to_be_added = [
+      DomainStatus::FORCE_DELETE,
+      DomainStatus::SERVER_RENEW_PROHIBITED,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+    ]
+
+    @domain.schedule_force_delete(type: :fast_track)
+    @domain.reload
+    assert (@domain.statuses & statuses_to_be_added) == statuses_to_be_added
+  end
+
+  def test_scheduling_force_delete_allows_domain_deletion
+    statuses_to_be_removed = [
+      DomainStatus::CLIENT_DELETE_PROHIBITED,
+      DomainStatus::SERVER_DELETE_PROHIBITED,
+    ]
+
+    @domain.statuses = statuses_to_be_removed + %w[other-status]
+    @domain.schedule_force_delete(type: :fast_track)
+    @domain.reload
+    assert_empty @domain.statuses & statuses_to_be_removed
+  end
+
+  def test_scheduling_force_delete_stops_pending_actions
+    Setting.redemption_grace_period = 45
+    statuses_to_be_removed = [
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_TRANSFER,
+      DomainStatus::PENDING_RENEW,
+      DomainStatus::PENDING_CREATE,
+    ]
+
+    @domain.statuses = statuses_to_be_removed + %w[other-status]
+    @domain.schedule_force_delete(type: :fast_track)
+    @domain.reload
+    assert_empty @domain.statuses & statuses_to_be_removed, 'Pending actions should be stopped'
+  end
+
+  def test_scheduling_force_delete_preserves_current_statuses
+    @domain.statuses = %w[test1 test2]
+    @domain.schedule_force_delete(type: :fast_track)
+    @domain.reload
+    assert_equal %w[test1 test2], @domain.statuses_before_force_delete
+  end
+
+  def test_scheduling_force_delete_bypasses_validation
+    @domain = domains(:invalid)
+    @domain.schedule_force_delete(type: :fast_track)
+    assert @domain.force_delete_scheduled?
+  end
+
+  def test_force_delete_cannot_be_scheduled_when_a_domain_is_discarded
+    @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
+    assert_raises StandardError do
+      @domain.schedule_force_delete(type: :fast_track)
     end
-
-    case type
-    when :fast_track
-      force_delete_fast_track
-    when :soft
-      force_delete_soft
-    else
-      raise StandardError, 'Wrong type for force delete'
-    end
   end
 
-  def force_delete_fast_track
-    preserve_current_statuses_for_force_delete
-    add_force_delete_statuses
-    self.force_delete_date = Time.zone.today + Setting.redemption_grace_period.days
-    self.force_delete_start = Time.zone.today
-    stop_all_pending_actions
-    allow_deletion
-    save(validate: false)
+  def test_cancels_force_delete
+    @domain.update_columns(statuses: [DomainStatus::FORCE_DELETE],
+                           force_delete_date: Time.zone.parse('2010-07-05'),
+                           force_delete_start: Time.zone.parse('2010-07-05') - 45.days)
+    assert @domain.force_delete_scheduled?
+
+    @domain.cancel_force_delete
+    @domain.reload
+
+    assert_not @domain.force_delete_scheduled?
+    assert_nil @domain.force_delete_date
+    assert_nil @domain.force_delete_start
   end
 
-  def force_delete_soft
-    preserve_current_statuses_for_force_delete
-    add_force_delete_statuses
-    calculate_soft_delete_date
-    stop_all_pending_actions
-    check_hold
-    allow_deletion
-    save(validate: false)
+  def test_cancelling_force_delete_bypasses_validation
+    @domain = domains(:invalid)
+    @domain.schedule_force_delete(type: :fast_track)
+    @domain.cancel_force_delete
+    assert_not @domain.force_delete_scheduled?
   end
 
-  def cancel_force_delete
-    restore_statuses_before_force_delete
-    remove_force_delete_statuses
-    self.force_delete_date = nil
-    self.force_delete_start = nil
-    save(validate: false)
-  end
+  def test_cancelling_force_delete_removes_statuses_that_were_set_on_force_delete
+    statuses = [
+      DomainStatus::FORCE_DELETE,
+      DomainStatus::SERVER_RENEW_PROHIBITED,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+    ]
+    @domain.statuses = @domain.statuses + statuses
+    @domain.schedule_force_delete(type: :fast_track)
 
-  private
+    @domain.cancel_force_delete
+    @domain.reload
 
-  def check_hold
-    if force_delete_start.present? &&
-      force_delete_start < valid_to &&
-      (force_delete_date + DAYS_TO_START_HOLD) > Time.zone.today
-      statuses << DomainStatus::CLIENT_HOLD
-    end
-  end
-
-  def calculate_soft_delete_date
-    years = (self.valid_to.to_date - Time.zone.today).to_i / 365
-    if years.positive?
-      self.force_delete_start = self.valid_to - years.years
-      self.force_delete_date = self.force_delete_start + Setting.redemption_grace_period.days
-    end
-  end
-
-  def stop_all_pending_actions
-    statuses.delete(DomainStatus::PENDING_UPDATE)
-    statuses.delete(DomainStatus::PENDING_TRANSFER)
-    statuses.delete(DomainStatus::PENDING_RENEW)
-    statuses.delete(DomainStatus::PENDING_CREATE)
-  end
-
-  def preserve_current_statuses_for_force_delete
-    self.statuses_before_force_delete = statuses.clone
-  end
-
-  def restore_statuses_before_force_delete
-    self.statuses = statuses_before_force_delete
-    self.statuses_before_force_delete = nil
-  end
-
-  def add_force_delete_statuses
-    statuses << DomainStatus::FORCE_DELETE
-    statuses << DomainStatus::SERVER_RENEW_PROHIBITED
-    statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
-  end
-
-  def remove_force_delete_statuses
-    statuses.delete(DomainStatus::FORCE_DELETE)
-    statuses.delete(DomainStatus::SERVER_RENEW_PROHIBITED)
-    statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
-    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
-    statuses.delete(DomainStatus::PENDING_DELETE)
-    statuses.delete(DomainStatus::SERVER_MANUAL_INZONE)
-    statuses.delete(DomainStatus::CLIENT_HOLD)
-  end
-
-  def allow_deletion
-    statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
-    statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
+    assert_empty @domain.statuses & statuses
   end
 end

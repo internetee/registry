@@ -7,15 +7,30 @@ module Concerns::Domain::ForceDelete
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
-  def schedule_force_delete
+  def schedule_force_delete(type: :fast_track)
     if discarded?
       raise StandardError, 'Force delete procedure cannot be scheduled while a domain is discarded'
     end
 
+    type == :fast_track ? force_delete_fast_track : force_delete_soft
+  end
+
+  def force_delete_fast_track
     preserve_current_statuses_for_force_delete
     add_force_delete_statuses
-    self.force_delete_date = Time.zone.today + Setting.redemption_grace_period.days + 1.day
+    self.force_delete_date = Time.zone.today + Setting.redemption_grace_period.days
+    self.force_delete_start = Time.zone.today
     stop_all_pending_actions
+    allow_deletion
+    save(validate: false)
+  end
+
+  def force_delete_soft
+    preserve_current_statuses_for_force_delete
+    add_force_delete_statuses
+    calculate_soft_delete_date
+    stop_all_pending_actions
+    check_hold
     allow_deletion
     save(validate: false)
   end
@@ -24,16 +39,27 @@ module Concerns::Domain::ForceDelete
     restore_statuses_before_force_delete
     remove_force_delete_statuses
     self.force_delete_date = nil
+    self.force_delete_start = nil
     save(validate: false)
   end
 
+  private
+
   def check_hold
-    if force_delete_start < valid_to && (force_delete_date + DAYS_TO_START_HOLD) > Time.zone.today
+    if force_delete_start.present? && force_delete_start + DAYS_TO_START_HOLD < valid_to
       statuses << DomainStatus::CLIENT_HOLD
     end
   end
 
-  private
+  def calculate_soft_delete_date
+    years = (valid_to.to_date - Time.zone.today).to_i / 365
+    soft_delete_dates(years) if years.positive?
+  end
+
+  def soft_delete_dates(years)
+    self.force_delete_start = valid_to - years.years
+    self.force_delete_date = force_delete_start + Setting.redemption_grace_period.days
+  end
 
   def stop_all_pending_actions
     statuses.delete(DomainStatus::PENDING_UPDATE)
@@ -55,21 +81,12 @@ module Concerns::Domain::ForceDelete
     statuses << DomainStatus::FORCE_DELETE
     statuses << DomainStatus::SERVER_RENEW_PROHIBITED
     statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
-    statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
-    statuses << DomainStatus::PENDING_DELETE
-
-    if (statuses & [DomainStatus::SERVER_HOLD, DomainStatus::CLIENT_HOLD]).empty?
-      statuses << DomainStatus::SERVER_MANUAL_INZONE
-    end
   end
 
   def remove_force_delete_statuses
     statuses.delete(DomainStatus::FORCE_DELETE)
     statuses.delete(DomainStatus::SERVER_RENEW_PROHIBITED)
     statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
-    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
-    statuses.delete(DomainStatus::PENDING_DELETE)
-    statuses.delete(DomainStatus::SERVER_MANUAL_INZONE)
     statuses.delete(DomainStatus::CLIENT_HOLD)
   end
 
