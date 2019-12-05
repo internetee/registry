@@ -5,7 +5,7 @@ module Admin
         authorize! :manage, domain
 
         domain.transaction do
-          domain.schedule_force_delete
+          domain.schedule_force_delete(type: force_delete_type)
           domain.registrar.notifications.create!(text: t('force_delete_set_on_domain',
                                                          domain_name: domain.name))
 
@@ -34,6 +34,14 @@ module Admin
 
       def notify_by_email?
         ActiveRecord::Type::Boolean.new.cast(params[:notify_by_email])
+      end
+
+      def force_delete_type
+        soft_delete? ? :soft : :fast_track
+      end
+
+      def soft_delete?
+        ActiveRecord::Type::Boolean.new.cast(params[:soft_delete])
       end
     end
   end

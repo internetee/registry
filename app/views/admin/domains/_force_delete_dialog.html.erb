@@ -10,6 +10,18 @@
 
             <%= form_tag admin_domain_force_delete_path(domain), id: 'domain-force-delete-form',
                          class: 'modal-body form-horizontal' do %>
+                <div class="form-group force-delete-type">
+                    <div class="col-md-9">
+                        <div class="checkbox">
+                            <label>
+                                <%= check_box_tag 'soft_delete', 1, true,
+                                                  data: { dependent_content_toggle: true } %>
+                                <%= t '.use_soft_delete' %>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <div class="col-md-9">
                         <div class="checkbox">
