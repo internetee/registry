@@ -1,0 +1,7 @@
+one:
+  action: confirmed
+  action_type: domain_delete
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  domain: shop
+  domain_name: shop.test
+  verification_token: 1234
