@@ -1,6 +1,8 @@
 # Used in Registrant portal to collect registrant verifications
 # Registrant postgres user can access this table directly.
 class RegistrantVerification < ApplicationRecord
+  has_paper_trail
+
   # actions
   CONFIRMED = 'confirmed'
   REJECTED  = 'rejected'
