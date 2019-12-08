@@ -1,10 +1,3 @@
-# Use https only for accessing github
-# https://github.com/bundler/bundler/pull/3447
-git_source(:github) do |repo_name|
-  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
-  "https://github.com/#{repo_name}.git"
-end if Bundler::VERSION < '2'
-
 source 'https://rubygems.org'
 
 # core

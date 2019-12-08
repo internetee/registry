@@ -13,8 +13,6 @@ before_install:
   - "sudo mv -f ~/chromedriver /usr/local/share/"
   - "sudo chmod +x /usr/local/share/chromedriver"
   - "sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver"
-  - "gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true"
-  - "gem install bundler -v '< 2'"
 before_script:
   - "cp config/application.yml.sample config/application.yml"
   - "cp config/database_travis.yml config/database.yml"
