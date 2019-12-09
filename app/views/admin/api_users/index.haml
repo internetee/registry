@@ -13,11 +13,11 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'active', t('.active'))
         %tbody
-          - @api_users.each do |x|
+          - @api_users.each do |api_user|
             %tr
-              %td= link_to(x, [:admin, x])
-              %td= link_to(x.registrar, [:admin, x.registrar])
-              %td= x.active
+              %td= link_to api_user, [:admin, api_user]
+              %td= link_to api_user.registrar, [:admin, api_user.registrar]
+              %td= api_user.active
 .row
   .col-md-12
     = paginate @api_users

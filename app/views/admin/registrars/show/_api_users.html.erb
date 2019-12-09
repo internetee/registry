@@ -12,10 +12,10 @@
         </thead>
 
         <tbody>
-            <% registrar.api_users.each do |user| %>
+            <% registrar.api_users.each do |api_user| %>
                 <tr>
-                    <td><%= link_to(user, [:admin, user]) %></td>
-                    <td><%= user.active %></td>
+                    <td><%= link_to api_user, admin_registrar_api_user_path(api_user.registrar, api_user) %></td>
+                    <td><%= api_user.active %></td>
                 </tr>
             <% end %>
         </tbody>
