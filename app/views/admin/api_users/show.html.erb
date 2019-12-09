@@ -14,12 +14,12 @@
         <div class="col-sm-4 text-right">
             <%= link_to t('.edit_btn'), edit_admin_registrar_api_user_path(@api_user.registrar,
                                                                            @api_user),
-                        class: 'btn btn-default' %>
+                        class: 'btn btn-primary' %>
             <%= link_to t('.delete_btn'), admin_registrar_api_user_path(@api_user.registrar,
                                                                         @api_user),
                         method: :delete,
                         data: { confirm: t(:are_you_sure) },
-                        class: 'btn btn-danger' %>
+                        class: 'btn btn-default' %>
         </div>
     </div>
 </div>

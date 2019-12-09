@@ -14,7 +14,7 @@ class AdminRegistrarsApiUsersSystemTest < ApplicationSystemTestCase
 
     fill_in 'Username', with: username
     fill_in 'Password', with: valid_password
-    click_on 'Save'
+    click_on 'Create API user'
 
     assert_text 'Record created'
     assert_text "Username #{username}"
@@ -43,7 +43,7 @@ class AdminRegistrarsApiUsersSystemTest < ApplicationSystemTestCase
     visit admin_registrar_api_user_path(api_user.registrar, api_user)
     click_link_or_button 'Edit'
     fill_in 'Username', with: new_username
-    click_link_or_button 'Save'
+    click_link_or_button 'Update API user'
 
     assert_text 'Record updated'
     assert_text "Username #{new_username}"

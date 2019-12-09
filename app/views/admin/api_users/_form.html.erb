@@ -1,5 +1,5 @@
 <%= form_for([:admin, @api_user.registrar, @api_user], html: { class: 'form-horizontal', autocomplete: 'off' }) do |f| %>
-    <%= render 'shared/full_errors', object: @api_user %>
+    <%= render 'form_errors', target: @api_user %>
 
     <div class="row">
         <div class="col-md-8">
@@ -48,12 +48,11 @@
         </div>
     </div>
 
-    <hr/>
+    <hr>
 
     <div class="row">
         <div class="col-md-8 text-right">
-            <%= button_tag(t(:save), class: 'btn btn-primary') %>
+            <%= button_tag t(".#{f.object.new_record? ? 'create' : 'update'}_btn"), class: 'btn btn-success' %>
         </div>
     </div>
-
 <% end %>

@@ -19,3 +19,5 @@ en:
 
       form:
         active: Active
+        create_btn: Create API user
+        update_btn: Update API user
