@@ -52,10 +52,6 @@ module Admin
 
     private
 
-    def set_api_user
-      @api_user = ApiUser.find(params[:id])
-    end
-
     def api_user_params
       params.require(:api_user).permit(:username, :plain_text_password, :active,
                                        :identity_code, { roles: [] })
