@@ -270,7 +270,7 @@ Rails.application.routes.draw do
     end
 
     resources :admin_users
-    resources :api_users do
+    resources :api_users, except: %i[new] do
       resources :certificates do
         member do
           post 'sign'

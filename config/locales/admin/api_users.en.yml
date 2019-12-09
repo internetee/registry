@@ -2,7 +2,6 @@ en:
   admin:
     api_users:
       index:
-        new_btn: New API user
         title: API users
         active: Active
 
