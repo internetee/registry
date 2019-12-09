@@ -14,11 +14,11 @@ module Admin
     def create
       @api_user = registrar.api_users.build(api_user_params)
 
-      if @api_user.save
+      if @api_user.valid?
+        @api_user.save!
         flash[:notice] = I18n.t('record_created')
         redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user)
       else
-        flash.now[:alert] = I18n.t('failed_to_create_record')
         render 'new'
       end
     end
@@ -34,11 +34,13 @@ module Admin
         params[:api_user].delete(:plain_text_password)
       end
 
-      if @api_user.update(api_user_params)
+      @api_user.attributes = api_user_params
+
+      if @api_user.valid?
+        @api_user.save!
         flash[:notice] = I18n.t('record_updated')
         redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user)
       else
-        flash.now[:alert] = I18n.t('failed_to_update_record')
         render 'edit'
       end
     end
