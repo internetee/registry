@@ -259,7 +259,7 @@ Rails.application.routes.draw do
     end
 
     resources :registrars do
-      resources :api_users, except: %i[show edit update destroy]
+      resources :api_users, except: %i[index]
       resources :white_ips
     end
 
@@ -270,7 +270,8 @@ Rails.application.routes.draw do
     end
 
     resources :admin_users
-    resources :api_users, except: %i[new create] do
+    # /admin/api_users is mainly for manual testing
+    resources :api_users, only: :index do
       resources :certificates do
         member do
           post 'sign'

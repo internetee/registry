@@ -2,7 +2,6 @@ module Admin
   class ApiUsersController < BaseController
     load_and_authorize_resource
     before_action :set_api_user, only: [:show, :edit, :update, :destroy]
-    before_action :find_registrar, only: %i[new create]
 
     def index
       @q = ApiUser.includes(:registrar).search(params[:q])
@@ -10,15 +9,15 @@ module Admin
     end
 
     def new
-      @api_user = ApiUser.new
+      @api_user = registrar.api_users.build
     end
 
     def create
-      @api_user = @registrar.api_users.build(api_user_params)
+      @api_user = registrar.api_users.build(api_user_params)
 
       if @api_user.save
         flash[:notice] = I18n.t('record_created')
-        redirect_to [:admin, @api_user]
+        redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user)
       else
         flash.now[:alert] = I18n.t('failed_to_create_record')
         render 'new'
@@ -38,7 +37,7 @@ module Admin
 
       if @api_user.update(api_user_params)
         flash[:notice] = I18n.t('record_updated')
-        redirect_to [:admin, @api_user]
+        redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user)
       else
         flash.now[:alert] = I18n.t('failed_to_update_record')
         render 'edit'
@@ -48,7 +47,7 @@ module Admin
     def destroy
       if @api_user.destroy
         flash[:notice] = I18n.t('record_deleted')
-        redirect_to admin_api_users_path
+        redirect_to admin_registrar_path(@api_user.registrar)
       else
         flash.now[:alert] = I18n.t('failed_to_delete_record')
         render 'show'
@@ -66,8 +65,8 @@ module Admin
                                        :identity_code, { roles: [] })
     end
 
-    def find_registrar
-      @registrar = Registrar.find(params[:registrar_id])
+    def registrar
+      Registrar.find(params[:registrar_id])
     end
   end
 end
