@@ -16,8 +16,8 @@ module Admin
 
       if @api_user.valid?
         @api_user.save!
-        flash[:notice] = I18n.t('record_created')
-        redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user)
+        redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user),
+                    notice: t('.created')
       else
         render 'new'
       end
@@ -38,8 +38,8 @@ module Admin
 
       if @api_user.valid?
         @api_user.save!
-        flash[:notice] = I18n.t('record_updated')
-        redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user)
+        redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user),
+                    notice: t('.updated')
       else
         render 'edit'
       end
@@ -47,7 +47,7 @@ module Admin
 
     def destroy
       @api_user.destroy!
-      redirect_to admin_registrar_path(@api_user.registrar), notice: t('record_deleted')
+      redirect_to admin_registrar_path(@api_user.registrar), notice: t('.deleted')
     end
 
     private

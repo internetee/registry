@@ -5,17 +5,26 @@ en:
         header: API users
         active: Active
 
+      new:
+        header: New API user
+
+      create:
+        created: API user has been successfully created
+
       show:
         active: Active
         subject: Subject
         edit_btn: Edit
         delete_btn: Delete
 
-      new:
-        header: New API user
-
       edit:
         header: Edit API user
+
+      update:
+        updated: API user has been successfully updated
+
+      destroy:
+        deleted: API user has been successfully deleted
 
       form:
         active: Active

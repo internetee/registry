@@ -16,7 +16,7 @@ class AdminRegistrarsApiUsersSystemTest < ApplicationSystemTestCase
     fill_in 'Password', with: valid_password
     click_on 'Create API user'
 
-    assert_text 'Record created'
+    assert_text 'API user has been successfully created'
     assert_text "Username #{username}"
     new_api_user = ApiUser.last
     assert_current_path admin_registrar_api_user_path(registrar, new_api_user)
@@ -45,7 +45,7 @@ class AdminRegistrarsApiUsersSystemTest < ApplicationSystemTestCase
     fill_in 'Username', with: new_username
     click_link_or_button 'Update API user'
 
-    assert_text 'Record updated'
+    assert_text 'API user has been successfully updated'
     assert_text "Username #{new_username}"
     assert_current_path admin_registrar_api_user_path(api_user.registrar, api_user)
   end
@@ -56,7 +56,7 @@ class AdminRegistrarsApiUsersSystemTest < ApplicationSystemTestCase
     visit admin_registrar_api_user_path(api_user.registrar, api_user)
     click_on 'Delete'
 
-    assert_text 'Record deleted'
+    assert_text 'API user has been successfully deleted'
     assert_current_path admin_registrar_path(api_user.registrar)
   end
 
