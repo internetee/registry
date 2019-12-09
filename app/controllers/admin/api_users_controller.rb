@@ -1,7 +1,6 @@
 module Admin
   class ApiUsersController < BaseController
     load_and_authorize_resource
-    before_action :set_api_user, only: [:show, :edit, :update, :destroy]
 
     def index
       @q = ApiUser.includes(:registrar).search(params[:q])
