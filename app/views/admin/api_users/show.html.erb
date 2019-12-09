@@ -24,15 +24,6 @@
     </div>
 </div>
 
-<% if @api_user.errors.any? %>
-    <% @api_user.errors.each do |attr, err| %>
-        <%= err %>
-        <br/>
-    <% end %>
-<% end %>
-<% if @api_user.errors.any? %>
-    <hr/>
-<% end %>
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
