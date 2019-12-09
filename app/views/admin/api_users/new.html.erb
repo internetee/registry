@@ -1,2 +1,11 @@
-<%= render 'shared/title', name: t('.title') %>
+<ol class="breadcrumb">
+    <li><%= link_to t('admin.registrars.index.header'), admin_registrars_path %></li>
+    <li><%= link_to @api_user.registrar, admin_registrar_path(@api_user.registrar) %></li>
+    <li><%= t '.header' %></li>
+</ol>
+
+<div class="page-header">
+    <h1><%= t '.header' %></h1>
+</div>
+
 <%= render 'form' %>

@@ -277,7 +277,6 @@ en:
   certificate_signing_req: 'Certificate signing request'
   csr: 'CSR'
   crt: 'CRT'
-  back_to_api_user: 'Back to API user'
 
   dnskey: 'DNS key'
   dnskeys: 'DNS Keys'

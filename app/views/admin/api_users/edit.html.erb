@@ -1,5 +1,14 @@
-<% content_for :actions do %>
-    <%= link_to(t(:back_to_api_user), admin_registrar_api_user_path(@api_user.registrar, @api_user), class: 'btn btn-default') %>
-<% end %>
-<%= render 'shared/title', name: "#{t(:edit)}: #{@api_user.username}" %>
+<ol class="breadcrumb">
+    <li><%= link_to t('admin.registrars.index.header'), admin_registrars_path %></li>
+    <li><%= link_to @api_user.registrar, admin_registrar_path(@api_user.registrar) %></li>
+    <li><%= t 'admin.registrars.show.api_users.header' %></li>
+    <li><%= link_to @api_user.username, admin_registrar_api_user_path(@api_user.registrar,
+                                                                      @api_user) %></li>
+    <li><%= t '.header' %></li>
+</ol>
+
+<div class="page-header">
+    <h1><%= t '.header' %></h1>
+</div>
+
 <%= render 'form' %>

@@ -1,8 +1,29 @@
-<% content_for :actions do %>
-    <%= link_to(t(:edit), edit_admin_registrar_api_user_path(@api_user.registrar, @api_user), class: 'btn btn-default') %>
-    <%= link_to(t(:delete), admin_registrar_api_user_path(@api_user.registrar, @api_user), method: :delete, data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger') %>
-<% end %>
-<%= render 'shared/title', name: @api_user.username %>
+<ol class="breadcrumb">
+    <li><%= link_to t('admin.registrars.index.header'), admin_registrars_path %></li>
+    <li><%= link_to @api_user.registrar, admin_registrar_path(@api_user.registrar) %></li>
+    <li><%= t 'admin.registrars.show.api_users.header' %></li>
+    <li><%= @api_user.username %></li>
+</ol>
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-8">
+            <h1><%= @api_user.username %></h1>
+        </div>
+
+        <div class="col-sm-4 text-right">
+            <%= link_to t('.edit_btn'), edit_admin_registrar_api_user_path(@api_user.registrar,
+                                                                           @api_user),
+                        class: 'btn btn-default' %>
+            <%= link_to t('.delete_btn'), admin_registrar_api_user_path(@api_user.registrar,
+                                                                        @api_user),
+                        method: :delete,
+                        data: { confirm: t(:are_you_sure) },
+                        class: 'btn btn-danger' %>
+        </div>
+    </div>
+</div>
+
 <% if @api_user.errors.any? %>
     <% @api_user.errors.each do |attr, err| %>
         <%= err %>

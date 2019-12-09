@@ -2,15 +2,20 @@ en:
   admin:
     api_users:
       index:
-        title: API users
+        header: API users
         active: Active
 
       show:
         active: Active
         subject: Subject
+        edit_btn: Edit
+        delete_btn: Delete
 
       new:
-        title: New API user
+        header: New API user
+
+      edit:
+        header: Edit API user
 
       form:
         active: Active
