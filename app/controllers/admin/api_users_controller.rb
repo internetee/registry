@@ -46,13 +46,8 @@ module Admin
     end
 
     def destroy
-      if @api_user.destroy
-        flash[:notice] = I18n.t('record_deleted')
-        redirect_to admin_registrar_path(@api_user.registrar)
-      else
-        flash.now[:alert] = I18n.t('failed_to_delete_record')
-        render 'show'
-      end
+      @api_user.destroy!
+      redirect_to admin_registrar_path(@api_user.registrar), notice: t('record_deleted')
     end
 
     private
