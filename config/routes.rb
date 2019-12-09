@@ -259,7 +259,7 @@ Rails.application.routes.draw do
     end
 
     resources :registrars do
-      resources :api_users
+      resources :api_users, except: %i[create show edit update destroy]
       resources :white_ips
     end
 
