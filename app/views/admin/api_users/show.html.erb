@@ -32,43 +32,29 @@
                     <%= t(:general) %>
                 </h3>
             </div>
+
             <div class="panel-body">
                 <dl class="dl-horizontal">
-                    <dt>
-                        <%= t(:username) %>
-                    </dt>
-                    <dd>
-                        <%= @api_user.username %>
-                    </dd>
-                    <dt>
-                        <%= t(:password) %>
-                    </dt>
-                    <dd>
-                        <%= @api_user.plain_text_password %>
-                    </dd>
-                    <dt>
-                        <%= t(:registrar_name) %>
-                    </dt>
-                    <dd>
-                        <%= link_to(@api_user.registrar, admin_registrar_path(@api_user.registrar)) %>
-                    </dd>
-                    <dt>
-                        <%= t(:role) %>
-                    </dt>
-                    <dd>
-                        <%= @api_user.roles.join(', ') %>
-                    </dd>
-                    <dt>
-                        <%= t('.active') %>
-                    </dt>
-                    <dd>
-                        <%= @api_user.active %>
-                    </dd>
+                    <dt><%= t(:username) %></dt>
+                    <dd><%= @api_user.username %></dd>
+
+                    <dt><%= t(:password) %></dt>
+                    <dd><%= @api_user.plain_text_password %></dd>
+
+                    <dt><%= t(:registrar_name) %></dt>
+                    <dd><%= link_to(@api_user.registrar, admin_registrar_path(@api_user.registrar)) %></dd>
+
+                    <dt><%= t(:role) %></dt>
+                    <dd><%= @api_user.roles.join(', ') %></dd>
+
+                    <dt><%= t('.active') %></dt>
+                    <dd><%= @api_user.active %></dd>
                 </dl>
             </div>
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
@@ -81,40 +67,46 @@
                     <%= link_to(t(:upload_csr), new_admin_api_user_certificate_path(@api_user), class: 'btn btn-primary btn-xs') %>
                 </div>
             </div>
+
             <div class="table-responsive">
                 <table class="table table-hover table-bordered table-condensed">
                     <thead>
-                    <tr>
-                        <th class="col-xs-10">
-                            <%= t('.subject') %>
-                        </th>
-                        <th class="col-xs-2">
-                            <%= t(:status) %>
-                        </th>
-                    </tr>
+                        <tr>
+                            <th class="col-xs-10">
+                                <%= t('.subject') %>
+                            </th>
+                            <th class="col-xs-2">
+                                <%= t(:status) %>
+                            </th>
+                        </tr>
                     </thead>
+
                     <tbody>
-                    <% @api_user.certificates.each do |x| %>
-                        <% if x.csr %>
-                            <tr>
-                                <td>
-                                    <%= link_to(x.parsed_csr.try(:subject), admin_api_user_certificate_path(@api_user, x)) %>
-                                </td>
-                                <td>
-                                    <%= x.status %>
-                                </td>
-                            </tr>
-                        <% elsif x.crt %>
-                            <tr>
-                                <td>
-                                    <%= link_to(x.parsed_crt.try(:subject), admin_api_user_certificate_path(@api_user, x)) %>
-                                </td>
-                                <td>
-                                    <%= x.status %>
-                                </td>
-                            </tr>
+                        <% @api_user.certificates.each do |x| %>
+                            <% if x.csr %>
+                                <tr>
+                                    <td>
+                                        <%= link_to(x.parsed_csr.try(:subject),
+                                                    admin_api_user_certificate_path(@api_user,
+                                                                                    x)) %>
+                                    </td>
+                                    <td>
+                                        <%= x.status %>
+                                    </td>
+                                </tr>
+                            <% elsif x.crt %>
+                                <tr>
+                                    <td>
+                                        <%= link_to(x.parsed_crt.try(:subject),
+                                                    admin_api_user_certificate_path(@api_user,
+                                                                                    x)) %>
+                                    </td>
+                                    <td>
+                                        <%= x.status %>
+                                    </td>
+                                </tr>
+                            <% end %>
                         <% end %>
-                    <% end %>
                     </tbody>
                 </table>
             </div>

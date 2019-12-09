@@ -1,5 +1,6 @@
 <%= form_for([:admin, @api_user.registrar, @api_user], html: { class: 'form-horizontal', autocomplete: 'off' }) do |f| %>
     <%= render 'shared/full_errors', object: @api_user %>
+
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
@@ -10,6 +11,7 @@
                     <%= f.text_field :username, required: true, autofocus: true, class: 'form-control' %>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="col-md-4 control-label">
                     <%= f.label :plain_text_password, nil, class: 'required' %>
@@ -18,6 +20,7 @@
                     <%= f.text_field :plain_text_password, required: true, class: 'form-control' %>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="col-md-4 control-label">
                     <%= f.label :identity_code %>
@@ -26,10 +29,12 @@
                     <%= f.text_field(:identity_code, class: 'form-control') %>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="col-md-4 control-label">
                     <%= f.label :role, nil, class: 'required' %>
                 </div>
+
                 <div class="col-md-7">
                     <%= select_tag 'api_user[roles][]', options_for_select(ApiUser::ROLES.map { |x| [x, x] }, @api_user.roles.try(:first)), class: 'form-control selectize' %>
                     <div class="checkbox">
@@ -42,10 +47,13 @@
             </div>
         </div>
     </div>
+
     <hr/>
+
     <div class="row">
         <div class="col-md-8 text-right">
             <%= button_tag(t(:save), class: 'btn btn-primary') %>
         </div>
     </div>
+
 <% end %>

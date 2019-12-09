@@ -1,42 +1,41 @@
 <div class="page-header">
     <h1><%= t '.header' %></h1>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
             <table class="table table-hover table-bordered table-condensed">
                 <thead>
-                <tr>
-                    <th class="col-xs-2">
-                        <%= sort_link(@q, 'username') %>
-                    </th>
-                    <th class="col-xs-2">
-                        <%= sort_link(@q, 'registrar_name', t(:registrar_name)) %>
-                    </th>
-                    <th class="col-xs-2">
-                        <%= sort_link(@q, 'active', t('.active')) %>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <% @api_users.each do |api_user| %>
                     <tr>
-                        <td>
-                            <%= link_to api_user, admin_registrar_api_user_path(api_user.registrar, api_user) %>
-                        </td>
-                        <td>
-                            <%= link_to api_user.registrar, [:admin, api_user.registrar] %>
-                        </td>
-                        <td>
-                            <%= api_user.active %>
-                        </td>
+                        <th class="col-xs-2">
+                            <%= sort_link(@q, 'username') %>
+                        </th>
+                        <th class="col-xs-2">
+                            <%= sort_link(@q, 'registrar_name', t(:registrar_name)) %>
+                        </th>
+                        <th class="col-xs-2">
+                            <%= sort_link(@q, 'active', t('.active')) %>
+                        </th>
                     </tr>
-                <% end %>
+                </thead>
+
+                <tbody>
+                    <% @api_users.each do |api_user| %>
+                        <tr>
+                            <td><%= link_to api_user,
+                                            admin_registrar_api_user_path(api_user.registrar,
+                                                                          api_user) %></td>
+                            <td><%= link_to api_user.registrar, [:admin, api_user.registrar] %></td>
+                            <td><%= api_user.active %></td>
+                        </tr>
+                    <% end %>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <%= paginate @api_users %>
