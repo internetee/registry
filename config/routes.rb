@@ -259,7 +259,7 @@ Rails.application.routes.draw do
     end
 
     resources :registrars do
-      resources :api_users, except: %i[create show edit update destroy]
+      resources :api_users, except: %i[show edit update destroy]
       resources :white_ips
     end
 
@@ -270,7 +270,7 @@ Rails.application.routes.draw do
     end
 
     resources :admin_users
-    resources :api_users, except: %i[new] do
+    resources :api_users, except: %i[new create] do
       resources :certificates do
         member do
           post 'sign'

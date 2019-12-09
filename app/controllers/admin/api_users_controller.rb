@@ -2,6 +2,7 @@ module Admin
   class ApiUsersController < BaseController
     load_and_authorize_resource
     before_action :set_api_user, only: [:show, :edit, :update, :destroy]
+    before_action :find_registrar, only: %i[new create]
 
     def index
       @q = ApiUser.includes(:registrar).search(params[:q])
@@ -9,12 +10,11 @@ module Admin
     end
 
     def new
-      @registrar = Registrar.find_by(id: params[:registrar_id])
-      @api_user = ApiUser.new(registrar: @registrar)
+      @api_user = ApiUser.new
     end
 
     def create
-      @api_user = ApiUser.new(api_user_params)
+      @api_user = @registrar.api_users.build(api_user_params)
 
       if @api_user.save
         flash[:notice] = I18n.t('record_created')
@@ -63,8 +63,11 @@ module Admin
 
     def api_user_params
       params.require(:api_user).permit(:username, :plain_text_password, :active,
-                                       :registrar_id, :registrar_typeahead,
                                        :identity_code, { roles: [] })
+    end
+
+    def find_registrar
+      @registrar = Registrar.find(params[:registrar_id])
     end
   end
 end

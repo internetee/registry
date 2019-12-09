@@ -28,7 +28,6 @@ class ApiUser < User
   delegate :code, :name, to: :registrar, prefix: true
 
   alias_attribute :login, :username
-  attr_accessor :registrar_typeahead
 
   SUPER = 'super'
   EPP = 'epp'
@@ -51,10 +50,6 @@ class ApiUser < User
     def find_by_id_card(id_card)
       find_by(identity_code: id_card.personal_code)
     end
-  end
-
-  def registrar_typeahead
-    @registrar_typeahead || registrar || nil
   end
 
   def to_s

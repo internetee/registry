@@ -1,4 +1,4 @@
-= form_for([:admin, @api_user], html: {class: 'form-horizontal', autocomplete: 'off'}) do |f|
+= form_for([:admin, @registrar, @api_user], html: {class: 'form-horizontal', autocomplete: 'off'}) do |f|
   = render 'shared/full_errors', object: @api_user
 
   .row
@@ -21,18 +21,6 @@
           = f.text_field(:identity_code, class: 'form-control')
 
       .form-group
-        .form-group.has-feedback.js-typeahead-container
-          .col-md-4.control-label
-            = f.label :registrar_typeahead, t(:registrar_name), class: 'required'
-          .col-md-7
-            = f.text_field(:registrar_typeahead,
-              class: 'form-control js-registrar-typeahead typeahead required',
-              placeholder: t(:registrar_name), autocomplete: 'off')
-            %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
-            %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
-            = f.hidden_field(:registrar_id, class: 'js-registrar-id')
-
-      .form-group
         .col-md-4.control-label
           = f.label :role, nil, class: 'required'
         .col-md-7
@@ -49,8 +37,3 @@
   .row
     .col-md-8.text-right
       = button_tag(t(:save), class: 'btn btn-primary')
-
-:javascript
-  window.addEventListener('load', function() {
-    Autocomplete.bindAdminRegistrarSearch();
-  });
