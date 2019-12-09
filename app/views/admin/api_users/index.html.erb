@@ -21,15 +21,7 @@
                 </thead>
 
                 <tbody>
-                    <% @api_users.each do |api_user| %>
-                        <tr>
-                            <td><%= link_to api_user,
-                                            admin_registrar_api_user_path(api_user.registrar,
-                                                                          api_user) %></td>
-                            <td><%= link_to api_user.registrar, [:admin, api_user.registrar] %></td>
-                            <td><%= api_user.active %></td>
-                        </tr>
-                    <% end %>
+                    <%= render @api_users %>
                 </tbody>
             </table>
         </div>
