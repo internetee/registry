@@ -30,10 +30,6 @@ module Admin
     end
 
     def update
-      if params[:api_user][:plain_text_password].blank?
-        params[:api_user].delete(:plain_text_password)
-      end
-
       @api_user.attributes = api_user_params
 
       if @api_user.valid?
