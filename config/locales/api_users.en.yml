@@ -3,3 +3,4 @@ en:
     attributes:
       api_user:
         plain_text_password: Password
+        roles: Role
