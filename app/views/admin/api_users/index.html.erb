@@ -12,10 +12,10 @@
                             <%= sort_link(@q, 'username') %>
                         </th>
                         <th class="col-xs-2">
-                            <%= sort_link(@q, 'registrar_name', t(:registrar_name)) %>
+                            <%= sort_link(@q, 'registrar_name', Registrar.model_name.human) %>
                         </th>
                         <th class="col-xs-2">
-                            <%= sort_link(@q, 'active', t('.active')) %>
+                            <%= sort_link(@q, 'active', ApiUser.human_attribute_name(:active)) %>
                         </th>
                     </tr>
                 </thead>

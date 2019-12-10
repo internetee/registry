@@ -3,7 +3,6 @@ en:
     api_users:
       index:
         header: API users
-        active: Active
 
       new:
         header: New API user
@@ -12,7 +11,6 @@ en:
         created: API user has been successfully created
 
       show:
-        active: Active
         subject: Subject
         edit_btn: Edit
         delete_btn: Delete
@@ -27,6 +25,5 @@ en:
         deleted: API user has been successfully deleted
 
       form:
-        active: Active
         create_btn: Create API user
         update_btn: Update API user

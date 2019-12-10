@@ -35,19 +35,19 @@
 
             <div class="panel-body">
                 <dl class="dl-horizontal">
-                    <dt><%= t(:username) %></dt>
+                    <dt><%= ApiUser.human_attribute_name :username %></dt>
                     <dd><%= @api_user.username %></dd>
 
-                    <dt><%= t(:password) %></dt>
+                    <dt><%= ApiUser.human_attribute_name :plain_text_password %></dt>
                     <dd><%= @api_user.plain_text_password %></dd>
 
-                    <dt><%= t(:registrar_name) %></dt>
+                    <dt><%= Registrar.model_name.human %></dt>
                     <dd><%= link_to(@api_user.registrar, admin_registrar_path(@api_user.registrar)) %></dd>
 
-                    <dt><%= t(:role) %></dt>
+                    <dt><%= ApiUser.human_attribute_name :roles %></dt>
                     <dd><%= @api_user.roles.join(', ') %></dd>
 
-                    <dt><%= t('.active') %></dt>
+                    <dt><%= ApiUser.human_attribute_name :active %></dt>
                     <dd><%= @api_user.active %></dd>
                 </dl>
             </div>
