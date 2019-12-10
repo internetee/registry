@@ -18,7 +18,7 @@
             <%= link_to t('.delete_btn'), admin_registrar_api_user_path(@api_user.registrar,
                                                                         @api_user),
                         method: :delete,
-                        data: { confirm: t(:are_you_sure) },
+                        data: { confirm: t('.delete_btn_confirm') },
                         class: 'btn btn-default' %>
         </div>
     </div>
@@ -29,7 +29,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">
-                    <%= t(:general) %>
+                    <%= t '.header' %>
                 </h3>
             </div>
 
