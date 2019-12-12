@@ -1,5 +1,6 @@
 12.12.2019
 * Updated e-invoice gem [#1429](https://github.com/internetee/registry/pull/1429)
+* Upgraded bundler to 2.0.2 [#1433](https://github.com/internetee/registry/pull/1433)
 * Set not null constraint on contact.name db column [#1417](https://github.com/internetee/registry/pull/1417)
 * Removed domain name from registrant_verifications table [#1431](https://github.com/internetee/registry/pull/1431)
 
