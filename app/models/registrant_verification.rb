@@ -11,7 +11,7 @@ class RegistrantVerification < ApplicationRecord
 
   belongs_to :domain
 
-  validates :verification_token, :domain_name, :domain, :action, :action_type, presence: true
+  validates :verification_token, :domain, :action, :action_type, presence: true
 
   def domain_registrant_change_confirm!(initiator)
     self.action_type = DOMAIN_REGISTRANT_CHANGE

@@ -16,7 +16,6 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
     end
 
     @registrant_verification = RegistrantVerification.new(domain_id: @domain.id,
-                                                          domain_name: @domain.name,
                                                           verification_token: params[:token])
 
     initiator = current_registrant_user ? current_registrant_user.username :

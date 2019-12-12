@@ -1963,7 +1963,6 @@ ALTER SEQUENCE public.que_jobs_job_id_seq OWNED BY public.que_jobs.job_id;
 
 CREATE TABLE public.registrant_verifications (
     id integer NOT NULL,
-    domain_name character varying NOT NULL,
     verification_token character varying NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -4362,6 +4361,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191007123000'),
 ('20191008024334'),
 ('20191024153351'),
-('20191024160038');
+('20191024160038'),
+('20191206183853');
 
 
