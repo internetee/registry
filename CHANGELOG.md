@@ -1,3 +1,6 @@
+12.12.2019
+* Updated e-invoice gem [#1429](https://github.com/internetee/registry/pull/1429)
+
 15.11.2019
 * Restored EPP exception logging to syslog [#1371](https://github.com/internetee/registry/issues/1371)
 
