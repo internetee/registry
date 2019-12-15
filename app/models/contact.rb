@@ -56,6 +56,8 @@ class Contact < ApplicationRecord
 
   after_save :update_related_whois_records
 
+  self.ignored_columns = %w[legacy_id legacy_history_id]
+
   ORG = 'org'
   PRIV = 'priv'
 

@@ -70,7 +70,7 @@ class SerializersRegistrantApiDomainTest < ActiveSupport::TestCase
   def test_other_fields_are_also_present
     keys = %i[id name registrar registered_at valid_to created_at updated_at
               registrant tech_contacts admin_contacts transfer_code name_dirty name_puny period
-              period_unit creator_str updator_str legacy_id legacy_registrar_id legacy_registrant_id
+              period_unit creator_str updator_str
               outzone_at delete_date registrant_verification_asked_at
               registrant_verification_token pending_json force_delete_date statuses
               locked_by_registrant_at status_notes nameservers]

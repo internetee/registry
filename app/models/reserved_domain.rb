@@ -8,6 +8,8 @@ class ReservedDomain < ApplicationRecord
 
   alias_attribute :registration_code, :password
 
+  self.ignored_columns = %w[legacy_id]
+
   class << self
     def pw_for(domain_name)
       name_in_ascii = SimpleIDN.to_ascii(domain_name)

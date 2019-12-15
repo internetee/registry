@@ -34,6 +34,8 @@ class Nameserver < ApplicationRecord
 
   delegate :name, to: :domain, prefix: true
 
+  self.ignored_columns = %w[legacy_domain_id]
+
   def epp_code_map
     {
         '2302' => [

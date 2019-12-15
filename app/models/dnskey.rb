@@ -22,6 +22,8 @@ class Dnskey < ApplicationRecord
   FLAGS = %w(0 256 257) # 256 = ZSK, 257 = KSK
   DS_DIGEST_TYPE = [1,2]
 
+  self.ignored_columns = %w[legacy_domain_id]
+
   def epp_code_map
     {
       '2005' => [
