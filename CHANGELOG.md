@@ -1,6 +1,7 @@
 16.12.2019
 * Bump puma from 4.2.1 to 4.3.1 [#1437](https://github.com/internetee/registry/pull/1437)
 * Refactored API user management [#1435](https://github.com/internetee/registry/pull/1435)
+* Removed Ruby version from Travis config and let it use .ruby-version [#1441](https://github.com/internetee/registry/pull/1441)
 * Removed `fill_ident_country` postgresql function as unused [#1439](https://github.com/internetee/registry/pull/1439)
 
 12.12.2019
