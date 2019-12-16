@@ -1,3 +1,6 @@
+16.12.2019
+* Refactored API user management [#1435](https://github.com/internetee/registry/pull/1435)
+
 12.12.2019
 * Updated e-invoice gem [#1429](https://github.com/internetee/registry/pull/1429)
 * Upgraded bundler to 2.0.2 [#1433](https://github.com/internetee/registry/pull/1433)
