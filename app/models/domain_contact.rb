@@ -8,6 +8,8 @@ class DomainContact < ApplicationRecord
 
   attr_accessor :value_typeahead
 
+  self.ignored_columns = %w[legacy_domain_id legacy_contact_id]
+
   def epp_code_map
     {
       '2302' => [

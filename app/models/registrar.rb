@@ -46,6 +46,8 @@ class Registrar < ApplicationRecord
     RegenerateRegistrarWhoisesJob.enqueue id
   end
 
+  self.ignored_columns = %w[legacy_id]
+
   class << self
     def ordered
       order(name: :asc)

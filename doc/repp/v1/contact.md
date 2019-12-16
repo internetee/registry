@@ -50,7 +50,6 @@ Content-Type: application/json
       "zip": "11111",
       "country_code": "EE",
       "state": null,
-      "legacy_id": null,
       "statuses": [
         "ok"
       ],

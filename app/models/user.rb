@@ -5,6 +5,8 @@ class User < ApplicationRecord
 
   attr_accessor :phone
 
+  self.ignored_columns = %w[legacy_id]
+
   def id_role_username
     "#{self.id}-#{self.class}: #{self.username}"
   end
