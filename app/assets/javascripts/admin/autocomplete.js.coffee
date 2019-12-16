@@ -47,12 +47,6 @@ class @Autocomplete
       selector: '.js-contact-typeahead'
       hiddenSelector: '.js-contact-id'
 
-  @bindAdminRegistrarSearch: ->
-    Autocomplete.bindTypeahead
-      remote: '/admin/registrars/search'
-      selector: '.js-registrar-typeahead'
-      hiddenSelector: '.js-registrar-id'
-
   @bindClientContactSearch: ->
     Autocomplete.bindTypeahead
       remote: '/client/contacts/search'

@@ -25,7 +25,7 @@ en:
         preferences:
           header: Preferences
 
-        users:
+        api_users:
           header: API Users
           new_btn: New API user
 

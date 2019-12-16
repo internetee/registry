@@ -2,16 +2,34 @@ en:
   admin:
     api_users:
       index:
-        new_btn: New API user
-        title: API users
-        active: Active
-
-      show:
-        active: Active
-        subject: Subject
+        header: API users
 
       new:
-        title: New API user
+        header: New API user
+
+      create:
+        created: API user has been successfully created
+
+      show:
+        edit_btn: Edit
+        delete_btn: Delete
+        delete_btn_confirm: Are you sure you want to delete this API user?
+
+        details:
+          header: Details
+
+        certificates:
+          subject: Subject
+
+      edit:
+        header: Edit API user
+
+      update:
+        updated: API user has been successfully updated
+
+      destroy:
+        deleted: API user has been successfully deleted
 
       form:
-        active: Active
+        create_btn: Create API user
+        update_btn: Update API user
