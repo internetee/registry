@@ -3,7 +3,7 @@ require 'test_helper'
 class NewDomainForceDeleteTest < ActiveSupport::TestCase
   setup do
     @domain = domains(:shop)
-    Setting.redemption_grace_period = 45
+    Setting.redemption_grace_period = 30
   end
 
   def test_schedules_force_delete_fast_track
@@ -29,7 +29,6 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     assert @domain.force_delete_scheduled?
     assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
-    assert (@domain.statuses.include?(DomainStatus::CLIENT_HOLD))
   end
 
   def test_schedules_force_delete_soft_less_than_year_ahead

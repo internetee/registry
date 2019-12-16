@@ -1,10 +1,27 @@
 module Concerns::Domain::ForceDelete
   extend ActiveSupport::Concern
 
-  DAYS_TO_START_HOLD = 15.days
+  class_methods do
+    def force_delete_scheduled
+      where('force_delete_start <= ?', Time.zone.now)
+    end
+  end
 
   def force_delete_scheduled?
     statuses.include?(DomainStatus::FORCE_DELETE)
+  end
+
+  def client_holdable?
+    force_delete_scheduled? && !statuses.include?(DomainStatus::CLIENT_HOLD) &&
+      force_delete_start.present? && force_delete_lte_today && force_delete_lte_valid_date
+  end
+
+  def force_delete_lte_today
+    force_delete_start + Setting.expire_warning_period.days <= Time.zone.now
+  end
+
+  def force_delete_lte_valid_date
+    force_delete_start + Setting.expire_warning_period.days <= valid_to
   end
 
   def schedule_force_delete(type: :fast_track)
@@ -18,7 +35,7 @@ module Concerns::Domain::ForceDelete
   def force_delete_fast_track
     preserve_current_statuses_for_force_delete
     add_force_delete_statuses
-    self.force_delete_date = Time.zone.today + Setting.redemption_grace_period.days
+    self.force_delete_date = force_delete_fast_track_start_date
     self.force_delete_start = Time.zone.today
     stop_all_pending_actions
     allow_deletion
@@ -30,7 +47,6 @@ module Concerns::Domain::ForceDelete
     add_force_delete_statuses
     calculate_soft_delete_date
     stop_all_pending_actions
-    check_hold
     allow_deletion
     save(validate: false)
   end
@@ -45,12 +61,6 @@ module Concerns::Domain::ForceDelete
 
   private
 
-  def check_hold
-    if force_delete_start.present? && force_delete_start + DAYS_TO_START_HOLD < valid_to
-      statuses << DomainStatus::CLIENT_HOLD
-    end
-  end
-
   def calculate_soft_delete_date
     years = (valid_to.to_date - Time.zone.today).to_i / 365
     soft_delete_dates(years) if years.positive?
@@ -58,7 +68,8 @@ module Concerns::Domain::ForceDelete
 
   def soft_delete_dates(years)
     self.force_delete_start = valid_to - years.years
-    self.force_delete_date = force_delete_start + Setting.redemption_grace_period.days
+    self.force_delete_date = force_delete_start + Setting.expire_warning_period.days +
+                             Setting.redemption_grace_period.days
   end
 
   def stop_all_pending_actions
@@ -93,5 +104,9 @@ module Concerns::Domain::ForceDelete
   def allow_deletion
     statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
     statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
+  end
+
+  def force_delete_fast_track_start_date
+    Time.zone.today + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
   end
 end
