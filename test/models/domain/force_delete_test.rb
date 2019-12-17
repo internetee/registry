@@ -151,4 +151,64 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
 
     assert_empty @domain.statuses & statuses
   end
+
+  def test_force_delete_soft_year_ahead_sets_client_hold
+    asserted_status = DomainStatus::CLIENT_HOLD
+
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    assert_not @domain.force_delete_scheduled?
+    travel_to Time.zone.parse('2010-07-05')
+    @domain.schedule_force_delete(type: :soft)
+
+    travel_to Time.zone.parse('2010-08-20')
+    DomainCron.start_client_hold
+    @domain.reload
+    assert_includes(@domain.statuses, asserted_status)
+  end
+
+  def test_force_delete_soft_year_ahead_not_sets_client_hold_before_threshold
+    asserted_status = DomainStatus::CLIENT_HOLD
+
+    @domain.update_columns(valid_to: Time.zone.parse('2010-08-05'),
+                           force_delete_date: nil)
+    assert_not @domain.force_delete_scheduled?
+    travel_to Time.zone.parse('2010-07-05')
+    @domain.schedule_force_delete(type: :soft)
+
+    travel_to Time.zone.parse('2010-07-06')
+    DomainCron.start_client_hold
+    @domain.reload
+
+    assert_not_includes(@domain.statuses, asserted_status)
+  end
+
+  def test_force_delete_fast_track_sets_client_hold
+    asserted_status = DomainStatus::CLIENT_HOLD
+    @domain.update_columns(valid_to: Time.zone.parse('2010-10-05'),
+                           force_delete_date: nil)
+
+    travel_to Time.zone.parse('2010-07-05')
+
+    @domain.schedule_force_delete(type: :fast_track)
+    travel_to Time.zone.parse('2010-07-25')
+    DomainCron.start_client_hold
+    @domain.reload
+
+    assert_includes(@domain.statuses, asserted_status)
+  end
+
+  def test_not_sets_hold_before_treshold
+    asserted_status = DomainStatus::CLIENT_HOLD
+    @domain.update_columns(valid_to: Time.zone.parse('2010-10-05'),
+                           force_delete_date: nil)
+
+    travel_to Time.zone.parse('2010-07-05')
+
+    @domain.schedule_force_delete(type: :fast_track)
+    travel_to Time.zone.parse('2010-07-06')
+    DomainCron.start_client_hold
+    @domain.reload
+
+    assert_not_includes(@domain.statuses, asserted_status)
+  end
 end
