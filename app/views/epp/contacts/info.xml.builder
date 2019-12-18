@@ -68,11 +68,11 @@ xml.epp_head do
         # xml.tag!('contact:trDate', '123') if false
         if can? :view_password, @contact, @password
           xml.tag!('contact:authInfo') do
-           xml.tag!('contact:pw', @contact.auth_info)
+            xml.tag!('contact:pw', @contact.auth_info)
           end
         else
           xml.tag!('contact:authInfo') do
-          xml.tag!('contact:pw', 'No access')
+            xml.tag!('contact:pw', 'No access')
           end
         end
       end
