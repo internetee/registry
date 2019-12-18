@@ -195,7 +195,6 @@ en:
   domain_details: 'Domain details'
   registered_at: 'Registered at'
   password: 'Password'
-  authinfo_pw: 'AuthInfo pw'
   valid_from: 'Valid from'
   general: 'General'
   contacts: 'Contacts'
