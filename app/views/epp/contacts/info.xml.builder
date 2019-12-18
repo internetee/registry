@@ -69,10 +69,6 @@ xml.epp_head do
           xml.tag!('contact:authInfo') do
             xml.tag!('contact:pw', @contact.auth_info)
           end
-        else
-          xml.tag!('contact:authInfo') do
-            xml.tag!('contact:pw', 'No access')
-          end
         end
       end
     end
