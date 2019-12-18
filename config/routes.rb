@@ -202,7 +202,7 @@ Rails.application.routes.draw do
 
     resources :zonefiles
     resources :zones, controller: 'dns/zones', except: %i[show destroy]
-    resources :legal_documents
+    resources :legal_documents, only: :show
     resources :prices, controller: 'billing/prices', except: %i[show destroy] do
       member do
         patch :expire
