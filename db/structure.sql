@@ -1074,7 +1074,7 @@ CREATE TABLE public.legal_documents (
     documentable_type character varying,
     created_at timestamp without time zone,
     creator_str character varying,
-    path character varying,
+    path character varying NOT NULL,
     checksum character varying
 );
 
@@ -4828,6 +4828,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191203083643'),
 ('20191206183853'),
 ('20191212133136'),
+('20191219112434'),
 ('20191227110904'),
 ('20200113091254'),
 ('20200115102202'),
@@ -4849,5 +4850,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200811074839'),
 ('20200812090409'),
 ('20200812125810');
-
-
