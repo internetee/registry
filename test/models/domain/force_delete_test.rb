@@ -14,8 +14,8 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     @domain.reload
 
     assert @domain.force_delete_scheduled?
-    assert_equal Date.parse('2010-08-19'), @domain.force_delete_date.to_date
-    assert_equal Date.parse('2010-07-05'), @domain.force_delete_start.to_date
+    assert_equal Date.parse('2010-08-20'), @domain.force_delete_date.to_date
+    assert_equal Date.parse('2010-07-06'), @domain.force_delete_start.to_date
   end
 
   def test_schedules_force_delete_soft_year_ahead
@@ -27,8 +27,8 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     @domain.reload
 
     assert @domain.force_delete_scheduled?
-    assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
-    assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
+    assert_equal Date.parse('2010-09-20'), @domain.force_delete_date.to_date
+    assert_equal Date.parse('2010-08-06'), @domain.force_delete_start.to_date
   end
 
   def test_schedules_force_delete_soft_less_than_year_ahead
@@ -160,7 +160,7 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     travel_to Time.zone.parse('2010-07-05')
     @domain.schedule_force_delete(type: :soft)
 
-    travel_to Time.zone.parse('2010-08-20')
+    travel_to Time.zone.parse('2010-08-21')
     DomainCron.start_client_hold
     @domain.reload
     assert_includes(@domain.statuses, asserted_status)

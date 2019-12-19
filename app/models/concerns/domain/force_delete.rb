@@ -35,8 +35,8 @@ module Concerns::Domain::ForceDelete
   def force_delete_fast_track
     preserve_current_statuses_for_force_delete
     add_force_delete_statuses
-    self.force_delete_date = force_delete_fast_track_start_date
-    self.force_delete_start = Time.zone.today
+    self.force_delete_date = force_delete_fast_track_start_date + 1.day
+    self.force_delete_start = Time.zone.today + 1.day
     stop_all_pending_actions
     allow_deletion
     save(validate: false)
@@ -67,7 +67,7 @@ module Concerns::Domain::ForceDelete
   end
 
   def soft_delete_dates(years)
-    self.force_delete_start = valid_to - years.years
+    self.force_delete_start = valid_to - years.years + 1.day
     self.force_delete_date = force_delete_start + Setting.expire_warning_period.days +
                              Setting.redemption_grace_period.days
   end
