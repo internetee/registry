@@ -1,3 +1,4 @@
 one:
   documentable: shop (Domain)
+  document_type: pdf
   path: some

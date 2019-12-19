@@ -1069,7 +1069,7 @@ ALTER SEQUENCE public.invoices_id_seq OWNED BY public.invoices.id;
 
 CREATE TABLE public.legal_documents (
     id integer NOT NULL,
-    document_type character varying,
+    document_type character varying NOT NULL,
     documentable_id integer,
     documentable_type character varying,
     created_at timestamp without time zone,
@@ -4829,6 +4829,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191206183853'),
 ('20191212133136'),
 ('20191219112434'),
+('20191219124429'),
 ('20191227110904'),
 ('20200113091254'),
 ('20200115102202'),
