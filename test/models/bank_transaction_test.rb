@@ -6,9 +6,20 @@ class BankTransactionTest < ActiveSupport::TestCase
     @invoice = invoices(:one)
   end
 
-  def test_matches_against_invoice_number_and_reference_number
-    create_payable_invoice(number: '2222', total: 10, reference_no: '1111')
-    transaction = BankTransaction.new(description: 'invoice #2222', sum: 10, reference_no: '1111')
+  def test_matches_against_invoice_nubmber_and_reference_number
+    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+    transaction = BankTransaction.new(description: 'invoice #2222', sum: 10, reference_no: '1234567')
+
+    assert_difference 'AccountActivity.count' do
+      transaction.autobind_invoice
+    end
+  end
+
+  def test_matches_against_invoice_nubmber_and_reference_number_in_description
+    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+    transaction = BankTransaction.new(description: 'invoice #2222',
+                                      sum: 10,
+                                      description: 'Order nr 1 from registrar 1234567 second number 2345678')
 
     assert_difference 'AccountActivity.count' do
       transaction.autobind_invoice
