@@ -5,7 +5,7 @@ class RegistrantVerificationTest < ActiveSupport::TestCase
     registrant_verification = registrant_verifications(:one)
     random_action = "random#{rand(100)}"
 
-    assert_difference -> { PaperTrail::Version.count } do
+    assert_difference -> { RegistrantVerificationVersion.count } do
       registrant_verification.update_attributes!(action: random_action)
     end
   end
