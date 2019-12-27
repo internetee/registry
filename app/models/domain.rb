@@ -57,6 +57,7 @@ class Domain < ApplicationRecord
 
   has_many :legal_documents, as: :documentable
   accepts_nested_attributes_for :legal_documents, reject_if: proc { |attrs| attrs[:body].blank? }
+  has_many :registrant_verifications, dependent: :destroy
 
   after_initialize do
     self.pending_json = {} if pending_json.blank?
