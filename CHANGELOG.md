@@ -1,3 +1,6 @@
+27.12.2019
+* Records in registrant_verifications are now archived by PaperTrail [#1425](https://github.com/internetee/registry/issues/1425)
+
 16.12.2019
 * Bump puma from 4.2.1 to 4.3.1 [#1437](https://github.com/internetee/registry/pull/1437)
 * Refactored API user management [#1435](https://github.com/internetee/registry/pull/1435)
