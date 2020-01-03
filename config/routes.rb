@@ -271,7 +271,7 @@ Rails.application.routes.draw do
 
     resources :admin_users
     # /admin/api_users is mainly for manual testing
-    resources :api_users, only: :index do
+    resources :api_users, only: [:index, :show] do
       resources :certificates do
         member do
           post 'sign'
