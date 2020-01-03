@@ -1,3 +1,7 @@
+03.01.2020
+* Added an option for registrars to add and remove clientHold status on domains [#1454](https://github.com/internetee/registry/pull/1454)
+* Fixed contact view internal error in admin [#1458](https://github.com/internetee/registry/issues/1458)
+
 27.12.2019
 * Records in registrant_verifications are now archived by PaperTrail [#1425](https://github.com/internetee/registry/issues/1425)
 
