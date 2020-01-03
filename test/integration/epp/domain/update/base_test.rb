@@ -303,6 +303,56 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert @domain.inactive?
   end
 
+  def test_update_domain_allows_add_of_client_hold
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>shop.test</domain:name>
+                <domain:add>
+                  <domain:status s="clientHold" lang="en">Test</domain:status>
+                </domain:add>
+              </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    @domain.reload
+    assert_epp_response :completed_successfully
+    assert_includes(@domain.statuses, DomainStatus::CLIENT_HOLD)
+  end
+
+  def test_update_domain_allows_remove_of_client_hold
+    @domain.update!(statuses: [DomainStatus::CLIENT_HOLD])
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>shop.test</domain:name>
+                <domain:rem>
+                  <domain:status s="clientHold" lang="en">Test</domain:status>
+                </domain:rem>
+              </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    @domain.reload
+    assert_epp_response :completed_successfully
+    assert_not_includes(@domain.statuses, DomainStatus::CLIENT_HOLD)
+  end
+
   private
 
   def assert_verification_and_notification_emails

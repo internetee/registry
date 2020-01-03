@@ -311,11 +311,17 @@ module Epp
 
     def status_editing_disabled
       return true if Setting.client_status_editing_enabled
+      return true if check_client_hold
       return true if params[:parsed_frame].css('status').empty?
       epp_errors << {
         code: '2306',
         msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
       }
+    end
+
+    def check_client_hold
+      statuses = params[:parsed_frame].css('status').map { |element| element['s'] }
+      statuses == [::DomainStatus::CLIENT_HOLD]
     end
 
     def balance_ok?(operation, period = nil, unit = nil)
