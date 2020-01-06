@@ -328,7 +328,9 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_update_domain_allows_remove_of_client_hold
-    @domain.update!(statuses: [DomainStatus::CLIENT_HOLD])
+    @domain.update!(statuses: [DomainStatus::CLIENT_HOLD, DomainStatus::FORCE_DELETE,
+                               DomainStatus::SERVER_RENEW_PROHIBITED,
+                               DomainStatus::SERVER_TRANSFER_PROHIBITED])
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
