@@ -277,7 +277,7 @@ GEM
       erubis
       que (~> 0.8)
       sinatra
-    rack (2.0.7)
+    rack (2.0.8)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rack-protection (2.0.7)
