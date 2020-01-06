@@ -1,3 +1,7 @@
+06.01.2020
+* Updated e-invoice gem [#1456](https://github.com/internetee/registry/pull/1456)
+* Bumped rack gem to 2.0.8 [#1448](https://github.com/internetee/registry/pull/1448)
+
 03.01.2020
 * Added an option for registrars to add and remove clientHold status on domains [#1454](https://github.com/internetee/registry/pull/1454)
 * Fixed contact view internal error in admin [#1458](https://github.com/internetee/registry/issues/1458)
