@@ -116,12 +116,15 @@ class Domain < ApplicationRecord
 
   attr_accessor :is_admin
 
-  validate :check_permissions, :unless => :is_admin
-  def check_permissions
-    return unless force_delete_scheduled?
-    errors.add(:base, I18n.t(:object_status_prohibits_operation))
-    false
-  end
+  # Removed to comply new ForceDelete procedure
+  # at https://github.com/internetee/registry/issues/1428#issuecomment-570561967
+  #
+  # validate :check_permissions, :unless => :is_admin
+  # def check_permissions
+  #   return unless force_delete_scheduled?
+  #   errors.add(:base, I18n.t(:object_status_prohibits_operation))
+  #   false
+  # end
 
   validates :nameservers, domain_nameserver: {
     min: -> { Setting.ns_min_count },
