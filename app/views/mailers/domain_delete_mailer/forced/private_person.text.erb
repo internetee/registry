@@ -2,11 +2,11 @@ Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt
 
 Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et füüsiline isik isikukoodiga <%= @registrant.id_code %> on surnud ja sellest on möödunud vähemalt 6 kuud.
 
-Kuna surnud isik ei saa olla domeeni registreerijaks, algas domeeni <%= @domain.name %> suhtes <%= @redemption_grace_period %> päevane kustutusmenetlus. Menetluse käigus on domeen internetis kättesaadav.
+Kuna surnud isik ei saa olla domeeni registreerijaks, algas domeeni <%= @domain.name %> suhtes <%= @delete_period_length %> päevane kustutusmenetlus. Menetluse käigus on domeen <%= @expire_warning_period %> esimest päeva internetis kättesaadav.
 
-Domeeni suhtes õigust omaval isikul on võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @registrar.name %> domeeni üleandmise taotlus, millele tuleb lisada pärimisõiguse tõend. Dokumentatsioon tuleb esitada registripidajale <%= @redemption_grace_period %> päeva jooksul.
+Domeeni suhtes õigust omaval isikul on võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @registrar.name %> domeeni üleandmise taotlus, millele tuleb lisada pärimisõiguse tõend. Dokumentatsioon tuleb esitada registripidajale <%= @delete_period_length %> päeva jooksul.
 
-Kui üleandmine ei ole <%= @redemption_grace_period %> päeva jooksul toimunud, läheb domeen <%= @domain.name %> <%= @domain.force_delete_date %> domeenioksjonile .ee oksjonikeskkonda https://auction.internet.ee. Juhul kui domeenile <%= @domain.name %> ei tehta oksjonil 24h möödudes pakkumist, domeen vabaneb ja on registreerimiseks vabalt kättesaadav kõigile huvilistele. Muude võimalike oksjoni tulemuste kohta loe https://www.internet.ee/domeenid/domeenide-oksjonikeskkonna-kasutajatingimused#3-oksjonikeskkonna-enampakkumisel-osalemise-tingimused.
+Kui üleandmine ei ole <%= @delete_period_length %> päeva jooksul toimunud, läheb domeen <%= @domain.name %> <%= @domain.force_delete_date %> domeenioksjonile .ee oksjonikeskkonda https://auction.internet.ee. Juhul kui domeenile <%= @domain.name %> ei tehta oksjonil 24h möödudes pakkumist, domeen vabaneb ja on registreerimiseks vabalt kättesaadav kõigile huvilistele. Muude võimalike oksjoni tulemuste kohta loe https://www.internet.ee/domeenid/domeenide-oksjonikeskkonna-kasutajatingimused#3-oksjonikeskkonna-enampakkumisel-osalemise-tingimused.
 
 Lisaküsimuste korral võtke palun ühendust oma registripidajaga:
 <%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
@@ -19,11 +19,11 @@ Dear registrant/administrative contact of <%= @domain.name %> domain
 
 Estonian Internet Foundation (EIF) has learned that the natural person with identification code <%= @registrant.id_code %> has been deceased more than 6 months.
 
-The registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar <%= @registrar.name %>.The application must be submitted together with succession evidence certifying the acquisition of the domain. The relevant documents should be submitted to the registrar within <%= @redemption_grace_period %> days.
+The registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar <%= @registrar.name %>.The application must be submitted together with succession evidence certifying the acquisition of the domain. The relevant documents should be submitted to the registrar within <%= @delete_period_length %> days.
 
-As a deceased natural person can not be the registrant of a domain, a <%= @redemption_grace_period %>-day deletion process of <%= @domain.name %> domain has started.  The domain will remain available on the Internet during the deletion process.
+As a deceased natural person can not be the registrant of a domain, a <%= @delete_period_length %>-day deletion process of <%= @domain.name %> domain has started. For the first <%= @expire_warning_period %> days the domain will remain available on the Internet during the deletion process.
 
-If the transfer is not made within <%= @redemption_grace_period %> days, the domain <%= @domain.name %> will go to domain auction on <%= @domain.force_delete_date %> in the .ee auction environment at https://auction.internet.ee. If no offer is made for the domain <%= @domain.name %> at auction within 24 hours, the domain will be released and made freely available for registration to anyone interested on a first-come, first-served basis. Read more about other potential auction results at https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment.
+If the transfer is not made within <%= @delete_period_length %> days, the domain <%= @domain.name %> will go to domain auction on <%= @domain.force_delete_date %> in the .ee auction environment at https://auction.internet.ee. If no offer is made for the domain <%= @domain.name %> at auction within 24 hours, the domain will be released and made freely available for registration to anyone interested on a first-come, first-served basis. Read more about other potential auction results at https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment.
 
 Should you have additional questions, please contact your registrar:
 <%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
@@ -36,11 +36,11 @@ Should you have additional questions, please contact your registrar:
 
 Целевому учреждению Eesti Internet (EIS) стало известно, что физическое лицо с личным кодом <%= @registrant.id_code %> умерло, и с момента смерти прошло не менее 6 месяцев.
 
-Поскольку умершее лицо не может являться регистрантом домена, начат <%= @redemption_grace_period %>-дневный процесс удаления домена <%= @domain.name %>. До завершения процесса домен доступен в Интернете.
+Поскольку умершее лицо не может являться регистрантом домена, начат <%= @delete_period_length %>-дневный процесс удаления домена <%= @domain.name %>. Домен доступен в интернете на протяжении <%= @expire_warning_period %> дней после начала процесса удаления.
 
-Лицо, обладающее правом на домен, может подать регистратору <%= @registrar.name %> домена <%= @domain.name %> ходатайство о передаче, представив справку о праве наследования. Документы должны быть представлены регистратору в течение <%= @redemption_grace_period %> дней.
+Лицо, обладающее правом на домен, может подать регистратору <%= @registrar.name %> домена <%= @domain.name %> ходатайство о передаче, представив справку о праве наследования. Документы должны быть представлены регистратору в течение <%= @delete_period_length %> дней.
 
-Если передача не состоится в течение <%= @redemption_grace_period %> дней, <%= @domain.force_delete_date %> домен <%= @domain.name %> отправится на доменный аукцион в аукционной среде .ee https://auction.internet.ee. Если в течение 24 часов в отношении домена <%= @domain.name %> не поступит предложений, домен освободится и станет доступным для всех желающих по принципу «кто раньше». О других возможных результатах аукциона читайте по ссылке https://www.internet.ee/domeny/dogovor-pol-zovatelya-aukcionnoj-sredy#3-usloviya-uchastiya-v-aukcione.
+Если передача не состоится в течение <%= @delete_period_length %>дней, <%= @domain.force_delete_date %> домен <%= @domain.name %> отправится на доменный аукцион в аукционной среде .ee https://auction.internet.ee. Если в течение 24 часов в отношении домена <%= @domain.name %> не поступит предложений, домен освободится и станет доступным для всех желающих по принципу «кто раньше». О других возможных результатах аукциона читайте по ссылке https://www.internet.ee/domeny/dogovor-pol-zovatelya-aukcionnoj-sredy#3-usloviya-uchastiya-v-aukcione.
 
 В случае возникновения дополнительных вопросов свяжитесь, пожалуйста, со своим регистратором:
 <%= render 'mailers/shared/registrar/registrar.ru.text', registrar: @registrar %>
