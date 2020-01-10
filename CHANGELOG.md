@@ -1,3 +1,6 @@
+09.01.2020
+* serverForceDelete status does not block removing clientHold status [#1462](https://github.com/internetee/registry/pull/1462) 
+
 06.01.2020
 * Updated e-invoice gem [#1456](https://github.com/internetee/registry/pull/1456)
 * Bumped rack gem to 2.0.8 [#1448](https://github.com/internetee/registry/pull/1448)
