@@ -1,3 +1,7 @@
+10.01.2020
+* updated ForceDelete email templates according new regulation [#1466](https://github.com/internetee/registry/issues/1466) 
+* regenerated WHOIS db schema [#1436](https://github.com/internetee/registry/pull/1436)
+
 09.01.2020
 * serverForceDelete status does not block removing clientHold status [#1462](https://github.com/internetee/registry/pull/1462) 
 
