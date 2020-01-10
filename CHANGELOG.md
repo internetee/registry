@@ -1,3 +1,6 @@
+10.01.2020
+* regenerated WHOIS db schema [#1436](https://github.com/internetee/registry/pull/1436)
+
 09.01.2020
 * serverForceDelete status does not block removing clientHold status [#1462](https://github.com/internetee/registry/pull/1462) 
 
