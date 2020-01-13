@@ -1524,7 +1524,8 @@ CREATE TABLE public.log_registrant_verifications (
     object json,
     object_changes json,
     created_at timestamp without time zone,
-    session character varying
+    session character varying,
+    uuid character varying
 );
 
 
@@ -4329,8 +4330,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191008024334'),
 ('20191024153351'),
 ('20191024160038'),
+('20191203083643'),
 ('20191206183853'),
 ('20191212133136'),
-('20191227110904');
+('20191227110904'),
+('20200113091254');
 
 
