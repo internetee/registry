@@ -57,6 +57,7 @@ module Concerns::Domain::ForceDelete
     self.force_delete_date = nil
     self.force_delete_start = nil
     save(validate: false)
+    registrar.notifications.create!(text: I18n.t('force_delete_cancelled', domain_name: name))
   end
 
   private

@@ -94,7 +94,7 @@ class DomainCron
       domain.statuses << DomainStatus::CLIENT_HOLD
       log_start_client_hold(domain)
 
-      domain.save(validate: false) and marked += 1
+      domain.save(validate: false) and marked += 1 and notify_client_hold(domain)
     end
 
     log_end_end_client_hold(marked: marked, real: real)
@@ -119,5 +119,11 @@ class DomainCron
 
     STDOUT << "#{Time.zone.now.utc} - Successfully set client_hold to #{marked} of #{real} "\
               "domains\n"
+  end
+
+  def self.notify_client_hold(domain)
+    domain.registrar.notifications.create!(text: I18n.t('soft_force_delete_set_on_domain',
+                                                        domain_name: domain.name,
+                                                        start_date: domain.force_delete_start))
   end
 end
