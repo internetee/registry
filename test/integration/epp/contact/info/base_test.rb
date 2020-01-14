@@ -44,6 +44,34 @@ class EppContactInfoBaseTest < EppTestCase
                                                                     contact: xml_schema).text
   end
 
+  def test_hides_password_when_current_registrar_is_not_sponsoring
+    non_sponsoring_registrar = registrars(:goodnames)
+    @contact.update!(registrar: non_sponsoring_registrar)
+
+    # https://github.com/internetee/registry/issues/415
+    @contact.update_columns(code: @contact.code.upcase)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <info>
+            <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:id>#{@contact.code}</contact:id>
+            </contact:info>
+          </info>
+        </command>
+      </epp>
+    XML
+
+    post epp_info_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' =>
+                                                                       'session=api_bestnames' }
+
+    assert_epp_response :completed_successfully
+    response_xml = Nokogiri::XML(response.body)
+    assert_nil response_xml.at_xpath('//contact:authInfo', contact: xml_schema)
+  end
+
   private
 
   def xml_schema
