@@ -46,7 +46,7 @@ if @cron_group == 'registry'
     runner 'DomainCron.start_redemption_grace_period'
   end
 
-  every 1.hour do
+  every 1.day do
     runner 'DomainCron.start_client_hold'
   end
 

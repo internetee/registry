@@ -547,6 +547,8 @@ class Domain < ApplicationRecord
       activate if nameservers.reject(&:marked_for_destruction?).size >= Setting.ns_min_count
     end
 
+    cancel_force_delete if force_delete_scheduled? && pending_json['new_registrant_id']
+
     if statuses.empty? && valid?
       statuses << DomainStatus::OK
     elsif (statuses.length > 1 && active?) || !valid?

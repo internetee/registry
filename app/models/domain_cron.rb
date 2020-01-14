@@ -1,4 +1,6 @@
 class DomainCron
+  include Concerns::Job::ForceDelete
+  include Concerns::Job::ForceDeleteMessages
 
   def self.clean_expired_pendings
     STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?
@@ -77,53 +79,5 @@ class DomainCron
 
     STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{marked} of #{real} domains\n" unless Rails.env.test?
     marked
-  end
-
-  def self.start_client_hold
-    log_prepare_client_hold
-
-    ::PaperTrail.whodunnit = "cron - #{__method__}"
-
-    marked = 0
-    real = 0
-
-    Domain.force_delete_scheduled.each do |domain|
-      next unless domain.client_holdable?
-
-      real += 1
-      domain.statuses << DomainStatus::CLIENT_HOLD
-      log_start_client_hold(domain)
-
-      domain.save(validate: false) and marked += 1 and notify_client_hold(domain)
-    end
-
-    log_end_end_client_hold(marked: marked, real: real)
-    marked
-  end
-
-  def self.log_prepare_client_hold
-    return if Rails.env.test?
-
-    STDOUT << "#{Time.zone.now.utc} - Setting client_hold to domains\n"
-  end
-
-  def self.log_start_client_hold(domain)
-    return if Rails.env.test?
-
-    STDOUT << "#{Time.zone.now.utc} DomainCron.start_client_hold: ##{domain.id} (#{domain.name})"\
-                "#{domain.changes}\n"
-  end
-
-  def self.log_end_end_client_hold(marked:, real:)
-    return if Rails.env.test?
-
-    STDOUT << "#{Time.zone.now.utc} - Successfully set client_hold to #{marked} of #{real} "\
-              "domains\n"
-  end
-
-  def self.notify_client_hold(domain)
-    domain.registrar.notifications.create!(text: I18n.t('soft_force_delete_set_on_domain',
-                                                        domain_name: domain.name,
-                                                        start_date: domain.force_delete_start))
   end
 end

@@ -11,6 +11,11 @@ module Concerns::Domain::ForceDelete
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
+  def should_notify_on_soft_force_delete?
+    force_delete_scheduled? && !statuses.include?(DomainStatus::CLIENT_HOLD) &&
+      force_delete_start.present? && force_delete_start.to_date == Time.zone.now.to_date
+  end
+
   def client_holdable?
     force_delete_scheduled? && !statuses.include?(DomainStatus::CLIENT_HOLD) &&
       force_delete_start.present? && force_delete_lte_today && force_delete_lte_valid_date
