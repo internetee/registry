@@ -1,3 +1,6 @@
+14.01.2020
+* removed authinfo element from contact:info response for non-sponsoring registrars [#1446](https://github.com/internetee/registry/issues/1446)
+
 13.01.2020
 * resolved internal error on registrant confirmation [#1468](https://github.com/internetee/registry/issues/1468)
 
