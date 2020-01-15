@@ -156,6 +156,7 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     asserted_status = DomainStatus::CLIENT_HOLD
 
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    @domain.update(template_name: 'legal_person')
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
     @domain.schedule_force_delete(type: :soft)

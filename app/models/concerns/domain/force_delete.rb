@@ -25,7 +25,7 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
 
   def should_notify_on_soft_force_delete?
     force_delete_scheduled? && contact_notification_sent_date.blank? &&
-      force_delete_start.to_date == Time.zone.now.to_date && force_delete_type.to_sym == :soft
+      force_delete_start.to_date <= Time.zone.now.to_date && force_delete_type.to_sym == :soft
   end
 
   def client_holdable?
