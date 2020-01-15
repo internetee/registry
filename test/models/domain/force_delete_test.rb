@@ -201,6 +201,7 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     asserted_status = DomainStatus::CLIENT_HOLD
     @domain.update_columns(valid_to: Time.zone.parse('2010-10-05'),
                            force_delete_date: nil)
+    @domain.update(template_name: 'legal_person')
 
     travel_to Time.zone.parse('2010-07-05')
 

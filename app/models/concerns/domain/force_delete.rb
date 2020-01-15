@@ -1,5 +1,17 @@
-module Concerns::Domain::ForceDelete
+module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   extend ActiveSupport::Concern
+
+  included do
+    store_accessor :force_delete_data,
+                   :force_delete_type,
+                   :contact_notification_sent_date,
+                   :template_name
+
+    scope :notification_not_sent,
+          lambda {
+            where("(force_delete_data->>'contact_notification_sent_date') is null")
+          }
+  end
 
   class_methods do
     def force_delete_scheduled
@@ -12,8 +24,8 @@ module Concerns::Domain::ForceDelete
   end
 
   def should_notify_on_soft_force_delete?
-    force_delete_scheduled? && !statuses.include?(DomainStatus::CLIENT_HOLD) &&
-      force_delete_start.present? && force_delete_start.to_date == Time.zone.now.to_date
+    force_delete_scheduled? && contact_notification_sent_date.blank? &&
+      force_delete_start.to_date == Time.zone.now.to_date && force_delete_type.to_sym == :soft
   end
 
   def client_holdable?
@@ -37,9 +49,14 @@ module Concerns::Domain::ForceDelete
     type == :fast_track ? force_delete_fast_track : force_delete_soft
   end
 
+  def add_force_delete_type(force_delete_type)
+    self.force_delete_type = force_delete_type
+  end
+
   def force_delete_fast_track
     preserve_current_statuses_for_force_delete
     add_force_delete_statuses
+    add_force_delete_type(:fast)
     self.force_delete_date = force_delete_fast_track_start_date + 1.day
     self.force_delete_start = Time.zone.today + 1.day
     stop_all_pending_actions
@@ -50,15 +67,21 @@ module Concerns::Domain::ForceDelete
   def force_delete_soft
     preserve_current_statuses_for_force_delete
     add_force_delete_statuses
+    add_force_delete_type(:soft)
     calculate_soft_delete_date
     stop_all_pending_actions
     allow_deletion
     save(validate: false)
   end
 
+  def clear_force_delete_data
+    self.force_delete_data = nil
+  end
+
   def cancel_force_delete
     restore_statuses_before_force_delete
     remove_force_delete_statuses
+    clear_force_delete_data
     self.force_delete_date = nil
     self.force_delete_start = nil
     save(validate: false)

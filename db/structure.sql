@@ -744,7 +744,9 @@ CREATE TABLE public.domains (
     up_date timestamp without time zone,
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     locked_by_registrant_at timestamp without time zone,
-    force_delete_start timestamp without time zone
+    force_delete_start timestamp without time zone,
+    force_delete_data public.hstore
+
 );
 
 
@@ -4336,6 +4338,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191206183853'),
 ('20191212133136'),
 ('20191227110904'),
-('20200113091254');
+('20200113091254'),
+('20200115102202');
 
 

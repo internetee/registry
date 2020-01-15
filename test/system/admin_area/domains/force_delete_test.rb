@@ -31,6 +31,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
   def test_notifies_registrant_and_admin_contacts_by_email_by_default
     assert_emails 1 do
       visit edit_admin_domain_url(@domain)
+      find(:css, '#soft_delete').set(false)
       click_link_or_button 'Force delete domain'
     end
   end

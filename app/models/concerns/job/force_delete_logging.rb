@@ -1,6 +1,6 @@
 module Concerns
   module Job
-    module ForceDeleteMessages
+    module ForceDeleteLogging
       extend ActiveSupport::Concern
 
       class_methods do
@@ -21,18 +21,6 @@ module Concerns
           return if Rails.env.test?
 
           STDOUT << "#{Time.zone.now.utc} - Successfully set client_hold on (#{domain.name})"
-        end
-
-        def notify_client_hold(domain)
-          domain.registrar.notifications.create!(text: I18n.t('client_hold_set_on_domain',
-                                                              domain_name: domain.name,
-                                                              date: domain.force_delete_start))
-        end
-
-        def notify_on_grace_period(domain)
-          domain.registrar.notifications.create!(text: I18n.t('grace_period_started_domain',
-                                                              domain_name: domain.name,
-                                                              date: domain.force_delete_start))
         end
       end
     end
