@@ -1,3 +1,6 @@
+16.01.2020
+* Added tests for registrant verification [#1430](https://github.com/internetee/registry/pull/1430)
+
 14.01.2020
 * removed authinfo element from contact:info response for non-sponsoring registrars [#1446](https://github.com/internetee/registry/issues/1446)
 
