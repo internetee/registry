@@ -1,3 +1,6 @@
+18.01.2020
+* New ForceDelete procedure [#1428](https://github.com/internetee/registry/issues/1428)
+
 16.01.2020
 * Added tests for registrant verification [#1430](https://github.com/internetee/registry/pull/1430)
 
