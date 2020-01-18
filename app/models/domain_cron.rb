@@ -1,4 +1,7 @@
 class DomainCron
+  include Concerns::Job::ForceDelete
+  include Concerns::Job::ForceDeleteLogging
+  include Concerns::Job::ForceDeleteNotify
 
   def self.clean_expired_pendings
     STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?

@@ -405,6 +405,22 @@ class DomainTest < ActiveSupport::TestCase
     assert_not domain.active?
   end
 
+  def test_registrant_change_removes_force_delete
+    @domain.update_columns(valid_to: Time.zone.parse('2010-10-05'),
+                           force_delete_date: nil)
+    @domain.update(template_name: 'legal_person')
+    travel_to Time.zone.parse('2010-07-05')
+    @domain.schedule_force_delete(type: :fast_track)
+    assert(@domain.force_delete_scheduled?)
+    other_registrant = Registrant.find_by(code: 'jane-001')
+    @domain.pending_json['new_registrant_id'] = other_registrant.id
+
+    @domain.registrant = other_registrant
+    @domain.save!
+
+    assert_not(@domain.force_delete_scheduled?)
+  end
+
   private
 
   def valid_domain

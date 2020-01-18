@@ -46,6 +46,10 @@ if @cron_group == 'registry'
     runner 'DomainCron.start_redemption_grace_period'
   end
 
+  every 1.day do
+    runner 'DomainCron.start_client_hold'
+  end
+
   every '0 0 1 * *' do
     runner 'Directo.send_monthly_invoices'
   end
