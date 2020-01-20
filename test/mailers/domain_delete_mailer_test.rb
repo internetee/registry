@@ -73,7 +73,7 @@ class DomainDeleteMailerTest < ActionMailer::TestCase
 
     assert_emails 1
     assert_equal ['legal@registry.test'], email.from
-    assert_equal %w[jane@mail.test john@inbox.test], email.to
+    assert_equal @domain.force_delete_contact_emails, email.to
     assert_equal 'Domeen shop.test on kustutusmenetluses' \
                  ' / Domain shop.test is in deletion process' \
                  ' / Домен shop.test в процессе удаления', email.subject
