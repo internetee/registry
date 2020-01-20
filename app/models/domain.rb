@@ -587,6 +587,15 @@ class Domain < ApplicationRecord
     (admin_contacts.emails + [registrant.email]).uniq
   end
 
+  def force_delete_contact_emails
+    (primary_contact_emails + tech_contacts.pluck(:email) +
+      ["info@#{name}", "#{prepared_domain_name}@#{name}"]).uniq
+  end
+
+  def prepared_domain_name
+    name.split('.')&.first
+  end
+
   def new_registrant_email
     pending_json['new_registrant_email']
   end

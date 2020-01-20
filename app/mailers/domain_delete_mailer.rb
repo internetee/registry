@@ -44,7 +44,7 @@ class DomainDeleteMailer < ApplicationMailer
 
     subject = default_i18n_subject(domain_name: domain.name)
     mail(from: forced_email_from,
-         to: domain.primary_contact_emails,
+         to: domain.force_delete_contact_emails,
          subject: subject,
          template_path: 'mailers/domain_delete_mailer/forced',
          template_name: template_name)
