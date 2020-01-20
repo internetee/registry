@@ -1,3 +1,6 @@
+20.01.2020
+* ForceDelete email notifications are sent to all contacts + info and domain@domain [#1477](https://github.com/internetee/registry/issues/1477)
+
 18.01.2020
 * New ForceDelete procedure [#1428](https://github.com/internetee/registry/issues/1428)
 
