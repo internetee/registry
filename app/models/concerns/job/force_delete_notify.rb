@@ -5,9 +5,10 @@ module Concerns
 
       class_methods do
         def notify_client_hold(domain)
-          domain.registrar.notifications.create!(text: I18n.t('client_hold_set_on_domain',
+          domain.registrar.notifications.create!(text: I18n.t('force_delete_set_on_domain',
                                                               domain_name: domain.name,
-                                                              date: domain.force_delete_start))
+                                                              outzone_date: domain.outzone_date,
+                                                              purge_date: domain.purge_date))
         end
 
         def notify_on_grace_period(domain)

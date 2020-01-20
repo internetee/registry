@@ -7,7 +7,9 @@ module Admin
         domain.transaction do
           domain.schedule_force_delete(type: force_delete_type)
           domain.registrar.notifications.create!(text: t('force_delete_set_on_domain',
-                                                         domain_name: domain.name))
+                                                         domain_name: domain.name,
+                                                         outzone_date: domain.outzone_date,
+                                                         purge_date: domain.purge_date))
 
           notify_by_email if notify_by_email?
         end
