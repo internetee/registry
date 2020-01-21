@@ -93,8 +93,8 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def purge_date
-    force_delete_date || valid_to + Setting.expire_warning_period.days +
-      Setting.redemption_grace_period.days + 1.day
+    (force_delete_date&.beginning_of_day || valid_to + Setting.expire_warning_period.days +
+      Setting.redemption_grace_period.days)
   end
 
   private
