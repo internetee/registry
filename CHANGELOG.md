@@ -1,3 +1,6 @@
+21.01.2020
+* Registrant change cancels automatically force delete process [#1479](https://github.com/internetee/registry/issues/1479)
+
 20.01.2020
 * ForceDelete email notifications are sent to all contacts + info and domain@domain [#1477](https://github.com/internetee/registry/issues/1477)
 
