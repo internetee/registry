@@ -268,6 +268,46 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_no_emails
   end
 
+  def test_clears_force_delete_when_registrar_changed
+    Setting.request_confrimation_on_registrant_change_enabled = true
+    new_registrant = contacts(:william).becomes(Registrant)
+    @domain.schedule_force_delete(type: :fast_track)
+    assert_not_equal new_registrant, @domain.registrant
+    assert @domain.force_delete_scheduled?
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{@domain.name}</domain:name>
+                <domain:chg>
+                  <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
+                </domain:chg>
+            </domain:update>
+          </update>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    @domain.reload
+
+    assert_epp_response :completed_successfully
+    assert_equal new_registrant, @domain.registrant
+    assert_not @domain.registrant_verification_asked?
+    refute @domain.force_delete_scheduled?
+    refute_includes @domain.statuses, DomainStatus::PENDING_UPDATE
+    assert_no_emails
+  end
+
   def test_deactivates_domain_when_all_name_servers_are_removed
     assert @domain.active?
     assert_equal 2, @domain.nameservers.count
