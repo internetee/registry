@@ -1,3 +1,6 @@
+22.01.2020
+* ForceDelete poll messages with outzone and purge dates [#1478](https://github.com/internetee/registry/issues/1478)
+
 21.01.2020
 * Registrant change cancels automatically force delete process [#1479](https://github.com/internetee/registry/issues/1479)
 
