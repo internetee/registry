@@ -152,6 +152,35 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     assert_empty @domain.statuses & statuses
   end
 
+  def test_hard_force_delete_should_have_outzone_and_purge_date_with_time
+    @domain.schedule_force_delete(type: :fast_track)
+    @domain.reload
+
+    assert_equal(@domain.purge_date.to_date, @domain.force_delete_date)
+    assert_equal(@domain.outzone_date.to_date, @domain.force_delete_start.to_date +
+                                               Setting.expire_warning_period.days)
+    assert(@domain.purge_date.is_a?(ActiveSupport::TimeWithZone))
+    assert(@domain.outzone_date.is_a?(ActiveSupport::TimeWithZone))
+  end
+
+  def test_soft_force_delete_year_ahead_should_have_outzone_and_purge_date_with_time
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    @domain.update(template_name: 'legal_person')
+    travel_to Time.zone.parse('2010-07-05')
+
+    @domain.schedule_force_delete(type: :soft)
+
+    travel_to Time.zone.parse('2010-08-21')
+    DomainCron.start_client_hold
+    @domain.reload
+
+    assert_equal(@domain.purge_date.to_date, @domain.force_delete_date.to_date)
+    assert_equal(@domain.outzone_date.to_date, @domain.force_delete_start.to_date +
+        Setting.expire_warning_period.days)
+    assert(@domain.purge_date.is_a?(ActiveSupport::TimeWithZone))
+    assert(@domain.outzone_date.is_a?(ActiveSupport::TimeWithZone))
+  end
+
   def test_force_delete_soft_year_ahead_sets_client_hold
     asserted_status = DomainStatus::CLIENT_HOLD
 

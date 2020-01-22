@@ -88,6 +88,15 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     registrar.notifications.create!(text: I18n.t('force_delete_cancelled', domain_name: name))
   end
 
+  def outzone_date
+    (force_delete_start || valid_to) + Setting.expire_warning_period.days
+  end
+
+  def purge_date
+    (force_delete_date&.beginning_of_day || valid_to + Setting.expire_warning_period.days +
+      Setting.redemption_grace_period.days)
+  end
+
   private
 
   def calculate_soft_delete_date
