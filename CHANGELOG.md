@@ -1,3 +1,6 @@
+23.01.2020
+* Payment invoice matching by looking for ref nr in description field [#1415](https://github.com/internetee/registry/issues/1415)
+
 22.01.2020
 * ForceDelete poll messages with outzone and purge dates [#1478](https://github.com/internetee/registry/issues/1478)
 
