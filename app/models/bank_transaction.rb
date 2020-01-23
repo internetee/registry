@@ -16,22 +16,12 @@ class BankTransaction < ApplicationRecord
     account_activity.invoice
   end
 
-
-  def invoice_num
-    return @invoice_no if defined?(@invoice_no)
-
-    match = description.match(/^[^\d]*(\d+)/)
-    return unless match
-
-    @invoice_no = match[1].try(:to_i)
-  end
-
   def invoice
-    @invoice ||= registrar.invoices.find_by(number: invoice_num) if registrar
+    @invoice ||= registrar.invoices.find_by(total: sum) if registrar
   end
 
   def registrar
-    @registrar ||= Invoice.find_by(reference_no: reference_no)&.buyer
+    @registrar ||= Invoice.find_by(reference_no: parsed_ref_number)&.buyer
   end
 
 
@@ -39,11 +29,9 @@ class BankTransaction < ApplicationRecord
   def autobind_invoice
     return if binded?
     return unless registrar
-    return unless invoice_num
     return unless invoice
     return unless invoice.payable?
 
-    return if invoice.total != sum
     create_activity(registrar, invoice)
   end
 
@@ -97,5 +85,13 @@ class BankTransaction < ApplicationRecord
 
     registrar.settings['balance_auto_reload'].delete('pending')
     registrar.save!
+  end
+
+  def parsed_ref_number
+    reference_no || ref_number_from_description
+  end
+
+  def ref_number_from_description
+    /(\d{7})/.match(description)[0]
   end
 end

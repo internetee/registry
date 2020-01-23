@@ -28,7 +28,7 @@ class PaymentCallbackTest < ApplicationIntegrationTest
 
   def assert_matching_bank_transaction_exists(invoice)
     assert BankTransaction.find_by(
-      description: invoice.order,
+      description: invoice.description,
       currency: invoice.currency,
       iban: invoice.seller_iban
     ), 'Matching bank transaction should exist'
