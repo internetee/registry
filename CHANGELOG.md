@@ -1,3 +1,6 @@
+27.01.2020
+* Admin: fixed history view for domains with legacy id [#1489](https://github.com/internetee/registry/issues/1489)
+
 23.01.2020
 * Payment invoice matching by looking for ref nr in description field [#1415](https://github.com/internetee/registry/issues/1415)
 
