@@ -184,7 +184,8 @@ class Registrar
                                   :contacts_ident_eq,
                                   :nameservers_hostname_eq,
                                   :valid_to_gteq,
-                                  :valid_to_lteq)
+                                  :valid_to_lteq,
+                                  :s)
     end
   end
 end
