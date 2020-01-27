@@ -61,7 +61,8 @@ module Versions
           preceding(time + 1, true).
           select("distinct on (item_id) #{ver_klass.table_name}.*").
           map do |ver|
-            o = new(ver.object)
+            valid_columns = ver.item_type.constantize&.column_names
+            o = new(ver.object&.slice(*valid_columns))
             o.version_loader = ver
             ver.object_changes.to_h.each { |k, v| o.public_send("#{k}=", v[-1]) }
             o
