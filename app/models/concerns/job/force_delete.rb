@@ -11,8 +11,9 @@ module Concerns
 
           ::Domain.force_delete_scheduled.each do |domain|
             proceed_client_hold(domain: domain)
-            log_end_end_client_hold(domain)
           end
+
+          log_end_end_force_delete_job
         end
 
         def proceed_client_hold(domain:)
@@ -24,6 +25,8 @@ module Concerns
 
           domain.save(validate: false)
           notify_client_hold(domain)
+
+          log_end_end_client_hold(domain)
         end
       end
     end

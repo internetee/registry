@@ -38,4 +38,18 @@ class DomainCronTest < ActiveSupport::TestCase
 
     assert_emails 1
   end
+
+  def test_does_not_sets_hold_if_already_set
+    Setting.redemption_grace_period = 30
+
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    travel_to Time.zone.parse('2010-07-05')
+    @domain.schedule_force_delete(type: :soft)
+    @domain.reload
+    @domain.update(template_name: 'legal_person', statuses: [DomainStatus::CLIENT_HOLD])
+    travel_to Time.zone.parse('2010-08-06')
+    DomainCron.start_client_hold
+
+    assert_emails 0
+  end
 end
