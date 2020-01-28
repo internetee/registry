@@ -60,6 +60,9 @@
 * Set not null constraint on contact.name db column [#1417](https://github.com/internetee/registry/pull/1417)
 * Removed domain name from registrant_verifications table [#1431](https://github.com/internetee/registry/pull/1431)
 
+19.11.2019
+* Updated Rails to 5.0.7 [#377](https://github.com/internetee/registry/issues/377)
+
 15.11.2019
 * Restored EPP exception logging to syslog [#1371](https://github.com/internetee/registry/issues/1371)
 
