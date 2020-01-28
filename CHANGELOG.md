@@ -1,3 +1,7 @@
+28.01.2020
+* Registrar: fixed sorting of domain view [#1461](https://github.com/internetee/registry/issues/1461)
+* clientHold status is now set once instead of resetting it every time the job is run [#1480](https://github.com/internetee/registry/issues/1480)
+
 27.01.2020
 * Admin: fixed history view for domains with legacy id [#1489](https://github.com/internetee/registry/issues/1489)
 
