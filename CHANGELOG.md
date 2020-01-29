@@ -1,3 +1,6 @@
+29.01.2020
+* Fixed the invoice binding bug where process failed if registrar tried to load a sum that they have used before [#1496](https://github.com/internetee/registry/issues/1496)
+
 28.01.2020
 * Registrar: fixed sorting of domain view [#1461](https://github.com/internetee/registry/issues/1461)
 * clientHold status is now set once instead of resetting it every time the job is run [#1480](https://github.com/internetee/registry/issues/1480)
