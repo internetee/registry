@@ -17,7 +17,7 @@ class BankTransaction < ApplicationRecord
   end
 
   def invoice
-    @invoice ||= registrar.invoices.find_by(total: sum) if registrar
+    @invoice ||= registrar.invoices.order(created_at: :asc).unpaid.find_by(total: sum) if registrar
   end
 
   def registrar
