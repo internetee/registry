@@ -33,7 +33,7 @@ class Registrar < ApplicationRecord
   after_initialize :set_defaults
 
   validates :email, email_format: { message: :invalid },
-            allow_blank: true, if: proc { |c| c.email_changed? }
+            allow_blank: true, if: proc { |c| c.will_save_change_to_email? }
   validates :billing_email, email_format: { message: :invalid }, allow_blank: true
 
   alias_attribute :contact_email, :email

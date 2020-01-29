@@ -28,7 +28,7 @@ class Contact < ApplicationRecord
   validates :phone, presence: true, e164: true, phone: true
 
   validates :email, format: /@/
-  validates :email, email_format: { message: :invalid }, if: proc { |c| c.email_changed? }
+  validates :email, email_format: { message: :invalid }, if: proc { |c| c.will_save_change_to_email? }
 
   validates :code,
     uniqueness: { message: :epp_id_taken },
