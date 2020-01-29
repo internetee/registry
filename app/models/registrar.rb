@@ -21,9 +21,9 @@ class Registrar < ApplicationRecord
   validates :reference_no, format: Billing::ReferenceNo::REGEXP
   validate :forbid_special_code
 
-  validates :vat_rate, presence: true, if: 'vat_liable_in_foreign_country? && vat_no.blank?'
+  validates :vat_rate, presence: true, if: -> { vat_liable_in_foreign_country? && vat_no.blank? }
   validates :vat_rate, absence: true, if: :vat_liable_locally?
-  validates :vat_rate, absence: true, if: 'vat_liable_in_foreign_country? && vat_no?'
+  validates :vat_rate, absence: true, if: -> { vat_liable_in_foreign_country? && vat_no? }
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
 

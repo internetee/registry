@@ -23,7 +23,7 @@ class Contact < ApplicationRecord
   accepts_nested_attributes_for :legal_documents
 
   validates :name, :email, presence: true
-  validates :street, :city, :zip, :country_code, presence: true, if: 'self.class.address_processing?'
+  validates :street, :city, :zip, :country_code, presence: true, if: -> { self.class.address_processing? }
 
   validates :phone, presence: true, e164: true, phone: true
 
@@ -37,7 +37,7 @@ class Contact < ApplicationRecord
   validates_associated :identifier
 
   validate :validate_html
-  validate :validate_country_code, if: 'self.class.address_processing?'
+  validate :validate_country_code, if: -> { self.class.address_processing? }
 
   after_initialize do
     self.status_notes = {} if status_notes.nil?
