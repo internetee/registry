@@ -10,7 +10,7 @@ gem 'uglifier'
 gem 'figaro', '1.1.1'
 
 # model related
-gem 'pg',                        '0.19.0'
+gem 'pg',                        '1.2.2'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 1.8'
 gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and RFC 3696
