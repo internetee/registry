@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # core
 gem 'iso8601',      '0.8.6' # for dates and times
-gem 'rails', '~> 5.0.7'
+gem 'rails', '~> 5.1.7'
 gem 'rest-client'
 gem 'uglifier'
 
