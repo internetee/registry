@@ -7,6 +7,7 @@ class Invoice < ApplicationRecord
   has_one  :account_activity
   has_many :items, class_name: 'InvoiceItem', dependent: :destroy
   has_many :directo_records, as: :item, class_name: 'Directo'
+  has_many :payment_orders
 
   accepts_nested_attributes_for :items
 

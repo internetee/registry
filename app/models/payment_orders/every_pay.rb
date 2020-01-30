@@ -1,9 +1,15 @@
 module PaymentOrders
-  class EveryPay < Base
-    USER       = ENV['payments_every_pay_api_user'].freeze
-    KEY        = ENV['payments_every_pay_api_key'].freeze
-    ACCOUNT_ID = ENV['payments_every_pay_seller_account'].freeze
-    SUCCESSFUL_PAYMENT = %w(settled authorized).freeze
+  class EveryPay < PaymentOrder
+    USER       = ENV['payments_every_pay_api_user']
+    KEY        = ENV['payments_every_pay_api_key']
+    ACCOUNT_ID = ENV['payments_every_pay_seller_account']
+    SUCCESSFUL_PAYMENT = %w[settled authorized].freeze
+
+    CONFIG_NAMESPACE = 'every_pay'
+
+    def self.config_namespace_name
+      CONFIG_NAMESPACE
+    end
 
     def form_fields
       base_json = base_params
@@ -20,31 +26,30 @@ module PaymentOrders
 
     def valid_response_from_intermediary?
       return false unless response
+
       valid_hmac? && valid_amount? && valid_account?
     end
 
     def settled_payment?
-      SUCCESSFUL_PAYMENT.include?(response[:payment_state])
+      SUCCESSFUL_PAYMENT.include?(response['payment_state'])
     end
 
     def complete_transaction
       return unless valid_response_from_intermediary? && settled_payment?
 
-      transaction = BankTransaction.find_by(
+      transaction = BankTransaction.where(description: invoice.order).first_or_initialize(
         description: invoice.order,
-        currency:    invoice.currency,
-        iban:        invoice.seller_iban
+        reference_no: invoice.reference_no,
+        currency: invoice.currency,
+        iban: invoice.seller_iban
       )
 
-      transaction.sum = response[:amount]
-      transaction.paid_at = Date.strptime(response[:timestamp], '%s')
-      transaction.buyer_name = response[:cc_holder_name]
+      transaction.sum = response['amount']
+      transaction.paid_at = Date.strptime(response['timestamp'], '%s')
+      transaction.buyer_name = response['cc_holder_name']
 
-      transaction.save!
       transaction.autobind_invoice
     end
-
-    private
 
     def base_params
       {
@@ -61,24 +66,23 @@ module PaymentOrders
     end
 
     def valid_hmac?
-      hmac_fields = response[:hmac_fields].split(',')
+      hmac_fields = response['hmac_fields'].split(',')
       hmac_hash = {}
       hmac_fields.map do |field|
-        symbol = field.to_sym
-        hmac_hash[symbol] = response[symbol]
+        hmac_hash[field] = response[field]
       end
 
       hmac_string = hmac_hash.map { |key, _v| "#{key}=#{hmac_hash[key]}" }.join('&')
       expected_hmac = OpenSSL::HMAC.hexdigest('sha1', KEY, hmac_string)
-      expected_hmac == response[:hmac]
+      expected_hmac == response['hmac']
     end
 
     def valid_amount?
-      invoice.total == BigDecimal.new(response[:amount])
+      invoice.total == BigDecimal(response['amount'])
     end
 
     def valid_account?
-      response[:account_id] == ACCOUNT_ID
+      response['account_id'] == ACCOUNT_ID
     end
   end
 end

@@ -17,4 +17,4 @@
 
 - if @invoice.payable?
   .row.semifooter
-    .col-md-6-offset-6.text-right= render 'registrar/invoices/partials/banklinks', locals: { payment_channels: PaymentOrders::PAYMENT_METHODS }
+    .col-md-6-offset-6.text-right= render 'registrar/invoices/partials/banklinks', locals: { payment_channels: PaymentOrder::PAYMENT_METHODS }
