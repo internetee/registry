@@ -36,6 +36,7 @@ module PaymentOrders
 
     def complete_transaction
       return unless valid_response_from_intermediary? && settled_payment?
+      self.status = 'paid'
 
       transaction = BankTransaction.where(description: invoice.order).first_or_initialize(
         description: invoice.order,
@@ -48,7 +49,8 @@ module PaymentOrders
       transaction.paid_at = Date.strptime(response['timestamp'], '%s')
       transaction.buyer_name = response['cc_holder_name']
 
-      transaction.autobind_invoice
+      transaction.save!
+      transaction.autobind_invoice(invoice_no: invoice.number)
     end
 
     def base_params

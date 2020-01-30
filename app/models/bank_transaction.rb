@@ -24,15 +24,20 @@ class BankTransaction < ApplicationRecord
     @registrar ||= Invoice.find_by(reference_no: parsed_ref_number)&.buyer
   end
 
-
   # For successful binding, reference number, invoice id and sum must match with the invoice
-  def autobind_invoice
+  def autobind_invoice(invoice_no: nil)
     return if binded?
     return unless registrar
-    return unless invoice
-    return unless invoice.payable?
 
-    create_activity(registrar, invoice)
+    inv = if invoice_no.nil?
+            invoice
+          else
+            Invoice.find_by(number: invoice_no)
+          end
+    return unless inv
+    return unless inv.payable?
+
+    create_activity(registrar, inv)
   end
 
   def bind_invoice(invoice_no)
