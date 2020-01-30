@@ -31,20 +31,20 @@ class Registrar
     end
 
     def back
-      puts params
-
       @payment_order = PaymentOrder.find_by!(id: params[:bank])
       @payment_order.update!(response: params.to_unsafe_h)
 
-      if @payment_order.valid_response_from_intermediary? && @payment_order.settled_payment?
-        @payment_order.complete_transaction
+      if @payment_order.payment_received?
+        @payment_order.complete_transaction(@payment_order.composed_transaction)
 
         if @payment_order.invoice.paid?
           flash[:notice] = t(:pending_applied)
         else
-          flash[:alert] = t(:something_wrong)
+          # flash[:alert] = t(:something_wrong)
+          flash[:alert] = 'We fucked up'
         end
       else
+        @payment_order.create_failure_report
         flash[:alert] = t(:something_wrong)
       end
       redirect_to registrar_invoice_path(@payment_order.invoice)
@@ -54,8 +54,10 @@ class Registrar
       @payment_order = PaymentOrder.find_by!(id: params[:bank])
       @payment_order.update!(response: params.to_unsafe_h)
 
-      if @payment_order.valid_response_from_intermediary? && @payment_order.settled_payment?
+      if @payment_order.payment_received?
         @payment_order.complete_transaction
+      else
+        @payment_order.create_failure_report
       end
 
       render status: 200, json: { status: 'ok' }

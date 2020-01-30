@@ -11,7 +11,8 @@ class PaymentOrder < ApplicationRecord
   validate :invoice_cannot_be_already_paid, on: :create
   # validates :type, inclusion: { in: PAYMENT_METHODS }
 
-  enum status: { issued: 'issued', paid: 'paid', cancelled: 'cancelled' }
+  enum status: { issued: 'issued', paid: 'paid', cancelled: 'cancelled',
+                 failed: 'failed' }
 
   attr_accessor :return_url, :response_url
 
@@ -32,6 +33,22 @@ class PaymentOrder < ApplicationRecord
     else
       false
     end
+  end
+
+  def complete_transaction(transaction)
+    paid!
+
+    transaction.save!
+    transaction.bind_invoice(invoice.number)
+
+    return unless transaction.errors.any?
+
+    worded_errors = 'Failed to bind. '
+    transaction.errors.full_messages.each do |err|
+      worded_errors << "#{err}, "
+    end
+
+    update!(notes: worded_errors)
   end
 
   def self.supported_methods

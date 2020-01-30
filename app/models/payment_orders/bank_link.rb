@@ -48,10 +48,17 @@ module PaymentOrders
       end
     end
 
-    def complete_transaction
-      return unless valid_response_from_intermediary? && settled_payment?
+    def payment_received?
+      valid_response_from_intermediary? && settled_payment?
+    end
 
-      self.status = 'paid'
+    def create_failure_report
+      notes = "User failed to make valid payment. Bank responded with code #{response['VK_SERVICE']}"
+      status = 'cancelled'
+      update!(notes: notes, status: status)
+    end
+
+    def composed_transaction
       transaction = BankTransaction.where(description: invoice.order).first_or_initialize(
         description: invoice.order,
         reference_no: invoice.reference_no,
@@ -66,8 +73,7 @@ module PaymentOrders
       transaction.buyer_name      = response['VK_SND_NAME']
       transaction.paid_at         = Time.parse(response['VK_T_DATETIME'])
 
-      transaction.save!
-      transaction.autobind_invoice(invoice_no: invoice.number)
+      transaction
     end
 
     def settled_payment?

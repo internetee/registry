@@ -34,11 +34,12 @@ module PaymentOrders
       SUCCESSFUL_PAYMENT.include?(response['payment_state'])
     end
 
-    def complete_transaction
-      return unless valid_response_from_intermediary? && settled_payment?
-      self.status = 'paid'
+    def payment_received?
+      valid_response_from_intermediary? && settled_payment?
+    end
 
-      transaction = BankTransaction.where(description: invoice.order).first_or_initialize(
+    def composed_transaction
+      transaction = BankTransaction.new(
         description: invoice.order,
         reference_no: invoice.reference_no,
         currency: invoice.currency,
@@ -49,8 +50,13 @@ module PaymentOrders
       transaction.paid_at = Date.strptime(response['timestamp'], '%s')
       transaction.buyer_name = response['cc_holder_name']
 
-      transaction.save!
-      transaction.autobind_invoice(invoice_no: invoice.number)
+      transaction
+    end
+
+    def create_failure_report
+      notes = "User failed to make valid payment. Payment state: #{response['payment_state']}"
+      status = 'cancelled'
+      update!(notes: notes, status: status)
     end
 
     def base_params
@@ -80,6 +86,8 @@ module PaymentOrders
     end
 
     def valid_amount?
+      return false unless response.key? 'amount'
+
       invoice.total == BigDecimal(response['amount'])
     end
 
