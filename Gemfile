@@ -10,11 +10,11 @@ gem 'uglifier'
 gem 'figaro', '1.1.1'
 
 # model related
+gem 'paper_trail', '~> 8.1'
 gem 'pg',                        '1.2.2'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 1.8'
 gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and RFC 3696
-gem 'paper_trail', '~> 6.0'
 
 # 0.7.3 is the latest for Rails 4.2, however, it is absent on Rubygems server
 # https://github.com/huacnlee/rails-settings-cached/issues/165
