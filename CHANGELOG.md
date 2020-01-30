@@ -1,3 +1,10 @@
+29.01.2020
+* Fixed the invoice binding bug where process failed if registrar tried to load a sum that they have used before [#1496](https://github.com/internetee/registry/issues/1496)
+
+28.01.2020
+* Registrar: fixed sorting of domain view [#1461](https://github.com/internetee/registry/issues/1461)
+* clientHold status is now set once instead of resetting it every time the job is run [#1480](https://github.com/internetee/registry/issues/1480)
+
 27.01.2020
 * Admin: fixed history view for domains with legacy id [#1489](https://github.com/internetee/registry/issues/1489)
 
@@ -55,6 +62,9 @@
 * Upgraded bundler to 2.0.2 [#1433](https://github.com/internetee/registry/pull/1433)
 * Set not null constraint on contact.name db column [#1417](https://github.com/internetee/registry/pull/1417)
 * Removed domain name from registrant_verifications table [#1431](https://github.com/internetee/registry/pull/1431)
+
+19.11.2019
+* Updated Rails to 5.0.7 [#377](https://github.com/internetee/registry/issues/377)
 
 15.11.2019
 * Restored EPP exception logging to syslog [#1371](https://github.com/internetee/registry/issues/1371)

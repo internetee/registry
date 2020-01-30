@@ -22,6 +22,12 @@ module Concerns
 
           STDOUT << "#{Time.zone.now.utc} - Successfully set client_hold on (#{domain.name})"
         end
+
+        def log_end_end_force_delete_job
+          return if Rails.env.test?
+
+          STDOUT << "#{Time.zone.now.utc} - All client_hold setting are done\n"
+        end
       end
     end
   end
