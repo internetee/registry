@@ -9,15 +9,16 @@ class Dnskey < ApplicationRecord
   validate :validate_protocol
   validate :validate_flags
 
-  before_save -> { generate_digest if will_save_change_to_public_key? &&
-                                      !will_save_change_to_ds_digest? }
+  before_save lambda {
+    generate_digest if will_save_change_to_public_key? && !will_save_change_to_ds_digest?
+  }
 
   before_save lambda {
     if (will_save_change_to_public_key? ||
         will_save_change_to_flags? ||
         will_save_change_to_alg? ||
         will_save_change_to_protocol?) &&
-        !will_save_change_to_ds_key_tag?
+       !will_save_change_to_ds_key_tag?
       generate_ds_key_tag
     end
   }

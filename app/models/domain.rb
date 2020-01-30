@@ -74,11 +74,12 @@ class Domain < ApplicationRecord
   before_update :manage_statuses
   def manage_statuses
     return unless will_save_change_to_registrant_id? # rollback has not yet happened
+
     pending_update! if registrant_verification_asked?
     true
   end
 
-  after_commit :update_whois_record, unless: 'domain_name.at_auction?'
+  after_commit :update_whois_record, unless: -> { domain_name.at_auction? }
 
   after_create :update_reserved_domains
   def update_reserved_domains

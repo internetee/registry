@@ -84,8 +84,8 @@ end
 group :test do
   gem 'capybara'
   gem 'database_cleaner'
+  gem 'minitest', '~> 5.14'
   gem 'simplecov', require: false
   gem 'webdrivers'
   gem 'webmock'
-  gem 'minitest', '~> 5.10.0'
 end

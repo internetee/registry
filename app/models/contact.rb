@@ -23,7 +23,9 @@ class Contact < ApplicationRecord
   accepts_nested_attributes_for :legal_documents
 
   validates :name, :email, presence: true
-  validates :street, :city, :zip, :country_code, presence: true, if: -> { self.class.address_processing? }
+  validates :street, :city, :zip, :country_code, presence: true, if: lambda {
+    self.class.address_processing?
+  }
 
   validates :phone, presence: true, e164: true, phone: true
 

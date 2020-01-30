@@ -16,7 +16,6 @@ require 'minitest/mock'
 require 'capybara/rails'
 require 'capybara/minitest'
 require 'webmock/minitest'
-require 'support/rails5_assertions' # Remove once upgraded to Rails 5.1
 require 'support/assertions/epp_assertions'
 
 
