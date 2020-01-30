@@ -1,6 +1,7 @@
 module Epp
   class SessionsController < BaseController
     skip_authorization_check only: [:hello, :login, :logout]
+    before_action :set_paper_trail_whodunnit
 
     def hello
       render_epp_response('greeting')

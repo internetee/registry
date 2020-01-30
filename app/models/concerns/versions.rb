@@ -55,7 +55,7 @@ module Versions
 
   module ClassMethods
     def all_versions_for(ids, time)
-      ver_klass    = paper_trail_version_class
+      ver_klass    = paper_trail.version_class
       from_history = ver_klass.where(item_id: ids.to_a).
           order(:item_id).
           preceding(time + 1, true).
