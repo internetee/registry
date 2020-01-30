@@ -1824,7 +1824,7 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 CREATE TABLE public.payment_orders (
     id integer NOT NULL,
     type character varying NOT NULL,
-    status character varying DEFAULT '0'::character varying NOT NULL,
+    status character varying DEFAULT 'issued'::character varying NOT NULL,
     invoice_id integer,
     response jsonb,
     notes character varying,
