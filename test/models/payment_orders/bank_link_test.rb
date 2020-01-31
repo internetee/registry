@@ -114,7 +114,9 @@ class BankLinkTest < ActiveSupport::TestCase
     mock_transaction.expect(:paid_at= , Date.parse('2018-04-01 00:30:00 +0300'), [Time.parse('2018-04-01T00:30:00+0300')])
     mock_transaction.expect(:buyer_name=, 'John Doe', ['John Doe'])
     mock_transaction.expect(:save!, true)
-    mock_transaction.expect(:autobind_invoice, AccountActivity.new)
+    mock_transaction.expect(:binded?, false)
+    mock_transaction.expect(:bind_invoice, AccountActivity.new, [1])
+    mock_transaction.expect(:errors, [])
 
     BankTransaction.stub(:find_by, mock_transaction) do
       @completed_bank_link.complete_transaction

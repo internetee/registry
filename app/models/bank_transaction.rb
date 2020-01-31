@@ -48,6 +48,7 @@ class BankTransaction < ApplicationRecord
     end
 
     invoice = Invoice.find_by(number: invoice_no)
+    @registrar = invoice.buyer
 
     unless invoice
       errors.add(:base, I18n.t('invoice_was_not_found'))

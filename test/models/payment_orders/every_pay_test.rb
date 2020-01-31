@@ -72,7 +72,9 @@ class EveryPayTest < ActiveSupport::TestCase
     mock_transaction.expect(:paid_at= , Date.strptime('1524136727', '%s'), [Date.strptime('1524136727', '%s')])
     mock_transaction.expect(:buyer_name=, 'John Doe', ['John Doe'])
     mock_transaction.expect(:save!, true)
-    mock_transaction.expect(:autobind_invoice, AccountActivity.new)
+    mock_transaction.expect(:binded?, false)
+    mock_transaction.expect(:bind_invoice, AccountActivity.new, [1])
+    mock_transaction.expect(:errors, [])
 
     BankTransaction.stub(:find_by, mock_transaction) do
       @every_pay.complete_transaction

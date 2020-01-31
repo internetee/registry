@@ -51,11 +51,7 @@ module PaymentOrders
     def complete_transaction
       return unless valid_successful_transaction?
 
-      transaction = BankTransaction.find_by(
-        description: invoice.order,
-        currency: invoice.currency,
-        iban: invoice.seller_iban
-      )
+      transaction = compose_or_find_transaction
 
       transaction.sum             = response['VK_AMOUNT']
       transaction.bank_reference  = response['VK_T_NO']
@@ -65,7 +61,12 @@ module PaymentOrders
       transaction.paid_at         = Time.parse(response["VK_T_DATETIME"])
 
       transaction.save!
-      transaction.autobind_invoice
+      transaction.bind_invoice(invoice.number)
+      if transaction.errors.empty?
+        Rails.logger.info("Invoice ##{invoice.number} was marked as paid")
+      else
+        Rails.logger.error("Failed to bind invoice ##{invoice.number}")
+      end
     end
 
     def settled_payment?
