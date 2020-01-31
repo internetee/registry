@@ -27,6 +27,8 @@ class Registrar
       opts = { response: params }
       @payment = ::PaymentOrders.create_with_type(params[:bank], invoice, opts)
       if @payment.valid_response_from_intermediary? && @payment.settled_payment?
+        Rails.logger.info("User paid invoice ##{invoice.number} successfully")
+
         @payment.complete_transaction
 
         if invoice.paid?

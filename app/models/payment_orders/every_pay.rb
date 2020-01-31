@@ -20,6 +20,7 @@ module PaymentOrders
 
     def valid_response_from_intermediary?
       return false unless response
+
       valid_hmac? && valid_amount? && valid_account?
     end
 
@@ -30,18 +31,19 @@ module PaymentOrders
     def complete_transaction
       return unless valid_response_from_intermediary? && settled_payment?
 
-      transaction = BankTransaction.find_by(
-        description: invoice.order,
-        currency:    invoice.currency,
-        iban:        invoice.seller_iban
-      )
+      transaction = compose_or_find_transaction
 
       transaction.sum = response[:amount]
       transaction.paid_at = Date.strptime(response[:timestamp], '%s')
       transaction.buyer_name = response[:cc_holder_name]
 
       transaction.save!
-      transaction.autobind_invoice
+      transaction.bind_invoice(invoice.number)
+      if transaction.errors.empty?
+        Rails.logger.info("Invoice ##{invoice.number} marked as paid")
+      else
+        Rails.logger.error("Failed to bind invoice ##{invoice.number}")
+      end
     end
 
     private
