@@ -60,7 +60,8 @@ module DNS
     end
 
     def blocked?
-      BlockedDomain.where(name: name).any?
+      BlockedDomain.where(name: name).any? ||
+        BlockedDomain.where(name: SimpleIDN.to_unicode(name)).any?
     end
 
     def reserved?
