@@ -25,14 +25,14 @@ class PaymentOrder < ApplicationRecord
     errors.add(:invoice, 'is already paid')
   end
 
-  def self.supported_method?(some_class)
-    raise ArgumentError unless some_class < PaymentOrder
+  def self.type_from_shortname(shortname)
+    ('PaymentOrders::' + shortname.camelize).constantize
+  end
 
-    if PAYMENT_METHODS.include?(some_class.name)
-      true
-    else
-      false
-    end
+  def self.supported_method?(some_class)
+    supported_methods.include? type_from_shortname(some_class)
+  rescue NameError
+    false
   end
 
   def complete_transaction(transaction)
@@ -52,16 +52,16 @@ class PaymentOrder < ApplicationRecord
   end
 
   def self.supported_methods
-    enabled = []
+    supported = []
 
-    ENABLED_METHODS.each do |method|
-      class_name = method.constantize
-      raise(Errors::ExpectedPaymentOrder, class_name) unless class_name < PaymentOrder
+    PAYMENT_METHODS.each do |method|
+      class_name = ('PaymentOrders::' + method.camelize).constantize
+      raise(NoMethodError, class_name) unless class_name < PaymentOrder
 
-      enabled << class_name
+      supported << class_name
     end
 
-    enabled
+    supported
   end
 
   def channel

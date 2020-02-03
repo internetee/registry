@@ -1,5 +1,5 @@
 module PaymentOrders
-  class LHV < BankLink
+  class Lhv < BankLink
     def self.config_namespace_name
       'lhv'
     end

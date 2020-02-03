@@ -5,21 +5,14 @@ class Registrar
     skip_authorization_check # actually anyone can pay, no problems at all
     skip_before_action :authenticate_registrar_user!, :check_ip_restriction,
                        only: [:back, :callback]
-    before_action :check_supported_payment_method
+
+    before_action :check_supported_payment_method, only: [:pay]
 
     def pay
       invoice = Invoice.find(params[:invoice_id])
       payment_type = params[:bank]
 
-      channel = if payment_type == 'every_pay'
-                  'PaymentOrders::EveryPay'
-                elsif payment_type == 'seb'
-                  'PaymentOrders::SEB'
-                elsif payment_type == 'swed'
-                  'PaymentOrders::Swed'
-                elsif payment_type == 'lhv'
-                  'PaymentOrders::LHV'
-                end
+      channel = PaymentOrder.type_from_shortname(payment_type)
 
       @payment_order = PaymentOrder.new(type: channel, invoice: invoice)
       @payment_order.save && @payment_order.reload
@@ -31,7 +24,7 @@ class Registrar
     end
 
     def back
-      @payment_order = PaymentOrder.find_by!(id: params[:bank])
+      @payment_order = PaymentOrder.find_by!(id: params[:payment_order])
       @payment_order.update!(response: params.to_unsafe_h)
 
       if @payment_order.payment_received?
@@ -51,7 +44,7 @@ class Registrar
     end
 
     def callback
-      @payment_order = PaymentOrder.find_by!(id: params[:bank])
+      @payment_order = PaymentOrder.find_by!(id: params[:payment_order])
       @payment_order.update!(response: params.to_unsafe_h)
 
       if @payment_order.payment_received?
@@ -68,13 +61,11 @@ class Registrar
     def check_supported_payment_method
       return if supported_payment_method?
 
-      raise StandardError.new('Not supported payment method')
+      raise(StandardError, 'Not supported payment method')
     end
 
     def supported_payment_method?
-      puts "Payment method param is #{params[:bank]}"
-      # PaymentOrder::PAYMENT_METHODS.include?(params[:bank])
-      true
+      PaymentOrder.supported_method?(params[:bank])
     end
   end
 end
