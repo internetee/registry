@@ -28,7 +28,7 @@ class Registrar
       @payment_order.update!(response: params.to_unsafe_h)
 
       if @payment_order.payment_received?
-        @payment_order.complete_transaction(@payment_order.composed_transaction)
+        @payment_order.complete_transaction
 
         if @payment_order.invoice.paid?
           flash[:notice] = t(:pending_applied)
@@ -65,7 +65,8 @@ class Registrar
     end
 
     def supported_payment_method?
-      PaymentOrder.supported_method?(params[:bank])
+      method_name = PaymentOrder.type_from_shortname(params[:bank])
+      PaymentOrder.supported_method?(method_name)
     end
   end
 end

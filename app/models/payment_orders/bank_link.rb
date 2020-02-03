@@ -53,25 +53,20 @@ module PaymentOrders
     end
 
     def create_failure_report
-      notes = "User failed to make valid payment. Bank responded with code #{response['VK_SERVICE']}"
+      notes = "User failed to make payment. Bank responded with code #{response['VK_SERVICE']}"
       status = 'cancelled'
       update!(notes: notes, status: status)
     end
 
     def composed_transaction
-      transaction = BankTransaction.where(description: invoice.order).first_or_initialize(
-        description: invoice.order,
-        reference_no: invoice.reference_no,
-        currency: invoice.currency,
-        iban: invoice.seller_iban
-      )
+      paid_at = Time.parse(response['VK_T_DATETIME'])
+      transaction = base_transaction(sum: response['VK_AMOUNT'],
+                                     paid_at: paid_at,
+                                     buyer_name: response['VK_SND_NAME'])
 
-      transaction.sum             = response['VK_AMOUNT']
-      transaction.bank_reference  = response['VK_T_NO']
+      transaction.bank_reference = response['VK_T_NO']
       transaction.buyer_bank_code = response['VK_SND_ID']
-      transaction.buyer_iban      = response['VK_SND_ACC']
-      transaction.buyer_name      = response['VK_SND_NAME']
-      transaction.paid_at         = Time.parse(response['VK_T_DATETIME'])
+      transaction.buyer_iban = response['VK_SND_ACC']
 
       transaction
     end
@@ -80,7 +75,7 @@ module PaymentOrders
       response['VK_SERVICE'] == SUCCESSFUL_PAYMENT_SERVICE_NUMBER
     end
 
-    # private
+    private
 
     def valid_successful_transaction?
       valid_success_notice? && valid_amount? && valid_currency?

@@ -5,7 +5,7 @@ module PaymentOrders
     ACCOUNT_ID = ENV['payments_every_pay_seller_account']
     SUCCESSFUL_PAYMENT = %w[settled authorized].freeze
 
-    CONFIG_NAMESPACE = 'every_pay'
+    CONFIG_NAMESPACE = 'every_pay'.freeze
 
     def self.config_namespace_name
       CONFIG_NAMESPACE
@@ -39,18 +39,9 @@ module PaymentOrders
     end
 
     def composed_transaction
-      transaction = BankTransaction.new(
-        description: invoice.order,
-        reference_no: invoice.reference_no,
-        currency: invoice.currency,
-        iban: invoice.seller_iban
-      )
-
-      transaction.sum = response['amount']
-      transaction.paid_at = Date.strptime(response['timestamp'], '%s')
-      transaction.buyer_name = response['cc_holder_name']
-
-      transaction
+      base_transaction(sum: response['amount'],
+                       paid_at: Date.strptime(response['timestamp'], '%s'),
+                       buyer_name: response['cc_holder_name'])
     end
 
     def create_failure_report
@@ -58,6 +49,8 @@ module PaymentOrders
       status = 'cancelled'
       update!(notes: notes, status: status)
     end
+
+    private
 
     def base_params
       {

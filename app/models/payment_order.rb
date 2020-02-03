@@ -9,47 +9,12 @@ class PaymentOrder < ApplicationRecord
   belongs_to :invoice, optional: false
 
   validate :invoice_cannot_be_already_paid, on: :create
-  # validates :type, inclusion: { in: PAYMENT_METHODS }
+  validate :supported_payment_method
 
   enum status: { issued: 'issued', paid: 'paid', cancelled: 'cancelled',
                  failed: 'failed' }
 
   attr_accessor :return_url, :response_url
-
-  # Name of configuration namespace
-  def self.config_namespace_name; end
-
-  def invoice_cannot_be_already_paid
-    return unless invoice&.paid?
-
-    errors.add(:invoice, 'is already paid')
-  end
-
-  def self.type_from_shortname(shortname)
-    ('PaymentOrders::' + shortname.camelize).constantize
-  end
-
-  def self.supported_method?(some_class)
-    supported_methods.include? type_from_shortname(some_class)
-  rescue NameError
-    false
-  end
-
-  def complete_transaction(transaction)
-    paid!
-
-    transaction.save!
-    transaction.bind_invoice(invoice.number)
-
-    return unless transaction.errors.any?
-
-    worded_errors = 'Failed to bind. '
-    transaction.errors.full_messages.each do |err|
-      worded_errors << "#{err}, "
-    end
-
-    update!(notes: worded_errors)
-  end
 
   def self.supported_methods
     supported = []
@@ -62,6 +27,59 @@ class PaymentOrder < ApplicationRecord
     end
 
     supported
+  end
+
+  # Name of configuration namespace
+  def self.config_namespace_name; end
+
+  def supported_payment_method
+    return if PaymentOrder.supported_method? type.constantize
+
+    errors.add(:type, 'is not supported')
+  end
+
+  def invoice_cannot_be_already_paid
+    return unless invoice&.paid?
+
+    errors.add(:invoice, 'is already paid')
+  end
+
+  def self.type_from_shortname(shortname)
+    ('PaymentOrders::' + shortname.camelize).constantize
+  end
+
+  def self.supported_method?(some_class)
+    supported_methods.include? some_class
+  rescue NameError
+    false
+  end
+
+  def base_transaction(sum:, paid_at:, buyer_name:)
+    BankTransaction.new(
+      description: invoice.order,
+      reference_no: invoice.reference_no,
+      currency: invoice.currency,
+      iban: invoice.seller_iban,
+      sum: sum,
+      paid_at: paid_at,
+      buyer_name: buyer_name
+    )
+  end
+
+  def complete_transaction
+    paid!
+    transaction = composed_transaction
+    transaction.save!
+    transaction.bind_invoice(invoice.number)
+
+    return unless transaction.errors.any?
+
+    worded_errors = 'Failed to bind. '
+    transaction.errors.full_messages.each do |err|
+      worded_errors << "#{err}, "
+    end
+
+    update!(notes: worded_errors)
   end
 
   def channel
