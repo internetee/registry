@@ -10,11 +10,9 @@ class Registrar
 
     def pay
       invoice = Invoice.find(params[:invoice_id])
-      payment_type = params[:bank]
+      channel = params[:bank]
 
-      channel = PaymentOrder.type_from_shortname(payment_type)
-
-      @payment_order = PaymentOrder.new(type: channel, invoice: invoice)
+      @payment_order = PaymentOrder.create_with_type(type: channel, invoice: invoice)
       @payment_order.save && @payment_order.reload
 
       @payment_order.return_url = registrar_return_payment_with_url(@payment_order)

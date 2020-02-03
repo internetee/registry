@@ -12,7 +12,7 @@ class PaymentCallbackTest < ApplicationIntegrationTest
     invoice = payable_invoice
     assert_matching_bank_transaction_exists(invoice)
 
-    request_params = every_pay_request_params.merge(invoice_id: invoice.id)
+    request_params = every_pay_request_params.merge(payment_order: invoice.id)
     post "/registrar/pay/callback/every_pay", params: request_params
 
     assert_response :ok

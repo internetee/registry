@@ -76,6 +76,8 @@ module PaymentOrders
       hmac_string = hmac_hash.map { |key, _v| "#{key}=#{hmac_hash[key]}" }.join('&')
       expected_hmac = OpenSSL::HMAC.hexdigest('sha1', KEY, hmac_string)
       expected_hmac == response['hmac']
+    rescue NoMethodError
+      false
     end
 
     def valid_amount?

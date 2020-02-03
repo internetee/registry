@@ -1,0 +1,20 @@
+issued:
+  type: PaymentOrders::EveryPay
+  status: issued
+  invoice: one
+  response:
+  notes:
+
+paid:
+  type: PaymentOrders::EveryPay
+  status: paid
+  invoice: one
+  response: "{}"
+  notes:
+
+cancelled:
+  type: PaymentOrders::Seb
+  status: cancelled
+  invoice: one
+  response: "{}"
+  notes: User failed to make payment. Bank responded with code 1911

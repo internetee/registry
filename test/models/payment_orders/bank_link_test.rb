@@ -36,11 +36,11 @@ class BankLinkTest < ActiveSupport::TestCase
       'VK_MAC': 'CZZvcptkxfuOxRR88JmT4N+Lw6Hs4xiQfhBWzVYldAcRTQbcB/lPf9MbJzBE4e1/HuslQgkdCFt5g1xW2lJwrVDBQTtP6DAHfvxU3kkw7dbk0IcwhI4whUl68/QCwlXEQTAVDv1AFnGVxXZ40vbm/aLKafBYgrirB5SUe8+g9FE=',
       'VK_ENCODING': 'UTF-8',
       'VK_LANG': 'ENG'
-    }.with_indifferent_access
+    }.as_json
 
-    @completed_bank_link = PaymentOrders::BankLink.new(
-      'seb', @invoice, { response: params }
-    )
+    @completed_bank_link = PaymentOrder.new(type: 'PaymentOrders::Seb',
+                                            invoice: @invoice,
+                                            response: params)
   end
 
   def create_cancelled_bank_link
@@ -55,16 +55,18 @@ class BankLinkTest < ActiveSupport::TestCase
       'VK_MAC': 'PElE2mYXXN50q2UBvTuYU1rN0BmOQcbafPummDnWfNdm9qbaGQkGyOn0XaaFGlrdEcldXaHBbZKUS0HegIgjdDfl2NOk+wkLNNH0Iu38KzZaxHoW9ga7vqiyKHC8dcxkHiO9HsOnz77Sy/KpWCq6cz48bi3fcMgo+MUzBMauWoQ=',
       'VK_ENCODING': 'UTF-8',
       'VK_LANG': 'ENG'
-    }.with_indifferent_access
+    }.as_json
 
-    @cancelled_bank_link = PaymentOrders::BankLink.new(
-      'seb', @invoice, { response: params }
-    )
+    @cancelled_bank_link = PaymentOrder.new(type: 'PaymentOrders::Seb',
+                                            invoice: @invoice,
+                                            response: params)
   end
 
   def create_new_bank_link
     params = { return_url: 'return.url', response_url: 'response.url' }
-    @new_bank_link = PaymentOrders::BankLink.new('seb', @invoice, params)
+    @new_bank_link = PaymentOrder.new(type: 'PaymentOrders::Seb', invoice: @invoice)
+    @new_bank_link.return_url = 'return.url'
+    @new_bank_link.response_url = 'response.url'
   end
 
   def test_response_is_not_valid_when_it_is_missing

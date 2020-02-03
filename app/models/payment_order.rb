@@ -29,6 +29,12 @@ class PaymentOrder < ApplicationRecord
     supported
   end
 
+  def self.create_with_type(type:, invoice:)
+    channel = PaymentOrder.type_from_shortname(type)
+
+    PaymentOrder.new(type: channel, invoice: invoice)
+  end
+
   # Name of configuration namespace
   def self.config_namespace_name; end
 
@@ -67,11 +73,11 @@ class PaymentOrder < ApplicationRecord
   end
 
   def complete_transaction
+    return NoMethodError unless payment_received?
+
     paid!
     transaction = composed_transaction
-    transaction.save!
-    transaction.bind_invoice(invoice.number)
-
+    transaction.save! && transaction.bind_invoice(invoice.number)
     return unless transaction.errors.any?
 
     worded_errors = 'Failed to bind. '

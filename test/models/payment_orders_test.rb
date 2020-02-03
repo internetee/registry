@@ -5,23 +5,21 @@ class PaymentOrdersTest < ActiveSupport::TestCase
     super
 
     @original_methods = ENV['payment_methods']
-    @original_seb_URL = ENV['seb_payment_url']
-    ENV['payment_methods'] = 'seb, swed, credit_card'
+    @original_seb_url = ENV['seb_payment_url']
+    ENV['payment_methods'] = 'seb, swed, every_pay'
     ENV['seb_payment_url'] = nil
-    @not_implemented_payment = PaymentOrders::Base.new(
-      'not_implemented', Invoice.new
-    )
+    @not_implemented_payment = PaymentOrder.new(invoice: Invoice.new)
   end
 
   def teardown
     super
 
     ENV['payment_methods'] = @original_methods
-    ENV['seb_payment_url'] = @original_seb_URL
+    ENV['seb_payment_url'] = @original_seb_url
   end
 
   def test_variable_assignment
-    assert_equal 'not_implemented', @not_implemented_payment.type
+    assert_nil @not_implemented_payment.type
     assert_nil @not_implemented_payment.response_url
     assert_nil @not_implemented_payment.return_url
     assert_nil @not_implemented_payment.form_url
@@ -45,14 +43,14 @@ class PaymentOrdersTest < ActiveSupport::TestCase
     end
   end
 
-  def test_that_create_with_type_raises_argument_error
-    assert_raise ArgumentError do
-      PaymentOrders.create_with_type("not_implemented", Invoice.new)
+  def test_can_not_create_order_with_invalid_type
+    assert_raise NameError do
+      PaymentOrder.create_with_type(type: 'not_implemented', invoice: Invoice.new)
     end
   end
 
-  def test_create_with_correct_subclass
-    payment = PaymentOrders.create_with_type('seb', Invoice.new)
-    assert_equal PaymentOrders::BankLink, payment.class
+  def test_can_create_with_correct_subclass
+    payment = PaymentOrder.create_with_type(type: 'seb', invoice: Invoice.new)
+    assert_equal PaymentOrders::Seb, payment.class
   end
 end
