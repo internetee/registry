@@ -1515,6 +1515,44 @@ ALTER SEQUENCE public.log_notifications_id_seq OWNED BY public.log_notifications
 
 
 --
+-- Name: log_payment_orders; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE public.log_payment_orders (
+    id integer NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object jsonb,
+    object_changes jsonb,
+    created_at timestamp without time zone,
+    session character varying,
+    children jsonb,
+    uuid character varying
+);
+
+
+--
+-- Name: log_payment_orders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.log_payment_orders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_payment_orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.log_payment_orders_id_seq OWNED BY public.log_payment_orders.id;
+
+
+--
 -- Name: log_registrant_verifications; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1828,6 +1866,8 @@ CREATE TABLE public.payment_orders (
     invoice_id integer,
     response jsonb,
     notes character varying,
+    creator_str character varying,
+    updator_str character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -2537,6 +2577,13 @@ ALTER TABLE ONLY public.log_notifications ALTER COLUMN id SET DEFAULT nextval('p
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.log_payment_orders ALTER COLUMN id SET DEFAULT nextval('public.log_payment_orders_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.log_registrant_verifications ALTER COLUMN id SET DEFAULT nextval('public.log_registrant_verifications_id_seq'::regclass);
 
 
@@ -2943,6 +2990,14 @@ ALTER TABLE ONLY public.log_nameservers
 
 ALTER TABLE ONLY public.log_notifications
     ADD CONSTRAINT log_notifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: log_payment_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY public.log_payment_orders
+    ADD CONSTRAINT log_payment_orders_pkey PRIMARY KEY (id);
 
 
 --
@@ -4404,6 +4459,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191227110904'),
 ('20200113091254'),
 ('20200115102202'),
-('20200130092113');
+('20200130092113'),
+('20200203143458');
 
 

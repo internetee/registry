@@ -1,5 +1,5 @@
 class PaymentOrder < ApplicationRecord
-  #include Versions
+  include Versions
   include ActionView::Helpers::NumberHelper
 
   PAYMENT_INTERMEDIARIES = ENV['payments_intermediaries'].to_s.strip.split(', ').freeze

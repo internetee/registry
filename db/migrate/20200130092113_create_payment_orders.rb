@@ -6,6 +6,8 @@ class CreatePaymentOrders < ActiveRecord::Migration[5.0]
       t.belongs_to :invoice, foreign_key: true
       t.jsonb :response, null: true
       t.string :notes, null: true
+      t.string :creator_str
+      t.string :updator_str
 
       t.timestamps
     end
