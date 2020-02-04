@@ -8,7 +8,7 @@ class BankLinkTest < ActiveSupport::TestCase
     super
 
     @invoice = invoices(:one)
-    @invoice.update!(total: 12)
+    @invoice.update!(account_activity: nil, total: 12)
 
     travel_to '2018-04-01 00:30 +0300'
     create_new_bank_link
@@ -63,7 +63,6 @@ class BankLinkTest < ActiveSupport::TestCase
   end
 
   def create_new_bank_link
-    params = { return_url: 'return.url', response_url: 'response.url' }
     @new_bank_link = PaymentOrder.new(type: 'PaymentOrders::Seb', invoice: @invoice)
     @new_bank_link.return_url = 'return.url'
     @new_bank_link.response_url = 'response.url'
@@ -94,6 +93,20 @@ class BankLinkTest < ActiveSupport::TestCase
     assert_equal(expected_response, @new_bank_link.form_fields)
   end
 
+  def test_correct_channel_is_assigned
+    swed_link = PaymentOrder.create_with_type(type: 'swed', invoice: @invoice)
+    assert_equal swed_link.channel, 'Swed'
+    assert_equal swed_link.class.config_namespace_name, 'swed'
+
+    seb_link = PaymentOrder.create_with_type(type: 'seb', invoice: @invoice)
+    assert_equal seb_link.channel, 'Seb'
+    assert_equal seb_link.class.config_namespace_name, 'seb'
+
+    lhv_link = PaymentOrder.create_with_type(type: 'lhv', invoice: @invoice)
+    assert_equal lhv_link.channel, 'Lhv'
+    assert_equal lhv_link.class.config_namespace_name, 'lhv'
+  end
+
   def test_valid_success_response_from_intermediary?
     assert(@completed_bank_link.valid_response_from_intermediary?)
   end
@@ -107,21 +120,14 @@ class BankLinkTest < ActiveSupport::TestCase
     refute(@cancelled_bank_link.settled_payment?)
   end
 
-  def test_complete_transaction_calls_methods_on_transaction
-    mock_transaction = MiniTest::Mock.new
-    mock_transaction.expect(:sum= , '12.00', ['12.00'])
-    mock_transaction.expect(:bank_reference= , '1', ['1'])
-    mock_transaction.expect(:buyer_bank_code= , 'testvpos', ['testvpos'])
-    mock_transaction.expect(:buyer_iban= , '1234', ['1234'])
-    mock_transaction.expect(:paid_at= , Date.parse('2018-04-01 00:30:00 +0300'), [Time.parse('2018-04-01T00:30:00+0300')])
-    mock_transaction.expect(:buyer_name=, 'John Doe', ['John Doe'])
-    mock_transaction.expect(:save!, true)
-    mock_transaction.expect(:autobind_invoice, AccountActivity.new)
+  def test_successful_payment_creates_bank_transaction
+    @completed_bank_link.complete_transaction
 
-    BankTransaction.stub(:find_by, mock_transaction) do
-      @completed_bank_link.complete_transaction
-    end
+    transaction = BankTransaction.find_by(
+      sum: @completed_bank_link.response['VK_AMOUNT'],
+      buyer_name: @completed_bank_link.response['VK_SND_NAME']
+    )
 
-    mock_transaction.verify
+    assert transaction.present?
   end
 end

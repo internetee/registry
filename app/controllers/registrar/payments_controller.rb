@@ -57,14 +57,9 @@ class Registrar
     private
 
     def check_supported_payment_method
-      return if supported_payment_method?
+      return if PaymentOrder.supported_method?(params[:bank], shortname: true)
 
       raise(StandardError, 'Not supported payment method')
-    end
-
-    def supported_payment_method?
-      method_name = PaymentOrder.type_from_shortname(params[:bank])
-      PaymentOrder.supported_method?(method_name)
     end
   end
 end

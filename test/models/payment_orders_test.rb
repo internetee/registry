@@ -43,10 +43,31 @@ class PaymentOrdersTest < ActiveSupport::TestCase
     end
   end
 
+  def test_can_not_create_order_for_paid_invoice
+    invoice = invoices(:one)
+    payment_order = PaymentOrder.create_with_type(type: 'every_pay', invoice: invoice)
+    assert payment_order.invalid?
+    assert_includes payment_order.errors[:invoice], 'is already paid'
+  end
+
+  def test_order_without_channel_is_invalid
+    payment_order = PaymentOrder.new
+    assert payment_order.invalid?
+    assert_includes payment_order.errors[:type], 'is not supported'
+  end
+
   def test_can_not_create_order_with_invalid_type
     assert_raise NameError do
       PaymentOrder.create_with_type(type: 'not_implemented', invoice: Invoice.new)
     end
+  end
+
+  def test_supported_method_bool_does_not_fail
+    assert_not PaymentOrder.supported_method?('not_implemented', shortname: true)
+    assert PaymentOrder.supported_method?('every_pay', shortname: true)
+
+    assert_not PaymentOrder.supported_method?('PaymentOrders::NonExistant')
+    assert PaymentOrder.supported_method?('PaymentOrders::EveryPay')
   end
 
   def test_can_create_with_correct_subclass

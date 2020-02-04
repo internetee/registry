@@ -30,7 +30,7 @@ class PaymentOrder < ApplicationRecord
   end
 
   def self.create_with_type(type:, invoice:)
-    channel = PaymentOrder.type_from_shortname(type)
+    channel = ('PaymentOrders::' + type.camelize).constantize
 
     PaymentOrder.new(type: channel, invoice: invoice)
   end
@@ -39,7 +39,7 @@ class PaymentOrder < ApplicationRecord
   def self.config_namespace_name; end
 
   def supported_payment_method
-    return if PaymentOrder.supported_method? type.constantize
+    return if PaymentOrder.supported_method?(type)
 
     errors.add(:type, 'is not supported')
   end
@@ -50,11 +50,12 @@ class PaymentOrder < ApplicationRecord
     errors.add(:invoice, 'is already paid')
   end
 
-  def self.type_from_shortname(shortname)
-    ('PaymentOrders::' + shortname.camelize).constantize
-  end
-
-  def self.supported_method?(some_class)
+  def self.supported_method?(name, shortname: false)
+    some_class = if shortname
+                   ('PaymentOrders::' + name.camelize).constantize
+                 else
+                   name.constantize
+                 end
     supported_methods.include? some_class
   rescue NameError
     false

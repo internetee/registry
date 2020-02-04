@@ -6,33 +6,39 @@ class PaymentCallbackTest < ApplicationIntegrationTest
 
     @user = users(:api_bestnames)
     sign_in @user
+
+    @payment_order = payment_orders(:everypay_issued)
+    @invoice = invoices(:one)
+    @invoice.update!(account_activity: nil, total: 12)
   end
 
   def test_every_pay_callback_returns_status_200
-    invoice = payable_invoice
-    assert_matching_bank_transaction_exists(invoice)
-
-    request_params = every_pay_request_params.merge(payment_order: invoice.id)
-    post "/registrar/pay/callback/every_pay", params: request_params
+    request_params = every_pay_request_params
+    post "/registrar/pay/callback/#{@payment_order.id}", params: request_params
 
     assert_response :ok
   end
 
+  def test_invoice_is_marked_as_paid
+    request_params = every_pay_request_params
+    post "/registrar/pay/callback/#{@payment_order.id}", params: request_params
+
+    assert @payment_order.invoice.paid?
+  end
+
+  def failure_log_is_created_if_unsuccessful_payment
+    request_params = every_pay_request_params.dup
+    request_params['payment_state'] = 'cancelled'
+    request_params['transaction_result'] = 'failed'
+
+    post "/registrar/pay/callback/#{@payment_order.id}", params: request_params
+
+    @payment_order.reload
+    assert @payment_order.cancelled?
+    assert_includes @payment_order.notes, 'Payment state: cancelled'
+  end
+
   private
-
-  def payable_invoice
-    invoice = invoices(:one)
-    invoice.update!(account_activity: nil)
-    invoice
-  end
-
-  def assert_matching_bank_transaction_exists(invoice)
-    assert BankTransaction.find_by(
-      description: invoice.description,
-      currency: invoice.currency,
-      iban: invoice.seller_iban
-    ), 'Matching bank transaction should exist'
-  end
 
   def every_pay_request_params
     {
