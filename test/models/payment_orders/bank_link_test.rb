@@ -93,20 +93,6 @@ class BankLinkTest < ActiveSupport::TestCase
     assert_equal(expected_response, @new_bank_link.form_fields)
   end
 
-  def test_correct_channel_is_assigned
-    swed_link = PaymentOrder.create_with_type(type: 'swed', invoice: @invoice)
-    assert_equal swed_link.channel, 'Swed'
-    assert_equal swed_link.class.config_namespace_name, 'swed'
-
-    seb_link = PaymentOrder.create_with_type(type: 'seb', invoice: @invoice)
-    assert_equal seb_link.channel, 'Seb'
-    assert_equal seb_link.class.config_namespace_name, 'seb'
-
-    lhv_link = PaymentOrder.create_with_type(type: 'lhv', invoice: @invoice)
-    assert_equal lhv_link.channel, 'Lhv'
-    assert_equal lhv_link.class.config_namespace_name, 'lhv'
-  end
-
   def test_valid_success_response_from_intermediary?
     assert(@completed_bank_link.valid_response_from_intermediary?)
   end

@@ -43,6 +43,32 @@ class PaymentOrdersTest < ActiveSupport::TestCase
     end
   end
 
+  def test_correct_channel_is_assigned
+    everypay_channel = PaymentOrder.create_with_type(type: 'every_pay', invoice: @invoice)
+    assert_equal everypay_channel.channel, 'EveryPay'
+    assert_equal everypay_channel.class.config_namespace_name, 'every_pay'
+
+    swed_channel = PaymentOrder.create_with_type(type: 'swed', invoice: @invoice)
+    assert_equal swed_channel.channel, 'Swed'
+    assert_equal swed_channel.class.config_namespace_name, 'swed'
+
+    seb_channel = PaymentOrder.create_with_type(type: 'seb', invoice: @invoice)
+    assert_equal seb_channel.channel, 'Seb'
+    assert_equal seb_channel.class.config_namespace_name, 'seb'
+
+    lhv_channel = PaymentOrder.create_with_type(type: 'lhv', invoice: @invoice)
+    assert_equal lhv_channel.channel, 'Lhv'
+    assert_equal lhv_channel.class.config_namespace_name, 'lhv'
+
+    admin_channel = PaymentOrder.create_with_type(type: 'admin_payment', invoice: @invoice)
+    assert_equal admin_channel.channel, 'AdminPayment'
+    assert_equal admin_channel.class.config_namespace_name, 'admin_payment'
+
+    system_channel = PaymentOrder.create_with_type(type: 'system_payment', invoice: @invoice)
+    assert_equal system_channel.channel, 'SystemPayment'
+    assert_equal system_channel.class.config_namespace_name, 'system_payment'
+  end
+
   def test_can_not_create_order_for_paid_invoice
     invoice = invoices(:one)
     payment_order = PaymentOrder.create_with_type(type: 'every_pay', invoice: invoice)

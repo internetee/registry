@@ -4,7 +4,9 @@ class PaymentOrder < ApplicationRecord
 
   PAYMENT_INTERMEDIARIES = ENV['payments_intermediaries'].to_s.strip.split(', ').freeze
   PAYMENT_BANKLINK_BANKS = ENV['payments_banks'].to_s.strip.split(', ').freeze
-  PAYMENT_METHODS = [PAYMENT_INTERMEDIARIES, PAYMENT_BANKLINK_BANKS].flatten.freeze
+  INTERNAL_PAYMENT_METHODS = %w[admin_payment system_payment].freeze
+  PAYMENT_METHODS = [PAYMENT_INTERMEDIARIES, PAYMENT_BANKLINK_BANKS,
+                     INTERNAL_PAYMENT_METHODS].flatten.freeze
 
   belongs_to :invoice, optional: false
 
