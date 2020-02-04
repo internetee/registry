@@ -131,7 +131,10 @@ class DNS::DomainNameTest < ActiveSupport::TestCase
 
   def test_blocked
     assert_equal 'blocked.test', blocked_domains(:one).name
+    assert_equal 'blockedäöüõ.test', blocked_domains(:idn).name
     assert DNS::DomainName.new('blocked.test').blocked?
+    assert DNS::DomainName.new('blockedäöüõ.test').blocked?
+    assert DNS::DomainName.new(SimpleIDN.to_ascii('blockedäöüõ.test')).blocked?
     assert_not DNS::DomainName.new('nonblocked .test').blocked?
   end
 

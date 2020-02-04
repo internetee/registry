@@ -1,3 +1,11 @@
+04.02.2020
+* Fixed bug that allowed bypassing blocked domain validation using punycode [#1142](https://github.com/internetee/registry/issues/1142)
+* SimpleIDN gem update to 0.0.9 [#1508](https://github.com/internetee/registry/pull/1508)
+
+31.01.2020
+* Instant payments marks specific invoice as paid [#1500](https://github.com/internetee/registry/issues/1500)
+* Sending invoice payment date to accounting [#1416](https://github.com/internetee/registry/issues/1416)
+
 29.01.2020
 * Fixed the invoice binding bug where process failed if registrar tried to load a sum that they have used before [#1496](https://github.com/internetee/registry/issues/1496)
 

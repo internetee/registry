@@ -22,14 +22,16 @@ class Directo < ApplicationRecord
             counter += 1
 
             num     = invoice.number
+            paid_at = invoice.account_activity.bank_transaction&.paid_at&.strftime("%Y-%m-%d")
             mappers[num] = invoice
             xml.invoice(
-                "SalesAgent"  => Setting.directo_sales_agent,
-                "Number"      => num,
-                "InvoiceDate" => invoice.issue_date.strftime("%Y-%m-%d"),
-                "PaymentTerm" => Setting.directo_receipt_payment_term,
-                "Currency"    => invoice.currency,
-                "CustomerCode"=> invoice.buyer.accounting_customer_code
+              "SalesAgent"  => Setting.directo_sales_agent,
+              "Number"      => num,
+              "InvoiceDate" => invoice.issue_date.strftime("%Y-%m-%d"),
+              'TransactionDate' => paid_at,
+              "PaymentTerm" => Setting.directo_receipt_payment_term,
+              "Currency"    => invoice.currency,
+              "CustomerCode"=> invoice.buyer.accounting_customer_code
             ){
               xml.line(
                   "ProductID"      => Setting.directo_receipt_product_name,
