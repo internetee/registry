@@ -100,8 +100,7 @@ class Registrar < ApplicationRecord
       ]
     )
 
-    e_invoice = invoice.to_e_invoice
-    e_invoice.deliver
+    SendEInvoiceJob.enqueue(invoice)
 
     invoice
   end

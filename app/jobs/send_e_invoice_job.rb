@@ -1,19 +1,17 @@
 class SendEInvoiceJob < Que::Job
-
   def run(invoice)
     return if invoice.e_invoice_sent_at
 
-    e_invoice = invoice.to_e_invoice
-    e_invoice.deliver
+    invoice.to_e_invoice.deliver
 
     ActiveRecord::Base.transaction do
       invoice.update(e_invoice_sent_at: Time.zone.now)
       log_success(invoice)
       destroy
     end
-
-  rescue Savon::Error => e
+  rescue StandardError => e
     log_error(invoice: invoice, error: e)
+    raise e
   end
 
   private
@@ -35,5 +33,4 @@ class SendEInvoiceJob < Que::Job
   def logger
     Rails.logger
   end
-
 end
