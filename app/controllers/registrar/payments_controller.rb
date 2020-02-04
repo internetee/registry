@@ -29,14 +29,13 @@ class Registrar
         @payment_order.complete_transaction
 
         if @payment_order.invoice.paid?
-          flash[:notice] = t(:pending_applied)
+          flash[:notice] = t('.payment_successful')
         else
-          # flash[:alert] = t(:something_wrong)
-          flash[:alert] = 'We fucked up'
+          flash[:alert] = t('.successful_payment_backend_error')
         end
       else
         @payment_order.create_failure_report
-        flash[:alert] = t(:something_wrong)
+        flash[:alert] = t('.payment_not_received')
       end
       redirect_to registrar_invoice_path(@payment_order.invoice)
     end
