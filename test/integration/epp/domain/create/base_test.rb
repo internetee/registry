@@ -144,6 +144,36 @@ class EppDomainCreateBaseTest < EppTestCase
     assert_epp_response :data_management_policy_violation
   end
 
+  def test_blocked_punicode_domain_cannot_be_registered
+    blocked_domain = 'blockedäöüõ.test'
+    assert BlockedDomain.find_by(name: blocked_domain)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{SimpleIDN.to_ascii('blockedäöüõ.test')}</domain:name>
+              <domain:registrant>#{contacts(:john).code}</domain:registrant>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    assert_epp_response :data_management_policy_violation
+  end
+
   def test_reserved_domain_cannot_be_registered_with_wrong_registration_code
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
