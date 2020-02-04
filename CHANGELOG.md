@@ -1,3 +1,6 @@
+04.02.2020
+* SimpleIDN gem update to 0.0.9 [#1508](https://github.com/internetee/registry/pull/1508)
+
 31.01.2020
 * Instant payments marks specific invoice as paid [#1500](https://github.com/internetee/registry/issues/1500)
 * Sending invoice payment date to accounting [#1416](https://github.com/internetee/registry/issues/1416)
