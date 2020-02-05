@@ -7,6 +7,7 @@ class PaymentOrder < ApplicationRecord
   INTERNAL_PAYMENT_METHODS = %w[admin_payment system_payment].freeze
   PAYMENT_METHODS = [PAYMENT_INTERMEDIARIES, PAYMENT_BANKLINK_BANKS,
                      INTERNAL_PAYMENT_METHODS].flatten.freeze
+  CUSTOMER_PAYMENT_METHODS = [PAYMENT_INTERMEDIARIES, PAYMENT_BANKLINK_BANKS].flatten.freeze
 
   belongs_to :invoice, optional: false
 
