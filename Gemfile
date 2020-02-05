@@ -63,7 +63,7 @@ gem 'airbrake'
 
 gem 'company_register', github: 'internetee/company_register', branch: :master
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
-gem 'lhv', github: 'internetee/lhv', tag: 'v0.1.0'
+gem 'lhv', github: 'internetee/lhv', branch: :master
 gem 'domain_name'
 gem 'haml', '~> 5.0'
 gem 'wkhtmltopdf-binary'
