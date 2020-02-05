@@ -1,6 +1,6 @@
 class SendEInvoiceJob < Que::Job
   def run(invoice)
-    return if invoice.e_invoice_sent_at
+    destroy if invoice.do_not_send_e_invoice?
 
     invoice.to_e_invoice.deliver
 
@@ -9,7 +9,7 @@ class SendEInvoiceJob < Que::Job
       log_success(invoice)
       destroy
     end
-  rescue StandardError => e
+  rescue Exception => e
     log_error(invoice: invoice, error: e)
     raise e
   end
@@ -17,13 +17,15 @@ class SendEInvoiceJob < Que::Job
   private
 
   def log_success(invoice)
-    message = "E-Invoice for an invoice with ID # #{invoice.id} was sent successfully"
+    id = invoice.try(:id) || invoice
+    message = "E-Invoice for an invoice with ID # #{id} was sent successfully"
     logger.info message
   end
 
   def log_error(invoice:, error:)
+    id = invoice.try(:id) || invoice
     message = <<~TEXT.squish
-      There was an error sending e-invoice for invoice with ID # #{invoice.id}.
+      There was an error sending e-invoice for invoice with ID # #{id}.
       The error message was the following: #{error}.
       This job will retry
     TEXT
