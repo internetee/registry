@@ -43,10 +43,11 @@ class BankTransaction < ApplicationRecord
               else
                 'system_payment'
               end
-    record_system_payment(channel: channel, invoice: invoice, registrar: registrar)
+    create_internal_payment_record(channel: channel, invoice: invoice,
+                                   registrar: registrar)
   end
 
-  def record_system_payment(channel: nil, invoice:, registrar:)
+  def create_internal_payment_record(channel: nil, invoice:, registrar:)
     if channel.nil?
       create_activity(invoice.buyer, invoice)
       return
@@ -75,8 +76,8 @@ class BankTransaction < ApplicationRecord
     validate_invoice_data(invoice)
     return if errors.any?
 
-    record_system_payment(channel: (manual ? 'admin_payment' : nil), invoice: invoice,
-                          registrar: invoice.buyer)
+    create_internal_payment_record(channel: (manual ? 'admin_payment' : nil), invoice: invoice,
+                                   registrar: invoice.buyer)
   end
 
   def validate_invoice_data(invoice)
