@@ -68,6 +68,8 @@ gem 'domain_name'
 gem 'haml', '~> 5.0'
 gem 'wkhtmltopdf-binary'
 
+gem 'directo', github: 'internetee/directo', branch: 'directo-api'
+
 group :development do
   # deploy
   gem 'mina', '0.3.1' # for fast deployment
