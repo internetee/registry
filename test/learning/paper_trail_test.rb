@@ -40,7 +40,7 @@ class PaperTrailLearningTest < ActiveSupport::TestCase
     @record = Post.create!(title: 'any')
 
     assert_difference -> { @record.versions.size } do
-      @record.touch_with_version
+      @record.paper_trail.touch_with_version
     end
   end
 end

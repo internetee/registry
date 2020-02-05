@@ -23,12 +23,14 @@ class Contact < ApplicationRecord
   accepts_nested_attributes_for :legal_documents
 
   validates :name, :email, presence: true
-  validates :street, :city, :zip, :country_code, presence: true, if: 'self.class.address_processing?'
+  validates :street, :city, :zip, :country_code, presence: true, if: lambda {
+    self.class.address_processing?
+  }
 
   validates :phone, presence: true, e164: true, phone: true
 
   validates :email, format: /@/
-  validates :email, email_format: { message: :invalid }, if: proc { |c| c.email_changed? }
+  validates :email, email_format: { message: :invalid }, if: proc { |c| c.will_save_change_to_email? }
 
   validates :code,
     uniqueness: { message: :epp_id_taken },
@@ -37,7 +39,7 @@ class Contact < ApplicationRecord
   validates_associated :identifier
 
   validate :validate_html
-  validate :validate_country_code, if: 'self.class.address_processing?'
+  validate :validate_country_code, if: -> { self.class.address_processing? }
 
   after_initialize do
     self.status_notes = {} if status_notes.nil?

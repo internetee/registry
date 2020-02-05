@@ -73,12 +73,13 @@ class Domain < ApplicationRecord
 
   before_update :manage_statuses
   def manage_statuses
-    return unless registrant_id_changed? # rollback has not yet happened
+    return unless will_save_change_to_registrant_id? # rollback has not yet happened
+
     pending_update! if registrant_verification_asked?
     true
   end
 
-  after_commit :update_whois_record, unless: 'domain_name.at_auction?'
+  after_commit :update_whois_record, unless: -> { domain_name.at_auction? }
 
   after_create :update_reserved_domains
   def update_reserved_domains
@@ -547,7 +548,7 @@ class Domain < ApplicationRecord
       activate if nameservers.reject(&:marked_for_destruction?).size >= Setting.ns_min_count
     end
 
-    cancel_force_delete if force_delete_scheduled? && registrant_id_changed?
+    cancel_force_delete if force_delete_scheduled? && will_save_change_to_registrant_id?
 
     if statuses.empty? && valid?
       statuses << DomainStatus::OK

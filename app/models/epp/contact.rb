@@ -182,7 +182,7 @@ class Epp::Contact < Contact
 
     self.attributes = at
 
-    email_changed = email_changed?
+    email_changed = will_save_change_to_email?
     old_email = email_was
     updated = save
 
