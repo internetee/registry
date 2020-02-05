@@ -53,7 +53,7 @@ class BankTransaction < ApplicationRecord
       return
     end
 
-    payment_order = PaymentOrder.create_with_type(type: channel, invoice: invoice)
+    payment_order = PaymentOrder.new_with_type(type: channel, invoice: invoice)
     payment_order.save!
 
     if create_activity(registrar, invoice)

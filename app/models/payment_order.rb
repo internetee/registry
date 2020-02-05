@@ -32,7 +32,7 @@ class PaymentOrder < ApplicationRecord
     supported
   end
 
-  def self.create_with_type(type:, invoice:)
+  def self.new_with_type(type:, invoice:)
     channel = ('PaymentOrders::' + type.camelize).constantize
 
     PaymentOrder.new(type: channel, invoice: invoice)
