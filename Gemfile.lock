@@ -36,11 +36,12 @@ GIT
 
 GIT
   remote: https://github.com/internetee/lhv.git
-  revision: e211516bc5fff2139584d4da41c17511863c229d
-  tag: v0.1.0
+  revision: 145f66e21d65a4a7543f6b28a4124440d36fec98
+  branch: master
   specs:
     lhv (0.1.0)
       keystores
+      logger
       nokogiri
 
 GIT
@@ -236,6 +237,7 @@ GEM
     kaminari-core (1.2.0)
     keystores (0.4.0)
     libxml-ruby (3.1.0)
+    logger (1.4.2)
     loofah (2.4.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
