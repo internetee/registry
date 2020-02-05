@@ -1,3 +1,8 @@
+05.02.2020
+* Ruby version upgrade to 2.6.3 [#846](https://github.com/internetee/registry/issues/846)
+* Added retries & raise to connect api to handle timeouts [#1474](https://github.com/internetee/registry/issues/1474)
+* Added logging of XML if there is NoMethodError#text on xml data fields [#1475](https://github.com/internetee/registry/issues/1475)
+
 04.02.2020
 * Fixed bug that allowed bypassing blocked domain validation using punycode [#1142](https://github.com/internetee/registry/issues/1142)
 * SimpleIDN gem update to 0.0.9 [#1508](https://github.com/internetee/registry/pull/1508)
