@@ -85,7 +85,7 @@ class Registrar
 
     def create
       authorize! :create, Depp::Domain
-      @domain_params = params[:domain]
+      @domain_params = domain_params.to_h
       @data = @domain.create(@domain_params)
 
       if response_ok?
@@ -186,6 +186,13 @@ class Registrar
                                   :valid_to_gteq,
                                   :valid_to_lteq,
                                   :s)
+    end
+
+    def domain_params
+      params.require(:domain).permit(:name, :period, :registrant, :registrant_helper, :reserved_pw,
+                                     :legal_document, contacts_attributes: {},
+                                                      nameservers_attributes: {},
+                                                      dnskeys_attributes: {})
     end
   end
 end
