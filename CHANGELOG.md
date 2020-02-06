@@ -1,3 +1,6 @@
+06.02.2020
+* Permit & turn ActiveController::Parameters to hash on domain create [#1516](https://github.com/internetee/registry/issues/1516)
+
 05.02.2020
 * Ruby version upgrade to 2.6.3 [#846](https://github.com/internetee/registry/issues/846)
 * Added retries & raise to connect api to handle timeouts [#1474](https://github.com/internetee/registry/issues/1474)
