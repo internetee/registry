@@ -89,7 +89,7 @@ module PaymentOrders
 
     def valid_amount?
       source = number_with_precision(
-        BigDecimal.new(response["VK_AMOUNT"]), precision: 2, separator: "."
+        BigDecimal(response["VK_AMOUNT"]), precision: 2, separator: "."
       )
       target = number_with_precision(
         invoice.total, precision: 2, separator: "."

@@ -76,7 +76,7 @@ module PaymentOrders
     end
 
     def valid_amount?
-      invoice.total == BigDecimal.new(response[:amount])
+      invoice.total == BigDecimal(response[:amount])
     end
 
     def valid_account?
