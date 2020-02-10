@@ -25,13 +25,14 @@ class Directo < ApplicationRecord
             paid_at = invoice.account_activity.bank_transaction&.paid_at&.strftime("%Y-%m-%d")
             mappers[num] = invoice
             xml.invoice(
-              "SalesAgent"  => Setting.directo_sales_agent,
-              "Number"      => num,
-              "InvoiceDate" => invoice.issue_date.strftime("%Y-%m-%d"),
+              'SalesAgent' => Setting.directo_sales_agent,
+              'Number' => num,
+              'InvoiceDate' => invoice.issue_date.strftime("%Y-%m-%d"),
               'TransactionDate' => paid_at,
-              "PaymentTerm" => Setting.directo_receipt_payment_term,
-              "Currency"    => invoice.currency,
-              "CustomerCode"=> invoice.buyer.accounting_customer_code
+              'PaymentTerm' => Setting.directo_receipt_payment_term,
+              'Currency' => invoice.currency,
+              'CustomerCode' => invoice.buyer.accounting_customer_code,
+              'Language' => directo_language(invoice.buyer)
             ){
               xml.line(
                   "ProductID"      => Setting.directo_receipt_product_name,
@@ -154,13 +155,13 @@ class Directo < ApplicationRecord
 
         builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
           xml.invoices{
-            xml.invoice("Number"      =>directo_next,
-                        "InvoiceDate" =>invoices_until.strftime(date_format),
-                        "PaymentTerm" =>Setting.directo_receipt_payment_term,
-                        "CustomerCode"=>registrar.accounting_customer_code,
-                        "Language"    =>"",
-                        "Currency"    =>registrar_activities.first.currency,
-                        "SalesAgent"  =>Setting.directo_sales_agent){
+            xml.invoice("Number" =>directo_next,
+                        "InvoiceDate" => invoices_until.strftime(date_format),
+                        "PaymentTerm" => Setting.directo_receipt_payment_term,
+                        "CustomerCode"=> registrar.accounting_customer_code,
+                        "Language" => directo_language(registrar),
+                        "Currency" =>registrar_activities.first.currency,
+                        "SalesAgent" =>Setting.directo_sales_agent){
               xml.line("RN" => 1, "RR"=>1, "ProductName"=> "Domeenide registreerimine - #{I18n.l(invoices_until, format: "%B %Y").titleize}")
               items.each do |line, val|
                 xml.line(val.merge(line))
@@ -197,5 +198,9 @@ class Directo < ApplicationRecord
     @pricelists ||= {}
     return @pricelists[account_activity.price_id] if @pricelists.has_key?(account_activity.price_id)
     @pricelists[account_activity.price_id] = account_activity.price
+  end
+
+  def self.directo_language(registrar)
+    registrar.language == 'en' ? 'ENG' : ''
   end
 end

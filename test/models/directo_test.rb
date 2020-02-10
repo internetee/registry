@@ -30,7 +30,7 @@ class DirectoTest < ActiveSupport::TestCase
     XML
 
     stub_request(:post, ENV['directo_invoice_url']).with do |request|
-      request.body.include? 'TransactionDate'
+      request.body.include? 'TransactionDate' && 'Language'
     end.to_return(status: 200, body: response)
 
     assert_nothing_raised do
