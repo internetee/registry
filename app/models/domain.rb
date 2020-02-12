@@ -10,8 +10,6 @@ class Domain < ApplicationRecord
   include Concerns::Domain::RegistryLockable
   include Concerns::Domain::Releasable
 
-  has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
-
   attr_accessor :roles
 
   attr_accessor :legal_document_id

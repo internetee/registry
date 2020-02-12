@@ -4,7 +4,13 @@ module Versions
 
   included do
     attr_accessor :version_loader
-    has_paper_trail class_name: "#{model_name}Version"
+    WITH_CHILDREN = %w[Domain Contact].freeze
+
+    if WITH_CHILDREN.include?(model_name.name)
+      has_paper_trail class_name: "#{model_name}Version", meta: { children: :children_log }
+    else
+      has_paper_trail class_name: "#{model_name}Version"
+    end
 
     # add creator and updator
     before_create :add_creator

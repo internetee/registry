@@ -25,7 +25,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
   end
 
   def test_locking_a_domain_creates_a_version_record
-    assert_difference '@domain.versions.count', 2 do
+    assert_difference '@domain.versions.count', 1 do
       post '/api/v1/registrant/domains/2df2c1a1-8f6a-490a-81be-8bdf29866880/registry_lock',
            headers: @auth_headers
     end
