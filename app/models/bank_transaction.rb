@@ -59,9 +59,7 @@ class BankTransaction < ApplicationRecord
     if create_activity(registrar, invoice)
       payment_order.paid!
     else
-      payment_order.failed!
-      payment_order.notes = 'Failed to create activity'
-      payment_order.save!
+      payment_order.update(notes: 'Failed to create activity', status: 'failed')
     end
   end
 
@@ -95,10 +93,12 @@ class BankTransaction < ApplicationRecord
   end
 
   def create_activity(registrar, invoice)
-    activity = AccountActivity.new(account: registrar.cash_account,
-                                   invoice: invoice, sum: invoice.subtotal,
-                                   currency: currency, description: description,
-                                   activity_type: AccountActivity::ADD_CREDIT)
+    activity = AccountActivity.new(
+      account: registrar.cash_account, bank_transaction: self,
+      invoice: invoice, sum: invoice.subtotal,
+      currency: currency, description: description,
+      activity_type: AccountActivity::ADD_CREDIT
+    )
     if activity.save
       reset_pending_registrar_balance_reload
       true
