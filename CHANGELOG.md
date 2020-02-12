@@ -1,3 +1,6 @@
+12.02.2020
+* Fixed papertrails double recording issue [#1526](https://github.com/internetee/registry/issues/1526)
+
 10.02.2020
 * Resolved Money gem deprecation warning and silenced all warnings due plan to replace papertrail [#1522](https://github.com/internetee/registry/pull/1522)
 
