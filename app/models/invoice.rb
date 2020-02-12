@@ -102,6 +102,22 @@ class Invoice < ApplicationRecord
     generator.generate
   end
 
+  def as_directo_json
+    inv = ActiveSupport::JSON.decode(ActiveSupport::JSON.encode(self))
+    inv['customer_code'] = buyer.accounting_customer_code
+    inv['issue_date'] = issue_date.strftime('%Y-%m-%d')
+    inv['transaction_date'] = account_activity.bank_transaction&.paid_at&.strftime('%Y-%m-%d')
+    inv['language'] = buyer.language
+    inv['invoice_lines'] = [{
+      'product_id': Setting.directo_receipt_product_name,
+      'description': order,
+      'quantity': 1,
+      'price': ActionController::Base.helpers.number_with_precision(subtotal, precision: 2, separator: ".")
+    }].as_json
+
+    inv
+  end
+
   private
 
   def apply_default_buyer_vat_no

@@ -8,6 +8,15 @@ GIT
       savon
 
 GIT
+  remote: https://github.com/internetee/directo.git
+  revision: 6ac71939da589fcceb5ef3989ba982134679ec97
+  branch: directo-api
+  specs:
+    directo (0.1.0)
+      money (~> 6.13)
+      nokogiri (~> 1.10)
+
+GIT
   remote: https://github.com/internetee/e_invoice.git
   revision: 3a754974ed25569aa85d99a87ae9e131b7c10a24
   branch: master
@@ -457,6 +466,7 @@ DEPENDENCIES
   database_cleaner
   devise (~> 4.7)
   digidoc_client!
+  directo!
   domain_name
   e_invoice!
   epp!
@@ -500,4 +510,4 @@ DEPENDENCIES
   wkhtmltopdf-binary
 
 BUNDLED WITH
-   2.0.2
+   2.1.4
