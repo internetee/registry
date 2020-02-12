@@ -14,8 +14,6 @@ class Contact < ApplicationRecord
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
   has_many :actions, dependent: :destroy
 
-  has_paper_trail class_name: "ContactVersion", meta: { children: :children_log }
-
   attr_accessor :legal_document_id
   alias_attribute :kind, :ident_type
   alias_attribute :copy_from_id, :original_id # Old attribute name; for PaperTrail

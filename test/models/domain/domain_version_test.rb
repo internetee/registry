@@ -17,7 +17,7 @@ class DomainVersionTest < ActiveSupport::TestCase
     duplicate_domain = prepare_duplicate_domain
 
     PaperTrail.whodunnit = @user.id_role_username
-    assert_difference 'duplicate_domain.versions.count', 2 do
+    assert_difference 'duplicate_domain.versions.count', 1 do
       duplicate_domain.save!
     end
 
@@ -30,7 +30,7 @@ class DomainVersionTest < ActiveSupport::TestCase
   def test_assigns_updator_to_paper_trail_whodunnit
     PaperTrail.whodunnit = @user.id_role_username
 
-    assert_difference '@domain.versions.count', 2 do
+    assert_difference '@domain.versions.count', 1 do
       @domain.apply_registry_lock
     end
 

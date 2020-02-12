@@ -21,6 +21,25 @@ class PaperTrailLearningTest < ActiveSupport::TestCase
     assert_respond_to @record.versions.first, :item_id
   end
 
+  def test_returns_version_count_on_domains
+    @domain = domains(:airport)
+    @domain.save
+
+    assert_equal 1, @domain.versions.count
+
+    @domain.name = 'domain.test'
+    @domain.save!
+    assert_equal 2, @domain.versions.count
+  end
+
+  def test_returns_version_count_on_users
+    @user = users(:registrant)
+
+    @user.email = 'aaa@bbb.com'
+    @user.save!
+    assert_equal 1, @user.versions.count
+  end
+
   def test_creates_new_version_upon_update
     @record = Post.create!(title: 'old title')
     original_record = @record.clone
