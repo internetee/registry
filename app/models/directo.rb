@@ -48,16 +48,18 @@ class Directo < ApplicationRecord
       Rails.logger.info("[Directo] XML request: #{data}")
       response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false)
       Rails.logger.info("[Directo] Directo responded with code: #{response.code}, body: #{response.body}")
-      dump_result_to_db(mappers, response.to_s)
+      dump_result_to_db(mappers: mappers, xml: response.to_s, data: data)
     end
 
     STDOUT << "#{Time.zone.now.utc} - Directo receipts sending finished. #{counter} of #{total} are sent\n"
   end
 
-  def self.dump_result_to_db mappers, xml
+  def self.dump_result_to_db(mappers:, xml:, data:)
     Nokogiri::XML(xml).css("Result").each do |res|
       obj = mappers[res.attributes["docid"].value.to_i]
-      obj.directo_records.create!(response: res.as_json.to_h, invoice_number: obj.number)
+      obj.directo_records.create!(request: data,
+                                  response: res.as_json.to_h,
+                                  invoice_number: obj.number)
       obj.update_columns(in_directo: true)
       Rails.logger.info("[DIRECTO] Invoice #{res.attributes["docid"].value} was pushed and return is #{res.as_json.to_h.inspect}")
     end
