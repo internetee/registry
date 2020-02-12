@@ -5,7 +5,8 @@ class Registrant::ContactsController < RegistrantController
   skip_authorization_check only: %i[edit update]
 
   def show
-    @contact = current_user_contacts.find(params[:id])
+    @contact = domain.contacts.find(params[:id])
+    @requester_contact = domain.contacts.find_by(ident: current_registrant_user.ident).id
     authorize! :read, @contact
   end
 

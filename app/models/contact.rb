@@ -415,7 +415,7 @@ class Contact < ApplicationRecord
   # if total is smaller than needed, the load more
   # we also need to sort by valid_to
   # todo: extract to drapper. Then we can remove Domain#roles
-  def all_domains(page: nil, per: nil, params:)
+  def all_domains(page: nil, per: nil, params:, requester:)
     # compose filter sql
     filter_sql = case params[:domain_filter]
       when "Registrant".freeze
@@ -431,9 +431,14 @@ class Contact < ApplicationRecord
     sort  = Domain.column_names.include?(sorts.first) ? sorts.first : "valid_to"
     order = {"asc"=>"desc", "desc"=>"asc"}[sorts.second] || "desc"
 
-
     # fetch domains
-    domains  = Domain.where("domains.id IN (#{filter_sql})")
+    if requester
+      requester_domains = Contact.find(requester).domains
+      domains = requester_domains.where("domains.id IN (#{filter_sql})")
+    else
+      domains = Domain.where("domains.id IN (#{filter_sql})")
+    end
+
     domains = domains.includes(:registrar).page(page).per(per)
 
     if sorts.first == "registrar_name".freeze
