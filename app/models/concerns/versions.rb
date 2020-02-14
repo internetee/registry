@@ -1,10 +1,10 @@
 # Papertrail concerns is mainly tested at country spec
 module Versions
   extend ActiveSupport::Concern
+  WITH_CHILDREN = %w[Domain Contact].freeze
 
   included do
     attr_accessor :version_loader
-    WITH_CHILDREN = %w[Domain Contact].freeze
 
     if WITH_CHILDREN.include?(model_name.name)
       has_paper_trail class_name: "#{model_name}Version", meta: { children: :children_log }
