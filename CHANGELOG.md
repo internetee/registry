@@ -1,3 +1,6 @@
+14.02.2020
+* Fixed Papertrail warnings [#1530](https://github.com/internetee/registry/issues/1530)
+
 12.02.2020
 * Fixed papertrails double recording issue [#1526](https://github.com/internetee/registry/issues/1526)
 * Requests to Directo are now saved for both credit and monthly invoices [#344](https://github.com/internetee/registry/issues/344)
