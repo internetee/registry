@@ -99,8 +99,7 @@ class Registrar < ApplicationRecord
         }
       ]
     )
-
-    SendEInvoiceJob.enqueue(invoice)
+    SendEInvoiceJob.enqueue(invoice.id)
 
     invoice
   end
