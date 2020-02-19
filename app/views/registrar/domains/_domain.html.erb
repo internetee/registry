@@ -9,9 +9,5 @@
                     class: 'btn btn-default btn-xs' %>
         <%= link_to t('.delete_btn'), delete_registrar_domains_path(domain_name: domain.name),
                     class: 'btn btn-default btn-xs' %>
-        <% if domain.client_holded? %>
-            <%= link_to t('.client_hold_btn'), remove_hold_registrar_domains_path(domain_name: domain.name),
-                        class: 'btn btn-default btn-xs' %>
-        <% end %>
     </td>
 </tr>

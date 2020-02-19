@@ -206,6 +206,7 @@ en:
   statuses: 'Statuses'
   description: 'Description'
   delete: 'Delete'
+  remove_client_hold: 'Remove clientHold'
   are_you_sure: 'Are you sure?'
   back: 'Back'
   new_domain: 'New domain'

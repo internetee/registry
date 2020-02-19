@@ -34,10 +34,6 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
       force_delete_start.present? && force_delete_lte_today && force_delete_lte_valid_date
   end
 
-  def client_holded?
-    statuses.include?(DomainStatus::CLIENT_HOLD)
-  end
-
   def force_delete_lte_today
     force_delete_start + Setting.expire_warning_period.days <= Time.zone.now
   end

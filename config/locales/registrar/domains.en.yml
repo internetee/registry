@@ -24,7 +24,6 @@ en:
         edit_btn: Edit
         renew_btn: Renew
         delete_btn: Delete
-        client_hold_btn: Remove Hold
 
       form:
         save_btn: Save
