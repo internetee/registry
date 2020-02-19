@@ -11,7 +11,7 @@ module BookKeeping
       'customer_code': accounting_customer_code,
       'language': language,
       'currency': activities.first.currency,
-      'date': month.end_of_month.strftime('%Y-%m-%d'),
+      'date': month.end_of_month.strftime('%Y-%m-%d')
     }.as_json
 
     lines = []
@@ -43,12 +43,13 @@ module BookKeeping
   end
 
   def new_montly_invoice_line(activity:, duration: nil)
-    price = DirectoInvoiceForwardJob.load_price(activity)
+    price = load_price(activity)
     yearly = price.duration.include?('year')
     line = {
       'product_id': DOMAIN_TO_PRODUCT[price.zone_name.to_sym],
       'quantity': 1,
       'price': yearly ? (price.price.amount / price.duration.to_i) : price.amount,
+      'unit': language == 'en' ? 'pc' : 'tk'
     }
 
     line['description'] = description_in_language(price: price, yearly: yearly)
@@ -59,8 +60,9 @@ module BookKeeping
 
   def add_product_timeframe(line:, activity:, duration:)
     create_time = activity.created_at
-    line['start_date'] = (create_time + (duration - 1).year).end_of_month.strftime('%Y-%m-%d')
-    line['end_date'] = (create_time + (duration - 1).year + 1).end_of_month.strftime('%Y-%m-%d')
+    start_date = (create_time + (duration - 1).year).end_of_month
+    end_date = (create_time + (duration - 1).year + 1).end_of_month
+    line['period'] = start_date..end_date
   end
 
   def description_in_language(price:, yearly:)
@@ -84,9 +86,10 @@ module BookKeeping
     lines.each { |l| total += l['quantity'].to_f * l['price'].to_f }
     {
       'product_id': Setting.directo_receipt_product_name,
-      'description': 'Domeenide ettemaks',
+      'description': language == 'en' ? 'Domains prepayment' : 'Domeenide ettemaks',
       'quantity': -1,
-      'price': total
+      'price': total,
+      'unit': language == 'en' ? 'pc' : 'tk'
     }
   end
 
