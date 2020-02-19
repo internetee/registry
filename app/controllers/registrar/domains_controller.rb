@@ -153,6 +153,14 @@ class Registrar
       render json: scope.pluck(:name, :code).map { |c| { display_key: "#{c.second} #{c.first}", value: c.second } }
     end
 
+    def remove_hold
+      authorize! :remove_hold, Depp::Domain
+      return unless params[:domain_name]
+
+      @data = @domain.remove_hold(params)
+      redirect_to info_registrar_domains_url(domain_name: params[:domain_name])
+    end
+
     private
 
     def init_domain
