@@ -1,3 +1,8 @@
+20.02.2020
+* E-invoice sending to Que to manage resending in case of an error [#1509](https://github.com/internetee/registry/issues/1509)
+* Check to make sure all monthly invoices fit in available invoice number range [#277](https://github.com/internetee/registry/issues/277)
+* Disabled aurbreak performance monitoring [#1534](https://github.com/internetee/registry/pull/1534)
+
 14.02.2020
 * Fixed Papertrail warnings [#1530](https://github.com/internetee/registry/issues/1530)
 
