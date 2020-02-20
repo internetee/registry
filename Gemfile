@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 # core
-gem 'iso8601',      '0.8.6' # for dates and times
-gem 'rails', '~> 5.0.7'
+gem 'iso8601',      '0.12.1' # for dates and times
+gem 'rails', '~> 5.1.7'
 gem 'rest-client'
 gem 'uglifier'
 
@@ -10,11 +10,11 @@ gem 'uglifier'
 gem 'figaro', '1.1.1'
 
 # model related
-gem 'pg',                        '0.19.0'
+gem 'paper_trail', '~> 8.1'
+gem 'pg',                        '1.2.2'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 1.8'
 gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and RFC 3696
-gem 'paper_trail', '~> 4.0'
 
 # 0.7.3 is the latest for Rails 4.2, however, it is absent on Rubygems server
 # https://github.com/huacnlee/rails-settings-cached/issues/165
@@ -63,7 +63,7 @@ gem 'airbrake'
 
 gem 'company_register', github: 'internetee/company_register', branch: :master
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
-gem 'lhv', github: 'internetee/lhv', tag: 'v0.1.0'
+gem 'lhv', github: 'internetee/lhv', branch: :master
 gem 'domain_name'
 gem 'haml', '~> 5.0'
 gem 'wkhtmltopdf-binary'
@@ -86,8 +86,8 @@ end
 group :test do
   gem 'capybara'
   gem 'database_cleaner'
+  gem 'minitest', '~> 5.14'
   gem 'simplecov', require: false
   gem 'webdrivers'
   gem 'webmock'
-  gem 'minitest', '~> 5.10.0'
 end

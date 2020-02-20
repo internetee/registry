@@ -43,7 +43,7 @@ class ApiUser < User
   after_initialize :set_defaults
   def set_defaults
     return unless new_record?
-    self.active = true unless active_changed?
+    self.active = true unless saved_change_to_active?
   end
 
   class << self

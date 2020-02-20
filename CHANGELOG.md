@@ -1,3 +1,21 @@
+14.02.2020
+* Fixed Papertrail warnings [#1530](https://github.com/internetee/registry/issues/1530)
+
+12.02.2020
+* Fixed papertrails double recording issue [#1526](https://github.com/internetee/registry/issues/1526)
+* Requests to Directo are now saved for both credit and monthly invoices [#344](https://github.com/internetee/registry/issues/344)
+
+10.02.2020
+* Resolved Money gem deprecation warning and silenced all warnings due plan to replace papertrail [#1522](https://github.com/internetee/registry/pull/1522)
+
+06.02.2020
+* Permit & turn ActiveController::Parameters to hash on domain create [#1516](https://github.com/internetee/registry/issues/1516)
+
+05.02.2020
+* Ruby version upgrade to 2.6.3 [#846](https://github.com/internetee/registry/issues/846)
+* Added retries & raise to connect api to handle timeouts [#1474](https://github.com/internetee/registry/issues/1474)
+* Added logging of XML if there is NoMethodError#text on xml data fields [#1475](https://github.com/internetee/registry/issues/1475)
+
 04.02.2020
 * Fixed bug that allowed bypassing blocked domain validation using punycode [#1142](https://github.com/internetee/registry/issues/1142)
 * SimpleIDN gem update to 0.0.9 [#1508](https://github.com/internetee/registry/pull/1508)
