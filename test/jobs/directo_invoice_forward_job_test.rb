@@ -21,7 +21,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     end.to_return(status: 200, body: response)
 
     assert_nothing_raised do
-      Directo.send_receipts
+      DirectoInvoiceForwardJob.run(monthly: false, dry: false)
     end
 
     assert_not_empty @invoice.directo_records.first.request

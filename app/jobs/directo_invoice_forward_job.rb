@@ -67,8 +67,7 @@ class DirectoInvoiceForwardJob < Que::Job
   end
 
   def sync_with_directo
-    Rails.logger.info('[Directo] - attempting to send following XML:')
-    puts @client.invoices.as_xml
+    Rails.logger.info("[Directo] - attempting to send following XML:\n #{@client.invoices.as_xml}")
 
     return if @dry
 
@@ -95,7 +94,7 @@ class DirectoInvoiceForwardJob < Que::Job
     directo_record = Directo.new(response: res.as_json.to_h,
                                  request: req, invoice_number: res.attributes['docid'].value.to_i)
     if invoice
-      directo_record.invoice = invoice
+      directo_record.item = invoice
       invoice.update_columns(in_directo: true)
     else
       update_directo_number(num: directo_record.invoice_number)
