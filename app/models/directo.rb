@@ -67,7 +67,7 @@ class Directo < ApplicationRecord
 
 
   def self.send_monthly_invoices(debug: false)
-    I18n.locale    = :et
+    I18n.locale    = :et unless Rails.env.test?
     month          = Time.now - 1.month
     invoices_until = month.end_of_month
     date_format    = "%Y-%m-%d"
@@ -76,8 +76,9 @@ class Directo < ApplicationRecord
     min_directo    = Setting.directo_monthly_number_min.presence.try(:to_i)
     max_directo    = Setting.directo_monthly_number_max.presence.try(:to_i)
     last_directo   = [Setting.directo_monthly_number_last.presence.try(:to_i), min_directo].compact.max || 0
-    if max_directo && max_directo <= last_directo
-      raise "Directo counter is out of period (max allowed number is smaller than last counter number)"
+    if max_directo && (max_directo <= last_directo + Registrar.count)
+      raise 'Directo counter is out of period (max allowed number is smaller than last counter'\
+            'number plus Registrar\'s count)'
     end
 
     directo_next = last_directo
