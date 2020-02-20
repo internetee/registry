@@ -3,6 +3,9 @@ Airbrake.configure do |config|
   config.project_id = ENV['airbrake_project_id']
   config.project_key = ENV['airbrake_project_key']
   config.root_directory = Rails.root
+  config.job_stats = false
+  config.query_stats = false
+  config.performance_stats = false
   config.logger =
     if ENV['RAILS_LOG_TO_STDOUT'].present?
       Logger.new(STDOUT, level: Rails.logger.level)
