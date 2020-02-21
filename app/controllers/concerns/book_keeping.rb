@@ -6,6 +6,8 @@ module BookKeeping
 
   def monthly_summary(month:)
     activities = monthly_activites(month)
+    return unless activities.any?
+
     inv = {
       'number': 1,
       'customer_code': accounting_customer_code,
@@ -15,6 +17,8 @@ module BookKeeping
     }.as_json
 
     lines = []
+
+    lines << { 'description': title_for_summary(month) }
     activities.each do |activity|
       fetch_invoice_lines(activity, lines)
     end
@@ -25,11 +29,23 @@ module BookKeeping
     inv
   end
 
+  def title_for_summary(date)
+    if language == 'en'
+      I18n.with_locale('en') do
+        "Domains registrations -  #{I18n.l(date, format: '%B %Y')}"
+      end
+    else
+      I18n.with_locale('et') do
+        "Domeenide registreerimine - #{I18n.l(date, format: '%B %Y')}"
+      end
+    end
+  end
+
   def fetch_invoice_lines(activity, lines)
     price = load_price(activity)
     if price.duration.include? 'year'
       price.duration.to_i.times do |duration|
-        lines << new_montly_invoice_line(activity: activity, duration: duration + 1).as_json
+        lines << new_monthly_invoice_line(activity: activity, duration: duration + 1).as_json
       end
     else
       lines << new_monthly_invoice_line(activity: activity).as_json
@@ -42,27 +58,28 @@ module BookKeeping
                    .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW])
   end
 
-  def new_montly_invoice_line(activity:, duration: nil)
+  def new_monthly_invoice_line(activity:, duration: nil)
     price = load_price(activity)
     yearly = price.duration.include?('year')
     line = {
       'product_id': DOMAIN_TO_PRODUCT[price.zone_name.to_sym],
       'quantity': 1,
-      'price': yearly ? (price.price.amount / price.duration.to_i) : price.amount,
+      'price': yearly ? (price.price.amount / price.duration.to_i) : price.price.amount,
       'unit': language == 'en' ? 'pc' : 'tk'
     }
 
     line['description'] = description_in_language(price: price, yearly: yearly)
-    add_product_timeframe(line: line, activity: activity, duration: duration) if duration > 1
+    if yearly && duration
+      add_product_timeframe(line: line, activity: activity, duration: duration) if duration > 1
+    end
 
     line
   end
 
   def add_product_timeframe(line:, activity:, duration:)
     create_time = activity.created_at
-    start_date = (create_time + (duration - 1).year).end_of_month
-    end_date = (create_time + (duration - 1).year + 1).end_of_month
-    line['period'] = start_date..end_date
+    line['start_date'] = (create_time + (duration - 1).year).end_of_month.strftime('%Y-%m-%d')
+    line['end_date'] = (create_time + (duration - 1).year + 1).end_of_month.strftime('%Y-%m-%d')
   end
 
   def description_in_language(price:, yearly:)

@@ -33,6 +33,8 @@ class DirectoInvoiceForwardJob < Que::Job
       next unless registrar.cash_account
 
       invoice = registrar.monthly_summary(month: month)
+      next if invoice.nil?
+
       @client.invoices.add_with_schema(invoice: invoice, schema: 'summary')
     end
 
@@ -104,9 +106,9 @@ class DirectoInvoiceForwardJob < Que::Job
   end
 
   def update_directo_number(num:)
-    return unless num.to_i > Setting.directo_monthly_number_last
+    return unless num.to_i > Setting.directo_monthly_number_last.to_i
 
-    Setting.directo_monthly_number_last = num
+    Setting.directo_monthly_number_last = num.to_i
   end
 
   def directo_counter_exceedable?(invoice_count)
