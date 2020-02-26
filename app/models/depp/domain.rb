@@ -1,6 +1,7 @@
 module Depp
   class Domain
     include ActiveModel::Conversion
+    include RemoveHold
     extend ActiveModel::Naming
 
     attr_accessor :name, :current_user, :epp_xml

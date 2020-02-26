@@ -206,6 +206,7 @@ en:
   statuses: 'Statuses'
   description: 'Description'
   delete: 'Delete'
+  remove_client_hold: 'Remove clientHold'
   are_you_sure: 'Are you sure?'
   back: 'Back'
   new_domain: 'New domain'
@@ -580,6 +581,7 @@ en:
   tech: Tech contact
   valid: Valid
   object_is_not_eligible_for_renewal: 'Object is not eligible for renewal'
+  object_is_not_holded: 'Object is not holded'
   bank_statement_desc: 'Import file row will match only when matching following attributes: <b><br>ref number<br>payment amount<br>invoice number (the first numerical value in comment field)</b>.'
   create_bank_statement: 'Create bank statement'
   create_bank_transaction: 'Create bank transaction'
