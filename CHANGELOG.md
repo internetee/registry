@@ -1,4 +1,5 @@
 26.02.2020
+* Registrar: added an option to remove clientHold status [#1481](https://github.com/internetee/registry/issues/1481)
 * Implemented consistent and automated data migrations [#1298](https://github.com/internetee/registry/issues/1298)
 
 20.02.2020
