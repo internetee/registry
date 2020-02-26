@@ -190,9 +190,9 @@ class Registrar
 
     def domain_params
       params.require(:domain).permit(:name, :period, :registrant, :registrant_helper, :reserved_pw,
-                                     :legal_document, contacts_attributes: {},
-                                                      nameservers_attributes: {},
-                                                      dnskeys_attributes: {})
+                                     :verified, :legal_document, contacts_attributes: {},
+                                                                 nameservers_attributes: {},
+                                                                 dnskeys_attributes: {})
     end
   end
 end
