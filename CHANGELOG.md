@@ -1,3 +1,6 @@
+26.02.2020
+* Implemented consistent and automated data migrations [#1298](https://github.com/internetee/registry/issues/1298)
+
 20.02.2020
 * E-invoice sending to Que to manage resending in case of an error [#1509](https://github.com/internetee/registry/issues/1509)
 * Check to make sure all monthly invoices fit in available invoice number range [#277](https://github.com/internetee/registry/issues/277)
