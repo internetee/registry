@@ -462,7 +462,7 @@ DEPENDENCIES
   company_register!
   countries
   daemons-rails (= 1.2.1)
-  data_migrate
+  data_migrate (~> 6.1)
   database_cleaner
   devise (~> 4.7)
   digidoc_client!
