@@ -70,7 +70,7 @@ class Invoice < ApplicationRecord
     Country.new(buyer_country_code)
   end
 
-# order is used for directo/banklink description
+  # order is used for directo/banklink description
   def order
     "Order nr. #{number}"
   end
@@ -108,15 +108,16 @@ class Invoice < ApplicationRecord
     inv['issue_date'] = issue_date.strftime('%Y-%m-%d')
     inv['transaction_date'] = account_activity.bank_transaction&.paid_at&.strftime('%Y-%m-%d')
     inv['language'] = buyer.language
-    inv['invoice_lines'] = [{
-      'product_id': Setting.directo_receipt_product_name,
-      'description': order,
-      'quantity': 1,
-      'price': ActionController::Base.helpers
-                                     .number_with_precision(subtotal, precision: 2, separator: '.'),
-    }].as_json
+    inv['invoice_lines'] = compose_directo_product
 
     inv
+  end
+
+  def compose_directo_product
+    [{ 'product_id': Setting.directo_receipt_product_name, 'description': order,
+       'quantity': 1, 'price': ActionController::Base.helpers.number_with_precision(
+         subtotal, precision: 2, separator: '.'
+       ) }].as_json
   end
 
   def do_not_send_e_invoice?

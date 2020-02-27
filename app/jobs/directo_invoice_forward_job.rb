@@ -27,18 +27,23 @@ class DirectoInvoiceForwardJob < Que::Job
   end
 
   def send_monthly_invoices
-    Registrar.where(test_registrar: false).find_each do |registrar|
-      next unless registrar.cash_account
-
-      invoice = registrar.monthly_summary(month: @month)
-      @client.invoices.add_with_schema(invoice: invoice, schema: 'summary') unless invoice.nil?
+    Registrar.where.not(test_registrar: true).find_each do |registrar|
+      fetch_monthly_summary(registrar: registrar)
     end
 
-    assign_montly_numbers
+    return unless @client.invoices.count.positive?
+
     sync_with_directo
   end
 
-  def assign_montly_numbers
+  def fetch_monthly_summary(registrar:)
+    return unless registrar.cash_account
+
+    summary = registrar.monthly_summary(month: @month)
+    @client.invoices.add_with_schema(invoice: summary, schema: 'summary') unless summary.nil?
+  end
+
+  def assign_monthly_numbers
     if directo_counter_exceedable?(@client.invoices.count)
       raise 'Directo Counter is going to be out of period!'
     end
@@ -66,9 +71,9 @@ class DirectoInvoiceForwardJob < Que::Job
 
   def sync_with_directo
     Rails.logger.info("[Directo] - attempting to send following XML:\n #{@client.invoices.as_xml}")
-
     return if @dry
 
+    assign_monthly_numbers if @month
     res = @client.invoices.deliver(ssl_verify: false)
     update_invoice_directo_state(res.body, @client.invoices.as_xml) if res.code == '200'
   rescue SocketError, Errno::ECONNREFUSED, Timeout::Error, Errno::EINVAL, Errno::ECONNRESET,

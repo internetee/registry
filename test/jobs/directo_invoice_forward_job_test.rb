@@ -37,8 +37,11 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
   end
 
   def test_fails_if_directo_bounds_exceedable
-    Setting.clear_cache
-    Setting.directo_monthly_number_max = 30990
+    activity = account_activities(:one)
+    price = billing_prices(:create_one_year)
+    activity.update!(activity_type: 'create', price: price)
+
+    Setting.directo_monthly_number_max = 30991
 
     assert_raises 'RuntimeError' do
       DirectoInvoiceForwardJob.run(monthly: true, dry: false)
