@@ -885,6 +885,7 @@ CREATE TABLE public.invoices (
     in_directo boolean DEFAULT false,
     buyer_vat_no character varying,
     issue_date date NOT NULL,
+    e_invoice_sent_at timestamp without time zone,
     CONSTRAINT invoices_due_date_is_not_before_issue_date CHECK ((due_date >= issue_date))
 );
 
@@ -4460,6 +4461,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200113091254'),
 ('20200115102202'),
 ('20200130092113'),
-('20200203143458');
+('20200203143458'),
+('20200204103125');
 
 
