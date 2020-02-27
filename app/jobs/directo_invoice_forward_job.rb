@@ -27,7 +27,7 @@ class DirectoInvoiceForwardJob < Que::Job
   end
 
   def send_monthly_invoices
-    month = Time.now
+    month = Time.zone.now - 1.month
 
     Registrar.where.not(test_registrar: true).find_each do |registrar|
       next unless registrar.cash_account

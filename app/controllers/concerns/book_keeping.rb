@@ -13,7 +13,7 @@ module BookKeeping
       'customer_code': accounting_customer_code,
       'language': language,
       'currency': activities.first.currency,
-      'date': month.end_of_month.strftime('%Y-%m-%d')
+      'date': month.end_of_month.strftime('%Y-%m-%d'),
     }.as_json
 
     lines = []
@@ -65,7 +65,7 @@ module BookKeeping
       'product_id': DOMAIN_TO_PRODUCT[price.zone_name.to_sym],
       'quantity': 1,
       'price': yearly ? (price.price.amount / price.duration.to_i) : price.price.amount,
-      'unit': language == 'en' ? 'pc' : 'tk'
+      'unit': language == 'en' ? 'pc' : 'tk',
     }
 
     line['description'] = description_in_language(price: price, yearly: yearly)
@@ -106,7 +106,7 @@ module BookKeeping
       'description': language == 'en' ? 'Domains prepayment' : 'Domeenide ettemaks',
       'quantity': -1,
       'price': total,
-      'unit': language == 'en' ? 'pc' : 'tk'
+      'unit': language == 'en' ? 'pc' : 'tk',
     }
   end
 

@@ -112,7 +112,8 @@ class Invoice < ApplicationRecord
       'product_id': Setting.directo_receipt_product_name,
       'description': order,
       'quantity': 1,
-      'price': ActionController::Base.helpers.number_with_precision(subtotal, precision: 2, separator: ".")
+      'price': ActionController::Base.helpers
+                                     .number_with_precision(subtotal, precision: 2, separator: '.'),
     }].as_json
 
     inv
