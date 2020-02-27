@@ -59,6 +59,7 @@ class Registrar
     def info
       authorize! :info, Depp::Domain
       @data = @domain.info(params[:domain_name]) if params[:domain_name]
+      @client_holded = client_holded(@data)
       if response_ok?
         render 'info'
       else
@@ -85,7 +86,7 @@ class Registrar
 
     def create
       authorize! :create, Depp::Domain
-      @domain_params = params[:domain]
+      @domain_params = domain_params.to_h
       @data = @domain.create(@domain_params)
 
       if response_ok?
@@ -153,12 +154,26 @@ class Registrar
       render json: scope.pluck(:name, :code).map { |c| { display_key: "#{c.second} #{c.first}", value: c.second } }
     end
 
+    def remove_hold
+      authorize! :remove_hold, Depp::Domain
+      return unless params[:domain_name]
+
+      @data = @domain.remove_hold(params)
+
+      flash[:alert] = @data.css('msg').text unless response_ok?
+      redirect_to info_registrar_domains_url(domain_name: params[:domain_name])
+    end
+
     private
 
     def init_domain
       @domain = Depp::Domain.new(current_user: depp_current_user)
     end
 
+    def client_holded(data)
+      data.css('status')&.map { |element| element.attribute('s').value }
+         &.any? { |status| status == DomainStatus::CLIENT_HOLD }
+    end
 
     def contacts
       current_registrar_user.registrar.contacts
@@ -186,6 +201,13 @@ class Registrar
                                   :valid_to_gteq,
                                   :valid_to_lteq,
                                   :s)
+    end
+
+    def domain_params
+      params.require(:domain).permit(:name, :period, :registrant, :registrant_helper, :reserved_pw,
+                                     :legal_document, contacts_attributes: {},
+                                                      nameservers_attributes: {},
+                                                      dnskeys_attributes: {})
     end
   end
 end

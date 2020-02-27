@@ -48,16 +48,18 @@ class Directo < ApplicationRecord
       Rails.logger.info("[Directo] XML request: #{data}")
       response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false)
       Rails.logger.info("[Directo] Directo responded with code: #{response.code}, body: #{response.body}")
-      dump_result_to_db(mappers, response.to_s)
+      dump_result_to_db(mappers: mappers, xml: response.to_s, data: data)
     end
 
     STDOUT << "#{Time.zone.now.utc} - Directo receipts sending finished. #{counter} of #{total} are sent\n"
   end
 
-  def self.dump_result_to_db mappers, xml
+  def self.dump_result_to_db(mappers:, xml:, data:)
     Nokogiri::XML(xml).css("Result").each do |res|
       obj = mappers[res.attributes["docid"].value.to_i]
-      obj.directo_records.create!(response: res.as_json.to_h, invoice_number: obj.number)
+      obj.directo_records.create!(request: data,
+                                  response: res.as_json.to_h,
+                                  invoice_number: obj.number)
       obj.update_columns(in_directo: true)
       Rails.logger.info("[DIRECTO] Invoice #{res.attributes["docid"].value} was pushed and return is #{res.as_json.to_h.inspect}")
     end
@@ -65,7 +67,7 @@ class Directo < ApplicationRecord
 
 
   def self.send_monthly_invoices(debug: false)
-    I18n.locale    = :et
+    I18n.locale    = :et unless Rails.env.test?
     month          = Time.now - 1.month
     invoices_until = month.end_of_month
     date_format    = "%Y-%m-%d"
@@ -74,8 +76,9 @@ class Directo < ApplicationRecord
     min_directo    = Setting.directo_monthly_number_min.presence.try(:to_i)
     max_directo    = Setting.directo_monthly_number_max.presence.try(:to_i)
     last_directo   = [Setting.directo_monthly_number_last.presence.try(:to_i), min_directo].compact.max || 0
-    if max_directo && max_directo <= last_directo
-      raise "Directo counter is out of period (max allowed number is smaller than last counter number)"
+    if max_directo && (max_directo <= last_directo + Registrar.count)
+      raise 'Directo counter is out of period (max allowed number is smaller than last counter'\
+            'number plus Registrar\'s count)'
     end
 
     directo_next = last_directo

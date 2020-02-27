@@ -1,3 +1,31 @@
+26.02.2020
+* Registrar: added an option to remove clientHold status [#1481](https://github.com/internetee/registry/issues/1481)
+* Admin: fixed domain status removal issue [#1543](https://github.com/internetee/registry/issues/1543)
+* Implemented consistent and automated data migrations [#1298](https://github.com/internetee/registry/issues/1298)
+
+20.02.2020
+* E-invoice sending to Que to manage resending in case of an error [#1509](https://github.com/internetee/registry/issues/1509)
+* Check to make sure all monthly invoices fit in available invoice number range [#277](https://github.com/internetee/registry/issues/277)
+* Disabled aurbreak performance monitoring [#1534](https://github.com/internetee/registry/pull/1534)
+
+14.02.2020
+* Fixed Papertrail warnings [#1530](https://github.com/internetee/registry/issues/1530)
+
+12.02.2020
+* Fixed papertrails double recording issue [#1526](https://github.com/internetee/registry/issues/1526)
+* Requests to Directo are now saved for both credit and monthly invoices [#344](https://github.com/internetee/registry/issues/344)
+
+10.02.2020
+* Resolved Money gem deprecation warning and silenced all warnings due plan to replace papertrail [#1522](https://github.com/internetee/registry/pull/1522)
+
+06.02.2020
+* Permit & turn ActiveController::Parameters to hash on domain create [#1516](https://github.com/internetee/registry/issues/1516)
+
+05.02.2020
+* Ruby version upgrade to 2.6.3 [#846](https://github.com/internetee/registry/issues/846)
+* Added retries & raise to connect api to handle timeouts [#1474](https://github.com/internetee/registry/issues/1474)
+* Added logging of XML if there is NoMethodError#text on xml data fields [#1475](https://github.com/internetee/registry/issues/1475)
+
 04.02.2020
 * Fixed bug that allowed bypassing blocked domain validation using punycode [#1142](https://github.com/internetee/registry/issues/1142)
 * SimpleIDN gem update to 0.0.9 [#1508](https://github.com/internetee/registry/pull/1508)

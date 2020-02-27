@@ -103,6 +103,14 @@ class Invoice < ApplicationRecord
     generator.generate
   end
 
+  def do_not_send_e_invoice?
+    e_invoice_sent? || cancelled? || paid?
+  end
+
+  def e_invoice_sent?
+    e_invoice_sent_at.present?
+  end
+
   private
 
   def apply_default_buyer_vat_no
