@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/directo.git
-  revision: c688c46134ce04f5a75b7a0563abc18cd9af030a
+  revision: 6fb158c1589c609b2519d8e8658c11de52bd3d9d
   branch: directo-api
   specs:
     directo (0.1.0)
@@ -278,7 +278,7 @@ GEM
       mustermann (>= 1.0.0)
     netrc (0.11.0)
     nio4r (2.5.2)
-    nokogiri (1.10.7)
+    nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     nori (2.6.0)
     open4 (1.3.4)
@@ -471,7 +471,7 @@ DEPENDENCIES
   company_register!
   countries
   daemons-rails (= 1.2.1)
-  data_migrate
+  data_migrate (~> 6.1)
   database_cleaner
   devise (~> 4.7)
   digidoc_client!

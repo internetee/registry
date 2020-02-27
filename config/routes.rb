@@ -99,6 +99,7 @@ Rails.application.routes.draw do
         get 'check'
         get 'delete'
         get 'search_contacts'
+        get 'remove_hold'
       end
     end
     resources :domain_transfers, only: %i[new create]

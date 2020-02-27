@@ -35,4 +35,15 @@ class AdminDomainsTestTest < ApplicationSystemTestCase
     assert_text 'deleteCandidate status has been removed'
     assert_no_link 'Remove deleteCandidate status'
   end
+
+  def test_remove_domain_status
+    @domain.update!(statuses: [DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED])
+
+    visit edit_admin_domain_url(@domain)
+
+    click_link_or_button 'Delete'
+    click_link_or_button 'Save'
+
+    assert_text 'Domain updated!'
+  end
 end

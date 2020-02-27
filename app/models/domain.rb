@@ -485,9 +485,9 @@ class Domain < ApplicationRecord
             self.delete_date = nil
           when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
             self.outzone_at = Time.zone.now if force_delete_scheduled?
-          when DomainStatus::DomainStatus::EXPIRED # removal causes server hold to set
+          when DomainStatus::EXPIRED # removal causes server hold to set
             self.outzone_at = self.expire_time + 15.day
-          when DomainStatus::DomainStatus::SERVER_HOLD # removal causes server hold to set
+          when DomainStatus::SERVER_HOLD # removal causes server hold to set
             self.outzone_at = nil
         end
       end
