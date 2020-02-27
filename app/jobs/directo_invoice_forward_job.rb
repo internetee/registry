@@ -1,7 +1,7 @@
 class DirectoInvoiceForwardJob < Que::Job
   def run(monthly: false, dry: false)
     @dry = dry
-    @monthly = monthly
+    (@month = Time.zone.now - 1.month) if monthly
     api_url = ENV['directo_invoice_url']
     sales_agent = Setting.directo_sales_agent
     payment_term = Setting.directo_receipt_payment_term
@@ -27,15 +27,11 @@ class DirectoInvoiceForwardJob < Que::Job
   end
 
   def send_monthly_invoices
-    month = Time.zone.now - 1.month
-
-    Registrar.where.not(test_registrar: true).find_each do |registrar|
+    Registrar.where(test_registrar: false).find_each do |registrar|
       next unless registrar.cash_account
 
-      invoice = registrar.monthly_summary(month: month)
-      next if invoice.nil?
-
-      @client.invoices.add_with_schema(invoice: invoice, schema: 'summary')
+      invoice = registrar.monthly_summary(month: @month)
+      @client.invoices.add_with_schema(invoice: invoice, schema: 'summary') unless invoice.nil?
     end
 
     assign_montly_numbers
@@ -83,7 +79,7 @@ class DirectoInvoiceForwardJob < Que::Job
   def update_invoice_directo_state(xml, req)
     Rails.logger.info "[Directo] - Responded with body: #{xml}"
     Nokogiri::XML(xml).css('Result').each do |res|
-      if @monthly
+      if @month
         mark_invoice_as_sent(res: res, req: req)
       else
         inv = Invoice.find_by(number: res.attributes['docid'].value.to_i)
@@ -97,7 +93,7 @@ class DirectoInvoiceForwardJob < Que::Job
                                  request: req, invoice_number: res.attributes['docid'].value.to_i)
     if invoice
       directo_record.item = invoice
-      invoice.update_columns(in_directo: true)
+      invoice.update(in_directo: true)
     else
       update_directo_number(num: directo_record.invoice_number)
     end

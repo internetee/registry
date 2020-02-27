@@ -11,11 +11,16 @@ module BookKeeping
     inv = {
       'number': 1,
       'customer_code': accounting_customer_code,
-      'language': language,
-      'currency': activities.first.currency,
+      'language': language, 'currency': activities.first.currency,
       'date': month.end_of_month.strftime('%Y-%m-%d'),
     }.as_json
 
+    inv['invoice_lines'] = prepare_invoice_lines(month: month, activities: activities)
+
+    inv
+  end
+
+  def prepare_invoice_lines(month:, activities:)
     lines = []
 
     lines << { 'description': title_for_summary(month) }
@@ -24,9 +29,7 @@ module BookKeeping
     end
     lines << prepayment_for_all(lines)
 
-    inv['invoice_lines'] = lines.as_json
-
-    inv
+    lines.as_json
   end
 
   def title_for_summary(date)
@@ -83,19 +86,15 @@ module BookKeeping
   end
 
   def description_in_language(price:, yearly:)
-    if language == 'en'
-      registration_length = yearly ? 'year' : 'month'
-      prefix = ".#{price.zone_name} registration: #{price.duration.to_i} #{registration_length}"
-      suffix = 's'
-    else
-      registration_length = yearly ? 'aasta' : 'kuu'
-      prefix = ".#{price.zone_name} registreerimine: #{price.duration.to_i} #{registration_length}"
-      suffix = yearly ? 't' : 'd'
-    end
+    en = language == 'en'
+    registration_length = if yearly
+                            en ? 'year(s)' : 'aasta(t)'
+                          else
+                            en ? 'month(s)' : 'kuu(d)'
+                          end
 
-    return "#{prefix}#{suffix}" if price.duration.to_i > 1
-
-    prefix
+    registration = en ? 'registration' : 'registreerimine'
+    ".#{price.zone_name} #{registration}: #{price.duration.to_i} #{registration_length}"
   end
 
   def prepayment_for_all(lines)

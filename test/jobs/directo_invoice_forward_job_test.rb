@@ -61,7 +61,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     stub_request(:post, ENV['directo_invoice_url']).with do |request|
       body = CGI.unescape(request.body)
 
-      (body.include? '.test registreerimine: 1 aasta') &&
+      (body.include? '.test registreerimine: 1 aasta(t)') &&
         (body.include? 'Domeenide ettemaks') &&
         (body.include? '309902')
     end.to_return(status: 200, body: response)
@@ -133,7 +133,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
 
     stub_request(:post, ENV['directo_invoice_url']).with do |request|
       body = CGI.unescape(request.body)
-      (body.include? 'months')
+      body.include? 'month(s)'
     end.to_return(status: 200, body: response)
 
     assert_difference 'Setting.directo_monthly_number_last' do
