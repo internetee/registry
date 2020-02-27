@@ -4,7 +4,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
   setup do
     @invoice = invoices(:one)
     @user = registrars(:bestnames)
-    travel_to Time.zone.parse('2010-07-06')
+    travel_to Time.zone.parse('2010-08-06')
   end
 
   def teardown
