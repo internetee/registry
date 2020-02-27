@@ -1,3 +1,7 @@
+27.02.2020
+* Registrar: fixed the verified checkbox bug that did not change the element value to yes in epp request [#1540](https://github.com/internetee/registry/issues/1540)
+* Ruby version update to 2.6.5 [#1545](https://github.com/internetee/registry/pull/1545)
+
 26.02.2020
 * Registrar: added an option to remove clientHold status [#1481](https://github.com/internetee/registry/issues/1481)
 * Admin: fixed domain status removal issue [#1543](https://github.com/internetee/registry/issues/1543)
