@@ -70,18 +70,18 @@ class DirectoInvoiceForwardJob < Que::Job
   end
 
   def sync_with_directo
+    assign_monthly_numbers if @month
     Rails.logger.info("[Directo] - attempting to send following XML:\n #{@client.invoices.as_xml}")
     return if @dry
 
-    assign_monthly_numbers if @month
     res = @client.invoices.deliver(ssl_verify: false)
-    update_invoice_directo_state(res.body, @client.invoices.as_xml) if res.code == '200'
+    process_directo_response(res.body, @client.invoices.as_xml)
   rescue SocketError, Errno::ECONNREFUSED, Timeout::Error, Errno::EINVAL, Errno::ECONNRESET,
          EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError
     Rails.logger.info('[Directo] Failed to communicate via API')
   end
 
-  def update_invoice_directo_state(xml, req)
+  def process_directo_response(xml, req)
     Rails.logger.info "[Directo] - Responded with body: #{xml}"
     Nokogiri::XML(xml).css('Result').each do |res|
       if @month

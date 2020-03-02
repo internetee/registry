@@ -1,7 +1,8 @@
 en:
-  registrars:
+  registrar:
     invoice_yearly_product_description: '%{tld} registration: %{length} year(s)'
     invoice_monthly_product_description: '%{tld} registration: %{length} month(s)'
+    monthly_summary_title: 'Domain registrations - %{date}'
   activerecord:
     errors:
       models:
