@@ -17,12 +17,13 @@ class Registrar
         search_params[:registrant_domains_id_not_null] = 1
       end
 
-      if params[:statuses_contains]
-        contacts = current_registrar_user.registrar.contacts.includes(:registrar).where(
-          "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
-        )
-      else
-        contacts = current_registrar_user.registrar.contacts.includes(:registrar)
+      contacts = current_registrar_user.registrar.contacts.includes(:registrar)
+      status_list = params[:statuses_contains]
+
+      if status_list
+        contacts_ids = contacts.select { |c| (c.statuses & status_list.to_a) == status_list.to_a }
+                               .map(&:id)
+        contacts = contacts.where(id: contacts_ids)
       end
 
       normalize_search_parameters do
