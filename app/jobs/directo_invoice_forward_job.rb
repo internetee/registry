@@ -118,10 +118,8 @@ class DirectoInvoiceForwardJob < Que::Job
     last_directo   = [Setting.directo_monthly_number_last.presence.try(:to_i),
                       min_directo].compact.max || 0
 
-    if max_directo && max_directo < (last_directo + invoice_count)
-      true
-    else
-      false
-    end
+    return true if max_directo && max_directo < (last_directo + invoice_count)
+
+    false
   end
 end

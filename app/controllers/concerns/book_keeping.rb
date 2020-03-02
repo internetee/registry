@@ -92,15 +92,12 @@ module BookKeeping
   end
 
   def description_in_language(price:, yearly:)
-    en = language == 'en'
-    registration_length = if yearly
-                            en ? 'year(s)' : 'aasta(t)'
-                          else
-                            en ? 'month(s)' : 'kuu(d)'
-                          end
+    timeframe_string = yearly ? 'yearly' : 'monthly'
+    locale_string = ".registrars.invoice_#{timeframe_string}_product_description"
 
-    registration = en ? 'registration' : 'registreerimine'
-    ".#{price.zone_name} #{registration}: #{price.duration.to_i} #{registration_length}"
+    I18n.with_locale(language == 'en' ? 'en' : 'et') do
+      I18n.t(locale_string, tld: ".#{price.zone_name}", length: price.duration.to_i)
+    end
   end
 
   def prepayment_for_all(lines)
