@@ -1,5 +1,8 @@
+02.03.2020
+* Registrar: fixed statuses based contact filtering [#1004](https://github.com/internetee/registry/issues/1004)
+
 28.02.2020
-* Registrara: fixed account switching [#1535](https://github.com/internetee/registry/issues/1535)
+* Registrar: fixed account switching [#1535](https://github.com/internetee/registry/issues/1535)
 
 27.02.2020
 * Registrar: fixed the verified checkbox bug that did not change the element value to yes in epp request [#1540](https://github.com/internetee/registry/issues/1540)
