@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/directo.git
-  revision: 6fb158c1589c609b2519d8e8658c11de52bd3d9d
+  revision: 7bac1d5ca413e3cce25a7adad3c0e8d7f8cd673e
   branch: directo-api
   specs:
     directo (0.1.0)

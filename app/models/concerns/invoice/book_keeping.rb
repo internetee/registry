@@ -4,14 +4,15 @@ module Concerns
       extend ActiveSupport::Concern
 
       def as_directo_json
-        inv = ActiveSupport::JSON.decode(ActiveSupport::JSON.encode(self))
-        inv['customer_code'] = buyer.accounting_customer_code
-        inv['issue_date'] = issue_date.strftime('%Y-%m-%d')
-        inv['transaction_date'] = account_activity.bank_transaction&.paid_at&.strftime('%Y-%m-%d')
-        inv['language'] = buyer.language == 'en' ? 'ENG' : ''
-        inv['invoice_lines'] = compose_directo_product
+        invoice = ActiveSupport::JSON.decode(ActiveSupport::JSON.encode(self))
+        invoice['customer_code'] = buyer.accounting_customer_code
+        invoice['issue_date'] = issue_date.strftime('%Y-%m-%d')
+        invoice['transaction_date'] = account_activity
+                                      .bank_transaction&.paid_at&.strftime('%Y-%m-%d')
+        invoice['language'] = buyer.language == 'en' ? 'ENG' : ''
+        invoice['invoice_lines'] = compose_directo_product
 
-        inv
+        invoice
       end
 
       def compose_directo_product

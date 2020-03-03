@@ -10,16 +10,16 @@ module Concerns
         activities = monthly_activites(month)
         return unless activities.any?
 
-        inv = {
+        invoice = {
           'number': 1,
           'customer_code': accounting_customer_code,
           'language': language == 'en' ? 'ENG' : '', 'currency': activities.first.currency,
           'date': month.end_of_month.strftime('%Y-%m-%d')
         }.as_json
 
-        inv['invoice_lines'] = prepare_invoice_lines(month: month, activities: activities)
+        invoice['invoice_lines'] = prepare_invoice_lines(month: month, activities: activities)
 
-        inv
+        invoice
       end
 
       def prepare_invoice_lines(month:, activities:)
