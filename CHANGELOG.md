@@ -1,3 +1,6 @@
+03.03.2020
+* Admin: fixed import of th6 bank statement [#1551](https://github.com/internetee/registry/issues/1551)
+
 02.03.2020
 * Registrar: fixed statuses based contact filtering [#1004](https://github.com/internetee/registry/issues/1004)
 
