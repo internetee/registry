@@ -25,8 +25,14 @@ class BankStatement < ApplicationRecord
       bank_transactions.build(bt_params)
     end
 
+    prepare_dir
     self.import_file_path = "#{ENV['bank_statement_import_dir']}/#{Time.zone.now.to_formatted_s(:number)}.txt"
     File.open(import_file_path, 'w') { |f| f.write(th6_file.open.read) }
+  end
+
+  def prepare_dir
+    dirname = ENV['bank_statement_import_dir']
+    FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
   end
 
   def parse_th6_row(row)
