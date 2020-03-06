@@ -1,3 +1,6 @@
+06.03.2020
+* Record payment method and failed payments [#1422](https://github.com/internetee/registry/issues/1422)
+
 03.03.2020
 * Admin: fixed import of th6 bank statement [#1551](https://github.com/internetee/registry/issues/1551)
 
