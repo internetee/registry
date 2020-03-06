@@ -1,3 +1,6 @@
+04.03.2020
+* Bump Puma to 4.3.3 [#1557](https://github.com/internetee/registry/pull/1557)
+
 03.03.2020
 * Admin: fixed import of th6 bank statement [#1551](https://github.com/internetee/registry/issues/1551)
 
