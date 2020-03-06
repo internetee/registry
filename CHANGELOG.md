@@ -1,3 +1,6 @@
+06.03.2020
+* Record payment method and failed payments [#1422](https://github.com/internetee/registry/issues/1422)
+
 04.03.2020
 * Bump Puma to 4.3.3 [#1557](https://github.com/internetee/registry/pull/1557)
 
