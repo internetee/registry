@@ -13,6 +13,7 @@ class BankTransaction < ApplicationRecord
 
   def binded_invoice
     return unless binded?
+
     account_activity.invoice
   end
 
@@ -30,31 +31,54 @@ class BankTransaction < ApplicationRecord
     @registrar ||= Invoice.find_by(reference_no: parsed_ref_number)&.buyer
   end
 
-
   # For successful binding, reference number, invoice id and sum must match with the invoice
-  def autobind_invoice
+  def autobind_invoice(manual: false)
     return if binded?
     return unless registrar
     return unless invoice
     return unless invoice.payable?
 
-    create_activity(registrar, invoice)
+    channel = if manual
+                'admin_payment'
+              else
+                'system_payment'
+              end
+    create_internal_payment_record(channel: channel, invoice: invoice,
+                                   registrar: registrar)
   end
 
-  def bind_invoice(invoice_no)
+  def create_internal_payment_record(channel: nil, invoice:, registrar:)
+    if channel.nil?
+      create_activity(invoice.buyer, invoice)
+      return
+    end
+
+    payment_order = PaymentOrder.new_with_type(type: channel, invoice: invoice)
+    payment_order.save!
+
+    if create_activity(registrar, invoice)
+      payment_order.paid!
+    else
+      payment_order.update(notes: 'Failed to create activity', status: 'failed')
+    end
+  end
+
+  def bind_invoice(invoice_no, manual: false)
     if binded?
       errors.add(:base, I18n.t('transaction_is_already_binded'))
       return
     end
 
     invoice = Invoice.find_by(number: invoice_no)
-    @registrar = invoice.buyer
+    errors.add(:base, I18n.t('invoice_was_not_found')) unless invoice
+    validate_invoice_data(invoice)
+    return if errors.any?
 
-    unless invoice
-      errors.add(:base, I18n.t('invoice_was_not_found'))
-      return
-    end
+    create_internal_payment_record(channel: (manual ? 'admin_payment' : nil), invoice: invoice,
+                                   registrar: invoice.buyer)
+  end
 
+  def validate_invoice_data(invoice)
     if invoice.paid?
       errors.add(:base, I18n.t('invoice_is_already_binded'))
       return
@@ -65,23 +89,21 @@ class BankTransaction < ApplicationRecord
       return
     end
 
-    if invoice.total != sum
-      errors.add(:base, I18n.t('invoice_and_transaction_sums_do_not_match'))
-      return
-    end
-
-    create_activity(invoice.buyer, invoice)
+    errors.add(:base, I18n.t('invoice_and_transaction_sums_do_not_match')) if invoice.total != sum
   end
 
   def create_activity(registrar, invoice)
-    ActiveRecord::Base.transaction do
-      create_account_activity!(account: registrar.cash_account,
-                               invoice: invoice,
-                               sum: invoice.subtotal,
-                               currency: currency,
-                               description: description,
-                               activity_type: AccountActivity::ADD_CREDIT)
+    activity = AccountActivity.new(
+      account: registrar.cash_account, bank_transaction: self,
+      invoice: invoice, sum: invoice.subtotal,
+      currency: currency, description: description,
+      activity_type: AccountActivity::ADD_CREDIT
+    )
+    if activity.save
       reset_pending_registrar_balance_reload
+      true
+    else
+      false
     end
   end
 

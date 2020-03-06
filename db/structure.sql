@@ -746,7 +746,6 @@ CREATE TABLE public.domains (
     locked_by_registrant_at timestamp without time zone,
     force_delete_start timestamp without time zone,
     force_delete_data public.hstore
-
 );
 
 
@@ -1517,6 +1516,44 @@ ALTER SEQUENCE public.log_notifications_id_seq OWNED BY public.log_notifications
 
 
 --
+-- Name: log_payment_orders; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE public.log_payment_orders (
+    id integer NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object jsonb,
+    object_changes jsonb,
+    created_at timestamp without time zone,
+    session character varying,
+    children jsonb,
+    uuid character varying
+);
+
+
+--
+-- Name: log_payment_orders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.log_payment_orders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_payment_orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.log_payment_orders_id_seq OWNED BY public.log_payment_orders.id;
+
+
+--
 -- Name: log_registrant_verifications; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
@@ -1817,6 +1854,43 @@ CREATE SEQUENCE public.notifications_id_seq
 --
 
 ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
+
+
+--
+-- Name: payment_orders; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE public.payment_orders (
+    id integer NOT NULL,
+    type character varying NOT NULL,
+    status character varying DEFAULT 'issued'::character varying NOT NULL,
+    invoice_id integer,
+    response jsonb,
+    notes character varying,
+    creator_str character varying,
+    updator_str character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: payment_orders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.payment_orders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: payment_orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.payment_orders_id_seq OWNED BY public.payment_orders.id;
 
 
 --
@@ -2504,6 +2578,13 @@ ALTER TABLE ONLY public.log_notifications ALTER COLUMN id SET DEFAULT nextval('p
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.log_payment_orders ALTER COLUMN id SET DEFAULT nextval('public.log_payment_orders_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.log_registrant_verifications ALTER COLUMN id SET DEFAULT nextval('public.log_registrant_verifications_id_seq'::regclass);
 
 
@@ -2554,6 +2635,13 @@ ALTER TABLE ONLY public.nameservers ALTER COLUMN id SET DEFAULT nextval('public.
 --
 
 ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('public.notifications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_orders ALTER COLUMN id SET DEFAULT nextval('public.payment_orders_id_seq'::regclass);
 
 
 --
@@ -2906,6 +2994,14 @@ ALTER TABLE ONLY public.log_notifications
 
 
 --
+-- Name: log_payment_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY public.log_payment_orders
+    ADD CONSTRAINT log_payment_orders_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
@@ -2967,6 +3063,14 @@ ALTER TABLE ONLY public.nameservers
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: payment_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY public.payment_orders
+    ADD CONSTRAINT payment_orders_pkey PRIMARY KEY (id);
 
 
 --
@@ -3631,6 +3735,13 @@ CREATE INDEX index_notifications_on_registrar_id ON public.notifications USING b
 
 
 --
+-- Name: index_payment_orders_on_invoice_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE INDEX index_payment_orders_on_invoice_id ON public.payment_orders USING btree (invoice_id);
+
+
+--
 -- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
@@ -3894,6 +4005,14 @@ ALTER TABLE ONLY public.account_activities
 
 ALTER TABLE ONLY public.registrant_verifications
     ADD CONSTRAINT fk_rails_f41617a0e9 FOREIGN KEY (domain_id) REFERENCES public.domains(id);
+
+
+--
+-- Name: fk_rails_f9dc5857c3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_orders
+    ADD CONSTRAINT fk_rails_f9dc5857c3 FOREIGN KEY (invoice_id) REFERENCES public.invoices(id);
 
 
 --
@@ -4341,6 +4460,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191227110904'),
 ('20200113091254'),
 ('20200115102202'),
+('20200130092113'),
+('20200203143458'),
 ('20200204103125');
 
 

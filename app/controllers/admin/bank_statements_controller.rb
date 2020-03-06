@@ -60,7 +60,7 @@ module Admin
     end
 
     def bind_invoices
-      @bank_statement.bind_invoices
+      @bank_statement.bind_invoices(manual: true)
 
       flash[:notice] = t('invoices_were_fully_binded') if @bank_statement.fully_binded?
       flash[:warning] = t('invoices_were_partially_binded') if @bank_statement.partially_binded?

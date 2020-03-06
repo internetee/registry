@@ -86,7 +86,9 @@ class BankStatement < ApplicationRecord
     status == FULLY_BINDED
   end
 
-  def bind_invoices
-    bank_transactions.unbinded.each(&:autobind_invoice)
+  def bind_invoices(manual: false)
+    bank_transactions.unbinded.each do |transaction|
+      transaction.autobind_invoice(manual: manual)
+    end
   end
 end
