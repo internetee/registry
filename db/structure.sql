@@ -191,12 +191,73 @@ CREATE FUNCTION public.generate_zonefile(i_origin character varying) RETURNS tex
       $_$;
 
 
+--
+-- Name: process_contact_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_contact_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.contacts
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.contacts
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.contacts
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+--
+-- Name: contacts; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.contacts (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT contacts_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
 
 --
--- Name: account_activities; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: contacts_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.contacts_id_seq OWNED BY audit.contacts.id;
+
+
+--
+-- Name: account_activities; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.account_activities (
@@ -558,7 +619,16 @@ ALTER SEQUENCE public.contacts_id_seq OWNED BY public.contacts.id;
 
 
 --
--- Name: directos; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: data_migrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_migrations (
+    version character varying NOT NULL
+);
+
+
+--
+-- Name: directos; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.directos (
@@ -2344,14 +2414,21 @@ ALTER SEQUENCE public.zones_id_seq OWNED BY public.zones.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: contacts id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.contacts ALTER COLUMN id SET DEFAULT nextval('audit.contacts_id_seq'::regclass);
+
+
+--
+-- Name: account_activities id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.account_activities ALTER COLUMN id SET DEFAULT nextval('public.account_activities_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.accounts ALTER COLUMN id SET DEFAULT nextval('public.accounts_id_seq'::regclass);
@@ -2722,7 +2799,15 @@ ALTER TABLE ONLY public.zones ALTER COLUMN id SET DEFAULT nextval('public.zones_
 
 
 --
--- Name: account_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: contacts contacts_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.contacts
+    ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_activities account_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.account_activities
@@ -2730,7 +2815,7 @@ ALTER TABLE ONLY public.account_activities
 
 
 --
--- Name: accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.accounts
@@ -3266,14 +3351,28 @@ ALTER TABLE ONLY public.zones
 
 
 --
--- Name: index_account_activities_on_account_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: contacts_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX contacts_object_id_idx ON audit.contacts USING btree (object_id);
+
+
+--
+-- Name: contacts_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX contacts_recorded_at_idx ON audit.contacts USING btree (recorded_at);
+
+
+--
+-- Name: index_account_activities_on_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_account_activities_on_account_id ON public.account_activities USING btree (account_id);
 
 
 --
--- Name: index_account_activities_on_bank_transaction_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_account_activities_on_bank_transaction_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_account_activities_on_bank_transaction_id ON public.account_activities USING btree (bank_transaction_id);
@@ -3826,21 +3925,35 @@ CREATE INDEX log_domains_object_legacy_id ON public.log_contacts USING btree (((
 
 
 --
--- Name: log_nameservers_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: log_nameservers_object_legacy_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX log_nameservers_object_legacy_id ON public.log_contacts USING btree ((((object ->> 'legacy_domain_id'::text))::integer));
 
 
 --
--- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_data_migrations ON public.data_migrations USING btree (version);
+
+
+--
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING btree (version);
 
 
 --
--- Name: contacts_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: contacts process_contact_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_contact_audit AFTER INSERT OR DELETE OR UPDATE ON public.contacts FOR EACH ROW EXECUTE PROCEDURE public.process_contact_audit();
+
+
+--
+-- Name: contacts contacts_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.contacts
@@ -3848,7 +3961,7 @@ ALTER TABLE ONLY public.contacts
 
 
 --
--- Name: domain_contacts_contact_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: domain_contacts domain_contacts_contact_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domain_contacts
@@ -4463,5 +4576,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200130092113'),
 ('20200203143458'),
 ('20200204103125'),
+('20200310105731'),
+('20200310105736'),
 ('20200311114649');
 
