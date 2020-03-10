@@ -1,3 +1,6 @@
+10.03.2020
+* Updated lhv, e-invoice & company_register gem due to security updates [#1564](https://github.com/internetee/registry/pull/1564)
+
 06.03.2020
 * Record payment method and failed payments [#1422](https://github.com/internetee/registry/issues/1422)
 
