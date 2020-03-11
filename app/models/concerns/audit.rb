@@ -3,6 +3,43 @@ module Audit
 
   included do
     attr_accessor :version_loader
+
+    # add creator and updator
+    before_create :add_creator
+    before_create :add_updator
+    before_update :add_updator
+
+    def add_creator
+      self.creator_str = ::User.whodunnit || 'console-root'
+      true
+    end
+
+    def add_updator
+      self.updator_str = ::User.whodunnit || 'console-root'
+      true
+    end
+
+    def creator
+      return nil if creator_str.blank?
+      creator = user_from_id_role_username creator_str
+      creator.present? ? creator : creator_str
+    end
+
+    def updator
+      return nil if updator_str.blank?
+      updator = user_from_id_role_username updator_str
+      updator.present? ? updator : updator_str
+    end
+
+    def user_from_id_role_username(str)
+      registrar = Registrar.find_by(name: str)
+      user = registrar.api_users.first if registrar
+
+      str_match = str.match(/^(\d+)-(ApiUser:|api-|AdminUser:|RegistrantUser:)/)
+      user ||= User.find_by(id: str_match[1]) if str_match
+
+      user
+    end
   end
 
   module ClassMethods

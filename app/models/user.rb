@@ -11,4 +11,12 @@ class User < ApplicationRecord
     "#{self.id}-#{self.class}: #{self.username}"
   end
 
+  def self.whodunnit=(user)
+    Thread.current[:current_user] = user
+  end
+
+  def self.whodunnit
+    Thread.current[:current_user]
+  end
+
 end

@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   check_authorization unless: :devise_controller?
   before_action :set_paper_trail_whodunnit
+  before_action :set_current_user_whodunnit
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -29,6 +30,11 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def set_current_user_whodunnit
+    User.whodunnit = current_admin_user&.id_role_username ||
+                     current_registrar_user&.id_role_username
+  end
 
   def available_languages
     { en: 'English', et: 'Estonian' }.invert

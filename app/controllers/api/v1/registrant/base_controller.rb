@@ -7,6 +7,7 @@ module Api
         before_action :set_cors_header
         before_action :authenticate
         before_action :set_paper_trail_whodunnit
+        before_action :set_current_user_whodunnit
 
         rescue_from ActiveRecord::RecordNotFound, with: :show_not_found_error
         rescue_from ActiveRecord::RecordInvalid, with: :show_invalid_record_error
@@ -43,6 +44,10 @@ module Api
 
         # This controller does not inherit from ApplicationController,
         # so user_for_paper_trail method is not usable.
+        def set_current_user_whodunnit
+          User.whodunnit = current_registrant_user&.id_role_username
+        end
+
         def set_paper_trail_whodunnit
           ::PaperTrail.whodunnit = current_registrant_user.id_role_username
         end

@@ -12,6 +12,12 @@ SET xmloption = content;
 SET client_min_messages = warning;
 
 --
+-- Name: audit; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA audit;
+
+--
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 

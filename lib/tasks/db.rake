@@ -3,7 +3,6 @@ namespace :db do
     desc 'Create all databases: api_log and whois'
     task all: [:environment, :load_config] do
       Rake::Task['db:create:all'].invoke
-      Rake::Task['db:audit:prepare'].invoke
       Rake::Task['db:structure:load'].invoke
       Rake::Task['db:schema:load:all'].invoke
 
@@ -64,15 +63,6 @@ namespace :db do
           end
         end
       end
-    end
-  end
-
-  namespace :audit do
-    task prepare: [:environment, :load_config] do
-      sql = <<~SQL
-        CREATE SCHEMA IF NOT EXISTS audit;
-      SQL
-      ActiveRecord::Base.connection.execute(sql)
     end
   end
 end
