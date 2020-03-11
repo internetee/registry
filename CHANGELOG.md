@@ -1,3 +1,6 @@
+11.03.2020
+* Fixed glue record issues when using 2nd level domain as host [#1562](https://github.com/internetee/registry/issues/1562)
+
 10.03.2020
 * Updated lhv, e-invoice & company_register gem due to security updates [#1564](https://github.com/internetee/registry/pull/1564)
 
