@@ -140,7 +140,7 @@ CREATE FUNCTION public.generate_zonefile(i_origin character varying) RETURNS tex
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            AND ns.hostname LIKE '%.' || d.name
+            AND (ns.hostname LIKE '%.' || d.name) OR (ns.hostname LIKE d.name)
             AND d.name <> i_origin
             AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> '{}'
             AND NOT ('{serverHold,clientHold,inactive}' && d.statuses)
@@ -160,7 +160,7 @@ CREATE FUNCTION public.generate_zonefile(i_origin character varying) RETURNS tex
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            AND ns.hostname LIKE '%.' || d.name
+            AND (ns.hostname LIKE '%.' || d.name) OR (ns.hostname LIKE d.name)
             AND d.name <> i_origin
             AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> '{}'
             AND NOT ('{serverHold,clientHold,inactive}' && d.statuses)
@@ -4462,6 +4462,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200115102202'),
 ('20200130092113'),
 ('20200203143458'),
-('20200204103125');
-
+('20200204103125'),
+('20200311114649');
 
