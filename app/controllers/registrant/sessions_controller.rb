@@ -1,5 +1,6 @@
 class Registrant::SessionsController < Devise::SessionsController
   layout 'registrant/application'
+  before_action :set_current_user_whodunnit
 
   def login_mid
     @user = User.new
@@ -88,5 +89,13 @@ class Registrant::SessionsController < Devise::SessionsController
 
   def user_for_paper_trail
     current_registrant_user.present? ? current_registrant_user.id_role_username : 'anonymous'
+  end
+
+  def set_current_user_whodunnit
+    User.whodunnit = if current_registrant_user.present?
+                       current_registrant_user.id_role_username
+                     else
+                       'anonymous'
+                     end
   end
 end

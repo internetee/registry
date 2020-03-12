@@ -4,6 +4,7 @@ class DomainDeleteJob < Que::Job
     domain = Domain.find(domain_id)
 
     ::PaperTrail.whodunnit = "job - #{self.class.name}"
+    User.whodunnit = "job - #{self.class.name}"
     WhoisRecord.where(domain_id: domain.id).destroy_all
 
     domain.destroy

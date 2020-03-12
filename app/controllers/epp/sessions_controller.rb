@@ -2,6 +2,7 @@ module Epp
   class SessionsController < BaseController
     skip_authorization_check only: [:hello, :login, :logout]
     before_action :set_paper_trail_whodunnit
+    before_action :set_current_user_whodunnit
 
     def hello
       render_epp_response('greeting')
@@ -128,6 +129,10 @@ module Epp
       user = params[:parsed_frame].css('clID').first.text
       pw = params[:parsed_frame].css('pw').first.text
       { username: user, plain_text_password: pw }
+    end
+
+    def set_current_user_whodunnit
+      User.whodunnit = current_user&.id_role_username
     end
 
     private

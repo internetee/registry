@@ -1,6 +1,7 @@
 module Admin
   class BaseController < ApplicationController
     before_action :authenticate_admin_user!
+    before_action :set_current_user_whodunnit
     helper_method :head_title_sufix
 
     def head_title_sufix
@@ -15,6 +16,10 @@ module Admin
 
     def user_for_paper_trail
       current_admin_user ? current_admin_user.id_role_username : 'anonymous'
+    end
+
+    def set_current_user_whodunnit
+      User.whodunnit = current_admin_user ? current_admin_user.id_role_username : 'anonymous'
     end
   end
 end

@@ -4,6 +4,7 @@ class Registrar
 
     before_action :authenticate_registrar_user!
     before_action :check_ip_restriction
+    before_action :set_current_user_whodunnit
     helper_method :depp_controller?
     helper_method :head_title_sufix
 
@@ -37,6 +38,14 @@ class Registrar
 
     def user_for_paper_trail
       current_registrar_user ? current_registrar_user.id_role_username : 'anonymous'
+    end
+
+    def set_current_user_whodunnit
+      User.whodunnit = if current_registrar_user
+                         current_registrar_user.id_role_username
+                       else
+                         'anonymous'
+                       end
     end
   end
 end

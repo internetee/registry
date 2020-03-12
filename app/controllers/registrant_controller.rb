@@ -1,5 +1,6 @@
 class RegistrantController < ApplicationController
   before_action :authenticate_registrant_user!
+  before_action :set_current_user_whodunnit
   layout 'registrant/application'
 
   include Registrant::ApplicationHelper
@@ -18,6 +19,14 @@ class RegistrantController < ApplicationController
 
   def user_for_paper_trail
     current_registrant_user.present? ? current_registrant_user.id_role_username : 'anonymous'
+  end
+
+  def set_current_user_whodunnit
+    User.whodunnit = if current_registrant_user.present?
+                       current_registrant_user.id_role_username
+                     else
+                       'anonymous'
+                     end
   end
 
   def current_user_contacts

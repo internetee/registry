@@ -3,6 +3,7 @@ module Epp
     before_action :find_domain, only: %i[info renew update transfer delete]
     before_action :find_password, only: %i[info update transfer delete]
     before_action :set_paper_trail_whodunnit
+    before_action :set_current_user_whodunnit
 
     def info
       authorize! :info, @domain
@@ -224,6 +225,10 @@ module Epp
     end
 
     private
+
+    def set_current_user_whodunnit
+      User.whodunnit = current_user&.id_role_username
+    end
 
     def validate_info
       @prefix = 'info > info >'

@@ -1,6 +1,7 @@
 class Registrar
   class SessionsController < Devise::SessionsController
     before_action :check_ip_restriction
+    before_action :set_current_user_whodunnit
     helper_method :depp_controller?
 
     def create
@@ -192,6 +193,14 @@ class Registrar
 
     def user_for_paper_trail
       current_registrar_user ? current_registrar_user.id_role_username : 'anonymous'
+    end
+
+    def set_current_user_whodunnit
+      User.whodunnit = if current_registrar_user
+                         current_registrar_user.id_role_username
+                       else
+                         'anonymous'
+                       end
     end
 
     def depp_user_params
