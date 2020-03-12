@@ -278,10 +278,10 @@ class Contact < ApplicationRecord
   # to too many places
   def statuses
     calculated = Array(read_attribute(:statuses))
-    calculated.delete(Contact::OK)
-    calculated.delete(Contact::LINKED)
-    calculated << Contact::OK     if calculated.empty?# && valid?
-    calculated << Contact::LINKED if linked?
+    calculated.delete(::Contact::OK)
+    calculated.delete(::Contact::LINKED)
+    calculated << ::Contact::OK     if calculated.empty?# && valid?
+    calculated << ::Contact::LINKED if linked?
 
     calculated.uniq
   end

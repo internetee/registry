@@ -1,6 +1,6 @@
-- attributes = only_present_fields(@version, Contact)
+- attributes = only_present_fields_audit(@version, Contact)
 - contact = Contact.new(attributes)
-- attach_existing_fields(@version, contact)
+- attach_existing_fields_audit(@version, contact)
 = render 'shared/title', name: contact.name
 
 .row
@@ -8,77 +8,77 @@
     .panel.panel-default{:style => "min-height:420px;"}
       .panel-heading
         %h3.panel-title
-          = l(@version.created_at, format: :short)
-          = @version.event
+          = l(@version.recorded_at, format: :short)
+          = @version.action
           = plain_username(@version.terminator)
       .panel-body
         %dl.dl-horizontal
           %dt= t(:id)
-          %dd{class: changing_css_class(@version,"code")}
+          %dd{class: changing_css_class_audit(@version,"code")}
             = contact.code
 
           %dt= t(:statuses)
-          %dd{class: changing_css_class(@version,"statuses")}
+          %dd{class: changing_css_class_audit(@version,"statuses")}
             = contact.statuses.join(", ")
 
           %dt= t(:ident)
-          %dd{class: changing_css_class(@version,"ident_country_code", "ident_type", "ident")}
+          %dd{class: changing_css_class_audit(@version,"ident_country_code", "ident_type", "ident")}
             = ident_for(contact)
 
           - if contact.email.present?
             %dt= t(:email)
-            %dd{class: changing_css_class(@version,"email")}
+            %dd{class: changing_css_class_audit(@version,"email")}
               = contact.email
 
           - if contact.phone.present?
             %dt= t(:phone)
-            %dd{class: changing_css_class(@version,"phone")}
+            %dd{class: changing_css_class_audit(@version,"phone")}
               = contact.phone
 
           - if contact.fax.present?
             %dt= t(:fax)
-            %dd{class: changing_css_class(@version,"fax")}
+            %dd{class: changing_css_class_audit(@version,"fax")}
               = contact.fax
 
           %br
 
           %dt= t(:created_at)
-          %dd{class: changing_css_class(@version,"created_at")}
+          %dd{class: changing_css_class_audit(@version,"created_at")}
             = l(contact.created_at, format: :short)
 
           %dt= t(:updated_at)
-          %dd{class: changing_css_class(@version,"updated_at")}
+          %dd{class: changing_css_class_audit(@version,"updated_at")}
             = l(contact.updated_at, format: :short)
 
           %dt= t(:registrar_name)
-          %dd{class: changing_css_class(@version,"registrar_id")}
+          %dd{class: changing_css_class_audit(@version,"registrar_id")}
             - if contact.registrar.present?
               = link_to(contact.registrar, admin_registrar_path(contact.registrar))
 
         %dl.dl-horizontal
           - if contact.org_name.present?
             %dt= t(:org_name)
-            %dd{class: changing_css_class(@version,"org_name")}= contact.org_name
+            %dd{class: changing_css_class_audit(@version,"org_name")}= contact.org_name
 
           - if contact.street.present?
             %dt= t(:street)
-            %dd{class: changing_css_class(@version,"street")}= contact.street
+            %dd{class: changing_css_class_audit(@version,"street")}= contact.street
 
           - if contact.city.present?
             %dt= t(:city)
-            %dd{class: changing_css_class(@version,"city")}= contact.city
+            %dd{class: changing_css_class_audit(@version,"city")}= contact.city
 
           - if contact.zip.present?
             %dt= t(:zip)
-            %dd{class: changing_css_class(@version,"zip")}= contact.zip
+            %dd{class: changing_css_class_audit(@version,"zip")}= contact.zip
 
           - if contact.state.present?
             %dt= t(:state)
-            %dd{class: changing_css_class(@version,"state")}= contact.state
+            %dd{class: changing_css_class_audit(@version,"state")}= contact.state
 
           - if contact.country.present?
             %dt= t(:country)
-            %dd{class: changing_css_class(@version,"country_code")}= contact.country
+            %dd{class: changing_css_class_audit(@version,"country_code")}= contact.country
 
 
       %span{:style => "padding-right:10px; float: right;"}
@@ -103,7 +103,7 @@
         - @versions.each do |vs|
           %li{class: (vs.id == @version.id) && :active}
             = link_to admin_contact_version_path(vs) do
-              = l(vs.created_at, format: :short)
-              = vs.event
+              = l(vs.recorded_at, format: :short)
+              = vs.action
       %span{:style => "padding-left:10px; position: absolute; bottom: 10px;"}
         = paginate @versions

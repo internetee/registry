@@ -99,6 +99,17 @@ module ApplicationHelper
     end
   end
 
+  def changing_css_class_audit(version, *attrs)
+    return unless version
+    css_class = "text-warning"
+
+    if attrs.size == 1
+      version.diff.to_h[attrs.first] && css_class
+    else
+      version.diff.to_h.slice(*attrs).any? && css_class
+    end
+  end
+
   def legal_document_types
     types = LegalDocument::TYPES.dup
     types.delete('ddoc')
