@@ -21,5 +21,13 @@ module Admin
     def set_current_user_whodunnit
       User.whodunnit = current_admin_user ? current_admin_user.id_role_username : 'anonymous'
     end
+
+    def catch_version_page
+      per_page = 7
+      counter = @versions_map.index(@version.id) + 1
+      page = counter / per_page
+      page += 1 if (counter % per_page) != 0
+      page
+    end
   end
 end

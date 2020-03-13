@@ -56,12 +56,7 @@ module Admin
 
       # what we do is calc amount of results until needed version
       # then we cacl which page it is
-      if params[:page].blank?
-        counter = @versions_map.index(@version.id) + 1
-        page = counter / per_page
-        page += 1 if (counter % per_page) != 0
-        params[:page] = page
-      end
+      params[:page] = catch_version_page if params[:page].blank?
 
       @versions = @versions.page(params[:page]).per(per_page)
     end
