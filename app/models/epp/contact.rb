@@ -150,7 +150,7 @@ class Epp::Contact < Contact
     # https://github.com/internetee/registry/issues/576
     if ident_frame
       if identifier.valid?
-        submitted_ident = Ident.new(code: ident_frame.text,
+        submitted_ident = Contact::Ident.new(code: ident_frame.text,
                                     type: ident_frame.attr('type'),
                                     country_code: ident_frame.attr('cc'))
 
@@ -166,7 +166,7 @@ class Epp::Contact < Contact
           return
         end
 
-        identifier = Ident.new(code: ident,
+        identifier = Contact::Ident.new(code: ident,
                                type: ident_frame.attr('type'),
                                country_code: ident_frame.attr('cc'))
 
