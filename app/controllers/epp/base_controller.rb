@@ -11,6 +11,7 @@ module Epp
     before_action :validate_against_schema
     before_action :validate_request
     before_action :update_epp_session, if: -> { signed_in? }
+    before_action :set_current_user_whodunnit
 
     around_action :wrap_exceptions
 
@@ -49,6 +50,10 @@ module Epp
     end
 
     private
+
+    def set_current_user_whodunnit
+      User.whodunnit = current_user&.id_role_username
+    end
 
     def wrap_exceptions
       yield

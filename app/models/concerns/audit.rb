@@ -9,12 +9,12 @@ module Audit
     before_update :add_updator
 
     def add_creator
-      self.creator_str = User.whodunnit || 'console-root'
+      self.creator_str = ::User.whodunnit || 'console-root'
       true
     end
 
     def add_updator
-      self.updator_str = User.whodunnit || 'console-root'
+      self.updator_str = ::User.whodunnit || 'console-root'
       true
     end
 
