@@ -68,7 +68,7 @@ gem 'domain_name'
 gem 'haml', '~> 5.0'
 gem 'wkhtmltopdf-binary'
 
-gem 'directo', github: 'internetee/directo', branch: 'directo-api'
+gem 'directo', github: 'internetee/directo', branch: 'master'
 
 group :development do
   # deploy
