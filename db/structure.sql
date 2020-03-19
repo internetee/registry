@@ -12,12 +12,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 
 --
--- Name: audit; Type: SCHEMA; Schema: -; Owner: -
---
-
-CREATE SCHEMA audit;
-
---
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -226,6 +220,35 @@ CREATE FUNCTION public.process_contact_audit() RETURNS trigger
 $$;
 
 
+--
+-- Name: process_domain_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_domain_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.domains
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.domains
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.domains
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
 SET default_tablespace = '';
 
 --
@@ -260,6 +283,40 @@ CREATE SEQUENCE audit.contacts_id_seq
 --
 
 ALTER SEQUENCE audit.contacts_id_seq OWNED BY audit.contacts.id;
+
+
+--
+-- Name: domains; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.domains (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT domains_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: domains_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.domains_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: domains_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.domains_id_seq OWNED BY audit.domains.id;
 
 
 --
@@ -2427,6 +2484,13 @@ ALTER TABLE ONLY audit.contacts ALTER COLUMN id SET DEFAULT nextval('audit.conta
 
 
 --
+-- Name: domains id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.domains ALTER COLUMN id SET DEFAULT nextval('audit.domains_id_seq'::regclass);
+
+
+--
 -- Name: account_activities id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2810,6 +2874,14 @@ ALTER TABLE ONLY public.zones ALTER COLUMN id SET DEFAULT nextval('public.zones_
 
 ALTER TABLE ONLY audit.contacts
     ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: domains domains_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.domains
+    ADD CONSTRAINT domains_pkey PRIMARY KEY (id);
 
 
 --
@@ -3368,6 +3440,20 @@ CREATE INDEX contacts_object_id_idx ON audit.contacts USING btree (object_id);
 --
 
 CREATE INDEX contacts_recorded_at_idx ON audit.contacts USING btree (recorded_at);
+
+
+--
+-- Name: domains_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX domains_object_id_idx ON audit.domains USING btree (object_id);
+
+
+--
+-- Name: domains_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX domains_recorded_at_idx ON audit.domains USING btree (recorded_at);
 
 
 --
@@ -3956,6 +4042,13 @@ CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING b
 --
 
 CREATE TRIGGER process_contact_audit AFTER INSERT OR DELETE OR UPDATE ON public.contacts FOR EACH ROW EXECUTE PROCEDURE public.process_contact_audit();
+
+
+--
+-- Name: domains process_domain_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_domain_audit AFTER INSERT OR DELETE OR UPDATE ON public.domains FOR EACH ROW EXECUTE PROCEDURE public.process_domain_audit();
 
 
 --
@@ -4584,5 +4677,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200204103125'),
 ('20200310105731'),
 ('20200310105736'),
-('20200311114649');
+('20200311114649'),
+('20200319082650');
 
