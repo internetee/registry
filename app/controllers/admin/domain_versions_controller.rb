@@ -7,7 +7,7 @@ module Admin
     def index
       params[:q] ||= {}
 
-      @q = DomainVersion.includes(:item).search(params[:q])
+      @q = Audit::Domain.search(params[:q])
       @versions = @q.result.page(params[:page])
       search_params = params[:q].deep_dup
 
@@ -26,21 +26,21 @@ module Admin
       search_params.each do |key, value|
         next if value.empty?
         case key
-          when 'event'
-            whereS += " AND event = '#{value}'"
+          when 'action'
+            whereS += " AND action = '#{value}'"
           when 'name'
-            whereS += " AND (object->>'name' ~* '#{value}' OR object_changes->>'name' ~* '#{value}')"
+            whereS += " AND (new_value->>'name' ~* '#{value}' OR new_value->>'name' ~* '#{value}')"
           else
             whereS += create_where_string(key, value)
         end
       end
 
-      whereS += "  AND object->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrants.present?
+      whereS += "  AND new_value->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrants.present?
       whereS += "  AND 1=0" if registrants == []
-      whereS += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrars.present?
+      whereS += "  AND new_value->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrars.present?
       whereS += "  AND 1=0" if registrars == []
 
-      versions = DomainVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
+      versions = Audit::Domain.where(whereS).order(recorded_at: :desc, id: :desc)
       @q = versions.search(params[:q])
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
