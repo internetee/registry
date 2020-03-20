@@ -1,5 +1,6 @@
 class Nameserver < ApplicationRecord
   include Versions # version/nameserver_version.rb
+  include Audit
   include EppErrors
 
   HOSTNAME_REGEXP = /\A(([a-zA-Z0-9]|[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9][a-zA-ZäöüõšžÄÖÜÕŠŽ0-9\-]

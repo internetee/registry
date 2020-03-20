@@ -12,5 +12,9 @@ module Audit
     def terminator
       new_value['updator_str'] || new_value['creator_str']
     end
+
+    def children
+      new_value['children']
+    end
   end
 end

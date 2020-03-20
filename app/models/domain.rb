@@ -66,6 +66,19 @@ class Domain < ApplicationRecord
 
   before_save :manage_automatic_statuses
   before_save :touch_always_version
+  before_save :fill_children
+
+  def fill_children
+    self.children = {
+      "admin_contacts" => admin_contact_ids,
+      "tech_contacts" => tech_contact_ids,
+      "nameservers" => nameserver_ids,
+      "dnskeys" => dnskey_ids,
+      "legal_documents" => legal_document_ids,
+      "registrant" => [registrant_id]
+    }
+  end
+
   def touch_always_version
     self.updated_at = Time.zone.now
   end

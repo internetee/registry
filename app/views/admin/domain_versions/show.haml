@@ -6,9 +6,9 @@
   - children = HashWithIndifferentAccess.new(@version.children)
   - nameservers    = Nameserver.all_versions_for(children[:nameservers], @version.created_at)
   - dnskeys        = Dnskey.all_versions_for(children[:dnskeys], @version.created_at)
-  - tech_contacts  = Contact.all_versions_for(children[:tech_contacts], @version.created_at)
-  - admin_contacts = Contact.all_versions_for(children[:admin_contacts], @version.created_at)
-  - registrant     = Contact.all_versions_for(children[:registrant], @version.created_at)
+  - tech_contacts  = Contact.audit_versions_for(children[:tech_contacts], @version.created_at)
+  - admin_contacts = Contact.audit_versions_for(children[:admin_contacts], @version.created_at)
+  - registrant     = Contact.audit_versions_for(children[:registrant], @version.created_at)
   - event       = @version.event
   - creator     = plain_username(@version.terminator)
 

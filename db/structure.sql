@@ -221,6 +221,35 @@ $$;
 
 
 --
+-- Name: process_dnskey_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_dnskey_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.dnskeys
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.dnskeys
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.dnskeys
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
 -- Name: process_domain_audit(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -240,6 +269,35 @@ CREATE FUNCTION public.process_domain_audit() RETURNS trigger
       RETURN NEW;
     ELSEIF (TG_OP = 'DELETE') THEN
       INSERT INTO audit.domains
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_nameserver_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_nameserver_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.nameservers
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.nameservers
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.nameservers
       (object_id, action, recorded_at, old_value, new_value)
       VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
       RETURN OLD;
@@ -286,6 +344,40 @@ ALTER SEQUENCE audit.contacts_id_seq OWNED BY audit.contacts.id;
 
 
 --
+-- Name: dnskeys; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.dnskeys (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT dnskeys_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: dnskeys_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.dnskeys_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dnskeys_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.dnskeys_id_seq OWNED BY audit.dnskeys.id;
+
+
+--
 -- Name: domains; Type: TABLE; Schema: audit; Owner: -
 --
 
@@ -317,6 +409,40 @@ CREATE SEQUENCE audit.domains_id_seq
 --
 
 ALTER SEQUENCE audit.domains_id_seq OWNED BY audit.domains.id;
+
+
+--
+-- Name: nameservers; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.nameservers (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT nameservers_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: nameservers_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.nameservers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: nameservers_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.nameservers_id_seq OWNED BY audit.nameservers.id;
 
 
 --
@@ -878,7 +1004,8 @@ CREATE TABLE public.domains (
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     locked_by_registrant_at timestamp without time zone,
     force_delete_start timestamp without time zone,
-    force_delete_data public.hstore
+    force_delete_data public.hstore,
+    children json
 );
 
 
@@ -2484,10 +2611,24 @@ ALTER TABLE ONLY audit.contacts ALTER COLUMN id SET DEFAULT nextval('audit.conta
 
 
 --
+-- Name: dnskeys id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.dnskeys ALTER COLUMN id SET DEFAULT nextval('audit.dnskeys_id_seq'::regclass);
+
+
+--
 -- Name: domains id; Type: DEFAULT; Schema: audit; Owner: -
 --
 
 ALTER TABLE ONLY audit.domains ALTER COLUMN id SET DEFAULT nextval('audit.domains_id_seq'::regclass);
+
+
+--
+-- Name: nameservers id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.nameservers ALTER COLUMN id SET DEFAULT nextval('audit.nameservers_id_seq'::regclass);
 
 
 --
@@ -2877,11 +3018,27 @@ ALTER TABLE ONLY audit.contacts
 
 
 --
+-- Name: dnskeys dnskeys_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.dnskeys
+    ADD CONSTRAINT dnskeys_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: domains domains_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
 --
 
 ALTER TABLE ONLY audit.domains
     ADD CONSTRAINT domains_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: nameservers nameservers_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.nameservers
+    ADD CONSTRAINT nameservers_pkey PRIMARY KEY (id);
 
 
 --
@@ -3443,6 +3600,20 @@ CREATE INDEX contacts_recorded_at_idx ON audit.contacts USING btree (recorded_at
 
 
 --
+-- Name: dnskeys_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX dnskeys_object_id_idx ON audit.dnskeys USING btree (object_id);
+
+
+--
+-- Name: dnskeys_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX dnskeys_recorded_at_idx ON audit.dnskeys USING btree (recorded_at);
+
+
+--
 -- Name: domains_object_id_idx; Type: INDEX; Schema: audit; Owner: -
 --
 
@@ -3454,6 +3625,20 @@ CREATE INDEX domains_object_id_idx ON audit.domains USING btree (object_id);
 --
 
 CREATE INDEX domains_recorded_at_idx ON audit.domains USING btree (recorded_at);
+
+
+--
+-- Name: nameservers_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX nameservers_object_id_idx ON audit.nameservers USING btree (object_id);
+
+
+--
+-- Name: nameservers_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX nameservers_recorded_at_idx ON audit.nameservers USING btree (recorded_at);
 
 
 --
@@ -4045,10 +4230,24 @@ CREATE TRIGGER process_contact_audit AFTER INSERT OR DELETE OR UPDATE ON public.
 
 
 --
+-- Name: dnskeys process_dnskey_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_dnskey_audit AFTER INSERT OR DELETE OR UPDATE ON public.dnskeys FOR EACH ROW EXECUTE PROCEDURE public.process_dnskey_audit();
+
+
+--
 -- Name: domains process_domain_audit; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER process_domain_audit AFTER INSERT OR DELETE OR UPDATE ON public.domains FOR EACH ROW EXECUTE PROCEDURE public.process_domain_audit();
+
+
+--
+-- Name: nameservers process_nameserver_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_nameserver_audit AFTER INSERT OR DELETE OR UPDATE ON public.nameservers FOR EACH ROW EXECUTE PROCEDURE public.process_nameserver_audit();
 
 
 --
@@ -4678,5 +4877,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200310105731'),
 ('20200310105736'),
 ('20200311114649'),
-('20200319082650');
+('20200319082650'),
+('20200320090152'),
+('20200320094842');
 

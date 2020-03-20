@@ -1,5 +1,6 @@
 class Dnskey < ApplicationRecord
   include Versions # version/dnskey_version.rb
+  include Audit
   include EppErrors
 
   belongs_to :domain
