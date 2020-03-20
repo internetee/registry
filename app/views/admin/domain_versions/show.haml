@@ -1,15 +1,15 @@
-- present_fields = only_present_fields(@version, Domain)
+- present_fields = only_present_fields_audit(@version, Domain)
 - domain = Domain.new(present_fields)
-- attach_existing_fields(@version, domain)
+- attach_existing_fields_audit(@version, domain)
 
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)
-  - nameservers    = Nameserver.all_versions_for(children[:nameservers], @version.created_at)
-  - dnskeys        = Dnskey.all_versions_for(children[:dnskeys], @version.created_at)
-  - tech_contacts  = Contact.audit_versions_for(children[:tech_contacts], @version.created_at)
-  - admin_contacts = Contact.audit_versions_for(children[:admin_contacts], @version.created_at)
-  - registrant     = Contact.audit_versions_for(children[:registrant], @version.created_at)
-  - event       = @version.event
+  - nameservers    = Nameserver.audit_versions_for(children[:nameservers], @version.recorded_at)
+  - dnskeys        = Dnskey.audit_versions_for(children[:dnskeys], @version.recorded_at)
+  - tech_contacts  = Contact.audit_versions_for(children[:tech_contacts], @version.recorded_at)
+  - admin_contacts = Contact.audit_versions_for(children[:admin_contacts], @version.recorded_at)
+  - registrant     = Contact.audit_versions_for(children[:registrant], @version.recorded_at)
+  - event       = @version.action
   - creator     = plain_username(@version.terminator)
 
 = render 'shared/title', name: domain.name
@@ -19,17 +19,17 @@
     .panel.panel-default{:style => "min-height:450px;"}
       .panel-heading
         %h3.panel-title
-          = l(@version.created_at, format: :short)
+          = l(@version.recorded_at, format: :short)
           = event
           = creator
       .panel-body
         %dl.dl-horizontal
           %dt= t(:name)
           - if !domain.name
-            - domain_name = Domain.find(@version.item_id).try(:name)
+            - domain_name = Domain.find(@version.object_id).try(:name)
           - else
             - domain_name = domain.name
-          %dd= link_to(domain_name, admin_domain_path(@version.item_id))
+          %dd= link_to(domain_name, admin_domain_path(@version.object_id))
 
           %dt= t('.created')
           %dd
@@ -42,13 +42,13 @@
           %br
 
           %dt= t(:statuses)
-          %dd{class: changing_css_class(@version,"statuses")}
+          %dd{class: changing_css_class_audit(@version,"statuses")}
             - if domain.statuses.present?
               - domain.statuses.each do |s|
                 = s
 
           %dt= t('.registrant')
-          %dd{class: changing_css_class(@version,"registrant_id")}
+          %dd{class: changing_css_class_audit(@version,"registrant_id")}
             - registrant.each do |r|
               - link = r.version_loader ? admin_contact_version_path(r.version_loader.try(:id)) : admin_contact_path(r.id)
               = link_to link, target: "contact_#{r.id}" do
@@ -100,7 +100,7 @@
 
           - if domain.registrar
             %dt= t(:registrar_name)
-            %dd{class: changing_css_class(@version,"registrar_id")}
+            %dd{class: changing_css_class_audit(@version,"registrar_id")}
               = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
                 = domain.registrar.name
             %span{:style => "margin: 20px 20px; clear:both;"}
@@ -126,7 +126,7 @@
         - @versions.each do |vs|
           %li{class: (vs.id == @version.id) && :active}
             = link_to admin_domain_version_path(vs) do
-              = l(vs.created_at, format: :short)
-              = vs.event
+              = l(vs.recorded_at, format: :short)
+              = vs.action
       %span{:style => "padding-left:10px; position: absolute; bottom: 10px;"}
         = paginate @versions
