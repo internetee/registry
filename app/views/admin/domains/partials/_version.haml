@@ -7,14 +7,13 @@
   - if version # normal history
     - epp_req = ApiLog::EppLog.find_by(uuid: version.uuid).try(:request) if version.uuid
     - children       = HashWithIndifferentAccess.new(version.children)
-    - nameservers    = Nameserver.all_versions_for(children[:nameservers], version.created_at)
-    - dnskeys        = Dnskey.all_versions_for(children[:dnskeys], version.created_at)
-    - tech_contacts  = Contact.all_versions_for(children[:tech_contacts], version.created_at)
-    - admin_contacts = Contact.all_versions_for(children[:admin_contacts], version.created_at)
-    - registrant     = Contact.all_versions_for(children[:registrant], version.created_at)
-    - event          = version.event
+    - nameservers    = Nameserver.audit_versions_for(children[:nameservers], version.recorded_at)
+    - dnskeys        = Dnskey.audit_versions_for(children[:dnskeys], version.recorded_at)
+    - tech_contacts  = Contact.audit_versions_for(children[:tech_contacts], version.recorded_at)
+    - admin_contacts = Contact.audit_versions_for(children[:admin_contacts], version.recorded_at)
+    - registrant     = Contact.audit_versions_for(children[:registrant], version.recorded_at)
+    - event          = version.action
     - creator        = plain_username(version.terminator)
-    - whodunnit      = version.try(:whodunnit)
   - else # pending history
     - epp_req = false
     - nameservers    = domain.nameservers
@@ -23,13 +22,13 @@
     - admin_contacts = domain.admin_contacts
     - registrant     = domain.registrant
     - unless registrant
-      - ver = ContactVersion.where(item_id: domain.registrant_id).where(event: :destroy).last
-      - registrant = ver.reify
+      - ver = Audit::Contact.where(object_id: domain.registrant_id).where(action: 'DELETE').last
+      - attributes = only_present_fields_audit(ver, Contact)
+      - registrant = Contact.new(attributes)
       - registrant.version_loader = ver
     - registrant     = [registrant]
     - creator        = pending_user.try(:username)
     - event          = 'pending'
-    - whodunnit      = false
 
   %td
     %p.nowrap
@@ -38,20 +37,17 @@
         %br= link_to t(:edit_statuses), edit_admin_domain_path(params[:domain_id])
 
     %p.text-right
-      - if (event == 'update' || event == 'create') && epp_req
+      - if (event == 'UPDATE' || event == 'CREATE') && epp_req
         = link_to event, '#', class: 'js-event'
       - else
         = event
       %br
-      - if whodunnit
-        = whodunnit
-      - else
         = creator
     - if version
       %p.text-right
         = link_to "Pure history", admin_domain_version_path(version)
 
-  %td{class: changing_css_class(version,"statuses")}
+  %td{class: changing_css_class_audit(version,"statuses")}
     %p
       - if domain.statuses.present?
         - domain.statuses.each do |s|
@@ -66,7 +62,7 @@
       %p
         = link_to t(:pending_epp), '#', class: 'js-pending'
 
-  %td{class: changing_css_class(version, "period", "period_unit", "valid_to")}
+  %td{class: changing_css_class_audit(version, "period", "period_unit", "valid_to")}
     %p
       = "#{domain.period}#{domain.period_unit}"
       %br
@@ -122,13 +118,13 @@
         - if ns.public_key.present?
           \...#{ns.public_key.to_s[-20,20]}
 
-  %td{class: changing_css_class(version,"registrar_id")}
+  %td{class: changing_css_class_audit(version,"registrar_id")}
     - if domain.registrar
       %p
         = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
           = domain.registrar.name
 
-  - if (event == 'create' || event == 'update') && epp_req
+  - if (event == 'CREATE' || event == 'UPDATE') && epp_req
     %tr.js-event{ style: 'display: none;' }
       %td{colspan: 9}
         %pre

@@ -25,14 +25,15 @@ module Admin
 
       search_params.each do |key, value|
         next if value.empty?
-        case key
-          when 'action'
-            whereS += " AND action = '#{value}'"
-          when 'name'
-            whereS += " AND (new_value->>'name' ~* '#{value}' OR new_value->>'name' ~* '#{value}')"
-          else
-            whereS += create_where_string(key, value)
-        end
+
+        whereS += case key
+                  when 'action'
+                    " AND action = '#{value}'"
+                  when 'name'
+                    " AND (new_value->>'name' ~* '#{value}' OR new_value->>'name' ~* '#{value}')"
+                  else
+                    create_where_string(key, value)
+                  end
       end
 
       whereS += "  AND new_value->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrants.present?

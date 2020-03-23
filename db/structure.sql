@@ -12,6 +12,12 @@ SET xmloption = content;
 SET client_min_messages = warning;
 
 --
+-- Name: audit; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA audit;
+
+--
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -1005,7 +1011,7 @@ CREATE TABLE public.domains (
     locked_by_registrant_at timestamp without time zone,
     force_delete_start timestamp without time zone,
     force_delete_data public.hstore,
-    children json
+    children jsonb
 );
 
 

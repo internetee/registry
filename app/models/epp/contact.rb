@@ -151,8 +151,8 @@ class Epp::Contact < Contact
     if ident_frame
       if identifier.valid?
         submitted_ident = Contact::Ident.new(code: ident_frame.text,
-                                    type: ident_frame.attr('type'),
-                                    country_code: ident_frame.attr('cc'))
+                                             type: ident_frame.attr('type'),
+                                             country_code: ident_frame.attr('cc'))
 
         if submitted_ident != identifier
           add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident'))
@@ -167,8 +167,8 @@ class Epp::Contact < Contact
         end
 
         identifier = Contact::Ident.new(code: ident,
-                               type: ident_frame.attr('type'),
-                               country_code: ident_frame.attr('cc'))
+                                        type: ident_frame.attr('type'),
+                                        country_code: ident_frame.attr('cc'))
 
         identifier.validate
 

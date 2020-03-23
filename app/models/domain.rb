@@ -42,6 +42,7 @@ class Domain < ApplicationRecord
   has_many :admin_contacts, through: :admin_domain_contacts, source: :contact
   has_many :tech_contacts, through: :tech_domain_contacts, source: :contact
   has_many :nameservers, dependent: :destroy, inverse_of: :domain
+  has_many :audit_domains, class_name: 'Audit::Domain', foreign_key: 'object_id'
 
   accepts_nested_attributes_for :nameservers, allow_destroy: true,
                                               reject_if: proc { |attrs| attrs[:hostname].blank? }
@@ -70,12 +71,12 @@ class Domain < ApplicationRecord
 
   def fill_children
     self.children = {
-      "admin_contacts" => admin_contact_ids,
-      "tech_contacts" => tech_contact_ids,
-      "nameservers" => nameserver_ids,
-      "dnskeys" => dnskey_ids,
-      "legal_documents" => legal_document_ids,
-      "registrant" => [registrant_id]
+      'admin_contacts' => admin_contact_ids,
+      'tech_contacts' => tech_contact_ids,
+      'nameservers' => nameserver_ids,
+      'dnskeys' => dnskey_ids,
+      'legal_documents' => legal_document_ids,
+      'registrant' => [registrant_id],
     }
   end
 
