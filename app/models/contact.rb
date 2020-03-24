@@ -426,15 +426,14 @@ class Contact < ApplicationRecord
       else
         %Q{select domain_id from domain_contacts where contact_id=#{id}  UNION select id from domains where registrant_id=#{id}}
     end
-
     # get sorting rules
     sorts = params.fetch(:sort, {}).first || []
-    sort  = Domain.column_names.include?(sorts.first) ? sorts.first : "valid_to"
+    sort  = ::Domain.column_names.include?(sorts.first) ? sorts.first : "valid_to"
     order = {"asc"=>"desc", "desc"=>"asc"}[sorts.second] || "desc"
 
 
     # fetch domains
-    domains  = Domain.where("domains.id IN (#{filter_sql})")
+    domains  = ::Domain.where("domains.id IN (#{filter_sql})")
     domains = domains.includes(:registrar).page(page).per(per)
 
     if sorts.first == "registrar_name".freeze
@@ -443,8 +442,6 @@ class Contact < ApplicationRecord
     else
       domains = domains.order("#{sort} #{order} NULLS LAST")
     end
-
-
 
     # adding roles. Need here to make faster sqls
     domain_c = Hash.new([])
