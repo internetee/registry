@@ -2,7 +2,7 @@ module Admin
   class DomainVersionsController < BaseController
     include ObjectVersionsHelper
 
-    load_and_authorize_resource
+    load_and_authorize_resource  class: "Audit::Domain"
 
     def index
       params[:q] ||= {}

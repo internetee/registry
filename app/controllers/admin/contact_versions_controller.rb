@@ -2,7 +2,7 @@ module Admin
   class ContactVersionsController < BaseController
     include ObjectVersionsHelper
 
-    load_and_authorize_resource
+    load_and_authorize_resource class: "Audit::Contact"
 
     def index
       params[:q] ||= {}
