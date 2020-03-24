@@ -2,7 +2,7 @@ en:
   activemodel:
     errors:
       models:
-        contact/ident:
+        ident:
           attributes:
             base:
               mismatch: Ident type "%{type}" is invalid for %{country}

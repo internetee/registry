@@ -83,7 +83,7 @@ module Admin
     end
 
     def ident_types
-      Contact::Ident.types
+      Ident.types
     end
 
     def domain_filter_params

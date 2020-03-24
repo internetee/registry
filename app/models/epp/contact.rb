@@ -150,9 +150,9 @@ class Epp::Contact < Contact
     # https://github.com/internetee/registry/issues/576
     if ident_frame
       if identifier.valid?
-        submitted_ident = Contact::Ident.new(code: ident_frame.text,
-                                             type: ident_frame.attr('type'),
-                                             country_code: ident_frame.attr('cc'))
+        submitted_ident = Ident.new(code: ident_frame.text,
+                                    type: ident_frame.attr('type'),
+                                    country_code: ident_frame.attr('cc'))
 
         if submitted_ident != identifier
           add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident'))
@@ -166,9 +166,9 @@ class Epp::Contact < Contact
           return
         end
 
-        identifier = Contact::Ident.new(code: ident,
-                                        type: ident_frame.attr('type'),
-                                        country_code: ident_frame.attr('cc'))
+        identifier = Ident.new(code: ident,
+                               type: ident_frame.attr('type'),
+                               country_code: ident_frame.attr('cc'))
 
         identifier.validate
 

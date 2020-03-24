@@ -1,4 +1,4 @@
-class Contact::Ident
+class Ident
   include ActiveModel::Model
 
   attr_accessor :code
@@ -16,18 +16,18 @@ class Contact::Ident
 
   def self.epp_code_map
     {
-      '2003' => [
-        [:code, :blank],
-        [:type, :blank],
-        [:country_code, :blank]
-      ],
-      '2005' => [
-        [:base, :mismatch],
-        [:code, :invalid_national_id],
-        [:code, :invalid_reg_no],
-        [:code, :invalid_iso8601_date],
-        [:country_code, :invalid_iso31661_alpha2]
-      ]
+        '2003' => [
+            [:code, :blank],
+            [:type, :blank],
+            [:country_code, :blank]
+        ],
+        '2005' => [
+            [:base, :mismatch],
+            [:code, :invalid_national_id],
+            [:code, :invalid_reg_no],
+            [:code, :invalid_iso8601_date],
+            [:country_code, :invalid_iso31661_alpha2]
+        ]
     }
   end
 
@@ -58,8 +58,8 @@ class Contact::Ident
   def ==(other_ident)
     if other_ident.is_a?(self.class)
       (code == other_ident.code) &&
-        (type == other_ident.type) &&
-        (country_code == other_ident.country_code)
+          (type == other_ident.type) &&
+          (country_code == other_ident.country_code)
     else
       false
     end

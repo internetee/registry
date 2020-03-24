@@ -1,4 +1,4 @@
-class Contact::Ident::RegNoValidator < ActiveModel::EachValidator
+class Ident::RegNoValidator < ActiveModel::EachValidator
   def self.country_specific_formats
     {
       Country.new('EE') => /\A[0-9]{8}\z/,

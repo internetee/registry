@@ -1,4 +1,4 @@
-class Contact::Ident::MismatchValidator < ActiveModel::Validator
+class Ident::MismatchValidator < ActiveModel::Validator
   Mismatch = Struct.new(:type, :country)
 
   def self.mismatches

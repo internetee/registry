@@ -70,7 +70,7 @@ class ContactIdentTest < ActiveSupport::TestCase
   end
 
   def test_validates_type
-    assert_not_includes Contact::Ident.types, 'invalid'
+    assert_not_includes Ident.types, 'invalid'
     ident = valid_ident
     ident.type = 'invalid'
 
@@ -95,7 +95,7 @@ class ContactIdentTest < ActiveSupport::TestCase
 
   def test_validates_for_mismatches
     ident = valid_ident
-    mismatch = Contact::Ident::MismatchValidator.mismatches.first
+    mismatch = Ident::MismatchValidator.mismatches.first
     ident.type = mismatch.type
     ident.country_code = mismatch.country.alpha2
 
@@ -104,25 +104,25 @@ class ContactIdentTest < ActiveSupport::TestCase
   end
 
   def test_returns_types
-    assert_equal %w[org priv birthday], Contact::Ident.types
+    assert_equal %w[org priv birthday], Ident.types
   end
 
   def test_returns_country
     country_code = 'US'
-    ident = Contact::Ident.new(country_code: country_code)
+    ident = Ident.new(country_code: country_code)
     assert_equal Country.new(country_code), ident.country
   end
 
   def test_equality
-    assert_equal Contact::Ident.new(code: 'code', type: 'type', country_code: 'US'),
-                 Contact::Ident.new(code: 'code', type: 'type', country_code: 'US')
-    assert_not_equal Contact::Ident.new(code: 'code', type: 'type', country_code: 'US'),
-                     Contact::Ident.new(code: 'code', type: 'type', country_code: 'GB')
+    assert_equal Ident.new(code: 'code', type: 'type', country_code: 'US'),
+                 Ident.new(code: 'code', type: 'type', country_code: 'US')
+    assert_not_equal Ident.new(code: 'code', type: 'type', country_code: 'US'),
+                     Ident.new(code: 'code', type: 'type', country_code: 'GB')
   end
 
   private
 
   def valid_ident
-    Contact::Ident.new(code: '1234', type: 'priv', country_code: 'US')
+    Ident.new(code: '1234', type: 'priv', country_code: 'US')
   end
 end

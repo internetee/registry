@@ -137,7 +137,7 @@ class Registrar
     end
 
     def ident_types
-      Contact::Ident.types
+      Ident.types
     end
 
     def contact_params

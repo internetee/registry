@@ -49,8 +49,8 @@ class Contact < ApplicationRecord
   before_validation :strip_email
 
   composed_of :identifier,
-              class_name: 'Contact::Ident',
-              constructor: proc { |code, type, country_code| Contact::Ident.new(code: code,
+              class_name: 'Ident',
+              constructor: proc { |code, type, country_code| Ident.new(code: code,
                                                                                 type: type,
                                                                                 country_code: country_code) },
               mapping: [%w[ident code], %w[ident_type type], %w[ident_country_code country_code]]
