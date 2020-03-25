@@ -2,6 +2,7 @@ class Invoice < ApplicationRecord
   include Versions
   include Concerns::Invoice::Cancellable
   include Concerns::Invoice::Payable
+  include Concerns::Invoice::BookKeeping
 
   belongs_to :buyer, class_name: 'Registrar'
   has_one  :account_activity
@@ -71,7 +72,7 @@ class Invoice < ApplicationRecord
     Country.new(buyer_country_code)
   end
 
-# order is used for directo/banklink description
+  # order is used for directo/banklink description
   def order
     "Order nr. #{number}"
   end
