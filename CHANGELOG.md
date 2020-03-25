@@ -1,3 +1,6 @@
+25.03.2020
+* Implemented Directo gem [#1547](https://github.com/internetee/registry/pull/1547)
+
 11.03.2020
 * Fixed glue record issues when using 2nd level domain as host [#1562](https://github.com/internetee/registry/issues/1562)
 
