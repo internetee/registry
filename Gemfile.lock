@@ -100,6 +100,8 @@ GEM
       activemodel (= 5.2.4.2)
       activesupport (= 5.2.4.2)
       arel (>= 9.0)
+    activerecord-import (1.0.4)
+      activerecord (>= 3.2)
     activestorage (5.2.4.2)
       actionpack (= 5.2.4.2)
       activerecord (= 5.2.4.2)
@@ -474,6 +476,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-import
   airbrake
   autodoc
   bootstrap-sass (~> 3.4)
