@@ -1,14 +1,13 @@
-class CopyOldHistory < ActiveRecord::Migration[5.1]
-  def up
+class CopyOldHistoryJob < Que::Job
+
+  def run
     models = %w[contact domain]
     models.each do |model|
       copy_history(model)
     end
   end
 
-  def down
-    # raise ActiveRecord::IrreversibleMigration
-  end
+  private
 
   def copy_history(model)
     old_history = "#{model.capitalize}Version".constantize.all
@@ -27,11 +26,11 @@ class CopyOldHistory < ActiveRecord::Migration[5.1]
     end
 
     history_array.in_groups_of(100, false) do |group|
-      new_history_class.import group
+      new_history_class.transaction do
+        new_history_class.import group
+      end
     end
   end
-
-  private
 
   def process_old_history(new_history_class:, old_history_entry:, history_array:)
     old_value = old_history_entry.object || {}
@@ -75,5 +74,4 @@ class CopyOldHistory < ActiveRecord::Migration[5.1]
       'DELETE'
     end
   end
-
 end
