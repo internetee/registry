@@ -8,15 +8,21 @@
         .col-md-3
           .form-group
             = f.label :name
-            = f.search_field :name, value: params[:q][:name], class: 'form-control', placeholder: t(:name)
+            = f.search_field :new_name_or_old_name_cont,
+              value: params[:q][:new_name_or_old_name_cont],
+              class: 'form-control', placeholder: t(:name)
         .col-md-3
           .form-group
             = f.label :id
-            = f.search_field :code, value: params[:q][:code], class: 'form-control', placeholder: t(:id)
+            = f.search_field :new_code_or_old_code_cont,
+              value: params[:q][:new_code_or_old_code_cont],
+              class: 'form-control', placeholder: t(:id)
         .col-md-3
           .form-group
             = f.label :ident
-            = f.search_field :ident, value: params[:q][:ident], class: 'form-control', placeholder: t(:ident)
+            = f.search_field :new_ident_or_old_ident_cont,
+              value: params[:q][:new_ident_or_old_ident_cont],
+              class: 'form-control', placeholder: t(:ident)
         .col-md-3
           .form-group
             = label_tag :action
