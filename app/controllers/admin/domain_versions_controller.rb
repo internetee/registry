@@ -36,9 +36,15 @@ module Admin
                   end
       end
 
-      whereS += "  AND new_value->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrants.present?
+      if registrants.present?
+        whereS += "  AND (new_value->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','})"\
+                  " OR old_value->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','}))"
+      end
       whereS += "  AND 1=0" if registrants == []
-      whereS += "  AND new_value->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrars.present?
+      if registrars.present?
+        whereS += "  AND (new_value->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})"\
+                  " OR old_value->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','}))"
+      end
       whereS += "  AND 1=0" if registrars == []
 
       versions = Audit::Domain.where(whereS).order(recorded_at: :desc, id: :desc)
@@ -68,7 +74,7 @@ module Admin
     end
 
     def create_where_string(key, value)
-      " AND object->>'#{key}' ~* '#{value}'"
+      " AND (new_value->>'#{key}' ~* '#{value}' OR old_value->>'#{key}' ~* '#{value}')"
     end
   end
 end

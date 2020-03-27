@@ -26,7 +26,7 @@
         .col-md-3
           .form-group
             = label_tag :action
-            = select_tag '[q][event]', options_for_select([['Update', 'UPDATE'], ['Delete', 'DELETE'], ['Insert', 'INSERT']], params[:q][:event]), { include_blank:true, multiple: false, placeholder: t(:choose), class: 'form-control js-combobox' }
+            = select_tag '[q][action_eq]', options_for_select([['Update', 'UPDATE'], ['Delete', 'DELETE'], ['Insert', 'INSERT']], params[:q][:action_eq]), { include_blank:true, multiple: false, placeholder: t(:choose), class: 'form-control js-combobox' }
       .row
         .col-md-3
         .col-md-3
