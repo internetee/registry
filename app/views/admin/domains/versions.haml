@@ -25,19 +25,19 @@
                 domain: @pending_domain, pending_user: @pending_user, statuses_link: true
 
           -# current version
-          - if @domain.audit_domains.present?
-            %tr.small
-              = render 'admin/domains/partials/version',
-                domain: @domain, version: @domain.audit_domains.last
+          -# - if @domain.audit_domains.present?
+          -#   %tr.small
+          -#     = render 'admin/domains/partials/version',
+          -#       domain: @domain, version: @domain.audit_domains.last
 
           -# all other older versions
-          - @domain.audit_domains.not_creates.reverse.each do |version|
+          - @domain.audit_domains.not_creates.each do |version|
             - attributes = only_present_fields_audit(version, Domain)
             - domain = Domain.new(attributes)
             - attach_existing_fields_audit(version, domain)
             %tr.small
               = render 'admin/domains/partials/version',
-                domain: domain, version: version.previous
+                domain: domain, version: version
 
 :javascript
   window.addEventListener('load', function() {
