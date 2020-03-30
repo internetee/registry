@@ -1,5 +1,6 @@
 class BankStatement < ApplicationRecord
   include Versions
+  include Audit
   has_many :bank_transactions
 
   accepts_nested_attributes_for :bank_transactions

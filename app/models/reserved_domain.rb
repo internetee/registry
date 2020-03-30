@@ -1,5 +1,6 @@
 class ReservedDomain < ApplicationRecord
   include Versions # version/reserved_domain_version.rb
+  include Audit
   before_save :fill_empty_passwords
   before_save :generate_data
   after_destroy :remove_data

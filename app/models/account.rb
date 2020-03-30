@@ -1,5 +1,6 @@
 class Account < ApplicationRecord
   include Versions
+  include Audit
 
   belongs_to :registrar, required: true
   has_many :account_activities

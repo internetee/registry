@@ -198,6 +198,209 @@ CREATE FUNCTION public.generate_zonefile(i_origin character varying) RETURNS tex
 
 
 --
+-- Name: process_account_activity_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_account_activity_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.account_activities
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.account_activities
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.account_activities
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_account_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_account_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.accounts
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.accounts
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.accounts
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_action_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_action_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.actions
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.actions
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.actions
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_bank_statement_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_bank_statement_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.bank_statements
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.bank_statements
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.bank_statements
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_bank_transaction_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_bank_transaction_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.bank_transactions
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.bank_transactions
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.bank_transactions
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_blocked_domain_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_blocked_domain_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.blocked_domains
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.blocked_domains
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.blocked_domains
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_certificate_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_certificate_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.certificates
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.certificates
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.certificates
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
 -- Name: process_contact_audit(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -285,6 +488,93 @@ $$;
 
 
 --
+-- Name: process_domain_contact_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_domain_contact_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.domain_contacts
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.domain_contacts
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.domain_contacts
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_invoice_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_invoice_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.invoices
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.invoices
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.invoices
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_invoice_item_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_invoice_item_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.invoice_items
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.invoice_items
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.invoice_items
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
 -- Name: process_nameserver_audit(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -313,7 +603,448 @@ CREATE FUNCTION public.process_nameserver_audit() RETURNS trigger
 $$;
 
 
+--
+-- Name: process_notification_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_notification_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.notifications
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.notifications
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.notifications
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_payment_order_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_payment_order_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.payment_orders
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.payment_orders
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.payment_orders
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_registrant_verification_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_registrant_verification_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.registrant_verifications
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.registrant_verifications
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.registrant_verifications
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_reserved_domain_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_reserved_domain_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.reserved_domains
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.reserved_domains
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.reserved_domains
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_setting_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_setting_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.settings
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.settings
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.settings
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_user_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_user_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.users
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.users
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.users
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
+-- Name: process_white_ip_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_white_ip_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.white_ips
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.white_ips
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.white_ips
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
 SET default_tablespace = '';
+
+--
+-- Name: account_activities; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.account_activities (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT account_activities_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: account_activities_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.account_activities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: account_activities_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.account_activities_id_seq OWNED BY audit.account_activities.id;
+
+
+--
+-- Name: accounts; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.accounts (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT accounts_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: accounts_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.accounts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.accounts_id_seq OWNED BY audit.accounts.id;
+
+
+--
+-- Name: actions; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.actions (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT actions_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: actions_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.actions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: actions_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.actions_id_seq OWNED BY audit.actions.id;
+
+
+--
+-- Name: bank_statements; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.bank_statements (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT bank_statements_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: bank_statements_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.bank_statements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bank_statements_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.bank_statements_id_seq OWNED BY audit.bank_statements.id;
+
+
+--
+-- Name: bank_transactions; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.bank_transactions (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT bank_transactions_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: bank_transactions_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.bank_transactions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bank_transactions_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.bank_transactions_id_seq OWNED BY audit.bank_transactions.id;
+
+
+--
+-- Name: blocked_domains; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.blocked_domains (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT blocked_domains_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: blocked_domains_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.blocked_domains_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blocked_domains_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.blocked_domains_id_seq OWNED BY audit.blocked_domains.id;
+
+
+--
+-- Name: certificates; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.certificates (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT certificates_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: certificates_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.certificates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: certificates_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.certificates_id_seq OWNED BY audit.certificates.id;
+
 
 --
 -- Name: contacts; Type: TABLE; Schema: audit; Owner: -
@@ -384,6 +1115,40 @@ ALTER SEQUENCE audit.dnskeys_id_seq OWNED BY audit.dnskeys.id;
 
 
 --
+-- Name: domain_contacts; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.domain_contacts (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT domain_contacts_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: domain_contacts_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.domain_contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: domain_contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.domain_contacts_id_seq OWNED BY audit.domain_contacts.id;
+
+
+--
 -- Name: domains; Type: TABLE; Schema: audit; Owner: -
 --
 
@@ -418,6 +1183,74 @@ ALTER SEQUENCE audit.domains_id_seq OWNED BY audit.domains.id;
 
 
 --
+-- Name: invoice_items; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.invoice_items (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT invoice_items_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: invoice_items_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.invoice_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: invoice_items_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.invoice_items_id_seq OWNED BY audit.invoice_items.id;
+
+
+--
+-- Name: invoices; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.invoices (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT invoices_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: invoices_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.invoices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.invoices_id_seq OWNED BY audit.invoices.id;
+
+
+--
 -- Name: nameservers; Type: TABLE; Schema: audit; Owner: -
 --
 
@@ -449,6 +1282,244 @@ CREATE SEQUENCE audit.nameservers_id_seq
 --
 
 ALTER SEQUENCE audit.nameservers_id_seq OWNED BY audit.nameservers.id;
+
+
+--
+-- Name: notifications; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.notifications (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT notifications_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.notifications_id_seq OWNED BY audit.notifications.id;
+
+
+--
+-- Name: payment_orders; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.payment_orders (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT payment_orders_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: payment_orders_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.payment_orders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: payment_orders_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.payment_orders_id_seq OWNED BY audit.payment_orders.id;
+
+
+--
+-- Name: registrant_verifications; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.registrant_verifications (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT registrant_verifications_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: registrant_verifications_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.registrant_verifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: registrant_verifications_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.registrant_verifications_id_seq OWNED BY audit.registrant_verifications.id;
+
+
+--
+-- Name: reserved_domains; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.reserved_domains (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT reserved_domains_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: reserved_domains_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.reserved_domains_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reserved_domains_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.reserved_domains_id_seq OWNED BY audit.reserved_domains.id;
+
+
+--
+-- Name: settings; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.settings (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT settings_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.settings_id_seq OWNED BY audit.settings.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.users (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT users_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.users_id_seq OWNED BY audit.users.id;
+
+
+--
+-- Name: white_ips; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.white_ips (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT white_ips_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: white_ips_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.white_ips_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: white_ips_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.white_ips_id_seq OWNED BY audit.white_ips.id;
 
 
 --
@@ -2610,6 +3681,55 @@ ALTER SEQUENCE public.zones_id_seq OWNED BY public.zones.id;
 
 
 --
+-- Name: account_activities id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.account_activities ALTER COLUMN id SET DEFAULT nextval('audit.account_activities_id_seq'::regclass);
+
+
+--
+-- Name: accounts id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.accounts ALTER COLUMN id SET DEFAULT nextval('audit.accounts_id_seq'::regclass);
+
+
+--
+-- Name: actions id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.actions ALTER COLUMN id SET DEFAULT nextval('audit.actions_id_seq'::regclass);
+
+
+--
+-- Name: bank_statements id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.bank_statements ALTER COLUMN id SET DEFAULT nextval('audit.bank_statements_id_seq'::regclass);
+
+
+--
+-- Name: bank_transactions id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.bank_transactions ALTER COLUMN id SET DEFAULT nextval('audit.bank_transactions_id_seq'::regclass);
+
+
+--
+-- Name: blocked_domains id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.blocked_domains ALTER COLUMN id SET DEFAULT nextval('audit.blocked_domains_id_seq'::regclass);
+
+
+--
+-- Name: certificates id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.certificates ALTER COLUMN id SET DEFAULT nextval('audit.certificates_id_seq'::regclass);
+
+
+--
 -- Name: contacts id; Type: DEFAULT; Schema: audit; Owner: -
 --
 
@@ -2624,6 +3744,13 @@ ALTER TABLE ONLY audit.dnskeys ALTER COLUMN id SET DEFAULT nextval('audit.dnskey
 
 
 --
+-- Name: domain_contacts id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.domain_contacts ALTER COLUMN id SET DEFAULT nextval('audit.domain_contacts_id_seq'::regclass);
+
+
+--
 -- Name: domains id; Type: DEFAULT; Schema: audit; Owner: -
 --
 
@@ -2631,10 +3758,73 @@ ALTER TABLE ONLY audit.domains ALTER COLUMN id SET DEFAULT nextval('audit.domain
 
 
 --
+-- Name: invoice_items id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.invoice_items ALTER COLUMN id SET DEFAULT nextval('audit.invoice_items_id_seq'::regclass);
+
+
+--
+-- Name: invoices id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.invoices ALTER COLUMN id SET DEFAULT nextval('audit.invoices_id_seq'::regclass);
+
+
+--
 -- Name: nameservers id; Type: DEFAULT; Schema: audit; Owner: -
 --
 
 ALTER TABLE ONLY audit.nameservers ALTER COLUMN id SET DEFAULT nextval('audit.nameservers_id_seq'::regclass);
+
+
+--
+-- Name: notifications id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.notifications ALTER COLUMN id SET DEFAULT nextval('audit.notifications_id_seq'::regclass);
+
+
+--
+-- Name: payment_orders id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.payment_orders ALTER COLUMN id SET DEFAULT nextval('audit.payment_orders_id_seq'::regclass);
+
+
+--
+-- Name: registrant_verifications id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.registrant_verifications ALTER COLUMN id SET DEFAULT nextval('audit.registrant_verifications_id_seq'::regclass);
+
+
+--
+-- Name: reserved_domains id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.reserved_domains ALTER COLUMN id SET DEFAULT nextval('audit.reserved_domains_id_seq'::regclass);
+
+
+--
+-- Name: settings id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.settings ALTER COLUMN id SET DEFAULT nextval('audit.settings_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.users ALTER COLUMN id SET DEFAULT nextval('audit.users_id_seq'::regclass);
+
+
+--
+-- Name: white_ips id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.white_ips ALTER COLUMN id SET DEFAULT nextval('audit.white_ips_id_seq'::regclass);
 
 
 --
@@ -3032,6 +4222,14 @@ ALTER TABLE ONLY audit.dnskeys
 
 
 --
+-- Name: domain_contacts domain_contacts_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.domain_contacts
+    ADD CONSTRAINT domain_contacts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: domains domains_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
 --
 
@@ -3040,11 +4238,83 @@ ALTER TABLE ONLY audit.domains
 
 
 --
+-- Name: invoice_items invoice_items_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.invoice_items
+    ADD CONSTRAINT invoice_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: invoices invoices_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.invoices
+    ADD CONSTRAINT invoices_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: nameservers nameservers_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
 --
 
 ALTER TABLE ONLY audit.nameservers
     ADD CONSTRAINT nameservers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notifications notifications_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.notifications
+    ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: payment_orders payment_orders_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.payment_orders
+    ADD CONSTRAINT payment_orders_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: registrant_verifications registrant_verifications_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.registrant_verifications
+    ADD CONSTRAINT registrant_verifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reserved_domains reserved_domains_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.reserved_domains
+    ADD CONSTRAINT reserved_domains_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: settings settings_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.settings
+    ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: white_ips white_ips_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.white_ips
+    ADD CONSTRAINT white_ips_pkey PRIMARY KEY (id);
 
 
 --
@@ -3584,11 +4854,109 @@ ALTER TABLE ONLY public.whois_records
 
 
 --
--- Name: zones_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: zones zones_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.zones
     ADD CONSTRAINT zones_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_activities_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX account_activities_object_id_idx ON audit.account_activities USING btree (object_id);
+
+
+--
+-- Name: account_activities_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX account_activities_recorded_at_idx ON audit.account_activities USING btree (recorded_at);
+
+
+--
+-- Name: accounts_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX accounts_object_id_idx ON audit.accounts USING btree (object_id);
+
+
+--
+-- Name: accounts_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX accounts_recorded_at_idx ON audit.accounts USING btree (recorded_at);
+
+
+--
+-- Name: actions_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX actions_object_id_idx ON audit.actions USING btree (object_id);
+
+
+--
+-- Name: actions_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX actions_recorded_at_idx ON audit.actions USING btree (recorded_at);
+
+
+--
+-- Name: bank_statements_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX bank_statements_object_id_idx ON audit.bank_statements USING btree (object_id);
+
+
+--
+-- Name: bank_statements_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX bank_statements_recorded_at_idx ON audit.bank_statements USING btree (recorded_at);
+
+
+--
+-- Name: bank_transactions_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX bank_transactions_object_id_idx ON audit.bank_transactions USING btree (object_id);
+
+
+--
+-- Name: bank_transactions_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX bank_transactions_recorded_at_idx ON audit.bank_transactions USING btree (recorded_at);
+
+
+--
+-- Name: blocked_domains_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX blocked_domains_object_id_idx ON audit.blocked_domains USING btree (object_id);
+
+
+--
+-- Name: blocked_domains_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX blocked_domains_recorded_at_idx ON audit.blocked_domains USING btree (recorded_at);
+
+
+--
+-- Name: certificates_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX certificates_object_id_idx ON audit.certificates USING btree (object_id);
+
+
+--
+-- Name: certificates_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX certificates_recorded_at_idx ON audit.certificates USING btree (recorded_at);
 
 
 --
@@ -3620,6 +4988,20 @@ CREATE INDEX dnskeys_recorded_at_idx ON audit.dnskeys USING btree (recorded_at);
 
 
 --
+-- Name: domain_contacts_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX domain_contacts_object_id_idx ON audit.domain_contacts USING btree (object_id);
+
+
+--
+-- Name: domain_contacts_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX domain_contacts_recorded_at_idx ON audit.domain_contacts USING btree (recorded_at);
+
+
+--
 -- Name: domains_object_id_idx; Type: INDEX; Schema: audit; Owner: -
 --
 
@@ -3634,6 +5016,34 @@ CREATE INDEX domains_recorded_at_idx ON audit.domains USING btree (recorded_at);
 
 
 --
+-- Name: invoice_items_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX invoice_items_object_id_idx ON audit.invoice_items USING btree (object_id);
+
+
+--
+-- Name: invoice_items_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX invoice_items_recorded_at_idx ON audit.invoice_items USING btree (recorded_at);
+
+
+--
+-- Name: invoices_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX invoices_object_id_idx ON audit.invoices USING btree (object_id);
+
+
+--
+-- Name: invoices_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX invoices_recorded_at_idx ON audit.invoices USING btree (recorded_at);
+
+
+--
 -- Name: nameservers_object_id_idx; Type: INDEX; Schema: audit; Owner: -
 --
 
@@ -3645,6 +5055,104 @@ CREATE INDEX nameservers_object_id_idx ON audit.nameservers USING btree (object_
 --
 
 CREATE INDEX nameservers_recorded_at_idx ON audit.nameservers USING btree (recorded_at);
+
+
+--
+-- Name: notifications_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX notifications_object_id_idx ON audit.notifications USING btree (object_id);
+
+
+--
+-- Name: notifications_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX notifications_recorded_at_idx ON audit.notifications USING btree (recorded_at);
+
+
+--
+-- Name: payment_orders_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX payment_orders_object_id_idx ON audit.payment_orders USING btree (object_id);
+
+
+--
+-- Name: payment_orders_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX payment_orders_recorded_at_idx ON audit.payment_orders USING btree (recorded_at);
+
+
+--
+-- Name: registrant_verifications_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX registrant_verifications_object_id_idx ON audit.registrant_verifications USING btree (object_id);
+
+
+--
+-- Name: registrant_verifications_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX registrant_verifications_recorded_at_idx ON audit.registrant_verifications USING btree (recorded_at);
+
+
+--
+-- Name: reserved_domains_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX reserved_domains_object_id_idx ON audit.reserved_domains USING btree (object_id);
+
+
+--
+-- Name: reserved_domains_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX reserved_domains_recorded_at_idx ON audit.reserved_domains USING btree (recorded_at);
+
+
+--
+-- Name: settings_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX settings_object_id_idx ON audit.settings USING btree (object_id);
+
+
+--
+-- Name: settings_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX settings_recorded_at_idx ON audit.settings USING btree (recorded_at);
+
+
+--
+-- Name: users_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX users_object_id_idx ON audit.users USING btree (object_id);
+
+
+--
+-- Name: users_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX users_recorded_at_idx ON audit.users USING btree (recorded_at);
+
+
+--
+-- Name: white_ips_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX white_ips_object_id_idx ON audit.white_ips USING btree (object_id);
+
+
+--
+-- Name: white_ips_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX white_ips_recorded_at_idx ON audit.white_ips USING btree (recorded_at);
 
 
 --
@@ -4229,6 +5737,55 @@ CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING b
 
 
 --
+-- Name: account_activities process_account_activity_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_account_activity_audit AFTER INSERT OR DELETE OR UPDATE ON public.account_activities FOR EACH ROW EXECUTE PROCEDURE public.process_account_activity_audit();
+
+
+--
+-- Name: accounts process_account_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_account_audit AFTER INSERT OR DELETE OR UPDATE ON public.accounts FOR EACH ROW EXECUTE PROCEDURE public.process_account_audit();
+
+
+--
+-- Name: actions process_action_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_action_audit AFTER INSERT OR DELETE OR UPDATE ON public.actions FOR EACH ROW EXECUTE PROCEDURE public.process_action_audit();
+
+
+--
+-- Name: bank_statements process_bank_statement_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_bank_statement_audit AFTER INSERT OR DELETE OR UPDATE ON public.bank_statements FOR EACH ROW EXECUTE PROCEDURE public.process_bank_statement_audit();
+
+
+--
+-- Name: bank_transactions process_bank_transaction_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_bank_transaction_audit AFTER INSERT OR DELETE OR UPDATE ON public.bank_transactions FOR EACH ROW EXECUTE PROCEDURE public.process_bank_transaction_audit();
+
+
+--
+-- Name: blocked_domains process_blocked_domain_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_blocked_domain_audit AFTER INSERT OR DELETE OR UPDATE ON public.blocked_domains FOR EACH ROW EXECUTE PROCEDURE public.process_blocked_domain_audit();
+
+
+--
+-- Name: certificates process_certificate_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_certificate_audit AFTER INSERT OR DELETE OR UPDATE ON public.certificates FOR EACH ROW EXECUTE PROCEDURE public.process_certificate_audit();
+
+
+--
 -- Name: contacts process_contact_audit; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -4250,10 +5807,80 @@ CREATE TRIGGER process_domain_audit AFTER INSERT OR DELETE OR UPDATE ON public.d
 
 
 --
+-- Name: domain_contacts process_domain_contact_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_domain_contact_audit AFTER INSERT OR DELETE OR UPDATE ON public.domain_contacts FOR EACH ROW EXECUTE PROCEDURE public.process_domain_contact_audit();
+
+
+--
+-- Name: invoices process_invoice_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_invoice_audit AFTER INSERT OR DELETE OR UPDATE ON public.invoices FOR EACH ROW EXECUTE PROCEDURE public.process_invoice_audit();
+
+
+--
+-- Name: invoice_items process_invoice_item_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_invoice_item_audit AFTER INSERT OR DELETE OR UPDATE ON public.invoice_items FOR EACH ROW EXECUTE PROCEDURE public.process_invoice_item_audit();
+
+
+--
 -- Name: nameservers process_nameserver_audit; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER process_nameserver_audit AFTER INSERT OR DELETE OR UPDATE ON public.nameservers FOR EACH ROW EXECUTE PROCEDURE public.process_nameserver_audit();
+
+
+--
+-- Name: notifications process_notification_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_notification_audit AFTER INSERT OR DELETE OR UPDATE ON public.notifications FOR EACH ROW EXECUTE PROCEDURE public.process_notification_audit();
+
+
+--
+-- Name: payment_orders process_payment_order_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_payment_order_audit AFTER INSERT OR DELETE OR UPDATE ON public.payment_orders FOR EACH ROW EXECUTE PROCEDURE public.process_payment_order_audit();
+
+
+--
+-- Name: registrant_verifications process_registrant_verification_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_registrant_verification_audit AFTER INSERT OR DELETE OR UPDATE ON public.registrant_verifications FOR EACH ROW EXECUTE PROCEDURE public.process_registrant_verification_audit();
+
+
+--
+-- Name: reserved_domains process_reserved_domain_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_reserved_domain_audit AFTER INSERT OR DELETE OR UPDATE ON public.reserved_domains FOR EACH ROW EXECUTE PROCEDURE public.process_reserved_domain_audit();
+
+
+--
+-- Name: settings process_setting_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_setting_audit AFTER INSERT OR DELETE OR UPDATE ON public.settings FOR EACH ROW EXECUTE PROCEDURE public.process_setting_audit();
+
+
+--
+-- Name: users process_user_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_user_audit AFTER INSERT OR DELETE OR UPDATE ON public.users FOR EACH ROW EXECUTE PROCEDURE public.process_user_audit();
+
+
+--
+-- Name: white_ips process_white_ip_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_white_ip_audit AFTER INSERT OR DELETE OR UPDATE ON public.white_ips FOR EACH ROW EXECUTE PROCEDURE public.process_white_ip_audit();
 
 
 --
@@ -4885,5 +6512,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200311114649'),
 ('20200319082650'),
 ('20200320090152'),
-('20200320094842');
+('20200320094842'),
+('20200330111918');
 

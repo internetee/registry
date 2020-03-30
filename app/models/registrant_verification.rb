@@ -2,6 +2,7 @@
 # Registrant postgres user can access this table directly.
 class RegistrantVerification < ApplicationRecord
   has_paper_trail class_name: 'RegistrantVerificationVersion'
+  include Audit
 
   # actions
   CONFIRMED = 'confirmed'

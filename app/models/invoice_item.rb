@@ -1,5 +1,6 @@
 class InvoiceItem < ApplicationRecord
   include Versions
+  include Audit
   belongs_to :invoice
 
   delegate :vat_rate, to: :invoice

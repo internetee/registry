@@ -1,5 +1,6 @@
 class Setting < RailsSettings::Base
   include Versions # version/setting_version.rb
+  include Audit
   source Rails.root.join('config', 'app.yml')
 
   # When config/app.yml has changed, you need change this prefix to v2, v3 ... to expires caches

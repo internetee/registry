@@ -1,5 +1,6 @@
 class AccountActivity < ApplicationRecord
   include Versions
+  include Audit
   belongs_to :account, required: true
   belongs_to :bank_transaction
   belongs_to :invoice

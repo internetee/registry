@@ -1,6 +1,7 @@
 class Registrar < ApplicationRecord
   include Versions # version/registrar_version.rb
   include Concerns::Registrar::BookKeeping
+  include Audit
 
   has_many :domains, dependent: :restrict_with_error
   has_many :contacts, dependent: :restrict_with_error

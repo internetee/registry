@@ -1,5 +1,6 @@
 class BankTransaction < ApplicationRecord
   include Versions
+  include Audit
   belongs_to :bank_statement
   has_one :account_activity
 

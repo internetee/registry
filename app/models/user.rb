@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include Versions # version/user_version.rb
+  include Audit
 
   has_many :actions, dependent: :restrict_with_exception
 
