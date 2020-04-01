@@ -31,7 +31,7 @@
           -#       domain: @domain, version: @domain.audit_domains.last
 
           -# all other older versions
-          - @domain.audit_domains.not_creates.each do |version|
+          - @versions.each do |version|
             - attributes = only_present_fields_audit(version, Domain)
             - domain = Domain.new(attributes)
             - attach_existing_fields_audit(version, domain)

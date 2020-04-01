@@ -18,12 +18,12 @@ module Audit
       new_value['children']
     end
 
-    def next
-      self.class.where("id > ?", id).first
+    def next_version
+      self.class.where("id > ?", id).where(object_id: object_id).first
     end
 
-    def prev
-      self.class.where("id < ?", id).last
+    def prev_version
+      self.class.where("id < ?", id).where(object_id: object_id).last
     end
   end
 end

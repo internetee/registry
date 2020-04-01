@@ -63,5 +63,24 @@ module Audit
                  object
                end
     end
+
+    def objects_for(ids)
+      ver_class = "Audit::#{name}".constantize
+      return unless ver_class
+
+      calculate_from_versions(ver_class: ver_class, ids: ids)
+    end
+
+    def calculate_from_versions(ver_class:, ids:)
+      ver_class.where(id: ids.to_a)
+          .order(:object_id)
+          .order(recorded_at: :desc)
+          .map do |version|
+            valid_columns = column_names
+            object = new(version[:new_value].slice(*valid_columns))
+            object.version_loader = version
+            object
+          end
+    end
   end
 end

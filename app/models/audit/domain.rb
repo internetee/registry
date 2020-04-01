@@ -46,7 +46,7 @@ module Audit
     end
 
     def date_range
-      next_version_recorded_at = self.next&.recorded_at || Time.zone.now
+      next_version_recorded_at = self.next_version&.recorded_at || Time.zone.now
       (recorded_at..next_version_recorded_at)
     end
   end

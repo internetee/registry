@@ -3,12 +3,12 @@
 - attach_existing_fields_audit(@version, domain)
 
 - if @version
-  - children = HashWithIndifferentAccess.new(@version.children)
-  - nameservers    = Nameserver.audit_versions_for(children[:nameservers], @version.recorded_at)
-  - dnskeys        = Dnskey.audit_versions_for(children[:dnskeys], @version.recorded_at)
-  - tech_contacts  = Contact.audit_versions_for(children[:tech_contacts], @version.recorded_at)
-  - admin_contacts = Contact.audit_versions_for(children[:admin_contacts], @version.recorded_at)
-  - registrant     = Contact.audit_versions_for(children[:registrant], @version.recorded_at)
+  - children = HashWithIndifferentAccess.new(@version.prepare_children_history)
+  - nameservers    = Nameserver.objects_for(children[:nameservers]&.map(&:id))
+  - dnskeys        = Dnskey.objects_for(children[:dnskeys]&.map(&:id))
+  - tech_contacts  = Contact.objects_for(children[:tech_contacts]&.map(&:id))
+  - admin_contacts = Contact.objects_for(children[:admin_contacts]&.map(&:id))
+  - registrant     = Contact.objects_for(children[:registrant]&.map(&:id))
   - event       = @version.action
   - creator     = plain_username(@version.terminator)
 
