@@ -31,23 +31,42 @@ module Audit
       new_value['uuid']
     end
 
-    # def previous
-    #   self.class.where(object_id: object_id).where('id < ?', id).last
-    # end
-
     def prepare_children_history
       children.each_with_object({}) do |(key, value), hash|
         klass = CHILDREN_VERSIONS_HASH[key]
         next unless klass
 
-        result = klass.where(object_id: value).where(recorded_at: date_range)
-        hash[key] = result unless result.blank?
+        value = prepare_value(key: key, value: value)
+        parent_klass = klass.name.split('::').last.constantize
+        result = klass.where(object_id: value)
+                      .where(recorded_at: date_range)
+
+        result = parent_klass.where(id: value) if result.all?(&:blank?)
+        hash[key] = result unless result.all?(&:blank?)
       end
     end
 
     def date_range
       next_version_recorded_at = self.next_version&.recorded_at || Time.zone.now
       (recorded_at..next_version_recorded_at)
+    end
+
+    def prepare_value(key:, value:)
+      return value unless value.all?(&:blank?)
+      case key
+      when 'dnskeys'
+        self.object.dnskey_ids
+      when 'registrant'
+        [self.object.registrant_id]
+      when 'nameservers'
+        self.object.nameserver_ids
+      when 'tech_contacts'
+        self.object.tech_contact_ids
+      when 'admin_contacts'
+        self.object.admin_contact_ids
+      else # 'legal_documents'
+        [self.object.legal_document_id]
+      end
     end
   end
 end

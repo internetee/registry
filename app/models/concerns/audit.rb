@@ -68,7 +68,9 @@ module Audit
       ver_class = "Audit::#{name}".constantize
       return unless ver_class
 
-      calculate_from_versions(ver_class: ver_class, ids: ids)
+      result = calculate_from_versions(ver_class: ver_class, ids: ids)
+      result = name.constantize.where(id: ids) if result.all?(&:blank?)
+      result
     end
 
     def calculate_from_versions(ver_class:, ids:)
