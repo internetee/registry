@@ -1,5 +1,4 @@
 class Registrar < ApplicationRecord
-  include Versions # version/registrar_version.rb
   include Concerns::Registrar::BookKeeping
   include Audit
 

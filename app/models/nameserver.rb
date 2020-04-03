@@ -1,5 +1,4 @@
 class Nameserver < ApplicationRecord
-  include Versions # version/nameserver_version.rb
   include Audit
   include EppErrors
 

@@ -1,6 +1,5 @@
 class Domain < ApplicationRecord
   include UserEvents
-  include Versions # version/domain_version.rb
   include Audit
   include Concerns::Domain::Expirable
   include Concerns::Domain::Activatable

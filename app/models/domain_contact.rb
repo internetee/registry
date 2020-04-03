@@ -1,7 +1,6 @@
 class DomainContact < ApplicationRecord
   # STI: tech_domain_contact
   # STI: admin_domain_contact
-  include Versions # version/domain_contact_version.rb
   include Audit
   include EppErrors
   belongs_to :contact

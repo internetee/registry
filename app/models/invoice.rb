@@ -1,5 +1,4 @@
 class Invoice < ApplicationRecord
-  include Versions
   include Audit
   include Concerns::Invoice::Cancellable
   include Concerns::Invoice::Payable

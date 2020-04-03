@@ -1,5 +1,4 @@
 class Setting < RailsSettings::Base
-  include Versions # version/setting_version.rb
   include Audit
   source Rails.root.join('config', 'app.yml')
 

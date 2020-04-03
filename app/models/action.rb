@@ -1,5 +1,5 @@
 class Action < ApplicationRecord
-  has_paper_trail class_name: 'ActionVersion'
+  include Audit
 
   belongs_to :user
   belongs_to :contact

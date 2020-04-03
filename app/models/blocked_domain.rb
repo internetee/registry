@@ -1,5 +1,4 @@
 class BlockedDomain < ApplicationRecord
-  include Versions
   include Audit
   before_save   :generate_data
   after_destroy :remove_data

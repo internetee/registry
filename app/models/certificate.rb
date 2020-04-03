@@ -1,7 +1,6 @@
 require 'open3'
 
 class Certificate < ApplicationRecord
-  include Versions
   include Audit
 
   belongs_to :api_user

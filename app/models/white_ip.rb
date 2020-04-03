@@ -1,5 +1,4 @@
 class WhiteIp < ApplicationRecord
-  include Versions
   include Audit
   belongs_to :registrar
 

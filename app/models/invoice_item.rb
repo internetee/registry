@@ -1,5 +1,4 @@
 class InvoiceItem < ApplicationRecord
-  include Versions
   include Audit
   belongs_to :invoice
 

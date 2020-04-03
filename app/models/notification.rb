@@ -1,5 +1,4 @@
 class Notification < ApplicationRecord
-  include Versions # version/notification_version.rb
   include Audit
 
   belongs_to :registrar

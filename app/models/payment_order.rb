@@ -1,5 +1,4 @@
 class PaymentOrder < ApplicationRecord
-  include Versions
   include Audit
   include ActionView::Helpers::NumberHelper
 

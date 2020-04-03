@@ -1,5 +1,4 @@
 class BankStatement < ApplicationRecord
-  include Versions
   include Audit
   has_many :bank_transactions
 

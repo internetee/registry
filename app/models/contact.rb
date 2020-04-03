@@ -1,5 +1,4 @@
 class Contact < ApplicationRecord
-  include Versions # version/contact_version.rb
   include Audit
   include EppErrors
   include UserEvents
