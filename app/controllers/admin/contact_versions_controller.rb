@@ -2,12 +2,12 @@ module Admin
   class ContactVersionsController < BaseController
     include ObjectVersionsHelper
 
-    load_and_authorize_resource class: "Audit::Contact"
+    load_and_authorize_resource class: "Audit::ContactHistory"
 
     def index
       params[:q] ||= {}
 
-      @q = Audit::Contact.search(params[:q])
+      @q = Audit::ContactHistory.search(params[:q])
       @versions = @q.result.page(params[:page])
       return unless params[:results_per_page].to_i.positive?
 
@@ -17,8 +17,8 @@ module Admin
     def show
       per_page = 7
 
-      @version = Audit::Contact.find(params[:id])
-      @versions = Audit::Contact.where(object_id: @version.object_id)
+      @version = Audit::ContactHistory.find(params[:id])
+      @versions = Audit::ContactHistory.where(object_id: @version.object_id)
                                 .order(recorded_at: :desc, id: :desc)
       @versions_map = @versions.all.map(&:id)
 
@@ -30,7 +30,7 @@ module Admin
     end
 
     def search
-      render json: Audit::Contact.search_by_query(params[:q])
+      render json: Audit::ContactHistory.search_by_query(params[:q])
     end
   end
 end

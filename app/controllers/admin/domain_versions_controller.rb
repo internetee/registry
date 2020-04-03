@@ -2,12 +2,12 @@ module Admin
   class DomainVersionsController < BaseController
     include ObjectVersionsHelper
 
-    load_and_authorize_resource  class: "Audit::Domain"
+    load_and_authorize_resource  class: "Audit::DomainHistory"
 
     def index
       params[:q] ||= {}
 
-      @q = Audit::Domain.search(params[:q])
+      @q = Audit::DomainHistory.search(params[:q])
       @versions = @q.result.page(params[:page])
       search_params = params[:q].deep_dup
 
@@ -47,7 +47,7 @@ module Admin
       end
       whereS += "  AND 1=0" if registrars == []
 
-      versions = Audit::Domain.where(whereS).order(recorded_at: :desc, id: :desc)
+      versions = Audit::DomainHistory.where(whereS).order(recorded_at: :desc, id: :desc)
       @q = versions.search(params[:q])
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
@@ -57,8 +57,8 @@ module Admin
 
     def show
       per_page = 7
-      @version = Audit::Domain.find(params[:id])
-      @versions = Audit::Domain.where(object_id: @version.object_id)
+      @version = Audit::DomainHistory.find(params[:id])
+      @versions = Audit::DomainHistory.where(object_id: @version.object_id)
                                .order(recorded_at: :desc, id: :desc)
       @versions_map = @versions.all.map(&:id)
 
@@ -70,7 +70,7 @@ module Admin
     end
 
     def search
-      render json: Audit::Domain.search_by_query(params[:q])
+      render json: Audit::DomainHistory.search_by_query(params[:q])
     end
 
     def create_where_string(key, value)

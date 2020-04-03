@@ -1,5 +1,5 @@
 module Audit
-  class Invoice < Base
+  class InvoiceHistory < BaseHistory
     self.table_name = 'audit.invoices'
   end
 end

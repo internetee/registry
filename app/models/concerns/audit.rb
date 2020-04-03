@@ -9,12 +9,12 @@ module Audit
     before_update :add_updator
 
     def add_creator
-      self.creator_str = ::User.whodunnit || 'console-root'
+      self.creator_str = ::User.whodunnit || 'console-root' if self.respond_to?(:creator_str=)
       true
     end
 
     def add_updator
-      self.updator_str = ::User.whodunnit || 'console-root'
+      self.updator_str = ::User.whodunnit || 'console-root' if self.respond_to?(:updator_str=)
       true
     end
 
@@ -45,7 +45,7 @@ module Audit
 
   module ClassMethods
     def audit_versions_for(ids, time)
-      ver_class = "Audit::#{name}".constantize
+      ver_class = "Audit::#{name}History".constantize
       return unless ver_class
 
       calculate_from_history(ver_class, ids, time)
@@ -65,7 +65,7 @@ module Audit
     end
 
     def objects_for(ids)
-      ver_class = "Audit::#{name}".constantize
+      ver_class = "Audit::#{name}History".constantize
       return unless ver_class
 
       result = calculate_from_versions(ver_class: ver_class, ids: ids)

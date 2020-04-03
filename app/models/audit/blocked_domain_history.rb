@@ -1,5 +1,5 @@
 module Audit
-  class BlockedDomain < Base
+  class BlockedDomainHistory < BaseHistory
     self.table_name = 'audit.blocked_domains'
   end
 end

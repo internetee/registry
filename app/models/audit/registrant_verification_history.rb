@@ -1,5 +1,5 @@
 module Audit
-  class RegistrantVerification < Base
+  class RegistrantVerificationHistory < BaseHistory
     self.table_name = 'audit.registrant_verifications'
   end
 end

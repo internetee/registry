@@ -1,13 +1,13 @@
 module Audit
-  class Domain < Base
+  class DomainHistory < BaseHistory
     self.table_name = 'audit.domains'
 
     CHILDREN_VERSIONS_HASH = {
-      dnskeys: Audit::Dnskey,
-      registrant: Audit::Contact,
-      nameservers: Nameserver,
-      tech_contacts: Audit::Contact,
-      admin_contacts: Audit::Contact
+      dnskeys: Audit::DnskeyHistory,
+      registrant: Audit::ContactHistory,
+      nameservers: Audit::NameserverHistory,
+      tech_contacts: Audit::ContactHistory,
+      admin_contacts: Audit::ContactHistory
     }.with_indifferent_access.freeze
 
     ransacker :name do |parent|
@@ -37,7 +37,7 @@ module Audit
         next unless klass
 
         value = prepare_value(key: key, value: value)
-        parent_klass = klass.name.split('::').last.constantize
+        parent_klass = klass.name.gsub('History', '').split('::').last.constantize
         result = klass.where(object_id: value)
                       .where(recorded_at: date_range)
 

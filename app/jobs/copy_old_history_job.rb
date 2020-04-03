@@ -14,7 +14,7 @@ class CopyOldHistoryJob < Que::Job
     count, current = old_history.count, 1
     puts "Proceeding #{count} entries of #{model.capitalize}Version"
 
-    new_history_class = "Audit::#{model.capitalize}".constantize
+    new_history_class = "Audit::#{model.capitalize}History".constantize
     history_array = []
 
     old_history.find_each do |old_history_entry|

@@ -1,5 +1,5 @@
 module Audit
-  class BankStatement < Base
+  class BankStatementHistory < BaseHistory
     self.table_name = 'audit.bank_statements'
   end
 end

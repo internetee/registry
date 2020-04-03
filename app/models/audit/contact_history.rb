@@ -1,5 +1,5 @@
 module Audit
-  class Contact < Base
+  class ContactHistory < BaseHistory
     self.table_name = 'audit.contacts'
 
     ransacker :new_name do |parent|

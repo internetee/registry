@@ -1,5 +1,5 @@
 module Audit
-  class Notification < Base
+  class NotificationHistory < BaseHistory
     self.table_name = 'audit.notifications'
   end
 end

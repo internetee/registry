@@ -1,5 +1,5 @@
 module Audit
-  class Setting < Base
+  class SettingHistory < BaseHistory
     self.table_name = 'audit.settings'
   end
 end

@@ -1,5 +1,5 @@
 module Audit
-  class Nameserver < Base
+  class NameserverHistory < BaseHistory
     self.table_name = 'audit.nameservers'
   end
 end
