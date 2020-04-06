@@ -8,17 +8,18 @@ class DomainAuditLogTest < ActionDispatch::IntegrationTest
     nameserver_ids = [nameservers(:shop_ns1).id, nameservers(:shop_ns2).id].sort
     registrant_id = contacts(:john).id
     legal_document_id = 1
+
     assert_equal admin_contact_ids, domain.admin_contacts.ids
     assert_equal tech_contact_ids, domain.tech_contacts.ids.sort
     assert_equal nameserver_ids, domain.nameservers.ids.sort
     assert_equal registrant_id, domain.registrant_id
-    domain.legal_document_id = legal_document_id
+    domain.legal_document_ids << legal_document_id
 
-    assert_difference 'domain.versions.count', 1 do
+    assert_difference 'domain.audit_domains.count', 1 do
       domain.save!
     end
 
-    domain_version = domain.versions.last
+    domain_version = domain.audit_domains.last
     assert_equal admin_contact_ids, domain_version.children['admin_contacts'].sort
     assert_equal tech_contact_ids, domain_version.children['tech_contacts'].sort
     assert_equal nameserver_ids, domain_version.children['nameservers'].sort

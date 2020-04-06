@@ -41,7 +41,7 @@ class Domain < ApplicationRecord
   has_many :admin_contacts, through: :admin_domain_contacts, source: :contact
   has_many :tech_contacts, through: :tech_domain_contacts, source: :contact
   has_many :nameservers, dependent: :destroy, inverse_of: :domain
-  has_many :audit_domains, class_name: 'Audit::Domain', foreign_key: 'object_id'
+  has_many :audit_domains, class_name: '::Audit::DomainHistory', foreign_key: 'object_id'
 
   accepts_nested_attributes_for :nameservers, allow_destroy: true,
                                               reject_if: proc { |attrs| attrs[:hostname].blank? }

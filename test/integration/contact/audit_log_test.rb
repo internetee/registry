@@ -1,16 +1,12 @@
 require 'test_helper'
 
 class ContactAuditLogTest < ActionDispatch::IntegrationTest
-  def test_stores_metadata
+  def test_stores_history
     contact = contacts(:john)
 
-    contact.legal_document_id = 1
-    assert_difference 'contact.versions.count', 1 do
+    contact.legal_document_ids << 1
+    assert_difference 'contact.audit_contacts.count', 1 do
       contact.save!
     end
-
-    contact_version = contact.versions.last
-    assert_equal ({ legal_documents: [1] }).with_indifferent_access,
-                 contact_version.children.with_indifferent_access
   end
 end
