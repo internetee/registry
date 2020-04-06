@@ -15,7 +15,7 @@ class RegistrantVerificationTest < ActiveSupport::TestCase
     registrant_verification = registrant_verifications(:one)
     random_action = "random#{rand(100)}"
 
-    assert_difference -> { RegistrantVerificationVersion.count } do
+    assert_difference -> { Audit::RegistrantVerificationHistory.count } do
       registrant_verification.update_attributes!(action: random_action)
     end
   end
@@ -23,11 +23,11 @@ class RegistrantVerificationTest < ActiveSupport::TestCase
   def test_reject_changes
     @registrant_verification = RegistrantVerification.new(domain_id: @domain.id,
                                                           verification_token: @token)
-    start_versions_count = RegistrantVerificationVersion.count
+    start_versions_count = Audit::RegistrantVerificationHistory.count
 
     assert_nothing_raised do
       @registrant_verification.domain_registrant_change_reject!("email link, #{@initiator}")
     end
-    assert_equal RegistrantVerificationVersion.count, start_versions_count + 1
+    assert_equal Audit::RegistrantVerificationHistory.count, start_versions_count + 1
   end
 end

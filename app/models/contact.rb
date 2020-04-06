@@ -15,6 +15,7 @@ class Contact < ApplicationRecord
   has_many :actions, dependent: :destroy
 
   has_many :audit_contacts, class_name: '::Audit::ContactHistory', foreign_key: 'object_id'
+  alias_attribute :versions, :audit_contacts
 
   attr_accessor :legal_document_id
   alias_attribute :kind, :ident_type
