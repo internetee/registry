@@ -16,19 +16,27 @@ class Ident
 
   def self.epp_code_map
     {
-        '2003' => [
-            [:code, :blank],
-            [:type, :blank],
-            [:country_code, :blank]
-        ],
-        '2005' => [
-            [:base, :mismatch],
-            [:code, :invalid_national_id],
-            [:code, :invalid_reg_no],
-            [:code, :invalid_iso8601_date],
-            [:country_code, :invalid_iso31661_alpha2]
-        ]
+      '2003' => code_errors,
+      '2005' => base_errors,
     }
+  end
+
+  def code_errors
+    [
+      %i[code blank],
+      %i[type blank],
+      %i[country_code blank],
+    ]
+  end
+
+  def base_errors
+    [
+      %i[base mismatch],
+      %i[code invalid_national_id],
+      %i[code invalid_reg_no],
+      %i[code invalid_iso8601_date],
+      %i[country_code invalid_iso31661_alpha2],
+    ]
   end
 
   def self.types
@@ -55,11 +63,11 @@ class Ident
     Country.new(country_code)
   end
 
-  def ==(other_ident)
-    if other_ident.is_a?(self.class)
-      (code == other_ident.code) &&
-          (type == other_ident.type) &&
-          (country_code == other_ident.country_code)
+  def ==(other)
+    if other.is_a?(self.class)
+      (code == other.code) &&
+        (type == other.type) &&
+        (country_code == other.country_code)
     else
       false
     end
@@ -68,7 +76,5 @@ class Ident
   private
 
   # https://github.com/rails/rails/issues/1513
-  def validation_context=(_value)
-    ;
-  end
+  def validation_context=(_value); end
 end

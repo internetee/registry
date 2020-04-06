@@ -52,9 +52,10 @@ class Contact < ApplicationRecord
 
   composed_of :identifier,
               class_name: 'Ident',
-              constructor: proc { |code, type, country_code| Ident.new(code: code,
-                                                                                type: type,
-                                                                                country_code: country_code) },
+              constructor: proc { |code, type, country_code|
+                                  Ident.new(code: code,
+                                            type: type,
+                                            country_code: country_code) },
               mapping: [%w[ident code], %w[ident_type type], %w[ident_country_code country_code]]
 
   after_save :update_related_whois_records
@@ -222,7 +223,7 @@ class Contact < ApplicationRecord
       CSV.generate do |csv|
         csv << column_names
         all.each do |contact|
-        csv << contact.attributes.values_at(*column_names)
+          csv << contact.attributes.values_at(*column_names)
         end
       end
     end
@@ -358,14 +359,14 @@ class Contact < ApplicationRecord
 
     if legal_document_data
 
-        doc = LegalDocument.create(
-            documentable_type: Contact,
-            document_type:     legal_document_data[:type],
-            body:              legal_document_data[:body]
-        )
-        self.legal_documents = [doc]
-        self.legal_document_id = doc.id
-        self.save
+      doc = LegalDocument.create(
+          documentable_type: Contact,
+          document_type:     legal_document_data[:type],
+          body:              legal_document_data[:body]
+      )
+      self.legal_documents = [doc]
+      self.legal_document_id = doc.id
+      save
     end
     destroy
   end
@@ -435,7 +436,7 @@ class Contact < ApplicationRecord
 
 
     # fetch domains
-    domains  = ::Domain.where("domains.id IN (#{filter_sql})")
+    domains = ::Domain.where("domains.id IN (#{filter_sql})")
     domains = domains.includes(:registrar).page(page).per(per)
 
     if sorts.first == "registrar_name".freeze

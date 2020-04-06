@@ -1,22 +1,24 @@
-class Ident::NationalIdValidator < ActiveModel::EachValidator
-  def self.country_specific_validations
-    {
-      Country.new('EE') => proc { |code| Isikukood.new(code).valid? },
-    }
-  end
+class Ident
+  class NationalIdValidator < ActiveModel::EachValidator
+    def self.country_specific_validations
+      {
+        Country.new('EE') => proc { |code| Isikukood.new(code).valid? },
+      }
+    end
 
-  def validate_each(record, attribute, value)
-    validation = validation_for(record.country)
+    def validate_each(record, attribute, value)
+      validation = validation_for(record.country)
 
-    return unless validation
+      return unless validation
 
-    valid = validation.call(value)
-    record.errors.add(attribute, :invalid_national_id, country: record.country) unless valid
-  end
+      valid = validation.call(value)
+      record.errors.add(attribute, :invalid_national_id, country: record.country) unless valid
+    end
 
-  private
+    private
 
-  def validation_for(country)
-    self.class.country_specific_validations[country]
+    def validation_for(country)
+      self.class.country_specific_validations[country]
+    end
   end
 end

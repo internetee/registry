@@ -1,20 +1,24 @@
-class Ident::MismatchValidator < ActiveModel::Validator
-  Mismatch = Struct.new(:type, :country)
+class Ident
+  class MismatchValidator < ActiveModel::Validator
+    Mismatch = Struct.new(:type, :country)
 
-  def self.mismatches
-    [
-      Mismatch.new('birthday', Country.new('EE')),
-    ]
-  end
+    def self.mismatches
+      [
+        Mismatch.new('birthday', Country.new('EE')),
+      ]
+    end
 
-  def validate(record)
-    record.errors.add(:base, :mismatch, type: record.type, country: record.country) if mismatched?(record)
-  end
+    def validate(record)
+      return unless mismatched?(record)
 
-  private
+      record.errors.add(:base, :mismatch, type: record.type, country: record.country)
+    end
 
-  def mismatched?(record)
-    mismatch = Mismatch.new(record.type, record.country)
-    self.class.mismatches.include?(mismatch)
+    private
+
+    def mismatched?(record)
+      mismatch = Mismatch.new(record.type, record.country)
+      self.class.mismatches.include?(mismatch)
+    end
   end
 end

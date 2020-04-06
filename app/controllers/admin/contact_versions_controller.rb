@@ -1,8 +1,9 @@
 module Admin
   class ContactVersionsController < BaseController
     include ObjectVersionsHelper
+    include Auditable
 
-    load_and_authorize_resource class: "Audit::ContactHistory"
+    load_and_authorize_resource class: 'Audit::ContactHistory'
 
     def index
       params[:q] ||= {}
@@ -15,18 +16,7 @@ module Admin
     end
 
     def show
-      per_page = 7
-
-      @version = Audit::ContactHistory.find(params[:id])
-      @versions = Audit::ContactHistory.where(object_id: @version.object_id)
-                                .order(recorded_at: :desc, id: :desc)
-      @versions_map = @versions.all.map(&:id)
-
-      # what we do is calc amount of results until needed version
-      # then we cacl which page it is
-      params[:page] = catch_version_page if params[:page].blank?
-
-      @versions = @versions.page(params[:page]).per(per_page)
+      generate_show(Audit::ContactHistory)
     end
 
     def search

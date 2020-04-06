@@ -88,17 +88,6 @@ module ApplicationHelper
     link_to(title, url_for(sort: {param_name => order}), class: "sort_link #{order}")
   end
 
-  def changing_css_class(version, *attrs)
-    return unless version
-    css_class = "text-warning"
-
-    if attrs.size == 1
-      version.object_changes.to_h[attrs.first] && css_class
-    else
-      version.object_changes.to_h.slice(*attrs).any? && css_class
-    end
-  end
-
   def changing_css_class_audit(version, *attrs)
     return unless version
     css_class = "text-warning"

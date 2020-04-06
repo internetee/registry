@@ -7,6 +7,9 @@ prepare:
 plugins:
   brakeman:
     enabled: true
+    checks:
+      sql_injection:
+        enabled: false
   bundler-audit:
     enabled: true
   duplication:
@@ -23,8 +26,15 @@ plugins:
   rubocop:
     enabled: true
     channel: rubocop-0-74
+    checks:
+      Rubocop/Metrics/BlockLength:
+        enabled: false
+      Rubocop/Bundler/OrderedGems:
+        enabled: false
 exclude_patterns:
+  - "app/models/audit/"
   - "app/models/version/"
+  - "app/models/concerns/versions.rb"
   - "bin/"
   - "config/"
   - "db/"

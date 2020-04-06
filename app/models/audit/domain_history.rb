@@ -37,11 +37,11 @@ module Audit
         next unless klass
 
         value = prepare_value(key: key, value: value)
-        parent_klass = klass.name.gsub('History', '').split('::').last.constantize
-        result = klass.where(object_id: value)
-                      .where(recorded_at: date_range)
+        parent_klass = parent_from_klass(klass)
+        result = calculate_result(klass: klass,
+                                  parent_klass: parent_klass,
+                                  value: value)
 
-        result = parent_klass.where(id: value) if result.all?(&:blank?)
         hash[key] = result unless result.all?(&:blank?)
       end
     end
@@ -49,6 +49,16 @@ module Audit
     def date_range
       next_version_recorded_at = self.next_version&.recorded_at || Time.zone.now
       (recorded_at..next_version_recorded_at)
+    end
+
+    def parent_from_klass(klass)
+      klass.name.gsub('History', '').split('::').last.constantize
+    end
+
+    def calculate_result(klass:, parent_klass:, value:)
+      result = klass.where(object_id: value).where(recorded_at: date_range)
+      result = parent_klass.where(id: value) if result.all?(&:blank?)
+      result
     end
 
     def prepare_value(key:, value:)
