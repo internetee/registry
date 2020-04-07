@@ -17,4 +17,12 @@ class ActionTest < ActiveSupport::TestCase
   def test_notification_key_for_contact
     assert_equal :contact_update, @action.notification_key
   end
+
+  def test_stores_history
+    @action.created_at = Time.zone.now + 10.years
+
+    assert_difference '@action.versions.count', 1 do
+      @action.save!
+    end
+  end
 end

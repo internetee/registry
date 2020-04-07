@@ -53,7 +53,7 @@ class CopyOldHistoryJob < Que::Job
 
     already_exist = new_klass.find_by(recorded_at: recorded_at,
                                       object_id: object_id).present?
-    next if already_exist
+    return if already_exist
 
     array << attrs
   end

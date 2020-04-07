@@ -39,4 +39,12 @@ class NotificationTest < ActiveSupport::TestCase
       @notification.mark_as_read
     end
   end
+
+  def test_stores_history
+    @notification.text = 'Test'
+
+    assert_difference '@notification.versions.count', 1 do
+      @notification.save!
+    end
+  end
 end

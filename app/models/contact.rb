@@ -14,9 +14,6 @@ class Contact < ApplicationRecord
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
   has_many :actions, dependent: :destroy
 
-  has_many :audit_contacts, class_name: '::Audit::ContactHistory', foreign_key: 'object_id'
-  alias_attribute :versions, :audit_contacts
-
   attr_accessor :legal_document_id
   alias_attribute :kind, :ident_type
   alias_attribute :copy_from_id, :original_id # Old attribute name; for PaperTrail

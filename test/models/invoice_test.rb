@@ -109,4 +109,13 @@ class InvoiceTest < ActiveSupport::TestCase
                           seller_zip: nil)
     assert_equal 'street, city, state', invoice.seller_address
   end
+
+  def test_stores_history
+    invoice = invoices(:one)
+    invoice.seller_name = 'test'
+
+    assert_difference 'invoice.versions.count', 1 do
+      invoice.save!
+    end
+  end
 end

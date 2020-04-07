@@ -691,6 +691,35 @@ $$;
 
 
 --
+-- Name: process_registrar_audit(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.process_registrar_audit() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF (TG_OP = 'INSERT') THEN
+      INSERT INTO audit.registrars
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'INSERT', now(), '{}', to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'UPDATE') THEN
+      INSERT INTO audit.registrars
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (NEW.id, 'UPDATE', now(), to_json(OLD)::jsonb, to_json(NEW)::jsonb);
+      RETURN NEW;
+    ELSEIF (TG_OP = 'DELETE') THEN
+      INSERT INTO audit.registrars
+      (object_id, action, recorded_at, old_value, new_value)
+      VALUES (OLD.id, 'DELETE', now(), to_json(OLD)::jsonb, '{}');
+      RETURN OLD;
+    END IF;
+    RETURN NULL;
+  END
+$$;
+
+
+--
 -- Name: process_reserved_domain_audit(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1384,6 +1413,40 @@ CREATE SEQUENCE audit.registrant_verifications_id_seq
 --
 
 ALTER SEQUENCE audit.registrant_verifications_id_seq OWNED BY audit.registrant_verifications.id;
+
+
+--
+-- Name: registrars; Type: TABLE; Schema: audit; Owner: -
+--
+
+CREATE TABLE audit.registrars (
+    id integer NOT NULL,
+    object_id bigint,
+    action text NOT NULL,
+    recorded_at timestamp without time zone,
+    old_value jsonb,
+    new_value jsonb,
+    CONSTRAINT registrars_action_check CHECK ((action = ANY (ARRAY['INSERT'::text, 'UPDATE'::text, 'DELETE'::text, 'TRUNCATE'::text])))
+);
+
+
+--
+-- Name: registrars_id_seq; Type: SEQUENCE; Schema: audit; Owner: -
+--
+
+CREATE SEQUENCE audit.registrars_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: registrars_id_seq; Type: SEQUENCE OWNED BY; Schema: audit; Owner: -
+--
+
+ALTER SEQUENCE audit.registrars_id_seq OWNED BY audit.registrars.id;
 
 
 --
@@ -3800,6 +3863,13 @@ ALTER TABLE ONLY audit.registrant_verifications ALTER COLUMN id SET DEFAULT next
 
 
 --
+-- Name: registrars id; Type: DEFAULT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.registrars ALTER COLUMN id SET DEFAULT nextval('audit.registrars_id_seq'::regclass);
+
+
+--
 -- Name: reserved_domains id; Type: DEFAULT; Schema: audit; Owner: -
 --
 
@@ -4283,6 +4353,14 @@ ALTER TABLE ONLY audit.payment_orders
 
 ALTER TABLE ONLY audit.registrant_verifications
     ADD CONSTRAINT registrant_verifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: registrars registrars_pkey; Type: CONSTRAINT; Schema: audit; Owner: -
+--
+
+ALTER TABLE ONLY audit.registrars
+    ADD CONSTRAINT registrars_pkey PRIMARY KEY (id);
 
 
 --
@@ -5100,6 +5178,20 @@ CREATE INDEX registrant_verifications_recorded_at_idx ON audit.registrant_verifi
 
 
 --
+-- Name: registrars_object_id_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX registrars_object_id_idx ON audit.registrars USING btree (object_id);
+
+
+--
+-- Name: registrars_recorded_at_idx; Type: INDEX; Schema: audit; Owner: -
+--
+
+CREATE INDEX registrars_recorded_at_idx ON audit.registrars USING btree (recorded_at);
+
+
+--
 -- Name: reserved_domains_object_id_idx; Type: INDEX; Schema: audit; Owner: -
 --
 
@@ -5856,6 +5948,13 @@ CREATE TRIGGER process_registrant_verification_audit AFTER INSERT OR DELETE OR U
 
 
 --
+-- Name: registrars process_registrar_audit; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER process_registrar_audit AFTER INSERT OR DELETE OR UPDATE ON public.registrars FOR EACH ROW EXECUTE PROCEDURE public.process_registrar_audit();
+
+
+--
 -- Name: reserved_domains process_reserved_domain_audit; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -6513,5 +6612,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200319082650'),
 ('20200320090152'),
 ('20200320094842'),
-('20200330111918');
+('20200330111918'),
+('20200408091005');
 

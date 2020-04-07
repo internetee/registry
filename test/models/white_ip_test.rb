@@ -18,6 +18,15 @@ class WhiteIpTest < ActiveSupport::TestCase
     assert white_ip.valid?
   end
 
+  def test_stores_history
+    white_ip = valid_white_ip
+    white_ip.ipv6 = valid_ipv6
+
+    assert_difference 'white_ip.versions.count', 1 do
+      white_ip.save!
+    end
+  end
+
   def test_validates_ipv4_format
     white_ip = valid_white_ip
 

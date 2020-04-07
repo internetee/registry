@@ -238,6 +238,15 @@ class RegistrarTest < ActiveSupport::TestCase
     assert_equal iban, registrar.e_invoice_iban
   end
 
+  def test_stores_history
+    @registrar.address_country_code = 'DE'
+    @registrar.vat_rate = BigDecimal('25.5')
+
+    assert_difference '@registrar.versions.count', 1 do
+      @registrar.save!
+    end
+  end
+
   private
 
   def valid_registrar

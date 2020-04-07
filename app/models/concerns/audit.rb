@@ -8,6 +8,8 @@ module Audit
     before_create :add_updator
     before_update :add_updator
 
+    has_many :versions, class_name: "::Audit::#{self.name}History", foreign_key: 'object_id'
+
     def add_creator
       self.creator_str = ::User.whodunnit || 'console-root' if respond_to?(:creator_str=)
       true
@@ -42,26 +44,6 @@ module Audit
   end
 
   module ClassMethods
-    def audit_versions_for(ids, time)
-      ver_class = "Audit::#{name}History".constantize
-      return unless ver_class
-
-      calculate_from_history(ver_class, ids, time)
-    end
-
-    def calculate_from_history(ver_class, ids, time)
-      ver_class.where(object_id: ids.to_a)
-               .order(:object_id)
-               .where('recorded_at < ?', time + 1)
-               .order(recorded_at: :desc)
-               .map do |version|
-                 valid_columns = column_names
-                 object = new(version[:new_value].slice(*valid_columns))
-                 object.version_loader = version
-                 object
-               end
-    end
-
     def objects_for(ids)
       ver_class = "Audit::#{name}History".constantize
       return unless ver_class

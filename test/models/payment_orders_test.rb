@@ -100,4 +100,12 @@ class PaymentOrdersTest < ActiveSupport::TestCase
     payment = PaymentOrder.new_with_type(type: 'seb', invoice: Invoice.new)
     assert_equal PaymentOrders::Seb, payment.class
   end
+
+  def test_stores_history
+    payment_order = PaymentOrder.new_with_type(type: 'every_pay', invoice: Invoice.new)
+
+    assert_difference 'payment_order.versions.count', 1 do
+      payment_order.save!
+    end
+  end
 end

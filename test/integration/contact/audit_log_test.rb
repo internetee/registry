@@ -5,7 +5,7 @@ class ContactAuditLogTest < ActionDispatch::IntegrationTest
     contact = contacts(:john)
 
     contact.legal_document_ids << 1
-    assert_difference 'contact.audit_contacts.count', 1 do
+    assert_difference 'contact.versions.count', 1 do
       contact.save!
     end
   end

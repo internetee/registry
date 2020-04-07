@@ -27,4 +27,14 @@ class InvoiceItemTest < ActiveSupport::TestCase
     invoice_item = InvoiceItem.new(price: 5, quantity: 2, invoice: invoice)
     assert_equal 12, invoice_item.total
   end
+
+  def test_stores_history
+    invoice = invoices(:one)
+    invoice_item = invoice_items(:one)
+    invoice_item.description = 'test'
+
+    assert_difference 'invoice_item.versions.count', 1 do
+      invoice_item.save!
+    end
+  end
 end

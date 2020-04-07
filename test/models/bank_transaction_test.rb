@@ -149,6 +149,17 @@ class BankTransactionTest < ActiveSupport::TestCase
     assert transaction.errors.full_messages.include?('Cannot bind cancelled invoice')
   end
 
+  def test_saves_history
+    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+    transaction = BankTransaction.new(description: 'invoice #2222',
+                                      sum: 10,
+                                      description: 'Order nr 1 from registrar 1234567 second number 2345678')
+
+    assert_difference 'transaction.versions.count', 1 do
+      transaction.autobind_invoice
+    end
+  end
+
   private
 
   def create_payable_invoice(attributes)

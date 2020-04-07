@@ -22,4 +22,13 @@ class BankStatementTest < ActiveSupport::TestCase
   def valid_bank_statement
     bank_statements(:one)
   end
+
+  def test_stores_history
+    bank_statement = valid_bank_statement
+    bank_statement.bank_code = '5678'
+
+    assert_difference 'bank_statement.versions.count', 1 do
+      bank_statement.save!
+    end
+  end
 end

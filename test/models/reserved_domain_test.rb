@@ -13,4 +13,12 @@ class ReservedDomainTest < ActiveSupport::TestCase
     reserved_domain = ReservedDomain.new(password: 'reserved-001')
     assert_equal 'reserved-001', reserved_domain.registration_code
   end
+
+  def test_stores_history
+    @reserved_domain.name = 'reserved2.test'
+
+    assert_difference '@reserved_domain.versions.count', 1 do
+      @reserved_domain.save!
+    end
+  end
 end

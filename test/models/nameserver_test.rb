@@ -80,4 +80,12 @@ class NameserverTest < ActiveSupport::TestCase
     @nameserver.hostname = 'ns1.münchen.de'
     assert_equal 'ns1.xn--mnchen-3ya.de', @nameserver.hostname_puny
   end
+
+  def test_stores_history
+    @nameserver.hostname = 'ns2.bestnames.test'
+
+    assert_difference '@nameserver.versions.count', 1 do
+      @nameserver.save!
+    end
+  end
 end
