@@ -1,25 +1,26 @@
 class CopyOldHistoryJob < Que::Job
-  MODELS = %w[contact
-              domain
-              account_activity
-              account action
-              bank_statement
-              bank_transaction
-              blocked_domain
-              certificate
-              dnskey
-              domain_contact
-              invoice
-              invoice_item
-              nameserver
-              notification
-              payment_order
-              registrant_verification
-              registrar
-              reserved_domain
-              setting
-              user
-              white_ip].freeze
+  MODELS = %w[AccountActivity
+              Contact
+              Domain
+              Account
+              Action
+              BankStatement
+              BankTransaction
+              BlockedDomain
+              Certificate
+              Dnskey
+              DomainContact
+              Invoice
+              InvoiceItem
+              Nameserver
+              Notification
+              PaymentOrder
+              RegistrantVerification
+              Registrar
+              ReservedDomain
+              Setting
+              User
+              WhiteIp].freeze
 
   def run
     MODELS.each do |model|
@@ -30,9 +31,9 @@ class CopyOldHistoryJob < Que::Job
   private
 
   def copy_history(model)
-    old_history = "#{model.capitalize}Version".constantize.all
+    old_history = "#{model}Version".constantize.all
 
-    new_klass = "Audit::#{model.capitalize}History".constantize
+    new_klass = "Audit::#{model}History".constantize
     history_array = []
 
     old_history.find_each do |old_entry|
@@ -51,7 +52,7 @@ class CopyOldHistoryJob < Que::Job
 
     attrs = attrs(old_history_entry: old_entry, old_value: old_value, new_value: new_value)
 
-    already_exist = new_klass.find_by(recorded_at: recorded_at,
+    already_exist = new_klass.find_by(recorded_at: old_entry.created_at,
                                       object_id: object_id).present?
     return if already_exist
 
