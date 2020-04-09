@@ -35,6 +35,8 @@ exclude_patterns:
   - "app/models/audit/"
   - "app/models/version/"
   - "app/models/concerns/versions.rb"
+  - "app/models/concerns/audit.rb"
+  - "app/jobs/copy_old_history_job.rb"
   - "bin/"
   - "config/"
   - "db/"
