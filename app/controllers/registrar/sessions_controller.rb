@@ -1,5 +1,6 @@
 class Registrar
   class SessionsController < Devise::SessionsController
+    skip_before_action :verify_authenticity_token, only: [:create]
     before_action :check_ip_restriction
     helper_method :depp_controller?
 
