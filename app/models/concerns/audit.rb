@@ -9,8 +9,7 @@ module Audit
     before_update :add_updator
 
     has_many :versions, class_name: "::Audit::#{name}History",
-                        foreign_key: 'object_id',
-                        inverse_of: 'object'
+                        foreign_key: 'object_id'
 
     def add_creator
       self.creator_str = ::User.whodunnit || 'console-root' if respond_to?(:creator_str=)
