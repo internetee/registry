@@ -1,3 +1,6 @@
+15.04.2020
+* Updated Rails to 5.2 and fixed acitionview security issue [#1568](https://github.com/internetee/registry/issues/1568) 
+
 25.03.2020
 * Implemented Directo gem [#1547](https://github.com/internetee/registry/pull/1547)
 
