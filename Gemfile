@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 # core
-gem 'iso8601',      '0.12.1' # for dates and times
-gem 'rails', '~> 5.1.7'
+gem 'iso8601', '0.12.1' # for dates and times
+gem 'rails', '~> 5.2.4.2'
 gem 'rest-client'
 gem 'uglifier'
 
@@ -10,10 +10,10 @@ gem 'uglifier'
 gem 'figaro', '1.1.1'
 
 # model related
-gem 'paper_trail', '~> 8.1'
+gem 'paper_trail', '~> 9.2'
 gem 'pg',                        '1.2.2'
 # 1.8 is for Rails < 5.0
-gem 'ransack', '~> 1.8'
+gem 'ransack', '~> 2.3'
 gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and RFC 3696
 
 # 0.7.3 is the latest for Rails 4.2, however, it is absent on Rubygems server

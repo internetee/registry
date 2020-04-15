@@ -1,7 +1,5 @@
 class DomainStatus < ApplicationRecord
-  include Versions # version/domain_status_version.rb
   include EppErrors
-
   belongs_to :domain
 
   # Requests to delete the object MUST be rejected.
