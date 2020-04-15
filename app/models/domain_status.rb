@@ -1,6 +1,5 @@
 class DomainStatus < ApplicationRecord
   include EppErrors
-
   belongs_to :domain
 
   # Requests to delete the object MUST be rejected.
