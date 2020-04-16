@@ -31,6 +31,21 @@ module Audit
       new_value['uuid']
     end
 
+    def children
+      new_value['children'] || object_current_children
+    end
+
+    def object_current_children
+      {
+          'admin_contacts' => object.admin_contact_ids,
+          'tech_contacts' => object.tech_contact_ids,
+          'nameservers' => object.nameserver_ids,
+          'dnskeys' => object.dnskey_ids,
+          'legal_documents' => object.legal_document_ids,
+          'registrant' => [object.registrant_id],
+      }
+    end
+
     def prepare_children_history
       children.each_with_object({}) do |(key, value), hash|
         klass = CHILDREN_VERSIONS_HASH[key]

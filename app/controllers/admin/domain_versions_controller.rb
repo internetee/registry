@@ -22,27 +22,27 @@ module Admin
         search_params.delete(:registrar)
       end
 
-      whereS = '1=1'
+      where_str = '1=1'
 
       search_params.each do |key, value|
         next if value.empty?
 
-        whereS += case key
-                  when 'action'
-                    " AND action = '#{value}'"
-                  when 'name'
-                    " AND (new_value->>'name' ~* '#{value}' OR new_value->>'name' ~* '#{value}')"
-                  else
-                    create_where_string(key, value)
-                  end
+        where_str += case key
+                     when 'action'
+                       " AND action = '#{value}'"
+                     when 'name'
+                       " AND (new_value->>'name' ~* '#{value}' OR new_value->>'name' ~* '#{value}')"
+                     else
+                       create_where_string(key, value)
+                     end
       end
 
-      whereS += add_query(contacts: registrants, field: 'registrant_id') if registrants.present?
-      whereS += '  AND 1=0' if registrants == []
-      whereS += add_query(contacts: registrars, field: 'registrar_id') if registrars.present?
-      whereS += '  AND 1=0' if registrars == []
+      where_str += add_query(contacts: registrants, field: 'registrant_id') if registrants.present?
+      where_str += '  AND 1=0' if registrants == []
+      where_str += add_query(contacts: registrars, field: 'registrar_id') if registrars.present?
+      where_str += '  AND 1=0' if registrars == []
 
-      versions = Audit::DomainHistory.where(whereS).order(recorded_at: :desc, id: :desc)
+      versions = Audit::DomainHistory.where(where_str).order(recorded_at: :desc, id: :desc)
       @q = versions.search(params[:q])
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?

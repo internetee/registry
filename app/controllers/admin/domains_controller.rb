@@ -57,7 +57,7 @@ module Admin
     end
 
     def versions
-      @domain = Domain.where(id: params[:domain_id]).includes({ versions: :item }).first
+      @domain = Domain.where(id: params[:domain_id]).first
       @versions = @domain.audit_domains
     end
 

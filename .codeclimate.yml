@@ -5,11 +5,6 @@ prepare:
     - url: "https://raw.githubusercontent.com/internetee/style-guide/master/.rubocop-rails.yml"
       path: ".rubocop.yml"
 plugins:
-  brakeman:
-    enabled: true
-    checks:
-      sql_injection:
-        enabled: false
   bundler-audit:
     enabled: true
   duplication:
@@ -27,9 +22,9 @@ plugins:
     enabled: true
     channel: rubocop-0-74
     checks:
-      Rubocop/Metrics/BlockLength:
-        enabled: false
       Rubocop/Bundler/OrderedGems:
+        enabled: false
+      Rubocop/Rails/InverseOf:
         enabled: false
 exclude_patterns:
   - "app/models/audit/"
