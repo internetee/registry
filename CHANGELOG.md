@@ -1,3 +1,6 @@
+17.04.2020
+* Webinterfaces have now clickable version string pointing to the latest deployed commit in github [#1345](https://github.com/internetee/registry/pull/1345)
+
 15.04.2020
 * Updated Rails to 5.2 and fixed acitionview security issue [#1568](https://github.com/internetee/registry/issues/1568) 
 
