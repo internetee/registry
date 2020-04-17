@@ -33,6 +33,15 @@ module ApplicationHelper
     end
   end
 
+  def current_commit_link
+    hash = CURRENT_COMMIT_HASH
+    current_repo = CURRENT_COMMIT_REPO.gsub('com:', 'com/')
+                                      .gsub('git@', 'https://')
+                                      .gsub('.git', '')
+
+    link_to hash.to_s, "#{current_repo}/commit/#{hash}", class: 'footer-version-link'
+  end
+
   def creator_link(model)
     return 'not present' if model.blank?
     return 'unknown'     if model.creator.blank?
