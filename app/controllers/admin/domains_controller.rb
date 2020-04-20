@@ -58,7 +58,7 @@ module Admin
 
     def versions
       @domain = Domain.where(id: params[:domain_id]).first
-      @versions = @domain.audit_domains
+      @versions = @domain.audit_domains.order(recorded_at: :desc)
     end
 
     def keep

@@ -3,6 +3,7 @@ module Audit
 
   included do
     attr_accessor :version_loader
+    attr_accessor :action
 
     before_create :add_creator
     before_create :add_updator
@@ -59,11 +60,22 @@ module Audit
                .order(:object_id)
                .order(recorded_at: :desc)
                .map do |version|
-                 valid_columns = column_names
-                 object = new(version[:new_value].slice(*valid_columns))
+                 columns = column_names
+                 object = generate_object_from_version(version: version, columns: columns)
                  object.version_loader = version
+                 object.action = version.action
                  object
                end
+    end
+
+    def generate_object_from_version(version:, columns:)
+      case version.action
+      when 'DELETE'
+        new(version[:old_value].slice(*columns))
+      else
+        new(version[:new_value].slice(*columns))
+      end
+
     end
   end
 end

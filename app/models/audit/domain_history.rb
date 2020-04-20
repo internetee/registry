@@ -31,19 +31,46 @@ module Audit
       new_value['uuid']
     end
 
-    def children
-      new_value['children'] || object_current_children
-    end
-
     def object_current_children
       {
-          'admin_contacts' => object.admin_contact_ids,
-          'tech_contacts' => object.tech_contact_ids,
-          'nameservers' => object.nameserver_ids,
-          'dnskeys' => object.dnskey_ids,
-          'legal_documents' => object.legal_document_ids,
-          'registrant' => [object.registrant_id],
+        'admin_contacts' => object.admin_contact_ids,
+        'tech_contacts' => object.tech_contact_ids,
+        'nameservers' => object.nameserver_ids,
+        'dnskeys' => object.dnskey_ids,
+        'legal_documents' => object.legal_document_ids,
+        'registrant' => [object.registrant_id],
       }
+    end
+
+    def object_history_children
+      {
+        'admin_contacts' => Audit::DomainContactHistory.by_domain(object.id).admin.contact_ids,
+        'tech_contacts' => Audit::DomainContactHistory.by_domain(object.id).tech.contact_ids,
+        'nameservers' => Audit::NameserverHistory.by_domain(object.id).pluck(:object_id),
+        'dnskeys' => Audit::DnskeyHistory.by_domain(object.id).pluck(:object_id),
+        'registrant' => object_history_registrars
+      }
+    end
+
+    def object_history_registrars
+      self.class.where(object_id: object.id)
+          .pluck(Arel.sql("new_value->'registrant_id'"),
+                       Arel.sql("old_value->'registrant_id'"))
+          .flatten
+          .reject(&:blank?)
+          .uniq
+    end
+
+    def children
+      current_hash = (old_value['children'] || {})
+                     .merge(new_value['children']) do |_key, old_val, new_val|
+        result = (old_val + new_val).uniq
+        result.reject(&:blank?)
+      end
+      current_hash.merge(object_history_children) do |_key, old_val, new_val|
+        result = (old_val + new_val).uniq
+        result.reject(&:blank?)
+      end
     end
 
     def prepare_children_history
@@ -52,9 +79,7 @@ module Audit
         next unless klass
 
         value = prepare_value(key: key, value: value)
-        parent_klass = parent_from_klass(klass)
         result = calculate_result(klass: klass,
-                                  parent_klass: parent_klass,
                                   value: value)
 
         hash[key] = result unless result.all?(&:blank?)
@@ -63,16 +88,11 @@ module Audit
 
     def date_range
       next_version_recorded_at = self.next_version&.recorded_at || Time.zone.now
-      (recorded_at..next_version_recorded_at)
+      (recorded_at...next_version_recorded_at)
     end
 
-    def parent_from_klass(klass)
-      klass.name.gsub('History', '').split('::').last.constantize
-    end
-
-    def calculate_result(klass:, parent_klass:, value:)
+    def calculate_result(klass:, value:)
       result = klass.where(object_id: value).where(recorded_at: date_range)
-      result = parent_klass.where(id: value) if result.all?(&:blank?)
       result
     end
 

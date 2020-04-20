@@ -83,11 +83,12 @@
   %td
     %p
       - Array(nameservers).each do |ns|
-        = ns[:hostname]
-        %br
-        = ns[:ipv4].presence
-        = ns[:ipv6].presence
-        %br
+        %span{class: changing_css_class_action(ns)}
+          = ns[:hostname]
+          %br
+          = ns[:ipv4].presence
+          = ns[:ipv6].presence
+          %br
   %td
     - Array(dnskeys).each do |ns|
       %p
