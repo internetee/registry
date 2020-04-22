@@ -1,0 +1,10 @@
+en:
+  admin:
+    disputes:
+      index:
+        title: Domain disputes
+        new_btn: New domain dispute
+        reset_btn: Reset
+
+      form:
+        password_hint: Generated automatically if left blank
