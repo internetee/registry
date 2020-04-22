@@ -171,9 +171,21 @@ class Epp::Domain < Domain
 
     at[:dnskeys_attributes] = dnskeys_attrs(dnskey_frame, action)
 
+    admin_contacts_initial = initial_contact_data(at[:admin_domain_contacts_attributes]
+                                                      .map { |hash| hash['contact_id'] })
+    tech_contacts_initial = initial_contact_data(at[:tech_domain_contacts_attributes]
+                                                     .map { |hash| hash['contact_id'] })
+    at[:children] = {
+      'admin_contacts_initial' => admin_contacts_initial,
+      'tech_contacts_initial' => tech_contacts_initial,
+      'registrant_initial' => initial_contact_data(at[:registrant_id]),
+    }
     at
   end
 
+  def initial_contact_data(ids)
+    Contact.where(id: ids)
+  end
 
   # Adding legal doc to domain and
   # if something goes wrong - raise Rollback error

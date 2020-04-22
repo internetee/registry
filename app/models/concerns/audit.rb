@@ -46,12 +46,15 @@ module Audit
   end
 
   module ClassMethods
-    def objects_for(ids)
+    def objects_for(ids:, initial: false)
       ver_class = "Audit::#{name}History".constantize
       return unless ver_class
 
-      result = calculate_from_versions(ver_class: ver_class, ids: ids)
-      result = name.constantize.where(id: ids) if result.all?(&:blank?)
+      result = if initial
+                 name.constantize.where(id: ids)
+               else
+                 calculate_from_versions(ver_class: ver_class, ids: ids)
+               end
       result
     end
 

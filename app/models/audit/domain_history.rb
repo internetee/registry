@@ -7,7 +7,20 @@ module Audit
       registrant: Audit::ContactHistory,
       nameservers: Audit::NameserverHistory,
       tech_contacts: Audit::ContactHistory,
-      admin_contacts: Audit::ContactHistory
+      tech_contacts_initial: Audit::ContactHistory,
+      admin_contacts: Audit::ContactHistory,
+      admin_contacts_initial: Audit::ContactHistory,
+    }.with_indifferent_access.freeze
+
+    CHILDREN_INITIAL_HASH = {
+        dnskeys: Dnskey,
+        registrant: Contact,
+        registrant_initial: Contact,
+        nameservers: Nameserver,
+        tech_contacts: Contact,
+        tech_contacts_initial: Contact,
+        admin_contacts: Contact,
+        admin_contacts_initial: Contact,
     }.with_indifferent_access.freeze
 
     ransacker :name do |parent|
@@ -29,17 +42,6 @@ module Audit
 
     def uuid
       new_value['uuid']
-    end
-
-    def object_current_children
-      {
-        'admin_contacts' => object.admin_contact_ids,
-        'tech_contacts' => object.tech_contact_ids,
-        'nameservers' => object.nameserver_ids,
-        'dnskeys' => object.dnskey_ids,
-        'legal_documents' => object.legal_document_ids,
-        'registrant' => [object.registrant_id],
-      }
     end
 
     def object_history_children
@@ -74,16 +76,24 @@ module Audit
     end
 
     def prepare_children_history
-      children.each_with_object({}) do |(key, value), hash|
-        klass = CHILDREN_VERSIONS_HASH[key]
+      result = children.each_with_object({}) do |(key, value), hash|
+        klass = show_initial?(key) ? CHILDREN_INITIAL_HASH[key] : CHILDREN_VERSIONS_HASH[key]
         next unless klass
 
-        value = prepare_value(key: key, value: value)
-        result = calculate_result(klass: klass,
-                                  value: value)
+        value = prepare_value(key: key, value: value) unless show_initial?(key)
+        history = if show_initial?(key)
+                    calculate_initial(klass: klass, value: value, key: key)
+                  else
+                    calculate_history(klass: klass, value: value)
+                  end
 
-        hash[key] = result unless result.all?(&:blank?)
+        hash[key] = history unless history.blank? || history.all?(&:blank?)
       end
+      result
+    end
+
+    def show_initial?(key)
+      initial? && key != 'nameservers'
     end
 
     def date_range
@@ -91,8 +101,18 @@ module Audit
       (recorded_at...next_version_recorded_at)
     end
 
-    def calculate_result(klass:, value:)
+    def calculate_history(klass:, value:)
       result = klass.where(object_id: value).where(recorded_at: date_range)
+      result
+    end
+
+    def calculate_initial(klass:, value:, key:)
+      result = case key
+               when 'registrant', 'tech_contacts', 'admin_contacts'
+                 children["#{key}_initial"]&.map { |attrs| klass.new(attrs) }
+               else
+                 klass.where(id: value)
+               end
       result
     end
 

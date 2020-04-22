@@ -4,11 +4,11 @@
 
 - if @version
   - children = HashWithIndifferentAccess.new(@version.prepare_children_history)
-  - nameservers    = Nameserver.objects_for(children[:nameservers]&.map(&:id))
-  - dnskeys        = Dnskey.objects_for(children[:dnskeys]&.map(&:id))
-  - tech_contacts  = Contact.objects_for(children[:tech_contacts]&.map(&:id))
-  - admin_contacts = Contact.objects_for(children[:admin_contacts]&.map(&:id))
-  - registrant     = Contact.objects_for(children[:registrant]&.map(&:id))
+  - nameservers    = Nameserver.objects_for(ids: children[:nameservers]&.map(&:id))
+  - dnskeys        = Dnskey.objects_for(ids: children[:dnskeys]&.map(&:id))
+  - tech_contacts  = Contact.objects_for(ids: children[:tech_contacts]&.map(&:id))
+  - admin_contacts = Contact.objects_for(ids: children[:admin_contacts]&.map(&:id))
+  - registrant     = Contact.objects_for(ids: children[:registrant]&.map(&:id))
   - event       = @version.action
   - creator     = plain_username(@version.terminator)
 

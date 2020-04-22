@@ -21,7 +21,7 @@ class DomainAuditTest < ActiveSupport::TestCase
     assert_equal duplicate_domain.children, duplicate_domain.versions.last.children
 
     admin_contact_ids = duplicate_domain.children['admin_contacts']
-    admin_contacts = Contact.objects_for(admin_contact_ids)
+    admin_contacts = Contact.objects_for(ids: admin_contact_ids)
 
     assert_equal duplicate_domain.admin_contacts.to_a, admin_contacts.to_a
   end

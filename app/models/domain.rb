@@ -70,7 +70,7 @@ class Domain < ApplicationRecord
   before_save :fill_children
 
   def fill_children
-    self.children = {
+    hash = {
       'admin_contacts' => admin_contact_ids,
       'tech_contacts' => tech_contact_ids,
       'nameservers' => nameserver_ids,
@@ -78,6 +78,8 @@ class Domain < ApplicationRecord
       'legal_documents' => legal_document_ids,
       'registrant' => [registrant_id],
     }
+
+    self.children.merge! hash
   end
 
   def touch_always_version

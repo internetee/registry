@@ -25,5 +25,9 @@ module Audit
     def prev_version
       self.class.where("id < ?", id).where(object_id: object_id).last
     end
+
+    def initial?
+      action == 'INSERT'
+    end
   end
 end
