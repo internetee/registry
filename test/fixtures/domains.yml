@@ -13,6 +13,7 @@ shop:
   period: 1
   period_unit: m
   uuid: 1b3ee442-e8fe-4922-9492-8fcb9dccc69c
+  children: {}
 
 airport:
   name: airport.test
@@ -25,6 +26,7 @@ airport:
   period: 1
   period_unit: m
   uuid: 2df2c1a1-8f6a-490a-81be-8bdf29866880
+  children: {}
 
 library:
   name: library.test
@@ -37,6 +39,7 @@ library:
   period: 1
   period_unit: m
   uuid: 647bcc48-8d5e-4a04-8ce5-2a3cd17b6eab
+  children: {}
 
 metro:
   name: metro.test
@@ -49,6 +52,7 @@ metro:
   period: 1
   period_unit: m
   uuid: ef97cb80-333b-4893-b9df-163f2b452798
+  children: {}
 
 hospital:
   name: hospital.test
@@ -61,6 +65,7 @@ hospital:
   period: 1
   period_unit: m
   uuid: 5edda1a5-3548-41ee-8b65-6d60daf85a37
+  children: {}
 
 invalid:
   name: invalid.test
@@ -71,3 +76,4 @@ invalid:
   registrar: bestnames
   registrant: invalid
   uuid: 3c430ead-bb17-4b5b-aaa1-caa7dde7e138
+  children: {}

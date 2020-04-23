@@ -3,7 +3,7 @@ module Audit
 
   included do
     attr_accessor :version_loader
-    attr_accessor :action
+    attr_accessor :history_action
 
     before_create :add_creator
     before_create :add_updator
@@ -46,6 +46,13 @@ module Audit
   end
 
   module ClassMethods
+    def versions_for(ids:)
+      ver_class = "Audit::#{name}History".constantize
+      return unless ver_class
+
+      calculate_from_versions(ver_class: ver_class, ids: ids, field: :object_id)
+    end
+
     def objects_for(ids:, initial: false)
       ver_class = "Audit::#{name}History".constantize
       return unless ver_class
@@ -53,20 +60,20 @@ module Audit
       result = if initial
                  name.constantize.where(id: ids)
                else
-                 calculate_from_versions(ver_class: ver_class, ids: ids)
+                 calculate_from_versions(ver_class: ver_class, ids: ids, field: :id)
                end
       result
     end
 
-    def calculate_from_versions(ver_class:, ids:)
-      ver_class.where(id: ids.to_a)
+    def calculate_from_versions(ver_class:, ids:, field:)
+      ver_class.where(field => ids.to_a)
                .order(:object_id)
                .order(recorded_at: :desc)
                .map do |version|
                  columns = column_names
                  object = generate_object_from_version(version: version, columns: columns)
                  object.version_loader = version
-                 object.action = version.action
+                 object.history_action = version.action
                  object
                end
     end

@@ -79,7 +79,7 @@ class Domain < ApplicationRecord
       'registrant' => [registrant_id],
     }
 
-    self.children.merge! hash
+    children.merge! hash
   end
 
   def touch_always_version

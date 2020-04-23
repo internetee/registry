@@ -102,8 +102,8 @@ module ApplicationHelper
   def changing_css_class_action(version)
     return unless version
 
-    css_class = 'text-red' if version.action == 'DELETE'
-    css_class = 'text-green' if version.action == 'INSERT'
+    css_class = 'text-red' if version.history_action == 'DELETE'
+    css_class = 'text-green' if version.history_action == 'INSERT'
     css_class
   end
 

@@ -8,7 +8,8 @@ class ContactAuditTest < ActiveSupport::TestCase
     contact.legal_document_ids << 1
     contact.save!
 
-    history_objects = Contact.objects_for(ids: [contact.id])
+    history_objects = Contact.versions_for(ids: [contact.id])
+
     assert_equal history_objects, [old_contact]
   end
 
