@@ -29,7 +29,7 @@ class DomainAuditTest < ActiveSupport::TestCase
 
   def test_audit_saves_versions
     duplicate_domain = prepare_duplicate_domain
-    assert_difference 'duplicate_domain.versions.count', 1 do
+    assert_difference 'duplicate_domain.versions.count', 4 do
       duplicate_domain.save!
     end
   end

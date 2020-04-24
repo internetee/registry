@@ -174,13 +174,13 @@ class Epp::Domain < Domain
           'admin_contacts_initial' => admin_contacts_initial,
           'tech_contacts_initial' => tech_contacts_initial,
           'registrant_initial' => initial_contact_data(at[:registrant_id]),
+          'dnskey_initial' => dnskeys_attrs(dnskey_frame, action),
       }
     else
       dnskey_frame = frame
     end
 
     at[:dnskeys_attributes] = dnskeys_attrs(dnskey_frame, action)
-
     at
   end
 

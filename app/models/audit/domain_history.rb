@@ -4,6 +4,7 @@ module Audit
 
     CHILDREN_VERSIONS_HASH = {
       dnskeys: Audit::DnskeyHistory,
+      dnskeys_initial: Audit::DnskeyHistory,
       registrant: Audit::ContactHistory,
       nameservers: Audit::NameserverHistory,
       tech_contacts: Audit::ContactHistory,
@@ -14,6 +15,7 @@ module Audit
 
     CHILDREN_INITIAL_HASH = {
         dnskeys: Dnskey,
+        dnskeys_initial: Dnskey,
         registrant: Contact,
         registrant_initial: Contact,
         nameservers: Nameserver,

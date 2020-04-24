@@ -47,6 +47,8 @@ class Contact < ApplicationRecord
   before_validation :to_upcase_country_code
   before_validation :strip_email
 
+  before_update -> { domains.update_all(updated_at: Time.zone.now) }
+
   composed_of :identifier,
               class_name: 'Ident',
               constructor: proc { |code, type, country_code|
