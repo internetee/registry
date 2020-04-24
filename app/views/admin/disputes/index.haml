@@ -41,13 +41,11 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'password')
             %th{class: 'col-xs-2'}
+              = sort_link(@q, 'starts_at')
+            %th{class: 'col-xs-2'}
               = sort_link(@q, 'expires_at')
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'comment')
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'created_at', t(:created_at))
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'updated_at', t(:updated_at))
             %th{class: 'col-xs-2'}
               = t(:actions)
         %tbody
@@ -55,12 +53,11 @@
             %tr
               %td= x.domain_name
               %td= x.password
+              %td= x.starts_at
               %td= x.expires_at
               %td= x.comment
-              %td= l(x.created_at, format: :short)
-              %td= l(x.updated_at, format: :short)
               %td
-                = link_to(t(:edit_pw), edit_admin_dispute_path(id: x.id),
+                = link_to(t(:edit), edit_admin_dispute_path(id: x.id),
                   class: 'btn btn-primary btn-xs')
                 = link_to(t(:delete), delete_admin_dispute_path(id: x.id),
                   data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger btn-xs')
