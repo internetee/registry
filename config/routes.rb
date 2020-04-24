@@ -1,7 +1,6 @@
 require_dependency 'epp_constraint'
 
 Rails.application.routes.draw do
-  resources :disputes
   # https://github.com/internetee/epp_proxy#translation-of-epp-calls
   namespace :epp do
     constraints(EppConstraint.new(:session)) do
@@ -259,7 +258,11 @@ Rails.application.routes.draw do
         get 'delete'
       end
     end
-    resources :disputes
+    resources :disputes do
+      member do
+        get 'delete'
+      end
+    end
 
     resources :registrars do
       resources :api_users, except: %i[index]

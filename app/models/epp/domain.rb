@@ -58,7 +58,8 @@ class Epp::Domain < Domain
       '2003' => [ # Required parameter missing
         [:registrant, :blank],
         [:registrar, :blank],
-        [:base, :required_parameter_missing_reserved]
+        [:base, :required_parameter_missing_reserved],
+        [:base, :required_parameter_missing_disputed]
       ],
       '2004' => [ # Parameter value range error
         [:dnskeys, :out_of_range,
@@ -88,7 +89,8 @@ class Epp::Domain < Domain
         [:transfer_code, :wrong_pw]
       ],
       '2202' => [
-        [:base, :invalid_auth_information_reserved]
+        [:base, :invalid_auth_information_reserved],
+        [:base, :invalid_auth_information_disputed]
       ],
       '2302' => [ # Object exists
         [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
@@ -154,6 +156,7 @@ class Epp::Domain < Domain
     at[:period_unit] = Epp::Domain.parse_period_unit_from_frame(frame) || 'y'
 
     at[:reserved_pw] = frame.css('reserved > pw').text
+    at[:disputed_pw] = frame.css('disputed > pw').text
 
     # at[:statuses] = domain_statuses_attrs(frame, action)
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
@@ -475,6 +478,16 @@ class Epp::Domain < Domain
 
     same_registrant_as_current = (registrant.code == frame.css('registrant').text)
 
+    if !same_registrant_as_current && disputed?
+      disputed_pw = frame.css('disputed > pw').text
+      if disputed_pw.blank?
+        add_epp_error('2304', nil, nil, 'Required parameter missing; disputed pw element required for dispute domains')
+      else
+        dispute = Dispute.active.find_by(domain_name: name, password: disputed_pw)
+        add_epp_error('2202', nil, nil, 'Invalid authorization information; invalid disputed>pw value') if dispute.nil?
+      end
+    end
+
     if !same_registrant_as_current && errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
        frame.css('registrant').present? &&
@@ -706,6 +719,11 @@ class Epp::Domain < Domain
 
 
   def can_be_deleted?
+    if disputed?
+      errors.add(:base, :domain_status_prohibits_operation)
+      return false
+    end
+
     begin
       errors.add(:base, :domain_status_prohibits_operation)
       return false

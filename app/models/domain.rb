@@ -90,6 +90,7 @@ class Domain < ApplicationRecord
   validates :transfer_code, presence: true
 
   validate :validate_reservation
+
   def validate_reservation
     return if persisted? || !in_reserved_list?
 
@@ -99,6 +100,7 @@ class Domain < ApplicationRecord
     end
 
     return if ReservedDomain.pw_for(name) == reserved_pw
+
     errors.add(:base, :invalid_auth_information_reserved)
   end
 
@@ -170,7 +172,7 @@ class Domain < ApplicationRecord
   end
 
   attr_accessor :registrant_typeahead, :update_me,
-    :epp_pending_update, :epp_pending_delete, :reserved_pw
+    :epp_pending_update, :epp_pending_delete, :reserved_pw, :disputed_pw
 
   self.ignored_columns = %w[legacy_id legacy_registrar_id legacy_registrant_id]
 
@@ -273,6 +275,10 @@ class Domain < ApplicationRecord
 
   def in_reserved_list?
     @in_reserved_list ||= ReservedDomain.by_domain(name).any?
+  end
+
+  def disputed?
+    Dispute.active.where(domain_name: name).any?
   end
 
   def pending_transfer

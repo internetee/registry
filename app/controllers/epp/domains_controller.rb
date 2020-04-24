@@ -104,6 +104,10 @@ module Epp
       authorize! :update, @domain, @password
 
       if @domain.update(params[:parsed_frame], current_user)
+        if @domain.disputed?
+          dispute = Dispute.active.find_by(domain_name: @domain.name)
+          dispute.close
+        end
         if @domain.epp_pending_update.present?
           render_epp_response '/epp/domains/success_pending'
         else

@@ -28,9 +28,8 @@ module Admin
     # POST /admin/disputes
     def create
       @dispute = Dispute.new(dispute_params)
-
       if @dispute.save
-        redirect_to @dispute, notice: 'Dispute was successfully created.'
+        redirect_to admin_disputes_url, notice: 'Dispute was successfully created.'
       else
         render :new
       end
@@ -39,16 +38,16 @@ module Admin
     # PATCH/PUT /admin/disputes/1
     def update
       if @dispute.update(dispute_params)
-        redirect_to @dispute, notice: 'Dispute was successfully updated.'
+        redirect_to admin_disputes_url, notice: 'Dispute was successfully updated.'
       else
         render :edit
       end
     end
 
     # DELETE /admin/disputes/1
-    def destroy
+    def delete
       @dispute.destroy
-      redirect_to disputes_url, notice: 'Dispute was successfully destroyed.'
+      redirect_to admin_disputes_url, notice: 'Dispute was successfully destroyed.'
     end
 
     private
@@ -60,7 +59,7 @@ module Admin
 
     # Only allow a trusted parameter "white list" through.
     def dispute_params
-      params.require(:dispute).permit(:domain_name, :password, :expires_at, :comment, :created_at)
+      params.require(:dispute).permit(:domain_name, :password, :starts_at, :comment)
     end
   end
 end

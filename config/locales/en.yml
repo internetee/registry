@@ -24,6 +24,8 @@ en:
               key_data_not_allowed: 'keyData object is not allowed'
               required_parameter_missing_reserved: 'Required parameter missing; reserved>pw element required for reserved domains'
               invalid_auth_information_reserved: 'Invalid authorization information; invalid reserved>pw value'
+              required_parameter_missing_disputed: 'Required parameter missing; disputed pw element required for dispute domains'
+              invalid_auth_information_disputed: 'Invalid authorization information; invalid disputed>pw value'
               domain_name_blocked: 'Data management policy violation: Domain name is blocked [name]'
             name_dirty:
               invalid: 'Domain name is invalid'
@@ -631,6 +633,7 @@ en:
   add_blocked_domain: 'Add domain to blocked list'
   add_disputed_domain: 'Add domain to disputed list'
   edit_pw: 'Edit Pw'
+  edit_dispute: 'Edit dispute'
   optional: 'Optional'
   test_registrar: "Test registrar"
   verified_confirm: 'Verified status is for cases when current registrant is the one applying for the update. Legal document signed by the registrant is required. Are you sure this update is properly verified with the registrant?'
