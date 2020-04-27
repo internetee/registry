@@ -8,10 +8,16 @@ module Admin
     # GET /admin/disputes
     def index
       params[:q] ||= {}
-      disputes = Dispute.all.order(:domain_name)
+      disputes = Dispute.active.all.order(:domain_name)
+
       @q = disputes.search(params[:q])
       @disputes = @q.result.page(params[:page])
       @disputes = @disputes.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+
+      closed_disputes = Dispute.closed.order(:domain_name)
+      @closed_q = closed_disputes.search(params[:closed_q])
+      @closed_disputes = @closed_q.result.page(params[:closed_page])
+      @closed_disputes = @closed_disputes.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
     end
 
     # GET /admin/disputes/1

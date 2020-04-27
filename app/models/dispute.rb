@@ -2,10 +2,10 @@
 
 class Dispute < ApplicationRecord
   validates :domain_name, :password, :starts_at, :expires_at, presence: true
-  validates_uniqueness_of :domain_name, case_sensitive: true
   before_validation :fill_empty_passwords
   before_validation :set_expiry_date
-  validate :validate_domain_name
+  validate :validate_domain_name_format
+  validate :validate_domain_name_period_uniqueness
 
   with_options on: :admin do
     validate :validate_start_date
@@ -15,7 +15,7 @@ class Dispute < ApplicationRecord
   after_destroy :remove_data
 
   scope :expired, -> { where('expires_at < ?', Time.zone.today) }
-  scope :active, -> { where('expires_at > ? AND closed = 0', Time.zone.today) }
+  scope :active, -> { where('expires_at > ? AND closed = false', Time.zone.today) }
   scope :closed, -> { where(closed: true) }
 
   alias_attribute :name, :domain_name
@@ -78,12 +78,21 @@ class Dispute < ApplicationRecord
     errors.add(:starts_at, :past) if starts_at.past?
   end
 
-  def validate_domain_name
+  def validate_domain_name_format
     return unless domain_name
 
     zone = domain_name.split('.').last
     supported_zone = DNS::Zone.origins.include?(zone)
 
     errors.add(:domain_name, :unsupported_zone) unless supported_zone
+  end
+
+  def validate_domain_name_period_uniqueness
+    return unless new_record?
+
+    existing_dispute = Dispute.unscoped.where(domain_name: domain_name, closed: false).where('expires_at > ?', starts_at)
+    return unless existing_dispute.any?
+
+    errors.add(:base, 'Dispute already exists for this domain at given timeframe')
   end
 end
