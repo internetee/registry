@@ -4,6 +4,7 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
 
   def show
     return if params[:confirmed] || params[:rejected]
+
     @domain = Domain.find(params[:id])
     @domain = nil unless @domain.registrant_delete_confirmable?(params[:token])
   end
@@ -21,22 +22,23 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
     initiator = current_registrant_user ? current_registrant_user.username :
                   t(:user_not_authenticated)
 
-    if params[:rejected]
-      if @registrant_verification.domain_registrant_delete_reject!("email link #{initiator}")
-        flash[:notice] = t(:registrant_domain_verification_rejected)
-        redirect_to registrant_domain_delete_confirm_path(@domain.id, rejected: true)
-      else
-        flash[:alert] = t(:registrant_domain_delete_rejected_failed)
-        return render 'show'
-      end
-    elsif params[:confirmed]
-      if @registrant_verification.domain_registrant_delete_confirm!("email link #{initiator}")
-        flash[:notice] = t(:registrant_domain_verification_confirmed)
-        redirect_to registrant_domain_delete_confirm_path(@domain.id, confirmed: true)
-      else
-        flash[:alert] = t(:registrant_domain_delete_confirmed_failed)
-        return render 'show'
-      end
+    confirmed = params[:confirmed] ? true : false
+    action = if confirmed
+               @registrant_verification.domain_registrant_delete_reject!("email link #{initiator}")
+             else
+               @registrant_verification.domain_registrant_delete_confirm!("email link #{initiator}")
+             end
+
+    fail_msg = t("registrant_domain_delete_#{confirmed ? 'confirmed' : 'rejected'}_failed".to_sym)
+    success_msg = t("registrant_domain_verification_#{confirmed ? 'confirmed' : 'rejected'}".to_sym)
+
+    flash[:alert] = action ? success_msg : fail_msg
+    (render 'show' && return) unless action
+
+    if confirmed
+      redirect_to registrant_domain_delete_confirm_path(@domain.id, confirmed: true) && return
+    else
+      redirect_to registrant_domain_delete_confirm_path(@domain.id, rejected: true) unless confirmed
     end
   end
 end

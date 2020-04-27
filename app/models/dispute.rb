@@ -20,6 +20,11 @@ class Dispute < ApplicationRecord
 
   alias_attribute :name, :domain_name
 
+  def self.close_by_domain(domain_name)
+    dispute = Dispute.active.find_by(domain_name: domain_name)
+    dispute.update(closed: true) if dispute.present?
+  end
+
   def set_expiry_date
     return if starts_at.blank?
 

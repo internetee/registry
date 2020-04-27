@@ -8,20 +8,8 @@ module Admin
     # GET /admin/disputes
     def index
       params[:q] ||= {}
-      disputes = Dispute.active.all.order(:domain_name)
-
-      @q = disputes.search(params[:q])
-      @disputes = @q.result.page(params[:page])
-      if params[:results_per_page].to_i.positive?
-        @disputes = @disputes.per(params[:results_per_page])
-      end
-
-      closed_disputes = Dispute.closed.order(:domain_name)
-      @closed_q = closed_disputes.search(params[:closed_q])
-      @closed_disputes = @closed_q.result.page(params[:closed_page])
-      return unless params[:results_per_page].to_i.positive?
-
-      @closed_disputes = @closed_disputes.per(params[:results_per_page])
+      @disputes = sortable_dispute_query_for(Dispute.active.all, params[:q])
+      @closed_disputes = sortable_dispute_query_for(Dispute.closed.all, params[:q])
     end
 
     # GET /admin/disputes/1
@@ -61,6 +49,14 @@ module Admin
     end
 
     private
+
+    def sortable_dispute_query_for(disputes, query)
+      @q = disputes.order(:domain_name).search(query)
+      disputes = @q.result.page(params[:page])
+      return disputes.per(params[:results_per_page]) if params[:results_per_page].present?
+
+      disputes
+    end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_dispute

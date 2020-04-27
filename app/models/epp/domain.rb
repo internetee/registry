@@ -53,7 +53,7 @@ class Epp::Domain < Domain
   def epp_code_map
     {
       '2002' => [ # Command use error
-        %i[base domain_already_belongs_to_the_querying_registrar]
+        %i[base domain_already_belongs_to_the_querying_registrar],
       ],
       '2003' => [ # Required parameter missing
         %i[registrant blank],
@@ -86,7 +86,7 @@ class Epp::Domain < Domain
         [:puny_label, :too_long, { obj: 'name', val: name_puny }]
       ],
       '2201' => [ # Authorisation error
-        %i[transfer_code wrong_pw]
+        %i[transfer_code wrong_pw],
       ],
       '2202' => [
         %i[base invalid_auth_information_reserved],

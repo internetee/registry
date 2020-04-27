@@ -103,25 +103,18 @@ module Epp
     def update
       authorize! :update, @domain, @password
 
-      if @domain.update(params[:parsed_frame], current_user)
-        if @domain.disputed?
-          dispute = Dispute.active.find_by(domain_name: @domain.name)
-          dispute.close
-        end
-        if @domain.epp_pending_update.present?
-          render_epp_response '/epp/domains/success_pending'
-        else
-          render_epp_response '/epp/domains/success'
-        end
-      else
-        handle_errors(@domain)
-      end
+      updated = @domain.update(params[:parsed_frame], current_user)
+      (handle_errors(@domain) && return) unless updated
+
+      Dispute.active.close_by_domain(@domain.name) if @domain.disputed?
+      pending = @domain.epp_pending_update.present?
+      render_epp_response "/epp/domains/success#{'_pending' if pending}"
     end
 
     def delete
       authorize! :delete, @domain, @password
 
-      handle_errors(@domain) and return unless @domain.can_be_deleted?
+      (handle_errors(@domain) && return) unless @domain.can_be_deleted?
 
       if @domain.epp_destroy(params[:parsed_frame], current_user.id)
         if @domain.epp_pending_delete.present?
