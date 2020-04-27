@@ -12,6 +12,7 @@ class Dispute < ApplicationRecord
   end
   before_save :set_expiry_date
   before_save :sync_reserved_password
+  before_save :generate_data
   after_destroy :remove_data
 
   scope :expired, -> { where('expires_at < ?', Time.zone.today) }
@@ -36,23 +37,33 @@ class Dispute < ApplicationRecord
   end
 
   def generate_data
-    return if Domain.where(name: domain_name).any?
-
     wr = Whois::Record.find_or_initialize_by(name: domain_name)
-    wr.json = @json = generate_json # we need @json to bind to class
-    wr.save
+    if Domain.where(name: domain_name).any?
+      @json = wr.json.with_indifferent_access
+      @json[:status] << 'disputed' unless @json[:status].include? 'disputed'
+      wr.json = @json
+    else
+      wr.json = @json = generate_json(wr) # we need @json to bind to class
+    end
+    wr.save!
   end
+
+  alias_method :update_whois_record, :generate_data
 
   def close
     self.closed = true
     save!
   end
 
-  def generate_json
-    h = HashWithIndifferentAccess.new
-    h[:name] = domain_name
-    h[:status] = ['Disputed']
-    h
+  def generate_json(record)
+    h = HashWithIndifferentAccess.new(name: domain_name, status: ['disputed'])
+    return h if record.json.empty?
+
+    status_arr = (record.json['status'] ||= [])
+    status_arr.push('disputed') unless status_arr.include? 'disputed'
+
+    record.json['status'] = status_arr
+    record.json
   end
 
   def remove_data

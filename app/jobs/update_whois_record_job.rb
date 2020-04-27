@@ -1,13 +1,13 @@
 class UpdateWhoisRecordJob < Que::Job
 
   def run(names, type)
-    ::PaperTrail.whodunnit = "job - #{self.class.name} - #{type}"
+    ::PaperTrail.request.whodunnit = "job - #{self.class.name} - #{type}"
 
     klass = case type
             when 'reserved' then ReservedDomain
             when 'blocked'  then BlockedDomain
             when 'domain'   then Domain
-            when 'disputed' then Dispute
+            when 'disputed' then Dispute.active
             end
 
     Array(names).each do |name|
@@ -56,6 +56,11 @@ class UpdateWhoisRecordJob < Que::Job
   end
 
   def delete_disputed(name)
-    delete_reserved(name)
+    return if Dispute.active.find_by(domain_name: name).present?
+
+    Whois::Record.where(name: name).each do |r|
+      r.json['status'] = r.json['status'].delete_if { |status| status == 'disputed' }
+      r.save!
+    end
   end
 end
