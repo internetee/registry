@@ -73,6 +73,11 @@
           = ac[:email]
         %p
           = ac[:code]
+    - unless version.initial?
+      - version.domain_contact_admin_changes.each do |admin_change|
+        %p
+          %span{class: changing_css_class_action(admin_change)}
+            = admin_change.contact_code
 
   %td
     - Array(tech_contacts).each do |tc|
@@ -84,6 +89,11 @@
           = tc[:email]
         %p
           = tc[:code]
+    - unless version.initial?
+      - version.domain_contact_tech_changes.each do |tech_change|
+        %p
+          %span{class: changing_css_class_action(tech_change)}
+            = tech_change.contact_code
 
   %td
     %p

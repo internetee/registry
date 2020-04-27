@@ -1,5 +1,7 @@
 module Audit
   class BaseHistory < ApplicationRecord
+    alias_attribute :history_action, :action
+
     def diff
       new_value.reject { |k, v| v == old_value[k] }
     end

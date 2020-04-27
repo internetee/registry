@@ -118,6 +118,14 @@ module Audit
       result
     end
 
+    def domain_contact_admin_changes
+      DomainContactHistory.by_domain(self.object_id).admin.by_date(date_range)
+    end
+
+    def domain_contact_tech_changes
+      DomainContactHistory.by_domain(self.object_id).tech.by_date(date_range)
+    end
+
     def prepare_value(key:, value:)
       return value unless value.all?(&:blank?)
       case key

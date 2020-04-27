@@ -171,10 +171,10 @@ class Epp::Domain < Domain
       tech_contacts_initial = initial_contact_data(at[:tech_domain_contacts_attributes]
                                                        .map { |hash| hash['contact_id'] })
       at[:children] = {
-          'admin_contacts_initial' => admin_contacts_initial,
-          'tech_contacts_initial' => tech_contacts_initial,
-          'registrant_initial' => initial_contact_data(at[:registrant_id]),
-          'dnskey_initial' => dnskeys_attrs(dnskey_frame, action),
+        'admin_contacts_initial' => admin_contacts_initial,
+        'tech_contacts_initial' => tech_contacts_initial,
+        'registrant_initial' => initial_contact_data(at[:registrant_id]),
+        'dnskey_initial' => dnskeys_attrs(dnskey_frame, action),
       }
     else
       dnskey_frame = frame
