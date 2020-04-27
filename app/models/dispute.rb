@@ -90,7 +90,8 @@ class Dispute < ApplicationRecord
   def validate_domain_name_period_uniqueness
     return unless new_record?
 
-    existing_dispute = Dispute.unscoped.where(domain_name: domain_name, closed: false).where('expires_at > ?', starts_at)
+    existing_dispute = Dispute.unscoped.where(domain_name: domain_name, closed: false)
+                              .where('expires_at > ?', starts_at)
     return unless existing_dispute.any?
 
     errors.add(:base, 'Dispute already exists for this domain at given timeframe')

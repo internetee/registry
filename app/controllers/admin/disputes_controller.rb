@@ -3,7 +3,7 @@
 module Admin
   class DisputesController < BaseController
     load_and_authorize_resource
-    before_action :set_dispute, only: %i[show edit update destroy]
+    before_action :set_dispute, only: %i[show edit update delete]
 
     # GET /admin/disputes
     def index
@@ -12,12 +12,16 @@ module Admin
 
       @q = disputes.search(params[:q])
       @disputes = @q.result.page(params[:page])
-      @disputes = @disputes.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+      if params[:results_per_page].to_i.positive?
+        @disputes = @disputes.per(params[:results_per_page])
+      end
 
       closed_disputes = Dispute.closed.order(:domain_name)
       @closed_q = closed_disputes.search(params[:closed_q])
       @closed_disputes = @closed_q.result.page(params[:closed_page])
-      @closed_disputes = @closed_disputes.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+      return unless params[:results_per_page].to_i.positive?
+
+      @closed_disputes = @closed_disputes.per(params[:results_per_page])
     end
 
     # GET /admin/disputes/1

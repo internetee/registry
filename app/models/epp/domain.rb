@@ -53,13 +53,13 @@ class Epp::Domain < Domain
   def epp_code_map
     {
       '2002' => [ # Command use error
-        [:base, :domain_already_belongs_to_the_querying_registrar]
+        %i[base domain_already_belongs_to_the_querying_registrar]
       ],
       '2003' => [ # Required parameter missing
-        [:registrant, :blank],
-        [:registrar, :blank],
-        [:base, :required_parameter_missing_reserved],
-        [:base, :required_parameter_missing_disputed]
+        %i[registrant blank],
+        %i[registrar blank],
+        %i[base required_parameter_missing_reserved],
+        %i[base required_parameter_missing_disputed],
       ],
       '2004' => [ # Parameter value range error
         [:dnskeys, :out_of_range,
@@ -86,11 +86,11 @@ class Epp::Domain < Domain
         [:puny_label, :too_long, { obj: 'name', val: name_puny }]
       ],
       '2201' => [ # Authorisation error
-        [:transfer_code, :wrong_pw]
+        %i[transfer_code wrong_pw]
       ],
       '2202' => [
-        [:base, :invalid_auth_information_reserved],
-        [:base, :invalid_auth_information_disputed]
+        %i[base invalid_auth_information_reserved],
+        %i[base invalid_auth_information_disputed],
       ],
       '2302' => [ # Object exists
         [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
@@ -481,10 +481,14 @@ class Epp::Domain < Domain
     if !same_registrant_as_current && disputed?
       disputed_pw = frame.css('disputed > pw').text
       if disputed_pw.blank?
-        add_epp_error('2304', nil, nil, 'Required parameter missing; disputed pw element required for dispute domains')
+        add_epp_error('2304', nil, nil, 'Required parameter missing; disputed' \
+        'pw element required for dispute domains')
       else
         dispute = Dispute.active.find_by(domain_name: name, password: disputed_pw)
-        add_epp_error('2202', nil, nil, 'Invalid authorization information; invalid disputed>pw value') if dispute.nil?
+        if dispute.nil?
+          add_epp_error('2202', nil, nil, 'Invalid authorization information; '\
+          'invalid disputed>pw value')
+        end
       end
     end
 

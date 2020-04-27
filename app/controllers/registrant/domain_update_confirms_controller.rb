@@ -32,7 +32,6 @@ class Registrant::DomainUpdateConfirmsController < RegistrantController
     elsif params[:confirmed]
       if @registrant_verification.domain_registrant_change_confirm!("email link, #{initiator}")
         if @domain.disputed?
-          Rails.logger.info 'Closing domain dispute via RegistrantConfirmation'
           dispute = Dispute.active.find_by(domain_name: @domain.name)
           dispute.close
         end
