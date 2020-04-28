@@ -22,6 +22,15 @@ module Audit
       pluck(Arel.sql("new_value->'contact_id'"), Arel.sql("old_value->'contact_id'")).flatten.reject(&:blank?)
     end
 
+    def contact_id
+      case action
+      when 'DELETE'
+        old_value['contact_id']
+      else
+        new_value['contact_id']
+      end
+    end
+
     def contact_code
       case action
       when 'DELETE'

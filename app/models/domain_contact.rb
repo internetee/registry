@@ -31,11 +31,6 @@ class DomainContact < ApplicationRecord
     self.contact_code_cache = contact.code
   end
 
-  after_destroy :update_contact
-  def update_contact
-    Contact.find(contact_id).save
-  end
-
   def value_typeahead
     @value_typeahead || contact.try(:name) || nil
   end

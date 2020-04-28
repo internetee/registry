@@ -76,7 +76,7 @@
     - unless version.initial?
       - version.domain_contact_admin_changes.each do |admin_change|
         %p
-          %span{class: changing_css_class_action(admin_change)}
+          = link_to admin_contact_path(admin_change.contact_id), class: changing_css_class_action(admin_change), target: '_blank' do
             = admin_change.contact_code
 
   %td
@@ -92,7 +92,7 @@
     - unless version.initial?
       - version.domain_contact_tech_changes.each do |tech_change|
         %p
-          %span{class: changing_css_class_action(tech_change)}
+          = link_to admin_contact_path(tech_change.contact_id), class: changing_css_class_action(tech_change), target: '_blank' do
             = tech_change.contact_code
 
   %td
