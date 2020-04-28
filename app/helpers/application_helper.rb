@@ -107,6 +107,13 @@ module ApplicationHelper
     css_class
   end
 
+  def last_contact_history_version(change:)
+    object = Audit::ContactHistory.by_contact(change.contact_id).last
+    link_to admin_contact_version_path(object), class: changing_css_class_action(change), target: '_blank' do
+      yield
+    end
+  end
+
   def legal_document_types
     types = LegalDocument::TYPES.dup
     types.delete('ddoc')

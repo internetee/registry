@@ -31,5 +31,9 @@ module Audit
       Arel::Nodes::InfixOperation.new('->>', parent.table[:old_value],
                                       Arel::Nodes.build_quoted('ident'))
     end
+
+    scope :by_contact, lambda { |contact_id|
+      where(object_id: contact_id)
+    }
   end
 end

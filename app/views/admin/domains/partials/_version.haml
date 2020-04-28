@@ -74,9 +74,11 @@
         %p
           = ac[:code]
     - unless version.initial?
-      - version.domain_contact_admin_changes.each do |admin_change|
+      - if admin_contacts.any?
+        %hr
+      - version.domain_contact_admin_changes.order(:action).each do |admin_change|
         %p
-          = link_to admin_contact_path(admin_change.contact_id), class: changing_css_class_action(admin_change), target: '_blank' do
+          = last_contact_history_version(change: admin_change) do
             = admin_change.contact_code
 
   %td
@@ -89,10 +91,12 @@
           = tc[:email]
         %p
           = tc[:code]
+    - if tech_contacts.any?
+      %hr
     - unless version.initial?
-      - version.domain_contact_tech_changes.each do |tech_change|
+      - version.domain_contact_tech_changes.order(:action).each do |tech_change|
         %p
-          = link_to admin_contact_path(tech_change.contact_id), class: changing_css_class_action(tech_change), target: '_blank' do
+          = last_contact_history_version(change: tech_change) do
             = tech_change.contact_code
 
   %td
