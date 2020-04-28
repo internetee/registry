@@ -95,7 +95,7 @@ module Audit
     end
 
     def show_initial?(key)
-      initial? && key != 'nameservers'
+      initial? && !%w[nameservers dnskeys].include?(key)
     end
 
     def date_range

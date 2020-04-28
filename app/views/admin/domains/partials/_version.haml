@@ -107,11 +107,12 @@
   %td
     - Array(dnskeys).each do |ns|
       %p
-        = ns.flags
-        = ns.protocol
-        = ns.alg
-        - if ns.public_key.present?
-          \...#{ns.public_key.to_s[-20,20]}
+        %span{class: changing_css_class_action(ns)}
+          = ns.flags
+          = ns.protocol
+          = ns.alg
+          - if ns.public_key.present?
+            \...#{ns.public_key.to_s[-20,20]}
 
   %td{class: changing_css_class_audit(version,"registrar_id")}
     - if domain.registrar
