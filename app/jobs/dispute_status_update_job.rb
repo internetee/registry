@@ -1,54 +1,48 @@
 class DisputeStatusUpdateJob < Que::Job
   def run
-    @backlog = { activated: 0, closed: 0, active_fail: [], close_fail: [] }
+    @backlog = { 'activated': 0, 'closed': 0, 'activate_fail': [], 'close_fail': [] }
 
     close_disputes
     activate_disputes
 
-    Rails.logger.info "DisputeStatusCloseJob - All done. Closed #{@backlog[:closed]} and " \
+    Rails.logger.info "DisputeStatusUpdateJob - All done. Closed #{@backlog[:closed]} and " \
     "activated #{@backlog[:closed]} disputes."
 
-    show_failed_disputes unless @backlog[:active_fail].empty? && @backlog[:close_fail].empty?
+    show_failed_disputes unless @backlog[:activate_fail].empty? && @backlog[:close_fail].empty?
   end
 
   def close_disputes
     disputes = Dispute.where(closed: false).where('expires_at < ?', Time.zone.today).all
-    Rails.logger.info "DisputeStatusCloseJob - Found #{disputes.count} closable disputes"
+    Rails.logger.info "DisputeStatusUpdateJob - Found #{disputes.count} closable disputes"
     disputes.each do |dispute|
-      close_dispute(dispute)
+      process_dispute(dispute, closing: true)
     end
   end
 
   def activate_disputes
     disputes = Dispute.where(closed: false, starts_at: Time.zone.today).all
-    Rails.logger.info "DisputeStatusCloseJob - Found #{disputes.count} activatable disputes"
+    Rails.logger.info "DisputeStatusUpdateJob - Found #{disputes.count} activatable disputes"
 
     disputes.each do |dispute|
-      activate_dispute(dispute)
+      process_dispute(dispute, closing: false)
     end
   end
 
-  def close_dispute(dispute)
-    if dispute.close
-      Rails.logger.info 'DisputeStatusCloseJob - Closed dispute ' \
-      "##{dispute.id} for '#{dispute.domain_name}'"
-      @backlog[:closed] += 1
-    else
-      Rails.logger.info 'DisputeStatusCloseJob - Failed to close dispute ' \
-      "##{dispute.id} for '#{dispute.domain_name}'"
-      @backlog[:close_fail] << dispute.id
-    end
+  def process_dispute(dispute, closing: false)
+    intent = closing ? 'close' : 'activate'
+    success = closing ? dispute.close : dispute.generate_data
+    create_backlog_entry(dispute: dispute, intent: intent, successful: success)
   end
 
-  def activate_dispute(dispute)
-    if dispute.generate_data
-      Rails.logger.info 'DisputeStatusCloseJob - Activated dispute ' \
-      "##{dispute.id} for '#{dispute.domain_name}'"
-      @backlog[:activated] += 1
+  def create_backlog_entry(dispute:, intent:, successful:)
+    if successful
+      @backlog["#{intent}d"] << dispute.id
+      Rails.logger.info "DisputeStatusUpdateJob - #{intent}d dispute " \
+      " for '#{dispute.domain_name}'"
     else
-      Rails.logger.info 'DisputeStatusCloseJob - Failed to activate dispute ' \
-      "##{dispute.id} for '#{dispute.domain_name}'"
-      @backlog[:active_fail] << dispute.id
+      @backlog["#{intent}_fail"] << dispute.id
+      Rails.logger.info 'DisputeStatusUpdateJob - Failed to' \
+      "#{intent} dispute for '#{dispute.domain_name}'"
     end
   end
 
@@ -58,9 +52,9 @@ class DisputeStatusUpdateJob < Que::Job
       "#{@backlog[:close_fail]}")
     end
 
-    return unless @backlog[:active_fail].any?
+    return unless @backlog[:activate_fail].any?
 
     Rails.logger.info('DisputeStatuseCloseJob - Failed to activate disputes with Ids:' \
-    "#{@backlog[:active_fail]}")
+    "#{@backlog[:activate_fail]}")
   end
 end
