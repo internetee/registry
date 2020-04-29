@@ -294,7 +294,7 @@ class Domain < ApplicationRecord
   def renewable?
     if Setting.days_to_renew_domain_before_expire != 0
       # if you can renew domain at days_to_renew before domain expiration
-      if (expire_time.to_date - Date.today) + 1 > Setting.days_to_renew_domain_before_expire
+      if (expire_time.to_date - Time.zone.today) + 1 > Setting.days_to_renew_domain_before_expire
         return false
       end
     end

@@ -15,8 +15,8 @@ class Dispute < ApplicationRecord
   before_save :generate_data
   after_destroy :remove_data
 
-  scope :expired, -> { where('expires_at < ?', Date.today) }
-  scope :active, -> { where('expires_at > ? AND closed = false', Date.today) }
+  scope :expired, -> { where('expires_at < ?', Time.zone.today) }
+  scope :active, -> { where('expires_at > ? AND closed = false', Time.zone.today) }
   scope :closed, -> { where(closed: true) }
 
   alias_attribute :name, :domain_name
@@ -41,7 +41,7 @@ class Dispute < ApplicationRecord
   end
 
   def generate_data
-    return if starts_at > Date.today
+    return if starts_at > Time.zone.today
 
     wr = Whois::Record.find_or_initialize_by(name: domain_name)
     if for_active_domain?
@@ -58,7 +58,6 @@ class Dispute < ApplicationRecord
     return false unless update(closed: true)
     return if Dispute.active.where(domain_name: domain_name).any?
 
-    puts "PASS"
     whois_record = Whois::Record.find_or_initialize_by(name: domain_name)
     return true if remove_whois_data(whois_record)
 

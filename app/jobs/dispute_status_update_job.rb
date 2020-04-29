@@ -12,16 +12,15 @@ class DisputeStatusUpdateJob < Que::Job
   end
 
   def close_disputes
-    disputes = Dispute.where(closed: false).where('expires_at < ?', Date.today).all
+    disputes = Dispute.where(closed: false).where('expires_at < ?', Time.zone.today).all
     Rails.logger.info "DisputeStatusCloseJob - Found #{disputes.count} closable disputes"
     disputes.each do |dispute|
-      puts "attempnt"
       close_dispute(dispute)
     end
   end
 
   def activate_disputes
-    disputes = Dispute.where(closed: false, starts_at: Date.today).all
+    disputes = Dispute.where(closed: false, starts_at: Time.zone.today).all
     Rails.logger.info "DisputeStatusCloseJob - Found #{disputes.count} activatable disputes"
 
     disputes.each do |dispute|
