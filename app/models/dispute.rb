@@ -26,10 +26,6 @@ class Dispute < ApplicationRecord
     dispute.update(closed: true) if dispute.present?
   end
 
-  def for_active_domain?
-    Domain.where(name: domain_name).any?
-  end
-
   def set_expiry_date
     return if starts_at.blank?
 
@@ -44,11 +40,7 @@ class Dispute < ApplicationRecord
     return if starts_at > Time.zone.today
 
     wr = Whois::Record.find_or_initialize_by(name: domain_name)
-    if for_active_domain?
-      wr.json['status'] << 'disputed' unless wr.json['status'].include? 'disputed'
-    else
-      wr.json = generate_json(wr) # we need @json to bind to class
-    end
+    wr.json = generate_json(wr)
     wr.save
   end
 
@@ -75,12 +67,12 @@ class Dispute < ApplicationRecord
   end
 
   def generate_json(record)
+    status_arr = (record.json['status'] ||= [])
     h = HashWithIndifferentAccess.new(name: domain_name, status: ['disputed'])
     return h if record.json.blank?
+    return record.json if status_arr.include? 'disputed'
 
-    status_arr = (record.json['status'] ||= [])
-    status_arr.push('disputed') unless status_arr.include? 'disputed'
-
+    status_arr.push('disputed')
     record.json['status'] = status_arr
     record.json
   end
