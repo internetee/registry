@@ -36,7 +36,13 @@ module Audit
       when 'DELETE'
         old_value['contact_code_cache']
       when 'UPDATE'
-        "#{old_value['contact_code_cache']} >> #{new_value['contact_code_cache']}"
+        prev_contact_code = Contact.find_by(id: old_value['contact_id'])&.code
+        new_contact_code = Contact.find_by(id: new_value['contact_id'])&.code
+
+        old_code = prev_contact_code || old_value['contact_code_cache']
+        new_code = new_contact_code || new_value['contact_code_cache']
+
+        "#{old_code} >> #{new_code}"
       else
         new_value['contact_code_cache']
       end
