@@ -15,8 +15,8 @@ class Dispute < ApplicationRecord
   before_save :generate_data
   after_destroy :remove_data
 
-  scope :expired, -> { where('expires_at < ?', Time.zone.today) }
-  scope :active, -> { where('expires_at > ? AND closed = false', Time.zone.today) }
+  scope :expired, -> { where('expires_at < ?', Date.today) }
+  scope :active, -> { where('expires_at > ? AND closed = false', Date.today) }
   scope :closed, -> { where(closed: true) }
 
   alias_attribute :name, :domain_name
@@ -24,6 +24,10 @@ class Dispute < ApplicationRecord
   def self.close_by_domain(domain_name)
     dispute = Dispute.active.find_by(domain_name: domain_name)
     dispute.update(closed: true) if dispute.present?
+  end
+
+  def for_active_domain?
+    Domain.where(name: domain_name).any?
   end
 
   def set_expiry_date
@@ -37,27 +41,43 @@ class Dispute < ApplicationRecord
   end
 
   def generate_data
+    return if starts_at > Date.today
+
     wr = Whois::Record.find_or_initialize_by(name: domain_name)
-    if Domain.where(name: domain_name).any?
-      @json = wr.json.with_indifferent_access
-      @json[:status] << 'disputed' unless @json[:status].include? 'disputed'
-      wr.json = @json
+    if for_active_domain?
+      wr.json['status'] << 'disputed' unless wr.json['status'].include? 'disputed'
     else
-      wr.json = @json = generate_json(wr) # we need @json to bind to class
+      wr.json = generate_json(wr) # we need @json to bind to class
     end
-    wr.save!
+    wr.save
   end
 
   alias_method :update_whois_record, :generate_data
 
   def close
-    self.closed = true
-    save!
+    return false unless update(closed: true)
+    return if Dispute.active.where(domain_name: domain_name).any?
+
+    puts "PASS"
+    whois_record = Whois::Record.find_or_initialize_by(name: domain_name)
+    return true if remove_whois_data(whois_record)
+
+    false
+  end
+
+  def remove_whois_data(record)
+    record.json['status'] = record.json['status'].delete_if { |status| status == 'disputed' }
+    if record.json['status'].blank?
+      return true if record.destroy
+
+      return false
+    end
+    record.save
   end
 
   def generate_json(record)
     h = HashWithIndifferentAccess.new(name: domain_name, status: ['disputed'])
-    return h if record.json.empty?
+    return h if record.json.blank?
 
     status_arr = (record.json['status'] ||= [])
     status_arr.push('disputed') unless status_arr.include? 'disputed'

@@ -60,7 +60,7 @@ class UpdateWhoisRecordJob < Que::Job
 
     Whois::Record.where(name: name).each do |r|
       r.json['status'] = r.json['status'].delete_if { |status| status == 'disputed' }
-      r.save!
+      r.json['status'].blank? ? r.destroy : r.save
     end
   end
 end
