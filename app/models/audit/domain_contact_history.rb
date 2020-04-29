@@ -35,6 +35,8 @@ module Audit
       case action
       when 'DELETE'
         old_value['contact_code_cache']
+      when 'UPDATE'
+        "#{old_value['contact_code_cache']} >> #{new_value['contact_code_cache']}"
       else
         new_value['contact_code_cache']
       end
