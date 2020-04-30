@@ -108,7 +108,7 @@ class Dispute < ApplicationRecord
   def validate_domain_name_format
     return unless domain_name
 
-    zone = domain_name.split('.').last
+    zone = domain_name.reverse.rpartition('.').map(&:reverse).reverse.last
     supported_zone = DNS::Zone.origins.include?(zone)
 
     errors.add(:domain_name, :unsupported_zone) unless supported_zone
