@@ -13,7 +13,7 @@
   - else
     - tech_contacts = Contact.objects_for(ids: children[:tech_contacts]&.map(&:id))
     - admin_contacts = Contact.objects_for(ids: children[:admin_contacts]&.map(&:id))
-    - registrant     = Contact.objects_for(ids: children[:registrant]&.map(&:id))
+    - registrant     = Contact.objects_for(ids: children[:registrant]&.map(&:id), initial: version.transfer?)
   - event                   = version.action
   - creator                 = plain_username(version.terminator)
 

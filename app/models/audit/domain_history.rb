@@ -83,13 +83,15 @@ module Audit
         next unless klass
 
         value = prepare_value(key: key, value: value) unless show_initial?(key)
-        history = if show_initial?(key)
-                    calculate_initial(klass: klass, value: value, key: key)
-                  else
-                    calculate_history(klass: klass, value: value)
-                  end
+        res = if show_initial?(key)
+                calculate_initial(klass: klass, value: value, key: key)
+              else
+                calculate_history(klass: klass, value: value)
+              end
 
-        hash[key] = history unless history.blank? || history.all?(&:blank?)
+        res = Contact.where(id: transfer_registrant_id) if transfer(key)
+
+        hash[key] = res unless res.blank? || res.all?(&:blank?)
       end
       result
     end
@@ -124,6 +126,18 @@ module Audit
 
     def domain_contact_tech_changes
       DomainContactHistory.by_domain(self.object_id).tech.by_date(date_range)
+    end
+
+    def transfer(key)
+      transfer? && key == 'registrant'
+    end
+
+    def transfer?
+      diff['registrant_id'].present?
+    end
+
+    def transfer_registrant_id
+      diff['registrant_id']
     end
 
     def prepare_value(key:, value:)
