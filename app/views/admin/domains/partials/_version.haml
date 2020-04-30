@@ -54,8 +54,7 @@
       = "#{l(domain.valid_to, format: :date)}"
   %td
     - Array(registrant).each do |r|
-      - link = r.version_loader ? admin_contact_version_path(r.version_loader.try(:id)) : admin_contact_path(r.id)
-      = link_to link, target: "contact_#{r.id}" do
+      = last_contact_history_version(contact: r) do
         %p
           = r[:name]
           = r[:phone]
@@ -65,8 +64,7 @@
 
   %td
     - Array(admin_contacts).each do |ac|
-      - link = ac.version_loader ? admin_contact_version_path(ac.version_loader.try(:id)) : admin_contact_path(ac.id)
-      = link_to link, target: "contact_#{ac.id}" do
+      = last_contact_history_version(contact: ac) do
         %p
           = ac[:name]
           = ac[:phone]
@@ -78,13 +76,12 @@
         %hr
       - version.domain_contact_admin_changes.order(:action).each do |admin_change|
         %p
-          = last_contact_history_version(change: admin_change) do
+          = last_change_history_version(change: admin_change) do
             = admin_change.contact_code
 
   %td
     - Array(tech_contacts).each do |tc|
-      - link = tc.version_loader ? admin_contact_version_path(tc.version_loader.try(:id)) : admin_contact_path(tc.id)
-      = link_to link, target: "contact_#{tc.id}" do
+      = last_contact_history_version(contact: tc) do
         %p
           = tc[:name]
           = tc[:phone]
@@ -97,7 +94,7 @@
         %hr
       - version.domain_contact_tech_changes.order(:action).each do |tech_change|
         %p
-          = last_contact_history_version(change: tech_change) do
+          = last_change_history_version(change: tech_change) do
             = tech_change.contact_code
 
   %td
