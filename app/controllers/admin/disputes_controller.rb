@@ -35,7 +35,7 @@ module Admin
 
     # PATCH/PUT /admin/disputes/1
     def update
-      if @dispute.update(dispute_params)
+      if @dispute.update(dispute_params.except(:domain_name))
         redirect_to admin_disputes_url, notice: 'Dispute was successfully updated.'
       else
         render :edit
