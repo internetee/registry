@@ -43,7 +43,7 @@ class ReservedDomain < ApplicationRecord
   end
 
   def sync_dispute_password
-    dispute = Dispute.active.find_by(domain_name: domain_name)
+    dispute = Dispute.active.find_by(domain_name: name)
     self.password = dispute.password if dispute.present?
   end
 

@@ -16,7 +16,7 @@ class Dispute < ApplicationRecord
   after_destroy :remove_data
 
   scope :expired, -> { where('expires_at < ?', Time.zone.today) }
-  scope :active, -> { where('expires_at > ? AND closed = false', Time.zone.today) }
+  scope :active, -> { where('expires_at >= ? AND closed = false', Time.zone.today) }
   scope :closed, -> { where(closed: true) }
 
   alias_attribute :name, :domain_name
@@ -52,24 +52,21 @@ class Dispute < ApplicationRecord
 
     whois_record = Whois::Record.find_or_initialize_by(name: domain_name)
     return true if remove_whois_data(whois_record)
-
-    false
   end
 
   def remove_whois_data(record)
     record.json['status'] = record.json['status'].delete_if { |status| status == 'disputed' }
     if record.json['status'].blank?
-      return true if record.destroy
-
-      return false
+      return true if record.destroy && record.json['status'].blank?
     end
     record.save
   end
 
   def generate_json(record)
-    status_arr = (record.json['status'] ||= [])
     h = HashWithIndifferentAccess.new(name: domain_name, status: ['disputed'])
     return h if record.json.blank?
+
+    status_arr = (record.json['status'] ||= [])
     return record.json if status_arr.include? 'disputed'
 
     status_arr.push('disputed')
@@ -115,12 +112,13 @@ class Dispute < ApplicationRecord
   end
 
   def validate_domain_name_period_uniqueness
-    return unless new_record?
-
     existing_dispute = Dispute.unscoped.where(domain_name: domain_name, closed: false)
-                              .where('expires_at > ?', starts_at)
+                              .where('expires_at >= ?', starts_at)
+
+    existing_dispute = existing_dispute.where.not(id: id) unless new_record?
+
     return unless existing_dispute.any?
 
-    errors.add(:base, 'Dispute already exists for this domain at given timeframe')
+    errors.add(:starts_at, 'Dispute already exists for this domain at given timeframe')
   end
 end
