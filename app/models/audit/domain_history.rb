@@ -71,8 +71,12 @@ module Audit
         result = (old_val + new_val).uniq
         result.reject(&:blank?)
       end
-      current_hash.merge(object_history_children) do |_key, old_val, new_val|
-        result = (old_val + new_val).uniq
+      current_hash.merge(object_history_children) do |key, old_val, new_val|
+        result = if %w[dnskeys dnskeys_initial nameservers].include? key
+                   (old_val + new_val).uniq
+                 else
+                   old_val
+                 end
         result.reject(&:blank?)
       end
     end
