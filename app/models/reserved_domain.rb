@@ -2,6 +2,7 @@ class ReservedDomain < ApplicationRecord
   include Versions # version/reserved_domain_version.rb
   before_save :fill_empty_passwords
   before_save :generate_data
+  before_save :sync_dispute_password
   after_destroy :remove_data
 
   validates :name, domain_name: true, uniqueness: true
@@ -39,6 +40,11 @@ class ReservedDomain < ApplicationRecord
 
   def regenerate_password
     self.password = SecureRandom.hex
+  end
+
+  def sync_dispute_password
+    dispute = Dispute.active.find_by(domain_name: domain_name)
+    self.password = dispute.password if dispute.present?
   end
 
   def generate_data
