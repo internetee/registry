@@ -1,3 +1,6 @@
+30.04.2020
+* Fix for internal error on opening domain history with legacy id record [#1576](https://github.com/internetee/registry/issues/1576)
+
 27.04.2020
 * Downgrade SimpleCov to 0.17 due to incompatibiilty with CodeClimate [#1575](https://github.com/internetee/registry/pull/1575)
 
