@@ -1,0 +1,7 @@
+en:
+  registrar:
+    payments:
+      back:
+        payment_successful: 'Thank you! Payment received successfully.'
+        successful_payment_backend_error: 'We received your payment, but something went wrong on our side. Please contact us via email or phone.'
+        payment_not_received: 'Payment was unsuccessful. Please make sure you have enough funds on your account and try again.'

@@ -48,7 +48,7 @@ class Nameserver < ApplicationRecord
             [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }]
         ],
         '2003' => [
-            [:ipv4, :blank]
+          %i[base ip_required],
         ]
     }
   end
@@ -83,6 +83,7 @@ class Nameserver < ApplicationRecord
 
   def glue_record_required?
     return unless hostname? && domain
+
     DomainName(hostname).domain == domain.name
   end
 

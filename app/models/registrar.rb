@@ -1,5 +1,6 @@
 class Registrar < ApplicationRecord
   include Versions # version/registrar_version.rb
+  include Concerns::Registrar::BookKeeping
 
   has_many :domains, dependent: :restrict_with_error
   has_many :contacts, dependent: :restrict_with_error
@@ -21,9 +22,9 @@ class Registrar < ApplicationRecord
   validates :reference_no, format: Billing::ReferenceNo::REGEXP
   validate :forbid_special_code
 
-  validates :vat_rate, presence: true, if: 'vat_liable_in_foreign_country? && vat_no.blank?'
+  validates :vat_rate, presence: true, if: -> { vat_liable_in_foreign_country? && vat_no.blank? }
   validates :vat_rate, absence: true, if: :vat_liable_locally?
-  validates :vat_rate, absence: true, if: 'vat_liable_in_foreign_country? && vat_no?'
+  validates :vat_rate, absence: true, if: -> { vat_liable_in_foreign_country? && vat_no? }
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
 
@@ -33,7 +34,7 @@ class Registrar < ApplicationRecord
   after_initialize :set_defaults
 
   validates :email, email_format: { message: :invalid },
-            allow_blank: true, if: proc { |c| c.email_changed? }
+            allow_blank: true, if: proc { |c| c.will_save_change_to_email? }
   validates :billing_email, email_format: { message: :invalid }, allow_blank: true
 
   alias_attribute :contact_email, :email
@@ -99,9 +100,7 @@ class Registrar < ApplicationRecord
         }
       ]
     )
-
-    e_invoice = invoice.to_e_invoice
-    e_invoice.deliver
+    SendEInvoiceJob.enqueue(invoice.id)
 
     invoice
   end

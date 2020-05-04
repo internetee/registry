@@ -25,8 +25,14 @@ class BankStatement < ApplicationRecord
       bank_transactions.build(bt_params)
     end
 
+    prepare_dir
     self.import_file_path = "#{ENV['bank_statement_import_dir']}/#{Time.zone.now.to_formatted_s(:number)}.txt"
     File.open(import_file_path, 'w') { |f| f.write(th6_file.open.read) }
+  end
+
+  def prepare_dir
+    dirname = ENV['bank_statement_import_dir']
+    FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
   end
 
   def parse_th6_row(row)
@@ -45,7 +51,7 @@ class BankStatement < ApplicationRecord
       buyer_name: row[83, 35].strip,
       document_no: row[118, 8].strip,
       description: row[126, 140].strip,
-      sum: BigDecimal.new(row[268, 12].strip) / BigDecimal.new('100.0'),
+      sum: BigDecimal(row[268, 12].strip) / BigDecimal('100.0'),
       reference_no: row[280, 35].strip
     }
   end
@@ -80,7 +86,9 @@ class BankStatement < ApplicationRecord
     status == FULLY_BINDED
   end
 
-  def bind_invoices
-    bank_transactions.unbinded.each(&:autobind_invoice)
+  def bind_invoices(manual: false)
+    bank_transactions.unbinded.each do |transaction|
+      transaction.autobind_invoice(manual: manual)
+    end
   end
 end

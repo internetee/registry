@@ -10,7 +10,7 @@ module Epp
     before_action :latin_only
     before_action :validate_against_schema
     before_action :validate_request
-    before_action :update_epp_session, if: 'signed_in?'
+    before_action :update_epp_session, if: -> { signed_in? }
 
     around_action :wrap_exceptions
 

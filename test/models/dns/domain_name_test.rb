@@ -13,6 +13,8 @@ class AuctionDoubleTest < ActiveSupport::TestCase
 end
 
 class DNS::DomainNameTest < ActiveSupport::TestCase
+  fixtures 'whois/records'
+
   def test_available_when_not_at_auction
     domain_name = DNS::DomainName.new('auction.test')
     auctions(:one).update!(domain: 'auction.test', status: Auction.statuses[:domain_registered])

@@ -1,3 +1,71 @@
+30.04.2020
+* Fix for internal error on opening domain history with legacy id record [#1576](https://github.com/internetee/registry/issues/1576)
+
+27.04.2020
+* Downgrade SimpleCov to 0.17 due to incompatibiilty with CodeClimate [#1575](https://github.com/internetee/registry/pull/1575)
+
+17.04.2020
+* Webinterfaces have now clickable version string pointing to the latest deployed commit in github [#1345](https://github.com/internetee/registry/pull/1345)
+
+15.04.2020
+* Updated Rails to 5.2 and fixed acitionview security issue [#1568](https://github.com/internetee/registry/issues/1568) 
+
+25.03.2020
+* Implemented Directo gem [#1547](https://github.com/internetee/registry/pull/1547)
+
+11.03.2020
+* Fixed glue record issues when using 2nd level domain as host [#1562](https://github.com/internetee/registry/issues/1562)
+
+10.03.2020
+* Updated lhv, e-invoice & company_register gem due to security updates [#1564](https://github.com/internetee/registry/pull/1564)
+
+06.03.2020
+* Record payment method and failed payments [#1422](https://github.com/internetee/registry/issues/1422)
+
+04.03.2020
+* Bump Puma to 4.3.3 [#1557](https://github.com/internetee/registry/pull/1557)
+
+03.03.2020
+* Admin: fixed import of th6 bank statement [#1551](https://github.com/internetee/registry/issues/1551)
+
+02.03.2020
+* Registrar: fixed statuses based contact filtering [#1004](https://github.com/internetee/registry/issues/1004)
+
+28.02.2020
+* Registrar: fixed account switching [#1535](https://github.com/internetee/registry/issues/1535)
+
+27.02.2020
+* Registrar: fixed the verified checkbox bug that did not change the element value to yes in epp request [#1540](https://github.com/internetee/registry/issues/1540)
+* Ruby version update to 2.6.5 [#1545](https://github.com/internetee/registry/pull/1545)
+
+26.02.2020
+* Registrar: added an option to remove clientHold status [#1481](https://github.com/internetee/registry/issues/1481)
+* Admin: fixed domain status removal issue [#1543](https://github.com/internetee/registry/issues/1543)
+* Implemented consistent and automated data migrations [#1298](https://github.com/internetee/registry/issues/1298)
+
+20.02.2020
+* E-invoice sending to Que to manage resending in case of an error [#1509](https://github.com/internetee/registry/issues/1509)
+* Check to make sure all monthly invoices fit in available invoice number range [#277](https://github.com/internetee/registry/issues/277)
+* Disabled aurbreak performance monitoring [#1534](https://github.com/internetee/registry/pull/1534)
+
+14.02.2020
+* Fixed Papertrail warnings [#1530](https://github.com/internetee/registry/issues/1530)
+
+12.02.2020
+* Fixed papertrails double recording issue [#1526](https://github.com/internetee/registry/issues/1526)
+* Requests to Directo are now saved for both credit and monthly invoices [#344](https://github.com/internetee/registry/issues/344)
+
+10.02.2020
+* Resolved Money gem deprecation warning and silenced all warnings due plan to replace papertrail [#1522](https://github.com/internetee/registry/pull/1522)
+
+06.02.2020
+* Permit & turn ActiveController::Parameters to hash on domain create [#1516](https://github.com/internetee/registry/issues/1516)
+
+05.02.2020
+* Ruby version upgrade to 2.6.3 [#846](https://github.com/internetee/registry/issues/846)
+* Added retries & raise to connect api to handle timeouts [#1474](https://github.com/internetee/registry/issues/1474)
+* Added logging of XML if there is NoMethodError#text on xml data fields [#1475](https://github.com/internetee/registry/issues/1475)
+
 04.02.2020
 * Fixed bug that allowed bypassing blocked domain validation using punycode [#1142](https://github.com/internetee/registry/issues/1142)
 * SimpleIDN gem update to 0.0.9 [#1508](https://github.com/internetee/registry/pull/1508)

@@ -6,7 +6,7 @@ class Registrar
       raise 'Cannot switch to unlinked user' unless current_registrar_user.linked_with?(new_user)
 
       sign_in(:registrar_user, new_user)
-      redirect_to :back, notice: t('.switched', new_user: new_user)
+      redirect_back(fallback_location: root_path, notice: t('.switched', new_user: new_user))
     end
 
     private

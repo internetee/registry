@@ -8,6 +8,9 @@ class PaymentReturnTest < ApplicationIntegrationTest
     sign_in @user
 
     @invoice = invoices(:one)
+    @invoice.update!(account_activity: nil, total: 12)
+    @everypay_order = payment_orders(:everypay_issued)
+    @banklink_order = payment_orders(:banklink_issued)
   end
 
   def every_pay_request_params
@@ -57,33 +60,78 @@ class PaymentReturnTest < ApplicationIntegrationTest
     }
   end
 
-  def test_every_pay_return_creates_activity_redirects_to_invoice_path
-    request_params = every_pay_request_params.merge(invoice_id: @invoice.id)
+  def test_successful_bank_payment_marks_invoice_as_paid
+    @invoice.update!(account_activity: nil)
+    request_params = bank_link_request_params
 
-    post "/registrar/pay/return/every_pay", params: request_params
+    post "/registrar/pay/return/#{@banklink_order.id}", params: request_params
+
+    @banklink_order.reload
+    assert @banklink_order.invoice.paid?
+  end
+
+  def test_every_pay_return_creates_activity_redirects_to_invoice_path
+    request_params = every_pay_request_params
+
+    post "/registrar/pay/return/#{@everypay_order.id}", params: request_params
     assert_equal(302, response.status)
     assert_redirected_to(registrar_invoice_path(@invoice))
   end
 
-  def test_Every_Pay_return_raises_RecordNotFound
-    request_params = every_pay_request_params.merge(invoice_id: "178907")
+  def test_every_pay_return_raises_record_not_found
+    request_params = every_pay_request_params
     assert_raises(ActiveRecord::RecordNotFound) do
-      post "/registrar/pay/return/every_pay", params: request_params
+      post '/registrar/pay/return/123456', params: request_params
     end
   end
 
   def test_bank_link_return_redirects_to_invoice_paths
-    request_params = bank_link_request_params.merge(invoice_id: @invoice.id)
+    request_params = bank_link_request_params
 
-    post "/registrar/pay/return/seb", params: request_params
+    post "/registrar/pay/return/#{@banklink_order.id}", params: request_params
     assert_equal(302, response.status)
     assert_redirected_to(registrar_invoice_path(@invoice))
   end
 
   def test_bank_link_return
-    request_params = bank_link_request_params.merge(invoice_id: "178907")
+    request_params = bank_link_request_params
     assert_raises(ActiveRecord::RecordNotFound) do
-      post "/registrar/pay/return/seb", params: request_params
+      post '/registrar/pay/return/123456', params: request_params
     end
+  end
+
+  def test_marks_as_paid_and_adds_notes_if_failed_to_bind
+    request_params = bank_link_request_params
+
+    post "/registrar/pay/return/#{@banklink_order.id}", params: request_params
+    post "/registrar/pay/return/#{@banklink_order.id}", params: request_params
+    @banklink_order.reload
+
+    assert @banklink_order.notes.present?
+    assert @banklink_order.paid?
+    assert_includes @banklink_order.notes, 'Failed to bind'
+  end
+
+  def test_failed_bank_link_payment_creates_brief_error_explanation
+    request_params = bank_link_request_params.dup
+    request_params['VK_SERVICE'] = '1911'
+
+    post "/registrar/pay/return/#{@banklink_order.id}", params: request_params
+
+    @banklink_order.reload
+
+    assert_includes @banklink_order.notes, 'Bank responded with code 1911'
+  end
+
+  def test_failed_every_pay_payment_creates_brief_error_explanation
+    request_params = every_pay_request_params.dup
+    request_params['payment_state'] = 'cancelled'
+    request_params['transaction_result'] = 'failed'
+
+    post "/registrar/pay/return/#{@everypay_order.id}", params: request_params
+
+    @everypay_order.reload
+
+    assert_includes @everypay_order.notes, 'Payment state: cancelled'
   end
 end

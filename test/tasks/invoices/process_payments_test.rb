@@ -58,6 +58,30 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
     assert @invoice.paid?
   end
 
+  def test_attaches_paid_payment_order_to_invoice
+    assert @invoice.unpaid?
+
+    capture_io { run_task }
+    @invoice.reload
+
+    payment_order = @invoice.payment_orders.last
+    assert_equal 'PaymentOrders::SystemPayment', payment_order.type
+    assert payment_order.paid?
+  end
+
+  def test_attaches_failed_payment_order_to_invoice
+    assert @invoice.unpaid?
+    account = accounts(:cash)
+    account.update!(registrar: registrars(:goodnames))
+
+    capture_io { run_task }
+    @invoice.reload
+
+    payment_order = @invoice.payment_orders.last
+    assert_equal 'PaymentOrders::SystemPayment', payment_order.type
+    assert payment_order.failed?
+  end
+
   def test_output
     assert_output "Transactions processed: 1\n" do
       run_task

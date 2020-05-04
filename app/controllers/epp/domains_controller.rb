@@ -2,6 +2,7 @@ module Epp
   class DomainsController < BaseController
     before_action :find_domain, only: %i[info renew update transfer delete]
     before_action :find_password, only: %i[info update transfer delete]
+    before_action :set_paper_trail_whodunnit
 
     def info
       authorize! :info, @domain

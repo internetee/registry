@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 # core
-gem 'iso8601',      '0.8.6' # for dates and times
-gem 'rails', '~> 5.0.7'
+gem 'iso8601', '0.12.1' # for dates and times
+gem 'rails', '~> 5.2.4.2'
 gem 'rest-client'
 gem 'uglifier'
 
@@ -10,11 +10,11 @@ gem 'uglifier'
 gem 'figaro', '1.1.1'
 
 # model related
-gem 'pg',                        '0.19.0'
+gem 'paper_trail', '~> 9.2'
+gem 'pg',                        '1.2.2'
 # 1.8 is for Rails < 5.0
-gem 'ransack', '~> 1.8'
+gem 'ransack', '~> 2.3'
 gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and RFC 3696
-gem 'paper_trail', '~> 4.0'
 
 # 0.7.3 is the latest for Rails 4.2, however, it is absent on Rubygems server
 # https://github.com/huacnlee/rails-settings-cached/issues/165
@@ -36,10 +36,10 @@ gem 'devise', '~> 4.7'
 gem 'grape'
 
 # registry specfic
+gem 'data_migrate', '~> 6.1'
 gem 'isikukood' # for EE-id validation
 gem 'simpleidn', '0.0.9' # For punycode
 gem 'money-rails'
-gem 'data_migrate'
 gem 'whenever', '0.9.4', require: false
 
 # country listing
@@ -63,10 +63,12 @@ gem 'airbrake'
 
 gem 'company_register', github: 'internetee/company_register', branch: :master
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
-gem 'lhv', github: 'internetee/lhv', tag: 'v0.1.0'
+gem 'lhv', github: 'internetee/lhv', branch: :master
 gem 'domain_name'
 gem 'haml', '~> 5.0'
 gem 'wkhtmltopdf-binary'
+
+gem 'directo', github: 'internetee/directo', branch: 'master'
 
 group :development do
   # deploy
@@ -84,8 +86,8 @@ end
 group :test do
   gem 'capybara'
   gem 'database_cleaner'
-  gem 'simplecov', require: false
+  gem 'minitest', '~> 5.14'
+  gem 'simplecov', '0.17.1', require: false # CC last supported v0.17
   gem 'webdrivers'
   gem 'webmock'
-  gem 'minitest', '~> 5.10.0'
 end
