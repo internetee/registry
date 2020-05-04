@@ -74,7 +74,7 @@
     - unless version.initial?
       - if admin_contacts.any? && version.domain_contact_admin_changes.any?
         %hr
-      - version.domain_contact_admin_changes.order(:action).each do |admin_change|
+      - version.domain_contact_admin_changes.order(action: :desc).each do |admin_change|
         %p
           = last_change_history_version(change: admin_change) do
             = admin_change.contact_code
@@ -92,7 +92,7 @@
     - unless version.initial?
       - if tech_contacts.any? && version.domain_contact_tech_changes.any?
         %hr
-      - version.domain_contact_tech_changes.order(:action).each do |tech_change|
+      - version.domain_contact_tech_changes.order(action: :desc).each do |tech_change|
         %p
           = last_change_history_version(change: tech_change) do
             = tech_change.contact_code
