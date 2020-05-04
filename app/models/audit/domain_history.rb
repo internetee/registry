@@ -92,7 +92,6 @@ module Audit
               else
                 calculate_history(klass: klass, value: value)
               end
-
         res = Contact.where(id: transfer_registrant_id) if transfer(key)
 
         hash[key] = res unless res.blank? || res.all?(&:blank?)
@@ -133,7 +132,7 @@ module Audit
     end
 
     def transfer(key)
-      transfer? && key == 'registrant'
+      transfer? && key == 'registrant' && !initial?
     end
 
     def transfer?
