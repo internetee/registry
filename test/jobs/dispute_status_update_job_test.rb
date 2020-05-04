@@ -65,6 +65,5 @@ class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
 
     whois_record.reload
     assert_not whois_record.json['status'].include? 'disputed'
-    puts whois_record.json['status']
   end
 end

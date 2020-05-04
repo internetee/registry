@@ -92,7 +92,7 @@ module Epp
                                              status: Auction.statuses[:payment_received])
             active_auction.domain_registered!
           end
-
+          Dispute.close_by_domain(@domain.name)
           render_epp_response '/epp/domains/create'
         else
           handle_errors(@domain)

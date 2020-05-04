@@ -27,6 +27,10 @@ class Dispute < ApplicationRecord
     dispute.update(closed: true) if dispute.present?
   end
 
+  def self.valid_auth?(domain_name, password)
+    Dispute.active.find_by(domain_name: domain_name, password: password).present?
+  end
+
   def set_expiry_date
     return if starts_at.blank?
 
@@ -98,7 +102,6 @@ class Dispute < ApplicationRecord
   private
 
   def validate_start_date
-    puts 'EXECUTED'
     return if starts_at.nil?
 
     errors.add(:starts_at, :past) if starts_at.past?
