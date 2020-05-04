@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Dispute < ApplicationRecord
   validates :domain_name, :password, :starts_at, :expires_at, presence: true
   before_validation :fill_empty_passwords
@@ -10,6 +8,7 @@ class Dispute < ApplicationRecord
   with_options on: :admin do
     validate :validate_start_date
   end
+
   before_save :set_expiry_date
   before_save :sync_reserved_password
   before_save :generate_data
@@ -18,6 +17,8 @@ class Dispute < ApplicationRecord
   scope :expired, -> { where('expires_at < ?', Time.zone.today) }
   scope :active, -> { where('expires_at >= ? AND closed = false', Time.zone.today) }
   scope :closed, -> { where(closed: true) }
+
+  attr_readonly :domain_name
 
   alias_attribute :name, :domain_name
 
@@ -97,6 +98,7 @@ class Dispute < ApplicationRecord
   private
 
   def validate_start_date
+    puts 'EXECUTED'
     return if starts_at.nil?
 
     errors.add(:starts_at, :past) if starts_at.past?
