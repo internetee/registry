@@ -260,8 +260,8 @@ class Contact < ApplicationRecord
     private
 
     def registrant_user_indirect_contacts(registrant_user)
-      ident = registrant_user.companies.collect(&:registration_number)
-
+      # ident = registrant_user.companies.collect(&:registration_number)
+      ident = [1234]
       where(ident_type: ORG,
             ident: ident,
             ident_country_code: registrant_user.country.alpha2)
