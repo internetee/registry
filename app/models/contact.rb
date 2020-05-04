@@ -260,8 +260,8 @@ class Contact < ApplicationRecord
     private
 
     def registrant_user_indirect_contacts(registrant_user)
-      # ident = registrant_user.companies.collect(&:registration_number)
-      ident = [1234]
+      ident = registrant_user.companies.collect(&:registration_number)
+
       where(ident_type: ORG,
             ident: ident,
             ident_country_code: registrant_user.country.alpha2)
@@ -416,47 +416,61 @@ class Contact < ApplicationRecord
   # we also need to sort by valid_to
   # todo: extract to drapper. Then we can remove Domain#roles
   def all_domains(page: nil, per: nil, params:, requester:)
-    # compose filter sql
-    filter_sql = case params[:domain_filter]
-      when "Registrant".freeze
-        %Q{select id from domains where registrant_id=#{id}}
-      when AdminDomainContact.to_s, TechDomainContact.to_s
-        %Q{select domain_id from domain_contacts where contact_id=#{id} AND type='#{params[:domain_filter]}'}
-      else
-        %Q{select domain_id from domain_contacts where contact_id=#{id}  UNION select id from domains where registrant_id=#{id}}
-    end
+    filter_sql = qualified_domain_ids(params[:domain_filter])
 
     # get sorting rules
     sorts = params.fetch(:sort, {}).first || []
-    sort  = Domain.column_names.include?(sorts.first) ? sorts.first : "valid_to"
-    order = {"asc"=>"desc", "desc"=>"asc"}[sorts.second] || "desc"
+    sort  = %w[name registrar_name valid_to].include?(sorts.first) ? sorts.first : 'valid_to'
+    order = %w[asc desc].include?(sorts.second) ? sorts.second : 'desc'
 
     # fetch domains
-    if requester
-      requester_domains = Contact.find(requester).domains
-      domains = requester_domains.where("domains.id IN (#{filter_sql})")
-    else
-      domains = Domain.where("domains.id IN (#{filter_sql})")
-    end
-
+    domains = qualified_domain_name_list(requester, filter_sql)
     domains = domains.includes(:registrar).page(page).per(per)
 
-    if sorts.first == "registrar_name".freeze
-      # using small rails hack to generate outer join
-      domains = domains.includes(:registrar).where.not(registrars: {id: nil}).order("registrars.name #{order} NULLS LAST")
-    else
-      domains = domains.order("#{sort} #{order} NULLS LAST")
-    end
-
-
+    # using small rails hack to generate outer join
+    domains = if sorts.first == 'registrar_name'.freeze
+                domains.includes(:registrar).where.not(registrars: { id: nil })
+                       .order("registrars.name #{order} NULLS LAST")
+              else
+                domains.order("#{sort} #{order} NULLS LAST")
+              end
 
     # adding roles. Need here to make faster sqls
     domain_c = Hash.new([])
-    registrant_domains.where(id: domains.map(&:id)).each{|d| domain_c[d.id] |= ["Registrant".freeze] }
-    DomainContact.where(contact_id: id, domain_id: domains.map(&:id)).each{|d| domain_c[d.domain_id] |= [d.type] }
-    domains.each{|d| d.roles = domain_c[d.id].uniq}
+    registrant_domains.where(id: domains.map(&:id)).each do |d|
+      domain_c[d.id] |= ['Registrant'.freeze]
+    end
+
+    DomainContact.where(contact_id: id, domain_id: domains.map(&:id)).each do |d|
+      domain_c[d.domain_id] |= [d.type]
+    end
+
+    domains.each { |d| d.roles = domain_c[d.id].uniq }
 
     domains
+  end
+
+  def qualified_domain_name_list(requester, filter_sql)
+    if requester
+      requester_domains = Contact.find(requester).domains
+      domains = requester_domains.where('domains.id IN (?)', filter_sql)
+    else
+      domains = Domain.where('domains.id IN (?)', filter_sql)
+    end
+
+    domains
+  end
+
+  def qualified_domain_ids(domain_filter)
+    registrant_ids = Domain.select('id').where(registrant: id).pluck(:id)
+    return registrant_ids if domain_filter == 'Registrant'
+
+    if %w[AdminDomainContact TechDomainContact].include? domain_filter
+      DomainContact.select('domain_id').where(contact_id: id, type: domain_filter)
+    else
+      (DomainContact.select('domain_id').where(contact_id: id).pluck(:id) +
+       registrant_ids).uniq
+    end
   end
 
   def update_prohibited?
