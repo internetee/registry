@@ -109,7 +109,7 @@ module Audit
     end
 
     def calculate_history(klass:, value:)
-      result = klass.where(object_id: value).where(recorded_at: date_range)
+      result = klass.where(object_id: value).where(recorded_at: date_range).order(action: :desc)
       result
     end
 
@@ -137,6 +137,10 @@ module Audit
 
     def transfer?
       diff['registrant_id'].present?
+    end
+
+    def renew?
+      diff['valid_to'].present?
     end
 
     def transfer_registrant_id

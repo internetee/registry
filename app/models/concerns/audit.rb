@@ -66,16 +66,18 @@ module Audit
     end
 
     def calculate_from_versions(ver_class:, ids:, field:)
-      ver_class.where(field => ids.to_a)
-               .order(:object_id)
-               .order(recorded_at: :desc)
-               .map do |version|
-                 columns = column_names
-                 object = generate_object_from_version(version: version, columns: columns)
-                 object.version_loader = version
-                 object.history_action = version.action
-                 object
-               end
+      ver = ver_class.where(field => ids.to_a)
+      ver = order_version(ver)
+      ver.where(field => ids.to_a)
+         .order(:object_id)
+         .order(recorded_at: :desc)
+         .map do |version|
+           columns = column_names
+           object = generate_object_from_version(version: version, columns: columns)
+           object.version_loader = version
+           object.history_action = version.action
+           object
+         end
     end
 
     def generate_object_from_version(version:, columns:)
@@ -86,6 +88,15 @@ module Audit
         new(version[:new_value].slice(*columns))
       end
 
+    end
+
+    def order_version(ver)
+      case name
+    when 'Nameserver', 'Dnskey'
+      ver.order(action: :desc).order(recorded_at: :desc)
+    else
+      ver.order(:object_id).order(recorded_at: :desc)
+    end
     end
   end
 end

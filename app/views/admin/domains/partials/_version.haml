@@ -48,10 +48,11 @@
         = link_to t(:pending_epp), '#', class: 'js-pending'
 
   %td{class: changing_css_class_audit(version, "period", "period_unit", "valid_to")}
-    %p
-      = "#{domain.period}#{domain.period_unit}"
-      %br
-      = "#{l(domain.valid_to, format: :date)}"
+    - if version.renew?
+      %p
+        = "#{domain.period}#{domain.period_unit}"
+        %br
+        = "#{l(domain.valid_to, format: :date)}"
   %td
     - Array(registrant).each do |r|
       = last_contact_history_version(contact: r) do
