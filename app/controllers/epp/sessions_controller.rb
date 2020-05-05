@@ -26,7 +26,8 @@ module Epp
       end
 
       if !Rails.env.development? && (!webclient_request && @api_user)
-        unless @api_user.api_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
+        unless @api_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'],
+                                 request.env['HTTP_SSL_CLIENT_S_DN_CN'])
           epp_errors << {
             msg: 'Authentication error; server closing connection (certificate is not valid)',
             code: '2501'
