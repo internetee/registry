@@ -66,22 +66,24 @@ class ApiUser < User
 
   def registrar_pki_ok?(crt, cn)
     return false if crt.blank? || cn.blank?
+
     crt = crt.split(' ').join("\n")
     crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
     crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
     cert = OpenSSL::X509::Certificate.new(crt)
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
-    certificates.registrar.exists?(md5: md5, common_name: cn)
+    certificates.registrar.exists?(md5: md5, common_name: cn, revoked: false)
   end
 
   def api_pki_ok?(crt, cn)
     return false if crt.blank? || cn.blank?
+
     crt = crt.split(' ').join("\n")
     crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
     crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
     cert = OpenSSL::X509::Certificate.new(crt)
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
-    certificates.api.exists?(md5: md5, common_name: cn)
+    certificates.api.exists?(md5: md5, common_name: cn, revoked: false)
   end
 
   def linked_users

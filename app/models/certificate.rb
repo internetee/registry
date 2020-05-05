@@ -116,6 +116,7 @@ class Certificate < ApplicationRecord
       -revoke #{crt_file.path} -key '#{ENV['ca_key_password']}' -batch")
 
     if err.match(/Data Base Updated/) || err.match(/ERROR:Already revoked/)
+      self.revoked = true
       save!
       @cached_status = REVOKED
     else
