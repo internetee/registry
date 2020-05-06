@@ -30,6 +30,8 @@ module Api
           raise "Invalid status #{params[:status]}"
         end
 
+        auction.mark_deadline(params[:registration_deadline]) if params[:registration_deadline]
+
         if auction.payment_not_received? || auction.domain_not_registered?
           update_whois_from_auction(Auction.pending(auction.domain))
         else
