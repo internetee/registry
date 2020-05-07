@@ -185,7 +185,7 @@ class Domain < ApplicationRecord
   end
 
   attr_accessor :registrant_typeahead, :update_me,
-    :epp_pending_update, :epp_pending_delete, :reserved_pw, :disputed_pw
+    :epp_pending_update, :epp_pending_delete, :reserved_pw
 
   self.ignored_columns = %w[legacy_id legacy_registrar_id legacy_registrant_id]
 

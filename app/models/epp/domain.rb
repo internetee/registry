@@ -495,7 +495,7 @@ class Epp::Domain < Domain
        Setting.request_confrimation_on_registrant_change_enabled &&
        frame.css('registrant').present? &&
        frame.css('registrant').attr('verified').to_s.downcase != 'yes'
-      registrant_verification_asked!(frame.to_s, current_user.id)
+      registrant_verification_asked!(frame.to_s, current_user.id) unless disputed?
     end
 
     errors.empty? && super(at)
