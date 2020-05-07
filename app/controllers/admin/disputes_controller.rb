@@ -44,8 +44,8 @@ module Admin
 
     # DELETE /admin/disputes/1
     def delete
-      @dispute.destroy
-      redirect_to admin_disputes_url, notice: 'Dispute was successfully destroyed.'
+      @dispute.update(closed: true)
+      redirect_to admin_disputes_url, notice: 'Dispute was successfully closed.'
     end
 
     private

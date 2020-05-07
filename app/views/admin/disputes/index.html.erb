@@ -136,9 +136,6 @@
                         <th class="col-xs-2">
                             <%= sort_link(@q, 'comment') %>
                         </th>
-                        <th class="col-xs-2">
-                            <%= t(:actions) %>
-                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -158,10 +155,6 @@
                         </td>
                         <td>
                             <%= x.comment %>
-                        </td>
-                        <td>
-                            <%= link_to t(:delete), delete_admin_dispute_path(id: x.id),
-                            data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger btn-xs' %>
                         </td>
                     </tr>
                     <% end %>
