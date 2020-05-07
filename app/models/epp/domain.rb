@@ -156,7 +156,6 @@ class Epp::Domain < Domain
     at[:period_unit] = Epp::Domain.parse_period_unit_from_frame(frame) || 'y'
 
     at[:reserved_pw] = frame.css('reserved > pw').text
-    at[:disputed_pw] = frame.css('disputed > pw').text
 
     # at[:statuses] = domain_statuses_attrs(frame, action)
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
@@ -479,15 +478,15 @@ class Epp::Domain < Domain
     same_registrant_as_current = (registrant.code == frame.css('registrant').text)
 
     if !same_registrant_as_current && disputed?
-      disputed_pw = frame.css('disputed > pw').text
+      disputed_pw = frame.css('reserved > pw').text
       if disputed_pw.blank?
-        add_epp_error('2304', nil, nil, 'Required parameter missing; disputed' \
+        add_epp_error('2304', nil, nil, 'Required parameter missing; reserved' \
         'pw element required for dispute domains')
       else
         dispute = Dispute.active.find_by(domain_name: name, password: disputed_pw)
         if dispute.nil?
           add_epp_error('2202', nil, nil, 'Invalid authorization information; '\
-          'invalid disputed>pw value')
+          'invalid reserved>pw value')
         end
       end
     end

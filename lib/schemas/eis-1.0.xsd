@@ -25,7 +25,6 @@
       <element name="ident" type="eis:identType" minOccurs="0" maxOccurs="1"/>
       <element name="legalDocument" type="eis:legalDocType" minOccurs="0" maxOccurs="1"/>
       <element name="reserved" type="eis:reservedType" minOccurs="0" maxOccurs="1"/>
-      <element name="disputed" type="eis:disputedType" minOccurs="0" maxOccurs="1"/>
     </sequence>
   </complexType>
 
@@ -49,16 +48,6 @@
        <maxLength value="255"/>
      </restriction>
   </simpleType>
-
-  <!--
-    Disputed for providing passwords for disputed domains
-  -->
-
-  <complexType name="disputedType">
-    <sequence>
-      <element name="pw" type="eis:pwType" minOccurs="0" maxOccurs="1"/>
-    </sequence>
-  </complexType>
 
   <!--
   Legal document, encoded in base64
