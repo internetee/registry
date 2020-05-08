@@ -55,8 +55,16 @@ class Dispute < ApplicationRecord
     return false unless update(closed: true)
     return if Dispute.active.where(domain_name: domain_name).any?
 
-    whois_record = Whois::Record.find_or_initialize_by(name: domain_name)
-    return true if remove_whois_data(whois_record)
+    domain = DNS::DomainName.new(domain_name)
+    if domain.available? && domain.auctionable?
+      domain.sell_at_auction
+      return true
+    else
+      whois_record = Whois::Record.find_or_initialize_by(name: domain_name)
+      return true if remove_whois_data(whois_record)
+    end
+
+    false
   end
 
   def remove_whois_data(record)

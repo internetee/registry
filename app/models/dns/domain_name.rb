@@ -29,6 +29,8 @@ module DNS
         :at_auction
       elsif awaiting_payment?
         :awaiting_payment
+      elsif disputed?
+        :disputed
       end
     end
 
