@@ -100,6 +100,7 @@ class Registrar
       authorize! :update, Depp::Domain
       @data = @domain.info(params[:domain_name])
       @domain_params = Depp::Domain.construct_params_from_server_data(@data)
+      @disputed = Dispute.active.find_by(domain_name: params[:domain_name]).present?
     end
 
     def update
