@@ -1,3 +1,6 @@
+11.05.2020
+* Auction process due dates are now available over whois and rest-whois [#1201](https://github.com/internetee/registry/issues/1201)
+
 30.04.2020
 * Fix for internal error on opening domain history with legacy id record [#1576](https://github.com/internetee/registry/issues/1576)
 
