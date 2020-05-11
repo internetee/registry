@@ -325,7 +325,8 @@ CREATE TABLE public.auctions (
     status character varying NOT NULL,
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    registration_code character varying
+    registration_code character varying,
+    registration_deadline timestamp without time zone
 );
 
 
@@ -4463,5 +4464,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200130092113'),
 ('20200203143458'),
 ('20200204103125'),
-('20200311114649');
-
+('20200311114649'),
+('20200417075720');
