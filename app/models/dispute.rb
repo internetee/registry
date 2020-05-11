@@ -12,16 +12,24 @@ class Dispute < ApplicationRecord
   after_destroy :remove_data
 
   scope :expired, -> { where('expires_at < ?', Time.zone.today) }
-  scope :active, -> { where('expires_at >= ? AND closed = false', Time.zone.today) }
+  scope :active, lambda {
+    where('starts_at <= ? AND expires_at >= ? AND closed = false', Time.zone.today, Time.zone.today)
+  }
   scope :closed, -> { where(closed: true) }
 
   attr_readonly :domain_name
 
   alias_attribute :name, :domain_name
 
+  def domain
+    Domain.find_by(name: domain_name)
+  end
+
   def self.close_by_domain(domain_name)
     dispute = Dispute.active.find_by(domain_name: domain_name)
-    dispute.update(closed: true) if dispute.present?
+    return false unless dispute
+
+    dispute.close
   end
 
   def self.valid_auth?(domain_name, password)
@@ -40,6 +48,12 @@ class Dispute < ApplicationRecord
 
   def generate_data
     return if starts_at > Time.zone.today
+    return if expires_at < Time.zone.today
+
+    domain = Domain.find_by_idn(domain_name)
+    domain&.mark_as_disputed
+
+    return if domain
 
     wr = Whois::Record.find_or_initialize_by(name: domain_name)
     wr.json = generate_json(wr)
@@ -51,6 +65,8 @@ class Dispute < ApplicationRecord
   def close
     return false unless update(closed: true)
     return if Dispute.active.where(domain_name: domain_name).any?
+
+    Domain.find_by_idn(domain_name)&.unmark_as_disputed
 
     domain = DNS::DomainName.new(domain_name)
     if domain.available? && domain.auctionable?

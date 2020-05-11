@@ -84,6 +84,7 @@ class WhoisRecord < ApplicationRecord
 
   def populate
     return if domain_id.blank?
+
     self.json = generated_json
     self.name = json['name']
     self.registrar_id = domain.registrar_id if domain # for faster registrar updates

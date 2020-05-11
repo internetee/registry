@@ -9,6 +9,7 @@ class Domain < ApplicationRecord
   include Concerns::Domain::Transferable
   include Concerns::Domain::RegistryLockable
   include Concerns::Domain::Releasable
+  include Concerns::Domain::Disputable
 
   attr_accessor :roles
 
@@ -88,9 +89,8 @@ class Domain < ApplicationRecord
   validates :puny_label, length: { maximum: 63 }
   validates :period, presence: true, numericality: { only_integer: true }
   validates :transfer_code, presence: true
-
   validate :validate_reservation
-  validate :validate_disputed
+
   def validate_reservation
     return if persisted? || !in_reserved_list?
 
@@ -100,19 +100,6 @@ class Domain < ApplicationRecord
     end
 
     return if ReservedDomain.pw_for(name) == reserved_pw
-
-    errors.add(:base, :invalid_auth_information_reserved)
-  end
-
-  def validate_disputed
-    return if persisted? || !in_disputed_list?
-
-    if reserved_pw.blank?
-      errors.add(:base, :required_parameter_missing_reserved)
-      return false
-    end
-
-    return if Dispute.valid_auth?(name, reserved_pw)
 
     errors.add(:base, :invalid_auth_information_reserved)
   end
@@ -290,14 +277,6 @@ class Domain < ApplicationRecord
     @in_reserved_list ||= ReservedDomain.by_domain(name).any?
   end
 
-  def in_disputed_list?
-    @in_disputed_list ||= Dispute.active.find_by(domain_name: name).present?
-  end
-
-  def disputed?
-    Dispute.active.where(domain_name: name).any?
-  end
-
   def pending_transfer
     transfers.find_by(status: DomainTransfer::PENDING)
   end
@@ -318,8 +297,8 @@ class Domain < ApplicationRecord
 
     return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
                                           DomainStatus::PENDING_TRANSFER, DomainStatus::PENDING_DELETE,
-                                          DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION)
-    return false if disputed?
+                                          DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION,
+                                          DomainStatus::DISPUTED)
 
     true
   end

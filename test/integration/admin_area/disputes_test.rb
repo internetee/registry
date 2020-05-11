@@ -60,7 +60,7 @@ class AdminDisputesSystemTest < ApplicationSystemTestCase
   def test_deletes_dispute
     visit delete_admin_dispute_path(@dispute)
 
-    assert_text 'Dispute was successfully destroyed.'
+    assert_text 'Dispute was successfully closed.'
   end
 
   def test_can_not_create_overlapping_dispute
