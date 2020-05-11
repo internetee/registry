@@ -1,4 +1,11 @@
 en:
+  activerecord:
+    errors:
+      models:
+        dispute:
+          attributes:
+            starts_at:
+              future: 'can not be greater than today'
   admin:
     disputes:
       index:
@@ -9,4 +16,4 @@ en:
       form:
         password_hint: Generated automatically if left blank
         optional: Not required by default
-        in_future: Must be at least today / in future
+        past_or_today: Can not be greater than today's date

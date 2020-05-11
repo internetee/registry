@@ -4,10 +4,7 @@ class Dispute < ApplicationRecord
   before_validation :set_expiry_date
   validate :validate_domain_name_format
   validate :validate_domain_name_period_uniqueness
-
-  with_options on: :admin do
-    validate :validate_start_date
-  end
+  validate :validate_start_date
 
   before_save :set_expiry_date
   before_save :sync_reserved_password
@@ -112,7 +109,7 @@ class Dispute < ApplicationRecord
   def validate_start_date
     return if starts_at.nil?
 
-    errors.add(:starts_at, :past) if starts_at.past?
+    errors.add(:starts_at, :future) if starts_at.future?
   end
 
   def validate_domain_name_format
