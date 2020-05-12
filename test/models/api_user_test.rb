@@ -64,18 +64,22 @@ class ApiUserTest < ActiveSupport::TestCase
   end
 
   def test_verifies_pki_status
-    certificate = certificates(:one)
+    certificate = certificates(:api)
 
     assert @user.pki_ok?(certificate.crt, certificate.common_name, api: true)
     assert_not @user.pki_ok?(certificate.crt, 'invalid-cn', api: true)
 
-    certificate.update(interface: 'registrar')
+    certificate = certificates(:registrar)
 
     assert @user.pki_ok?(certificate.crt, certificate.common_name, api: false)
     assert_not @user.pki_ok?(certificate.crt, 'invalid-cn', api: false)
 
     certificate.update(revoked: true)
     assert_not @user.pki_ok?(certificate.crt, certificate.common_name, api: false)
+
+    certificate = certificates(:api)
+    certificate.update(revoked: true)
+    assert_not @user.pki_ok?(certificate.crt, certificate.common_name, api: true)
   end
 
   private

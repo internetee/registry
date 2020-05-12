@@ -32,20 +32,21 @@ class Certificate < ApplicationRecord
       errors.add(:base, I18n.t(:invalid_csr_or_crt))
   end
 
-  before_create :parse_metadata
-  def parse_metadata
-    if crt
-      pc = parsed_crt.try(:subject).try(:to_s) || ''
-      cn = pc.scan(/\/CN=(.+)/).flatten.first
-      self.common_name = cn.split('/').first
-      self.md5 = OpenSSL::Digest::MD5.new(parsed_crt.to_der).to_s
-      self.interface = API
-    elsif csr
-      pc = parsed_csr.try(:subject).try(:to_s) || ''
-      cn = pc.scan(/\/CN=(.+)/).flatten.first
-      self.common_name = cn.split('/').first
-      self.interface = REGISTRAR
-    end
+  validate :assign_metadata
+
+  def assign_metadata
+    origin = crt ? parsed_crt : parsed_csr
+    parse_metadata(origin)
+  rescue NoMethodError
+    errors.add(:base, I18n.t(:invalid_csr_or_crt))
+  end
+
+  def parse_metadata(origin)
+    pc = origin.subject.to_s
+    cn = pc.scan(%r{\/CN=(.+)}).flatten.first
+    self.common_name = cn.split('/').first
+    self.md5 = OpenSSL::Digest::MD5.new(origin.to_der).to_s if crt
+    self.interface = crt ? API : REGISTRAR
   end
 
   def parsed_crt
