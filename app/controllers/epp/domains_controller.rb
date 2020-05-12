@@ -106,7 +106,7 @@ module Epp
       updated = @domain.update(params[:parsed_frame], current_user)
       (handle_errors(@domain) && return) unless updated
 
-      Dispute.active.close_by_domain(@domain.name) if @domain.disputed?
+      Dispute.close_by_domain(@domain.name) if @domain.disputed?
       pending = @domain.epp_pending_update.present?
       render_epp_response "/epp/domains/success#{'_pending' if pending}"
     end

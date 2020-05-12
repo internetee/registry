@@ -491,10 +491,12 @@ class Epp::Domain < Domain
       end
     end
 
+    unverified_registrant_params = frame.css('registrant').present? &&
+                                   frame.css('registrant').attr('verified').to_s.downcase != 'yes'
+
     if !same_registrant_as_current && errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
-       frame.css('registrant').present? &&
-       frame.css('registrant').attr('verified').to_s.downcase != 'yes'
+       unverified_registrant_params
       registrant_verification_asked!(frame.to_s, current_user.id) unless disputed?
     end
 

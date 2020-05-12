@@ -20,7 +20,7 @@ class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
     assert_includes whois_record.json['status'], 'disputed'
   end
 
-  def test_unregistered_domain_whois_data_is_deleted
+  def test_on_expiry_unregistered_domain_is_sent_to_auction
     dispute = disputes(:active)
     dispute.update!(starts_at: Time.zone.today - 3.years - 1.day)
 
@@ -30,7 +30,7 @@ class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
     assert dispute.closed
 
     whois_record = Whois::Record.find_by(name: dispute.domain_name)
-    assert whois_record.nil?
+    assert_equal ['AtAuction'], whois_record.json['status']
   end
 
   def test_registered_domain_whois_data_is_added

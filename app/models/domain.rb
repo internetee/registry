@@ -284,21 +284,22 @@ class Domain < ApplicationRecord
   def server_holdable?
     return false if statuses.include?(DomainStatus::SERVER_HOLD)
     return false if statuses.include?(DomainStatus::SERVER_MANUAL_INZONE)
+
     true
   end
 
   def renewable?
-    if Setting.days_to_renew_domain_before_expire != 0
-      # if you can renew domain at days_to_renew before domain expiration
-      if (expire_time.to_date - Time.zone.today) + 1 > Setting.days_to_renew_domain_before_expire
-        return false
-      end
-    end
+    blocking_statuses = [DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
+                         DomainStatus::PENDING_TRANSFER, DomainStatus::DISPUTED,
+                         DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE,
+                         DomainStatus::PENDING_DELETE_CONFIRMATION]
+    return false if statuses.include_any? blocking_statuses
+    return true unless Setting.days_to_renew_domain_before_expire != 0
 
-    return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
-                                          DomainStatus::PENDING_TRANSFER, DomainStatus::PENDING_DELETE,
-                                          DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION,
-                                          DomainStatus::DISPUTED)
+    # if you can renew domain at days_to_renew before domain expiration
+    if (expire_time.to_date - Time.zone.today) + 1 > Setting.days_to_renew_domain_before_expire
+      return false
+    end
 
     true
   end

@@ -1,14 +1,11 @@
 class Dispute < ApplicationRecord
   validates :domain_name, :password, :starts_at, :expires_at, presence: true
-  before_validation :fill_empty_passwords
-  before_validation :set_expiry_date
+  before_validation :fill_empty_passwords, :set_expiry_date
   validate :validate_domain_name_format
   validate :validate_domain_name_period_uniqueness
   validate :validate_start_date
 
-  before_save :set_expiry_date
-  before_save :sync_reserved_password
-  before_save :generate_data
+  before_save :set_expiry_date, :sync_reserved_password, :generate_data
   after_destroy :remove_data
 
   scope :expired, -> { where('expires_at < ?', Time.zone.today) }
@@ -18,8 +15,6 @@ class Dispute < ApplicationRecord
   scope :closed, -> { where(closed: true) }
 
   attr_readonly :domain_name
-
-  alias_attribute :name, :domain_name
 
   def domain
     Domain.find_by(name: domain_name)
@@ -47,12 +42,9 @@ class Dispute < ApplicationRecord
   end
 
   def generate_data
-    return if starts_at > Time.zone.today
-    return if expires_at < Time.zone.today
+    return if starts_at > Time.zone.today || expires_at < Time.zone.today
 
-    domain = Domain.find_by_idn(domain_name)
     domain&.mark_as_disputed
-
     return if domain
 
     wr = Whois::Record.find_or_initialize_by(name: domain_name)
@@ -60,32 +52,31 @@ class Dispute < ApplicationRecord
     wr.save
   end
 
-  alias_method :update_whois_record, :generate_data
-
   def close
     return false unless update(closed: true)
     return if Dispute.active.where(domain_name: domain_name).any?
 
-    Domain.find_by_idn(domain_name)&.unmark_as_disputed
+    domain&.unmark_as_disputed
+    return true if domain
 
+    forward_to_auction_if_possible
+  end
+
+  def forward_to_auction_if_possible
     domain = DNS::DomainName.new(domain_name)
-    if domain.available? && domain.auctionable?
-      domain.sell_at_auction
-      return true
-    else
-      whois_record = Whois::Record.find_or_initialize_by(name: domain_name)
-      return true if remove_whois_data(whois_record)
-    end
+    return domain.sell_at_auction if domain.available? && domain.auctionable?
 
-    false
+    whois_record = Whois::Record.find_by(name: domain_name)
+    remove_whois_data(whois_record)
   end
 
   def remove_whois_data(record)
-    record.json['status'] = record.json['status'].delete_if { |status| status == 'disputed' }
-    if record.json['status'].blank?
-      return true if record.destroy && record.json['status'].blank?
-    end
-    record.save
+    return true unless record
+
+    record.json['status'].delete_if { |status| status == 'disputed' }
+    record.destroy && return if record.json['status'].blank?
+
+    save
   end
 
   def generate_json(record)
