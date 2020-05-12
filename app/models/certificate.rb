@@ -32,7 +32,7 @@ class Certificate < ApplicationRecord
       errors.add(:base, I18n.t(:invalid_csr_or_crt))
   end
 
-  validate :assign_metadata
+  validate :assign_metadata, on: :create
 
   def assign_metadata
     origin = crt ? parsed_crt : parsed_csr
