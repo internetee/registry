@@ -23,8 +23,17 @@ class Auction < ApplicationRecord
     save!
   end
 
+  def whois_deadline
+    registration_deadline.to_s
+  end
+
   def mark_as_no_bids
     no_bids!
+  end
+
+  def mark_deadline(registration_deadline)
+    self.registration_deadline = registration_deadline
+    save!
   end
 
   def mark_as_payment_received
