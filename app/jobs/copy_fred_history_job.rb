@@ -38,7 +38,7 @@ class CopyFredHistoryJob < Que::Job
 
   def contact_history
     sql = <<~SQL.gsub(/\s+/, " ").strip
-      select * from contact_history order by id, historyid asc
+      select * from contact_history
     SQL
     result_entries(sql)
   end
@@ -55,7 +55,7 @@ class CopyFredHistoryJob < Que::Job
     result = with_another_db(DATABASE) do
       ActiveRecord::Base.connection.exec_query(sql)
     end
-    result
+    result.entries
   end
 
 end
