@@ -477,7 +477,8 @@ CREATE TABLE public.certificates (
     updated_at timestamp without time zone,
     common_name character varying,
     md5 character varying,
-    interface character varying
+    interface character varying,
+    revoked boolean DEFAULT false NOT NULL
 );
 
 
@@ -4465,4 +4466,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200203143458'),
 ('20200204103125'),
 ('20200311114649'),
-('20200417075720');
+('20200417075720'),
+('20200505103316');
+
