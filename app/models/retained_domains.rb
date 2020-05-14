@@ -24,16 +24,9 @@ class RetainedDomains
   end
 
   def domain_to_json(domain)
-    # Smelly, but ActiveRecord objects are weird and do not respond
-    # to usual syntax:
-    #   case a
-    #   when Array then "foo"
-    #   when Hash then "bar"
-    #   else "baz"
-    #   end
-    status = case domain.class.to_s
-             when 'ReservedDomain' then RESERVED
-             when 'BlockedDomain' then BLOCKED
+    status = case domain
+             when ReservedDomain then RESERVED
+             when BlockedDomain then BLOCKED
              end
 
     punycode = SimpleIDN.to_ascii(domain.name)
