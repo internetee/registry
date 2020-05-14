@@ -35,6 +35,7 @@ module DomainNameRegistry
     # Autoload all model subdirs
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '**/')]
     config.eager_load_paths << config.root.join('lib', 'validators')
+    config.eager_load_paths << config.root.join('lib', 'sql_utils')
     config.watchable_dirs['lib'] = %i[rb]
 
     config.active_record.schema_format = :sql
