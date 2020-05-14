@@ -1,3 +1,6 @@
+14.05.2020
+* Deleted certificates are now revoked first [#952](https://github.com/internetee/registry/issues/952)
+
 11.05.2020
 * Auction process due dates are now available over whois and rest-whois [#1201](https://github.com/internetee/registry/issues/1201)
 
