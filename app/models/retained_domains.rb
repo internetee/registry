@@ -41,11 +41,9 @@ class RetainedDomains
     {
       name: domain.name,
       status: status,
-      punycode_name: punycode
+      punycode_name: punycode,
     }
   end
 
-  def count
-    domains.count
-  end
+  delegate :count, to: :domains
 end
