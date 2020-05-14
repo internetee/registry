@@ -31,7 +31,8 @@ class Registrar
       end
 
       if @depp_user.pki
-        unless @api_user.registrar_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
+        unless @api_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'],
+                                 request.env['HTTP_SSL_CLIENT_S_DN_CN'], api: false)
           @depp_user.errors.add(:base, :invalid_cert)
         end
       end

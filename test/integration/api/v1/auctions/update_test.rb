@@ -39,6 +39,17 @@ class ApiV1AuctionUpdateTest < ActionDispatch::IntegrationTest
     assert @auction.awaiting_payment?
   end
 
+  def test_sets_registration_deadline
+    deadline = (Time.zone.now + 10.days).end_of_day
+    patch api_v1_auction_path(@auction.uuid),
+          params: { status: Auction.statuses[:awaiting_payment],
+                    registration_deadline: deadline},
+          as: :json
+    @auction.reload
+
+    assert_in_delta @auction.registration_deadline, deadline, 1.second
+  end
+
   def test_marks_as_no_bids
     patch api_v1_auction_path(@auction.uuid),
           params: { status: Auction.statuses[:no_bids] },
