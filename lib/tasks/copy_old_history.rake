@@ -5,7 +5,7 @@ namespace :copy_old_history do
   end
 
   task copy_fred: :environment do
-    CopyOldHistoryJob.run
+    CopyFredHistoryJob.run
   end
 
   task clear: :environment do

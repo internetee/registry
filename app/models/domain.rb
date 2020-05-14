@@ -632,6 +632,14 @@ class Domain < ApplicationRecord
     DNS::DomainName.new(name)
   end
 
+  def self.without_ignored_columns
+    been_ignored = ignored_columns
+    self.ignored_columns = []
+    yield
+
+    self.ignored_columns = been_ignored
+  end
+
   def self.to_csv
     CSV.generate do |csv|
       csv << column_names
