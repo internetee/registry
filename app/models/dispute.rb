@@ -48,7 +48,7 @@ class Dispute < ApplicationRecord
     return if domain
 
     wr = Whois::Record.find_or_initialize_by(name: domain_name)
-    wr.json = generate_json(wr)
+    wr.json = @json = generate_json(wr)
     wr.save
   end
 
@@ -64,7 +64,7 @@ class Dispute < ApplicationRecord
 
   def forward_to_auction_if_possible
     domain = DNS::DomainName.new(domain_name)
-    return domain.sell_at_auction if domain.available? && domain.auctionable?
+    (domain.sell_at_auction && return) if domain.available? && domain.auctionable?
 
     whois_record = Whois::Record.find_by(name: domain_name)
     remove_whois_data(whois_record)
@@ -73,10 +73,10 @@ class Dispute < ApplicationRecord
   def remove_whois_data(record)
     return true unless record
 
-    record.json['status'].delete_if { |status| status == 'disputed' }
+    record.json['status'] = record.json['status'].delete_if { |status| status == 'disputed' }
     record.destroy && return if record.json['status'].blank?
 
-    save
+    record.save
   end
 
   def generate_json(record)
