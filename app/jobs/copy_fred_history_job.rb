@@ -1,10 +1,10 @@
 class CopyFredHistoryJob < Que::Job
   include FredSqlUtils
-  attr_accessor :initial_contacts_history, :object_history, :domain_contacts
+  attr_accessor :initial_contacts_history, :object_history, :domain_contacts, :contacts_history
 
   def run
     process_domains
-    # process_contacts
+    process_contacts
   end
 
   def process_domain(domain)
@@ -62,8 +62,48 @@ class CopyFredHistoryJob < Que::Job
     end
   end
 
+  def process_contact(contact)
+
+    new_history_array = []
+    history_entries = contacts_history.select { |entry| entry[:id] == contact.legacy_id }
+    history_entries.each do |entry|
+      recorded_at = entry[:update]
+      attrs = { recorded_at: recorded_at, object_id: contact.id }
+
+      already_exist = Audit::DomainHistory.find_by(attrs).present?
+      next if already_exist
+
+      attrs[:action] = 'UPDATE'
+      attrs[:old_value] = {}
+      attrs[:new_value] = {
+          id: contact.id,
+          fax: entry[:fax],
+          zip: entry[:postalcode],
+          city: entry[:city],
+          name: entry[:name],
+          email: entry[:email],
+          ident: entry[:ssn],
+          phone: entry[:telephone],
+          state: entry[:stateorprovince],
+          street: entry[:street1],
+          legacy_id: entry[:id],
+          country_code: entry[:country],
+          ident_country_code: entry[:country]
+      }
+      new_history_array << attrs
+    end
+
+    Audit::ContactHistory.transaction { Audit::ContactHistory.import new_history_array }
+  end
+
   def process_contacts
 
+    Contact.without_ignored_columns do
+      fred_history_contacts = Contact.where.not(legacy_id: nil)
+      fred_history_contacts.find_each do |contact|
+        process_contact(contact)
+      end
+    end
   end
 
   def process_status(status)
@@ -139,6 +179,19 @@ class CopyFredHistoryJob < Que::Job
         FROM summary s
         join contact_history ch on s.historyid = ch.historyid
        WHERE s.rk = 1
+    SQL
+    result_entries(sql: sql)
+  end
+
+  def contacts_history
+    @contacts_history ||= contacts_history_request
+  end
+
+  def contacts_history_request
+    sql = <<~SQL.gsub(/\s+/, " ").strip
+      select ch.*, h.valid_from as update
+      from contact_history ch
+      join history h on ch.historyid = h.id
     SQL
     result_entries(sql: sql)
   end

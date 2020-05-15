@@ -560,4 +560,12 @@ class Contact < ApplicationRecord
   def deletable?
     !linked?
   end
+
+  def self.without_ignored_columns
+    been_ignored = ignored_columns
+    self.ignored_columns = []
+    yield
+
+    self.ignored_columns = been_ignored
+  end
 end
