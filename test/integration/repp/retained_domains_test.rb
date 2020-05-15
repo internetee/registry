@@ -24,6 +24,41 @@ class ReppV1RetainedDomainsTest < ActionDispatch::IntegrationTest
     assert_equal response_json[:domains], expected_objects
   end
 
+  def test_get_index_with_type_parameter
+    get repp_v1_retained_domains_path({ 'type' => 'reserved' })
+    response_json = JSON.parse(response.body, symbolize_names: true)
+
+    assert response_json[:count] == 1
+
+    expected_objects = [{ name: 'reserved.test',
+                          status: 'reserved',
+                          punycode_name: 'reserved.test' }]
+
+    assert_equal response_json[:domains], expected_objects
+  end
+
+  def test_etags_cache
+    get repp_v1_retained_domains_path({ 'type' => 'reserved' })
+    etag = response.headers['ETag']
+
+    get repp_v1_retained_domains_path({ 'type' => 'reserved' }),
+        headers: { 'If-None-Match' => etag }
+
+    assert_equal response.status, 304
+    assert_equal response.body, ''
+  end
+
+  def test_etags_cache_valid_for_type_only
+    get repp_v1_retained_domains_path({ 'type' => 'blocked' })
+    etag = response.headers['ETag']
+
+    get repp_v1_retained_domains_path, headers: { 'If-None-Match' => etag }
+
+    assert_equal response.status, 200
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    assert response_json[:count] == 3
+  end
+
   def test_cors_preflight
     process :options, repp_v1_retained_domains_path, headers: { 'Origin' => 'https://example.com' }
 
