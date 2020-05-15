@@ -3,9 +3,9 @@ class Registrant::ContactsController < RegistrantController
   helper_method :fax_enabled?
   helper_method :domain_filter_params
   skip_authorization_check only: %i[edit update]
+  before_action :set_contact, only: [:show]
 
   def show
-    @contact = domain.contacts.find(params[:id])
     @requester_contact = Contact.find_by(ident: current_registrant_user.ident).id
     authorize! :read, @contact
   end
@@ -30,6 +30,13 @@ class Registrant::ContactsController < RegistrantController
   end
 
   private
+
+  def set_contact
+    id = params[:id]
+    contact = domain.contacts.find_by(id: id) || current_user_contacts.find_by(id: id)
+    contact ||= Contact.find_by(id: id, ident: domain.registrant.ident)
+    @contact = contact
+  end
 
   def domain
     current_user_domains.find(params[:domain_id])

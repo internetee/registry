@@ -415,7 +415,7 @@ class Contact < ApplicationRecord
   # if total is smaller than needed, the load more
   # we also need to sort by valid_to
   # todo: extract to drapper. Then we can remove Domain#roles
-  def all_domains(page: nil, per: nil, params:, requester:)
+  def all_domains(page: nil, per: nil, params:, requester: nil)
     filter_sql = qualified_domain_ids(params[:domain_filter])
 
     # get sorting rules
@@ -451,9 +451,12 @@ class Contact < ApplicationRecord
   end
 
   def qualified_domain_name_list(requester, filter_sql)
-    if requester
-      requester_domains = Contact.find(requester).domains
-      domains = requester_domains.where('domains.id IN (?)', filter_sql)
+    if requester != id
+      first_scope = Contact.find(requester).domains
+      second_scope = Contact.find(requester).registrant_domains
+
+      domains = Domain.from("(#{first_scope.to_sql} UNION #{second_scope.to_sql}) as domains")
+                      .where('domains.id IN (?)', filter_sql)
     else
       domains = Domain.where('domains.id IN (?)', filter_sql)
     end
@@ -462,13 +465,13 @@ class Contact < ApplicationRecord
   end
 
   def qualified_domain_ids(domain_filter)
-    registrant_ids = Domain.select('id').where(registrant: id).pluck(:id)
+    registrant_ids = registrant_domains.pluck(:id)
     return registrant_ids if domain_filter == 'Registrant'
 
     if %w[AdminDomainContact TechDomainContact].include? domain_filter
       DomainContact.select('domain_id').where(contact_id: id, type: domain_filter)
     else
-      (DomainContact.select('domain_id').where(contact_id: id).pluck(:id) +
+      (DomainContact.select('domain_id').where(contact_id: id).pluck(:domain_id) +
        registrant_ids).uniq
     end
   end
