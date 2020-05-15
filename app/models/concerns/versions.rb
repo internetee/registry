@@ -70,7 +70,8 @@ module Versions
             valid_columns = ver.item_type.constantize&.column_names
             o = new(ver.object&.slice(*valid_columns))
             o.version_loader = ver
-            ver.object_changes.to_h.each { |k, v| o.public_send("#{k}=", v[-1]) }
+            changes = ver.object_changes.to_h&.slice(*valid_columns)
+            changes.each { |k, v| o.public_send("#{k}=", v[-1]) }
             o
           end
       not_in_history = where(id: (ids.to_a - from_history.map(&:id)))
