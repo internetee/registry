@@ -24,8 +24,8 @@ class RetainedDomains
     type = params[:type]
 
     case type
-    when 'reserved' then :reserved
-    when 'blocked' then :blocked
+    when RESERVED then :reserved
+    when BLOCKED then :blocked
     else :all
     end
   end
