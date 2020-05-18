@@ -13,7 +13,7 @@ en:
         zones: Zones
         blocked_domains: Blocked domains
         reserved_domains: Reserved domains
-        disputed_domains: Domain disputes
+        disputed_domains: Disputed domains
         epp_log: EPP log
         repp_log: REPP log
         que: Que

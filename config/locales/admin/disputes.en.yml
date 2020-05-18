@@ -9,8 +9,8 @@ en:
   admin:
     disputes:
       index:
-        title: Domain disputes
-        new_btn: New domain dispute
+        title: Disputed domains
+        new_btn: New disputed domain
         reset_btn: Reset
 
       form:
