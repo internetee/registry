@@ -1,5 +1,5 @@
 module FredSqlUtils
-  DATABASE = ActiveRecord::Base.configurations['fred_test']
+  DATABASE = ActiveRecord::Base.configurations['fred']
 
   def with_another_db(another_db_config)
     original_connection = ActiveRecord::Base.remove_connection

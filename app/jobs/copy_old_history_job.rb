@@ -68,7 +68,7 @@ class CopyOldHistoryJob < Que::Job
 
     old_value = old_entry.object || {}
     new_value = generate_new_value(old_entry&.object_changes)
-    new_value['children'] = old_entry&.children if old_entry.respond_to?(:children)
+    new_value['children'] = generate_new_value_children(old_entry)
     attrs = attrs(old_history_entry: old_entry, old_value: old_value, new_value: new_value)
 
     return if attrs.blank?
@@ -98,6 +98,29 @@ class CopyOldHistoryJob < Que::Job
       hash[key] = value[1]
     end
     hash
+  end
+
+  def generate_new_value_children(old_entry)
+    hash = {}
+    hash = old_entry&.children if old_entry.respond_to?(:children)
+    if old_entry.event == 'create' && old_entry.item_type == 'Domain'
+      registrant_id = old_entry.object_changes['registrant_id'][1]
+      hash[:registrant_initial] = initial_contact_versions(ids: [registrant_id],
+                                                           version_date: old_entry.created_at)
+
+      admin_contact_ids = old_entry.children['admin_contacts']
+      hash[:admin_contacts_initial] = initial_contact_versions(ids: admin_contact_ids,
+                                                               version_date: old_entry.created_at)
+
+      tech_contact_ids = old_entry.children['tech_contacts']
+      hash[:tech_contacts_initial] = initial_contact_versions(ids: tech_contact_ids,
+                                                              version_date: old_entry.created_at)
+    end
+    hash
+  end
+
+  def initial_contact_versions(ids:, version_date:)
+    Contact.where(id: ids).map { |contact| contact.paper_trail.version_at(version_date) }
   end
 
   def generate_action(event)

@@ -1,5 +1,6 @@
 class Contact < ApplicationRecord
   include Audit
+  include Versions
   include EppErrors
   include UserEvents
   include Concerns::Contact::Transferable
