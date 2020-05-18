@@ -1,6 +1,6 @@
---
--- PostgreSQL database dump
---
+---
+--- PostgreSQL database dump
+---
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -605,9 +605,10 @@ CREATE TABLE public.disputes (
     expires_at date NOT NULL,
     starts_at date NOT NULL,
     comment text,
-    closed boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    closed timestamp without time zone,
+    initiator character varying
 );
 
 
@@ -4520,5 +4521,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200417075720'),
 ('20200421093637'),
 ('20200505103316'),
-('20200505150413');
+('20200505150413'),
+('20200518104105');
+
 

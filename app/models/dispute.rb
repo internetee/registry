@@ -10,9 +10,9 @@ class Dispute < ApplicationRecord
 
   scope :expired, -> { where('expires_at < ?', Time.zone.today) }
   scope :active, lambda {
-    where('starts_at <= ? AND expires_at >= ? AND closed = false', Time.zone.today, Time.zone.today)
+    where('starts_at <= ? AND expires_at >= ? AND closed IS NULL', Time.zone.today, Time.zone.today)
   }
-  scope :closed, -> { where(closed: true) }
+  scope :closed, -> { where.not(closed: nil) }
 
   attr_readonly :domain_name
 
@@ -24,7 +24,7 @@ class Dispute < ApplicationRecord
     dispute = Dispute.active.find_by(domain_name: domain_name)
     return false unless dispute
 
-    dispute.close
+    dispute.close(initiator: 'Registrant')
   end
 
   def self.valid_auth?(domain_name, password)
@@ -52,8 +52,8 @@ class Dispute < ApplicationRecord
     wr.save
   end
 
-  def close
-    return false unless update(closed: true)
+  def close(initiator: 'Unknown')
+    return false unless update(closed: Time.zone.now, initiator: initiator)
     return if Dispute.active.where(domain_name: domain_name).any?
 
     domain&.unmark_as_disputed
@@ -129,7 +129,7 @@ class Dispute < ApplicationRecord
   end
 
   def validate_domain_name_period_uniqueness
-    existing_dispute = Dispute.unscoped.where(domain_name: domain_name, closed: false)
+    existing_dispute = Dispute.unscoped.where(domain_name: domain_name, closed: nil)
                               .where('expires_at >= ?', starts_at)
 
     existing_dispute = existing_dispute.where.not(id: id) unless new_record?

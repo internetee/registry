@@ -18,7 +18,7 @@ class AdminDisputesSystemTest < ApplicationSystemTestCase
     assert_nil Dispute.active.find_by(domain_name: 'disputed.test')
 
     visit admin_disputes_path
-    click_on 'New domain dispute'
+    click_on 'New disputed domain'
 
     fill_in 'Domain name', with: 'disputed.test'
     fill_in 'Password', with: '1234'
@@ -34,7 +34,7 @@ class AdminDisputesSystemTest < ApplicationSystemTestCase
     assert_nil Dispute.active.find_by(domain_name: 'disputed.test')
 
     visit admin_disputes_path
-    click_on 'New domain dispute'
+    click_on 'New disputed domain'
 
     fill_in 'Domain name', with: 'disputed.test'
     fill_in 'Password', with: '1234'
@@ -65,7 +65,7 @@ class AdminDisputesSystemTest < ApplicationSystemTestCase
 
   def test_can_not_create_overlapping_dispute
     visit admin_disputes_path
-    click_on 'New domain dispute'
+    click_on 'New disputed domain'
 
     fill_in 'Domain name', with: 'active-dispute.test'
     fill_in 'Starts at', with: @dispute.starts_at + 1.day

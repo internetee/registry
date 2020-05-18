@@ -125,13 +125,13 @@
                             <%= sort_link(@q, 'name') %>
                         </th>
                         <th class="col-xs-2">
-                            <%= sort_link(@q, 'password') %>
+                            <%= sort_link(@q, 'Initiator') %>
                         </th>
                         <th class="col-xs-2">
                             <%= sort_link(@q, 'starts_at') %>
                         </th>
                         <th class="col-xs-2">
-                            <%= sort_link(@q, 'expires_at') %>
+                            <%= sort_link(@q, 'Expired/Closed At') %>
                         </th>
                         <th class="col-xs-2">
                             <%= sort_link(@q, 'comment') %>
@@ -145,13 +145,13 @@
                             <%= x.domain_name %>
                         </td>
                         <td>
-                            <%= x.password %>
+                            <%= x.initiator %>
                         </td>
                         <td>
                             <%= x.starts_at %>
                         </td>
                         <td>
-                            <%= x.expires_at %>
+                            <%= x.closed %>
                         </td>
                         <td>
                             <%= x.comment %>

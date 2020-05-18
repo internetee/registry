@@ -13,7 +13,7 @@ class DisputeStatusUpdateJob < Que::Job
   end
 
   def close_disputes
-    disputes = Dispute.where(closed: false).where('expires_at < ?', Time.zone.today).all
+    disputes = Dispute.where(closed: nil).where('expires_at < ?', Time.zone.today).all
     Rails.logger.info "DisputeStatusUpdateJob - Found #{disputes.count} closable disputes"
     disputes.each do |dispute|
       process_dispute(dispute, closing: true)
@@ -21,7 +21,7 @@ class DisputeStatusUpdateJob < Que::Job
   end
 
   def activate_disputes
-    disputes = Dispute.where(closed: false, starts_at: Time.zone.today).all
+    disputes = Dispute.where(closed: nil, starts_at: Time.zone.today).all
     Rails.logger.info "DisputeStatusUpdateJob - Found #{disputes.count} activatable disputes"
 
     disputes.each do |dispute|
@@ -31,7 +31,7 @@ class DisputeStatusUpdateJob < Que::Job
 
   def process_dispute(dispute, closing: false)
     intent = closing ? 'close' : 'activate'
-    success = closing ? dispute.close : dispute.generate_data
+    success = closing ? dispute.close(initiator: 'Job') : dispute.generate_data
     create_backlog_entry(dispute: dispute, intent: intent, successful: success)
   end
 

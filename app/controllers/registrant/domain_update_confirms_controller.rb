@@ -31,10 +31,7 @@ class Registrant::DomainUpdateConfirmsController < RegistrantController
       end
     elsif params[:confirmed]
       if @registrant_verification.domain_registrant_change_confirm!("email link, #{initiator}")
-        if @domain.disputed?
-          dispute = Dispute.active.find_by(domain_name: @domain.name)
-          dispute.close
-        end
+        Dispute.close_by_domain(@domain.name) if @domain.disputed?
 
         flash[:notice] = t(:registrant_domain_verification_confirmed)
         redirect_to registrant_domain_update_confirm_path(@domain.id, confirmed: true)
