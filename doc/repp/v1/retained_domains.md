@@ -73,7 +73,7 @@ Cache-Control: max-age=0, private, must-revalidate
 
 #### Cache miss response
 
-Standard 200 response is sent when the list have changed since last requested.
+Standard 200 response (with the current complete list) is sent when the list have changed since last requested.
 
 
 ```
