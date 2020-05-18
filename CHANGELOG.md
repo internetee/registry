@@ -1,3 +1,6 @@
+18.05.2020
+* REPP returns list of reserved and blocked domains [#1569](https://github.com/internetee/registry/issues/1569)
+
 14.05.2020
 * Deleted certificates are now revoked first [#952](https://github.com/internetee/registry/issues/952)
 
