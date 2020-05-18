@@ -39,6 +39,18 @@ Rails.application.routes.draw do
 
   mount Repp::API => '/'
 
+  namespace :repp do
+    namespace :v1 do
+      resources :retained_domains, only: %i[index]
+    end
+  end
+
+  match 'repp/v1/retained_domains',
+        controller: 'api/cors',
+        action: 'cors_preflight_check',
+        via: [:options],
+        as: 'repp_cors_preflight_check'
+
   namespace :api do
     namespace :v1 do
       namespace :registrant do
