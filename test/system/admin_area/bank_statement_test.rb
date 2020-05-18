@@ -1,6 +1,6 @@
 require 'application_system_test_case'
 
-class BankStatementTest < ApplicationSystemTestCase
+class AdminAreaBankStatementTest < ApplicationSystemTestCase
   setup do
     sign_in users(:admin)
     travel_to Time.zone.parse('2010-07-05 00:30:00')
