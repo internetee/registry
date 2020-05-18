@@ -6,7 +6,7 @@ class DisputeStatusUpdateJob < Que::Job
     close_disputes
     activate_disputes
 
-    Rails.logger.info "DisputeStatusUpdateJob - All done. Closed #{@backlog['closed']} and " \
+    logger.info "DisputeStatusUpdateJob - All done. Closed #{@backlog['closed']} and " \
     "activated #{@backlog['activated']} disputes."
 
     show_failed_disputes unless @backlog['activate_fail'].empty? && @backlog['close_fail'].empty?
@@ -14,7 +14,7 @@ class DisputeStatusUpdateJob < Que::Job
 
   def close_disputes
     disputes = Dispute.where(closed: nil).where('expires_at < ?', Time.zone.today).all
-    Rails.logger.info "DisputeStatusUpdateJob - Found #{disputes.count} closable disputes"
+    logger.info "DisputeStatusUpdateJob - Found #{disputes.count} closable disputes"
     disputes.each do |dispute|
       process_dispute(dispute, closing: true)
     end
@@ -22,7 +22,7 @@ class DisputeStatusUpdateJob < Que::Job
 
   def activate_disputes
     disputes = Dispute.where(closed: nil, starts_at: Time.zone.today).all
-    Rails.logger.info "DisputeStatusUpdateJob - Found #{disputes.count} activatable disputes"
+    logger.info "DisputeStatusUpdateJob - Found #{disputes.count} activatable disputes"
 
     disputes.each do |dispute|
       process_dispute(dispute, closing: false)
@@ -38,24 +38,28 @@ class DisputeStatusUpdateJob < Que::Job
   def create_backlog_entry(dispute:, intent:, successful:)
     if successful
       @backlog["#{intent}d"] += 1
-      Rails.logger.info "DisputeStatusUpdateJob - #{intent}d dispute " \
+      logger.info "DisputeStatusUpdateJob - #{intent}d dispute " \
       " for '#{dispute.domain_name}'"
     else
       @backlog["#{intent}_fail"] << dispute.id
-      Rails.logger.info 'DisputeStatusUpdateJob - Failed to' \
+      logger.info 'DisputeStatusUpdateJob - Failed to' \
       "#{intent} dispute for '#{dispute.domain_name}'"
     end
   end
 
   def show_failed_disputes
     if @backlog['close_fail'].any?
-      Rails.logger.info('DisputeStatusUpdateJob - Failed to close disputes with Ids:' \
+      logger.info('DisputeStatusUpdateJob - Failed to close disputes with Ids:' \
       "#{@backlog['close_fail']}")
     end
 
     return unless @backlog['activate_fail'].any?
 
-    Rails.logger.info('DisputeStatusUpdateJob - Failed to activate disputes with Ids:' \
+    logger.info('DisputeStatusUpdateJob - Failed to activate disputes with Ids:' \
     "#{@backlog['activate_fail']}")
+  end
+
+  def logger
+    Logger.new(STDOUT)
   end
 end
