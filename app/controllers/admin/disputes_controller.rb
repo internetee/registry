@@ -27,7 +27,10 @@ module Admin
     def create
       @dispute = Dispute.new(dispute_params)
       if @dispute.save
-        redirect_to admin_disputes_url, notice: 'Dispute was successfully created.'
+        notice = 'Dispute was successfully created'
+        notice += @dispute.domain ? '.' : ' for domain that is not registered.'
+
+        redirect_to admin_disputes_url, notice: notice
       else
         render :new
       end

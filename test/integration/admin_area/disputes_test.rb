@@ -15,22 +15,38 @@ class AdminDisputesSystemTest < ApplicationSystemTestCase
   end
 
   def test_creates_new_dispute
-    assert_nil Dispute.active.find_by(domain_name: 'disputed.test')
+    assert_nil Dispute.active.find_by(domain_name: 'hospital.test')
 
     visit admin_disputes_path
     click_on 'New disputed domain'
 
-    fill_in 'Domain name', with: 'disputed.test'
+    fill_in 'Domain name', with: 'hospital.test'
+    fill_in 'Password', with: '1234'
+    fill_in 'Starts at', with: (Time.zone.today - 2.years).to_s
+    fill_in 'Comment', with: 'Sample comment'
+    click_on 'Save'
+
+    assert_text 'Dispute was successfully created.'
+    assert_text 'hospital.test'
+  end
+
+  def test_creates_new_dispute_for_unregistered_domain
+    assert_nil Dispute.active.find_by(domain_name: 'nonexistant.test')
+
+    visit admin_disputes_path
+    click_on 'New disputed domain'
+
+    fill_in 'Domain name', with: 'nonexistant.test'
     fill_in 'Password', with: '1234'
     fill_in 'Starts at', with: Time.zone.today.to_s
     fill_in 'Comment', with: 'Sample comment'
     click_on 'Save'
 
-    assert_text 'Dispute was successfully created.'
-    assert_text 'disputed.test'
+    assert_text 'Dispute was successfully created for domain that is not registered.'
+    assert_text 'nonexistant.test'
   end
 
-  def test_throws_error_if_starts_at_is_past
+  def test_throws_error_if_starts_at_is_in_future
     assert_nil Dispute.active.find_by(domain_name: 'disputed.test')
 
     visit admin_disputes_path
@@ -38,12 +54,11 @@ class AdminDisputesSystemTest < ApplicationSystemTestCase
 
     fill_in 'Domain name', with: 'disputed.test'
     fill_in 'Password', with: '1234'
-    fill_in 'Starts at', with: (Time.zone.today - 2.day).to_s
+    fill_in 'Starts at', with: (Time.zone.today + 2.day).to_s
     fill_in 'Comment', with: 'Sample comment'
     click_on 'Save'
 
-    assert_text 'Dispute was successfully created.'
-    assert_text 'disputed.test'
+    assert_text "Can not be greater than today's date"
   end
 
   def test_updates_dispute
