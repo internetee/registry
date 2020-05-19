@@ -8,6 +8,7 @@ module Audit
     before_create :add_creator
     before_create :add_updator
     before_update :add_updator
+    # before_save :add_updator
 
     has_many :versions, class_name: "::Audit::#{name}History",
                         foreign_key: 'object_id'

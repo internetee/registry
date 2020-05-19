@@ -60,13 +60,13 @@ module Concerns::Domain::Transferable
     contacts.each do |contact|
       next if copied_ids.include?(contact.id) || contact.registrar == new_registrar
 
-      if registrant_id_was == contact.id # registrant was copied previously, do not copy it again
-        oc = OpenStruct.new(id: registrant_id, code: contact.code)
-      else
-        oc = contact.transfer(new_registrar)
-      end
-      domain_contacts.where(contact_id: contact.id).update_all({ contact_id: oc.id,
-                                                                 contact_code_cache: oc.code }) # n+1 workaround
+      oc = if registrant_id_was == contact.id # registrant was copied previously, do not copy it
+             OpenStruct.new(id: registrant_id, code: contact.code)
+           else
+             contact.transfer(new_registrar)
+           end
+      domain_contacts.where(contact_id: contact.id).update_all(contact_id: oc.id,
+                                                               contact_code_cache: oc.code)
       copied_ids << contact.id
     end
   end

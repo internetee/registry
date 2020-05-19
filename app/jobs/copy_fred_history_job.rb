@@ -1,21 +1,53 @@
 class CopyFredHistoryJob < Que::Job
   include FredSqlUtils
-  attr_accessor :initial_contacts_history, :object_history, :domain_contacts, :contacts_history
+  attr_accessor :initial_contacts_history, :object_history, :domain_contacts, :contacts_history,
+                :legacy_domain_data, :legacy_contact_data
 
-  def run
-    process_domains
-    process_contacts
+  def run(prepare: false)
+    Rails.logger = Logger.new(STDOUT)
+    prepare_staging if prepare
+    process_domains unless prepare
+    process_contacts unless prepare
+  end
+
+  def prepare_staging
+    logger.info 'Starting preparing staging domain data'
+    Domain.without_ignored_columns do
+      Domain.find_each do |domain|
+        logger.info "Check if there is FRED entry for the #{domain.name}"
+        entry = legacy_domain_data.detect { |entry| entry[:name] == domain.name }
+        domain.update_columns(legacy_id: entry[:id]) if entry && domain.legacy_id != entry[:id]
+      end
+    end
+    logger.info 'Finished preparing staging domain data'
+    logger.info 'Starting preparing staging contact data'
+    Contact.without_ignored_columns do
+      Contact.find_each do |contact|
+        logger.info "Check if there is FRED entry for the #{contact.name}"
+        entry = legacy_contact_data.detect { |entry| entry[:name] == contact.name }
+        contact.update_columns(legacy_id: entry[:id]) if entry && contact.legacy_id != entry[:id]
+      end
+    end
+    logger.info 'Finished preparing staging contact data'
+  end
+
+  def logger
+    Rails.logger
   end
 
   def process_domain(domain)
+    logger.info "Starting processing domain #{domain.name}"
     new_history_array = []
     history_entries = object_history.select { |entry| entry[:id] == domain.legacy_id }
+    return if history_entries.empty?
+
     history_entries.each do |entry|
-      recorded_at = entry[:update]
+      recorded_at = entry[:update].to_datetime
       attrs = { recorded_at: recorded_at, object_id: domain.id }
 
       already_exist = Audit::DomainHistory.find_by(attrs).present?
       next if already_exist
+      logger.info "FRED history of #{domain.name} didn't imported yet, proceeding"
 
       start_reg = initial_contacts_history.detect{ |val| val[:id] == entry[:registrant] }
       admin_contact_id = domain_contacts.detect{ |val| val[:domainid] == entry[:id] }[:contactid]
@@ -51,6 +83,7 @@ class CopyFredHistoryJob < Que::Job
     end
 
     Audit::DomainHistory.transaction { Audit::DomainHistory.import new_history_array }
+    logger.info "Finished processing domain #{domain.name}"
   end
 
   def process_domains
@@ -63,15 +96,18 @@ class CopyFredHistoryJob < Que::Job
   end
 
   def process_contact(contact)
-
+    logger.info "Starting processing contact #{contact.id}/#{contact.name}"
     new_history_array = []
     history_entries = contacts_history.select { |entry| entry[:id] == contact.legacy_id }
-    history_entries.each do |entry|
-      recorded_at = entry[:update]
-      attrs = { recorded_at: recorded_at, object_id: contact.id }
+    return if history_entries.empty?
 
-      already_exist = Audit::DomainHistory.find_by(attrs).present?
+    history_entries.each do |entry|
+      recorded_at = entry[:update].to_datetime
+      attrs = { recorded_at: recorded_at, object_id: contact.id }
+      already_exist = Audit::ContactHistory.find_by(attrs).present?
       next if already_exist
+
+      logger.info "FRED history of contact #{contact.id}/#{contact.name} didn't imported yet."
 
       attrs[:action] = 'UPDATE'
       attrs[:old_value] = {}
@@ -94,6 +130,7 @@ class CopyFredHistoryJob < Que::Job
     end
 
     Audit::ContactHistory.transaction { Audit::ContactHistory.import new_history_array }
+    logger.info "Finished processing contact #{contact.id}/#{contact.name}"
   end
 
   def process_contacts
@@ -192,6 +229,30 @@ class CopyFredHistoryJob < Que::Job
       select ch.*, h.valid_from as update
       from contact_history ch
       join history h on ch.historyid = h.id
+    SQL
+    result_entries(sql: sql)
+  end
+
+  def legacy_domain_data
+    @legacy_domain_data ||= legacy_domains
+  end
+
+  def legacy_domains
+    sql = <<~SQL.gsub(/\s+/, " ").strip
+      select distinct id, name from object_registry
+      where type = 3
+    SQL
+    result_entries(sql: sql)
+  end
+
+  def legacy_contact_data
+    @legacy_contact_data ||= legacy_contacts
+  end
+
+  def legacy_contacts
+    sql = <<~SQL.gsub(/\s+/, " ").strip
+      select distinct id, name
+      from contact
     SQL
     result_entries(sql: sql)
   end

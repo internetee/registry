@@ -9,6 +9,7 @@ module FredSqlUtils
     ActiveRecord::Base.establish_connection(original_connection)
   end
 
+  # rubocop:disable Rubocop/MethodLength
   def result_entries(sql:, bind: {})
     bindings = []
     bind_index = 1
@@ -33,8 +34,11 @@ module FredSqlUtils
       end
     end
   end
+  # rubocop:enable Rubocop/MethodLength
 
   def json_to_hash(json)
-    JSON.parse(json, symbolize_names: true) rescue json
+    JSON.parse(json, symbolize_names: true)
+  rescue JSON::ParserError, TypeError
+    json
   end
 end

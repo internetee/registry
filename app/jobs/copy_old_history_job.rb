@@ -23,9 +23,14 @@ class CopyOldHistoryJob < Que::Job
               Domain].freeze
 
   def run
+    Rails.logger = Logger.new(STDOUT)
     MODELS.each do |model|
       copy_history(model)
     end
+  end
+
+  def logger
+    Rails.logger
   end
 
   def default_resolve_action
@@ -36,7 +41,6 @@ class CopyOldHistoryJob < Que::Job
 
   def copy_history(model)
     old_history = "#{model}Version".constantize.all
-    logger = Rails.logger
     logger.info "Starting process #{model}Version"
 
     new_klass = "Audit::#{model}History".constantize
@@ -104,15 +108,17 @@ class CopyOldHistoryJob < Que::Job
     hash = {}
     hash = old_entry&.children if old_entry.respond_to?(:children)
     if old_entry.event == 'create' && old_entry.item_type == 'Domain'
-      registrant_id = old_entry.object_changes['registrant_id'][1]
+      registrant_id = old_entry&.object_changes['registrant_id'].try(:[], 1)
+
       hash[:registrant_initial] = initial_contact_versions(ids: [registrant_id],
                                                            version_date: old_entry.created_at)
 
-      admin_contact_ids = old_entry.children['admin_contacts']
+      admin_contact_ids = old_entry&.children['admin_contacts']
+
       hash[:admin_contacts_initial] = initial_contact_versions(ids: admin_contact_ids,
                                                                version_date: old_entry.created_at)
 
-      tech_contact_ids = old_entry.children['tech_contacts']
+      tech_contact_ids = old_entry&.children['tech_contacts']
       hash[:tech_contacts_initial] = initial_contact_versions(ids: tech_contact_ids,
                                                               version_date: old_entry.created_at)
     end

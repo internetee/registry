@@ -1,3 +1,4 @@
+# rubocop:disable Rubocop/ModuleLength
 module ApplicationHelper
   def unstable_env
     return nil if Rails.env.production?
@@ -109,14 +110,16 @@ module ApplicationHelper
 
   def last_change_history_version(change:)
     object = Audit::ContactHistory.by_contact(change.contact_id).last
-    link_to admin_contact_version_path(object), class: changing_css_class_action(change), target: '_blank' do
+    link_to admin_contact_version_path(object), class: changing_css_class_action(change),
+                                                target: '_blank',
+                                                rel: 'noopener' do
       yield
     end
   end
 
   def last_contact_history_version(contact:)
     object = Audit::ContactHistory.by_contact(contact.id).last
-    link_to admin_contact_version_path(object), target: '_blank' do
+    link_to admin_contact_version_path(object), target: '_blank', rel: 'noopener' do
       yield
     end
   end
@@ -131,3 +134,4 @@ module ApplicationHelper
     [controller_path.split('/').map!(&:dasherize), action_name.dasherize, 'page'].join('-')
   end
 end
+# rubocop:enable Rubocop/ModuleLength

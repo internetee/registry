@@ -49,8 +49,10 @@ class Contact < ApplicationRecord
   before_validation :strip_email
 
   before_update lambda {
-    domains.update_all(updated_at: Time.zone.now) # rubocop:disable Rails/SkipsModelValidations
-    registrant_domains.update_all(updated_at: Time.zone.now) # rubocop:disable Rails/SkipsModelValidations
+    # rubocop:disable Rails/SkipsModelValidations
+    domains.update_all(updated_at: Time.zone.now)
+    registrant_domains.update_all(updated_at: Time.zone.now)
+    # rubocop:enable Rails/SkipsModelValidations
   }
 
   composed_of :identifier,
