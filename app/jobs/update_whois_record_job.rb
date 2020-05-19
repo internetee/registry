@@ -47,8 +47,10 @@ class UpdateWhoisRecordJob < Que::Job
   end
 
   def delete_reserved(name)
-    Domain.where(name: name).any?
-    Whois::Record.where(name: name).delete_all
+    Whois::Record.where(name: name).each do |r|
+      r.json['status'] = r.json['Reserved'].delete_if { |status| status == 'Reserved' }
+      r.json['status'].blank? ? r.destroy : r.save
+    end
   end
 
   def delete_blocked(name)
