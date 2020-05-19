@@ -9,7 +9,7 @@ module Admin
     def index
       params[:q] ||= {}
       @disputes = sortable_dispute_query_for(Dispute.active.all, params[:q])
-      @closed_disputes = sortable_dispute_query_for(Dispute.closed.all, params[:q])
+      @closed_disputes = sortable_dispute_query_for(Dispute.closed.all, params[:q], closed: true)
     end
 
     # GET /admin/disputes/1
@@ -53,9 +53,9 @@ module Admin
 
     private
 
-    def sortable_dispute_query_for(disputes, query)
+    def sortable_dispute_query_for(disputes, query, closed: false)
       @q = disputes.order(:domain_name).search(query)
-      disputes = @q.result.page(params[:page])
+      disputes = @q.result.page(closed ? params[:closed_page] : params[:page])
       return disputes.per(params[:results_per_page]) if params[:results_per_page].present?
 
       disputes

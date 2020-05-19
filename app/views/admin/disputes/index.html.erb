@@ -8,8 +8,8 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <%= f.label :name %>
-                    <%= f.search_field :name_matches, value: params[:q][:name_matches], class: 'form-control', placeholder: t(:name) %>
+                    <%= f.label :domain_name %>
+                    <%= f.search_field :domain_name_matches, value: params[:q][:domain_name_matches], class: 'form-control', placeholder: t(:name) %>
                 </div>
             </div>
             <div class="col-md-3">
@@ -53,7 +53,7 @@
                 <thead>
                     <tr>
                         <th class="col-xs-2">
-                            <%= sort_link(@q, 'name') %>
+                            <%= sort_link(@q, 'domain_name') %>
                         </th>
                         <th class="col-xs-2">
                             <%= sort_link(@q, 'password') %>
@@ -122,16 +122,16 @@
                 <thead>
                     <tr>
                         <th class="col-xs-2">
-                            <%= sort_link(@q, 'name') %>
+                            <%= sort_link(@q, 'domain_name') %>
                         </th>
                         <th class="col-xs-2">
-                            <%= sort_link(@q, 'Initiator') %>
+                            <%= sort_link(@q, 'initiator') %>
                         </th>
                         <th class="col-xs-2">
                             <%= sort_link(@q, 'starts_at') %>
                         </th>
                         <th class="col-xs-2">
-                            <%= sort_link(@q, 'Expired/Closed At') %>
+                            <%= sort_link(@q, 'closed') %>
                         </th>
                         <th class="col-xs-2">
                             <%= sort_link(@q, 'comment') %>
@@ -165,7 +165,7 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <%= paginate @closed_disputes %>
+        <%= paginate @closed_disputes, param_name: :closed_page %>
     </div>
     <div class="col-md-6 text-right">
         <div class="pagination">
