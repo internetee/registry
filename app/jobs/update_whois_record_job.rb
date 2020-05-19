@@ -47,10 +47,7 @@ class UpdateWhoisRecordJob < Que::Job
   end
 
   def delete_reserved(name)
-    Whois::Record.where(name: name).each do |r|
-      r.json['status'] = r.json['Reserved'].delete_if { |status| status == 'Reserved' }
-      r.json['status'].blank? ? r.destroy : r.save
-    end
+    remove_status_from_whois(domain_name: name, domain_status: 'Reserved')
   end
 
   def delete_blocked(name)
@@ -60,8 +57,12 @@ class UpdateWhoisRecordJob < Que::Job
   def delete_disputed(name)
     return if Dispute.active.find_by(domain_name: name).present?
 
-    Whois::Record.where(name: name).each do |r|
-      r.json['status'] = r.json['status'].delete_if { |status| status == 'disputed' }
+    remove_status_from_whois(domain_name: name, domain_status: 'disputed')
+  end
+
+  def remove_status_from_whois(domain_name:, domain_status:)
+    Whois::Record.where(name: domain_name).each do |r|
+      r.json['status'] = r.json['status'].delete_if { |status| status == domain_status }
       r.json['status'].blank? ? r.destroy : r.save
     end
   end

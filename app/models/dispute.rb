@@ -1,4 +1,5 @@
 class Dispute < ApplicationRecord
+  include WhoisStatusPopulate
   validates :domain_name, :password, :starts_at, :expires_at, presence: true
   before_validation :fill_empty_passwords, :set_expiry_date
   validate :validate_domain_name_format
@@ -48,7 +49,7 @@ class Dispute < ApplicationRecord
     return if domain
 
     wr = Whois::Record.find_or_initialize_by(name: domain_name)
-    wr.json = @json = generate_json(wr)
+    wr.json = @json = generate_json(wr, domain_status: 'disputed')
     wr.save
   end
 
@@ -77,18 +78,6 @@ class Dispute < ApplicationRecord
     record.destroy && return if record.json['status'].blank?
 
     record.save
-  end
-
-  def generate_json(record)
-    h = HashWithIndifferentAccess.new(name: domain_name, status: ['disputed'])
-    return h if record.json.blank?
-
-    status_arr = (record.json['status'] ||= [])
-    return record.json if status_arr.include? 'disputed'
-
-    status_arr.push('disputed')
-    record.json['status'] = status_arr
-    record.json
   end
 
   def remove_data
