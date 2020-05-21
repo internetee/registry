@@ -451,17 +451,16 @@ class Contact < ApplicationRecord
   end
 
   def qualified_domain_name_list(requester, filter_sql)
-    if requester != id
-      first_scope = Contact.find(requester).domains
-      second_scope = Contact.find(requester).registrant_domains
+    return Domain.where('domains.id IN (?)', filter_sql) unless requester != id
 
-      domains = Domain.from("(#{first_scope.to_sql} UNION #{second_scope.to_sql}) as domains")
-                      .where('domains.id IN (?)', filter_sql)
-    else
-      domains = Domain.where('domains.id IN (?)', filter_sql)
+    requester = Contact.find_by(id: requester)
+    registrant_user = RegistrantUser.find_or_initialize_by(registrant_ident:
+      "#{requester.ident_country_code}-#{requester.ident}")
+    begin
+      registrant_user.domains.where('domains.id IN (?)', filter_sql)
+    rescue CompanyRegister::NotAvailableError
+      registrant_user.direct_domains.where('domains.id IN (?)', filter_sql)
     end
-
-    domains
   end
 
   def qualified_domain_ids(domain_filter)
