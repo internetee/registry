@@ -21,3 +21,4 @@ Main communication specification through Restful EPP (REPP):
 [Account related functions](repp/v1/account.md)
 [Nameservers](repp/v1/nameservers.md)
 [Retained domains](repp/v1/retained_domains.md)
+[Auctions](repp/v1/auctions.md)

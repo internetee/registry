@@ -41,11 +41,12 @@ Rails.application.routes.draw do
 
   namespace :repp do
     namespace :v1 do
+      resources :auctions, only: %i[index]
       resources :retained_domains, only: %i[index]
     end
   end
 
-  match 'repp/v1/retained_domains',
+  match 'repp/v1/*all',
         controller: 'api/cors',
         action: 'cors_preflight_check',
         via: [:options],
