@@ -26,7 +26,7 @@ class NewInvoicePaymentTest < ApplicationSystemTestCase
 
   def test_create_new_SEB_payment
     create_invoice_and_visit_its_page
-    click_link_or_button 'Seb'
+    click_link_or_button 'seb'
     form = page.find('form')
     assert_equal('https://www.seb.ee/cgi-bin/dv.sh/ipank.r', form['action'])
     assert_equal('post', form['method'])
@@ -35,7 +35,7 @@ class NewInvoicePaymentTest < ApplicationSystemTestCase
 
   def test_create_new_Every_Pay_payment
     create_invoice_and_visit_its_page
-    click_link_or_button 'Every pay'
+    click_link_or_button 'every_pay'
     expected_hmac_fields = 'account_id,amount,api_username,callback_url,' +
                            'customer_url,hmac_fields,nonce,order_reference,timestamp,transaction_type'
 
