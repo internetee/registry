@@ -107,6 +107,7 @@ class Registrar
       authorize! :update, Depp::Domain
       @domain_params = params[:domain]
       @data = @domain.update(@domain_params)
+      @disputed = Dispute.active.find_by(domain_name: @domain_params[:name]).present?
 
       if response_ok?
         redirect_to info_registrar_domains_url(domain_name: @domain_params[:name])
