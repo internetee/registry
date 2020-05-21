@@ -1,3 +1,13 @@
+21.05.2020
+* Fixed contact view access bug in registrant [#1527](https://github.com/internetee/registry/pull/1527)
+* REPP returns list of domains currently at auction [#1582](https://github.com/internetee/registry/pull/1582)
+
+18.05.2020
+* REPP returns list of reserved and blocked domains [#1569](https://github.com/internetee/registry/issues/1569)
+
+14.05.2020
+* Deleted certificates are now revoked first [#952](https://github.com/internetee/registry/issues/952)
+
 11.05.2020
 * Auction process due dates are now available over whois and rest-whois [#1201](https://github.com/internetee/registry/issues/1201)
 
