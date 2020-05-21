@@ -477,7 +477,7 @@ class Epp::Domain < Domain
 
     same_registrant_as_current = true
     # registrant block may not be present, so we need this to rule out false positives
-    unless frame.css('registrant').text.blank?
+    if frame.css('registrant').text.present?
       same_registrant_as_current = (registrant.code == frame.css('registrant').text)
     end
 
