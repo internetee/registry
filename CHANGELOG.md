@@ -1,6 +1,6 @@
 21.05.2020
 * Fixed contact view access bug in registrant [#1527](https://github.com/internetee/registry/pull/1527)
-* REPP returns list of domains currently at auction [#1583](https://github.com/internetee/registry/pull/1583)
+* REPP returns list of domains currently at auction [#1582](https://github.com/internetee/registry/pull/1582)
 
 18.05.2020
 * REPP returns list of reserved and blocked domains [#1569](https://github.com/internetee/registry/issues/1569)
