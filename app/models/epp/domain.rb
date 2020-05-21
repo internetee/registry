@@ -475,7 +475,11 @@ class Epp::Domain < Domain
       self.up_date = Time.zone.now
     end
 
-    same_registrant_as_current = (registrant.code == frame.css('registrant').text)
+    same_registrant_as_current = true
+    # registrant block may not be present, so we need this to rule out false positives
+    unless frame.css('registrant').text.blank?
+      same_registrant_as_current = (registrant.code == frame.css('registrant').text)
+    end
 
     if !same_registrant_as_current && disputed?
       disputed_pw = frame.css('reserved > pw').text
@@ -484,7 +488,9 @@ class Epp::Domain < Domain
         'pw element required for dispute domains')
       else
         dispute = Dispute.active.find_by(domain_name: name, password: disputed_pw)
-        if dispute.nil?
+        if dispute
+          Dispute.close_by_domain(name)
+        else
           add_epp_error('2202', nil, nil, 'Invalid authorization information; '\
           'invalid reserved>pw value')
         end
