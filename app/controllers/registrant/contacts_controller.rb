@@ -6,7 +6,7 @@ class Registrant::ContactsController < RegistrantController
   before_action :set_contact, only: [:show]
 
   def show
-    @requester_contact = Contact.find_by(ident: current_registrant_user.ident).id
+    @requester_contact = Contact.find_by(ident: current_registrant_user.ident)
     authorize! :read, @contact
   end
 
