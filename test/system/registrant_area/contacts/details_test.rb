@@ -24,18 +24,10 @@ class RegistrantAreaContactDetailsTest < ApplicationSystemTestCase
   end
 
   def test_registrant_user_cannot_access_contact_when_given_domain_belongs_to_another_user
-    suppress(ActionView::Template::Error) do
+    suppress(ActiveRecord::RecordNotFound) do
       visit registrant_domain_contact_url(domains(:metro), @contact)
       assert_response :not_found
       assert_no_text 'Name John'
-    end
-  end
-
-  def test_unmanaged_contact_cannot_be_accessed
-    @contact.update!(ident: '12345')
-
-    assert_raises ActiveRecord::RecordNotFound do
-      visit registrant_domain_contact_url(@domain, @contact)
     end
   end
 end

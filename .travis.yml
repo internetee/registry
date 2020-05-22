@@ -12,6 +12,12 @@ before_install:
   - "sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver"
 before_script:
   - "cp config/application.yml.sample config/application.yml"
+  - "echo \"openssl_config_path: 'test/fixtures/files/test_ca/openssl.cnf'\" >> config/application.yml"
+  - "echo \"crl_dir:      'test/fixtures/files/test_ca/crl'\" >> config/application.yml"
+  - "echo \"crl_path:     'test/fixtures/files/test_ca/crl/crl.pem'\" >> config/application.yml"
+  - "echo \"ca_cert_path: 'test/fixtures/files/test_ca/certs/ca.crt.pem'\" >> config/application.yml"
+  - "echo \"ca_key_path:  'test/fixtures/files/test_ca/private/ca.key.pem'\" >> config/application.yml"
+  - "echo \"ca_key_password: 'password'\" >> config/application.yml"
   - "cp config/database_travis.yml config/database.yml"
   - "bundle exec rake db:setup:all"
   - "curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter"
@@ -19,6 +25,8 @@ before_script:
   - "./cc-test-reporter before-build"
 after_script:
   - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
+script:
+  - "bundle exec rails test test/*"
 services:
   - postgresql
 addons:

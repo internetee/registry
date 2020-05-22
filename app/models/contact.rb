@@ -451,9 +451,8 @@ class Contact < ApplicationRecord
   end
 
   def qualified_domain_name_list(requester, filter_sql)
-    return Domain.where('domains.id IN (?)', filter_sql) if requester.nil?
+    return Domain.where('domains.id IN (?)', filter_sql) if requester.blank?
 
-    requester = Contact.find_by(id: requester)
     registrant_user = RegistrantUser.find_or_initialize_by(registrant_ident:
       "#{requester.ident_country_code}-#{requester.ident}")
     begin
