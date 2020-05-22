@@ -65,7 +65,10 @@ class Dispute < ApplicationRecord
 
   def forward_to_auction_if_possible
     domain = DNS::DomainName.new(domain_name)
-    (domain.sell_at_auction && return) if domain.available? && domain.auctionable?
+    if domain.available? && domain.auctionable?
+      domain.sell_at_auction
+      return true
+    end
 
     whois_record = Whois::Record.find_by(name: domain_name)
     remove_whois_data(whois_record)
