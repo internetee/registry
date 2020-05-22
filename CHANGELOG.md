@@ -1,3 +1,6 @@
+22.05.2020
+* New solution for managing domains with effective dispute commitee decision [#269](https://github.com/internetee/registry/issues/269)
+
 21.05.2020
 * Fixed contact view access bug in registrant [#1527](https://github.com/internetee/registry/pull/1527)
 * REPP returns list of domains currently at auction [#1582](https://github.com/internetee/registry/pull/1582)
