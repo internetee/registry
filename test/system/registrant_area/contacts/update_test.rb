@@ -141,14 +141,6 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
     assert_no_field 'Street'
   end
 
-  def test_unmanaged_contact_cannot_be_updated
-    @contact.update!(ident: '12345')
-
-    assert_raises ActiveRecord::RecordNotFound do
-      visit registrant_domain_contact_url(@domain, @contact)
-    end
-  end
-
   def test_fail_gracefully
     stub_auth_request
 
