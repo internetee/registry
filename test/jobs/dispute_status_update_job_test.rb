@@ -3,17 +3,18 @@ require "test_helper"
 class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
   setup do
     travel_to Time.zone.parse('2010-10-05')
+    @logger = Rails.logger
   end
 
   def test_nothing_is_raised
     assert_nothing_raised do
-      DisputeStatusUpdateJob.run
+      DisputeStatusUpdateJob.run(logger: @logger)
     end
   end
 
   def test_whois_data_added_when_dispute_activated
     dispute = disputes(:future)
-    DisputeStatusUpdateJob.run
+    DisputeStatusUpdateJob.run(logger: @logger)
 
     whois_record = Whois::Record.find_by(name: dispute.domain_name)
     assert whois_record.present?
@@ -24,7 +25,7 @@ class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
     dispute = disputes(:active)
     dispute.update!(starts_at: Time.zone.today - 3.years - 1.day)
 
-    DisputeStatusUpdateJob.run
+    DisputeStatusUpdateJob.run(logger: @logger)
     dispute.reload
 
     assert dispute.closed
@@ -36,7 +37,7 @@ class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
   def test_registered_domain_whois_data_is_added
     Dispute.create(domain_name: 'shop.test', starts_at: '2010-07-05')
     travel_to Time.zone.parse('2010-07-05')
-    DisputeStatusUpdateJob.run
+    DisputeStatusUpdateJob.run(logger: @logger)
 
     whois_record = Whois::Record.find_by(name: 'shop.test')
     assert_includes whois_record.json['status'], 'disputed'
@@ -61,7 +62,7 @@ class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
     # Dispute status is removed night time day after it's ended
     travel_to Time.zone.parse('2010-07-05') + 3.years + 1.day
 
-    DisputeStatusUpdateJob.run
+    DisputeStatusUpdateJob.run(logger: @logger)
 
     whois_record.reload
     assert_not whois_record.json['status'].include? 'disputed'
