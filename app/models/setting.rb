@@ -46,6 +46,7 @@ class Setting < RailsSettings::Base
       expire_warning_period
       redemption_grace_period
       expire_pending_confirmation
+      dispute_period_in_months
     ]
   end
 

@@ -9,6 +9,7 @@ class Domain < ApplicationRecord
   include Concerns::Domain::Transferable
   include Concerns::Domain::RegistryLockable
   include Concerns::Domain::Releasable
+  include Concerns::Domain::Disputable
 
   attr_accessor :roles
 
@@ -88,8 +89,8 @@ class Domain < ApplicationRecord
   validates :puny_label, length: { maximum: 63 }
   validates :period, presence: true, numericality: { only_integer: true }
   validates :transfer_code, presence: true
-
   validate :validate_reservation
+
   def validate_reservation
     return if persisted? || !in_reserved_list?
 
@@ -99,6 +100,7 @@ class Domain < ApplicationRecord
     end
 
     return if ReservedDomain.pw_for(name) == reserved_pw
+
     errors.add(:base, :invalid_auth_information_reserved)
   end
 
@@ -282,20 +284,23 @@ class Domain < ApplicationRecord
   def server_holdable?
     return false if statuses.include?(DomainStatus::SERVER_HOLD)
     return false if statuses.include?(DomainStatus::SERVER_MANUAL_INZONE)
+
     true
   end
 
   def renewable?
-    if Setting.days_to_renew_domain_before_expire != 0
-      # if you can renew domain at days_to_renew before domain expiration
-      if (expire_time.to_date - Date.today) + 1 > Setting.days_to_renew_domain_before_expire
-        return false
-      end
+    blocking_statuses = [DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
+                         DomainStatus::PENDING_TRANSFER, DomainStatus::DISPUTED,
+                         DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE,
+                         DomainStatus::PENDING_DELETE_CONFIRMATION]
+    return false if statuses.include_any? blocking_statuses
+    return true unless Setting.days_to_renew_domain_before_expire != 0
+
+    # if you can renew domain at days_to_renew before domain expiration
+    if (expire_time.to_date - Time.zone.today) + 1 > Setting.days_to_renew_domain_before_expire
+      return false
     end
 
-    return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
-                                          DomainStatus::PENDING_TRANSFER, DomainStatus::PENDING_DELETE,
-                                          DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION)
     true
   end
 

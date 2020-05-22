@@ -1,7 +1,9 @@
 class ReservedDomain < ApplicationRecord
   include Versions # version/reserved_domain_version.rb
+  include WhoisStatusPopulate
   before_save :fill_empty_passwords
   before_save :generate_data
+  before_save :sync_dispute_password
   after_destroy :remove_data
 
   validates :name, domain_name: true, uniqueness: true
@@ -41,22 +43,20 @@ class ReservedDomain < ApplicationRecord
     self.password = SecureRandom.hex
   end
 
+  def sync_dispute_password
+    dispute = Dispute.active.find_by(domain_name: name)
+    self.password = dispute.password if dispute.present?
+  end
+
   def generate_data
     return if Domain.where(name: name).any?
 
     wr = Whois::Record.find_or_initialize_by(name: name)
-    wr.json = @json = generate_json # we need @json to bind to class
+    wr.json = @json = generate_json(wr, domain_status: 'Reserved') # we need @json to bind to class
     wr.save
   end
 
   alias_method :update_whois_record, :generate_data
-
-  def generate_json
-    h = HashWithIndifferentAccess.new
-    h[:name] = self.name
-    h[:status] = ['Reserved']
-    h
-  end
 
   def remove_data
     UpdateWhoisRecordJob.enqueue name, 'reserved'

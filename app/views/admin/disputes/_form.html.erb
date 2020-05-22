@@ -1,0 +1,60 @@
+<%= form_for([:admin, @dispute], html: { class: 'form-horizontal' }) do |f| %>
+    <%= render 'shared/full_errors', object: @dispute %>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <%= t(:general) %>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <p>As per domain law, expiry time is <%= Setting.dispute_period_in_months / 12 %> years ahead from start date.</p>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :domain_name %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:domain_name, class: 'form-control', disabled: !f.object.new_record?) %>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :password %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:password, placeholder: t(:optional), class: 'form-control') %>
+                            <span class="help-block"><%= t '.password_hint' %></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :starts_at %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:starts_at, class: 'form-control js-datepicker') %>
+                            <span class="help-block"><%= t '.past_or_today' %></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :comment %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:comment, placeholder: t(:optional), class: 'form-control') %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 text-right">
+            <%= button_tag(t(:save), class: 'btn btn-primary') %>
+        </div>
+    </div>
+<% end %>

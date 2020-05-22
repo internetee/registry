@@ -53,12 +53,13 @@ class Epp::Domain < Domain
   def epp_code_map
     {
       '2002' => [ # Command use error
-        [:base, :domain_already_belongs_to_the_querying_registrar]
+        %i[base domain_already_belongs_to_the_querying_registrar],
       ],
       '2003' => [ # Required parameter missing
-        [:registrant, :blank],
-        [:registrar, :blank],
-        [:base, :required_parameter_missing_reserved]
+        %i[registrant blank],
+        %i[registrar blank],
+        %i[base required_parameter_missing_reserved],
+        %i[base required_parameter_missing_disputed],
       ],
       '2004' => [ # Parameter value range error
         [:dnskeys, :out_of_range,
@@ -85,10 +86,11 @@ class Epp::Domain < Domain
         [:puny_label, :too_long, { obj: 'name', val: name_puny }]
       ],
       '2201' => [ # Authorisation error
-        [:transfer_code, :wrong_pw]
+        %i[transfer_code wrong_pw],
       ],
       '2202' => [
-        [:base, :invalid_auth_information_reserved]
+        %i[base invalid_auth_information_reserved],
+        %i[base invalid_auth_information_disputed],
       ],
       '2302' => [ # Object exists
         [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
@@ -473,13 +475,35 @@ class Epp::Domain < Domain
       self.up_date = Time.zone.now
     end
 
-    same_registrant_as_current = (registrant.code == frame.css('registrant').text)
+    same_registrant_as_current = true
+    # registrant block may not be present, so we need this to rule out false positives
+    if frame.css('registrant').text.present?
+      same_registrant_as_current = (registrant.code == frame.css('registrant').text)
+    end
+
+    if !same_registrant_as_current && disputed?
+      disputed_pw = frame.css('reserved > pw').text
+      if disputed_pw.blank?
+        add_epp_error('2304', nil, nil, 'Required parameter missing; reserved' \
+        'pw element required for dispute domains')
+      else
+        dispute = Dispute.active.find_by(domain_name: name, password: disputed_pw)
+        if dispute
+          Dispute.close_by_domain(name)
+        else
+          add_epp_error('2202', nil, nil, 'Invalid authorization information; '\
+          'invalid reserved>pw value')
+        end
+      end
+    end
+
+    unverified_registrant_params = frame.css('registrant').present? &&
+                                   frame.css('registrant').attr('verified').to_s.downcase != 'yes'
 
     if !same_registrant_as_current && errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
-       frame.css('registrant').present? &&
-       frame.css('registrant').attr('verified').to_s.downcase != 'yes'
-      registrant_verification_asked!(frame.to_s, current_user.id)
+       unverified_registrant_params
+      registrant_verification_asked!(frame.to_s, current_user.id) unless disputed?
     end
 
     errors.empty? && super(at)
@@ -706,6 +730,11 @@ class Epp::Domain < Domain
 
 
   def can_be_deleted?
+    if disputed?
+      errors.add(:base, :domain_status_prohibits_operation)
+      return false
+    end
+
     begin
       errors.add(:base, :domain_status_prohibits_operation)
       return false

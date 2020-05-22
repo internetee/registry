@@ -271,6 +271,11 @@ Rails.application.routes.draw do
         get 'delete'
       end
     end
+    resources :disputes do
+      member do
+        get 'delete'
+      end
+    end
 
     resources :registrars do
       resources :api_users, except: %i[index]

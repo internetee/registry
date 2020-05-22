@@ -44,6 +44,8 @@ defaults: &defaults
   registrar_ip_whitelist_enabled: false
   api_ip_whitelist_enabled: false
 
+  dispute_period_in_months: 36
+
   registry_juridical_name: "Eesti Interneti SA"
   registry_reg_no: "90010019"
   registry_email: "info@internet.ee"

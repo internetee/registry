@@ -100,6 +100,7 @@ class Ability
     can :manage, Invoice
     can :manage, WhiteIp
     can :manage, AccountActivity
+    can :manage, Dispute
     can :read, ApiLog::EppLog
     can :read, ApiLog::ReppLog
     can :update, :pending

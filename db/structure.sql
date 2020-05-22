@@ -1,6 +1,6 @@
---
--- PostgreSQL database dump
---
+---
+--- PostgreSQL database dump
+---
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -592,6 +592,43 @@ CREATE SEQUENCE public.directos_id_seq
 --
 
 ALTER SEQUENCE public.directos_id_seq OWNED BY public.directos.id;
+
+
+--
+-- Name: disputes; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE public.disputes (
+    id bigint NOT NULL,
+    domain_name character varying NOT NULL,
+    password character varying NOT NULL,
+    expires_at date NOT NULL,
+    starts_at date NOT NULL,
+    comment text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    closed timestamp without time zone,
+    initiator character varying
+);
+
+
+--
+-- Name: disputes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.disputes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: disputes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.disputes_id_seq OWNED BY public.disputes.id;
 
 
 --
@@ -2419,6 +2456,13 @@ ALTER TABLE ONLY public.directos ALTER COLUMN id SET DEFAULT nextval('public.dir
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.disputes ALTER COLUMN id SET DEFAULT nextval('public.disputes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.dnskeys ALTER COLUMN id SET DEFAULT nextval('public.dnskeys_id_seq'::regclass);
 
 
@@ -2809,6 +2853,14 @@ ALTER TABLE ONLY public.contacts
 
 ALTER TABLE ONLY public.directos
     ADD CONSTRAINT directos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: disputes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY public.disputes
+    ADD CONSTRAINT disputes_pkey PRIMARY KEY (id);
 
 
 --
@@ -4467,5 +4519,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200204103125'),
 ('20200311114649'),
 ('20200417075720'),
-('20200505103316');
+('20200421093637'),
+('20200505103316'),
+('20200505150413'),
+('20200518104105');
+
 

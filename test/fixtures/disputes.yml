@@ -1,0 +1,22 @@
+active:
+  domain_name: active-dispute.test
+  password: active-001
+  starts_at: <%= Date.parse '2010-07-05' %>
+  expires_at: <%= Date.parse '2013-07-05' %>
+future:
+  domain_name: future-dispute.test
+  password: active-001
+  starts_at: <%= Date.parse '2010-10-05' %>
+  expires_at: <%= Date.parse '2013-10-05' %>
+expired:
+  domain_name: expired-dispute.test
+  password: active-001
+  starts_at: <%= Date.parse '2010-07-05' %>
+  expires_at: <%= Date.parse '2013-07-05' %>
+  closed:  <%= Date.parse '2013-07-05' %>
+closed:
+  domain_name: closed_dispute.test
+  password: active-001
+  starts_at: <%= Date.parse '2010-07-05' %>
+  expires_at: <%= Date.parse '2013-07-05' %>
+  closed:  <%= Date.parse '2013-07-05' %>

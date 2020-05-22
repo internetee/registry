@@ -68,6 +68,10 @@ module DNS
       ReservedDomain.where(name: name).any?
     end
 
+    def disputed?
+      Dispute.active.where(domain_name: name).any?
+    end
+
     def auctionable?
       !not_auctionable?
     end
@@ -81,7 +85,7 @@ module DNS
     attr_reader :name
 
     def not_auctionable?
-      blocked? || reserved?
+      blocked? || reserved? || disputed?
     end
 
     def zone_with_same_origin?
