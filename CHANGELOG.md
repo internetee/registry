@@ -1,5 +1,7 @@
 22.05.2020
 * New solution for managing domains with effective dispute commitee decision [#269](https://github.com/internetee/registry/issues/269)
+* Bump puma from 4.3.5 [#1585](https://github.com/internetee/registry/pull/1585)
+* Run all CI tests [#1584](https://github.com/internetee/registry/pull/1584)
 
 21.05.2020
 * Fixed contact view access bug in registrant [#1527](https://github.com/internetee/registry/pull/1527)
