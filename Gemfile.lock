@@ -304,7 +304,7 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     public_suffix (4.0.3)
-    puma (4.3.3)
+    puma (4.3.5)
       nio4r (~> 2.0)
     que (0.14.3)
     que-web (0.7.2)
