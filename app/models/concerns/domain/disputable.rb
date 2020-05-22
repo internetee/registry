@@ -31,7 +31,7 @@ module Concerns
         return if persisted? || !in_disputed_list?
 
         if reserved_pw.blank?
-          errors.add(:base, :required_parameter_missing_reserved)
+          errors.add(:base, :required_parameter_missing_disputed)
           return false
         end
 
