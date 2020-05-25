@@ -1,3 +1,6 @@
+25.05.2020
+* Fixed registrant change verification bug for disputed domains [#1586](https://github.com/internetee/registry/issues/1586)
+
 22.05.2020
 * New solution for managing domains with effective dispute commitee decision [#269](https://github.com/internetee/registry/issues/269)
 * Bump puma from 4.3.5 [#1585](https://github.com/internetee/registry/pull/1585)
