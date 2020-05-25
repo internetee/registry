@@ -194,6 +194,49 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_no_emails
   end
 
+  def test_skips_verification_when_registrant_changed_with_dispute_password
+    Setting.request_confrimation_on_registrant_change_enabled = true
+    dispute = disputes(:expired)
+    dispute.update!(starts_at: Time.zone.now, expires_at: Time.zone.now + 5.days, closed: nil)
+    new_registrant = contacts(:william)
+
+    assert @domain.disputed?
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{@domain.name}</domain:name>
+                <domain:chg>
+                  <domain:registrant>#{new_registrant.code}</domain:registrant>
+                </domain:chg>
+            </domain:update>
+          </update>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+              <eis:reserved>
+                <eis:pw>#{dispute.password}</eis:pw>
+              </eis:reserved>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+                          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    @domain.reload
+
+    assert_epp_response :completed_successfully
+    assert new_registrant, @domain.registrant
+    assert_not @domain.registrant_verification_asked?
+    assert_not @domain.disputed?
+    assert_no_emails
+  end
+
   def test_skips_verification_when_disabled
     Setting.request_confrimation_on_registrant_change_enabled = false
     new_registrant = contacts(:william).becomes(Registrant)

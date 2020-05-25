@@ -475,13 +475,13 @@ class Epp::Domain < Domain
       self.up_date = Time.zone.now
     end
 
-    same_registrant_as_current = true
+    registrant_verification_needed = false
     # registrant block may not be present, so we need this to rule out false positives
     if frame.css('registrant').text.present?
-      same_registrant_as_current = (registrant.code == frame.css('registrant').text)
+      registrant_verification_needed = (registrant.code != frame.css('registrant').text)
     end
 
-    if !same_registrant_as_current && disputed?
+    if registrant_verification_needed && disputed?
       disputed_pw = frame.css('reserved > pw').text
       if disputed_pw.blank?
         add_epp_error('2304', nil, nil, 'Required parameter missing; reserved' \
@@ -490,6 +490,7 @@ class Epp::Domain < Domain
         dispute = Dispute.active.find_by(domain_name: name, password: disputed_pw)
         if dispute
           Dispute.close_by_domain(name)
+          registrant_verification_needed = false # Prevent asking current registrant confirmation
         else
           add_epp_error('2202', nil, nil, 'Invalid authorization information; '\
           'invalid reserved>pw value')
@@ -500,7 +501,7 @@ class Epp::Domain < Domain
     unverified_registrant_params = frame.css('registrant').present? &&
                                    frame.css('registrant').attr('verified').to_s.downcase != 'yes'
 
-    if !same_registrant_as_current && errors.empty? && verify &&
+    if registrant_verification_needed && errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
        unverified_registrant_params
       registrant_verification_asked!(frame.to_s, current_user.id) unless disputed?
