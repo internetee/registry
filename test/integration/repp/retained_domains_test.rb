@@ -37,6 +37,49 @@ class ReppV1RetainedDomainsTest < ActionDispatch::IntegrationTest
     assert_equal response_json[:domains], expected_objects
   end
 
+  def test_get_index_disputed_type
+    dispute = Dispute.new(domain_name: 'disputed.test', starts_at: Time.zone.today, password: 'disputepw')
+    dispute.save
+
+    get repp_v1_retained_domains_path({ 'type' => 'disputed' })
+    response_json = JSON.parse(response.body, symbolize_names: true)
+
+    assert response_json[:count] == 1
+
+    expected_objects = [{ name: 'disputed.test',
+                          status: 'disputed',
+                          punycode_name: 'disputed.test' }]
+
+    assert_equal response_json[:domains], expected_objects
+  end
+
+  # A disputed domain can be also reserved, and according
+  # to business rules it should appear on the list twice.
+  def test_domain_can_appear_twice_if_it_is_disputed_and_reserved
+    dispute = Dispute.new(domain_name: 'reserved.test', starts_at: Time.zone.today, password: 'disputepw')
+    dispute.save
+
+    get repp_v1_retained_domains_path
+    response_json = JSON.parse(response.body, symbolize_names: true)
+
+    assert response_json[:count] == 4
+
+    expected_objects = [{ name: 'blocked.test',
+                          status: 'blocked',
+                          punycode_name: 'blocked.test' },
+                        { name: 'blockedäöüõ.test',
+                          status: 'blocked',
+                          punycode_name: 'xn--blocked-cxa7mj0e.test' },
+                        { name: 'reserved.test',
+                          status: 'reserved',
+                          punycode_name: 'reserved.test' },
+                        { name: 'reserved.test',
+                          status: 'disputed',
+                          punycode_name: 'reserved.test' }]
+
+    assert_equal response_json[:domains], expected_objects
+  end
+
   def test_etags_cache
     get repp_v1_retained_domains_path({ 'type' => 'reserved' })
     etag = response.headers['ETag']

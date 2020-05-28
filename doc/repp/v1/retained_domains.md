@@ -1,16 +1,20 @@
 ## GET /repp/v1/retained_domains
 
-Return a list of reserved and blocked domains, along with total count. You can
-filter them by type of the domain, which can be either reserved or blocked.
+Return a list of disputed, reserved and blocked domains, along with total count.
+You can filter them by type of the domain, which can be: `reserved`, `blocked`
+or `disputed`.
+
+NB! A domain name can be both `disputed` and `reserved` at the same time, and it
+will appear on the list as two separate objects.
 
 In contrast with other endpoints in REPP, this one is publicly available for
 anyone without authentication.
 
 #### Parameters
 
-| Field name | Required |  Type   |     Allowed values      |        Description         |
-| ---------- | -------- |  ----   |  --------------         |        -----------         |
-|   type     |  false   | string  | ["reserved", "blocked"] | Type of domains to show    |
+| Field name | Required |  Type   |     Allowed values                  |        Description         |
+| ---------- | -------- |  ----   |  --------------                     |        -----------         |
+|   type     |  false   | string  | ["reserved", "blocked", "disputed"] | Type of domains to show    |
 
 
 #### Request
