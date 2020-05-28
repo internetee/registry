@@ -63,17 +63,8 @@ class RetainedDomains
   end
 
   def domain_to_jsonable(domain)
-    status = case domain
-             when ReservedDomain then RESERVED
-             when BlockedDomain then BLOCKED
-             when Dispute then DISPUTED
-             end
-
-    domain_name = case domain
-                  when Dispute then domain.domain_name
-                  else domain.name
-                  end
-
+    status = get_status(domain)
+    domain_name = get_domain_name(domain)
     punycode = SimpleIDN.to_ascii(domain_name)
 
     {
@@ -81,5 +72,20 @@ class RetainedDomains
       status: status,
       punycode_name: punycode,
     }
+  end
+
+  def get_status(domain)
+    case domain
+    when ReservedDomain then RESERVED
+    when BlockedDomain then BLOCKED
+    when Dispute then DISPUTED
+    end
+  end
+
+  def get_domain_name(domain)
+    case domain
+    when Dispute then domain.domain_name
+    else domain.name
+    end
   end
 end
