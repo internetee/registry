@@ -3,6 +3,7 @@
 class RetainedDomains
   RESERVED = 'reserved'.freeze
   BLOCKED = 'blocked'.freeze
+  DISPUTED = 'disputed'.freeze
 
   attr_reader :domains,
               :type
@@ -26,14 +27,15 @@ class RetainedDomains
     case type
     when RESERVED then :reserved
     when BLOCKED then :blocked
+    when DISPUTED then :disputed
     else :all
     end
   end
 
   def gather_domains
-    domains = blocked_domains.to_a.union(reserved_domains.to_a)
-
-    domains.sort_by(&:name)
+    blocked_domains.to_a
+                   .union(reserved_domains.to_a)
+                   .union(disputed_domains.to_a)
   end
 
   def blocked_domains
@@ -52,16 +54,30 @@ class RetainedDomains
     end
   end
 
+  def disputed_domains
+    if %i[all disputed].include?(type)
+      Dispute.order(domain_name: :desc).active
+    else
+      []
+    end
+  end
+
   def domain_to_jsonable(domain)
     status = case domain
              when ReservedDomain then RESERVED
              when BlockedDomain then BLOCKED
+             when Dispute then DISPUTED
              end
 
-    punycode = SimpleIDN.to_ascii(domain.name)
+    domain_name = case domain
+                  when Dispute then domain.domain_name
+                  else domain.name
+                  end
+
+    punycode = SimpleIDN.to_ascii(domain_name)
 
     {
-      name: domain.name,
+      name: domain_name,
       status: status,
       punycode_name: punycode,
     }
