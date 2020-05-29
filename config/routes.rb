@@ -37,7 +37,7 @@ Rails.application.routes.draw do
     get 'error/:command', to: 'errors#error'
   end
 
-  mount Repp::API => '/'
+  mount Repp::Api => '/'
 
   namespace :repp do
     namespace :v1 do

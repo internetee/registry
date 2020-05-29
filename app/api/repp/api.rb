@@ -1,5 +1,5 @@
 module Repp
-  class API < Grape::API
+  class Api < Grape::API
     format :json
     prefix :repp
 
