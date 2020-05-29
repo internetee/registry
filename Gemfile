@@ -5,6 +5,7 @@ gem 'iso8601', '0.12.1' # for dates and times
 gem 'rails', '~> 6.0'
 gem 'rest-client'
 gem 'uglifier'
+gem 'bootsnap', '>= 1.1.0', require: false
 
 # load env
 gem 'figaro', '1.1.1'
