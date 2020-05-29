@@ -118,7 +118,7 @@ module Epp
     end
 
     def render_epp_response(*args)
-      @response = render_to_string(*args, formats: 'xml')
+      @response = render_to_string(*args, formats: [:xml])
       render xml: @response
       write_to_epp_log
     end
