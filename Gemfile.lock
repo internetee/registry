@@ -263,6 +263,9 @@ GEM
     kaminari-core (1.2.0)
     keystores (0.4.0)
     libxml-ruby (3.1.0)
+    listen (3.2.1)
+      rb-fsevent (~> 0.10, >= 0.10.3)
+      rb-inotify (~> 0.9, >= 0.9.10)
     logger (1.4.2)
     loofah (2.5.0)
       crass (~> 1.0.2)
@@ -364,6 +367,9 @@ GEM
       activesupport (>= 5.2.1)
       i18n
       polyamorous (= 2.3.2)
+    rb-fsevent (0.10.4)
+    rb-inotify (0.10.1)
+      ffi (~> 1.0)
     rbtree3 (0.6.0)
     rdoc (4.3.0)
     regexp_parser (1.6.0)
@@ -510,6 +516,7 @@ DEPENDENCIES
   jquery-ui-rails (= 5.0.5)
   kaminari
   lhv!
+  listen (= 3.2.1)
   mina (= 0.3.1)
   minitest (~> 5.14)
   money-rails

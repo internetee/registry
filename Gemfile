@@ -73,6 +73,7 @@ gem 'directo', github: 'internetee/directo', branch: 'master'
 group :development do
   # deploy
   gem 'mina', '0.3.1' # for fast deployment
+  gem 'listen', '3.2.1'
 end
 
 group :development, :test do
