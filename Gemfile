@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # core
 gem 'iso8601', '0.12.1' # for dates and times
-gem 'rails', '~> 5.2.4.3'
+gem 'rails', '~> 5.2.4.2'
 gem 'rest-client'
 gem 'uglifier'
 
@@ -10,7 +10,7 @@ gem 'uglifier'
 gem 'figaro', '1.1.1'
 
 # model related
-gem 'paper_trail', '~> 9.2'
+gem 'paper_trail', '~> 10.3'
 gem 'pg',                        '1.2.2'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 2.3'
