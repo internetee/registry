@@ -23,7 +23,7 @@ gem 'nokogiri'
 
 # style
 gem 'bootstrap-sass', '~> 3.4'
-gem 'sass-rails',     '5.0.6'   # sass style
+gem 'sass-rails',     '6.0.0'   # sass style
 gem 'coffee-rails', '~> 4.2'
 gem 'jquery-rails'
 gem 'selectize-rails', '0.12.1' # include selectize.js for select
