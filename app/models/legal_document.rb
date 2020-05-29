@@ -58,7 +58,7 @@ class LegalDocument < ApplicationRecord
   end
 
   def add_creator
-    self.creator_str = ::PaperTrail.whodunnit
+    self.creator_str = ::PaperTrail.request.whodunnit
     true
   end
 

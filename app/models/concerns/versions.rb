@@ -18,12 +18,12 @@ module Versions
     before_update :add_updator
 
     def add_creator
-      self.creator_str = ::PaperTrail.whodunnit
+      self.creator_str = ::PaperTrail.request.whodunnit
       true
     end
 
     def add_updator
-      self.updator_str = ::PaperTrail.whodunnit
+      self.updator_str = ::PaperTrail.request.whodunnit
       true
     end
 

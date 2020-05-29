@@ -44,7 +44,7 @@ module Api
         # This controller does not inherit from ApplicationController,
         # so user_for_paper_trail method is not usable.
         def set_paper_trail_whodunnit
-          ::PaperTrail.whodunnit = current_registrant_user.id_role_username
+          ::PaperTrail.request.whodunnit = current_registrant_user.id_role_username
         end
 
         def show_not_found_error
