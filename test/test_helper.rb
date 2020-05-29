@@ -10,7 +10,7 @@ if ENV['COVERAGE']
 end
 
 ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('../../config/environment', __FILE__)
+require_relative '../config/environment'
 require 'rails/test_help'
 require 'minitest/mock'
 require 'capybara/rails'
@@ -42,6 +42,9 @@ CompanyRegister::Client = CompanyRegisterClientStub
 EInvoice.provider = EInvoice::Providers::TestProvider.new
 
 class ActiveSupport::TestCase
+  # Run tests in parallel with specified workers
+  parallelize(workers: :number_of_processors)
+
   ActiveRecord::Migration.check_pending!
   fixtures :all
 
