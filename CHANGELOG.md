@@ -1,5 +1,5 @@
 29.05.2020
-* Bump kaminari from to 1.2.1 [#1592](https://github.com/internetee/registry/pull/1592)
+* Bump kaminari to 1.2.1 [#1592](https://github.com/internetee/registry/pull/1592)
 
 28.05.2020
 * REPP returns list of disputed domains [#1588](https://github.com/internetee/registry/issues/1588)
