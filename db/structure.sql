@@ -1,6 +1,6 @@
----
---- PostgreSQL database dump
----
+----
+---- PostgreSQL database dump
+----
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -4522,6 +4522,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200421093637'),
 ('20200505103316'),
 ('20200505150413'),
-('20200518104105');
+('20200518104105'),
+('20200529115011');
 
 
