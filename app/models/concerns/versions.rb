@@ -51,11 +51,11 @@ module Versions
 
     # callbacks
     def touch_domain_version
-      domain.paper_trail.try(:touch_with_version)
+      domain.try(:touch)
     end
 
     def touch_domains_version
-      domains.each { |domain| domain.paper_trail.touch_with_version }
+      domains.each { |domain| domain.touch }
     end
   end
 
