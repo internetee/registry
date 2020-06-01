@@ -7,9 +7,10 @@ module Versions
     attr_accessor :version_loader
 
     if WITH_CHILDREN.include?(model_name.name)
-      has_paper_trail class_name: "#{model_name}Version", meta: { children: :children_log }
+      has_paper_trail versions: { class_name: "#{model_name}Version" },
+                      meta: { children: :children_log }
     else
-      has_paper_trail class_name: "#{model_name}Version"
+      has_paper_trail versions: { class_name: "#{model_name}Version" }
     end
 
     # add creator and updator
