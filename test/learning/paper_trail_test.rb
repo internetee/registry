@@ -9,7 +9,7 @@ class PaperTrailLearningTest < ActiveSupport::TestCase
     ActiveRecord::Base.connection.create_table :posts do |t|
       t.string :title
 
-      # Otherwise `touch_with_version` fails silently
+      # Otherwise `touch` fails silently
       t.datetime :updated_at
     end
   end
@@ -55,11 +55,11 @@ class PaperTrailLearningTest < ActiveSupport::TestCase
     assert_equal 'update', version.event
   end
 
-  def test_touch_with_version
+  def test_touch
     @record = Post.create!(title: 'any')
 
     assert_difference -> { @record.versions.size } do
-      @record.paper_trail.touch_with_version
+      @record.touch
     end
   end
 end

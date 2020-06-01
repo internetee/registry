@@ -4,8 +4,8 @@ source 'https://rubygems.org'
 gem 'iso8601', '0.12.1' # for dates and times
 gem 'rails', '~> 6.0'
 gem 'rest-client'
-gem 'uglifier'
 gem 'bootsnap', '>= 1.1.0', require: false
+gem 'uglifier'
 
 # load env
 gem 'figaro', '1.1.1'
@@ -73,8 +73,8 @@ gem 'directo', github: 'internetee/directo', branch: 'master'
 
 group :development do
   # deploy
-  gem 'mina', '0.3.1' # for fast deployment
   gem 'listen', '3.2.1'
+  gem 'mina', '0.3.1' # for fast deployment
 end
 
 group :development, :test do
