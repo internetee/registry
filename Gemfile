@@ -29,7 +29,7 @@ gem 'jquery-rails'
 gem 'selectize-rails', '0.12.1' # include selectize.js for select
 gem 'kaminari'
 gem 'coderay',          '1.1.0'   # xml console visualize
-gem 'sassc-rails'
+gem 'sass-rails'
 gem 'select2-rails',    '3.5.9.3' # for autocomplete
 gem 'cancancan'
 gem 'devise', '~> 4.7'

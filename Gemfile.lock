@@ -402,6 +402,8 @@ GEM
     ruby2_keywords (0.0.2)
     rubyzip (2.2.0)
     safe_yaml (1.0.5)
+    sass-rails (6.0.0)
+      sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.2.1)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -535,7 +537,7 @@ DEPENDENCIES
   rails-settings-cached (= 0.7.2)
   ransack (~> 2.3)
   rest-client
-  sassc-rails
+  sass-rails
   sdoc (= 0.4.1)
   select2-rails (= 3.5.9.3)
   selectize-rails (= 0.12.1)
