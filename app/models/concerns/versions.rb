@@ -56,7 +56,7 @@ module Versions
     end
 
     def touch_domains_version
-      domains.each { |domain| domain.touch }
+      domains.each(&:touch)
     end
   end
 

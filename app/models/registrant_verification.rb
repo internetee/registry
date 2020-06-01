@@ -3,7 +3,6 @@
 class RegistrantVerification < ApplicationRecord
   has_paper_trail versions: { class_name: 'RegistrantVerificationVersion' }
 
-
   # actions
   CONFIRMED = 'confirmed'
   REJECTED  = 'rejected'
