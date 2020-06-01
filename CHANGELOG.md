@@ -1,3 +1,6 @@
+01.06.2020
+* Improved error handling in case legal doc is not found for downloading [#1452](https://github.com/internetee/registry/issues/1452)
+
 29.05.2020
 * Bump kaminari to 1.2.1 [#1592](https://github.com/internetee/registry/pull/1592)
 
