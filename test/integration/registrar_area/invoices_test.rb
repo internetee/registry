@@ -13,7 +13,7 @@ class RegistrarAreaInvoicesIntegrationTest < ApplicationIntegrationTest
 
     assert_response :ok
     assert_equal 'application/pdf', response.headers['Content-Type']
-    assert_equal 'attachment; filename="invoice-1.pdf"', response.headers['Content-Disposition']
+    assert_equal "attachment; filename=\"invoice-1.pdf\"; filename*=UTF-8''invoice-1.pdf", response.headers['Content-Disposition']
     assert_not_empty response.body
   end
 end
