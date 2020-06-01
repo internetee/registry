@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 
 # core
+gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.12.1' # for dates and times
 gem 'rails', '~> 6.0'
 gem 'rest-client'
-gem 'bootsnap', '>= 1.1.0', require: false
 gem 'uglifier'
 
 # load env
@@ -24,12 +24,12 @@ gem 'nokogiri'
 
 # style
 gem 'bootstrap-sass', '~> 3.4'
-gem 'sass-rails',     '6.0.0'   # sass style
 gem 'coffee-rails', '~> 4.2'
 gem 'jquery-rails'
 gem 'selectize-rails', '0.12.1' # include selectize.js for select
 gem 'kaminari'
 gem 'coderay',          '1.1.0'   # xml console visualize
+gem 'sassc-rails'
 gem 'select2-rails',    '3.5.9.3' # for autocomplete
 gem 'cancancan'
 gem 'devise', '~> 4.7'
