@@ -5,7 +5,14 @@ module Admin
     def show
       @ld = LegalDocument.find(params[:id])
       filename = @ld.path.split('/').last
-      send_data File.open(@ld.path).read, filename: filename
+      file = File.open(@ld.path).read
+
+      if file
+        send_data file, filename: filename
+      else
+        flash[:notice] = I18n.t('legal_doc_not_found')
+        redirect_to [:admin, @ld.documentable]
+      end
     end
   end
 end
