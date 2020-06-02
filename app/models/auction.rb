@@ -24,7 +24,7 @@ class Auction < ApplicationRecord
   end
 
   def whois_deadline
-    registration_deadline.to_s
+    registration_deadline.try(:to_s, :iso8601)
   end
 
   def mark_as_no_bids
