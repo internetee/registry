@@ -50,7 +50,8 @@ class Whois::RecordTest < ActiveSupport::TestCase
     assert_equal ({ 'name' => 'domain.test',
                     'status' => ['PendingRegistration'],
                     'disclaimer' => 'disclaimer',
-                    'registration_deadline' => registration_deadline.to_s }), @whois_record.json
+                    'registration_deadline' => registration_deadline.try(:to_s, :iso8601) }),
+                 @whois_record.json
   end
 
   def test_updates_whois_record_from_auction_when_payment_received
@@ -64,7 +65,8 @@ class Whois::RecordTest < ActiveSupport::TestCase
     assert_equal ({ 'name' => 'domain.test',
                     'status' => ['PendingRegistration'],
                     'disclaimer' => 'disclaimer',
-                    'registration_deadline' => registration_deadline.to_s }), @whois_record.json
+                    'registration_deadline' => registration_deadline.try(:to_s, :iso8601) }),
+                 @whois_record.json
   end
 
   def registration_deadline
