@@ -1,3 +1,6 @@
+02.06.2020
+* Fixed registration deadline format for whois/restwhois [#1595](https://github.com/internetee/registry/pull/1595)
+
 01.06.2020
 * Improved error handling in case legal doc is not found for downloading [#1452](https://github.com/internetee/registry/issues/1452)
 
