@@ -6,13 +6,4 @@ Rails.application.configure do
 
   # Add additional assets to the asset load path
   config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts', 'node_modules')
-
-  # Precompile additional assets.
-  # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
-  config.assets.precompile += %w[login.css registrar-manifest.css shared/pdf.css]
-  config.assets.precompile += %w(*.svg *.eot *.woff *.ttf)
-  config.assets.precompile += %w(admin-manifest.css admin-manifest.js)
-  config.assets.precompile += %w(registrar-manifest.css registrar-manifest.js)
-  config.assets.precompile += %w(registrant-manifest.css registrant-manifest.js)
-  config.assets.precompile += %w( admin.js admin.css )
 end
