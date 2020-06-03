@@ -18,7 +18,6 @@ gem 'ransack', '~> 2.3'
 gem 'truemail', '~> 1.7' # validates email by regexp, mail server existence and address existence
 gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and RFC 3696
 
-
 # 0.7.3 is the latest for Rails 4.2, however, it is absent on Rubygems server
 # https://github.com/huacnlee/rails-settings-cached/issues/165
 gem 'rails-settings-cached', '0.7.2'

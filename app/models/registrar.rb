@@ -29,14 +29,11 @@ class Registrar < ApplicationRecord
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
 
-  validate :forbid_special_code
-
   attribute :vat_rate, ::Type::VATRate.new
   after_initialize :set_defaults
 
-  validates :email, email_format: { message: :invalid },
-            allow_blank: true, if: proc { |c| c.will_save_change_to_email? }
-  validates :billing_email, email_format: { message: :invalid }, allow_blank: true
+  validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
+  validate :correct_billing_email_format
 
   alias_attribute :contact_email, :email
 
@@ -195,5 +192,19 @@ class Registrar < ApplicationRecord
 
   def vat_liable_in_foreign_country?
     !vat_liable_locally?
+  end
+
+  def verify_email_mx_smtp(field:, email:)
+    errors.add(field, :invalid) unless email.blank? || Truemail.valid?(email)
+  end
+
+  def correct_email_format
+    verify_email_mx_smtp(field: :email, email: email)
+  end
+
+  def correct_billing_email_format
+    return if self[:billing_email].blank?
+
+    verify_email_mx_smtp(field: :billing_email, email: billing_email)
   end
 end

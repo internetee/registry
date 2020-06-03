@@ -28,7 +28,11 @@ Truemail.configure do |config|
   # Optional parameter. You can predefine default validation type for
   # Truemail.validate('email@email.com') call without with-parameter
   # Available validation types: :regex, :mx, :smtp
-  config.default_validation_type = :smtp
+  if Rails.env.production?
+    config.default_validation_type = :smtp
+  else
+    config.default_validation_type = :regex
+  end
 
   # Optional parameter. You can predefine which type of validation will be used for domains.
   # Also you can skip validation by domain. Available validation types: :regex, :mx, :smtp
@@ -42,11 +46,6 @@ Truemail.configure do |config|
   # return true. Other validations will not processed even if it was defined in validation_type_for
   # It is equal to empty array by default.
   # config.whitelisted_domains = []
-
-  unless Rails.env.production?
-    config.whitelisted_domains = %w[bestnames.test goodnames.test example.com inbox.test mail.test
-                                    outlook.test invalid.test email.test]
-  end
 
   # Optional parameter. With this option Truemail will validate email which contains whitelisted
   # domain only, i.e. if domain whitelisted, validation will passed to Regex, MX or SMTP validators.
