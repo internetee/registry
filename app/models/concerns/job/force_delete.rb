@@ -7,7 +7,7 @@ module Concerns
         def start_client_hold
           log_prepare_client_hold
 
-          ::PaperTrail.whodunnit = "cron - #{__method__}"
+          ::PaperTrail.request.whodunnit = "cron - #{__method__}"
 
           ::Domain.force_delete_scheduled.each do |domain|
             proceed_client_hold(domain: domain)

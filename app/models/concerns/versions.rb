@@ -7,9 +7,10 @@ module Versions
     attr_accessor :version_loader
 
     if WITH_CHILDREN.include?(model_name.name)
-      has_paper_trail class_name: "#{model_name}Version", meta: { children: :children_log }
+      has_paper_trail versions: { class_name: "#{model_name}Version" },
+                      meta: { children: :children_log }
     else
-      has_paper_trail class_name: "#{model_name}Version"
+      has_paper_trail versions: { class_name: "#{model_name}Version" }
     end
 
     # add creator and updator
@@ -18,12 +19,12 @@ module Versions
     before_update :add_updator
 
     def add_creator
-      self.creator_str = ::PaperTrail.whodunnit
+      self.creator_str = ::PaperTrail.request.whodunnit
       true
     end
 
     def add_updator
-      self.updator_str = ::PaperTrail.whodunnit
+      self.updator_str = ::PaperTrail.request.whodunnit
       true
     end
 
@@ -51,11 +52,11 @@ module Versions
 
     # callbacks
     def touch_domain_version
-      domain.paper_trail.try(:touch_with_version)
+      domain.try(:touch)
     end
 
     def touch_domains_version
-      domains.each { |domain| domain.paper_trail.touch_with_version }
+      domains.each(&:touch)
     end
   end
 

@@ -10,7 +10,7 @@ class RegistrarAreaContactsIntegrationTest < ApplicationIntegrationTest
 
     assert_response :ok
     assert_equal "#{Mime[:csv]}; charset=utf-8", response.headers['Content-Type']
-    assert_equal 'attachment; filename="contacts.csv"', response.headers['Content-Disposition']
+    assert_equal "attachment; filename=\"contacts.csv\"; filename*=UTF-8''contacts.csv", response.headers['Content-Disposition']
     assert_not_empty response.body
   end
 
@@ -19,7 +19,7 @@ class RegistrarAreaContactsIntegrationTest < ApplicationIntegrationTest
 
     assert_response :ok
     assert_equal Mime[:pdf], response.headers['Content-Type']
-    assert_equal 'attachment; filename="contacts.pdf"', response.headers['Content-Disposition']
+    assert_equal "attachment; filename=\"contacts.pdf\"; filename*=UTF-8''contacts.pdf", response.headers['Content-Disposition']
     assert_not_empty response.body
   end
 end

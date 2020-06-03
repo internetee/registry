@@ -1,8 +1,9 @@
 source 'https://rubygems.org'
 
 # core
+gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.12.1' # for dates and times
-gem 'rails', '~> 5.2.4.2'
+gem 'rails', '~> 6.0'
 gem 'rest-client'
 gem 'uglifier'
 
@@ -10,7 +11,7 @@ gem 'uglifier'
 gem 'figaro', '1.1.1'
 
 # model related
-gem 'paper_trail', '~> 9.2'
+gem 'paper_trail', '~> 10.3'
 gem 'pg',                        '1.2.2'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 2.3'
@@ -23,12 +24,12 @@ gem 'nokogiri'
 
 # style
 gem 'bootstrap-sass', '~> 3.4'
-gem 'sass-rails',     '5.0.6'   # sass style
 gem 'coffee-rails', '~> 4.2'
 gem 'jquery-rails'
 gem 'selectize-rails', '0.12.1' # include selectize.js for select
 gem 'kaminari'
 gem 'coderay',          '1.1.0'   # xml console visualize
+gem 'sass-rails'
 gem 'select2-rails',    '3.5.9.3' # for autocomplete
 gem 'cancancan'
 gem 'devise', '~> 4.7'
@@ -72,6 +73,7 @@ gem 'directo', github: 'internetee/directo', branch: 'master'
 
 group :development do
   # deploy
+  gem 'listen', '3.2.1'
   gem 'mina', '0.3.1' # for fast deployment
 end
 

@@ -21,7 +21,7 @@ class AdminAreaZonesIntegrationTest < ApplicationIntegrationTest
 
     assert_response :ok
     assert_equal 'text/plain', response.headers['Content-Type']
-    assert_equal 'attachment; filename="test.txt"', response.headers['Content-Disposition']
+    assert_equal "attachment; filename=\"test.txt\"; filename*=UTF-8''test.txt", response.headers['Content-Disposition']
     assert_not_empty response.body
   end
 end
