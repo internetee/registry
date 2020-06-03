@@ -43,6 +43,11 @@ Truemail.configure do |config|
   # It is equal to empty array by default.
   # config.whitelisted_domains = []
 
+  unless Rails.env.production?
+    config.whitelisted_domains = %w[bestnames.test goodnames.test example.com inbox.test mail.test
+                                    outlook.test invalid.test email.test]
+  end
+
   # Optional parameter. With this option Truemail will validate email which contains whitelisted
   # domain only, i.e. if domain whitelisted, validation will passed to Regex, MX or SMTP validators.
   # Validation of email which not contains whitelisted domain always will return false.
