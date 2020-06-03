@@ -1,3 +1,6 @@
+03.06.2020
+* Upgraded Rails to 6.0.3 [#1593](https://github.com/internetee/registry/pull/1593)
+
 02.06.2020
 * Fixed registration deadline format for whois/restwhois [#1595](https://github.com/internetee/registry/pull/1595)
 
