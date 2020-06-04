@@ -7,6 +7,7 @@ class Contact < ApplicationRecord
   include Concerns::Contact::Transferable
   include Concerns::Contact::Identical
   include Concerns::Contact::Disclosable
+  include Concerns::EmailCheckable
 
   belongs_to :original, class_name: self.name
   belongs_to :registrar, required: true
@@ -29,8 +30,7 @@ class Contact < ApplicationRecord
 
   validates :phone, presence: true, e164: true, phone: true
 
-  validates :email, format: /@/
-  validates :email, email_format: { message: :invalid }, if: proc { |c| c.will_save_change_to_email? }
+  validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
 
   validates :code,
     uniqueness: { message: :epp_id_taken },
