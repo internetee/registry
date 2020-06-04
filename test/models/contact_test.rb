@@ -61,14 +61,27 @@ class ContactTest < ActiveSupport::TestCase
     assert contact.invalid?
   end
 
-  def test_validates_email_format
-    contact = valid_contact
+  def tests_email_mx_and_smtp
+    Truemail.configure do |config|
+      config.default_validation_type = :smtp
+    end
 
-    contact.email = 'invalid'
+    contact = valid_contact
+    contact.email = 'info@internet.ee'
+    assert contact.valid?
+
+    contact.email = 'somecrude1337joke@internet.ee'
     assert contact.invalid?
 
-    contact.email = 'valid@registrar.test'
-    assert contact.valid?
+    contact.email = 'some@strangesentence@internet.ee'
+    assert contact.invalid?
+
+    contact.email = 'somecrude31337joke@somestrange31337domain.ee'
+    assert contact.invalid?
+
+    Truemail.configure do |config|
+      config.default_validation_type = :regex
+    end
   end
 
   def test_invalid_without_phone

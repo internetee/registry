@@ -38,14 +38,27 @@ class RegistrarTest < ActiveSupport::TestCase
     assert registrar.invalid?
   end
 
-  def test_email_format_validation
-    registrar = valid_registrar
+  def tests_email_mx_and_smtp
+    Truemail.configure do |config|
+      config.default_validation_type = :smtp
+    end
 
-    registrar.email = 'invalid'
+    registrar = valid_registrar
+    registrar.email = 'info@internet.ee'
+    assert registrar.valid?
+
+    registrar.email = 'somecrude1337joke@internet.ee'
     assert registrar.invalid?
 
-    registrar.email = 'valid@email.test'
-    assert registrar.valid?
+    registrar.email = 'some@strangesentence@internet.ee'
+    assert registrar.invalid?
+
+    registrar.email = 'somecrude31337joke@somestrange31337domain.ee'
+    assert registrar.invalid?
+
+    Truemail.configure do |config|
+      config.default_validation_type = :regex
+    end
   end
 
   def test_invalid_without_accounting_customer_code
@@ -60,14 +73,27 @@ class RegistrarTest < ActiveSupport::TestCase
     assert registrar.valid?
   end
 
-  def test_billing_email_format_validation
-    registrar = valid_registrar
+  def tests_email_mx_and_smtp
+    Truemail.configure do |config|
+      config.default_validation_type = :smtp
+    end
 
-    registrar.billing_email = 'invalid'
+    registrar = valid_registrar
+    registrar.billing_email = 'info@internet.ee'
+    assert registrar.valid?
+
+    registrar.billing_email = 'somecrude1337joke@internet.ee'
     assert registrar.invalid?
 
-    registrar.billing_email = 'valid@email.test'
-    assert registrar.valid?
+    registrar.billing_email = 'непонятное@словосочетание@internet.ee'
+    assert registrar.invalid?
+
+    registrar.billing_email = 'somecrude31337joke@somestrange31337domain.ee'
+    assert registrar.invalid?
+
+    Truemail.configure do |config|
+      config.default_validation_type = :regex
+    end
   end
 
   def test_returns_billing_email_when_provided
