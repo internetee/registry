@@ -24,7 +24,7 @@ gem 'nokogiri'
 
 # style
 gem 'bootstrap-sass', '~> 3.4'
-gem 'coffee-rails', '~> 4.2'
+gem 'coffee-rails', '>= 5.0'
 gem 'jquery-rails'
 gem 'selectize-rails', '0.12.1' # include selectize.js for select
 gem 'kaminari'

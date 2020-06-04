@@ -42,9 +42,6 @@ CompanyRegister::Client = CompanyRegisterClientStub
 EInvoice.provider = EInvoice::Providers::TestProvider.new
 
 class ActiveSupport::TestCase
-  # Run tests in parallel with specified workers
-  parallelize(workers: :number_of_processors)
-
   ActiveRecord::Migration.check_pending!
   fixtures :all
 

@@ -1,7 +1,7 @@
 module Epp
   class BaseController < ActionController::Base
     class AuthorizationError < StandardError; end
-
+    skip_before_action :verify_authenticity_token
     check_authorization
     layout false
 
