@@ -1,6 +1,7 @@
 class Registrar < ApplicationRecord
   include Versions # version/registrar_version.rb
   include Concerns::Registrar::BookKeeping
+  include Concerns::EmailCheckable
   include Concerns::Registrar::LegalDoc
 
   has_many :domains, dependent: :restrict_with_error
@@ -192,19 +193,5 @@ class Registrar < ApplicationRecord
 
   def vat_liable_in_foreign_country?
     !vat_liable_locally?
-  end
-
-  def verify_email_mx_smtp(field:, email:)
-    errors.add(field, :invalid) unless email.blank? || Truemail.valid?(email)
-  end
-
-  def correct_email_format
-    verify_email_mx_smtp(field: :email, email: email)
-  end
-
-  def correct_billing_email_format
-    return if self[:billing_email].blank?
-
-    verify_email_mx_smtp(field: :billing_email, email: billing_email)
   end
 end
