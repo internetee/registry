@@ -43,7 +43,8 @@ EInvoice.provider = EInvoice::Providers::TestProvider.new
 
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
-  parallelize(workers: :number_of_processors)
+  cpu_count = ENV['PARALLEL_WORKERS'] || Concurrent.physical_processor_count || 1
+  parallelize(workers: cpu_count)
 
   ActiveRecord::Migration.check_pending!
   fixtures :all
