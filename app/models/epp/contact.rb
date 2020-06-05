@@ -57,17 +57,6 @@ class Epp::Contact < Contact
       )
     end
 
-    def legal_document_attrs(legal_frame)
-      return [] if legal_frame.blank?
-      return [] if legal_frame.try('text').blank?
-      return [] if legal_frame.attr('type').blank?
-
-      [{
-        body: legal_frame.text,
-        document_type: legal_frame.attr('type')
-      }]
-    end
-
     def check_availability(codes)
       codes = [codes] if codes.is_a?(String)
 
