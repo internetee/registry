@@ -3,12 +3,12 @@ module Concerns
     extend ActiveSupport::Concern
 
     def email_verification
-      EmailAddressVerification.find_by(email: self.email)
+      EmailAddressVerification.find_or_create_by(email: self.email)
     end
 
     def billing_email_verification
       if self.attribute_names.include?('billing_email')
-        EmailAddressVerification.find_by(email: self.billing_email)
+        EmailAddressVerification.find_or_create_by(email: self.billing_email)
       else
         nil
       end
