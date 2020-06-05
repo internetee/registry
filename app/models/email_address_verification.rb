@@ -3,7 +3,8 @@ class EmailAddressVerification < ApplicationRecord
   RECENTLY_VERIFIED_PERIOD = 1.month
 
   def recently_verified?
-    verified_at > Time.zone.now - RECENTLY_VERIFIED_PERIOD
+    verified_at.present? &&
+      verified_at > Time.zone.now - RECENTLY_VERIFIED_PERIOD
   end
 
   def verify
