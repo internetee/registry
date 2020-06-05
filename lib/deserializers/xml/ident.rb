@@ -12,7 +12,7 @@ module Deserializers
           {
             ident: frame.text,
             ident_type: frame.attr('type'),
-            ident_country_code: frame.attr('cc')
+            ident_country_code: frame.attr('cc'),
           }
         else
           {}

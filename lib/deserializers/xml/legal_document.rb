@@ -14,7 +14,7 @@ module Deserializers
 
         {
           body: ld.text,
-          type: ld['type']
+          type: ld['type'],
         }
       end
     end
