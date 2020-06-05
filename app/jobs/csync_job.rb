@@ -11,11 +11,31 @@ class CsyncJob < Que::Job
     scanner_results.keys.each do |domain|
       result = scanner_results[domain]
       result_types = result[:ns].map { |ns| ns[:type] }.uniq
-      ns_ok = result_types.size == 1 && fetch_result_types.included_in?(%w[secure insecure])
-      key_ok = result[:cdnskey].map { |k| k[:cdnskey] }.uniq.size == 1
+      ns_ok = result_types.size == 1 && (result_types & %w[secure insecure]).any?
+      key_ok = result[:ns].map { |ns| ns[:cdnskey] }.uniq.size == 1
+      if !ns_ok || !key_ok
+        reason = !ns_ok ? 'no CDNSKEY was found / NS unavailable' : 'different CDNSKEYs were reported'
+        @logger.info "CsyncJob: Removing '#{domain}' from watch list. Reason: #{reason}"
+        CsyncRecord.clear(domain)
+        next
+      end
 
-      csync = CsyncRecord.find_or_initialize_by(name: domain)
+      begin
+        csync = CsyncRecord.by_domain_name(domain)
+      rescue ActiveRecord::RecordNotFound
+        @logger.info "CsyncJob: Couldn't find domain object for #{domain} in zone. Skipping."
+        next
+      end
+
+      csync_update = csync.record_new_scan(result[:ns].first[:cdnskey])
+
+      if csync_update
+        @logger.info "CsyncJob: Domain #{domain} processed."
+      else
+        @logger.info "CsyncJob: Failed to save monitoring data for #{domain}"
+      end
     end
+    @logger.info 'CsyncJob: Finished.'
   end
 
   def scanner_results

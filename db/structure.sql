@@ -565,7 +565,7 @@ ALTER SEQUENCE public.contacts_id_seq OWNED BY public.contacts.id;
 
 CREATE TABLE public.csync_records (
     id bigint NOT NULL,
-    domain_name character varying NOT NULL,
+    domain_id bigint NOT NULL,
     times_scanned integer DEFAULT 0 NOT NULL,
     last_scan timestamp without time zone NOT NULL,
     cdnskey character varying NOT NULL,
@@ -3426,6 +3426,13 @@ CREATE INDEX index_contacts_on_registrar_id_and_ident_type ON public.contacts US
 
 
 --
+-- Name: index_csync_records_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE UNIQUE INDEX index_csync_records_on_domain_id ON public.csync_records USING btree (domain_id);
+
+
+--
 -- Name: index_directos_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
@@ -4005,6 +4012,14 @@ ALTER TABLE ONLY public.white_ips
 
 ALTER TABLE ONLY public.domain_transfers
     ADD CONSTRAINT fk_rails_59c422f73d FOREIGN KEY (old_registrar_id) REFERENCES public.registrars(id);
+
+
+--
+-- Name: fk_rails_5df85aeb13; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.csync_records
+    ADD CONSTRAINT fk_rails_5df85aeb13 FOREIGN KEY (domain_id) REFERENCES public.domains(id);
 
 
 --
