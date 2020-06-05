@@ -1,0 +1,4 @@
+class EmailAddressVerification < ApplicationRecord
+
+
+end

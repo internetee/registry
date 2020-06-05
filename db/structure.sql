@@ -817,7 +817,97 @@ ALTER SEQUENCE public.domains_id_seq OWNED BY public.domains.id;
 
 
 --
--- Name: epp_sessions; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: email_address_verifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_address_verifications (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    verified_at timestamp without time zone
+);
+
+
+--
+-- Name: email_address_verifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_address_verifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_address_verifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_address_verifications_id_seq OWNED BY public.email_address_verifications.id;
+
+
+--
+-- Name: email_addresses_validations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_addresses_validations (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    validated_at timestamp without time zone
+);
+
+
+--
+-- Name: email_addresses_validations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_addresses_validations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_addresses_validations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_addresses_validations_id_seq OWNED BY public.email_addresses_validations.id;
+
+
+--
+-- Name: email_addresses_verifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_addresses_verifications (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    validated_at timestamp without time zone
+);
+
+
+--
+-- Name: email_addresses_verifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_addresses_verifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_addresses_verifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_addresses_verifications_id_seq OWNED BY public.email_addresses_verifications.id;
+
+
+--
+-- Name: epp_sessions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.epp_sessions (
@@ -2492,21 +2582,42 @@ ALTER TABLE ONLY public.domain_transfers ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: domains id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domains ALTER COLUMN id SET DEFAULT nextval('public.domains_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: email_address_verifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_address_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_address_verifications_id_seq'::regclass);
+
+
+--
+-- Name: email_addresses_validations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_validations ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_validations_id_seq'::regclass);
+
+
+--
+-- Name: email_addresses_verifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_verifications_id_seq'::regclass);
+
+
+--
+-- Name: epp_sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.epp_sessions ALTER COLUMN id SET DEFAULT nextval('public.epp_sessions_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: invoice_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.invoice_items ALTER COLUMN id SET DEFAULT nextval('public.invoice_items_id_seq'::regclass);
@@ -2907,7 +3018,31 @@ ALTER TABLE ONLY public.domains
 
 
 --
--- Name: epp_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: email_address_verifications email_address_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_address_verifications
+    ADD CONSTRAINT email_address_verifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_addresses_validations email_addresses_validations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_validations
+    ADD CONSTRAINT email_addresses_validations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_addresses_verifications email_addresses_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_verifications
+    ADD CONSTRAINT email_addresses_verifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: epp_sessions epp_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.epp_sessions
@@ -2915,7 +3050,7 @@ ALTER TABLE ONLY public.epp_sessions
 
 
 --
--- Name: invoice_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: invoice_items invoice_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.invoice_items
@@ -4535,6 +4670,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200505150413'),
 ('20200518104105'),
 ('20200529115011'),
+('20200605100827'),
 ('20200630081231');
-
 

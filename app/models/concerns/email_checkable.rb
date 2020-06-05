@@ -2,6 +2,18 @@ module Concerns
   module EmailCheckable
     extend ActiveSupport::Concern
 
+    def email_verification
+      EmailAddressVerification.find_by(email: self.email)
+    end
+
+    def billing_email_verification
+      if self.attribute_names.include?('billing_email')
+        EmailAddressVerification.find_by(email: self.billing_email)
+      else
+        nil
+      end
+    end
+
     def verify_email_mx_smtp(field:, email:)
       errors.add(field, :invalid) unless email.blank? || Truemail.valid?(email)
     end
