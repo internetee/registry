@@ -1,12 +1,25 @@
 # frozen_string_literal: true
 
 class CsyncJob < Que::Job
-  def run(generate: false)
+  def run(generate: false, ipv6: false)
     @logger = Logger.new(STDOUT)
-    generate ? generate_scanner_input : scanner_results
+    generate ? generate_scanner_input : scanner_results(ipv6)
   end
 
-  def scanner_results
+  def scanner_results(ipv6)
+    results = scanner_line_results
+    combined_results = {}
+    results.each do |fetch|
+      next if !ipv6 && fetch[:ns_ip].include?(':')
+
+      combined_results[fetch[:domain]] = { ns: [] } unless combined_results.key? fetch[:domain]
+      combined_results[fetch[:domain]][:ns] << fetch.except(:domain)
+    end
+
+    puts combined_results.to_json
+  end
+
+  def scanner_line_results
     records = []
     File.open(ENV['cdns_scanner_output_file'], 'r').each_line do |line|
       # Input type, NS host, NS IP, Domain name, Key type, Protocol, Algorithm, Public key
