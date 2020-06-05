@@ -2,21 +2,32 @@
 
 class CsyncJob < Que::Job
   def run(generate: false, ipv6: false)
+    @ipv6 = ipv6
     @logger = Logger.new(STDOUT)
-    generate ? generate_scanner_input : scanner_results(ipv6)
+    generate ? generate_scanner_input : process_scanner_results
   end
 
-  def scanner_results(ipv6)
+  def process_scanner_results
+    scanner_results.keys.each do |domain|
+      result = scanner_results[domain]
+      result_types = result[:ns].map { |ns| ns[:type] }.uniq
+      success = result_types.size == 1 && fetch_result_types.included_in?(%w[secure insecure])
+
+      # WIP
+    end
+  end
+
+  def scanner_results
     results = scanner_line_results
     combined_results = {}
     results.each do |fetch|
-      next if !ipv6 && fetch[:ns_ip].include?(':')
+      next if !@ipv6 && fetch[:ns_ip].include?(':')
 
       combined_results[fetch[:domain]] = { ns: [] } unless combined_results.key? fetch[:domain]
       combined_results[fetch[:domain]][:ns] << fetch.except(:domain)
     end
 
-    puts combined_results.to_json
+    combined_results
   end
 
   def scanner_line_results

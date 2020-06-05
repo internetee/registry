@@ -1,6 +1,6 @@
-----
----- PostgreSQL database dump
-----
+---
+--- Name: csync_records; Type: TABLE; Schema: public; Owner: -; Tablespace:
+---
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -557,6 +557,41 @@ CREATE SEQUENCE public.contacts_id_seq
 --
 
 ALTER SEQUENCE public.contacts_id_seq OWNED BY public.contacts.id;
+
+
+--
+-- Name: csync_records; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE public.csync_records (
+    id bigint NOT NULL,
+    domain_id bigint NOT NULL,
+    times_scanned integer DEFAULT 0 NOT NULL,
+    last_scan timestamp without time zone NOT NULL,
+    cdnskey character varying NOT NULL,
+    cds character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: csync_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.csync_records_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: csync_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.csync_records_id_seq OWNED BY public.csync_records.id;
 
 
 --
@@ -2449,6 +2484,13 @@ ALTER TABLE ONLY public.contacts ALTER COLUMN id SET DEFAULT nextval('public.con
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.csync_records ALTER COLUMN id SET DEFAULT nextval('public.csync_records_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.directos ALTER COLUMN id SET DEFAULT nextval('public.directos_id_seq'::regclass);
 
 
@@ -2845,6 +2887,14 @@ ALTER TABLE ONLY public.certificates
 
 ALTER TABLE ONLY public.contacts
     ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: csync_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY public.csync_records
+    ADD CONSTRAINT csync_records_pkey PRIMARY KEY (id);
 
 
 --
@@ -3373,6 +3423,13 @@ CREATE INDEX index_contacts_on_registrar_id ON public.contacts USING btree (regi
 --
 
 CREATE INDEX index_contacts_on_registrar_id_and_ident_type ON public.contacts USING btree (registrar_id, ident_type);
+
+
+--
+-- Name: index_csync_records_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE INDEX index_csync_records_on_domain_id ON public.csync_records USING btree (domain_id);
 
 
 --
@@ -3958,6 +4015,14 @@ ALTER TABLE ONLY public.domain_transfers
 
 
 --
+-- Name: fk_rails_5df85aeb13; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.csync_records
+    ADD CONSTRAINT fk_rails_5df85aeb13 FOREIGN KEY (domain_id) REFERENCES public.domains(id);
+
+
+--
 -- Name: fk_rails_78c376257f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4523,6 +4588,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200505103316'),
 ('20200505150413'),
 ('20200518104105'),
-('20200529115011');
+('20200529115011'),
+('20200605125332');
 
 
