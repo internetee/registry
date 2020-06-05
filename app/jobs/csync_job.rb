@@ -11,9 +11,10 @@ class CsyncJob < Que::Job
     scanner_results.keys.each do |domain|
       result = scanner_results[domain]
       result_types = result[:ns].map { |ns| ns[:type] }.uniq
-      success = result_types.size == 1 && fetch_result_types.included_in?(%w[secure insecure])
+      ns_ok = result_types.size == 1 && fetch_result_types.included_in?(%w[secure insecure])
+      key_ok = result[:cdnskey].map { |k| k[:cdnskey] }.uniq.size == 1
 
-      # WIP
+      csync = CsyncRecord.find_or_initialize_by(name: domain)
     end
   end
 

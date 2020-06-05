@@ -1,5 +1,4 @@
 class CsyncRecord < ApplicationRecord
-  belongs_to :domain
   REQUIRED_PERSISTANCE_IN_DAYS = 3
 
   def pushable?
