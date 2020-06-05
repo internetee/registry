@@ -1,3 +1,5 @@
+require 'deserializers/xml/legal_document'
+
 class Epp::Contact < Contact
   include EppErrors
 
@@ -140,7 +142,7 @@ class Epp::Contact < Contact
       at[:statuses] = statuses - statuses_attrs(frame.css('rem'), 'rem') + statuses_attrs(frame.css('add'), 'add')
     end
 
-    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       frame.css("legalDocument").first.content = doc.path if doc&.persisted?
       self.legal_document_id = doc.id
     end
@@ -237,7 +239,7 @@ class Epp::Contact < Contact
   end
 
   def add_legal_file_to_new frame
-    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+    legal_document_data = ::Deserializers::Xml::LegalDocument.new(frame).call
     return unless legal_document_data
 
     doc = LegalDocument.create(
