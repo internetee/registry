@@ -1,0 +1,10 @@
+en:
+  csync_mailer:
+    dnssec_updated:
+      subject: >-
+        Teie domeeni %{domain_name} DNSSEC andmed on uuendatud
+        / DNSSEC data for %{domain_name} has been updated
+    dnssec_deleted:
+      subject: >-
+        Teie domeeni %{domain_name} DNSSEC andmed on eemaldatud
+        / DNSSEC data for %{domain_name} has been removed

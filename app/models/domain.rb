@@ -58,6 +58,7 @@ class Domain < ApplicationRecord
 
   has_many :legal_documents, as: :documentable
   has_many :registrant_verifications, dependent: :destroy
+  has_one :csync_record, dependent: :destroy
 
   after_initialize do
     self.pending_json = {} if pending_json.blank?
@@ -167,6 +168,35 @@ class Domain < ApplicationRecord
   validate :validate_nameserver_ips
 
   validate :statuses_uniqueness
+
+  def security_level_resolver
+    resolver = Dnsruby::Resolver.new(nameserver: Dnskey::RESOLVERS)
+    resolver.do_validation = true
+    resolver.do_caching = false
+    resolver.dnssec = true
+    resolver
+  end
+
+  def dnssec_security_level(stubber: nil)
+    Dnsruby::Dnssec.reset
+    resolver = security_level_resolver
+    Dnsruby::Recursor.clear_caches(resolver)
+    if Rails.env.staging?
+      clear_dnssec_trusted_anchors_and_keys
+    elsif stubber
+      Dnsruby::Dnssec.add_trust_anchor(stubber.ds_rr)
+    end
+    recursor = Dnsruby::Recursor.new(resolver)
+    recursor.dnssec = true
+    recursor.query(name, 'A', 'IN').security_level
+  end
+
+  def clear_dnssec_trusted_anchors_and_keys
+    Dnsruby::Dnssec.clear_trust_anchors
+    Dnsruby::Dnssec.clear_trusted_keys
+    Dnsruby::Dnssec.add_trust_anchor(Dnsruby::RR.create(ENV['trusted_dnskey']))
+  end
+
   def statuses_uniqueness
     return if statuses.uniq == statuses
     errors.add(:statuses, :taken)

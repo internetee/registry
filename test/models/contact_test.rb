@@ -291,37 +291,45 @@ class ContactTest < ActiveSupport::TestCase
     assert_equal 'US', contact.country_code
   end
 
-  def test_normalizes_ident_country_code
-    contact = Contact.new(ident_country_code: 'us')
-    contact.validate
-    assert_equal 'US', contact.ident_country_code
+  def test_linked_scope_returns_contact_that_acts_as_admin_contact
+    domains(:shop).admin_contacts = [@contact]
+    assert Contact.linked.include?(@contact), 'Contact should be included'
   end
 
-  def test_generates_code
-    contact = Contact.new(registrar: registrars(:bestnames))
-    assert_nil contact.code
-
-    contact.generate_code
-
-    assert_not_empty contact.code
+  def test_linked_scope_returns_contact_that_acts_as_tech_contact
+    domains(:shop).tech_contacts = [@contact]
+    assert Contact.linked.include?(@contact), 'Contact should be included'
   end
 
-  def test_prohibits_code_change
-    assert_no_changes -> { @contact.code } do
-      @contact.code = 'new'
-      @contact.save!
-      @contact.reload
-    end
+  def test_linked_scope_skips_unlinked_contact
+    contact = unlinked_contact
+    assert_not Contact.linked.include?(contact), 'Contact should be excluded'
   end
 
-  def test_removes_duplicate_statuses
-    contact = Contact.new(statuses: %w[ok ok])
-    assert_equal %w[ok], contact.statuses
+  def test_unlinked_scope_returns_unlinked_contact
+    contact = unlinked_contact
+    assert Contact.unlinked.include?(contact), 'Contact should be included'
   end
 
-  def test_default_status
-    contact = Contact.new
-    assert_equal %w[ok], contact.statuses
+  def test_unlinked_scope_skips_contact_that_is_linked_as_registrant
+    contact = unlinked_contact
+    domains(:shop).update_columns(registrant_id: contact.becomes(Registrant).id)
+
+    assert Contact.unlinked.exclude?(contact), 'Contact should be excluded'
+  end
+
+  def test_unlinked_scope_skips_contact_that_is_linked_as_admin_contact
+    contact = unlinked_contact
+    domains(:shop).admin_contacts = [contact]
+
+    assert Contact.unlinked.exclude?(contact), 'Contact should be excluded'
+  end
+
+  def test_unlinked_scope_skips_contact_that_is_linked_as_tech_contact
+    contact = unlinked_contact
+    domains(:shop).tech_contacts = [contact]
+
+    assert Contact.unlinked.exclude?(contact), 'Contact should be excluded'
   end
 
   def test_whois_gets_updated_after_contact_save

@@ -5,6 +5,7 @@ gem 'active_interaction', '~> 3.8'
 gem 'apipie-rails', '~> 0.5.18'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.12.1' # for dates and times
+gem 'mimemagic', '~> 0.3.7'
 gem 'rails', '~> 6.0'
 gem 'rest-client'
 gem 'uglifier'
@@ -39,6 +40,7 @@ gem 'devise', '~> 4.7'
 
 # registry specfic
 gem 'data_migrate', '~> 6.1'
+gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
 gem 'simpleidn', '0.1.1' # For punycode
 gem 'money-rails'

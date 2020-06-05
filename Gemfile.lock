@@ -54,12 +54,21 @@ GIT
 
 GIT
   remote: https://github.com/internetee/omniauth-tara.git
-  revision: cec845ec3794532144c4976104a07e206d759aa6
+  revision: 75c369dd86a5fe1a2ee4c2a6246252d79431071c
+  branch: extended-logging
   specs:
     omniauth-tara (0.3.0)
       addressable (~> 2.5)
       omniauth (~> 1.3)
       openid_connect (~> 1.1)
+
+GIT
+  remote: https://github.com/karlerikounapuu/dnsruby.git
+  revision: f54986268ba3109ecf7a7af0d41a78cddfce9847
+  branch: master
+  specs:
+    dnsruby (1.61.3)
+      simpleidn (~> 0.1)
 
 GIT
   remote: https://github.com/tarmotalu/digidoc_client.git
@@ -283,7 +292,9 @@ GEM
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2021.0225)
-    mimemagic (0.3.5)
+    mimemagic (0.3.10)
+      nokogiri (~> 1)
+      rake
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.14.4)
@@ -519,6 +530,7 @@ DEPENDENCIES
   devise (~> 4.7)
   digidoc_client!
   directo!
+  dnsruby!
   domain_name
   e_invoice!
   epp!
@@ -531,6 +543,7 @@ DEPENDENCIES
   jquery-ui-rails (= 5.0.5)
   kaminari
   lhv!
+  mimemagic (~> 0.3.7)
   minitest (~> 5.14)
   money-rails
   nokogiri (~> 1.10.0)
