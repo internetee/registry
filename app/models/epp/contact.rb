@@ -1,4 +1,5 @@
 require 'deserializers/xml/legal_document'
+require 'deserializers/xml/ident'
 
 class Epp::Contact < Contact
   include EppErrors
@@ -40,8 +41,8 @@ class Epp::Contact < Contact
 
       at[:auth_info]    = f.css('authInfo pw').text            if f.css('authInfo pw').present?
 
-
-      at.merge!(ident_attrs(f.css('ident').first)) if new_record
+      ident_attrs = ::Deserializers::Xml::Ident.new(f).call
+      at.merge!(ident_attrs) if new_record
       at
     end
 
@@ -54,25 +55,6 @@ class Epp::Contact < Contact
           registrar: registrar
         )
       )
-    end
-
-    def ident_attrs(ident_frame)
-      return {} unless ident_attr_valid?(ident_frame)
-
-      {
-        ident: ident_frame.text,
-        ident_type: ident_frame.attr('type'),
-        ident_country_code: ident_frame.attr('cc')
-      }
-    end
-
-    def ident_attr_valid?(ident_frame)
-      return false if ident_frame.blank?
-      return false if ident_frame.try('text').blank?
-      return false if ident_frame.attr('type').blank?
-      return false if ident_frame.attr('cc').blank?
-
-      true
     end
 
     def legal_document_attrs(legal_frame)
