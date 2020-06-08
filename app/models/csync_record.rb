@@ -1,40 +1,46 @@
 class CsyncRecord < ApplicationRecord
   belongs_to :domain, optional: false
   validates :domain, uniqueness: true
-  before_validation :calculate_ds_record
+  validates :alg, :proto, :pub, :flags, presence: true
+  validate :validate_unique_pub_key
   after_save :update_dnskey_objects
 
-  REQUIRED_PERSISTANCE_IN_DAYS = 3
+  REQUIRED_SCAN_CYCLES = 3
 
-  def record_new_scan(fetched_cdnskey)
+  def record_new_scan(result)
     self.last_scan = Time.zone.now
     self.times_scanned += 1
-    self.times_scanned = 1 if persisted? && cdnskey != fetched_cdnskey
-    self.cdnskey = fetched_cdnskey
+    self.times_scanned = 1 if persisted? && cdnskey != result[:cdnskey]
 
+    # Map the key data
+    self.cdnskey = result[:cdnskey]
+    self.alg = result[:alg]
+    self.proto = result[:proto]
+    self.pub = result[:pub]
+    self.flags = result[:flags]
     save
   end
 
   def update_dnskey_objects
-    if pushable?
-      puts "Domain DNSKEY should be updated"
-    else
-      puts "Domain DNSKEY SHOULD NOT be updated"
-    end
+    return unless pushable?
 
-    # TODO: Check that DS record is not already present
-  end
+    dnskey = domain.dnskeys.new(flags: flags, protocol: proto, alg: alg, public_key: pub)
+    return true if dnskey.save && destroy
 
-  def calculate_ds_record
-    self.cds = 'dummy' unless cds
-    # TODO: Calculate real DS record
+    errors.add(:cdnskey, "Failed to add DNSKEY record. #{dnskey.errors.full_messages.join('. ')}")
   end
 
   def pushable?
     return true if domain.dnskeys.any?
-    return true if times_scanned >= REQUIRED_PERSISTANCE_IN_DAYS
+    return true if times_scanned >= REQUIRED_SCAN_CYCLES
 
     false
+  end
+
+  def validate_unique_pub_key
+    return true unless domain.dnskeys.where(public_key: pub).any?
+
+    errors.add(:pub, 'already active for this domain')
   end
 
   def self.by_domain_name(domain)

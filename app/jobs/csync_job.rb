@@ -14,8 +14,8 @@ class CsyncJob < Que::Job
       ns_ok = result_types.size == 1 && (result_types & %w[secure insecure]).any?
       key_ok = result[:ns].map { |ns| ns[:cdnskey] }.uniq.size == 1
       if !ns_ok || !key_ok
-        reason = !ns_ok ? 'no CDNSKEY was found / NS unavailable' : 'different CDNSKEYs were reported'
-        @logger.info "CsyncJob: Removing '#{domain}' from watch list. Reason: #{reason}"
+        reason = !ns_ok ? 'no key found / NS unavailable' : 'different CDNSKEY entries'
+        @logger.info "CsyncJob: Reseting Csync state for '#{domain}'. Reason: #{reason}"
         CsyncRecord.clear(domain)
         next
       end
@@ -27,7 +27,7 @@ class CsyncJob < Que::Job
         next
       end
 
-      csync_update = csync.record_new_scan(result[:ns].first[:cdnskey])
+      csync_update = csync.record_new_scan(result[:ns].first)
 
       if csync_update
         @logger.info "CsyncJob: Domain #{domain} processed."
@@ -58,7 +58,7 @@ class CsyncJob < Que::Job
       data = line.strip.split(' ')
       type, ns, ns_ip, domain, key_bit, proto, alg, pub = data
       cdnskey = key_bit && proto && alg && pub ? "#{key_bit} #{proto} #{alg} #{pub}" : nil
-      record = { domain: domain, type: type, ns: ns, ns_ip: ns_ip, key_bit: key_bit, proto: proto,
+      record = { domain: domain, type: type, ns: ns, ns_ip: ns_ip, flags: key_bit, proto: proto,
                  alg: alg, pub: pub, cdnskey: cdnskey }
       records << record
     end
