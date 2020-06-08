@@ -27,7 +27,7 @@ class SendEInvoiceJob < Que::Job
 
   def log_success(verification)
     email = verification.try(:email) || verification
-    message = "Email address #{email} verified successfully"
+    message = "Email address #{email} verification done"
     logger.info message
   end
 
