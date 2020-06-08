@@ -3,12 +3,14 @@ module Concerns
     extend ActiveSupport::Concern
 
     def email_verification
-      EmailAddressVerification.find_or_create_by(email: self.email)
+      EmailAddressVerification.find_or_create_by(email: self.email,
+                                                 domain: Mail::Address.new(self.email).domain)
     end
 
     def billing_email_verification
       if self.attribute_names.include?('billing_email')
-        EmailAddressVerification.find_or_create_by(email: self.billing_email)
+        EmailAddressVerification.find_or_create_by(email: self.billing_email,
+                                                   domain: Mail::Address.new(self.email).domain)
       else
         nil
       end
@@ -23,8 +25,6 @@ module Concerns
     end
 
     def correct_billing_email_format
-      return if self[:billing_email].blank?
-
       verify_email_mx_smtp(field: :billing_email, email: billing_email)
     end
   end

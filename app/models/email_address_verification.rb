@@ -10,6 +10,11 @@ class EmailAddressVerification < ApplicationRecord
   def verify
     validation_request = Truemail.validate(email)
 
-    update(verified_at: Time.zone.now) if validation_request.result.success
+    if validation_request.result.success
+      update(verified_at: Time.zone.now,
+             success: true)
+    end
+
+    validation_request.result.success
   end
 end
