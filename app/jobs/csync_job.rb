@@ -5,13 +5,14 @@ class CsyncJob < Que::Job
     @ipv6 = ipv6
     @logger = Logger.new(STDOUT)
     generate ? generate_scanner_input : process_scanner_results
+    @store = {}
   end
 
   def process_scanner_results
     scanner_results.keys.each do |domain|
       result = scanner_results[domain]
       result_types = result[:ns].map { |ns| ns[:type] }.uniq
-      ns_ok = result_types.size == 1 && (result_types & %w[secure insecure]).any?
+      ns_ok = result_types.size == 1 && result_types.include?('insecure')
       key_ok = result[:ns].map { |ns| ns[:cdnskey] }.uniq.size == 1
       if !ns_ok || !key_ok
         reason = !ns_ok ? 'no key found / NS unavailable' : 'different CDNSKEY entries'
@@ -67,39 +68,33 @@ class CsyncJob < Que::Job
 
   # From this point we're working on generating input for cdnskey-scanner
   def gather_pollable_domains
-    @logger.info 'CsyncJob Generate: Gathering current domain(s) data'
-    @store = { secure: {}, insecure: {} }
     Nameserver.select(:hostname, :domain_id).all.each do |ns|
-      @store[:secure][ns.hostname] = [] unless @store[:secure].key? ns.hostname
-      @store[:insecure][ns.hostname] = [] unless @store[:insecure].key? ns.hostname
+      @store[ns.hostname] = [] unless @store.key? ns.hostname
 
       Domain.where(id: ns.domain_id).all.each do |domain|
-        state = domain.dnskeys.any? ? :secure : :insecure
-        @store[state][ns.hostname].push domain.name
+        @store[ns.hostname].push domain.name
       end
     end
   end
 
   def generate_scanner_input
+    @logger.info 'CsyncJob Generate: Gathering current domain(s) data'
     gather_pollable_domains
 
     @logger.info 'CsyncJob Generate: Writing input for cdnskey-scanner to ' \
     "#{ENV['cdns_scanner_input_file']}"
     out_file = File.new(ENV['cdns_scanner_input_file'], 'w+')
 
-    out_file.puts '[secure]'
-    create_input_lines(out_file, secure: true)
     out_file.puts '[insecure]'
-    create_input_lines(out_file, secure: false)
+    create_input_lines(out_file)
 
     out_file.close
     @logger.info 'CsyncJob Generate: Finished writing output.'
   end
 
-  def create_input_lines(out_file, secure: false)
-    state = secure ? :secure : :insecure
-    @store[state].keys.each do |nameserver|
-      domains = @store[state][nameserver].join(' ')
+  def create_input_lines(out_file)
+    @store.keys.each do |nameserver|
+      domains = @store[nameserver].join(' ')
       next unless domains.length.positive?
 
       out_file.puts "#{nameserver} #{domains}"
