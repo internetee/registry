@@ -569,7 +569,10 @@ CREATE TABLE public.csync_records (
     times_scanned integer DEFAULT 0 NOT NULL,
     last_scan timestamp without time zone NOT NULL,
     cdnskey character varying NOT NULL,
-    cds character varying NOT NULL,
+    alg integer NOT NULL,
+    proto integer NOT NULL,
+    flags integer NOT NULL,
+    pub character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
