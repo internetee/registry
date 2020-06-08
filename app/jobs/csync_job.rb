@@ -1,55 +1,45 @@
 # frozen_string_literal: true
 
 class CsyncJob < Que::Job
-  def run(generate: false, ipv6: false)
-    @ipv6 = ipv6
+  def run(generate: false)
+    @store = {}
+    @results = {}
     @logger = Logger.new(STDOUT)
     generate ? generate_scanner_input : process_scanner_results
-    @store = {}
-  end
 
-  def process_scanner_results
-    scanner_results.keys.each do |domain|
-      result = scanner_results[domain]
-      result_types = result[:ns].map { |ns| ns[:type] }.uniq
-      ns_ok = result_types.size == 1 && result_types.include?('insecure')
-      key_ok = result[:ns].map { |ns| ns[:cdnskey] }.uniq.size == 1
-      if !ns_ok || !key_ok
-        reason = !ns_ok ? 'no key found / NS unavailable' : 'different CDNSKEY entries'
-        @logger.info "CsyncJob: Reseting Csync state for '#{domain}'. Reason: #{reason}"
-        CsyncRecord.clear(domain)
-        next
-      end
-
-      begin
-        csync = CsyncRecord.by_domain_name(domain)
-      rescue ActiveRecord::RecordNotFound
-        @logger.info "CsyncJob: Couldn't find domain object for #{domain} in zone. Skipping."
-        next
-      end
-
-      csync_update = csync.record_new_scan(result[:ns].first)
-
-      if csync_update
-        @logger.info "CsyncJob: Domain #{domain} processed."
-      else
-        @logger.info "CsyncJob: Failed to save monitoring data for #{domain}"
-      end
-    end
     @logger.info 'CsyncJob: Finished.'
   end
 
-  def scanner_results
-    results = scanner_line_results
-    combined_results = {}
-    results.each do |fetch|
-      next if !@ipv6 && fetch[:ns_ip].include?(':')
+  def qualified_for_monitoring?(domain, data)
+    result_types = data[:ns].map { |ns| ns[:type] }.uniq
+    ns_ok = result_types == ['insecure']
+    key_ok = data[:ns].map { |ns| ns[:cdnskey] }.uniq.size == 1
 
-      combined_results[fetch[:domain]] = { ns: [] } unless combined_results.key? fetch[:domain]
-      combined_results[fetch[:domain]][:ns] << fetch.except(:domain)
+    return true if ns_ok && key_ok
+
+    reason = !ns_ok ? 'no key found / NS unavailable' : 'different CDNSKEY entries'
+    @logger.info "CsyncJob: Reseting Csync state for '#{domain}'. Reason: #{reason}"
+    CsyncRecord.clear(domain)
+
+    false
+  end
+
+  def process_scanner_results
+    scanner_results
+
+    @results.keys.each do |domain|
+      next unless qualified_for_monitoring?(domain, @results[domain])
+
+      CsyncRecord.by_domain_name(domain)&.record_new_scan(@results[domain][:ns].first)
     end
+  end
 
-    combined_results
+  def scanner_results
+    scanner_line_results.each do |fetch|
+      domain_name = fetch[:domain]
+      @results[domain_name] = { ns: [] } unless @results[domain_name]
+      @results[domain_name][:ns] << fetch.except(:domain)
+    end
   end
 
   def scanner_line_results
