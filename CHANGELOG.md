@@ -1,3 +1,6 @@
+08.06.2020
+* Bumped websocket-extensions to 0.1.5 [#1602](https://github.com/internetee/registry/pull/1602)
+
 04.06.2020
 * Moved dev config to sample file [#1599](https://github.com/internetee/registry/pull/1599)
 * Post Rails6 upgrade fixes [#1598](https://github.com/internetee/registry/pull/1598)
