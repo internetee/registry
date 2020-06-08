@@ -1,8 +1,7 @@
-class SendEInvoiceJob < Que::Job
+class VerifyEmailsJob < Que::Job
 
   def run(verification_id)
-    email_address_verification = run_condition(EmailAddressVerification
-                                                 .find(run_condition(verification_id)))
+    email_address_verification = run_condition(EmailAddressVerification.find(verification_id))
 
     ActiveRecord::Base.transaction do
       email_address_verification.verify
@@ -17,12 +16,14 @@ class SendEInvoiceJob < Que::Job
   private
 
   def run_condition(email_address_verification)
+    destroy unless email_address_verification
     destroy if email_address_verification.recently_verified?
+
     email_address_verification
   end
 
   def logger
-    Rails.logger
+    Rails.logger = Logger.new(STDOUT)
   end
 
   def log_success(verification)
