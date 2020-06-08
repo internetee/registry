@@ -1,11 +1,11 @@
 class EmailAddressVerification < ApplicationRecord
   RECENTLY_VERIFIED_PERIOD = 1.month
 
-  scope :not_verified_recently, -> {
+  scope :not_verified_recently, lambda {
     where('verified_at IS NULL or verified_at < ?', verification_period)
   }
 
-  scope :verified_recently, -> {
+  scope :verified_recently, lambda {
     where('verified_at IS NOT NULL and verified_at >= ?', verification_period)
   }
 
@@ -23,7 +23,8 @@ class EmailAddressVerification < ApplicationRecord
   end
 
   def verify
-    media = success ? :mx : :smtp
+    # media = success ? :mx : :smtp
+    media = :mx
     validation_request = Truemail.validate(email, with: media)
 
     if validation_request.result.success

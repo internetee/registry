@@ -3,17 +3,21 @@ module Concerns
     extend ActiveSupport::Concern
 
     def email_verification
-      EmailAddressVerification.find_or_create_by(email: self.email,
-                                                 domain: Mail::Address.new(self.email).domain)
+      EmailAddressVerification.find_or_create_by(email: email,
+                                                 domain: domain(email))
     end
 
     def billing_email_verification
-      if self.attribute_names.include?('billing_email')
-        EmailAddressVerification.find_or_create_by(email: self.billing_email,
-                                                   domain: Mail::Address.new(self.email).domain)
-      else
-        nil
-      end
+      return unless attribute_names.include?('billing_email')
+
+      EmailAddressVerification.find_or_create_by(email: billing_email,
+                                                 domain: domain(email))
+    end
+
+    def domain(email)
+      Mail::Address.new(email).domain || 'not_found'
+    rescue Mail::Field::IncompleteParseError
+      'not_found'
     end
 
     def verify_email_mx_smtp(field:, email:)

@@ -1,5 +1,4 @@
 class VerifyEmailsJob < Que::Job
-
   def run(verification_id)
     email_address_verification = run_condition(EmailAddressVerification.find(verification_id))
 

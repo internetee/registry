@@ -7,7 +7,7 @@ class FillEmailVerifications < ActiveRecord::Migration[6.0]
     emails = (contact_emails || registrar_emails || registrar_billing_emails).uniq
 
     result = emails.map do |email|
-      { email: email, domain: Mail::Address.new(email).domain || 'not_found' }
+      { email: email, domain: domain(email) }
     end
 
     EmailAddressVerification.import result, batch_size: 500
@@ -15,5 +15,11 @@ class FillEmailVerifications < ActiveRecord::Migration[6.0]
 
   def down
     EmailAddressVerification.delete_all
+  end
+
+  def domain(email)
+    Mail::Address.new(email).domain || 'not_found'
+  rescue Mail::Field::IncompleteParseError
+    'not_found'
   end
 end
