@@ -7,7 +7,7 @@ class Contact < ApplicationRecord
   include Concerns::Contact::Transferable
   include Concerns::Contact::Identical
   include Concerns::Contact::Disclosable
-  include Concerns::EmailCheckable
+  include Concerns::EmailVerifable
 
   belongs_to :original, class_name: self.name
   belongs_to :registrar, required: true

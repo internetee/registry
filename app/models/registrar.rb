@@ -1,7 +1,7 @@
 class Registrar < ApplicationRecord
   include Versions # version/registrar_version.rb
   include Concerns::Registrar::BookKeeping
-  include Concerns::EmailCheckable
+  include Concerns::EmailVerifable
   include Concerns::Registrar::LegalDoc
 
   has_many :domains, dependent: :restrict_with_error

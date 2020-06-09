@@ -17,7 +17,8 @@
       %dd= ident_for(@contact)
 
       %dt= t(:email)
-      %dd= @contact.email
+      %dd{class: ('text-danger' unless @contact.email_verification.success)}
+        = @contact.email
 
       %dt= t(:phone)
       %dd= @contact.phone

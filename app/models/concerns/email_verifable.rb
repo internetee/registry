@@ -1,5 +1,5 @@
 module Concerns
-  module EmailCheckable
+  module EmailVerifable
     extend ActiveSupport::Concern
 
     def email_verification

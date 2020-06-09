@@ -85,7 +85,9 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'ident', t(:ident))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'email', t(:created_at))
+              = sort_link(@q, 'email', t(:email))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'created_at', t(:created_at))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'registrar_name', t(:registrar_name))
         %tbody
@@ -94,6 +96,8 @@
               %td= link_to(contact, admin_contact_path(contact))
               %td= contact.code
               %td= ident_for(contact)
+              %td{class: ('text-danger' unless contact.email_verification.success)}
+                = contact.email
               %td= l(contact.created_at, format: :short)
               %td
                 - if contact.registrar
