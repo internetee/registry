@@ -100,8 +100,9 @@ class CsyncJob < Que::Job
 
     out_file = File.new(ENV['cdns_scanner_input_file'], 'w+')
 
-    %w[secure insecure].each do |state|
-      out_file.puts "[#{state}]" && create_input_lines(out_file, state: state)
+    %i[secure insecure].each do |state|
+      out_file.puts "[#{state}]"
+      create_input_lines(out_file, state)
     end
 
     out_file.close
