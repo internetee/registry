@@ -14,11 +14,9 @@ module Admin
       end
 
       contacts = Contact.includes(:registrar).joins(:registrar)
-                        .includes(:email_address_verification)
                         .select('contacts.*, registrars.name')
       contacts = contacts.filter_by_states(params[:statuses_contains].join(',')) if params[:statuses_contains]
-      contacts = contacts.where("ident_country_code is null or ident_country_code=''") if params[:only_no_country_code].eql?('1')
-      contacts = contacts.email_not_verified if params[:email_not_verified].eql?('1')
+      contacts = filter_by_flags(contacts)
 
       normalize_search_parameters do
         @q = contacts.search(search_params)
@@ -26,6 +24,14 @@ module Admin
       end
 
       @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+    end
+
+    def filter_by_flags(contacts)
+      if params[:only_no_country_code].eql?('1')
+        contacts = contacts.where("ident_country_code is null or ident_country_code=''")
+      end
+      contacts = contacts.email_not_verified if params[:email_not_verified].eql?('1')
+      contacts
     end
 
     def search
