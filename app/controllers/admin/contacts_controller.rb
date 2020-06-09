@@ -13,10 +13,12 @@ module Admin
         search_params[:registrant_domains_id_not_null] = 1
       end
 
-      contacts = Contact.includes(:registrar).joins(:registrar).select('contacts.*, registrars.name')
+      contacts = Contact.includes(:registrar).joins(:registrar)
+                        .includes(:email_address_verification)
+                        .select('contacts.*, registrars.name')
       contacts = contacts.filter_by_states(params[:statuses_contains].join(',')) if params[:statuses_contains]
       contacts = contacts.where("ident_country_code is null or ident_country_code=''") if params[:only_no_country_code].eql?('1')
-
+      contacts = contacts.email_not_verified if params[:email_not_verified].eql?('1')
 
       normalize_search_parameters do
         @q = contacts.search(search_params)

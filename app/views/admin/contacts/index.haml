@@ -63,6 +63,10 @@
           .form-group
             = label_tag :only_no_country_code, "Ident CC missing"
             = check_box_tag :only_no_country_code, '1',params[:only_no_country_code].eql?('1'), style: 'width:auto;height:auto;float:right'
+        .col-md-3
+          .form-group
+            = label_tag :email_not_verified, "Email not verified"
+            = check_box_tag :email_not_verified, '1',params[:email_not_verified].eql?('1'), style: 'width:auto;height:auto;float:right'
 
       .row
         .col-md-3{style: 'padding-top: 25px;float:right;'}

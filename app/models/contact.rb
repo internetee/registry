@@ -16,12 +16,21 @@ class Contact < ApplicationRecord
   has_many :legal_documents, as: :documentable
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
   has_many :actions, dependent: :destroy
+  belongs_to :email_address_verification, class_name: 'EmailAddressVerification',
+                                          primary_key: 'email',
+                                          foreign_key: 'email',
+                                          optional: true
 
   attr_accessor :legal_document_id
   alias_attribute :kind, :ident_type
   alias_attribute :copy_from_id, :original_id # Old attribute name; for PaperTrail
 
   accepts_nested_attributes_for :legal_documents
+
+  scope :email_not_verified, lambda {
+    joins(:email_address_verification)
+    .where('verified_at IS NULL OR verified_at <= ?', EmailAddressVerification.verification_period)
+  }
 
   validates :name, :email, presence: true
   validates :street, :city, :zip, :country_code, presence: true, if: lambda {
