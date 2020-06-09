@@ -166,6 +166,8 @@ test:
   lhv_keystore: 'test/fixtures/files/keystore.jks'
   lhv_keystore_password: 'testtest'
   lhv_keystore_alias: 'testtest'
+  cdns_scanner_input_file: 'tmp/cdns_input.txt'
+  cdns_scanner_output_file: 'test/fixtures/files/cdns_output.txt'
 
 # Airbrake // Errbit:
 airbrake_host: "https://your-errbit-host.ee"
