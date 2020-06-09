@@ -13,16 +13,25 @@ class CsyncJob < Que::Job
 
   def qualified_for_monitoring?(domain, data)
     result_types = data[:ns].map { |ns| ns[:type] }.uniq
-    ns_ok = result_types.size == 1 && (result_types & %w[secure insecure]).any?
-    key_ok = data[:ns].map { |ns| ns[:cdnskey] }.uniq.size == 1
+    ns_ok =  redundant_data_for?(nameserver: true, input: result_types)
+    key_ok = redundant_data_for?(nameserver: false, input: data)
 
     return true if ns_ok && key_ok
 
-    reason = unqualification_reason(ns_ok, key_ok, result_types)
-    @logger.info "CsyncJob: Reseting Csync state for '#{domain}'. Reason: #{reason}"
+    @logger.info "CsyncJob: Reseting Csync state for '#{domain}'. Reason: " +
+                 unqualification_reason(ns_ok, key_ok, result_types)
+
     CsyncRecord.clear(domain)
 
     false
+  end
+
+  def redundant_data_for?(nameserver: false, input:)
+    if nameserver
+      input.size == 1 && (input & %w[secure insecure]).any?
+    else
+      input[:ns].map { |ns| ns[:cdnskey] }.uniq.size == 1
+    end
   end
 
   def unqualification_reason(nss, key, result_types)
@@ -32,7 +41,7 @@ class CsyncJob < Que::Job
       return 'current DNSSEC config invalid (required for rollover/delete)'
     end
 
-    "Nameserver(s) not reachable / invalid data (#{result_types})" unless nss
+    "Nameserver(s) not reachable / invalid data (#{result_types.join(', ')})" unless nss
   end
 
   def process_scanner_results
@@ -71,13 +80,17 @@ class CsyncJob < Que::Job
   def gather_pollable_domains
     @logger.info 'CsyncJob Generate: Gathering current domain(s) data'
     Nameserver.select(:hostname, :domain_id).all.each do |ns|
-      @input_store[:secure][ns.hostname] = [] unless @input_store[:secure].key? ns.hostname
-      @input_store[:insecure][ns.hostname] = [] unless @input_store[:insecure].key? ns.hostname
-
-      Domain.where(id: ns.domain_id).all.each do |domain|
-        state = domain.dnskeys.any? ? :secure : :insecure
-        @input_store[state][ns.hostname].push domain.name
+      %i[secure insecure].each do |i|
+        @input_store[i][ns.hostname] = [] unless @input_store[i].key? ns.hostname
       end
+
+      append_domains_to_list(ns)
+    end
+  end
+
+  def append_domains_to_list(nameserver)
+    Domain.where(id: nameserver.domain_id).all.each do |domain|
+      @input_store[domain.dnskeys.any? ? :secure : :insecure][nameserver.hostname].push domain.name
     end
   end
 
@@ -85,22 +98,17 @@ class CsyncJob < Que::Job
     @logger.info 'CsyncJob Generate: Gathering current domain(s) data'
     gather_pollable_domains
 
-    @logger.info 'CsyncJob Generate: Writing input for cdnskey-scanner to ' \
-    "#{ENV['cdns_scanner_input_file']}"
-
     out_file = File.new(ENV['cdns_scanner_input_file'], 'w+')
 
-    out_file.puts '[secure]'
-    create_input_lines(out_file, secure: true)
-    out_file.puts '[insecure]'
-    create_input_lines(out_file, secure: false)
+    %w[secure insecure].each do |state|
+      out_file.puts "[#{state}]" && create_input_lines(out_file, state: state)
+    end
 
     out_file.close
-    @logger.info 'CsyncJob Generate: Finished writing output.'
+    @logger.info 'CsyncJob Generate: Finished writing output to ' + ENV['cdns_scanner_input_file']
   end
 
-  def create_input_lines(out_file, secure: false)
-    state = secure ? :secure : :insecure
+  def create_input_lines(out_file, state)
     @input_store[state].keys.each do |nameserver|
       domains = @input_store[state][nameserver].join(' ')
       next unless domains.length.positive?
