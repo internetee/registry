@@ -30,6 +30,9 @@ class EmailAddressVerification < ApplicationRecord
     if validation_request.result.success
       update(verified_at: Time.zone.now,
              success: true)
+    else
+      update(verified_at: nil,
+             success: false)
     end
 
     validation_request.result.success

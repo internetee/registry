@@ -13,6 +13,14 @@ class Registrar < ApplicationRecord
   has_many :nameservers, through: :domains
   has_many :whois_records
   has_many :white_ips, dependent: :destroy
+  belongs_to :email_address_verification, class_name: 'EmailAddressVerification',
+             primary_key: 'email',
+             foreign_key: 'email',
+             optional: true
+  belongs_to :billing_email_address_verification, class_name: 'EmailAddressVerification',
+             primary_key: 'email',
+             foreign_key: 'billing_email',
+             optional: true
 
   delegate :balance, to: :cash_account, allow_nil: true
 
