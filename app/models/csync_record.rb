@@ -3,7 +3,8 @@ class CsyncRecord < ApplicationRecord
   validates :domain, uniqueness: true
   validates :alg, :proto, :pub, :flags, presence: true
   validate :validate_unique_pub_key
-  after_save :update_dnskey_objects, if: proc { pushable? }
+  after_save :update_dnskey_objects, if: proc { pushable? && !disable_requested? }
+  after_save :remove_dnskeys, if: proc { pushable? && disable_requested? }
 
   REQUIRED_SCAN_CYCLES = 3
 
@@ -26,7 +27,7 @@ class CsyncRecord < ApplicationRecord
 
   def update_dnskey_objects
     dnskey = domain.dnskeys.new(flags: flags, protocol: proto, alg: alg, public_key: pub)
-    (destroy && return) if saved
+    (destroy && return) if dnskey.save
 
     logger.info "Failed to add DNSKEY record. #{dnskey.errors.full_messages.join('. ')}"
   end
@@ -38,10 +39,20 @@ class CsyncRecord < ApplicationRecord
     false
   end
 
+  def disable_requested?
+    cdnskey == '0 3 0 0'
+  end
+
+  def remove_dnskeys
+    logger.info "CsyncJob: Removing DNSKEYs for domain '#{domain.name}'"
+    domain.dnskeys.destroy_all
+    destroy
+  end
+
   def validate_unique_pub_key
     return true unless domain.dnskeys.where(public_key: pub).any?
 
-    errors.add(:pub, 'already active for this domain')
+    errors.add(:public_key, 'already tied this domain')
   end
 
   def self.by_domain_name(domain_name)
