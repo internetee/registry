@@ -10,6 +10,7 @@ class CreateCsyncRecords < ActiveRecord::Migration[6.0]
       t.integer :proto, null: false
       t.integer :flags, null: false
       t.string :pub, null: false
+      t.string :action, null: false
 
       t.timestamps
     end

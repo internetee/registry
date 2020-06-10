@@ -573,6 +573,7 @@ CREATE TABLE public.csync_records (
     proto integer NOT NULL,
     flags integer NOT NULL,
     pub character varying NOT NULL,
+    action character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
