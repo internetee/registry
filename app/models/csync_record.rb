@@ -21,13 +21,7 @@ class CsyncRecord < ApplicationRecord
   def compose_record_meta(result)
     result[:last_scan] = Time.zone.now
     result[:times_scanned] = persisted? && cdnskey != result[:cdnskey] ? 1 : times_scanned + 1
-    result[:action] = if result[:type] == :secure
-                        'rollover'
-                      elsif result[:type] == :insecure
-                        'initialize'
-                      elsif result[:cdnskey] == '0 3 0 0'
-                        'deactivate'
-                      end
+    result[:action] = determine_csync_intention(result[:type], result[:cdnskey])
     result.except(:type, :ns, :ns_ip)
   end
 
@@ -72,7 +66,7 @@ class CsyncRecord < ApplicationRecord
     registrar = domain.registrar
     registrar.notifications.create!(
       text: I18n.t('notifications.texts.csync',
-                   domain_name: domain.name,
+                   domain: domain.name,
                    action: action)
     )
   end
@@ -92,5 +86,11 @@ class CsyncRecord < ApplicationRecord
   def self.clear(domain_name)
     domains = Domain.where(name: domain_name).all
     CsyncRecord.where(domain: domains).delete_all
+  end
+
+  def determine_csync_intention(type, cdnskey)
+    return 'rollover' if type == 'secure' && cdnskey != '0 3 0 0'
+    return 'initialized' if type == 'insecure'
+    return 'deactivate' if cdnskey == '0 3 0 0'
   end
 end
