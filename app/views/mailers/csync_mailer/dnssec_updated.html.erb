@@ -1,0 +1,14 @@
+Tere,
+<br><br>
+Oleme uuendatud Teie domeeni <%= @domain.name %> DNSSEC andmeid registris.
+<br>
+Lisasime CDNSKEY väärtuses kajastatud võtme oma tsoonifaili ning on nüüd aktiveeritud.
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+<hr>
+<br><br>
+Hi,
+<br><br>
+We have updated DNSSEC data in our registry for domain <%= @domain.name %>.
+<br>
+DNS key specified in CDNSKEY has been added to our zone file and is now taking effect.
+<%= render 'mailers/shared/signatures/signature.en.html' %>
