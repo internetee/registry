@@ -1,7 +1,7 @@
 class CsyncRecord < ApplicationRecord
   belongs_to :domain, optional: false
   validates :domain, uniqueness: true
-  validates :alg, :proto, :pub, :flags, presence: true
+  validates :alg, :proto, :pub, :flags, :action, presence: true
   validate :validate_unique_pub_key
   after_save :update_dnskey_objects, if: proc { pushable? && !disable_requested? }
   after_save :remove_dnskeys, if: proc { pushable? && disable_requested? }
@@ -21,7 +21,13 @@ class CsyncRecord < ApplicationRecord
   def compose_record_meta(result)
     result[:last_scan] = Time.zone.now
     result[:times_scanned] = persisted? && cdnskey != result[:cdnskey] ? 1 : times_scanned + 1
-
+    result[:action] = if result[:type] == :secure
+                        'rollover'
+                      elsif result[:type] == :insecure
+                        'initialize'
+                      elsif result[:cdnskey] == '0 3 0 0'
+                        'deactivate'
+                      end
     result.except(:type, :ns, :ns_ip)
   end
 
@@ -36,6 +42,8 @@ class CsyncRecord < ApplicationRecord
     return dnskey unless dnskey.save
 
     CsyncMailer.dnssec_updated(domain: domain).deliver_now
+    notify_registrar_about_csync
+
     CsyncRecord.where(domain: domain).destroy_all
     true
   end
@@ -55,7 +63,18 @@ class CsyncRecord < ApplicationRecord
     logger.info "CsyncJob: Removing DNSKEYs for domain '#{domain.name}'"
     domain.dnskeys.destroy_all
     CsyncMailer.dnssec_deleted(domain: domain).deliver_now
+    notify_registrar_about_csync
+
     destroy
+  end
+
+  def notify_registrar_about_csync
+    registrar = domain.registrar
+    registrar.notifications.create!(
+      text: I18n.t('notifications.texts.csync',
+                   domain_name: domain.name,
+                   action: action)
+    )
   end
 
   def validate_unique_pub_key
