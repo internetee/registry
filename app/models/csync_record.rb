@@ -27,9 +27,17 @@ class CsyncRecord < ApplicationRecord
 
   def update_dnskey_objects
     dnskey = domain.dnskeys.new(flags: flags, protocol: proto, alg: alg, public_key: pub)
-    (CsyncMailer.dnssec_updated(domain: domain) && destroy) if dnskey.save
+    dnskey = process_new_dnskey(dnskey)
 
-    logger.info "Failed to add DNSKEY. #{dnskey.errors.full_messages.join('. ')}" unless dnskey.save
+    logger.info "Failed to add DNSKEY. #{dnskey.errors.full_messages.join('. ')}" unless dnskey
+  end
+
+  def process_new_dnskey(dnskey)
+    return dnskey unless dnskey.save
+
+    CsyncMailer.dnssec_updated(domain: domain).deliver_now
+    CsyncRecord.where(domain: domain).destroy_all
+    true
   end
 
   def pushable?
@@ -46,7 +54,7 @@ class CsyncRecord < ApplicationRecord
   def remove_dnskeys
     logger.info "CsyncJob: Removing DNSKEYs for domain '#{domain.name}'"
     domain.dnskeys.destroy_all
-    CsyncMailer.dnssec_updated(domain: domain)
+    CsyncMailer.dnssec_deleted(domain: domain).deliver_now
     destroy
   end
 

@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class CsyncJobTest < ActiveSupport::TestCase
+  include ActionMailer::TestHelper
+
   setup do
     @dnskey = dnskeys(:one)
     @domain = domains(:shop)
@@ -28,5 +30,31 @@ class CsyncJobTest < ActiveSupport::TestCase
     assert_equal '257 3 13 mdsswUyr3DPW132mOi8V9xESWE8jTo0dxCjjnopKl+GqJxpVXckHAeF+KkxLbxILfDLUT0rAK9iUzy1L53eKGQ==', csync_record.cdnskey
 
     assert_not @domain.dnskeys.any?
+  end
+
+  def test_creates_dnskey_after_required_cycles
+    assert_equal 0, @domain.dnskeys.count
+    assert_nil @domain.csync_record
+    CsyncJob.run # Creates initial CsyncRecord for domain
+
+    @domain.reload
+    assert @domain.csync_record.present?
+
+    @domain.csync_record.update(times_scanned: 2) # 3rd time trigger DNSKEY push
+    assert_equal 0, @domain.dnskeys.count
+    CsyncJob.run
+
+    @domain.reload
+    assert_equal 1, @domain.dnskeys.count
+    assert_equal 'mdsswUyr3DPW132mOi8V9xESWE8jTo0dxCjjnopKl+GqJxpVXckHAeF+KkxLbxILfDLUT0rAK9iUzy1L53eKGQ==', @domain.dnskeys.last.public_key
+    assert_nil @domain.csync_record
+  end
+
+  def test_sends_mail_to_contacts_if_dnskey_updated
+    assert_emails 1 do
+      3.times do
+        CsyncJob.run
+      end
+    end
   end
 end

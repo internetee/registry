@@ -1,7 +1,6 @@
 class CsyncMailer < ApplicationMailer
-  helper_method :address_processing
-
   def dnssec_updated(domain:)
+    @domain = domain
     emails = contact_emails(domain)
 
     subject = default_i18n_subject(domain_name: domain.name)
@@ -9,6 +8,7 @@ class CsyncMailer < ApplicationMailer
   end
 
   def dnssec_deleted(domain:)
+    @domain = domain
     emails = contact_emails(domain)
 
     subject = default_i18n_subject(domain_name: domain.name)
