@@ -2,6 +2,11 @@ class VerifyEmailsJob < Que::Job
   def run(verification_id)
     email_address_verification = run_condition(EmailAddressVerification.find(verification_id))
 
+    if email_address_verification.recently_verified?
+      destroy
+      return
+    end
+
     ActiveRecord::Base.transaction do
       email_address_verification.verify
       log_success(email_address_verification)
@@ -22,7 +27,7 @@ class VerifyEmailsJob < Que::Job
   end
 
   def logger
-    Rails.logger = Logger.new(STDOUT)
+    Rails.logger
   end
 
   def log_success(verification)
