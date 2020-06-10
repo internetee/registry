@@ -33,10 +33,17 @@ CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION btree_gist; Type: COMMENT; Schema: -; Owner: -
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: -
 --
 
-COMMENT ON EXTENSION btree_gist IS 'support for indexing common datatypes in GiST';
+CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
 --
@@ -822,10 +829,10 @@ ALTER SEQUENCE public.domains_id_seq OWNED BY public.domains.id;
 
 CREATE TABLE public.email_address_verifications (
     id bigint NOT NULL,
-    email character varying NOT NULL,
+    email public.citext NOT NULL,
     verified_at timestamp without time zone,
     success boolean DEFAULT false NOT NULL,
-    domain character varying NOT NULL
+    domain public.citext NOT NULL
 );
 
 
@@ -4700,5 +4707,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200518104105'),
 ('20200529115011'),
 ('20200605100827'),
+('20200610090110'),
 ('20200630081231');
 

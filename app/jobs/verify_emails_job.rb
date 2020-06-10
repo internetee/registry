@@ -2,10 +2,7 @@ class VerifyEmailsJob < Que::Job
   def run(verification_id)
     email_address_verification = run_condition(EmailAddressVerification.find(verification_id))
 
-    if email_address_verification.recently_verified?
-      destroy
-      return
-    end
+    return if email_address_verification.recently_verified?
 
     ActiveRecord::Base.transaction do
       email_address_verification.verify

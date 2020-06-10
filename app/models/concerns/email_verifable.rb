@@ -3,15 +3,15 @@ module Concerns
     extend ActiveSupport::Concern
 
     def email_verification
-      EmailAddressVerification.find_or_create_by(email: email,
-                                                 domain: domain(email))
+      EmailAddressVerification.find_or_create_by(email: email.downcase,
+                                                 domain: domain(email.downcase))
     end
 
     def billing_email_verification
       return unless attribute_names.include?('billing_email')
 
-      EmailAddressVerification.find_or_create_by(email: billing_email,
-                                                 domain: domain(email))
+      EmailAddressVerification.find_or_create_by(email: billing_email.downcase,
+                                                 domain: domain(email.downcase))
     end
 
     def domain(email)
