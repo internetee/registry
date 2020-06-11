@@ -248,6 +248,15 @@ class ContactTest < ActiveSupport::TestCase
     assert_equal %w[ok], contact.statuses
   end
 
+  def test_whois_gets_updated_after_contact_save
+    @contact.name = 'SomeReallyWeirdRandomTestName'
+    domain = @contact.registrant_domains.first
+
+    @contact.save!
+
+    assert_equal domain.whois_record.try(:json).try(:[], 'registrant'), @contact.name
+  end
+
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)
