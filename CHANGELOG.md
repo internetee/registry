@@ -1,3 +1,6 @@
+11.06.2020
+* Auction API returns json on error [#1605](https://github.com/internetee/registry/issues/1605)
+
 08.06.2020
 * Bumped websocket-extensions to 0.1.5 [#1602](https://github.com/internetee/registry/pull/1602)
 
