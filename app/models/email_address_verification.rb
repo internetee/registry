@@ -6,7 +6,11 @@ class EmailAddressVerification < ApplicationRecord
   }
 
   scope :verified_recently, lambda {
-    where('verified_at IS NOT NULL and verified_at >= ?', verification_period)
+    where('verified_at IS NOT NULL and verified_at >= ?', verification_period).where(success: true)
+  }
+
+  scope :verification_failed, lambda {
+    where.not(verified_at: nil).where(success: false)
   }
 
   def recently_verified?
@@ -22,16 +26,28 @@ class EmailAddressVerification < ApplicationRecord
     Time.zone.now - RECENTLY_VERIFIED_PERIOD
   end
 
+  def not_verified?
+    verified_at.blank? && !success
+  end
+
+  def failed?
+    verified_at.present? && !success
+  end
+
+  def verified?
+    success
+  end
+
   def verify
     # media = success ? :mx : :smtp
-    media = :mx
+    media = :regex
     validation_request = Truemail.validate(email, with: media)
 
     if validation_request.result.success
       update(verified_at: Time.zone.now,
              success: true)
     else
-      update(verified_at: nil,
+      update(verified_at: Time.zone.now,
              success: false)
     end
 

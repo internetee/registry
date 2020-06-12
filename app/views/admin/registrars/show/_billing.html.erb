@@ -15,8 +15,8 @@
             <dd><%= registrar.accounting_customer_code %></dd>
 
             <dt><%= Registrar.human_attribute_name :billing_email %></dt>
-            <dd class=<%= 'text-danger' unless @registrar.billing_email_verification&.success%>>
-                <%= registrar.billing_email %>
+            <dd>
+                <%= verified_email_span(registrar.billing_email_verification) %>
             </dd>
 
             <dt><%= Registrar.human_attribute_name :reference_no %></dt>

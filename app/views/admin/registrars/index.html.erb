@@ -49,13 +49,9 @@
                             <%= "#{x.test_registrar}" %>
                         </td>
                         <td>
-                            <span class=<%= 'text-danger' unless x.email_verification&.success %>>
-                            <%= "#{x.email}" %>
-                            </span>
+                            <%= verified_email_span(x.email_verification) %>
                             <% if x[:billing_email].present? %>
-                                <span class=<%= 'text-danger' unless x.billing_email_verification&.success %>>
-                                <%= "#{x[:billing_email]}" %>
-                                </span>
+                                <%= verified_email_span(x.billing_email_verification) %>
                             <% end %>
                         </td>
                     </tr>

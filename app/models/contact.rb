@@ -23,10 +23,9 @@ class Contact < ApplicationRecord
 
   accepts_nested_attributes_for :legal_documents
 
-  scope :email_not_verified, lambda {
-    joins('LEFT JOIN :email_address_verifications emv ON contacts.email = emv.email')
-      .where('verified_at IS NULL OR verified_at <= ?',
-             EmailAddressVerification.verification_period)
+  scope :email_verification_failed, lambda {
+    joins('LEFT JOIN email_address_verifications emv ON contacts.email = emv.email')
+      .where('success = false and verified_at IS NOT NULL')
   }
 
   validates :name, :email, presence: true

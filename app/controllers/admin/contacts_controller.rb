@@ -30,7 +30,7 @@ module Admin
       if params[:only_no_country_code].eql?('1')
         contacts = contacts.where("ident_country_code is null or ident_country_code=''")
       end
-      contacts = contacts.email_not_verified if params[:email_not_verified].eql?('1')
+      contacts = contacts.email_verification_failed if params[:email_verification_failed].eql?('1')
       contacts
     end
 
