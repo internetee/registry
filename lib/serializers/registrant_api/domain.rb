@@ -58,7 +58,7 @@ module Serializers
 
         array_of_contacts = []
         contact_pool.map do |contact|
-          array_of_contacts.push(name: contact.name, id: contact.uuid)
+          array_of_contacts.push(name: contact.name, id: contact.uuid, email: contact.email)
         end
 
         array_of_contacts
