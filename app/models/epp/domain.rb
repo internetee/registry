@@ -1,3 +1,5 @@
+require 'deserializers/xml/legal_document'
+
 class Epp::Domain < Domain
   include EppErrors
 
@@ -180,7 +182,7 @@ class Epp::Domain < Domain
   # Adding legal doc to domain and
   # if something goes wrong - raise Rollback error
   def add_legal_file_to_new frame
-    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+    legal_document_data = ::Deserializers::Xml::LegalDocument.new(frame).call
     return unless legal_document_data
 
     doc = LegalDocument.create(
@@ -457,7 +459,7 @@ class Epp::Domain < Domain
     at.deep_merge!(attrs_from(frame.css('chg'), current_user, 'chg'))
     at.deep_merge!(attrs_from(frame.css('rem'), current_user, 'rem'))
 
-    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       frame.css("legalDocument").first.content = doc.path if doc&.persisted?
       self.legal_document_id = doc.id
     end
@@ -554,7 +556,7 @@ class Epp::Domain < Domain
       return
     end
 
-    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       frame.css("legalDocument").first.content = doc.path if doc&.persisted?
     end
 
@@ -665,7 +667,7 @@ class Epp::Domain < Domain
         self.registrar = current_user.registrar
       end
 
-      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       save!(validate: false)
 
       return dt
@@ -690,7 +692,7 @@ class Epp::Domain < Domain
       regenerate_transfer_code
       self.registrar = pt.new_registrar
 
-      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       save!(validate: false)
     end
 
@@ -710,7 +712,7 @@ class Epp::Domain < Domain
         status: DomainTransfer::CLIENT_REJECTED
       )
 
-      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       save!(validate: false)
     end
 
@@ -757,18 +759,6 @@ class Epp::Domain < Domain
       p = parsed_frame.css('period').first
       return nil unless p
       p[:unit]
-    end
-
-    def parse_legal_document_from_frame(parsed_frame)
-      ld = parsed_frame.css('legalDocument').first
-      return nil unless ld
-      return nil if ld.text.starts_with?(ENV['legal_documents_dir']) # escape reloading
-      return nil if ld.text.starts_with?('/home/') # escape reloading
-
-      {
-        body: ld.text,
-        type: ld['type']
-      }
     end
 
     def check_availability(domain_names)

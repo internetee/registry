@@ -1,3 +1,5 @@
+require 'deserializers/xml/legal_document'
+
 class Contact < ApplicationRecord
   include Versions # version/contact_version.rb
   include EppErrors
@@ -351,7 +353,7 @@ class Contact < ApplicationRecord
       return false
     end
 
-    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+    legal_document_data = ::Deserializers::Xml::LegalDocument.new(frame).call
 
     if legal_document_data
 

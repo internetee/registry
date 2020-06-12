@@ -1,3 +1,6 @@
+require 'deserializers/xml/legal_document'
+require 'deserializers/xml/ident'
+
 class Epp::Contact < Contact
   include EppErrors
 
@@ -38,8 +41,8 @@ class Epp::Contact < Contact
 
       at[:auth_info]    = f.css('authInfo pw').text            if f.css('authInfo pw').present?
 
-
-      at.merge!(ident_attrs(f.css('ident').first)) if new_record
+      ident_attrs = ::Deserializers::Xml::Ident.new(f).call
+      at.merge!(ident_attrs) if new_record
       at
     end
 
@@ -52,36 +55,6 @@ class Epp::Contact < Contact
           registrar: registrar
         )
       )
-    end
-
-    def ident_attrs(ident_frame)
-      return {} unless ident_attr_valid?(ident_frame)
-
-      {
-        ident: ident_frame.text,
-        ident_type: ident_frame.attr('type'),
-        ident_country_code: ident_frame.attr('cc')
-      }
-    end
-
-    def ident_attr_valid?(ident_frame)
-      return false if ident_frame.blank?
-      return false if ident_frame.try('text').blank?
-      return false if ident_frame.attr('type').blank?
-      return false if ident_frame.attr('cc').blank?
-
-      true
-    end
-
-    def legal_document_attrs(legal_frame)
-      return [] if legal_frame.blank?
-      return [] if legal_frame.try('text').blank?
-      return [] if legal_frame.attr('type').blank?
-
-      [{
-        body: legal_frame.text,
-        document_type: legal_frame.attr('type')
-      }]
     end
 
     def check_availability(codes)
@@ -140,7 +113,7 @@ class Epp::Contact < Contact
       at[:statuses] = statuses - statuses_attrs(frame.css('rem'), 'rem') + statuses_attrs(frame.css('add'), 'add')
     end
 
-    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       frame.css("legalDocument").first.content = doc.path if doc&.persisted?
       self.legal_document_id = doc.id
     end
@@ -237,7 +210,7 @@ class Epp::Contact < Contact
   end
 
   def add_legal_file_to_new frame
-    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+    legal_document_data = ::Deserializers::Xml::LegalDocument.new(frame).call
     return unless legal_document_data
 
     doc = LegalDocument.create(
