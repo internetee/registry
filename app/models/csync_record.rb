@@ -3,6 +3,7 @@ class CsyncRecord < ApplicationRecord
   validates :domain, uniqueness: true
   validates :alg, :proto, :pub, :flags, :action, presence: true
   validate :validate_unique_pub_key
+  validate :validate_delete_request
   after_save :update_dnskey_objects, if: proc { pushable? && !disable_requested? }
   after_save :remove_dnskeys, if: proc { pushable? && disable_requested? }
 
@@ -37,9 +38,7 @@ class CsyncRecord < ApplicationRecord
 
     CsyncMailer.dnssec_updated(domain: domain).deliver_now
     notify_registrar_about_csync
-
     CsyncRecord.where(domain: domain).destroy_all
-    true
   end
 
   def pushable?
@@ -77,6 +76,13 @@ class CsyncRecord < ApplicationRecord
     errors.add(:public_key, 'already tied this domain')
   end
 
+  def validate_delete_request
+    return if domain.dnskeys.any?
+    return if cdnskey != '0 3 0 0'
+
+    errors.add(:domain, 'DNSSEC must be enabled for delete request')
+  end
+
   def self.by_domain_name(domain_name)
     domain = Domain.find_by(name: domain_name)
     logger.info "CsyncRecord: '#{domain_name}' not in zone. Not initializing record." unless domain
@@ -91,6 +97,6 @@ class CsyncRecord < ApplicationRecord
   def determine_csync_intention(type, cdnskey)
     return 'rollover' if type == 'secure' && cdnskey != '0 3 0 0'
     return 'initialized' if type == 'insecure'
-    return 'deactivate' if cdnskey == '0 3 0 0'
+    return 'deactivate' if cdnskey == '0 3 0 0' && type == 'secure'
   end
 end
