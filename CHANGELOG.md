@@ -1,3 +1,6 @@
+12.06.2020
+* Extracted Xml deserializing from EPP Contact and Domain classes [#1601](https://github.com/internetee/registry/pull/1601)
+
 11.06.2020
 * Auction API returns json on error [#1605](https://github.com/internetee/registry/issues/1605)
 * Fixed account activity index in admin [#1606](https://github.com/internetee/registry/issues/1606)
