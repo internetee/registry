@@ -61,6 +61,21 @@ class RegistrarTest < ActiveSupport::TestCase
     end
   end
 
+  def test_creates_email_verification_in_unicode
+    unicode_email = 'suur@äri.ee'
+    punycode_email = Registrar.unicode_to_punycode(unicode_email)
+    unicode_billing_email = 'billing@äri.ee'
+    punycode_billing_email = Registrar.unicode_to_punycode(unicode_billing_email)
+
+    registrar = valid_registrar
+    registrar.email = punycode_email
+    registrar.billing_email = punycode_billing_email
+    registrar.save
+
+    assert_equal registrar.email_verification.email, unicode_email
+    assert_equal registrar.billing_email_verification.email, unicode_billing_email
+  end
+
   def test_invalid_without_accounting_customer_code
     registrar = valid_registrar
     registrar.accounting_customer_code = ''

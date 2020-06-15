@@ -39,8 +39,7 @@ class EmailAddressVerification < ApplicationRecord
   end
 
   def verify
-    # media = success ? :mx : :smtp
-    media = :regex
+    media = :mx
     validation_request = Truemail.validate(email, with: media)
 
     if validation_request.result.success

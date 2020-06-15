@@ -270,6 +270,16 @@ class ContactTest < ActiveSupport::TestCase
     assert_equal domain.whois_record.try(:json).try(:[], 'registrant'), @contact.name
   end
 
+  def test_creates_email_verification_in_unicode
+    unicode_email = 'suur@äri.ee'
+    punycode_email = Contact.unicode_to_punycode(unicode_email)
+
+    @contact.email = punycode_email
+    @contact.save
+
+    assert_equal @contact.email_verification.email, unicode_email
+  end
+
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)
