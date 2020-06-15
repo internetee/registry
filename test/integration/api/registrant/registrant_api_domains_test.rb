@@ -20,9 +20,13 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
     assert_equal('hospital.test', domain[:name])
     assert_equal('5edda1a5-3548-41ee-8b65-6d60daf85a37', domain[:id])
     assert_equal({name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}, domain[:registrant])
-    assert_equal([{name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}],
+    assert_equal([{name: 'John',
+                   id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957',
+                   email: 'john@inbox.test'}],
                  domain[:admin_contacts])
-    assert_equal([{name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}],
+    assert_equal([{name: 'John',
+                   id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957',
+                   email: 'john@inbox.test'}],
                  domain[:tech_contacts])
     assert_equal({ name: 'Good Names', website: nil }, domain[:registrar])
     assert_equal([], domain[:nameservers])
