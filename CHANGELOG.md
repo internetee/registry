@@ -1,3 +1,6 @@
+15.06.2020
+* Added contact email to registrant API [#1611](https://github.com/internetee/registry/pull/1611)
+
 12.06.2020
 * Extracted Xml deserializing from EPP Contact and Domain classes [#1601](https://github.com/internetee/registry/pull/1601)
 * Fixed whois data update issue with child object updates [#1604](https://github.com/internetee/registry/issues/1604)
