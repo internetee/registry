@@ -43,7 +43,21 @@ class VerifyEmailTaskTest < ActiveSupport::TestCase
     assert @invalid_contact_verification.failed?
   end
 
+  def test_domain_task_verifies_for_one_domain
+    capture_io { run_single_domain_task(@contact_verification.domain) }
+
+    @contact_verification.reload
+    @invalid_contact_verification.reload
+
+    assert @contact_verification.verified?
+    assert @invalid_contact_verification.not_verified?
+  end
+
   def run_task
     Rake::Task['verify_email:all_domains'].execute
+  end
+
+  def run_single_domain_task(domain)
+    Rake::Task["verify_email:domain"].invoke(domain)
   end
 end

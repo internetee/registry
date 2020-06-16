@@ -13,6 +13,8 @@ class EmailAddressVerification < ApplicationRecord
     where.not(verified_at: nil).where(success: false)
   }
 
+  scope :by_domain, ->(domain_name) { where(domain: domain_name) }
+
   def recently_verified?
     verified_at.present? &&
       verified_at > verification_period
