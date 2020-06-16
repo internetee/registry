@@ -14,10 +14,10 @@ namespace :verify_email do
   # Default 'bundle exec rake verify_email:domain' wil use 'internet.ee' domain
   desc 'Stars verifying email jobs for domain stated in argument'
   task :domain, [:domain_name] => [:environment] do |_task, args|
-    args.with_defaults(domain_name: "internet.ee")
+    args.with_defaults(domain_name: 'internet.ee')
 
     verifications_by_domain = EmailAddressVerification.not_verified_recently
                                                       .by_domain(args[:domain_name])
-    verifications_by_domain.map{ |ver| VerifyEmailsJob.enqueue(ver.id) }
+    verifications_by_domain.map { |ver| VerifyEmailsJob.enqueue(ver.id) }
   end
 end
