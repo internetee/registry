@@ -1,0 +1,5 @@
+en:
+  email:
+    email_smtp_check_error: SMTP check error
+    email_mx_check_error: Mail domain not found
+    email_regex_check_error: Invalid format

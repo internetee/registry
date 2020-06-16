@@ -3,16 +3,16 @@ module Concerns
     extend ActiveSupport::Concern
 
     def email_verification
-      EmailAddressVerification.find_or_create_by(email: self.class.punycode_to_unicode(email),
-                                                 domain: domain(email))
+      @email_verification ||= EmailAddressVerification.find_or_create_by(email: unicode_email,
+                                                                         domain: domain(email))
     end
 
     def billing_email_verification
       return unless attribute_names.include?('billing_email')
 
-      EmailAddressVerification.find_or_create_by(email: self.class
-                                                            .punycode_to_unicode(billing_email),
-                                                 domain: domain(billing_email))
+      @billing_email_verification ||= EmailAddressVerification
+                                      .find_or_create_by(email: unicode_billing_email,
+                                                         domain: domain(billing_email))
     end
 
     class_methods do
@@ -45,6 +45,14 @@ module Concerns
       end
     end
 
+    def unicode_billing_email
+      self.class.punycode_to_unicode(billing_email)
+    end
+
+    def unicode_email
+      self.class.punycode_to_unicode(email)
+    end
+
     def domain(email)
       SimpleIDN.to_unicode(self.class.domain(email))
     end
@@ -53,16 +61,29 @@ module Concerns
       self.class.punycode_to_unicode(email)
     end
 
-    def verify_email_mx_smtp(field:, email:)
-      errors.add(field, :invalid) unless email.blank? || Truemail.valid?(email)
-    end
-
     def correct_email_format
-      verify_email_mx_smtp(field: :email, email: email)
+      return if email.blank?
+
+      result = email_verification.verify
+      process_result(result: result, field: :email)
     end
 
     def correct_billing_email_format
-      verify_email_mx_smtp(field: :billing_email, email: billing_email)
+      return if email.blank?
+
+      result = billing_email_verification.verify
+      process_result(result: result, field: :billing_email)
+    end
+
+    def process_result(result:, field:)
+      case result[:errors].keys.first
+      when :smtp
+        errors.add(field, I18n.t('email.email_smtp_check_error'))
+      when :mx
+        errors.add(field, I18n.t('email.email_mx_check_error'))
+      when :regex
+        errors.add(field, I18n.t('email.email_regex_check_error'))
+      end
     end
   end
 end

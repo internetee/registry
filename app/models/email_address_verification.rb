@@ -41,8 +41,7 @@ class EmailAddressVerification < ApplicationRecord
   end
 
   def verify
-    media = :mx
-    validation_request = Truemail.validate(email, with: media)
+    validation_request = Truemail.validate(email)
 
     if validation_request.result.success
       update(verified_at: Time.zone.now,
@@ -52,6 +51,6 @@ class EmailAddressVerification < ApplicationRecord
              success: false)
     end
 
-    validation_request.result.success
+    validation_request.result
   end
 end
