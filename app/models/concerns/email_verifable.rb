@@ -78,11 +78,11 @@ module Concerns
     def process_result(result:, field:)
       case result[:errors].keys.first
       when :smtp
-        errors.add(field, I18n.t('email.email_smtp_check_error'))
+        errors.add(field, I18n.t('email_verifable.email_smtp_check_error'))
       when :mx
-        errors.add(field, I18n.t('email.email_mx_check_error'))
+        errors.add(field, I18n.t('email_verifable.email_mx_check_error'))
       when :regex
-        errors.add(field, I18n.t('email.email_regex_check_error'))
+        errors.add(field, I18n.t('email_verifable.email_regex_check_error'))
       end
     end
   end

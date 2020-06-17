@@ -56,7 +56,7 @@ class RegistrarTest < ActiveSupport::TestCase
     registrar.billing_email = nil
 
     assert registrar.invalid?
-    assert_equal I18n.t('email.email_smtp_check_error'), registrar.errors.messages[:email].first
+    assert_equal I18n.t('email_verifable.email_smtp_check_error'), registrar.errors.messages[:email].first
   end
 
   def test_email_verification_mx_error
@@ -67,7 +67,7 @@ class RegistrarTest < ActiveSupport::TestCase
     registrar.billing_email = nil
 
     assert registrar.invalid?
-    assert_equal I18n.t('email.email_mx_check_error'), registrar.errors.messages[:email].first
+    assert_equal I18n.t('email_verifable.email_mx_check_error'), registrar.errors.messages[:email].first
   end
 
   def test_email_verification_regex_error
@@ -78,7 +78,7 @@ class RegistrarTest < ActiveSupport::TestCase
     registrar.billing_email = nil
 
     assert registrar.invalid?
-    assert_equal I18n.t('email.email_regex_check_error'), registrar.errors.messages[:email].first
+    assert_equal I18n.t('email_verifable.email_regex_check_error'), registrar.errors.messages[:email].first
   end
 
   def test_billing_email_verification_valid
@@ -95,7 +95,7 @@ class RegistrarTest < ActiveSupport::TestCase
     registrar.billing_email = 'somecrude1337joke@internet.ee'
 
     assert registrar.invalid?
-    assert_equal I18n.t('email.email_smtp_check_error'), registrar.errors.messages[:billing_email].first
+    assert_equal I18n.t('email_verifable.email_smtp_check_error'), registrar.errors.messages[:billing_email].first
   end
 
   def test_billing_email_verification_mx_error
@@ -105,7 +105,7 @@ class RegistrarTest < ActiveSupport::TestCase
     registrar.billing_email = 'somecrude31337joke@somestrange31337domain.ee'
 
     assert registrar.invalid?
-    assert_equal I18n.t('email.email_mx_check_error'), registrar.errors.messages[:billing_email].first
+    assert_equal I18n.t('email_verifable.email_mx_check_error'), registrar.errors.messages[:billing_email].first
   end
 
   def test_billing_email_verification_regex_error
@@ -115,7 +115,7 @@ class RegistrarTest < ActiveSupport::TestCase
     registrar.billing_email = 'some@strangesentence@internet.ee'
 
     assert registrar.invalid?
-    assert_equal I18n.t('email.email_regex_check_error'), registrar.errors.messages[:billing_email].first
+    assert_equal I18n.t('email_verifable.email_regex_check_error'), registrar.errors.messages[:billing_email].first
   end
 
   def test_creates_email_verification_in_unicode

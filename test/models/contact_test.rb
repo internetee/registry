@@ -78,7 +78,7 @@ class ContactTest < ActiveSupport::TestCase
     contact = valid_contact
     contact.email = 'somecrude1337joke@internet.ee'
     assert contact.invalid?
-    assert_equal I18n.t('email.email_smtp_check_error'), contact.errors.messages[:email].first
+    assert_equal I18n.t('email_verifable.email_smtp_check_error'), contact.errors.messages[:email].first
  end
 
   def test_email_verification_mx_error
@@ -87,7 +87,7 @@ class ContactTest < ActiveSupport::TestCase
     contact = valid_contact
     contact.email = 'somecrude31337joke@somestrange31337domain.ee'
     assert contact.invalid?
-    assert_equal I18n.t('email.email_mx_check_error'), contact.errors.messages[:email].first
+    assert_equal I18n.t('email_verifable.email_mx_check_error'), contact.errors.messages[:email].first
   end
 
   def test_email_verification_regex_error
@@ -96,7 +96,7 @@ class ContactTest < ActiveSupport::TestCase
     contact = valid_contact
     contact.email = 'some@strangesentence@internet.ee'
     assert contact.invalid?
-    assert_equal I18n.t('email.email_regex_check_error'), contact.errors.messages[:email].first
+    assert_equal I18n.t('email_verifable.email_regex_check_error'), contact.errors.messages[:email].first
   end
 
   def test_invalid_without_phone

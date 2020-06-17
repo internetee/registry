@@ -2,7 +2,6 @@ language: ruby
 cache: bundler
 env:
   - DB=postgresql
-bundler_args: --without development staging production
 before_install:
   - "wget -N http://chromedriver.storage.googleapis.com/2.43/chromedriver_linux64.zip -P ~/"
   - "unzip ~/chromedriver_linux64.zip -d ~/"
@@ -10,6 +9,7 @@ before_install:
   - "sudo mv -f ~/chromedriver /usr/local/share/"
   - "sudo chmod +x /usr/local/share/chromedriver"
   - "sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver"
+
 before_script:
   - "cp config/application.yml.sample config/application.yml"
   - "echo \"openssl_config_path: 'test/fixtures/files/test_ca/openssl.cnf'\" >> config/application.yml"
@@ -19,6 +19,7 @@ before_script:
   - "echo \"ca_key_path:  'test/fixtures/files/test_ca/private/ca.key.pem'\" >> config/application.yml"
   - "echo \"ca_key_password: 'password'\" >> config/application.yml"
   - "cp config/database_travis.yml config/database.yml"
+  - "bundle config set without 'development staging production'"
   - "bundle exec rake db:setup:all"
   - "bundle exec rake data:migrate"
   - "curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter"
