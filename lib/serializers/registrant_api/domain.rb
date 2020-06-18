@@ -43,7 +43,7 @@ module Serializers
           status_notes: domain.status_notes,
           nameservers: nameservers,
           dnssec_keys: dnssec_keys,
-          dnssec_changed_at: dnssec_updated_at
+          dnssec_changed_at: dnssec_updated_at,
         }
       end
 
