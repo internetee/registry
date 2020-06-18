@@ -29,7 +29,11 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
                    email: 'john@inbox.test'}],
                  domain[:tech_contacts])
     assert_equal({ name: 'Good Names', website: nil }, domain[:registrar])
+
     assert_equal([], domain[:nameservers])
+    assert_equal([], domain[:dnssec_keys])
+    assert(domain.has_key?(:dnssec_changed_at))
+
     assert(domain.has_key?(:locked_by_registrant_at))
   end
 
