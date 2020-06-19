@@ -1,4 +1,5 @@
 19.06.2020
+* Regsitrant API returns now DNSSEC info [#1613](https://github.com/internetee/registry/pull/1613)
 * Updated domain expiration email notification texts [#1614](https://github.com/internetee/registry/pull/1614)
 
 15.06.2020
