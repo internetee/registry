@@ -2,9 +2,11 @@ Domeen <%= @domain.name %> on aegunud
 
 Lugupeetud .ee domeeni registreerija/halduskontakt
 
-Domeeninimi <%= @domain.name %> on aegunud ja ei ole alates <%= @domain.on_hold_date %> internetis kättesaadav. Domeen <%= @domain.name %> on <%= @domain.delete_date %> domeenioksjonil .ee https://oksjon.internet.ee. Juhul kui domeenile <%= @domain.name %> ei tehta oksjonil 24h möödudes pakkumist, domeen vabaneb ja on registreerimiseks vabalt kättesaadav kõigile huvilistele. Muude võimalike oksjoni tulemuste kohta loe siit https://www.internet.ee/domeenid/domeenide-oksjonikeskkonna-kasutajatingimused#3-oksjonikeskkonna-enampakkumisel-osalemise-tingimused.
+Domeeninimi <%= @domain.name %> on aegunud ja ei ole alates <%= @domain.on_hold_date %> internetis kättesaadav. Registreeringu pikendamiseks pöörduge palun oma registripidaja poole.
 
-Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja poole:
+<%= @domain.name %> pikendamata jätmisel domeen kustub ja läheb <%= @domain.delete_date %> oksjonile .ee oksjonikeskkonda. Domeenioksjonite kohta loe lähemalt siit https://www.internet.ee/domeenid/domeenide-oksjonikeskkonna-kasutajatingimused#3-oksjonikeskkonna-enampakkumisel-osalemise-tingimused.
+
+Domeeni <%= @domain.name %> registripidaja:
 <%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
 
 Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist https://registrant.internet.ee/registrant/.
@@ -17,9 +19,11 @@ Domain <%= @domain.name %> has expired
 
 Dear registrant/administrative contact of .ee domain,
 
-The domain name <%= @domain.name %> has expired and since <%= @domain.on_hold_date %> is no longer available on the Internet. The domain <%= @domain.name %> will be available for domain auction on <%= @domain.delete_date %> in the .ee auction portal at https://auction.internet.ee. If no offer is made for the domain <%= @domain.name %> at auction within 24 hours, the domain will be released and made freely available for registration to anyone interested on a first-come, first-served basis. Read more about other potential auction results at https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment.
+The domain name <%= @domain.name %> has expired and since <%= @domain.on_hold_date %> is no longer available on the Internet. To renew your domain registration, please contact your registrar.
 
-To renew your domain registration, please contact your registrar:
+If you do not renew the <%= @domain.name %> domain registration, it is deleted and put on auction to .ee domain auction environment at <%= @domain.delete_date %>. Read more about other potential auction results at https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment.
+
+Registrar of the <%= @domain.name %>:
 <%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
 
 You can find an overview of all your domains at the registrant's portal https://registrant.internet.ee/registrant/.
@@ -32,9 +36,11 @@ You can find an overview of all your domains at the registrant's portal https://
 
 Уважаемый регистрант/административный контакт домена .ee
 
-Срок действия доменного имени <%= @domain.name %> истек, и с <%= @domain.on_hold_date %> оно больше не доступно в интернете. <%= @domain.delete_date %> домен <%= @domain.name %> будет представлен на доменном аукционе в аукционной среде .ee https://oksjon.internet.ee. Если в течение 24 часов в отношении домена <%= @domain.name %> не поступит предложений, домен освободится и станет доступным для всех желающих по принципу «кто раньше». О других возможных результатах аукциона читайте по ссылке https://www.internet.ee/domeny/dogovor-pol-zovatelya-aukcionnoj-sredy#3-usloviya-uchastiya-v-aukcione.
+Срок действия доменного имени <%= @domain.name %> истек, и с <%= @domain.on_hold_date %> оно больше не доступно в интернете. Для продления регистрации домена обратитесь пожалуйста к своему регистратору.
 
-Для продления регистрации домена обратитесь, пожалуйста, к своему регистратору:
+Если доменное имя не продлено, домен <%= @domain.name %> будет удален и <%= @domain.delete_date %> идет на аукцион в .ee среду аукциона. О других возможных результатах аукциона читайте по ссылке https://www.internet.ee/domeny/dogovor-pol-zovatelya-aukcionnoj-sredy#3-usloviya-uchastiya-v-aukcione.
+
+Pегистратор домена <%= @domain.name %>:
 <%= render 'mailers/shared/registrar/registrar.ru.text', registrar: @registrar %>
 
 Обзор всех связанных с вами доменов можете получить на портале регистратора https://registrant.internet.ee/registrant/
