@@ -1,3 +1,6 @@
+19.06.2020
+* Updated domain expiration email notification texts [#1614](https://github.com/internetee/registry/pull/1614)
+
 15.06.2020
 * Added contact email to registrant API [#1611](https://github.com/internetee/registry/pull/1611)
 
