@@ -34,21 +34,25 @@ Content-Type: application/json
     "admin_contacts":[
       {
         "name":"John Smith",
-        "id":"62015e7d-42c8-4d68-8164-e9b71680fd95"
+        "id":"62015e7d-42c8-4d68-8164-e9b71680fd95",
+        "email": "john@email.com"
       },
       {
         "name":"William Smith",
-        "id":"a041c5b6-7772-4fac-83cd-fbce3b2c8867"
+        "id":"a041c5b6-7772-4fac-83cd-fbce3b2c8867",
+        "email": "william@email.com"
       }
     ],
     "tech_contacts":[
       {
         "name":"John Smith",
-        "id":"62015e7d-42c8-4d68-8164-e9b71680fd95"
+        "id":"62015e7d-42c8-4d68-8164-e9b71680fd95",
+        "email": "john@email.com"
       },
       {
         "name":"William Smith",
         "id":"a041c5b6-7772-4fac-83cd-fbce3b2c8867"
+        "email": "william@email.com"
       }
     ],
     "transfer_code":"98oiewslkfkd",
@@ -93,6 +97,10 @@ Content-Type: application/json
       },
 
     ],
+    "dnssec_keys": [
+      "257 3 13 KlHFYV42UtxC7LpsolDpoUZ9DNPDRYQypalBRIqlubBg/zg78aqciLk+NaWUbrkN7AUaM7h7tx91sLN+ORVPxA==",
+    ],
+    "dnssec_changed_at": "2015-09-09T09:11:14.860Z",
     "status_notes":{
 
     },
@@ -205,6 +213,10 @@ Content-Type: application/json
       },
 
     ],
+    "dnssec_keys": [
+      "257 3 13 KlHFYV42UtxC7LpsolDpoUZ9DNPDRYQypalBRIqlubBg/zg78aqciLk+NaWUbrkN7AUaM7h7tx91sLN+ORVPxA==",
+    ],
+    "dnssec_changed_at": "2015-09-09T09:11:14.860Z",
     "status_notes":{
 
     },
@@ -308,6 +320,10 @@ Content-Type: application/json
       ]
     }
   ],
+  "dnssec_keys": [
+      "257 3 13 KlHFYV42UtxC7LpsolDpoUZ9DNPDRYQypalBRIqlubBg/zg78aqciLk+NaWUbrkN7AUaM7h7tx91sLN+ORVPxA==",
+    ],
+  "dnssec_changed_at": "2015-09-09T09:11:14.860Z",
   "status_notes":{
 
   },

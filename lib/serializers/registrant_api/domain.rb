@@ -42,10 +42,22 @@ module Serializers
           locked_by_registrant_at: domain.locked_by_registrant_at,
           status_notes: domain.status_notes,
           nameservers: nameservers,
+          dnssec_keys: dnssec_keys,
+          dnssec_changed_at: dnssec_updated_at,
         }
       end
 
       private
+
+      def dnssec_keys
+        domain.dnskeys.map do |key|
+          "#{key.flags} #{key.protocol} #{key.alg} #{key.public_key}"
+        end
+      end
+
+      def dnssec_updated_at
+        domain.dnskeys.order(updated_at: :desc).select(:updated_at).first
+      end
 
       def contacts(type)
         contact_pool = begin
