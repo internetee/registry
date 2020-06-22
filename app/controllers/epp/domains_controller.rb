@@ -103,7 +103,12 @@ module Epp
     def update
       authorize! :update, @domain, @password
 
-      updated = @domain.update(params[:parsed_frame], current_user)
+      updated = @domain.class.transaction do
+        @domain.with_lock do
+          @domain.update(params[:parsed_frame], current_user)
+        end
+      end
+
       (handle_errors(@domain) && return) unless updated
 
       pending = @domain.epp_pending_update.present?
