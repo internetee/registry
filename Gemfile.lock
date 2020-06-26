@@ -54,6 +54,14 @@ GIT
       nokogiri
 
 GIT
+  remote: https://github.com/karlerikounapuu/dnsruby.git
+  revision: eab809774b43cdee8f608c5fefdc23a573284fe3
+  branch: master
+  specs:
+    dnsruby (1.61.3)
+      simpleidn (~> 0.1)
+
+GIT
   remote: https://github.com/tarmotalu/digidoc_client.git
   revision: 1645e83a5a548addce383f75703b0275c5310c32
   ref: 1645e83a5a548addce383f75703b0275c5310c32
@@ -434,7 +442,8 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    simpleidn (0.0.9)
+    simpleidn (0.1.1)
+      unf (~> 0.1.4)
     sinatra (2.0.8.1)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -507,6 +516,7 @@ DEPENDENCIES
   devise (~> 4.7)
   digidoc_client!
   directo!
+  dnsruby!
   domain_name
   e_invoice!
   epp!
@@ -542,7 +552,7 @@ DEPENDENCIES
   select2-rails (= 3.5.9.3)
   selectize-rails (= 0.12.1)
   simplecov (= 0.17.1)
-  simpleidn (= 0.0.9)
+  simpleidn (= 0.1.1)
   uglifier
   validates_email_format_of (= 1.6.3)
   webdrivers

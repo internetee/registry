@@ -38,9 +38,10 @@ gem 'grape'
 
 # registry specfic
 gem 'data_migrate', '~> 6.1'
+gem 'dnsruby', github: 'karlerikounapuu/dnsruby', branch: :master
 gem 'isikukood' # for EE-id validation
-gem 'simpleidn', '0.0.9' # For punycode
 gem 'money-rails'
+gem 'simpleidn', '0.1.1' # For punycode
 gem 'whenever', '0.9.4', require: false
 
 # country listing
