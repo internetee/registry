@@ -67,7 +67,7 @@ module Audit
 
     def children
       current_hash = (old_value['children'] || {})
-                     .merge(new_value['children']) do |_key, old_val, new_val|
+                     .merge(new_value['children'] || {}) do |_key, old_val, new_val|
         result = (old_val + new_val).uniq
         result.reject(&:blank?)
       end
@@ -94,7 +94,7 @@ module Audit
               end
         res = Contact.where(id: transfer_registrant_id) if transfer(key)
 
-        hash[key] = res unless res.blank? || res.all?(&:blank?)
+        hash[key] = res unless res.blank? || (res.respond_to?(:all?) && res.all?(&:blank?))
       end
       result
     end
@@ -116,7 +116,11 @@ module Audit
     def calculate_initial(klass:, value:, key:)
       result = case key
                when 'registrant', 'tech_contacts', 'admin_contacts'
-                 children["#{key}_initial"]&.map { |attrs| klass.new(attrs) }
+                 if children["#{key}_initial"]&.is_a?(Hash)
+                   klass.new(children["#{key}_initial"])
+                 elsif children["#{key}_initial"]&.is_a?(Array)
+                  children["#{key}_initial"]&.map { |attrs| klass.new(attrs) }
+                 end
                else
                  klass.where(id: value)
                end

@@ -119,8 +119,14 @@ module ApplicationHelper
 
   def last_contact_history_version(contact:)
     object = Audit::ContactHistory.by_contact(contact.id).last
-    link_to admin_contact_version_path(object), target: '_blank', rel: 'noopener' do
-      yield
+    if object
+      link_to admin_contact_version_path(object), target: '_blank', rel: 'noopener' do
+        yield
+      end
+    else
+      content_tag(:p) do
+        yield
+      end
     end
   end
 
