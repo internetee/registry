@@ -10,7 +10,7 @@ module Deserializers
       def call
         attributes = {
           name: if_present('postalInfo name'),
-          org: if_present('postalInfo org'),
+          org_name: if_present('postalInfo org'),
           email: if_present('email'),
           fax: if_present('fax'),
           phone: if_present('voice'),

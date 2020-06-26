@@ -22,6 +22,7 @@ class DeserializersXmlContactTest < ActiveSupport::TestCase
               <contact:chg>
                 <contact:postalInfo>
                   <contact:name>new name</contact:name>
+                  <contact:org>Org</contact:org>
                 </contact:postalInfo>
                 <contact:voice>+123.4</contact:voice>
                 <contact:email>new-email@inbox.test</contact:email>
@@ -35,8 +36,9 @@ class DeserializersXmlContactTest < ActiveSupport::TestCase
     nokogiri_frame = Nokogiri::XML(xml_string).remove_namespaces!
     instance = ::Deserializers::Xml::Contact.new(nokogiri_frame)
     assert_equal instance.call, { name: 'new name',
-                                 email: 'new-email@inbox.test',
-                                 phone: '+123.4' }
+                                  org_name: 'Org',
+                                  email: 'new-email@inbox.test',
+                                  phone: '+123.4' }
   end
 
   def test_handles_create
