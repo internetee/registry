@@ -88,40 +88,6 @@ class Epp::Contact < Contact
     }
   end
 
-  def statuses_attrs(frame, action)
-    status_list = status_list_from(frame)
-
-    if action == 'rem'
-      to_destroy = []
-      status_list.each do |status|
-        if statuses.include?(status)
-          to_destroy << status
-        else
-          add_epp_error('2303', 'status', status, [:contact_statuses, :not_found])
-        end
-      end
-
-      return to_destroy
-    else
-      return status_list
-    end
-  end
-
-  def status_list_from(frame)
-    status_list = []
-
-    frame.css('status').each do |status|
-      unless Contact::CLIENT_STATUSES.include?(status['s'])
-        add_epp_error('2303', 'status', status['s'], [:domain_statuses, :not_found])
-        next
-      end
-
-      status_list << status['s']
-    end
-
-    status_list
-  end
-
   def attach_legal_document(legal_document_data)
     return unless legal_document_data
 
