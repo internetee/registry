@@ -34,14 +34,14 @@ module Deserializers
       end
 
       def if_present(css_path)
-        return unless frame.css(css_path).present?
+        return if frame.css(css_path).blank?
 
         frame.css(css_path).text
       end
 
       def statuses_to_add
         statuses_frame = frame.css('add')
-        return unless statuses_frame.present?
+        return if statuses_frame.blank?
 
         statuses_frame.css('status').map do |status|
           status['s']
@@ -50,7 +50,7 @@ module Deserializers
 
       def statuses_to_remove
         statuses_frame = frame.css('rem')
-        return unless statuses_frame.present?
+        return if statuses_frame.blank?
 
         statuses_frame.css('status').map do |status|
           status['s']
