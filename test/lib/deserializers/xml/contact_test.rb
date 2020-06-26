@@ -70,4 +70,43 @@ class DeserializersXmlContactTest < ActiveSupport::TestCase
     instance = ::Deserializers::Xml::Contact.new(nokogiri_frame)
     assert_equal instance.call, { name: 'new', email: 'new@registrar.test', phone: '+1.2' }
   end
+
+  def test_handles_statuses
+    xml_string = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:id>john-001</contact:id>
+              <contact:chg>
+                <contact:postalInfo>
+                  <contact:name>new name</contact:name>
+                </contact:postalInfo>
+                <contact:voice>+123.4</contact:voice>
+                <contact:email>new-email@inbox.test</contact:email>
+              </contact:chg>
+              <contact:add>
+                <contact:status s="clientDeleteProhibited" lang="en">Payment overdue.</contact:status>
+                <contact:status s="clientUpdateProhibited"/>
+              </contact:add>
+              <contact:rem>
+                <contact:status s="pendingDelete"/>
+              </contact:rem>
+            </contact:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    nokogiri_frame = Nokogiri::XML(xml_string).remove_namespaces!
+    instance = ::Deserializers::Xml::Contact.new(nokogiri_frame)
+    assert_equal instance.call, { name: 'new name',
+                                  email: 'new-email@inbox.test',
+                                  phone: '+123.4',
+                                  statuses_to_add: ['clientDeleteProhibited',
+                                                    'clientUpdateProhibited'],
+                                  statuses_to_remove: ['pendingDelete']
+                                }
+  end
 end

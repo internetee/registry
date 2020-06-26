@@ -24,6 +24,10 @@ module Deserializers
 
           # Auth info
           auth_info: if_present('authInfo pw'),
+
+          # statuses
+          statuses_to_add: statuses_to_add,
+          statuses_to_remove: statuses_to_remove,
         }
 
         attributes.compact
@@ -33,6 +37,24 @@ module Deserializers
         return unless frame.css(css_path).present?
 
         frame.css(css_path).text
+      end
+
+      def statuses_to_add
+        statuses_frame = frame.css('add')
+        return unless statuses_frame.present?
+
+        statuses_frame.css('status').map do |status|
+          status['s']
+        end
+      end
+
+      def statuses_to_remove
+        statuses_frame = frame.css('rem')
+        return unless statuses_frame.present?
+
+        statuses_frame.css('status').map do |status|
+          status['s']
+        end
       end
     end
   end
