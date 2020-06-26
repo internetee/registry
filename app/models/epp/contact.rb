@@ -88,68 +88,6 @@ class Epp::Contact < Contact
     }
   end
 
-  def update_attributes(frame, current_user)
-    return super if frame.blank?
-    new_attributes = self.class.attrs_from(frame, new_record: false)
-
-    if Setting.client_status_editing_enabled
-      new_attributes[:statuses] =
-        statuses - new_attributes[:statuses_to_remove] + new_attributes[:statuses_to_add]
-    end
-
-    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
-      frame.css("legalDocument").first.content = doc.path if doc&.persisted?
-      self.legal_document_id = doc.id
-    end
-
-    ident_attributes = ::Deserializers::Xml::Ident.new(frame).call
-
-    # https://github.com/internetee/registry/issues/576
-    if ident_attributes[:ident]
-      if identifier.valid?
-        submitted_ident = Ident.new(code: ident_attributes[:ident],
-                                    type: ident_attributes[:ident_type],
-                                    country_code: ident_attributes[:ident_country_code])
-
-        if submitted_ident != identifier
-          add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident'))
-          return
-        end
-      else
-        ident_update_attempt = ident_attributes[:ident] != ident
-
-        if ident_update_attempt
-          add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.ident_update'))
-          return
-        end
-
-        identifier = Ident.new(code: ident_attributes[:ident],
-                               type: ident_attributes[:ident_type],
-                               country_code: ident_attributes[:ident_country_code])
-
-        identifier.validate
-
-        self.identifier = identifier
-        self.ident_updated_at ||= Time.zone.now
-      end
-    end
-
-    self.upid = current_user.registrar.id if current_user.registrar
-    self.up_date = Time.zone.now
-
-    self.attributes = new_attributes
-
-    email_changed = will_save_change_to_email?
-    old_email = email_was
-    updated = save
-
-    if updated && email_changed && registrant?
-      ContactMailer.email_changed(contact: self, old_email: old_email).deliver_now
-    end
-
-    updated
-  end
-
   def statuses_attrs(frame, action)
     status_list = status_list_from(frame)
 
