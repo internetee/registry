@@ -1,5 +1,6 @@
 26.06.2020
 * Fixed race condition in domain update by adding new db constratints [#1612](https://github.com/internetee/registry/issues/1612)
+* Refactored contact validation [#1617](https://github.com/internetee/registry/pull/1617)
 
 19.06.2020
 * Regsitrant API returns now DNSSEC info [#1613](https://github.com/internetee/registry/pull/1613)
