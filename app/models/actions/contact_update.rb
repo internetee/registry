@@ -53,33 +53,33 @@ module Actions
     end
 
     def maybe_update_ident
-      if ident[:ident]
-        if contact.identifier.valid?
-          submitted_ident = ::Contact::Ident.new(code: ident[:ident],
-                                                 type: ident[:ident_type],
-                                                 country_code: ident[:ident_country_code])
+      return unless ident[:ident]
 
-          if submitted_ident != contact.identifier
-            contact.add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident'))
-            @error = true
-          end
-        else
-          ident_update_attempt = ident[:ident] != contact.ident
+      if contact.identifier.valid?
+        submitted_ident = ::Contact::Ident.new(code: ident[:ident],
+                                               type: ident[:ident_type],
+                                               country_code: ident[:ident_country_code])
 
-          if ident_update_attempt
-            contact.add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.ident_update'))
-            @error = true
-          end
-
-          identifier = ::Contact::Ident.new(code: ident[:ident],
-                                            type: ident[:ident_type],
-                                            country_code: ident[:ident_country_code])
-
-          identifier.validate
-
-          contact.identifier = identifier
-          contact.ident_updated_at ||= Time.zone.now
+        if submitted_ident != contact.identifier
+          contact.add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident'))
+          @error = true
         end
+      else
+        ident_update_attempt = ident[:ident] != contact.ident
+
+        if ident_update_attempt
+          contact.add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.ident_update'))
+          @error = true
+        end
+
+        identifier = ::Contact::Ident.new(code: ident[:ident],
+                                          type: ident[:ident_type],
+                                          country_code: ident[:ident_country_code])
+
+        identifier.validate
+
+        contact.identifier = identifier
+        contact.ident_updated_at ||= Time.zone.now
       end
     end
 
