@@ -16,7 +16,8 @@ class CsyncRecord < ApplicationRecord
     logger.info "#{prefix} cycle registered." if updated
     return if updated
 
-    logger.info "#{prefix} not registering cycle. Reason: #{errors.full_messages.join(' .')}"
+    logger.info "#{prefix} reseting cycles. Reason: #{errors.full_messages.join(' .')}"
+    CsyncRecord.where(domain: domain).delete_all
   end
 
   def compose_record_meta(result)
@@ -34,22 +35,87 @@ class CsyncRecord < ApplicationRecord
   end
 
   def process_new_dnskey(dnskey)
-    return dnskey unless dnskey.save
+    return dnskey unless dnskey.valid?
+
+    puts "Trying to detect DNSSEC status for domain #{domain.name}"
+    current_security_level = verify_dnssec_status(domain)
+
+    # Test if DNSSEC valid for domain beforehand
+    case current_security_level
+    when Dnsruby::Message::SecurityLevel.INSECURE
+      dnskey.errors.add(:base, 'Pre DNSSEC does not verify (rollover)') if action == 'rollover'
+      dnskey.errors.add(:base, 'Pre DNSSEC does not verify (rollover)') if action == 'deactivate'
+    when Dnsruby::Message::SecurityLevel.BOGUS
+      dnskey.errors.add(:base, 'Pre DNSSEC does not verify (bogus)') if action == 'rollover'
+      dnskey.errors.add(:base, 'Pre DNSSEC does not verify (rollover)') if action == 'deactivate'
+    when Dnsruby::Message::SecurityLevel.UNCHECKED
+      dnskey.errors.add(:base, 'Pre DNSSEC does not verify (unchecked)') if action == 'rollover'
+      dnskey.errors.add(:base, 'Pre DNSSEC does not verify (rollover)') if action == 'deactivate'
+    end
+
+    return dnskey if dnskey.errors.any? # if invalid security level, for example
+
+    puts 'Pre DNSSEC changes verification succeeded successfully'
+
+    # Test DNSSEC with new configuration
+    dnskey.generate_digest
+    new_security_level = verify_dnssec_status(domain, dnskey)
+    puts "Security level with new DNSSEC settings: #{new_security_level}"
+    if %w[rollover initialized].include? action
+      unless new_security_level == Dnsruby::Message::SecurityLevel.SECURE
+        dnskey.errors.add(:base, 'DNSSEC did not verify with new settings')
+      end
+    end
+
+    return dnskey unless dnskey.save # if invalid security level, for example
 
     CsyncMailer.dnssec_updated(domain: domain).deliver_now
     notify_registrar_about_csync
     CsyncRecord.where(domain: domain).destroy_all
+
+    true
+  end
+
+  def verify_dnssec_status(domain, dnskey = nil)
+    Dnsruby::Dnssec.validation_policy = Dnsruby::Dnssec::ValidationPolicy::ALWAYS_ROOT_ONLY
+    Dnsruby::Dnssec.clear_trust_anchors
+    Dnsruby::Dnssec.clear_trusted_keys
+    if dnskey
+      Dnsruby::Dnssec.validation_policy = Dnsruby::Dnssec::ValidationPolicy::ALWAYS_LOCAL_ANCHORS_ONLY
+      trusted_key = Dnsruby::RR.create(name: "#{domain.name}.", type: Dnsruby::Types.DNSKEY,
+                                       flags: dnskey.flags, protocol: dnskey.protocol,
+                                       algorithm: dnskey.alg,
+                                       key: dnskey.public_key)
+      Dnsruby::Dnssec.add_trust_anchor(trusted_key)
+      trusted_ds = Dnsruby::RR.create(name: "#{domain.name}.", type: Dnsruby::Types.DS,
+                                      key_tag: dnskey.ds_key_tag, algorithm: dnskey.ds_alg,
+                                      digest_type: dnskey.ds_digest_type, digest: dnskey.ds_digest)
+      Dnsruby::Dnssec.add_trust_anchor(trusted_ds)
+    end
+
+    inner_resolver = Dnsruby::Resolver.new(nameserver: ['8.8.8.8', '8.8.4.4'])
+    inner_resolver.do_validation = true
+    inner_resolver.do_caching = false
+    inner_resolver.dnssec = true
+    resolver = Dnsruby::Recursor.new(inner_resolver)
+    resolver.dnssec = true
+
+    resolver.query(domain.name, 'A', 'IN').security_level
   end
 
   def pushable?
     return true if domain.dnskeys.any?
-    return true if times_scanned >= REQUIRED_SCAN_CYCLES
+
+    if domain.dnskeys.empty? && times_scanned >= REQUIRED_SCAN_CYCLES && !disable_requested?
+      return true
+    end
 
     false
   end
 
-  def disable_requested?
-    cdnskey == '0 3 0 0'
+  def disable_requested?(pubkey = nil)
+    pubkey ||= cdnskey
+    ['0 3 0 AA==', '0 3 0 0'].include? pubkey
   end
 
   def remove_dnskeys
@@ -78,7 +144,7 @@ class CsyncRecord < ApplicationRecord
 
   def validate_delete_request
     return if domain.dnskeys.any?
-    return if cdnskey != '0 3 0 0'
+    return if ['0 3 0 AA==', '0 3 0 0'].include? cdnskey
 
     errors.add(:domain, 'DNSSEC must be enabled for delete request')
   end
@@ -95,8 +161,11 @@ class CsyncRecord < ApplicationRecord
   end
 
   def determine_csync_intention(type, cdnskey)
-    return 'rollover' if type == 'secure' && cdnskey != '0 3 0 0'
-    return 'initialized' if type == 'insecure'
-    return 'deactivate' if cdnskey == '0 3 0 0' && type == 'secure'
+    case type
+    when 'secure'
+      (disable_requested?(cdnskey) ? 'deactivate' : 'rollover') if domain.dnskeys.any?
+    when 'insecure'
+      'initialized' unless disable_requested?(cdnskey)
+    end
   end
 end
