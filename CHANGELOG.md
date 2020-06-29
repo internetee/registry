@@ -1,5 +1,6 @@
 29.06.2020
 * Bumped rack to 2.2.3 [#1618](https://github.com/internetee/registry/pull/1618)
+* Actionpack security update to 6.0.3.2 [#1619](https://github.com/internetee/registry/pull/1619)
 
 26.06.2020
 * Fixed race condition in domain update by adding new db constratints [#1612](https://github.com/internetee/registry/issues/1612)
