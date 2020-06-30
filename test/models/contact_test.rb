@@ -177,7 +177,7 @@ class ContactTest < ActiveSupport::TestCase
 
   def test_linked_when_in_use_as_domain_contact
     Domain.update_all(registrant_id: contacts(:william).id)
-    DomainContact.first.update(contact_id: @contact.id)
+    DomainContact.update_all(contact_id: @contact.id)
 
     assert @contact.linked?
   end
