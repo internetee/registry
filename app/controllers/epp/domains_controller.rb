@@ -103,17 +103,11 @@ module Epp
     def update
       authorize! :update, @domain, @password
 
-      updated = Domain.transaction(isolation: isolation_level) do
-        @domain.update(params[:parsed_frame], current_user)
-      end
+      updated = @domain.update(params[:parsed_frame], current_user)
       (handle_errors(@domain) && return) unless updated
 
       pending = @domain.epp_pending_update.present?
       render_epp_response "/epp/domains/success#{'_pending' if pending}"
-    end
-
-    def isolation_level
-      :serializable unless Rails.env.test?
     end
 
     def delete
