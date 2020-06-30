@@ -2190,8 +2190,6 @@ CREATE TABLE public.users (
     username character varying,
     plain_text_password character varying,
     created_at timestamp without time zone,
-<<<<<<< HEAD
-=======
     session character varying,
     children json,
     uuid character varying
