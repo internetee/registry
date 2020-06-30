@@ -1,4 +1,5 @@
 - path = (params[:domain_name]) ? update_registrar_domains_path : registrar_domains_path
+- legaldoc_mandatory = params[:domain_name].blank? && current_registrar_user.legaldoc_mandatory?
 = form_tag(path, class: 'form-horizontal', multipart: true) do
   .row
     .col-md-8
@@ -14,7 +15,7 @@
         .panel-body
           .form-group
             .col-md-3.control-label
-              - c, fr = 'required', true if params[:domain_name].blank?
+              - c, fr = 'required', true if legaldoc_mandatory
               = label_tag 'domain[legal_document]', t(:legal_document), class: c
               %p.help-block= t(:legal_document_max_size)
             .col-md-7

@@ -237,7 +237,7 @@ module Epp
       mutually_exclusive 'keyData', 'dsData'
 
       @prefix = nil
-      requires 'extension > extdata > legalDocument'
+      requires 'extension > extdata > legalDocument' if current_user.legaldoc_mandatory?
 
       optional_attribute 'period', 'unit', values: %w(d m y)
 
