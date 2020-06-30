@@ -100,6 +100,15 @@
                             <%= f.check_box :legaldoc_optout, class: 'form-control' %>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label t('.legaldoc_optout_comment') %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_area :legaldoc_optout_comment, class: 'form-control', rows: 3 %>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
