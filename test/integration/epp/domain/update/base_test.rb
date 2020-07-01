@@ -160,6 +160,68 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_verification_and_notification_emails
   end
 
+  def test_updates_registrant_when_legaldoc_is_not_mandatory
+    Setting.request_confrimation_on_registrant_change_enabled = true
+    new_registrant = contacts(:william)
+    assert_not_equal new_registrant, @domain.registrant
+
+    @domain.registrar.legaldoc_optout = true
+    @domain.registrar.save(validate: false)
+    @domain.registrar.reload
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{@domain.name}</domain:name>
+                <domain:chg>
+                  <domain:registrant verified="no">#{new_registrant.code}</domain:registrant>
+                </domain:chg>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    @domain.reload
+
+    assert_epp_response :completed_successfully_action_pending
+    assert_not_equal new_registrant, @domain.registrant
+    assert @domain.registrant_verification_asked?
+    assert_includes @domain.statuses, DomainStatus::PENDING_UPDATE
+    assert_verification_and_notification_emails
+  end
+
+  def test_dows_not_update_registrant_when_legaldoc_is_mandatory
+    Setting.request_confrimation_on_registrant_change_enabled = true
+    new_registrant = contacts(:william)
+    assert_not_equal new_registrant, @domain.registrant
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{@domain.name}</domain:name>
+                <domain:chg>
+                  <domain:registrant verified="no">#{new_registrant.code}</domain:registrant>
+                </domain:chg>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_epp_response :required_parameter_missing
+  end
+
   def test_skips_verification_when_provided_registrant_is_the_same_as_current_one
     Setting.request_confrimation_on_registrant_change_enabled = true
 
