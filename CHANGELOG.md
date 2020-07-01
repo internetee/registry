@@ -1,3 +1,7 @@
+01.07.2020
+* Reverted race condition fix due to data issues in production (#1612) [#1622](https://github.com/internetee/registry/pull/1622)
+* Added legaldoc opt-out option for approved registrars [#1620](https://github.com/internetee/registry/issues/1620)
+
 29.06.2020
 * Bumped rack to 2.2.3 [#1618](https://github.com/internetee/registry/pull/1618)
 * Actionpack security update to 6.0.3.2 [#1619](https://github.com/internetee/registry/pull/1619)
