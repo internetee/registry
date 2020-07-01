@@ -162,6 +162,8 @@ class EppDomainDeleteBaseTest < EppTestCase
 
   def test_legal_document_is_required
     assert_equal 'shop.test', @domain.name
+    @domain.registrar.legaldoc_optout = true
+    @domain.registrar.save(validate: false)
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
