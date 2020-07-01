@@ -6,6 +6,7 @@ defaults: &defaults
   tech_contacts_max_count: 10
   orphans_contacts_in_months: 6
   expire_pending_confirmation: 48
+  legal_document_is_mandatory: true
 
   ds_digest_type: 2
   ds_data_allowed: false

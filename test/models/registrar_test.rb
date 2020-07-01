@@ -238,6 +238,33 @@ class RegistrarTest < ActiveSupport::TestCase
     assert_equal iban, registrar.e_invoice_iban
   end
 
+  def test_legal_doc_is_mandatory
+    old_value = Setting.legal_document_is_mandatory
+    Setting.legal_document_is_mandatory = true
+    assert @registrar.legaldoc_mandatory?
+
+    Setting.legal_document_is_mandatory = old_value
+  end
+
+  def test_legal_doc_is_not_mandatory_if_opted_out
+    old_value = Setting.legal_document_is_mandatory
+    Setting.legal_document_is_mandatory = true
+    @registrar.legaldoc_optout = true
+    @registrar.save(validate: false)
+    @registrar.reload
+    assert_not @registrar.legaldoc_mandatory?
+
+    Setting.legal_document_is_mandatory = old_value
+  end
+
+  def test_legal_doc_is_not_mandatory_globally
+    old_value = Setting.legal_document_is_mandatory
+    Setting.legal_document_is_mandatory = false
+    assert_not @registrar.legaldoc_mandatory?
+
+    Setting.legal_document_is_mandatory = old_value
+  end
+
   private
 
   def valid_registrar
