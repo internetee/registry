@@ -14,10 +14,10 @@
 
         .form-group
           .col-md-4.control-label
-            = label_tag 'domain[legal_document]', t(:legal_document), class: ('required' if current_registrar_user.legaldoc_mandatory?)
+            = label_tag 'domain[legal_document]', t(:legal_document)
             %p.help-block= t(:legal_document_max_size)
           .col-md-6
-            = file_field_tag 'domain[legal_document]', required: current_registrar_user.legaldoc_mandatory?
+            = file_field_tag 'domain[legal_document]'
             = hidden_field_tag 'domain[name]', params[:domain_name]
   %hr
   .row
