@@ -49,6 +49,8 @@ en:
         misc: Miscellaneous
         create_btn: Create registrar
         update_btn: Update registrar
+        legaldoc_optout: Opt-out from legal document requirement
+        legaldoc_optout_comment: Commentary on opt-out
 
         address:
           header: Address

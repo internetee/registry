@@ -560,7 +560,16 @@ ALTER SEQUENCE public.contacts_id_seq OWNED BY public.contacts.id;
 
 
 --
--- Name: directos; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: data_migrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_migrations (
+    version character varying NOT NULL
+);
+
+
+--
+-- Name: directos; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.directos (
@@ -2078,7 +2087,9 @@ CREATE TABLE public.registrars (
     language character varying NOT NULL,
     vat_rate numeric(4,3),
     iban character varying,
-    settings jsonb DEFAULT '{}'::jsonb NOT NULL
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL,
+    legaldoc_optout boolean DEFAULT false NOT NULL,
+    legaldoc_optout_comment text
 );
 
 
@@ -4523,6 +4534,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200505103316'),
 ('20200505150413'),
 ('20200518104105'),
-('20200529115011');
+('20200529115011'),
+('20200630081231');
 
 

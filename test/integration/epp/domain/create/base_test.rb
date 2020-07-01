@@ -1,6 +1,36 @@
 require 'test_helper'
 
 class EppDomainCreateBaseTest < EppTestCase
+
+  def test_not_registers_domain_without_legaldoc
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+            </domain:create>
+          </create>
+        </command>
+      </epp>
+    XML
+
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    assert_epp_response :required_parameter_missing
+  end
+
   def test_registers_new_domain_with_required_attributes
     now = Time.zone.parse('2010-07-05')
     travel_to now
@@ -43,6 +73,43 @@ class EppDomainCreateBaseTest < EppTestCase
 
     default_registration_period = 1.year + 1.day
     assert_equal now + default_registration_period, domain.expire_time
+  end
+
+  def test_registers_domain_without_legaldoc_if_optout
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+    registrar = registrant.registrar
+
+    registrar.legaldoc_optout = true
+    registrar.save(validate: false)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+            </domain:create>
+          </create>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    assert_epp_response :completed_successfully
+
+    domain = Domain.find_by(name: name)
+    assert_equal name, domain.name
+    assert_equal registrant, domain.registrant
   end
 
   def test_registers_reserved_domain_with_registration_code

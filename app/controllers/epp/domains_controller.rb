@@ -237,7 +237,7 @@ module Epp
       mutually_exclusive 'keyData', 'dsData'
 
       @prefix = nil
-      requires 'extension > extdata > legalDocument'
+      requires 'extension > extdata > legalDocument' if current_user.legaldoc_mandatory?
 
       optional_attribute 'period', 'unit', values: %w(d m y)
 
@@ -246,7 +246,7 @@ module Epp
 
     def validate_update
       if element_count('update > chg > registrant') > 0
-        requires 'extension > extdata > legalDocument'
+        requires 'extension > extdata > legalDocument' if current_user.legaldoc_mandatory?
       end
 
       @prefix = 'update > update >'
@@ -256,7 +256,8 @@ module Epp
     end
 
     def validate_delete
-      requires 'extension > extdata > legalDocument'
+      # binding.pry
+      requires 'extension > extdata > legalDocument' if current_user.legaldoc_mandatory?
 
       @prefix = 'delete > delete >'
       requires 'name'
