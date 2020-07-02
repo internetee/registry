@@ -31,7 +31,7 @@ class DomainTest < ActiveSupport::TestCase
   def test_validates_name_format
     assert_equal dns_zones(:one).origin, 'test'
     domain = valid_domain
-    subdomain_min_length = 2
+    subdomain_min_length = 1
     subdomain_max_length = 63
 
     domain.name = '!invalid'
@@ -44,9 +44,6 @@ class DomainTest < ActiveSupport::TestCase
     assert domain.invalid?
 
     domain.name = 'example-.test'
-    assert domain.invalid?
-
-    domain.name = "#{'a' * subdomain_min_length.pred}.test"
     assert domain.invalid?
 
     domain.name = "#{'a' * subdomain_max_length.next}.test"
