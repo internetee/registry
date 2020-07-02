@@ -198,6 +198,8 @@ class EppDomainUpdateBaseTest < EppTestCase
 
   def test_dows_not_update_registrant_when_legaldoc_is_mandatory
     Setting.request_confrimation_on_registrant_change_enabled = true
+    old_value = Setting.legal_document_is_mandatory
+    Setting.legal_document_is_mandatory = true
     new_registrant = contacts(:william)
     assert_not_equal new_registrant, @domain.registrant
 
@@ -220,6 +222,7 @@ class EppDomainUpdateBaseTest < EppTestCase
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert_epp_response :required_parameter_missing
+    Setting.legal_document_is_mandatory = old_value
   end
 
   def test_skips_verification_when_provided_registrant_is_the_same_as_current_one
