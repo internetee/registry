@@ -4,7 +4,12 @@ module Concerns
       extend ActiveSupport::Concern
 
       def legaldoc_mandatory?
-        !legaldoc_optout
+        !legaldoc_not_mandatory?
+      end
+
+      def legaldoc_not_mandatory?
+        setting = Setting.find_by(var: 'legal_document_is_mandatory')&.value
+        legaldoc_optout || !setting
       end
     end
   end
