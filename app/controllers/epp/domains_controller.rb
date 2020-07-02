@@ -256,9 +256,6 @@ module Epp
     end
 
     def validate_delete
-      # binding.pry
-      requires 'extension > extdata > legalDocument' if current_user.legaldoc_mandatory?
-
       @prefix = 'delete > delete >'
       requires 'name'
     end
