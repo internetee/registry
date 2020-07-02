@@ -1,3 +1,6 @@
+02.07.2020
+* Adding legaldoc to domain:delete is now optional [#1624](https://github.com/internetee/registry/issues/1624)
+
 01.07.2020
 * Reverted race condition fix due to data issues in production (#1612) [#1622](https://github.com/internetee/registry/pull/1622)
 * Added legaldoc opt-out option for approved registrars [#1620](https://github.com/internetee/registry/issues/1620)
