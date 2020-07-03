@@ -1,4 +1,6 @@
 class DomainNameValidator < ActiveModel::EachValidator
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/LineLength
   def validate_each(record, attribute, value)
     if !self.class.validate_format(value)
       record.errors[attribute] << (options[:message] || record.errors.generate_message(attribute, :invalid))
@@ -27,8 +29,9 @@ class DomainNameValidator < ActiveModel::EachValidator
       end
 
       unicode_chars = /\u00E4\u00F5\u00F6\u00FC\u0161\u017E/ # äõöüšž
-      regexp = /\A[a-zA-Z0-9#{unicode_chars.source}][a-zA-Z0-9#{unicode_chars.source}-]{0,61}[a-zA-Z0-9#{unicode_chars.source}]\.#{general_domains.source}\z/
-      !!(value =~ regexp)
+      regexp = /\A[a-zA-Z0-9#{unicode_chars.source}][a-zA-Z0-9#{unicode_chars.source}-]{0,62}\.#{general_domains.source}\z/
+      end_regexp = /\-\.#{general_domains.source}\z/ # should not contain dash as a closing char
+      !!(value =~ regexp && value !~ end_regexp)
     end
 
     def validate_blocked(value)
@@ -39,4 +42,6 @@ class DomainNameValidator < ActiveModel::EachValidator
       DNS::Zone.where(origin: value).count.zero?
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/LineLength
 end
