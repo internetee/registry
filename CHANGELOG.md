@@ -1,3 +1,6 @@
+03.07.2020
+* 1-character domains are now valid but blocked by default [#1625](https://github.com/internetee/registry/issues/1625)
+
 02.07.2020
 * Adding legaldoc to domain:delete is now optional [#1624](https://github.com/internetee/registry/issues/1624)
 * Setting to make legaldoc functionality optional [#1623](https://github.com/internetee/registry/issues/1623)
