@@ -29,56 +29,59 @@ class CsyncRecord < ApplicationRecord
   end
 
   def dnskey
-    domain.dnskeys.new(flags: flags, protocol: proto, alg: alg, public_key: pub, ds_digest_type: 2)
+    key = domain.dnskeys.new(flags: flags, protocol: proto, alg: alg,
+                             public_key: pub, ds_digest_type: 2)
+
+    @log.info "DNSKEY not valid. #{key.errors.full_messages.join('. ')}. Exiting" unless key.valid?
+
+    key
   end
 
   def process_new_dnskey
-    if dnskey.errors.any?
-      @log.info "Failed to add DNSKEY. #{dnskey.errors.full_messages.join('. ')}"
-      return
-    end
+    return unless dnskey.valid?
+    return unless valid_security_level?(action)
+    return unless valid_security_level?(action, post: true)
 
-    @log.info "Trying to detect DNSSEC status for domain #{domain.name}"
-
-    # Test if DNSSEC valid for domain beforehand
-    security_level = domain.dnssec_security_level
-    valid = false
-    case security_level
-    when Dnsruby::Message::SecurityLevel.SECURE
-      valid = true if %w[rollover deactivate initialized].include? action
-    when Dnsruby::Message::SecurityLevel.INSECURE
-      valid = true if action == 'initialized'
-    when Dnsruby::Message::SecurityLevel.BOGUS
-      valid = true if action == 'initialized'
-    end
-
-    @log.info "#{domain.name}: Active DNSSEC validation (#{security_level}) " \
-              "#{ valid ? 'PASSED' : 'FAILED'} for action '#{action}'"
-    return unless valid
-
-    new_security_level = domain.dnssec_security_level(stubber: dnskey)
-
-    valid = false
-    if %w[rollover initialized].include? action
-      valid = true if new_security_level == Dnsruby::Message::SecurityLevel.SECURE
-    elsif %w[deactivate].include? action
-      valid = true if new_security_level != Dnsruby::Message::SecurityLevel.SECURE
-    end
-
-    @log.info "#{domain.name}: New DNSSEC data validation (#{new_security_level}) " \
-    "#{ valid ? 'PASSED' : 'FAILED'} for action '#{action}'"
-    return unless valid
-
-    unless dnskey.save
+    if dnskey.save
       @log.info "Failed to save DNSKEY. Errors: #{dnskey.errors.full_messages.join('. ')}"
-      return
+    else
+      finalize_and_notify
     end
+  end
 
+  def finalize_and_notify
     CsyncMailer.dnssec_updated(domain: domain).deliver_now
     notify_registrar_about_csync
     CsyncRecord.where(domain: domain).destroy_all
+  end
 
-    true
+  def valid_security_level?(action, post: false)
+    valid = valid_pre_action?(domain.dnssec_security_level, action)
+    valid = valid_post_action?(domain.dnssec_security_level(stubber: dnskey), action) if post
+
+    @log.info "#{domain.name}: #{post ? 'Post' : 'Pre'} DNSSEC validation " \
+      "#{valid ? 'PASSED' : 'FAILED'} for action '#{action}'"
+
+    valid
+  end
+
+  def valid_pre_action?(security_level, action)
+    case security_level
+    when Dnsruby::Message::SecurityLevel.SECURE
+      return true if %w[rollover deactivate].include? action
+    when Dnsruby::Message::SecurityLevel.INSECURE, Dnsruby::Message::SecurityLevel.BOGUS
+      return true if action == 'initialized'
+    end
+
+    false
+  end
+
+  def valid_post_action?(security_level, action)
+    secure_msg = Dnsruby::Message::SecurityLevel.SECURE
+    return true if action == 'deactivate' && security_level != secure_msg
+    return true if %w[rollover initialized].include?(action) && security_level == secure_msg
+
+    false
   end
 
   def pushable?
