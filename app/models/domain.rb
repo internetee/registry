@@ -167,6 +167,21 @@ class Domain < ApplicationRecord
   validate :validate_nameserver_ips
 
   validate :statuses_uniqueness
+
+  def dnssec_security_level(stubber: nil)
+    Dnsruby::Dnssec.reset
+
+    resolver = Dnsruby::Resolver.new(nameserver: ['8.8.8.8', '8.8.4.4'])
+    resolver.do_validation = true
+    resolver.do_caching = false
+    resolver.dnssec = true
+    Dnsruby::Recursor.clear_caches(resolver)
+    Dnsruby::Dnssec.add_trust_anchor(stubber.ds_rr) if stubber
+    recursor = Dnsruby::Recursor.new(resolver)
+    recursor.dnssec = true
+    recursor.query(name, 'A', 'IN').security_level
+  end
+
   def statuses_uniqueness
     return if statuses.uniq == statuses
     errors.add(:statuses, :taken)

@@ -115,6 +115,19 @@ class Dnskey < ApplicationRecord
     self.ds_key_tag = ((c & 0xFFFF) + (c >> 16)) & 0xFFFF
   end
 
+  def ds_rr
+    # Break the DNSSEC trust chain as we are not able to fake RRSIG's
+    Dnsruby::Dnssec.clear_trust_anchors
+    Dnsruby::Dnssec.clear_trusted_keys
+
+    # Basically let's configure domain as root anchor. We can still verify
+    # RRSIG's / DNSKEY targeted by DS of this domain
+    generate_digest
+    generate_ds_key_tag
+    Dnsruby::RR.create("#{domain.name}. 3600 IN DS #{ds_key_tag} #{ds_alg} " \
+    "#{ds_digest_type} #{ds_digest}")
+  end
+
   class << self
     def int_to_hex(s)
       s = s.to_s(16)

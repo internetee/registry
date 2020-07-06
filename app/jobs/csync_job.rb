@@ -50,7 +50,7 @@ class CsyncJob < Que::Job
     @results.keys.each do |domain|
       next unless qualified_for_monitoring?(domain, @results[domain])
 
-      CsyncRecord.by_domain_name(domain)&.record_new_scan(@results[domain][:ns].first)
+      CsyncRecord.by_domain_name(domain)&.record_new_scan(@results[domain][:ns].first, job: true)
     end
   end
 
