@@ -44,6 +44,15 @@ GIT
       libxml-ruby
 
 GIT
+  remote: https://github.com/internetee/lhv.git
+  revision: af0d3127bed6606ac50c44696bd56b09c096ac39
+  branch: remove-keystores-gem
+  specs:
+    lhv (0.1.0)
+      logger
+      nokogiri
+
+GIT
   remote: https://github.com/karlerikounapuu/dnsruby.git
   revision: f54986268ba3109ecf7a7af0d41a78cddfce9847
   branch: master
@@ -265,6 +274,7 @@ GEM
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    logger (1.4.2)
     loofah (2.5.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -517,6 +527,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails (= 5.0.5)
   kaminari
+  lhv!
   listen (= 3.2.1)
   mina (= 0.3.1)
   minitest (~> 5.14)
