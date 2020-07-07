@@ -115,6 +115,11 @@ class Dnskey < ApplicationRecord
     self.ds_key_tag = ((c & 0xFFFF) + (c >> 16)) & 0xFFFF
   end
 
+  def self.new_from_csync(cdnskey:, domain:)
+    flags, proto, alg, pub = cdnskey.strip.split(' ')
+    Dnskey.new(domain: domain, flags: flags, protocol: proto, alg: alg, public_key: pub)
+  end
+
   def ds_rr
     # Break the DNSSEC trust chain as we are not able to fake RRSIG's
     Dnsruby::Dnssec.clear_trust_anchors

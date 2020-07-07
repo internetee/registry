@@ -21,7 +21,7 @@ class CsyncJob < Que::Job
     @logger.info "CsyncJob: Reseting Csync state for '#{domain}'. Reason: " +
                  unqualification_reason(ns_ok, key_ok, result_types)
 
-    CsyncRecord.clear(domain)
+    CsyncRecord.where(domain: Domain.where(name: domain_name)).delete_all
 
     false
   end
