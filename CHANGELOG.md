@@ -1,3 +1,6 @@
+07.07.2020
+* Fixed legaldoc validation [#1634](https://github.com/internetee/registry/issues/1634)
+
 03.07.2020
 * 1-character domains are now valid but blocked by default [#1625](https://github.com/internetee/registry/issues/1625)
 
