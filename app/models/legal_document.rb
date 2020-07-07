@@ -28,17 +28,8 @@ class LegalDocument < ApplicationRecord
   end
 
   def val_body_length
-    if body.start_with? ENV['legal_documents_dir']
-      if File.exist? body
-        self.path = body
-        self.body = nil
-        return
-      end
-    end
-
     errors.add(:body, :length) if body.nil? || body.size < MIN_BODY_SIZE
   end
-
 
   def save_to_filesystem
     binary = Base64.decode64(body)
