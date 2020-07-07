@@ -14,8 +14,7 @@ class LegalDocument < ApplicationRecord
 
   belongs_to :documentable, polymorphic: true
 
-
-  validate :val_body_length, if: ->(file){ file.path.blank? && !Rails.env.staging?}
+  validate :val_body_length, if: ->(file) { file.path.blank? }
 
   before_create :add_creator
   before_save   :save_to_filesystem, if: :body
@@ -29,6 +28,14 @@ class LegalDocument < ApplicationRecord
   end
 
   def val_body_length
+    if body.start_with? ENV['legal_documents_dir']
+      if File.exist? body
+        self.path = body
+        self.body = nil
+        return
+      end
+    end
+
     errors.add(:body, :length) if body.nil? || body.size < MIN_BODY_SIZE
   end
 
