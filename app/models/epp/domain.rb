@@ -184,12 +184,10 @@ class Epp::Domain < Domain
   def add_legal_file_to_new frame
     legal_document_data = ::Deserializers::Xml::LegalDocument.new(frame).call
     return unless legal_document_data
+    return if legal_document_data[:body].starts_with?(ENV['legal_documents_dir'])
 
-    doc = LegalDocument.create(
-        documentable_type: Domain,
-        document_type:     legal_document_data[:type],
-        body:              legal_document_data[:body]
-    )
+    doc = LegalDocument.create(documentable_type: Domain, document_type: legal_document_data[:type],
+                               body: legal_document_data[:body])
     self.legal_documents = [doc]
 
     frame.css("legalDocument").first.content = doc.path if doc&.persisted?
@@ -543,6 +541,7 @@ class Epp::Domain < Domain
 
   def attach_legal_document(legal_document_data)
     return unless legal_document_data
+    return if legal_document_data[:body].starts_with?(ENV['legal_documents_dir'])
 
     legal_documents.create(
       document_type: legal_document_data[:type],
