@@ -1,3 +1,6 @@
+08.07.2020
+* Thorough email address validations and processing with truemail gem [#297](https://github.com/internetee/registry/issues/297)
+
 07.07.2020
 * Fixed legaldoc validation [#1634](https://github.com/internetee/registry/issues/1634)
 * Disabled collection cashe versioning [#1637](https://github.com/internetee/registry/pull/1637)
