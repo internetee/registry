@@ -62,6 +62,10 @@ if @cron_group == 'registry'
     rake 'domain:discard'
   end
 
+  every 10.minutes do
+    rake 'verify_email:all_domains'
+  end
+
   # Should be at least once every 4 days, since according to LHV specs:
   # "Unread messages older than 5 days are automatically scheduled for deletion"
   # https://partners.lhv.ee/en/connect/#messaging

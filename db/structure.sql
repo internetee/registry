@@ -33,10 +33,17 @@ CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION btree_gist; Type: COMMENT; Schema: -; Owner: -
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: -
 --
 
-COMMENT ON EXTENSION btree_gist IS 'support for indexing common datatypes in GiST';
+CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
 --
@@ -817,7 +824,99 @@ ALTER SEQUENCE public.domains_id_seq OWNED BY public.domains.id;
 
 
 --
--- Name: epp_sessions; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: email_address_verifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_address_verifications (
+    id bigint NOT NULL,
+    email public.citext NOT NULL,
+    verified_at timestamp without time zone,
+    success boolean DEFAULT false NOT NULL,
+    domain public.citext NOT NULL
+);
+
+
+--
+-- Name: email_address_verifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_address_verifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_address_verifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_address_verifications_id_seq OWNED BY public.email_address_verifications.id;
+
+
+--
+-- Name: email_addresses_validations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_addresses_validations (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    validated_at timestamp without time zone
+);
+
+
+--
+-- Name: email_addresses_validations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_addresses_validations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_addresses_validations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_addresses_validations_id_seq OWNED BY public.email_addresses_validations.id;
+
+
+--
+-- Name: email_addresses_verifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_addresses_verifications (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    validated_at timestamp without time zone
+);
+
+
+--
+-- Name: email_addresses_verifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_addresses_verifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_addresses_verifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_addresses_verifications_id_seq OWNED BY public.email_addresses_verifications.id;
+
+
+--
+-- Name: epp_sessions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.epp_sessions (
@@ -2492,21 +2591,42 @@ ALTER TABLE ONLY public.domain_transfers ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: domains id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domains ALTER COLUMN id SET DEFAULT nextval('public.domains_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: email_address_verifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_address_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_address_verifications_id_seq'::regclass);
+
+
+--
+-- Name: email_addresses_validations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_validations ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_validations_id_seq'::regclass);
+
+
+--
+-- Name: email_addresses_verifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_verifications_id_seq'::regclass);
+
+
+--
+-- Name: epp_sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.epp_sessions ALTER COLUMN id SET DEFAULT nextval('public.epp_sessions_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: invoice_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.invoice_items ALTER COLUMN id SET DEFAULT nextval('public.invoice_items_id_seq'::regclass);
@@ -2907,7 +3027,31 @@ ALTER TABLE ONLY public.domains
 
 
 --
--- Name: epp_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: email_address_verifications email_address_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_address_verifications
+    ADD CONSTRAINT email_address_verifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_addresses_validations email_addresses_validations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_validations
+    ADD CONSTRAINT email_addresses_validations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_addresses_verifications email_addresses_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_verifications
+    ADD CONSTRAINT email_addresses_verifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: epp_sessions epp_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.epp_sessions
@@ -2915,7 +3059,7 @@ ALTER TABLE ONLY public.epp_sessions
 
 
 --
--- Name: invoice_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: invoice_items invoice_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.invoice_items
@@ -3478,434 +3622,447 @@ CREATE INDEX index_domains_on_registrar_id ON public.domains USING btree (regist
 
 
 --
--- Name: index_domains_on_statuses; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_domains_on_statuses; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_domains_on_statuses ON public.domains USING gin (statuses);
 
 
 --
--- Name: index_epp_sessions_on_updated_at; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_email_address_verifications_on_domain; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_email_address_verifications_on_domain ON public.email_address_verifications USING btree (domain);
+
+
+--
+-- Name: index_epp_sessions_on_updated_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_epp_sessions_on_updated_at ON public.epp_sessions USING btree (updated_at);
 
 
 --
--- Name: index_invoice_items_on_invoice_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_invoice_items_on_invoice_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_invoice_items_on_invoice_id ON public.invoice_items USING btree (invoice_id);
 
 
 --
--- Name: index_invoices_on_buyer_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_invoices_on_buyer_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_invoices_on_buyer_id ON public.invoices USING btree (buyer_id);
 
 
 --
--- Name: index_legal_documents_on_checksum; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_legal_documents_on_checksum; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_legal_documents_on_checksum ON public.legal_documents USING btree (checksum);
 
 
 --
--- Name: index_legal_documents_on_documentable_type_and_documentable_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_legal_documents_on_documentable_type_and_documentable_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_legal_documents_on_documentable_type_and_documentable_id ON public.legal_documents USING btree (documentable_type, documentable_id);
 
 
 --
--- Name: index_log_account_activities_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_account_activities_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_account_activities_on_item_type_and_item_id ON public.log_account_activities USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_account_activities_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_account_activities_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_account_activities_on_whodunnit ON public.log_account_activities USING btree (whodunnit);
 
 
 --
--- Name: index_log_accounts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_accounts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_accounts_on_item_type_and_item_id ON public.log_accounts USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_accounts_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_accounts_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_accounts_on_whodunnit ON public.log_accounts USING btree (whodunnit);
 
 
 --
--- Name: index_log_bank_statements_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_bank_statements_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_bank_statements_on_item_type_and_item_id ON public.log_bank_statements USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_bank_statements_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_bank_statements_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_bank_statements_on_whodunnit ON public.log_bank_statements USING btree (whodunnit);
 
 
 --
--- Name: index_log_bank_transactions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_bank_transactions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_bank_transactions_on_item_type_and_item_id ON public.log_bank_transactions USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_bank_transactions_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_bank_transactions_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_bank_transactions_on_whodunnit ON public.log_bank_transactions USING btree (whodunnit);
 
 
 --
--- Name: index_log_blocked_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_blocked_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_blocked_domains_on_item_type_and_item_id ON public.log_blocked_domains USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_blocked_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_blocked_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_blocked_domains_on_whodunnit ON public.log_blocked_domains USING btree (whodunnit);
 
 
 --
--- Name: index_log_certificates_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_certificates_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_certificates_on_item_type_and_item_id ON public.log_certificates USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_certificates_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_certificates_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_certificates_on_whodunnit ON public.log_certificates USING btree (whodunnit);
 
 
 --
--- Name: index_log_contacts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_contacts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_contacts_on_item_type_and_item_id ON public.log_contacts USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_contacts_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_contacts_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_contacts_on_whodunnit ON public.log_contacts USING btree (whodunnit);
 
 
 --
--- Name: index_log_dnskeys_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_dnskeys_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_dnskeys_on_item_type_and_item_id ON public.log_dnskeys USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_dnskeys_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_dnskeys_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_dnskeys_on_whodunnit ON public.log_dnskeys USING btree (whodunnit);
 
 
 --
--- Name: index_log_domain_contacts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_domain_contacts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_domain_contacts_on_item_type_and_item_id ON public.log_domain_contacts USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_domain_contacts_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_domain_contacts_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_domain_contacts_on_whodunnit ON public.log_domain_contacts USING btree (whodunnit);
 
 
 --
--- Name: index_log_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_domains_on_item_type_and_item_id ON public.log_domains USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_domains_on_whodunnit ON public.log_domains USING btree (whodunnit);
 
 
 --
--- Name: index_log_invoice_items_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_invoice_items_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_invoice_items_on_item_type_and_item_id ON public.log_invoice_items USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_invoice_items_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_invoice_items_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_invoice_items_on_whodunnit ON public.log_invoice_items USING btree (whodunnit);
 
 
 --
--- Name: index_log_invoices_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_invoices_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_invoices_on_item_type_and_item_id ON public.log_invoices USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_invoices_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_invoices_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_invoices_on_whodunnit ON public.log_invoices USING btree (whodunnit);
 
 
 --
--- Name: index_log_nameservers_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_nameservers_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_nameservers_on_item_type_and_item_id ON public.log_nameservers USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_nameservers_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_nameservers_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_nameservers_on_whodunnit ON public.log_nameservers USING btree (whodunnit);
 
 
 --
--- Name: index_log_notifications_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_notifications_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_notifications_on_item_type_and_item_id ON public.log_notifications USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_notifications_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_notifications_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_notifications_on_whodunnit ON public.log_notifications USING btree (whodunnit);
 
 
 --
--- Name: index_log_registrant_verifications_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_registrant_verifications_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_registrant_verifications_on_item_type_and_item_id ON public.log_registrant_verifications USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_registrant_verifications_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_registrant_verifications_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_registrant_verifications_on_whodunnit ON public.log_registrant_verifications USING btree (whodunnit);
 
 
 --
--- Name: index_log_registrars_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_registrars_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_registrars_on_item_type_and_item_id ON public.log_registrars USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_registrars_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_registrars_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_registrars_on_whodunnit ON public.log_registrars USING btree (whodunnit);
 
 
 --
--- Name: index_log_reserved_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_reserved_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_reserved_domains_on_item_type_and_item_id ON public.log_reserved_domains USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_reserved_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_reserved_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_reserved_domains_on_whodunnit ON public.log_reserved_domains USING btree (whodunnit);
 
 
 --
--- Name: index_log_settings_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_settings_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_settings_on_item_type_and_item_id ON public.log_settings USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_settings_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_settings_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_settings_on_whodunnit ON public.log_settings USING btree (whodunnit);
 
 
 --
--- Name: index_log_users_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_users_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_users_on_item_type_and_item_id ON public.log_users USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_users_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_users_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_users_on_whodunnit ON public.log_users USING btree (whodunnit);
 
 
 --
--- Name: index_nameservers_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_nameservers_on_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_nameservers_on_domain_id ON public.nameservers USING btree (domain_id);
 
 
 --
--- Name: index_notifications_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_notifications_on_registrar_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_notifications_on_registrar_id ON public.notifications USING btree (registrar_id);
 
 
 --
--- Name: index_payment_orders_on_invoice_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_payment_orders_on_invoice_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_payment_orders_on_invoice_id ON public.payment_orders USING btree (invoice_id);
 
 
 --
--- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_prices_on_zone_id ON public.prices USING btree (zone_id);
 
 
 --
--- Name: index_registrant_verifications_on_created_at; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_registrant_verifications_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_registrant_verifications_on_created_at ON public.registrant_verifications USING btree (created_at);
 
 
 --
--- Name: index_registrant_verifications_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_registrant_verifications_on_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_verifications USING btree (domain_id);
 
 
 --
--- Name: index_settings_on_thing_type_and_thing_id_and_var; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_settings_on_thing_type_and_thing_id_and_var; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_settings_on_thing_type_and_thing_id_and_var ON public.settings USING btree (thing_type, thing_id, var);
 
 
 --
--- Name: index_users_on_identity_code; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_users_on_identity_code; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_users_on_identity_code ON public.users USING btree (identity_code);
 
 
 --
--- Name: index_users_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_users_on_registrar_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_id);
 
 
 --
--- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING btree (item_type, item_id);
 
 
 --
--- Name: index_whois_records_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_whois_records_on_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_whois_records_on_domain_id ON public.whois_records USING btree (domain_id);
 
 
 --
--- Name: index_whois_records_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_whois_records_on_registrar_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_whois_records_on_registrar_id ON public.whois_records USING btree (registrar_id);
 
 
 --
--- Name: log_contacts_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: log_contacts_object_legacy_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX log_contacts_object_legacy_id ON public.log_contacts USING btree ((((object ->> 'legacy_id'::text))::integer));
 
 
 --
--- Name: log_dnskeys_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: log_dnskeys_object_legacy_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX log_dnskeys_object_legacy_id ON public.log_contacts USING btree ((((object ->> 'legacy_domain_id'::text))::integer));
 
 
 --
--- Name: log_domains_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: log_domains_object_legacy_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX log_domains_object_legacy_id ON public.log_contacts USING btree ((((object ->> 'legacy_id'::text))::integer));
 
 
 --
--- Name: log_nameservers_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: log_nameservers_object_legacy_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX log_nameservers_object_legacy_id ON public.log_contacts USING btree ((((object ->> 'legacy_domain_id'::text))::integer));
 
 
 --
--- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_data_migrations ON public.data_migrations USING btree (version);
+
+
+--
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING btree (version);
 
-
 --
--- Name: contacts_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: contacts contacts_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.contacts
@@ -3913,7 +4070,7 @@ ALTER TABLE ONLY public.contacts
 
 
 --
--- Name: domain_contacts_contact_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: domain_contacts domain_contacts_contact_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domain_contacts
@@ -4535,6 +4692,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200505150413'),
 ('20200518104105'),
 ('20200529115011'),
+('20200605100827'),
+('20200610090110'),
 ('20200630081231');
-
 
