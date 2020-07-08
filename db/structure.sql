@@ -3636,20 +3636,6 @@ CREATE INDEX index_email_address_verifications_on_domain ON public.email_address
 
 
 --
--- Name: index_email_address_verifications_on_email; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_email_address_verifications_on_email ON public.email_address_verifications USING btree (email);
-
-
---
--- Name: index_email_addresses_validations_on_email; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_email_addresses_validations_on_email ON public.email_addresses_validations USING btree (email);
-
-
---
 -- Name: index_epp_sessions_on_updated_at; Type: INDEX; Schema: public; Owner: -
 --
 
