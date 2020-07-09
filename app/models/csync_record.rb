@@ -24,34 +24,33 @@ class CsyncRecord < ApplicationRecord
   end
 
   def assign_scanner_data!(result)
+    state = result[:type]
     self.last_scan = Time.zone.now
     self.times_scanned = (persisted? && cdnskey != result[:cdnskey] ? 1 : times_scanned + 1)
     self.cdnskey = result[:cdnskey]
-    self.action = determine_csync_intention(result[:type], disable_requested?(result[:cdnskey]))
+    self.action = initializes_dnssec?(state) ? 'initialized' : determine_csync_intention(state)
   end
 
   def dnskey
     key = Dnskey.new_from_csync(domain: domain, cdnskey: cdnskey)
-    @log.info "DNSKEY not valid. #{key.errors.full_messages.join('. ')}. Exiting" unless key.valid?
+    @log.info "DNSKEY not valid. #{key.errors.full_messages.join('. ')}." unless key.valid?
 
     key
   end
 
   def process_new_dnskey
-    return unless dnssec_validates?(action)
+    return unless dnssec_validates?
 
     if dnskey.save
-      @log.info "Failed to save DNSKEY. Errors: #{dnskey.errors.full_messages.join('. ')}"
-    else
       finalize_and_notify
+    else
+      @log.info "Failed to save DNSKEY. Errors: #{dnskey.errors.full_messages.join('. ')}"
     end
   end
 
-  def dnssec_validates?(action)
+  def dnssec_validates?
     return false unless dnskey.valid?
-    return true if valid_security_level?(action) && valid_security_level?(action, post: true)
-
-    false
+    return true if valid_security_level? && valid_security_level?(post: true)
   end
 
   def finalize_and_notify
@@ -60,7 +59,7 @@ class CsyncRecord < ApplicationRecord
     CsyncRecord.where(domain: domain).destroy_all
   end
 
-  def valid_security_level?(action, post: false)
+  def valid_security_level?(post: false)
     valid = valid_pre_action?(domain.dnssec_security_level, action)
     valid = valid_post_action?(domain.dnssec_security_level(stubber: dnskey), action) if post
 
@@ -77,27 +76,20 @@ class CsyncRecord < ApplicationRecord
     when Dnsruby::Message::SecurityLevel.INSECURE, Dnsruby::Message::SecurityLevel.BOGUS
       return true if action == 'initialized'
     end
-
-    false
   end
 
   def valid_post_action?(security_level, action)
     secure_msg = Dnsruby::Message::SecurityLevel.SECURE
     return true if action == 'deactivate' && security_level != secure_msg
     return true if %w[rollover initialized].include?(action) && security_level == secure_msg
-
-    false
   end
 
   def pushable?
-    return true if domain.dnskeys.any?
-    return true if domain.dnskeys.empty? && times_scanned >= SCAN_CYCLES && !disable_requested?
-
-    false
+    return true if domain.dnskeys.any? || times_scanned >= SCAN_CYCLES
   end
 
-  def disable_requested?(pubkey = nil)
-    ['0 3 0 AA==', '0 3 0 0'].include?(pubkey || cdnskey)
+  def disable_requested?
+    ['0 3 0 AA==', '0 3 0 0'].include? dnskey.public_key
   end
 
   def remove_dnskeys
@@ -115,7 +107,7 @@ class CsyncRecord < ApplicationRecord
   end
 
   def validate_unique_pub_key
-    return unless domain.dnskeys.where(public_key: dnskey.public_key).any?
+    return true unless domain.dnskeys.where(public_key: dnskey.public_key).any?
 
     errors.add(:public_key, 'already tied this domain')
   end
@@ -126,10 +118,13 @@ class CsyncRecord < ApplicationRecord
     CsyncRecord.find_or_initialize_by(domain: domain) if domain
   end
 
-  def determine_csync_intention(type, disable_requested)
-    return 'initialized' unless disable_requested && type == 'insecure'
-    return 'deactivate' if disable_requested
+  def determine_csync_intention(scan_state)
+    return unless domain.dnskeys.any? && scan_state == 'secure'
 
-    'rollover' if domain.dnskeys.any? && type == 'secure'
+    disable_requested? ? 'deactivate' : 'rollover'
+  end
+
+  def initializes_dnssec?(scan_state)
+    true if domain.dnskeys.empty? && !disable_requested? && scan_state == 'insecure'
   end
 end
