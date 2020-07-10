@@ -85,11 +85,3 @@ invalid:
   auth_info: any
   registrar: bestnames
   uuid: bd80c0f9-26ee-49e0-a2cb-2311d931c433
-
-invalid_email:
-  name: any
-  code: invalid_email
-  email: invalid@invalid.
-  auth_info: any
-  registrar: bestnames
-  uuid: fa8c4f51-a221-4628-b3c6-47995f4edea3

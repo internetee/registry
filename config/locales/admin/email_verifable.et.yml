@@ -1,5 +1,0 @@
-et:
-  email_verifable:
-    email_smtp_check_error: Eposti aadressi ei leitud (SMTP viga)
-    email_mx_check_error: Eposti aadressi domeeni ei leitud
-    email_regex_check_error: Eposti aadress on vigane

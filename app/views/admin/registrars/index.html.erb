@@ -28,9 +28,6 @@
                     <th class="col-xs-4">
                         <%= t(:test_registrar) %>
                     </th>
-                    <th class="col-xs-4">
-                        <%= t(:emails) %>
-                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,12 +44,6 @@
                         </td>
                         <td>
                             <%= "#{x.test_registrar}" %>
-                        </td>
-                        <td>
-                            <%= verified_email_span(x.email_verification) %>
-                            <% if x[:billing_email].present? %>
-                                <%= verified_email_span(x.billing_email_verification) %>
-                            <% end %>
                         </td>
                     </tr>
                 <% end %>

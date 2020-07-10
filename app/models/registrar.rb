@@ -1,7 +1,6 @@
 class Registrar < ApplicationRecord
   include Versions # version/registrar_version.rb
   include Concerns::Registrar::BookKeeping
-  include Concerns::EmailVerifable
   include Concerns::Registrar::LegalDoc
 
   has_many :domains, dependent: :restrict_with_error
@@ -30,11 +29,14 @@ class Registrar < ApplicationRecord
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
 
+  validate :forbid_special_code
+
   attribute :vat_rate, ::Type::VATRate.new
   after_initialize :set_defaults
 
-  validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
-  validate :correct_billing_email_format
+  validates :email, email_format: { message: :invalid },
+            allow_blank: true, if: proc { |c| c.will_save_change_to_email? }
+  validates :billing_email, email_format: { message: :invalid }, allow_blank: true
 
   alias_attribute :contact_email, :email
 
