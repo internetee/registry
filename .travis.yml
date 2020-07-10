@@ -2,6 +2,7 @@ language: ruby
 cache: bundler
 env:
   - DB=postgresql
+bundler_args: --without development staging production
 before_install:
   - "wget -N http://chromedriver.storage.googleapis.com/2.43/chromedriver_linux64.zip -P ~/"
   - "unzip ~/chromedriver_linux64.zip -d ~/"
@@ -9,8 +10,6 @@ before_install:
   - "sudo mv -f ~/chromedriver /usr/local/share/"
   - "sudo chmod +x /usr/local/share/chromedriver"
   - "sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver"
-  - "bundle config set without 'development staging production'"
-  - "bundle config set deployment '[secure]'"
 before_script:
   - "cp config/application.yml.sample config/application.yml"
   - "echo \"openssl_config_path: 'test/fixtures/files/test_ca/openssl.cnf'\" >> config/application.yml"

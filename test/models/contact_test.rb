@@ -3,11 +3,6 @@ require 'test_helper'
 class ContactTest < ActiveSupport::TestCase
   setup do
     @contact = contacts(:john)
-    @old_validation_type = Truemail.configure.default_validation_type
-  end
-
-  teardown do
-    Truemail.configure.default_validation_type = @old_validation_type
   end
 
   def test_valid_contact_fixture_is_valid
@@ -66,37 +61,14 @@ class ContactTest < ActiveSupport::TestCase
     assert contact.invalid?
   end
 
-  def test_email_verification_valid
+  def test_validates_email_format
     contact = valid_contact
-    contact.email = 'info@internet.ee'
+
+    contact.email = 'invalid'
+    assert contact.invalid?
+
+    contact.email = 'valid@registrar.test'
     assert contact.valid?
-  end
-
-  def test_email_verification_smtp_error
-    Truemail.configure.default_validation_type = :smtp
-
-    contact = valid_contact
-    contact.email = 'somecrude1337joke@internet.ee'
-    assert contact.invalid?
-    assert_equal I18n.t('email_verifable.email_smtp_check_error'), contact.errors.messages[:email].first
- end
-
-  def test_email_verification_mx_error
-    Truemail.configure.default_validation_type = :mx
-
-    contact = valid_contact
-    contact.email = 'somecrude31337joke@somestrange31337domain.ee'
-    assert contact.invalid?
-    assert_equal I18n.t('email_verifable.email_mx_check_error'), contact.errors.messages[:email].first
-  end
-
-  def test_email_verification_regex_error
-    Truemail.configure.default_validation_type = :regex
-
-    contact = valid_contact
-    contact.email = 'some@strangesentence@internet.ee'
-    assert contact.invalid?
-    assert_equal I18n.t('email_verifable.email_regex_check_error'), contact.errors.messages[:email].first
   end
 
   def test_invalid_without_phone
@@ -283,16 +255,6 @@ class ContactTest < ActiveSupport::TestCase
     @contact.save!
 
     assert_equal domain.whois_record.try(:json).try(:[], 'registrant'), @contact.name
-  end
-
-  def test_creates_email_verification_in_unicode
-    unicode_email = 'suur@äri.ee'
-    punycode_email = Contact.unicode_to_punycode(unicode_email)
-
-    @contact.email = punycode_email
-    @contact.save
-
-    assert_equal @contact.email_verification.email, unicode_email
   end
 
   private

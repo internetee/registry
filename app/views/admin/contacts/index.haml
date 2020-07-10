@@ -63,10 +63,6 @@
           .form-group
             = label_tag :only_no_country_code, "Ident CC missing"
             = check_box_tag :only_no_country_code, '1',params[:only_no_country_code].eql?('1'), style: 'width:auto;height:auto;float:right'
-        .col-md-3
-          .form-group
-            = label_tag :email_verification_failed, "Email verification failed"
-            = check_box_tag :email_verification_failed, '1',params[:email_verification_failed].eql?('1'), style: 'width:auto;height:auto;float:right'
 
       .row
         .col-md-3{style: 'padding-top: 25px;float:right;'}
@@ -89,9 +85,7 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'ident', t(:ident))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'email', t(:email))
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'created_at', t(:created_at))
+              = sort_link(@q, 'email', t(:created_at))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'registrar_name', t(:registrar_name))
         %tbody
@@ -100,7 +94,6 @@
               %td= link_to(contact, admin_contact_path(contact))
               %td= contact.code
               %td= ident_for(contact)
-              %td= verified_email_span(contact.email_verification)
               %td= l(contact.created_at, format: :short)
               %td
                 - if contact.registrar

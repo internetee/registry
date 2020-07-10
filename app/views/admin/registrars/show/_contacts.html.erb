@@ -15,9 +15,7 @@
             <dd><%= @registrar.phone %></dd>
 
             <dt><%= Registrar.human_attribute_name :email %></dt>
-            <dd>
-                <%= verified_email_span(@registrar.email_verification) %>
-            </dd>
+            <dd><%= @registrar.email %></dd>
         </dl>
     </div>
 </div>

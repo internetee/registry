@@ -15,9 +15,7 @@
             <dd><%= registrar.accounting_customer_code %></dd>
 
             <dt><%= Registrar.human_attribute_name :billing_email %></dt>
-            <dd>
-                <%= verified_email_span(registrar.billing_email_verification) %>
-            </dd>
+            <dd><%= registrar.billing_email %></dd>
 
             <dt><%= Registrar.human_attribute_name :reference_no %></dt>
             <dd><%= registrar.reference_no %></dd>

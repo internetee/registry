@@ -17,5 +17,5 @@ Airbrake.configure do |config|
     end
   config.environment = ENV['airbrake_env'] || Rails.env
   config.ignore_environments = %w[test]
-  config.blocklist_keys = Rails.application.config.filter_parameters
+  config.blacklist_keys = Rails.application.config.filter_parameters
 end

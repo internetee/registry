@@ -11,12 +11,10 @@ gem 'uglifier'
 gem 'figaro', '1.1.1'
 
 # model related
-gem 'activerecord-import'
 gem 'paper_trail', '~> 10.3'
 gem 'pg',                        '1.2.2'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 2.3'
-gem 'truemail', '~> 1.7' # validates email by regexp, mail server existence and address existence
 gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and RFC 3696
 
 # 0.7.3 is the latest for Rails 4.2, however, it is absent on Rubygems server
@@ -41,7 +39,7 @@ gem 'grape'
 # registry specfic
 gem 'data_migrate', '~> 6.1'
 gem 'isikukood' # for EE-id validation
-gem 'simpleidn', '0.1.1' # For punycode
+gem 'simpleidn', '0.0.9' # For punycode
 gem 'money-rails'
 gem 'whenever', '0.9.4', require: false
 
@@ -69,7 +67,7 @@ gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'lhv', github: 'internetee/lhv', branch: :master
 gem 'domain_name'
 gem 'haml', '~> 5.0'
-gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
+gem 'wkhtmltopdf-binary'
 
 gem 'directo', github: 'internetee/directo', branch: 'master'
 
