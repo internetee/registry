@@ -29,11 +29,9 @@ Truemail.configure do |config|
   # Truemail.validate('email@email.com') call without with-parameter
   # Available validation types: :regex, :mx, :smtp
   if Rails.env.production?
-    config.default_validation_type = :smtp
-  elsif Rails.env.test?
-    config.default_validation_type = :regex
-  else
     config.default_validation_type = :mx
+  else
+    config.default_validation_type = :regex
   end
 
   # Optional parameter. You can predefine which type of validation will be used for domains.

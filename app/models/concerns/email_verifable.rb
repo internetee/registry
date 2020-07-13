@@ -75,6 +75,7 @@ module Concerns
       process_result(result: result, field: :billing_email)
     end
 
+    # rubocop:disable Metrics/LineLength
     def process_result(result:, field:)
       case result[:errors].keys.first
       when :smtp
@@ -85,5 +86,6 @@ module Concerns
         errors.add(field, I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'))
       end
     end
+    # rubocop:enable Metrics/LineLength
   end
 end
