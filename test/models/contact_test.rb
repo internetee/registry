@@ -66,9 +66,25 @@ class ContactTest < ActiveSupport::TestCase
 
     contact.email = 'invalid'
     assert contact.invalid?
+    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_smtp_check_error'), contact.errors.messages[:email].first
+ end
 
-    contact.email = 'valid@registrar.test'
-    assert contact.valid?
+  def test_email_verification_mx_error
+    Truemail.configure.default_validation_type = :mx
+
+    contact = valid_contact
+    contact.email = 'somecrude31337joke@somestrange31337domain.ee'
+    assert contact.invalid?
+    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_mx_check_error'), contact.errors.messages[:email].first
+  end
+
+  def test_email_verification_regex_error
+    Truemail.configure.default_validation_type = :regex
+
+    contact = valid_contact
+    contact.email = 'some@strangesentence@internet.ee'
+    assert contact.invalid?
+    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'), contact.errors.messages[:email].first
   end
 
   def test_invalid_without_phone

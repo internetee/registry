@@ -43,15 +43,25 @@ class RegistrarTest < ActiveSupport::TestCase
 
     registrar.email = 'invalid'
     assert registrar.invalid?
+    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_smtp_check_error'), registrar.errors.messages[:email].first
+  end
 
-    registrar.email = 'valid@email.test'
-    assert registrar.valid?
+  def test_email_verification_mx_error
+    Truemail.configure.default_validation_type = :mx
+
+    registrar = valid_registrar
+    registrar.email = 'somecrude31337joke@somestrange31337domain.ee'
+    registrar.billing_email = nil
+
+    assert registrar.invalid?
+    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_mx_check_error'), registrar.errors.messages[:email].first
   end
 
   def test_invalid_without_accounting_customer_code
     registrar = valid_registrar
     registrar.accounting_customer_code = ''
     assert registrar.invalid?
+    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'), registrar.errors.messages[:email].first
   end
 
   def test_optional_billing_email
@@ -65,8 +75,53 @@ class RegistrarTest < ActiveSupport::TestCase
 
     registrar.billing_email = 'invalid'
     assert registrar.invalid?
+    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_smtp_check_error'), registrar.errors.messages[:billing_email].first
+  end
 
-    registrar.billing_email = 'valid@email.test'
+  def test_billing_email_verification_mx_error
+    Truemail.configure.default_validation_type = :mx
+
+    registrar = valid_registrar
+    registrar.billing_email = 'somecrude31337joke@somestrange31337domain.ee'
+
+    assert registrar.invalid?
+    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_mx_check_error'), registrar.errors.messages[:billing_email].first
+  end
+
+  def test_billing_email_verification_regex_error
+    Truemail.configure.default_validation_type = :regex
+
+    registrar = valid_registrar
+    registrar.billing_email = 'some@strangesentence@internet.ee'
+
+    assert registrar.invalid?
+    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'), registrar.errors.messages[:billing_email].first
+  end
+
+  def test_creates_email_verification_in_unicode
+    unicode_email = 'suur@äri.ee'
+    punycode_email = Registrar.unicode_to_punycode(unicode_email)
+    unicode_billing_email = 'billing@äri.ee'
+    punycode_billing_email = Registrar.unicode_to_punycode(unicode_billing_email)
+
+    registrar = valid_registrar
+    registrar.email = punycode_email
+    registrar.billing_email = punycode_billing_email
+    registrar.save
+
+    assert_equal registrar.email_verification.email, unicode_email
+    assert_equal registrar.billing_email_verification.email, unicode_billing_email
+  end
+
+  def test_invalid_without_accounting_customer_code
+    registrar = valid_registrar
+    registrar.accounting_customer_code = ''
+    assert registrar.invalid?
+  end
+
+  def test_optional_billing_email
+    registrar = valid_registrar
+    registrar.billing_email = ''
     assert registrar.valid?
   end
 

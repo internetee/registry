@@ -77,7 +77,10 @@ class Epp::Contact < Contact
         [:email, :invalid],
         [:country_code, :invalid],
         [:code, :invalid],
-        [:code, :too_long_contact_code]
+        [:code, :too_long_contact_code],
+        [:email, :email_smtp_check_error],
+        [:email, :email_mx_check_error],
+        [:email, :email_regex_check_error]
       ],
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
