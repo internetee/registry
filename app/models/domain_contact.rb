@@ -6,6 +6,8 @@ class DomainContact < ApplicationRecord
   belongs_to :contact
   belongs_to :domain
 
+  scope :admin, -> { where(type: 'AdminDomainContact') }
+
   attr_accessor :value_typeahead
 
   self.ignored_columns = %w[legacy_domain_id legacy_contact_id]

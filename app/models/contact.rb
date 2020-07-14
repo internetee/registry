@@ -12,6 +12,8 @@ class Contact < ApplicationRecord
   belongs_to :registrar, required: true
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
+  has_many :admin_domains, -> { merge(DomainContact.admin) }, source: :domain,
+                                                              through: :domain_contacts
   has_many :legal_documents, as: :documentable
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
   has_many :actions, dependent: :destroy
@@ -252,6 +254,16 @@ class Contact < ApplicationRecord
     def registrant_user_contacts(registrant_user)
       registrant_user_direct_contacts(registrant_user)
         .or(registrant_user_indirect_contacts(registrant_user))
+      # .or(registrant_user_indirect_admin_registrar_contacts(registrant_user))
+    end
+
+    def registrant_user_indirect_admin_registrar_contacts(registrant_user)
+      indirect_contacts = registrant_user_indirect_contacts(registrant_user)
+      admin_contact_ids = admin_contact_ids(indirect_contacts)
+      reg_contact_ids = registrar_contact_ids(indirect_contacts)
+
+      total_ids = (admin_contact_ids + reg_contact_ids).uniq
+      where(id: total_ids)
     end
 
     def registrant_user_direct_contacts(registrant_user)
@@ -263,10 +275,21 @@ class Contact < ApplicationRecord
 
     def registrant_user_indirect_contacts(registrant_user)
       ident = registrant_user.companies.collect(&:registration_number)
+      # ident = ['12345678']
 
       where(ident_type: ORG,
             ident: ident,
             ident_country_code: registrant_user.country.alpha2)
+    end
+
+    def admin_contact_ids(indirect_contacts)
+      domains = indirect_contacts.map(&:admin_domains).flatten
+      domains.map(&:contacts).flatten.collect(&:id)
+    end
+
+    def registrar_contact_ids(indirect_contacts)
+      registrar_domains = indirect_contacts.map(&:registrant_domains).flatten
+      registrar_domains.map(&:contacts).flatten.collect(&:id)
     end
   end
 
