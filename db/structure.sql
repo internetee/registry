@@ -3195,7 +3195,15 @@ ALTER TABLE ONLY public.blocked_domains
 
 
 --
--- Name: uniq_contact_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: domain_contacts uniq_contact_of_type_per_domain; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_contacts
+    ADD CONSTRAINT uniq_contact_of_type_per_domain UNIQUE (domain_id, type, contact_id);
+
+
+--
+-- Name: contacts uniq_contact_uuid; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.contacts
@@ -3203,7 +3211,7 @@ ALTER TABLE ONLY public.contacts
 
 
 --
--- Name: uniq_domain_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: domains uniq_domain_uuid; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domains
@@ -3211,7 +3219,15 @@ ALTER TABLE ONLY public.domains
 
 
 --
--- Name: uniq_reserved_domains_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: nameservers uniq_hostname_per_domain; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nameservers
+    ADD CONSTRAINT uniq_hostname_per_domain UNIQUE (domain_id, hostname);
+
+
+--
+-- Name: reserved_domains uniq_reserved_domains_name; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.reserved_domains
@@ -3219,7 +3235,7 @@ ALTER TABLE ONLY public.reserved_domains
 
 
 --
--- Name: uniq_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: auctions uniq_uuid; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.auctions
@@ -4535,6 +4551,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200505150413'),
 ('20200518104105'),
 ('20200529115011'),
-('20200630081231');
+('20200630081231'),
+('20200714115338');
 
 
