@@ -1,5 +1,5 @@
-08.07.2020
-* Thorough email address validations and processing with truemail gem [#297](https://github.com/internetee/registry/issues/297)
+15.07.2020
+* Reapplied race condition fix after fixing the data in prod env [#1612](https://github.com/internetee/registry/issues/1612)
 
 07.07.2020
 * Fixed legaldoc validation [#1634](https://github.com/internetee/registry/issues/1634)
