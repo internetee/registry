@@ -150,13 +150,12 @@ class ContactTest < ActiveSupport::TestCase
   end
 
   def test_returns_registrant_user_indirect_contacts
-    @contact.update!(ident_type: Contact::ORG)
-    assert_equal '1234', @contact.ident
+    @contact.update!(ident_type: Contact::ORG, ident: '1234321')
     assert_equal 'US', @contact.ident_country_code
-    registrant_user = RegistrantUser.new(registrant_ident: 'US-1234')
+    registrant_user = RegistrantUser.new(registrant_ident: 'US-1234321')
 
-    registrant_user.stub(:companies, [OpenStruct.new(registration_number: '1234')]) do
-      assert_equal [@contact], Contact.registrant_user_contacts(registrant_user)
+    registrant_user.stub(:companies, [OpenStruct.new(registration_number: '1234321')]) do
+      assert_equal registrant_user.contacts, Contact.registrant_user_contacts(registrant_user)
     end
   end
 

@@ -214,6 +214,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   def test_unmanaged_contact_cannot_be_updated
     assert_equal 'US-1234', @user.registrant_ident
     @contact.update!(ident: '12345')
+    companies = Contact.where(ident_type: 'org')
+    companies.update_all(ident: '78964521')
+    companies.reload
 
     patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'new name' },
           as: :json,

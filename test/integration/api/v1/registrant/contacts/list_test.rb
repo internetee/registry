@@ -35,8 +35,8 @@ class RegistrantApiV1ContactListTest < ActionDispatch::IntegrationTest
     get api_v1_registrant_contacts_path, as: :json, headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     response_json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal 1, response_json.size
-    assert_equal 'acme-ltd-001', response_json.first[:code]
+    assert_equal @user.contacts.count, response_json.size
+    assert_includes response_json.map{ |hash| hash[:code] }, @contact.code
   end
 
   def test_returns_direct_contacts_when_company_register_is_unavailable
