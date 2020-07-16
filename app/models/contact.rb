@@ -12,8 +12,6 @@ class Contact < ApplicationRecord
   belongs_to :registrar, required: true
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
-  has_many :admin_domains, -> { merge(DomainContact.admin) }, source: :domain,
-                                                              through: :domain_contacts
   has_many :legal_documents, as: :documentable
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
   has_many :actions, dependent: :destroy
@@ -264,7 +262,6 @@ class Contact < ApplicationRecord
 
     def registrant_user_company_contacts(registrant_user)
       ident = registrant_user.companies.collect(&:registration_number)
-      # ident = ['12345678']
 
       where(ident_type: ORG,
             ident: ident,
