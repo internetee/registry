@@ -7,6 +7,7 @@ class Contact < ApplicationRecord
   include Concerns::Contact::Transferable
   include Concerns::Contact::Identical
   include Concerns::Contact::Disclosable
+  include Concerns::EmailVerifable
 
   belongs_to :original, class_name: self.name
   belongs_to :registrar, required: true
@@ -22,6 +23,11 @@ class Contact < ApplicationRecord
 
   accepts_nested_attributes_for :legal_documents
 
+  scope :email_verification_failed, lambda {
+    joins('LEFT JOIN email_address_verifications emv ON contacts.email = emv.email')
+      .where('success = false and verified_at IS NOT NULL')
+  }
+
   validates :name, :email, presence: true
   validates :street, :city, :zip, :country_code, presence: true, if: lambda {
     self.class.address_processing?
@@ -29,8 +35,7 @@ class Contact < ApplicationRecord
 
   validates :phone, presence: true, e164: true, phone: true
 
-  validates :email, format: /@/
-  validates :email, email_format: { message: :invalid }, if: proc { |c| c.will_save_change_to_email? }
+  validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
 
   validates :code,
     uniqueness: { message: :epp_id_taken },

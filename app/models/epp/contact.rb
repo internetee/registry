@@ -60,6 +60,7 @@ class Epp::Contact < Contact
 
   delegate :ident_attr_valid?, to: :class
 
+  # rubocop:disable Style/SymbolArray
   def epp_code_map
     {
       '2003' => [ # Required parameter missing
@@ -77,7 +78,10 @@ class Epp::Contact < Contact
         [:email, :invalid],
         [:country_code, :invalid],
         [:code, :invalid],
-        [:code, :too_long_contact_code]
+        [:code, :too_long_contact_code],
+        [:email, :email_smtp_check_error],
+        [:email, :email_mx_check_error],
+        [:email, :email_regex_check_error],
       ],
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
@@ -87,6 +91,7 @@ class Epp::Contact < Contact
       ]
     }
   end
+  # rubocop:enable Style/SymbolArray
 
   def attach_legal_document(legal_document_data)
     return unless legal_document_data

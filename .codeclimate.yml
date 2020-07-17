@@ -23,6 +23,10 @@ plugins:
   rubocop:
     enabled: true
     channel: rubocop-0-74
+checks:
+  method-lines:
+    config:
+      threshold: 40
 exclude_patterns:
   - "app/models/version/"
   - "bin/"
