@@ -4,6 +4,9 @@
 #
 # Be sure to restart your server when you modify settings.
 #
+# Log directory for gems not using syslog
+log_dir: /home/app/current/log
+
 
 #
 # SMTP configuration (for Admin/EPP/Registrar/Registrant servers)

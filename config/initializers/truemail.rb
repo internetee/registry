@@ -72,6 +72,6 @@ Truemail.configure do |config|
   # stdout, write to file or both of these. Tracking event by default is :error
   # Available tracking event: :all, :unrecognized_error, :recognized_error, :error
   unless Rails.env.test?
-    config.logger = { tracking_event: :all, stdout: true, log_absolute_path: Rails.root.join('log', 'truemail.log') }
+    config.logger = { tracking_event: :all, stdout: true, log_absolute_path: "#{ENV['log_dir']}/truemail.log" }
   end
 end
