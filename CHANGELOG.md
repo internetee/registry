@@ -1,3 +1,6 @@
+17.07.2020
+* Added turemail gem for validating email addresses syntactically and on MX record level [#297](https://github.com/internetee/registry/issues/297)
+
 15.07.2020
 * Reapplied race condition fix after fixing the data in prod env [#1612](https://github.com/internetee/registry/issues/1612)
 
