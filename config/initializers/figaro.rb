@@ -5,5 +5,4 @@ Figaro.require_keys(%w[
   time_zone
   action_mailer_default_host
   action_mailer_default_from
-  log_dir
 ])
