@@ -160,8 +160,9 @@ class EppDomainDeleteBaseTest < EppTestCase
     assert_epp_response :completed_successfully
   end
 
-  def test_legal_document_is_required
+  def test_legal_document_is_optional
     assert_equal 'shop.test', @domain.name
+    Setting.request_confirmation_on_domain_deletion_enabled = false
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -178,7 +179,7 @@ class EppDomainDeleteBaseTest < EppTestCase
 
     post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
-    assert_epp_response :required_parameter_missing
+    assert_epp_response :completed_successfully
   end
 
   def test_domain_cannot_be_deleted_when_explicitly_prohibited_by_registrar

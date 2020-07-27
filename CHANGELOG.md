@@ -1,5 +1,53 @@
+17.07.2020
+* Added turemail gem for validating email addresses syntactically and on MX record level [#297](https://github.com/internetee/registry/issues/297)
+
+15.07.2020
+* Reapplied race condition fix after fixing the data in prod env [#1612](https://github.com/internetee/registry/issues/1612)
+
+07.07.2020
+* Fixed legaldoc validation [#1634](https://github.com/internetee/registry/issues/1634)
+* Disabled collection cashe versioning [#1637](https://github.com/internetee/registry/pull/1637)
+
+03.07.2020
+* 1-character domains are now valid but blocked by default [#1625](https://github.com/internetee/registry/issues/1625)
+
+02.07.2020
+* Adding legaldoc to domain:delete is now optional [#1624](https://github.com/internetee/registry/issues/1624)
+* Setting to make legaldoc functionality optional [#1623](https://github.com/internetee/registry/issues/1623)
+
+01.07.2020
+* Reverted race condition fix due to data issues in production (#1612) [#1622](https://github.com/internetee/registry/pull/1622)
+* Added legaldoc opt-out option for approved registrars [#1620](https://github.com/internetee/registry/issues/1620)
+
+29.06.2020
+* Bumped rack to 2.2.3 [#1618](https://github.com/internetee/registry/pull/1618)
+* Actionpack security update to 6.0.3.2 [#1619](https://github.com/internetee/registry/pull/1619)
+
+26.06.2020
+* Fixed race condition in domain update by adding new db constratints [#1612](https://github.com/internetee/registry/issues/1612)
+* Refactored contact validation [#1617](https://github.com/internetee/registry/pull/1617)
+
+19.06.2020
+* Regsitrant API returns now DNSSEC info [#1613](https://github.com/internetee/registry/pull/1613)
+* Updated domain expiration email notification texts [#1614](https://github.com/internetee/registry/pull/1614)
+
+15.06.2020
+* Added contact email to registrant API [#1611](https://github.com/internetee/registry/pull/1611)
+
+12.06.2020
+* Extracted Xml deserializing from EPP Contact and Domain classes [#1601](https://github.com/internetee/registry/pull/1601)
+* Fixed whois data update issue with child object updates [#1604](https://github.com/internetee/registry/issues/1604)
+
+11.06.2020
+* Auction API returns json on error [#1605](https://github.com/internetee/registry/issues/1605)
+* Fixed account activity index in admin [#1606](https://github.com/internetee/registry/issues/1606)
+
+08.06.2020
+* Bumped websocket-extensions to 0.1.5 [#1602](https://github.com/internetee/registry/pull/1602)
+
 04.06.2020
 * Moved dev config to sample file [#1599](https://github.com/internetee/registry/pull/1599)
+* Post Rails6 upgrade fixes [#1598](https://github.com/internetee/registry/pull/1598)
 
 03.06.2020
 * Upgraded Rails to 6.0.3 [#1593](https://github.com/internetee/registry/pull/1593)

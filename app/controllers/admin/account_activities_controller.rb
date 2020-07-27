@@ -23,11 +23,11 @@ module Admin
       @q.sorts = 'id desc' if @q.sorts.empty?
 
       @account_activities = @q.result.page(params[:page]).per(params[:results_per_page])
-      sort = @account_activities.orders.map(&:to_sql).join(",")
 
-      # can do here inline SQL as it's our
       if params[:page] && params[:page].to_i > 1
-        @sum = @q.result.reorder(sort).limit(@account_activities.offset_value).sum(:sum) + @b.result.where("account_activities.id NOT IN (#{@q.result.select(:id).to_sql})").sum(:sum)
+        @sum = @q.result.limit(@account_activities.offset_value).sum(:sum) +
+               @b.result.where("account_activities.id NOT IN (#{@q.result.select(:id).to_sql})")
+                 .sum(:sum)
       else
         @sum = @b.result.where("account_activities.id NOT IN (#{@q.result.select(:id).to_sql})").sum(:sum)
       end

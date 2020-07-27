@@ -36,11 +36,17 @@ class SerializersRegistrantApiDomainTest < ActiveSupport::TestCase
   end
 
   def test_returns_contacts_name_and_uuid
-    assert_equal([{name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'},
-                  {name: 'William', id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb'}].to_set,
+    assert_equal([{name: 'John',
+                   id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957',
+                   email: 'john@inbox.test'},
+                  {name: 'William',
+                   id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb',
+                   email: 'william@inbox.test'}].to_set,
                  @json[:admin_contacts].to_set)
 
-    assert_equal([{name: 'William', id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb'}].to_set,
+    assert_equal([{name: 'William',
+                   id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb',
+                   email: 'william@inbox.test'}].to_set,
                  @json[:tech_contacts].to_set)
   end
 

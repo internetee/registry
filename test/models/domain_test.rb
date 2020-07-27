@@ -31,7 +31,7 @@ class DomainTest < ActiveSupport::TestCase
   def test_validates_name_format
     assert_equal dns_zones(:one).origin, 'test'
     domain = valid_domain
-    subdomain_min_length = 2
+    subdomain_min_length = 1
     subdomain_max_length = 63
 
     domain.name = '!invalid'
@@ -44,9 +44,6 @@ class DomainTest < ActiveSupport::TestCase
     assert domain.invalid?
 
     domain.name = 'example-.test'
-    assert domain.invalid?
-
-    domain.name = "#{'a' * subdomain_min_length.pred}.test"
     assert domain.invalid?
 
     domain.name = "#{'a' * subdomain_max_length.next}.test"
@@ -137,9 +134,9 @@ class DomainTest < ActiveSupport::TestCase
     contact = contacts(:john)
 
     domain.admin_contacts << contact
-    domain.admin_contacts << contact
-
-    assert domain.invalid?
+    assert_raise ActiveRecord::RecordNotUnique do
+      domain.admin_contacts << contact
+    end
   end
 
   def test_invalid_when_the_same_tech_contact_is_linked_twice
@@ -147,9 +144,9 @@ class DomainTest < ActiveSupport::TestCase
     contact = contacts(:john)
 
     domain.tech_contacts << contact
-    domain.tech_contacts << contact
-
-    assert domain.invalid?
+    assert_raise ActiveRecord::RecordNotUnique do
+      domain.tech_contacts << contact
+    end
   end
 
   def test_validates_name_server_count_when_name_servers_are_required

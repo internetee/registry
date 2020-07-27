@@ -41,6 +41,41 @@ class EppContactCreateBaseTest < EppTestCase
     assert_not_empty contact.code
   end
 
+  def test_responces_error_with_email_error
+    name = 'new'
+    email = 'new@registrar@test'
+    phone = '+1.2'
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:postalInfo>
+                <contact:name>#{name}</contact:name>
+              </contact:postalInfo>
+              <contact:voice>#{phone}</contact:voice>
+              <contact:email>#{email}</contact:email>
+            </contact:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:ident type="priv" cc="US">any</eis:ident>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_no_difference 'Contact.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    assert_epp_response :parameter_value_syntax_error
+  end
+
   def test_respects_custom_code
     name = 'new'
     code = 'custom-id'

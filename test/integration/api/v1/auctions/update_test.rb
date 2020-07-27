@@ -141,10 +141,14 @@ class ApiV1AuctionUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_auction_not_found
-    assert_raises ActiveRecord::RecordNotFound do
-      patch api_v1_auction_path('non-existing-uuid'),
-            params: { status: Auction.statuses[:no_bids] },
-            as: :json
-    end
+    expected_uuid = 'non-existing-uuid'
+    patch api_v1_auction_path(expected_uuid),
+          params: { status: Auction.statuses[:no_bids] },
+          as: :json
+
+    assert_response :not_found
+    json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal expected_uuid, json[:uuid]
+    assert_equal 'Not Found', json[:error]
   end
 end

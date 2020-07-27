@@ -131,9 +131,18 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
 
     assert_equal({ name: 'Best Names', website: 'https://bestnames.test' }, response_json[:registrar])
     assert_equal({name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}, response_json[:registrant])
-    assert_equal([{name: 'Jane', id: '9db3de62-2414-4487-bee2-d5c155567768'}], response_json[:admin_contacts])
-    assert_equal([{name: 'William', id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb'},
-                  {name: 'Acme Ltd', id: 'f1dd365c-5be9-4b3d-a44e-3fa002465e4d'}].to_set,
+    assert_equal([{name: 'Jane',
+                   id: '9db3de62-2414-4487-bee2-d5c155567768',
+                   email: 'jane@mail.test'
+                  }],
+                 response_json[:admin_contacts])
+    assert_equal([{name: 'William',
+                   id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb',
+                   email: 'william@inbox.test'},
+                  {name: 'Acme Ltd',
+                   id: 'f1dd365c-5be9-4b3d-a44e-3fa002465e4d',
+                   email: 'acme@outlook.test'
+                  }].to_set,
                  response_json[:tech_contacts].to_set)
     assert_equal(
       [{hostname: 'ns1.bestnames.test', ipv4: ['192.0.2.1'], ipv6: ['2001:db8::1']},

@@ -108,4 +108,14 @@ module ApplicationHelper
   def body_css_class
     [controller_path.split('/').map!(&:dasherize), action_name.dasherize, 'page'].join('-')
   end
+
+  def verified_email_span(verification)
+    content_tag(:span, verification.email, class: verified_email_class(verification))
+  end
+
+  def verified_email_class(verification)
+    return 'text-danger' if verification.failed?
+    return 'text-primary' if verification.not_verified?
+    return 'text-success' if verification.verified?
+  end
 end

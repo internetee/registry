@@ -26,6 +26,7 @@ class ApiUser < User
   validates :username, uniqueness: true
 
   delegate :code, :name, to: :registrar, prefix: true
+  delegate :legaldoc_mandatory?, to: :registrar
 
   alias_attribute :login, :username
 

@@ -1,3 +1,5 @@
+require 'deserializers/xml/contact_update'
+
 module Epp
   class ContactsController < BaseController
     before_action :find_contact, only: [:info, :update, :delete]
@@ -43,9 +45,14 @@ module Epp
     def update
       authorize! :update, @contact, @password
 
-      frame = params[:parsed_frame]
+      collected_data = ::Deserializers::Xml::ContactUpdate.new(params[:parsed_frame])
+      action = Actions::ContactUpdate.new(@contact,
+                                          collected_data.contact,
+                                          collected_data.legal_document,
+                                          collected_data.ident,
+                                          current_user)
 
-      if @contact.update_attributes(frame, current_user)
+      if action.call
         if !address_processing? && address_given?
           @response_code = 1100
           @response_description = t('epp.contacts.completed_without_address')

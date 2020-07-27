@@ -26,10 +26,17 @@ CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION btree_gist; Type: COMMENT; Schema: -; Owner: -
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: -
 --
 
-COMMENT ON EXTENSION btree_gist IS 'support for indexing common datatypes in GiST';
+CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
 --
@@ -905,6 +912,98 @@ CREATE SEQUENCE public.domains_id_seq
 --
 
 ALTER SEQUENCE public.domains_id_seq OWNED BY public.domains.id;
+
+
+--
+-- Name: email_address_verifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_address_verifications (
+    id bigint NOT NULL,
+    email public.citext NOT NULL,
+    verified_at timestamp without time zone,
+    success boolean DEFAULT false NOT NULL,
+    domain public.citext NOT NULL
+);
+
+
+--
+-- Name: email_address_verifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_address_verifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_address_verifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_address_verifications_id_seq OWNED BY public.email_address_verifications.id;
+
+
+--
+-- Name: email_addresses_validations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_addresses_validations (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    validated_at timestamp without time zone
+);
+
+
+--
+-- Name: email_addresses_validations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_addresses_validations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_addresses_validations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_addresses_validations_id_seq OWNED BY public.email_addresses_validations.id;
+
+
+--
+-- Name: email_addresses_verifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_addresses_verifications (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    validated_at timestamp without time zone
+);
+
+
+--
+-- Name: email_addresses_verifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_addresses_verifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_addresses_verifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_addresses_verifications_id_seq OWNED BY public.email_addresses_verifications.id;
 
 
 --
@@ -2178,7 +2277,9 @@ CREATE TABLE public.registrars (
     language character varying NOT NULL,
     vat_rate numeric(4,3),
     iban character varying,
-    settings jsonb DEFAULT '{}'::jsonb NOT NULL
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL,
+    legaldoc_optout boolean DEFAULT false NOT NULL,
+    legaldoc_optout_comment text
 );
 
 
@@ -2599,6 +2700,27 @@ ALTER TABLE ONLY public.domain_transfers ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.domains ALTER COLUMN id SET DEFAULT nextval('public.domains_id_seq'::regclass);
+
+
+--
+-- Name: email_address_verifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_address_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_address_verifications_id_seq'::regclass);
+
+
+--
+-- Name: email_addresses_validations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_validations ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_validations_id_seq'::regclass);
+
+
+--
+-- Name: email_addresses_verifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_verifications_id_seq'::regclass);
 
 
 --
@@ -3034,6 +3156,30 @@ ALTER TABLE ONLY public.domains
 
 
 --
+-- Name: email_address_verifications email_address_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_address_verifications
+    ADD CONSTRAINT email_address_verifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_addresses_validations email_addresses_validations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_validations
+    ADD CONSTRAINT email_addresses_validations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_addresses_verifications email_addresses_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_verifications
+    ADD CONSTRAINT email_addresses_verifications_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: epp_sessions epp_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3322,6 +3468,14 @@ ALTER TABLE ONLY public.blocked_domains
 
 
 --
+-- Name: domain_contacts uniq_contact_of_type_per_domain; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_contacts
+    ADD CONSTRAINT uniq_contact_of_type_per_domain UNIQUE (domain_id, type, contact_id);
+
+
+--
 -- Name: contacts uniq_contact_uuid; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3335,6 +3489,14 @@ ALTER TABLE ONLY public.contacts
 
 ALTER TABLE ONLY public.domains
     ADD CONSTRAINT uniq_domain_uuid UNIQUE (uuid);
+
+
+--
+-- Name: nameservers uniq_hostname_per_domain; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nameservers
+    ADD CONSTRAINT uniq_hostname_per_domain UNIQUE (domain_id, hostname);
 
 
 --
@@ -3630,6 +3792,13 @@ CREATE INDEX index_domains_on_registrar_id ON public.domains USING btree (regist
 --
 
 CREATE INDEX index_domains_on_statuses ON public.domains USING gin (statuses);
+
+
+--
+-- Name: index_email_address_verifications_on_domain; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_email_address_verifications_on_domain ON public.email_address_verifications USING btree (domain);
 
 
 --
@@ -4046,18 +4215,17 @@ CREATE INDEX log_nameservers_object_legacy_id ON public.log_contacts USING btree
 
 
 --
+-- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_data_migrations ON public.data_migrations USING btree (version);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING btree (version);
-
-
---
--- Name: contacts process_contact_audit; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER process_contact_audit AFTER INSERT OR DELETE OR UPDATE ON public.contacts FOR EACH ROW EXECUTE PROCEDURE public.process_contact_audit();
-
 
 --
 -- Name: contacts contacts_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
@@ -4701,6 +4869,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200505150413'),
 ('20200518104105'),
 ('20200529115011'),
-('20200605125332');
-
+('20200605125332'),
+('20200605100827'),
+('20200610090110'),
+('20200630081231'),
+('20200714115338');
 

@@ -17,7 +17,7 @@
       %dd= ident_for(@contact)
 
       %dt= t(:email)
-      %dd= @contact.email
+      %dd= verified_email_span(@contact.email_verification)
 
       %dt= t(:phone)
       %dd= @contact.phone

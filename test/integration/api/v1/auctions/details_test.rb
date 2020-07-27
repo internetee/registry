@@ -25,8 +25,11 @@ class ApiV1AuctionDetailsTest < ActionDispatch::IntegrationTest
   end
 
   def test_auction_not_found
-    assert_raises ActiveRecord::RecordNotFound do
-      get api_v1_auction_path('non-existing-uuid'), as: :json
-    end
+    expected_uuid = 'not-a-real-path'
+    get api_v1_auction_path(expected_uuid), as: :json
+    assert_response :not_found
+    json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal expected_uuid, json[:uuid]
+    assert_equal 'Not Found', json[:error]
   end
 end
