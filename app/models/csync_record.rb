@@ -10,8 +10,9 @@ class CsyncRecord < ApplicationRecord
 
   SCAN_CYCLES = 3
 
-  def record_new_scan(result, job: false)
-    @log = job ? Logger.new(STDOUT) : logger
+  # rubocop:disable Metrics/AbcSize
+  def record_new_scan(result)
+    @log = Rails.env.test? ? logger : Logger.new(STDOUT)
     assign_scanner_data!(result)
     prefix = "CsyncRecord: #{domain.name}:"
 
@@ -22,6 +23,7 @@ class CsyncRecord < ApplicationRecord
       CsyncRecord.where(domain: domain).delete_all
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def assign_scanner_data!(result)
     state = result[:type]

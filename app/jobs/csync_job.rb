@@ -5,7 +5,7 @@ class CsyncJob < Que::Job
     @store = {}
     @input_store = { secure: {}, insecure: {} }
     @results = {}
-    @logger = Logger.new(STDOUT)
+    @logger = Rails.env.test? ? Rails.logger : Logger.new(STDOUT)
     generate ? generate_scanner_input : process_scanner_results
 
     @logger.info 'CsyncJob: Finished.'
@@ -50,7 +50,7 @@ class CsyncJob < Que::Job
     @results.keys.each do |domain|
       next unless qualified_for_monitoring?(domain, @results[domain])
 
-      CsyncRecord.by_domain_name(domain)&.record_new_scan(@results[domain][:ns].first, job: true)
+      CsyncRecord.by_domain_name(domain)&.record_new_scan(@results[domain][:ns].first)
     end
   end
 
