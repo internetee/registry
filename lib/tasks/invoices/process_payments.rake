@@ -2,12 +2,9 @@ namespace :invoices do
   task process_payments: :environment do
     registry_bank_account_iban = Setting.registry_iban
 
-    keystore_password = ENV['lhv_keystore_password']
-    keystore_alias = ENV['lhv_keystore_alias']
-    keystore = Keystores::JavaKeystore.new
-    keystore.load(ENV['lhv_keystore'], keystore_password)
-    cert = keystore.get_certificate(keystore_alias)
-    key = keystore.get_key(keystore_alias, keystore_password)
+    keystore = OpenSSL::PKCS12.new(File.read(ENV['lhv_p12_keystore']), ENV['lhv_keystore_password'])
+    key = keystore.key
+    cert = keystore.certificate
 
     api = Lhv::ConnectApi.new
     api.cert = cert
