@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CsyncRecord < ApplicationRecord
+  include Concerns::CsyncRecord::Diggable
   belongs_to :domain, optional: false
   validates :domain, uniqueness: true
   validates :cdnskey, :action, presence: true
@@ -10,20 +11,17 @@ class CsyncRecord < ApplicationRecord
 
   SCAN_CYCLES = 3
 
-  # rubocop:disable Metrics/AbcSize
   def record_new_scan(result)
-    @log = Rails.env.test? ? logger : Logger.new(STDOUT)
     assign_scanner_data!(result)
     prefix = "CsyncRecord: #{domain.name}:"
 
     if save
-      @log.info "#{prefix} cycle registered."
+      log.info "#{prefix} cycle registered."
     else
-      @log.info "#{prefix} reseting cycles. Reason: #{errors.full_messages.join(' .')}"
+      log.info "#{prefix} reseting cycles. Reason: #{errors.full_messages.join(' .')}"
       CsyncRecord.where(domain: domain).delete_all
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
   def assign_scanner_data!(result)
     state = result[:type]
@@ -35,7 +33,7 @@ class CsyncRecord < ApplicationRecord
 
   def dnskey
     key = Dnskey.new_from_csync(domain: domain, cdnskey: cdnskey)
-    @log.info "DNSKEY not valid. #{key.errors.full_messages.join('. ')}." unless key.valid?
+    log.info "DNSKEY not valid. #{key.errors.full_messages.join('. ')}." unless key.valid?
 
     key
   end
@@ -46,44 +44,14 @@ class CsyncRecord < ApplicationRecord
     if dnskey.save
       finalize_and_notify
     else
-      @log.info "Failed to save DNSKEY. Errors: #{dnskey.errors.full_messages.join('. ')}"
+      log.info "Failed to save DNSKEY. Errors: #{dnskey.errors.full_messages.join('. ')}"
     end
-  end
-
-  def dnssec_validates?
-    return false unless dnskey.valid?
-    return true if valid_security_level? && valid_security_level?(post: true)
   end
 
   def finalize_and_notify
     CsyncMailer.dnssec_updated(domain: domain).deliver_now
     notify_registrar_about_csync
     CsyncRecord.where(domain: domain).destroy_all
-  end
-
-  def valid_security_level?(post: false)
-    valid = valid_pre_action?(domain.dnssec_security_level, action)
-    valid = valid_post_action?(domain.dnssec_security_level(stubber: dnskey), action) if post
-
-    @log.info "#{domain.name}: #{post ? 'Post' : 'Pre'} DNSSEC validation " \
-      "#{valid ? 'PASSED' : 'FAILED'} for action '#{action}'"
-
-    valid
-  end
-
-  def valid_pre_action?(security_level, action)
-    case security_level
-    when Dnsruby::Message::SecurityLevel.SECURE
-      return true if %w[rollover deactivate].include? action
-    when Dnsruby::Message::SecurityLevel.INSECURE, Dnsruby::Message::SecurityLevel.BOGUS
-      return true if action == 'initialized'
-    end
-  end
-
-  def valid_post_action?(security_level, action)
-    secure_msg = Dnsruby::Message::SecurityLevel.SECURE
-    return true if action == 'deactivate' && security_level != secure_msg
-    return true if %w[rollover initialized].include?(action) && security_level == secure_msg
   end
 
   def pushable?
@@ -95,7 +63,7 @@ class CsyncRecord < ApplicationRecord
   end
 
   def remove_dnskeys
-    @log.info "CsyncJob: Removing DNSKEYs for domain '#{domain.name}'"
+    log.info "CsyncJob: Removing DNSKEYs for domain '#{domain.name}'"
     domain.dnskeys.destroy_all
     CsyncMailer.dnssec_deleted(domain: domain).deliver_now
     notify_registrar_about_csync
@@ -116,7 +84,7 @@ class CsyncRecord < ApplicationRecord
 
   def self.by_domain_name(domain_name)
     domain = Domain.find_by(name: domain_name)
-    @log.info "CsyncRecord: '#{domain_name}' not in zone. Not initializing record." unless domain
+    log.info "CsyncRecord: '#{domain_name}' not in zone. Not initializing record." unless domain
     CsyncRecord.find_or_initialize_by(domain: domain) if domain
   end
 
@@ -128,5 +96,10 @@ class CsyncRecord < ApplicationRecord
 
   def initializes_dnssec?(scan_state)
     true if domain.dnskeys.empty? && !disable_requested? && scan_state == 'insecure'
+  end
+
+  def log
+    @log ||= Rails.env.test? ? logger : Logger.new(STDOUT)
+    @log
   end
 end
