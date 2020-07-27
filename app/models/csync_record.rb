@@ -16,9 +16,9 @@ class CsyncRecord < ApplicationRecord
     prefix = "CsyncRecord: #{domain.name}:"
 
     if save
-      log.info "#{prefix} cycle registered."
+      log.info "#{prefix} Cycle done."
     else
-      log.info "#{prefix} reseting cycles. Reason: #{errors.full_messages.join(' .')}"
+      log.info "#{prefix}: not processing.. Reason: #{errors.full_messages.join(' .')}"
       CsyncRecord.where(domain: domain).delete_all
     end
   end
@@ -52,10 +52,13 @@ class CsyncRecord < ApplicationRecord
     CsyncMailer.dnssec_updated(domain: domain).deliver_now
     notify_registrar_about_csync
     CsyncRecord.where(domain: domain).destroy_all
+    log.info "CsyncRecord: #{domain.name}: DNSKEYs updated."
   end
 
   def pushable?
     return true if domain.dnskeys.any? || times_scanned >= SCAN_CYCLES
+
+    false
   end
 
   def disable_requested?

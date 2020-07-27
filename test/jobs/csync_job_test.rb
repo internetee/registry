@@ -42,7 +42,13 @@ class CsyncJobTest < ActiveSupport::TestCase
 
     @domain.csync_record.update(times_scanned: 2) # 3rd time trigger DNSKEY push
     assert_equal 0, @domain.dnskeys.count
-    CsyncJob.run
+    assert_equal 2, @domain.csync_record.times_scanned
+
+    CsyncRecord.stub :by_domain_name, @domain.csync_record do
+      @domain.csync_record.stub :dnssec_validates?, true do
+        CsyncJob.run
+      end
+    end
 
     @domain.reload
     assert_equal 1, @domain.dnskeys.count
@@ -52,8 +58,15 @@ class CsyncJobTest < ActiveSupport::TestCase
 
   def test_sends_mail_to_contacts_if_dnskey_updated
     assert_emails 1 do
-      3.times do
-        CsyncJob.run
+      CsyncJob.run
+      @domain.reload
+
+      CsyncRecord.stub :by_domain_name, @domain.csync_record do
+        @domain.csync_record.stub :dnssec_validates?, true do
+          2.times do
+            CsyncJob.run
+          end
+        end
       end
     end
   end
