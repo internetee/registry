@@ -4,8 +4,10 @@ class CsyncRecord < ApplicationRecord
   include Concerns::CsyncRecord::Diggable
   belongs_to :domain, optional: false
   validates :domain, uniqueness: true
-  validates :cdnskey, :action, presence: true
+  validates :cdnskey, :action, :last_scan, presence: true
   validate :validate_unique_pub_key
+  validate :validate_csync_action
+  validate :validate_cdnskey_format
   after_save :process_new_dnskey, if: proc { pushable? && !disable_requested? }
   after_save :remove_dnskeys, if: proc { pushable? && disable_requested? }
 
@@ -18,7 +20,7 @@ class CsyncRecord < ApplicationRecord
     if save
       log.info "#{prefix} Cycle done."
     else
-      log.info "#{prefix}: not processing.. Reason: #{errors.full_messages.join(' .')}"
+      log.info "#{prefix}: not processing. Reason: #{errors.full_messages.join(' .')}"
       CsyncRecord.where(domain: domain).delete_all
     end
   end
@@ -62,7 +64,7 @@ class CsyncRecord < ApplicationRecord
   end
 
   def disable_requested?
-    ['0 3 0 AA==', '0 3 0 0'].include? dnskey.public_key
+    ['0 3 0 AA==', '0 3 0 0'].include? cdnskey
   end
 
   def remove_dnskeys
@@ -80,9 +82,11 @@ class CsyncRecord < ApplicationRecord
   end
 
   def validate_unique_pub_key
+    return false unless domain
+    return true if disable_requested?
     return true unless domain.dnskeys.where(public_key: dnskey.public_key).any?
 
-    errors.add(:public_key, 'already tied this domain')
+    errors.add(:public_key, 'already tied to this domain')
   end
 
   def self.by_domain_name(domain_name)
@@ -104,5 +108,19 @@ class CsyncRecord < ApplicationRecord
   def log
     @log ||= Rails.env.test? ? logger : Logger.new(STDOUT)
     @log
+  end
+
+  def validate_csync_action
+    return true if %w[initialized rollover].include? action
+    return true if action == 'deactivate' && disable_requested?
+
+    errors.add(:action, :invalid)
+  end
+
+  def validate_cdnskey_format
+    return true if disable_requested?
+    return true if dnskey.valid?
+
+    errors.add(:cdnskey, :invalid)
   end
 end

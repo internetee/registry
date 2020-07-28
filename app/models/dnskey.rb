@@ -116,6 +116,8 @@ class Dnskey < ApplicationRecord
   end
 
   def self.new_from_csync(cdnskey:, domain:)
+    cdnskey ||= '' # avoid strip() issues for gibberish key
+
     flags, proto, alg, pub = cdnskey.strip.split(' ')
     Dnskey.new(domain: domain, flags: flags, protocol: proto, alg: alg, public_key: pub)
   end
