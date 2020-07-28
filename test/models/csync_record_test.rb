@@ -12,16 +12,16 @@ class CsyncRecordTest < ActiveSupport::TestCase
   end
 
   def test_domain_must_be_present
+    assert @csync_record.valid?
     @csync_record.domain = nil
     assert_not @csync_record.valid?
-    @csync_record.domain = domains(:shop)
   end
 
   def test_action_must_be_present_and_valid
     @csync_record.action = nil
     assert_not @csync_record.valid?
 
-    @csync_record.action = 'what the fuck'
+    @csync_record.action = 'definitely invalid action'
     assert_not @csync_record.valid?
 
     @csync_record.action = 'initialized'
@@ -190,6 +190,79 @@ class CsyncRecordTest < ActiveSupport::TestCase
     mail = ActionMailer::Base.deliveries.last
     assert_equal (@domain.contacts.map(&:email) << @domain.registrant.email).uniq, mail.to
     assert_equal mail.subject, "Teie domeeni #{@domain.name} DNSSEC andmed on eemaldatud / DNSSEC data for #{@domain.name} has been removed"
+  end
+
+  def test_validates_security_level_for_initialize_action
+    @csync_record.action = 'initialized'
+    @domain.stub :dnssec_security_level, Dnsruby::Message::SecurityLevel.INSECURE do
+      assert @csync_record.valid_pre_action?
+      assert_not @csync_record.valid_post_action?
+    end
+
+    @domain.stub :dnssec_security_level, Dnsruby::Message::SecurityLevel.BOGUS do
+      assert @csync_record.valid_pre_action?
+      assert_not @csync_record.valid_post_action?
+    end
+
+    @domain.stub :dnssec_security_level, Dnsruby::Message::SecurityLevel.SECURE do
+      assert @csync_record.valid_post_action?
+      assert_not @csync_record.valid_pre_action?
+    end
+  end
+
+  def test_validates_security_level_for_rollover_action
+    @csync_record.action = 'rollover'
+    @domain.stub :dnssec_security_level, Dnsruby::Message::SecurityLevel.INSECURE do
+      assert_not @csync_record.valid_pre_action?
+      assert_not @csync_record.valid_post_action?
+    end
+
+    @domain.stub :dnssec_security_level, Dnsruby::Message::SecurityLevel.BOGUS do
+      assert_not @csync_record.valid_pre_action?
+      assert_not @csync_record.valid_post_action?
+    end
+
+    @domain.stub :dnssec_security_level, Dnsruby::Message::SecurityLevel.SECURE do
+      assert @csync_record.valid_pre_action?
+      assert @csync_record.valid_post_action?
+    end
+  end
+
+  def test_validates_security_level_for_deactivate_action
+    @csync_record.action = 'deactivate'
+    @domain.stub :dnssec_security_level, Dnsruby::Message::SecurityLevel.INSECURE do
+      assert @csync_record.valid_post_action?
+      assert_not @csync_record.valid_pre_action?
+    end
+
+    @domain.stub :dnssec_security_level, Dnsruby::Message::SecurityLevel.BOGUS do
+      assert @csync_record.valid_post_action?
+      assert_not @csync_record.valid_pre_action?
+    end
+
+    @domain.stub :dnssec_security_level, Dnsruby::Message::SecurityLevel.SECURE do
+      assert @csync_record.valid_pre_action?
+      assert_not @csync_record.valid_post_action?
+    end
+  end
+
+  def test_returns_correct_result_if_pre_and_post_actions_succeed
+    stub_any_instance(CsyncRecord, :valid_post_action?, true) do
+      stub_any_instance(CsyncRecord, :valid_pre_action?, true) do
+        assert @csync_record.dnssec_validates?
+      end
+    end
+
+    stub_any_instance(CsyncRecord, :valid_post_action?, false) do
+      stub_any_instance(CsyncRecord, :valid_pre_action?, false) do
+        assert_not @csync_record.dnssec_validates?
+      end
+    end
+  end
+
+  def test_dnssec_validation_fails_if_domain_unreachable
+    @domain.name = 'definitely.not.valid.domain.123'
+    assert_not @csync_record.dnssec_validates?
   end
 
   def stub_any_instance(klass, method, value)
