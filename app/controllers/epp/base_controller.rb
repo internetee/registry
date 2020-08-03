@@ -20,6 +20,7 @@ module Epp
     rescue_from StandardError, with: :respond_with_command_failed_error
     rescue_from AuthorizationError, with: :respond_with_authorization_error
     rescue_from ActiveRecord::RecordNotFound, with: :respond_with_object_does_not_exist_error
+    before_action :set_paper_trail_whodunnit
 
     protected
 
