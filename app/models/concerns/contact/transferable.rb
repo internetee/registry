@@ -7,8 +7,6 @@ module Concerns::Contact::Transferable
   end
 
   def transfer(new_registrar)
-    return identical(new_registrar) if identical(new_registrar)
-
     new_contact = self.dup
     new_contact.registrar = new_registrar
     new_contact.original = self
