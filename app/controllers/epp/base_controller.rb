@@ -398,5 +398,9 @@ module Epp
       logger.error(([exception.message] + exception.backtrace).join($INPUT_RECORD_SEPARATOR))
       notify_airbrake(exception)
     end
+
+    def user_for_paper_trail
+      current_user ? current_user.id_role_username : 'anonymous'
+    end
   end
 end
