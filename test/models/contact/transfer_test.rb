@@ -47,6 +47,11 @@ class ContactTransferTest < ActiveSupport::TestCase
     end
   end
 
+  def test_reuses_identical_contact
+    identical = contacts(:identical_to_william)
+    assert_equal identical, contacts(:william).transfer(@new_registrar)
+  end
+
   def test_bypasses_validation
     @contact = contacts(:invalid)
 

@@ -7,7 +7,7 @@ module Concerns::Contact::Transferable
   end
 
   def transfer(new_registrar)
-    return identical(new_registrar) if identical_with_registrar?(new_registrar)
+    return identical(new_registrar) if identical(new_registrar)
 
     new_contact = self.dup
     new_contact.registrar = new_registrar
@@ -22,13 +22,6 @@ module Concerns::Contact::Transferable
   end
 
   protected
-
-  def identical_with_registrar?(registrar)
-    return false unless identical(registrar)
-    return true unless DomainContact.where(contact_id: id).any?
-
-    false
-  end
 
   def generate_auth_info
     self.auth_info = SecureRandom.hex(11)
