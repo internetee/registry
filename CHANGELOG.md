@@ -1,3 +1,6 @@
+04.08.2020
+* FIxed registrant verification for domain delete [#1631](https://github.com/internetee/registry/issues/1631)
+
 03.08.2020
 * Fixed 0 vat issue with invoices sent to Directo [#1647](https://github.com/internetee/registry/issues/1647)
 
