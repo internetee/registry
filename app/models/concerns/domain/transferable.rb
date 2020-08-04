@@ -57,8 +57,7 @@ module Concerns::Domain::Transferable
 
   def transfer_domain_contacts(new_registrar)
     copied_ids = []
-    domain_contacts.each do |dc|
-      contact = Contact.find(dc.contact_id)
+    contacts.each do |contact|
       next if copied_ids.include?(contact.id) || contact.registrar == new_registrar
 
       if registrant_id_was == contact.id # registrant was copied previously, do not copy it again
@@ -67,11 +66,7 @@ module Concerns::Domain::Transferable
         oc = contact.transfer(new_registrar)
       end
 
-      if domain_contacts.find_by(contact_id: oc.id, domain_id: id, type: dc.type).present?
-        dc.destroy
-      else
-        dc.update(contact_id: oc.id)
-      end
+      domain_contacts.where(contact_id: contact.id).update_all({ contact_id: oc.id }) # n+1 workaround
       copied_ids << contact.id
     end
   end
