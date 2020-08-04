@@ -59,7 +59,7 @@ class EppDomainTransferRequestTest < EppTestCase
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts
-    assert_difference -> { @new_registrar.contacts.size }, 4 do
+    assert_difference -> { @new_registrar.contacts.size }, 3 do
       post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
@@ -68,7 +68,7 @@ class EppDomainTransferRequestTest < EppTestCase
   def test_reuses_identical_contact
     post epp_transfer_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
-    assert_equal 2, @new_registrar.contacts.where(name: 'William').size
+    assert_equal 1, @new_registrar.contacts.where(name: 'William').size
   end
 
   def test_saves_legal_document

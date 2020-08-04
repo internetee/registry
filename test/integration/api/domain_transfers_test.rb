@@ -64,7 +64,7 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts
-    assert_difference -> { @new_registrar.contacts.size }, 4 do
+    assert_difference -> { @new_registrar.contacts.size }, 3 do
       post '/repp/v1/domain_transfers', params: request_params, as: :json,
            headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
@@ -73,7 +73,7 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
   def test_reuses_identical_contact
     post '/repp/v1/domain_transfers', params: request_params, as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert_equal 2, @new_registrar.contacts.where(name: 'William').size
+    assert_equal 1, @new_registrar.contacts.where(name: 'William').size
   end
 
   def test_fails_if_domain_does_not_exist

@@ -29,23 +29,4 @@ class DomainTransferTest < ActiveSupport::TestCase
     assert_equal id, notification.attached_obj_id
     assert_equal class_name, notification.attached_obj_type
   end
-
-  def test_does_not_reuse_identical_contacts_on_transfer
-    # Create identical contact and assign it to domain
-    domain = @domain_transfer.domain
-    identical_contact = domain.contacts.first.transfer(domain.registrar)
-
-    assert_equal 3, domain.domain_contacts.count
-    domain.domain_contacts.create!(contact: identical_contact, type: 'AdminDomainContact')
-
-    assert_equal 4, domain.domain_contacts.count
-
-    @domain_transfer.approve
-    @domain_transfer.reload
-    domain.reload
-
-    assert @domain_transfer.approved?
-    assert_equal 4, domain.domain_contacts.count
-    assert_equal domain.registrar, @domain_transfer.new_registrar
-  end
 end
