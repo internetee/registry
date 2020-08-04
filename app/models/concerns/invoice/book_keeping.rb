@@ -5,7 +5,7 @@ module Concerns
 
       def as_directo_json
         invoice = ActiveSupport::JSON.decode(ActiveSupport::JSON.encode(self))
-        invoice['customer_code'] = buyer.accounting_customer_code
+        invoice['customer'] = compose_directo_customer
         invoice['issue_date'] = issue_date.strftime('%Y-%m-%d')
         invoice['transaction_date'] = account_activity
                                       .bank_transaction&.paid_at&.strftime('%Y-%m-%d')
@@ -20,6 +20,14 @@ module Concerns
            'quantity': 1, 'price': ActionController::Base.helpers.number_with_precision(
              subtotal, precision: 2, separator: '.'
            ) }].as_json
+      end
+
+      def compose_directo_customer
+        {
+          'code': buyer.accounting_customer_code,
+          'destination': buyer_country_code,
+          'vat_reg_no': buyer_vat_no,
+        }.as_json
       end
     end
   end

@@ -24,9 +24,9 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
 
     confirmed = params[:confirmed] ? true : false
     action = if confirmed
-               @registrant_verification.domain_registrant_delete_reject!("email link #{initiator}")
-             else
                @registrant_verification.domain_registrant_delete_confirm!("email link #{initiator}")
+             else
+               @registrant_verification.domain_registrant_delete_reject!("email link #{initiator}")
              end
 
     fail_msg = t("registrant_domain_delete_#{confirmed ? 'confirmed' : 'rejected'}_failed".to_sym)
@@ -36,9 +36,9 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
     (render 'show' && return) unless action
 
     if confirmed
-      redirect_to registrant_domain_delete_confirm_path(@domain.id, confirmed: true) && return
+      redirect_to registrant_domain_delete_confirm_path(@domain.id, confirmed: true)
     else
-      redirect_to registrant_domain_delete_confirm_path(@domain.id, rejected: true) unless confirmed
+      redirect_to registrant_domain_delete_confirm_path(@domain.id, rejected: true)
     end
   end
 end
