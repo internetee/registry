@@ -1,7 +1,7 @@
 # Used in Registrant portal to collect registrant verifications
 # Registrant postgres user can access this table directly.
 class RegistrantVerification < ApplicationRecord
-  has_paper_trail versions: { class_name: 'RegistrantVerificationVersion' }
+  include Versions # version/domain_version.rb
 
   # actions
   CONFIRMED = 'confirmed'
