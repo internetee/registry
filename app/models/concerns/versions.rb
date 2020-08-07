@@ -30,12 +30,14 @@ module Versions
 
     def creator
       return nil if creator_str.blank?
+
       creator = user_from_id_role_username creator_str
       creator.present? ? creator : creator_str
     end
 
     def updator
       return nil if updator_str.blank?
+
       updator = user_from_id_role_username updator_str
       updator.present? ? updator : updator_str
     end
