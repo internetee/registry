@@ -1,3 +1,6 @@
+07.08.2020
+* Restored creator and updator strings to contacts and related object records [#1636](https://github.com/internetee/registry/issues/1636)
+
 04.08.2020
 * Fixed registrant verification for domain delete [#1631](https://github.com/internetee/registry/issues/1631)
 * Fixed domain transfer issue when one person was present in the same role more than once (different objects) [#1651](https://github.com/internetee/registry/issues/1651)
