@@ -1,3 +1,10 @@
+04.08.2020
+* Fixed registrant verification for domain delete [#1631](https://github.com/internetee/registry/issues/1631)
+* Fixed domain transfer issue when one person was present in the same role more than once (different objects) [#1651](https://github.com/internetee/registry/issues/1651)
+
+03.08.2020
+* Fixed 0 vat issue with invoices sent to Directo [#1647](https://github.com/internetee/registry/issues/1647)
+
 17.07.2020
 * Added turemail gem for validating email addresses syntactically and on MX record level [#297](https://github.com/internetee/registry/issues/297)
 

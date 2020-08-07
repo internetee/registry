@@ -12,7 +12,7 @@ module Concerns
 
         invoice = {
           'number': 1,
-          'customer_code': accounting_customer_code,
+          'customer': compose_directo_customer,
           'language': language == 'en' ? 'ENG' : '', 'currency': activities.first.currency,
           'date': month.end_of_month.strftime('%Y-%m-%d')
         }.as_json
@@ -107,6 +107,14 @@ module Concerns
           'price': total,
           'unit': en ? 'pc' : 'tk',
         }
+      end
+
+      def compose_directo_customer
+        {
+          'code': accounting_customer_code,
+          'destination': address_country_code,
+          'vat_reg_no': vat_no,
+        }.as_json
       end
 
       def load_price(account_activity)

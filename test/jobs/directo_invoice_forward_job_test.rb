@@ -14,6 +14,15 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     Setting.directo_monthly_number_last = 309901
   end
 
+  def test_directo_json_sends_customer_as_hash
+    @invoice.update!(buyer_country_code: @user.address_country_code)
+
+    json_output = @invoice.as_directo_json
+    assert json_output['customer'].is_a? Hash
+    assert_equal @user.accounting_customer_code, json_output['customer']['code']
+    assert_equal @user.address_country_code, json_output['customer']['destination']
+  end
+
   def test_xml_is_include_transaction_date
     @invoice.update(total: @invoice.account_activity.bank_transaction.sum)
     @invoice.account_activity.bank_transaction.update(paid_at: Time.zone.now)
