@@ -81,10 +81,10 @@ end
 
 group :development, :test do
   gem 'pry', '0.10.1'
-  gem 'sdoc',          '0.4.1'  # bundle exec rake doc:rails generates the API under doc/api.
   gem 'railroady',     '1.3.0'  # to generate database diagrams
   gem 'autodoc'
   gem 'puma'
+  gem 'sdoc', '~> 1.1'
 end
 
 group :test do
