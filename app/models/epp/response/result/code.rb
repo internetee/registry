@@ -7,6 +7,7 @@ module Epp
         KEY_TO_VALUE = {
           completed_successfully: 1000,
           completed_successfully_action_pending: 1001,
+          completed_without_address: 1100,
           completed_successfully_no_messages: 1300,
           completed_successfully_ack_to_dequeue: 1301,
           completed_successfully_ending_session: 1500,
