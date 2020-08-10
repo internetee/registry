@@ -240,6 +240,7 @@ class ContactTest < ActiveSupport::TestCase
   end
 
   def test_normalizes_country_code
+    Setting.address_processing = true
     contact = Contact.new(country_code: 'us')
     contact.validate
     assert_equal 'US', contact.country_code

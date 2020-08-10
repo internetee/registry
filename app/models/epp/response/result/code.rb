@@ -36,6 +36,7 @@ module Epp
         DEFAULT_DESCRIPTIONS = {
           1000 => 'Command completed successfully',
           1001 => 'Command completed successfully; action pending',
+          1100 => 'Command completed successfully; Postal address data discarded',
           1300 => 'Command completed successfully; no messages',
           1301 => 'Command completed successfully; ack to dequeue',
           1500 => 'Command completed successfully; ending session',
