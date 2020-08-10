@@ -511,14 +511,12 @@ class Contact < ApplicationRecord
   def clear_address_modifications
     return unless modifies_address?
 
-    addr_fields = %i[city street zip state country_code]
-    addr_fields.each { |field| self[field] = nil }
+    remove_address
   end
 
   def modifies_address?
-    addr_fields = %i[city street zip state country_code]
     modified = false
-    addr_fields.each { |field| modified = true if changes.key?(field) }
+    self.class.address_attribute_names.each { |field| modified = true if changes.key?(field) }
 
     modified
   end

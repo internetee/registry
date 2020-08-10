@@ -152,6 +152,8 @@ class ContactTest < ActiveSupport::TestCase
   end
 
   def test_address
+    Setting.address_processing = true
+
     address = Contact::Address.new('new street', '83746', 'new city', 'new state', 'EE')
     @contact.address = address
     @contact.save!
