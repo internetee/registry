@@ -62,7 +62,7 @@ class Contact < ApplicationRecord
               mapping: [%w[ident code], %w[ident_type type], %w[ident_country_code country_code]]
 
   after_save :update_related_whois_records
-  before_save :clear_address_modifications, if: -> { !self.class.address_processing? }
+  before_validation :clear_address_modifications, if: -> { !self.class.address_processing? }
 
   self.ignored_columns = %w[legacy_id legacy_history_id]
 

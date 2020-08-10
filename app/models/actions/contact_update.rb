@@ -23,7 +23,7 @@ module Actions
     end
 
     def maybe_remove_address
-      return if Setting.address_processing?
+      return if Contact.address_processing?
 
       new_attributes.delete(:city)
       new_attributes.delete(:zip)
