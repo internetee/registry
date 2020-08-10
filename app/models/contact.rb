@@ -62,6 +62,7 @@ class Contact < ApplicationRecord
               mapping: [%w[ident code], %w[ident_type type], %w[ident_country_code country_code]]
 
   after_save :update_related_whois_records
+  before_save :clear_address_modifications, if: -> { !self.class.address_processing? }
 
   self.ignored_columns = %w[legacy_id legacy_history_id]
 
@@ -505,6 +506,21 @@ class Contact < ApplicationRecord
       PENDING_UPDATE,
       PENDING_DELETE
     ]).present?
+  end
+
+  def clear_address_modifications
+    return unless modifies_address?
+
+    addr_fields = %i[city street zip state country_code]
+    addr_fields.each { |field| self[field] = nil }
+  end
+
+  def modifies_address?
+    addr_fields = %i[city street zip state country_code]
+    modified = false
+    addr_fields.each { |field| modified = true if changes.key?(field) }
+
+    modified
   end
 
   def update_related_whois_records
