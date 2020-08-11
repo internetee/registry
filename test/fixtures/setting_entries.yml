@@ -1,0 +1,349 @@
+
+registry_vat_prc:
+  code: registry_vat_prc
+  value: '0.2'
+  group: billing
+  format: float
+
+directo_sales_agent:
+  code: directo_sales_agent
+  value: HELEN
+  group: billing
+  format: string
+
+admin_contacts_min_count:
+  code: admin_contacts_min_count
+  value: '1'
+  group: domain_validation
+  format: integer
+
+admin_contacts_max_count:
+  code: admin_contacts_max_count
+  value: '10'
+  group: domain_validation
+  format: integer
+
+tech_contacts_min_count:
+  code: tech_contacts_min_count
+  value: '1'
+  group: domain_validation
+  format: integer
+
+tech_contacts_max_count:
+  code: tech_contacts_max_count
+  value: '10'
+  group: domain_validation
+  format: integer
+
+orphans_contacts_in_months:
+  code: orphans_contacts_in_months
+  value: '6'
+  group: domain_validation
+  format: integer
+
+ds_data_allowed:
+  code: ds_data_allowed
+  value: 'false'
+  group: domain_validation
+  format: boolean
+
+key_data_allowed:
+  code: key_data_allowed
+  value: 'true'
+  group: domain_validation
+  format: boolean
+
+dnskeys_min_count:
+  code: dnskeys_min_count
+  value: '0'
+  group: domain_validation
+  format: integer
+
+dnskeys_max_count:
+  code: dnskeys_max_count
+  value: '9'
+  group: domain_validation
+  format: integer
+
+nameserver_required:
+  code: nameserver_required
+  value: 'false'
+  group: domain_validation
+  format: boolean
+
+ns_min_count:
+  code: ns_min_count
+  value: '2'
+  group: domain_validation
+  format: integer
+
+ns_max_count:
+  code: ns_max_count
+  value: '11'
+  group: domain_validation
+  format: integer
+
+expire_pending_confirmation:
+  code: expire_pending_confirmation
+  value: '48'
+  group: domain_validation
+  format: integer
+
+days_to_renew_domain_before_expire:
+  code: days_to_renew_domain_before_expire
+  value: '90'
+  group: domain_expiration
+  format: integer
+
+expire_warning_period:
+  code: expire_warning_period
+  value: '15'
+  group: domain_expiration
+  format: integer
+
+redemption_grace_period:
+  code: redemption_grace_period
+  value: '30'
+  group: domain_expiration
+  format: integer
+
+transfer_wait_time:
+  code: transfer_wait_time
+  value: '0'
+  group: other
+  format: integer
+
+ds_digest_type:
+  code: ds_digest_type
+  value: '2'
+  group: other
+  format: integer
+
+client_side_status_editing_enabled:
+  code: client_side_status_editing_enabled
+  value: 'false'
+  group: other
+  format: boolean
+
+api_ip_whitelist_enabled:
+  code: api_ip_whitelist_enabled
+  value: 'false'
+  group: other
+  format: boolean
+
+registrar_ip_whitelist_enabled:
+  code: registrar_ip_whitelist_enabled
+  value: 'false'
+  group: other
+  format: boolean
+
+request_confrimation_on_registrant_change_enabled:
+  code: request_confrimation_on_registrant_change_enabled
+  value: 'true'
+  group: other
+  format: boolean
+
+request_confirmation_on_domain_deletion_enabled:
+  code: request_confirmation_on_domain_deletion_enabled
+  value: 'true'
+  group: other
+  format: boolean
+
+default_language:
+  code: default_language
+  value: en
+  group: other
+  format: string
+
+invoice_number_min:
+  code: invoice_number_min
+  value: '131050'
+  group: billing
+  format: integer
+
+invoice_number_max:
+  code: invoice_number_max
+  value: '149999'
+  group: billing
+  format: integer
+
+days_to_keep_invoices_active:
+  code: days_to_keep_invoices_active
+  value: '30'
+  group: billing
+  format: integer
+
+days_to_keep_overdue_invoices_active:
+  code: days_to_keep_overdue_invoices_active
+  value: '0'
+  group: billing
+  format: integer
+
+minimum_deposit:
+  code: minimum_deposit
+  value: '0.0'
+  group: billing
+  format: float
+
+directo_receipt_payment_term:
+  code: directo_receipt_payment_term
+  value: R
+  group: billing
+  format: string
+
+directo_receipt_product_name:
+  code: directo_receipt_product_name
+  value: ETTEM06
+  group: billing
+  format: string
+
+registry_billing_email:
+  code: registry_billing_email
+  value: info@internet.ee
+  group: billing
+  format: string
+
+registry_invoice_contact:
+  code: registry_invoice_contact
+  value: Martti Õigus
+  group: billing
+  format: string
+
+registry_vat_no:
+  code: registry_vat_no
+  value: EE101286464
+  group: billing
+  format: string
+
+registry_bank:
+  code: registry_bank
+  value: LHV Pank
+  group: billing
+  format: string
+
+registry_iban:
+  code: registry_iban
+  value: EE557700771000598731
+  group: billing
+  format: string
+
+registry_swift:
+  code: registry_swift
+  value: LHVBEE22
+  group: billing
+  format: string
+
+registry_email:
+  code: registry_email
+  value: info@internet.ee
+  group: contacts
+  format: string
+
+registry_phone:
+  code: registry_phone
+  value: "+372 727 1000"
+  group: contacts
+  format: string
+
+registry_url:
+  code: registry_url
+  value: www.internet.ee
+  group: contacts
+  format: string
+
+registry_street:
+  code: registry_street
+  value: Paldiski mnt 80
+  group: contacts
+  format: string
+
+registry_city:
+  code: registry_city
+  value: Tallinn
+  group: contacts
+  format: string
+
+registry_state:
+  code: registry_state
+  value: Harjumaa
+  group: contacts
+  format: string
+
+registry_country_code:
+  code: registry_country_code
+  value: EE
+  group: contacts
+  format: string
+
+expiration_reminder_mail:
+  code: expiration_reminder_mail
+  value: '2'
+  group: domain_expiration
+  format: integer
+
+directo_monthly_number_min:
+  code: directo_monthly_number_min
+  value: '309901'
+  group: billing
+  format: integer
+
+directo_monthly_number_max:
+  code: directo_monthly_number_max
+  value: '309999'
+  group: billing
+  format: integer
+
+registry_bank_code:
+  code: registry_bank_code
+  value: '689'
+  group: billing
+  format: string
+
+registry_reg_no:
+  code: registry_reg_no
+  value: '90010019'
+  group: contacts
+  format: string
+
+registry_zip:
+  code: registry_zip
+  value: '10617'
+  group: contacts
+  format: string
+
+registry_juridical_name:
+  code: registry_juridical_name
+  value: Eesti Interneti SA
+  group: contacts
+  format: string
+
+address_processing:
+  code: address_processing
+  value: 'true'
+  group: other
+  format: boolean
+
+directo_monthly_number_last:
+  code: directo_monthly_number_last
+  value: '309909'
+  group: billing
+  format: integer
+
+dispute_period_in_months:
+  code: dispute_period_in_months
+  value: '36'
+  group: other
+  format: integer
+
+registry_whois_disclaimer:
+  code: registry_whois_disclaimer
+  value: Search results may not be used for commercial, advertising, recompilation,
+    repackaging,  redistribution, reuse, obscuring or other similar activities.
+  group: contacts
+  format: string
+
+legal_document_is_mandatory:
+  code: legal_document_is_mandatory
+  value: 'true'
+  group: domain_validation
+  format: boolean
