@@ -152,6 +152,8 @@ class ContactTest < ActiveSupport::TestCase
   end
 
   def test_address
+    Setting.address_processing = true
+
     address = Contact::Address.new('new street', '83746', 'new city', 'new state', 'EE')
     @contact.address = address
     @contact.save!
@@ -238,6 +240,7 @@ class ContactTest < ActiveSupport::TestCase
   end
 
   def test_normalizes_country_code
+    Setting.address_processing = true
     contact = Contact.new(country_code: 'us')
     contact.validate
     assert_equal 'US', contact.country_code
