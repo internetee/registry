@@ -27,9 +27,13 @@ class SettingEntry < ApplicationRecord
   def self.method_missing(method, *args)
     super(method, *args)
   rescue NoMethodError
-    raise NoMethodError if method.to_s.include? '='
-
-    SettingEntry.find_by!(code: method.to_s).retrieve
+    if method.to_s[-1] == "="
+      stg_code = method.to_s.sub("=", "")
+      stg_value = args[0].to_s
+      SettingEntry.find_by!(code: stg_code).update(value: stg_value)
+    else
+      SettingEntry.find_by!(code: method.to_s).retrieve
+    end
   end
 
   # Validators
