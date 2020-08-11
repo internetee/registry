@@ -31,6 +31,14 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;
 
+
+--
+-- Name: EXTENSION btree_gist; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION btree_gist IS 'support for indexing common datatypes in GiST';
+
+
 --
 -- Name: citext; Type: EXTENSION; Schema: -; Owner: -
 --
@@ -2255,6 +2263,42 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: setting_entries; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE public.setting_entries (
+    id bigint NOT NULL,
+    code character varying NOT NULL,
+    value character varying NOT NULL,
+    "group" character varying NOT NULL,
+    format character varying NOT NULL,
+    creator_str character varying,
+    updator_str character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: setting_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.setting_entries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: setting_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.setting_entries_id_seq OWNED BY public.setting_entries.id;
+
+
+--
 -- Name: settings; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
@@ -2859,6 +2903,13 @@ ALTER TABLE ONLY public.reserved_domains ALTER COLUMN id SET DEFAULT nextval('pu
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.setting_entries ALTER COLUMN id SET DEFAULT nextval('public.setting_entries_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.settings_id_seq'::regclass);
 
 
@@ -3319,6 +3370,14 @@ ALTER TABLE ONLY public.registrars
 
 ALTER TABLE ONLY public.reserved_domains
     ADD CONSTRAINT reserved_domains_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: setting_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY public.setting_entries
+    ADD CONSTRAINT setting_entries_pkey PRIMARY KEY (id);
 
 
 --
@@ -3991,6 +4050,13 @@ CREATE INDEX index_registrant_verifications_on_created_at ON public.registrant_v
 --
 
 CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_verifications USING btree (domain_id);
+
+
+--
+-- Name: index_setting_entries_on_code; Type: INDEX; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE UNIQUE INDEX index_setting_entries_on_code ON public.setting_entries USING btree (code);
 
 
 --
@@ -4712,6 +4778,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200610090110'),
 ('20200630081231'),
 ('20200714115338'),
-('20200807110611');
+('20200807110611'),
+('20200811074839');
 
 
