@@ -1,3 +1,6 @@
+11.08.2020
+* FIxed postal address saving bug with disabled address processing [#1650](https://github.com/internetee/registry/issues/1650)
+
 07.08.2020
 * Restored creator and updator strings to contacts and related object records [#1636](https://github.com/internetee/registry/issues/1636)
 * Security gem updates: sdoc to 1.1 and json to 2.3.1 [#1657](https://github.com/internetee/registry/pull/1657)
