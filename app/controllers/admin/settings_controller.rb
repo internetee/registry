@@ -3,7 +3,12 @@ module Admin
     load_and_authorize_resource
 
     def index
-      @settings = Setting.unscoped
+      @settings = SettingEntry.unscoped
+      @validation_settings = SettingEntry.with_group('domain_validation')
+      @expiration_settings = SettingEntry.with_group('domain_expiration')
+      @other_settings = SettingEntry.with_group('other')
+      @billing_settings = SettingEntry.with_group('billing')
+      @contacts_settings = SettingEntry.with_group('contacts')
     end
 
     def create

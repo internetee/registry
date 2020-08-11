@@ -18,6 +18,10 @@ class SettingEntry < ApplicationRecord
     send(method)
   end
 
+  def self.with_group(group_name)
+    SettingEntry.where(group: group_name)
+  end
+
   def self.groups
     SettingEntry.all.pluck(:group).uniq
   end
