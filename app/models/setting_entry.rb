@@ -2,6 +2,7 @@ class SettingEntry < ApplicationRecord
   validates :code, presence: true, uniqueness: true
   validates :value, presence: true
   validates :format, presence: true
+  validates :group, presence: true
   validate :valid_value_format
 
   VALUE_FORMATS = {
@@ -12,6 +13,24 @@ class SettingEntry < ApplicationRecord
     array: :array_format,
   }.with_indifferent_access.freeze
 
+  def retrieve
+    method = VALUE_FORMATS[format]
+    send(method)
+  end
+
+  def self.groups
+    SettingEntry.all.pluck(:group).uniq
+  end
+
+  def self.method_missing(method, *args)
+    super(method, *args)
+  rescue NoMethodError
+    raise NoMethodError if method.to_s.include? '='
+
+    SettingEntry.find_by!(code: method.to_s).retrieve
+  end
+
+  # Validators
   def valid_value_format
     formats = VALUE_FORMATS.with_indifferent_access
     errors.add(:format, :invalid) unless formats.keys.any? format
@@ -35,18 +54,5 @@ class SettingEntry < ApplicationRecord
 
   def array_format
     JSON.parse(value).to_a
-  end
-
-  def retrieve
-    method = VALUE_FORMATS[format]
-    send(method)
-  end
-
-  def self.method_missing(method, *args)
-    super(method, *args)
-  rescue NoMethodError
-    raise NoMethodError if method.to_s.include? '='
-
-    SettingEntry.find_by!(code: method.to_s).retrieve
   end
 end
