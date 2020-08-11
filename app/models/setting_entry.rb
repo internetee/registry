@@ -4,10 +4,12 @@ class SettingEntry < ApplicationRecord
   validates :format, presence: true
   validates :group, presence: true
   validate :valid_value_format
+  include Concerns::Settings::Migratable
 
   VALUE_FORMATS = {
     string: :string_format,
     integer: :integer_format,
+    float: :float_format,
     boolean: :boolean_format,
     hash: :hash_format,
     array: :array_format,
@@ -19,11 +21,7 @@ class SettingEntry < ApplicationRecord
   end
 
   def self.with_group(group_name)
-    SettingEntry.where(group: group_name)
-  end
-
-  def self.groups
-    SettingEntry.all.pluck(:group).uniq
+    SettingEntry.order(id: :asc).where(group: group_name)
   end
 
   def self.method_missing(method, *args)
@@ -46,6 +44,10 @@ class SettingEntry < ApplicationRecord
 
   def integer_format
     value.to_i
+  end
+
+  def float_format
+    value.to_f
   end
 
   def boolean_format

@@ -1,7 +1,7 @@
 class LegalDocument < ApplicationRecord
   cattr_accessor :explicitly_write_file
   include EppErrors
-  MIN_BODY_SIZE = (1.37 * 3.kilobytes).ceil
+  MIN_BODY_SIZE = 5
 
   if ENV['legal_document_types'].present?
     TYPES = ENV['legal_document_types'].split(',').map(&:strip)
