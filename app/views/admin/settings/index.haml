@@ -32,7 +32,7 @@
           %tr
             %td.col-md-6= label_tag :default_language
             %td.col-md-6
-              = select_tag '[settings][default_language]',
+              = select_tag "[settings][#{SettingEntry.find_by(code: 'default_language').id || 1}]",
               options_for_select(available_languages, Setting.default_language),
               class: 'form-control'
 

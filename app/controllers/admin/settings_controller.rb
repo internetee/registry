@@ -12,17 +12,13 @@ module Admin
     end
 
     def create
-      @errors = Setting.params_errors(casted_settings)
-      if @errors.empty?
-        casted_settings.each do |k, v|
-          Setting[k] = v
-        end
-
+      update = SettingEntry.update(casted_settings.keys, casted_settings.values)
+      if update
         flash[:notice] = t('.saved')
-        redirect_to [:admin, :settings]
+        redirect_to %i[admin settings]
       else
-        flash[:alert] = @errors.values.uniq.join(", ")
-        render "admin/settings/index"
+        flash[:alert] = update.errors.values.uniq.join(', ')
+        render 'admin/settings/index'
       end
     end
 
@@ -32,10 +28,7 @@ module Admin
       settings = {}
 
       params[:settings].each do |k, v|
-        settings[k] = v
-        settings[k] = v.to_i if Setting.integer_settings.include?(k.to_sym)
-        settings[k] = v.to_f if Setting.float_settings.include?(k.to_sym)
-        settings[k] = (v == 'true' ? true : false) if Setting.boolean_settings.include?(k.to_sym)
+        settings[k] = { value: v }
       end
 
       settings
