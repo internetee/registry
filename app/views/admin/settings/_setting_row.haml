@@ -1,8 +1,8 @@
 %tr{class: (@errors && @errors.has_key?(setting.code) && "danger")}
   %td.col-md-6= setting.code.humanize
-  - if [TrueClass, FalseClass].include?(setting.value.class)
+  - if [TrueClass, FalseClass].include?(setting.retrieve.class)
     %td.col-md-6
       = hidden_field_tag("[settings][#{setting.id}]", '', id: nil)
-      = check_box_tag("[settings][#{setting.id}]", true, value)
+      = check_box_tag("[settings][#{setting.id}]", true, setting.retrieve)
   - else
     %td.col-md-6= text_field_tag("[settings][#{setting.id}]", setting.value, class: 'form-control')
