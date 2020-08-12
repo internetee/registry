@@ -21,7 +21,6 @@ before_script:
   - "echo \"ca_key_password: 'password'\" >> config/application.yml"
   - "cp config/database_travis.yml config/database.yml"
   - "bundle exec rake db:setup:all"
-  - "bundle exec rake data:migrate"
   - "curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter"
   - "chmod +x ./cc-test-reporter"
   - "./cc-test-reporter before-build"
