@@ -1,10 +1,10 @@
 class SettingEntry < ApplicationRecord
   include Versions
-  validates :code, presence: true, uniqueness: true
+  validates :code, presence: true, uniqueness: true, format: { with: /\A([a-z])[a-z|_]+[a-z]\z/ }
   validates :format, presence: true
   validates :group, presence: true
-  validate :valid_value_format
-  validates_format_of :code, with: /([a-z])[a-z|_]+[a-z]/
+  validate :validate_value_format
+  validate :validate_code_is_not_using_reserved_name
 
   VALUE_FORMATS = {
     string: :string_format,
@@ -44,7 +44,13 @@ class SettingEntry < ApplicationRecord
   end
 
   # Validators
-  def valid_value_format
+  def validate_code_is_not_using_reserved_name
+    disallowed = []
+    ActiveRecord::Base.instance_methods.sort.each { |m| disallowed << m.to_s }
+    errors.add(:code, :invalid) if disallowed.include? code
+  end
+
+  def validate_value_format
     formats = VALUE_FORMATS.with_indifferent_access
     errors.add(:format, :invalid) unless formats.keys.any? format
   end

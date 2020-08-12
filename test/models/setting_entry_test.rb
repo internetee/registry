@@ -35,6 +35,15 @@ class SettingEntryTest < ActiveSupport::TestCase
     @new_setting.code = 'a b'
     assert_not @new_setting.valid?
 
+    @new_setting.code = 'ab_'
+    assert_not @new_setting.valid?
+
+    @new_setting.code = '_ab'
+    assert_not @new_setting.valid?
+
+    @new_setting.code = '1_2'
+    assert_not @new_setting.valid?
+
     @new_setting.code = 'a_b'
     assert @new_setting.valid?
   end
