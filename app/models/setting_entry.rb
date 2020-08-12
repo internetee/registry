@@ -23,11 +23,12 @@ class SettingEntry < ApplicationRecord
     SettingEntry.order(id: :asc).where(group: group_name)
   end
 
+  # rubocop:disable Style/MethodMissingSuper
   def self.method_missing(method, *args)
     super(method, *args)
   rescue NoMethodError
-    if method.to_s[-1] == "="
-      stg_code = method.to_s.sub("=", "")
+    if method.to_s[-1] == '='
+      stg_code = method.to_s.sub('=', '')
       stg_value = args[0].to_s
       SettingEntry.find_by!(code: stg_code).update(value: stg_value)
     else
@@ -35,6 +36,7 @@ class SettingEntry < ApplicationRecord
       stg ? stg.retrieve : nil
     end
   end
+  # rubocop:enable Style/MethodMissingSuper
 
   # Validators
   def valid_value_format
