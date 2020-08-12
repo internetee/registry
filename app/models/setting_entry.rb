@@ -3,7 +3,6 @@ class SettingEntry < ApplicationRecord
   validates :format, presence: true
   validates :group, presence: true
   validate :valid_value_format
-  include Concerns::Settings::Migratable
 
   VALUE_FORMATS = {
     string: :string_format,
@@ -24,6 +23,7 @@ class SettingEntry < ApplicationRecord
   end
 
   # rubocop:disable Style/MethodMissingSuper
+  # rubocop:disable Style/MissingRespondToMissing
   def self.method_missing(method, *args)
     super(method, *args)
   rescue NoMethodError
@@ -36,6 +36,7 @@ class SettingEntry < ApplicationRecord
       stg ? stg.retrieve : nil
     end
   end
+  # rubocop:enable Style/MissingRespondToMissing
   # rubocop:enable Style/MethodMissingSuper
 
   # Validators
