@@ -27,17 +27,19 @@ class SettingEntry < ApplicationRecord
   def self.method_missing(method, *args)
     super(method, *args)
   rescue NoMethodError
-    if method.to_s[-1] == '='
-      stg_code = method.to_s.sub('=', '')
-      stg_value = args[0].to_s
-      SettingEntry.find_by!(code: stg_code).update(value: stg_value)
-    else
-      stg = SettingEntry.find_by(code: method.to_s)
-      stg ? stg.retrieve : nil
-    end
+    get_or_set(method.to_s, args[0])
   end
   # rubocop:enable Style/MissingRespondToMissing
   # rubocop:enable Style/MethodMissingSuper
+
+  def self.get_or_set(method_name, arg)
+    if method_name[-1] == '='
+      SettingEntry.find_by!(code: method_name.sub('=', '')).update(value: arg.to_s)
+    else
+      stg = SettingEntry.find_by(code: method_name)
+      stg ? stg.retrieve : nil
+    end
+  end
 
   # Validators
   def valid_value_format
