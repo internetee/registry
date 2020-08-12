@@ -3,8 +3,6 @@ require 'test_helper'
 class EppDomainCreateBaseTest < EppTestCase
 
   def test_not_registers_domain_without_legaldoc
-    old_value = Setting.legal_document_is_mandatory
-    Setting.legal_document_is_mandatory = true
     now = Time.zone.parse('2010-07-05')
     travel_to now
     name = "new.#{dns_zones(:one).origin}"
@@ -31,7 +29,6 @@ class EppDomainCreateBaseTest < EppTestCase
     end
 
     assert_epp_response :required_parameter_missing
-    Setting.legal_document_is_mandatory = old_value
   end
 
   def test_registers_new_domain_with_required_attributes
@@ -121,8 +118,6 @@ class EppDomainCreateBaseTest < EppTestCase
     name = "new.#{dns_zones(:one).origin}"
     contact = contacts(:john)
     registrant = contact.becomes(Registrant)
-    old_value = Setting.legal_document_is_mandatory
-    Setting.legal_document_is_mandatory = true
     registrar = registrant.registrar
 
     assert registrar.legaldoc_mandatory?
@@ -155,8 +150,6 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-
-    Setting.legal_document_is_mandatory = old_value
   end
 
   def test_registers_reserved_domain_with_registration_code

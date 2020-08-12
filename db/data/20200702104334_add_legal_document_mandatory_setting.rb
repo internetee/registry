@@ -1,9 +1,11 @@
 class AddLegalDocumentMandatorySetting < ActiveRecord::Migration[6.0]
   def up
-    Setting.legal_document_is_mandatory = true
+    Setting.create(code: 'legal_document_is_mandatory',
+                   value: 'true', format: 'boolean',
+                   group: 'domain_validation')
   end
 
   def down
-    Setting.find_by(var: 'legal_document_is_mandatory').delete
+    Setting.find_by(code: 'legal_document_is_mandatory').destroy
   end
 end
