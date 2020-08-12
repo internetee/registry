@@ -4,6 +4,7 @@ class SettingEntry < ApplicationRecord
   validates :format, presence: true
   validates :group, presence: true
   validate :valid_value_format
+  validates_format_of :code, with: /([a-z])[a-z|_]+[a-z]/
 
   VALUE_FORMATS = {
     string: :string_format,

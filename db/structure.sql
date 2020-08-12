@@ -2307,7 +2307,7 @@ CREATE TABLE public.schema_migrations (
 CREATE TABLE public.setting_entries (
     id bigint NOT NULL,
     code character varying NOT NULL,
-    value character varying DEFAULT ''::character varying,
+    value character varying,
     "group" character varying NOT NULL,
     format character varying NOT NULL,
     creator_str character varying,

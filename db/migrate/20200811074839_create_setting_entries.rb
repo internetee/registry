@@ -2,7 +2,7 @@ class CreateSettingEntries < ActiveRecord::Migration[6.0]
   def change
     create_table :setting_entries do |t|
       t.string :code, null: false, index: { unique: true }
-      t.string :value, null: false, default: ''
+      t.string :value
       t.string :group, null: false
       t.string :format, null: false
 
