@@ -1,4 +1,5 @@
 class SettingEntry < ApplicationRecord
+  include Versions
   validates :code, presence: true, uniqueness: true
   validates :format, presence: true
   validates :group, presence: true
