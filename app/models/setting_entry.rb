@@ -1,6 +1,5 @@
 class SettingEntry < ApplicationRecord
   validates :code, presence: true, uniqueness: true
-  validates :value, presence: true
   validates :format, presence: true
   validates :group, presence: true
   validate :valid_value_format
@@ -17,7 +16,7 @@ class SettingEntry < ApplicationRecord
 
   def retrieve
     method = VALUE_FORMATS[format]
-    send(method)
+    value.blank? ? nil : send(method)
   end
 
   def self.with_group(group_name)
@@ -32,7 +31,8 @@ class SettingEntry < ApplicationRecord
       stg_value = args[0].to_s
       SettingEntry.find_by!(code: stg_code).update(value: stg_value)
     else
-      SettingEntry.find_by!(code: method.to_s).retrieve
+      stg = SettingEntry.find_by(code: method.to_s)
+      stg ? stg.retrieve : nil
     end
   end
 

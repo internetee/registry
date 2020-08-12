@@ -2269,7 +2269,7 @@ CREATE TABLE public.schema_migrations (
 CREATE TABLE public.setting_entries (
     id bigint NOT NULL,
     code character varying NOT NULL,
-    value character varying DEFAULT ''::character varying NOT NULL,
+    value character varying DEFAULT ''::character varying,
     "group" character varying NOT NULL,
     format character varying NOT NULL,
     creator_str character varying,
@@ -4779,6 +4779,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200630081231'),
 ('20200714115338'),
 ('20200807110611'),
-('20200811074839');
+('20200811074839'),
+('20200812090409');
 
 
