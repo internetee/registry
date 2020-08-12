@@ -71,10 +71,7 @@ ActiveRecord::Base.transaction do
     country_code: 'EE',
     roles: ['admin']
   )
-  # Required for creating registrar
-  Setting.where(var: 'registry_vat_prc').first_or_create(
-    value: '0.2'
-  )
+
   # First registrar
   Registrar.where(name: 'Registrar First').first_or_create!(
     name: 'Registrar First',
