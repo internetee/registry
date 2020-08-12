@@ -26,9 +26,6 @@ require 'rake'
 Rake::Task.clear
 Rails.application.load_tasks
 
-Setting.address_processing = false
-Setting.registry_country_code = 'US'
-
 class CompanyRegisterClientStub
   Company = Struct.new(:registration_number)
 

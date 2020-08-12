@@ -57,7 +57,7 @@ ActiveRecord::Base.transaction do
   SettingEntry.create(code: 'registry_zip', value: '10617', format: 'string', group: 'contacts')
   SettingEntry.create(code: 'registry_juridical_name', value: 'Eesti Interneti SA', format: 'string', group: 'contacts')
   SettingEntry.create(code: 'address_processing', value: 'true', format: 'boolean', group: 'other')
-  SettingEntry.create(code: 'directo_monthly_number_last', value: '309909', format: 'integer', group: 'billing')
+  SettingEntry.create(code: 'directo_monthly_number_last', value: '309901', format: 'integer', group: 'billing')
   SettingEntry.create(code: 'dispute_period_in_months', value: '36', format: 'integer', group: 'other')
   SettingEntry.create(code: 'registry_whois_disclaimer', value: 'Search results may not be used for commercial, advertising, recompilation, repackaging,  redistribution, reuse, obscuring or other similar activities.', format: 'string', group: 'contacts')
   SettingEntry.create(code: 'legal_document_is_mandatory', value: 'true', format: 'boolean', group: 'domain_validation')
