@@ -8,10 +8,11 @@ class UpdateWhoisRecordJob < Que::Job
             when 'blocked'  then BlockedDomain
             when 'domain'   then Domain
             when 'disputed' then Dispute.active
+            when 'zone'     then DNS::Zone
             end
 
     Array(names).each do |name|
-      record = klass.find_by(name: name)
+      record = klass == DNS::Zone ? klass.find_by(origin: name) : klass.find_by(name: name)
       if record
         send "update_#{type}", record
       else
@@ -33,6 +34,10 @@ class UpdateWhoisRecordJob < Que::Job
   end
 
   def update_disputed(record)
+    update_reserved(record)
+  end
+
+  def update_zone(record)
     update_reserved(record)
   end
 
@@ -58,6 +63,10 @@ class UpdateWhoisRecordJob < Que::Job
     return if Dispute.active.find_by(domain_name: name).present?
 
     remove_status_from_whois(domain_name: name, domain_status: 'disputed')
+  end
+
+  def delete_zone(name)
+    WhoisRecord.where(name: name).destroy_all
   end
 
   def remove_status_from_whois(domain_name:, domain_status:)
