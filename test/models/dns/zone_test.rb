@@ -131,18 +131,21 @@ class DNS::ZoneTest < ActiveSupport::TestCase
   end
 
   def test_updates_whois_after_update
-    subzone = dns_zones(:subzone)
-    assert_nil Whois::Record.find_by(name: subzone.origin)
+    subzone = dns_zones(:one).dup
 
-    subzone.update(expire: 42)
+    subzone.origin = 'sub.zone'
+    subzone.save
 
     whois_record = Whois::Record.find_by(name: subzone.origin)
     assert whois_record.present?
   end
 
   def test_deletes_whois_record_after_destroy
-    subzone = dns_zones(:subzone)
-    subzone.update(expire: 42)
+    subzone = dns_zones(:one).dup
+
+    subzone.origin = 'sub.zone'
+    subzone.save
+
     assert Whois::Record.find_by(name: subzone.origin).present?
 
     subzone.destroy

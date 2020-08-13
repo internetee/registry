@@ -232,6 +232,99 @@ class EppContactUpdateBaseTest < EppTestCase
     assert_epp_response :completed_successfully
   end
 
+  def test_updates_address_when_address_processing_turned_on
+    @contact.update_columns(code: @contact.code.upcase)
+    Setting.address_processing = true
+
+    street = '123 Example'
+    city = 'Tallinn'
+    state = 'Harjumaa'
+    zip = '123456'
+    country_code = 'EE'
+
+    request_xml = <<-XML
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <command>
+        <update>
+          <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:id>#{@contact.code}</contact:id>
+            <contact:chg>
+              <contact:postalInfo>
+                <contact:addr>
+                  <contact:street>#{street}</contact:street>
+                  <contact:city>#{city}</contact:city>
+                  <contact:sp>#{state}</contact:sp>
+                  <contact:pc>#{zip}</contact:pc>
+                  <contact:cc>#{country_code}</contact:cc>
+                </contact:addr>
+              </contact:postalInfo>
+            </contact:chg>
+          </contact:update>
+        </update>
+      </command>
+    </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert_epp_response :completed_successfully
+    @contact.reload
+
+    assert_equal city, @contact.city
+    assert_equal street, @contact.street
+    assert_equal zip, @contact.zip
+    assert_equal country_code, @contact.country_code
+    assert_equal state, @contact.state
+  end
+
+  def test_does_not_update_address_when_address_processing_turned_off
+    @contact.update_columns(code: @contact.code.upcase)
+
+    street = '123 Example'
+    city = 'Tallinn'
+    state = 'Harjumaa'
+    zip = '123456'
+    country_code = 'EE'
+
+    request_xml = <<-XML
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <command>
+        <update>
+          <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:id>#{@contact.code}</contact:id>
+            <contact:chg>
+              <contact:postalInfo>
+                <contact:addr>
+                  <contact:street>#{street}</contact:street>
+                  <contact:city>#{city}</contact:city>
+                  <contact:sp>#{state}</contact:sp>
+                  <contact:pc>#{zip}</contact:pc>
+                  <contact:cc>#{country_code}</contact:cc>
+                </contact:addr>
+              </contact:postalInfo>
+            </contact:chg>
+          </contact:update>
+        </update>
+      </command>
+    </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert_epp_response :completed_without_address
+    @contact.reload
+
+    assert_nil @contact.city
+    assert_nil @contact.street
+    assert_nil @contact.zip
+    assert_nil @contact.country_code
+    assert_nil @contact.state
+  end
+
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)

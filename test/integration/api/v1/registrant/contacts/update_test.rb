@@ -91,8 +91,8 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_address_is_optional_when_enabled
-    @contact.update!(street: 'any', zip: 'any', city: 'any', state: 'any', country_code: 'US')
     Setting.address_processing = true
+    @contact.update!(street: 'any', zip: 'any', city: 'any', state: 'any', country_code: 'US')
 
     patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'any' },
           as: :json,
