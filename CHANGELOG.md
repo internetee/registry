@@ -1,5 +1,8 @@
+13.08.2020
+* Removed keystore gem and replaced LHV JKS with PKCS12 [#1645](https://github.com/internetee/registry/issues/1645)
+
 11.08.2020
-* FIxed postal address saving bug with disabled address processing [#1650](https://github.com/internetee/registry/issues/1650)
+* Fixed postal address saving bug with disabled address processing [#1650](https://github.com/internetee/registry/issues/1650)
 
 07.08.2020
 * Restored creator and updator strings to contacts and related object records [#1636](https://github.com/internetee/registry/issues/1636)
