@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DNS
   class Zone < ApplicationRecord
     validates :origin, :ttl, :refresh, :retry, :expire, :minimum_ttl, :email, :master_nameserver, presence: true
@@ -61,50 +63,36 @@ module DNS
     end
 
     def generate_json
-      h = HashWithIndifferentAccess.new
+      data = {}.with_indifferent_access
+      [domain_vars, registrar_vars, registrant_vars].each do |h|
+        data.merge!(h)
+      end
 
-      h[:disclaimer] = Setting.registry_whois_disclaimer if Setting.registry_whois_disclaimer
-      h[:name]       = origin
-      h[:status]     = ['ok (paid and in zone)']
-      h[:registered] = created_at.try(:to_s, :iso8601)
-      h[:changed]    = updated_at.try(:to_s, :iso8601)
-      h[:expire]     = nil
-      h[:outzone]    = nil
-      h[:delete] = nil
+      data
+    end
 
-      h[:registrant] = Setting.registry_juridical_name
-      h[:registrant_kind] = 'org'
-      h[:registrant_reg_no] = Setting.registry_reg_no
-      h[:registrant_ident_country_code] = Setting.registry_country_code
+    def domain_vars
+      { disclaimer: Setting.registry_whois_disclaimer, name: origin,
+        registered: created_at.try(:to_s, :iso8601), status: ['ok (paid and in zone)'],
+        changed: updated_at.try(:to_s, :iso8601), email: Setting.registry_email,
+        admin_contacts: [contact_vars], tech_contacts: [contact_vars],
+        nameservers: [master_nameserver] }
+    end
 
-      h[:email] = Setting.registry_email
-      h[:registrant_changed] = nil
-      h[:registrant_disclosed_attributes] = %w[name email],
+    def registrar_vars
+      { registrar: Setting.registry_juridical_name, registrar_website: Setting.registry_url,
+        registrar_phone: Setting.registry_phone }
+    end
 
-      contact = {
-        name: Setting.registry_invoice_contact,
-        email: Setting.registry_email,
-        changed: nil,
-        disclosed_attributes: %w[name email],
-      }
+    def registrant_vars
+      { registrant: Setting.registry_juridical_name, registrant_reg_no: Setting.registry_reg_no,
+        registrant_ident_country_code: Setting.registry_country_code, registrant_kind: 'org',
+        registrant_disclosed_attributes: %w[name email] }
+    end
 
-      h[:admin_contacts] = [contact]
-
-      h[:tech_contacts] = [contact]
-
-      # update registar triggers when adding new attributes
-      h[:registrar]         = Setting.registry_juridical_name
-      h[:registrar_website] = Setting.registry_url
-      h[:registrar_phone]   = Setting.registry_phone
-      h[:registrar_changed] = nil
-
-      h[:nameservers]         = [master_nameserver]
-      h[:nameservers_changed] = nil
-
-      h[:dnssec_keys]    = []
-      h[:dnssec_changed] = nil
-
-      h
+    def contact_vars
+      { name: Setting.registry_invoice_contact, email: Setting.registry_email,
+        disclosed_attributes: %w[name email] }
     end
   end
 end

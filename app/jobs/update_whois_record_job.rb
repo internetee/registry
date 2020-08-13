@@ -3,21 +3,29 @@ class UpdateWhoisRecordJob < Que::Job
   def run(names, type)
     ::PaperTrail.request.whodunnit = "job - #{self.class.name} - #{type}"
 
-    klass = case type
-            when 'reserved' then ReservedDomain
-            when 'blocked'  then BlockedDomain
-            when 'domain'   then Domain
-            when 'disputed' then Dispute.active
-            when 'zone'     then DNS::Zone
-            end
+    klass = determine_class(type)
 
     Array(names).each do |name|
-      record = klass == DNS::Zone ? klass.find_by(origin: name) : klass.find_by(name: name)
+      record = find_record(klass, name)
       if record
         send "update_#{type}", record
       else
         send "delete_#{type}", name
       end
+    end
+  end
+
+  def find_record(klass, name)
+    klass == DNS::Zone ? klass.find_by(origin: name) : klass.find_by(name: name)
+  end
+
+  def determine_class(type)
+    case type
+    when 'reserved' then ReservedDomain
+    when 'blocked'  then BlockedDomain
+    when 'domain'   then Domain
+    when 'disputed' then Dispute.active
+    when 'zone'     then DNS::Zone
     end
   end
 
