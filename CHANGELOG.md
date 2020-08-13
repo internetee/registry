@@ -1,3 +1,17 @@
+11.08.2020
+* FIxed postal address saving bug with disabled address processing [#1650](https://github.com/internetee/registry/issues/1650)
+
+07.08.2020
+* Restored creator and updator strings to contacts and related object records [#1636](https://github.com/internetee/registry/issues/1636)
+* Security gem updates: sdoc to 1.1 and json to 2.3.1 [#1657](https://github.com/internetee/registry/pull/1657)
+
+04.08.2020
+* Fixed registrant verification for domain delete [#1631](https://github.com/internetee/registry/issues/1631)
+* Fixed domain transfer issue when one person was present in the same role more than once (different objects) [#1651](https://github.com/internetee/registry/issues/1651)
+
+03.08.2020
+* Fixed 0 vat issue with invoices sent to Directo [#1647](https://github.com/internetee/registry/issues/1647)
+
 17.07.2020
 * Added turemail gem for validating email addresses syntactically and on MX record level [#297](https://github.com/internetee/registry/issues/297)
 

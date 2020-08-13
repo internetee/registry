@@ -164,6 +164,7 @@ test:
   action_mailer_force_delete_from: 'legal@registry.test'
   lhv_p12_keystore: 'test/fixtures/files/keystore.p12'
   lhv_keystore_password: 'testtest'
+  legal_documents_dir: 'test/fixtures/files'
 
 # Airbrake // Errbit:
 airbrake_host: "https://your-errbit-host.ee"

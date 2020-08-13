@@ -2,6 +2,7 @@ module Admin
   class BaseController < ApplicationController
     before_action :authenticate_admin_user!
     helper_method :head_title_sufix
+    before_action :set_paper_trail_whodunnit
 
     def head_title_sufix
       t(:admin_head_title_sufix)
