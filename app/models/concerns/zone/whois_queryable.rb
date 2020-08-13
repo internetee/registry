@@ -5,7 +5,7 @@ module Concerns
 
       included do
         after_save :update_whois_record, if: :subzone?
-        after_destroy :update_whois_record, if: :subzone?
+        after_destroy :update_whois_record
       end
 
       def subzone?

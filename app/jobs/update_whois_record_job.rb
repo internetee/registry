@@ -75,6 +75,7 @@ class UpdateWhoisRecordJob < Que::Job
 
   def delete_zone(name)
     WhoisRecord.where(name: name).destroy_all
+    Whois::Record.where(name: name).destroy_all
   end
 
   def remove_status_from_whois(domain_name:, domain_status:)
