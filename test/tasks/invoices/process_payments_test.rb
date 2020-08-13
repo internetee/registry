@@ -88,6 +88,12 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
     end
   end
 
+  def test_parses_keystore_properly
+    assert_nothing_raised do
+      run_task
+    end
+  end
+
   private
 
   def run_task
