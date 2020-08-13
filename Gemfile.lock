@@ -45,8 +45,8 @@ GIT
 
 GIT
   remote: https://github.com/internetee/lhv.git
-  revision: af0d3127bed6606ac50c44696bd56b09c096ac39
-  branch: remove-keystores-gem
+  revision: 1825240b3bf8b262418cc6c8ef7ed1aba386dd7d
+  branch: master
   specs:
     lhv (0.1.0)
       logger
