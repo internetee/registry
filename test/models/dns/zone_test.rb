@@ -140,6 +140,32 @@ class DNS::ZoneTest < ActiveSupport::TestCase
     assert whois_record.present?
   end
 
+  def test_has_setting_info_as_contacts_for_subzones
+    subzone = dns_zones(:one).dup
+
+    subzone.origin = 'sub.zone'
+    subzone.save
+
+    whois_record = Whois::Record.find_by(name: subzone.origin)
+    assert whois_record.present?
+
+    assert_equal Setting.registry_whois_disclaimer, whois_record.json['disclaimer']
+    assert_equal Setting.registry_email, whois_record.json['email']
+    assert_equal Setting.registry_juridical_name, whois_record.json['registrar']
+    assert_equal Setting.registry_url, whois_record.json['registrar_website']
+    assert_equal Setting.registry_phone, whois_record.json['registrar_phone']
+
+    assert_equal Setting.registry_juridical_name, whois_record.json['registrant']
+    assert_equal Setting.registry_reg_no, whois_record.json['registrant_reg_no']
+    assert_equal Setting.registry_country_code, whois_record.json['registrant_ident_country_code']
+
+    contact = { name: Setting.registry_invoice_contact, email: Setting.registry_email,
+                disclosed_attributes: %w[name email] }.with_indifferent_access
+
+    assert_equal contact, whois_record.json['admin_contacts'][0]
+    assert_equal contact, whois_record.json['tech_contacts'][0]
+  end
+
   def test_deletes_whois_record_after_destroy
     subzone = dns_zones(:one).dup
 
