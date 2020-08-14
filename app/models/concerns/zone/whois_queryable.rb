@@ -36,7 +36,7 @@ module Concerns
           registered: created_at.try(:to_s, :iso8601), status: ['ok (paid and in zone)'],
           changed: updated_at.try(:to_s, :iso8601), email: Setting.registry_email,
           admin_contacts: [contact_vars], tech_contacts: [contact_vars],
-          nameservers: [master_nameserver] }
+          nameservers: nameserver_vars }
       end
 
       def registrar_vars
@@ -53,6 +53,16 @@ module Concerns
       def contact_vars
         { name: Setting.registry_invoice_contact, email: Setting.registry_email,
           disclosed_attributes: %w[name email] }
+      end
+
+      def nameserver_vars
+        vars = []
+        vars.push(master_nameserver)
+        return vars unless ns_records
+
+        ns_records.split("\r\n").each { |ns| (vars << ns) if ns.match? Nameserver::HOSTNAME_REGEXP }
+
+        vars
       end
     end
   end
