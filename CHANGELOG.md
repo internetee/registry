@@ -1,3 +1,6 @@
+14.08.2020
+* Added handling of second lvl zoness managed by the registry in whois records [#1661](https://github.com/internetee/registry/issues/1661)
+
 13.08.2020
 * Removed keystore gem and replaced LHV JKS with PKCS12 [#1645](https://github.com/internetee/registry/issues/1645)
 
