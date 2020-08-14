@@ -57,10 +57,13 @@ module Concerns
 
       def nameserver_vars
         vars = []
-        vars.push(master_nameserver)
         return vars unless ns_records
 
-        ns_records.split("\r\n").each { |ns| (vars << ns) if ns.match? Nameserver::HOSTNAME_REGEXP }
+        parsed_ns = ns_records.gsub("\r", '').gsub("\n", '')
+        parsed_ns.split("#{origin}. IN NS ").each do |ns|
+          ns.delete_suffix! '.'
+          vars << ns if ns.match? Nameserver::HOSTNAME_REGEXP
+        end
 
         vars
       end
