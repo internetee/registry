@@ -45,11 +45,10 @@ GIT
 
 GIT
   remote: https://github.com/internetee/lhv.git
-  revision: c53dd82393f8a81f6e9da793ae0474294ef88762
+  revision: 1825240b3bf8b262418cc6c8ef7ed1aba386dd7d
   branch: master
   specs:
     lhv (0.1.0)
-      keystores
       logger
       nokogiri
 
@@ -266,7 +265,6 @@ GEM
       activerecord
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
-    keystores (0.4.0)
     libxml-ruby (3.2.0)
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
