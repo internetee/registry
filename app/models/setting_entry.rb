@@ -18,7 +18,7 @@ class SettingEntry < ApplicationRecord
 
   def retrieve
     method = VALUE_FORMATS[format]
-    return false if format == 'boolean' && value.blank?
+    return false if self.format == 'boolean' && value.blank?
     return if value.blank?
 
     send(method)
@@ -49,9 +49,10 @@ class SettingEntry < ApplicationRecord
 
   # Hooks
   def replace_boolean_nil_with_false
-    return unless format == 'boolean'
+    return unless self.format == 'boolean'
+    return if value == 'true'
 
-    self.value = value == 'true' ? 'true' : 'false'
+    self.value = 'false'
   end
 
   def validate_code_is_not_using_reserved_name

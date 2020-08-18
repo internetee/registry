@@ -44,7 +44,6 @@ class ActiveSupport::TestCase
 
   teardown do
     travel_back
-    Setting.address_processing = false
   end
 end
 
@@ -58,14 +57,9 @@ class ApplicationIntegrationTest < ActionDispatch::IntegrationTest
     WebMock.reset!
     Capybara.reset_sessions!
     Capybara.use_default_driver
-    Setting.address_processing = false
   end
 end
 
 class EppTestCase < ActionDispatch::IntegrationTest
   include Assertions::EppAssertions
-
-  teardown do
-    Setting.address_processing = false
-  end
 end

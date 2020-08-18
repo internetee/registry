@@ -103,6 +103,9 @@ class SettingEntryTest < ActiveSupport::TestCase
 
     Setting.boolean_format = 'false'
     assert_equal false, Setting.boolean_format
+
+    Setting.boolean_format = nil
+    assert_equal false, Setting.boolean_format
   end
 
   def test_parses_hash_format
