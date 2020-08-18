@@ -5,6 +5,7 @@ class SettingEntry < ApplicationRecord
   validates :group, presence: true
   validate :validate_value_format
   validate :validate_code_is_not_using_reserved_name
+  before_update :replace_boolean_nil_with_false
 
   VALUE_FORMATS = {
     string: :string_format,
@@ -17,7 +18,10 @@ class SettingEntry < ApplicationRecord
 
   def retrieve
     method = VALUE_FORMATS[format]
-    value.blank? ? nil : send(method)
+    return false if format == 'boolean' && value.blank?
+    return if value.blank?
+
+    send(method)
   end
 
   def self.with_group(group_name)
@@ -43,7 +47,13 @@ class SettingEntry < ApplicationRecord
     end
   end
 
-  # Validators
+  # Hooks
+  def replace_boolean_nil_with_false
+    return unless format == 'boolean'
+
+    self.value = value == 'true' ? 'true' : 'false'
+  end
+
   def validate_code_is_not_using_reserved_name
     disallowed = []
     ActiveRecord::Base.instance_methods.sort.each { |m| disallowed << m.to_s }
