@@ -12,7 +12,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
 
   def test_can_lock_a_not_locked_domain
     post '/api/v1/registrant/domains/2df2c1a1-8f6a-490a-81be-8bdf29866880/registry_lock',
-         {}, @auth_headers
+         headers: @auth_headers
 
     response_json = JSON.parse(response.body, symbolize_names: true)
 
@@ -27,7 +27,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
   def test_locking_a_domain_creates_a_version_record
     assert_difference '@domain.versions.count', 1 do
       post '/api/v1/registrant/domains/2df2c1a1-8f6a-490a-81be-8bdf29866880/registry_lock',
-           {}, @auth_headers
+           headers: @auth_headers
     end
 
     @domain.reload
@@ -39,7 +39,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
     @domain.save
 
     post '/api/v1/registrant/domains/2df2c1a1-8f6a-490a-81be-8bdf29866880/registry_lock',
-         {}, @auth_headers
+         headers: @auth_headers
 
     response_json = JSON.parse(response.body, symbolize_names: true)
     assert_equal(422, response.status)
@@ -51,7 +51,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
     assert(@domain.locked_by_registrant?)
 
     post '/api/v1/registrant/domains/2df2c1a1-8f6a-490a-81be-8bdf29866880/registry_lock',
-         {}, @auth_headers
+         headers: @auth_headers
 
     response_json = JSON.parse(response.body, symbolize_names: true)
     assert_equal(422, response.status)
@@ -62,7 +62,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
     @domain.apply_registry_lock
 
     delete '/api/v1/registrant/domains/2df2c1a1-8f6a-490a-81be-8bdf29866880/registry_lock',
-         {}, @auth_headers
+           headers: @auth_headers
 
     response_json = JSON.parse(response.body, symbolize_names: true)
     assert(response_json[:statuses].include?(DomainStatus::OK))
@@ -73,7 +73,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
 
   def test_cannot_unlock_a_not_locked_domain
     delete '/api/v1/registrant/domains/2df2c1a1-8f6a-490a-81be-8bdf29866880/registry_lock',
-         {}, @auth_headers
+           headers: @auth_headers
 
     response_json = JSON.parse(response.body, symbolize_names: true)
     assert_equal(422, response.status)
@@ -81,8 +81,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
   end
 
   def test_returns_404_when_domain_is_not_found
-    post '/api/v1/registrant/domains/random-uuid/registry_lock',
-         {}, @auth_headers
+    post '/api/v1/registrant/domains/random-uuid/registry_lock', headers: @auth_headers
 
     response_json = JSON.parse(response.body, symbolize_names: true)
     assert_equal(404, response.status)
@@ -99,7 +98,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
     assert_equal '1234', contact.ident
     assert_equal 'US', contact.ident_country_code
 
-    post api_v1_registrant_domain_registry_lock_path(domain.uuid), nil, @auth_headers
+    post api_v1_registrant_domain_registry_lock_path(domain.uuid), headers: @auth_headers
 
     assert_response :unauthorized
     response_json = JSON.parse(response.body, symbolize_names: true)
@@ -109,7 +108,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
 
   def test_registrant_can_lock_a_domain
     post '/api/v1/registrant/domains/1b3ee442-e8fe-4922-9492-8fcb9dccc69c/registry_lock',
-         {}, @auth_headers
+         headers: @auth_headers
 
     assert_equal(200, response.status)
     response_json = JSON.parse(response.body, symbolize_names: true)
@@ -125,16 +124,25 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
     assert_equal 'https://bestnames.test', @domain.registrar.website
 
     post '/api/v1/registrant/domains/1b3ee442-e8fe-4922-9492-8fcb9dccc69c/registry_lock',
-         {}, @auth_headers
+         headers: @auth_headers
 
     assert_equal(200, response.status)
     response_json = JSON.parse(response.body, symbolize_names: true)
 
     assert_equal({ name: 'Best Names', website: 'https://bestnames.test' }, response_json[:registrar])
     assert_equal({name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}, response_json[:registrant])
-    assert_equal([{name: 'Jane', id: '9db3de62-2414-4487-bee2-d5c155567768'}], response_json[:admin_contacts])
-    assert_equal([{name: 'William', id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb'},
-                  {name: 'Acme Ltd', id: 'f1dd365c-5be9-4b3d-a44e-3fa002465e4d'}].to_set,
+    assert_equal([{name: 'Jane',
+                   id: '9db3de62-2414-4487-bee2-d5c155567768',
+                   email: 'jane@mail.test'
+                  }],
+                 response_json[:admin_contacts])
+    assert_equal([{name: 'William',
+                   id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb',
+                   email: 'william@inbox.test'},
+                  {name: 'Acme Ltd',
+                   id: 'f1dd365c-5be9-4b3d-a44e-3fa002465e4d',
+                   email: 'acme@outlook.test'
+                  }].to_set,
                  response_json[:tech_contacts].to_set)
     assert_equal(
       [{hostname: 'ns1.bestnames.test', ipv4: ['192.0.2.1'], ipv6: ['2001:db8::1']},

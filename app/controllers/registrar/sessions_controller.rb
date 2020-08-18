@@ -31,7 +31,8 @@ class Registrar
       end
 
       if @depp_user.pki
-        unless @api_user.registrar_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
+        unless @api_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'],
+                                 request.env['HTTP_SSL_CLIENT_S_DN_CN'], api: false)
           @depp_user.errors.add(:base, :invalid_cert)
         end
       end
@@ -55,7 +56,7 @@ class Registrar
       ip_allowed = restricted_ip.can_access_registrar_area?(resource.registrar)
 
       unless ip_allowed
-        render text: t('registrar.authorization.ip_not_allowed', ip: request.ip)
+        render plain: t('registrar.authorization.ip_not_allowed', ip: request.ip)
         warden.logout(:registrar_user)
         return
       end
@@ -171,7 +172,7 @@ class Registrar
 
       return if allowed
 
-      render text: t('registrar.authorization.ip_not_allowed', ip: request.ip)
+      render plain: t('registrar.authorization.ip_not_allowed', ip: request.ip)
     end
 
     def current_ability

@@ -1,0 +1,19 @@
+en:
+  activerecord:
+    errors:
+      models:
+        dispute:
+          attributes:
+            starts_at:
+              future: 'can not be greater than today'
+  admin:
+    disputes:
+      index:
+        title: Disputed domains
+        new_btn: New disputed domain
+        reset_btn: Reset
+
+      form:
+        password_hint: Generated automatically if left blank
+        optional: Not required by default
+        past_or_today: Can not be greater than today's date

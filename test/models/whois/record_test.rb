@@ -40,24 +40,36 @@ class Whois::RecordTest < ActiveSupport::TestCase
   end
 
   def test_updates_whois_record_from_auction_when_awaiting_payment
-    @auction.update!(domain: 'domain.test', status: Auction.statuses[:awaiting_payment])
+    @auction.update!(domain: 'domain.test',
+                     status: Auction.statuses[:awaiting_payment],
+                     registration_deadline: registration_deadline)
     @whois_record.update!(name: 'domain.test')
     @whois_record.update_from_auction(@auction)
     @whois_record.reload
 
     assert_equal ({ 'name' => 'domain.test',
                     'status' => ['PendingRegistration'],
-                    'disclaimer' => 'disclaimer' }), @whois_record.json
+                    'disclaimer' => 'disclaimer',
+                    'registration_deadline' => registration_deadline.try(:to_s, :iso8601) }),
+                 @whois_record.json
   end
 
   def test_updates_whois_record_from_auction_when_payment_received
-    @auction.update!(domain: 'domain.test', status: Auction.statuses[:payment_received])
+    @auction.update!(domain: 'domain.test',
+                     status: Auction.statuses[:payment_received],
+                     registration_deadline: registration_deadline)
     @whois_record.update!(name: 'domain.test')
     @whois_record.update_from_auction(@auction)
     @whois_record.reload
 
     assert_equal ({ 'name' => 'domain.test',
                     'status' => ['PendingRegistration'],
-                    'disclaimer' => 'disclaimer' }), @whois_record.json
+                    'disclaimer' => 'disclaimer',
+                    'registration_deadline' => registration_deadline.try(:to_s, :iso8601) }),
+                 @whois_record.json
+  end
+
+  def registration_deadline
+    Time.zone.now + 10.days
   end
 end

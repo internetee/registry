@@ -16,7 +16,8 @@ module Whois
       elsif auction.awaiting_payment? || auction.payment_received?
         update!(json: { name: auction.domain,
                         status: ['PendingRegistration'],
-                        disclaimer: self.class.disclaimer })
+                        disclaimer: self.class.disclaimer,
+                        registration_deadline: auction.whois_deadline })
       end
     end
   end

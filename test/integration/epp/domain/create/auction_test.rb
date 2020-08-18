@@ -31,7 +31,8 @@ class EppDomainCreateAuctionTest < EppTestCase
     XML
 
     assert_difference 'Domain.count' do
-      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :completed_successfully
   end
@@ -68,7 +69,8 @@ class EppDomainCreateAuctionTest < EppTestCase
     XML
 
     assert_difference 'Domain.count' do
-      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :completed_successfully
   end
@@ -100,7 +102,8 @@ class EppDomainCreateAuctionTest < EppTestCase
     XML
 
     assert_difference 'Domain.count' do
-      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
     @auction.reload
@@ -132,7 +135,8 @@ class EppDomainCreateAuctionTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :required_parameter_missing
   end
@@ -164,7 +168,8 @@ class EppDomainCreateAuctionTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :invalid_authorization_information
   end
@@ -195,7 +200,8 @@ class EppDomainCreateAuctionTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :required_parameter_missing
   end
@@ -222,7 +228,8 @@ class EppDomainCreateAuctionTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post epp_create_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :parameter_value_policy_error
   end

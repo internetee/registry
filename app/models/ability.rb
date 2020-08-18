@@ -50,6 +50,7 @@ class Ability
     can(:check,    Epp::Domain)
     can(:create,   Epp::Domain)
     can(:renew,    Epp::Domain) { |d| d.registrar_id == @user.registrar_id }
+    can(:remove_hold, Epp::Domain) { |d| d.registrar_id == @user.registrar_id }
     can(:update,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
     can(:transfer, Epp::Domain)
     can(:delete,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
@@ -99,6 +100,7 @@ class Ability
     can :manage, Invoice
     can :manage, WhiteIp
     can :manage, AccountActivity
+    can :manage, Dispute
     can :read, ApiLog::EppLog
     can :read, ApiLog::ReppLog
     can :update, :pending

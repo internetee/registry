@@ -31,7 +31,7 @@ class RegistrarAreaTechContactBulkChangeTest < ApplicationSystemTestCase
     stub_request(:patch, /domains\/contacts/)
       .to_return(status: 400,
                  body: { error: { message: 'epic fail' } }.to_json,
-                 headers: { 'Content-type' => 'application/json' })
+                 headers: { 'Content-type' => Mime[:json] })
 
     visit registrar_domains_url
     click_link 'Bulk change'

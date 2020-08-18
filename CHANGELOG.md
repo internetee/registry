@@ -1,3 +1,259 @@
+14.08.2020
+* Added handling of second lvl zoness managed by the registry in whois records [#1661](https://github.com/internetee/registry/issues/1661)
+
+13.08.2020
+* Removed keystore gem and replaced LHV JKS with PKCS12 [#1645](https://github.com/internetee/registry/issues/1645)
+
+11.08.2020
+* Fixed postal address saving bug with disabled address processing [#1650](https://github.com/internetee/registry/issues/1650)
+
+07.08.2020
+* Restored creator and updator strings to contacts and related object records [#1636](https://github.com/internetee/registry/issues/1636)
+* Security gem updates: sdoc to 1.1 and json to 2.3.1 [#1657](https://github.com/internetee/registry/pull/1657)
+
+04.08.2020
+* Fixed registrant verification for domain delete [#1631](https://github.com/internetee/registry/issues/1631)
+* Fixed domain transfer issue when one person was present in the same role more than once (different objects) [#1651](https://github.com/internetee/registry/issues/1651)
+
+03.08.2020
+* Fixed 0 vat issue with invoices sent to Directo [#1647](https://github.com/internetee/registry/issues/1647)
+
+17.07.2020
+* Added turemail gem for validating email addresses syntactically and on MX record level [#297](https://github.com/internetee/registry/issues/297)
+
+15.07.2020
+* Reapplied race condition fix after fixing the data in prod env [#1612](https://github.com/internetee/registry/issues/1612)
+
+07.07.2020
+* Fixed legaldoc validation [#1634](https://github.com/internetee/registry/issues/1634)
+* Disabled collection cashe versioning [#1637](https://github.com/internetee/registry/pull/1637)
+
+03.07.2020
+* 1-character domains are now valid but blocked by default [#1625](https://github.com/internetee/registry/issues/1625)
+
+02.07.2020
+* Adding legaldoc to domain:delete is now optional [#1624](https://github.com/internetee/registry/issues/1624)
+* Setting to make legaldoc functionality optional [#1623](https://github.com/internetee/registry/issues/1623)
+
+01.07.2020
+* Reverted race condition fix due to data issues in production (#1612) [#1622](https://github.com/internetee/registry/pull/1622)
+* Added legaldoc opt-out option for approved registrars [#1620](https://github.com/internetee/registry/issues/1620)
+
+29.06.2020
+* Bumped rack to 2.2.3 [#1618](https://github.com/internetee/registry/pull/1618)
+* Actionpack security update to 6.0.3.2 [#1619](https://github.com/internetee/registry/pull/1619)
+
+26.06.2020
+* Fixed race condition in domain update by adding new db constratints [#1612](https://github.com/internetee/registry/issues/1612)
+* Refactored contact validation [#1617](https://github.com/internetee/registry/pull/1617)
+
+19.06.2020
+* Regsitrant API returns now DNSSEC info [#1613](https://github.com/internetee/registry/pull/1613)
+* Updated domain expiration email notification texts [#1614](https://github.com/internetee/registry/pull/1614)
+
+15.06.2020
+* Added contact email to registrant API [#1611](https://github.com/internetee/registry/pull/1611)
+
+12.06.2020
+* Extracted Xml deserializing from EPP Contact and Domain classes [#1601](https://github.com/internetee/registry/pull/1601)
+* Fixed whois data update issue with child object updates [#1604](https://github.com/internetee/registry/issues/1604)
+
+11.06.2020
+* Auction API returns json on error [#1605](https://github.com/internetee/registry/issues/1605)
+* Fixed account activity index in admin [#1606](https://github.com/internetee/registry/issues/1606)
+
+08.06.2020
+* Bumped websocket-extensions to 0.1.5 [#1602](https://github.com/internetee/registry/pull/1602)
+
+04.06.2020
+* Moved dev config to sample file [#1599](https://github.com/internetee/registry/pull/1599)
+* Post Rails6 upgrade fixes [#1598](https://github.com/internetee/registry/pull/1598)
+
+03.06.2020
+* Upgraded Rails to 6.0.3 [#1593](https://github.com/internetee/registry/pull/1593)
+
+02.06.2020
+* Fixed registration deadline format for whois/restwhois [#1595](https://github.com/internetee/registry/pull/1595)
+
+01.06.2020
+* Improved error handling in case legal doc is not found for downloading [#1452](https://github.com/internetee/registry/issues/1452)
+
+29.05.2020
+* Bump kaminari to 1.2.1 [#1592](https://github.com/internetee/registry/pull/1592)
+
+28.05.2020
+* REPP returns list of disputed domains [#1588](https://github.com/internetee/registry/issues/1588)
+* Updated Directo gem [#1590](https://github.com/internetee/registry/pull/1590)
+* Updated LHV gem [#1591](https://github.com/internetee/registry/pull/1591)
+
+25.05.2020
+* Fixed registrant change verification bug for disputed domains [#1586](https://github.com/internetee/registry/issues/1586)
+
+22.05.2020
+* New solution for managing domains with effective dispute commitee decision [#269](https://github.com/internetee/registry/issues/269)
+* Bump puma from 4.3.5 [#1585](https://github.com/internetee/registry/pull/1585)
+* Run all CI tests [#1584](https://github.com/internetee/registry/pull/1584)
+
+21.05.2020
+* Fixed contact view access bug in registrant [#1527](https://github.com/internetee/registry/pull/1527)
+* REPP returns list of domains currently at auction [#1582](https://github.com/internetee/registry/pull/1582)
+
+18.05.2020
+* REPP returns list of reserved and blocked domains [#1569](https://github.com/internetee/registry/issues/1569)
+
+14.05.2020
+* Deleted certificates are now revoked first [#952](https://github.com/internetee/registry/issues/952)
+
+11.05.2020
+* Auction process due dates are now available over whois and rest-whois [#1201](https://github.com/internetee/registry/issues/1201)
+
+30.04.2020
+* Fix for internal error on opening domain history with legacy id record [#1576](https://github.com/internetee/registry/issues/1576)
+
+27.04.2020
+* Downgrade SimpleCov to 0.17 due to incompatibiilty with CodeClimate [#1575](https://github.com/internetee/registry/pull/1575)
+
+17.04.2020
+* Webinterfaces have now clickable version string pointing to the latest deployed commit in github [#1345](https://github.com/internetee/registry/pull/1345)
+
+15.04.2020
+* Updated Rails to 5.2 and fixed acitionview security issue [#1568](https://github.com/internetee/registry/issues/1568) 
+
+25.03.2020
+* Implemented Directo gem [#1547](https://github.com/internetee/registry/pull/1547)
+
+11.03.2020
+* Fixed glue record issues when using 2nd level domain as host [#1562](https://github.com/internetee/registry/issues/1562)
+
+10.03.2020
+* Updated lhv, e-invoice & company_register gem due to security updates [#1564](https://github.com/internetee/registry/pull/1564)
+
+06.03.2020
+* Record payment method and failed payments [#1422](https://github.com/internetee/registry/issues/1422)
+
+04.03.2020
+* Bump Puma to 4.3.3 [#1557](https://github.com/internetee/registry/pull/1557)
+
+03.03.2020
+* Admin: fixed import of th6 bank statement [#1551](https://github.com/internetee/registry/issues/1551)
+
+02.03.2020
+* Registrar: fixed statuses based contact filtering [#1004](https://github.com/internetee/registry/issues/1004)
+
+28.02.2020
+* Registrar: fixed account switching [#1535](https://github.com/internetee/registry/issues/1535)
+
+27.02.2020
+* Registrar: fixed the verified checkbox bug that did not change the element value to yes in epp request [#1540](https://github.com/internetee/registry/issues/1540)
+* Ruby version update to 2.6.5 [#1545](https://github.com/internetee/registry/pull/1545)
+
+26.02.2020
+* Registrar: added an option to remove clientHold status [#1481](https://github.com/internetee/registry/issues/1481)
+* Admin: fixed domain status removal issue [#1543](https://github.com/internetee/registry/issues/1543)
+* Implemented consistent and automated data migrations [#1298](https://github.com/internetee/registry/issues/1298)
+
+20.02.2020
+* E-invoice sending to Que to manage resending in case of an error [#1509](https://github.com/internetee/registry/issues/1509)
+* Check to make sure all monthly invoices fit in available invoice number range [#277](https://github.com/internetee/registry/issues/277)
+* Disabled aurbreak performance monitoring [#1534](https://github.com/internetee/registry/pull/1534)
+
+14.02.2020
+* Fixed Papertrail warnings [#1530](https://github.com/internetee/registry/issues/1530)
+
+12.02.2020
+* Fixed papertrails double recording issue [#1526](https://github.com/internetee/registry/issues/1526)
+* Requests to Directo are now saved for both credit and monthly invoices [#344](https://github.com/internetee/registry/issues/344)
+
+10.02.2020
+* Resolved Money gem deprecation warning and silenced all warnings due plan to replace papertrail [#1522](https://github.com/internetee/registry/pull/1522)
+
+06.02.2020
+* Permit & turn ActiveController::Parameters to hash on domain create [#1516](https://github.com/internetee/registry/issues/1516)
+
+05.02.2020
+* Ruby version upgrade to 2.6.3 [#846](https://github.com/internetee/registry/issues/846)
+* Added retries & raise to connect api to handle timeouts [#1474](https://github.com/internetee/registry/issues/1474)
+* Added logging of XML if there is NoMethodError#text on xml data fields [#1475](https://github.com/internetee/registry/issues/1475)
+
+04.02.2020
+* Fixed bug that allowed bypassing blocked domain validation using punycode [#1142](https://github.com/internetee/registry/issues/1142)
+* SimpleIDN gem update to 0.0.9 [#1508](https://github.com/internetee/registry/pull/1508)
+
+31.01.2020
+* Instant payments marks specific invoice as paid [#1500](https://github.com/internetee/registry/issues/1500)
+* Sending invoice payment date to accounting [#1416](https://github.com/internetee/registry/issues/1416)
+
+29.01.2020
+* Fixed the invoice binding bug where process failed if registrar tried to load a sum that they have used before [#1496](https://github.com/internetee/registry/issues/1496)
+
+28.01.2020
+* Registrar: fixed sorting of domain view [#1461](https://github.com/internetee/registry/issues/1461)
+* clientHold status is now set once instead of resetting it every time the job is run [#1480](https://github.com/internetee/registry/issues/1480)
+
+27.01.2020
+* Admin: fixed history view for domains with legacy id [#1489](https://github.com/internetee/registry/issues/1489)
+
+23.01.2020
+* Payment invoice matching by looking for ref nr in description field [#1415](https://github.com/internetee/registry/issues/1415)
+
+22.01.2020
+* ForceDelete poll messages with outzone and purge dates [#1478](https://github.com/internetee/registry/issues/1478)
+
+21.01.2020
+* Registrant change cancels automatically force delete process [#1479](https://github.com/internetee/registry/issues/1479)
+
+20.01.2020
+* ForceDelete email notifications are sent to all contacts + info and domain@domain [#1477](https://github.com/internetee/registry/issues/1477)
+
+18.01.2020
+* New ForceDelete procedure [#1428](https://github.com/internetee/registry/issues/1428)
+
+16.01.2020
+* Added tests for registrant verification [#1430](https://github.com/internetee/registry/pull/1430)
+
+14.01.2020
+* removed authinfo element from contact:info response for non-sponsoring registrars [#1446](https://github.com/internetee/registry/issues/1446)
+
+13.01.2020
+* resolved internal error on registrant confirmation [#1468](https://github.com/internetee/registry/issues/1468)
+
+10.01.2020
+* updated ForceDelete email templates according new regulation [#1466](https://github.com/internetee/registry/issues/1466) 
+* regenerated WHOIS db schema [#1436](https://github.com/internetee/registry/pull/1436)
+
+09.01.2020
+* serverForceDelete status does not block removing clientHold status [#1462](https://github.com/internetee/registry/pull/1462) 
+
+06.01.2020
+* Updated e-invoice gem [#1456](https://github.com/internetee/registry/pull/1456)
+* Bumped rack gem to 2.0.8 [#1448](https://github.com/internetee/registry/pull/1448)
+
+03.01.2020
+* Added an option for registrars to add and remove clientHold status on domains [#1454](https://github.com/internetee/registry/pull/1454)
+* Fixed contact view internal error in admin [#1458](https://github.com/internetee/registry/issues/1458)
+
+27.12.2019
+* Records in registrant_verifications are now archived by PaperTrail [#1425](https://github.com/internetee/registry/issues/1425)
+
+16.12.2019
+* Bump puma from 4.2.1 to 4.3.1 [#1437](https://github.com/internetee/registry/pull/1437)
+* Refactored API user management [#1435](https://github.com/internetee/registry/pull/1435)
+* Ignoring legacy database columns at ActiveRecord level [#1377](https://github.com/internetee/registry/issues/1377)
+* Removed Ruby version from Travis config and let it use .ruby-version [#1441](https://github.com/internetee/registry/pull/1441)
+* Removed `fill_ident_country` postgresql function as unused [#1439](https://github.com/internetee/registry/pull/1439)
+
+12.12.2019
+* Updated e-invoice gem [#1429](https://github.com/internetee/registry/pull/1429)
+* Upgraded bundler to 2.0.2 [#1433](https://github.com/internetee/registry/pull/1433)
+* Set not null constraint on contact.name db column [#1417](https://github.com/internetee/registry/pull/1417)
+* Removed domain name from registrant_verifications table [#1431](https://github.com/internetee/registry/pull/1431)
+
+19.11.2019
+* Updated Rails to 5.0.7 [#377](https://github.com/internetee/registry/issues/377)
+
+15.11.2019
+* Restored EPP exception logging to syslog [#1371](https://github.com/internetee/registry/issues/1371)
+
 11.11.2019
 * Removed code for displaying errors in nameserver and dnskey data as unused [#1411](https://github.com/internetee/registry/pull/1411)
 

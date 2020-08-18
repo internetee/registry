@@ -3,5 +3,5 @@
 
 - locals[:payment_channels].each do |meth|
   - meth = meth.strip
-  = link_to registrar_payment_with_path(meth, invoice_id: params[:id]) do
+  = link_to registrar_payment_with_path(meth, invoice_id: params[:id]), id: meth do
     = image_tag("#{meth}.png")

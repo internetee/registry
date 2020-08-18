@@ -1,9 +1,8 @@
 module Epp
   class BaseController < ActionController::Base
     class AuthorizationError < StandardError; end
-
-    check_authorization
     skip_before_action :verify_authenticity_token
+    check_authorization
     layout false
 
     before_action :ensure_session_id_passed
@@ -11,7 +10,7 @@ module Epp
     before_action :latin_only
     before_action :validate_against_schema
     before_action :validate_request
-    before_action :update_epp_session, if: 'signed_in?'
+    before_action :update_epp_session, if: -> { signed_in? }
 
     around_action :wrap_exceptions
 
@@ -21,6 +20,7 @@ module Epp
     rescue_from StandardError, with: :respond_with_command_failed_error
     rescue_from AuthorizationError, with: :respond_with_authorization_error
     rescue_from ActiveRecord::RecordNotFound, with: :respond_with_object_does_not_exist_error
+    before_action :set_paper_trail_whodunnit
 
     protected
 
@@ -119,7 +119,7 @@ module Epp
     end
 
     def render_epp_response(*args)
-      @response = render_to_string(*args, formats: 'xml')
+      @response = render_to_string(*args, formats: [:xml])
       render xml: @response
       write_to_epp_log
     end
@@ -395,7 +395,12 @@ module Epp
     end
 
     def log_exception(exception)
+      logger.error(([exception.message] + exception.backtrace).join($INPUT_RECORD_SEPARATOR))
       notify_airbrake(exception)
+    end
+
+    def user_for_paper_trail
+      current_user ? current_user.id_role_username : 'anonymous'
     end
   end
 end

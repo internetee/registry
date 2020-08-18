@@ -1,11 +1,14 @@
+# frozen_string_literal: true
+
 module DNS
-  class Zone < ActiveRecord::Base
+  class Zone < ApplicationRecord
     validates :origin, :ttl, :refresh, :retry, :expire, :minimum_ttl, :email, :master_nameserver, presence: true
     validates :ttl, :refresh, :retry, :expire, :minimum_ttl, numericality: { only_integer: true }
     validates :origin, uniqueness: true
+    include Concerns::Zone::WhoisQueryable
 
     before_destroy do
-      !used?
+      throw(:abort) if used?
     end
 
     def self.generate_zonefiles

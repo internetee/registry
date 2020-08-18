@@ -31,7 +31,7 @@ class DomainTest < ActiveSupport::TestCase
   def test_validates_name_format
     assert_equal dns_zones(:one).origin, 'test'
     domain = valid_domain
-    subdomain_min_length = 2
+    subdomain_min_length = 1
     subdomain_max_length = 63
 
     domain.name = '!invalid'
@@ -44,9 +44,6 @@ class DomainTest < ActiveSupport::TestCase
     assert domain.invalid?
 
     domain.name = 'example-.test'
-    assert domain.invalid?
-
-    domain.name = "#{'a' * subdomain_min_length.pred}.test"
     assert domain.invalid?
 
     domain.name = "#{'a' * subdomain_max_length.next}.test"
@@ -137,9 +134,9 @@ class DomainTest < ActiveSupport::TestCase
     contact = contacts(:john)
 
     domain.admin_contacts << contact
-    domain.admin_contacts << contact
-
-    assert domain.invalid?
+    assert_raise ActiveRecord::RecordNotUnique do
+      domain.admin_contacts << contact
+    end
   end
 
   def test_invalid_when_the_same_tech_contact_is_linked_twice
@@ -147,9 +144,9 @@ class DomainTest < ActiveSupport::TestCase
     contact = contacts(:john)
 
     domain.tech_contacts << contact
-    domain.tech_contacts << contact
-
-    assert domain.invalid?
+    assert_raise ActiveRecord::RecordNotUnique do
+      domain.tech_contacts << contact
+    end
   end
 
   def test_validates_name_server_count_when_name_servers_are_required
@@ -247,7 +244,7 @@ class DomainTest < ActiveSupport::TestCase
     domain3 = domains(:library)
     domain3.update!(outzone_at: Time.zone.parse('2010-07-05 08:00:01'))
     Domain.connection.disable_referential_integrity do
-      Domain.delete_all("id NOT IN (#{[domain1.id, domain2.id, domain3.id].join(',')})")
+      Domain.where("id NOT IN (#{[domain1.id, domain2.id, domain3.id].join(',')})").delete_all
     end
 
     assert_equal [domain1.id], Domain.outzone_candidates.ids
@@ -262,7 +259,7 @@ class DomainTest < ActiveSupport::TestCase
     domain3 = domains(:library)
     domain3.update!(valid_to: Time.zone.parse('2010-07-05 08:00:01'))
     Domain.connection.disable_referential_integrity do
-      Domain.delete_all("id NOT IN (#{[domain1.id, domain2.id, domain3.id].join(',')})")
+      Domain.where("id NOT IN (#{[domain1.id, domain2.id, domain3.id].join(',')})").delete_all
     end
 
     assert_equal [domain1.id, domain2.id].sort, Domain.expired.ids.sort
@@ -403,6 +400,22 @@ class DomainTest < ActiveSupport::TestCase
 
     assert domain.inactive?
     assert_not domain.active?
+  end
+
+  def test_registrant_change_removes_force_delete
+    @domain.update_columns(valid_to: Time.zone.parse('2010-10-05'),
+                           force_delete_date: nil)
+    @domain.update(template_name: 'legal_person')
+    travel_to Time.zone.parse('2010-07-05')
+    @domain.schedule_force_delete(type: :fast_track)
+    assert(@domain.force_delete_scheduled?)
+    other_registrant = Registrant.find_by(code: 'jane-001')
+    @domain.pending_json['new_registrant_id'] = other_registrant.id
+
+    @domain.registrant = other_registrant
+    @domain.save!
+
+    assert_not(@domain.force_delete_scheduled?)
   end
 
   private

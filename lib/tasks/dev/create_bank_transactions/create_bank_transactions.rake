@@ -3,12 +3,9 @@ namespace :dev do
     remitter_iban = ENV['remitter_iban']
     beneficiary_iban = Setting.registry_iban
 
-    keystore_password = ENV['lhv_keystore_password']
-    keystore_alias = ENV['lhv_keystore_alias']
-    keystore = Keystores::JavaKeystore.new
-    keystore.load(ENV['lhv_keystore'], keystore_password)
-    cert = keystore.get_certificate(keystore_alias)
-    key = keystore.get_key(keystore_alias, keystore_password)
+    keystore = OpenSSL::PKCS12.new(File.read(ENV['lhv_p12_keystore']), ENV['lhv_keystore_password'])
+    key = keystore.key
+    cert = keystore.certificate
 
     api_base_uri = URI.parse('https://testconnect.lhv.eu/connect-prelive')
     request_headers = { 'content-type' => 'application/xml' }

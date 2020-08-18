@@ -30,7 +30,8 @@ module Repp
         webclient_cert_name = ENV['webclient_cert_common_name'] || 'webclient'
         error! "Webclient #{message} #{webclient_cert_name}", 401 if webclient_cert_name != request_name
       else
-        unless @current_user.api_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
+        unless @current_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'],
+                                     request.env['HTTP_SSL_CLIENT_S_DN_CN'])
           error! "#{message} #{@current_user.username}", 401
         end
       end

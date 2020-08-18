@@ -13,24 +13,28 @@ class EppDomainTransferRequestTest < EppTestCase
   end
 
   def test_transfers_domain_at_once
-    post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     assert_epp_response :completed_successfully
   end
 
   def test_creates_new_domain_transfer
     assert_difference -> { @domain.transfers.size } do
-      post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+      post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
   end
 
   def test_approves_automatically_if_auto_approval_is_enabled
-    post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     assert_equal 'serverApproved', Nokogiri::XML(response.body).xpath('//domain:trStatus', 'domain' =>
       'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
   end
 
   def test_assigns_new_registrar
-    post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
     assert_equal @new_registrar, @domain.registrar
   end
@@ -38,7 +42,8 @@ class EppDomainTransferRequestTest < EppTestCase
   def test_regenerates_transfer_code
     @old_transfer_code = @domain.transfer_code
 
-    post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     @domain.reload
     refute_equal @domain.transfer_code, @old_transfer_code
@@ -48,31 +53,36 @@ class EppDomainTransferRequestTest < EppTestCase
     @old_registrar = @domain.registrar
 
     assert_difference -> { @old_registrar.notifications.count } do
-      post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+      post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts
     assert_difference -> { @new_registrar.contacts.size }, 3 do
-      post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+      post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
   end
 
   def test_reuses_identical_contact
-    post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     assert_equal 1, @new_registrar.contacts.where(name: 'William').size
   end
 
   def test_saves_legal_document
-    assert_difference -> { @domain.legal_documents(true).size } do
-      post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    assert_difference -> { @domain.legal_documents.reload.size } do
+      post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
   end
 
   def test_non_transferable_domain
     @domain.update!(statuses: [DomainStatus::SERVER_TRANSFER_PROHIBITED])
 
-    post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     domains(:shop).reload
 
     assert_equal registrars(:bestnames), domains(:shop).registrar
@@ -82,7 +92,8 @@ class EppDomainTransferRequestTest < EppTestCase
   def test_discarded_domain_cannot_be_transferred
     @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
 
-    post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
 
     assert_equal registrars(:bestnames), @domain.registrar
@@ -91,7 +102,8 @@ class EppDomainTransferRequestTest < EppTestCase
 
   def test_same_registrar
     assert_no_difference -> { @domain.transfers.size } do
-      post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
+      post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :use_error
   end
@@ -113,7 +125,8 @@ class EppDomainTransferRequestTest < EppTestCase
       </epp>
     XML
 
-    post epp_transfer_path, { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
 
     assert_epp_response :invalid_authorization_information

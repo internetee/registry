@@ -2,8 +2,8 @@
   = t('registrar.invoices.redirected_to_intermediary')
 
 .payment-form
-  = form_tag @payment.form_url, method: :post do
-    - @payment.form_fields.each do |k, v|
+  = form_tag @payment_order.form_url, method: :post do
+    - @payment_order.form_fields.each do |k, v|
       = hidden_field_tag k, v
     = submit_tag t('registrar.invoices.go_to_intermediary')
 

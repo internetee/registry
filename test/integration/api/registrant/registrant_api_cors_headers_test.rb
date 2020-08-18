@@ -2,13 +2,13 @@ require 'test_helper'
 
 class RegistrantApiCorsHeadersTest < ApplicationIntegrationTest
   def test_returns_200_response_code_for_options_request
-    options '/api/v1/registrant/auth/eid', {}, { 'Origin' => 'https://example.com' }
-
+    process :options, api_v1_registrant_auth_eid_path,
+            headers: { 'Origin' => 'https://example.com' }
     assert_equal('200', response.code)
   end
 
   def test_returns_expected_headers_for_options_requests
-    options '/api/v1/registrant/auth/eid', {}, { 'Origin' => 'https://example.com' }
+    process :options, api_v1_registrant_auth_eid_path, headers: { 'Origin' => 'https://example.com' }
 
     assert_equal('https://example.com', response.headers['Access-Control-Allow-Origin'])
     assert_equal('POST, GET, PUT, PATCH, DELETE, OPTIONS',
@@ -20,16 +20,15 @@ class RegistrantApiCorsHeadersTest < ApplicationIntegrationTest
   end
 
   def test_returns_empty_body
-    options '/api/v1/registrant/auth/eid', { 'Origin' => 'https://example.com' }
-
+    process :options, api_v1_registrant_auth_eid_path, headers: { 'Origin' => 'https://example.com' }
     assert_equal('', response.body)
   end
 
   def test_it_returns_cors_headers_for_other_requests
-    post '/api/v1/registrant/auth/eid', {}, { 'Origin' => 'https://example.com' }
+    post '/api/v1/registrant/auth/eid', headers: { 'Origin' => 'https://example.com' }
     assert_equal('https://example.com', response.headers['Access-Control-Allow-Origin'])
 
-    get '/api/v1/registrant/contacts', {}, { 'Origin' => 'https://example.com' }
+    get '/api/v1/registrant/contacts', headers: { 'Origin' => 'https://example.com' }
     assert_equal('https://example.com', response.headers['Access-Control-Allow-Origin'])
   end
 end

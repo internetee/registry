@@ -22,6 +22,7 @@
           = render 'setting_row', var: :ns_min_count
           = render 'setting_row', var: :ns_max_count
           = render 'setting_row', var: :expire_pending_confirmation
+          = render 'setting_row', var: :legal_document_is_mandatory
 
   .panel.panel-default
     .panel-heading
@@ -48,7 +49,7 @@
           = render 'setting_row', var: :request_confrimation_on_registrant_change_enabled
           = render 'setting_row', var: :request_confirmation_on_domain_deletion_enabled
           = render 'setting_row', var: :address_processing
-
+          = render 'setting_row', var: :dispute_period_in_months
           %tr
             %td.col-md-6= label_tag :default_language
             %td.col-md-6

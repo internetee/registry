@@ -1,4 +1,4 @@
-class Domain < ActiveRecord::Base
+class Domain < ApplicationRecord
   include UserEvents
   include Versions # version/domain_version.rb
   include Concerns::Domain::Expirable
@@ -9,8 +9,7 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::Transferable
   include Concerns::Domain::RegistryLockable
   include Concerns::Domain::Releasable
-
-  has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
+  include Concerns::Domain::Disputable
 
   attr_accessor :roles
 
@@ -57,6 +56,7 @@ class Domain < ActiveRecord::Base
 
   has_many :legal_documents, as: :documentable
   accepts_nested_attributes_for :legal_documents, reject_if: proc { |attrs| attrs[:body].blank? }
+  has_many :registrant_verifications, dependent: :destroy
 
   after_initialize do
     self.pending_json = {} if pending_json.blank?
@@ -72,12 +72,13 @@ class Domain < ActiveRecord::Base
 
   before_update :manage_statuses
   def manage_statuses
-    return unless registrant_id_changed? # rollback has not yet happened
+    return unless will_save_change_to_registrant_id? # rollback has not yet happened
+
     pending_update! if registrant_verification_asked?
     true
   end
 
-  after_commit :update_whois_record, unless: 'domain_name.at_auction?'
+  after_commit :update_whois_record, unless: -> { domain_name.at_auction? }
 
   after_create :update_reserved_domains
   def update_reserved_domains
@@ -88,8 +89,8 @@ class Domain < ActiveRecord::Base
   validates :puny_label, length: { maximum: 63 }
   validates :period, presence: true, numericality: { only_integer: true }
   validates :transfer_code, presence: true
-
   validate :validate_reservation
+
   def validate_reservation
     return if persisted? || !in_reserved_list?
 
@@ -99,6 +100,7 @@ class Domain < ActiveRecord::Base
     end
 
     return if ReservedDomain.pw_for(name) == reserved_pw
+
     errors.add(:base, :invalid_auth_information_reserved)
   end
 
@@ -115,12 +117,15 @@ class Domain < ActiveRecord::Base
 
   attr_accessor :is_admin
 
-  validate :check_permissions, :unless => :is_admin
-  def check_permissions
-    return unless force_delete_scheduled?
-    errors.add(:base, I18n.t(:object_status_prohibits_operation))
-    false
-  end
+  # Removed to comply new ForceDelete procedure
+  # at https://github.com/internetee/registry/issues/1428#issuecomment-570561967
+  #
+  # validate :check_permissions, :unless => :is_admin
+  # def check_permissions
+  #   return unless force_delete_scheduled?
+  #   errors.add(:base, I18n.t(:object_status_prohibits_operation))
+  #   false
+  # end
 
   validates :nameservers, domain_nameserver: {
     min: -> { Setting.ns_min_count },
@@ -169,6 +174,8 @@ class Domain < ActiveRecord::Base
   attr_accessor :registrant_typeahead, :update_me,
     :epp_pending_update, :epp_pending_delete, :reserved_pw
 
+  self.ignored_columns = %w[legacy_id legacy_registrar_id legacy_registrant_id]
+
   def subordinate_nameservers
     nameservers.select { |x| x.hostname.end_with?(name) }
   end
@@ -191,8 +198,6 @@ class Domain < ActiveRecord::Base
     end
 
     def registrant_user_domains(registrant_user)
-      # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can
-      # be removed.
       from(
         "(#{registrant_user_domains_by_registrant(registrant_user).to_sql} UNION " \
         "#{registrant_user_domains_by_contact(registrant_user).to_sql}) AS domains"
@@ -200,8 +205,6 @@ class Domain < ActiveRecord::Base
     end
 
     def registrant_user_direct_domains(registrant_user)
-      # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can
-      # be removed.
       from(
         "(#{registrant_user_direct_domains_by_registrant(registrant_user).to_sql} UNION " \
         "#{registrant_user_direct_domains_by_contact(registrant_user).to_sql}) AS domains"
@@ -209,8 +212,6 @@ class Domain < ActiveRecord::Base
     end
 
     def registrant_user_administered_domains(registrant_user)
-      # In Rails 5, can be replaced with a much simpler `or` query method and the raw SQL parts can
-      # be removed.
       from(
         "(#{registrant_user_domains_by_registrant(registrant_user).to_sql} UNION " \
         "#{registrant_user_domains_by_admin_contact(registrant_user).to_sql}) AS domains"
@@ -229,7 +230,7 @@ class Domain < ActiveRecord::Base
 
     def registrant_user_domains_by_admin_contact(registrant_user)
       joins(:domain_contacts).where(domain_contacts: { contact_id: registrant_user.contacts,
-                                                       type: [AdminDomainContact] })
+                                                       type: [AdminDomainContact.name] })
     end
 
     def registrant_user_direct_domains_by_registrant(registrant_user)
@@ -283,20 +284,23 @@ class Domain < ActiveRecord::Base
   def server_holdable?
     return false if statuses.include?(DomainStatus::SERVER_HOLD)
     return false if statuses.include?(DomainStatus::SERVER_MANUAL_INZONE)
+
     true
   end
 
   def renewable?
-    if Setting.days_to_renew_domain_before_expire != 0
-      # if you can renew domain at days_to_renew before domain expiration
-      if (expire_time.to_date - Date.today) + 1 > Setting.days_to_renew_domain_before_expire
-        return false
-      end
+    blocking_statuses = [DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
+                         DomainStatus::PENDING_TRANSFER, DomainStatus::DISPUTED,
+                         DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE,
+                         DomainStatus::PENDING_DELETE_CONFIRMATION]
+    return false if statuses.include_any? blocking_statuses
+    return true unless Setting.days_to_renew_domain_before_expire != 0
+
+    # if you can renew domain at days_to_renew before domain expiration
+    if (expire_time.to_date - Time.zone.today) + 1 > Setting.days_to_renew_domain_before_expire
+      return false
     end
 
-    return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
-                                          DomainStatus::PENDING_TRANSFER, DomainStatus::PENDING_DELETE,
-                                          DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION)
     true
   end
 
@@ -486,9 +490,9 @@ class Domain < ActiveRecord::Base
             self.delete_date = nil
           when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
             self.outzone_at = Time.zone.now if force_delete_scheduled?
-          when DomainStatus::DomainStatus::EXPIRED # removal causes server hold to set
+          when DomainStatus::EXPIRED # removal causes server hold to set
             self.outzone_at = self.expire_time + 15.day
-          when DomainStatus::DomainStatus::SERVER_HOLD # removal causes server hold to set
+          when DomainStatus::SERVER_HOLD # removal causes server hold to set
             self.outzone_at = nil
         end
       end
@@ -547,6 +551,8 @@ class Domain < ActiveRecord::Base
       activate if nameservers.reject(&:marked_for_destruction?).size >= Setting.ns_min_count
     end
 
+    cancel_force_delete if force_delete_scheduled? && will_save_change_to_registrant_id?
+
     if statuses.empty? && valid?
       statuses << DomainStatus::OK
     elsif (statuses.length > 1 && active?) || !valid?
@@ -583,6 +589,15 @@ class Domain < ActiveRecord::Base
 
   def primary_contact_emails
     (admin_contacts.emails + [registrant.email]).uniq
+  end
+
+  def force_delete_contact_emails
+    (primary_contact_emails + tech_contacts.pluck(:email) +
+      ["info@#{name}", "#{prepared_domain_name}@#{name}"]).uniq
+  end
+
+  def prepared_domain_name
+    name.split('.')&.first
   end
 
   def new_registrant_email

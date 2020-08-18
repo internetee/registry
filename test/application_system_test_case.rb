@@ -17,7 +17,7 @@ class ApplicationSystemTestCase < ActionDispatch::IntegrationTest
 end
 
 class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
-  self.use_transactional_fixtures = false
+  self.use_transactional_tests = false
   DatabaseCleaner.strategy = :truncation
 
   Capybara.register_driver(:chrome) do |app|

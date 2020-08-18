@@ -1,4 +1,4 @@
-class EppSession < ActiveRecord::Base
+class EppSession < ApplicationRecord
   belongs_to :user, required: true
 
   validates :session_id, uniqueness: true, presence: true

@@ -1,4 +1,4 @@
-class Nameserver < ActiveRecord::Base
+class Nameserver < ApplicationRecord
   include Versions # version/nameserver_version.rb
   include EppErrors
 
@@ -34,6 +34,8 @@ class Nameserver < ActiveRecord::Base
 
   delegate :name, to: :domain, prefix: true
 
+  self.ignored_columns = %w[legacy_domain_id]
+
   def epp_code_map
     {
         '2302' => [
@@ -46,7 +48,7 @@ class Nameserver < ActiveRecord::Base
             [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }]
         ],
         '2003' => [
-            [:ipv4, :blank]
+          %i[base ip_required],
         ]
     }
   end
@@ -81,11 +83,12 @@ class Nameserver < ActiveRecord::Base
 
   def glue_record_required?
     return unless hostname? && domain
+
     DomainName(hostname).domain == domain.name
   end
 
   def normalize_attributes
-    self.hostname = hostname.try(:strip).try(:downcase)
+    self.hostname = hostname.try(:strip).try(:downcase).gsub(/\.$/, '')
     self.ipv4 = Array(ipv4).reject(&:blank?).map(&:strip)
     self.ipv6 = Array(ipv6).reject(&:blank?).map(&:strip).map(&:upcase)
   end

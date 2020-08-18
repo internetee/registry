@@ -10,14 +10,21 @@ if ENV['COVERAGE']
 end
 
 ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('../../config/environment', __FILE__)
+require_relative '../config/environment'
 require 'rails/test_help'
 require 'minitest/mock'
 require 'capybara/rails'
 require 'capybara/minitest'
 require 'webmock/minitest'
-require 'support/rails5_assertions' # Remove once upgraded to Rails 5
 require 'support/assertions/epp_assertions'
+
+
+# `bin/rails test` is not the same as `bin/rake test`.
+# All tasks will be loaded (and executed) twice when using the former without `Rake::Task.clear`.
+# https://github.com/rails/rails/issues/28786
+require 'rake'
+Rake::Task.clear
+Rails.application.load_tasks
 
 Setting.address_processing = false
 Setting.registry_country_code = 'US'
@@ -40,13 +47,7 @@ class ActiveSupport::TestCase
 
   teardown do
     travel_back
-  end
-end
-
-# Allows testing OPTIONS request just like GET or POST
-module ActionDispatch::Integration::RequestHelpers
-  def options(path, parameters = nil, headers_or_env = nil)
-    process :options, path, parameters, headers_or_env
+    Setting.address_processing = false
   end
 end
 
@@ -60,9 +61,14 @@ class ApplicationIntegrationTest < ActionDispatch::IntegrationTest
     WebMock.reset!
     Capybara.reset_sessions!
     Capybara.use_default_driver
+    Setting.address_processing = false
   end
 end
 
 class EppTestCase < ActionDispatch::IntegrationTest
   include Assertions::EppAssertions
+
+  teardown do
+    Setting.address_processing = false
+  end
 end

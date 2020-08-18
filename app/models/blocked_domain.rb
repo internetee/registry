@@ -1,4 +1,4 @@
-class BlockedDomain < ActiveRecord::Base
+class BlockedDomain < ApplicationRecord
   include Versions
   before_save   :generate_data
   after_destroy :remove_data

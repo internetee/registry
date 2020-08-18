@@ -1,17 +1,19 @@
 # Used in Registrant portal to collect registrant verifications
 # Registrant postgres user can access this table directly.
-class RegistrantVerification < ActiveRecord::Base
+class RegistrantVerification < ApplicationRecord
+  include Versions # version/domain_version.rb
+
   # actions
   CONFIRMED = 'confirmed'
   REJECTED  = 'rejected'
-  
+
   # action types
   DOMAIN_REGISTRANT_CHANGE = 'domain_registrant_change'
   DOMAIN_DELETE = 'domain_delete'
 
   belongs_to :domain
 
-  validates :verification_token, :domain_name, :domain, :action, :action_type, presence: true
+  validates :verification_token, :domain, :action, :action_type, presence: true
 
   def domain_registrant_change_confirm!(initiator)
     self.action_type = DOMAIN_REGISTRANT_CHANGE

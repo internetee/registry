@@ -20,7 +20,7 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t(:api_user)
-          %dd= link_to(@certificate.api_user, [:admin, @api_user])
+          %dd= link_to(@certificate.api_user, [:admin, @api_user.registrar, @api_user])
 
           %dt= t(:common_name)
           %dd= @certificate.common_name

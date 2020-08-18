@@ -1,4 +1,3 @@
-require 'rails5_api_controller_backport'
 require 'auth_token/auth_token_creator'
 
 module Api
@@ -16,7 +15,7 @@ module Api
         end
 
         def eid
-          user = RegistrantUser.find_or_create_by_api_data(eid_params)
+          user = RegistrantUser.find_or_create_by_api_data(eid_params.to_h)
           token = create_token(user)
 
           if token

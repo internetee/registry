@@ -148,9 +148,8 @@ action_mailer_default_port: # default: no port (80)
 action_mailer_default_from: # no-reply@example.com
 action_mailer_force_delete_from: # `From` header for `DomainDeleteMailer#forced` email
 
-lhv_keystore:
+lhv_p12_keystore:
 lhv_keystore_password:
-lhv_keystore_alias:
 lhv_ca_file: # Needed only in dev mode
 lhv_dev_mode: 'false'
 
@@ -163,9 +162,9 @@ test:
   action_mailer_default_host: 'registry.test'
   action_mailer_default_from: 'no-reply@registry.test'
   action_mailer_force_delete_from: 'legal@registry.test'
-  lhv_keystore: 'test/fixtures/files/keystore.jks'
+  lhv_p12_keystore: 'test/fixtures/files/keystore.p12'
   lhv_keystore_password: 'testtest'
-  lhv_keystore_alias: 'testtest'
+  legal_documents_dir: 'test/fixtures/files'
 
 # Airbrake // Errbit:
 airbrake_host: "https://your-errbit-host.ee"

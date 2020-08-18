@@ -21,12 +21,11 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
                      email: 'john@shop.test',
                      phone: '+111.1')
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'William',
-                                                           email: 'william@shop.test',
-                                                           phone: '+222.2' }.to_json,
-          'HTTP_AUTHORIZATION' => auth_token,
-          'Accept' => Mime::JSON,
-          'Content-Type' => Mime::JSON.to_s
+    patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'William',
+                                                                   email: 'william@shop.test',
+                                                                   phone: '+222.2' },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
     assert_response :ok
     @contact.reload
 
@@ -37,10 +36,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
 
   def test_notify_registrar
     assert_difference -> { @contact.registrar.notifications.count } do
-      patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name' }.to_json,
-            'HTTP_AUTHORIZATION' => auth_token,
-            'Accept' => Mime::JSON,
-            'Content-Type' => Mime::JSON.to_s
+      patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'new name' },
+            as: :json,
+            headers: { 'HTTP_AUTHORIZATION' => auth_token }
     end
     notification = @contact.registrar.notifications.last
     assert_equal 'Contact john-001 has been updated by registrant', notification.text
@@ -50,10 +48,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @contact.update!(fax: '+666.6')
     ENV['fax_enabled'] = 'true'
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { fax: '+777.7' }.to_json,
-          'HTTP_AUTHORIZATION' => auth_token,
-          'Accept' => Mime::JSON,
-          'Content-Type' => Mime::JSON.to_s
+    patch api_v1_registrant_contact_path(@contact.uuid), params: { fax: '+777.7' },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :ok
     @contact.reload
@@ -63,10 +60,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   def test_fax_cannot_be_updated_when_disabled
     ENV['fax_enabled'] = 'false'
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { fax: '+823.7' }.to_json,
-          'HTTP_AUTHORIZATION' => auth_token,
-          'Accept' => Mime::JSON,
-          'Content-Type' => Mime::JSON.to_s
+    patch api_v1_registrant_contact_path(@contact.uuid), params: { fax: '+823.7' },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :bad_request
     @contact.reload
@@ -80,14 +76,13 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   def test_update_address_when_enabled
     Setting.address_processing = true
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { address: { city: 'new city',
-                                                                      street: 'new street',
-                                                                      zip: '92837',
-                                                                      country_code: 'RU',
-                                                                      state: 'new state' } }.to_json,
-          'HTTP_AUTHORIZATION' => auth_token,
-          'Accept' => Mime::JSON,
-          'Content-Type' => Mime::JSON.to_s
+    patch api_v1_registrant_contact_path(@contact.uuid), params: { address: { city: 'new city',
+                                                                              street: 'new street',
+                                                                              zip: '92837',
+                                                                              country_code: 'RU',
+                                                                              state: 'new state' } },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :ok
     @contact.reload
@@ -96,13 +91,12 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_address_is_optional_when_enabled
-    @contact.update!(street: 'any', zip: 'any', city: 'any', state: 'any', country_code: 'US')
     Setting.address_processing = true
+    @contact.update!(street: 'any', zip: 'any', city: 'any', state: 'any', country_code: 'US')
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'any' }.to_json,
-          'HTTP_AUTHORIZATION' => auth_token,
-          'Accept' => Mime::JSON,
-          'Content-Type' => Mime::JSON.to_s
+    patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'any' },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :ok
   end
@@ -111,11 +105,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @contact.update!(street: 'old street')
     Setting.address_processing = false
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { address: { street: 'new street' } }
-                                                           .to_json,
-          'HTTP_AUTHORIZATION' => auth_token,
-          'Accept' => Mime::JSON,
-          'Content-Type' => Mime::JSON.to_s
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { address: { street: 'new street' } },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
     @contact.reload
 
     assert_response :bad_request
@@ -130,10 +123,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @contact.update!(ident_type: Contact::PRIV,
                      disclosed_attributes: %w[])
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { disclosed_attributes: %w[name] }.to_json,
-          'HTTP_AUTHORIZATION' => auth_token,
-          'Accept' => Mime::JSON,
-          'Content-Type' => Mime::JSON.to_s
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { disclosed_attributes: %w[name] },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
     @contact.reload
 
     assert_response :ok
@@ -143,10 +136,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   def test_conceal_private_persons_data
     @contact.update!(ident_type: Contact::PRIV, disclosed_attributes: %w[name])
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { disclosed_attributes: [] }.to_json,
-          { 'HTTP_AUTHORIZATION' => auth_token,
-            'Accept' => Mime::JSON,
-            'Content-Type' => Mime::JSON.to_s }
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { disclosed_attributes: [] },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     @contact.reload
 
@@ -166,11 +159,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_equal 'US-1234', @user.registrant_ident
 
     assert_no_changes -> { @contact.disclosed_attributes } do
-      patch api_v1_registrant_contact_path(@contact.uuid), { disclosed_attributes: %w[name] }
-                                                             .to_json,
-            'HTTP_AUTHORIZATION' => auth_token,
-            'Accept' => Mime::JSON,
-            'Content-Type' => Mime::JSON.to_s
+      patch api_v1_registrant_contact_path(@contact.uuid),
+            params: { disclosed_attributes: %w[name] },
+            as: :json,
+            headers: { 'HTTP_AUTHORIZATION' => auth_token }
       @contact.reload
     end
     assert_response :bad_request
@@ -182,10 +174,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_return_contact_details
-    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name' }.to_json,
-          'HTTP_AUTHORIZATION' => auth_token,
-          'Accept' => Mime::JSON,
-          'Content-Type' => Mime::JSON.to_s
+    patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'new name' },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
     assert_equal ({ id: @contact.uuid,
                     name: 'new name',
                     code: @contact.code,
@@ -211,10 +202,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_errors
-    patch api_v1_registrant_contact_path(@contact.uuid), { phone: 'invalid' }.to_json,
-          'HTTP_AUTHORIZATION' => auth_token,
-          'Accept' => Mime::JSON,
-          'Content-Type' => Mime::JSON.to_s
+    patch api_v1_registrant_contact_path(@contact.uuid), params: { phone: 'invalid' },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :bad_request
     assert_equal ({ errors: { phone: ['Phone nr is invalid'] } }), JSON.parse(response.body,
@@ -225,10 +215,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_equal 'US-1234', @user.registrant_ident
     @contact.update!(ident: '12345')
 
-    patch api_v1_registrant_contact_path(@contact.uuid), { name: 'new name' }.to_json,
-          'HTTP_AUTHORIZATION' => auth_token,
-          'Accept' => Mime::JSON,
-          'Content-Type' => Mime::JSON.to_s
+    patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'new name' },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
     @contact.reload
 
     assert_response :not_found
@@ -236,7 +225,8 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_non_existent_contact
-    patch api_v1_registrant_contact_path('non-existent'), nil, 'HTTP_AUTHORIZATION' => auth_token
+    patch api_v1_registrant_contact_path('non-existent'),
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
     assert_response :not_found
     assert_equal ({ errors: [{ base: ['Not found'] }] }),
                  JSON.parse(response.body, symbolize_names: true)

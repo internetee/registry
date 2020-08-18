@@ -36,11 +36,17 @@ class SerializersRegistrantApiDomainTest < ActiveSupport::TestCase
   end
 
   def test_returns_contacts_name_and_uuid
-    assert_equal([{name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'},
-                  {name: 'William', id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb'}].to_set,
+    assert_equal([{name: 'John',
+                   id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957',
+                   email: 'john@inbox.test'},
+                  {name: 'William',
+                   id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb',
+                   email: 'william@inbox.test'}].to_set,
                  @json[:admin_contacts].to_set)
 
-    assert_equal([{name: 'William', id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb'}].to_set,
+    assert_equal([{name: 'William',
+                   id: '0aa54704-d6f7-4ca9-b8ca-2827d9a4e4eb',
+                   email: 'william@inbox.test'}].to_set,
                  @json[:tech_contacts].to_set)
   end
 
@@ -70,7 +76,7 @@ class SerializersRegistrantApiDomainTest < ActiveSupport::TestCase
   def test_other_fields_are_also_present
     keys = %i[id name registrar registered_at valid_to created_at updated_at
               registrant tech_contacts admin_contacts transfer_code name_dirty name_puny period
-              period_unit creator_str updator_str legacy_id legacy_registrar_id legacy_registrant_id
+              period_unit creator_str updator_str
               outzone_at delete_date registrant_verification_asked_at
               registrant_verification_token pending_json force_delete_date statuses
               locked_by_registrant_at status_notes nameservers]

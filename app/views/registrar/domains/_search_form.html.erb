@@ -3,7 +3,7 @@
         <div class="col-md-3">
             <div class="form-group">
                 <%= f.label :name, for: nil %>
-                <%= f.search_field :name_matches, value: params[:q][:name_matches], class: 'form-control',
+                <%= f.search_field :name_matches, value: search_params[:name_matches], class: 'form-control',
                                    placeholder: t(:name) %>
             </div>
         </div>
@@ -44,7 +44,7 @@
         <div class="col-md-3">
             <div class="form-group">
                 <%= f.label :valid_to_from, for: nil %>
-                <%= f.search_field :valid_to_gteq, value: params[:q][:valid_to_gteq],
+                <%= f.search_field :valid_to_gteq, value: search_params[:valid_to_gteq],
                                    class: 'form-control js-datepicker',
                                    placeholder: t(:valid_to_from) %>
             </div>
@@ -53,7 +53,7 @@
         <div class="col-md-3">
             <div class="form-group">
                 <%= f.label :valid_to_until, for: nil %>
-                <%= f.search_field :valid_to_lteq, value: params[:q][:valid_to_lteq],
+                <%= f.search_field :valid_to_lteq, value: search_params[:valid_to_lteq],
                                    class: 'form-control js-datepicker',
                                    placeholder: t(:valid_to_until) %>
             </div>

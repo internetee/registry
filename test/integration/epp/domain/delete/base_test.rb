@@ -34,7 +34,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_delete_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert_includes Domain.find_by(name: 'invalid.test').statuses, DomainStatus::PENDING_DELETE_CONFIRMATION
     assert_epp_response :completed_successfully_action_pending
   end
@@ -62,7 +62,7 @@ class EppDomainDeleteBaseTest < EppTestCase
     XML
 
     assert_no_difference 'Domain.count' do
-      post epp_delete_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :object_status_prohibits_operation
   end
@@ -89,7 +89,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_delete_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
 
     assert @domain.registrant_verification_asked?
@@ -120,7 +120,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_delete_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
 
     assert_not @domain.registrant_verification_asked?
@@ -151,7 +151,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_delete_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
 
     assert_not @domain.registrant_verification_asked?
@@ -160,8 +160,9 @@ class EppDomainDeleteBaseTest < EppTestCase
     assert_epp_response :completed_successfully
   end
 
-  def test_legal_document_is_required
+  def test_legal_document_is_optional
     assert_equal 'shop.test', @domain.name
+    Setting.request_confirmation_on_domain_deletion_enabled = false
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -176,9 +177,9 @@ class EppDomainDeleteBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_delete_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
-    assert_epp_response :required_parameter_missing
+    assert_epp_response :completed_successfully
   end
 
   def test_domain_cannot_be_deleted_when_explicitly_prohibited_by_registrar
@@ -203,7 +204,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_delete_path, { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_epp_response :object_status_prohibits_operation
   end

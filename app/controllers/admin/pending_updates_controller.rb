@@ -26,7 +26,6 @@ module Admin
       # steal token
       token = @domain.registrant_verification_token
       @registrant_verification = RegistrantVerification.new(domain_id: @domain.id,
-                                                            domain_name: @domain.name,
                                                             verification_token: token)
     end
 

@@ -1,4 +1,4 @@
-class LegalDocument < ActiveRecord::Base
+class LegalDocument < ApplicationRecord
   cattr_accessor :explicitly_write_file
   include EppErrors
   MIN_BODY_SIZE = (1.37 * 3.kilobytes).ceil
@@ -14,8 +14,7 @@ class LegalDocument < ActiveRecord::Base
 
   belongs_to :documentable, polymorphic: true
 
-
-  validate :val_body_length, if: ->(file){ file.path.blank? && !Rails.env.staging?}
+  validate :val_body_length, if: ->(file) { file.path.blank? }
 
   before_create :add_creator
   before_save   :save_to_filesystem, if: :body
@@ -31,7 +30,6 @@ class LegalDocument < ActiveRecord::Base
   def val_body_length
     errors.add(:body, :length) if body.nil? || body.size < MIN_BODY_SIZE
   end
-
 
   def save_to_filesystem
     binary = Base64.decode64(body)
@@ -58,7 +56,7 @@ class LegalDocument < ActiveRecord::Base
   end
 
   def add_creator
-    self.creator_str = ::PaperTrail.whodunnit
+    self.creator_str = ::PaperTrail.request.whodunnit
     true
   end
 

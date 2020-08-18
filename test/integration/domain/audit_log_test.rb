@@ -14,7 +14,7 @@ class DomainAuditLogTest < ActionDispatch::IntegrationTest
     assert_equal registrant_id, domain.registrant_id
     domain.legal_document_id = legal_document_id
 
-    assert_difference 'domain.versions.count' do
+    assert_difference 'domain.versions.count', 1 do
       domain.save!
     end
 

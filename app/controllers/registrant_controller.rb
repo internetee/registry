@@ -1,5 +1,6 @@
 class RegistrantController < ApplicationController
   before_action :authenticate_registrant_user!
+  before_action :set_paper_trail_whodunnit
   layout 'registrant/application'
 
   include Registrant::ApplicationHelper

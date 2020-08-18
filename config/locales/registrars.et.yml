@@ -1,0 +1,5 @@
+et:
+  registrar:
+    invoice_yearly_product_description: '%{tld} registreerimine: %{length} aasta(t)'
+    invoice_monthly_product_description: '%{tld} registreerimine: %{length} kuu(d)'
+    monthly_summary_title: 'Domeenide registreerimine - %{date}'
