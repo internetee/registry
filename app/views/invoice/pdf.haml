@@ -195,7 +195,7 @@
             %dt= t(:reg_no)
             %dd= @invoice.buyer_reg_no
 
-            %dt= t(:address)
+            %dt= Invoice.human_attribute_name :address
             %dd= @invoice.buyer_address
 
             %dt= t(:country)
