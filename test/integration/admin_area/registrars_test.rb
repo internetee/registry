@@ -12,7 +12,7 @@ class AdminAreaRegistrarsIntegrationTest < ActionDispatch::IntegrationTest
     new_iban = 'GB94BARC10201530093459'
     assert_not_equal new_iban, @registrar.iban
 
-    patch admin_registrar_path(@registrar), registrar: { iban: new_iban }
+    patch admin_registrar_path(@registrar), params: { registrar: { iban: new_iban } }
     @registrar.reload
 
     assert_equal new_iban, @registrar.iban

@@ -28,7 +28,8 @@ class EppDomainCheckAuctionTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
@@ -52,7 +53,8 @@ class EppDomainCheckAuctionTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
@@ -76,7 +78,8 @@ class EppDomainCheckAuctionTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
@@ -100,7 +103,8 @@ class EppDomainCheckAuctionTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
@@ -124,7 +128,8 @@ class EppDomainCheckAuctionTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/check', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_check_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully

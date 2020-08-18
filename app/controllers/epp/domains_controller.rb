@@ -2,6 +2,7 @@ module Epp
   class DomainsController < BaseController
     before_action :find_domain, only: %i[info renew update transfer delete]
     before_action :find_password, only: %i[info update transfer delete]
+    before_action :set_paper_trail_whodunnit
 
     def info
       authorize! :info, @domain
@@ -91,7 +92,7 @@ module Epp
                                              status: Auction.statuses[:payment_received])
             active_auction.domain_registered!
           end
-
+          Dispute.close_by_domain(@domain.name)
           render_epp_response '/epp/domains/create'
         else
           handle_errors(@domain)
@@ -102,23 +103,17 @@ module Epp
     def update
       authorize! :update, @domain, @password
 
-      if @domain.update(params[:parsed_frame], current_user)
-        if @domain.epp_pending_update.present?
-          render_epp_response '/epp/domains/success_pending'
-        else
-          render_epp_response '/epp/domains/success'
-        end
-      else
-        handle_errors(@domain)
-      end
+      updated = @domain.update(params[:parsed_frame], current_user)
+      (handle_errors(@domain) && return) unless updated
+
+      pending = @domain.epp_pending_update.present?
+      render_epp_response "/epp/domains/success#{'_pending' if pending}"
     end
 
     def delete
       authorize! :delete, @domain, @password
-      # all includes for bullet
-      @domain = Epp::Domain.where(id: @domain.id).includes(nameservers: :versions).first
 
-      handle_errors(@domain) and return unless @domain.can_be_deleted?
+      (handle_errors(@domain) && return) unless @domain.can_be_deleted?
 
       if @domain.epp_destroy(params[:parsed_frame], current_user.id)
         if @domain.epp_pending_delete.present?
@@ -242,7 +237,7 @@ module Epp
       mutually_exclusive 'keyData', 'dsData'
 
       @prefix = nil
-      requires 'extension > extdata > legalDocument'
+      requires 'extension > extdata > legalDocument' if current_user.legaldoc_mandatory?
 
       optional_attribute 'period', 'unit', values: %w(d m y)
 
@@ -251,7 +246,7 @@ module Epp
 
     def validate_update
       if element_count('update > chg > registrant') > 0
-        requires 'extension > extdata > legalDocument'
+        requires 'extension > extdata > legalDocument' if current_user.legaldoc_mandatory?
       end
 
       @prefix = 'update > update >'
@@ -261,8 +256,6 @@ module Epp
     end
 
     def validate_delete
-      requires 'extension > extdata > legalDocument'
-
       @prefix = 'delete > delete >'
       requires 'name'
     end
@@ -313,11 +306,17 @@ module Epp
 
     def status_editing_disabled
       return true if Setting.client_status_editing_enabled
+      return true if check_client_hold
       return true if params[:parsed_frame].css('status').empty?
       epp_errors << {
         code: '2306',
         msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
       }
+    end
+
+    def check_client_hold
+      statuses = params[:parsed_frame].css('status').map { |element| element['s'] }
+      statuses == [::DomainStatus::CLIENT_HOLD]
     end
 
     def balance_ok?(operation, period = nil, unit = nil)

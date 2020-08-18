@@ -3,7 +3,7 @@ class Setting < RailsSettings::Base
   source Rails.root.join('config', 'app.yml')
 
   # When config/app.yml has changed, you need change this prefix to v2, v3 ... to expires caches
-  # cache_prefix { "v1" }
+  cache_prefix { 'v2' }
 
   def self.reload_settings!
     STDOUT << "#{Time.zone.now.utc} - Clearing settings cache\n"
@@ -46,6 +46,7 @@ class Setting < RailsSettings::Base
       expire_warning_period
       redemption_grace_period
       expire_pending_confirmation
+      dispute_period_in_months
     ]
   end
 
@@ -67,6 +68,7 @@ class Setting < RailsSettings::Base
       request_confirmation_on_domain_deletion_enabled
       nameserver_required
       address_processing
+      legal_document_is_mandatory
     ]
   end
 end

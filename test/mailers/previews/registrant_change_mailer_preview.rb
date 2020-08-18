@@ -1,7 +1,11 @@
 class RegistrantChangeMailerPreview < ActionMailer::Preview
   def initialize
-    @domain = Domain.first
-    @new_registrant = Registrant.where.not(email: nil, country_code: nil).first
+    @domain = Domain.joins(:registrant).where.not({ contacts: { email: nil,
+                                                                country_code: nil,
+                                                                ident_country_code: nil } }).take
+    @new_registrant = Registrant.where.not(email: nil,
+                                           country_code: nil,
+                                           ident_country_code: nil).take
     super
   end
 
@@ -21,7 +25,7 @@ class RegistrantChangeMailerPreview < ActionMailer::Preview
 
   def accepted
     RegistrantChangeMailer.accepted(domain: @domain,
-                                    old_registrant: @domain.registrar)
+                                    old_registrant: @domain.registrant)
   end
 
   def rejected

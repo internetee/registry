@@ -27,11 +27,6 @@
 <ellipse fill="none" stroke="black" cx="-322" cy="-150" rx="98.2828" ry="18"/>
 <text text-anchor="middle" x="-322" y="-146.3" font-family="Times,serif" font-size="14.00">Epp::DomainsController</text>
 </g>
-<!-- Epp::KeyrelaysController -->
-<g id="node4" class="node"><title>Epp::KeyrelaysController</title>
-<ellipse fill="none" stroke="black" cx="-283" cy="-402" rx="101.282" ry="18"/>
-<text text-anchor="middle" x="-283" y="-398.3" font-family="Times,serif" font-size="14.00">Epp::KeyrelaysController</text>
-</g>
 <!-- Epp::SessionsController -->
 <g id="node5" class="node"><title>Epp::SessionsController</title>
 <ellipse fill="none" stroke="black" cx="24" cy="-450" rx="96.3833" ry="18"/>
@@ -86,11 +81,6 @@
 <g id="node17" class="node"><title>Admin::ApiUsersController</title>
 <ellipse fill="none" stroke="black" cx="110" cy="366" rx="109.681" ry="18"/>
 <text text-anchor="middle" x="110" y="369.7" font-family="Times,serif" font-size="14.00">Admin::ApiUsersController</text>
-</g>
-<!-- Admin::KeyrelaysController -->
-<g id="node18" class="node"><title>Admin::KeyrelaysController</title>
-<ellipse fill="none" stroke="black" cx="-152" cy="246" rx="112.38" ry="18"/>
-<text text-anchor="middle" x="-152" y="249.7" font-family="Times,serif" font-size="14.00">Admin::KeyrelaysController</text>
 </g>
 <!-- Admin::SessionsController -->
 <g id="node19" class="node"><title>Admin::SessionsController</title>
@@ -171,11 +161,6 @@
 <g id="node35" class="node"><title>Registrar::DomainsController</title>
 <ellipse fill="none" stroke="black" cx="-196" cy="-330" rx="116.18" ry="18"/>
 <text text-anchor="middle" x="-196" y="-326.3" font-family="Times,serif" font-size="14.00">Registrar::DomainsController</text>
-</g>
-<!-- Registrar::KeyrelaysController -->
-<g id="node36" class="node"><title>Registrar::KeyrelaysController</title>
-<ellipse fill="none" stroke="black" cx="-144" cy="66" rx="119.679" ry="18"/>
-<text text-anchor="middle" x="-144" y="69.7" font-family="Times,serif" font-size="14.00">Registrar::KeyrelaysController</text>
 </g>
 <!-- Registrar::SessionsController -->
 <g id="node37" class="node"><title>Registrar::SessionsController</title>

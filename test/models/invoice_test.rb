@@ -11,7 +11,8 @@ class InvoiceTest < ActiveSupport::TestCase
 
   def test_overdue_scope_returns_unpaid_uncancelled_invoices_with_past_due_date
     travel_to Time.zone.parse('2010-07-05')
-    @invoice.update!(account_activity: nil, cancelled_at: nil, due_date: '2010-07-04')
+    @invoice.update!(account_activity: nil, cancelled_at: nil, issue_date: '2010-07-04',
+                     due_date: '2010-07-04')
 
     assert Invoice.overdue.include?(@invoice), 'Should return overdue invoice'
   end

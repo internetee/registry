@@ -1,11 +1,7 @@
 language: ruby
-rvm:
-  - 2.4
-  - 2.5
 cache: bundler
 env:
   - DB=postgresql
-bundler_args: --without development staging production
 before_install:
   - "wget -N http://chromedriver.storage.googleapis.com/2.43/chromedriver_linux64.zip -P ~/"
   - "unzip ~/chromedriver_linux64.zip -d ~/"
@@ -13,20 +9,26 @@ before_install:
   - "sudo mv -f ~/chromedriver /usr/local/share/"
   - "sudo chmod +x /usr/local/share/chromedriver"
   - "sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver"
-  - "gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true"
-  - "gem install bundler -v '< 2'"
+  - "bundle config set without 'development staging production'"
+  - "bundle config set deployment '[secure]'"
 before_script:
   - "cp config/application.yml.sample config/application.yml"
+  - "echo \"openssl_config_path: 'test/fixtures/files/test_ca/openssl.cnf'\" >> config/application.yml"
+  - "echo \"crl_dir:      'test/fixtures/files/test_ca/crl'\" >> config/application.yml"
+  - "echo \"crl_path:     'test/fixtures/files/test_ca/crl/crl.pem'\" >> config/application.yml"
+  - "echo \"ca_cert_path: 'test/fixtures/files/test_ca/certs/ca.crt.pem'\" >> config/application.yml"
+  - "echo \"ca_key_path:  'test/fixtures/files/test_ca/private/ca.key.pem'\" >> config/application.yml"
+  - "echo \"ca_key_password: 'password'\" >> config/application.yml"
   - "cp config/database_travis.yml config/database.yml"
   - "bundle exec rake db:setup:all"
+  - "bundle exec rake data:migrate"
   - "curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter"
   - "chmod +x ./cc-test-reporter"
   - "./cc-test-reporter before-build"
-script:
-  - "bundle exec rspec"
-  - "bundle exec rake test"
 after_script:
   - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
+script:
+  - "bundle exec rails test test/*"
 services:
   - postgresql
 addons:

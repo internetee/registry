@@ -5,7 +5,12 @@ class DomainCronTest < ActiveSupport::TestCase
 
   setup do
     @domain = domains(:shop)
+    @original_expire_pending_confirmation = Setting.expire_pending_confirmation
     ActionMailer::Base.deliveries.clear
+  end
+
+  teardown do
+    Setting.expire_pending_confirmation = @original_expire_pending_confirmation
   end
 
   def test_clean_expired_pendings_notifies_registrant_by_email
@@ -17,5 +22,34 @@ class DomainCronTest < ActiveSupport::TestCase
     DomainCron.clean_expired_pendings
 
     assert_emails 1
+  end
+
+  def test_client_hold
+    Setting.redemption_grace_period = 30
+
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    assert_not @domain.force_delete_scheduled?
+    travel_to Time.zone.parse('2010-07-05')
+    @domain.schedule_force_delete(type: :soft)
+    @domain.reload
+    @domain.update(template_name: 'legal_person')
+    travel_to Time.zone.parse('2010-08-06')
+    DomainCron.start_client_hold
+
+    assert_emails 1
+  end
+
+  def test_does_not_sets_hold_if_already_set
+    Setting.redemption_grace_period = 30
+
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    travel_to Time.zone.parse('2010-07-05')
+    @domain.schedule_force_delete(type: :soft)
+    @domain.reload
+    @domain.update(template_name: 'legal_person', statuses: [DomainStatus::CLIENT_HOLD])
+    travel_to Time.zone.parse('2010-08-06')
+    DomainCron.start_client_hold
+
+    assert_emails 0
   end
 end

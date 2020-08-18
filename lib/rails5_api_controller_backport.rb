@@ -1,3 +1,0 @@
-require_relative 'action_controller/metal/basic_implicit_render'
-require_relative 'action_controller/api/api_rendering'
-require_relative 'action_controller/api'

@@ -1,9 +1,12 @@
 class DomainCron
+  include Concerns::Job::ForceDelete
+  include Concerns::Job::ForceDeleteLogging
+  include Concerns::Job::ForceDeleteNotify
 
   def self.clean_expired_pendings
     STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?
 
-    ::PaperTrail.whodunnit = "cron - #{__method__}"
+    ::PaperTrail.request.whodunnit = "cron - #{__method__}"
     expire_at = Setting.expire_pending_confirmation.hours.ago
     count = 0
     expired_pending_domains = Domain.where('registrant_verification_asked_at <= ?', expire_at)
@@ -35,7 +38,7 @@ class DomainCron
   end
 
   def self.start_expire_period
-    ::PaperTrail.whodunnit = "cron - #{__method__}"
+    ::PaperTrail.request.whodunnit = "cron - #{__method__}"
     domains = Domain.expired
     marked = 0
     real = 0
@@ -61,7 +64,7 @@ class DomainCron
   def self.start_redemption_grace_period
     STDOUT << "#{Time.zone.now.utc} - Setting server_hold to domains\n" unless Rails.env.test?
 
-    ::PaperTrail.whodunnit = "cron - #{__method__}"
+    ::PaperTrail.request.whodunnit = "cron - #{__method__}"
 
     domains = Domain.outzone_candidates
     marked = 0

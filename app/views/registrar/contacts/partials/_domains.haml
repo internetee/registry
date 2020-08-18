@@ -1,5 +1,6 @@
-- domains = contact.all_domains(page: params[:domain_page], per: 20, params: params)
-#contacts.panel.panel-default
+- domains = contact.all_domains(page: params[:domain_page], per: 20,
+                                params: domain_filter_params.to_h)
+.panel.panel-default
   .panel-heading
     .pull-left
       = t(:domains)

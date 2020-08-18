@@ -6,9 +6,9 @@ class RegistrantAreaIdCardSignInTest < ApplicationIntegrationTest
   end
 
   def test_succeeds
-    post_via_redirect registrant_id_card_sign_in_path, nil,
-                      'SSL_CLIENT_S_DN_CN' => 'DOE,JOHN,1234',
-                      'SSL_CLIENT_I_DN_C' => 'US'
+    post registrant_id_card_sign_in_path, headers: { 'SSL_CLIENT_S_DN_CN' => 'DOE,JOHN,1234',
+                                                     'SSL_CLIENT_I_DN_C' => 'US' }
+    follow_redirect!
 
     assert_response :ok
     assert_equal registrant_root_path, path
@@ -16,7 +16,7 @@ class RegistrantAreaIdCardSignInTest < ApplicationIntegrationTest
   end
 
   def test_fails_when_certificate_is_absent
-    post_via_redirect registrant_id_card_sign_in_path, nil, 'SSL_CLIENT_S_DN_CN' => ''
+    post registrant_id_card_sign_in_path, headers: { 'SSL_CLIENT_S_DN_CN' => '' }
 
     assert_response :ok
     assert_equal registrant_id_card_sign_in_path, path

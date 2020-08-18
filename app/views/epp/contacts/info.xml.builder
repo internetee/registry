@@ -65,17 +65,11 @@ xml.epp_head do
           xml.tag!('contact:upID', upID) if upID.present? # optional upID
           xml.tag!('contact:upDate', @contact.updated_at.try(:iso8601))
         end
-        # xml.tag!('contact:trDate', '123') if false
         if can? :view_password, @contact, @password
           xml.tag!('contact:authInfo') do
-           xml.tag!('contact:pw', @contact.auth_info)
-          end
-        else
-          xml.tag!('contact:authInfo') do
-          xml.tag!('contact:pw', 'No access')
+            xml.tag!('contact:pw', @contact.auth_info)
           end
         end
-        # xml << render('/epp/contacts/disclosure_policy')
       end
     end
     if can? :view_full_info, @contact, @password

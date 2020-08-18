@@ -34,7 +34,7 @@ module Admin
     end
 
     def bind
-      if @bank_transaction.bind_invoice(params[:invoice_no])
+      if @bank_transaction.bind_invoice(params[:invoice_no], manual: true)
         flash[:notice] = I18n.t('record_created')
         redirect_to [:admin, @bank_transaction]
       else

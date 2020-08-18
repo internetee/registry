@@ -39,10 +39,12 @@ class DomainDeleteMailer < ApplicationMailer
     @registrant = RegistrantPresenter.new(registrant: registrant, view: view_context)
 
     @redemption_grace_period = Setting.redemption_grace_period
+    @expire_warning_period = Setting.expire_warning_period
+    @delete_period_length = @redemption_grace_period + @expire_warning_period
 
     subject = default_i18n_subject(domain_name: domain.name)
     mail(from: forced_email_from,
-         to: domain.primary_contact_emails,
+         to: domain.force_delete_contact_emails,
          subject: subject,
          template_path: 'mailers/domain_delete_mailer/forced',
          template_name: template_name)

@@ -1,5 +1,5 @@
 require "erb"
-class WhoisRecord < ActiveRecord::Base
+class WhoisRecord < ApplicationRecord
   belongs_to :domain
   belongs_to :registrar
 
@@ -84,6 +84,7 @@ class WhoisRecord < ActiveRecord::Base
 
   def populate
     return if domain_id.blank?
+
     self.json = generated_json
     self.name = json['name']
     self.registrar_id = domain.registrar_id if domain # for faster registrar updates

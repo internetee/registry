@@ -35,6 +35,11 @@ namespace :whois do
       ReservedDomain.find_in_batches.each do |group|
         UpdateWhoisRecordJob.enqueue group.map(&:name), 'reserved'
       end
+
+      print "\n-----> Update disputed domains whois_records"
+      Dispute.active.find_in_batches.each do |group|
+        UpdateWhoisRecordJob.enqueue group.map(&:domain_name), 'disputed'
+      end
     end
     puts "\n-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end

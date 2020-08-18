@@ -4,3 +4,10 @@ one:
   quantity: 1
   unit: pc
   invoice: one
+
+two:
+  description: Acme services
+  price: 5
+  quantity: 1
+  unit: pc
+  invoice: unpaid

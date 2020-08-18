@@ -1,5 +1,4 @@
-- panel_class = @domain.errors.messages[:dnskeys] ? 'panel-danger' : 'panel-default'
-#dnskeys.panel{class: panel_class}
+.panel.panel-default
   .panel-heading.clearfix
     = t(:dnskeys)
   .table-responsive
@@ -17,9 +16,3 @@
             %td= x.protocol
             %td= x.alg
             %td= x.public_key
-      - if @domain.errors.messages[:dnskeys]
-        %tfoot
-          - @domain.errors.messages[:dnskeys].each do |x|
-            %tr
-              %td{colspan: 4}= x
-

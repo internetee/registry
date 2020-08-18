@@ -1,15 +1,8 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
-# Pick the frameworks you want:
-require 'active_model/railtie'
-require 'active_record/railtie'
-require 'action_controller/railtie'
-require 'action_mailer/railtie'
-require 'action_view/railtie'
-require 'sprockets/railtie'
-require 'csv'
 require 'rails/all'
-# require "rails/test_unit/railtie"
+require 'English'
+require 'csv'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -23,6 +16,9 @@ end
 
 module DomainNameRegistry
   class Application < Rails::Application
+    config.load_defaults 6.0
+    config.autoloader = :classic # Do not use zeitwerk for now
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -43,21 +39,6 @@ module DomainNameRegistry
     config.eager_load_paths << config.root.join('lib', 'validators')
     config.watchable_dirs['lib'] = %i[rb]
 
-    # Add the fonts path
-    config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')
-
-    # Precompile additional assets
-    config.assets.precompile += %w(*.svg *.eot *.woff *.ttf)
-    config.assets.precompile += %w(admin-manifest.css admin-manifest.js)
-    config.assets.precompile += %w(registrar-manifest.css registrar-manifest.js)
-    config.assets.precompile += %w(registrant-manifest.css registrant-manifest.js)
-
-    # Active Record used to suppresses errors raised within
-    # `after_rollback`/`after_commit` callbacks and only printed them to the logs.
-    # In the next version, these errors will no longer be suppressed.
-    # Instead, the errors will propagate normally just like in other Active Record callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
-
     config.active_record.schema_format = :sql
 
     config.generators do |g|
@@ -76,9 +57,6 @@ module DomainNameRegistry
     config.action_mailer.perform_deliveries = true
     config.action_mailer.raise_delivery_errors = true
 
-    # Override "spec/mailers/previews" that RSpec sets
-    config.action_mailer.preview_path = "#{Rails.root}/test/mailers/previews"
-
     config.action_mailer.smtp_settings = {
       address:              ENV['smtp_address'],
       port:                 ENV['smtp_port'],
@@ -96,5 +74,13 @@ module DomainNameRegistry
 
     config.action_view.default_form_builder = 'DefaultFormBuilder'
     config.secret_key_base = Figaro.env.secret_key_base
+
+    # Using `Rails.application.config.active_record.belongs_to_required_by_default` in
+    # `new_framework_defaults.rb` has no effect in Rails 5.0.x.
+    # https://github.com/rails/rails/issues/23589
+    # https://stackoverflow.com/questions/38850712/rails-5-belongs-to-required-by-default-doesnt-work
+    # Not supported by `paper_trail` gem < 5.0
+    # https://github.com/paper-trail-gem/paper_trail/issues/682
+    config.active_record.belongs_to_required_by_default = false
   end
 end

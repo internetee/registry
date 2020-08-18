@@ -6,9 +6,93 @@ class BankTransactionTest < ActiveSupport::TestCase
     @invoice = invoices(:one)
   end
 
-  def test_matches_against_invoice_number_and_reference_number
-    create_payable_invoice(number: '2222', total: 10, reference_no: '1111')
-    transaction = BankTransaction.new(description: 'invoice #2222', sum: 10, reference_no: '1111')
+  def test_matches_against_invoice_nubmber_and_reference_number
+    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+    transaction = BankTransaction.new(description: 'invoice #2222', sum: 10, reference_no: '1234567')
+
+    assert_difference 'AccountActivity.count' do
+      transaction.autobind_invoice
+    end
+  end
+
+  def test_binds_if_this_sum_invoice_already_present
+    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+    another_invoice = @invoice.dup
+    another_invoice.save(validate: false)
+    another_invoice.update(reference_no: '7654321', number: '2221')
+
+    another_item = @invoice.items.first.dup
+    another_item.invoice = another_invoice
+    another_item.save
+    another_invoice.reload
+
+    first_transaction = BankTransaction.new(description: 'invoice #2221',
+                                            sum: 10,
+                                            description: 'Order nr 1 from registrar 1234567 second number 2345678')
+
+    first_transaction.create_activity(another_invoice.buyer, another_invoice)
+
+    transaction = BankTransaction.new(description: 'invoice #2222',
+                                      sum: 10,
+                                      description: 'Order nr 1 from registrar 1234567 second number 2345678')
+
+    assert_difference 'AccountActivity.count' do
+      transaction.autobind_invoice
+    end
+  end
+
+  def test_binds_if_this_sum_cancelled_invoice_already_present
+    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+    another_invoice = @invoice.dup
+    another_invoice.save(validate: false)
+
+
+    another_item = @invoice.items.first.dup
+    another_item.invoice = another_invoice
+
+    another_item.save
+    another_invoice.reload
+    another_invoice.update(reference_no: '1234567', number: '2221', cancelled_at: Time.zone.now)
+
+    transaction = BankTransaction.new(description: 'invoice #2222',
+                                      sum: 10,
+                                      description: 'Order nr 1 from registrar 1234567 second number 2345678')
+
+    assert_difference 'AccountActivity.count' do
+      transaction.autobind_invoice
+    end
+  end
+
+  def test_marks_the_first_one_as_paid_if_same_sum
+    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+    another_invoice = @invoice.dup
+    another_invoice.save(validate: false)
+    another_invoice.update(reference_no: '7654321', number: '2221')
+
+    another_item = @invoice.items.first.dup
+    another_item.invoice = another_invoice
+    another_item.save
+    another_invoice.reload
+
+    transaction = BankTransaction.new(description: 'invoice #2222',
+                                      sum: 10,
+                                      description: 'Order nr 1 from registrar 1234567 second number 2345678')
+
+    assert_difference 'AccountActivity.count' do
+      transaction.autobind_invoice
+    end
+
+    @invoice.reload
+    another_invoice.reload
+    assert(@invoice.paid?)
+    assert_not(another_invoice.paid?)
+  end
+
+  def test_matches_against_invoice_nubmber_and_reference_number_in_description
+    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+    transaction = BankTransaction.new(description: 'invoice #2222',
+                                      sum: 10,
+                                      description: 'Order nr 1 from registrar 1234567 second number 2345678')
 
     assert_difference 'AccountActivity.count' do
       transaction.autobind_invoice

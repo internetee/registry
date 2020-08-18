@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-2"><%= Contact.human_attribute_name :name %></th>
+                            <th class="col-xs-2"><%= Contact.human_attribute_name :code %></th>
+                            <th class="col-xs-2"><%= Contact.human_attribute_name :ident %></th>
+                            <th class="col-xs-2"><%= Contact.human_attribute_name :created_at %></th>
+                            <th class="col-xs-2"><%= Registrar.model_name.human %></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% @contacts.each do |contact| %>
+                            <tr>
+                                <td><%= contact %></td>
+                                <td><%= contact.code %></td>
+                                <td><%= ident_for(contact) %></td>
+                                <td><%= l(contact.created_at, format: :short) %></td>
+                                <td><%= contact.registrar %></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -18,12 +18,12 @@ class DomainVersionsTest < ApplicationSystemTestCase
 
   def create_domain_with_history
     sql = <<-SQL.squish
-      INSERT INTO contacts (id, code, email, auth_info, registrar_id)
-      VALUES (54, 'test_code', 'test@inbox.test', '8b4d462aa04194ca78840a', #{@registrar.id});
+      INSERT INTO contacts (id, name, code, email, auth_info, registrar_id)
+      VALUES (54, 'test_code', 'test_name', 'test@inbox.test', '8b4d462aa04194ca78840a', #{@registrar.id});
 
-      INSERT INTO domains (id, registrar_id, valid_to, registrant_id,
+      INSERT INTO domains (id, name, name_puny, name_dirty, registrar_id, valid_to, registrant_id,
       transfer_code)
-      VALUES (54, #{@registrar.id}, '2018-06-23T12:14:02.732+03:00', 54, 'transfer_code');
+      VALUES (54, 'any.test', 'any.test', 'any.test', #{@registrar.id}, '2018-06-23T12:14:02.732+03:00', 54, 'transfer_code');
 
       INSERT INTO log_domains (item_type, item_id, event, whodunnit, object,
       object_changes, created_at, session, children)

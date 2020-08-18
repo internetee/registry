@@ -13,17 +13,10 @@ class EppBaseTest < EppTestCase
            constraints: EppConstraint.new(:poll)
     end
 
-    any_valid_epp_request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-        <hello/>
-      </epp>
-    XML
-
     begin
       assert_difference 'ApiLog::EppLog.count' do
-        post '/epp/command/internal_error', { frame: any_valid_epp_request_xml },
-             'HTTP_COOKIE' => 'session=api_bestnames'
+        post '/epp/command/internal_error', params: { frame: valid_request_xml },
+             headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
       end
       assert_epp_response :command_failed
     rescue
@@ -33,14 +26,14 @@ class EppBaseTest < EppTestCase
     end
   end
 
-  def test_invalid_request
+  def test_validates_request_xml
     invalid_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
       </epp>
     XML
-    post '/epp/command/internal_error', { frame: invalid_xml },
-         'HTTP_COOKIE' => 'session=api_bestnames'
+    post valid_command_path, params: { frame: invalid_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_epp_response :syntax_error
   end
@@ -58,8 +51,8 @@ class EppBaseTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/command/info', { frame: xml_of_epp_command_that_requires_authentication },
-         'HTTP_COOKIE' => 'session=non-existent'
+    post epp_info_path, params: { frame: xml_of_epp_command_that_requires_authentication },
+         headers: { 'HTTP_COOKIE' => 'session=non-existent' }
 
     assert_epp_response :authorization_error
   end
@@ -82,9 +75,24 @@ class EppBaseTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/command/info', { frame: xml_of_epp_command_that_requires_authorization },
-         'HTTP_COOKIE' => "session=#{session.session_id}"
+    post epp_info_path, params: { frame: xml_of_epp_command_that_requires_authorization },
+         headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
 
     assert_epp_response :authorization_error
+  end
+
+  private
+
+  def valid_command_path
+    epp_poll_path
+  end
+
+  def valid_request_xml
+    <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <hello/>
+      </epp>
+    XML
   end
 end

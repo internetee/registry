@@ -1,4 +1,4 @@
-class BankTransaction < ActiveRecord::Base
+class BankTransaction < ApplicationRecord
   include Versions
   belongs_to :bank_statement
   has_one :account_activity
@@ -13,53 +13,72 @@ class BankTransaction < ActiveRecord::Base
 
   def binded_invoice
     return unless binded?
+
     account_activity.invoice
   end
 
-
-  def invoice_num
-    return @invoice_no if defined?(@invoice_no)
-
-    match = description.match(/^[^\d]*(\d+)/)
-    return unless match
-
-    @invoice_no = match[1].try(:to_i)
-  end
-
   def invoice
-    @invoice ||= registrar.invoices.find_by(number: invoice_num) if registrar
+    return unless registrar
+
+    @invoice ||= registrar.invoices
+                          .order(created_at: :asc)
+                          .unpaid
+                          .non_cancelled
+                          .find_by(total: sum)
   end
 
   def registrar
-    @registrar ||= Invoice.find_by(reference_no: reference_no)&.buyer
+    @registrar ||= Invoice.find_by(reference_no: parsed_ref_number)&.buyer
   end
 
-
   # For successful binding, reference number, invoice id and sum must match with the invoice
-  def autobind_invoice
+  def autobind_invoice(manual: false)
     return if binded?
     return unless registrar
-    return unless invoice_num
     return unless invoice
     return unless invoice.payable?
 
-    return if invoice.total != sum
-    create_activity(registrar, invoice)
+    channel = if manual
+                'admin_payment'
+              else
+                'system_payment'
+              end
+    create_internal_payment_record(channel: channel, invoice: invoice,
+                                   registrar: registrar)
   end
 
-  def bind_invoice(invoice_no)
+  def create_internal_payment_record(channel: nil, invoice:, registrar:)
+    if channel.nil?
+      create_activity(invoice.buyer, invoice)
+      return
+    end
+
+    payment_order = PaymentOrder.new_with_type(type: channel, invoice: invoice)
+    payment_order.save!
+
+    if create_activity(registrar, invoice)
+      payment_order.paid!
+    else
+      payment_order.update(notes: 'Failed to create activity', status: 'failed')
+    end
+  end
+
+  def bind_invoice(invoice_no, manual: false)
     if binded?
       errors.add(:base, I18n.t('transaction_is_already_binded'))
       return
     end
 
     invoice = Invoice.find_by(number: invoice_no)
+    errors.add(:base, I18n.t('invoice_was_not_found')) unless invoice
+    validate_invoice_data(invoice)
+    return if errors.any?
 
-    unless invoice
-      errors.add(:base, I18n.t('invoice_was_not_found'))
-      return
-    end
+    create_internal_payment_record(channel: (manual ? 'admin_payment' : nil), invoice: invoice,
+                                   registrar: invoice.buyer)
+  end
 
+  def validate_invoice_data(invoice)
     if invoice.paid?
       errors.add(:base, I18n.t('invoice_is_already_binded'))
       return
@@ -70,23 +89,21 @@ class BankTransaction < ActiveRecord::Base
       return
     end
 
-    if invoice.total != sum
-      errors.add(:base, I18n.t('invoice_and_transaction_sums_do_not_match'))
-      return
-    end
-
-    create_activity(invoice.buyer, invoice)
+    errors.add(:base, I18n.t('invoice_and_transaction_sums_do_not_match')) if invoice.total != sum
   end
 
   def create_activity(registrar, invoice)
-    ActiveRecord::Base.transaction do
-      create_account_activity!(account: registrar.cash_account,
-                               invoice: invoice,
-                               sum: invoice.subtotal,
-                               currency: currency,
-                               description: description,
-                               activity_type: AccountActivity::ADD_CREDIT)
+    activity = AccountActivity.new(
+      account: registrar.cash_account, bank_transaction: self,
+      invoice: invoice, sum: invoice.subtotal,
+      currency: currency, description: description,
+      activity_type: AccountActivity::ADD_CREDIT
+    )
+    if activity.save
       reset_pending_registrar_balance_reload
+      true
+    else
+      false
     end
   end
 
@@ -97,5 +114,13 @@ class BankTransaction < ActiveRecord::Base
 
     registrar.settings['balance_auto_reload'].delete('pending')
     registrar.save!
+  end
+
+  def parsed_ref_number
+    reference_no || ref_number_from_description
+  end
+
+  def ref_number_from_description
+    /(\d{7})/.match(description)[0]
   end
 end

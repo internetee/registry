@@ -1,17 +1,30 @@
 if ENV['COVERAGE']
   require 'simplecov'
-  SimpleCov.command_name 'test'
+  SimpleCov.start 'rails' do
+    add_filter '/app/models/version/'
+    add_filter '/lib/action_controller/'
+    add_filter '/lib/core_monkey_patches/'
+    add_filter '/lib/daemons/'
+    add_filter '/lib/gem_monkey_patches/'
+  end
 end
 
 ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('../../config/environment', __FILE__)
+require_relative '../config/environment'
 require 'rails/test_help'
 require 'minitest/mock'
 require 'capybara/rails'
 require 'capybara/minitest'
 require 'webmock/minitest'
-require 'support/rails5_assertions' # Remove once upgraded to Rails 5
 require 'support/assertions/epp_assertions'
+
+
+# `bin/rails test` is not the same as `bin/rake test`.
+# All tasks will be loaded (and executed) twice when using the former without `Rake::Task.clear`.
+# https://github.com/rails/rails/issues/28786
+require 'rake'
+Rake::Task.clear
+Rails.application.load_tasks
 
 Setting.address_processing = false
 Setting.registry_country_code = 'US'
@@ -29,20 +42,12 @@ CompanyRegister::Client = CompanyRegisterClientStub
 EInvoice.provider = EInvoice::Providers::TestProvider.new
 
 class ActiveSupport::TestCase
-  include FactoryBot::Syntax::Methods
-
   ActiveRecord::Migration.check_pending!
   fixtures :all
 
   teardown do
     travel_back
-  end
-end
-
-# Allows testing OPTIONS request just like GET or POST
-module ActionDispatch::Integration::RequestHelpers
-  def options(path, parameters = nil, headers_or_env = nil)
-    process :options, path, parameters, headers_or_env
+    Setting.address_processing = false
   end
 end
 
@@ -56,9 +61,14 @@ class ApplicationIntegrationTest < ActionDispatch::IntegrationTest
     WebMock.reset!
     Capybara.reset_sessions!
     Capybara.use_default_driver
+    Setting.address_processing = false
   end
 end
 
 class EppTestCase < ActionDispatch::IntegrationTest
   include Assertions::EppAssertions
+
+  teardown do
+    Setting.address_processing = false
+  end
 end

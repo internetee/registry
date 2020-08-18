@@ -7,6 +7,7 @@ module Epp
         KEY_TO_VALUE = {
           completed_successfully: 1000,
           completed_successfully_action_pending: 1001,
+          completed_without_address: 1100,
           completed_successfully_no_messages: 1300,
           completed_successfully_ack_to_dequeue: 1301,
           completed_successfully_ending_session: 1500,
@@ -16,6 +17,7 @@ module Epp
           required_parameter_missing: 2003,
           parameter_value_range_error: 2004,
           parameter_value_syntax_error: 2005,
+          unimplemented: 2101,
           billing_failure: 2104,
           object_is_not_eligible_for_renewal: 2105,
           object_is_not_eligible_for_transfer: 2106,
@@ -34,6 +36,7 @@ module Epp
         DEFAULT_DESCRIPTIONS = {
           1000 => 'Command completed successfully',
           1001 => 'Command completed successfully; action pending',
+          1100 => 'Command completed successfully; Postal address data discarded',
           1300 => 'Command completed successfully; no messages',
           1301 => 'Command completed successfully; ack to dequeue',
           1500 => 'Command completed successfully; ending session',
@@ -43,6 +46,7 @@ module Epp
           2003 => 'Required parameter missing',
           2004 => 'Parameter value range error',
           2005 => 'Parameter value syntax error',
+          2101 => 'Unimplemented command',
           2104 => 'Billing failure',
           2105 => 'Object is not eligible for renewal',
           2106 => 'Object is not eligible for transfer',

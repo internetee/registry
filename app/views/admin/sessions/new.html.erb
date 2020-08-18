@@ -16,12 +16,6 @@
                              required: true,
                              class: 'form-control' %>
 
-        <% if devise_mapping.rememberable? -%>
-            <div class="checkbox">
-                <label><%= f.check_box :remember_me %> <%= t '.remember_checkbox' %> %></label>
-            </div>
-        <% end -%>
-
         <%= f.submit t('.sign_in_btn'), class: 'btn btn-lg btn-primary btn-block' %>
     <% end %>
 </div>

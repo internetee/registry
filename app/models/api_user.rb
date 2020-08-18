@@ -26,9 +26,9 @@ class ApiUser < User
   validates :username, uniqueness: true
 
   delegate :code, :name, to: :registrar, prefix: true
+  delegate :legaldoc_mandatory?, to: :registrar
 
   alias_attribute :login, :username
-  attr_accessor :registrar_typeahead
 
   SUPER = 'super'
   EPP = 'epp'
@@ -44,17 +44,13 @@ class ApiUser < User
   after_initialize :set_defaults
   def set_defaults
     return unless new_record?
-    self.active = true unless active_changed?
+    self.active = true unless saved_change_to_active?
   end
 
   class << self
     def find_by_id_card(id_card)
       find_by(identity_code: id_card.personal_code)
     end
-  end
-
-  def registrar_typeahead
-    @registrar_typeahead || registrar || nil
   end
 
   def to_s
@@ -69,24 +65,14 @@ class ApiUser < User
     registrar.notifications.unread
   end
 
-  def registrar_pki_ok?(crt, cn)
-    return false if crt.blank? || cn.blank?
-    crt = crt.split(' ').join("\n")
-    crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
-    crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
-    cert = OpenSSL::X509::Certificate.new(crt)
-    md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
-    certificates.registrar.exists?(md5: md5, common_name: cn)
-  end
+  def pki_ok?(crt, com, api: true)
+    return false if crt.blank? || com.blank?
 
-  def api_pki_ok?(crt, cn)
-    return false if crt.blank? || cn.blank?
-    crt = crt.split(' ').join("\n")
-    crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
-    crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
-    cert = OpenSSL::X509::Certificate.new(crt)
+    origin = api ? certificates.api : certificates.registrar
+    cert = machine_readable_certificate(crt)
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
-    certificates.api.exists?(md5: md5, common_name: cn)
+
+    origin.exists?(md5: md5, common_name: com, revoked: false)
   end
 
   def linked_users
@@ -97,5 +83,15 @@ class ApiUser < User
 
   def linked_with?(another_api_user)
     another_api_user.identity_code == self.identity_code
+  end
+
+  private
+
+  def machine_readable_certificate(cert)
+    cert = cert.split(' ').join("\n")
+    cert.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
+    cert.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
+
+    OpenSSL::X509::Certificate.new(cert)
   end
 end

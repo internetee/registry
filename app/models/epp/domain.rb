@@ -1,3 +1,5 @@
+require 'deserializers/xml/legal_document'
+
 class Epp::Domain < Domain
   include EppErrors
 
@@ -9,10 +11,11 @@ class Epp::Domain < Domain
   def manage_permissions
     return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer || is_renewal
-    return unless update_prohibited? || delete_prohibited?
+    return unless update_prohibited?
+
     stat = (statuses & (DomainStatus::UPDATE_PROHIBIT_STATES + DomainStatus::DELETE_PROHIBIT_STATES)).first
     add_epp_error('2304', 'status', stat, I18n.t(:object_status_prohibits_operation))
-    false
+    throw(:abort)
   end
 
   after_validation :validate_contacts
@@ -23,12 +26,8 @@ class Epp::Domain < Domain
     active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
     active_techs = tech_domain_contacts.select { |x| !x.marked_for_destruction? }
 
-    # bullet workaround
-    ac = active_admins.map { |x| Contact.find(x.contact_id) }
-    tc = active_techs.map { |x| Contact.find(x.contact_id) }
-
     # validate registrant here as well
-    ([registrant] + ac + tc).each do |x|
+    ([registrant] + active_admins + active_techs).each do |x|
       unless x.valid?
         add_epp_error('2304', nil, nil, I18n.t(:contact_is_not_valid, value: x.code))
         ok = false
@@ -56,12 +55,13 @@ class Epp::Domain < Domain
   def epp_code_map
     {
       '2002' => [ # Command use error
-        [:base, :domain_already_belongs_to_the_querying_registrar]
+        %i[base domain_already_belongs_to_the_querying_registrar],
       ],
       '2003' => [ # Required parameter missing
-        [:registrant, :blank],
-        [:registrar, :blank],
-        [:base, :required_parameter_missing_reserved]
+        %i[registrant blank],
+        %i[registrar blank],
+        %i[base required_parameter_missing_reserved],
+        %i[base required_parameter_missing_disputed],
       ],
       '2004' => [ # Parameter value range error
         [:dnskeys, :out_of_range,
@@ -88,10 +88,11 @@ class Epp::Domain < Domain
         [:puny_label, :too_long, { obj: 'name', val: name_puny }]
       ],
       '2201' => [ # Authorisation error
-        [:transfer_code, :wrong_pw]
+        %i[transfer_code wrong_pw],
       ],
       '2202' => [
-        [:base, :invalid_auth_information_reserved]
+        %i[base invalid_auth_information_reserved],
+        %i[base invalid_auth_information_disputed],
       ],
       '2302' => [ # Object exists
         [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
@@ -123,9 +124,8 @@ class Epp::Domain < Domain
 
   def attach_default_contacts
     return if registrant.blank?
-    regt = Registrant.find(registrant.id) # temp for bullet
-    tech_contacts << regt if tech_domain_contacts.blank?
-    admin_contacts << regt if admin_domain_contacts.blank? && !regt.org?
+    tech_contacts << registrant if tech_domain_contacts.blank?
+    admin_contacts << registrant if admin_domain_contacts.blank? && !registrant.org?
   end
 
   def attrs_from(frame, current_user, action = nil)
@@ -182,14 +182,12 @@ class Epp::Domain < Domain
   # Adding legal doc to domain and
   # if something goes wrong - raise Rollback error
   def add_legal_file_to_new frame
-    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+    legal_document_data = ::Deserializers::Xml::LegalDocument.new(frame).call
     return unless legal_document_data
+    return if legal_document_data[:body].starts_with?(ENV['legal_documents_dir'])
 
-    doc = LegalDocument.create(
-        documentable_type: Domain,
-        document_type:     legal_document_data[:type],
-        body:              legal_document_data[:body]
-    )
+    doc = LegalDocument.create(documentable_type: Domain, document_type: legal_document_data[:type],
+                               body: legal_document_data[:body])
     self.legal_documents = [doc]
 
     frame.css("legalDocument").first.content = doc.path if doc&.persisted?
@@ -459,7 +457,7 @@ class Epp::Domain < Domain
     at.deep_merge!(attrs_from(frame.css('chg'), current_user, 'chg'))
     at.deep_merge!(attrs_from(frame.css('rem'), current_user, 'rem'))
 
-    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       frame.css("legalDocument").first.content = doc.path if doc&.persisted?
       self.legal_document_id = doc.id
     end
@@ -477,13 +475,36 @@ class Epp::Domain < Domain
       self.up_date = Time.zone.now
     end
 
-    same_registrant_as_current = (registrant.code == frame.css('registrant').text)
+    registrant_verification_needed = false
+    # registrant block may not be present, so we need this to rule out false positives
+    if frame.css('registrant').text.present?
+      registrant_verification_needed = (registrant.code != frame.css('registrant').text)
+    end
 
-    if !same_registrant_as_current && errors.empty? && verify &&
+    if registrant_verification_needed && disputed?
+      disputed_pw = frame.css('reserved > pw').text
+      if disputed_pw.blank?
+        add_epp_error('2304', nil, nil, 'Required parameter missing; reserved' \
+        'pw element required for dispute domains')
+      else
+        dispute = Dispute.active.find_by(domain_name: name, password: disputed_pw)
+        if dispute
+          Dispute.close_by_domain(name)
+          registrant_verification_needed = false # Prevent asking current registrant confirmation
+        else
+          add_epp_error('2202', nil, nil, 'Invalid authorization information; '\
+          'invalid reserved>pw value')
+        end
+      end
+    end
+
+    unverified_registrant_params = frame.css('registrant').present? &&
+                                   frame.css('registrant').attr('verified').to_s.downcase != 'yes'
+
+    if registrant_verification_needed && errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
-       frame.css('registrant').present? &&
-       frame.css('registrant').attr('verified').to_s.downcase != 'yes'
-      registrant_verification_asked!(frame.to_s, current_user.id)
+       unverified_registrant_params
+      registrant_verification_asked!(frame.to_s, current_user.id) unless disputed?
     end
 
     errors.empty? && super(at)
@@ -520,6 +541,7 @@ class Epp::Domain < Domain
 
   def attach_legal_document(legal_document_data)
     return unless legal_document_data
+    return if legal_document_data[:body].starts_with?(ENV['legal_documents_dir'])
 
     legal_documents.create(
       document_type: legal_document_data[:type],
@@ -533,7 +555,7 @@ class Epp::Domain < Domain
       return
     end
 
-    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       frame.css("legalDocument").first.content = doc.path if doc&.persisted?
     end
 
@@ -644,7 +666,7 @@ class Epp::Domain < Domain
         self.registrar = current_user.registrar
       end
 
-      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       save!(validate: false)
 
       return dt
@@ -669,7 +691,7 @@ class Epp::Domain < Domain
       regenerate_transfer_code
       self.registrar = pt.new_registrar
 
-      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       save!(validate: false)
     end
 
@@ -689,58 +711,12 @@ class Epp::Domain < Domain
         status: DomainTransfer::CLIENT_REJECTED
       )
 
-      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
       save!(validate: false)
     end
 
     pt
   end
-
-  def keyrelay(parsed_frame, requester)
-    if registrar == requester
-      errors.add(:base, :domain_already_belongs_to_the_querying_registrar) and return false
-    end
-
-    abs_datetime = parsed_frame.css('absolute').text
-    abs_datetime = DateTime.zone.parse(abs_datetime) if abs_datetime.present?
-
-    transaction do
-      kr = keyrelays.build(
-        pa_date: Time.zone.now,
-        key_data_flags: parsed_frame.css('flags').text,
-        key_data_protocol: parsed_frame.css('protocol').text,
-        key_data_alg: parsed_frame.css('alg').text,
-        key_data_public_key: parsed_frame.css('pubKey').text,
-        auth_info_pw: parsed_frame.css('pw').text,
-        expiry_relative: parsed_frame.css('relative').text,
-        expiry_absolute: abs_datetime,
-        requester: requester,
-        accepter: registrar
-      )
-
-      legal_document_data = self.class.parse_legal_document_from_frame(parsed_frame)
-      if legal_document_data
-        kr.legal_documents.build(
-          document_type: legal_document_data[:type],
-          body: legal_document_data[:body]
-        )
-      end
-
-      kr.save
-
-      return false unless valid?
-
-      registrar.notifications.create!(
-        text: 'Key Relay action completed successfully.',
-        attached_obj_type: kr.class.to_s,
-        attached_obj_id: kr.id
-      )
-    end
-
-    true
-  end
-
-  ### VALIDATIONS ###
 
   def validate_exp_dates(cur_exp_date)
     begin
@@ -756,6 +732,11 @@ class Epp::Domain < Domain
 
 
   def can_be_deleted?
+    if disputed?
+      errors.add(:base, :domain_status_prohibits_operation)
+      return false
+    end
+
     begin
       errors.add(:base, :domain_status_prohibits_operation)
       return false
@@ -777,18 +758,6 @@ class Epp::Domain < Domain
       p = parsed_frame.css('period').first
       return nil unless p
       p[:unit]
-    end
-
-    def parse_legal_document_from_frame(parsed_frame)
-      ld = parsed_frame.css('legalDocument').first
-      return nil unless ld
-      return nil if ld.text.starts_with?(ENV['legal_documents_dir']) # escape reloading
-      return nil if ld.text.starts_with?('/home/') # escape reloading
-
-      {
-        body: ld.text,
-        type: ld['type']
-      }
     end
 
     def check_availability(domain_names)

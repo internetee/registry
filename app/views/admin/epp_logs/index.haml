@@ -8,10 +8,10 @@
         .col-md-3
           .form-group
             = f.label :request_command
-            = f.select :request_command_eq, [[t(:choose),''], 'hello', 'login', 'logout', 'info', 'create', 'update', 'delete', 'check', 'renew', 'transfer', 'poll', 'keyrelay'], {}, class: 'form-control selectize', placeholder: t(:choose)
+            = f.select :request_command_eq, [[t(:choose),''], 'hello', 'login', 'logout', 'info', 'create', 'update', 'delete', 'check', 'renew', 'transfer', 'poll'], {}, class: 'form-control selectize', placeholder: t(:choose)
         .col-md-3
           .form-group
-            - opts  = [[t(:choose),''], 'contact', 'domain', 'poll', 'keyrelay']
+            - opts  = [[t(:choose),''], 'contact', 'domain', 'poll']
             - opts += [params[:q][:request_object_cont]] if params[:q].present? && params[:q][:request_object_cont].present?
             = f.label :request_object
             = f.select :request_object_cont, opts, {}, class: 'form-control selectize_create', placeholder: t(:choose)

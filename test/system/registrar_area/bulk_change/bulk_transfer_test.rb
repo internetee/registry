@@ -7,7 +7,7 @@ class RegistrarAreaBulkTransferTest < ApplicationSystemTestCase
 
   def test_transfer_multiple_domains_in_bulk
     request_body = { data: { domainTransfers: [{ domainName: 'shop.test', transferCode: '65078d5' }] } }
-    headers = { 'Content-type' => 'application/json' }
+    headers = { 'Content-type' => Mime[:json] }
     request_stub = stub_request(:post, /domain_transfers/).with(body: request_body,
                                                                 headers: headers,
                                                                 basic_auth: ['test_goodnames', 'testtest'])
@@ -28,7 +28,7 @@ class RegistrarAreaBulkTransferTest < ApplicationSystemTestCase
 
   def test_fail_gracefully
     body = { errors: [{ title: 'epic fail' }] }.to_json
-    headers = { 'Content-type' => 'application/json' }
+    headers = { 'Content-type' => Mime[:json] }
     stub_request(:post, /domain_transfers/).to_return(status: 400, body: body, headers: headers)
 
     visit registrar_domains_url

@@ -1,7 +1,9 @@
 version: "2"
 prepare:
   fetch:
-    - "https://raw.githubusercontent.com/internetee/style-guide/master/ruby/.rubocop.yml"
+    - "https://raw.githubusercontent.com/internetee/style-guide/master/.rubocop-ruby.yml"
+    - url: "https://raw.githubusercontent.com/internetee/style-guide/master/.rubocop-rails.yml"
+      path: ".rubocop.yml"
 plugins:
   brakeman:
     enabled: true
@@ -20,25 +22,25 @@ plugins:
     enabled: true
   rubocop:
     enabled: true
-    channel: rubocop-0-58
+    channel: rubocop-0-74
+checks:
+  method-lines:
+    config:
+      threshold: 40
 exclude_patterns:
-  - "app/models/legacy/"
   - "app/models/version/"
   - "bin/"
   - "config/"
   - "db/"
-  - "lib/action_controller/"
-  - "lib/core_ext/"
+  - "lib/core_monkey_patches/"
   - "lib/daemons/"
-  - "lib/gem_ext/"
+  - "lib/gem_monkey_patches/"
   - "lib/tasks/api_log.rake"
   - "lib/tasks/bootstrap.rake"
   - "lib/tasks/db.rake"
   - "lib/tasks/documents.rake"
-  - "lib/tasks/import.rake"
   - "lib/tasks/legal_doc.rake"
   - "lib/tasks/whois.rake"
-  - "spec/"
   - "test/"
   - "vendor/"
   - "CHANGELOG.md"
