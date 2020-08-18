@@ -134,11 +134,16 @@ class Certificate < ApplicationRecord
 
   class << self
     def update_crl
-      update_id_crl
-      update_registry_crl
-      reload_apache
+#      update_id_crl
+#      update_registry_crl
+#      reload_apache
+      run_crlupdater
     end
-
+    def run_crlupdater
+      STDOUT << "#{Time.zone.now.utc} - Running crlupdater\n" unless Rails.env.test?
+      system "#{ENV['crl_update_path']}"
+      STDOUT << "#{Time.zone.now.utc} - Finished running crlupdater\n" unless Rails.env.test?
+    end
     def update_id_crl
       STDOUT << "#{Time.zone.now.utc} - Updating ID CRL\n" unless Rails.env.test?
 
