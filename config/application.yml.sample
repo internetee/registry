@@ -34,6 +34,7 @@ time_zone: 'Tallinn' # more zones by rake time:zones:all
 openssl_config_path: '/etc/ssl/openssl.cnf'
 crl_dir:     '/home/registry/registry/shared/ca/crl'
 crl_path:     '/home/registry/registry/shared/ca/crl/crl.pem'
+crl_updater_path: '/home/registry/registry/shared/ca/crl/crlupdater.sh'
 ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
 ca_key_path:  '/home/registry/registry/shared/ca/private/ca.key.pem'
 ca_key_password: 'your-root-key-password'
