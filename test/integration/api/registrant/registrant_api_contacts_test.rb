@@ -12,7 +12,7 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
 
   def test_root_accepts_limit_and_offset_parameters
     contacts(:william).update!(ident: '1234', ident_type: 'priv', ident_country_code: 'US')
-    assert_equal 3, @user.contacts.size
+    assert_equal 4, @user.contacts.size
 
     get '/api/v1/registrant/contacts', params: { 'limit' => 1, 'offset' => 0 },
         headers: @auth_headers
@@ -22,7 +22,7 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
 
     get '/api/v1/registrant/contacts', headers: @auth_headers
     response_json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal(3, response_json.count)
+    assert_equal(@user.contacts.size, response_json.count)
   end
 
   def test_get_contact_details_by_uuid

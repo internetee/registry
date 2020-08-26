@@ -200,6 +200,7 @@ class Domain < ApplicationRecord
     def registrant_user_domains(registrant_user)
       from(
         "(#{registrant_user_domains_by_registrant(registrant_user).to_sql} UNION " \
+        "#{registrant_user_indirect_domains(registrant_user).to_sql} UNION " \
         "#{registrant_user_domains_by_contact(registrant_user).to_sql}) AS domains"
       )
     end
@@ -215,6 +216,14 @@ class Domain < ApplicationRecord
       from(
         "(#{registrant_user_domains_by_registrant(registrant_user).to_sql} UNION " \
         "#{registrant_user_domains_by_admin_contact(registrant_user).to_sql}) AS domains"
+      )
+    end
+
+    def registrant_user_indirect_domains(registrant_user)
+      companies = Contact.registrant_user_company_contacts(registrant_user)
+      from(
+        "(#{registrant_user_company_registrant(companies).to_sql} UNION "\
+        "#{registrant_user_domains_company(companies).to_sql}) AS domains"
       )
     end
 
@@ -239,6 +248,14 @@ class Domain < ApplicationRecord
 
     def registrant_user_direct_domains_by_contact(registrant_user)
       joins(:domain_contacts).where(domain_contacts: { contact_id: registrant_user.direct_contacts })
+    end
+
+    def registrant_user_company_registrant(companies)
+      where(registrant: companies)
+    end
+
+    def registrant_user_domains_company(companies)
+      joins(:domain_contacts).where(domain_contacts: { contact: companies })
     end
   end
 

@@ -75,8 +75,11 @@ class RegistrantApiV1ContactDetailsTest < ActionDispatch::IntegrationTest
   end
 
   def test_unmanaged_contact_cannot_be_accessed
-    assert_equal 'US-1234', @user.registrant_ident
-    @contact.update!(ident: '12345')
+    @user.update!(registrant_ident: 'US-12345')
+    @contact.update!(ident: '12345879')
+    companies = Contact.where(ident_type: 'org')
+    companies.update_all(ident: '78964521')
+    companies.reload
 
     get api_v1_registrant_contact_path(@contact.uuid), as: :json,
         headers: { 'HTTP_AUTHORIZATION' => auth_token }

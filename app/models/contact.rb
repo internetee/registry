@@ -257,6 +257,7 @@ class Contact < ApplicationRecord
 
     def registrant_user_contacts(registrant_user)
       registrant_user_direct_contacts(registrant_user)
+        .or(registrant_user_company_contacts(registrant_user))
         .or(registrant_user_indirect_contacts(registrant_user))
     end
 
@@ -265,14 +266,21 @@ class Contact < ApplicationRecord
                                                                                   .country.alpha2)
     end
 
-    private
-
-    def registrant_user_indirect_contacts(registrant_user)
+    def registrant_user_company_contacts(registrant_user)
       ident = registrant_user.companies.collect(&:registration_number)
 
       where(ident_type: ORG,
             ident: ident,
             ident_country_code: registrant_user.country.alpha2)
+    end
+
+    def registrant_user_indirect_contacts(registrant_user)
+      company_domains = Domain.registrant_user_indirect_domains(registrant_user)
+      company_contact_ids = company_domains.map(&:contacts).flatten.collect(&:id)
+      company_ids = Contact.registrant_user_company_contacts(registrant_user).collect(&:id)
+      total_ids = (company_contact_ids + company_ids).uniq
+
+      where(id: total_ids)
     end
   end
 
