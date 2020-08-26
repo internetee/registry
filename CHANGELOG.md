@@ -2,6 +2,7 @@
 * Fixed website url display issue in PDF invoices [#1188](https://github.com/internetee/registry/issues/1188)
 * Added error logging for missing cert_path [#1420](https://github.com/internetee/registry/pull/1420)
 * Refactored settings store mechanism [#1629](https://github.com/internetee/registry/issues/1629)
+* Registrant API now returns users' business contacts [#1642](https://github.com/internetee/registry/issues/1642)
 
 14.08.2020
 * Added handling of second lvl zoness managed by the registry in whois records [#1661](https://github.com/internetee/registry/issues/1661)
