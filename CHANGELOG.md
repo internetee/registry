@@ -1,3 +1,6 @@
+26.08.2020
+* Fixed website url display issue in PDF invoices [#1188](https://github.com/internetee/registry/issues/1188)
+
 14.08.2020
 * Added handling of second lvl zoness managed by the registry in whois records [#1661](https://github.com/internetee/registry/issues/1661)
 
