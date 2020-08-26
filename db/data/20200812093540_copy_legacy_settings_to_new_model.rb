@@ -52,6 +52,7 @@ class CopyLegacySettingsToNewModel < ActiveRecord::Migration[6.0]
     old_settings = ActiveRecord::Base.connection.execute(sql)
 
     old_settings.each do |origin|
+      next if origin['var'] == 'days_to_keep_business_registry_cache'
       entry = SettingEntry.find_or_initialize_by(code: origin['var'])
       entry[:format] = 'string'
       entry[:format] = 'boolean' if boolean_vars.include? entry.code

@@ -7,6 +7,7 @@ module Admin
       @validation_settings = SettingEntry.with_group('domain_validation')
       @expiration_settings = SettingEntry.with_group('domain_expiration')
       @other_settings = SettingEntry.with_group('other')
+                                    .where.not(code: 'default_language')
       @billing_settings = SettingEntry.with_group('billing')
       @contacts_settings = SettingEntry.with_group('contacts')
     end
