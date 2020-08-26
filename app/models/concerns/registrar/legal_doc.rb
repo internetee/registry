@@ -8,7 +8,7 @@ module Concerns
       end
 
       def legaldoc_not_mandatory?
-        setting = Setting.find_by(var: 'legal_document_is_mandatory')&.value
+        setting = Setting.legal_document_is_mandatory
         legaldoc_optout || !setting
       end
     end

@@ -31,6 +31,14 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;
 
+
+--
+-- Name: EXTENSION btree_gist; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION btree_gist IS 'support for indexing common datatypes in GiST';
+
+
 --
 -- Name: citext; Type: EXTENSION; Schema: -; Owner: -
 --
@@ -1813,6 +1821,44 @@ ALTER SEQUENCE public.log_reserved_domains_id_seq OWNED BY public.log_reserved_d
 
 
 --
+-- Name: log_setting_entries; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE public.log_setting_entries (
+    id bigint NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    object_changes json,
+    created_at timestamp without time zone,
+    session character varying,
+    children json,
+    uuid character varying
+);
+
+
+--
+-- Name: log_setting_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.log_setting_entries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_setting_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.log_setting_entries_id_seq OWNED BY public.log_setting_entries.id;
+
+
+--
 -- Name: log_settings; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
@@ -2252,6 +2298,42 @@ ALTER SEQUENCE public.reserved_domains_id_seq OWNED BY public.reserved_domains.i
 CREATE TABLE public.schema_migrations (
     version character varying NOT NULL
 );
+
+
+--
+-- Name: setting_entries; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE public.setting_entries (
+    id bigint NOT NULL,
+    code character varying NOT NULL,
+    value character varying,
+    "group" character varying NOT NULL,
+    format character varying NOT NULL,
+    creator_str character varying,
+    updator_str character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: setting_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.setting_entries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: setting_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.setting_entries_id_seq OWNED BY public.setting_entries.id;
 
 
 --
@@ -2782,6 +2864,13 @@ ALTER TABLE ONLY public.log_reserved_domains ALTER COLUMN id SET DEFAULT nextval
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.log_setting_entries ALTER COLUMN id SET DEFAULT nextval('public.log_setting_entries_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.log_settings ALTER COLUMN id SET DEFAULT nextval('public.log_settings_id_seq'::regclass);
 
 
@@ -2853,6 +2942,13 @@ ALTER TABLE ONLY public.registrars ALTER COLUMN id SET DEFAULT nextval('public.r
 --
 
 ALTER TABLE ONLY public.reserved_domains ALTER COLUMN id SET DEFAULT nextval('public.reserved_domains_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.setting_entries ALTER COLUMN id SET DEFAULT nextval('public.setting_entries_id_seq'::regclass);
 
 
 --
@@ -3234,6 +3330,14 @@ ALTER TABLE ONLY public.log_reserved_domains
 
 
 --
+-- Name: log_setting_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY public.log_setting_entries
+    ADD CONSTRAINT log_setting_entries_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: log_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
@@ -3319,6 +3423,14 @@ ALTER TABLE ONLY public.registrars
 
 ALTER TABLE ONLY public.reserved_domains
     ADD CONSTRAINT reserved_domains_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: setting_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY public.setting_entries
+    ADD CONSTRAINT setting_entries_pkey PRIMARY KEY (id);
 
 
 --
@@ -3924,6 +4036,20 @@ CREATE INDEX index_log_reserved_domains_on_whodunnit ON public.log_reserved_doma
 
 
 --
+-- Name: index_log_setting_entries_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE INDEX index_log_setting_entries_on_item_type_and_item_id ON public.log_setting_entries USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_setting_entries_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE INDEX index_log_setting_entries_on_whodunnit ON public.log_setting_entries USING btree (whodunnit);
+
+
+--
 -- Name: index_log_settings_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
@@ -3991,6 +4117,13 @@ CREATE INDEX index_registrant_verifications_on_created_at ON public.registrant_v
 --
 
 CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_verifications USING btree (domain_id);
+
+
+--
+-- Name: index_setting_entries_on_code; Type: INDEX; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE UNIQUE INDEX index_setting_entries_on_code ON public.setting_entries USING btree (code);
 
 
 --
@@ -4712,6 +4845,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200610090110'),
 ('20200630081231'),
 ('20200714115338'),
-('20200807110611');
+('20200807110611'),
+('20200811074839'),
+('20200812090409'),
+('20200812125810');
 
 

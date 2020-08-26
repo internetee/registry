@@ -1,0 +1,464 @@
+registry_vat_prc:
+  code: registry_vat_prc
+  value: '0.2'
+  group: billing
+  format: float
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+directo_sales_agent:
+  code: directo_sales_agent
+  value: HELEN
+  group: billing
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+admin_contacts_min_count:
+  code: admin_contacts_min_count
+  value: '1'
+  group: domain_validation
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+admin_contacts_max_count:
+  code: admin_contacts_max_count
+  value: '10'
+  group: domain_validation
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+tech_contacts_min_count:
+  code: tech_contacts_min_count
+  value: '1'
+  group: domain_validation
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+tech_contacts_max_count:
+  code: tech_contacts_max_count
+  value: '10'
+  group: domain_validation
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+orphans_contacts_in_months:
+  code: orphans_contacts_in_months
+  value: '6'
+  group: domain_validation
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+ds_data_allowed:
+  code: ds_data_allowed
+  value: 'false'
+  group: domain_validation
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+key_data_allowed:
+  code: key_data_allowed
+  value: 'true'
+  group: domain_validation
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+dnskeys_min_count:
+  code: dnskeys_min_count
+  value: '0'
+  group: domain_validation
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+dnskeys_max_count:
+  code: dnskeys_max_count
+  value: '9'
+  group: domain_validation
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+nameserver_required:
+  code: nameserver_required
+  value: 'false'
+  group: domain_validation
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+ns_min_count:
+  code: ns_min_count
+  value: '2'
+  group: domain_validation
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+ns_max_count:
+  code: ns_max_count
+  value: '11'
+  group: domain_validation
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+expire_pending_confirmation:
+  code: expire_pending_confirmation
+  value: '48'
+  group: domain_validation
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+days_to_renew_domain_before_expire:
+  code: days_to_renew_domain_before_expire
+  value: '90'
+  group: domain_expiration
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+expire_warning_period:
+  code: expire_warning_period
+  value: '15'
+  group: domain_expiration
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+redemption_grace_period:
+  code: redemption_grace_period
+  value: '30'
+  group: domain_expiration
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+transfer_wait_time:
+  code: transfer_wait_time
+  value: '0'
+  group: other
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+ds_digest_type:
+  code: ds_digest_type
+  value: '2'
+  group: other
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+client_side_status_editing_enabled:
+  code: client_side_status_editing_enabled
+  value: 'false'
+  group: other
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+api_ip_whitelist_enabled:
+  code: api_ip_whitelist_enabled
+  value: 'false'
+  group: other
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registrar_ip_whitelist_enabled:
+  code: registrar_ip_whitelist_enabled
+  value: 'false'
+  group: other
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+request_confrimation_on_registrant_change_enabled:
+  code: request_confrimation_on_registrant_change_enabled
+  value: 'true'
+  group: other
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+request_confirmation_on_domain_deletion_enabled:
+  code: request_confirmation_on_domain_deletion_enabled
+  value: 'true'
+  group: other
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+default_language:
+  code: default_language
+  value: en
+  group: other
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+invoice_number_min:
+  code: invoice_number_min
+  value: '131050'
+  group: billing
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+invoice_number_max:
+  code: invoice_number_max
+  value: '149999'
+  group: billing
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+days_to_keep_invoices_active:
+  code: days_to_keep_invoices_active
+  value: '30'
+  group: billing
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+days_to_keep_overdue_invoices_active:
+  code: days_to_keep_overdue_invoices_active
+  value: '0'
+  group: billing
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+minimum_deposit:
+  code: minimum_deposit
+  value: '0.0'
+  group: billing
+  format: float
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+directo_receipt_payment_term:
+  code: directo_receipt_payment_term
+  value: R
+  group: billing
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+directo_receipt_product_name:
+  code: directo_receipt_product_name
+  value: ETTEM06
+  group: billing
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_billing_email:
+  code: registry_billing_email
+  value: info@internet.ee
+  group: billing
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_invoice_contact:
+  code: registry_invoice_contact
+  value: 'Martti Õigus'
+  group: billing
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_vat_no:
+  code: registry_vat_no
+  value: EE101286464
+  group: billing
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_bank:
+  code: registry_bank
+  value: 'LHV Pank'
+  group: billing
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_iban:
+  code: registry_iban
+  value: EE557700771000598731
+  group: billing
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_swift:
+  code: registry_swift
+  value: LHVBEE22
+  group: billing
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_email:
+  code: registry_email
+  value: info@internet.ee
+  group: contacts
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_phone:
+  code: registry_phone
+  value: '+372 727 1000'
+  group: contacts
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_url:
+  code: registry_url
+  value: www.internet.ee
+  group: contacts
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_street:
+  code: registry_street
+  value: 'Paldiski mnt 80'
+  group: contacts
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_city:
+  code: registry_city
+  value: Tallinn
+  group: contacts
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_state:
+  code: registry_state
+  value: Harjumaa
+  group: contacts
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_country_code:
+  code: registry_country_code
+  value: US
+  group: contacts
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+expiration_reminder_mail:
+  code: expiration_reminder_mail
+  value: '2'
+  group: domain_expiration
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+directo_monthly_number_min:
+  code: directo_monthly_number_min
+  value: '309901'
+  group: billing
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+directo_monthly_number_max:
+  code: directo_monthly_number_max
+  value: '309999'
+  group: billing
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_bank_code:
+  code: registry_bank_code
+  value: '689'
+  group: billing
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_reg_no:
+  code: registry_reg_no
+  value: '90010019'
+  group: contacts
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_zip:
+  code: registry_zip
+  value: '10617'
+  group: contacts
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_juridical_name:
+  code: registry_juridical_name
+  value: 'Eesti Interneti SA'
+  group: contacts
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+address_processing:
+  code: address_processing
+  value: 'false'
+  group: other
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+directo_monthly_number_last:
+  code: directo_monthly_number_last
+  value: '309901'
+  group: billing
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+dispute_period_in_months:
+  code: dispute_period_in_months
+  value: '36'
+  group: other
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+registry_whois_disclaimer:
+  code: registry_whois_disclaimer
+  value: 'Search results may not be used for commercial, advertising, recompilation,
+    repackaging, redistribution, reuse, obscuring or other similar activities.'
+  group: contacts
+  format: string
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+legal_document_is_mandatory:
+  code: legal_document_is_mandatory
+  value: 'true'
+  group: domain_validation
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>

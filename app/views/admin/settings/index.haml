@@ -9,20 +9,8 @@
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
         %tbody
-          = render 'setting_row', var: :admin_contacts_min_count
-          = render 'setting_row', var: :admin_contacts_max_count
-          = render 'setting_row', var: :tech_contacts_min_count
-          = render 'setting_row', var: :tech_contacts_max_count
-          = render 'setting_row', var: :orphans_contacts_in_months
-          = render 'setting_row', var: :ds_data_allowed
-          = render 'setting_row', var: :key_data_allowed
-          = render 'setting_row', var: :dnskeys_min_count
-          = render 'setting_row', var: :dnskeys_max_count
-          = render 'setting_row', var: :nameserver_required
-          = render 'setting_row', var: :ns_min_count
-          = render 'setting_row', var: :ns_max_count
-          = render 'setting_row', var: :expire_pending_confirmation
-          = render 'setting_row', var: :legal_document_is_mandatory
+          - @validation_settings.each do |setting|
+            = render 'setting_row', setting: setting
 
   .panel.panel-default
     .panel-heading
@@ -30,10 +18,8 @@
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
         %tbody
-          = render 'setting_row', var: :days_to_renew_domain_before_expire
-          = render 'setting_row', var: :expire_warning_period
-          = render 'setting_row', var: :redemption_grace_period
-          = render 'setting_row', var: :expiration_reminder_mail
+          - @expiration_settings.each do |setting|
+            = render 'setting_row', setting: setting
 
   .panel.panel-default
     .panel-heading
@@ -41,19 +27,12 @@
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
         %tbody
-          = render 'setting_row', var: :transfer_wait_time
-          = render 'setting_row', var: :ds_digest_type
-          = render 'setting_row', var: :client_side_status_editing_enabled
-          = render 'setting_row', var: :api_ip_whitelist_enabled
-          = render 'setting_row', var: :registrar_ip_whitelist_enabled
-          = render 'setting_row', var: :request_confrimation_on_registrant_change_enabled
-          = render 'setting_row', var: :request_confirmation_on_domain_deletion_enabled
-          = render 'setting_row', var: :address_processing
-          = render 'setting_row', var: :dispute_period_in_months
+          - @other_settings.each do |setting|
+            = render 'setting_row', setting: setting
           %tr
             %td.col-md-6= label_tag :default_language
             %td.col-md-6
-              = select_tag '[settings][default_language]',
+              = select_tag "[settings][#{SettingEntry.find_by(code: 'default_language').id || 1}]",
               options_for_select(available_languages, Setting.default_language),
               class: 'form-control'
 
@@ -63,25 +42,8 @@
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
         %tbody
-          = render 'setting_row', var: :invoice_number_min
-          = render 'setting_row', var: :invoice_number_max
-          = render 'setting_row', var: :directo_monthly_number_min
-          = render 'setting_row', var: :directo_monthly_number_max
-          = render 'setting_row', var: :directo_monthly_number_last
-          = render 'setting_row', var: :days_to_keep_invoices_active
-          = render 'setting_row', var: :days_to_keep_overdue_invoices_active
-          = render 'setting_row', var: :minimum_deposit
-          = render 'setting_row', var: :directo_receipt_payment_term
-          = render 'setting_row', var: :directo_receipt_product_name
-          = render 'setting_row', var: :directo_sales_agent
-          = render 'setting_row', var: :registry_billing_email
-          = render 'setting_row', var: :registry_invoice_contact
-          = render 'setting_row', var: :registry_vat_no
-          = render 'setting_row', var: :registry_vat_prc
-          = render 'setting_row', var: :registry_bank
-          = render 'setting_row', var: :registry_bank_code
-          = render 'setting_row', var: :registry_iban
-          = render 'setting_row', var: :registry_swift
+          - @billing_settings.each do |setting|
+            = render 'setting_row', setting: setting
 
   .panel.panel-default
     .panel-heading
@@ -89,17 +51,8 @@
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
         %tbody
-          = render 'setting_row', var: :registry_juridical_name
-          = render 'setting_row', var: :registry_reg_no
-          = render 'setting_row', var: :registry_email
-          = render 'setting_row', var: :registry_phone
-          = render 'setting_row', var: :registry_url
-          = render 'setting_row', var: :registry_street
-          = render 'setting_row', var: :registry_city
-          = render 'setting_row', var: :registry_state
-          = render 'setting_row', var: :registry_zip
-          = render 'setting_row', var: :registry_country_code
-          = render 'setting_row', var: :registry_whois_disclaimer
+          - @contacts_settings.each do |setting|
+            = render 'setting_row', setting: setting
 
   .row
     .col-md-12.text-right

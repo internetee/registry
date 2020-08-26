@@ -8,7 +8,6 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
   end
 
   def teardown
-    Setting.clear_cache
     Setting.directo_monthly_number_min = 309901
     Setting.directo_monthly_number_max = 309999
     Setting.directo_monthly_number_last = 309901
