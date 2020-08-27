@@ -1,5 +1,6 @@
 27.08.2020
 * Fixed internal error in domain history [#1663](https://github.com/internetee/registry/issues/1663)
+* Second lvl zone records return now empty string for dnskey values [#1665](https://github.com/internetee/registry/issues/1665)
 
 26.08.2020
 * Fixed website url display issue in PDF invoices [#1188](https://github.com/internetee/registry/issues/1188)
