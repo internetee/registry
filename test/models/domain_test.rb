@@ -270,6 +270,13 @@ class DomainTest < ActiveSupport::TestCase
     assert_equal 'shop.test', domain.domain_name.to_s
   end
 
+  def test_nil_name_doesnt_throw_error
+    domain = Domain.new(name: 'shop.test')
+    assert_nothing_raised do
+      domain.name = nil
+    end
+  end
+
   def test_returns_registrant_user_domains_by_registrant
     registrant = contacts(:john).becomes(Registrant)
     assert_equal registrant, @domain.registrant
