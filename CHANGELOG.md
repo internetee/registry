@@ -1,3 +1,6 @@
+27.08.2020
+* Fixed internal error in domain history [#1663](https://github.com/internetee/registry/issues/1663)
+
 26.08.2020
 * Fixed website url display issue in PDF invoices [#1188](https://github.com/internetee/registry/issues/1188)
 * Added error logging for missing cert_path [#1420](https://github.com/internetee/registry/pull/1420)
