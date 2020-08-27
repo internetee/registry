@@ -31,12 +31,14 @@ module Concerns
         data
       end
 
+      # Take note - since this concern only used to zone whois queries, dnssec keys are set to
+      # empty array
       def domain_vars
         { disclaimer: Setting.registry_whois_disclaimer, name: origin,
           registered: created_at.try(:to_s, :iso8601), status: ['ok (paid and in zone)'],
           changed: updated_at.try(:to_s, :iso8601), email: Setting.registry_email,
           admin_contacts: [contact_vars], tech_contacts: [contact_vars],
-          nameservers: nameserver_vars }
+          nameservers: nameserver_vars, dnssec_keys: [], dnssec_changed: nil }
       end
 
       def registrar_vars

@@ -12,7 +12,10 @@ class RegenerateSubzoneWhoisesJobTest < ActiveSupport::TestCase
     assert_nil Whois::Record.find_by(name: dns_zones(:one).origin)
 
     RegenerateSubzoneWhoisesJob.run
-    assert Whois::Record.find_by(name: subzone.origin)
+    record = Whois::Record.find_by(name: subzone.origin)
+    assert record
+    assert record.json['dnssec_keys'].is_a?(Array)
+
     assert_nil Whois::Record.find_by(name: dns_zones(:one).origin)
   end
 end
