@@ -150,7 +150,7 @@ class EppDomainTransferRequestTest < EppTestCase
           </transfer>
           <extension>
             <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-              <eis:legalDocument type="pdf">test</eis:legalDocument>
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
         </command>

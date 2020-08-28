@@ -43,7 +43,7 @@ class LegalDocument < ApplicationRecord
         break unless File.file?(path)
     end
 
-    File.open(path, 'wb') { |f| f.write(binary) } if !Rails.env.test?
+    File.open(path, 'wb') { |f| f.write(binary) } unless Rails.env.test?
     self.path = path
     self.checksum = digest
   end
