@@ -365,6 +365,7 @@ module Epp
 
     def iptables_counter_update
       return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
+
       counter_update(current_user.registrar_code, ENV['iptables_server_ip'])
     end
 

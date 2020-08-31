@@ -109,8 +109,8 @@ class EppBaseTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/command/info', { frame: authentication_enabled_epp_request_xml },
-         'HTTP_COOKIE' => "session=#{session.session_id}"
+    post '/epp/command/info', params: { frame: authentication_enabled_epp_request_xml },
+         headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
 
     assert_epp_response :authorization_error
     assert_nil EppSession.find_by(session_id: session.session_id)
@@ -137,8 +137,9 @@ class EppBaseTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/info', { frame: authentication_enabled_epp_request_xml },
-         'HTTP_COOKIE' => "session=#{session.session_id}"
+    post '/epp/command/info', params: { frame: authentication_enabled_epp_request_xml },
+         headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
+
     session.reload
 
     assert_epp_response :completed_successfully
