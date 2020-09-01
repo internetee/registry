@@ -1,3 +1,6 @@
+01.09.2020
+* Removed some unused settings from admin [#1668](https://github.com/internetee/registry/issues/1668)
+
 27.08.2020
 * Fixed internal error in domain history [#1663](https://github.com/internetee/registry/issues/1663)
 * Second lvl zone records return now empty string for dnskey values [#1665](https://github.com/internetee/registry/issues/1665)
