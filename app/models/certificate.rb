@@ -134,7 +134,7 @@ class Certificate < ApplicationRecord
   class << self
     def update_crl
       STDOUT << "#{Time.zone.now.utc} - Running crlupdater\n" unless Rails.env.test?
-      system "#{ENV['crl_updater_path']}"
+      system('/bin/bash', ENV['crl_updater_path'].to_s)
       STDOUT << "#{Time.zone.now.utc} - Finished running crlupdater\n" unless Rails.env.test?
     end
 
