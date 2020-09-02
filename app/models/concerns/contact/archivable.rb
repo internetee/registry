@@ -20,6 +20,7 @@ module Concerns
 
       def archive
         raise 'Contact cannot be archived' unless archivable?
+
         destroy!
       end
 

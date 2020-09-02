@@ -27,7 +27,7 @@ class ArchiveContactsTaskTest < ActiveSupport::TestCase
 
     other_contact = contacts(:william)
     assert_not_equal other_contact, contact
-    Domain.update_all(registrant_id: other_contact)
+    Domain.update_all(registrant_id: other_contact.id)
 
     DomainContact.delete_all
 

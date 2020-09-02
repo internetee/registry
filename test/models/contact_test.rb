@@ -267,6 +267,7 @@ class ContactTest < ActiveSupport::TestCase
     contact = unlinked_contact
     domains(:shop).update_columns(registrant_id: contact.becomes(Registrant))
 
+    reload
     assert Contact.unlinked.exclude?(contact), 'Contact should be excluded'
   end
 

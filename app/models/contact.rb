@@ -240,8 +240,6 @@ class Contact < ApplicationRecord
              contacts.id)')
     end
 
-    private
-
     def registrant_user_company_contacts(registrant_user)
       ident = registrant_user.companies.collect(&:registration_number)
 
