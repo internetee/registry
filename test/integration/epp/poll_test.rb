@@ -135,7 +135,8 @@ class EppPollTest < EppTestCase
       </epp>
     XML
 
-    post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=non-existent'
+    post '/epp/command/poll', params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=non-existent' }
 
     assert_epp_response :authorization_error
   end
