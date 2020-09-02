@@ -1493,7 +1493,7 @@ CREATE TABLE public.log_domains (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json,
+    children jsonb,
     uuid character varying
 );
 
@@ -4849,5 +4849,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200811074839'),
 ('20200812090409'),
 ('20200812125810');
-
-
