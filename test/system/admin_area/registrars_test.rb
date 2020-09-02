@@ -1,11 +1,16 @@
-require 'test_helper'
+require 'application_system_test_case'
 
 class AdminRegistrarsSystemTest < ApplicationSystemTestCase
   include ActionView::Helpers::NumberHelper
 
   setup do
     @registrar = registrars(:bestnames)
+    @original_default_language = Setting.default_language
     sign_in users(:admin)
+  end
+
+  teardown do
+    Setting.default_language = @original_default_language
   end
 
   def test_creates_new_registrar

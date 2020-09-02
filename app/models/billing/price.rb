@@ -1,5 +1,5 @@
 module Billing
-  class Price < ActiveRecord::Base
+  class Price < ApplicationRecord
     include Concerns::Billing::Price::Expirable
 
     belongs_to :zone, class_name: 'DNS::Zone', required: true

@@ -3,13 +3,24 @@ require 'test_helper'
 require 'database_cleaner'
 require 'selenium/webdriver'
 
-ApplicationSystemTestCase = Class.new(ApplicationIntegrationTest)
+class ApplicationSystemTestCase < ActionDispatch::IntegrationTest
+  include Capybara::DSL
+  include Capybara::Minitest::Assertions
+  include AbstractController::Translation
+  include Devise::Test::IntegrationHelpers
+
+  teardown do
+    WebMock.reset!
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
+  end
+end
 
 class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
-  self.use_transactional_fixtures = false
+  self.use_transactional_tests = false
   DatabaseCleaner.strategy = :truncation
 
-  Capybara.register_driver(:chrome) do |_app|
+  Capybara.register_driver(:chrome) do |app|
     options = ::Selenium::WebDriver::Chrome::Options.new
 
     options.add_argument('--headless')
@@ -17,13 +28,10 @@ class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--window-size=1400,1400')
 
-    Capybara::Selenium::Driver.new(Rails.application, browser: :chrome, options: options)
+    Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
   end
 
-  Capybara.register_server(:silent_puma) do |app, port, _host|
-    require 'rack/handler/puma'
-    Rack::Handler::Puma.run(app, Port: port, Threads: '0:2', Silent: true)
-  end
+  Capybara.server = :puma, { Silent: true }
 
   def setup
     DatabaseCleaner.start
@@ -31,7 +39,6 @@ class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
     super
 
     Capybara.current_driver = :chrome
-    Capybara.server = :silent_puma
   end
 
   def teardown

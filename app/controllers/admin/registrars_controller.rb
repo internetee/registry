@@ -74,6 +74,8 @@ module Admin
                                         :vat_rate,
                                         :accounting_customer_code,
                                         :billing_email,
+                                        :legaldoc_optout,
+                                        :legaldoc_optout_comment,
                                         :iban,
                                         :language)
     end

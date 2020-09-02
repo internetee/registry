@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'application_system_test_case'
 
 class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
   setup do
@@ -6,7 +6,7 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
     @contact = contacts(:john)
     sign_in users(:registrant)
 
-    @original_address_processing_setting = Setting.address_processing
+    @original_address_processing = Setting.address_processing
     @original_fax_enabled_setting = ENV['fax_enabled']
     @original_registrant_api_base_url_setting = ENV['registrant_api_base_url']
 
@@ -14,7 +14,7 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
   end
 
   teardown do
-    Setting.address_processing = @original_address_processing_setting
+    Setting.address_processing = @original_address_processing
     ENV['fax_enabled'] = @original_fax_enabled_setting
     ENV['registrant_api_base_url'] = @original_registrant_api_base_url_setting
   end
@@ -31,7 +31,7 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
     stub_auth_request
 
     request_body = { name: 'new name', email: 'new@inbox.test', phone: '+666.6' }.to_json
-    headers = { 'Content-Type' => Mime::JSON,
+    headers = { 'Content-Type' => Mime[:json],
                 'Authorization' => 'Bearer test-access-token' }
     url = "https://api.test/api/v1/registrant/contacts/#{@contact.uuid}"
     update_request_stub = stub_request(:patch, url).with(body: request_body, headers: headers)
@@ -115,7 +115,7 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
                        country_code: 'AT',
                        state: 'new state',
                      } }.to_json
-    headers = { 'Content-type' => 'application/json',
+    headers = { 'Content-type' => Mime[:json],
                 'Authorization' => 'Bearer test-access-token' }
     url = "https://api.test/api/v1/registrant/contacts/#{@contact.uuid}"
     update_request_stub = stub_request(:patch, url).with(body: request_body, headers: headers)
@@ -139,14 +139,6 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
     visit edit_registrant_domain_contact_url(@domain, @contact)
     assert_no_field 'Address'
     assert_no_field 'Street'
-  end
-
-  def test_unmanaged_contact_cannot_be_updated
-    @contact.update!(ident: '12345')
-
-    assert_raises ActiveRecord::RecordNotFound do
-      visit registrant_domain_contact_url(@domain, @contact)
-    end
   end
 
   def test_fail_gracefully
@@ -174,7 +166,7 @@ class RegistrantAreaContactUpdateTest < ApplicationIntegrationTest
     body = { ident: '1234', first_name: 'Registrant', last_name: 'User' }
     stub_request(:post, 'https://api.test/api/v1/registrant/auth/eid').with(body: body)
       .to_return(body: { access_token: 'test-access-token' }.to_json,
-                 headers: { 'Content-type' => 'application/json' },
+                 headers: { 'Content-type' => Mime[:json] },
                  status: 200)
   end
 end

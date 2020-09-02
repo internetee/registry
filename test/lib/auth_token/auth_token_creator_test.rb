@@ -47,7 +47,5 @@ class AuthTokenCreatorTest < ActiveSupport::TestCase
     token_creator_with_defaults = AuthTokenCreator.create_with_defaults(@user)
     assert_equal(Rails.application.config.secret_key_base, token_creator_with_defaults.key)
     assert_equal('2010-07-05 02:30:00 UTC', token_creator_with_defaults.expires_at)
-
-    travel_back
   end
 end

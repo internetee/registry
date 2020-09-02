@@ -1,4 +1,5 @@
-<% domains = contact.all_domains(page: params[:domain_page], per: 20, params: params) %>
+<% domains = contact.all_domains(page: params[:domain_page], per: 20,
+                                 params: domain_filter_params.to_h, requester: @requester_contact) %>
 
 <div class="panel panel-default">
     <div class="panel-heading">

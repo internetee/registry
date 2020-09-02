@@ -34,7 +34,7 @@ module Admin
 
       if @certificate.destroy
         flash[:notice] = I18n.t('record_deleted')
-        redirect_to admin_api_user_path(@api_user)
+        redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user)
       else
         flash.now[:alert] = I18n.t('failed_to_delete_record')
         render 'show'

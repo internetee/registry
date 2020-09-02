@@ -13,8 +13,8 @@ class RegistrarAreaSettingsBalanceAutoReloadIntegrationTest < ActionDispatch::In
     threshold = 10
     assert_nil @registrar.settings['balance_auto_reload']
 
-    patch registrar_settings_balance_auto_reload_path, { type: { amount: amount,
-                                                                 threshold: threshold } }
+    patch registrar_settings_balance_auto_reload_path, params: { type: { amount: amount,
+                                                                         threshold: threshold } }
     @registrar.reload
 
     assert_equal amount, @registrar.settings['balance_auto_reload']['type']['amount']

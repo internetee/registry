@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainCreateAuctionTest < ApplicationIntegrationTest
+class EppDomainCreateAuctionTest < EppTestCase
   setup do
     @auction = auctions(:one)
     Domain.release_to_auction = true
@@ -31,11 +31,10 @@ class EppDomainCreateAuctionTest < ApplicationIntegrationTest
     XML
 
     assert_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 
   def test_registers_domain_with_correct_registration_code_after_another_auction_when_payment_is_received
@@ -70,11 +69,10 @@ class EppDomainCreateAuctionTest < ApplicationIntegrationTest
     XML
 
     assert_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 
   def test_registers_domain_with_correct_registration_code_when_payment_is_received
@@ -104,15 +102,13 @@ class EppDomainCreateAuctionTest < ApplicationIntegrationTest
     XML
 
     assert_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
     @auction.reload
     assert @auction.domain_registered?
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 
   def test_domain_cannot_be_registered_without_registration_code
@@ -139,12 +135,10 @@ class EppDomainCreateAuctionTest < ApplicationIntegrationTest
     XML
 
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2003', response_xml.at_css('result')[:code]
-    assert_equal 'Required parameter missing; reserved>pw element is required',
-                 response_xml.at_css('result msg').text
+    assert_epp_response :required_parameter_missing
   end
 
   def test_domain_cannot_be_registered_with_wrong_registration_code
@@ -174,12 +168,10 @@ class EppDomainCreateAuctionTest < ApplicationIntegrationTest
     XML
 
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2202', response_xml.at_css('result')[:code]
-    assert_equal 'Invalid authorization information; invalid reserved>pw value',
-                 response_xml.at_css('result msg').text
+    assert_epp_response :invalid_authorization_information
   end
 
   def test_domain_cannot_be_registered_when_payment_is_not_received
@@ -208,12 +200,10 @@ class EppDomainCreateAuctionTest < ApplicationIntegrationTest
     XML
 
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2003', response_xml.at_css('result')[:code]
-    assert_equal 'Required parameter missing; reserved>pw element required for reserved domains',
-                 response_xml.at_css('result msg').text
+    assert_epp_response :required_parameter_missing
   end
 
   def test_domain_cannot_be_registered_when_at_auction
@@ -238,11 +228,9 @@ class EppDomainCreateAuctionTest < ApplicationIntegrationTest
     XML
 
     assert_no_difference 'Domain.count' do
-      post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2306', response_xml.at_css('result')[:code]
-    assert_equal 'Parameter value policy error: domain is at auction',
-                 response_xml.at_css('result msg').text
+    assert_epp_response :parameter_value_policy_error
   end
 end

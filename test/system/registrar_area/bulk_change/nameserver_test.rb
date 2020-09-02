@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'application_system_test_case'
 
 class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
   setup do
@@ -12,7 +12,7 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
                                            ipv4: %w[192.0.2.55 192.0.2.56],
                                            ipv6: %w[2001:db8::55 2001:db8::56] } } }
     request_stub = stub_request(:put, /registrar\/nameservers/).with(body: request_body,
-                                                                     headers: { 'Content-type' => 'application/json' },
+                                                                     headers: { 'Content-type' => Mime[:json] },
                                                                      basic_auth: ['test_goodnames', 'testtest'])
                      .to_return(body: { data: [{
                                                  type: 'nameserver',
@@ -38,7 +38,7 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
   def test_fails_gracefully
     stub_request(:put, /registrar\/nameservers/).to_return(status: 400,
                                                            body: { errors: [{ title: 'epic fail' }] }.to_json,
-                                                           headers: { 'Content-type' => 'application/json' })
+                                                           headers: { 'Content-type' => Mime[:json] })
 
     visit registrar_domains_url
     click_link 'Bulk change'

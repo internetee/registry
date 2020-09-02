@@ -1,4 +1,4 @@
-class WhiteIp < ActiveRecord::Base
+class WhiteIp < ApplicationRecord
   include Versions
   belongs_to :registrar
 

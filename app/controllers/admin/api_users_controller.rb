@@ -1,7 +1,6 @@
 module Admin
   class ApiUsersController < BaseController
     load_and_authorize_resource
-    before_action :set_api_user, only: [:show, :edit, :update, :destroy]
 
     def index
       @q = ApiUser.includes(:registrar).search(params[:q])
@@ -9,18 +8,17 @@ module Admin
     end
 
     def new
-      @registrar = Registrar.find_by(id: params[:registrar_id])
-      @api_user = ApiUser.new(registrar: @registrar)
+      @api_user = registrar.api_users.build
     end
 
     def create
-      @api_user = ApiUser.new(api_user_params)
+      @api_user = registrar.api_users.build(api_user_params)
 
-      if @api_user.save
-        flash[:notice] = I18n.t('record_created')
-        redirect_to [:admin, @api_user]
+      if @api_user.valid?
+        @api_user.save!
+        redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user),
+                    notice: t('.created')
       else
-        flash.now[:alert] = I18n.t('failed_to_create_record')
         render 'new'
       end
     end
@@ -32,39 +30,31 @@ module Admin
     end
 
     def update
-      if params[:api_user][:plain_text_password].blank?
-        params[:api_user].delete(:plain_text_password)
-      end
+      @api_user.attributes = api_user_params
 
-      if @api_user.update(api_user_params)
-        flash[:notice] = I18n.t('record_updated')
-        redirect_to [:admin, @api_user]
+      if @api_user.valid?
+        @api_user.save!
+        redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user),
+                    notice: t('.updated')
       else
-        flash.now[:alert] = I18n.t('failed_to_update_record')
         render 'edit'
       end
     end
 
     def destroy
-      if @api_user.destroy
-        flash[:notice] = I18n.t('record_deleted')
-        redirect_to admin_api_users_path
-      else
-        flash.now[:alert] = I18n.t('failed_to_delete_record')
-        render 'show'
-      end
+      @api_user.destroy!
+      redirect_to admin_registrar_path(@api_user.registrar), notice: t('.deleted')
     end
 
     private
 
-    def set_api_user
-      @api_user = ApiUser.find(params[:id])
-    end
-
     def api_user_params
       params.require(:api_user).permit(:username, :plain_text_password, :active,
-                                       :registrar_id, :registrar_typeahead,
                                        :identity_code, { roles: [] })
+    end
+
+    def registrar
+      Registrar.find(params[:registrar_id])
     end
   end
 end

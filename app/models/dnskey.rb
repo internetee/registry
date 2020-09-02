@@ -1,4 +1,4 @@
-class Dnskey < ActiveRecord::Base
+class Dnskey < ApplicationRecord
   include Versions # version/dnskey_version.rb
   include EppErrors
 
@@ -9,10 +9,16 @@ class Dnskey < ActiveRecord::Base
   validate :validate_protocol
   validate :validate_flags
 
-  before_save -> { generate_digest if public_key_changed? && !ds_digest_changed? }
+  before_save lambda {
+    generate_digest if will_save_change_to_public_key? && !will_save_change_to_ds_digest?
+  }
 
   before_save lambda {
-    if (public_key_changed? || flags_changed? || alg_changed? || protocol_changed?) && !ds_key_tag_changed?
+    if (will_save_change_to_public_key? ||
+        will_save_change_to_flags? ||
+        will_save_change_to_alg? ||
+        will_save_change_to_protocol?) &&
+       !will_save_change_to_ds_key_tag?
       generate_ds_key_tag
     end
   }
@@ -21,6 +27,8 @@ class Dnskey < ActiveRecord::Base
   PROTOCOLS = %w(3)
   FLAGS = %w(0 256 257) # 256 = ZSK, 257 = KSK
   DS_DIGEST_TYPE = [1,2]
+
+  self.ignored_columns = %w[legacy_domain_id]
 
   def epp_code_map
     {

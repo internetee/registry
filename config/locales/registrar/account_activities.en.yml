@@ -1,5 +1,6 @@
 en:
   registrar:
     account_activities:
-      index:
+      search_form:
+        download_btn: Download CSV
         reset_btn: Reset

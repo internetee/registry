@@ -31,6 +31,7 @@ en:
       force_delete_dialog:
         title: Force delete
         notify_by_email: Notify registrant and administrative contacts by email
+        use_soft_delete: Use soft delete procedure
         email_template: Email template
         close_btn: Close dialog
         submit_btn: Force delete domain

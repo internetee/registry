@@ -32,9 +32,6 @@ module Serializers
           period_unit: domain.period_unit,
           creator_str: domain.creator_str,
           updator_str: domain.updator_str,
-          legacy_id: domain.legacy_id,
-          legacy_registrar_id: domain.legacy_registrar_id,
-          legacy_registrant_id: domain.legacy_registrant_id,
           outzone_at: domain.outzone_at,
           delete_date: domain.delete_date,
           registrant_verification_asked_at: domain.registrant_verification_asked_at,
@@ -45,10 +42,22 @@ module Serializers
           locked_by_registrant_at: domain.locked_by_registrant_at,
           status_notes: domain.status_notes,
           nameservers: nameservers,
+          dnssec_keys: dnssec_keys,
+          dnssec_changed_at: dnssec_updated_at,
         }
       end
 
       private
+
+      def dnssec_keys
+        domain.dnskeys.map do |key|
+          "#{key.flags} #{key.protocol} #{key.alg} #{key.public_key}"
+        end
+      end
+
+      def dnssec_updated_at
+        domain.dnskeys.order(updated_at: :desc).select(:updated_at).first
+      end
 
       def contacts(type)
         contact_pool = begin
@@ -61,7 +70,7 @@ module Serializers
 
         array_of_contacts = []
         contact_pool.map do |contact|
-          array_of_contacts.push(name: contact.name, id: contact.uuid)
+          array_of_contacts.push(name: contact.name, id: contact.uuid, email: contact.email)
         end
 
         array_of_contacts

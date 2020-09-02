@@ -1,11 +1,11 @@
 require 'test_helper'
 
-class EppDomainTransferQueryTest < ApplicationIntegrationTest
+class EppDomainTransferQueryTest < EppTestCase
   def test_returns_domain_transfer_details
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     xml_doc = Nokogiri::XML(response.body)
-    assert_equal '1000', xml_doc.at_css('result')[:code]
-    assert_equal 1, xml_doc.css('result').size
+    assert_epp_response :completed_successfully
     assert_equal 'shop.test', xml_doc.xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
     assert_equal 'serverApproved', xml_doc.xpath('//domain:trStatus', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
     assert_equal 'goodnames', xml_doc.xpath('//domain:reID', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
@@ -29,14 +29,17 @@ class EppDomainTransferQueryTest < ApplicationIntegrationTest
       </epp>
     XML
 
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
-    assert_equal '2201', Nokogiri::XML(response.body).at_css('result')[:code]
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert_epp_response :invalid_authorization_information
   end
 
   def test_no_domain_transfer
     domains(:shop).transfers.delete_all
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
-    assert_equal '2303', Nokogiri::XML(response.body).at_css('result')[:code]
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_epp_response :object_does_not_exist
   end
 
   private

@@ -17,7 +17,7 @@ en:
         transfer_btn: Transfer
 
       search_form:
-        download_btn: Download as CSV
+        download_btn: Download CSV
         reset_btn: Reset
 
       domain:

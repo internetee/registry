@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+require 'pathname'
+require 'fileutils'
+
+# path to your application root.
+APP_ROOT = Pathname.new File.expand_path('../../',  __FILE__)
+
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+def effective_user_id
+  uid = `id -u`
+  uid.strip!
+end
+
+Dir.chdir APP_ROOT do
+  puts '== Installing application build deps =='
+  sudo_prefix = ''
+  sudo_prefix = "sudo" unless effective_user_id == '0'
+  system! "#{sudo_prefix} apt-get update && #{sudo_prefix} apt-get -y --no-install-recommends install libxml2 libxml2-dev postgresql-client postgresql-client-common libpq-dev"
+
+  puts "== Installing rbenv ruby manager to #{ENV['HOME']} =="
+  unless Dir.exist?("#{ENV['HOME']}/.rbenv/")
+    system! 'git clone https://github.com/sstephenson/rbenv.git $HOME/.rbenv'
+    system! 'echo export PATH="$HOME/.rbenv/bin:$PATH" >> ~/.bashrc'
+    system! "echo 'eval $(rbenv init -)' >> ~/.bashrc"
+  end
+
+  unless Dir.exist?("#{ENV['HOME']}/.rbenv/plugins/ruby-build/")
+    system! 'git clone https://github.com/sstephenson/ruby-build.git $HOME/.rbenv/plugins/ruby-build'
+    system! 'echo export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH" >> ~/.bashrc'
+  end
+  unless Dir.exist?("#{ENV['HOME']}/.rbenv/plugins/rbenv-default-gems/")
+    system! 'git clone https://github.com/rbenv/rbenv-default-gems.git $HOME/.rbenv/plugins/rbenv-default-gems'
+    unless File.exist?("#{ENV['HOME']}/.rbenv/default-gems")
+      system! 'echo "bundler" > ~/.rbenv/default-gems'
+      end
+  end
+
+  # Include RBENV in path
+  ENV['PATH'] = ENV['HOME'] + "/.rbenv/bin:" + ENV['HOME'] + "/.rbenv/plugins/ruby-build/bin:" + ENV['PATH']
+  NEEDED_RUBY_VERSION = `cat .ruby-version`.freeze
+
+  if `!bundle check` == false
+    system! "#{SUDO_PREFIX} apt-get -y --no-install-recommends install libreadline-dev"
+    puts 'Installing Ruby: ' + NEEDED_RUBY_VERSION
+    system!('rbenv install ' + NEEDED_RUBY_VERSION)
+    system!('rbenv rehash')
+  else
+    puts 'Ruby ' + NEEDED_RUBY_VERSION + 'already installed'
+  end
+  puts 'Now running setup'
+  exec('./bin/setup')
+end

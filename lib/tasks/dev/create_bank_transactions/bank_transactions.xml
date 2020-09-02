@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+	<CstmrCdtTrfInitn>
+		<GrpHdr>
+			<MsgId>populated by rake task</MsgId>
+			<CreDtTm>2019-07-28T10:00:00</CreDtTm>
+			<NbOfTxs>1</NbOfTxs>
+			<!-- Amount of all transactions; acts as a checksum -->
+			<CtrlSum>0.1</CtrlSum>
+			<InitgPty>
+				<Nm>ABC Corporation</Nm>
+			</InitgPty>
+		</GrpHdr>
+		<PmtInf>
+			<PmtInfId>test3</PmtInfId>
+			<PmtMtd>TRF</PmtMtd>
+			<BtchBookg>false</BtchBookg>
+			<NbOfTxs>1</NbOfTxs>
+			<ReqdExctnDt>2019-07-28</ReqdExctnDt>
+			<Dbtr>
+				<Nm>test</Nm>
+			</Dbtr>
+			<DbtrAcct>
+	            <Id>
+                	<IBAN>populated by rake task</IBAN>
+	            </Id>
+            <Ccy>EUR</Ccy>
+			</DbtrAcct>
+			<DbtrAgt>
+				<FinInstnId>
+					<BIC>LHVBEE22</BIC>
+				</FinInstnId>
+			</DbtrAgt>
+			<CdtTrfTxInf>
+				<PmtId>
+					<InstrId>ABC/090928/CCT001/01</InstrId>
+					<EndToEndId>ABC/4562/2009-09-08</EndToEndId>
+				</PmtId>
+				<Amt>
+					<!-- Transaction amount. Use the smallest amount possible in dev mode, since account balance is not infinite -->
+					<InstdAmt Ccy="EUR">0.1</InstdAmt>
+				</Amt>
+				<ChrgBr>SHAR</ChrgBr>
+				<CdtrAgt>
+					<FinInstnId>
+						<BIC>LHVBEE22</BIC>
+					</FinInstnId>
+				</CdtrAgt>
+				<Cdtr>
+					<Nm>DEF Electronics</Nm>
+					<PstlAdr>
+						<AdrLine>Corn Exchange 5th Floor</AdrLine>
+					</PstlAdr>
+				</Cdtr>
+				<CdtrAcct>
+					<Id>
+						<IBAN>populated by rake task</IBAN>
+					</Id>
+				</CdtrAcct>
+			 	<RmtInf>
+			 		<!-- payment description -->
+        	<Ustrd>1</Ustrd>
+   				<Strd>
+		        <CdtrRefInf>
+		        	<!-- payment reference number -->
+		          <Ref>13</Ref>
+		        </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+			</CdtTrfTxInf>
+		</PmtInf>
+	</CstmrCdtTrfInitn>
+</Document>

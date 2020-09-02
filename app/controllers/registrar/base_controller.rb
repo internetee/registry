@@ -6,6 +6,7 @@ class Registrar
     before_action :check_ip_restriction
     helper_method :depp_controller?
     helper_method :head_title_sufix
+    before_action :set_paper_trail_whodunnit
 
     protected
 

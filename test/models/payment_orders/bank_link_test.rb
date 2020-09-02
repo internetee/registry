@@ -8,7 +8,7 @@ class BankLinkTest < ActiveSupport::TestCase
     super
 
     @invoice = invoices(:one)
-    @invoice.update!(total: 12)
+    @invoice.update!(account_activity: nil, total: 12)
 
     travel_to '2018-04-01 00:30 +0300'
     create_new_bank_link
@@ -36,11 +36,11 @@ class BankLinkTest < ActiveSupport::TestCase
       'VK_MAC': 'CZZvcptkxfuOxRR88JmT4N+Lw6Hs4xiQfhBWzVYldAcRTQbcB/lPf9MbJzBE4e1/HuslQgkdCFt5g1xW2lJwrVDBQTtP6DAHfvxU3kkw7dbk0IcwhI4whUl68/QCwlXEQTAVDv1AFnGVxXZ40vbm/aLKafBYgrirB5SUe8+g9FE=',
       'VK_ENCODING': 'UTF-8',
       'VK_LANG': 'ENG'
-    }.with_indifferent_access
+    }.as_json
 
-    @completed_bank_link = PaymentOrders::BankLink.new(
-      'seb', @invoice, { response: params }
-    )
+    @completed_bank_link = PaymentOrder.new(type: 'PaymentOrders::Seb',
+                                            invoice: @invoice,
+                                            response: params)
   end
 
   def create_cancelled_bank_link
@@ -55,16 +55,17 @@ class BankLinkTest < ActiveSupport::TestCase
       'VK_MAC': 'PElE2mYXXN50q2UBvTuYU1rN0BmOQcbafPummDnWfNdm9qbaGQkGyOn0XaaFGlrdEcldXaHBbZKUS0HegIgjdDfl2NOk+wkLNNH0Iu38KzZaxHoW9ga7vqiyKHC8dcxkHiO9HsOnz77Sy/KpWCq6cz48bi3fcMgo+MUzBMauWoQ=',
       'VK_ENCODING': 'UTF-8',
       'VK_LANG': 'ENG'
-    }.with_indifferent_access
+    }.as_json
 
-    @cancelled_bank_link = PaymentOrders::BankLink.new(
-      'seb', @invoice, { response: params }
-    )
+    @cancelled_bank_link = PaymentOrder.new(type: 'PaymentOrders::Seb',
+                                            invoice: @invoice,
+                                            response: params)
   end
 
   def create_new_bank_link
-    params = { return_url: 'return.url', response_url: 'response.url' }
-    @new_bank_link = PaymentOrders::BankLink.new('seb', @invoice, params)
+    @new_bank_link = PaymentOrder.new(type: 'PaymentOrders::Seb', invoice: @invoice)
+    @new_bank_link.return_url = 'return.url'
+    @new_bank_link.response_url = 'response.url'
   end
 
   def test_response_is_not_valid_when_it_is_missing
@@ -105,21 +106,14 @@ class BankLinkTest < ActiveSupport::TestCase
     refute(@cancelled_bank_link.settled_payment?)
   end
 
-  def test_complete_transaction_calls_methods_on_transaction
-    mock_transaction = MiniTest::Mock.new
-    mock_transaction.expect(:sum= , '12.00', ['12.00'])
-    mock_transaction.expect(:bank_reference= , '1', ['1'])
-    mock_transaction.expect(:buyer_bank_code= , 'testvpos', ['testvpos'])
-    mock_transaction.expect(:buyer_iban= , '1234', ['1234'])
-    mock_transaction.expect(:paid_at= , Date.parse('2018-04-01 00:30:00 +0300'), [Time.parse('2018-04-01T00:30:00+0300')])
-    mock_transaction.expect(:buyer_name=, 'John Doe', ['John Doe'])
-    mock_transaction.expect(:save!, true)
-    mock_transaction.expect(:autobind_invoice, AccountActivity.new)
+  def test_successful_payment_creates_bank_transaction
+    @completed_bank_link.complete_transaction
 
-    BankTransaction.stub(:find_by, mock_transaction) do
-      @completed_bank_link.complete_transaction
-    end
+    transaction = BankTransaction.find_by(
+      sum: @completed_bank_link.response['VK_AMOUNT'],
+      buyer_name: @completed_bank_link.response['VK_SND_NAME']
+    )
 
-    mock_transaction.verify
+    assert transaction.present?
   end
 end

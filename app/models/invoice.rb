@@ -1,13 +1,14 @@
-class Invoice < ActiveRecord::Base
+class Invoice < ApplicationRecord
   include Versions
   include Concerns::Invoice::Cancellable
   include Concerns::Invoice::Payable
+  include Concerns::Invoice::BookKeeping
 
-  belongs_to :seller, class_name: 'Registrar'
   belongs_to :buyer, class_name: 'Registrar'
   has_one  :account_activity
   has_many :items, class_name: 'InvoiceItem', dependent: :destroy
   has_many :directo_records, as: :item, class_name: 'Directo'
+  has_many :payment_orders
 
   accepts_nested_attributes_for :items
 
@@ -36,7 +37,7 @@ class Invoice < ActiveRecord::Base
   attribute :vat_rate, ::Type::VATRate.new
 
   def set_invoice_number
-    last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
+    last_no = Invoice.order(number: :desc).limit(1).pluck(:number).first
 
     if last_no && last_no >= Setting.invoice_number_min.to_i
       self.number = last_no + 1
@@ -48,7 +49,7 @@ class Invoice < ActiveRecord::Base
 
     errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
     logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
-    false
+    throw(:abort)
   end
 
   def to_s
@@ -71,7 +72,7 @@ class Invoice < ActiveRecord::Base
     Country.new(buyer_country_code)
   end
 
-# order is used for directo/banklink description
+  # order is used for directo/banklink description
   def order
     "Order nr. #{number}"
   end
@@ -101,6 +102,14 @@ class Invoice < ActiveRecord::Base
   def to_e_invoice
     generator = Invoice::EInvoiceGenerator.new(self)
     generator.generate
+  end
+
+  def do_not_send_e_invoice?
+    e_invoice_sent? || cancelled? || paid?
+  end
+
+  def e_invoice_sent?
+    e_invoice_sent_at.present?
   end
 
   private

@@ -1,6 +1,7 @@
 module Depp
   class Domain
     include ActiveModel::Conversion
+    include RemoveHold
     extend ActiveModel::Naming
 
     attr_accessor :name, :current_user, :epp_xml
@@ -119,16 +120,6 @@ module Depp
         name: { value: params[:domain_name] },
         authInfo: { pw: { value: params[:transfer_code] } }
       }, op, Domain.construct_custom_params_hash(params)))
-    end
-
-    def confirm_keyrelay(domain_params)
-      xml = epp_xml.update({
-        name: { value: domain_params[:name] }
-      }, {
-        add: Domain.create_dnskeys_hash(domain_params)
-      })
-
-      current_user.request(xml)
     end
 
     def confirm_transfer(domain_params)

@@ -1,21 +1,4 @@
 en:
-  views:
-    pagination:
-      first: "&laquo; First"
-      last: "Last &raquo;"
-      previous: "&lsaquo; Prev"
-      next: "Next &rsaquo;"
-      truncate: "&hellip;"
-  helpers:
-    page_entries_info:
-      one_page:
-        display_entries:
-          zero: "No %{entry_name} found"
-          one: "Displaying <b>1</b> %{entry_name}"
-          other: "Displaying <b>all %{count}</b> %{entry_name}"
-      more_pages:
-        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b> of <b>%{total}</b> in total"
-
   time:
     formats:
       default: "%Y-%m-%d %H:%M"
@@ -41,6 +24,8 @@ en:
               key_data_not_allowed: 'keyData object is not allowed'
               required_parameter_missing_reserved: 'Required parameter missing; reserved>pw element required for reserved domains'
               invalid_auth_information_reserved: 'Invalid authorization information; invalid reserved>pw value'
+              required_parameter_missing_disputed: 'Required parameter missing; disputed pw element required for dispute domains'
+              invalid_auth_information_disputed: 'Invalid authorization information; invalid disputed>pw value'
               domain_name_blocked: 'Data management policy violation: Domain name is blocked [name]'
             name_dirty:
               invalid: 'Domain name is invalid'
@@ -150,22 +135,6 @@ en:
               taken: 'Public key already exists'
               blank: 'Public key is missing'
 
-        keyrelay:
-          attributes:
-            base:
-              only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
-            expiry_relative:
-              unknown_pattern: 'Expiry relative must be compatible to ISO 8601'
-            key_data_public_key:
-              blank: 'Public key is missing'
-            key_data_flags:
-              blank: 'Flag is missing'
-            key_data_protocol:
-              blank: 'Protocol is missing'
-            key_data_alg:
-              blank: 'Algorithm is missing'
-            auth_info_pw:
-              blank: 'Password is missing'
         legal_document:
           attributes:
             body:
@@ -202,7 +171,6 @@ en:
       epp_domain_zone_with_same_origin: Zone with the same origin exists
       epp_domain_at_auction: Domain is at auction
       epp_domain_awaiting_payment: Awaiting payment
-      epp_obj_does_not_exist: 'Object does not exist'
       epp_authorization_error: 'Authorization error'
       epp_id_taken: 'Contact id already exists'
       epp_domain_not_found: 'Domain not found'
@@ -229,7 +197,6 @@ en:
   domain_details: 'Domain details'
   registered_at: 'Registered at'
   password: 'Password'
-  authinfo_pw: 'AuthInfo pw'
   valid_from: 'Valid from'
   general: 'General'
   contacts: 'Contacts'
@@ -241,6 +208,7 @@ en:
   statuses: 'Statuses'
   description: 'Description'
   delete: 'Delete'
+  remove_client_hold: 'Remove clientHold'
   are_you_sure: 'Are you sure?'
   back: 'Back'
   new_domain: 'New domain'
@@ -311,7 +279,6 @@ en:
   certificate_signing_req: 'Certificate signing request'
   csr: 'CSR'
   crt: 'CRT'
-  back_to_api_user: 'Back to API user'
 
   dnskey: 'DNS key'
   dnskeys: 'DNS Keys'
@@ -339,13 +306,11 @@ en:
   role: 'Role'
   user: 'User'
   customer_service: 'Customer service'
-  keyrelays: 'Keyrelays'
   uploaded_at: 'Uploaded at'
   expiry_relative: 'Expiry relative'
   expiry_absolute: 'Expiry absolute'
   requester: 'Requester'
   accepter: 'Accepter'
-  keyrelay_details: 'Keyrelay details'
   domain_name: 'Domain name'
   created_at: 'Created at'
   type: 'Type'
@@ -366,7 +331,6 @@ en:
   request_method: 'Request method'
   response_code: 'Response code'
   request_params: 'Request params'
-  could_not_determine_object_type_check_xml_format_and_namespaces: 'Could not determine object type. Check XML format and namespaces.'
   unknown_expiry_relative_pattern: 'Expiry relative must be compatible to ISO 8601'
   unknown_expiry_absolute_pattern: 'Expiry absolute must be compatible to ISO 8601'
   mutally_exclusive_params: 'Mutually exclusive parameters: %{params}'
@@ -457,7 +421,6 @@ en:
   exDate: 'Valid to'
   dequeue: 'Dequeue'
   are_you_sure_you_want_to_delete_domain: 'Are you sure you want to delete domain %{domain}?'
-  keyrelay: 'Keyrelay'
   upload_key: 'Upload key'
   legal_document: 'Legal document'
   legal_document_max_size: '(max. 8MB)'
@@ -620,6 +583,7 @@ en:
   tech: Tech contact
   valid: Valid
   object_is_not_eligible_for_renewal: 'Object is not eligible for renewal'
+  object_is_not_holded: 'Object is not holded'
   bank_statement_desc: 'Import file row will match only when matching following attributes: <b><br>ref number<br>payment amount<br>invoice number (the first numerical value in comment field)</b>.'
   create_bank_statement: 'Create bank statement'
   create_bank_transaction: 'Create bank transaction'
@@ -630,7 +594,6 @@ en:
   receipt_date_from: 'Receipt date from'
   receipt_date_until: 'Receipt date until'
   add_credit: 'Add credit'
-  export_csv: 'Export CSV'
   invalid_yaml: 'Invalid YAML'
   reserved_pw: 'Reserved pw'
   no_transfers_found: 'No transfers found'
@@ -659,16 +622,21 @@ en:
   created_at_from: 'Created at from'
   created_at_until: 'Created at until'
   is_registrant: 'Is registrant'
-  force_delete_set_on_domain: 'Force delete set on domain %{domain_name}'
+  force_delete_set_on_domain: 'Force delete set on domain %{domain_name}. Outzone date: %{outzone_date}. Purge date: %{purge_date}'
+  grace_period_started_domain: 'For domain %{domain_name} started 45-days redemption grace period, ForceDelete will be in effect from %{date}'
+  force_delete_cancelled: 'Force delete is cancelled on domain %{domain_name}'
   contact_is_not_valid: 'Contact %{value} is not valid, please fix the invalid contact'
   next: 'Next'
   previous: 'Previous'
   available_verification_url_not_found: 'Available verification url not found, for domain.'
   add_reserved_domain: 'Add domain to reserved list'
   add_blocked_domain: 'Add domain to blocked list'
+  add_disputed_domain: 'Add domain to disputed list'
   edit_pw: 'Edit Pw'
+  edit_dispute: 'Edit dispute'
   optional: 'Optional'
   test_registrar: "Test registrar"
+  emails: 'Email addresses'
   verified_confirm: 'Verified status is for cases when current registrant is the one applying for the update. Legal document signed by the registrant is required. Are you sure this update is properly verified with the registrant?'
   verified: 'Verified'
   deleted: 'Deleted'

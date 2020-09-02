@@ -3,6 +3,7 @@ class Registrar
     before_action :init_epp_contact
     helper_method :address_processing?
     helper_method :ident_types
+    helper_method :domain_filter_params
 
     def index
       authorize! :view, Depp::Contact
@@ -16,51 +17,40 @@ class Registrar
         search_params[:registrant_domains_id_not_null] = 1
       end
 
-      if search_params.length == 1 && search_params[:name_matches].present?
-        @contacts = Contact.find_by(name: search_params[:name_matches])
-      end
+      contacts = current_registrar_user.registrar.contacts.includes(:registrar)
+      status_list = params[:statuses_contains]
 
-      if params[:statuses_contains]
-        contacts = current_registrar_user.registrar.contacts.includes(:registrar).where(
-          "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
-        )
-      else
-        contacts = current_registrar_user.registrar.contacts.includes(:registrar)
+      if status_list
+        contacts_ids = contacts.select { |c| (c.statuses & status_list.to_a) == status_list.to_a }
+                               .map(&:id)
+        contacts = contacts.where(id: contacts_ids)
       end
 
       normalize_search_parameters do
         @q = contacts.search(search_params)
-        @contacts = @q.result(distinct: :true).page(params[:page])
       end
 
-      @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
-    end
-
-    def download_list
-      authorize! :view, Depp::Contact
-
-      params[:q] ||= {}
-      params[:q].delete_if { |_k, v| v.blank? }
-      if params[:q].length == 1 && params[:q][:name_matches].present?
-        @contacts = Contact.find_by(name: params[:q][:name_matches])
-      end
-
-      contacts = current_registrar_user.registrar.contacts.includes(:registrar)
-      contacts = contacts.filter_by_states(params[:statuses_contains]) if params[:statuses_contains]
-
-      normalize_search_parameters do
-        @q = contacts.search(params[:q])
-        @contacts = @q.result
-      end
+      contacts = @q.result
 
       respond_to do |format|
-        format.csv { render text: @contacts.to_csv }
+        format.html do
+          contacts_per_page = params[:results_per_page].to_i
+          @contacts = contacts.page(params[:page])
+          @contacts = @contacts.per(contacts_per_page) if contacts_per_page.positive?
+        end
+        format.csv do
+          raw_csv = contacts.to_csv
+          send_data raw_csv, filename: 'contacts.csv', type: "#{Mime[:csv]}; charset=utf-8"
+        end
         format.pdf do
-          pdf = @contacts.pdf(render_to_string('registrar/contacts/download_list', layout: false))
-          send_data pdf, filename: 'contacts.pdf'
+          view = ActionView::Base.new(ActionController::Base.view_paths, contacts: contacts)
+          view.class_eval { include ::ApplicationHelper }
+          raw_html = view.render(file: 'registrar/contacts/list_pdf', layout: false)
+          raw_pdf = contacts.pdf(raw_html)
+
+          send_data raw_pdf, filename: 'contacts.pdf'
         end
       end
-
     end
 
     def new
@@ -80,7 +70,7 @@ class Registrar
 
     def create
       authorize! :create, Depp::Contact
-      @contact = Depp::Contact.new(params[:depp_contact])
+      @contact = Depp::Contact.new(contact_params)
 
       if @contact.save
         redirect_to registrar_contact_url(@contact.id)
@@ -91,9 +81,9 @@ class Registrar
 
     def update
       authorize! :edit, Depp::Contact
-      @contact = Depp::Contact.new(params[:depp_contact])
+      @contact = Depp::Contact.new(contact_params)
 
-      if @contact.update_attributes(params[:depp_contact])
+      if @contact.update_attributes(contact_params)
         redirect_to registrar_contact_url(@contact.id)
       else
         render 'edit'
@@ -107,13 +97,19 @@ class Registrar
 
     def destroy
       authorize! :delete, Depp::Contact
-      @contact = Depp::Contact.new(params[:depp_contact])
+      @contact = Depp::Contact.new(contact_params_for_delete)
 
       if @contact.delete
         redirect_to registrar_contacts_url, notice: t(:destroyed)
       else
         render 'delete'
       end
+    end
+
+    protected
+
+    def domain_filter_params
+      params.permit(:domain_filter)
     end
 
     private
@@ -142,6 +138,23 @@ class Registrar
 
     def ident_types
       Contact::Ident.types
+    end
+
+    def contact_params
+      params.require(:depp_contact).permit(:id,
+                                           :name,
+                                           :email,
+                                           :phone,
+                                           :org_name,
+                                           :ident, :ident_type, :ident_country_code,
+                                           :street, :city, :zip, :state, :country_code,
+                                           :password,
+                                           :legal_document,
+                                           :code)
+    end
+
+    def contact_params_for_delete
+      params.require(:depp_contact).permit(:id, :password, :legal_document)
     end
   end
 end

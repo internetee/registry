@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'application_system_test_case'
 
 CompanyRegisterClientStub = Struct.new(:any_method) do
   def representation_rights(citizen_personal_code:, citizen_country_code:)

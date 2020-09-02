@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppLoginPasswordChangeTest < ActionDispatch::IntegrationTest
+class EppLoginPasswordChangeTest < EppTestCase
   def test_password_change
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -18,16 +18,15 @@ class EppLoginPasswordChangeTest < ActionDispatch::IntegrationTest
               <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
               <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-              <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
             </svcs>
           </login>
         </command>
       </epp>
     XML
 
-    post '/epp/session/login', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
+    post epp_login_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=new_session_id' }
     assert_equal 'new-password', users(:api_bestnames).plain_text_password
-    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 end

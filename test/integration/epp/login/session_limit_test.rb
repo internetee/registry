@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppLoginSessionLimitTest < ApplicationIntegrationTest
+class EppLoginSessionLimitTest < EppTestCase
   setup do
     travel_to Time.zone.parse('2010-07-05')
     EppSession.delete_all
@@ -14,11 +14,10 @@ class EppLoginSessionLimitTest < ApplicationIntegrationTest
     end
 
     assert_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
+      post epp_login_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=new_session_id' }
     end
-
-    assert Nokogiri::XML(response.body).at_css('result[code="1000"]')
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    assert_epp_response :completed_successfully
   end
 
   def test_reached
@@ -29,10 +28,10 @@ class EppLoginSessionLimitTest < ApplicationIntegrationTest
     end
 
     assert_no_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=new_session_id' }
+      post epp_login_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=new_session_id' }
     end
-
-    assert Nokogiri::XML(response.body).at_css('result[code="2501"]')
+    assert_epp_response :authentication_error_server_closing_connection
   end
 
   private
@@ -53,7 +52,6 @@ class EppLoginSessionLimitTest < ApplicationIntegrationTest
               <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
               <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-              <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
             </svcs>
           </login>
         </command>

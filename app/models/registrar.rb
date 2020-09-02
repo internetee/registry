@@ -1,5 +1,8 @@
-class Registrar < ActiveRecord::Base
+class Registrar < ApplicationRecord
   include Versions # version/registrar_version.rb
+  include Concerns::Registrar::BookKeeping
+  include Concerns::EmailVerifable
+  include Concerns::Registrar::LegalDoc
 
   has_many :domains, dependent: :restrict_with_error
   has_many :contacts, dependent: :restrict_with_error
@@ -21,20 +24,19 @@ class Registrar < ActiveRecord::Base
   validates :reference_no, format: Billing::ReferenceNo::REGEXP
   validate :forbid_special_code
 
-  validates :vat_rate, presence: true, if: 'vat_liable_in_foreign_country? && vat_no.blank?'
+  validates :vat_rate, presence: true, if: -> { vat_liable_in_foreign_country? && vat_no.blank? }
   validates :vat_rate, absence: true, if: :vat_liable_locally?
-  validates :vat_rate, absence: true, if: 'vat_liable_in_foreign_country? && vat_no?'
+  validates :vat_rate, absence: true, if: -> { vat_liable_in_foreign_country? && vat_no? }
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
-
-  validate :forbid_special_code
 
   attribute :vat_rate, ::Type::VATRate.new
   after_initialize :set_defaults
 
-  validates :email, :billing_email,
-    email_format: { message: :invalid },
-    allow_blank: true, if: proc { |c| c.email_changed? }
+  validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
+  validate :correct_billing_email_format
+
+  alias_attribute :contact_email, :email
 
   WHOIS_TRIGGERS = %w(name email phone street city state zip)
 
@@ -43,6 +45,8 @@ class Registrar < ActiveRecord::Base
     return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present?
     RegenerateRegistrarWhoisesJob.enqueue id
   end
+
+  self.ignored_columns = %w[legacy_id]
 
   class << self
     def ordered
@@ -95,9 +99,7 @@ class Registrar < ActiveRecord::Base
         }
       ]
     )
-
-    e_invoice = invoice.to_e_invoice
-    e_invoice.deliver
+    SendEInvoiceJob.enqueue(invoice.id)
 
     invoice
   end
@@ -172,6 +174,11 @@ class Registrar < ActiveRecord::Base
 
   def e_invoice_iban
     iban
+  end
+
+  def billing_email
+    return contact_email if self[:billing_email].blank?
+    self[:billing_email]
   end
 
   private

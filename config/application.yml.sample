@@ -1,0 +1,174 @@
+#
+# Registry servers configuration
+#
+#
+# Be sure to restart your server when you modify settings.
+#
+
+#
+# SMTP configuration (for Admin/EPP/Registrar/Registrant servers)
+#
+smtp_address: 'server-hostname'
+smtp_port: '25' # 587, 465
+smtp_user_name: 'login'
+smtp_password: 'pw/key'
+# If you need to specify a HELO domain, you can do it here.
+smtp_domain: '' # 'domain for HELO checking'
+# Use "none" only when for a self-signed and/or wildcard certificate
+smtp_openssl_verify_mode: 'peer' # 'none', 'peer', 'client_once','fail_if_no_peer_cert'
+# Detects if STARTTLS is enabled in your SMTP server and starts to use it. Defaults to true.
+# Set this to false if there is a problem with your server certificate that you cannot resolve.
+smtp_enable_starttls_auto: 'true' # 'false'
+# If your mail server requires authentication, please change.
+smtp_authentication: 'plain' # 'plain', 'login', 'cram_md5'
+
+#
+# ADMIN server
+#
+app_name: '.EE Registry'
+zonefile_export_dir: 'export/zonefiles'
+bank_statement_import_dir: 'import/bank_statements'
+legal_documents_dir: 'import/legal_documents'
+time_zone: 'Tallinn' # more zones by rake time:zones:all
+
+openssl_config_path: '/etc/ssl/openssl.cnf'
+crl_dir:     '/home/registry/registry/shared/ca/crl'
+crl_path:     '/home/registry/registry/shared/ca/crl/crl.pem'
+ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
+ca_key_path:  '/home/registry/registry/shared/ca/private/ca.key.pem'
+ca_key_password: 'your-root-key-password'
+
+directo_invoice_url: 'https://domain/ddddd.asp'
+
+
+#
+# EPP
+#
+webclient_ips: '127.0.0.1,0.0.0.0' #ips, separated with commas
+webclient_cert_common_name: 'webclient'
+# Contact epp will not accept org value by default
+# and returns 2306 "Parameter value policy error"
+contact_org_enabled: 'false'
+
+# Enable iptables counter updater
+# iptables_counter_enabled: 'true'
+# iptables_server_ip: '127.0.0.1'
+
+# Custom legal document types. Changing this requires updating EPP extension schema for allowed legalDocEnumType values.
+# System default for legal document types is: pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx
+# legal_document_types: "pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
+
+
+#
+# REGISTRAR configuration (DEPP)
+#
+show_ds_data_fields: 'false'
+default_nameservers_count: '2'
+default_admin_contacts_count: '1'
+epp_port: '700'
+cert_path: '/home/registry/registry/shared/ca/certs/webclient.cert.pem'
+key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
+epp_hostname: 'registry.gitlab.eu'
+repp_url: 'https://repp.gitlab.eu/repp/v1/'
+
+# Estonian Company Register
+company_register_username:
+company_register_password:
+company_register_cache_period_days: '2'
+company_register_test_mode: 'true' # Requests in test mode are free of charge
+
+# Mobile-ID and ID-card login
+# https://www.id.ee/?id=35760 General how-to
+# https://www.id.ee/?id=36381 Mobile-ID test numbers
+sk_digi_doc_service_endpoint: 'https://tsp.demo.sk.ee'
+sk_digi_doc_service_name: 'Testimine'
+
+# Registrant API
+registrant_api_base_url:
+registrant_api_auth_allowed_ips: '127.0.0.1, 0.0.0.0' #ips, separated with commas
+
+#
+# MISC
+
+# You can use `rake secret` to generate a secure secret key.
+# Your secret key is used for verifying the integrity of signed cookies.
+# If you change this key, all old signed cookies will become invalid!
+secret_key_base: 'please-change-it-you-can-generate-it-with-rake-secret'
+devise_secret: 'please-change-it-you-can-generate-it-with-rake-secret'
+
+# You should list only payment methods that
+# conform with the Estonian BankLink standard
+payments_banks: >
+  seb,
+  swed,
+  lhv
+
+payments_seb_url: 'https://www.seb.ee/cgi-bin/dv.sh/ipank.r'
+payments_seb_bank_certificate: 'eyp_pub.pem'
+payments_seb_seller_private: 'kaupmees_priv.pem'
+payments_seb_seller_account: 'testvpos'
+payments_swed_url: 'https://www.seb.ee/cgi-bin/dv.sh/ipank.r'
+payments_swed_bank_certificate: 'eyp_pub.pem'
+payments_swed_seller_private: 'kaupmees_priv.pem'
+payments_swed_seller_account: 'testvpos'
+payments_lhv_url: 'https://www.seb.ee/cgi-bin/dv.sh/ipank.r'
+payments_lhv_bank_certificate: 'eyp_pub.pem'
+payments_lhv_seller_private: 'kaupmees_priv.pem'
+payments_lhv_seller_account: 'testvpos'
+
+# You should list other payment intermediaries here. Each one of them needs their own class in
+# /app/models/payment_orders/
+payments_intermediaries: >
+  every_pay
+
+# Other intermediaries should follow this naming convention:
+# payments_intermediary_url - URL to intiate payments
+# payments_intermediary_seller_account - your username in the bank system
+# payments_intermediary_api_user - API username, in case it's different than the seller account
+# payments_intermediary_api_key - API key given to you by intermediary
+payments_every_pay_url: 'https://igw-demo.every-pay.com/transactions/'
+payments_every_pay_seller_account: 'EUR3D1'
+payments_every_pay_api_user: 'api_user'
+payments_every_pay_api_key: 'api_key'
+
+e_invoice_provider_name: 'omniva'
+e_invoice_provider_password:
+e_invoice_provider_test_mode: 'false'
+
+user_session_timeout: '3600' # 1 hour
+secure_session_cookies: 'false' # true|false
+same_site_session_cookies: 'false' # false|strict|lax
+
+release_domains_to_auction: 'true'
+auction_api_allowed_ips: '' # 192.0.2.0, 192.0.2.1
+
+action_mailer_default_protocol: # default: http
+action_mailer_default_host:
+action_mailer_default_port: # default: no port (80)
+action_mailer_default_from: # no-reply@example.com
+action_mailer_force_delete_from: # `From` header for `DomainDeleteMailer#forced` email
+
+lhv_p12_keystore:
+lhv_keystore_password:
+lhv_ca_file: # Needed only in dev mode
+lhv_dev_mode: 'false'
+
+# Since the keys for staging are absent from the repo, we need to supply them separate for testing.
+test:
+  payments_seb_bank_certificate: 'test/fixtures/files/seb_bank_cert.pem'
+  payments_seb_seller_private: 'test/fixtures/files/seb_seller_key.pem'
+  release_domains_to_auction: 'false'
+  auction_api_allowed_ips: ''
+  action_mailer_default_host: 'registry.test'
+  action_mailer_default_from: 'no-reply@registry.test'
+  action_mailer_force_delete_from: 'legal@registry.test'
+  lhv_p12_keystore: 'test/fixtures/files/keystore.p12'
+  lhv_keystore_password: 'testtest'
+  legal_documents_dir: 'test/fixtures/files'
+
+# Airbrake // Errbit:
+airbrake_host: "https://your-errbit-host.ee"
+# airbrake_env defaults to Rails.env, can be left blank.
+# airbrake_env: "staging"
+airbrake_project_id: "1"
+airbrake_project_key: "api_key"

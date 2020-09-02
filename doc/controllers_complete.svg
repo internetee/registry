@@ -54,18 +54,6 @@
 <text text-anchor="start" x="108.5" y="76.2" font-family="Times,serif" font-size="14.00">validate_transfer</text>
 <text text-anchor="start" x="108.5" y="91.2" font-family="Times,serif" font-size="14.00">validate_update</text>
 </g>
-<!-- Epp::KeyrelaysController -->
-<g id="node4" class="node"><title>Epp::KeyrelaysController</title>
-<path fill="none" stroke="black" d="M-688,-380.5C-688,-380.5 -556,-380.5 -556,-380.5 -550,-380.5 -544,-386.5 -544,-392.5 -544,-392.5 -544,-491.5 -544,-491.5 -544,-497.5 -550,-503.5 -556,-503.5 -556,-503.5 -688,-503.5 -688,-503.5 -694,-503.5 -700,-497.5 -700,-491.5 -700,-491.5 -700,-392.5 -700,-392.5 -700,-386.5 -694,-380.5 -688,-380.5"/>
-<text text-anchor="middle" x="-622" y="-488.3" font-family="Times,serif" font-size="14.00">Epp::KeyrelaysController</text>
-<polyline fill="none" stroke="black" points="-700,-480.5 -544,-480.5 "/>
-<text text-anchor="start" x="-692" y="-465.3" font-family="Times,serif" font-size="14.00">keyrelay</text>
-<polyline fill="none" stroke="black" points="-700,-457.5 -544,-457.5 "/>
-<polyline fill="none" stroke="black" points="-700,-433.5 -544,-433.5 "/>
-<text text-anchor="start" x="-692" y="-418.3" font-family="Times,serif" font-size="14.00">_layout</text>
-<text text-anchor="start" x="-692" y="-403.3" font-family="Times,serif" font-size="14.00">find_domain</text>
-<text text-anchor="start" x="-692" y="-388.3" font-family="Times,serif" font-size="14.00">validate_keyrelay</text>
-</g>
 <!-- Epp::SessionsController -->
 <g id="node5" class="node"><title>Epp::SessionsController</title>
 <path fill="none" stroke="black" d="M532,-320.5C532,-320.5 656,-320.5 656,-320.5 662,-320.5 668,-326.5 668,-332.5 668,-332.5 668,-491.5 668,-491.5 668,-497.5 662,-503.5 656,-503.5 656,-503.5 532,-503.5 532,-503.5 526,-503.5 520,-497.5 520,-491.5 520,-491.5 520,-332.5 520,-332.5 520,-326.5 526,-320.5 532,-320.5"/>
@@ -123,7 +111,6 @@
 <text text-anchor="middle" x="808" y="-13.8" font-family="Times,serif" font-size="14.00">Epp::ErrorsController</text>
 <polyline fill="none" stroke="black" points="740.5,-6 875.5,-6 "/>
 <text text-anchor="start" x="748.5" y="9.2" font-family="Times,serif" font-size="14.00">error</text>
-<text text-anchor="start" x="748.5" y="24.2" font-family="Times,serif" font-size="14.00">not_found</text>
 <polyline fill="none" stroke="black" points="740.5,32 875.5,32 "/>
 <polyline fill="none" stroke="black" points="740.5,56 875.5,56 "/>
 <text text-anchor="start" x="748.5" y="71.2" font-family="Times,serif" font-size="14.00">_layout</text>
@@ -226,17 +213,6 @@
 <text text-anchor="start" x="107.5" y="-338.3" font-family="Times,serif" font-size="14.00">_layout</text>
 <text text-anchor="start" x="107.5" y="-323.3" font-family="Times,serif" font-size="14.00">api_user_params</text>
 <text text-anchor="start" x="107.5" y="-308.3" font-family="Times,serif" font-size="14.00">set_api_user</text>
-</g>
-<!-- Admin::KeyrelaysController -->
-<g id="node18" class="node"><title>Admin::KeyrelaysController</title>
-<path fill="none" stroke="black" d="M-627.5,379C-627.5,379 -478.5,379 -478.5,379 -472.5,379 -466.5,373 -466.5,367 -466.5,367 -466.5,283 -466.5,283 -466.5,277 -472.5,271 -478.5,271 -478.5,271 -627.5,271 -627.5,271 -633.5,271 -639.5,277 -639.5,283 -639.5,283 -639.5,367 -639.5,367 -639.5,373 -633.5,379 -627.5,379"/>
-<text text-anchor="middle" x="-553" y="286.2" font-family="Times,serif" font-size="14.00">Admin::KeyrelaysController</text>
-<polyline fill="none" stroke="black" points="-639.5,294 -466.5,294 "/>
-<text text-anchor="start" x="-631.5" y="309.2" font-family="Times,serif" font-size="14.00">index</text>
-<text text-anchor="start" x="-631.5" y="324.2" font-family="Times,serif" font-size="14.00">show</text>
-<polyline fill="none" stroke="black" points="-639.5,332 -466.5,332 "/>
-<polyline fill="none" stroke="black" points="-639.5,356 -466.5,356 "/>
-<text text-anchor="start" x="-631.5" y="371.2" font-family="Times,serif" font-size="14.00">_layout</text>
 </g>
 <!-- Admin::SessionsController -->
 <g id="node19" class="node"><title>Admin::SessionsController</title>
@@ -459,17 +435,6 @@
 <text text-anchor="start" x="288.5" y="256.7" font-family="Times,serif" font-size="14.00">init_contacts_autocomplete_map</text>
 <text text-anchor="start" x="288.5" y="271.7" font-family="Times,serif" font-size="14.00">init_domain</text>
 </g>
-<!-- Registrar::KeyrelaysController -->
-<g id="node36" class="node"><title>Registrar::KeyrelaysController</title>
-<path fill="none" stroke="black" d="M712,499C712,499 872,499 872,499 878,499 884,493 884,487 884,487 884,403 884,403 884,397 878,391 872,391 872,391 712,391 712,391 706,391 700,397 700,403 700,403 700,487 700,487 700,493 706,499 712,499"/>
-<text text-anchor="middle" x="792" y="406.2" font-family="Times,serif" font-size="14.00">Registrar::KeyrelaysController</text>
-<polyline fill="none" stroke="black" points="700,414 884,414 "/>
-<text text-anchor="start" x="708" y="429.2" font-family="Times,serif" font-size="14.00">create</text>
-<text text-anchor="start" x="708" y="444.2" font-family="Times,serif" font-size="14.00">show</text>
-<polyline fill="none" stroke="black" points="700,452 884,452 "/>
-<polyline fill="none" stroke="black" points="700,476 884,476 "/>
-<text text-anchor="start" x="708" y="491.2" font-family="Times,serif" font-size="14.00">_layout</text>
-</g>
 <!-- Registrar::SessionsController -->
 <g id="node37" class="node"><title>Registrar::SessionsController</title>
 <path fill="none" stroke="black" d="M-288,-301C-288,-301 -136,-301 -136,-301 -130,-301 -124,-307 -124,-313 -124,-313 -124,-517 -124,-517 -124,-523 -130,-529 -136,-529 -136,-529 -288,-529 -288,-529 -294,-529 -300,-523 -300,-517 -300,-517 -300,-313 -300,-313 -300,-307 -294,-301 -288,-301"/>
@@ -491,7 +456,6 @@
 <path fill="none" stroke="black" d="M-288,619.5C-288,619.5 -156,619.5 -156,619.5 -150,619.5 -144,613.5 -144,607.5 -144,607.5 -144,478.5 -144,478.5 -144,472.5 -150,466.5 -156,466.5 -156,466.5 -288,466.5 -288,466.5 -294,466.5 -300,472.5 -300,478.5 -300,478.5 -300,607.5 -300,607.5 -300,613.5 -294,619.5 -288,619.5"/>
 <text text-anchor="middle" x="-222" y="481.7" font-family="Times,serif" font-size="14.00">Registrar::PollsController</text>
 <polyline fill="none" stroke="black" points="-300,489.5 -144,489.5 "/>
-<text text-anchor="start" x="-292" y="504.7" font-family="Times,serif" font-size="14.00">confirm_keyrelay</text>
 <text text-anchor="start" x="-292" y="519.7" font-family="Times,serif" font-size="14.00">confirm_transfer</text>
 <text text-anchor="start" x="-292" y="534.7" font-family="Times,serif" font-size="14.00">destroy</text>
 <text text-anchor="start" x="-292" y="549.7" font-family="Times,serif" font-size="14.00">show</text>
@@ -645,35 +609,6 @@
 <polyline fill="none" stroke="black" points="-420,372 -154,372 "/>
 <polyline fill="none" stroke="black" points="-420,396 -154,396 "/>
 <text text-anchor="start" x="-412" y="411.2" font-family="Times,serif" font-size="14.00">_layout</text>
-</g>
-<!-- EppController -->
-<g id="node51" class="node"><title>EppController</title>
-<path fill="none" stroke="black" d="M-68.5,219C-68.5,219 56.5,219 56.5,219 62.5,219 68.5,213 68.5,207 68.5,207 68.5,-177 68.5,-177 68.5,-183 62.5,-189 56.5,-189 56.5,-189 -68.5,-189 -68.5,-189 -74.5,-189 -80.5,-183 -80.5,-177 -80.5,-177 -80.5,207 -80.5,207 -80.5,213 -74.5,219 -68.5,219"/>
-<text text-anchor="middle" x="-6" y="-173.8" font-family="Times,serif" font-size="14.00">EppController</text>
-<polyline fill="none" stroke="black" points="-80.5,-166 68.5,-166 "/>
-<text text-anchor="start" x="-72.5" y="-150.8" font-family="Times,serif" font-size="14.00">create_full_selectors</text>
-<text text-anchor="start" x="-72.5" y="-135.8" font-family="Times,serif" font-size="14.00">current_user</text>
-<text text-anchor="start" x="-72.5" y="-120.8" font-family="Times,serif" font-size="14.00">element_count</text>
-<text text-anchor="start" x="-72.5" y="-105.8" font-family="Times,serif" font-size="14.00">epp_errors</text>
-<text text-anchor="start" x="-72.5" y="-90.8" font-family="Times,serif" font-size="14.00">epp_session</text>
-<text text-anchor="start" x="-72.5" y="-75.8" font-family="Times,serif" font-size="14.00">exactly_one_of</text>
-<text text-anchor="start" x="-72.5" y="-60.8" font-family="Times,serif" font-size="14.00">generate_svtrid</text>
-<text text-anchor="start" x="-72.5" y="-45.8" font-family="Times,serif" font-size="14.00">handle_errors</text>
-<text text-anchor="start" x="-72.5" y="-30.8" font-family="Times,serif" font-size="14.00">has_attribute</text>
-<text text-anchor="start" x="-72.5" y="-0.8" font-family="Times,serif" font-size="14.00">latin_only</text>
-<text text-anchor="start" x="-72.5" y="14.2" font-family="Times,serif" font-size="14.00">mutually_exclusive</text>
-<text text-anchor="start" x="-72.5" y="29.2" font-family="Times,serif" font-size="14.00">optional</text>
-<text text-anchor="start" x="-72.5" y="44.2" font-family="Times,serif" font-size="14.00">optional_attribute</text>
-<text text-anchor="start" x="-72.5" y="59.2" font-family="Times,serif" font-size="14.00">params_hash</text>
-<text text-anchor="start" x="-72.5" y="74.2" font-family="Times,serif" font-size="14.00">render_epp_response</text>
-<text text-anchor="start" x="-72.5" y="89.2" font-family="Times,serif" font-size="14.00">requires</text>
-<text text-anchor="start" x="-72.5" y="104.2" font-family="Times,serif" font-size="14.00">requires_attribute</text>
-<text text-anchor="start" x="-72.5" y="134.2" font-family="Times,serif" font-size="14.00">validate_request</text>
-<text text-anchor="start" x="-72.5" y="149.2" font-family="Times,serif" font-size="14.00">write_to_epp_log</text>
-<text text-anchor="start" x="-72.5" y="164.2" font-family="Times,serif" font-size="14.00">xml_attrs_present?</text>
-<polyline fill="none" stroke="black" points="-80.5,172 68.5,172 "/>
-<polyline fill="none" stroke="black" points="-80.5,196 68.5,196 "/>
-<text text-anchor="start" x="-72.5" y="211.2" font-family="Times,serif" font-size="14.00">_layout</text>
 </g>
 </g>
 </svg>

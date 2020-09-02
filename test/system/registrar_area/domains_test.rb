@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'application_system_test_case'
 
 class RegistrarDomainsTest < ApplicationSystemTestCase
   def test_downloads_domain_list_as_csv
@@ -14,8 +14,8 @@ class RegistrarDomainsTest < ApplicationSystemTestCase
     CSV
 
     visit registrar_domains_url
-    click_button 'Download as CSV'
-    assert_equal 'attachment; filename="Domains_2010-07-05_10.30.csv"', response_headers['Content-Disposition']
+    click_button 'Download CSV'
+    assert_equal "attachment; filename=\"Domains_2010-07-05_10.30.csv\"; filename*=UTF-8''Domains_2010-07-05_10.30.csv", response_headers['Content-Disposition']
     assert_equal expected_csv, page.body
   end
 end

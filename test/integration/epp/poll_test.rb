@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppPollTest < ApplicationIntegrationTest
+class EppPollTest < EppTestCase
   setup do
     @notification = notifications(:complete)
   end
@@ -15,11 +15,11 @@ class EppPollTest < ApplicationIntegrationTest
         </command>
       </epp>
     XML
-    post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     xml_doc = Nokogiri::XML(response.body)
-    assert_equal 1301.to_s, xml_doc.at_css('result')[:code]
-    assert_equal 1, xml_doc.css('result').size
+    assert_epp_response :completed_successfully_ack_to_dequeue
     assert_equal 2.to_s, xml_doc.at_css('msgQ')[:count]
     assert_equal @notification.id.to_s, xml_doc.at_css('msgQ')[:id]
     assert_equal Time.zone.parse('2010-07-05').utc.xmlschema, xml_doc.at_css('msgQ qDate').text
@@ -37,7 +37,8 @@ class EppPollTest < ApplicationIntegrationTest
         </command>
       </epp>
     XML
-    post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     xml_doc = Nokogiri::XML(response.body)
     namespace = 'https://epp.tld.ee/schema/changePoll-1.0.xsd'
@@ -61,11 +62,10 @@ class EppPollTest < ApplicationIntegrationTest
         </command>
       </epp>
     XML
-    post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
-    xml_doc = Nokogiri::XML(response.body)
-    assert_equal 1300.to_s, xml_doc.at_css('result')[:code]
-    assert_equal 1, xml_doc.css('result').size
+    assert_epp_response :completed_successfully_no_messages
   end
 
   def test_mark_as_read
@@ -80,13 +80,13 @@ class EppPollTest < ApplicationIntegrationTest
       </epp>
     XML
 
-    post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     notification.reload
 
     xml_doc = Nokogiri::XML(response.body)
     assert notification.read?
-    assert_equal 1000.to_s, xml_doc.at_css('result')[:code]
-    assert_equal 1, xml_doc.css('result').size
+    assert_epp_response :completed_successfully
     assert_equal 1.to_s, xml_doc.at_css('msgQ')[:count]
     assert_equal notification.id.to_s, xml_doc.at_css('msgQ')[:id]
   end
@@ -102,12 +102,12 @@ class EppPollTest < ApplicationIntegrationTest
         </command>
       </epp>
     XML
-    post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     notification.reload
 
-    xml_doc = Nokogiri::XML(response.body)
     assert notification.unread?
-    assert_equal 2303.to_s, xml_doc.at_css('result')[:code]
+    assert_epp_response :object_does_not_exist
   end
 
   def test_notification_not_found
@@ -119,9 +119,9 @@ class EppPollTest < ApplicationIntegrationTest
         </command>
       </epp>
     XML
-    post '/epp/command/poll', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_poll_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
-    xml_doc = Nokogiri::XML(response.body)
-    assert_equal 2303.to_s, xml_doc.at_css('result')[:code]
+    assert_epp_response :object_does_not_exist
   end
 end

@@ -1,7 +1,9 @@
 en:
   registrar:
     contacts:
-      index:
+      search_form:
+        download_pdf_btn: Download PDF
+        download_csv_btn: Download CSV
         reset_btn: Reset
 
       partials:

@@ -4,7 +4,7 @@
   .panel-body
     %dl.dl-horizontal
       %dt= t(:name)
-      %dd= link_to(@domain.registrant, [:admin, @domain.registrant])
+      %dd= link_to @domain.registrant, admin_contact_path(@domain.registrant)
 
       %dt= t(:id)
       %dd= @domain.registrant.code

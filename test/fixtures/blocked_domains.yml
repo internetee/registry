@@ -1,2 +1,4 @@
 one:
   name: blocked.test
+idn:
+  name: blockedäöüõ.test

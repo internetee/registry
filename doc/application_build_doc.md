@@ -25,14 +25,14 @@ Deploy overview: (database schema should be loaded and seeds should be present)
     cd registry
     rbenv local 2.2.2 # more info about rbenv at debian doc
     gem install mina # or any other deployment tool
-    cp config/deploy-example.rb config/deploy.rb # and edit it
+    cp config/deploy.rb.sample config/deploy.rb # and edit it
     mina pr setup # one time, only creates missing directories
     ssh registry
 
     # at your server
     cd registry
-    cp current/config/application-example.yml shared/config/application.yml # and edit it
-    cp current/config/database-example.yml shared/config/database.yml # and edit it
+    cp current/config/application.yml.sample shared/config/application.yml # and edit it
+    cp current/config/database.yml.sample shared/config/database.yml # and edit it
 
     vi /etc/apache2/sites-enabled/registry.conf # add conf and all needed serts
     vi /etc/apache2/sites-enabled/epp.conf # add epp conf, restart apache
@@ -48,7 +48,7 @@ We recommend [Mina](https://github.com/mina-deploy/mina) instead of Capistrano o
 
 All deploy code locates at config/deploy.rb, please copy content from example file and edit it.
 
-    cp config/deploy-example.rb config/deploy.rb # and edit it
+    cp config/deploy.rb.sample config/deploy.rb # and edit it
 
 First add shortcuts to your local machine ssh config file, 
 
@@ -117,13 +117,13 @@ General rake and mina tips:
 
 ### CRON
 
-Crontab can be setup after deploy. Jobs can be viewed [here](/config/schedule.rb). Some jobs are dependent on `cron_group` variable set in [deploy-example.rb](/config/deploy-example.rb) file.
+Crontab can be setup after deploy. Jobs can be viewed [here](/config/schedule.rb). Some jobs are dependent on `cron_group` variable set in [deploy.rb.sample](/config/deploy.rb.sample) file.
 
     mina pr cron:setup # to update the crontab.
     mina pr cron:clear # to clear crontab.
 
 ### Application settings
 
-Application settings locate at [config/application-example.yml](/config/application-example.yml)
+Application settings locate at [config/application.yml.sample](/config/application.yml.sample)
 
 

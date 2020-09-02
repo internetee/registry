@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainInfoBaseTest < ApplicationIntegrationTest
+class EppDomainInfoBaseTest < EppTestCase
   def test_returns_valid_response
     assert_equal 'john-001', contacts(:john).code
     domains(:shop).update_columns(statuses: [DomainStatus::OK],
@@ -21,11 +21,11 @@ class EppDomainInfoBaseTest < ApplicationIntegrationTest
       </epp>
     XML
 
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
+    assert_epp_response :completed_successfully
     assert_equal 'shop.test', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
     assert_equal 'ok', response_xml.at_xpath('//domain:status', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['s']
     assert_equal 'john-001', response_xml.at_xpath('//domain:registrant', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
@@ -50,7 +50,8 @@ class EppDomainInfoBaseTest < ApplicationIntegrationTest
       </epp>
     XML
 
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '65078d5', response_xml.at_xpath('//domain:authInfo/domain:pw', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
@@ -77,7 +78,8 @@ class EppDomainInfoBaseTest < ApplicationIntegrationTest
       </epp>
     XML
 
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_goodnames'
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal '65078d5', response_xml.at_xpath('//domain:authInfo/domain:pw', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
@@ -100,33 +102,11 @@ class EppDomainInfoBaseTest < ApplicationIntegrationTest
       </epp>
     XML
 
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_goodnames'
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_nil response_xml.at_xpath('//domain:authInfo/domain:pw',
                                      'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')
-  end
-
-  def test_returns_not_found_error_when_domain_is_not_registered
-    assert DNS::DomainName.new('not-registered.test').not_registered?
-
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-        <command>
-          <info>
-            <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-              <domain:name>not-registered.test</domain:name>
-            </domain:info>
-          </info>
-        </command>
-      </epp>
-    XML
-
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_equal '2303', response_xml.at_css('result')[:code]
-    assert_equal 'Domain not found', response_xml.at_css('result msg').text
   end
 end

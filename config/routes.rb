@@ -1,22 +1,56 @@
 require_dependency 'epp_constraint'
 
 Rails.application.routes.draw do
-  namespace(:epp, defaults: { format: :xml }) do
-    match 'session/:action', controller: 'sessions', via: :all, constraints: EppConstraint.new(:session)
-    match 'session/pki/:action', controller: 'sessions', via: :all, constraints: EppConstraint.new(:session)
+  # https://github.com/internetee/epp_proxy#translation-of-epp-calls
+  namespace :epp do
+    constraints(EppConstraint.new(:session)) do
+      get 'session/hello', to: 'sessions#hello', as: 'hello'
+      post 'session/login', to: 'sessions#login', as: 'login'
+      post 'session/logout', to: 'sessions#logout', as: 'logout'
+    end
 
-    post 'command/:action', controller: 'domains', constraints: EppConstraint.new(:domain)
-    post 'command/:action', controller: 'contacts', constraints: EppConstraint.new(:contact)
-    post 'command/poll',     to: 'polls#poll', constraints: EppConstraint.new(:poll)
-    post 'command/keyrelay', to: 'keyrelays#keyrelay', constraints: EppConstraint.new(:keyrelay)
+    constraints(EppConstraint.new(:contact)) do
+      controller('contacts') do
+        post 'command/create', action: 'create', as: :create
+        post 'command/update', action: 'update', as: :update
+        post 'command/info', action: 'info', as: :info
+        post 'command/check', action: 'check', as: :check
+        post 'command/transfer', action: 'transfer', as: :transfer
+        post 'command/renew', action: 'renew', as: :renew
+        post 'command/delete', action: 'delete', as: :delete
+      end
+    end
 
-    post 'command/:command', to: 'errors#not_found', constraints: EppConstraint.new(:not_found) # fallback route
+    constraints(EppConstraint.new(:domain)) do
+      controller('domains') do
+        post 'command/create', action: 'create', as: nil
+        post 'command/update', action: 'update', as: nil
+        post 'command/info', action: 'info', as: nil
+        post 'command/check', action: 'check', as: nil
+        post 'command/transfer', action: 'transfer', as: nil
+        post 'command/renew', action: 'renew', as: nil
+        post 'command/delete', action: 'delete', as: nil
+      end
+    end
 
+    post 'command/poll', to: 'polls#poll', as: 'poll', constraints: EppConstraint.new(:poll)
     get 'error/:command', to: 'errors#error'
-    match "*command", to: 'errors#error', via: [:post, :get, :patch, :put, :delete]
   end
 
   mount Repp::API => '/'
+
+  namespace :repp do
+    namespace :v1 do
+      resources :auctions, only: %i[index]
+      resources :retained_domains, only: %i[index]
+    end
+  end
+
+  match 'repp/v1/*all',
+        controller: 'api/cors',
+        action: 'cors_preflight_check',
+        via: [:options],
+        as: 'repp_cors_preflight_check'
 
   namespace :api do
     namespace :v1 do
@@ -78,6 +112,7 @@ Rails.application.routes.draw do
         get 'check'
         get 'delete'
         get 'search_contacts'
+        get 'remove_hold'
       end
     end
     resources :domain_transfers, only: %i[new create]
@@ -91,18 +126,14 @@ Rails.application.routes.draw do
 
       collection do
         get 'check'
-        get 'download_list'
       end
     end
 
     resource :poll, only: %i[show destroy] do
       collection do
-        post 'confirm_keyrelay'
         post 'confirm_transfer'
       end
     end
-
-    resource :keyrelay
 
     resource :xml_console do
       collection do
@@ -110,11 +141,11 @@ Rails.application.routes.draw do
       end
     end
 
-    get  'pay/return/:bank'       => 'payments#back',  as: 'return_payment_with'
-    post 'pay/return/:bank'       => 'payments#back'
-    put  'pay/return/:bank'       => 'payments#back'
-    post 'pay/callback/:bank'     => 'payments#callback', as: 'response_payment_with'
-    get  'pay/go/:bank'           => 'payments#pay',   as: 'payment_with'
+    get  'pay/return/:payment_order' => 'payments#back', as: 'return_payment_with'
+    post 'pay/return/:payment_order' => 'payments#back'
+    put  'pay/return/:payment_order' => 'payments#back'
+    post 'pay/callback/:payment_order' => 'payments#callback', as: 'response_payment_with'
+    get  'pay/go/:bank' => 'payments#pay', as: 'payment_with'
 
     namespace :settings do
       resource :balance_auto_reload, controller: :balance_auto_reload, only: %i[edit update destroy]
@@ -155,11 +186,6 @@ Rails.application.routes.draw do
     resources :registrars, only: :show
     resources :domains, only: %i[index show] do
       resources :contacts, only: %i[show edit update]
-
-      collection do
-        get :download_list
-      end
-
       member do
         get 'confirmation'
       end
@@ -174,12 +200,9 @@ Rails.application.routes.draw do
     root 'dashboard#show'
     devise_for :users, path: '', class_name: 'AdminUser'
 
-    resources :keyrelays
     resources :zonefiles
     resources :zones, controller: 'dns/zones', except: %i[show destroy]
     resources :legal_documents
-    resources :keyrelays
-
     resources :prices, controller: 'billing/prices', except: %i[show destroy] do
       member do
         patch :expire
@@ -248,13 +271,16 @@ Rails.application.routes.draw do
         get 'delete'
       end
     end
-
-    resources :registrars do
-      resources :api_users
-      resources :white_ips
+    resources :disputes do
+      member do
+        get 'delete'
+      end
     end
 
-    resources :registrants, controller: 'contacts'
+    resources :registrars do
+      resources :api_users, except: %i[index]
+      resources :white_ips
+    end
 
     resources :contacts do
       collection do
@@ -263,7 +289,8 @@ Rails.application.routes.draw do
     end
 
     resources :admin_users
-    resources :api_users do
+    # /admin/api_users is mainly for manual testing
+    resources :api_users, only: [:index, :show] do
       resources :certificates do
         member do
           post 'sign'

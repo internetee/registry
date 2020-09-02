@@ -19,6 +19,7 @@ api_goodnames:
 
 admin:
   username: test
+  email: test@registry.test
   encrypted_password: <%= Devise::Encryptor.digest(AdminUser, 'testtest') %>
   type: AdminUser
   country_code: US

@@ -57,7 +57,7 @@
             %th{class: 'col-xs-3'}= t(:total)
         %tbody
           - @invoices.each do |invoice|
-            %tr.invoice
+            %tr
               %td= link_to(invoice, [:registrar, invoice])
               - if invoice.paid?
                 %td= l invoice.receipt_date

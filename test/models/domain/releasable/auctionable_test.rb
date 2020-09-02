@@ -2,7 +2,7 @@ require 'test_helper'
 
 class DomainReleasableAuctionableTest < ActiveSupport::TestCase
   # Needed for `test_updates_whois` test because of `after_commit :update_whois_record` in Domain
-  self.use_transactional_fixtures = false
+  self.use_transactional_tests = false
 
   setup do
     @domain = domains(:shop)

@@ -6,6 +6,10 @@
                     class: 'btn btn-default') %>
         <%= link_to(t(:delete), delete_registrar_domains_path(domain_name: params[:domain_name]),
                     class: 'btn btn-default') %>
+        <% if @client_holded %>
+            <%= link_to(t(:remove_client_hold), remove_hold_registrar_domains_path(domain_name: params[:domain_name]),
+                    class: 'btn btn-default') %>
+        <% end %>
     <% else %>
         <%= link_to t('.transfer_btn'), new_registrar_domain_transfer_path(domain_name: params[:domain_name]),
                     class: 'btn btn-default' %>

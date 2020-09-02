@@ -60,11 +60,16 @@ module DNS
     end
 
     def blocked?
-      BlockedDomain.where(name: name).any?
+      BlockedDomain.where(name: name).any? ||
+        BlockedDomain.where(name: SimpleIDN.to_unicode(name)).any?
     end
 
     def reserved?
       ReservedDomain.where(name: name).any?
+    end
+
+    def disputed?
+      Dispute.active.where(domain_name: name).any?
     end
 
     def auctionable?
@@ -80,7 +85,7 @@ module DNS
     attr_reader :name
 
     def not_auctionable?
-      blocked? || reserved?
+      blocked? || reserved? || disputed?
     end
 
     def zone_with_same_origin?

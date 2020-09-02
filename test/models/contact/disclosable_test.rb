@@ -28,7 +28,7 @@ class ContactDisclosableTest < ActiveSupport::TestCase
     @contact.disclosed_attributes = %w[some undisclosable]
 
     assert @contact.invalid?
-    assert_includes @contact.errors.get(:disclosed_attributes), 'contain unsupported attribute(s)'
+    assert_includes @contact.errors[:disclosed_attributes], 'contain unsupported attribute(s)'
   end
 
   def test_valid_when_attribute_is_disclosable

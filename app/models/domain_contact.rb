@@ -1,4 +1,4 @@
-class DomainContact < ActiveRecord::Base
+class DomainContact < ApplicationRecord
   # STI: tech_domain_contact
   # STI: admin_domain_contact
   include Versions # version/domain_contact_version.rb
@@ -7,6 +7,8 @@ class DomainContact < ActiveRecord::Base
   belongs_to :domain
 
   attr_accessor :value_typeahead
+
+  self.ignored_columns = %w[legacy_domain_id legacy_contact_id]
 
   def epp_code_map
     {

@@ -13,7 +13,7 @@ module Admin
         send_data @zonefile, filename: "#{params[:origin]}.txt"
       else
         flash[:alert] = 'Origin not supported'
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       end
     end
   end

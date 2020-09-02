@@ -1,4 +1,4 @@
-class Auction < ActiveRecord::Base
+class Auction < ApplicationRecord
   enum status: {
     started: 'started',
     awaiting_payment: 'awaiting_payment',
@@ -23,8 +23,17 @@ class Auction < ActiveRecord::Base
     save!
   end
 
+  def whois_deadline
+    registration_deadline.try(:to_s, :iso8601)
+  end
+
   def mark_as_no_bids
     no_bids!
+  end
+
+  def mark_deadline(registration_deadline)
+    self.registration_deadline = registration_deadline
+    save!
   end
 
   def mark_as_payment_received

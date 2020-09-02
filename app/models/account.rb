@@ -1,4 +1,4 @@
-class Account < ActiveRecord::Base
+class Account < ApplicationRecord
   include Versions
 
   belongs_to :registrar, required: true

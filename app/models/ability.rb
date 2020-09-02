@@ -34,8 +34,6 @@ class Ability
     if @user.registrar.api_ip_white?(@ip)
       can :manage, :poll
       can :manage, Depp::Contact
-      # can :manage, Depp::Keyrelay # TODO: Keyrelay is disabled for now
-      # can :confirm, :keyrelay # TODO: Keyrelay is disabled for now
       can :manage, :xml_console
       can :manage,   Depp::Domain
     end
@@ -48,13 +46,13 @@ class Ability
     # can(:create, :epp_request)
 
     # Epp::Domain
-    can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || pw.blank? ? true : d.transfer_code == pw }
+    can(:info, Epp::Domain)
     can(:check,    Epp::Domain)
     can(:create,   Epp::Domain)
     can(:renew,    Epp::Domain) { |d| d.registrar_id == @user.registrar_id }
+    can(:remove_hold, Epp::Domain) { |d| d.registrar_id == @user.registrar_id }
     can(:update,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
-    can(:transfer, Epp::Domain) { |d, pw| d.transfer_code == pw }
-    can(:view_password, Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
+    can(:transfer, Epp::Domain)
     can(:delete,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
 
     # Epp::Contact
@@ -65,6 +63,7 @@ class Ability
     can(:update, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
     can(:delete, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
     can(:renew,  Epp::Contact)
+    can(:transfer,  Epp::Contact)
     can(:view_password, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
   end
 
@@ -95,13 +94,13 @@ class Ability
     can :manage, ApiUser
     can :manage, AdminUser
     can :manage, Certificate
-    can :manage, Keyrelay
     can :manage, LegalDocument
     can :manage, BankStatement
     can :manage, BankTransaction
     can :manage, Invoice
     can :manage, WhiteIp
     can :manage, AccountActivity
+    can :manage, Dispute
     can :read, ApiLog::EppLog
     can :read, ApiLog::ReppLog
     can :update, :pending

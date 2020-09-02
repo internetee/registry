@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppContactInfoBaseTest < ActionDispatch::IntegrationTest
+class EppContactInfoBaseTest < EppTestCase
   setup do
     @contact = contacts(:john)
   end
@@ -29,11 +29,11 @@ class EppContactInfoBaseTest < ActionDispatch::IntegrationTest
       </epp>
     XML
 
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '1000', response_xml.at_css('result')[:code]
-    assert_equal 1, response_xml.css('result').size
+    assert_epp_response :completed_successfully
     assert_equal 'JOHN-001', response_xml.at_xpath('//contact:id', contact: xml_schema).text
     assert_equal 'ok', response_xml.at_xpath('//contact:status', contact: xml_schema)['s']
     assert_equal 'john@inbox.test', response_xml.at_xpath('//contact:email', contact: xml_schema)
@@ -44,8 +44,12 @@ class EppContactInfoBaseTest < ActionDispatch::IntegrationTest
                                                                     contact: xml_schema).text
   end
 
-  def test_contact_not_found
-    assert_nil Contact.find_by(code: 'non-existing')
+  def test_hides_password_when_current_registrar_is_not_sponsoring
+    non_sponsoring_registrar = registrars(:goodnames)
+    @contact.update!(registrar: non_sponsoring_registrar)
+
+    # https://github.com/internetee/registry/issues/415
+    @contact.update_columns(code: @contact.code.upcase)
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -53,17 +57,19 @@ class EppContactInfoBaseTest < ActionDispatch::IntegrationTest
         <command>
           <info>
             <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
-              <contact:id>non-existing</contact:id>
+              <contact:id>#{@contact.code}</contact:id>
             </contact:info>
           </info>
         </command>
       </epp>
     XML
 
-    post '/epp/command/info', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
+    post epp_info_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' =>
+                                                                       'session=api_bestnames' }
 
+    assert_epp_response :completed_successfully
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '2303', response_xml.at_css('result')[:code]
+    assert_nil response_xml.at_xpath('//contact:authInfo', contact: xml_schema)
   end
 
   private

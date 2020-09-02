@@ -3,7 +3,7 @@ module Concerns::Contact::Transferable
 
   included do
     validates :auth_info, presence: true
-    after_initialize :generate_auth_info, if: 'new_record? && auth_info.blank?'
+    after_initialize :generate_auth_info, if: -> { new_record? && auth_info.blank? }
   end
 
   def transfer(new_registrar)

@@ -1,4 +1,4 @@
-class InvoiceItem < ActiveRecord::Base
+class InvoiceItem < ApplicationRecord
   include Versions
   belongs_to :invoice
 

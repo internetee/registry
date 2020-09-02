@@ -1,0 +1,77 @@
+<% content_for :actions do %>
+    <%= link_to(t(:new), new_registrar_contact_path, class: 'btn btn-primary') %>
+<% end %>
+<%= render 'shared/title', name: t(:contacts) %>
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'search_form' %>
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-condensed contacts">
+                <thead>
+                <tr>
+                    <th class="col-xs-2">
+                        <%= sort_link(@q, 'name', t(:name)) %>
+                    </th>
+                    <th class="col-xs-2">
+                        <%= sort_link(@q, 'code', t(:id)) %>
+                    </th>
+                    <th class="col-xs-2">
+                        <%= sort_link(@q, 'ident', t(:ident)) %>
+                    </th>
+                    <th class="col-xs-2">
+                        <%= sort_link(@q, 'email', t(:created_at)) %>
+                    </th>
+                    <th class="col-xs-2">
+                        <%= sort_link(@q, 'registrar_name', t(:registrar_name)) %>
+                    </th>
+                    <th class="col-xs-2">
+                        <%= t(:actions) %>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @contacts.each do |contact| %>
+                    <tr>
+                        <td>
+                            <%= link_to(contact.name, registrar_contact_path(id: contact.code)) %>
+                        </td>
+                        <td>
+                            <%= contact.code %>
+                        </td>
+                        <td>
+                            <%= ident_for(contact) %>
+                        </td>
+                        <td>
+                            <%= l(contact.created_at, format: :short) %>
+                        </td>
+                        <td>
+                            <% if contact.registrar %>
+                                <%= contact.registrar %>
+                            <% end %>
+                        </td>
+                        <td>
+                            <%= link_to(t(:edit), edit_registrar_contact_path(contact.code), class: 'btn btn-primary btn-xs') %>
+                            <%= link_to(t(:delete), delete_registrar_contact_path(contact.code), class: 'btn btn-default btn-xs') %>
+                        </td>
+                    </tr>
+                <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <%= paginate @contacts %>
+    </div>
+    <div class="col-md-6 text-right">
+        <div class="pagination">
+            <%= t(:result_count, count: @contacts.total_count) %>
+        </div>
+    </div>
+</div>

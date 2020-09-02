@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppDomainTransferRequestTest < ApplicationIntegrationTest
+class EppDomainTransferRequestTest < EppTestCase
   def setup
     @domain = domains(:shop)
     @new_registrar = registrars(:goodnames)
@@ -13,25 +13,28 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
   end
 
   def test_transfers_domain_at_once
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
-    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
-    assert_equal 1, Nokogiri::XML(response.body).css('result').size
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    assert_epp_response :completed_successfully
   end
 
   def test_creates_new_domain_transfer
     assert_difference -> { @domain.transfers.size } do
-      post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+      post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
   end
 
   def test_approves_automatically_if_auto_approval_is_enabled
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     assert_equal 'serverApproved', Nokogiri::XML(response.body).xpath('//domain:trStatus', 'domain' =>
       'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
   end
 
   def test_assigns_new_registrar
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
     assert_equal @new_registrar, @domain.registrar
   end
@@ -39,7 +42,8 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
   def test_regenerates_transfer_code
     @old_transfer_code = @domain.transfer_code
 
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     @domain.reload
     refute_equal @domain.transfer_code, @old_transfer_code
@@ -49,54 +53,59 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
     @old_registrar = @domain.registrar
 
     assert_difference -> { @old_registrar.notifications.count } do
-      post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+      post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts
     assert_difference -> { @new_registrar.contacts.size }, 3 do
-      post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+      post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
   end
 
   def test_reuses_identical_contact
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     assert_equal 1, @new_registrar.contacts.where(name: 'William').size
   end
 
   def test_saves_legal_document
-    assert_difference -> { @domain.legal_documents(true).size } do
-      post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    assert_difference -> { @domain.legal_documents.reload.size } do
+      post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
   end
 
   def test_non_transferable_domain
     @domain.update!(statuses: [DomainStatus::SERVER_TRANSFER_PROHIBITED])
 
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     domains(:shop).reload
 
     assert_equal registrars(:bestnames), domains(:shop).registrar
-    assert_equal '2304', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_epp_response :object_status_prohibits_operation
   end
 
   def test_discarded_domain_cannot_be_transferred
     @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
 
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
 
     assert_equal registrars(:bestnames), @domain.registrar
-    assert_equal '2105', Nokogiri::XML(response.body).at_css('result')[:code]
-    travel_back
+    assert_epp_response :object_is_not_eligible_for_transfer
   end
 
   def test_same_registrar
     assert_no_difference -> { @domain.transfers.size } do
-      post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
+      post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-
-    assert_equal '2002', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_epp_response :use_error
   end
 
   def test_wrong_transfer_code
@@ -116,10 +125,12 @@ class EppDomainTransferRequestTest < ApplicationIntegrationTest
       </epp>
     XML
 
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    post epp_transfer_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
+
+    assert_epp_response :invalid_authorization_information
     refute_equal @new_registrar, @domain.registrar
-    assert_equal '2201', Nokogiri::XML(response.body).at_css('result')[:code]
   end
 
   private
