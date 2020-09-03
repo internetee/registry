@@ -124,4 +124,20 @@ class EppPollTest < EppTestCase
 
     assert_epp_response :object_does_not_exist
   end
+
+  def test_anonymous_user_cannot_access
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <poll op="req"/>
+        </command>
+      </epp>
+    XML
+
+    post '/epp/command/poll', params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=non-existent' }
+
+    assert_epp_response :authorization_error
+  end
 end
