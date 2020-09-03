@@ -5,11 +5,11 @@ class InactiveContacts
     @contacts = contacts
   end
 
-  def archive
+  def archive(verified: false)
     contacts.each do |contact|
       log("Archiving contact: id(#{contact.id}), code(#{contact.code})")
 
-      contact.archive
+      contact.archive(verified: verified)
       yield contact if block_given?
     end
   end

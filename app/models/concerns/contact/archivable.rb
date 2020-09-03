@@ -17,8 +17,10 @@ module Concerns
         inactive
       end
 
-      def archive
-        raise 'Contact cannot be archived' unless archivable?(post: true)
+      def archive(verified: false)
+        unless verified
+          raise 'Contact cannot be archived' unless archivable?(post: true)
+        end
 
         destroy!
       end

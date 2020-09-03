@@ -4,7 +4,7 @@ namespace :contacts do
   task archive: :environment do
     puts 'Starting to gather archivable contacts'
     inactive_contacts = InactiveContacts.new
-    archived_contacts = inactive_contacts.archive
+    archived_contacts = inactive_contacts.archive(verified: true)
 
     puts "Archived total: #{archived_contacts.count}"
   end
