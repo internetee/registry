@@ -7,8 +7,15 @@ class InactiveContacts
 
   def archive
     contacts.each do |contact|
+      log("Archiving contact: id(#{contact.id}), code(#{contact.code})")
+
       contact.archive
       yield contact if block_given?
     end
+  end
+
+  def log(msg)
+    @logger ||= Logger.new(STDOUT)
+    @logger.info(msg)
   end
 end
