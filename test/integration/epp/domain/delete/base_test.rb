@@ -27,7 +27,7 @@ class EppDomainDeleteBaseTest < EppTestCase
           </delete>
           <extension>
             <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-              <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
         </command>
@@ -35,6 +35,7 @@ class EppDomainDeleteBaseTest < EppTestCase
     XML
 
     post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    # binding.pry
     assert_includes Domain.find_by(name: 'invalid.test').statuses, DomainStatus::PENDING_DELETE_CONFIRMATION
     assert_epp_response :completed_successfully_action_pending
   end
@@ -54,7 +55,7 @@ class EppDomainDeleteBaseTest < EppTestCase
           </delete>
           <extension>
             <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-              <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
         </command>
@@ -82,7 +83,7 @@ class EppDomainDeleteBaseTest < EppTestCase
           </delete>
           <extension>
             <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-              <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
         </command>
@@ -113,7 +114,7 @@ class EppDomainDeleteBaseTest < EppTestCase
           </delete>
           <extension>
             <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-              <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
         </command>
@@ -144,7 +145,7 @@ class EppDomainDeleteBaseTest < EppTestCase
           </delete>
           <extension>
             <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-              <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
         </command>

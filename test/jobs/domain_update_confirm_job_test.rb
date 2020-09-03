@@ -7,7 +7,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
     @domain = domains(:shop)
     @new_registrant = contacts(:william)
     @user = users(:api_bestnames)
-    @legal_doc_path = 'test/fixtures/files/legaldoc.pdf'
+    @legal_doc_path = "#{'test' * 2000}"
 
     @domain.update!(pending_json: { new_registrant_id: @new_registrant.id,
                                     new_registrant_name: @new_registrant.name,

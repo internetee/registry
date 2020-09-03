@@ -55,7 +55,6 @@ class Domain < ApplicationRecord
   accepts_nested_attributes_for :dnskeys, allow_destroy: true
 
   has_many :legal_documents, as: :documentable
-  accepts_nested_attributes_for :legal_documents, reject_if: proc { |attrs| attrs[:body].blank? }
   has_many :registrant_verifications, dependent: :destroy
 
   after_initialize do
