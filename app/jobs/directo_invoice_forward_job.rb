@@ -28,17 +28,18 @@ class DirectoInvoiceForwardJob < Que::Job
 
   def send_monthly_invoices
     Registrar.where.not(test_registrar: true).find_each do |registrar|
+      @client = DirectoApi::Client.new(api_url, sales_agent, payment_term)
       fetch_monthly_summary(registrar: registrar)
+      next unless @client.invoices.count.positive?
+
+      sync_with_directo
     end
-
-    return unless @client.invoices.count.positive?
-
-    sync_with_directo
   end
 
   def fetch_monthly_summary(registrar:)
     return unless registrar.cash_account
 
+    Rails.logger.info "Fetching monthly summary for registrar #{registrar.name}"
     summary = registrar.monthly_summary(month: @month)
     @client.invoices.add_with_schema(invoice: summary, schema: 'summary') unless summary.nil?
   end
