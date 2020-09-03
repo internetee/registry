@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/directo.git
-  revision: 8ff8a382d004ffb85722a6a7a68a020bd4d7159b
+  revision: e4ba54f601d1815fd8782a196788730d47861e86
   branch: master
   specs:
     directo (1.0.1)
@@ -165,7 +165,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.6)
+    concurrent-ruby (1.1.7)
     countries (3.0.1)
       i18n_data (~> 0.10.0)
       sixarm_ruby_unaccent (~> 1.1)
@@ -241,7 +241,7 @@ GEM
     httpi (2.4.4)
       rack
       socksify
-    i18n (1.8.3)
+    i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     i18n_data (0.10.0)
     isikukood (0.1.2)
