@@ -4,7 +4,7 @@ class EppSession < ApplicationRecord
   validates :session_id, uniqueness: true, presence: true
 
   class_attribute :timeout
-  self.timeout = ENV['epp_session_timeout_seconds'].to_i.seconds
+  self.timeout = (ENV['epp_session_timeout_seconds'] || 300).to_i.seconds
 
   alias_attribute :last_access, :updated_at
 
