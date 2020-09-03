@@ -10,7 +10,8 @@ module Epp
     before_action :latin_only
     before_action :validate_against_schema
     before_action :validate_request
-    before_action :update_epp_session, if: -> { signed_in? }
+    before_action :enforce_epp_session_timeout, if: :signed_in?
+    before_action :iptables_counter_update, if: :signed_in?
 
     around_action :wrap_exceptions
 
@@ -349,32 +350,22 @@ module Epp
       raise 'EPP session id is empty' unless epp_session_id.present?
     end
 
-    def update_epp_session
-      iptables_counter_update
-
-      if session_timeout_reached?
-        @api_user = current_user # cache current_user for logging
-        epp_session.destroy
-
+    def enforce_epp_session_timeout
+      if epp_session.timed_out?
         epp_errors << {
-          msg: t('session_timeout'),
-          code: '2201'
+          code: '2201',
+          msg: 'Authorization error: Session timeout',
         }
-
-        handle_errors and return
+        handle_errors
+        epp_session.destroy!
       else
-        epp_session.update_column(:updated_at, Time.zone.now)
+        epp_session.update_last_access
       end
-    end
-
-    def session_timeout_reached?
-      timeout = 5.minutes
-      epp_session.updated_at < (Time.zone.now - timeout)
     end
 
     def iptables_counter_update
       return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
-      return if current_user.blank?
+
       counter_update(current_user.registrar_code, ENV['iptables_server_ip'])
     end
 

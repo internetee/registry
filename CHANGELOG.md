@@ -1,3 +1,8 @@
+03.09.2020
+* Refactored session timeout management [#711](https://github.com/internetee/registry/issues/711)
+* Improved error handling for epp requests without proper session [#1276](https://github.com/internetee/registry/pull/1276)
+* Refactored legal document epp extension [#1451](https://github.com/internetee/registry/pull/1451)
+
 01.09.2020
 * Removed some unused settings from admin [#1668](https://github.com/internetee/registry/issues/1668)
 

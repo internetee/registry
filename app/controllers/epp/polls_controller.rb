@@ -1,8 +1,7 @@
 module Epp
   class PollsController < BaseController
-    skip_authorization_check # TODO: move authorization under ability
-
     def poll
+      authorize! :manage, :poll
       req_poll if params[:parsed_frame].css('poll').first['op'] == 'req'
       ack_poll if params[:parsed_frame].css('poll').first['op'] == 'ack'
     end
