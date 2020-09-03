@@ -27,9 +27,11 @@ module Concerns
       private
 
       def inactive?
-        return (created_at <= inactivity_period.ago) unless DomainVersion.was_contact_linked?(id)
+        if DomainVersion.contact_unlinked_more_than?(contact_id: id, period: inactivity_period)
+          return true
+        end
 
-        DomainVersion.contact_unlinked_more_than?(contact_id: id, period: inactivity_period)
+        DomainVersion.was_contact_linked?(id) ? false : created_at <= inactivity_period.ago
       end
     end
   end
