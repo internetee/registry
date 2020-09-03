@@ -36,7 +36,7 @@ class ArchiveContactsTaskTest < ActiveSupport::TestCase
 
   def eliminate_effect_of_all_contacts_except(contact)
     Contact.connection.disable_referential_integrity do
-      Contact.delete_all("id != #{contact.id}")
+      Contact.where("id != #{contact.id}").delete_all
     end
   end
 

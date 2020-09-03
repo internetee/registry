@@ -265,9 +265,8 @@ class ContactTest < ActiveSupport::TestCase
 
   def test_unlinked_scope_skips_contact_that_is_linked_as_registrant
     contact = unlinked_contact
-    domains(:shop).update_columns(registrant_id: contact.becomes(Registrant))
+    domains(:shop).update_columns(registrant_id: contact.becomes(Registrant).id)
 
-    reload
     assert Contact.unlinked.exclude?(contact), 'Contact should be excluded'
   end
 
