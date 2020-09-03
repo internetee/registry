@@ -13,7 +13,8 @@ class ArchiveContactsTaskTest < ActiveSupport::TestCase
     contact = archivable_contact
     eliminate_effect_of_all_contacts_except(contact)
 
-    expected_output = "Contact ##{contact.id} (code: #{contact.code}) is archived\n" \
+    expected_output = "Found archivable contact id(#{contact.id}), code (#{contact.code})\n" \
+                      "Archiving contact: id(#{contact.id}), code(#{contact.code})\n" \
                       "Archived total: 1\n"
     assert_output(expected_output) { run_task }
   end

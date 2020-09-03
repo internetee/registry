@@ -12,7 +12,7 @@ module Concerns
       def archivable?(post: false)
         inactive = inactive?
 
-        log("Found archivable contact id(#{id}), code (#{code})") if inactive && !post
+        puts "Found archivable contact id(#{id}), code (#{code})" if inactive && !post
 
         inactive
       end
@@ -37,11 +37,6 @@ module Concerns
 
       def inactivity_period
         Setting.orphans_contacts_in_months.months
-      end
-
-      def log(msg)
-        @logger ||= Logger.new(STDOUT)
-        @logger.info(msg)
       end
     end
   end
