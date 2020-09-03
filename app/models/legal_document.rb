@@ -1,5 +1,4 @@
 class LegalDocument < ApplicationRecord
-  cattr_accessor :explicitly_write_file
   include EppErrors
   MIN_BODY_SIZE = (1.37 * 3.kilobytes).ceil
 
@@ -44,7 +43,7 @@ class LegalDocument < ApplicationRecord
         break unless File.file?(path)
     end
 
-    File.open(path, 'wb') { |f| f.write(binary) } if !Rails.env.test? || self.class.explicitly_write_file
+    File.open(path, 'wb') { |f| f.write(binary) } unless Rails.env.test?
     self.path = path
     self.checksum = digest
   end
