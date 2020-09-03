@@ -32,12 +32,15 @@ class DirectoInvoiceForwardJob < Que::Job
       next unless registrar.cash_account
 
       @client = new_directo_client
-      summary = registrar.monthly_summary(month: @month)
-      @client.invoices.add_with_schema(invoice: summary, schema: 'summary') unless summary.nil?
-      next unless @client.invoices.count.positive?
-
-      sync_with_directo
+      send_invoice_for_registrar(registrar)
     end
+  end
+
+  def send_invoice_for_registrar(registrar)
+    summary = registrar.monthly_summary(month: @month)
+    @client.invoices.add_with_schema(invoice: summary, schema: 'summary') unless summary.nil?
+
+    sync_with_directo if @client.invoices.count.positive?
   end
 
   def assign_monthly_numbers
