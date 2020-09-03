@@ -22,7 +22,7 @@ class ArchiveContactsTaskTest < ActiveSupport::TestCase
 
   def archivable_contact
     contact = contacts(:john)
-    Contact.inactivity_period = 0.seconds
+    Setting.orphans_contacts_in_months = 0
     DomainVersion.delete_all
 
     other_contact = contacts(:william)

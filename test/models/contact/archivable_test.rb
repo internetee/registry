@@ -14,7 +14,7 @@ class ArchivableContactTest < ActiveSupport::TestCase
   end
 
   def test_contact_is_archivable_when_it_was_never_linked_and_inactivity_period_has_passed
-    Contact.inactivity_period = 1.second
+    Setting.orphans_contacts_in_months = 0
     @contact.created_at = Time.zone.parse('2010-07-05 00:00:00')
     travel_to Time.zone.parse('2010-07-05 00:00:01')
 
@@ -24,7 +24,7 @@ class ArchivableContactTest < ActiveSupport::TestCase
   end
 
   def test_contact_is_not_archivable_when_it_was_never_linked_and_inactivity_period_has_not_passed
-    Contact.inactivity_period = 1.second
+    Setting.orphans_contacts_in_months = 5
     @contact.created_at = Time.zone.parse('2010-07-05')
     travel_to Time.zone.parse('2010-07-05')
 
@@ -62,7 +62,7 @@ class ArchivableContactTest < ActiveSupport::TestCase
 
   def archivable_contact
     contact = contacts(:john)
-    Contact.inactivity_period = 0.seconds
+    Setting.orphans_contacts_in_months = 0
     DomainVersion.delete_all
 
     other_contact = contacts(:william)
@@ -75,7 +75,7 @@ class ArchivableContactTest < ActiveSupport::TestCase
   end
 
   def unarchivable_contact
-    Contact.inactivity_period = 99.years
+    Setting.orphans_contacts_in_months = 1188
     @contact
   end
 end

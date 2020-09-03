@@ -3,11 +3,6 @@ module Concerns
     module Archivable
       extend ActiveSupport::Concern
 
-      included do
-        class_attribute :inactivity_period, instance_predicate: false, instance_writer: false
-        self.inactivity_period = Setting.orphans_contacts_in_months.months
-      end
-
       class_methods do
         def archivable
           unlinked.find_each.select(&:archivable?)
@@ -32,6 +27,10 @@ module Concerns
         end
 
         DomainVersion.was_contact_linked?(id) ? false : created_at <= inactivity_period.ago
+      end
+
+      def inactivity_period
+        Setting.orphans_contacts_in_months.months
       end
     end
   end
