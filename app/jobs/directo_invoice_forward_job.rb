@@ -2,13 +2,14 @@ class DirectoInvoiceForwardJob < Que::Job
   def run(monthly: false, dry: false)
     @dry = dry
     (@month = Time.zone.now - 1.month) if monthly
-    api_url = ENV['directo_invoice_url']
-    sales_agent = Setting.directo_sales_agent
-    payment_term = Setting.directo_receipt_payment_term
-    @prepayment_product_id = Setting.directo_receipt_product_name
 
-    @client = DirectoApi::Client.new(api_url, sales_agent, payment_term)
+    @client = new_directo_client
     monthly ? send_monthly_invoices : send_receipts
+  end
+
+  def new_directo_client
+    DirectoApi::Client.new(ENV['directo_invoice_url'], Setting.directo_sales_agent,
+                           Setting.directo_receipt_payment_term)
   end
 
   def send_receipts
@@ -28,20 +29,15 @@ class DirectoInvoiceForwardJob < Que::Job
 
   def send_monthly_invoices
     Registrar.where.not(test_registrar: true).find_each do |registrar|
-      @client = DirectoApi::Client.new(api_url, sales_agent, payment_term)
-      fetch_monthly_summary(registrar: registrar)
+      next unless registrar.cash_account
+
+      @client = new_directo_client
+      summary = registrar.monthly_summary(month: @month)
+      @client.invoices.add_with_schema(invoice: summary, schema: 'summary') unless summary.nil?
       next unless @client.invoices.count.positive?
 
       sync_with_directo
     end
-  end
-
-  def fetch_monthly_summary(registrar:)
-    return unless registrar.cash_account
-
-    Rails.logger.info "Fetching monthly summary for registrar #{registrar.name}"
-    summary = registrar.monthly_summary(month: @month)
-    @client.invoices.add_with_schema(invoice: summary, schema: 'summary') unless summary.nil?
   end
 
   def assign_monthly_numbers
