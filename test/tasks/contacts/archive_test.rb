@@ -9,17 +9,6 @@ class ArchiveContactsTaskTest < ActiveSupport::TestCase
     end
   end
 
-  def test_output
-    contact = archivable_contact
-    eliminate_effect_of_all_contacts_except(contact)
-
-    expected_output = "Found 1 unlinked contacts. Starting to archive.\n" \
-                      "Found archivable contact id(#{contact.id}), code (#{contact.code})\n" \
-                      "Archiving contact: id(#{contact.id}), code(#{contact.code})\n" \
-                      "Archived total: 1\n"
-    assert_output(expected_output) { run_task }
-  end
-
   private
 
   def archivable_contact

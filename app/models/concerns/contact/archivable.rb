@@ -31,7 +31,8 @@ module Concerns
       def notify_registrar_about_archivation
         registrar.notifications.create!(
           text: I18n.t('contact_has_been_archived',
-                       contact_code: code, orphan_months: Setting.orphans_contacts_in_months))
+                       contact_code: code, orphan_months: Setting.orphans_contacts_in_months)
+        )
       end
 
       def inactive?
