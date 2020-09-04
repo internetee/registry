@@ -35,7 +35,8 @@ class EppLoginTest < EppTestCase
       </epp>
     XML
     assert_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{new_session_id}"
+      post '/epp/session/login', params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => "session=#{new_session_id}" }
     end
     assert_epp_response :completed_successfully
     session = EppSession.last
@@ -70,7 +71,8 @@ class EppLoginTest < EppTestCase
     XML
 
     assert_no_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, HTTP_COOKIE: "session=#{session.session_id}"
+      post '/epp/session/login', params: { frame: request_xml },
+           headers: { HTTP_COOKIE: "session=#{session.session_id}" }
     end
     assert_epp_response :use_error
   end
@@ -103,7 +105,8 @@ class EppLoginTest < EppTestCase
     XML
 
     assert_no_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new-session-id'
+      post '/epp/session/login', params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=new-session-id' }
     end
     assert_epp_response :authentication_error_server_closing_connection
   end
@@ -135,7 +138,8 @@ class EppLoginTest < EppTestCase
         </command>
       </epp>
     XML
-    post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new-session-id'
+    post '/epp/session/login', params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=new-session-id' }
     user.reload
 
     assert_epp_response :completed_successfully
@@ -171,7 +175,8 @@ class EppLoginTest < EppTestCase
     XML
 
     assert_no_difference 'EppSession.count' do
-      post '/epp/session/login', { frame: request_xml }, 'HTTP_COOKIE' => 'session=new-session-id'
+      post '/epp/session/login', params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=new-session-id' }
     end
     assert_epp_response :session_limit_exceeded_server_closing_connection
   end

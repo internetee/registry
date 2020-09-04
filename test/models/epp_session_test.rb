@@ -53,7 +53,7 @@ class EppSessionTest < ActiveSupport::TestCase
     travel_to Time.zone.parse('2010-07-05')
     EppSession.delete_all
 
-    EppSession.limit_per_registrar.times do
+    EppSession.sessions_per_registrar.times do
       EppSession.create!(session_id: SecureRandom.hex,
                          user: users(:api_goodnames),
                          updated_at: Time.zone.parse('2010-07-05'))
