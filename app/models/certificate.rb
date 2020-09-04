@@ -132,12 +132,16 @@ class Certificate < ApplicationRecord
   end
 
   class << self
+
+    def tostdout(message)
+      time = Time.zone.now.utc
+      STDOUT << "#{time} - #{message}\n" unless Rails.env.test?
+    end
     def update_crl
-      start = "#{Time.zone.now.utc} - Running crlupdater\n"
-      stop = "#{Time.zone.now.utc} - Finished running crlupdater\n"
-      STDOUT << start unless Rails.env.test?
+
+      tostdout('Running crlupdater')
       system('/bin/bash', ENV['crl_updater_path'].to_s)
-      STDOUT << stop unless Rails.env.test?
+      tostdout('Finished running crlupdater')
     end
 
     def parse_md_from_string(crt)
