@@ -1,3 +1,7 @@
+04.09.2020
+* Removed reduntant domains.registered_at db column [#1445](https://github.com/internetee/registry/pull/1445)
+* Fixed poll request ip whitelist issue [#1672](https://github.com/internetee/registry/pull/1672)
+
 03.09.2020
 * Refactored session timeout management [#711](https://github.com/internetee/registry/issues/711)
 * Improved error handling for epp requests without proper session [#1276](https://github.com/internetee/registry/pull/1276)
