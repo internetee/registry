@@ -58,6 +58,16 @@ class ArchivableContactTest < ActiveSupport::TestCase
     assert_equal 'Contact cannot be archived', e.message
   end
 
+  def test_sends_poll_msg_to_registrar_after_archivation
+    contact = archivable_contact
+    registrar = contact.registrar
+    contact.archive
+
+    assert_equal(I18n.t(:contact_has_been_archived, contact_code: contact.code,
+                                                    orphan_months: Setting.orphans_contacts_in_months),
+                 registrar.notifications.last.text)
+  end
+
   private
 
   def archivable_contact
