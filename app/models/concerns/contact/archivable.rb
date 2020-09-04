@@ -17,15 +17,22 @@ module Concerns
         inactive
       end
 
-      def archive(verified: false)
+      def archive(verified: false, notify: true)
         unless verified
           raise 'Contact cannot be archived' unless archivable?(post: true)
         end
 
+        notify_registrar_about_archivation if notify
         destroy!
       end
 
       private
+
+      def notify_registrar_about_archivation
+        registrar.notifications.create!(text: I18n.t('contact_has_been_archived',
+                                                contact_code: code,
+                                                orphan_months: Setting.orphans_contacts_in_months))
+      end
 
       def inactive?
         if DomainVersion.contact_unlinked_more_than?(contact_id: id, period: inactivity_period)
