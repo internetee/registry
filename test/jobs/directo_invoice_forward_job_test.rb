@@ -151,4 +151,42 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
       DirectoInvoiceForwardJob.run(monthly: true, dry: false)
     end
   end
+
+  def test_sends_each_monthly_invoice_separately
+    activity = account_activities(:one)
+    price = billing_prices(:create_one_year)
+    price.update(duration: '3 years')
+    activity.update(activity_type: 'create', price: price)
+
+    # Creating account activity for second action
+    another_activity = activity.dup
+    another_activity.account = accounts(:two)
+
+    AccountActivity.skip_callback(:create, :after, :update_balance)
+    another_activity.created_at = Time.zone.parse('2010-07-05 10:00')
+    another_activity.save
+    AccountActivity.set_callback(:create, :after, :update_balance)
+
+    response = <<-XML
+    <?xml version="1.0" encoding="UTF-8"?>
+    <results>
+      <Result Type="0" Desc="OK" docid="309902" doctype="ARVE" submit="Invoices"/>
+    </results>
+    XML
+
+    first_registrar_stub = stub_request(:post, ENV['directo_invoice_url']).with do |request|
+      body = CGI.unescape(request.body)
+      (body.include? 'StartDate') && (body.include? 'EndDate') && (body.include? 'bestnames')
+    end.to_return(status: 200, body: response)
+
+    second_registrar_stub = stub_request(:post, ENV['directo_invoice_url']).with do |request|
+      body = CGI.unescape(request.body)
+      (body.include? 'StartDate') && (body.include? 'EndDate') && (body.include? 'goodnames')
+    end.to_return(status: 200, body: response)
+
+    DirectoInvoiceForwardJob.run(monthly: true, dry: false)
+
+    assert_requested first_registrar_stub
+    assert_requested second_registrar_stub
+  end
 end
