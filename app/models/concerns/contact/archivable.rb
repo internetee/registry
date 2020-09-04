@@ -12,7 +12,7 @@ module Concerns
       def archivable?(post: false)
         inactive = inactive?
 
-        puts "Found archivable contact id(#{id}), code (#{code})" if inactive && !post
+        log("Found archivable contact id(#{id}), code (#{code})") if inactive && !post
 
         inactive
       end
@@ -29,9 +29,9 @@ module Concerns
       private
 
       def notify_registrar_about_archivation
-        registrar.notifications.create!(text: I18n.t('contact_has_been_archived',
-                                                contact_code: code,
-                                                orphan_months: Setting.orphans_contacts_in_months))
+        registrar.notifications.create!(
+          text: I18n.t('contact_has_been_archived',
+                       contact_code: code, orphan_months: Setting.orphans_contacts_in_months))
       end
 
       def inactive?
@@ -44,6 +44,11 @@ module Concerns
 
       def inactivity_period
         Setting.orphans_contacts_in_months.months
+      end
+
+      def log(msg)
+        @log ||= Logger.new(STDOUT)
+        @log.info(msg)
       end
     end
   end

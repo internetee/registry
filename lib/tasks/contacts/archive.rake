@@ -5,17 +5,17 @@ namespace :contacts do
     unlinked_contacts = contacts_start_point(args[:track_id])
 
     counter = 0
-    puts "Found #{unlinked_contacts.count} unlinked contacts. Starting to archive."
+    log("Found #{unlinked_contacts.count} unlinked contacts. Starting to archive.")
 
     unlinked_contacts.each do |contact|
       next unless contact.archivable?
 
-      puts "Archiving contact: id(#{contact.id}), code(#{contact.code})"
+      log("Archiving contact: id(#{contact.id}), code(#{contact.code})")
       contact.archive(verified: true)
       counter += 1
     end
 
-    puts "Archived total: #{counter}"
+    log("Archived total: #{counter}")
   end
 
   def contacts_start_point(track_id = nil)
@@ -23,5 +23,10 @@ namespace :contacts do
     return Contact.unlinked unless track_id
 
     Contact.unlinked.where("id > #{track_id}")
+  end
+
+  def log(msg)
+    @log ||= Logger.new(STDOUT)
+    @log.info(msg)
   end
 end
