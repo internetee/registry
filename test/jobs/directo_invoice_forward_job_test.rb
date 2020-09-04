@@ -153,6 +153,8 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
   end
 
   def test_sends_each_monthly_invoice_separately
+    WebMock.reset!
+
     activity = account_activities(:one)
     price = billing_prices(:create_one_year)
     price.update(duration: '3 years')
