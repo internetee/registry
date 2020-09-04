@@ -5,7 +5,6 @@ shop:
   registrar: bestnames
   registrant: john
   transfer_code: 65078d5
-  registered_at: <%= Time.zone.parse('2010-07-04').to_s(:db) %>
   valid_to: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
   outzone_at: <%= Time.zone.parse('2010-07-06').to_s(:db) %>
   delete_date: 2010-07-07

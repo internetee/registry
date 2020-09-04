@@ -425,6 +425,12 @@ class DomainTest < ActiveSupport::TestCase
     assert_not(@domain.force_delete_scheduled?)
   end
 
+  def test_aliases_registered_at_to_created_at
+    created_at = Time.zone.parse('2010-07-05 10:00')
+    domain = Domain.new(created_at: created_at)
+    assert_equal created_at, domain.registered_at
+  end
+
   private
 
   def valid_domain
