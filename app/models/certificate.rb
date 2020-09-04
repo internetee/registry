@@ -132,13 +132,12 @@ class Certificate < ApplicationRecord
   end
 
   class << self
-
     def tostdout(message)
       time = Time.zone.now.utc
       STDOUT << "#{time} - #{message}\n" unless Rails.env.test?
     end
-    def update_crl
 
+    def update_crl
       tostdout('Running crlupdater')
       system('/bin/bash', ENV['crl_updater_path'].to_s)
       tostdout('Finished running crlupdater')
