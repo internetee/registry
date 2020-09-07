@@ -112,6 +112,15 @@ class Invoice < ApplicationRecord
     e_invoice_sent_at.present?
   end
 
+  def self.create_from_transaction!(transaction)
+    registrar_user = Registrar.find_by(reference_no: transasction.parsed_ref_number)
+    return unless registrar_user
+
+    registrar_user.issue_prepayment_invoice(amount: transaction.sum,
+                                            description: 'Direct top-up via bank transfer',
+                                            paid: true)
+  end
+
   private
 
   def apply_default_buyer_vat_no

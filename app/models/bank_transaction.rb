@@ -31,12 +31,18 @@ class BankTransaction < ApplicationRecord
     @registrar ||= Invoice.find_by(reference_no: parsed_ref_number)&.buyer
   end
 
+  def autobindable?
+    return false if binded?
+    return false unless registrar
+    return false unless invoice
+    return false unless invoice.payable?
+
+    true
+  end
+
   # For successful binding, reference number, invoice id and sum must match with the invoice
   def autobind_invoice(manual: false)
-    return if binded?
-    return unless registrar
-    return unless invoice
-    return unless invoice.payable?
+    return unless autobindable?
 
     channel = if manual
                 'admin_payment'
