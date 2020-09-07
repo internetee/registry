@@ -113,7 +113,7 @@ class Invoice < ApplicationRecord
   end
 
   def self.create_from_transaction!(transaction)
-    registrar_user = Registrar.find_by(reference_no: transasction.parsed_ref_number)
+    registrar_user = Registrar.find_by(reference_no: transaction.parsed_ref_number)
     return unless registrar_user
 
     registrar_user.issue_prepayment_invoice(amount: transaction.sum,

@@ -32,12 +32,9 @@ class BankTransaction < ApplicationRecord
   end
 
   def autobindable?
-    return false if binded?
-    return false unless registrar
-    return false unless invoice
-    return false unless invoice.payable?
-
-    true
+    binded? && registrar.present && invoice.payable? ? true : false
+  rescue NoMethodError
+    false
   end
 
   # For successful binding, reference number, invoice id and sum must match with the invoice
@@ -113,6 +110,10 @@ class BankTransaction < ApplicationRecord
     end
   end
 
+  def parsed_ref_number
+    reference_no || ref_number_from_description
+  end
+
   private
 
   def reset_pending_registrar_balance_reload
@@ -120,10 +121,6 @@ class BankTransaction < ApplicationRecord
 
     registrar.settings['balance_auto_reload'].delete('pending')
     registrar.save!
-  end
-
-  def parsed_ref_number
-    reference_no || ref_number_from_description
   end
 
   def ref_number_from_description
