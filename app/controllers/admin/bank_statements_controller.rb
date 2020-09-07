@@ -2,7 +2,7 @@ module Admin
   class BankStatementsController < BaseController
     load_and_authorize_resource
 
-    before_action :set_bank_statement, only: [:show, :bind_invoices]
+    before_action :set_bank_statement, only: %i[show bind_invoices]
 
     def index
       @q = BankStatement.search(params[:q])
