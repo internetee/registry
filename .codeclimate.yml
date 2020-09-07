@@ -29,6 +29,7 @@ checks:
       threshold: 40
 exclude_patterns:
   - "app/models/version/"
+  - "app/models/ability.rb/"
   - "bin/"
   - "config/"
   - "db/"

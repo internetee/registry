@@ -31,21 +31,22 @@ class Ability
   end
 
   def epp # Registrar/api_user dynamic role
-    if @user.registrar.api_ip_white?(@ip)
-      can :manage, Depp::Contact
-      can :manage, :xml_console
-      can :manage,   Depp::Domain
-    end
-
-    # Poll
-    can :manage, :poll
-
     # REPP
     can(:manage, :repp)
 
     # EPP
     can(:create, :epp_login) # billing can establish epp connection in order to login
     # can(:create, :epp_request)
+
+    return unless @user.registrar.api_ip_white?(@ip)
+
+    # Web Interface
+    can :manage, Depp::Contact
+    can :manage, :xml_console
+    can :manage,   Depp::Domain
+
+    # Epp::Poll
+    can :manage, :poll
 
     # Epp::Domain
     can(:info, Epp::Domain)

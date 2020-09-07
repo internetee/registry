@@ -25,6 +25,10 @@ module Epp
 
     protected
 
+    def current_ability
+      @current_ability ||= Ability.new(current_user, request.remote_ip)
+    end
+
     def respond_with_command_failed_error(exception)
       epp_errors << {
         code: '2400',
