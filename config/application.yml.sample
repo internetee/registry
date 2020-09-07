@@ -156,6 +156,9 @@ lhv_dev_mode: 'false'
 
 epp_session_timeout_seconds: '300'
 
+# Email validation setting for Truemail gem. Possible values: 'regex', 'mx', 'smtp'
+default_email_validation_type: 'regex'
+
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:
   payments_seb_bank_certificate: 'test/fixtures/files/seb_bank_cert.pem'
