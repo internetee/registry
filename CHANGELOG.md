@@ -1,3 +1,9 @@
+04.09.2020
+* Removed reduntant domains.registered_at db column [#1445](https://github.com/internetee/registry/pull/1445)
+* Certificate revocation lists are now hanlded outside of the application code [#1662](https://github.com/internetee/registry/pull/1662)
+* Monthly invoices are sent one by one to elliminate reply delay from accounting system [#1671](https://github.com/internetee/registry/pull/1671)
+* Fixed poll request ip whitelist issue [#1672](https://github.com/internetee/registry/pull/1672)
+
 03.09.2020
 * Refactored session timeout management [#711](https://github.com/internetee/registry/issues/711)
 * Improved error handling for epp requests without proper session [#1276](https://github.com/internetee/registry/pull/1276)

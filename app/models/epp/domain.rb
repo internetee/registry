@@ -41,7 +41,6 @@ class Epp::Domain < Domain
       domain = Epp::Domain.new
       domain.attributes = domain.attrs_from(frame, current_user)
       domain.attach_default_contacts
-      domain.registered_at = Time.zone.now
 
       period = domain.period.to_i
       plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym
@@ -150,7 +149,6 @@ class Epp::Domain < Domain
 
     at[:name] = frame.css('name').text if new_record?
     at[:registrar_id] = current_user.registrar.try(:id)
-    at[:registered_at] = Time.zone.now if new_record?
 
     period = frame.css('period').text
     at[:period] = (period.to_i == 0) ? 1 : period.to_i

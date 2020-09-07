@@ -18,6 +18,7 @@ class Domain < ApplicationRecord
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
   alias_attribute :auth_info, :transfer_code # Old attribute name; for PaperTrail
+  alias_attribute :registered_at, :created_at
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
@@ -627,7 +628,7 @@ class Domain < ApplicationRecord
   def as_json(_options)
     hash = super
     hash['auth_info'] = hash.delete('transfer_code') # API v1 requirement
-    hash['valid_from'] = hash['registered_at'] # API v1 requirement
+    hash['valid_from'] = hash['created_at'] # API v1 requirement
     hash.delete('statuses_before_force_delete')
     hash
   end

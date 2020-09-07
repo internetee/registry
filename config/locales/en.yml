@@ -195,7 +195,6 @@ en:
   registrar_name: 'Registrar'
   owner: 'Registrant'
   domain_details: 'Domain details'
-  registered_at: 'Registered at'
   password: 'Password'
   valid_from: 'Valid from'
   general: 'General'
