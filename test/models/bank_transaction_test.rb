@@ -26,14 +26,12 @@ class BankTransactionTest < ActiveSupport::TestCase
     another_item.save
     another_invoice.reload
 
-    first_transaction = BankTransaction.new(description: 'invoice #2221',
-                                            sum: 10,
+    first_transaction = BankTransaction.new(sum: 10,
                                             description: 'Order nr 1 from registrar 1234567 second number 2345678')
 
     first_transaction.create_activity(another_invoice.buyer, another_invoice)
 
-    transaction = BankTransaction.new(description: 'invoice #2222',
-                                      sum: 10,
+    transaction = BankTransaction.new(sum: 10,
                                       description: 'Order nr 1 from registrar 1234567 second number 2345678')
 
     assert_difference 'AccountActivity.count' do
@@ -54,8 +52,7 @@ class BankTransactionTest < ActiveSupport::TestCase
     another_invoice.reload
     another_invoice.update(reference_no: '1234567', number: '2221', cancelled_at: Time.zone.now)
 
-    transaction = BankTransaction.new(description: 'invoice #2222',
-                                      sum: 10,
+    transaction = BankTransaction.new(sum: 10,
                                       description: 'Order nr 1 from registrar 1234567 second number 2345678')
 
     assert_difference 'AccountActivity.count' do
@@ -74,8 +71,7 @@ class BankTransactionTest < ActiveSupport::TestCase
     another_item.save
     another_invoice.reload
 
-    transaction = BankTransaction.new(description: 'invoice #2222',
-                                      sum: 10,
+    transaction = BankTransaction.new(sum: 10,
                                       description: 'Order nr 1 from registrar 1234567 second number 2345678')
 
     assert_difference 'AccountActivity.count' do
@@ -90,12 +86,23 @@ class BankTransactionTest < ActiveSupport::TestCase
 
   def test_matches_against_invoice_nubmber_and_reference_number_in_description
     create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
-    transaction = BankTransaction.new(description: 'invoice #2222',
-                                      sum: 10,
+    transaction = BankTransaction.new(sum: 10,
                                       description: 'Order nr 1 from registrar 1234567 second number 2345678')
 
     assert_difference 'AccountActivity.count' do
       transaction.autobind_invoice
+    end
+  end
+
+  def test_no_errors_if_no_valid_refnumber_in_description
+    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+    transaction = BankTransaction.new(sum: 10,
+                                      description: 'Order nr 1 from registrar 123456')
+
+    assert_no_difference 'AccountActivity.count' do
+      assert_nothing_raised do
+        transaction.autobind_invoice
+      end
     end
   end
 
