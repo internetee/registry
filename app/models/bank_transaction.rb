@@ -32,7 +32,7 @@ class BankTransaction < ApplicationRecord
   end
 
   def autobindable?
-    binded? && registrar.present && invoice.payable? ? true : false
+    !binded? && registrar && invoice.payable? ? true : false
   rescue NoMethodError
     false
   end
