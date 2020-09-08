@@ -27,7 +27,6 @@ smtp_authentication: 'plain' # 'plain', 'login', 'cram_md5'
 #
 app_name: '.EE Registry'
 zonefile_export_dir: 'export/zonefiles'
-bank_statement_import_dir: 'import/bank_statements'
 legal_documents_dir: 'import/legal_documents'
 time_zone: 'Tallinn' # more zones by rake time:zones:all
 

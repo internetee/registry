@@ -121,6 +121,7 @@ class BankTransaction < ApplicationRecord
   end
 
   def ref_number_from_description
-    /(\d{7})/.match(description)[0]
+    match_data = /(\d{7})/.match(description)
+    match_data[0] if match_data.present?
   end
 end

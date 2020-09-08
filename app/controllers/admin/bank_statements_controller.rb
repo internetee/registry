@@ -2,7 +2,7 @@ module Admin
   class BankStatementsController < BaseController
     load_and_authorize_resource
 
-    before_action :set_bank_statement, only: [:show, :download_import_file, :bind_invoices]
+    before_action :set_bank_statement, only: %i[show bind_invoices]
 
     def index
       @q = BankStatement.search(params[:q])
@@ -43,22 +43,6 @@ module Admin
       end
     end
 
-    def import
-      @bank_statement = BankStatement.new
-    end
-
-    def create_from_import
-      @bank_statement = BankStatement.new(bank_statement_params)
-
-      if @bank_statement.import
-        flash[:notice] = I18n.t('record_created')
-        redirect_to [:admin, @bank_statement]
-      else
-        flash.now[:alert] = I18n.t('failed_to_create_record')
-        render 'new'
-      end
-    end
-
     def bind_invoices
       @bank_statement.bind_invoices(manual: true)
 
@@ -69,11 +53,6 @@ module Admin
       redirect_to [:admin, @bank_statement]
     end
 
-    def download_import_file
-      filename = @bank_statement.import_file_path.split('/').last
-      send_data File.open(@bank_statement.import_file_path, 'r').read, filename: filename
-    end
-
     private
 
     def set_bank_statement
@@ -81,7 +60,7 @@ module Admin
     end
 
     def bank_statement_params
-      params.require(:bank_statement).permit(:th6_file, :bank_code, :iban, bank_transactions_attributes: [
+      params.require(:bank_statement).permit(:bank_code, :iban, bank_transactions_attributes: [
         :description, :sum, :currency, :reference_no, :paid_at
       ])
     end

@@ -466,7 +466,6 @@ en:
   paid_at: 'Paid at'
   invoice: 'Invoice'
   bank_statements: 'Bank statements'
-  import_th6_bank_statement: 'Import TH6 bank statement'
   back_to_bank_statements: 'Back to bank statements'
   back_to_bank_statement: 'Back to bank statement'
   back_to_billing: 'Back to billing'
@@ -583,7 +582,6 @@ en:
   valid: Valid
   object_is_not_eligible_for_renewal: 'Object is not eligible for renewal'
   object_is_not_holded: 'Object is not holded'
-  bank_statement_desc: 'Import file row will match only when matching following attributes: <b><br>ref number<br>payment amount<br>invoice number (the first numerical value in comment field)</b>.'
   create_bank_statement: 'Create bank statement'
   create_bank_transaction: 'Create bank transaction'
   create_new_invoice: 'Create new invoice'
