@@ -1,5 +1,6 @@
 08.09.2020
 * Removed bank statement import option [#1674](https://github.com/internetee/registry/pull/1674)
+* Fixed error with reference nr not being found in the transaction [#1677](https://github.com/internetee/registry/issues/1677)
 
 04.09.2020
 * Removed reduntant domains.registered_at db column [#1445](https://github.com/internetee/registry/pull/1445)
