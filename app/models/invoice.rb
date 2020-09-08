@@ -99,8 +99,8 @@ class Invoice < ApplicationRecord
     generator.as_pdf
   end
 
-  def to_e_invoice
-    generator = Invoice::EInvoiceGenerator.new(self)
+  def to_e_invoice(payable: true)
+    generator = Invoice::EInvoiceGenerator.new(self, payable: payable)
     generator.generate
   end
 
@@ -120,7 +120,7 @@ class Invoice < ApplicationRecord
     wo_vat = transaction.sum / (1 + (vat / 100))
     registrar_user.issue_prepayment_invoice(amount: wo_vat,
                                             description: 'Direct top-up via bank transfer',
-                                            paid: true)
+                                            payable: false)
   end
 
   private

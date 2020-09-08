@@ -54,7 +54,7 @@ class Registrar < ApplicationRecord
     end
   end
 
-  def issue_prepayment_invoice(amount, description = nil, paid: false)
+  def issue_prepayment_invoice(amount, description = nil, payable: true)
     vat_rate = ::Invoice::VatRateCalculator.new(registrar: self).calculate
 
     invoice = invoices.create!(
@@ -99,7 +99,7 @@ class Registrar < ApplicationRecord
         }
       ]
     )
-    SendEInvoiceJob.enqueue(invoice.id) unless paid
+    SendEInvoiceJob.enqueue(invoice.id, payable: payable)
 
     invoice
   end

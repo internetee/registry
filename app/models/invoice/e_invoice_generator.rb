@@ -1,9 +1,11 @@
 class Invoice
   class EInvoiceGenerator
     attr_reader :invoice
+    attr_reader :payable
 
-    def initialize(invoice)
+    def initialize(invoice, payable)
       @invoice = invoice
+      @payable = payable
     end
 
     def generate
@@ -70,6 +72,7 @@ class Invoice
         i.total = invoice.total
         i.currency = invoice.currency
         i.delivery_channel = %i[internet_bank portal]
+        i.payable = payable
       end
 
       EInvoice::EInvoice.new(date: Time.zone.today, invoice: e_invoice_invoice)
