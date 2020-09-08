@@ -116,7 +116,9 @@ class Invoice < ApplicationRecord
     registrar_user = Registrar.find_by(reference_no: transaction.parsed_ref_number)
     return unless registrar_user
 
-    registrar_user.issue_prepayment_invoice(amount: transaction.sum,
+    vat = VatRateCalculator.new(registrar: registrar_user).calculate
+    wo_vat = transaction.sum / (1 + (vat / 100))
+    registrar_user.issue_prepayment_invoice(amount: wo_vat,
                                             description: 'Direct top-up via bank transfer',
                                             paid: true)
   end
