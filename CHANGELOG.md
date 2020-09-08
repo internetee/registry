@@ -1,3 +1,6 @@
+08.09.2020
+* Removed bank statement import option [#1674](https://github.com/internetee/registry/pull/1674)
+
 04.09.2020
 * Removed reduntant domains.registered_at db column [#1445](https://github.com/internetee/registry/pull/1445)
 * Certificate revocation lists are now hanlded outside of the application code [#1662](https://github.com/internetee/registry/pull/1662)
