@@ -18,8 +18,8 @@ GIT
 
 GIT
   remote: https://github.com/internetee/e_invoice.git
-  revision: b374ffd7be77b559b30c7a0210dc0df5ac3ed723
-  branch: master
+  revision: 8a1aea2a1f0d46e1a8f3145b7b46a1810318d229
+  branch: make-payable-configurable
   specs:
     e_invoice (0.1.0)
       builder (~> 3.2)
