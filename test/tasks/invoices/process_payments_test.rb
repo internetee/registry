@@ -94,6 +94,13 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
     end
   end
 
+  def test_topup_creates_invoice_with_total_of_transactioned_amount
+    registrar = registrars(:bestnames)
+    run_task
+
+    assert_equal 0.1, registrar.invoices.last.total
+  end
+
   def test_output
     assert_output "Transactions processed: 1\n" do
       run_task

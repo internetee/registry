@@ -109,4 +109,16 @@ class InvoiceTest < ActiveSupport::TestCase
                           seller_zip: nil)
     assert_equal 'street, city, state', invoice.seller_address
   end
+
+  def test_assumes_correct_sum_amount_when_created_by_transaction
+    registrar = registrars(:bestnames)
+
+    bank_transaction = bank_transactions(:one).dup
+    bank_transaction.reference_no = registrar.reference_no
+    bank_transaction.sum = 5
+    bank_transaction.save
+
+    invoice = Invoice.create_from_transaction!(bank_transaction)
+    assert_equal 5, invoice.total
+  end
 end
