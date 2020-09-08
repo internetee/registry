@@ -371,7 +371,6 @@ CREATE TABLE public.bank_statements (
     id integer NOT NULL,
     bank_code character varying,
     iban character varying,
-    import_file_path character varying,
     queried_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -4850,4 +4849,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200807110611'),
 ('20200811074839'),
 ('20200812090409'),
-('20200812125810');
+('20200812125810'),
+('20200908131554');
+
+

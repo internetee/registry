@@ -30,10 +30,6 @@
       %dt= t(:created_at)
       %dd= l(@bank_statement.created_at)
 
-      - if @bank_statement.import_file_path
-        %dt= t(:import_file)
-        %dd= link_to(t(:download), download_import_file_admin_bank_statement_path(@bank_statement))
-
 .row
   .col-sm-6
     %h3.text-center-xs
