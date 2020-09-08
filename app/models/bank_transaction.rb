@@ -41,11 +41,7 @@ class BankTransaction < ApplicationRecord
   def autobind_invoice(manual: false)
     return unless autobindable?
 
-    channel = if manual
-                'admin_payment'
-              else
-                'system_payment'
-              end
+    channel = manual ? 'admin_payment' : 'system_payment'
     create_internal_payment_record(channel: channel, invoice: invoice,
                                    registrar: registrar)
   end
