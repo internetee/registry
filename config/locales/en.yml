@@ -543,7 +543,7 @@ en:
   crt_or_csr_must_be_present: 'CRT or CSR must be present'
   ipv4_or_ipv6_must_be_present: 'IPv4 or IPv6 must be present'
   white_ip: 'White IP'
-  edit_white_ip: 'Edit white IP'
+  edit_white_ip: 'Edit white IP (might be IP or a netmask)'
   confirm_domain_delete: 'Confirm domain delete'
   reject_domain_delete: 'Reject domain delete'
   confirm_domain_registrant_update: 'Confirm domain registrant change'

@@ -2,13 +2,32 @@ class WhiteIp < ApplicationRecord
   include Versions
   belongs_to :registrar
 
-  validates :ipv4, format: { with: /\A(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\z/, allow_blank: true }
-  validates :ipv6, format: { with: /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/, allow_blank: true }
+  validate :valid_ipv4?
+  validate :valid_ipv6?
 
   validate :validate_ipv4_and_ipv6
   def validate_ipv4_and_ipv6
     return if ipv4.present? || ipv6.present?
     errors.add(:base, I18n.t(:ipv4_or_ipv6_must_be_present))
+  end
+
+  def valid_ipv4?
+    return if ipv4.blank?
+
+    errors.add(:ipv4, :invalid) unless valid_ip_addr?(ipv4)
+  end
+
+  def valid_ipv6?
+    return if ipv6.blank?
+
+    errors.add(:ipv6, :invalid) unless valid_ip_addr?(ipv6)
+  end
+
+  def valid_ip_addr?(ip)
+    IPAddr.new(ip)
+    true
+  rescue IPAddr::InvalidAddressError => _e
+    false
   end
 
   API = 'api'
@@ -23,8 +42,24 @@ class WhiteIp < ApplicationRecord
   end
 
   class << self
-    def include_ip?(ip)
-      where('ipv4 = :ip OR ipv6 = :ip', ip: ip).any?
+    def registrar_area_scope(registrar)
+      registrar.present? ? registrar.white_ips.registrar_area : registrar_area
     end
+
+    def api_scope(registrar)
+      registrar.present? ? registrar.white_ips.api : api
+    end
+
+    # rubocop:disable Style/CaseEquality
+    def include_ip?(ip:, scope: :api, registrar:)
+      logger.info "Checking whitelisting of ip #{ip}"
+      scoped = scope == :api ? api_scope(registrar) : registrar_area_scope(registrar)
+      whitelist = scoped.pluck(:ipv4, :ipv6).flatten.reject(&:blank?)
+                        .uniq.map { |white_ip| IPAddr.new(white_ip) }
+      check = whitelist.any? { |white_ip| white_ip === IPAddr.new(ip) }
+      logger.info "Check result is #{check}"
+      check
+    end
+    # rubocop:enable Style/CaseEquality
   end
 end

@@ -64,7 +64,8 @@ class Registrar
       return User.new unless idc
       possible_users = ApiUser.where(identity_code: idc) || User.new
       possible_users.each do |selected_user|
-        if selected_user.registrar.white_ips.registrar_area.include_ip?(request.ip)
+        registrar = selected_user.registrar
+        if WhiteIp.include_ip?(ip: request.ip, scope: :registrar_area, registrar: registrar)
           return selected_user
         end
       end

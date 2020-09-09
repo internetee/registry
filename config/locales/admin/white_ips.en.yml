@@ -2,4 +2,4 @@ en:
   admin:
     white_ips:
       new:
-        header: New whitelisted IP
+        header: New whitelisted IP (might be IP or a netmask)

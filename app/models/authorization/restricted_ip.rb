@@ -10,12 +10,12 @@ module Authorization
 
     def can_access_registrar_area?(registrar)
       return true unless self.class.enabled?
-      registrar.white_ips.registrar_area.include_ip?(ip)
+      WhiteIp.include_ip?(ip: ip, scope: :registrar_area, registrar: registrar)
     end
 
     def can_access_registrar_area_sign_in_page?
       return true unless self.class.enabled?
-      WhiteIp.registrar_area.include_ip?(ip)
+      WhiteIp.include_ip?(ip: ip, scope: :registrar_area, registrar: nil)
     end
 
     private
