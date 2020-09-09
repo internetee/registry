@@ -38,11 +38,7 @@ class BankTransaction < ApplicationRecord
     return unless invoice
     return unless invoice.payable?
 
-    channel = if manual
-                'admin_payment'
-              else
-                'system_payment'
-              end
+    channel = manual ? 'admin_payment' : 'system_payment'
     create_internal_payment_record(channel: channel, invoice: invoice,
                                    registrar: registrar)
   end

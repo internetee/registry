@@ -1,7 +1,7 @@
 module Billing
   class ReferenceNo
-    REGEXP = /\A\d{2,20}\z/
-    MULTI_REGEXP = /(\d{2,20})/
+    REGEXP = /\A\d{2,20}\z/.freeze
+    MULTI_REGEXP = /(\d{2,20})/.freeze
 
     def self.generate
       base = Base.generate
