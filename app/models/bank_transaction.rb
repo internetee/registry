@@ -121,7 +121,8 @@ class BankTransaction < ApplicationRecord
   end
 
   def ref_number_from_description
-    match_data = /(\d{7})/.match(description)
-    match_data[0] if match_data.present?
+    (Billing::ReferenceNo::MULTI_REGEXP.match(description) || []).captures.each do |match|
+      break match if match.length == 7 || Registrar.where(reference_no: match).present?
+    end
   end
 end
