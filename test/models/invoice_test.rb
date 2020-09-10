@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class InvoiceTest < ActiveSupport::TestCase
+  include ActionMailer::TestHelper
+
   setup do
     @invoice = invoices(:one)
   end
@@ -110,15 +112,32 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal 'street, city, state', invoice.seller_address
   end
 
-  def test_assumes_correct_sum_amount_when_created_by_transaction
+  def test_creates_invoice_with_bank_transaction_total
     registrar = registrars(:bestnames)
+    transaction = bank_transactions(:one).dup
+    transaction.reference_no = registrar.reference_no
+    transaction.sum = 250
 
-    bank_transaction = bank_transactions(:one).dup
-    bank_transaction.reference_no = registrar.reference_no
-    bank_transaction.sum = 5
-    bank_transaction.save
+    invoice = Invoice.create_from_transaction!(transaction)
+    assert_equal 250, invoice.total
 
-    invoice = Invoice.create_from_transaction!(bank_transaction)
-    assert_equal 5, invoice.total
+    transaction.sum = 146.88
+    invoice = Invoice.create_from_transaction!(transaction)
+    assert_equal 146.88, invoice.total
+
+    transaction.sum = 0.99
+    invoice = Invoice.create_from_transaction!(transaction)
+    assert_equal 0.99, invoice.total
+  end
+
+  def test_emails_invoice_after_creating_topup_invoice
+    registrar = registrars(:bestnames)
+    transaction = bank_transactions(:one).dup
+    transaction.reference_no = registrar.reference_no
+    transaction.sum = 250
+
+    Invoice.create_from_transaction!(transaction)
+
+    assert_emails 1
   end
 end
