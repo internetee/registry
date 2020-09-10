@@ -1,3 +1,6 @@
+10.09.2020
+* New registrar ref nr are now always created 7 digits long [#1679](https://github.com/internetee/registry/pull/1679)
+
 08.09.2020
 * Removed bank statement import option [#1674](https://github.com/internetee/registry/pull/1674)
 * Fixed error with reference nr not being found in the transaction [#1677](https://github.com/internetee/registry/issues/1677)
