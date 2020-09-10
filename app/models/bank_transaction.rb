@@ -38,11 +38,7 @@ class BankTransaction < ApplicationRecord
     return unless invoice
     return unless invoice.payable?
 
-    channel = if manual
-                'admin_payment'
-              else
-                'system_payment'
-              end
+    channel = manual ? 'admin_payment' : 'system_payment'
     create_internal_payment_record(channel: channel, invoice: invoice,
                                    registrar: registrar)
   end
@@ -121,7 +117,12 @@ class BankTransaction < ApplicationRecord
   end
 
   def ref_number_from_description
-    match_data = /(\d{7})/.match(description)
-    match_data[0] if match_data.present?
+    (Billing::ReferenceNo::MULTI_REGEXP.match(description) || []).captures.each do |match|
+      break match if match.length == 7 || valid_ref_no?(match)
+    end
+  end
+
+  def valid_ref_no?(match)
+    return true if Billing::ReferenceNo.valid?(match) && Registrar.find_by(reference_no: match).any?
   end
 end
