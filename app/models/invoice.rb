@@ -82,7 +82,7 @@ class Invoice < ApplicationRecord
   end
 
   def vat_amount
-    subtotal * vat_rate / 100
+    (subtotal * vat_rate / 100)
   end
 
   def total
@@ -118,9 +118,8 @@ class Invoice < ApplicationRecord
 
     vat = VatRateCalculator.new(registrar: registrar_user).calculate
     wo_vat = (transaction.sum / (1 + (vat / 100)))
-
     registrar_user.issue_prepayment_invoice(wo_vat, 'Direct top-up via bank transfer',
-                                            payable: false, total: transaction.sum)
+                                            payable: false)
   end
 
   private
@@ -130,6 +129,6 @@ class Invoice < ApplicationRecord
   end
 
   def calculate_total
-    self.total = subtotal + vat_amount
+    self.total = (subtotal + vat_amount).round(3)
   end
 end

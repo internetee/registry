@@ -1,7 +1,3 @@
----
---- PostgreSQL database dump
----
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -371,7 +367,6 @@ CREATE TABLE public.bank_statements (
     id integer NOT NULL,
     bank_code character varying,
     iban character varying,
-    import_file_path character varying,
     queried_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -963,7 +958,7 @@ CREATE TABLE public.invoice_items (
     description character varying NOT NULL,
     unit character varying NOT NULL,
     quantity integer NOT NULL,
-    price numeric(10,2) NOT NULL,
+    price numeric(10,3) NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
@@ -4850,4 +4845,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200807110611'),
 ('20200811074839'),
 ('20200812090409'),
-('20200812125810');
+('20200812125810'),
+('20200908131554'),
+('20200910085157');
+
+

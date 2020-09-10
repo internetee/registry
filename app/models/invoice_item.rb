@@ -5,7 +5,7 @@ class InvoiceItem < ApplicationRecord
   delegate :vat_rate, to: :invoice
 
   def item_sum_without_vat
-    (price * quantity).round(2)
+    (price * quantity).round(3)
   end
   alias_method :subtotal, :item_sum_without_vat
 
@@ -14,6 +14,6 @@ class InvoiceItem < ApplicationRecord
   end
 
   def total
-    subtotal + vat_amount
+    (subtotal + vat_amount)
   end
 end

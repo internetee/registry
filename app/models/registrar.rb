@@ -54,7 +54,7 @@ class Registrar < ApplicationRecord
     end
   end
 
-  def issue_prepayment_invoice(amount, description = nil, payable: true, total: nil)
+  def issue_prepayment_invoice(amount, description = nil, payable: true)
     vat_rate = ::Invoice::VatRateCalculator.new(registrar: self).calculate
 
     invoice = invoices.create!(
@@ -90,7 +90,6 @@ class Registrar < ApplicationRecord
       buyer_email: email,
       reference_no: reference_no,
       vat_rate: vat_rate,
-      total: total,
       items_attributes: [
         {
           description: 'prepayment',
