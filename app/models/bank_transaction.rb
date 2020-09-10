@@ -42,8 +42,7 @@ class BankTransaction < ApplicationRecord
     return unless autobindable?
 
     channel = manual ? 'admin_payment' : 'system_payment'
-    create_internal_payment_record(channel: channel, invoice: invoice,
-                                   registrar: registrar)
+    create_internal_payment_record(channel: channel, invoice: invoice, registrar: registrar)
   end
 
   def create_internal_payment_record(channel: nil, invoice:, registrar:)
@@ -92,12 +91,11 @@ class BankTransaction < ApplicationRecord
   end
 
   def create_activity(registrar, invoice)
-    activity = AccountActivity.new(
-      account: registrar.cash_account, bank_transaction: self,
-      invoice: invoice, sum: invoice.subtotal,
-      currency: currency, description: description,
-      activity_type: AccountActivity::ADD_CREDIT
-    )
+    activity = AccountActivity.new(account: registrar.cash_account, bank_transaction: self,
+                                   invoice: invoice, sum: invoice.subtotal,
+                                   currency: currency, description: description,
+                                   activity_type: AccountActivity::ADD_CREDIT)
+
     if activity.save
       reset_pending_registrar_balance_reload
       true
