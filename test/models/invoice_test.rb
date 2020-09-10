@@ -136,8 +136,8 @@ class InvoiceTest < ActiveSupport::TestCase
     transaction.reference_no = registrar.reference_no
     transaction.sum = 250
 
-    Invoice.create_from_transaction!(transaction)
-
-    assert_emails 1
+    assert_emails 1 do
+      Invoice.create_from_transaction!(transaction)
+    end
   end
 end

@@ -118,12 +118,11 @@ class BankTransaction < ApplicationRecord
   end
 
   def ref_number_from_description
-    (Billing::ReferenceNo::MULTI_REGEXP.match(description) || []).captures.each do |match|
-      break match if match.length == 7 || valid_ref_no?(match)
-    end
+    matches = description.to_s.scan(Billing::ReferenceNo::MULTI_REGEXP).flatten
+    matches.detect { |m| break m if m.length == 7 || valid_ref_no?(m) }
   end
 
   def valid_ref_no?(match)
-    return true if Billing::ReferenceNo.valid?(match) && Registrar.find_by(reference_no: match).any?
+    return true if Billing::ReferenceNo.valid?(match) && Registrar.find_by(reference_no: match)
   end
 end
