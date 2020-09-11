@@ -1,3 +1,6 @@
+11.09.2020
+* Registrars can now top up their credit accounts without generating invoice in advance [#1101](https://github.com/internetee/registry/issues/1101)
+
 10.09.2020
 * New registrar ref nr are now always created 7 digits long [#1679](https://github.com/internetee/registry/pull/1679)
 
