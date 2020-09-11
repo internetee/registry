@@ -1,8 +1,8 @@
 class SendEInvoiceJob < Que::Job
-  def run(invoice_id)
-    invoice = run_condition(Invoice.find_by(id: invoice_id))
+  def run(invoice_id, payable: true)
+    invoice = run_condition(Invoice.find_by(id: invoice_id), payable: payable)
 
-    invoice.to_e_invoice.deliver
+    invoice.to_e_invoice(payable: payable).deliver
     ActiveRecord::Base.transaction do
       invoice.update(e_invoice_sent_at: Time.zone.now)
       log_success(invoice)
@@ -15,9 +15,9 @@ class SendEInvoiceJob < Que::Job
 
   private
 
-  def run_condition(invoice)
+  def run_condition(invoice, payable: true)
     destroy unless invoice
-    destroy if invoice.do_not_send_e_invoice?
+    destroy if invoice.do_not_send_e_invoice? && payable
     invoice
   end
 

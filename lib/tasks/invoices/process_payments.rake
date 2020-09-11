@@ -36,6 +36,8 @@ namespace :invoices do
                                      reference_no: incoming_transaction.payment_reference_number,
                                      description: incoming_transaction.payment_description }
           transaction = bank_statement.bank_transactions.create!(transaction_attributes)
+          Invoice.create_from_transaction!(transaction) unless transaction.autobindable?
+
           transaction.autobind_invoice
         end
       end

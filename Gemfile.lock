@@ -18,7 +18,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/e_invoice.git
-  revision: b374ffd7be77b559b30c7a0210dc0df5ac3ed723
+  revision: 5f8d0029bf1affdbf2bd6e3d1ce87d34066add4d
   branch: master
   specs:
     e_invoice (0.1.0)
@@ -238,7 +238,7 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httpclient (2.8.3)
-    httpi (2.4.4)
+    httpi (2.4.5)
       rack
       socksify
     i18n (1.8.5)
@@ -467,7 +467,8 @@ GEM
       i18n
     warden (1.2.8)
       rack (>= 2.0.6)
-    wasabi (3.5.0)
+    wasabi (3.6.1)
+      addressable
       httpi (~> 2.0)
       nokogiri (>= 1.4.2)
     webdrivers (4.4.1)

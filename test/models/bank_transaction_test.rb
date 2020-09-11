@@ -156,6 +156,24 @@ class BankTransactionTest < ActiveSupport::TestCase
     assert transaction.errors.full_messages.include?('Cannot bind cancelled invoice')
   end
 
+  def test_assumes_7_digit_number_is_reference_no_in_desc
+    statement = BankTransaction.new
+    statement.description = 'number 1234567 defo valid'
+    assert_equal '1234567', statement.parsed_ref_number
+  end
+
+  def test_determines_correct_ref_no_from_description
+    statement = BankTransaction.new
+    ref_no = registrars(:bestnames).reference_no
+    statement.description = "invoice 123 125 55 4521 #{ref_no} 7541 defo valid"
+    assert_equal ref_no.to_s, statement.parsed_ref_number
+  end
+
+  def test_parsed_ref_no_returns_nil_if_ref_not_found
+    statement = BankTransaction.new
+    statement.description = "all invalid 12 123 55 77777 --"
+    assert_nil statement.parsed_ref_number
+  end
   private
 
   def create_payable_invoice(attributes)
