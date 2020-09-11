@@ -182,8 +182,8 @@ registrar_ip_whitelist_enabled:
   created_at: <%= Time.zone.parse('2010-07-05') %>
   updated_at: <%= Time.zone.parse('2010-07-05') %>
 
-request_confrimation_on_registrant_change_enabled:
-  code: request_confrimation_on_registrant_change_enabled
+request_confirmation_on_registrant_change_enabled:
+  code: request_confirmation_on_registrant_change_enabled
   value: 'true'
   group: other
   format: boolean

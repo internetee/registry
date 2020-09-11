@@ -500,7 +500,7 @@ class Epp::Domain < Domain
                                    frame.css('registrant').attr('verified').to_s.downcase != 'yes'
 
     if registrant_verification_needed && errors.empty? && verify &&
-       Setting.request_confrimation_on_registrant_change_enabled &&
+       Setting.request_confirmation_on_registrant_change_enabled &&
        unverified_registrant_params
       registrant_verification_asked!(frame.to_s, current_user.id) unless disputed?
     end
