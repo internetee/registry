@@ -1,6 +1,7 @@
 module Billing
   class Price < ApplicationRecord
     include Concerns::Billing::Price::Expirable
+    include Versions
 
     belongs_to :zone, class_name: 'DNS::Zone', required: true
     has_many :account_activities
