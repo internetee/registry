@@ -1,3 +1,6 @@
+14.09.2020
+* Restored version logging for registry prices [#980](https://github.com/internetee/registry/pull/980)
+
 11.09.2020
 * Registrars can now top up their credit accounts without generating invoice in advance [#1101](https://github.com/internetee/registry/issues/1101)
 * Fixed typo in admin settings [#371](https://github.com/internetee/registry/issues/371)
