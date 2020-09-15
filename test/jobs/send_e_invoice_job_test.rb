@@ -13,7 +13,7 @@ class SendEInvoiceJobTest < ActiveSupport::TestCase
     EInvoice::Providers::TestProvider.deliveries.clear
 
     assert_nothing_raised do
-      SendEInvoiceJob.enqueue(@invoice.id)
+      SendEInvoiceJob.enqueue(@invoice.id, true)
     end
     @invoice.reload
 
@@ -29,7 +29,7 @@ class SendEInvoiceJobTest < ActiveSupport::TestCase
     stub_request(:get, "https://testfinance.post.ee/finance/erp/erpServices.wsdl").to_timeout
 
     assert_raise HTTPClient::TimeoutError do
-      SendEInvoiceJob.enqueue(@invoice.id)
+      SendEInvoiceJob.enqueue(@invoice.id, true)
     end
     assert @invoicee_invoice_sent_at.blank?
 
@@ -37,7 +37,7 @@ class SendEInvoiceJobTest < ActiveSupport::TestCase
     EInvoice::Providers::TestProvider.deliveries.clear
 
     assert_nothing_raised do
-      SendEInvoiceJob.enqueue(@invoice.id)
+      SendEInvoiceJob.enqueue(@invoice.id, true)
     end
     @invoice.reload
 
