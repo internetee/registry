@@ -100,7 +100,7 @@ class Invoice < ApplicationRecord
   end
 
   def to_e_invoice(payable: true)
-    generator = Invoice::EInvoiceGenerator.new(self, payable: payable)
+    generator = Invoice::EInvoiceGenerator.new(self, payable)
     generator.generate
   end
 

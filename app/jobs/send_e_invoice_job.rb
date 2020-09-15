@@ -1,5 +1,5 @@
 class SendEInvoiceJob < Que::Job
-  def run(invoice_id, payable: true)
+  def run(invoice_id, payable = true)
     invoice = run_condition(Invoice.find_by(id: invoice_id), payable: payable)
 
     invoice.to_e_invoice(payable: payable).deliver

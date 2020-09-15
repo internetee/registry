@@ -104,7 +104,7 @@ class Registrar < ApplicationRecord
       InvoiceMailer.invoice_email(invoice: invoice, recipient: billing_email).deliver_now
     end
 
-    SendEInvoiceJob.enqueue(invoice.id, payable: payable)
+    SendEInvoiceJob.enqueue(invoice.id, payable)
 
     invoice
   end
