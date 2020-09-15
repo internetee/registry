@@ -2437,7 +2437,9 @@ CREATE TABLE public.users (
     remember_created_at timestamp without time zone,
     failed_attempts integer DEFAULT 0 NOT NULL,
     locked_at timestamp without time zone,
-    legacy_id integer
+    legacy_id integer,
+    provider character varying,
+    uid character varying
 );
 
 
@@ -4190,6 +4192,12 @@ CREATE UNIQUE INDEX index_settings_on_thing_type_and_thing_id_and_var ON public.
 
 CREATE INDEX index_users_on_identity_code ON public.users USING btree (identity_code);
 
+--
+-- Name: index_users_on_provider_and_uid; Type: INDEX; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE UNIQUE INDEX index_users_on_provider_and_uid ON public.users USING btree (provider, uid);
+
 
 --
 -- Name: index_users_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
@@ -4906,5 +4914,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200902131603'),
 ('20200908131554'),
 ('20200910085157'),
-('20200910102028');
+('20200910102028'),
+('20200915073245');
 

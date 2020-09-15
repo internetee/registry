@@ -295,6 +295,8 @@ en:
 
   authentication_error: 'Authentication error'
 
+  sign_in_cancelled: "Sign in cancelled"
+
   transfer_requested: 'Transfer requested.'
   message_was_not_found: 'Message was not found'
   only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
