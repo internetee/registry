@@ -1,3 +1,6 @@
+15.09.2020
+* Fixed e-invoice sending issue with QUE [#1683](https://github.com/internetee/registry/pull/1683)
+
 14.09.2020
 * Restored version logging for registry prices [#980](https://github.com/internetee/registry/pull/980)
 
