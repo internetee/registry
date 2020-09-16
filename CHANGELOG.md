@@ -1,5 +1,7 @@
 16.09.2020
+* Refactored orphaned contact archivation process [#956](https://github.com/internetee/registry/issues/956)
 * Rails update to 6.0.3.3 [#1685](https://github.com/internetee/registry/pull/1685)
+* E-invoice gem update to change the incoice total to 0 in case of prepaiment [#1684](https://github.com/internetee/registry/pull/1684)
 
 15.09.2020
 * Fixed e-invoice sending issue with QUE [#1683](https://github.com/internetee/registry/pull/1683)
