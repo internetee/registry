@@ -17,12 +17,13 @@ module Concerns
         inactive
       end
 
-      def archive(verified: false, notify: true)
+      def archive(verified: false, notify: true, extra_log: false)
         unless verified
           raise 'Contact cannot be archived' unless archivable?(post: true)
         end
 
         notify_registrar_about_archivation if notify
+        write_to_registrar_log if extra_log
         destroy!
       end
 
@@ -50,6 +51,17 @@ module Concerns
       def log(msg)
         @log ||= Logger.new(STDOUT)
         @log.info(msg)
+      end
+
+      def write_to_registrar_log
+        registrar_name = registrar.accounting_customer_code
+        archive_path = ENV['contact_archivation_log_file_dir']
+        registrar_log_path = "#{archive_path}/#{registrar_name}.txt"
+        FileUtils.mkdir_p(archive_path) unless Dir.exist?(archive_path)
+
+        f = File.new(registrar_log_path, 'a+')
+        f.write("#{code}\n")
+        f.close
       end
     end
   end

@@ -1,9 +1,9 @@
 namespace :contacts do
   desc 'Archives inactive contacts'
 
-  task :archive, [:track_id] => [:environment] do |_t, args|
+  task :archive, %i[track_id initial_run] => [:environment] do |_t, args|
     unlinked_contacts = contacts_start_point(args[:track_id])
-
+    initial_run = args[:initial_run] == true || args[:initial_run] == 'true'
     counter = 0
     log("Found #{unlinked_contacts.count} unlinked contacts. Starting to archive.")
 
@@ -11,7 +11,7 @@ namespace :contacts do
       next unless contact.archivable?
 
       log("Archiving contact: id(#{contact.id}), code(#{contact.code})")
-      contact.archive(verified: true)
+      contact.archive(verified: true, notify: !initial_run, extra_log: initial_run)
       counter += 1
     end
 
