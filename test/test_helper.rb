@@ -41,6 +41,7 @@ EInvoice.provider = EInvoice::Providers::TestProvider.new
 class ActiveSupport::TestCase
   ActiveRecord::Migration.check_pending!
   fixtures :all
+  set_fixture_class log_domains: DomainVersion
 
   teardown do
     travel_back

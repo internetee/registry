@@ -17,8 +17,8 @@ if @cron_group == 'registry'
     runner 'DNS::Zone.generate_zonefiles'
   end
 
-  every 6.months, at: '12:01am' do
-    runner 'Contact.destroy_orphans'
+  every :day, at: '12:01am' do
+    rake 'contacts:archive'
   end
 
   every :day, at: '12:10am' do

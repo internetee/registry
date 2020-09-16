@@ -238,6 +238,52 @@ class ContactTest < ActiveSupport::TestCase
     assert_not @contact.deletable?
   end
 
+  def test_linked_scope_returns_contact_that_acts_as_registrant
+    domains(:shop).update!(registrant: @contact.becomes(Registrant))
+    assert Contact.linked.include?(@contact), 'Contact should be included'
+  end
+
+  def test_linked_scope_returns_contact_that_acts_as_admin_contact
+    domains(:shop).admin_contacts = [@contact]
+    assert Contact.linked.include?(@contact), 'Contact should be included'
+  end
+
+  def test_linked_scope_returns_contact_that_acts_as_tech_contact
+    domains(:shop).tech_contacts = [@contact]
+    assert Contact.linked.include?(@contact), 'Contact should be included'
+  end
+
+  def test_linked_scope_skips_unlinked_contact
+    contact = unlinked_contact
+    assert_not Contact.linked.include?(contact), 'Contact should be excluded'
+  end
+
+  def test_unlinked_scope_returns_unlinked_contact
+    contact = unlinked_contact
+    assert Contact.unlinked.include?(contact), 'Contact should be included'
+  end
+
+  def test_unlinked_scope_skips_contact_that_is_linked_as_registrant
+    contact = unlinked_contact
+    domains(:shop).update_columns(registrant_id: contact.becomes(Registrant).id)
+
+    assert Contact.unlinked.exclude?(contact), 'Contact should be excluded'
+  end
+
+  def test_unlinked_scope_skips_contact_that_is_linked_as_admin_contact
+    contact = unlinked_contact
+    domains(:shop).admin_contacts = [contact]
+
+    assert Contact.unlinked.exclude?(contact), 'Contact should be excluded'
+  end
+
+  def test_unlinked_scope_skips_contact_that_is_linked_as_tech_contact
+    contact = unlinked_contact
+    domains(:shop).tech_contacts = [contact]
+
+    assert Contact.unlinked.exclude?(contact), 'Contact should be excluded'
+  end
+
   def test_normalizes_country_code
     Setting.address_processing = true
     contact = Contact.new(country_code: 'us')
@@ -306,9 +352,12 @@ class ContactTest < ActiveSupport::TestCase
   end
 
   def unlinked_contact
-    Domain.update_all(registrant_id: contacts(:william).id)
+    other_contact = contacts(:william)
+    assert_not_equal @contact, other_contact
+    Domain.update_all(registrant_id: other_contact.id)
     DomainContact.delete_all
-    contacts(:john)
+
+    @contact
   end
 
   def valid_contact

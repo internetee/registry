@@ -154,6 +154,7 @@ lhv_ca_file: # Needed only in dev mode
 lhv_dev_mode: 'false'
 
 epp_session_timeout_seconds: '300'
+contact_archivation_log_file_dir:
 
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:

@@ -640,6 +640,7 @@ en:
   cant_match_version: 'Impossible match version with request'
   user_not_authenticated: "user not authenticated"
   actions: Actions
+  contact_has_been_archived: 'Contact with code %{contact_code} has been archieved because it has been orphaned for longer than %{orphan_months} months.'
 
   number:
     currency:

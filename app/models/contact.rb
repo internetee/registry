@@ -7,6 +7,7 @@ class Contact < ApplicationRecord
   include Concerns::Contact::Transferable
   include Concerns::Contact::Identical
   include Concerns::Contact::Disclosable
+  include Concerns::Contact::Archivable
   include Concerns::EmailVerifable
 
   belongs_to :original, class_name: self.name
@@ -152,59 +153,15 @@ class Contact < ApplicationRecord
       res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v.name} (#{v.code})" } }
     end
 
-    def find_orphans
-      where('
-        NOT EXISTS(
-          select 1 from domains d where d.registrant_id = contacts.id
-        ) AND NOT EXISTS(
-          select 1 from domain_contacts dc where dc.contact_id = contacts.id
-        )
-      ')
-    end
-
-    def find_linked
-      where('
-        EXISTS(
-          select 1 from domains d where d.registrant_id = contacts.id
-        ) OR EXISTS(
-          select 1 from domain_contacts dc where dc.contact_id = contacts.id
-        )
-      ')
-    end
-
     def filter_by_states in_states
       states = Array(in_states).dup
       scope  = all
 
       # all contacts has state ok, so no need to filter by it
       scope = scope.where("NOT contacts.statuses && ?::varchar[]", "{#{(STATUSES - [OK, LINKED]).join(',')}}") if states.delete(OK)
-      scope = scope.find_linked if states.delete(LINKED)
+      scope = scope.linked if states.delete(LINKED)
       scope = scope.where("contacts.statuses @> ?::varchar[]", "{#{states.join(',')}}") if states.any?
       scope
-    end
-
-    # To leave only new ones we need to check
-    # if contact was at any time used in domain.
-    # This can be checked by domain history.
-    # This can be checked by saved relations in children attribute
-    def destroy_orphans
-      STDOUT << "#{Time.zone.now.utc} - Destroying orphaned contacts\n" unless Rails.env.test?
-
-      counter = Counter.new
-      find_orphans.find_each do |contact|
-        ver_scope = []
-        %w(admin_contacts tech_contacts registrant).each do |type|
-          ver_scope << "(children->'#{type}')::jsonb <@ json_build_array(#{contact.id})::jsonb"
-        end
-        next if DomainVersion.where("created_at > ?", Time.now - Setting.orphans_contacts_in_months.to_i.months).where(ver_scope.join(" OR ")).any?
-        next if contact.linked?
-
-        contact.destroy
-        counter.next
-        STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{contact.id} (#{contact.name})\n" unless Rails.env.test?
-      end
-
-      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{counter} orphaned contacts\n" unless Rails.env.test?
     end
 
     def admin_statuses
@@ -262,6 +219,23 @@ class Contact < ApplicationRecord
     def registrant_user_direct_contacts(registrant_user)
       where(ident_type: PRIV, ident: registrant_user.ident, ident_country_code: registrant_user
                                                                                   .country.alpha2)
+    end
+
+    def linked
+      sql = <<-SQL
+        EXISTS(SELECT 1 FROM domains WHERE domains.registrant_id = contacts.id) OR
+        EXISTS(SELECT 1 FROM domain_contacts WHERE domain_contacts.contact_id =
+        contacts.id)
+      SQL
+
+      where(sql)
+    end
+
+    def unlinked
+      where('NOT EXISTS(SELECT 1 FROM domains WHERE domains.registrant_id = contacts.id)
+             AND
+             NOT EXISTS(SELECT 1 FROM domain_contacts WHERE domain_contacts.contact_id =
+             contacts.id)')
     end
 
     def registrant_user_company_contacts(registrant_user)
