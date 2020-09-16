@@ -18,8 +18,8 @@ GIT
 
 GIT
   remote: https://github.com/internetee/e_invoice.git
-  revision: 7fa00fe72cc8da6199c6175cd46e5eba5c056ff1
-  branch: payment-total-sum-zero-for-paid-invoice
+  revision: 1e83e0b9d502d0a96d7bbbf9235a6621591d4e66
+  branch: master
   specs:
     e_invoice (0.1.0)
       builder (~> 3.2)
