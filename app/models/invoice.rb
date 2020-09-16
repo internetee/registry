@@ -99,8 +99,8 @@ class Invoice < ApplicationRecord
     generator.as_pdf
   end
 
-  def to_e_invoice
-    generator = Invoice::EInvoiceGenerator.new(self)
+  def to_e_invoice(payable: true)
+    generator = Invoice::EInvoiceGenerator.new(self, payable)
     generator.generate
   end
 
@@ -112,6 +112,15 @@ class Invoice < ApplicationRecord
     e_invoice_sent_at.present?
   end
 
+  def self.create_from_transaction!(transaction)
+    registrar_user = Registrar.find_by(reference_no: transaction.parsed_ref_number)
+    return unless registrar_user
+
+    vat = VatRateCalculator.new(registrar: registrar_user).calculate
+    net = (transaction.sum / (1 + (vat / 100)))
+    registrar_user.issue_prepayment_invoice(net, 'Direct top-up via bank transfer', payable: false)
+  end
+
   private
 
   def apply_default_buyer_vat_no
@@ -119,6 +128,6 @@ class Invoice < ApplicationRecord
   end
 
   def calculate_total
-    self.total = subtotal + vat_amount
+    self.total = (subtotal + vat_amount).round(3)
   end
 end

@@ -12,7 +12,7 @@ class RegistrantAreaDomainDetailsTest < ApplicationSystemTestCase
     visit registrant_domain_url(@domain)
 
     assert_text 'Name shop.test'
-    assert_text "Registered at #{l Time.zone.parse('2010-07-04')}"
+    assert_text "Registered at #{l @domain.registered_at}"
     assert_link 'Best Names', href: registrant_registrar_path(@domain.registrar)
 
     assert_text 'Transfer code'

@@ -26,7 +26,7 @@ ActiveRecord::Base.transaction do
   SettingEntry.create(code: 'client_side_status_editing_enabled', value: 'false', format: 'boolean', group: 'other')
   SettingEntry.create(code: 'api_ip_whitelist_enabled', value: 'false', format: 'boolean', group: 'other')
   SettingEntry.create(code: 'registrar_ip_whitelist_enabled', value: 'false', format: 'boolean', group: 'other')
-  SettingEntry.create(code: 'request_confrimation_on_registrant_change_enabled', value: 'true', format: 'boolean', group: 'other')
+  SettingEntry.create(code: 'request_confirmation_on_registrant_change_enabled', value: 'true', format: 'boolean', group: 'other')
   SettingEntry.create(code: 'request_confirmation_on_domain_deletion_enabled', value: 'true', format: 'boolean', group: 'other')
   SettingEntry.create(code: 'default_language', value: 'en', format: 'string', group: 'other')
   SettingEntry.create(code: 'invoice_number_min', value: '131050', format: 'integer', group: 'billing')

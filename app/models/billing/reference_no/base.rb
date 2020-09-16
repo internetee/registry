@@ -2,7 +2,7 @@ module Billing
   class ReferenceNo
     class Base
       def self.generate
-        new(SecureRandom.random_number(1..1_000_000))
+        new((SecureRandom.random_number(9e5) + 1e5).to_i)
       end
 
       def initialize(base)

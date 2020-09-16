@@ -31,20 +31,18 @@ class BankTransaction < ApplicationRecord
     @registrar ||= Invoice.find_by(reference_no: parsed_ref_number)&.buyer
   end
 
+  def autobindable?
+    !binded? && registrar && invoice.payable? ? true : false
+  rescue NoMethodError
+    false
+  end
+
   # For successful binding, reference number, invoice id and sum must match with the invoice
   def autobind_invoice(manual: false)
-    return if binded?
-    return unless registrar
-    return unless invoice
-    return unless invoice.payable?
+    return unless autobindable?
 
-    channel = if manual
-                'admin_payment'
-              else
-                'system_payment'
-              end
-    create_internal_payment_record(channel: channel, invoice: invoice,
-                                   registrar: registrar)
+    channel = manual ? 'admin_payment' : 'system_payment'
+    create_internal_payment_record(channel: channel, invoice: invoice, registrar: registrar)
   end
 
   def create_internal_payment_record(channel: nil, invoice:, registrar:)
@@ -93,18 +91,21 @@ class BankTransaction < ApplicationRecord
   end
 
   def create_activity(registrar, invoice)
-    activity = AccountActivity.new(
-      account: registrar.cash_account, bank_transaction: self,
-      invoice: invoice, sum: invoice.subtotal,
-      currency: currency, description: description,
-      activity_type: AccountActivity::ADD_CREDIT
-    )
+    activity = AccountActivity.new(account: registrar.cash_account, bank_transaction: self,
+                                   invoice: invoice, sum: invoice.subtotal,
+                                   currency: currency, description: description,
+                                   activity_type: AccountActivity::ADD_CREDIT)
+
     if activity.save
       reset_pending_registrar_balance_reload
       true
     else
       false
     end
+  end
+
+  def parsed_ref_number
+    reference_no || ref_number_from_description
   end
 
   private
@@ -116,11 +117,12 @@ class BankTransaction < ApplicationRecord
     registrar.save!
   end
 
-  def parsed_ref_number
-    reference_no || ref_number_from_description
+  def ref_number_from_description
+    matches = description.to_s.scan(Billing::ReferenceNo::MULTI_REGEXP).flatten
+    matches.detect { |m| break m if m.length == 7 || valid_ref_no?(m) }
   end
 
-  def ref_number_from_description
-    /(\d{7})/.match(description)[0]
+  def valid_ref_no?(match)
+    return true if Billing::ReferenceNo.valid?(match) && Registrar.find_by(reference_no: match)
   end
 end

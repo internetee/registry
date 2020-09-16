@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/directo.git
-  revision: 8ff8a382d004ffb85722a6a7a68a020bd4d7159b
+  revision: e4ba54f601d1815fd8782a196788730d47861e86
   branch: master
   specs:
     directo (1.0.1)
@@ -18,7 +18,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/e_invoice.git
-  revision: b374ffd7be77b559b30c7a0210dc0df5ac3ed723
+  revision: 5f8d0029bf1affdbf2bd6e3d1ce87d34066add4d
   branch: master
   specs:
     e_invoice (0.1.0)
@@ -165,7 +165,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.6)
+    concurrent-ruby (1.1.7)
     countries (3.0.1)
       i18n_data (~> 0.10.0)
       sixarm_ruby_unaccent (~> 1.1)
@@ -238,10 +238,10 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httpclient (2.8.3)
-    httpi (2.4.4)
+    httpi (2.4.5)
       rack
       socksify
-    i18n (1.8.3)
+    i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     i18n_data (0.10.0)
     isikukood (0.1.2)
@@ -467,7 +467,8 @@ GEM
       i18n
     warden (1.2.8)
       rack (>= 2.0.6)
-    wasabi (3.5.0)
+    wasabi (3.6.1)
+      addressable
       httpi (~> 2.0)
       nokogiri (>= 1.4.2)
     webdrivers (4.4.1)

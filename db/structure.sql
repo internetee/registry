@@ -371,7 +371,6 @@ CREATE TABLE public.bank_statements (
     id integer NOT NULL,
     bank_code character varying,
     iban character varying,
-    import_file_path character varying,
     queried_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -778,7 +777,6 @@ CREATE TABLE public.domains (
     id integer NOT NULL,
     name character varying NOT NULL,
     registrar_id integer NOT NULL,
-    registered_at timestamp without time zone,
     valid_to timestamp without time zone NOT NULL,
     registrant_id integer NOT NULL,
     transfer_code character varying NOT NULL,
@@ -964,7 +962,7 @@ CREATE TABLE public.invoice_items (
     description character varying NOT NULL,
     unit character varying NOT NULL,
     quantity integer NOT NULL,
-    price numeric(10,2) NOT NULL,
+    price numeric(10,3) NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
@@ -1708,7 +1706,45 @@ ALTER SEQUENCE public.log_payment_orders_id_seq OWNED BY public.log_payment_orde
 
 
 --
--- Name: log_registrant_verifications; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_prices; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.log_prices (
+    id bigint NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    object_changes json,
+    created_at timestamp without time zone,
+    session character varying,
+    children json,
+    uuid character varying
+);
+
+
+--
+-- Name: log_prices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.log_prices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_prices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.log_prices_id_seq OWNED BY public.log_prices.id;
+
+
+--
+-- Name: log_registrant_verifications; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_registrant_verifications (
@@ -2094,8 +2130,8 @@ CREATE TABLE public.prices (
     price_cents integer NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    creator_str character varying,
     updator_str character varying,
+    creator_str character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     duration interval,
@@ -2840,7 +2876,14 @@ ALTER TABLE ONLY public.log_payment_orders ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: log_prices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_prices ALTER COLUMN id SET DEFAULT nextval('public.log_prices_id_seq'::regclass);
+
+
+--
+-- Name: log_registrant_verifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_registrant_verifications ALTER COLUMN id SET DEFAULT nextval('public.log_registrant_verifications_id_seq'::regclass);
@@ -3306,7 +3349,15 @@ ALTER TABLE ONLY public.log_payment_orders
 
 
 --
--- Name: log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_prices log_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_prices
+    ADD CONSTRAINT log_prices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: log_registrant_verifications log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_registrant_verifications
@@ -4828,6 +4879,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191203083643'),
 ('20191206183853'),
 ('20191212133136'),
+('20191217013225'),
 ('20191219112434'),
 ('20191219124429'),
 ('20191227110904'),
@@ -4851,5 +4903,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200811074839'),
 ('20200812090409'),
 ('20200812125810'),
-('20200902131603');
+('20200902131603'),
+('20200908131554'),
+('20200910085157'),
+('20200910102028');
 

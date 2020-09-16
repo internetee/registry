@@ -32,11 +32,13 @@ class Ability
 
   def epp # Registrar/api_user dynamic role
     if @user.registrar.api_ip_white?(@ip)
-      can :manage, :poll
       can :manage, Depp::Contact
       can :manage, :xml_console
       can :manage,   Depp::Domain
     end
+
+    # Poll
+    can :manage, :poll
 
     # REPP
     can(:manage, :repp)

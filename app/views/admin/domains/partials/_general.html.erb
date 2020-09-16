@@ -10,7 +10,7 @@
             <dt><%= t(:name) %></dt>
             <dd><%= @domain.name %></dd>
 
-            <dt><%= t(:registered_at) %></dt>
+            <dt><%= Domain.human_attribute_name :registered_at %></dt>
             <dd><%= l(@domain.registered_at) %></dd>
 
             <dt><%= t(:registrar_name) %></dt>

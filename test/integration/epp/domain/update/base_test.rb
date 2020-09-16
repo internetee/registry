@@ -6,12 +6,12 @@ class EppDomainUpdateBaseTest < EppTestCase
   setup do
     @domain = domains(:shop)
     @original_registrant_change_verification =
-      Setting.request_confrimation_on_registrant_change_enabled
+      Setting.request_confirmation_on_registrant_change_enabled
     ActionMailer::Base.deliveries.clear
   end
 
   teardown do
-    Setting.request_confrimation_on_registrant_change_enabled =
+    Setting.request_confirmation_on_registrant_change_enabled =
       @original_registrant_change_verification
   end
 
@@ -87,7 +87,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_requires_verification_from_current_registrant_when_provided_registrant_is_a_new_one
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.request_confirmation_on_registrant_change_enabled = true
     new_registrant = contacts(:william).becomes(Registrant)
     assert_not_equal new_registrant, @domain.registrant
 
@@ -124,7 +124,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_requires_verification_from_current_registrant_when_not_yet_verified_by_registrar
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.request_confirmation_on_registrant_change_enabled = true
     new_registrant = contacts(:william)
     assert_not_equal new_registrant, @domain.registrant
 
@@ -161,7 +161,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_updates_registrant_when_legaldoc_is_not_mandatory
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.request_confirmation_on_registrant_change_enabled = true
     new_registrant = contacts(:william)
     assert_not_equal new_registrant, @domain.registrant
 
@@ -197,7 +197,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_dows_not_update_registrant_when_legaldoc_is_mandatory
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.request_confirmation_on_registrant_change_enabled = true
     old_value = Setting.legal_document_is_mandatory
     Setting.legal_document_is_mandatory = true
     new_registrant = contacts(:william)
@@ -226,7 +226,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_skips_verification_when_provided_registrant_is_the_same_as_current_one
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.request_confirmation_on_registrant_change_enabled = true
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -260,7 +260,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_skips_verification_when_registrant_changed_with_dispute_password
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.request_confirmation_on_registrant_change_enabled = true
     dispute = disputes(:expired)
     dispute.update!(starts_at: Time.zone.now, expires_at: Time.zone.now + 5.days, closed: nil)
     new_registrant = contacts(:william)
@@ -303,7 +303,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_skips_verification_when_disabled
-    Setting.request_confrimation_on_registrant_change_enabled = false
+    Setting.request_confirmation_on_registrant_change_enabled = false
     new_registrant = contacts(:william).becomes(Registrant)
     assert_not_equal new_registrant, @domain.registrant
 
@@ -340,7 +340,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_skips_verification_from_current_registrant_when_already_verified_by_registrar
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.request_confirmation_on_registrant_change_enabled = true
     new_registrant = contacts(:william).becomes(Registrant)
     assert_not_equal new_registrant, @domain.registrant
 
@@ -377,7 +377,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_clears_force_delete_when_registrar_changed
-    Setting.request_confrimation_on_registrant_change_enabled = true
+    Setting.request_confirmation_on_registrant_change_enabled = true
     new_registrant = contacts(:william).becomes(Registrant)
     @domain.schedule_force_delete(type: :fast_track)
     assert_not_equal new_registrant, @domain.registrant
