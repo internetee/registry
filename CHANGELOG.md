@@ -1,3 +1,6 @@
+16.09.2020
+* Rails update to 6.0.3.3 [#1685](https://github.com/internetee/registry/pull/1685)
+
 15.09.2020
 * Fixed e-invoice sending issue with QUE [#1683](https://github.com/internetee/registry/pull/1683)
 
