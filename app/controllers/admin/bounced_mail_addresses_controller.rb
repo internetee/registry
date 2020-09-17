@@ -24,7 +24,10 @@ module Admin
       @bounced_mail_address = BouncedMailAddress.new(bounced_mail_address_params)
 
       if @bounced_mail_address.save
-        redirect_to(admin_bounced_mail_addresses_url, notice: 'Bounced mail address was successfully created.')
+        redirect_to(
+          admin_bounced_mail_addresses_url,
+          notice: 'Bounced mail address was successfully created.'
+        )
       else
         render(:new)
       end
@@ -42,7 +45,10 @@ module Admin
     # DELETE /bounced_mail_addresses/1
     def destroy
       @bounced_mail_address.destroy
-      redirect_to(admin_bounced_mail_addresses_url, notice: 'Bounced mail address was successfully destroyed.')
+      redirect_to(
+        admin_bounced_mail_addresses_url,
+        notice: 'Bounced mail address was successfully destroyed.'
+      )
     end
 
     private
@@ -54,7 +60,12 @@ module Admin
 
     # Only allow a trusted parameter "white list" through.
     def bounced_mail_address_params
-      params.require(:bounced_mail_address).permit(:email, :bounce_reason, :incidents, :response_json)
+      params.require(:bounced_mail_address).permit(
+        :email,
+        :bounce_reason,
+        :incidents,
+        :response_json
+      )
     end
   end
 end
