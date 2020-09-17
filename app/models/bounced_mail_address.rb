@@ -1,0 +1,2 @@
+class BouncedMailAddress < ApplicationRecord
+end

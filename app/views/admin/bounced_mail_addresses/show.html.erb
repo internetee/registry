@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @bounced_mail_address.email %>
+</p>
+
+<p>
+  <strong>Bounce reason:</strong>
+  <%= @bounced_mail_address.bounce_reason %>
+</p>
+
+<p>
+  <strong>Incidents:</strong>
+  <%= @bounced_mail_address.incidents %>
+</p>
+
+<p>
+  <strong>Response json:</strong>
+  <%= @bounced_mail_address.response_json %>
+</p>
+
+<%= link_to 'Edit', edit_admin_bounced_mail_address_path(@bounced_mail_address) %> |
+<%= link_to 'Back', admin_bounced_mail_addresses_path %>
