@@ -16,8 +16,7 @@ class DomainDeleteConfirmsTest < ApplicationSystemTestCase
     click_on 'Confirm domain delete'
     assert_text 'Domain registrant change has successfully received.'
 
-    @domain.reload
-    assert_includes @domain.statuses, 'serverHold'
+    assert_enqueued_jobs 1, only: DomainDeleteConfirmJob
   end
 
   def test_enqueues_reject_job_after_verification
@@ -26,8 +25,7 @@ class DomainDeleteConfirmsTest < ApplicationSystemTestCase
     click_on 'Reject domain delete'
     assert_text 'Domain registrant change has been rejected successfully.'
 
-    @domain.reload
-    assert_equal ['ok'], @domain.statuses
+    assert_enqueued_jobs 1, only: DomainDeleteConfirmJob
   end
 
   def test_saves_whodunnit_info_after_verifivation

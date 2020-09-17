@@ -1,5 +1,7 @@
-class DomainExpireEmailJob < Que::Job
-  def run(domain_id)
+class DomainExpireEmailJob < ApplicationJob
+  queue_as :default
+
+  def perform(domain_id)
     domain = Domain.find(domain_id)
 
     return if domain.registered?

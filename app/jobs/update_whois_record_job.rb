@@ -1,6 +1,7 @@
-class UpdateWhoisRecordJob < Que::Job
+class UpdateWhoisRecordJob < ApplicationJob
+  queue_as :default
 
-  def run(names, type)
+  def perform(names, type)
     ::PaperTrail.request.whodunnit = "job - #{self.class.name} - #{type}"
 
     klass = determine_class(type)

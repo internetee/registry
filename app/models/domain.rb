@@ -362,8 +362,8 @@ class Domain < ApplicationRecord
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
 
-    RegistrantChangeConfirmEmailJob.enqueue(id, new_registrant_id)
-    RegistrantChangeNoticeEmailJob.enqueue(id, new_registrant_id)
+    RegistrantChangeConfirmEmailJob.perform_later(id, new_registrant_id)
+    RegistrantChangeNoticeEmailJob.perform_later(id, new_registrant_id)
 
     reload
 
@@ -418,7 +418,7 @@ class Domain < ApplicationRecord
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
-    DomainDeleteConfirmEmailJob.enqueue(id)
+    DomainDeleteConfirmEmailJob.perform_later(id)
   end
 
   def cancel_pending_delete
@@ -598,7 +598,7 @@ class Domain < ApplicationRecord
   end
 
   def update_whois_record
-    UpdateWhoisRecordJob.enqueue name, 'domain'
+    UpdateWhoisRecordJob.perform_later name, 'domain'
   end
 
   def status_notes_array=(notes)

@@ -87,6 +87,9 @@ sk_digi_doc_service_name: 'Testimine'
 registrant_api_base_url:
 registrant_api_auth_allowed_ips: '127.0.0.1, 0.0.0.0' #ips, separated with commas
 
+# Bounces API
+api_shared_key: testkey
+
 #
 # MISC
 

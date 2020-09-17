@@ -18,24 +18,24 @@ class RegistrantVerification < ApplicationRecord
   def domain_registrant_change_confirm!(initiator)
     self.action_type = DOMAIN_REGISTRANT_CHANGE
     self.action = CONFIRMED
-    DomainUpdateConfirmJob.enqueue domain.id, CONFIRMED, initiator if save
+    DomainUpdateConfirmJob.perform_later domain.id, CONFIRMED, initiator if save
   end
 
   def domain_registrant_change_reject!(initiator)
     self.action_type = DOMAIN_REGISTRANT_CHANGE
     self.action = REJECTED
-    DomainUpdateConfirmJob.run domain.id, REJECTED, initiator if save
+    DomainUpdateConfirmJob.perform_later domain.id, REJECTED, initiator if save
   end
 
   def domain_registrant_delete_confirm!(initiator)
     self.action_type = DOMAIN_DELETE
     self.action = CONFIRMED
-    DomainDeleteConfirmJob.enqueue domain.id, CONFIRMED, initiator if save
+    DomainDeleteConfirmJob.perform_later(domain.id, CONFIRMED, initiator) if save
   end
 
   def domain_registrant_delete_reject!(initiator)
     self.action_type = DOMAIN_DELETE
     self.action = REJECTED
-    DomainDeleteConfirmJob.enqueue domain.id, REJECTED, initiator if save
+    DomainDeleteConfirmJob.perform_later(domain.id, REJECTED, initiator) if save
   end
 end

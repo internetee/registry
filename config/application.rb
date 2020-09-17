@@ -41,6 +41,8 @@ module DomainNameRegistry
 
     config.active_record.schema_format = :sql
 
+    config.active_job.queue_adapter = :que
+
     config.generators do |g|
       g.stylesheets false
       g.javascripts false

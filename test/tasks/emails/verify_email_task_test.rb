@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class VerifyEmailTaskTest < ActiveSupport::TestCase
+class VerifyEmailTaskTest < ActiveJob::TestCase
 
   def setup
     @contact = contacts(:john)
@@ -54,10 +54,14 @@ class VerifyEmailTaskTest < ActiveSupport::TestCase
   end
 
   def run_task
-    Rake::Task['verify_email:all_domains'].execute
+    perform_enqueued_jobs do
+      Rake::Task['verify_email:all_domains'].execute
+    end
   end
 
   def run_single_domain_task(domain)
-    Rake::Task["verify_email:domain"].invoke(domain)
+    perform_enqueued_jobs do
+      Rake::Task["verify_email:domain"].invoke(domain)
+    end
   end
 end

@@ -10,6 +10,11 @@ module Api
         head :unauthorized unless ip_allowed
       end
 
+      def authenticate_shared_key
+        api_key = "Basic #{ENV['api_shared_key']}"
+        head(:unauthorized) unless api_key == request.authorization
+      end
+
       def not_found_error
         uuid = params['uuid']
         json = { error: 'Not Found', uuid: uuid, message: 'Record not found' }

@@ -482,9 +482,12 @@ ALTER SEQUENCE public.blocked_domains_id_seq OWNED BY public.blocked_domains.id;
 CREATE TABLE public.bounced_mail_addresses (
     id bigint NOT NULL,
     email character varying NOT NULL,
-    bounce_reason character varying NOT NULL,
-    incidents integer DEFAULT 1 NOT NULL,
-    response_json jsonb,
+    message_id character varying NOT NULL,
+    bounce_type character varying NOT NULL,
+    bounce_subtype character varying NOT NULL,
+    action character varying NOT NULL,
+    status character varying NOT NULL,
+    diagnostic character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1740,7 +1743,7 @@ ALTER SEQUENCE public.log_payment_orders_id_seq OWNED BY public.log_payment_orde
 
 
 --
--- Name: log_prices; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_prices; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_prices (
@@ -1778,7 +1781,7 @@ ALTER SEQUENCE public.log_prices_id_seq OWNED BY public.log_prices.id;
 
 
 --
--- Name: log_registrant_verifications; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_registrant_verifications; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_registrant_verifications (
@@ -3398,7 +3401,7 @@ ALTER TABLE ONLY public.log_payment_orders
 
 
 --
--- Name: log_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_prices
@@ -3406,7 +3409,7 @@ ALTER TABLE ONLY public.log_prices
 
 
 --
--- Name: log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_registrant_verifications
@@ -4956,6 +4959,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200908131554'),
 ('20200910085157'),
 ('20200910102028'),
+('20200915073245'),
 ('20200916125326');
-
 
