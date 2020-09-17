@@ -16,9 +16,13 @@
 </p>
 
 <p>
-  <strong>Response json:</strong>
-  <%= @bounced_mail_address.response_json %>
+  <strong>Bounced recipient JSON:</strong>
+  <pre><%= JSON.pretty_generate(@bounced_mail_address.recipient_json) %></pre>
 </p>
 
-<%= link_to 'Edit', edit_admin_bounced_mail_address_path(@bounced_mail_address) %> |
+<p>
+  <strong>Bounce payload:</strong>
+  <pre><%= JSON.pretty_generate(@bounced_mail_address.response_json) %></pre>
+</p>
+
 <%= link_to 'Back', admin_bounced_mail_addresses_path %>
