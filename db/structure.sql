@@ -486,7 +486,8 @@ CREATE TABLE public.bounced_mail_addresses (
     incidents integer DEFAULT 1 NOT NULL,
     response_json jsonb,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    recipient_json jsonb NOT NULL
 );
 
 
@@ -4956,6 +4957,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200908131554'),
 ('20200910085157'),
 ('20200910102028'),
-('20200916125326');
+('20200916125326'),
+('20200917104213');
 
 
