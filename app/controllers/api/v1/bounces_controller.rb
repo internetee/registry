@@ -1,11 +1,20 @@
 module Api
   module V1
     class BouncesController < BaseController
-      before_action :authenticate
-
+      # POST api/v1/bounces/
       def create
-        bounced_mail_address = BouncedMailAddress.record(json)
-        bounced_mail_address ? render(head: :ok) : render(head: :failed)
+        BouncedMailAddress.record(bounce_params)
+        head(:ok)
+      rescue ActionController::ParameterMissing
+        head(:bad_request)
+      end
+
+      def bounce_params
+        params.require(:data).require(:bounce).require(:bouncedRecipients).each do |r|
+          r.require(:emailAddress)
+        end
+
+        params.require(:data)
       end
     end
   end
