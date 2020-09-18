@@ -31,7 +31,7 @@ class EppLoginCredentialsTest < EppTestCase
   end
 
   def test_already_logged_in
-    assert true # Handled by mod_epp
+    assert true # Handled by EPP proxy
   end
 
   def test_wrong_credentials

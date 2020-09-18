@@ -22,11 +22,6 @@ Documentation
 * [Database diagram](/doc/models_complete.svg)
 * [Controllers diagram](/doc/controllers_complete.svg)
 
-### Updating documentation
-
-    AUTODOC=true rspec spec/requests
-    EPP_DOC=true rspec spec/epp --tag epp --require support/epp_doc.rb --format EppDoc > doc/epp_examples.md
-
 Installation
 ------------
 
@@ -47,23 +42,9 @@ Manual demo install and database setup:
     bundle exec rake bootstrap
     bundle exec rake assets:precompile
 
-### Apache with patched mod_epp (Debian 7/Ubuntu 14.04 LTS)
+### Apache (Debian 7/Ubuntu 14.04 LTS)
 
     sudo apt-get install apache2
-
-    sudo apt-get install apache2-threaded-dev     # needed to compile mod_epp
-    wget sourceforge.net/projects/aepps/files/mod_epp/1.10/mod_epp-1.10.tar.gz
-    tar -xzvf mod_epp-1.10.tar.gz
-    cd mod_epp-1.10
-
-Patch mod_epp for Rack. Beacause Rack multipart parser expects specifically
-formatted content boundaries, the mod_epp needs to be modified before building:
-
-    wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch
-    wget https://raw.githubusercontent.com/domify/registry/master/doc/patches/mod_epp_1.10-frame-size.patch
-    patch < mod_epp_1.10-rack-friendly.patch
-    patch < mod_epp_1.10-frame-size.patch
-    sudo apxs2 -a -c -i mod_epp.c
 
 Enable ssl:
 
@@ -380,37 +361,6 @@ Be sure to update paths to match your system configuration.
         </Directory>
     </VirtualHost>
 </IfModule>
-
-<IfModule mod_epp.c>
-    Listen 700
-    <VirtualHost *:700>
-      SSLEngine on
-      SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
-      SSLCertificateFile /etc/apache2/ssl/apache.crt
-      SSLCertificateKeyFile /etc/apache2/ssl/apache.key
-
-      SSLVerifyClient require
-      SSLVerifyDepth 1
-      SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
-      SSLCARevocationPath /home/registry/registry/shared/ca/crl
-      # Uncomment this when upgrading to apache 2.4:
-      # SSLCARevocationCheck chain
-
-      RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
-      RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
-
-      EPPEngine On
-      EPPCommandRoot          /proxy/command
-      EPPSessionRoot          /proxy/session
-      EPPErrorRoot            /proxy/error
-      EPPRawFrame             raw_frame
-
-      ProxyPass /proxy/ http://localhost:8080/epp/
-
-      EPPAuthURI              implicit
-      EPPReturncodeHeader     X-EPP-Returncode
-    </VirtualHost>
-</IfModule>
 ```
 
 Enable epp_ssl and restart apache
@@ -425,6 +375,8 @@ All registry demo data can be found at:
     db/seeds.rb
 
 Initially you can use two type of users: admin users and EPP users.
+
+For using EPP we are strongly recommend to install epp_proxy instead of mod_epp. You can get epp_proxy from https://github.com/internetee/epp_proxy
 
 ### Wkhtmltopdf setup
 
