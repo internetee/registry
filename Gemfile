@@ -80,10 +80,7 @@ end
 
 group :development, :test do
   gem 'pry', '0.10.1'
-  gem 'railroady',     '1.3.0'  # to generate database diagrams
-  gem 'autodoc'
   gem 'puma'
-  gem 'sdoc', '~> 1.1'
 end
 
 group :test do
