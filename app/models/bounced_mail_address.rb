@@ -1,21 +1,28 @@
 class BouncedMailAddress < ApplicationRecord
   validates :email, presence: true
-  validates :bounce_reason, presence: true
+  validates :bounce_reason, :recipient_json, :response_json, presence: true
   before_validation :assign_bounce_reason
 
   def assign_bounce_reason
-    self.bounce_reason = "#{action} (#{status} #{diagnostic})"
+    if recipient_json
+      self.bounce_reason = "#{action} (#{status} #{diagnostic})"
+    else
+      self.bounce_reason = nil
+    end
   end
 
   def diagnostic
+    return nil unless recipient_json
     recipient_json['diagnosticCode']
   end
 
   def action
+    return nil unless recipient_json
     recipient_json['action']
   end
 
   def status
+    return nil unless recipient_json
     recipient_json['status']
   end
 
