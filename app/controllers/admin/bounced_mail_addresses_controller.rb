@@ -26,15 +26,5 @@ module Admin
     def set_bounced_mail_address
       @bounced_mail_address = BouncedMailAddress.find(params[:id])
     end
-
-    # Only allow a trusted parameter "white list" through.
-    def bounced_mail_address_params
-      params.require(:bounced_mail_address).permit(
-        :email,
-        :bounce_reason,
-        :incidents,
-        :response_json
-      )
-    end
   end
 end
