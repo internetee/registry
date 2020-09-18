@@ -161,12 +161,10 @@ class Registrar
 
       possible_users = ApiUser.where(identity_code: idc) || User.new
       possible_users.each do |selected_user|
-        next unless selected_user.registrar.white_ips.registrar_area.include_ip?(request.ip)
-
-        return selected_user
+        if selected_user.registrar.white_ips.registrar_area.include_ip?(request.ip)
+          return selected_user
+        end
       end
-
-      User.new
     end
 
     def check_ip_restriction

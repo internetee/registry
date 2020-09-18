@@ -4,25 +4,26 @@ class BouncedMailAddress < ApplicationRecord
   before_validation :assign_bounce_reason
 
   def assign_bounce_reason
-    if recipient_json
-      self.bounce_reason = "#{action} (#{status} #{diagnostic})"
-    else
-      self.bounce_reason = nil
-    end
+    return self.bounce_reason = nil unless recipient_json
+
+    self.bounce_reason = "#{action} (#{status} #{diagnostic})"
   end
 
   def diagnostic
-    return nil unless recipient_json
+    return unless recipient_json
+
     recipient_json['diagnosticCode']
   end
 
   def action
-    return nil unless recipient_json
+    return unless recipient_json
+
     recipient_json['action']
   end
 
   def status
-    return nil unless recipient_json
+    return unless recipient_json
+
     recipient_json['status']
   end
 
