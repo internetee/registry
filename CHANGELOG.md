@@ -1,3 +1,6 @@
+18.09.2020
+* Updated testing documentation [#1285](https://github.com/internetee/registry/pull/1285)
+
 16.09.2020
 * Refactored orphaned contact archivation process [#956](https://github.com/internetee/registry/issues/956)
 * Rails update to 6.0.3.3 [#1685](https://github.com/internetee/registry/pull/1685)
