@@ -22,11 +22,6 @@ Documentation
 * [Database diagram](/doc/models_complete.svg)
 * [Controllers diagram](/doc/controllers_complete.svg)
 
-### Updating documentation
-
-    AUTODOC=true rspec spec/requests
-    EPP_DOC=true rspec spec/epp --tag epp --require support/epp_doc.rb --format EppDoc > doc/epp_examples.md
-
 Installation
 ------------
 
@@ -380,6 +375,8 @@ All registry demo data can be found at:
     db/seeds.rb
 
 Initially you can use two type of users: admin users and EPP users.
+
+For using EPP we are strongly recommend to install epp_proxy instead of mod_epp. You can get epp_proxy from https://github.com/internetee/epp_proxy
 
 ### Wkhtmltopdf setup
 
