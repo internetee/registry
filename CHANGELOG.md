@@ -1,6 +1,7 @@
 18.09.2020
 * Updated testing documentation [#1285](https://github.com/internetee/registry/pull/1285)
 * Removed mod-epp docs - replaced by epp-proxy [#1284](https://github.com/internetee/registry/pull/1284)
+* Removed outdated diagrams [#1073](https://github.com/internetee/registry/pull/1073)
 
 16.09.2020
 * Refactored orphaned contact archivation process [#956](https://github.com/internetee/registry/issues/956)
