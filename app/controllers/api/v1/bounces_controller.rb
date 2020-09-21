@@ -5,6 +5,8 @@ module Api
 
       # POST api/v1/bounces/
       def create
+        return head(:bad_request) unless bounce_params[:bounce][:bouncedRecipients].any?
+
         BouncedMailAddress.record(bounce_params)
         head(:created)
       rescue ActionController::ParameterMissing
