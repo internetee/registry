@@ -1,0 +1,4 @@
+app/**/*.rb
+-o docs
+--tag document:'Should be documented'
+--query 'has_tag?(:document)'

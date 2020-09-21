@@ -1,3 +1,6 @@
+# The main domain class
+#
+# @document
 class Domain < ApplicationRecord
   include UserEvents
   include Versions # version/domain_version.rb
