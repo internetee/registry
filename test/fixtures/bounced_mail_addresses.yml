@@ -1,7 +1,6 @@
 one:
   email: bounced@registry.test
   bounce_reason: failed (5.1.1 smtp; 550 5.1.1 user unknown)
-  incidents: 1
   recipient_json: {
     "action": "failed",
     "status": "5.1.1",
