@@ -76,6 +76,7 @@ group :development do
   # deploy
   gem 'listen', '3.2.1'
   gem 'mina', '0.3.1' # for fast deployment
+  gem 'yard'
 end
 
 group :development, :test do
