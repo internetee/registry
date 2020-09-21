@@ -482,11 +482,14 @@ ALTER SEQUENCE public.blocked_domains_id_seq OWNED BY public.blocked_domains.id;
 CREATE TABLE public.bounced_mail_addresses (
     id bigint NOT NULL,
     email character varying NOT NULL,
-    bounce_reason character varying NOT NULL,
-    response_json jsonb,
+    message_id character varying NOT NULL,
+    bounce_type character varying NOT NULL,
+    bounce_subtype character varying NOT NULL,
+    action character varying NOT NULL,
+    status character varying NOT NULL,
+    diagnostic character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    recipient_json jsonb NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -4956,8 +4959,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200908131554'),
 ('20200910085157'),
 ('20200910102028'),
-('20200916125326'),
-('20200917104213'),
-('20200921084356');
+('20200916125326');
 
 
