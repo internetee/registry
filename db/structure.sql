@@ -483,7 +483,6 @@ CREATE TABLE public.bounced_mail_addresses (
     id bigint NOT NULL,
     email character varying NOT NULL,
     bounce_reason character varying NOT NULL,
-    incidents integer DEFAULT 1 NOT NULL,
     response_json jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
@@ -4958,6 +4957,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200910085157'),
 ('20200910102028'),
 ('20200916125326'),
-('20200917104213');
+('20200917104213'),
+('20200921084356');
 
 

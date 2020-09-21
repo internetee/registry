@@ -8,11 +8,6 @@
 </p>
 
 <p>
-  <strong>Incidents:</strong>
-  <%= @bounced_mail_address.incidents %>
-</p>
-
-<p>
   <strong>Bounced recipient JSON:</strong>
   <pre><%= JSON.pretty_generate(@bounced_mail_address.recipient_json) %></pre>
 </p>
