@@ -299,7 +299,7 @@ Rails.application.routes.draw do
     resources :delayed_jobs
     resources :epp_logs
     resources :repp_logs
-    resources :bounced_mail_addresses
+    resources :bounced_mail_addresses, only: %i[index show destroy]
 
     authenticate :admin_user do
       mount Que::Web, at: 'que'
