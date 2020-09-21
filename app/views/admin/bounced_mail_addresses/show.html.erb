@@ -1,20 +1,26 @@
+<p>
   <strong>Email:</strong>
   <%= @bounced_mail_address.email %>
 </p>
 
 <p>
-  <strong>Bounce reason:</strong>
-  <%= @bounced_mail_address.bounce_reason %>
+  <strong>Bounced message ID:</strong>
+  <%= @bounced_mail_address.message_id %>
 </p>
 
 <p>
-  <strong>Bounced recipient JSON:</strong>
-  <pre><%= JSON.pretty_generate(@bounced_mail_address.recipient_json) %></pre>
+  <strong>Overall bounce type:</strong>
+  <%= @bounced_mail_address.bounce_type %> (<%= @bounced_mail_address.bounce_subtype %> )
 </p>
 
 <p>
-  <strong>Bounce payload:</strong>
-  <pre><%= JSON.pretty_generate(@bounced_mail_address.response_json) %></pre>
+  <strong>Bounced recipient status:</strong>
+  <%= @bounced_mail_address.action %> (<%= @bounced_mail_address.status %>)
+</p>
+
+<p>
+  <strong>Bounced recipient diagnostic:</strong>
+  <pre><%= @bounced_mail_address.diagnostic %></pre>
 </p>
 
 <%= link_to 'Back', admin_bounced_mail_addresses_path %>
