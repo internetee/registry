@@ -78,6 +78,18 @@ identical_to_william:
   auth_info: 5ab865
   uuid: c0a191d5-3793-4f0b-8f85-491612d0293e
 
+registrar_ltd:
+  name: Registrar Ltd
+  email: registrar@inbox.test
+  phone: '+555.555'
+  ident: 1234567890
+  ident_type: org
+  registrar: goodnames
+  ident_country_code: US
+  code: registrarltd-001
+  auth_info: e2c441
+  uuid: 28b65455-6f1a-49fd-961c-0758886dbd76
+
 invalid:
   name: any
   code: invalid
