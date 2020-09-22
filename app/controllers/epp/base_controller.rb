@@ -270,13 +270,12 @@ module Epp
     end
 
     # Returns how many elements were present in the request
-    # if use_prefix is true, @prefix will be prepended to selectors e.g create > create > name
+    # if use_prefix is true, `@prefix` will be prepended to selectors e.g create > create > name
     # default is true
     #
-    # @prefix = 'create > create >'
-    # element_count 'name', 'registrar', use_prefix: false
-    # => 2
-
+    #   `@prefix` = 'create > create >'
+    #   element_count 'name', 'registrar', use_prefix: false
+    #   => 2
     def element_count(*selectors)
       options = selectors.extract_options!
       use_prefix = options[:use_prefix] != false # use_prefix is true by default

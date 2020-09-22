@@ -1,6 +1,3 @@
-# The main domain class
-#
-# @document
 class Domain < ApplicationRecord
   include UserEvents
   include Versions # version/domain_version.rb
@@ -18,6 +15,8 @@ class Domain < ApplicationRecord
 
   attr_accessor :legal_document_id
 
+  # Used for backward compatibility with old PaperTrail records
+  #
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
   alias_attribute :auth_info, :transfer_code # Old attribute name; for PaperTrail

@@ -1,4 +1,9 @@
 app/**/*.rb
+
 -o docs
---tag document:'Should be documented'
---query 'has_tag?(:document)'
+# optional setup to document only set methods/objects
+#--tag document:'Should be documented'
+#--query 'has_tag?(:document)'
+#--hide-tag document
+--markup=markdown
+--private
