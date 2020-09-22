@@ -91,7 +91,7 @@ module Api
         private
 
         def current_user_contacts
-          current_registrant_user.contacts
+          current_registrant_user.contacts(representable: false)
         rescue CompanyRegister::NotAvailableError
           current_registrant_user.direct_contacts
         end

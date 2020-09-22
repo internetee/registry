@@ -22,8 +22,8 @@ class RegistrantUser < User
                                            citizen_country_code: country.alpha3)
   end
 
-  def contacts(representment: true)
-    Contact.registrant_user_contacts(self, representment: representment)
+  def contacts(representable: true)
+    Contact.registrant_user_contacts(self, representable: representable)
   end
 
   def direct_contacts

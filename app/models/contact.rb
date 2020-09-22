@@ -210,11 +210,11 @@ class Contact < ApplicationRecord
       )
     end
 
-    def registrant_user_contacts(registrant_user, representment: true)
+    def registrant_user_contacts(registrant_user, representable: true)
       represented_contacts = registrant_user_direct_contacts(registrant_user)
                              .or(registrant_user_company_contacts(registrant_user))
 
-      return represented_contacts if representment
+      return represented_contacts if representable
 
       represented_contacts.or(registrant_user_indirect_contacts(registrant_user))
     end
