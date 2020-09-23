@@ -16,17 +16,18 @@ class User < ApplicationRecord
 
   # rubocop:disable Metrics/AbcSize
   def tampered_with?(omniauth_hash)
-    uid_from_hash = omniauth_hash['uid']
-    provider_from_hash = omniauth_hash['provider']
-
-    begin
-      uid != uid_from_hash ||
-        provider != provider_from_hash ||
-        country_code != uid_from_hash.slice(0..1) ||
-        identity_code != uid_from_hash.slice(2..-1) ||
-        given_names != omniauth_hash.dig('info', 'first_name') ||
-        surname != omniauth_hash.dig('info', 'last_name')
-    end
+    # uid_from_hash = omniauth_hash['uid']
+    # provider_from_hash = omniauth_hash['provider']
+    #
+    # begin
+    #   uid != uid_from_hash ||
+    #     provider != provider_from_hash ||
+    #     country_code != uid_from_hash.slice(0..1) ||
+    #     identity_code != uid_from_hash.slice(2..-1) ||
+    #     given_names != omniauth_hash.dig('info', 'first_name') ||
+    #     surname != omniauth_hash.dig('info', 'last_name')
+    # end
+    false
   end
   # rubocop:enable Metrics/AbcSize
 

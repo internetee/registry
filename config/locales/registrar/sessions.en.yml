@@ -7,3 +7,7 @@ en:
       login_mid:
         header: Log in with mobile-id
         submit_btn: Login
+    tara:
+      callback:
+        header_html: "Eesti Interneti SA<br>Registrar Portal"
+        submit_btn: Login

@@ -19,11 +19,15 @@
 
         <hr>
 
-        <%= link_to '/registrar/login/mid', id: 'login-with-mobile-id-btn' do %>
-            <%= image_tag 'mid.gif' %>
-        <% end %>
+        <%#= link_to '/registrar/login/mid', id: 'login-with-mobile-id-btn' do %>
+            <%#= image_tag 'mid.gif' %>
+        <%# end %>
 
-        <%= link_to registrar_id_card_sign_in_path, method: :post do %>
+        <%#= link_to registrar_id_card_sign_in_path, method: :post do %>
+            <%#= image_tag 'id_card.gif' %>
+        <%# end %>
+
+        <%= link_to "/auth/tara", method: :post, class: "ui button big primary" do %>
             <%= image_tag 'id_card.gif' %>
         <% end %>
     </div>
