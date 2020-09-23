@@ -86,10 +86,10 @@ Rails.application.routes.draw do
 
       post 'mid' => 'sessions#mid'
 
-      match '/tara/callback', via: %i[get post], to: 'tara#callback', as: :tara_callback
-      match '/tara/cancel', via: %i[get post delete], to: 'tara#cancel',
+      match '/open_id/callback', via: %i[get post], to: 'tara#callback', as: :tara_callback
+      match '/open_id/cancel', via: %i[get post delete], to: 'tara#cancel',
             as: :tara_cancel
-      match '/tara/create', via: [:post], to: 'tara#create', as: :tara_create
+      match '/open_id/create', via: [:post], to: 'tara#create', as: :tara_create
     end
 
     resources :invoices, except: %i[new create edit update destroy] do
