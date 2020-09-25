@@ -1,7 +1,7 @@
 class RegistrantUser < User
   attr_accessor :idc_data
 
-  devise :trackable, :timeoutable, :id_card_authenticatable
+  devise :trackable, :timeoutable#, :id_card_authenticatable
 
   def ability
     @ability ||= Ability.new(self)

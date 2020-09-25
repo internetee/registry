@@ -555,6 +555,7 @@ DEPENDENCIES
   minitest (~> 5.14)
   money-rails
   nokogiri
+  omniauth
   omniauth-rails_csrf_protection
   omniauth-tara!
   paper_trail (~> 10.3)

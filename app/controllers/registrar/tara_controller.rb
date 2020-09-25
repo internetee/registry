@@ -2,6 +2,8 @@ require 'tampering_detected'
 
 class Registrar
   class TaraController < ApplicationController
+    skip_authorization_check
+
     rescue_from Errors::TamperingDetected do
       redirect_to root_url, alert: t('auth.tara.tampering')
     end
