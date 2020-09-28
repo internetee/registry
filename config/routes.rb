@@ -77,14 +77,14 @@ Rails.application.routes.draw do
     devise_for :users, path: '', class_name: 'ApiUser', skip: %i[sessions]
 
     devise_scope :registrar_user do
-      get 'login/mid' => 'sessions#login_mid'
-      post 'login/mid' => 'sessions#mid'
-      post 'login/mid_status' => 'sessions#mid_status'
+      # get 'login/mid' => 'sessions#login_mid'
+      # post 'login/mid' => 'sessions#mid'
+      # post 'login/mid_status' => 'sessions#mid_status'
 
       # /registrar/id path is hardcoded in Apache config for authentication with Estonian ID-card
-      post 'id' => 'sessions#id_card', as: :id_card_sign_in
-
-      post 'mid' => 'sessions#mid'
+      # post 'id' => 'sessions#id_card', as: :id_card_sign_in
+      #
+      # post 'mid' => 'sessions#mid'
 
       match '/open_id/callback', via: %i[get post], to: 'tara#callback', as: :tara_callback
       match '/open_id/cancel', via: %i[get post delete], to: 'tara#cancel',

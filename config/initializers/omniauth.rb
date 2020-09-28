@@ -18,6 +18,7 @@ redirect_uri = ENV['tara_redirect_uri']
 
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider "tara", {
+      callback_path: '/registrar/open_id/callback',
       name: 'tara',
       scope: ['openid'],
       state: Proc.new{ SecureRandom.hex(10) },
