@@ -1,5 +1,6 @@
 28.09.2020
 * Fixed data leakage with shared contacts [#1690](https://github.com/internetee/registry/issues/1690)
+* RenewProhoboted status blocks renew [#1693](https://github.com/internetee/registry/issues/1693)
 
 18.09.2020
 * Updated testing documentation [#1285](https://github.com/internetee/registry/pull/1285)
