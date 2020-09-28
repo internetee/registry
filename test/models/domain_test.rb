@@ -431,6 +431,19 @@ class DomainTest < ActiveSupport::TestCase
     assert_equal created_at, domain.registered_at
   end
 
+  def test_not_renewable_if_renew_prohibited
+    assert @domain.renewable?
+
+    @domain.statuses << DomainStatus::SERVER_RENEW_PROHIBITED
+    assert_not @domain.renewable?
+
+    @domain.statuses.delete(DomainStatus::SERVER_RENEW_PROHIBITED)
+    assert @domain.renewable?
+
+    @domain.statuses << DomainStatus::CLIENT_RENEW_PROHIBITED
+    assert_not @domain.renewable?
+  end
+
   private
 
   def valid_domain
