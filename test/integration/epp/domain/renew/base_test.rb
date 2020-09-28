@@ -196,7 +196,7 @@ class EppDomainRenewBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     domain.reload
 
-    assert_epp_response :object_is_not_eligible_for_renewal
+    assert_epp_response :object_status_prohibits_operation
     assert_equal original_valid_to, domain.valid_to
   end
 end
