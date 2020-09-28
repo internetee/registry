@@ -1,3 +1,6 @@
+28.09.2020
+* Fixed data leakage with shared contacts [#1690](https://github.com/internetee/registry/issues/1690)
+
 18.09.2020
 * Updated testing documentation [#1285](https://github.com/internetee/registry/pull/1285)
 * Removed mod-epp docs - replaced by epp-proxy [#1284](https://github.com/internetee/registry/pull/1284)
