@@ -167,4 +167,36 @@ class EppDomainRenewBaseTest < EppTestCase
     end
     assert_epp_response :parameter_value_policy_error
   end
+
+  def test_fails_if_domain_has_renewal_prohibited_statuses
+    travel_to Time.zone.parse('2010-07-05')
+    domain = domains(:shop)
+    domain.statuses << DomainStatus::SERVER_RENEW_PROHIBITED
+    domain.save
+
+    original_valid_to = domain.valid_to
+    default_renewal_period = 1.year
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <renew>
+            <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{domain.name}</domain:name>
+              <domain:curExpDate>#{domain.expire_time.to_date}</domain:curExpDate>
+              <domain:period unit="y">1</domain:period>
+            </domain:renew>
+          </renew>
+        </command>
+      </epp>
+    XML
+
+    post epp_renew_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    domain.reload
+
+    assert_epp_response :object_status_prohibits_operation
+    assert_equal original_valid_to, domain.valid_to
+  end
 end
