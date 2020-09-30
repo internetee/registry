@@ -1,3 +1,6 @@
+30.09.2020
+* Added Tara integration to registrar portal [#1680](https://github.com/internetee/registry/issues/1680)
+
 28.09.2020
 * Fixed data leakage with shared contacts [#1690](https://github.com/internetee/registry/issues/1690)
 * RenewProhoboted status blocks renew [#1693](https://github.com/internetee/registry/issues/1693)
