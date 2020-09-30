@@ -4,6 +4,10 @@ en:
       new:
         header_html: Eesti Interneti SA<br>Registrar Portal
         submit_btn: Login
+        sign_in_with_identity_document: "Sign in with identity document"
+        identity_document_text: |
+          Sign in using Estonian (incl. e-residents) ID card, mobile ID,
+          Bank link or other EU citizen's electronic ID supported by EIDAS.
       login_mid:
         header: Log in with mobile-id
         submit_btn: Login
