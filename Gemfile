@@ -53,6 +53,11 @@ gem 'digidoc_client',
     github: 'tarmotalu/digidoc_client',
     ref: '1645e83a5a548addce383f75703b0275c5310c32'
 
+# TARA
+gem 'omniauth'
+gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-tara', github: 'internetee/omniauth-tara'
+
 
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.1.0', github: 'internetee/epp-xml'
