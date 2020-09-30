@@ -21,5 +21,4 @@ class User < ApplicationRecord
 
     User.find_by(identity_code: identity_code, country_code: country_code)
   end
-
 end
