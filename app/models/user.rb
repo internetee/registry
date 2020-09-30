@@ -17,8 +17,8 @@ class User < ApplicationRecord
   def self.from_omniauth(omniauth_hash)
     uid = omniauth_hash['uid']
     identity_code = uid.slice(2..-1)
-    country_code = uid.slice(0..1)
+    # country_code = uid.slice(0..1)
 
-    User.find_by(identity_code: identity_code, country_code: country_code)
+    User.find_by(identity_code: identity_code)
   end
 end
