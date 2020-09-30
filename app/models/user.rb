@@ -1,9 +1,6 @@
 class User < ApplicationRecord
   include Versions # version/user_version.rb
 
-  ESTONIAN_COUNTRY_CODE = 'EE'.freeze
-  TARA_PROVIDER = 'tara'.freeze
-
   has_many :actions, dependent: :restrict_with_exception
 
   attr_accessor :phone

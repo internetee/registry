@@ -8,6 +8,7 @@ class Registrar
       @api_user = ApiUser.from_omniauth(user_hash)
 
       if @api_user
+        flash[:notice] = t(:signed_in_successfully)
         sign_in_and_redirect(:registrar_user, @api_user)
       else
         show_error and return

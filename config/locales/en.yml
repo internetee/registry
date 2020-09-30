@@ -660,3 +660,5 @@ en:
     ipv6: IPv6
     reference_no: Reference number
     iban: IBAN
+  sign_in: "Sign in"
+  signed_in_successfully: "Signed in successfully"
