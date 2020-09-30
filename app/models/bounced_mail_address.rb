@@ -1,11 +1,8 @@
 class BouncedMailAddress < ApplicationRecord
   validates :email, :message_id, :bounce_type, :bounce_subtype, :action, :status, presence: true
-  before_validation :assign_bounce_reason
 
-  def assign_bounce_reason
-    return self.bounce_reason = nil unless recipient_json
-
-    self.bounce_reason = "#{action} (#{status} #{diagnostic})"
+  def bounce_reason
+    "#{action} (#{status} #{diagnostic})"
   end
 
   def self.record(json)
@@ -17,7 +14,7 @@ class BouncedMailAddress < ApplicationRecord
     end
   end
 
-  def params_from_json(json, bounced_record)
+  def self.params_from_json(json, bounced_record)
     {
       email: bounced_record['emailAddress'],
       message_id: json['mail']['messageId'],

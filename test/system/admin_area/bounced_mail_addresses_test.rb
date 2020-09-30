@@ -28,8 +28,7 @@ class AdminBouncedMailAddressesTest < ApplicationSystemTestCase
     assert_text @bounced_mail.diagnostic
     assert_text @bounced_mail.email
 
-    assert_text 'bouncedRecipients'
-    assert_text '010f0174a0c7d4f9-27d59756-6111-4d5f-xxxx-26bee0d55fa2-000000'
+    assert_text @bounced_mail.message_id
   end
 
   def test_deletes_registrar

@@ -1,39 +1,10 @@
 one:
   email: bounced@registry.test
-  bounce_reason: failed (5.1.1 smtp; 550 5.1.1 user unknown)
-  recipient_json: {
-    "action": "failed",
-    "status": "5.1.1",
-    "emailAddress": "bounced@registry.test",
-    "diagnosticCode": "smtp; 550 5.1.1 user unknown"
-  }
-  response_json: {
-    "notificationType": "Bounce",
-    "mail": {
-      "source": "noreply@registry.test",
-      "sourceIp": "195.43.86.5",
-      "messageId": "010f0174a0c7d348-ea6e2fc1-0854-4073-b71f-5cecf9b0d0b2-000000",
-      "sourceArn": "arn:aws:ses:us-east-2:65026820000:identity/noreply@registry.test",
-      "timestamp": "2020-09-18T10:34:44.000Z",
-      "destination": [ "bounced@registry.test" ],
-      "sendingAccountId": "650268220000"
-    },
-    "bounce": {
-      "timestamp": "2020-09-18T10:34:44.911Z",
-      "bounceType": "Permanent",
-      "feedbackId": "010f0174a0c7d4f9-27d59756-6111-4d5f-xxxx-26bee0d55fa2-000000",
-      "remoteMtaIp": "127.0.01",
-      "reportingMTA": "dsn; xxx.amazonses.com",
-      "bounceSubType": "General",
-      "bouncedRecipients": [
-        {
-          "action": "failed",
-          "status": "5.1.1",
-          "emailAddress": "bounced@registry.test",
-          "diagnosticCode": "smtp; 550 5.1.1 user unknown"
-        }
-      ]
-    }
-  }
+  message_id: 010f0174a0c7d348-ea6e2fc1-0854-4073-b71f-5cecf9b0d0b2-000000
+  bounce_type: Permanent
+  bounce_subtype: General
+  action: failed
+  status: '5.1.1'
+  diagnostic: 'smtp; 550 5.1.1 user unknown'
   created_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
   updated_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
