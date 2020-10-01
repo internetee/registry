@@ -76,12 +76,6 @@ Rails.application.routes.draw do
 
     devise_for :users, path: '', class_name: 'ApiUser', skip: %i[sessions]
 
-    devise_scope :registrar_user do
-      match '/open_id/callback', via: %i[get post], to: 'tara#callback', as: :tara_callback
-      match '/open_id/cancel', via: %i[get post delete], to: 'tara#cancel',
-            as: :tara_cancel
-    end
-
     resources :invoices, except: %i[new create edit update destroy] do
       resource :delivery, controller: 'invoices/delivery', only: %i[new create]
 
@@ -158,6 +152,22 @@ Rails.application.routes.draw do
       post 'sessions', to: 'registrar/sessions#create', as: :registrar_user_session
 
       delete 'sign_out', to: 'registrar/sessions#destroy', as: :destroy_registrar_user_session
+
+      # TARA
+      match '/open_id/callback', via: %i[get post], to: 'sso/tara#registrar_callback'
+      match '/open_id/cancel', via: %i[get post delete], to: 'sso/tara#cancel'
+    end
+  end
+
+  scope :registrant do
+    devise_scope :registrant_user do
+      get 'sign_in', to: 'registrant/sessions#new', as: :new_registrant_user_session
+      post 'sessions', to: 'registrant/sessions#create', as: :registrant_user_session
+      delete 'sign_out', to: 'registrant/sessions#destroy', as: :destroy_registrant_user_session
+
+      # TARA
+      match '/open_id/callback', via: %i[get post], to: 'sso/tara#registrant_callback'
+      match '/open_id/cancel', via: %i[get post delete], to: 'sso/tara#cancel'
     end
   end
 
@@ -166,16 +176,6 @@ Rails.application.routes.draw do
 
     # POST /registrant/sign_in is not used
     devise_for :users, path: '', class_name: 'RegistrantUser'
-    devise_scope :registrant_user do
-      get 'login/mid' => 'sessions#login_mid'
-      post 'login/mid' => 'sessions#mid'
-      post 'login/mid_status' => 'sessions#mid_status'
-      post 'mid' => 'sessions#mid'
-
-      match '/open_id/callback', via: %i[get post], to: 'tara#callback', as: :tara_registrant_callback
-      match '/open_id/cancel', via: %i[get post delete], to: 'tara#cancel',
-            as: :tara_registrant_cancel
-    end
 
     resources :registrars, only: :show
     resources :domains, only: %i[index show] do
