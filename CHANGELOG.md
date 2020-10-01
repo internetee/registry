@@ -1,3 +1,6 @@
+01.10.2020
+* Fixed EPP authentication [#1697](https://github.com/internetee/registry/pull/1697)
+
 30.09.2020
 * Added Tara integration to registrar portal [#1680](https://github.com/internetee/registry/issues/1680)
 
