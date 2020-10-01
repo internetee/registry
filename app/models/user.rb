@@ -16,6 +16,6 @@ class User < ApplicationRecord
     identity_code = uid.slice(2..-1)
     # country_code = uid.slice(0..1)
 
-    User.find_by(identity_code: identity_code)
+    find_by(identity_code: identity_code)
   end
 end
