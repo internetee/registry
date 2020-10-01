@@ -1,7 +1,7 @@
 class RegistrantUser < User
   attr_accessor :idc_data
 
-  devise :trackable, :timeoutable, :id_card_authenticatable
+  devise :trackable, :timeoutable
 
   def ability
     @ability ||= Ability.new(self)
@@ -74,7 +74,7 @@ class RegistrantUser < User
       last_name = omniauth_hash.dig('info', 'last_name')
 
       user_data = { first_name: first_name, last_name: last_name,
-        ident: identity_code, country_code: country_code }
+                    ident: identity_code, country_code: country_code }
 
       find_or_create_by_user_data(user_data)
     end

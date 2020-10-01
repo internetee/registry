@@ -172,10 +172,6 @@ Rails.application.routes.draw do
       post 'login/mid_status' => 'sessions#mid_status'
       post 'mid' => 'sessions#mid'
 
-      # /registrant/id path is hardcoded in Apache config for authentication with Estonian ID-card
-      # Client certificate is asked only on login form submission, therefore the path must be different from the one in
-      # `new_registrant_user_session_path` route, in case some other auth type will be implemented
-      post 'id' => 'sessions#create', as: :id_card_sign_in
       match '/open_id/callback', via: %i[get post], to: 'tara#callback', as: :tara_registrant_callback
       match '/open_id/cancel', via: %i[get post delete], to: 'tara#cancel',
             as: :tara_registrant_cancel
