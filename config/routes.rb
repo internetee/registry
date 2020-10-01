@@ -78,22 +78,6 @@ Rails.application.routes.draw do
 
     devise_for :users, path: '', class_name: 'ApiUser', skip: %i[sessions]
 
-    devise_scope :registrar_user do
-      get 'login/mid' => 'sessions#login_mid'
-      post 'login/mid' => 'sessions#mid'
-      post 'login/mid_status' => 'sessions#mid_status'
-
-      # /registrar/id path is hardcoded in Apache config for authentication with Estonian ID-card
-      post 'id' => 'sessions#id_card', as: :id_card_sign_in
-
-      post 'mid' => 'sessions#mid'
-
-      match '/tara/callback', via: %i[get post], to: 'tara#callback', as: :tara_callback
-      match '/tara/cancel', via: %i[get post delete], to: 'tara#cancel',
-            as: :tara_cancel
-      match '/tara/create', via: [:post], to: 'tara#create', as: :tara_create
-    end
-
     resources :invoices, except: %i[new create edit update destroy] do
       resource :delivery, controller: 'invoices/delivery', only: %i[new create]
 
@@ -194,15 +178,6 @@ Rails.application.routes.draw do
 
     # POST /registrant/sign_in is not used
     devise_for :users, path: '', class_name: 'RegistrantUser'
-
-      # /registrant/id path is hardcoded in Apache config for authentication with Estonian ID-card
-      # Client certificate is asked only on login form submission, therefore the path must be different from the one in
-      # `new_registrant_user_session_path` route, in case some other auth type will be implemented
-      post 'id' => 'sessions#create', as: :id_card_sign_in
-      match '/open_id/callback', via: %i[get post], to: 'tara#callback', as: :tara_registrant_callback
-      match '/open_id/cancel', via: %i[get post delete], to: 'tara#cancel',
-            as: :tara_registrant_cancel
-    end
 
     resources :registrars, only: :show
     # resources :companies, only: :index
