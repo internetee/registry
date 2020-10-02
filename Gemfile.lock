@@ -9,8 +9,8 @@ GIT
 
 GIT
   remote: https://github.com/internetee/directo.git
-  revision: e4ba54f601d1815fd8782a196788730d47861e86
-  branch: master
+  revision: 9193bd9bcd3ab48a2e25543270b62fb8cb9ff1b2
+  branch: 10-fix-vat-vat-code-if-reverse-charge-vat
   specs:
     directo (1.0.1)
       money (~> 6.13)
