@@ -1743,7 +1743,7 @@ ALTER SEQUENCE public.log_payment_orders_id_seq OWNED BY public.log_payment_orde
 
 
 --
--- Name: log_prices; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_prices; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_prices (
@@ -1781,7 +1781,7 @@ ALTER SEQUENCE public.log_prices_id_seq OWNED BY public.log_prices.id;
 
 
 --
--- Name: log_registrant_verifications; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_registrant_verifications; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_registrant_verifications (
@@ -3401,7 +3401,7 @@ ALTER TABLE ONLY public.log_payment_orders
 
 
 --
--- Name: log_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_prices
@@ -3409,7 +3409,7 @@ ALTER TABLE ONLY public.log_prices
 
 
 --
--- Name: log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_registrant_verifications
