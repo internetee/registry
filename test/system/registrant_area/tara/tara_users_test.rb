@@ -37,13 +37,15 @@ class RegistrantAreaTaraUsersTest < ApplicationSystemTestCase
   end
 
   def test_new_user_is_created_and_signed_in
-    OmniAuth.config.mock_auth[:tara] = OmniAuth::AuthHash.new(@new_user_hash)
+    OmniAuth.config.mock_auth[:rant_tara] = OmniAuth::AuthHash.new(@new_user_hash)
 
-    visit new_registrant_user_session_path
-    click_link('Sign in')
+    assert_difference 'RegistrantUser.count' do
+      visit new_registrant_user_session_path
+      click_link('Sign in')
 
-    assert_text('Signed in successfully')
-    assert 'New Registrant User', RegistrantUser.last.username
-    assert 'EE-51007050604', RegistrantUser.last.registrant_ident
+      assert_equal 'New Registrant User', RegistrantUser.last.username
+      assert_equal 'EE-51007050604', RegistrantUser.last.registrant_ident
+      assert_text('Signed in successfully')
+    end
   end
 end
