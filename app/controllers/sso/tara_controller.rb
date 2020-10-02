@@ -15,7 +15,7 @@ module Sso
     # rubocop:disable Style/AndOr
     def callback(user, registrar: true)
       session[:omniauth_hash] = user_hash
-      (show error and return) unless user
+      (show_error(registrar: registrar) and return) unless user
 
       flash[:notice] = t(:signed_in_successfully)
       sign_in_and_redirect(registrar ? :registrar_user : :registrant_user, user)
