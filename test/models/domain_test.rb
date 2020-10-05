@@ -444,6 +444,20 @@ class DomainTest < ActiveSupport::TestCase
     assert_not @domain.renewable?
   end
 
+  def test_renewable_if_pending_delete
+    assert @domain.renewable?
+    @domain.statuses << DomainStatus::PENDING_DELETE
+
+    assert @domain.renewable?
+  end
+
+  def test_not_renewable_if_pending_delete_unconfirmed
+    assert @domain.renewable?
+    @domain.statuses << DomainStatus::PENDING_DELETE_CONFIRMATION
+
+    assert_not @domain.renewable?
+  end
+
   private
 
   def valid_domain
