@@ -1,5 +1,5 @@
 require 'deserializers/xml/contact_update'
-
+require 'deserializers/xml/contact_create'
 module Epp
   class ContactsController < BaseController
     before_action :find_contact, only: [:info, :update, :delete]
@@ -21,13 +21,13 @@ module Epp
 
     def create
       authorize! :create, Epp::Contact
-      frame = params[:parsed_frame]
-      @contact = Epp::Contact.new(frame, current_user.registrar)
 
-      @contact.add_legal_file_to_new(frame)
-      @contact.generate_code
+      @contact = Epp::Contact.new(params[:parsed_frame], current_user.registrar)
+      collected_data = ::Deserializers::Xml::ContactCreate.new(params[:parsed_frame])
 
-      if @contact.save
+      action = Actions::ContactCreate.new(@contact, collected_data.legal_document)
+
+      if action.call
         if !address_processing? && address_given?
           @response_code = 1100
           @response_description = t('epp.contacts.completed_without_address')
