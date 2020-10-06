@@ -75,7 +75,7 @@ gem 'domain_name'
 gem 'haml', '~> 5.0'
 gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
 
-gem 'directo', github: 'internetee/directo', branch: '10-fix-vat-vat-code-if-reverse-charge-vat'
+gem 'directo', github: 'internetee/directo', branch: 'master'
 
 group :development do
   # deploy
