@@ -30,6 +30,37 @@ module Repp
           total_number_of_records: current_user.registrar.contacts.count
         }
       end
+
+      desc 'Create new contact object'
+      params do
+        requires :contact, type: Hash, allow_blank: false do
+          requires :name, type: String, desc: 'Full name of contact'
+          requires :ident, type: String, desc: 'Government identifier of contact'
+          requires :ident_type, type: String, desc: 'Type of contact ident'
+          requires :ident_country_code, type: String, desc: 'Ident country code'
+          requires :country_code, type: String, desc: 'Address country'
+          requires :phone, type: String, desc: 'Phone number of contact. In format of +country_prefix.number'
+          requires :email, type: String, desc: 'Email address of contact'
+          requires :fax, type: String, desc: 'Fax number of contact'
+          requires :street, type: String, desc: 'Address street'
+          requires :city, type: String, desc: 'Address city'
+          requires :zip, type: String, desc: 'Address ZIP'
+        end
+      end
+
+      post '/' do
+        @legal_doc = params[:legal_documents]
+        @contact = Contact.new(params[:contact])
+        @contact.registrar = current_user.registrar
+        action = Actions::ContactCreate.new(@contact, @legal_doc)
+
+        if action.call
+          @response = { data: { contact: { id: @contact.id } } }
+        else
+          status :bad_request
+          @response = { errors: @contact.errors }
+        end
+      end
     end
   end
 end
