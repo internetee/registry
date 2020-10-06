@@ -1,5 +1,6 @@
 06.10.2020
 * Updated Directo gem to fix vat codes for EU and non-EU clients [#1699](https://github.com/internetee/registry/pull/1699)
+* Email validation level is now configurable [#1675](https://github.com/internetee/registry/pull/1675)
 
 01.10.2020
 * Fixed EPP authentication [#1697](https://github.com/internetee/registry/pull/1697)
