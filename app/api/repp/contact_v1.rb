@@ -34,18 +34,29 @@ module Repp
       desc 'Creates a new contact object'
       params do
         requires :contact, type: Hash, allow_blank: false do
+          # Contact info
           requires :name, type: String, desc: 'Full name of contact'
-          requires :ident, type: String, desc: 'Government identifier of contact'
-          requires :ident_type, type: String, desc: 'Type of contact ident'
-          requires :ident_country_code, type: String, desc: 'Ident country code'
-          requires :country_code, type: String, desc: 'Address country'
           requires :phone, type: String, desc: 'Phone number of contact. In format of +country_prefix.number'
           requires :email, type: String, desc: 'Email address of contact'
-          optional :fax, type: String, desc: 'Fax number of contact'
-          optional :street, type: String, desc: 'Address street'
-          optional :city, type: String, desc: 'Address city'
-          optional :zip, type: String, desc: 'Address ZIP'
+          optional :fax, type: String, allow_blank: true, desc: 'Fax number of contact'
+
+          # Ident
+          requires :ident, type: Hash do
+            requires :ident, type: String, allow_blank: false, desc: 'Government identifier of contact'
+            requires :ident_type, type: String, allow_blank: false, desc: 'Type of contact ident'
+            requires :ident_country_code, type: String, allow_blank: false, desc: 'Ident country code'
+          end
+
+          # Physical address
+          optional :addr, type: Hash do
+            requires :country_code, type: String, allow_blank: false, desc: 'Address country'
+            requires :street, type: String, allow_blank: false, desc: 'Address street'
+            requires :city, type: String, allow_blank: false, desc: 'Address city'
+            requires :zip, type: String, allow_blank: false, desc: 'Address ZIP'
+          end
         end
+
+        # Legal document
         optional :legal_document, type: Hash, allow_blank: false do
           requires :body, type: String, desc: 'Raw data of legal document'
           requires :type, type: String, desc: 'Format of legal document'
@@ -54,9 +65,20 @@ module Repp
 
       post '/' do
         @legal_doc = params[:legal_documents]
-        @contact = Contact.new(params[:contact])
-        @contact.registrar = current_user.registrar
-        action = Actions::ContactCreate.new(@contact, @legal_doc)
+        @contact_params = params[:contact]
+
+        # Ident object
+        @ident = @contact_params[:ident]
+        @contact_params.delete(:ident)
+
+        # Address
+        %w[city street zip country_code].each { |k| @contact_params[k] = @contact_params[:addr][k] }
+        @contact_params.delete(:addr)
+
+        @contact = Epp::Contact.new(@contact_params, current_user.registrar, epp: false)
+        puts "#{params[:contact]}"
+
+        action = Actions::ContactCreate.new(@contact, @legal_doc, @ident)
 
         if action.call
           @response = { contact: { id: @contact.code } }
@@ -89,7 +111,7 @@ module Repp
         end
       end
 
-      post '/:code' do
+      put '/:code' do
         @contact = current_user.registrar.contacts.find_by(code: params[:code])
         (status(:not_found) && return) unless @contact
 

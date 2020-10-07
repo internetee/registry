@@ -18,6 +18,10 @@ module Deserializers
       def legal_document
         @legal_document ||= ::Deserializers::Xml::LegalDocument.new(frame).call
       end
+
+      def ident
+        @ident ||= ::Deserializers::Xml::Ident.new(frame).call
+      end
     end
   end
 end

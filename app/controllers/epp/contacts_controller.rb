@@ -25,7 +25,7 @@ module Epp
       @contact = Epp::Contact.new(params[:parsed_frame], current_user.registrar)
       collected_data = ::Deserializers::Xml::ContactCreate.new(params[:parsed_frame])
 
-      action = Actions::ContactCreate.new(@contact, collected_data.legal_document)
+      action = Actions::ContactCreate.new(@contact, collected_data.legal_document, collected_data.ident)
 
       if action.call
         if !address_processing? && address_given?
