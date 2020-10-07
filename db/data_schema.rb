@@ -1,2 +1,2 @@
 # encoding: UTF-8
-DataMigrate::Data.define(version: 20200901131427)
+DataMigrate::Data.define(version: 20201007104651)
