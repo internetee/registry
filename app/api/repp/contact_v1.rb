@@ -36,15 +36,18 @@ module Repp
         requires :contact, type: Hash, allow_blank: false do
           # Contact info
           requires :name, type: String, desc: 'Full name of contact'
-          requires :phone, type: String, desc: 'Phone number of contact. In format of +country_prefix.number'
+          requires :phone, type: String,
+                           desc: 'Phone number of contact. In format of +country_prefix.number'
           requires :email, type: String, desc: 'Email address of contact'
           optional :fax, type: String, allow_blank: true, desc: 'Fax number of contact'
 
           # Ident
           requires :ident, type: Hash do
-            requires :ident, type: String, allow_blank: false, desc: 'Government identifier of contact'
+            requires :ident, type: String, allow_blank: false,
+                             desc: 'Government identifier of contact'
             requires :ident_type, type: String, allow_blank: false, desc: 'Type of contact ident'
-            requires :ident_country_code, type: String, allow_blank: false, desc: 'Ident country code'
+            requires :ident_country_code, type: String, allow_blank: false,
+                                          desc: 'Ident country code'
           end
 
           # Physical address
@@ -72,18 +75,29 @@ module Repp
         @contact_params.delete(:ident)
 
         # Address
+        address_present = params[:contact][:addr].keys.any?
+
         %w[city street zip country_code].each { |k| @contact_params[k] = @contact_params[:addr][k] }
         @contact_params.delete(:addr)
 
         @contact = Epp::Contact.new(@contact_params, current_user.registrar, epp: false)
-        puts "#{params[:contact]}"
 
         action = Actions::ContactCreate.new(@contact, @legal_doc, @ident)
 
         if action.call
-          @response = { contact: { id: @contact.code } }
+          if !Contact.address_processing? && address_present
+            @response_code = 1100
+            @response_description = I18n.t('epp.contacts.completed_without_address')
+          else
+            @response_code = 1000
+            @response_description = I18n.t('epp.contacts.completed')
+          end
+
+          @response = { code: @response_code,
+                        description: @response_description,
+                        data: { contact: { id: @contact.code } } }
         else
-          status :bad_request
+          status(:bad_request)
           @response = { errors: @contact.errors }
         end
       end
@@ -98,7 +112,8 @@ module Repp
           end
           optional :name, type: String, desc: 'Full name of contact'
           optional :country_code, type: String, desc: 'Address country'
-          optional :phone, type: String, desc: 'Phone number of contact. In format of +country_prefix.number'
+          optional :phone, type: String,
+                           desc: 'Phone number of contact. In format of +country_prefix.number'
           optional :email, type: String, desc: 'Email address of contact'
           optional :fax, type: String, desc: 'Fax number of contact'
           optional :street, type: String, desc: 'Address street'
@@ -125,7 +140,7 @@ module Repp
         if action.call
           @response = {}
         else
-          status :bad_request
+          status(:bad_request)
           @response = { errors: @contact.errors }
         end
       end

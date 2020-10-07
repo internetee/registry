@@ -3,6 +3,14 @@ module Repp
     format :json
     prefix :repp
 
+    rescue_from Grape::Exceptions::ValidationErrors do |e|
+      messages = e.full_messages
+      errors = []
+      messages.each { |m| errors << { code: 2003, message: m } }
+
+      error!({ errors: errors }, 400)
+    end
+
     http_basic do |username, password|
       @current_user ||= ApiUser.find_by(username: username, plain_text_password: password)
       if @current_user
