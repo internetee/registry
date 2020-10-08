@@ -37,10 +37,9 @@ Rails.application.routes.draw do
     get 'error/:command', to: 'errors#error'
   end
 
-  mount Repp::API => '/'
-
   namespace :repp do
     namespace :v1 do
+      resources :contacts
       resources :auctions, only: %i[index]
       resources :retained_domains, only: %i[index]
     end
