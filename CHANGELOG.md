@@ -1,3 +1,6 @@
+08.10.2020
+* Fixed serach in admin history [#1695](https://github.com/internetee/registry/issues/1695)
+
 06.10.2020
 * Updated Directo gem to fix vat codes for EU and non-EU clients [#1699](https://github.com/internetee/registry/pull/1699)
 * Email validation level is now configurable [#1675](https://github.com/internetee/registry/pull/1675)
