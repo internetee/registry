@@ -40,6 +40,11 @@ Rails.application.routes.draw do
   namespace :repp do
     namespace :v1 do
       resources :contacts
+      resources :accounts do
+        collection do
+          get 'balance'
+        end
+      end
       resources :auctions, only: %i[index]
       resources :retained_domains, only: %i[index]
     end
