@@ -29,7 +29,7 @@ Truemail.configure do |config|
   # Truemail.validate('email@email.com') call without with-parameter
   # Available validation types: :regex, :mx, :smtp
   if ENV['default_email_validation_type'].present? &&
-      %w[regex, mx, smtp].include?(ENV['default_email_validation_type'])
+      %w[regex mx smtp].include?(ENV['default_email_validation_type'])
     config.default_validation_type = ENV['default_email_validation_type'].to_sym
   elsif Rails.env.production?
     config.default_validation_type = :mx
