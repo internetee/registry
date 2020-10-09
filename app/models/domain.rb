@@ -489,7 +489,7 @@ class Domain < ApplicationRecord
   end
 
   def pending_update?
-    statuses.include?(DomainStatus::PENDING_UPDATE) && !statuses.include?(DomainStatus::FORCE_DELETE)
+    statuses.include?(DomainStatus::PENDING_UPDATE)
   end
 
   # depricated not used, not valid
