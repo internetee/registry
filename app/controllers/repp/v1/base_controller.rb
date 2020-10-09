@@ -46,7 +46,7 @@ module Repp
       end
 
       def ip_whitelisted?
-        return false unless @api_user.registrar.api_ip_white?(request.ip)
+        return false unless current_user.registrar.api_ip_white?(request.ip)
       end
 
       def basic_token
@@ -70,7 +70,6 @@ module Repp
 
         return if allowed
 
-        flash[:alert] = t('registrar.authorization.ip_not_allowed', ip: request.ip)
         render(json: { errors: [{ base: [I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip)] }] }, status: :unauthorized)
       end
 

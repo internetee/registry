@@ -41,10 +41,9 @@ module Repp
       ## POST /repp/v1/contacts
       def create
         @legal_doc = params[:legal_documents]
-        @contact_params = contact_create_params
+        @contact_params = contact_params_with_address
         @ident = contact_ident_params
         address_present = contact_addr_params.keys.any?
-        %w[city street zip country_code].each { |k| @contact_params[k] = contact_addr_params[k] }
 
         @contact = Epp::Contact.new(@contact_params, current_user.registrar, epp: false)
 
@@ -70,8 +69,7 @@ module Repp
 
       ## PUT /repp/v1/contacts/1
       def update
-        @update = contact_create_params
-        %w[city street zip country_code].each { |k| @new_params[k] = contact_addr_params[k] }
+        @update = contact_params_with_address
 
         @legal_doc = params[:legal_document]
         @ident = contact_ident_params || {}
@@ -99,6 +97,12 @@ module Repp
       def find_contact
         code = params[:id]
         @contact = Epp::Contact.find_by!(code: code)
+      end
+
+      def contact_params_with_address
+        addr = {}
+        contact_addr_params[:addr].each_key { |k| addr[k] = contact_addr_params[:addr][k] }
+        contact_create_params.merge(addr)
       end
 
       def contact_create_params
