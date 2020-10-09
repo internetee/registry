@@ -1,7 +1,7 @@
 module Repp
   module V1
     class ContactsController < BaseController
-      before_action :find_contact, only: [:update]
+      before_action :find_contact, only: %i[show update]
 
       ## GET /repp/v1/contacts
       def index
@@ -18,6 +18,24 @@ module Repp
         contacts = contacts.pluck(:code) unless params[:details]
         resp = { contacts: contacts, total_number_of_records: record_count }
         render(json: resp, status: :ok)
+      end
+
+      ## GET /repp/v1/contacts/1
+      def show
+        render(json: @contact.as_json, status: :ok)
+      end
+
+      ## GET /repp/v1/contacts/check/1
+      def check
+        contact = Epp::Contact.find_by(code: params[:id])
+
+        render json: {
+          code: 1000, message: I18n.t('epp.contacts.completed'),
+          data: { contact: {
+            id: params[:id],
+            available: contact.nil?
+          } }
+        }, status: :ok
       end
 
       ## POST /repp/v1/contacts

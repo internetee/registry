@@ -39,7 +39,12 @@ Rails.application.routes.draw do
 
   namespace :repp do
     namespace :v1 do
-      resources :contacts
+      resources :contacts do
+        collection do
+          get 'check/:id', to: 'contacts#check'
+        end
+      end
+
       resources :accounts do
         collection do
           get 'balance'
