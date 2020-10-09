@@ -101,6 +101,8 @@ module Repp
 
       def contact_params_with_address
         addr = {}
+        return contact_create_params unless contact_addr_params.key?(:addr)
+
         contact_addr_params[:addr].each_key { |k| addr[k] = contact_addr_params[:addr][k] }
         contact_create_params.merge(addr)
       end
