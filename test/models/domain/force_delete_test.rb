@@ -243,11 +243,11 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     assert_not_includes(@domain.statuses, asserted_status)
   end
 
-  def test_does_force_delete_does_not_affect_pending_update_check
+  def test_force_delete_does_not_affect_pending_update_check
     @domain.schedule_force_delete(type: :soft)
     @domain.reload
 
-    @domain.statuses << DomainStatus::PENDING_DELETE
+    @domain.statuses << DomainStatus::PENDING_UPDATE
 
     assert @domain.force_delete_scheduled?
     assert @domain.pending_update?
