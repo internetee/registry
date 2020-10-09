@@ -1,3 +1,6 @@
+09.10.2020
+* Fixed pendingUpdate release while forceDelete is set [#1705](https://github.com/internetee/registry/issues/1705)
+
 08.10.2020
 * Fixed serach in admin history [#1695](https://github.com/internetee/registry/issues/1695)
 
