@@ -22,76 +22,49 @@ module Repp
 
       ## GET /repp/v1/contacts/1
       def show
-        render(json: @contact.as_json, status: :ok)
+        render_success(data: @contact.as_json)
       end
 
       ## GET /repp/v1/contacts/check/1
       def check
         contact = Epp::Contact.find_by(code: params[:id])
+        data = { contact: { id: params[:id], available: contact.nil? } }
 
-        render json: {
-          code: 1000, message: I18n.t('epp.contacts.completed'),
-          data: { contact: {
-            id: params[:id],
-            available: contact.nil?
-          } }
-        }, status: :ok
+        render_success(data: data)
       end
 
       ## POST /repp/v1/contacts
       def create
         @legal_doc = params[:legal_documents]
-        @contact_params = contact_params_with_address
-        @ident = contact_ident_params
-        address_present = contact_addr_params.keys.any?
 
-        @contact = Epp::Contact.new(@contact_params, current_user.registrar, epp: false)
+        @contact = Epp::Contact.new(contact_params_with_address, current_user.registrar, epp: false)
+        action = Actions::ContactCreate.new(@contact, @legal_doc, contact_ident_params)
+        handle_errors(@contact) and return unless action.call
 
-        action = Actions::ContactCreate.new(@contact, @legal_doc, @ident)
-
-        if action.call
-          if !Contact.address_processing? && address_present
-            @response_code = 1100
-            @response_description = I18n.t('epp.contacts.completed_without_address')
-          else
-            @response_code = 1000
-            @response_description = I18n.t('epp.contacts.completed')
-          end
-
-          render(json: { code: @response_code,
-                         message: @response_description,
-                         data: { contact: { id: @contact.code } } },
-                         status: :created)
-        else
-          handle_errors(@contact)
-        end
+        render_success(code: opt_addr? ? 1100 : nil, data: { contact: { id: @contact.code } },
+                       message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : nil)
       end
 
       ## PUT /repp/v1/contacts/1
       def update
-        @update = contact_params_with_address
+        action = Actions::ContactUpdate.new(@contact, contact_params_with_address,
+                                            params[:legal_document],
+                                            contact_ident_params(required: false), current_user)
 
-        @legal_doc = params[:legal_document]
-        @ident = contact_ident_params || {}
-        address_present = contact_addr_params.keys.any?
-        action = Actions::ContactUpdate.new(@contact, @update, @legal_doc, @ident, current_user)
+        handle_errors(@contact) and return unless action.call
 
-        if action.call
-          if !Contact.address_processing? && address_present
-            @response_code = 1100
-            @response_description = I18n.t('epp.contacts.completed_without_address')
-          else
-            @response_code = 1000
-            @response_description = I18n.t('epp.contacts.completed')
-          end
+        render_success(code: opt_addr? ? 1100 : nil, data: { contact: { id: @contact.code } },
+                       message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : nil)
+      end
 
-          render(json: { code: @response_code,
-                         message: @response_description,
-                         data: { contact: { id: @contact.code } } },
-                         status: :ok)
-        else
-          handle_errors(@contact)
-        end
+      def contact_addr_present?
+        return false unless contact_addr_params.key?(:addr)
+
+        contact_addr_params[:addr].keys.any?
+      end
+
+      def opt_addr?
+        !Contact.address_processing? && contact_addr_present?
       end
 
       def find_contact
@@ -100,9 +73,9 @@ module Repp
       end
 
       def contact_params_with_address
-        addr = {}
         return contact_create_params unless contact_addr_params.key?(:addr)
 
+        addr = {}
         contact_addr_params[:addr].each_key { |k| addr[k] = contact_addr_params[:addr][k] }
         contact_create_params.merge(addr)
       end
@@ -112,9 +85,13 @@ module Repp
         params.require(:contact).permit(:name, :email, :phone)
       end
 
-      def contact_ident_params
-        params.require(:contact).require(:ident).require(%i[ident ident_type ident_country_code])
-        params.require(:contact).require(:ident).permit(:ident, :ident_type, :ident_country_code)
+      def contact_ident_params(required: true)
+        if required
+          params.require(:contact).require(:ident).require(%i[ident ident_type ident_country_code])
+          params.require(:contact).require(:ident).permit(:ident, :ident_type, :ident_country_code)
+        else
+          params.permit(ident: %i[ident ident_type ident_country_code])
+        end
       end
 
       def contact_addr_params

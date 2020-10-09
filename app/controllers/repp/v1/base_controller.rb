@@ -13,6 +13,13 @@ module Repp
 
       private
 
+      def render_success(code: nil, message: nil, data: nil)
+        resp = { code: code || 1000, message: message || 'Command completed successfully',
+                 data: data || {} }
+
+        render(json: resp, status: :ok)
+      end
+
       def epp_errors
         @errors ||= []
       end
