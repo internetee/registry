@@ -9,13 +9,9 @@ module Repp
         offset = params[:offset] || 0
 
         record_count = current_user.registrar.contacts.count
-        contacts = current_user.registrar.contacts.limit(limit).offset(offset)
+        show_addresses = Contact.address_processing? && params[:details] == 'true'
+        contacts = showable_contacts(params[:details], limit, offset, show_addresses)
 
-        unless Contact.address_processing? && params[:details] == 'true'
-          contacts = contacts.select(Contact.attribute_names - Contact.address_attribute_names)
-        end
-
-        contacts = contacts.pluck(:code) unless params[:details]
         resp = { contacts: contacts, total_number_of_records: record_count }
         render(json: resp, status: :ok)
       end
@@ -61,6 +57,17 @@ module Repp
         return false unless contact_addr_params.key?(:addr)
 
         contact_addr_params[:addr].keys.any?
+      end
+
+      def showable_contacts(details, limit, offset, addresses)
+        contacts = current_user.registrar.contacts.limit(limit).offset(offset)
+        unless addresses
+          contacts = contacts.select(Contact.attribute_names - Contact.address_attribute_names)
+        end
+
+        contacts = contacts.pluck(:code) unless details
+
+        contacts
       end
 
       def opt_addr?
