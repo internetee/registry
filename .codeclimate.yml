@@ -32,6 +32,7 @@ exclude_patterns:
   - "bin/"
   - "config/"
   - "db/"
+  - "app/controllers/api/v1/registrant/companies_controller.rb"
   - "lib/core_monkey_patches/"
   - "lib/daemons/"
   - "lib/gem_monkey_patches/"

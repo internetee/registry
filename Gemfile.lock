@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/internetee/company_register.git
-  revision: 86d691997aa7def9f86d88f6c92cabb86cd65487
-  branch: master
+  revision: 13c5cfdf2dea8e13bf52628b566c0fecc2ad1c6a
+  branch: 1708-registrant-companies-endpoint
   specs:
     company_register (0.1.0)
       activesupport
