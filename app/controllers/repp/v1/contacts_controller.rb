@@ -5,15 +5,12 @@ module Repp
 
       ## GET /repp/v1/contacts
       def index
-        limit = params[:limit] || 200
-        offset = params[:offset] || 0
-
         record_count = current_user.registrar.contacts.count
         show_addresses = Contact.address_processing? && params[:details] == 'true'
-        contacts = showable_contacts(params[:details], limit, offset, show_addresses)
+        contacts = showable_contacts(params[:details], params[:limit] || 200,
+                                     params[:offset] || 0, show_addresses)
 
-        resp = { contacts: contacts, total_number_of_records: record_count }
-        render(json: resp, status: :ok)
+        render(json: { contacts: contacts, total_number_of_records: record_count }, status: :ok)
       end
 
       ## GET /repp/v1/contacts/1
@@ -31,17 +28,16 @@ module Repp
 
       ## POST /repp/v1/contacts
       def create
-        @legal_doc = params[:legal_documents]
-
         @contact = Epp::Contact.new(contact_params_with_address, current_user.registrar, epp: false)
-        action = Actions::ContactCreate.new(@contact, @legal_doc, contact_ident_params)
+        action = Actions::ContactCreate.new(@contact, params[:legal_documents],
+                                            contact_ident_params)
+
         unless action.call
           handle_errors(@contact)
           return
         end
 
-        render_success(code: opt_addr? ? 1100 : nil, data: { contact: { id: @contact.code } },
-                       message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : nil)
+        render_success(create_update_success_data)
       end
 
       ## PUT /repp/v1/contacts/1
@@ -55,14 +51,18 @@ module Repp
           return
         end
 
-        render_success(code: opt_addr? ? 1100 : nil, data: { contact: { id: @contact.code } },
-                       message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : nil)
+        render_success(create_update_success_data)
       end
 
       def contact_addr_present?
         return false unless contact_addr_params.key?(:addr)
 
         contact_addr_params[:addr].keys.any?
+      end
+
+      def create_update_success_body
+        { code: opt_addr? ? 1100 : nil, data: { contact: { id: @contact.code } },
+          message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : nil }
       end
 
       def showable_contacts(details, limit, offset, addresses)
