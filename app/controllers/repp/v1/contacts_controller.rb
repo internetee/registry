@@ -35,7 +35,10 @@ module Repp
 
         @contact = Epp::Contact.new(contact_params_with_address, current_user.registrar, epp: false)
         action = Actions::ContactCreate.new(@contact, @legal_doc, contact_ident_params)
-        handle_errors(@contact) and return unless action.call
+        unless action.call
+          handle_errors(@contact)
+          return
+        end
 
         render_success(code: opt_addr? ? 1100 : nil, data: { contact: { id: @contact.code } },
                        message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : nil)
@@ -47,7 +50,10 @@ module Repp
                                             params[:legal_document],
                                             contact_ident_params(required: false), current_user)
 
-        handle_errors(@contact) and return unless action.call
+        unless action.call
+          handle_errors(@contact)
+          return
+        end
 
         render_success(code: opt_addr? ? 1100 : nil, data: { contact: { id: @contact.code } },
                        message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : nil)
