@@ -34,12 +34,11 @@ module Repp
 
         if update
           @errors.each_with_index do |errors, index|
-            if errors[:code] == '2304' &&
-              errors[:value].present? &&
-              errors[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
-              errors[:value][:obj] == 'status'
-              @errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
-            end
+            next unless errors[:code] == '2304' && errors[:value].present? &&
+                        errors[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
+                        errors[:value][:obj] == 'status'
+
+            @errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
           end
         end
 
@@ -77,7 +76,12 @@ module Repp
 
         return if allowed
 
-        render(json: { errors: [{ base: [I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip)] }] }, status: :unauthorized)
+        render(
+          status: :unauthorized,
+          json: { errors: [
+            { base: [I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip)] },
+          ] }
+        )
       end
 
       def not_found_error

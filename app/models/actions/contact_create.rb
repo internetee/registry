@@ -28,7 +28,8 @@ module Actions
     def validate_ident
       if ident.present?
         if ident[:ident_type].blank?
-          contact.add_epp_error('2003', nil, 'ident_type', I18n.t('errors.messages.required_ident_attribute_missing'))
+          contact.add_epp_error('2003', nil, 'ident_type',
+                                I18n.t('errors.messages.required_ident_attribute_missing'))
           @error = true
         elsif !%w[priv org birthday].include?(ident[:ident_type])
           contact.add_epp_error('2003', nil, 'ident_type', 'Invalid ident type')
@@ -37,7 +38,8 @@ module Actions
       end
 
       if ident.present? && ident[:ident_type] != 'birthday' && ident[:ident_country_code].blank?
-        contact.add_epp_error('2003', nil, 'ident_country_code', I18n.t('errors.messages.required_ident_attribute_missing'))
+        contact.add_epp_error('2003', nil, 'ident_country_code',
+                              I18n.t('errors.messages.required_ident_attribute_missing'))
         @error = true
       end
 
