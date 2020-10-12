@@ -21,34 +21,37 @@ module Repp
       end
 
       def epp_errors
-        @errors ||= []
+        @epp_errors ||= []
       end
 
       def handle_errors(obj = nil, update: false)
-        @errors ||= []
+        @epp_errors ||= []
 
         if obj
           obj.construct_epp_errors
-          @errors += obj.errors[:epp_errors]
+          @epp_errors += obj.errors[:epp_errors]
         end
 
         if update
-          @errors.each_with_index do |errors, index|
+          @epp_errors.each_with_index do |errors, index|
             next unless errors[:code] == '2304' && errors[:value].present? &&
                         errors[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
                         errors[:value][:obj] == 'status'
 
-            @errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
+            @epp_errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
           end
         end
 
-        @errors.uniq!
+        @epp_errors.uniq!
 
         render_epp_error
       end
 
       def render_epp_error
-        render(json: { code: @errors[0][:code], message: @errors[0][:msg] }, status: :bad_request)
+        render(
+          json: { code: @epp_errors[0][:code], message: @epp_errors[0][:msg] },
+          status: :bad_request
+        )
       end
 
       def ip_whitelisted?

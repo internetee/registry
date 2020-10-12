@@ -6,9 +6,8 @@ module Repp
       ## GET /repp/v1/contacts
       def index
         record_count = current_user.registrar.contacts.count
-        show_addresses = Contact.address_processing? && params[:details] == 'true'
         contacts = showable_contacts(params[:details], params[:limit] || 200,
-                                     params[:offset] || 0, show_addresses)
+                                     params[:offset] || 0)
 
         render(json: { contacts: contacts, total_number_of_records: record_count }, status: :ok)
       end
@@ -65,9 +64,9 @@ module Repp
           message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : nil }
       end
 
-      def showable_contacts(details, limit, offset, addresses)
+      def showable_contacts(details, limit, offset)
         contacts = current_user.registrar.contacts.limit(limit).offset(offset)
-        unless addresses
+        unless Contact.address_processing? && params[:details] == 'true'
           contacts = contacts.select(Contact.attribute_names - Contact.address_attribute_names)
         end
 
