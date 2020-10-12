@@ -27,24 +27,23 @@ module Repp
       def handle_errors(obj = nil, update: false)
         @epp_errors ||= []
 
-        if obj
-          obj.construct_epp_errors
-          @epp_errors += obj.errors[:epp_errors]
-        end
+        obj&.construct_epp_errors
+        @epp_errors += obj.errors[:epp_errors] if obj
 
-        if update
-          @epp_errors.each_with_index do |errors, index|
-            next unless errors[:code] == '2304' && errors[:value].present? &&
-                        errors[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
-                        errors[:value][:obj] == 'status'
-
-            @epp_errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
-          end
-        end
-
+        format_epp_errors if update
         @epp_errors.uniq!
 
         render_epp_error
+      end
+
+      def format_epp_errors
+        @epp_errors.each_with_index do |errors, index|
+          next unless errors[:code] == '2304' && errors[:value].present? &&
+                      errors[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
+                      errors[:value][:obj] == 'status'
+
+          @epp_errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
+        end
       end
 
       def render_epp_error
