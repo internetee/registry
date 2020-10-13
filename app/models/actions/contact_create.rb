@@ -27,12 +27,7 @@ module Actions
 
     def validate_ident
       validate_ident_integrity
-
-      if ident.present? && ident[:ident_type] != 'birthday' && ident[:ident_country_code].blank?
-        contact.add_epp_error('2003', nil, 'ident_country_code',
-                              I18n.t('errors.messages.required_ident_attribute_missing'))
-        @error = true
-      end
+      validate_ident_birthday
 
       identifier = ::Contact::Ident.new(code: ident[:ident], type: ident[:ident_type],
                                         country_code: ident[:ident_country_code])
@@ -52,6 +47,15 @@ module Actions
         contact.add_epp_error('2003', nil, 'ident_type', 'Invalid ident type')
         @error = true
       end
+    end
+
+    def validate_ident_birthday
+      return if ident.blank?
+      return unless ident[:ident_type] != 'birthday' && ident[:ident_country_code].blank?
+
+      contact.add_epp_error('2003', nil, 'ident_country_code',
+                            I18n.t('errors.messages.required_ident_attribute_missing'))
+      @error = true
     end
 
     def maybe_attach_legal_doc

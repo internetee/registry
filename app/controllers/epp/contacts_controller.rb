@@ -4,7 +4,6 @@ module Epp
   class ContactsController < BaseController
     before_action :find_contact, only: [:info, :update, :delete]
     before_action :find_password, only: [:info, :update, :delete]
-    helper_method :address_processing?
 
     def info
       authorize! :info, @contact, @password
@@ -68,11 +67,13 @@ module Epp
     private
 
     def opt_addr?
-      !address_processing? && address_given?
+      !Contact.address_processing? && address_given?
     end
 
     def action_call_response(action:)
+      # rubocop:disable Style/AndOr
       (handle_errors(@contact) and return) unless action.call
+      # rubocop:enable Style/AndOr
 
       if opt_addr?
         @response_code = 1100
@@ -123,8 +124,7 @@ module Epp
         'postalInfo > addr > cc',
       ]
 
-      required_attributes.concat(address_attributes) if address_processing?
-
+      required_attributes.concat(address_attributes) if Contact.address_processing?
       requires(*required_attributes)
       ident = params[:parsed_frame].css('ident')
 
@@ -199,10 +199,6 @@ module Epp
 
     def address_given?
       params[:parsed_frame].css('postalInfo addr').size != 0
-    end
-
-    def address_processing?
-      Contact.address_processing?
     end
   end
 end
