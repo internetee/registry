@@ -37,10 +37,14 @@ module Repp
       end
 
       def format_epp_errors
-        @epp_errors.each_with_index do |errors, index|
-          next unless errors[:code] == '2304' && errors[:value].present? &&
-                      errors[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
-                      errors[:value][:obj] == 'status'
+        @epp_errors.each_with_index do |error, index|
+          blocked_by_delete_prohibited?(error, index)
+        end
+      end
+
+      def blocked_by_delete_prohibited?(error, index)
+        if error[:code] == 2304 && error[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
+           error[:value][:obj] == 'status'
 
           @epp_errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
         end

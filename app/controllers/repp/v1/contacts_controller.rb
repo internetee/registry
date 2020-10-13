@@ -36,7 +36,7 @@ module Repp
           return
         end
 
-        render_success(create_update_success_data)
+        render_success(create_update_success_body)
       end
 
       ## PUT /repp/v1/contacts/1
@@ -50,7 +50,7 @@ module Repp
           return
         end
 
-        render_success(create_update_success_data)
+        render_success(create_update_success_body)
       end
 
       def contact_addr_present?
