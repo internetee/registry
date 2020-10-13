@@ -4,21 +4,39 @@ module Api
   module V1
     module Registrant
       class CompaniesController < ::Api::V1::Registrant::BaseController
+        MAX_LIMIT = 200
+        MIN_OFFSET = 0
+
         def index
-          limit = params[:limit] || 200
-          offset = params[:offset] || 0
+          result = error_result('limit') if limit > MAX_LIMIT || limit < 1
+          result = error_result('offset') if offset < MIN_OFFSET
+          result ||= companies_result(limit, offset)
 
-          if limit.to_i > 200 || limit.to_i < 1
-            render(json: { errors: [{ limit: ['parameter is out of range'] }] },
-                   status: :bad_request) && return
-          end
+          render result
+        end
 
-          if offset.to_i.negative?
-            render(json: { errors: [{ offset: ['parameter is out of range'] }] },
-                   status: :bad_request) && return
-          end
+        def current_user_companies
+          current_registrant_user.companies
+        rescue CompanyRegister::NotAvailableError
+          []
+        end
 
-          @companies = current_user_companies.drop(offset.to_i).first(limit.to_i)
+        def limit
+          (params[:limit] || MAX_LIMIT).to_i
+        end
+
+        def offset
+          (params[:offset] || MIN_OFFSET).to_i
+        end
+
+        def error_result(attr_name)
+          { json: { errors: [{ attr_name.to_sym => ['parameter is out of range'] }] },
+            status: :bad_request }
+        end
+
+        def companies_result(limit, offset)
+          @companies = current_user_companies.drop(offset).first(limit)
+          status = @companies.present? ? :ok : :not_found
 
           serialized_companies = @companies.map do |item|
             country_code = current_registrant_user.country.alpha3
@@ -26,14 +44,7 @@ module Api
                                                                    country_code: country_code)
             serializer.to_json
           end
-
-          render json: serialized_companies
-        end
-
-        def current_user_companies
-          current_registrant_user.companies
-        rescue CompanyRegister::NotAvailableError
-          nil
+          { json: { companies: serialized_companies }, status: status }
         end
       end
     end
