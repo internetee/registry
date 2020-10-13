@@ -67,17 +67,21 @@ module Epp
 
     private
 
+    def opt_addr?
+      !address_processing? && address_given?
+    end
+
     def action_call_response(action:)
-      unless action.call
-        handle_errors(@contact)
-        return
+      (handle_errors(@contact) and return) unless action.call
+
+      if opt_addr?
+        @response_code = 1100
+        @response_description = t('epp.contacts.completed_without_address')
+      else
+        @response_code = 1000
+        @response_description = t('epp.contacts.completed')
       end
 
-      @response_code = !address_processing? && address_given? ? 1100 : 1000
-      str = 'epp.contacts.completed'
-      str = "#{str}_without_address" if !address_processing? && address_given?
-
-      @response_description = t(str)
       render_epp_response('epp/contacts/save')
     end
 
