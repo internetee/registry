@@ -27,19 +27,7 @@ module Epp
       action = Actions::ContactCreate.new(@contact, collected_data.legal_document,
                                           collected_data.ident)
 
-      if action.call
-        if !address_processing? && address_given?
-          @response_code = 1100
-          @response_description = t('epp.contacts.completed_without_address')
-        else
-          @response_code = 1000
-          @response_description = t('epp.contacts.completed')
-        end
-
-        render_epp_response '/epp/contacts/save'
-      else
-        handle_errors(@contact)
-      end
+      action_call_response(action: action)
     end
 
     def update
@@ -52,19 +40,7 @@ module Epp
                                           collected_data.ident,
                                           current_user)
 
-      if action.call
-        if !address_processing? && address_given?
-          @response_code = 1100
-          @response_description = t('epp.contacts.completed_without_address')
-        else
-          @response_code = 1000
-          @response_description = t('epp.contacts.completed')
-        end
-
-        render_epp_response 'epp/contacts/save'
-      else
-        handle_errors(@contact)
-      end
+      action_call_response(action: action)
     end
 
     def delete
@@ -90,6 +66,20 @@ module Epp
     end
 
     private
+
+    def action_call_response(action:)
+      unless action.call
+        handle_errors(@contact)
+        return
+      end
+
+      @response_code = !address_processing? && address_given? ? 1100 : 1000
+      str = 'epp.contacts.completed'
+      str = "#{str}_without_address" if !address_processing? && address_given?
+
+      @response_description = t(str)
+      render_epp_response('epp/contacts/save')
+    end
 
     def find_password
       @password = params[:parsed_frame].css('authInfo pw').text
