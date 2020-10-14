@@ -61,9 +61,11 @@ Rails.application.routes.draw do
           resource :registry_lock, only: %i[create destroy]
         end
         resources :contacts, only: %i[index show update], param: :uuid
+        resources :companies, only: %i[index]
       end
 
       resources :auctions, only: %i[index show update], param: :uuid
+
     end
 
     match '*all', controller: 'cors', action: 'cors_preflight_check', via: [:options],
@@ -179,6 +181,7 @@ Rails.application.routes.draw do
     end
 
     resources :registrars, only: :show
+    # resources :companies, only: :index
     resources :domains, only: %i[index show] do
       resources :contacts, only: %i[show edit update]
       member do

@@ -27,10 +27,10 @@ Rake::Task.clear
 Rails.application.load_tasks
 
 class CompanyRegisterClientStub
-  Company = Struct.new(:registration_number)
+  Company = Struct.new(:registration_number, :company_name)
 
   def representation_rights(citizen_personal_code:, citizen_country_code:)
-    [Company.new('1234567')]
+    [Company.new('1234567', 'ACME Ltd')]
   end
 end
 
