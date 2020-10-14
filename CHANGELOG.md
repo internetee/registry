@@ -1,3 +1,6 @@
+14.10.2020
+* Fixed domain delete history records in admin [#1710](https://github.com/internetee/registry/issues/1710)
+
 09.10.2020
 * Fixed pendingUpdate release while forceDelete is set [#1705](https://github.com/internetee/registry/issues/1705)
 
