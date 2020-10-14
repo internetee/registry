@@ -13,7 +13,7 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
   end
 
   def test_returns_domain_transfers
-    post '/repp/v1/domain_transfers', params: request_params, as: :json,
+    post '/repp/v1/domains/transfer', params: request_params, as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response 200
     assert_equal ({ data: [{
@@ -27,19 +27,19 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
 
   def test_creates_new_domain_transfer
     assert_difference -> { @domain.transfers.size } do
-      post '/repp/v1/domain_transfers', params: request_params, as: :json,
+      post '/repp/v1/domains/transfer', params: request_params, as: :json,
            headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
   end
 
   def test_approves_automatically_if_auto_approval_is_enabled
-    post '/repp/v1/domain_transfers', params: request_params, as: :json,
+    post '/repp/v1/domains/transfer', params: request_params, as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert @domain.transfers.last.approved?
   end
 
   def test_assigns_new_registrar
-    post '/repp/v1/domain_transfers', params: request_params, as: :json,
+    post '/repp/v1/domains/transfer', params: request_params, as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     @domain.reload
     assert_equal @new_registrar, @domain.registrar
@@ -48,7 +48,7 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
   def test_regenerates_transfer_code
     @old_transfer_code = @domain.transfer_code
 
-    post '/repp/v1/domain_transfers', params: request_params, as: :json,
+    post '/repp/v1/domains/transfer', params: request_params, as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     @domain.reload
     refute_equal @domain.transfer_code, @old_transfer_code
@@ -58,26 +58,26 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
     @old_registrar = @domain.registrar
 
     assert_difference -> { @old_registrar.notifications.count } do
-      post '/repp/v1/domain_transfers', params: request_params, as: :json,
+      post '/repp/v1/domains/transfer', params: request_params, as: :json,
            headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts
     assert_difference -> { @new_registrar.contacts.size }, 3 do
-      post '/repp/v1/domain_transfers', params: request_params, as: :json,
+      post '/repp/v1/domains/transfer', params: request_params, as: :json,
            headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
   end
 
   def test_reuses_identical_contact
-    post '/repp/v1/domain_transfers', params: request_params, as: :json,
+    post '/repp/v1/domains/transfer', params: request_params, as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_equal 1, @new_registrar.contacts.where(name: 'William').size
   end
 
   def test_fails_if_domain_does_not_exist
-    post '/repp/v1/domain_transfers',
+    post '/repp/v1/domains/transfer',
          params: { data: { domainTransfers: [{ domainName: 'non-existent.test',
                                                transferCode: 'any' }] } },
          as: :json,
@@ -88,7 +88,7 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
   end
 
   def test_fails_if_transfer_code_is_wrong
-    post '/repp/v1/domain_transfers',
+    post '/repp/v1/domains/transfer',
          params: { data: { domainTransfers: [{ domainName: 'shop.test',
                                                transferCode: 'wrong' }] } },
          as: :json,
