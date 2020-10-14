@@ -50,10 +50,10 @@ module Repp
         end
       end
 
-      def render_epp_error
+      def render_epp_error(status = :bad_request)
         render(
           json: { code: @epp_errors[0][:code], message: @epp_errors[0][:msg] },
-          status: :bad_request
+          status: status
         )
       end
 
