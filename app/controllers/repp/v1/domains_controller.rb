@@ -27,26 +27,34 @@ module Repp
 
       def transfer
         @errors ||= []
-        successful = []
+        @successful = []
 
         params[:data][:domain_transfers].each do |transfer|
-          domain = transferable_domain(transfer[:domain_name], transfer[:transfer_code])
-          next unless domain
-
-          DomainTransfer.request(domain, current_user.registrar)
-          successful << { type: 'domain_transfer', attributes: { domain_name: domain.name } }
+          initiate_transfer(transfer)
         end
 
-        render_success(data: { errors: @errors }) and return if @errors.any?
+        if @errors.any
+          render_success(data: { errors: @errors })
+        else
+          render_success(data: successful)
+        end
+      end
 
-        render_success(data: successful)
+      def initiate_transfer(transfer)
+        domain = transferable_domain(transfer[:domain_name], transfer[:transfer_code])
+        next unless domain
+
+        DomainTransfer.request(domain, current_user.registrar)
+        @successful << { type: 'domain_transfer', attributes: { domain_name: domain.name } }
       end
 
       def transferable_domain(domain_name, transfer_code)
         domain = Domain.find_by(name: domain_name)
         valid_transfer_code = domain.transfer_code == transfer_code
+        # rubocop:disable Style/AndOr
         add_error("#{domain_name} does not exist") and return unless domain
         add_error("#{domain_name} transfer code is wrong") and return unless valid_transfer_code
+        # rubocop:enable Style/AndOr
 
         domain
       end
