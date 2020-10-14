@@ -33,7 +33,7 @@ module Repp
           initiate_transfer(transfer)
         end
 
-        if @errors.any
+        if @errors.any?
           render_success(data: { errors: @errors })
         else
           render_success(data: successful)
@@ -42,7 +42,7 @@ module Repp
 
       def initiate_transfer(transfer)
         domain = transferable_domain(transfer[:domain_name], transfer[:transfer_code])
-        next unless domain
+        return unless domain
 
         DomainTransfer.request(domain, current_user.registrar)
         @successful << { type: 'domain_transfer', attributes: { domain_name: domain.name } }
