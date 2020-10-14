@@ -57,7 +57,7 @@
             - if version
               - attributes = only_present_fields(version, Domain)
               - domain = Domain.new(attributes)
-              - attach_existing_fields(version, domain)
+              - attach_existing_fields(version, domain) unless version.event == 'destroy'
 
               %tr
                 %td= link_to(domain.name, admin_domain_version_path(version.id))
