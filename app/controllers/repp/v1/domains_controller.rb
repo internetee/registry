@@ -25,7 +25,48 @@ module Repp
         render_success(data: data)
       end
 
+      def transfer
+        @errors ||= []
+        successful = []
+
+        params[:data][:domain_transfers].each do |transfer|
+          domain = transferable_domain(transfer[:domain_name], transfer[:transfer_code])
+          next unless domain
+
+          DomainTransfer.request(domain, current_user.registrar)
+          successful << { type: 'domain_transfer', attributes: { domain_name: domain.name } }
+        end
+
+        render_success(data: { errors: @errors }) and return if @errors.any?
+
+        render_success(data: successful)
+      end
+
+      def transferable_domain(domain_name, transfer_code)
+        domain = Domain.find_by(name: domain_name)
+        valid_transfer_code = domain.transfer_code == transfer_code
+        add_error("#{domain_name} does not exist") and return unless domain
+        add_error("#{domain_name} transfer code is wrong") and return unless valid_transfer_code
+
+        domain
+      end
+
+      def add_error(msg)
+        @errors ||= []
+        @errors << { title: msg }
+      end
+
       private
+
+      def transfer_params
+        params.require(:data).require(:domain_transfers).each do |t|
+          t.require(:domain_name)
+          t.permit(:domain_name)
+          t.require(:transfer_code)
+          t.permit(:transfer_code)
+        end
+        params.require(:data).permit(domain_transfers: %i[domain_name transfer_code])
+      end
 
       def transfer_info_params
         params.require(:id)
