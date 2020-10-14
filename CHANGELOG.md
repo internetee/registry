@@ -1,4 +1,5 @@
 14.10.2020
+* Added company registration data query to regisrant API [#1708](https://github.com/internetee/registry/issues/1708)
 * Fixed domain delete history records in admin [#1710](https://github.com/internetee/registry/issues/1710)
 
 09.10.2020
