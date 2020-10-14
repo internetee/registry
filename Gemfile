@@ -69,7 +69,7 @@ gem 'jquery-ui-rails', '5.0.5'
 gem 'airbrake'
 
 gem 'company_register', github: 'internetee/company_register',
-                        branch: '1708-registrant-companies-endpoint'
+                        branch: 'master'
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'domain_name'
