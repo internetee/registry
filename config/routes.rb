@@ -59,6 +59,13 @@ Rails.application.routes.draw do
           end
         end
       end
+      namespace :domains do
+        resources :contacts do
+          collection do
+            patch '/', to: 'contacts#update'
+          end
+        end
+      end
     end
   end
 
