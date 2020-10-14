@@ -50,9 +50,9 @@ module Repp
 
       def transferable_domain(domain_name, transfer_code)
         domain = Domain.find_by(name: domain_name)
-        valid_transfer_code = domain.transfer_code == transfer_code
         # rubocop:disable Style/AndOr
         add_error("#{domain_name} does not exist") and return unless domain
+        valid_transfer_code = domain.transfer_code.eql?(transfer_code)
         add_error("#{domain_name} transfer code is wrong") and return unless valid_transfer_code
         # rubocop:enable Style/AndOr
 

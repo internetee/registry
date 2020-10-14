@@ -12,11 +12,11 @@ module Repp
 
       after_action do
         ApiLog::ReppLog.create(
-          { request_path: request.path, request_method: request.request_method,
-            request_params: request.params.except('route_info').to_json, uuid: request.try(:uuid),
-            response: @response.to_json, response_code: status, ip: request.ip,
-            api_user_name: current_user.try(:username),
-            api_user_registrar: current_user.try(:registrar).try(:to_s) }
+          request_path: request.path, request_method: request.request_method,
+          request_params: request.params.except('route_info').to_json, uuid: request.try(:uuid),
+          response: @response.to_json, response_code: status, ip: request.ip,
+          api_user_name: current_user.try(:username),
+          api_user_registrar: current_user.try(:registrar).try(:to_s)
         )
       end
 
