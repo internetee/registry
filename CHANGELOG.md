@@ -1,3 +1,6 @@
+15.10.2020
+* Tara integration for registrant portal [#1698](https://github.com/internetee/registry/pull/1698)
+
 14.10.2020
 * Added company registration data query to regisrant API [#1708](https://github.com/internetee/registry/issues/1708)
 * Fixed domain delete history records in admin [#1710](https://github.com/internetee/registry/issues/1710)
