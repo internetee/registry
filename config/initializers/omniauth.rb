@@ -52,7 +52,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       callback_path: '/registrant/open_id/callback',
       name: 'rant_tara',
       scope: ['openid'],
-      state: Proc.new{ SecureRandom.hex(10) },
       client_signing_alg: :RS256,
       client_jwk_signing_key: signing_keys,
       send_scope_to_token_endpoint: false,
