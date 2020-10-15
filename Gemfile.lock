@@ -54,8 +54,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/omniauth-tara.git
-  revision: 35c93a072e844b7a79a7d4a81b1de1ed9426dcd8
-  branch: extended-logging
+  revision: cec845ec3794532144c4976104a07e206d759aa6
   specs:
     omniauth-tara (0.3.0)
       addressable (~> 2.5)
