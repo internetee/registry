@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/directo.git
-  revision: e4ba54f601d1815fd8782a196788730d47861e86
+  revision: 711ce2d942456ee830b649b03b7141e903a1d86b
   branch: master
   specs:
     directo (1.0.1)
@@ -54,7 +54,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/omniauth-tara.git
-  revision: 75c369dd86a5fe1a2ee4c2a6246252d79431071c
+  revision: 35c93a072e844b7a79a7d4a81b1de1ed9426dcd8
   branch: extended-logging
   specs:
     omniauth-tara (0.3.0)
