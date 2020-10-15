@@ -1,7 +1,7 @@
 class RegistrantUser < User
   attr_accessor :idc_data
 
-  devise :trackable, :timeoutable, :id_card_authenticatable
+  devise :trackable, :timeoutable
 
   def ability
     @ability ||= Ability.new(self)
@@ -66,21 +66,17 @@ class RegistrantUser < User
       find_or_create_by_user_data(user_data)
     end
 
-    def find_or_create_by_mid_data(response)
-      user_data = { first_name: response.user_givenname, last_name: response.user_surname,
-                    ident: response.user_id_code, country_code: response.user_country }
+    def find_or_create_by_omniauth_data(omniauth_hash)
+      uid = omniauth_hash['uid']
+      identity_code = uid.slice(2..-1)
+      country_code = uid.slice(0..1)
+      first_name = omniauth_hash.dig('info', 'first_name')
+      last_name = omniauth_hash.dig('info', 'last_name')
+
+      user_data = { first_name: first_name, last_name: last_name,
+                    ident: identity_code, country_code: country_code }
 
       find_or_create_by_user_data(user_data)
-    end
-
-    def find_by_id_card(id_card)
-      registrant_ident = "#{id_card.country_code}-#{id_card.personal_code}"
-      username = [id_card.first_name, id_card.last_name].join("\s")
-
-      user = find_or_initialize_by(registrant_ident: registrant_ident)
-      user.username = username
-      user.save!
-      user
     end
 
     private

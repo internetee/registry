@@ -2,11 +2,7 @@ en:
   registrant:
     sessions:
       new:
-        header: Log in
+        header: Sign in with identity document
         hint:  >-
-          Access currently available only to Estonian citizens and e-residents with Estonian ID-card
-          or Mobile-ID.
-
-      login_mid:
-        header: Log in with mobile-id
-        submit_btn: Login
+          Sign in using Estonian (incl. e-residents) ID card, mobile ID,
+          Bank link or other EU citizen's electronic ID supported by EIDAS.
