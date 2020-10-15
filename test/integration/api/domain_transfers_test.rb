@@ -16,13 +16,20 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
     post '/repp/v1/domains/transfer', params: request_params, as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response 200
-    assert_equal ({ data: [{
-                             type: 'domain_transfer',
-                             attributes: {
-                               domain_name: 'shop.test'
-                             },
-                           }] }),
-                 JSON.parse(response.body, symbolize_names: true)
+
+    expected_body = {
+      code: 1000,
+      message: 'Command completed successfully',
+      data: [
+        {
+          type: 'domain_transfer',
+          attributes: { domain_name: 'shop.test' },
+        }
+      ]
+    }
+
+    real_body = JSON.parse(response.body, symbolize_names: true)
+    assert_equal(expected_body, real_body)
   end
 
   def test_creates_new_domain_transfer
@@ -78,8 +85,8 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
 
   def test_fails_if_domain_does_not_exist
     post '/repp/v1/domains/transfer',
-         params: { data: { domainTransfers: [{ domainName: 'non-existent.test',
-                                               transferCode: 'any' }] } },
+         params: { data: { domain_transfers: [{ domain_name: 'non-existent.test',
+                                               transfer_code: 'any' }] } },
          as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response 400
@@ -89,8 +96,8 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
 
   def test_fails_if_transfer_code_is_wrong
     post '/repp/v1/domains/transfer',
-         params: { data: { domainTransfers: [{ domainName: 'shop.test',
-                                               transferCode: 'wrong' }] } },
+         params: { data: { domain_transfers: [{ domain_name: 'shop.test',
+                                               transfer_code: 'wrong' }] } },
          as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response 400
@@ -102,7 +109,7 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
   private
 
   def request_params
-    { data: { domainTransfers: [{ domainName: 'shop.test', transferCode: '65078d5' }] } }
+    { data: { domain_transfers: [{ domain_name: 'shop.test', transfer_code: '65078d5' }] } }
   end
 
   def http_auth_key

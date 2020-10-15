@@ -36,7 +36,7 @@ module Repp
         if @errors.any?
           render_success(data: { errors: @errors })
         else
-          render_success(data: successful)
+          render_success(data: @successful)
         end
       end
 

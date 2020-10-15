@@ -15,12 +15,12 @@ class Registrar
         csv.each do |row|
           domain_name = row['Domain']
           transfer_code = row['Transfer code']
-          domain_transfers << { 'domainName' => domain_name, 'transferCode' => transfer_code }
+          domain_transfers << { 'domain_name' => domain_name, 'transfer_code' => transfer_code }
         end
 
-        uri = URI.parse("#{ENV['repp_url']}domain_transfers")
+        uri = URI.parse("#{ENV['repp_url']}domains/transfer")
         request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
-        request.body = { data: { domainTransfers: domain_transfers } }.to_json
+        request.body = { data: { domain_transfers: domain_transfers } }.to_json
         request.basic_auth(current_registrar_user.username,
                            current_registrar_user.plain_text_password)
 

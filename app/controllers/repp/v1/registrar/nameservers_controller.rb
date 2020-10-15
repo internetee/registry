@@ -22,7 +22,7 @@ module Repp
 
         def hostname_params
           params.require(:data).require(%i[type id])
-          params.require(:data).require(:attributes).require(%i[hostname ipv4 ipv6])
+          params.require(:data).require(:attributes)
 
           params.permit(data: [:type, :id, attributes: [:hostname, ipv4: [], ipv6: []]])
         end
