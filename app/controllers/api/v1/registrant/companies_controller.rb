@@ -16,9 +16,9 @@ module Api
         end
 
         def current_user_companies
-          current_registrant_user.companies
+          [:ok, current_registrant_user.companies]
         rescue CompanyRegister::NotAvailableError
-          []
+          [:service_unavailable, []]
         end
 
         def limit
@@ -35,8 +35,8 @@ module Api
         end
 
         def companies_result(limit, offset)
-          @companies = current_user_companies.drop(offset).first(limit)
-          status = @companies.present? ? :ok : :not_found
+          status, all_companies = current_user_companies
+          @companies = all_companies.drop(offset).first(limit)
 
           serialized_companies = @companies.map do |item|
             country_code = current_registrant_user.country.alpha3
