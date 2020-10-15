@@ -56,7 +56,7 @@ gem 'digidoc_client',
 # TARA
 gem 'omniauth'
 gem 'omniauth-rails_csrf_protection'
-gem 'omniauth-tara', github: 'internetee/omniauth-tara'
+gem 'omniauth-tara', github: 'internetee/omniauth-tara', branch: 'extended-logging'
 
 
 gem 'epp', github: 'internetee/epp', branch: :master
