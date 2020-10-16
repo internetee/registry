@@ -47,12 +47,6 @@ class ApiUser < User
     self.active = true unless saved_change_to_active?
   end
 
-  class << self
-    def find_by_id_card(id_card)
-      find_by(identity_code: id_card.personal_code)
-    end
-  end
-
   def to_s
     username
   end

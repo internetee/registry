@@ -1,3 +1,20 @@
+15.10.2020
+* Tara integration for registrant portal [#1698](https://github.com/internetee/registry/pull/1698)
+
+14.10.2020
+* Added company registration data query to regisrant API [#1708](https://github.com/internetee/registry/issues/1708)
+* Fixed domain delete history records in admin [#1710](https://github.com/internetee/registry/issues/1710)
+
+09.10.2020
+* Fixed pendingUpdate release while forceDelete is set [#1705](https://github.com/internetee/registry/issues/1705)
+
+08.10.2020
+* Fixed serach in admin history [#1695](https://github.com/internetee/registry/issues/1695)
+
+06.10.2020
+* Updated Directo gem to fix vat codes for EU and non-EU clients [#1699](https://github.com/internetee/registry/pull/1699)
+* Email validation level is now configurable [#1675](https://github.com/internetee/registry/pull/1675)
+
 01.10.2020
 * Fixed EPP authentication [#1697](https://github.com/internetee/registry/pull/1697)
 

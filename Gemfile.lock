@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/internetee/company_register.git
-  revision: 86d691997aa7def9f86d88f6c92cabb86cd65487
+  revision: 4181b2fff9080e2d87d15612561131f9e3fdfb4c
   branch: master
   specs:
     company_register (0.1.0)
@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/directo.git
-  revision: e4ba54f601d1815fd8782a196788730d47861e86
+  revision: 711ce2d942456ee830b649b03b7141e903a1d86b
   branch: master
   specs:
     directo (1.0.1)

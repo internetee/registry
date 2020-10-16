@@ -52,4 +52,26 @@ class DomainCronTest < ActiveSupport::TestCase
 
     assert_emails 0
   end
+
+  def test_cleans_expired_pendings_when_force_delete_active
+    Setting.expire_pending_confirmation = 0
+
+    # Set force delete
+    @domain.schedule_force_delete(type: :soft)
+    @domain.reload
+
+    @domain.statuses << DomainStatus::PENDING_UPDATE
+    # Set domain registrant change that's expired
+    @domain.update!(registrant_verification_asked_at: Time.zone.now,
+                    registrant_verification_token: 'test',
+                    statuses: @domain.statuses)
+
+    assert @domain.pending_update?
+    @domain.reload
+
+    DomainCron.clean_expired_pendings
+    @domain.reload
+
+    assert_not @domain.pending_update?
+  end
 end

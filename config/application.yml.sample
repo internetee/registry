@@ -163,6 +163,13 @@ tara_secret: 'secret'
 tara_redirect_uri: 'redirect_url'
 tara_keys: "{\"kty\":\"RSA\",\"kid\":\"de6cc4\",\"n\":\"jWwAjT_03ypme9ZWeSe7c-jY26NO50Wo5I1LBnPW2JLc0dPMj8v7y4ehiRpClYNTaSWcLd4DJmlKXDXXudEUWwXa7TtjBFJfzlZ-1u0tDvJ-H9zv9MzO7UhUFytztUEMTrtStdhGbzkzdEZZCgFYeo2i33eXxzIR1nGvI05d9Y-e_LHnNE2ZKTa89BC7ZiCXq5nfAaCgQna_knh4kFAX-KgiPRAtsiDHcAWKcBY3qUVcb-5XAX8p668MlGLukzsh5tFkQCbJVyNtmlbIHdbGvVHPb8C0H3oLYciv1Fjy_tS1lO7OT_cb3GVp6Ql-CG0uED_8pkpVtfsGRviub4_ElQ\",\"e\":\"AQAB\"}"
 
+tara_rant_identifier: 'identifier'
+tara_rant_secret: 'secret'
+tara_rant_redirect_uri: 'redirect_uri'
+
+default_email_validation_type: 'regex'
+
+
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:
   payments_seb_bank_certificate: 'test/fixtures/files/seb_bank_cert.pem'
