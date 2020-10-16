@@ -45,8 +45,8 @@ GIT
 
 GIT
   remote: https://github.com/internetee/lhv.git
-  revision: 1825240b3bf8b262418cc6c8ef7ed1aba386dd7d
-  branch: master
+  revision: 3f27d87dddd16b7ef9fc6502f048f1a6718750dc
+  branch: 1712-improve-logging-autotopup-fix
   specs:
     lhv (0.1.0)
       logger
