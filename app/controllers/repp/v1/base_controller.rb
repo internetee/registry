@@ -59,9 +59,12 @@ module Repp
         end
       end
 
-      def render_epp_error(status = :bad_request)
+      def render_epp_error(status = :bad_request, data = {})
+        @epp_errors ||= []
+        @epp_errors << { code: 2304, msg: 'Command failed' } if data != {}
+
         render(
-          json: { code: @epp_errors[0][:code], message: @epp_errors[0][:msg] },
+          json: { code: @epp_errors[0][:code], message: @epp_errors[0][:msg], data: data },
           status: status
         )
       end

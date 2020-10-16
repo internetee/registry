@@ -90,7 +90,7 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
          as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response 400
-    assert_equal ({ errors: [{ title: 'non-existent.test does not exist' }] }),
+    assert_equal ({ code: 2304, message: 'Command failed', data: [{ title: 'non-existent.test does not exist' }] }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
@@ -102,7 +102,7 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response 400
     refute_equal @new_registrar, @domain.registrar
-    assert_equal ({ errors: [{ title: 'shop.test transfer code is wrong' }] }),
+    assert_equal ({ code: 2304, message: 'Command failed', data: [{ title: 'shop.test transfer code is wrong' }] }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 

@@ -16,11 +16,14 @@ module Repp
         end
 
         def update
-          @epp_errors << { code: '2304', msg: 'New contact must be valid' } if @new_contact.invalid?
+          @epp_errors ||= []
+          @epp_errors << { code: 2304, msg: 'New contact must be valid' } if @new_contact.invalid?
 
           if @new_contact == @current_contact
-            @epp_errors << { code: '2304', msg: 'New contact must be different from current' }
+            @epp_errors << { code: 2304, msg: 'New contact must be different from current' }
           end
+
+          return handle_errors if @epp_errors.any?
 
           affected, skipped = TechDomainContact.replace(@current_contact, @new_contact)
           data = { affected_domains: affected, skipped_domains: skipped }

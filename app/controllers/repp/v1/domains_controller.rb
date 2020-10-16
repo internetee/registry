@@ -34,7 +34,7 @@ module Repp
         end
 
         if @errors.any?
-          render_success(data: { errors: @errors })
+          render_epp_error(:bad_request, @errors)
         else
           render_success(data: @successful)
         end
@@ -52,10 +52,11 @@ module Repp
         domain = Domain.find_by(name: domain_name)
         # rubocop:disable Style/AndOr
         add_error("#{domain_name} does not exist") and return unless domain
-        valid_transfer_code = domain.transfer_code.eql?(transfer_code)
-        add_error("#{domain_name} transfer code is wrong") and return unless valid_transfer_code
         # rubocop:enable Style/AndOr
-
+        unless domain.transfer_code.eql?(transfer_code)
+          add_error("#{domain_name} transfer code is wrong")
+          return
+        end
         domain
       end
 
