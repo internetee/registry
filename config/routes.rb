@@ -63,14 +63,7 @@ Rails.application.routes.draw do
         collection do
           get ':id/transfer_info', to: 'domains#transfer_info', constraints: { id: /.*/ }
           post 'transfer', to: 'domains#transfer'
-        end
-      end
-
-      namespace :domains do
-        resources :contacts do
-          collection do
-            patch '/', to: 'domains/contacts#update'
-          end
+          patch 'contacts', to: 'domains/contacts#update'
         end
       end
     end
