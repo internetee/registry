@@ -38,7 +38,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     end.to_return(status: 200, body: response)
 
     assert_nothing_raised do
-      DirectoInvoiceForwardJob.run(monthly: false, dry: false)
+      DirectoInvoiceForwardJob.perform_now(monthly: false, dry: false)
     end
 
     assert_not_empty @invoice.directo_records.first.request
@@ -52,7 +52,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     Setting.directo_monthly_number_max = 30991
 
     assert_raises 'RuntimeError' do
-      DirectoInvoiceForwardJob.run(monthly: true, dry: false)
+      DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
     end
   end
 
@@ -78,7 +78,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     end.to_return(status: 200, body: response)
 
     assert_difference 'Setting.directo_monthly_number_last' do
-      DirectoInvoiceForwardJob.run(monthly: true, dry: false)
+      DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
     end
   end
 
@@ -103,7 +103,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     end.to_return(status: 200, body: response)
 
     assert_difference 'Setting.directo_monthly_number_last' do
-      DirectoInvoiceForwardJob.run(monthly: true, dry: false)
+      DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
     end
   end
 
@@ -126,7 +126,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     end.to_return(status: 200, body: response)
 
     assert_difference 'Setting.directo_monthly_number_last' do
-      DirectoInvoiceForwardJob.run(monthly: true, dry: false)
+      DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
     end
   end
 
@@ -148,7 +148,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     end.to_return(status: 200, body: response)
 
     assert_difference 'Setting.directo_monthly_number_last' do
-      DirectoInvoiceForwardJob.run(monthly: true, dry: false)
+      DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
     end
   end
 
@@ -186,7 +186,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
       (body.include? 'StartDate') && (body.include? 'EndDate') && (body.include? 'goodnames')
     end.to_return(status: 200, body: response)
 
-    DirectoInvoiceForwardJob.run(monthly: true, dry: false)
+    DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
 
     assert_requested first_registrar_stub
     assert_requested second_registrar_stub

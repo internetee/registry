@@ -17,7 +17,7 @@ module Domains
         update_domain
         clean_pendings!
 
-        WhoisRecord.find_by(domain_id: domain.id).save # need to reload model
+        WhoisRecord.find_by(domain_id: domain.id)&.save # need to reload model
       end
 
       # rubocop:disable Metrics/AbcSize

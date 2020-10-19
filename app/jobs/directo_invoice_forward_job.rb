@@ -1,5 +1,7 @@
-class DirectoInvoiceForwardJob < Que::Job
-  def run(monthly: false, dry: false)
+class DirectoInvoiceForwardJob < ApplicationJob
+  queue_as :default
+
+  def perform(monthly: false, dry: false)
     @dry = dry
     (@month = Time.zone.now - 1.month) if monthly
 
