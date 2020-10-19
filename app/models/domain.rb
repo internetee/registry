@@ -363,7 +363,7 @@ class Domain < ApplicationRecord
     new_registrant_name  = registrant.name
 
     RegistrantChangeConfirmEmailJob.enqueue(id, new_registrant_id)
-    RegistrantChangeNoticeEmailJob.enqueue(id, new_registrant_id)
+    RegistrantChangeNoticeEmailJob.perform_later(id, new_registrant_id)
 
     reload
 
