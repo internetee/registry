@@ -76,7 +76,8 @@ module Repp
       def basic_token
         pattern = /^Basic /
         header  = request.headers['Authorization']
-        header.gsub(pattern, '') if header&.match(pattern)
+        header = header.gsub(pattern, '') if header&.match(pattern)
+        header.strip
       end
 
       def authenticate_user
@@ -85,9 +86,12 @@ module Repp
 
         return if @current_user
 
-        render(json: { errors: [{ base: ['Not authorized'] }] }, status: :unauthorized)
-      rescue NoMethodError
-        render(json: { errors: [{ base: ['Not authorized'] }] }, status: :unauthorized)
+        raise(ArgumentError)
+      rescue NoMethodError, ArgumentError
+        render(
+          json: { code: 2202, message: 'Invalid authorization information' },
+          status: :unauthorized
+        )
       end
 
       def check_ip_restriction
