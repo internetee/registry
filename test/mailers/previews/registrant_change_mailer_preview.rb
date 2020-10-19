@@ -37,6 +37,8 @@ class RegistrantChangeMailerPreview < ActionMailer::Preview
   def expired
     RegistrantChangeMailer.expired(domain: @domain,
                                    registrar: @domain.registrar,
-                                   registrant: @domain.registrant)
+                                   registrant: @domain.registrant,
+                                   send_to: [@domain.new_registrant_email,
+                                             @domain.registrant.email])
   end
 end

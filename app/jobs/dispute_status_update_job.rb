@@ -1,5 +1,5 @@
-class DisputeStatusUpdateJob < Que::Job
-  def run(logger: Logger.new(STDOUT))
+class DisputeStatusUpdateJob < ApplicationJob
+  def perform(logger: Logger.new(STDOUT))
     @logger = logger
 
     @backlog = { 'activated': 0, 'closed': 0, 'activate_fail': [], 'close_fail': [] }

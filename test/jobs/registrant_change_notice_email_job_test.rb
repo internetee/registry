@@ -11,7 +11,7 @@ class RegistrantChangeNoticeEmailJobTest < ActiveSupport::TestCase
     domain_id = domains(:shop).id
     new_registrant_id = contacts(:william).id
 
-    RegistrantChangeNoticeEmailJob.enqueue(domain_id, new_registrant_id)
+    RegistrantChangeNoticeEmailJob.perform_now(domain_id, new_registrant_id)
 
     assert_emails 1
   end
