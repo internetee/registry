@@ -2,8 +2,8 @@ require 'test_helper'
 
 class ReppV1BaseTest < ActionDispatch::IntegrationTest
   def setup
-    @registrant = users(:api_bestnames)
-    token = Base64.encode64("#{@registrant.username}:#{@registrant.plain_text_password}")
+    @registrar = users(:api_bestnames)
+    token = Base64.encode64("#{@registrar.username}:#{@registrar.plain_text_password}")
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }

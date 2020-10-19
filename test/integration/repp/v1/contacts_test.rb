@@ -2,23 +2,54 @@ require 'test_helper'
 
 class ReppV1ContactsTest < ActionDispatch::IntegrationTest
   def setup
-    @auction = auctions(:one)
-    @auction.update!(uuid: '1b3ee442-e8fe-4922-9492-8fcb9dccc69c',
-                     domain: 'auction.test',
-                     status: Auction.statuses[:started])
+    @user = users(:api_bestnames)
+    token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
+    token = "Basic #{token}"
+
+    @auth_headers = { 'Authorization' => token }
   end
 
-  def test_get_index
-    get repp_v1_contacts_path
-    response_json = JSON.parse(response.body, symbolize_names: true)
+  def test_returns_registrar_contacts
+    get repp_v1_contacts_path, headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
 
-    puts response_json
+    assert_response :ok
 
-    assert response_json[:count] == 1
+    assert_equal @user.registrar.contacts.count, json[:total_number_of_records]
+    assert_equal @user.registrar.contacts.count, json[:contacts].length
 
-    expected_response = [{ domain_name: @auction.domain,
-                           punycode_domain_name: @auction.domain }]
+    assert json[:contacts][0].is_a? String
+  end
 
-    assert_equal expected_response, response_json[:auctions]
+
+  def test_returns_detailed_registrar_contacts
+    get repp_v1_contacts_path(details: true), headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+
+    assert_equal @user.registrar.contacts.count, json[:total_number_of_records]
+    assert_equal @user.registrar.contacts.count, json[:contacts].length
+
+    assert json[:contacts][0].is_a? Hash
+  end
+
+  def test_respects_limit_in_registrar_contact_list
+    get repp_v1_contacts_path(details: true, limit: 2), headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+
+    assert_equal 2, json[:contacts].length
+  end
+
+  def test_respects_offset_in_registrar_contact_list
+    offset = 1
+    get repp_v1_contacts_path(details: true, offset: offset), headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+
+    assert_equal (@user.registrar.contacts.count - offset), json[:contacts].length
   end
 end
