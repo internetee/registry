@@ -1,5 +1,7 @@
-class RegistrantChangeExpiredEmailJob < Que::Job
-  def run(domain_id)
+class RegistrantChangeExpiredEmailJob < ApplicationJob
+  queue_as :default
+
+  def perform(domain_id)
     domain = Domain.find(domain_id)
     log(domain)
     RegistrantChangeMailer.expired(domain: domain,

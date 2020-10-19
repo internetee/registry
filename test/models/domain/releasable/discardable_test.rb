@@ -1,7 +1,10 @@
 require 'test_helper'
 
 class DomainReleasableDiscardableTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   setup do
+    ActiveJob::Base.queue_adapter = :test
     @domain = domains(:shop)
   end
 
@@ -64,16 +67,18 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
     travel_to Time.zone.parse('2010-07-05')
 
     @domain.update_columns(delete_date: '2010-07-05')
-    Domain.release_domains
+
+    assert_enqueued_with(job: DomainDeleteJob) do
+      Domain.release_domains
+    end
 
     other_domain = domains(:airport)
     other_domain.update_columns(delete_date: '2010-07-05')
-    Domain.release_domains
+    assert_enqueued_with(job: DomainDeleteJob) do
+      Domain.release_domains
+    end
 
-    background_job = QueJob.find_by("args->>0 = '#{@domain.id}'", job_class: DomainDeleteJob.name)
-    other_background_job = QueJob.find_by("args->>0 = '#{other_domain.id}'",
-                                          job_class: DomainDeleteJob.name)
-    assert_not_equal background_job.run_at, other_background_job.run_at
+    assert_not other_domain.deletion_time == @domain.deletion_time
   end
 
   def test_discarding_a_domain_bypasses_validation

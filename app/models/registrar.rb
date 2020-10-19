@@ -43,7 +43,7 @@ class Registrar < ApplicationRecord
   after_commit :update_whois_records
   def update_whois_records
     return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present?
-    RegenerateRegistrarWhoisesJob.enqueue id
+    RegenerateRegistrarWhoisesJob.perform_later id
   end
 
   self.ignored_columns = %w[legacy_id]
@@ -104,7 +104,7 @@ class Registrar < ApplicationRecord
       InvoiceMailer.invoice_email(invoice: invoice, recipient: billing_email).deliver_now
     end
 
-    SendEInvoiceJob.enqueue(invoice.id, payable)
+    SendEInvoiceJob.perform_later(invoice.id, payable)
 
     invoice
   end

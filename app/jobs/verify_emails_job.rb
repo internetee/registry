@@ -1,14 +1,12 @@
-class VerifyEmailsJob < Que::Job
-  def run(verification_id)
-    email_address_verification = run_condition(EmailAddressVerification.find(verification_id))
+class VerifyEmailsJob < ApplicationJob
+  queue_as :default
+  discard_on StandardError
 
-    return if email_address_verification.recently_verified?
+  def perform(verification_id)
+    email_address_verification = EmailAddressVerification.find(verification_id)
+    return unless need_to_verify?(email_address_verification)
 
-    ActiveRecord::Base.transaction do
-      email_address_verification.verify
-      log_success(email_address_verification)
-      destroy
-    end
+    process(email_address_verification)
   rescue StandardError => e
     log_error(verification: email_address_verification, error: e)
     raise e
@@ -16,11 +14,16 @@ class VerifyEmailsJob < Que::Job
 
   private
 
-  def run_condition(email_address_verification)
-    destroy unless email_address_verification
-    destroy if email_address_verification.recently_verified?
+  def need_to_verify?(email_address_verification)
+    return false if email_address_verification.blank?
+    return false if email_address_verification.recently_verified?
 
-    email_address_verification
+    true
+  end
+
+  def process(email_address_verification)
+    email_address_verification.verify
+    log_success(email_address_verification)
   end
 
   def logger

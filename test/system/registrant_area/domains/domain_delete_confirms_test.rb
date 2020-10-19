@@ -14,25 +14,21 @@ class DomainDeleteConfirmsTest < ApplicationSystemTestCase
   def test_enqueues_approve_job_after_verification
     visit registrant_domain_delete_confirm_url(@domain.id, token: @domain.registrant_verification_token)
 
-    perform_enqueued_jobs do
-      click_on 'Confirm domain delete'
-    end
+    click_on 'Confirm domain delete'
+
     assert_text 'Domain registrant change has successfully received.'
 
-    @domain.reload
-    assert_includes @domain.statuses, 'serverHold'
+    assert_enqueued_jobs 1, only: DomainDeleteConfirmJob
   end
 
   def test_enqueues_reject_job_after_verification
     visit registrant_domain_delete_confirm_url(@domain.id, token: @domain.registrant_verification_token)
 
-    perform_enqueued_jobs do
-      click_on 'Reject domain delete'
-    end
+    click_on 'Reject domain delete'
+
     assert_text 'Domain registrant change has been rejected successfully.'
 
-    @domain.reload
-    assert_equal ['ok'], @domain.statuses
+    assert_enqueued_jobs 1, only: DomainDeleteConfirmJob
   end
 
   def test_saves_whodunnit_info_after_verifivation
