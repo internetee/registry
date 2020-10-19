@@ -1,5 +1,5 @@
 class DomainExpireEmailJob < Que::Job
-  def run(domain_id, email)
+  def perform(domain_id, email)
     domain = Domain.find(domain_id)
 
     return if domain.registered?
