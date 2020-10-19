@@ -1,3 +1,6 @@
+16.10.2020
+* Improved error handling for registrant API comapnies endpoint [#1713](https://github.com/internetee/registry/pull/1713)
+
 15.10.2020
 * Tara integration for registrant portal [#1698](https://github.com/internetee/registry/pull/1698)
 

@@ -1,3 +1,4 @@
+$VERBOSE=nil
 require 'test_helper'
 require 'auth_token/auth_token_creator'
 
@@ -33,6 +34,18 @@ class RegistrantApiCompaniesTest < ApplicationIntegrationTest
     assert_equal(:companies, response_json.keys.first)
   end
 
+  def test_status_if_nil_result
+    contacts(:john).update!(ident: '12344321', ident_type: 'priv', ident_country_code: 'US')
+
+    CompanyRegister.const_set(:Client, CompanyRegisterClientZeroStub)
+
+    get '/api/v1/registrant/companies', headers: @auth_headers
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal(1, response_json.count)
+    assert_equal(200, response.status)
+    assert_equal(:companies, response_json.keys.first)
+  end
+
   private
 
   def auth_token
@@ -41,3 +54,12 @@ class RegistrantApiCompaniesTest < ApplicationIntegrationTest
     "Bearer #{hash[:access_token]}"
   end
 end
+
+class CompanyRegisterClientZeroStub
+  Company = Struct.new(:registration_number, :company_name)
+
+  def representation_rights(citizen_personal_code:, citizen_country_code:)
+    []
+  end
+end
+
