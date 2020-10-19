@@ -81,7 +81,7 @@ module Repp
 
       def find_contact
         code = params[:id]
-        @contact = Epp::Contact.find_by!(code: code)
+        @contact = Epp::Contact.find_by!(code: code, registrar: current_user.registrar)
       end
 
       def contact_params_with_address

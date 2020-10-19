@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ReppV1ContactsTest < ActionDispatch::IntegrationTest
+class ReppV1ContactsListTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:api_bestnames)
     token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
@@ -34,7 +34,7 @@ class ReppV1ContactsTest < ActionDispatch::IntegrationTest
     assert json[:contacts][0].is_a? Hash
   end
 
-  def test_respects_limit_in_registrar_contact_list
+  def test_respects_limit
     get repp_v1_contacts_path(details: true, limit: 2), headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
@@ -43,7 +43,7 @@ class ReppV1ContactsTest < ActionDispatch::IntegrationTest
     assert_equal 2, json[:contacts].length
   end
 
-  def test_respects_offset_in_registrar_contact_list
+  def test_respects_offset
     offset = 1
     get repp_v1_contacts_path(details: true, offset: offset), headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
