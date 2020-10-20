@@ -23,6 +23,9 @@ namespace :invoices do
     end
 
     if incoming_transactions.any?
+      log 'Got incoming transactions'
+      log incoming_transactions
+
       bank_statement = BankStatement.new(bank_code: Setting.registry_bank_code,
                                          iban: Setting.registry_iban)
 
@@ -41,8 +44,15 @@ namespace :invoices do
           transaction.autobind_invoice
         end
       end
+    else
+      log 'Got no incoming transactions parsed, aborting'
     end
 
     puts "Transactions processed: #{incoming_transactions.size}"
+  end
+
+  def log(msg)
+    @log ||= Logger.new(STDOUT)
+    @log.info(msg)
   end
 end

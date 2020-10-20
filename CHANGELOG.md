@@ -1,3 +1,7 @@
+19.10.2020
+* Improved logging for LHV-connect messages [#1712](https://github.com/internetee/registry/issues/1712)
+* LHV-connect gem update to handle blank descriptions [#1714](https://github.com/internetee/registry/issues/1714)
+
 16.10.2020
 * Improved error handling for registrant API comapnies endpoint [#1713](https://github.com/internetee/registry/pull/1713)
 
