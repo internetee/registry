@@ -28,7 +28,7 @@ module Repp
       ## POST /repp/v1/contacts
       def create
         @contact = Epp::Contact.new(contact_params_with_address, current_user.registrar, epp: false)
-        action = Actions::ContactCreate.new(@contact, params[:legal_documents],
+        action = Actions::ContactCreate.new(@contact, params[:legal_document],
                                             contact_ident_params)
 
         unless action.call
@@ -115,11 +115,6 @@ module Repp
         else
           params.require(:contact).permit(addr: %i[country_code city street zip])
         end
-      end
-
-      def legal_document_params
-        params.require(:legal_document).require(%i[body type])
-        params.require(:legal_document).permit(:body, :type)
       end
     end
   end

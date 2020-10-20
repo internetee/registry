@@ -79,4 +79,26 @@ class ReppV1ContactsUpdateTest < ActionDispatch::IntegrationTest
     assert_equal 2308, json[:code]
     assert json[:message].include? 'Ident update is not allowed. Consider creating new contact object'
   end
+
+  def test_attaches_legaldoc_if_present
+    request_body =  {
+      "contact": {
+        "email": "donaldtrump@yandex.ru"
+      },
+      "legal_document": {
+        "type": "pdf",
+        "body": "#{'test' * 2000}"
+      }
+    }
+
+    put "/repp/v1/contacts/#{@contact.code}", headers: @auth_headers, params: request_body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+
+    @contact.reload
+    assert @contact.legal_documents.any?
+  end
 end

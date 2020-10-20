@@ -124,4 +124,33 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
     assert_equal 2005, json[:code]
     assert json[:message].include? 'Ident code does not conform to national identification number format'
   end
+
+  def test_attaches_legaldoc_if_present
+    request_body =  {
+      "contact": {
+        "name": "Donald Trump",
+        "phone": "+372.51111112",
+        "email": "donald@trumptower.com",
+        "ident": {
+          "ident_type": "priv",
+          "ident_country_code": "EE",
+          "ident": "39708290069"
+        },
+      },
+      "legal_document": {
+        "type": "pdf",
+        "body": "#{'test' * 2000}"
+      }
+    }
+
+    post '/repp/v1/contacts', headers: @auth_headers, params: request_body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+
+    contact = Contact.find_by(code: json[:data][:contact][:id])
+    assert contact.legal_documents.any?
+  end
 end
