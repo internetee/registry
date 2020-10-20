@@ -69,10 +69,6 @@ module Repp
         )
       end
 
-      def ip_whitelisted?
-        return false unless current_user.registrar.api_ip_white?(request.ip)
-      end
-
       def basic_token
         pattern = /^Basic /
         header  = request.headers['Authorization']
@@ -95,16 +91,16 @@ module Repp
       end
 
       def check_ip_restriction
-        ip_restriction = Authorization::RestrictedIP.new(request.ip)
-        allowed = ip_restriction.can_access_registrar_area?(@current_user.registrar)
+        allowed = @current_user.registrar.api_ip_white?(request.ip)
 
         return if allowed
 
         render(
-          status: :unauthorized,
-          json: { errors: [
-            { base: [I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip)] },
-          ] }
+          json: {
+            code: 2202,
+            message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip),
+          },
+          status: :unauthorized
         )
       end
 
