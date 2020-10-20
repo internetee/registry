@@ -64,7 +64,7 @@ module Repp
         @epp_errors << { code: 2304, msg: 'Command failed' } if data != {}
 
         render(
-          json: { code: @epp_errors[0][:code], message: @epp_errors[0][:msg], data: data },
+          json: { code: @epp_errors[0][:code].to_i, message: @epp_errors[0][:msg], data: data },
           status: status
         )
       end
