@@ -41,7 +41,7 @@ module Repp
 
       ## PUT /repp/v1/contacts/1
       def update
-        action = Actions::ContactUpdate.new(@contact, contact_params_with_address,
+        action = Actions::ContactUpdate.new(@contact, contact_params_with_address(required: false),
                                             params[:legal_document],
                                             contact_ident_params(required: false), current_user)
 
@@ -84,16 +84,16 @@ module Repp
         @contact = Epp::Contact.find_by!(code: code, registrar: current_user.registrar)
       end
 
-      def contact_params_with_address
-        return contact_create_params unless contact_addr_params.key?(:addr)
+      def contact_params_with_address(required: true)
+        return contact_create_params(required: required) unless contact_addr_params.key?(:addr)
 
         addr = {}
         contact_addr_params[:addr].each_key { |k| addr[k] = contact_addr_params[:addr][k] }
-        contact_create_params.merge(addr)
+        contact_create_params(required: required).merge(addr)
       end
 
-      def contact_create_params
-        params.require(:contact).require(%i[name email phone])
+      def contact_create_params(required: true)
+        params.require(:contact).require(%i[name email phone]) if required
         params.require(:contact).permit(:name, :email, :phone)
       end
 
@@ -102,8 +102,10 @@ module Repp
           params.require(:contact).require(:ident).require(%i[ident ident_type ident_country_code])
           params.require(:contact).require(:ident).permit(:ident, :ident_type, :ident_country_code)
         else
-          params.permit(ident: %i[ident ident_type ident_country_code])
+          params.permit(contact: { ident: %i[ident ident_type ident_country_code] })
         end
+
+        params[:contact][:ident]
       end
 
       def contact_addr_params

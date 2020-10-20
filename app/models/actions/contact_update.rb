@@ -17,7 +17,7 @@ module Actions
     def call
       maybe_remove_address
       maybe_update_statuses
-      maybe_update_ident
+      maybe_update_ident if ident
       maybe_attach_legal_doc
       commit
     end
