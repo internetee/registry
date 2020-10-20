@@ -1,3 +1,6 @@
+20.10.2020
+* ForceDelete mailer now respects option to not notify registrant [#1719](https://github.com/internetee/registry/pull/1719)
+
 19.10.2020
 * Improved logging for LHV-connect messages [#1712](https://github.com/internetee/registry/issues/1712)
 * LHV-connect gem update to handle blank descriptions [#1714](https://github.com/internetee/registry/issues/1714)
