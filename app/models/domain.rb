@@ -418,7 +418,7 @@ class Domain < ApplicationRecord
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
-    DomainDeleteConfirmEmailJob.enqueue(id)
+    DomainDeleteConfirmEmailJob.perform_later(id)
   end
 
   def cancel_pending_delete
