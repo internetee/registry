@@ -1,7 +1,7 @@
 module Repp
   module V1
     class ContactsController < BaseController
-      before_action :find_contact, only: %i[show update]
+      before_action :find_contact, only: %i[show update destroy]
 
       ## GET /repp/v1/contacts
       def index
@@ -51,6 +51,16 @@ module Repp
         end
 
         render_success(create_update_success_body)
+      end
+
+      def destroy
+        action = Actions::ContactDelete.new(@contact, params[:legal_document])
+        unless action.call
+          handle_errors(@contact)
+          return
+        end
+
+        render_success
       end
 
       def contact_addr_present?

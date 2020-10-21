@@ -44,12 +44,13 @@ module Epp
 
     def delete
       authorize! :delete, @contact, @password
-
-      if @contact.destroy_and_clean(params[:parsed_frame])
-        render_epp_response '/epp/contacts/delete'
-      else
+      action = Actions::ContactDelete.new(@contact, params[:legal_document])
+      unless action.call
         handle_errors(@contact)
+        return
       end
+
+      render_epp_response '/epp/contacts/delete'
     end
 
     def renew
