@@ -30,12 +30,12 @@ class RegistrantVerification < ApplicationRecord
   def domain_registrant_delete_confirm!(initiator)
     self.action_type = DOMAIN_DELETE
     self.action = CONFIRMED
-    DomainDeleteConfirmJob.enqueue domain.id, CONFIRMED, initiator if save
+    DomainDeleteConfirmJob.perform_later(domain.id, CONFIRMED, initiator) if save
   end
 
   def domain_registrant_delete_reject!(initiator)
     self.action_type = DOMAIN_DELETE
     self.action = REJECTED
-    DomainDeleteConfirmJob.enqueue domain.id, REJECTED, initiator if save
+    DomainDeleteConfirmJob.perform_later(domain.id, REJECTED, initiator) if save
   end
 end
