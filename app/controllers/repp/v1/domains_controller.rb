@@ -90,7 +90,7 @@ module Repp
 
         return if @domain.transfer_code.eql?(request.headers['Auth-Code'])
 
-        @epp_errors << { code: '401', msg: I18n.t('errors.messages.epp_authorization_error') }
+        @epp_errors << { code: 2202, msg: I18n.t('errors.messages.epp_authorization_error') }
         handle_errors
       end
 
