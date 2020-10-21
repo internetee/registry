@@ -6,7 +6,7 @@ module Repp
       def index
         records = current_user.registrar.domains
         domains = records.limit(limit).offset(offset)
-        domains = domains.pluck(:name) unless params[:details] == 'true'
+        domains = domains.pluck(:name) unless index_params[:details] == 'true'
 
         render_success(data: { domains: domains, total_number_of_records: records.count })
       end
@@ -96,11 +96,11 @@ module Repp
       end
 
       def limit
-        params[:limit] || 200
+        index_params[:limit] || 200
       end
 
       def offset
-        params[:offset] || 0
+        index_params[:offset] || 0
       end
 
       def index_params

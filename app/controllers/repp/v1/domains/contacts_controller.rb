@@ -7,7 +7,7 @@ module Repp
 
         def set_current_contact
           @current_contact = current_user.registrar.contacts.find_by!(
-            code: params[:current_contact_id]
+            code: contact_params[:current_contact_id]
           )
         end
 
