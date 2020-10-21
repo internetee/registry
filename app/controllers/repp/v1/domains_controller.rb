@@ -29,7 +29,7 @@ module Repp
         @errors ||= []
         @successful = []
 
-        params[:data][:domain_transfers].each do |transfer|
+        transfer_params[:domain_transfers].each do |transfer|
           initiate_transfer(transfer)
         end
 
@@ -57,6 +57,7 @@ module Repp
           add_error("#{domain_name} transfer code is wrong")
           return
         end
+
         domain
       end
 

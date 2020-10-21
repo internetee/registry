@@ -13,7 +13,7 @@ class ReppV1DomainsTransferInfoTest < ActionDispatch::IntegrationTest
     headers = @auth_headers
     headers['Auth-Code'] = @domain.transfer_code
 
-    get "/repp/v1/domains/#{@domain.name}/transfer_info", headers: @auth_headers
+    get "/repp/v1/domains/#{@domain.name}/transfer_info", headers: headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
@@ -29,7 +29,7 @@ class ReppV1DomainsTransferInfoTest < ActionDispatch::IntegrationTest
     headers = @auth_headers
     headers['Auth-Code'] = 'jhfgifhdg'
 
-    get "/repp/v1/domains/#{@domain.name}/transfer_info", headers: @auth_headers
+    get "/repp/v1/domains/#{@domain.name}/transfer_info", headers: headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :bad_request
