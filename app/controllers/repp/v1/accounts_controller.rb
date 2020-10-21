@@ -4,7 +4,7 @@ module Repp
       def balance
         resp = { balance: current_user.registrar.cash_account.balance,
                  currency: current_user.registrar.cash_account.currency }
-        render(json: resp, status: :ok)
+        render_success(data: resp)
       end
     end
   end
