@@ -14,10 +14,12 @@ module Actions
 
     def call
       return unless domain_exists?
-      return unless run_validations
+      return unless valid_transfer_code?
 
-      #return domain.pending_transfer if domain.pending_transfer
-      #attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
+      run_validations
+
+      # return domain.pending_transfer if domain.pending_transfer
+      # attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
 
       return if domain.errors[:epp_errors].any?
 
@@ -33,15 +35,12 @@ module Actions
     end
 
     def run_validations
-      return unless validate_transfer_code
-      return unless validate_registrar
-      return unless validate_eligilibty
-      return unless validate_not_discarded
-
-      true
+      validate_registrar
+      validate_eligilibty
+      validate_not_discarded
     end
 
-    def validate_transfer_code
+    def valid_transfer_code?
       return true if transfer_code == domain.transfer_code
 
       domain.add_epp_error('2202', nil, nil, 'Invalid authorization information')
@@ -49,24 +48,22 @@ module Actions
     end
 
     def validate_registrar
-      return true unless user == domain.registrar
+      return unless user == domain.registrar
 
-      domain.add_epp_error('2002', nil, nil, I18n.t(:domain_already_belongs_to_the_querying_registrar))
-      false
+      domain.add_epp_error('2002', nil, nil,
+                           I18n.t(:domain_already_belongs_to_the_querying_registrar))
     end
 
     def validate_eligilibty
-      return true unless domain.non_transferable?
+      return unless domain.non_transferable?
 
-      domain.add_epp_error('2304', nil, nil, 'Domain is not transferable??')
-      false
+      domain.add_epp_error('2304', nil, nil, 'Object status prohibits operation')
     end
 
     def validate_not_discarded
-      return true unless domain.discarded?
+      return unless domain.discarded?
 
       domain.add_epp_error('2106', nil, nil, 'Object is not eligible for transfer')
-      false
     end
 
     def commit
