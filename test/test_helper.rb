@@ -26,6 +26,8 @@ require 'rake'
 Rake::Task.clear
 Rails.application.load_tasks
 
+ActiveJob::Base.queue_adapter = :test
+
 class CompanyRegisterClientStub
   Company = Struct.new(:registration_number, :company_name)
 

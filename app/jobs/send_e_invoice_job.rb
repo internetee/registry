@@ -1,12 +1,16 @@
-class SendEInvoiceJob < Que::Job
-  def run(invoice_id, payable = true)
-    invoice = run_condition(Invoice.find_by(id: invoice_id), payable: payable)
+class SendEInvoiceJob < ApplicationJob
+  queue_as :default
+  discard_on HTTPClient::TimeoutError
+
+  def perform(invoice_id, payable = true)
+    invoice = Invoice.find_by(id: invoice_id)
+    return unless invoice
+    return if invoice.do_not_send_e_invoice? && payable
 
     invoice.to_e_invoice(payable: payable).deliver
     ActiveRecord::Base.transaction do
       invoice.update(e_invoice_sent_at: Time.zone.now)
       log_success(invoice)
-      destroy
     end
   rescue StandardError => e
     log_error(invoice: invoice, error: e)
@@ -14,12 +18,6 @@ class SendEInvoiceJob < Que::Job
   end
 
   private
-
-  def run_condition(invoice, payable: true)
-    destroy unless invoice
-    destroy if invoice.do_not_send_e_invoice? && payable
-    invoice
-  end
 
   def log_success(invoice)
     id = invoice.try(:id) || invoice

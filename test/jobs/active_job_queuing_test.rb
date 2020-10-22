@@ -3,10 +3,6 @@ require 'test_helper'
 
 class ActiveJobQueuingTest < ActiveJob::TestCase
 
-  setup do
-    ActiveJob::Base.queue_adapter = :test
-  end
-
   def test_job_discarded_after_error
     assert_no_enqueued_jobs
     assert_performed_jobs 1 do

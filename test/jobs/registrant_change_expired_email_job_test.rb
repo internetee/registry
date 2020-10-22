@@ -4,7 +4,6 @@ class RegistrantChangeExpiredEmailJobTest < ActiveJob::TestCase
   include ActionMailer::TestHelper
 
   setup do
-    ActiveJob::Base.queue_adapter = :test
     ActionMailer::Base.deliveries.clear
   end
 
