@@ -43,7 +43,7 @@ class Registrar < ApplicationRecord
   after_commit :update_whois_records
   def update_whois_records
     return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present?
-    RegenerateRegistrarWhoisesJob.enqueue id
+    RegenerateRegistrarWhoisesJob.perform_later id
   end
 
   self.ignored_columns = %w[legacy_id]

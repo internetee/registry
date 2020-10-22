@@ -1,5 +1,7 @@
-class RegenerateRegistrarWhoisesJob < Que::Job
-  def run(registrar_id)
+class RegenerateRegistrarWhoisesJob < ApplicationJob
+  queue_as :default
+
+  def perform(registrar_id)
     # no return as we want restart job if fails
     registrar = Registrar.find(registrar_id)
 
