@@ -90,7 +90,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       </epp>
     XML
 
-    assert_performed_jobs 1, only: DomainDeleteJob do
+    assert_performed_jobs 2, only: [DomainDeleteJob, UpdateWhoisRecordJob] do
       perform_enqueued_jobs do
         post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
       end

@@ -7,7 +7,7 @@ class RegenerateSubzoneWhoisesJob < ApplicationJob
     subzones.each do |zone|
       next unless zone.subzone?
 
-      UpdateWhoisRecordJob.enqueue zone.origin, 'zone'
+      UpdateWhoisRecordJob.perform_later zone.origin, 'zone'
     end
   end
 end

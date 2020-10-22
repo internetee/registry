@@ -598,7 +598,7 @@ class Domain < ApplicationRecord
   end
 
   def update_whois_record
-    UpdateWhoisRecordJob.enqueue name, 'domain'
+    UpdateWhoisRecordJob.perform_later name, 'domain'
   end
 
   def status_notes_array=(notes)

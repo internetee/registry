@@ -1,6 +1,6 @@
 require "test_helper"
 
-class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
+class DisputeStatusUpdateJobTest < ActiveJob::TestCase
   setup do
     travel_to Time.zone.parse('2010-10-05')
     @logger = Rails.logger
@@ -37,7 +37,9 @@ class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
   def test_registered_domain_whois_data_is_added
     Dispute.create(domain_name: 'shop.test', starts_at: '2010-07-05')
     travel_to Time.zone.parse('2010-07-05')
-    DisputeStatusUpdateJob.perform_now(logger: @logger)
+    perform_enqueued_jobs do
+      DisputeStatusUpdateJob.perform_now(logger: @logger)
+    end
 
     whois_record = Whois::Record.find_by(name: 'shop.test')
     assert_includes whois_record.json['status'], 'disputed'
@@ -53,7 +55,9 @@ class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
                   force_delete_date: nil)
 
     # Dispute status is added automatically if starts_at is not in future
-    Dispute.create(domain_name: 'shop.test', starts_at: Time.zone.parse('2010-07-05'))
+    perform_enqueued_jobs do
+      Dispute.create(domain_name: 'shop.test', starts_at: Time.zone.parse('2010-07-05'))
+    end
     domain.reload
 
     whois_record = Whois::Record.find_by(name: 'shop.test')
@@ -62,7 +66,9 @@ class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
     # Dispute status is removed night time day after it's ended
     travel_to Time.zone.parse('2010-07-05') + 3.years + 1.day
 
-    DisputeStatusUpdateJob.perform_now(logger: @logger)
+    perform_enqueued_jobs do
+      DisputeStatusUpdateJob.perform_now(logger: @logger)
+    end
 
     whois_record.reload
     assert_not whois_record.json['status'].include? 'disputed'

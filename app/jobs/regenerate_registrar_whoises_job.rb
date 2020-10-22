@@ -7,7 +7,7 @@ class RegenerateRegistrarWhoisesJob < ApplicationJob
     registrar = Registrar.find(registrar_id)
 
     registrar.whois_records.select(:name).find_in_batches(batch_size: 20) do |group|
-      UpdateWhoisRecordJob.enqueue group.map(&:name), 'domain'
+      UpdateWhoisRecordJob.perform_later group.map(&:name), 'domain'
     end
   end
 end

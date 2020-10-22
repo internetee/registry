@@ -510,7 +510,7 @@ class Contact < ApplicationRecord
     return if saved_changes.slice(*(self.class.column_names - ignored_columns)).empty?
 
     names = related_domain_descriptions.keys
-    UpdateWhoisRecordJob.enqueue(names, 'domain') if names.present?
+    UpdateWhoisRecordJob.perform_later(names, 'domain') if names.present?
   end
 
   def children_log
