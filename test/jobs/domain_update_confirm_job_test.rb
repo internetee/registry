@@ -20,7 +20,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
   end
 
   def test_rejected_registrant_verification_notifies_registrar
-    DomainUpdateConfirmJob.enqueue(@domain.id, RegistrantVerification::REJECTED)
+    DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::REJECTED)
 
     last_registrar_notification = @domain.registrar.notifications.last
     assert_equal(last_registrar_notification.attached_obj_id, @domain.id)
@@ -28,7 +28,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
   end
 
   def test_accepted_registrant_verification_notifies_registrar
-    DomainUpdateConfirmJob.enqueue(@domain.id, RegistrantVerification::CONFIRMED)
+    DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::CONFIRMED)
 
     last_registrar_notification = @domain.registrar.notifications.last
     assert_equal(last_registrar_notification.attached_obj_id, @domain.id)
@@ -44,7 +44,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
     @domain.update(pending_json: @domain.pending_json)
 
     @domain.reload
-    DomainUpdateConfirmJob.enqueue(@domain.id, RegistrantVerification::CONFIRMED)
+    DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::CONFIRMED)
     @domain.reload
 
     assert_equal @domain.registrant.code, @new_registrant.code
@@ -58,7 +58,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
     @domain.pending_json['frame'] = epp_xml
     @domain.update(pending_json: @domain.pending_json)
 
-    DomainUpdateConfirmJob.enqueue(@domain.id, RegistrantVerification::REJECTED)
+    DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::REJECTED)
     @domain.reload
 
     assert_not @domain.statuses.include? DomainStatus::PENDING_DELETE_CONFIRMATION
