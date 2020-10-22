@@ -33,37 +33,16 @@ module Repp
           initiate_transfer(transfer)
         end
 
-        if @errors.any?
-          render_epp_error(:bad_request, @errors)
-        else
-          render_success(data: @successful)
-        end
+        render_success(data: {success: @successful, failed: @errors})
       end
 
       def initiate_transfer(transfer)
-        domain = transferable_domain(transfer[:domain_name], transfer[:transfer_code])
-        return unless domain
+        domain = Epp::Domain.find_or_initialize_by(name: transfer[:domain_name])
+        action = Actions::DomainTransfer.new(domain, transfer[:transfer_code], current_user.registrar)
 
-        DomainTransfer.request(domain, current_user.registrar)
-        @successful << { type: 'domain_transfer', attributes: { domain_name: domain.name } }
-      end
+        @successful << { type: 'domain_transfer', domain_name: domain.name } and return if action.call
 
-      def transferable_domain(domain_name, transfer_code)
-        domain = Domain.find_by(name: domain_name)
-        # rubocop:disable Style/AndOr
-        add_error("#{domain_name} does not exist") and return unless domain
-        # rubocop:enable Style/AndOr
-        unless domain.transfer_code.eql?(transfer_code)
-          add_error("#{domain_name} transfer code is wrong")
-          return
-        end
-
-        domain
-      end
-
-      def add_error(msg)
-        @errors ||= []
-        @errors << { title: msg }
+        @errors << { type: 'domain_transfer', domain_name: domain.name, errors: domain.errors[:epp_errors] }
       end
 
       private

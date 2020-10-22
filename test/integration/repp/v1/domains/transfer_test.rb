@@ -25,8 +25,11 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
-    assert_equal @domain.name, json[:data][0][:attributes][:domain_name]
-    assert_equal 'domain_transfer', json[:data][0][:type]
+    assert_equal @domain.name, json[:data][:success][0][:domain_name]
+
+    @domain.reload
+
+    assert @domain.registrar = @user.registrar
   end
 
   def test_does_not_transfer_domain_with_invalid_auth_code
@@ -40,10 +43,10 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     post "/repp/v1/domains/transfer", headers: @auth_headers, params: payload
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :bad_request
-    assert_equal 2304, json[:code]
-    assert_equal 'Command failed', json[:message]
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
 
-    assert_equal "#{@domain.name} transfer code is wrong", json[:data][0][:title]
+    assert_equal "Invalid authorization information", json[:data][:failed][0][:errors][0][:msg]
   end
 end
