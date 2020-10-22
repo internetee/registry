@@ -1,27 +1,20 @@
-class VerifyEmailsJob < Que::Job
-  def run(verification_id)
-    email_address_verification = run_condition(EmailAddressVerification.find(verification_id))
+class VerifyEmailsJob < ApplicationJob
+  queue_as :default
+  discard_on StandardError
 
+  def perform(verification_id)
+    email_address_verification = EmailAddressVerification.find(verification_id)
+    return unless email_address_verification
     return if email_address_verification.recently_verified?
 
-    ActiveRecord::Base.transaction do
-      email_address_verification.verify
-      log_success(email_address_verification)
-      destroy
-    end
+    email_address_verification.verify
+    log_success(email_address_verification)
   rescue StandardError => e
     log_error(verification: email_address_verification, error: e)
     raise e
   end
 
   private
-
-  def run_condition(email_address_verification)
-    destroy unless email_address_verification
-    destroy if email_address_verification.recently_verified?
-
-    email_address_verification
-  end
 
   def logger
     @logger ||= Logger.new(Rails.root.join('log', 'email_verification.log'))
