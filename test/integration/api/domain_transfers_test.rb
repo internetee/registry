@@ -12,26 +12,6 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
     Setting.transfer_wait_time = @original_transfer_wait_time
   end
 
-  def test_returns_domain_transfers
-    post '/repp/v1/domains/transfer', params: request_params, as: :json,
-         headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert_response 200
-
-    expected_body = {
-      code: 1000,
-      message: 'Command completed successfully',
-      data: [
-        {
-          type: 'domain_transfer',
-          attributes: { domain_name: 'shop.test' },
-        }
-      ]
-    }
-
-    real_body = JSON.parse(response.body, symbolize_names: true)
-    assert_equal(expected_body, real_body)
-  end
-
   def test_creates_new_domain_transfer
     assert_difference -> { @domain.transfers.size } do
       post '/repp/v1/domains/transfer', params: request_params, as: :json,
@@ -81,29 +61,6 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
     post '/repp/v1/domains/transfer', params: request_params, as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_equal 1, @new_registrar.contacts.where(name: 'William').size
-  end
-
-  def test_fails_if_domain_does_not_exist
-    post '/repp/v1/domains/transfer',
-         params: { data: { domain_transfers: [{ domain_name: 'non-existent.test',
-                                               transfer_code: 'any' }] } },
-         as: :json,
-         headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert_response 400
-    assert_equal ({ code: 2304, message: 'Command failed', data: [{ title: 'non-existent.test does not exist' }] }),
-                 JSON.parse(response.body, symbolize_names: true)
-  end
-
-  def test_fails_if_transfer_code_is_wrong
-    post '/repp/v1/domains/transfer',
-         params: { data: { domain_transfers: [{ domain_name: 'shop.test',
-                                               transfer_code: 'wrong' }] } },
-         as: :json,
-         headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert_response 400
-    refute_equal @new_registrar, @domain.registrar
-    assert_equal ({ code: 2304, message: 'Command failed', data: [{ title: 'shop.test transfer code is wrong' }] }),
-                 JSON.parse(response.body, symbolize_names: true)
   end
 
   private
