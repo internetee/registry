@@ -4,17 +4,27 @@ class VerifyEmailsJob < ApplicationJob
 
   def perform(verification_id)
     email_address_verification = EmailAddressVerification.find(verification_id)
-    return unless email_address_verification
-    return if email_address_verification.recently_verified?
+    return unless need_to_verify?(email_address_verification)
 
-    email_address_verification.verify
-    log_success(email_address_verification)
+    process(email_address_verification)
   rescue StandardError => e
     log_error(verification: email_address_verification, error: e)
     raise e
   end
 
   private
+
+  def need_to_verify?(email_address_verification)
+    return false if email_address_verification.blank?
+    return false if email_address_verification.recently_verified?
+
+    true
+  end
+
+  def process(email_address_verification)
+    email_address_verification.verify
+    log_success(email_address_verification)
+  end
 
   def logger
     @logger ||= Logger.new(Rails.root.join('log', 'email_verification.log'))

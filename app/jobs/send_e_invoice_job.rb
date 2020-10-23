@@ -4,20 +4,28 @@ class SendEInvoiceJob < ApplicationJob
 
   def perform(invoice_id, payable = true)
     invoice = Invoice.find_by(id: invoice_id)
-    return unless invoice
-    return if invoice.do_not_send_e_invoice? && payable
+    return unless need_to_process_invoice?(invoice: invoice, payable: payable)
 
-    invoice.to_e_invoice(payable: payable).deliver
-    ActiveRecord::Base.transaction do
-      invoice.update(e_invoice_sent_at: Time.zone.now)
-      log_success(invoice)
-    end
+    process(invoice: invoice, payable: payable)
   rescue StandardError => e
     log_error(invoice: invoice, error: e)
     raise e
   end
 
   private
+
+  def need_to_process_invoice?(invoice:, payable:)
+    return false if invoice.blank?
+    return false if invoice.do_not_send_e_invoice? && payable
+
+    true
+  end
+
+  def process(invoice:, payable:)
+    invoice.to_e_invoice(payable: payable).deliver
+    invoice.update(e_invoice_sent_at: Time.zone.now)
+    log_success(invoice)
+  end
 
   def log_success(invoice)
     id = invoice.try(:id) || invoice
