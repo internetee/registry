@@ -27,8 +27,8 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     @domain.reload
 
     assert @domain.force_delete_scheduled?
-    assert_equal Date.parse('2010-09-20'), @domain.force_delete_date.to_date
-    assert_equal Date.parse('2010-08-06'), @domain.force_delete_start.to_date
+    assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
+    assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
   end
 
   def test_schedules_force_delete_soft_less_than_year_ahead

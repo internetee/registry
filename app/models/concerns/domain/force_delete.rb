@@ -106,7 +106,7 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def soft_delete_dates(years)
-    self.force_delete_start = valid_to - years.years + 1.day
+    self.force_delete_start = valid_to - years.years
     self.force_delete_date = force_delete_start + Setting.expire_warning_period.days +
                              Setting.redemption_grace_period.days
   end
