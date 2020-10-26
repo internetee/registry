@@ -104,7 +104,7 @@ module Repp
 
       def contact_create_params(required: true)
         params.require(:contact).require(%i[name email phone]) if required
-        params.require(:contact).permit(:name, :email, :phone)
+        params.require(:contact).permit(:name, :email, :phone, :code)
       end
 
       def contact_ident_params(required: true)
