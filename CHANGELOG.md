@@ -1,3 +1,46 @@
+20.10.2020
+* ForceDelete mailer now respects option to not notify registrant [#1719](https://github.com/internetee/registry/pull/1719)
+
+19.10.2020
+* Improved logging for LHV-connect messages [#1712](https://github.com/internetee/registry/issues/1712)
+* LHV-connect gem update to handle blank descriptions [#1714](https://github.com/internetee/registry/issues/1714)
+
+16.10.2020
+* Improved error handling for registrant API comapnies endpoint [#1713](https://github.com/internetee/registry/pull/1713)
+
+15.10.2020
+* Tara integration for registrant portal [#1698](https://github.com/internetee/registry/pull/1698)
+
+14.10.2020
+* Added company registration data query to regisrant API [#1708](https://github.com/internetee/registry/issues/1708)
+* Fixed domain delete history records in admin [#1710](https://github.com/internetee/registry/issues/1710)
+
+09.10.2020
+* Fixed pendingUpdate release while forceDelete is set [#1705](https://github.com/internetee/registry/issues/1705)
+
+08.10.2020
+* Fixed serach in admin history [#1695](https://github.com/internetee/registry/issues/1695)
+
+06.10.2020
+* Updated Directo gem to fix vat codes for EU and non-EU clients [#1699](https://github.com/internetee/registry/pull/1699)
+* Email validation level is now configurable [#1675](https://github.com/internetee/registry/pull/1675)
+
+01.10.2020
+* Fixed EPP authentication [#1697](https://github.com/internetee/registry/pull/1697)
+
+30.09.2020
+* Added Tara integration to registrar portal [#1680](https://github.com/internetee/registry/issues/1680)
+
+28.09.2020
+* Fixed data leakage with shared contacts [#1690](https://github.com/internetee/registry/issues/1690)
+* RenewProhoboted status blocks renew [#1693](https://github.com/internetee/registry/issues/1693)
+
+18.09.2020
+* Updated testing documentation [#1285](https://github.com/internetee/registry/pull/1285)
+* Removed mod-epp docs - replaced by epp-proxy [#1284](https://github.com/internetee/registry/pull/1284)
+* Removed outdated diagrams [#1073](https://github.com/internetee/registry/pull/1073)
+* Removed unused autodoc gems [#1358](https://github.com/internetee/registry/pull/1358)
+
 16.09.2020
 * Refactored orphaned contact archivation process [#956](https://github.com/internetee/registry/issues/956)
 * Rails update to 6.0.3.3 [#1685](https://github.com/internetee/registry/pull/1685)

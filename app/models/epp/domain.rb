@@ -581,11 +581,14 @@ class Epp::Domain < Domain
     save(validate: false)
   end
 
+  ### RENEW ###
+
   def renew(cur_exp_date, period, unit = 'y')
     @is_renewal = true
     validate_exp_dates(cur_exp_date)
 
-    add_epp_error('2105', nil, nil, I18n.t('object_is_not_eligible_for_renewal')) unless renewable?
+    add_renew_epp_errors unless renewable?
+
     return false if errors.any?
 
     period = period.to_i
@@ -611,6 +614,13 @@ class Epp::Domain < Domain
     statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
 
     save
+  end
+
+  def add_renew_epp_errors
+    if renew_blocking_statuses.any? && !renewable?
+      add_epp_error('2304', 'status', renew_blocking_statuses,
+                    I18n.t('object_status_prohibits_operation'))
+    end
   end
 
   ### TRANSFER ###

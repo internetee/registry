@@ -35,7 +35,7 @@ class RegistrantApiV1ContactListTest < ActionDispatch::IntegrationTest
     get api_v1_registrant_contacts_path, as: :json, headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     response_json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal @user.contacts.count, response_json.size
+    assert_equal @user.contacts(representable: false).count, response_json.size
     assert_includes response_json.map{ |hash| hash[:code] }, @contact.code
   end
 

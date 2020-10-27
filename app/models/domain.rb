@@ -306,11 +306,7 @@ class Domain < ApplicationRecord
   end
 
   def renewable?
-    blocking_statuses = [DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
-                         DomainStatus::PENDING_TRANSFER, DomainStatus::DISPUTED,
-                         DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE,
-                         DomainStatus::PENDING_DELETE_CONFIRMATION]
-    return false if statuses.include_any? blocking_statuses
+    return false unless renew_blocking_statuses.empty?
     return true unless Setting.days_to_renew_domain_before_expire != 0
 
     # if you can renew domain at days_to_renew before domain expiration
@@ -319,6 +315,15 @@ class Domain < ApplicationRecord
     end
 
     true
+  end
+
+  def renew_blocking_statuses
+    disallowed = [DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
+                  DomainStatus::PENDING_TRANSFER, DomainStatus::CLIENT_RENEW_PROHIBITED,
+                  DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE,
+                  DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::SERVER_RENEW_PROHIBITED]
+
+    (statuses & disallowed)
   end
 
   def notify_registrar(message_key)
@@ -484,7 +489,7 @@ class Domain < ApplicationRecord
   end
 
   def pending_update?
-    statuses.include?(DomainStatus::PENDING_UPDATE) && !statuses.include?(DomainStatus::FORCE_DELETE)
+    statuses.include?(DomainStatus::PENDING_UPDATE)
   end
 
   # depricated not used, not valid

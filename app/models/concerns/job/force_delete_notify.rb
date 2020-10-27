@@ -15,7 +15,7 @@ module Concerns
           domain.registrar.notifications.create!(text: I18n.t('grace_period_started_domain',
                                                               domain_name: domain.name,
                                                               date: domain.force_delete_start))
-          send_mail(domain)
+          send_mail(domain) if domain.template_name.present?
           domain.update(contact_notification_sent_date: Time.zone.today)
         end
 

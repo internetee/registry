@@ -1,0 +1,14 @@
+en:
+  auth:
+    tara:
+      tampering: "Tampering detected. Sign in cancelled."
+
+      callback:
+        title: "Create a user"
+        errors: "prohibited this user from being saved"
+
+      form:
+        contact_data: "Contact Data"
+        data_from_identity_document: "Data from identity document"
+        new_password: "New password"
+        sign_up: "Sign up"

@@ -28,6 +28,20 @@ class RegistrantAreaDomainListTest < ApplicationSystemTestCase
     assert_no_text 'metro.test'
   end
 
+  def test_only_shows_direct_relation_and_or_company_domains
+    # case https://github.com/internetee/registry/issues/1690
+    tech_contact = contacts(:registrar_ltd)
+
+    # All domains share the same tech contact object
+    Domain.all.each do |domain|
+      DomainContact.create(domain: domain, contact: tech_contact, type: TechDomainContact)
+    end
+
+    visit registrant_domains_url
+    assert_no_text 'Company register is unavailable.'
+    assert_no_text 'metro.test'
+  end
+
   def test_notification_when_company_register_is_unavailable
     CompanyRegister::Client.stub(:new, CompanyRegisterClientStub.new) do
       visit registrant_domains_url
