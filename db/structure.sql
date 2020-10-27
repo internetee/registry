@@ -489,7 +489,8 @@ CREATE TABLE public.bounced_mail_addresses (
     status character varying NOT NULL,
     diagnostic character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    additional_error_description json
 );
 
 
@@ -4959,6 +4960,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200908131554'),
 ('20200910085157'),
 ('20200910102028'),
-('20200915073245'),
-('20200916125326');
+('20200916125326'),
+('20201027112804');
+
 
