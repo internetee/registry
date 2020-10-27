@@ -1,6 +1,9 @@
 class BouncedMailAddress < ApplicationRecord
   validates :email, :message_id, :bounce_type, :bounce_subtype, :action, :status, presence: true
 
+  error_storage_keys = %i[date job_name error_description]
+  store_accessor :additional_error_description, *error_storage_keys
+
   def bounce_reason
     "#{action} (#{status} #{diagnostic})"
   end
