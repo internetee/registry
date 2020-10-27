@@ -1,3 +1,6 @@
+27.10.2020
+* Fixed 1 day delay in force delete for multi year registrations [#1720](https://github.com/internetee/registry/issues/1720)
+
 20.10.2020
 * ForceDelete mailer now respects option to not notify registrant [#1719](https://github.com/internetee/registry/pull/1719)
 
