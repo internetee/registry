@@ -71,6 +71,7 @@ module Actions
     end
 
     def commit
+      contact.id = nil # new record
       return false if @error
 
       contact.generate_code

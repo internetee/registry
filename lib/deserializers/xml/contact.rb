@@ -14,7 +14,6 @@ module Deserializers
           email: if_present('email'),
           fax: if_present('fax'),
           phone: if_present('voice'),
-          id: if_present('id'),
 
           # Address fields
           city: if_present('postalInfo addr city'),
