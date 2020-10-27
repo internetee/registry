@@ -1,0 +1,14 @@
+et:
+  auth:
+    tara:
+      tampering: "Avastatud urkimine. Sisselogimine tühistatud."
+
+      callback:
+        title: "Loo kasutaja"
+        errors: "seda kasutajat ei saa salvestada"
+
+      form:
+        contact_data: "Kontaktandmed"
+        data_from_identity_document: "Andmed elektroonselt isikutunnistuselt"
+        new_password: "Uus salasõna"
+        sign_up: "Registreeru"

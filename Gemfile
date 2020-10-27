@@ -53,6 +53,11 @@ gem 'digidoc_client',
     github: 'tarmotalu/digidoc_client',
     ref: '1645e83a5a548addce383f75703b0275c5310c32'
 
+# TARA
+gem 'omniauth'
+gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-tara', github: 'internetee/omniauth-tara'
+
 
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.1.0', github: 'internetee/epp-xml'
@@ -63,7 +68,8 @@ gem 'pdfkit'
 gem 'jquery-ui-rails', '5.0.5'
 gem 'airbrake'
 
-gem 'company_register', github: 'internetee/company_register', branch: :master
+gem 'company_register', github: 'internetee/company_register',
+                        branch: 'master'
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'domain_name'
@@ -80,10 +86,7 @@ end
 
 group :development, :test do
   gem 'pry', '0.10.1'
-  gem 'railroady',     '1.3.0'  # to generate database diagrams
-  gem 'autodoc'
   gem 'puma'
-  gem 'sdoc', '~> 1.1'
 end
 
 group :test do

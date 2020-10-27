@@ -2,7 +2,7 @@ require 'open3'
 
 class ApiUser < User
   include EppErrors
-  devise :database_authenticatable, :trackable, :timeoutable, :id_card_authenticatable,
+  devise :database_authenticatable, :trackable, :timeoutable,
          authentication_keys: [:username]
 
   def epp_code_map
@@ -45,12 +45,6 @@ class ApiUser < User
   def set_defaults
     return unless new_record?
     self.active = true unless saved_change_to_active?
-  end
-
-  class << self
-    def find_by_id_card(id_card)
-      find_by(identity_code: id_card.personal_code)
-    end
   end
 
   def to_s

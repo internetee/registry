@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/internetee/company_register.git
-  revision: 86d691997aa7def9f86d88f6c92cabb86cd65487
+  revision: 4181b2fff9080e2d87d15612561131f9e3fdfb4c
   branch: master
   specs:
     company_register (0.1.0)
@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/directo.git
-  revision: e4ba54f601d1815fd8782a196788730d47861e86
+  revision: 711ce2d942456ee830b649b03b7141e903a1d86b
   branch: master
   specs:
     directo (1.0.1)
@@ -45,12 +45,21 @@ GIT
 
 GIT
   remote: https://github.com/internetee/lhv.git
-  revision: 1825240b3bf8b262418cc6c8ef7ed1aba386dd7d
+  revision: 1fb07818369425510a0172ad53bc86e85b6f83cc
   branch: master
   specs:
     lhv (0.1.0)
       logger
       nokogiri
+
+GIT
+  remote: https://github.com/internetee/omniauth-tara.git
+  revision: cec845ec3794532144c4976104a07e206d759aa6
+  specs:
+    omniauth-tara (0.3.0)
+      addressable (~> 2.5)
+      omniauth (~> 1.3)
+      openid_connect (~> 1.1)
 
 GIT
   remote: https://github.com/tarmotalu/digidoc_client.git
@@ -111,7 +120,7 @@ GEM
     activerecord (6.0.3.3)
       activemodel (= 6.0.3.3)
       activesupport (= 6.0.3.3)
-    activerecord-import (1.0.5)
+    activerecord-import (1.0.6)
       activerecord (>= 3.2)
     activestorage (6.0.3.3)
       actionpack (= 6.0.3.3)
@@ -126,21 +135,20 @@ GEM
       zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    airbrake (10.0.5)
-      airbrake-ruby (~> 4.13)
-    airbrake-ruby (4.15.0)
+    aes_key_wrap (1.1.0)
+    airbrake (11.0.0)
+      airbrake-ruby (~> 5.0)
+    airbrake-ruby (5.0.2)
       rbtree3 (~> 0.5)
     akami (1.3.1)
       gyoku (>= 0.4.0)
       nokogiri
-    autodoc (0.7.4)
-      actionpack
-      activesupport (>= 3.0.0)
-      rspec
-    autoprefixer-rails (9.8.4)
+    attr_required (1.0.1)
+    autoprefixer-rails (10.0.0.2)
       execjs
-    bcrypt (3.1.13)
-    bootsnap (1.4.6)
+    bcrypt (3.1.16)
+    bindata (2.4.8)
+    bootsnap (1.4.8)
       msgpack (~> 1.0)
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
@@ -170,8 +178,7 @@ GEM
       i18n_data (~> 0.10.0)
       sixarm_ruby_unaccent (~> 1.1)
       unicode_utils (~> 1.4)
-    crack (0.4.3)
-      safe_yaml (~> 1.0.0)
+    crack (0.4.4)
     crass (1.0.6)
     daemons (1.3.1)
     daemons-rails (1.2.1)
@@ -180,13 +187,12 @@ GEM
     data_migrate (6.3.0)
       rails (>= 5.0)
     database_cleaner (1.8.5)
-    devise (4.7.2)
+    devise (4.7.3)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    diff-lcs (1.4.4)
     docile (1.3.2)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -201,7 +207,7 @@ GEM
       concurrent-ruby (~> 1.0)
     dry-equalizer (0.3.0)
     dry-inflector (0.2.0)
-    dry-logic (1.0.6)
+    dry-logic (1.0.7)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.2)
       dry-equalizer (~> 0.2)
@@ -220,7 +226,7 @@ GEM
       thor (~> 0.14)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-    grape (1.3.3)
+    grape (1.4.0)
       activesupport
       builder
       dry-types (>= 1.1)
@@ -233,6 +239,7 @@ GEM
       temple (>= 0.8.0)
       tilt
     hashdiff (1.0.1)
+    hashie (4.1.0)
     hpricot (0.8.6)
     http-accept (1.7.0)
     http-cookie (1.0.3)
@@ -253,6 +260,10 @@ GEM
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
     json (2.3.1)
+    json-jwt (1.13.0)
+      activesupport (>= 4.2)
+      aes_key_wrap
+      bindata
     kaminari (1.2.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.1)
@@ -298,7 +309,7 @@ GEM
       money (~> 6.13.2)
       railties (>= 3.0)
     msgpack (1.3.3)
-    multi_json (1.14.1)
+    multi_json (1.15.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     mustermann-grape (1.0.1)
@@ -308,12 +319,28 @@ GEM
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     nori (2.6.0)
+    omniauth (1.9.1)
+      hashie (>= 3.4.6)
+      rack (>= 1.6.2, < 3)
+    omniauth-rails_csrf_protection (0.1.2)
+      actionpack (>= 4.2)
+      omniauth (>= 1.3.1)
     open4 (1.3.4)
+    openid_connect (1.2.0)
+      activemodel
+      attr_required (>= 1.0.0)
+      json-jwt (>= 1.5.0)
+      rack-oauth2 (>= 1.6.1)
+      swd (>= 1.0.0)
+      tzinfo
+      validate_email
+      validate_url
+      webfinger (>= 1.0.1)
     orm_adapter (0.5.0)
     paper_trail (10.3.1)
       activerecord (>= 4.2)
       request_store (~> 1.1)
-    pdfkit (0.8.4.3.1)
+    pdfkit (0.8.4.3.2)
     pg (1.2.2)
     polyamorous (2.3.2)
       activerecord (>= 5.2.1)
@@ -322,7 +349,7 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     public_suffix (4.0.6)
-    puma (4.3.5)
+    puma (5.0.0)
       nio4r (~> 2.0)
     que (0.14.3)
     que-web (0.7.2)
@@ -332,11 +359,16 @@ GEM
     rack (2.2.3)
     rack-accept (0.4.5)
       rack (>= 0.4)
-    rack-protection (2.0.8.1)
+    rack-oauth2 (1.16.0)
+      activesupport
+      attr_required
+      httpclient
+      json-jwt (>= 1.11.0)
+      rack (>= 2.1.0)
+    rack-protection (2.1.0)
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
-    railroady (1.3.0)
     rails (6.0.3.3)
       actioncable (= 6.0.3.3)
       actionmailbox (= 6.0.3.3)
@@ -373,8 +405,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rbtree3 (0.6.0)
-    rdoc (6.2.1)
-    regexp_parser (1.7.1)
+    regexp_parser (1.8.0)
     request_store (1.5.0)
       rack (>= 1.4)
     responders (3.0.1)
@@ -385,22 +416,8 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rspec (3.9.0)
-      rspec-core (~> 3.9.0)
-      rspec-expectations (~> 3.9.0)
-      rspec-mocks (~> 3.9.0)
-    rspec-core (3.9.2)
-      rspec-support (~> 3.9.3)
-    rspec-expectations (3.9.2)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.9.0)
-    rspec-mocks (3.9.1)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.9.0)
-    rspec-support (3.9.3)
     ruby2_keywords (0.0.2)
     rubyzip (2.3.0)
-    safe_yaml (1.0.5)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -419,8 +436,6 @@ GEM
       nokogiri (>= 1.8.1)
       nori (~> 2.4)
       wasabi (~> 3.4)
-    sdoc (1.1.0)
-      rdoc (>= 5.0)
     select2-rails (3.5.9.3)
       thor (~> 0.14)
     selectize-rails (0.12.1)
@@ -434,10 +449,10 @@ GEM
     simplecov-html (0.10.2)
     simpleidn (0.1.1)
       unf (~> 0.1.4)
-    sinatra (2.0.8.1)
+    sinatra (2.1.0)
       mustermann (~> 1.0)
-      rack (~> 2.0)
-      rack-protection (= 2.0.8.1)
+      rack (~> 2.2)
+      rack-protection (= 2.1.0)
       tilt (~> 2.0)
     sixarm_ruby_unaccent (1.2.0)
     slop (3.6.0)
@@ -449,11 +464,15 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    swd (1.2.0)
+      activesupport (>= 3)
+      attr_required (>= 0.0.5)
+      httpclient (>= 2.4)
     temple (0.8.2)
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.10)
-    truemail (1.8.0)
+    truemail (1.9.1)
       simpleidn (~> 0.1.1)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
@@ -463,10 +482,16 @@ GEM
       unf_ext
     unf_ext (0.0.7.7)
     unicode_utils (1.4.0)
+    validate_email (0.1.6)
+      activemodel (>= 3.0)
+      mail (>= 2.2.5)
+    validate_url (1.0.13)
+      activemodel (>= 3.0.0)
+      public_suffix
     validates_email_format_of (1.6.3)
       i18n
-    warden (1.2.8)
-      rack (>= 2.0.6)
+    warden (1.2.9)
+      rack (>= 2.0.9)
     wasabi (3.6.1)
       addressable
       httpi (~> 2.0)
@@ -475,7 +500,10 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
       selenium-webdriver (>= 3.0, < 4.0)
-    webmock (3.8.3)
+    webfinger (1.1.0)
+      activesupport
+      httpclient (>= 2.4)
+    webmock (3.9.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -495,7 +523,6 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import
   airbrake
-  autodoc
   bootsnap (>= 1.1.0)
   bootstrap-sass (~> 3.4)
   cancancan
@@ -528,6 +555,9 @@ DEPENDENCIES
   minitest (~> 5.14)
   money-rails
   nokogiri
+  omniauth
+  omniauth-rails_csrf_protection
+  omniauth-tara!
   paper_trail (~> 10.3)
   pdfkit
   pg (= 1.2.2)
@@ -535,12 +565,10 @@ DEPENDENCIES
   puma
   que
   que-web
-  railroady (= 1.3.0)
   rails (~> 6.0)
   ransack (~> 2.3)
   rest-client
   sass-rails
-  sdoc (~> 1.1)
   select2-rails (= 3.5.9.3)
   selectize-rails (= 0.12.1)
   simplecov (= 0.17.1)

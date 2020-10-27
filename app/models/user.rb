@@ -11,4 +11,11 @@ class User < ApplicationRecord
     "#{self.id}-#{self.class}: #{self.username}"
   end
 
+  def self.from_omniauth(omniauth_hash)
+    uid = omniauth_hash['uid']
+    identity_code = uid.slice(2..-1)
+    # country_code = uid.slice(0..1)
+
+    find_by(identity_code: identity_code)
+  end
 end

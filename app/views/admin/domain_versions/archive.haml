@@ -57,7 +57,7 @@
             - if version
               - attributes = only_present_fields(version, Domain)
               - domain = Domain.new(attributes)
-              - attach_existing_fields(version, domain)
+              - attach_existing_fields(version, domain) unless version.event == 'destroy'
 
               %tr
                 %td= link_to(domain.name, admin_domain_version_path(version.id))
@@ -67,7 +67,7 @@
                   - else
                     - contact = Contact.all_versions_for([domain.registrant_id], version.created_at).first
                     - if contact.nil? && ver = ContactVersion.where(item_id: domain.registrant_id).last
-                      - contact = Contact.new(ver.object.to_h.merge(ver.object_changes.to_h.each_with_object({}){|(k,v), o| o.public_send("#{k}=", v.last) } ))
+                      - contact = Contact.new(ver.object.to_h.merge(ver.object_changes.to_h.each_with_object({}) {|(k,v), o| o[k] = v.last }))
                     = contact.try(:name)
                     = "&#160;".html_safe
                     = "(#{t(:deleted)})"

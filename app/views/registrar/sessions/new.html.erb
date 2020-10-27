@@ -19,12 +19,10 @@
 
         <hr>
 
-        <%= link_to '/registrar/login/mid', id: 'login-with-mobile-id-btn' do %>
-            <%= image_tag 'mid.gif' %>
-        <% end %>
-
-        <%= link_to registrar_id_card_sign_in_path, method: :post do %>
-            <%= image_tag 'id_card.gif' %>
-        <% end %>
+        <div id="tara-sign-in" class="login-block ui segment">
+            <h3><%= t('.sign_in_with_identity_document') %></h3>
+            <p><%= t('.identity_document_text')%></p>
+            <%= link_to t(:sign_in), "/auth/tara", method: :post, class: 'btn btn-lg btn-primary btn-block' %>
+        </div>
     </div>
 </div>
