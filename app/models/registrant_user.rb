@@ -57,7 +57,9 @@ class RegistrantUser < User
 
   def update_related_contacts
     cc, idcode = registrant_ident.split('-')
-    contacts = Contact.where(ident: idcode, country_code: cc).where('name != ?', username)
+    contacts = Contact.where(ident: idcode, country_code: cc)
+                      .where('UPPER(name) != UPPER(?)', username)
+
     contacts.each { |c| c.update(name: username) }
   end
 
@@ -67,8 +69,8 @@ class RegistrantUser < User
       return false unless user_data[:first_name]
       return false unless user_data[:last_name]
 
-      user_data.each_value { |v| v.upcase! if v.is_a?(String) }
       user_data[:country_code] ||= 'EE'
+      %i[ident country_code].each { |f| user_data[f].upcase! if user_data[f].is_a?(String) }
 
       find_or_create_by_user_data(user_data)
     end
