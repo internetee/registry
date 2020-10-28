@@ -320,8 +320,8 @@ class Domain < ApplicationRecord
   def renew_blocking_statuses
     disallowed = [DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
                   DomainStatus::PENDING_TRANSFER, DomainStatus::CLIENT_RENEW_PROHIBITED,
-                  DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE,
-                  DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::SERVER_RENEW_PROHIBITED]
+                  DomainStatus::PENDING_UPDATE, DomainStatus::SERVER_RENEW_PROHIBITED,
+                  DomainStatus::PENDING_DELETE_CONFIRMATION]
 
     (statuses & disallowed)
   end
