@@ -1,9 +1,10 @@
-class RegistrantChangeNoticeEmailJob < ApplicationJob
+class RegistrantChangeNoticeEmailJob < EmailJob
   queue_as :default
 
   def perform(domain_id, new_registrant_id)
     domain = Domain.find(domain_id)
     new_registrant = Registrant.find(new_registrant_id)
+    @email = new_registrant.email
     log(domain, new_registrant)
     RegistrantChangeMailer.notification(domain: domain,
                                         registrar: domain.registrar,

@@ -1,8 +1,9 @@
-class DomainExpireEmailJob < ApplicationJob
+class DomainExpireEmailJob < EmailJob
   queue_as :default
 
   def perform(domain_id)
     domain = Domain.find(domain_id)
+    @email = domain.primary_contact_emails
 
     return if domain.registered?
 

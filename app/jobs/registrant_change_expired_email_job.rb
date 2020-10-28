@@ -1,8 +1,9 @@
-class RegistrantChangeExpiredEmailJob < ApplicationJob
+class RegistrantChangeExpiredEmailJob < EmailJob
   queue_as :default
 
   def perform(domain_id)
     domain = Domain.find(domain_id)
+    @email = domain.new_registrant_email
     log(domain)
     RegistrantChangeMailer.expired(domain: domain,
                                    registrar: domain.registrar,
