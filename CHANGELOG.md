@@ -1,3 +1,6 @@
+28.10.2020
+* domain renew now canceles pending delete process [#1664](https://github.com/internetee/registry/issues/1664)
+
 27.10.2020
 * Fixed 1 day delay in force delete for multi year registrations [#1720](https://github.com/internetee/registry/issues/1720)
 
