@@ -476,17 +476,17 @@ ALTER SEQUENCE public.blocked_domains_id_seq OWNED BY public.blocked_domains.id;
 
 
 --
--- Name: bounced_mail_addresses; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: bounced_mail_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.bounced_mail_addresses (
     id bigint NOT NULL,
     email character varying NOT NULL,
-    message_id character varying NOT NULL,
-    bounce_type character varying NOT NULL,
-    bounce_subtype character varying NOT NULL,
-    action character varying NOT NULL,
-    status character varying NOT NULL,
+    message_id character varying,
+    bounce_type character varying,
+    bounce_subtype character varying,
+    action character varying,
+    status character varying,
     diagnostic character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
@@ -4961,6 +4961,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200910085157'),
 ('20200910102028'),
 ('20200916125326'),
-('20201027112804');
+('20201027112804'),
+('20201028092624');
 
 
