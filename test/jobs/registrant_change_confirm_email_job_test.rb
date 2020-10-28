@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrantChangeConfirmEmailJobTest < ActiveSupport::TestCase
+class RegistrantChangeConfirmEmailJobTest < ActiveJob::TestCase
   include ActionMailer::TestHelper
 
   setup do
@@ -11,7 +11,9 @@ class RegistrantChangeConfirmEmailJobTest < ActiveSupport::TestCase
     domain_id = domains(:shop).id
     new_registrant_id = contacts(:william).id
 
-    RegistrantChangeConfirmEmailJob.perform_now(domain_id, new_registrant_id)
+    perform_enqueued_jobs do
+      RegistrantChangeConfirmEmailJob.perform_now(domain_id, new_registrant_id)
+    end
 
     assert_emails 1
   end

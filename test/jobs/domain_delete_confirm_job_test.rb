@@ -1,6 +1,6 @@
 require "test_helper"
 
-class DomainDeleteConfirmJobTest < ActiveSupport::TestCase
+class DomainDeleteConfirmJobTest < ActiveJob::TestCase
   setup do
     @legal_doc_path = 'test/fixtures/files/legaldoc.pdf'
     @domain = domains(:shop)
@@ -18,7 +18,9 @@ class DomainDeleteConfirmJobTest < ActiveSupport::TestCase
       new_registrant_email: @new_registrant.email,
       current_user_id: @user.id })
 
-    DomainDeleteConfirmJob.perform_now(@domain.id, RegistrantVerification::REJECTED)
+    perform_enqueued_jobs do
+      DomainDeleteConfirmJob.perform_now(@domain.id, RegistrantVerification::REJECTED)
+    end
 
     last_registrar_notification = @domain.registrar.notifications.last
     assert_equal(last_registrar_notification.attached_obj_id, @domain.id)

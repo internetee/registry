@@ -1,9 +1,10 @@
-class RegistrantChangeConfirmEmailJob < ApplicationJob
+class RegistrantChangeConfirmEmailJob < EmailJob
   queue_as :default
 
   def perform(domain_id, new_registrant_id)
     domain = Domain.find(domain_id)
     new_registrant = Registrant.find(new_registrant_id)
+    @email = domain.registrant.email
 
     log(domain)
     RegistrantChangeMailer.confirmation_request(domain: domain,

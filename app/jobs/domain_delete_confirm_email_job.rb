@@ -1,8 +1,9 @@
-class DomainDeleteConfirmEmailJob < ApplicationJob
+class DomainDeleteConfirmEmailJob < EmailJob
   queue_as :default
 
   def perform(domain_id)
     domain = Domain.find(domain_id)
+    @email = domain.registrant.email
 
     log(domain)
     DomainDeleteMailer.confirmation_request(domain: domain,

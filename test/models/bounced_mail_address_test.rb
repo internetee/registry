@@ -20,36 +20,6 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
     assert @bounced_mail.invalid?
   end
 
-  def test_message_id_is_required
-    assert @bounced_mail.valid?
-    @bounced_mail.message_id = nil
-    assert @bounced_mail.invalid?
-  end
-
-  def test_bounce_type_is_required
-    assert @bounced_mail.valid?
-    @bounced_mail.bounce_type = nil
-    assert @bounced_mail.invalid?
-  end
-
-  def test_bounce_subtype_is_required
-    assert @bounced_mail.valid?
-    @bounced_mail.bounce_subtype = nil
-    assert @bounced_mail.invalid?
-  end
-
-  def test_action_is_required
-    assert @bounced_mail.valid?
-    @bounced_mail.action = nil
-    assert @bounced_mail.invalid?
-  end
-
-  def test_status_is_required
-    assert @bounced_mail.valid?
-    @bounced_mail.status = nil
-    assert @bounced_mail.invalid?
-  end
-
   def test_diagnostic_is_not_required
     assert @bounced_mail.valid?
     @bounced_mail.diagnostic = nil
