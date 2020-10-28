@@ -12,10 +12,7 @@ class WhoisRecordTest < ActiveSupport::TestCase
   end
 
   def test_generated_json_has_expected_values
-    expected_disclaimer_text = <<-TEXT.squish
-    Search results may not be used for commercial, advertising, recompilation,
-    repackaging, redistribution, reuse, obscuring or other similar activities.
-    TEXT
+    expected_disclaimer_text = SettingEntry.find_by(code: 'registry_whois_disclaimer').retrieve
 
     expected_partial_hash = {
       disclaimer: expected_disclaimer_text,
