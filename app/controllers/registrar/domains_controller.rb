@@ -16,13 +16,14 @@ class Registrar
         end
       end
 
-      if params[:statuses_contains]
-        domains = current_registrar_user.registrar.domains.includes(:registrar, :registrant).where(
-          "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
-        )
-      else
-        domains = current_registrar_user.registrar.domains.includes(:registrar, :registrant)
-      end
+      domains = if params[:statuses_contains]
+                  current_registrar_user.registrar.domains
+                                        .includes(:registrar, :registrant)
+                                        .where('domains.statuses @> ?::varchar[]',
+                                               "{#{params[:statuses_contains].join(',')}}")
+                else
+                  current_registrar_user.registrar.domains.includes(:registrar, :registrant)
+                end
 
       normalize_search_parameters do
         @q = domains.search(search_params)
