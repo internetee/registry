@@ -11,27 +11,27 @@ class Registrar
         search_params[:name_matches].present?
         domain = Domain.find_by(name: search_params[:name_matches])
 
-        if domain
-          redirect_to info_registrar_domains_url(domain_name: domain.name) and return
-        end
+        redirect_to info_registrar_domains_url(domain_name: domain.name) and return if domain
       end
 
       domains = if params[:statuses_contains]
-                  current_registrar_user.registrar.domains
-                                        .includes(:registrar, :registrant)
-                                        .where('domains.statuses @> ?::varchar[]',
-                                               "{#{params[:statuses_contains].join(',')}}")
+                  current_domain_scope.where('domains.statuses @> ?::varchar[]',
+                                             "{#{params[:statuses_contains].join(',')}}")
                 else
-                  current_registrar_user.registrar.domains.includes(:registrar, :registrant)
+                  current_domain_scope
                 end
 
+      if params[:contacts_ident_eq]
+        domains = domains.where(contacts: { ident: params[:contacts_ident_eq] })
+      end
+
       normalize_search_parameters do
-        @q = domains.search(search_params)
+        @q = domains.search(search_params.except(:contacts_ident_eq))
         @domains = @q.result.page(params[:page])
 
         # if we do not get any results, add wildcards to the name field and search again
         if @domains.count == 0 && search_params[:name_matches] !~ /^%.+%$/
-          new_search_params = search_params.to_h
+          new_search_params = search_params.to_h.except(:contacts_ident_eq)
           new_search_params[:name_matches] = "%#{new_search_params[:name_matches]}%"
           @q = domains.search(new_search_params)
           @domains = @q.result.page(params[:page])
@@ -55,6 +55,10 @@ class Registrar
           send_data raw_csv, filename: filename, type: "#{Mime[:csv]}; charset=utf-8"
         end
       end
+    end
+
+    def current_domain_scope
+      current_registrar_user.registrar.domains.includes(:registrar, :registrant)
     end
 
     def info
