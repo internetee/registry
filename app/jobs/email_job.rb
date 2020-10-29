@@ -6,8 +6,7 @@ class EmailJob < ApplicationJob
   end
 
   def self.save_error_data(job, error)
-    BouncedMailAddress.create(enqueued_at: job.enqueued_at.to_datetime,
-                              email: job.email,
+    BouncedMailAddress.create(email: job.email,
                               job_name: job.class.name,
                               error_description: error.to_s)
   end

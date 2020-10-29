@@ -23,5 +23,15 @@
   <pre><%= @bounced_mail_address.diagnostic %></pre>
 </p>
 
+<p>
+  <strong>Email job name, if any</strong>
+  <pre><%= @bounced_mail_address.job_name %></pre>
+</p>
+
+<p>
+  <strong>Error description, if any</strong>
+  <pre><%= @bounced_mail_address.error_description %></pre>
+</p>
+
 <%= link_to 'Back', admin_bounced_mail_addresses_path %>
 <%= link_to 'Destroy', admin_bounced_mail_address_path(@bounced_mail_address), method: :delete, data: { confirm: 'Are you sure?' } %></td>

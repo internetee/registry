@@ -12,6 +12,7 @@
                             <th>Status</th>
                             <th>Diagnostic</th>
                             <th>Tracked</th>
+                            <th>Job name</th>
                             <th colspan="2">Actions</th>
                         </tr>
                     </thead>
@@ -24,6 +25,7 @@
                             <td><%= mail_addr.status %></td>
                             <td><%= mail_addr.diagnostic %></td>
                             <td><%= mail_addr.created_at %></td>
+                            <td><%= mail_addr.job_name %></td>
                             <td><%= link_to 'Detailed', admin_bounced_mail_address_path(mail_addr) %></td>
                             <td><%= link_to 'Destroy', admin_bounced_mail_address_path(mail_addr), method: :delete, data: { confirm: 'Are you sure?' } %></td>
                         </tr>
