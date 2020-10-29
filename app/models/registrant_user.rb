@@ -2,7 +2,6 @@ class RegistrantUser < User
   attr_accessor :idc_data
 
   devise :trackable, :timeoutable
-  after_save :update_related_contacts
 
   def ability
     @ability ||= Ability.new(self)
@@ -56,8 +55,7 @@ class RegistrantUser < User
   end
 
   def update_related_contacts
-    cc, idcode = registrant_ident.split('-')
-    contacts = Contact.where(ident: idcode, country_code: cc)
+    contacts = Contact.where(ident: ident, country_code: country_code)
                       .where('UPPER(name) != UPPER(?)', username)
 
     contacts.each { |c| c.update(name: username) }
@@ -100,6 +98,7 @@ class RegistrantUser < User
       user.username = "#{user_data[:first_name]} #{user_data[:last_name]}"
       user.save
 
+      user.update_related_contacts
       user
     end
   end
