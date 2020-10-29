@@ -5,6 +5,10 @@ class EmailJob < ApplicationJob
     save_error_data(job, error)
   end
 
+  discard_on ArgumentError do |job, error|
+    save_error_data(job, error)
+  end
+
   def self.save_error_data(job, error)
     BouncedMailAddress.create(email: job.email,
                               job_name: job.class.name,

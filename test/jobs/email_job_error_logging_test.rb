@@ -22,6 +22,19 @@ class EmailJobLoggingTest < ActiveJob::TestCase
     assert_equal bounced_mail_address.job_name, 'StubEmailJob'
     assert_equal bounced_mail_address.error_description, error
   end
+
+  def test_discard_if_argument_error
+    domain = domains(:shop)
+    error = 'ArgumentError'
+
+    assert_difference -> { BouncedMailAddress.all.count }, 1 do
+      perform_enqueued_jobs do
+        assert_no_performed_jobs do
+          StubEmailJob.perform_now(domain.id, error)
+        end
+      end
+    end
+  end
 end
 
 class StubEmailJob < EmailJob
