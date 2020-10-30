@@ -55,8 +55,7 @@ class RegistrantUser < User
   end
 
   def update_related_contacts
-    cc, idcode = registrant_ident.split('-')
-    contacts = Contact.where(ident: idcode, ident_country_code: cc)
+    contacts = Contact.where(ident: ident, ident_country_code: country.alpha2)
                       .where('UPPER(name) != UPPER(?)', username)
 
     contacts.each { |c| c.update(name: username) }
