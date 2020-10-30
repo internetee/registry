@@ -11,4 +11,13 @@ class DomainExpireMailerTest < ActionMailer::TestCase
     assert_equal 'Domeen shop.test on aegunud / Domain shop.test has expired' \
       ' / Срок действия домена shop.test истек', email.subject
   end
+
+  def test_delivers_domain_expiration_soft_email
+    domain = domains(:shop)
+    assert_equal 'shop.test', domain.name
+
+    DomainExpireMailer.expired_soft(domain: domain, registrar: domain.registrar).deliver_now
+
+    assert_emails 1
+  end
 end
