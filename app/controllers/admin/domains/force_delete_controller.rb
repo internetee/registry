@@ -22,7 +22,7 @@ module Admin
           send_email
           domain.update(contact_notification_sent_date: Time.zone.today)
         else
-          domain.update(template_name: params[:template_name])
+          domain.update(template_name: template_name)
         end
       end
 
@@ -33,6 +33,10 @@ module Admin
       end
 
       private
+
+      def template_name
+        domain.registrant.org? ? 'legal_person' : 'private_person'
+      end
 
       def domain
         @domain ||= Domain.find(params[:domain_id])
@@ -46,7 +50,7 @@ module Admin
         DomainDeleteMailer.forced(domain: domain,
                                   registrar: domain.registrar,
                                   registrant: domain.registrant,
-                                  template_name: params[:template_name]).deliver_now
+                                  template_name: template_name).deliver_now
       end
 
       def force_delete_type
