@@ -58,7 +58,11 @@ class RegistrantUser < User
     contacts = Contact.where(ident: ident, ident_country_code: country.alpha2)
                       .where('UPPER(name) != UPPER(?)', username)
 
-    contacts.each { |c| c.update(name: username) }
+    contacts.each do |contact|
+      contact.update(name: username)
+      action = actions.create!(contact: contact, operation: :update)
+      contact.registrar.notify(action)
+    end
   end
 
   class << self
