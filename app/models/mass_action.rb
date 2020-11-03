@@ -9,8 +9,8 @@ class MassAction
     log = { ok: [], fail: [] }
     entries = CSV.read(entries, headers: true)
     entries.each do |e|
-      dn = Domain.find_by(name_puny: e['Domain name'])
-      log[:fail] << e['Domain name'] and next unless dn
+      dn = Domain.find_by(name_puny: e['domain_name'])
+      log[:fail] << e['domain_name'] and next unless dn
 
       dn.schedule_force_delete(type: :soft, notify: true)
       log[:ok] << dn.name
