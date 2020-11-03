@@ -2,7 +2,6 @@ class RegistrantUser < User
   attr_accessor :idc_data
 
   devise :trackable, :timeoutable
-  after_save :update_related_contacts
 
   def ability
     @ability ||= Ability.new(self)
@@ -53,12 +52,6 @@ class RegistrantUser < User
 
   def last_name
     username.split.second
-  end
-
-  def update_related_contacts
-    cc, idcode = registrant_ident.split('-')
-    contacts = Contact.where(ident: idcode, country_code: cc).where('name != ?', username)
-    contacts.each { |c| c.update(name: username) }
   end
 
   class << self
