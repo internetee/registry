@@ -42,12 +42,12 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     force_delete_start + Setting.expire_warning_period.days <= valid_to
   end
 
-  def schedule_force_delete(type: :fast_track, notify: false)
+  def schedule_force_delete(type: :fast_track, reason: nil)
     if discarded?
       raise StandardError, 'Force delete procedure cannot be scheduled while a domain is discarded'
     end
 
-    type == :fast_track ? force_delete_fast_track : force_delete_soft(notify: notify)
+    type == :fast_track ? force_delete_fast_track : force_delete_soft(reason: reason)
   end
 
   def add_force_delete_type(force_delete_type)
@@ -65,7 +65,7 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     save(validate: false)
   end
 
-  def force_delete_soft(notify: false)
+  def force_delete_soft(reason: nil)
     preserve_current_statuses_for_force_delete
     add_force_delete_statuses
     add_force_delete_type(:soft)
@@ -73,7 +73,7 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     stop_all_pending_actions
     allow_deletion
     save(validate: false)
-    notify_parties if notify
+    notify_parties(reason) if reason
   end
 
   def clear_force_delete_data
@@ -150,8 +150,11 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     Time.zone.today + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
   end
 
-  def notify_parties
-    self.template_name = registrant.org? ? 'legal_person' : 'private_person'
+  def notify_parties(reason)
+    ent = registrant.org? ? 'legal_person' : 'private_person' if reason == 'ENTITY_BURIED'
+    ent ||= reason.downcase
+    self.template_name = ent
+
     save(validate: false)
     registrar.notifications.create!(text: I18n.t('force_delete_set_on_domain',
                                                  domain_name: name,

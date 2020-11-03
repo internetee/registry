@@ -12,7 +12,7 @@ class MassAction
       dn = Domain.find_by(name_puny: e['domain_name'])
       log[:fail] << e['domain_name'] and next unless dn
 
-      dn.schedule_force_delete(type: :soft, notify: true)
+      dn.schedule_force_delete(type: :soft, reason: e['delete_reason'])
       log[:ok] << dn.name
     end
 
