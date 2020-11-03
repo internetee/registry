@@ -1,0 +1,17 @@
+<div class="page-header">
+  <h1>Mass actions</h1>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Bulk Domain Force Delete</div>
+  <div class="panel-body">
+    <p>Triggers <b>soft</b> force delete procedure for uploaded domain list. List must be in <b>CSV</b> format. Each domain entry must be on separate line. Line must include <b>domain name</b> with <b>delete reason</b>, separated by comma.</p>
+    <p>Allowed delete reasons: <b>IDENT_BURIED</b> | <b>PHONE</b> | <b>EMAIL</b></p>
+    <%= form_tag admin_mass_actions_path, multipart: true do %>
+      <%= file_field_tag :entry_list, accept: 'text/csv' %>
+      <%= hidden_field_tag :mass_action, 'force_delete' %>
+      <br>
+      <%= submit_tag "Start force delete process", class: 'btn btn-danger', disabled: true %>
+    <% end %>
+  </div>
+</div>

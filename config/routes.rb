@@ -295,6 +295,7 @@ Rails.application.routes.draw do
     resources :delayed_jobs
     resources :epp_logs
     resources :repp_logs
+    resources :mass_actions, only: %i[index create]
 
     authenticate :admin_user do
       mount Que::Web, at: 'que'
