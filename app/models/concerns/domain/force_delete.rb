@@ -128,9 +128,9 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def add_force_delete_statuses
-    statuses << DomainStatus::FORCE_DELETE
-    statuses << DomainStatus::SERVER_RENEW_PROHIBITED
-    statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
+    self.statuses |= [DomainStatus::FORCE_DELETE,
+                      DomainStatus::SERVER_RENEW_PROHIBITED,
+                      DomainStatus::SERVER_TRANSFER_PROHIBITED]
   end
 
   def remove_force_delete_statuses
