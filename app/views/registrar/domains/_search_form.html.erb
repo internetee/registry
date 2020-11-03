@@ -18,7 +18,8 @@
         <div class="col-md-3">
             <div class="form-group">
                 <%= f.label :contact_ident, for: nil %>
-                <%= f.search_field :contacts_ident_eq, class: 'form-control', placeholder: t(:contact_ident) %>
+                <%= f.search_field :contacts_ident_eq, value: search_params[:contacts_ident_eq],
+                                    class: 'form-control', placeholder: t(:contact_ident) %>
             </div>
         </div>
 
