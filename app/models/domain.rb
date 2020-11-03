@@ -384,7 +384,7 @@ class Domain < ApplicationRecord
   end
 
   def registrant_update_confirmable?(token)
-    return false if (statuses & [DomainStatus::FORCE_DELETE, DomainStatus::DELETE_CANDIDATE]).any?
+    return false if statuses.include? DomainStatus::DELETE_CANDIDATE
     return false unless pending_update?
     return false unless registrant_verification_asked?
     return false unless registrant_verification_token == token

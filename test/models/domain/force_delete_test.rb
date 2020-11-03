@@ -252,4 +252,16 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     assert @domain.force_delete_scheduled?
     assert @domain.pending_update?
   end
+
+  def test_force_delete_does_not_affect_registrant_update_confirmable
+    @domain.schedule_force_delete(type: :soft)
+    @domain.registrant_verification_asked!('test', User.last.id)
+    @domain.save!
+    @domain.reload
+
+    @domain.statuses << DomainStatus::PENDING_UPDATE
+
+    assert @domain.force_delete_scheduled?
+    assert @domain.registrant_update_confirmable?(@domain.registrant_verification_token)
+  end
 end
