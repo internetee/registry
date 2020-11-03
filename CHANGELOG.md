@@ -1,5 +1,6 @@
 03.11.2020
 * Fixed registrant confirmation while forcedelete is set on a domain [#1729](https://github.com/internetee/registry/issues/1729)
+* Fixed search in registrar domain view [#262](https://github.com/internetee/registry/issues/262)
 
 28.10.2020
 * Domain renew now canceles pending delete process [#1664](https://github.com/internetee/registry/issues/1664)
