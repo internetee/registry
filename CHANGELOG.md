@@ -1,3 +1,6 @@
+03.11.2020
+* Fixed registrant confirmation while forcedelete is set on a domain [#1729](https://github.com/internetee/registry/issues/1729)
+
 28.10.2020
 * Domain renew now canceles pending delete process [#1664](https://github.com/internetee/registry/issues/1664)
 * Added multi-language support to whois disclaimer [#1703](https://github.com/internetee/registry/issues/1703)
