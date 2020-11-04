@@ -19,6 +19,10 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     end
   end
 
+  def notification_template
+    registrant.org? ? 'legal_person' : 'private_person'
+  end
+
   def force_delete_scheduled?
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
