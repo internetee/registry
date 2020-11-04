@@ -1,17 +1,20 @@
 class MassAction
   def self.process(action_type, entries)
     entries = CSV.read(entries, headers: true)
-    case action_type
-    when 'force_delete'
-      return false unless force_delete_entries_valid?(entries)
+    return process_force_delete(entries) if action_type == 'force_delete'
 
-      process_force_delete(entries)
-    end
+    false
   rescue StandardError
     false
   end
 
   def self.process_force_delete(entries)
+    return false unless force_delete_entries_valid?(entries)
+
+    apply_force_deletes(entries)
+  end
+
+  def self.apply_force_deletes(entries)
     log = { ok: [], fail: [] }
     entries.each do |e|
       dn = Domain.find_by(name_puny: e['domain_name'])
@@ -25,15 +28,11 @@ class MassAction
   end
 
   def self.force_delete_entries_valid?(entries)
-    valid = true
     entries.each do |e|
-      unless e['domain_name'].present? && %w[IDENT_BURIED EMAIL PHONE].include?(e['delete_reason'])
-        valid = false
-      end
+      reasons = %w[IDENT_BURIED EMAIL PHONE]
+      return false unless e['domain_name'].present? && reasons.include?(e['delete_reason'])
     end
 
-    valid
-  rescue StandardError
-    false
+    true
   end
 end
