@@ -137,6 +137,19 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     assert_not @domain.force_delete_scheduled?
   end
 
+  def test_force_delete_does_not_double_statuses
+    statuses = [
+        DomainStatus::FORCE_DELETE,
+        DomainStatus::SERVER_RENEW_PROHIBITED,
+        DomainStatus::SERVER_TRANSFER_PROHIBITED,
+    ]
+    @domain.statuses = @domain.statuses + statuses
+    @domain.save!
+    @domain.reload
+    @domain.schedule_force_delete(type: :fast_track)
+    assert_equal @domain.statuses.size, statuses.size
+  end
+
   def test_cancelling_force_delete_removes_statuses_that_were_set_on_force_delete
     statuses = [
       DomainStatus::FORCE_DELETE,
@@ -251,5 +264,17 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
 
     assert @domain.force_delete_scheduled?
     assert @domain.pending_update?
+  end
+
+  def test_force_delete_does_not_affect_registrant_update_confirmable
+    @domain.schedule_force_delete(type: :soft)
+    @domain.registrant_verification_asked!('test', User.last.id)
+    @domain.save!
+    @domain.reload
+
+    @domain.statuses << DomainStatus::PENDING_UPDATE
+
+    assert @domain.force_delete_scheduled?
+    assert @domain.registrant_update_confirmable?(@domain.registrant_verification_token)
   end
 end

@@ -19,6 +19,10 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     end
   end
 
+  def notification_template
+    registrant.org? ? 'legal_person' : 'private_person'
+  end
+
   def force_delete_scheduled?
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
@@ -129,9 +133,9 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def add_force_delete_statuses
-    statuses << DomainStatus::FORCE_DELETE
-    statuses << DomainStatus::SERVER_RENEW_PROHIBITED
-    statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
+    self.statuses |= [DomainStatus::FORCE_DELETE,
+                      DomainStatus::SERVER_RENEW_PROHIBITED,
+                      DomainStatus::SERVER_TRANSFER_PROHIBITED]
   end
 
   def remove_force_delete_statuses

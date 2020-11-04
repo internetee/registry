@@ -1,3 +1,11 @@
+04.11.2020
+* Email notification templates for forceDelete are now automatically selected according to registrant type [#442](https://github.com/internetee/registry/issues/442)
+
+03.11.2020
+* Fixed registrant confirmation while forcedelete is set on a domain [#1729](https://github.com/internetee/registry/issues/1729)
+* Fixed search in registrar domain view [#262](https://github.com/internetee/registry/issues/262)
+* Fixed double status issue on setting forceDelete [#1135](https://github.com/internetee/registry/issues/1135)
+
 28.10.2020
 * Domain renew now canceles pending delete process [#1664](https://github.com/internetee/registry/issues/1664)
 * Added multi-language support to whois disclaimer [#1703](https://github.com/internetee/registry/issues/1703)
