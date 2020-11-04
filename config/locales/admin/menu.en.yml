@@ -14,6 +14,7 @@ en:
         blocked_domains: Blocked domains
         reserved_domains: Reserved domains
         disputed_domains: Disputed domains
+        mass_actions: Mass actions
         epp_log: EPP log
         repp_log: REPP log
         que: Que
