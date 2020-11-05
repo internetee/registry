@@ -5,8 +5,7 @@ module Admin
     before_action :authorize_admin
 
     # GET /admin/mass_actions
-    def index
-    end
+    def index; end
 
     # POST /admin/mass_actions
     def create
