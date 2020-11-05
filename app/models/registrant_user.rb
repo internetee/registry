@@ -54,14 +54,25 @@ class RegistrantUser < User
     username.split.second
   end
 
+  def update_related_contacts
+    contacts = Contact.where(ident: ident, ident_country_code: country.alpha2)
+                      .where('UPPER(name) != UPPER(?)', username)
+
+    contacts.each do |contact|
+      contact.update(name: username)
+      action = actions.create!(contact: contact, operation: :update)
+      contact.registrar.notify(action)
+    end
+  end
+
   class << self
     def find_or_create_by_api_data(user_data = {})
       return false unless user_data[:ident]
       return false unless user_data[:first_name]
       return false unless user_data[:last_name]
 
-      user_data.each_value { |v| v.upcase! if v.is_a?(String) }
       user_data[:country_code] ||= 'EE'
+      %i[ident country_code].each { |f| user_data[f].upcase! if user_data[f].is_a?(String) }
 
       find_or_create_by_user_data(user_data)
     end
@@ -91,6 +102,7 @@ class RegistrantUser < User
       user.username = "#{user_data[:first_name]} #{user_data[:last_name]}"
       user.save
 
+      user.update_related_contacts
       user
     end
   end

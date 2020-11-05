@@ -85,8 +85,8 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def cancel_force_delete
-    restore_statuses_before_force_delete
     remove_force_delete_statuses
+    restore_statuses_before_force_delete
     clear_force_delete_data
     self.force_delete_date = nil
     self.force_delete_start = nil
@@ -124,7 +124,7 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def preserve_current_statuses_for_force_delete
-    self.statuses_before_force_delete = statuses.clone
+    update(statuses_before_force_delete: statuses)
   end
 
   def restore_statuses_before_force_delete

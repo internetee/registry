@@ -150,19 +150,36 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     assert_equal @domain.statuses.size, statuses.size
   end
 
-  def test_cancelling_force_delete_removes_statuses_that_were_set_on_force_delete
-    statuses = [
-      DomainStatus::FORCE_DELETE,
-      DomainStatus::SERVER_RENEW_PROHIBITED,
-      DomainStatus::SERVER_TRANSFER_PROHIBITED,
-    ]
-    @domain.statuses = @domain.statuses + statuses
+  def test_cancelling_force_delete_removes_force_delete_status
     @domain.schedule_force_delete(type: :fast_track)
+
+    assert @domain.statuses.include?(DomainStatus::FORCE_DELETE)
+    assert @domain.statuses.include?(DomainStatus::SERVER_RENEW_PROHIBITED)
+    assert @domain.statuses.include?(DomainStatus::SERVER_TRANSFER_PROHIBITED)
 
     @domain.cancel_force_delete
     @domain.reload
 
-    assert_empty @domain.statuses & statuses
+    assert_not @domain.statuses.include?(DomainStatus::FORCE_DELETE)
+    assert_not @domain.statuses.include?(DomainStatus::SERVER_RENEW_PROHIBITED)
+    assert_not @domain.statuses.include?(DomainStatus::SERVER_TRANSFER_PROHIBITED)
+  end
+
+  def test_cancelling_force_delete_keeps_previous_statuses
+    statuses = [
+        DomainStatus::SERVER_RENEW_PROHIBITED,
+        DomainStatus::SERVER_TRANSFER_PROHIBITED,
+    ]
+
+    @domain.statuses = statuses
+    @domain.save!
+    @domain.reload
+
+    @domain.schedule_force_delete(type: :fast_track)
+    @domain.cancel_force_delete
+    @domain.reload
+
+    assert_equal @domain.statuses, statuses
   end
 
   def test_hard_force_delete_should_have_outzone_and_purge_date_with_time
