@@ -15,6 +15,10 @@ module Concerns
                                                          domain: domain(billing_email))
     end
 
+    def email_verification_failed?
+      email_verification.failed?
+    end
+
     class_methods do
       def domain(email)
         Mail::Address.new(email).domain&.downcase || 'not_found'

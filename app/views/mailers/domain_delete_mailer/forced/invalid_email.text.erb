@@ -42,6 +42,6 @@
 <p>Если контактные данные не будут исправлены в течение <%= @delete_period_length %> дней, домен <%= @domain.name %> отправится <%= @domain.force_delete_date %> на доменный аукцион в <a href="https://auction.internet.ee">аукционной среде.ee</a>. Если в течение 24 часов в отношении домена <%= @domain.name %> е поступит предложений, домен освободится и станет доступным для всех желающих по принципу «кто раньше». О других возможных результатах аукциона читайте <a href="https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment">здесь</a>.</p>
 
 <p>В случае возникновения дополнительных вопросов свяжитесь, пожалуйста, со своим регистратором:
-<%= render 'mailers/shared/registrar/registrar.ru.html', registrar: @registrar %></p>
+    <%= render 'mailers/shared/registrar/registrar.ru.html', registrar: @registrar %></p>
 
 <%= render 'mailers/shared/signatures/signature.ru.html' %>
