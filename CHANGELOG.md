@@ -1,5 +1,6 @@
 05.11.2020
 * New email template for expired domains in forceDelete [#1725](https://github.com/internetee/registry/issues/1725)
+* Cancelling forceDelete (FD) restores the state of the domain prior application of FD [#1136](https://github.com/internetee/registry/issues/1136)
 
 04.11.2020
 * Email notification templates for forceDelete are now automatically selected according to registrant type [#442](https://github.com/internetee/registry/issues/442)
