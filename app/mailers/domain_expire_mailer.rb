@@ -17,7 +17,7 @@ class DomainExpireMailer < ApplicationMailer
     logger.info("Send DomainExpireMailer##{method_name} email for #{domain.name} (##{domain.id})" \
     " to #{recipient(domain).join(', ')}")
 
-    mail(to: recipient(domain), subject: subject)
+    mail(to: recipient(domain), subject: subject(method_name))
   end
 
   def init(domain, registrar)
@@ -29,8 +29,8 @@ class DomainExpireMailer < ApplicationMailer
     filter_invalid_emails(emails: domain.primary_contact_emails, domain: @domain)
   end
 
-  def subject
-    default_i18n_subject(domain_name: @domain.name)
+  def subject(method_name)
+    I18n.t("domain_expire_mailer.#{method_name}.subject", domain_name: @domain.name)
   end
 
   def domain_presenter(domain:)
