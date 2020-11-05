@@ -2,7 +2,6 @@ module Admin
   class DomainsController < BaseController
     before_action :set_domain, only: %i[show edit update keep]
     authorize_resource
-    helper_method :force_delete_templates
 
     def index
       params[:q] ||= {}
@@ -104,10 +103,6 @@ module Admin
       yield
 
       params[:q][:valid_to_lteq] = ca_cache
-    end
-
-    def force_delete_templates
-      DomainDeleteMailer.force_delete_templates
     end
   end
 end

@@ -20,7 +20,13 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def notification_template
-    registrant.org? ? 'legal_person' : 'private_person'
+    if contact_emails_verification_failed.present?
+      'invalid_email'
+    elsif  registrant.org?
+      'legal_person'
+    else
+      'private_person'
+    end
   end
 
   def force_delete_scheduled?
