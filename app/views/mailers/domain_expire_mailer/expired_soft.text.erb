@@ -1,0 +1,48 @@
+Domeen <%= @domain.name %> on aegunud ning suunatud kustutusmenetlusse kuna oleme tuvastanud domeeniga seotud kontaktides olulisi puudusi.
+
+Lugupeetud .ee domeeni registreerija/halduskontakt
+
+Domeeninimi <%= @domain.name %> on aegunud ja ei ole alates <%= @domain.on_hold_date %> internetis kättesaadav. Domeeniga on seotud puudulike kontakti objekte, milles tulenevalt on Eesti Interneti SA blokeerinud domeeni pikendamise ja registripidaja vahetuse, kuniks kontaktandmed korrastatakse. Andmete korrastamiseks ja registreeringu pikendamiseks pöörduge palun oma registripidaja poole.
+
+<%= @domain.name %> pikendamata jätmisel domeen kustub ja läheb <%= @domain.delete_date %> oksjonile .ee oksjonikeskkonda. Domeenioksjonite kohta loe lähemalt siit https://www.internet.ee/domeenioksjonid.
+
+Domeeni <%= @domain.name %> registripidaja:
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+
+Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist https://registrant.internet.ee/registrant/.
+
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+
+--------------------------------------
+
+Domain <%= @domain.name %> has expired
+
+Dear registrant/administrative contact of .ee domain,
+
+The domain name <%= @domain.name %> has expired and since <%= @domain.on_hold_date %> is no longer available on the Internet. Domain registration has invalid contact data. Renewal and registrar transfer is therefore prohibited until contact data has been fixed. To correct the data and renew your domain registration, please contact your registrar.
+
+If you do not renew the <%= @domain.name %> domain registration, it is deleted and put on auction to .ee domain auction environment at <%= @domain.delete_date %>. Read more about .ee domain auctions here https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment.
+
+Registrar of the <%= @domain.name %>:
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+
+You can find an overview of all your domains at the registrant's portal https://registrant.internet.ee/registrant/.
+
+<%= render 'mailers/shared/signatures/signature.en.html' %>
+
+--------------------------------------
+
+Срок действия домена <%= @domain.name %> истек
+
+Уважаемый регистрант/административный контакт домена .ee
+
+Срок действия доменного имени <%= @domain.name %> истек, и с <%= @domain.on_hold_date %> оно больше не доступно в интернете. У домена указаны неверные контактные данные. Обновление и перенос к другому регистратору заблокированы до исправления контактных данных. Для исправления контактных данных и обновления регистрации вашего домена, пожалуйста, обратитесь в вашему регистратору.
+
+Если доменное имя не продлено, домен <%= @domain.name %> будет удален и <%= @domain.delete_date %> идет на аукцион в .ee среду аукциона. О проведении доменных аукционов читайте здесь https://www.internet.ee/domeny/dogovor-pol-zovatelya-aukcionnoj-sredy#3-usloviya-uchastiya-v-aukcione.
+
+Pегистратор домена <%= @domain.name %>:
+<%= render 'mailers/shared/registrar/registrar.ru.html', registrar: @registrar %>
+
+Обзор всех связанных с вами доменов можете получить на портале регистратора https://registrant.internet.ee/registrant/.
+
+<%= render 'mailers/shared/signatures/signature.ru.html' %>
