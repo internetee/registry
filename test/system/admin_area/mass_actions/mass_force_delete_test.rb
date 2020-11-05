@@ -21,8 +21,4 @@ class AdminAreaMassActionsForceDeleteTest < ApplicationSystemTestCase
     click_link_or_button 'Start force delete process'
     assert_text 'Dataset integrity validation failed for force_delete'
   end
-
-def test_logs_failed_domains_to_response
-
-end
 end
