@@ -155,7 +155,7 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def notify_parties(reason)
-    ent = notification_template if reason == 'ENTITY_BURIED'
+    ent = notification_template if %w[ENTITY_BURIED EMAIL].include? reason
     ent ||= reason.downcase
     self.template_name = ent
 

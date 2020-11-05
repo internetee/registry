@@ -1,9 +1,12 @@
 class MassAction
   def self.process(action_type, entries)
-    return false unless %w[force_delete].include?(action_type)
-
     entries = CSV.read(entries, headers: true)
-    process_force_delete(entries) if action_type == force_delete
+    case action_type
+    when 'force_delete'
+      process_force_delete(entries)
+    else
+      false
+    end
   rescue StandardError
     false
   end
