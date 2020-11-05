@@ -109,7 +109,7 @@ class Ability
     can :destroy, :pending
     can :create, :zonefile
     can :access, :settings_menu
-    can :manage, MassAction
+    can :manage, :mass_actions
   end
 
   def static_registrant

@@ -7,11 +7,13 @@
   <div class="panel-body">
     <p>Triggers <b>soft</b> force delete procedure for uploaded domain list. List must be in <b>CSV</b> format. Each domain entry must be on separate line. Line must include <b>domain_name</b> (puny) followed with <b>delete_reason</b>, separated by comma.</p>
     <p>Allowed delete reasons: <b>ENTITY_BURIED</b> | <b>PHONE</b> | <b>EMAIL</b></p>
-    <%= form_tag admin_mass_actions_path, multipart: true do %>
-      <%= file_field_tag :entry_list, accept: 'text/csv' %>
+    <%= form_tag admin_mass_actions_path, multipart: true, method: :post do %>
+      <%= label_tag :entry_list %>
+      <%= file_field_tag :entry_list, required: true, accept: 'text/csv' %>
       <%= hidden_field_tag :mass_action, 'force_delete' %>
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
       <br>
-      <%= submit_tag "Start force delete process", class: 'btn btn-danger', disabled: true %>
+      <%= submit_tag "Start force delete process", class: 'btn btn-danger', id: 'fd_submit' %>
     <% end %>
   </div>
 </div>

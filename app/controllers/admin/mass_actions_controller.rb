@@ -2,10 +2,11 @@
 
 module Admin
   class MassActionsController < BaseController
-    authorize_resource
+    before_action :authorize_admin
 
     # GET /admin/mass_actions
-    def index; end
+    def index
+    end
 
     # POST /admin/mass_actions
     def create
@@ -18,6 +19,10 @@ module Admin
                end
 
       redirect_to(admin_mass_actions_path, notice: notice)
+    end
+
+    def authorize_admin
+      authorize! :manage, :mass_actions
     end
   end
 end
