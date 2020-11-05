@@ -1,6 +1,6 @@
 class DomainDeleteMailerPreview < ActionMailer::Preview
   def self.define_forced_templates
-    DomainDeleteMailer.force_delete_templates.each do |template_name|
+    %w[private_person legal_person invalid_email].each do |template_name|
       define_method "forced_#{template_name}".to_sym do
         DomainDeleteMailer.forced(domain: @domain,
                                   registrar: @domain.registrar,

@@ -22,7 +22,7 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   def notification_template
     if contact_emails_verification_failed.present?
       'invalid_email'
-    elsif  registrant.org?
+    elsif registrant.org?
       'legal_person'
     else
       'private_person'

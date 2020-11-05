@@ -16,7 +16,7 @@ module Concerns
     end
 
     def email_verification_failed?
-      email_verification.failed?
+      email_verification&.failed?
     end
 
     class_methods do
