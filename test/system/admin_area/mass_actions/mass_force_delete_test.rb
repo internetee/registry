@@ -9,15 +9,20 @@ class AdminAreaMassActionsForceDeleteTest < ApplicationSystemTestCase
   def test_processes_uploaded_valid_csv
     visit admin_mass_actions_path
 
-    attach_file('entry_list', Rails.root.join('test', 'fixtures', 'files', 'valid_mass_force_delete_list.csv').to_s)
+    attach_file('entry_list', Rails.root.join('test', 'fixtures', 'files', 'mass_actions', 'valid_mass_force_delete_list.csv').to_s)
     click_link_or_button 'Start force delete process'
-    assert_text 'force_delete completed for ["shop.test"]. Failed: objects: []'
+    assert_text 'force_delete completed for ["shop.test", "airport.test", "library.test"]. Failed: ["nonexistant.test"]'
   end
 
   def test_processes_uploaded_invalid_csv
     visit admin_mass_actions_path
-    attach_file(:entry_list, Rails.root.join('test', 'fixtures', 'files', 'invalid_mass_force_delete_list.csv').to_s)
+
+    attach_file(:entry_list, Rails.root.join('test', 'fixtures', 'files', 'mass_actions', 'invalid_mass_force_delete_list.csv').to_s)
     click_link_or_button 'Start force delete process'
     assert_text 'Dataset integrity validation failed for force_delete'
   end
+
+def test_logs_failed_domains_to_response
+
+end
 end

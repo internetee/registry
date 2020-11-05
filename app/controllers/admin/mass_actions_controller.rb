@@ -12,7 +12,7 @@ module Admin
       res = MassAction.process(params[:mass_action], params[:entry_list].path)
       notice = if res
                  "#{params[:mass_action]} completed for #{res[:ok]}.\n" \
-                 "Failed: objects: #{res[:fail]}"
+                 "Failed: #{res[:fail]}"
                else
                  "Dataset integrity validation failed for #{params[:mass_action]}"
                end

@@ -1,0 +1,5 @@
+domain_name,delete_reason
+shop.test,ENTITY_BURIED
+airport.test,PHONE
+library.test,EMAIL
+nonexistant.test,ENTITY_BURIED
