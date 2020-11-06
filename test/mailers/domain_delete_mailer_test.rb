@@ -5,10 +5,6 @@ class DomainDeleteMailerTest < ActionMailer::TestCase
     @domain = domains(:shop)
   end
 
-  def test_force_delete_templates
-    assert_equal %w[private_person legal_person], DomainDeleteMailer.force_delete_templates
-  end
-
   def test_delivers_confirmation_request_email
     assert_equal 'shop.test', @domain.name
     assert_equal 'john@inbox.test', @domain.registrant.email
@@ -68,8 +64,7 @@ class DomainDeleteMailerTest < ActionMailer::TestCase
     email = DomainDeleteMailer.forced(domain: @domain,
                                       registrar: @domain.registrar,
                                       registrant: @domain.registrant,
-                                      template_name: DomainDeleteMailer.force_delete_templates
-                                                       .first).deliver_now
+                                      template_name: @domain.notification_template).deliver_now
 
     assert_emails 1
     assert_equal ['legal@registry.test'], email.from
