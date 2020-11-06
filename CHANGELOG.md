@@ -1,4 +1,5 @@
 06.11.2020
+* Csv option to limit list of domains for bulk nameserver change in registrar portal [#1737](https://github.com/internetee/registry/issues/1737)
 * New forceDelete email template for invalid contact data [#1178](https://github.com/internetee/registry/issues/1178)
 
 05.11.2020
