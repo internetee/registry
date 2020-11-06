@@ -1,4 +1,4 @@
-<%= form_tag registrar_nameservers_path, method: :patch, class: 'form-horizontal' do %>
+<%= form_tag registrar_nameservers_path, multipart: true, method: :patch, class: 'form-horizontal' do %>
     <%= render 'registrar/domain_transfers/form/api_errors' %>
 
     <div class="form-group">
@@ -41,6 +41,16 @@
         <div class="col-md-4">
             <%= text_area_tag :ipv6, params[:ipv6], class: 'form-control' %>
             <span class="help-block"><%= t '.ip_hint' %></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= label_tag 'List of domains' %>
+        </div>
+        <div class="col-md-4">
+            <%= file_field_tag :batch_file, required: false, accept: 'text/csv' %>
+            <span class="help-block">CSV format, must have domain_name field. List of domains that nameserver change should be scoped to.</span>
         </div>
     </div>
 
