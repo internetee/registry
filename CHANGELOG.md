@@ -1,3 +1,6 @@
+06.11.2020
+* New forceDelete email template for invalid contact data [#1178](https://github.com/internetee/registry/issues/1178)
+
 05.11.2020
 * Registrant API contact name update feature [#1724](https://github.com/internetee/registry/issues/1724)
 * New email template for expired domains in forceDelete [#1725](https://github.com/internetee/registry/issues/1725)
