@@ -1,10 +1,11 @@
 class RegistrantChangeExpiredEmailJob < Que::Job
-  def run(domain_id)
+  def run(domain_id:, send_to:)
     domain = Domain.find(domain_id)
     log(domain)
     RegistrantChangeMailer.expired(domain: domain,
                                    registrar: domain.registrar,
-                                   registrant: domain.registrant).deliver_now
+                                   registrant: domain.registrant,
+                                   send_to: send_to).deliver_now
   end
 
   private
