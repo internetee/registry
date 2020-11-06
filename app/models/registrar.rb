@@ -141,7 +141,7 @@ class Registrar < ApplicationRecord
   end
 
   # Audit log is needed, therefore no raw SQL
-  def replace_nameservers(hostname, new_attributes, domains)
+  def replace_nameservers(hostname, new_attributes, domains: [])
     transaction do
       domain_list = []
 

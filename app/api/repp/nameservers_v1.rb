@@ -32,7 +32,8 @@ module Repp
         domains = params[:data][:domains] || []
 
         begin
-          affected_domains = current_user.registrar.replace_nameservers(hostname, new_attributes, domains)
+          affected_domains = current_user.registrar.replace_nameservers(hostname, new_attributes,
+                                                                        domains: domains)
         rescue ActiveRecord::RecordInvalid => e
           error!({ errors: e.record.errors.full_messages.map { |error| { title: error } } }, 400)
         end

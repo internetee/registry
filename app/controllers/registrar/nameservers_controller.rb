@@ -8,7 +8,6 @@ class Registrar
 
       domains = domain_list_from_csv
 
-      puts "Domains are #{domains}"
       uri = URI.parse("#{ENV['repp_url']}registrar/nameservers")
       request = Net::HTTP::Put.new(uri, 'Content-Type' => 'application/json')
       request.body = { data: { type: 'nameserver', id: params[:old_hostname],
@@ -61,10 +60,10 @@ class Registrar
     end
 
     def domain_list_from_csv
-      return [] if params[:batch_file].blank?
+      return [] if params[:puny_file].blank?
 
       domains = []
-      CSV.read(params[:batch_file].path, headers: true).each { |b| domains << b['domain_name'] }
+      CSV.read(params[:puny_file].path, headers: true).each { |b| domains << b['domain_name'] }
       domains
     end
   end
