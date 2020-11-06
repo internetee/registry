@@ -8,6 +8,7 @@ module Repp
           requires :data, type: Hash, allow_blank: false do
             requires :type, type: String, allow_blank: false
             requires :id, type: String, allow_blank: false
+            optional :domains, type: Array
             requires :attributes, type: Hash, allow_blank: false do
               requires :hostname, type: String, allow_blank: false
               requires :ipv4, type: Array
@@ -28,8 +29,11 @@ module Repp
           ipv6: params[:data][:attributes][:ipv6],
         }
 
+        domains = params[:data][:domains] || []
+
         begin
-          affected_domains = current_user.registrar.replace_nameservers(hostname, new_attributes)
+          affected_domains = current_user.registrar.replace_nameservers(hostname, new_attributes,
+                                                                        domains: domains)
         rescue ActiveRecord::RecordInvalid => e
           error!({ errors: e.record.errors.full_messages.map { |error| { title: error } } }, 400)
         end
