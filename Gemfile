@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 # core
 gem 'bootsnap', '>= 1.1.0', require: false
+gem 'interactor', '~> 3.0'
+gem 'interactor-rails', '~> 2.0'
 gem 'iso8601', '0.12.1' # for dates and times
 gem 'rails', '~> 6.0'
 gem 'rest-client'

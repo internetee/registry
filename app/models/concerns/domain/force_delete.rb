@@ -7,6 +7,10 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
                    :contact_notification_sent_date,
                    :template_name
 
+    STATUSES_TO_SET = [DomainStatus::FORCE_DELETE,
+                       DomainStatus::SERVER_RENEW_PROHIBITED,
+                       DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
+
     scope :notification_not_sent,
           lambda {
             where("(force_delete_data->>'contact_notification_sent_date') is null")

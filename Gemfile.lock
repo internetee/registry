@@ -251,6 +251,10 @@ GEM
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     i18n_data (0.10.0)
+    interactor (3.1.2)
+    interactor-rails (2.2.1)
+      interactor (~> 3.0)
+      rails (>= 4.2)
     isikukood (0.1.2)
     iso8601 (0.12.1)
     jquery-rails (4.4.0)
@@ -544,6 +548,8 @@ DEPENDENCIES
   figaro (= 1.1.1)
   grape
   haml (~> 5.0)
+  interactor (~> 3.0)
+  interactor-rails (~> 2.0)
   isikukood
   iso8601 (= 0.12.1)
   jquery-rails
