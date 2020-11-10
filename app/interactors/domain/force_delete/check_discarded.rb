@@ -6,8 +6,8 @@ class Domain
       def call
         return unless context.domain.discarded?
 
-        raise StandardError,
-              'Force delete procedure cannot be scheduled while a domain is discarded'
+        message = 'Force delete procedure cannot be scheduled while a domain is discarded'
+        context.fail!( message: message )
       end
     end
   end

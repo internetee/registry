@@ -5,19 +5,21 @@ module Admin
         authorize! :manage, domain
 
         domain.transaction do
-          domain.schedule_force_delete(type: force_delete_type)
-          domain.registrar.notifications.create!(text: t('force_delete_set_on_domain',
-                                                         domain_name: domain.name,
-                                                         outzone_date: domain.outzone_date,
-                                                         purge_date: domain.purge_date))
-
-          notify_by_email if notify_by_email?
+          # domain.schedule_force_delete(type: force_delete_type)
+          # domain.registrar.notifications.create!(text: t('force_delete_set_on_domain',
+          #                                                domain_name: domain.name,
+          #                                                outzone_date: domain.outzone_date,
+          #                                                purge_date: domain.purge_date)) # added to interactor
+          #
+          # notify_by_email if notify_by_email? # added to interactor
+          Domain::ForceDelete::Base.call(domain: domain, type: force_delete_type)
         end
 
         redirect_to edit_admin_domain_url(domain), notice: t('.scheduled')
       end
 
       def notify_by_email
+        # added to interactor
         if force_delete_type == :fast_track
           send_email
           domain.update(contact_notification_sent_date: Time.zone.today)
@@ -39,10 +41,12 @@ module Admin
       end
 
       def notify_by_email?
+        # added to interactor
         ActiveRecord::Type::Boolean.new.cast(params[:notify_by_email])
       end
 
       def send_email
+        # added to interactor
         DomainDeleteMailer.forced(domain: domain,
                                   registrar: domain.registrar,
                                   registrant: domain.registrant,

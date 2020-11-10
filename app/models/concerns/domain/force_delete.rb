@@ -7,10 +7,6 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
                    :contact_notification_sent_date,
                    :template_name
 
-    STATUSES_TO_SET = [DomainStatus::FORCE_DELETE,
-                       DomainStatus::SERVER_RENEW_PROHIBITED,
-                       DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
-
     scope :notification_not_sent,
           lambda {
             where("(force_delete_data->>'contact_notification_sent_date') is null")
@@ -57,6 +53,7 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def schedule_force_delete(type: :fast_track)
+    # added to interactor
     if discarded?
       raise StandardError, 'Force delete procedure cannot be scheduled while a domain is discarded'
     end
@@ -72,8 +69,8 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     preserve_current_statuses_for_force_delete
     add_force_delete_statuses
     add_force_delete_type(:fast)
-    self.force_delete_date = force_delete_fast_track_start_date + 1.day
-    self.force_delete_start = Time.zone.today + 1.day
+    self.force_delete_date = force_delete_fast_track_start_date + 1.day # added to interactor
+    self.force_delete_start = Time.zone.today + 1.day # added to interactor
     stop_all_pending_actions
     allow_deletion
     save(validate: false)
@@ -120,12 +117,14 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def soft_delete_dates(years)
+    # added to interactor
     self.force_delete_start = valid_to - years.years
     self.force_delete_date = force_delete_start + Setting.expire_warning_period.days +
                              Setting.redemption_grace_period.days
   end
 
   def stop_all_pending_actions
+    # added to interactor
     statuses.delete(DomainStatus::PENDING_UPDATE)
     statuses.delete(DomainStatus::PENDING_TRANSFER)
     statuses.delete(DomainStatus::PENDING_RENEW)
@@ -133,6 +132,7 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def preserve_current_statuses_for_force_delete
+    # added to interactor
     update(statuses_before_force_delete: statuses)
   end
 
@@ -142,6 +142,7 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def add_force_delete_statuses
+    # added to interactor
     self.statuses |= [DomainStatus::FORCE_DELETE,
                       DomainStatus::SERVER_RENEW_PROHIBITED,
                       DomainStatus::SERVER_TRANSFER_PROHIBITED]
@@ -155,11 +156,13 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def allow_deletion
+    # added to interactor
     statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
     statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
   end
 
   def force_delete_fast_track_start_date
+    # added to interactor
     Time.zone.today + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
   end
 end

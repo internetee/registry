@@ -16,7 +16,10 @@ class Domain
       end
 
       def force_delete_fast_track
-        domain.force_delete_date = force_delete_fast_track_start_date + 1.day
+        domain.force_delete_date = Time.zone.today +
+                                   Setting.expire_warning_period.days +
+                                   Setting.redemption_grace_period.days +
+                                   1.day
         domain.force_delete_start = Time.zone.today + 1.day
       end
 
