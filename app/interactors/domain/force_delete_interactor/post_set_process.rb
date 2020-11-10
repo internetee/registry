@@ -1,10 +1,8 @@
 class Domain
   module ForceDeleteInteractor
-    class PostSetProcess
-      include Interactor
-
+    class PostSetProcess < Base
       def call
-        statuses = context.domain.statuses
+        statuses = domain.statuses
         # Stop all pending actions
         statuses.delete(DomainStatus::PENDING_UPDATE)
         statuses.delete(DomainStatus::PENDING_TRANSFER)
@@ -14,7 +12,7 @@ class Domain
         # Allow deletion
         statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
         statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
-        context.domain.save(validate: false)
+        domain.save(validate: false)
       end
     end
   end

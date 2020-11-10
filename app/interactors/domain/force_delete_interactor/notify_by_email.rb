@@ -1,8 +1,6 @@
 class Domain
   module ForceDeleteInteractor
-    class NotifyByEmail
-      include Interactor
-
+    class NotifyByEmail < Base
       def call
         return unless context.notify_by_email
 
@@ -12,12 +10,6 @@ class Domain
         else
           domain.update(template_name: context.domain.notification_template)
         end
-      end
-
-      private
-
-      def domain
-        @domain ||= context.domain
       end
 
       def send_email

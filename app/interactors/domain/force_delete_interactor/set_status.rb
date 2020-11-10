@@ -1,16 +1,10 @@
 class Domain
   module ForceDeleteInteractor
-    class SetStatus
-      include Interactor
-
+    class SetStatus < Base
       def call
         domain.force_delete_type = context.type
         context.type == :fast_track ? force_delete_fast_track : force_delete_soft
         domain.save(validate: false)
-      end
-
-      def domain
-        @domain ||= context.domain
       end
 
       def force_delete_fast_track

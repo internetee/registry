@@ -1,16 +1,13 @@
 class Domain
   module ForceDeleteInteractor
     class Base
-      include Interactor::Organizer
+      include Interactor
 
-      # As per https://github.com/collectiveidea/interactor#organizers
+      private
 
-      organize Domain::ForceDeleteInteractor::CheckDiscarded,
-               Domain::ForceDeleteInteractor::PrepareDomain,
-               Domain::ForceDeleteInteractor::SetStatus,
-               Domain::ForceDeleteInteractor::PostSetProcess,
-               Domain::ForceDeleteInteractor::NotifyRegistrar,
-               Domain::ForceDeleteInteractor::NotifyByEmail
+      def domain
+        @domain ||= context.domain
+      end
     end
   end
 end

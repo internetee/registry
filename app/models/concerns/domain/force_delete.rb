@@ -53,9 +53,9 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def schedule_force_delete(type: :fast_track, notify_by_email: false)
-    Domain::ForceDeleteInteractor::Base.call(domain: self,
-                                             type: type,
-                                             notify_by_email: notify_by_email)
+    Domain::ForceDeleteInteractor::SetForceDelete.call(domain: self,
+                                                       type: type,
+                                                       notify_by_email: notify_by_email)
   end
 
   def clear_force_delete_data
