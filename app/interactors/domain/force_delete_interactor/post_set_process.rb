@@ -1,5 +1,5 @@
 class Domain
-  module ForceDelete
+  module ForceDeleteInteractor
     class PostSetProcess
       include Interactor
 

@@ -414,7 +414,7 @@ class DomainTest < ActiveSupport::TestCase
                            force_delete_date: nil)
     @domain.update(template_name: 'legal_person')
     travel_to Time.zone.parse('2010-07-05')
-    @domain.schedule_force_delete(type: :fast_track)
+    Domain::ForceDeleteInteractor::Base.call(domain: @domain, type: :fast_track)
     assert(@domain.force_delete_scheduled?)
     other_registrant = Registrant.find_by(code: 'jane-001')
     @domain.pending_json['new_registrant_id'] = other_registrant.id
