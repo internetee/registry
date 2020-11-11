@@ -7,6 +7,7 @@ module Api
         skip_before_action :authenticate, :set_paper_trail_whodunnit
         before_action :set_domain, only: %i[index update]
         before_action :verify_updateable, only: %i[index update]
+        before_action :verify_decision, only: %i[update]
 
         def index
           render json: {
@@ -18,16 +19,30 @@ module Api
 
         def update
           verification = RegistrantVerification.new(domain_id: @domain.id,
-            verification_token: confirmation_params[:token])
+                                                    verification_token: verify_params[:token])
 
-            head(update_action(verification) ? :ok : :bad_request)
+          head(:bad_request) and return unless update_action(verification)
+
+          render json: {
+            domain_name: @domain.name,
+            current_registrant: serialized_registrant(current_registrant),
+            status: params[:decision]
+          }
         end
 
         private
 
+        def current_registrant
+          changes_registrant? ? @domain.registrant : @domain.pending_registrant
+        end
+
+        def changes_registrant?
+          params[:decision] == 'confirmed'
+        end
+
         def update_action(verification)
-          initiator = "email link, #{t(:user_not_authenticated)}"
-          if params[:confirm].present?
+          initiator = "email link, #{I18n.t(:user_not_authenticated)}"
+          if changes_registrant?
             verification.domain_registrant_change_confirm!(initiator)
           else
             verification.domain_registrant_change_reject!(initiator)
@@ -42,25 +57,31 @@ module Api
           }
         end
 
-        def confirmation_params
+        def verify_params
           params do |p|
             p.require(:name)
             p.require(:token)
           end
         end
 
+        def verify_decision
+          return if %w[confirmed rejected].include?(params[:decision])
+
+          head :bad_request
+        end
+
         def set_domain
-          @domain = Domain.find_by(name: confirmation_params[:name])
+          @domain = Domain.find_by(name: verify_params[:name])
+          @domain ||= Domain.find_by(name_puny: verify_params[:name])
           return if @domain
 
           render json: { error: 'Domain not found' }, status: :not_found
         end
 
         def verify_updateable
-          return if @domain.registrant_update_confirmable?(confirmation_params[:token])
+          return if @domain.registrant_update_confirmable?(verify_params[:token])
 
-          render json: { error: 'Application expired or not found' },
-          status: :unauthorized
+          render json: { error: 'Application expired or not found' }, status: :unauthorized
         end
       end
     end
