@@ -13,7 +13,7 @@ module Api
           render json: {
             domain_name: @domain.name,
             current_registrant: serialized_registrant(@domain.registrant),
-            new_registrant: serialized_registrant(@domain.pending_registrant)
+            new_registrant: serialized_registrant(@domain.pending_registrant),
           }
         end
 
@@ -26,7 +26,7 @@ module Api
           render json: {
             domain_name: @domain.name,
             current_registrant: serialized_registrant(current_registrant),
-            status: params[:decision]
+            status: params[:decision],
           }
         end
 
@@ -53,7 +53,7 @@ module Api
           {
             name: registrant.try(:name),
             ident: registrant.try(:ident),
-            country: registrant.try(:ident_country_code)
+            country: registrant.try(:ident_country_code),
           }
         end
 
