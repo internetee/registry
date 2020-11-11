@@ -1,7 +1,7 @@
 class Domain
-  module ForceDeleteInteractor
+  module ForceDeleteInteraction
     class NotifyRegistrar < Base
-      def call
+      def execute
         domain.registrar.notifications.create!(text: I18n.t('force_delete_set_on_domain',
                                                             domain_name: domain.name,
                                                             outzone_date: domain.outzone_date,

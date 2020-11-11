@@ -1,9 +1,9 @@
 class Domain
-  module ForceDeleteInteractor
+  module ForceDeleteInteraction
     class SetStatus < Base
-      def call
-        domain.force_delete_type = context.type
-        context.type == :fast_track ? force_delete_fast_track : force_delete_soft
+      def execute
+        domain.force_delete_type = type
+        type == :fast_track ? force_delete_fast_track : force_delete_soft
         domain.save(validate: false)
       end
 
@@ -19,14 +19,14 @@ class Domain
         soft_forcedelete_dates(years) if years.positive?
       end
 
+      private
+
       def soft_forcedelete_dates(years)
         domain.force_delete_start = domain.valid_to - years.years
         domain.force_delete_date = domain.force_delete_start +
                                    Setting.expire_warning_period.days +
                                    Setting.redemption_grace_period.days
       end
-
-      private
 
       def redemption_grace_period_days
         Setting.redemption_grace_period.days + 1.day

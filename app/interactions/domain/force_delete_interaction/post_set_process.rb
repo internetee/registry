@@ -1,7 +1,7 @@
 class Domain
-  module ForceDeleteInteractor
+  module ForceDeleteInteraction
     class PostSetProcess < Base
-      def call
+      def execute
         statuses = domain.statuses
         # Stop all pending actions
         statuses.delete(DomainStatus::PENDING_UPDATE)

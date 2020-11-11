@@ -111,10 +111,12 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
 
   def test_force_delete_cannot_be_scheduled_when_a_domain_is_discarded
     @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
-    context = Domain::ForceDeleteInteractor::SetForceDelete.call(domain: @domain, type: :fast_track)
+    result = Domain::ForceDeleteInteraction::SetForceDelete.run(domain: @domain, type: :fast_track)
 
-    assert_not context.success?
-    assert_equal 'Force delete procedure cannot be scheduled while a domain is discarded', context.message
+    assert_not result.valid?
+    assert_not @domain.force_delete_scheduled?
+    message = ["Force delete procedure cannot be scheduled while a domain is discarded"]
+    assert_equal message, result.errors.messages[:domain]
   end
 
   def test_cancels_force_delete

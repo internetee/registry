@@ -112,6 +112,8 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    active_interaction (3.8.3)
+      activemodel (>= 4, < 7)
     activejob (6.0.3.3)
       activesupport (= 6.0.3.3)
       globalid (>= 0.3.6)
@@ -251,10 +253,6 @@ GEM
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     i18n_data (0.10.0)
-    interactor (3.1.2)
-    interactor-rails (2.2.1)
-      interactor (~> 3.0)
-      rails (>= 4.2)
     isikukood (0.1.2)
     iso8601 (0.12.1)
     jquery-rails (4.4.0)
@@ -525,6 +523,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_interaction (~> 3.8)
   activerecord-import
   airbrake
   bootsnap (>= 1.1.0)
@@ -548,8 +547,6 @@ DEPENDENCIES
   figaro (= 1.1.1)
   grape
   haml (~> 5.0)
-  interactor (~> 3.0)
-  interactor-rails (~> 2.0)
   isikukood
   iso8601 (= 0.12.1)
   jquery-rails

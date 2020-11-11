@@ -1,14 +1,14 @@
 class Domain
-  module ForceDeleteInteractor
+  module ForceDeleteInteraction
     class NotifyByEmail < Base
-      def call
-        return unless context.notify_by_email
+      def execute
+        return unless notify_by_email
 
-        if context.type == :fast_track
+        if type == :fast_track
           send_email
           domain.update(contact_notification_sent_date: Time.zone.today)
         else
-          domain.update(template_name: context.domain.notification_template)
+          domain.update(template_name: domain.notification_template)
         end
       end
 
