@@ -63,6 +63,7 @@ Rails.application.routes.draw do
           resource :registry_lock, only: %i[create destroy]
         end
         resources :contacts, only: %i[index show update], param: :uuid
+        resources :companies, only: %i[index]
       end
 
       resources :auctions, only: %i[index show update], param: :uuid

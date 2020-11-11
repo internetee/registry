@@ -53,7 +53,12 @@ class DomainDeleteMailer < ApplicationMailer
   private
 
   def confirmation_url(domain)
-    registrant_domain_delete_confirm_url(domain, token: domain.registrant_verification_token)
+    base_url = ENV['registrant_portal_verifications_base_url']
+    if base_url.blank?
+      registrant_domain_delete_confirm_url(domain, token: domain.registrant_verification_token)
+    else
+      "#{base_url}/confirmation/#{domain.name_puny}/#{domain.registrant_verification_token}"
+    end
   end
 
   def forced_email_from
