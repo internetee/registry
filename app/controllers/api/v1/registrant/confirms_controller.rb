@@ -17,9 +17,22 @@ module Api
         end
 
         def update
+          verification = RegistrantVerification.new(domain_id: @domain.id,
+            verification_token: confirmation_params[:token])
+
+            head(update_action(verification) ? :ok : :bad_request)
         end
 
         private
+
+        def update_action(verification)
+          initiator = "email link, #{t(:user_not_authenticated)}"
+          if params[:confirm].present?
+            verification.domain_registrant_change_confirm!(initiator)
+          else
+            verification.domain_registrant_change_reject!(initiator)
+          end
+        end
 
         def serialized_registrant(registrant)
           {
