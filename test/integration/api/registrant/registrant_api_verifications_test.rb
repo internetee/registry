@@ -8,17 +8,22 @@ class RegistrantApiVerificationsTest < ApplicationIntegrationTest
     @domain = domains(:hospital)
     @registrant = @domain.registrant
     @new_registrant = contacts(:jack)
+    @user = users(:api_bestnames)
 
     @token = 'verysecrettoken'
 
-    @domain.update(statuses: [DomainStatus::PENDING_UPDATE],
+    @domain.update!(statuses: [DomainStatus::PENDING_UPDATE],
       registrant_verification_asked_at: Time.zone.now - 1.day,
       registrant_verification_token: @token)
 
   end
 
   def test_fetches_registrant_change_request
-    pending_json = { new_registrant_id: @new_registrant.id }
+    pending_json = { new_registrant_id: @new_registrant.id,
+      new_registrant_name: @new_registrant.name,
+      new_registrant_email: @new_registrant.email,
+      current_user_id: @user.id }
+
     @domain.update(pending_json: pending_json)
     @domain.reload
 
@@ -46,31 +51,40 @@ class RegistrantApiVerificationsTest < ApplicationIntegrationTest
   end
 
   def test_approves_registrant_change_request
-    pending_json = { new_registrant_id: @new_registrant.id }
-    @domain.update(pending_json: pending_json)
+  pending_json = { new_registrant_id: @new_registrant.id,
+    new_registrant_name: @new_registrant.name,
+    new_registrant_email: @new_registrant.email,
+    current_user_id: @user.id }
+
+    @domain.update!(pending_json: pending_json)
     @domain.reload
 
     assert @domain.registrant_update_confirmable?(@token)
 
-    post "/api/v1/registrant/confirms/#{@domain.name_puny}/change/#{@token}/confirmed"
-    assert_equal(200, response.status)
+    perform_enqueued_jobs do
+      post "/api/v1/registrant/confirms/#{@domain.name_puny}/change/#{@token}/confirmed"
+      assert_equal(200, response.status)
 
-    res = JSON.parse(response.body, symbolize_names: true)
-    expected_body = {
-      domain_name: @domain.name,
-      current_registrant: {
-        name: @new_registrant.name,
-        ident: @new_registrant.ident,
-        country: @new_registrant.ident_country_code
-      },
-      status: 'confirmed'
-    }
-
-    assert_equal expected_body, res
+      res = JSON.parse(response.body, symbolize_names: true)
+      expected_body = {
+        domain_name: @domain.name,
+        current_registrant: {
+          name: @new_registrant.name,
+          ident: @new_registrant.ident,
+          country: @new_registrant.ident_country_code
+        },
+        status: 'confirmed'
+      }
+      assert_equal expected_body, res
+    end
   end
 
   def test_rejects_registrant_change_request
-    pending_json = { new_registrant_id: @new_registrant.id }
+    pending_json = { new_registrant_id: @new_registrant.id,
+      new_registrant_name: @new_registrant.name,
+      new_registrant_email: @new_registrant.email,
+      current_user_id: @user.id }
+
     @domain.update(pending_json: pending_json)
     @domain.reload
 
@@ -94,7 +108,11 @@ class RegistrantApiVerificationsTest < ApplicationIntegrationTest
   end
 
   def test_registrant_change_requires_valid_attributes
-    pending_json = { new_registrant_id: @new_registrant.id }
+  pending_json = { new_registrant_id: @new_registrant.id,
+    new_registrant_name: @new_registrant.name,
+    new_registrant_email: @new_registrant.email,
+    current_user_id: @user.id }
+
     @domain.update(pending_json: pending_json)
     @domain.reload
 
@@ -109,7 +127,12 @@ class RegistrantApiVerificationsTest < ApplicationIntegrationTest
   end
 
   def test_fetches_domain_delete_request
-    @domain.update(statuses: [DomainStatus::PENDING_DELETE_CONFIRMATION])
+    pending_json = { new_registrant_id: @new_registrant.id,
+    new_registrant_name: @new_registrant.name,
+    new_registrant_email: @new_registrant.email,
+    current_user_id: @user.id }
+
+    @domain.update(pending_json: pending_json, statuses: [DomainStatus::PENDING_DELETE_CONFIRMATION])
     @domain.reload
 
     assert @domain.registrant_delete_confirmable?(@token)
@@ -131,8 +154,13 @@ class RegistrantApiVerificationsTest < ApplicationIntegrationTest
   end
 
   def test_approves_domain_delete_request
-    @domain.update(statuses: [DomainStatus::PENDING_DELETE_CONFIRMATION])
-    @domain.reload
+    pending_json = { new_registrant_id: @new_registrant.id,
+      new_registrant_name: @new_registrant.name,
+      new_registrant_email: @new_registrant.email,
+      current_user_id: @user.id }
+
+      @domain.update(pending_json: pending_json, statuses: [DomainStatus::PENDING_DELETE_CONFIRMATION])
+      @domain.reload
 
     assert @domain.registrant_delete_confirmable?(@token)
 
@@ -154,8 +182,13 @@ class RegistrantApiVerificationsTest < ApplicationIntegrationTest
   end
 
   def test_rejects_domain_delete_request
-    @domain.update(statuses: [DomainStatus::PENDING_DELETE_CONFIRMATION])
-    @domain.reload
+    pending_json = { new_registrant_id: @new_registrant.id,
+      new_registrant_name: @new_registrant.name,
+      new_registrant_email: @new_registrant.email,
+      current_user_id: @user.id }
+
+      @domain.update(pending_json: pending_json, statuses: [DomainStatus::PENDING_DELETE_CONFIRMATION])
+      @domain.reload
 
     assert @domain.registrant_delete_confirmable?(@token)
 
@@ -177,7 +210,12 @@ class RegistrantApiVerificationsTest < ApplicationIntegrationTest
   end
 
   def test_domain_delete_requires_valid_attributes
-    @domain.update(statuses: [DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::PENDING_DELETE])
+    pending_json = { new_registrant_id: @new_registrant.id,
+      new_registrant_name: @new_registrant.name,
+      new_registrant_email: @new_registrant.email,
+      current_user_id: @user.id }
+
+    @domain.update(pending_json: pending_json, statuses: [DomainStatus::PENDING_DELETE_CONFIRMATION])
     @domain.reload
 
     get "/api/v1/registrant/confirms/#{@domain.name_puny}/delete/123"

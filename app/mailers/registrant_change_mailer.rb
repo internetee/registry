@@ -5,7 +5,7 @@ class RegistrantChangeMailer < ApplicationMailer
     @domain = DomainPresenter.new(domain: domain, view: view_context)
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
     @new_registrant = RegistrantPresenter.new(registrant: new_registrant, view: view_context)
-    @confirmation_url = confirmation_url(domain)
+    @confirmation_url = registrant_confirm_url(domain: domain, method: 'change')
 
     subject = default_i18n_subject(domain_name: domain.name)
     mail(to: current_registrant.email, subject: subject)
@@ -48,15 +48,6 @@ class RegistrantChangeMailer < ApplicationMailer
   end
 
   private
-
-  def confirmation_url(domain)
-    base_url = ENV['registrant_portal_verifications_base_url']
-    if base_url.blank?
-      registrant_domain_update_confirm_url(domain, token: domain.registrant_verification_token)
-    else
-      "#{base_url}/confirmation/#{domain.name_puny}/change/#{domain.registrant_verification_token}"
-    end
-  end
 
   def address_processing
     Contact.address_processing?
