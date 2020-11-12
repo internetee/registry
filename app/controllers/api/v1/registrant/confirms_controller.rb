@@ -26,11 +26,9 @@ module Api
             return
           end
 
-          render json: {
-            domain_name: @domain.name,
-            current_registrant: serialized_registrant(current_registrant),
-            status: params[:decision],
-          }
+          render json: { domain_name: @domain.name,
+                         current_registrant: serialized_registrant(current_registrant),
+                         status: params[:decision] }
         end
 
         private
@@ -96,11 +94,13 @@ module Api
         end
 
         def verify_action
-          if params[:template] == 'change'
-            return true if @domain.registrant_update_confirmable?(verify_params[:token])
-          elsif params[:template] == 'delete'
-            return true if @domain.registrant_delete_confirmable?(verify_params[:token])
-          end
+          action = if params[:template] == 'change'
+                     @domain.registrant_update_confirmable?(verify_params[:token])
+                   elsif params[:template] == 'delete'
+                     @domain.registrant_delete_confirmable?(verify_params[:token])
+                   end
+
+          return unless action
 
           render json: { error: 'Application expired or not found' }, status: :unauthorized
         end
