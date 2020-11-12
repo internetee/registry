@@ -50,7 +50,12 @@ class RegistrantChangeMailer < ApplicationMailer
   private
 
   def confirmation_url(domain)
-    registrant_domain_update_confirm_url(domain, token: domain.registrant_verification_token)
+    base_url = ENV['registrant_portal_verifications_base_url']
+    if base_url.blank?
+      registrant_domain_update_confirm_url(domain, token: domain.registrant_verification_token)
+    else
+      "#{base_url}/confirmation/#{domain.name_puny}/change/#{domain.registrant_verification_token}"
+    end
   end
 
   def address_processing

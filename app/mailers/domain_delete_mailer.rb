@@ -57,7 +57,7 @@ class DomainDeleteMailer < ApplicationMailer
     if base_url.blank?
       registrant_domain_delete_confirm_url(domain, token: domain.registrant_verification_token)
     else
-      "#{base_url}/confirmation/#{domain.name_puny}/#{domain.registrant_verification_token}"
+      "#{base_url}/confirmation/#{domain.name_puny}/delete/#{domain.registrant_verification_token}"
     end
   end
 

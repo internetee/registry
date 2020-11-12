@@ -6,7 +6,7 @@ module Api
       class ConfirmsController < ::Api::V1::Registrant::BaseController
         skip_before_action :authenticate, :set_paper_trail_whodunnit
         before_action :set_domain, only: %i[index update]
-        before_action :verify_updateable, only: %i[index update]
+        before_action :verify_action, only: %i[index update]
         before_action :verify_decision, only: %i[update]
 
         def index
@@ -21,7 +21,10 @@ module Api
           verification = RegistrantVerification.new(domain_id: @domain.id,
                                                     verification_token: verify_params[:token])
 
-          head(:bad_request) and return unless update_action(verification)
+          unless delete_action? ? delete_action(verification) : change_action(verification)
+            head :bad_request
+            return
+          end
 
           render json: {
             domain_name: @domain.name,
@@ -32,21 +35,28 @@ module Api
 
         private
 
-        def current_registrant
-          changes_registrant? ? @domain.registrant : @domain.pending_registrant
+        def initiator
+          "email link, #{I18n.t(:user_not_authenticated)}"
         end
 
-        def changes_registrant?
+        def current_registrant
+          approved? ? @domain.registrant : @domain.pending_registrant
+        end
+
+        def approved?
           params[:decision] == 'confirmed'
         end
 
-        def update_action(verification)
-          initiator = "email link, #{I18n.t(:user_not_authenticated)}"
-          if changes_registrant?
-            verification.domain_registrant_change_confirm!(initiator)
-          else
-            verification.domain_registrant_change_reject!(initiator)
-          end
+        def change_action(verification)
+          return verification.domain_registrant_change_confirm!(initiator) if approved?
+
+          verification.domain_registrant_change_reject!(initiator)
+        end
+
+        def delete_action(verification)
+          return verification.domain_registrant_delete_confirm!(initiator) if approved?
+
+          verification.domain_registrant_delete_reject!(initiator)
         end
 
         def serialized_registrant(registrant)
@@ -59,9 +69,16 @@ module Api
 
         def verify_params
           params do |p|
+            p.require(:template)
             p.require(:name)
             p.require(:token)
           end
+        end
+
+        def delete_action?
+          return true if params[:template] == 'delete'
+
+          false
         end
 
         def verify_decision
@@ -78,8 +95,12 @@ module Api
           render json: { error: 'Domain not found' }, status: :not_found
         end
 
-        def verify_updateable
-          return if @domain.registrant_update_confirmable?(verify_params[:token])
+        def verify_action
+          if params[:template] == 'change'
+            return true if @domain.registrant_update_confirmable?(verify_params[:token])
+          elsif params[:template] == 'delete'
+            return true if @domain.registrant_delete_confirmable?(verify_params[:token])
+          end
 
           render json: { error: 'Application expired or not found' }, status: :unauthorized
         end
