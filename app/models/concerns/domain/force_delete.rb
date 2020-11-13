@@ -154,9 +154,11 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     Time.zone.today + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
   end
 
-  def notify_parties(reason)
-    ent = notification_template if %w[ENTITY_BURIED EMAIL].include? reason
-    ent ||= reason.downcase
+  # Uncomment when we have template for phone / email as well
+  def notify_parties(_reason)
+    ent = notification_template
+    # if %w[ENTITY_BURIED EMAIL].include? reason
+    # ent ||= reason.downcase
     self.template_name = ent
 
     save(validate: false)
