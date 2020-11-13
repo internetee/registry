@@ -1,3 +1,8 @@
+13.11.2020
+* Fixed per registrar epp session limit [#729](https://github.com/internetee/registry/issues/729)
+* Correct error code is returned on reaching session limit [#587](https://github.com/internetee/registry/issues/587)
+* No logins within active session [#1313](https://github.com/internetee/registry/issues/1313)
+
 06.11.2020
 * Csv option to limit list of domains for bulk nameserver change in registrar portal [#1737](https://github.com/internetee/registry/issues/1737)
 * New forceDelete email template for invalid contact data [#1178](https://github.com/internetee/registry/issues/1178)
