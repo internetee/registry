@@ -30,6 +30,7 @@ module Epp
           data_management_policy_violation: 2308,
           command_failed: 2400,
           authentication_error_server_closing_connection: 2501,
+          session_limit_exceeded_server_closing_connection: 2502,
         }.freeze
         private_constant :KEY_TO_VALUE
 
@@ -59,6 +60,7 @@ module Epp
           2308 => 'Data management policy violation',
           2400 => 'Command failed',
           2501 => 'Authentication error; server closing connection',
+          2502 => 'Session limit exceeded; server closing connection',
         }.freeze
         private_constant :DEFAULT_DESCRIPTIONS
 
