@@ -11,13 +11,21 @@ class EppSession < ApplicationRecord
 
   alias_attribute :last_access, :updated_at
 
+  scope :not_expired,
+        lambda {
+          where(':now <= (updated_at + interval :interval)', now: Time.zone.now, interval: interval)
+        }
+
   def self.limit_reached?(registrar)
-    count = where(user_id: registrar.api_users.ids).count
+    count = where(user_id: registrar.api_users.ids).not_expired.count
     count >= sessions_per_registrar
   end
 
+  def self.interval
+    "#{timeout.parts.first.second} #{timeout.parts.first.first}"
+  end
+
   def self.expired
-    interval = "#{timeout.parts.first.second} #{timeout.parts.first.first}"
     where(':now > (updated_at + interval :interval)', now: Time.zone.now, interval: interval)
   end
 
