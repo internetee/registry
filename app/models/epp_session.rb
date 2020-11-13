@@ -7,7 +7,7 @@ class EppSession < ApplicationRecord
   self.timeout = (ENV['epp_session_timeout_seconds'] || 300).to_i.seconds
 
   class_attribute :sessions_per_registrar
-  self.sessions_per_registrar = (ENV['epp_session_limit_per_registrar'] || 4).to_i
+  self.sessions_per_registrar = (ENV['epp_sessions_per_registrar'] || 4).to_i
 
   alias_attribute :last_access, :updated_at
 
