@@ -1,3 +1,4 @@
+require 'serializers/repp/contact'
 module Repp
   module V1
     class ContactsController < BaseController
@@ -14,7 +15,8 @@ module Repp
 
       ## GET /repp/v1/contacts/1
       def show
-        render_success(data: @contact.as_json)
+        serializer = ::Serializers::Repp::Contact.new(@contact, show_address: Contact.address_processing?)
+        render_success(data: serializer.to_json)
       end
 
       ## GET /repp/v1/contacts/check/1
@@ -76,11 +78,13 @@ module Repp
 
       def showable_contacts(details, limit, offset)
         contacts = current_user.registrar.contacts.limit(limit).offset(offset)
-        unless Contact.address_processing? && params[:details] == 'true'
-          contacts = contacts.select(Contact.attribute_names - Contact.address_attribute_names)
-        end
 
-        contacts = contacts.pluck(:code) unless details
+        return contacts.pluck(:code) unless details
+
+        contacts = contacts.map do |contact|
+          serializer = ::Serializers::Repp::Contact.new(contact, show_address: Contact.address_processing?)
+          serializer.to_json
+        end
 
         contacts
       end
@@ -104,7 +108,7 @@ module Repp
 
       def contact_create_params(required: true)
         params.require(:contact).require(%i[name email phone]) if required
-        params.require(:contact).permit(:name, :email, :phone, :code)
+        params.require(:contact).permit(:name, :email, :phone, :id)
       end
 
       def contact_ident_params(required: true)

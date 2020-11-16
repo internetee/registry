@@ -36,7 +36,7 @@ class Epp::Contact < Contact
       attrs = epp ? attrs_from(frame, new_record: true) : frame
       super(
         attrs.merge(
-          code: epp ? frame.css('id').text : frame[:code],
+          code: epp ? frame.css('id').text : frame[:id],
           registrar: registrar
         )
       )
