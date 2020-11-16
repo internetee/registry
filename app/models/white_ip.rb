@@ -14,20 +14,13 @@ class WhiteIp < ApplicationRecord
   def valid_ipv4?
     return if ipv4.blank?
 
-    errors.add(:ipv4, :invalid) unless valid_ip_addr?(ipv4)
+    errors.add(:ipv4, :invalid) unless self.class.ip_to_check(ipv4).is_a? IPAddr
   end
 
   def valid_ipv6?
     return if ipv6.blank?
 
-    errors.add(:ipv6, :invalid) unless valid_ip_addr?(ipv6)
-  end
-
-  def valid_ip_addr?(ip)
-    IPAddr.new(ip)
-    true
-  rescue IPAddr::InvalidAddressError => _e
-    false
+    errors.add(:ipv6, :invalid) unless self.class.ip_to_check(ipv6).is_a? IPAddr
   end
 
   API = 'api'
@@ -55,11 +48,22 @@ class WhiteIp < ApplicationRecord
       logger.info "Checking whitelisting of ip #{ip}"
       scoped = scope == :api ? api_scope(registrar) : registrar_area_scope(registrar)
       whitelist = scoped.pluck(:ipv4, :ipv6).flatten.reject(&:blank?)
-                        .uniq.map { |white_ip| IPAddr.new(white_ip) }
-      check = whitelist.any? { |white_ip| white_ip === IPAddr.new(ip.to_s) }
+                        .uniq.map { |white_ip| ip_to_check(white_ip) }
+      check = whitelist.any? { |white_ip| white_ip === ip_to_check(ip) }
       logger.info "Check result is #{check}"
       check
     end
     # rubocop:enable Style/CaseEquality
+
+    def ip_to_check(ip)
+      result = if ip.is_a? IPAddr
+                 ip
+               elsif ip.is_a? String
+                 IPAddr.new(ip)
+               end
+      result
+    rescue StandardError => _e
+      ip
+    end
   end
 end
