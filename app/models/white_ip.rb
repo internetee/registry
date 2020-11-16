@@ -56,7 +56,7 @@ class WhiteIp < ApplicationRecord
       scoped = scope == :api ? api_scope(registrar) : registrar_area_scope(registrar)
       whitelist = scoped.pluck(:ipv4, :ipv6).flatten.reject(&:blank?)
                         .uniq.map { |white_ip| IPAddr.new(white_ip) }
-      check = whitelist.any? { |white_ip| white_ip === IPAddr.new(ip) }
+      check = whitelist.any? { |white_ip| white_ip === IPAddr.new(ip.to_s) }
       logger.info "Check result is #{check}"
       check
     end
