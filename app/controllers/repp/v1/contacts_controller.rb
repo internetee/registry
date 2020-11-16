@@ -112,7 +112,7 @@ module Repp
       end
 
       def contact_ident_params(required: true)
-        if required || !params[:contact][:ident].nil?
+        if required
           params.require(:contact).require(:ident).require(%i[ident ident_type ident_country_code])
           params.require(:contact).require(:ident).permit(:ident, :ident_type, :ident_country_code)
         else

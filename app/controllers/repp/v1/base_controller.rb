@@ -4,6 +4,7 @@ module Repp
       rescue_from ActiveRecord::RecordNotFound, with: :not_found_error
       before_action :authenticate_user
       before_action :check_ip_restriction
+      before_action :set_paper_trail_whodunnit
       attr_reader :current_user
 
       rescue_from ActionController::ParameterMissing do |exception|

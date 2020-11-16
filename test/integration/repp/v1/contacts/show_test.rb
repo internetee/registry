@@ -28,7 +28,7 @@ class ReppV1ContactsShowTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
-    assert_equal contact.code, json[:data][:code]
+    assert_equal contact.code, json[:data][:id]
   end
 
   def test_can_not_access_out_of_scope_contacts
