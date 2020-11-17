@@ -15,7 +15,8 @@ module Repp
 
       ## GET /repp/v1/contacts/1
       def show
-        serializer = ::Serializers::Repp::Contact.new(@contact, show_address: Contact.address_processing?)
+        serializer = ::Serializers::Repp::Contact.new(@contact,
+                                                      show_address: Contact.address_processing?)
         render_success(data: serializer.to_json)
       end
 
@@ -82,7 +83,8 @@ module Repp
         return contacts.pluck(:code) unless details
 
         contacts = contacts.map do |contact|
-          serializer = ::Serializers::Repp::Contact.new(contact, show_address: Contact.address_processing?)
+          serializer = ::Serializers::Repp::Contact.new(contact,
+                                                        show_address: Contact.address_processing?)
           serializer.to_json
         end
 

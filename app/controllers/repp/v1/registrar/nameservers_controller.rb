@@ -34,7 +34,7 @@ module Repp
           params.permit(data: [
                           :type, :id,
                           { domains: [],
-                            attributes: [:hostname, { ipv4: [], ipv6: [] }] },
+                            attributes: [:hostname, { ipv4: [], ipv6: [] }] }
                         ])
         end
 
