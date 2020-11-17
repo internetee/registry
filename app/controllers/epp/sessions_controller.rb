@@ -117,8 +117,11 @@ module Epp
     end
 
     def ip_white?
+      logger.info "Checking webclient request for remote ip #{request.remote_ip}"
       webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.remote_ip)
+      logger.info "Webclient request is #{webclient_request}, included from #{ENV['webclient_ips'].split(',').map(&:strip)}"
       return true if webclient_request
+      logger.info "Checking if api_user: #{@api_user}"
       if @api_user
         return false unless @api_user.registrar.api_ip_white?(request.remote_ip)
       end
