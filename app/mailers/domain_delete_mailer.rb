@@ -1,8 +1,4 @@
 class DomainDeleteMailer < ApplicationMailer
-  def self.force_delete_templates
-    %w[private_person legal_person]
-  end
-
   def confirmation_request(domain:, registrar:, registrant:)
     @domain = DomainPresenter.new(domain: domain, view: view_context)
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)

@@ -4,6 +4,10 @@ class DomainExpireEmailJob < Que::Job
 
     return if domain.registered?
 
-    DomainExpireMailer.expired(domain: domain, registrar: domain.registrar).deliver_now
+    if domain.force_delete_scheduled?
+      DomainExpireMailer.expired_soft(domain: domain, registrar: domain.registrar).deliver_now
+    else
+      DomainExpireMailer.expired(domain: domain, registrar: domain.registrar).deliver_now
+    end
   end
 end

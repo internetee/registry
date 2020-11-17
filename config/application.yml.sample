@@ -170,6 +170,8 @@ tara_rant_redirect_uri: 'redirect_uri'
 default_email_validation_type: 'regex'
 
 
+epp_sessions_per_registrar: '4'
+
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:
   payments_seb_bank_certificate: 'test/fixtures/files/seb_bank_cert.pem'

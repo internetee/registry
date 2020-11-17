@@ -448,10 +448,9 @@ dispute_period_in_months:
 
 registry_whois_disclaimer:
   code: registry_whois_disclaimer
-  value: 'Search results may not be used for commercial, advertising, recompilation,
-    repackaging, redistribution, reuse, obscuring or other similar activities.'
+  value: "{\"en\":\"111\",\"et\":\"222\",\"ru\":\"333\"}"
   group: contacts
-  format: string
+  format: hash
   created_at: <%= Time.zone.parse('2010-07-05') %>
   updated_at: <%= Time.zone.parse('2010-07-05') %>
 

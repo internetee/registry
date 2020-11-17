@@ -1,3 +1,35 @@
+13.11.2020
+* Fixed per registrar epp session limit [#729](https://github.com/internetee/registry/issues/729)
+* Correct error code is returned on reaching session limit [#587](https://github.com/internetee/registry/issues/587)
+* No logins within active session [#1313](https://github.com/internetee/registry/issues/1313)
+
+06.11.2020
+* Csv option to limit list of domains for bulk nameserver change in registrar portal [#1737](https://github.com/internetee/registry/issues/1737)
+* New forceDelete email template for invalid contact data [#1178](https://github.com/internetee/registry/issues/1178)
+
+05.11.2020
+* Registrant API contact name update feature [#1724](https://github.com/internetee/registry/issues/1724)
+* New email template for expired domains in forceDelete [#1725](https://github.com/internetee/registry/issues/1725)
+* Cancelling forceDelete (FD) restores the state of the domain prior application of FD [#1136](https://github.com/internetee/registry/issues/1136)
+
+04.11.2020
+* Email notification templates for forceDelete are now automatically selected according to registrant type [#442](https://github.com/internetee/registry/issues/442)
+
+03.11.2020
+* Fixed registrant confirmation while forcedelete is set on a domain [#1729](https://github.com/internetee/registry/issues/1729)
+* Fixed search in registrar domain view [#262](https://github.com/internetee/registry/issues/262)
+* Fixed double status issue on setting forceDelete [#1135](https://github.com/internetee/registry/issues/1135)
+
+28.10.2020
+* Domain renew now canceles pending delete process [#1664](https://github.com/internetee/registry/issues/1664)
+* Added multi-language support to whois disclaimer [#1703](https://github.com/internetee/registry/issues/1703)
+
+27.10.2020
+* Fixed 1 day delay in force delete for multi year registrations [#1720](https://github.com/internetee/registry/issues/1720)
+
+20.10.2020
+* ForceDelete mailer now respects option to not notify registrant [#1719](https://github.com/internetee/registry/pull/1719)
+
 19.10.2020
 * Improved logging for LHV-connect messages [#1712](https://github.com/internetee/registry/issues/1712)
 * LHV-connect gem update to handle blank descriptions [#1714](https://github.com/internetee/registry/issues/1714)

@@ -5,3 +5,8 @@ en:
         Domeen %{domain_name} on aegunud
         / Domain %{domain_name} has expired
         / Срок действия домена %{domain_name} истек
+    expired_soft:
+      subject: >-
+        Domeen %{domain_name} on aegunud ning suunatud kustutusmenetlusse
+        / Domain %{domain_name} has expired and directed into deletion process
+        / Срок действия домена %{domain_name} истек
