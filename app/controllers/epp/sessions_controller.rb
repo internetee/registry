@@ -117,10 +117,10 @@ module Epp
     end
 
     def ip_white?
-      webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
+      webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.remote_ip)
       return true if webclient_request
       if @api_user
-        return false unless @api_user.registrar.api_ip_white?(request.ip)
+        return false unless @api_user.registrar.api_ip_white?(request.remote_ip)
       end
       true
     end
