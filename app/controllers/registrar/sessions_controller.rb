@@ -72,12 +72,14 @@ class Registrar
     end
 
     def check_ip_restriction
-      ip_restriction = Authorization::RestrictedIP.new(request.ip)
+      ip_restriction = Authorization::RestrictedIP.new(request.remote_ip)
       allowed = ip_restriction.can_access_registrar_area_sign_in_page?
 
-      return if allowed
-
-      render plain: t('registrar.authorization.ip_not_allowed', ip: request.ip)
+      if allowed
+        return
+      else
+        render plain: t('registrar.authorization.ip_not_allowed', ip: request.remote_ip)
+      end
     end
 
     def current_ability

@@ -17,15 +17,17 @@ class Registrar
     private
 
     def check_ip_restriction
-      ip_restriction = Authorization::RestrictedIP.new(request.ip)
+      ip_restriction = Authorization::RestrictedIP.new(request.remote_ip)
       allowed = ip_restriction.can_access_registrar_area?(current_registrar_user.registrar)
 
-      return if allowed
+      if allowed
+        return
+      else
+        sign_out current_registrar_user
 
-      sign_out current_registrar_user
-
-      flash[:alert] = t('registrar.authorization.ip_not_allowed', ip: request.ip)
-      redirect_to new_registrar_user_session_url
+        flash[:alert] = t('registrar.authorization.ip_not_allowed', ip: request.remote_ip)
+        redirect_to new_registrar_user_session_url
+      end
     end
 
     def depp_controller?
