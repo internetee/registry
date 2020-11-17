@@ -25,7 +25,7 @@ module Repp
 
       def render_success(code: nil, message: nil, data: nil)
         @response = { code: code || 1000, message: message || 'Command completed successfully',
-                 data: data || {} }
+                      data: data || {} }
 
         render(json: @response, status: :ok)
       end
