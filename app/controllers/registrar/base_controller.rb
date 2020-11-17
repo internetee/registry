@@ -19,7 +19,8 @@ class Registrar
     def check_ip_restriction
       ip_restriction = Authorization::RestrictedIP.new(request.remote_ip)
       allowed = ip_restriction.can_access_registrar_area?(current_registrar_user.registrar)
-
+      logger.info "Remote IP: #{request.remote_ip}"
+      logger.info "Checking result if allowed: #{allowed}"
       if allowed
         return
       else

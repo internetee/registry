@@ -110,6 +110,7 @@ class Registrar
     end
 
     def show_error
+      logger.error @depp_user.errors.full_messages
       redirect_to new_registrar_user_session_url, alert: @depp_user.errors.full_messages.first
     end
   end
