@@ -24,7 +24,10 @@ class WhiteIp < ApplicationRecord
 
   class << self
     def include_ip?(ip)
-      where('ipv4 = :ip OR ipv6 = :ip', ip: ip).any?
+      ipv4 = select{ |white_ip| IPAddr.new(white_ip.ipv4, Socket::AF_INET) === IPAddr.new(ip) }
+      ipv6 = select{ |white_ip| IPAddr.new(white_ip.ipv6, Socket::AF_INET6) === IPAddr.new(ip) }
+      ids = (ipv4.pluck(:id) + ipv6.pluck(:id)).flatten.uniq
+      where(id: ids).any?
     end
   end
 end
