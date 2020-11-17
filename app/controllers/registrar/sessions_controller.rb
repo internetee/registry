@@ -72,18 +72,15 @@ class Registrar
     end
 
     def check_ip_restriction
-      ip_restriction = Authorization::RestrictedIP.new(request.remote_ip)
+      ip_restriction = Authorization::RestrictedIP.new(request.ip)
       allowed = ip_restriction.can_access_registrar_area_sign_in_page?
+      return if allowed
 
-      if allowed
-        return
-      else
-        render plain: t('registrar.authorization.ip_not_allowed', ip: request.remote_ip)
-      end
+      render plain: t('registrar.authorization.ip_not_allowed', ip: request.ip)
     end
 
     def current_ability
-      @current_ability ||= Ability.new(current_registrar_user, request.remote_ip)
+      @current_ability ||= Ability.new(current_registrar_user, request.ip)
     end
 
     def after_sign_in_path_for(_resource_or_scope)

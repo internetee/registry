@@ -11,24 +11,20 @@ class Registrar
     protected
 
     def current_ability
-      @current_ability ||= Ability.new(current_registrar_user, request.remote_ip)
+      @current_ability ||= Ability.new(current_registrar_user, request.ip)
     end
 
     private
 
     def check_ip_restriction
-      ip_restriction = Authorization::RestrictedIP.new(request.remote_ip)
+      ip_restriction = Authorization::RestrictedIP.new(request.ip)
       allowed = ip_restriction.can_access_registrar_area?(current_registrar_user.registrar)
-      logger.info "Remote IP: #{request.remote_ip}"
-      logger.info "Checking result if allowed: #{allowed}"
-      if allowed
-        return
-      else
-        sign_out current_registrar_user
+      return if allowed
 
-        flash[:alert] = t('registrar.authorization.ip_not_allowed', ip: request.remote_ip)
-        redirect_to new_registrar_user_session_url
-      end
+      sign_out current_registrar_user
+
+      flash[:alert] = t('registrar.authorization.ip_not_allowed', ip: request.ip)
+      redirect_to new_registrar_user_session_url
     end
 
     def depp_controller?

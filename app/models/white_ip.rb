@@ -45,12 +45,10 @@ class WhiteIp < ApplicationRecord
 
     # rubocop:disable Style/CaseEquality
     def include_ip?(ip:, scope: :api, registrar:)
-      logger.info "Checking whitelisting of ip #{ip}"
       scoped = scope == :api ? api_scope(registrar) : registrar_area_scope(registrar)
       whitelist = scoped.pluck(:ipv4, :ipv6).flatten.reject(&:blank?)
                         .uniq.map { |white_ip| ip_to_check(white_ip) }
       check = whitelist.any? { |white_ip| white_ip === ip_to_check(ip) }
-      logger.info "Check result is #{check}"
       check
     end
     # rubocop:enable Style/CaseEquality
