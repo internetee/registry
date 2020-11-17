@@ -3,7 +3,8 @@ module ObjectVersionsHelper
     version.object_changes.to_h.each do |key, value|
       method_name = "#{key}=".to_sym
       if new_object.respond_to?(method_name)
-        new_object.public_send(method_name, value.last)
+        delete_action = version.event == 'destroy'
+        new_object.public_send(method_name, delete_action ? value.first : value.last)
       end
     end
   end
