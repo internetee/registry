@@ -2,13 +2,29 @@ class WhiteIp < ApplicationRecord
   include Versions
   belongs_to :registrar
 
-  validates :ipv4, format: { with: /\A(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\z/, allow_blank: true }
-  validates :ipv6, format: { with: /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/, allow_blank: true }
+  validate :valid_ipv4?
+  validate :valid_ipv6?
 
   validate :validate_ipv4_and_ipv6
   def validate_ipv4_and_ipv6
     return if ipv4.present? || ipv6.present?
     errors.add(:base, I18n.t(:ipv4_or_ipv6_must_be_present))
+  end
+
+  def valid_ipv4?
+    return if ipv4.blank?
+
+    IPAddr.new(ipv4, Socket::AF_INET)
+  rescue StandardError => _e
+    errors.add(:ipv4, :invalid)
+  end
+
+  def valid_ipv6?
+    return if ipv6.blank?
+
+    IPAddr.new(ipv6, Socket::AF_INET6)
+  rescue StandardError => _e
+    errors.add(:ipv6, :invalid)
   end
 
   API = 'api'
@@ -23,11 +39,13 @@ class WhiteIp < ApplicationRecord
   end
 
   class << self
+    # rubocop:disable Style/CaseEquality
     def include_ip?(ip)
-      ipv4 = select{ |white_ip| IPAddr.new(white_ip.ipv4, Socket::AF_INET) === IPAddr.new(ip) }
-      ipv6 = select{ |white_ip| IPAddr.new(white_ip.ipv6, Socket::AF_INET6) === IPAddr.new(ip) }
-      ids = (ipv4.pluck(:id) + ipv6.pluck(:id)).flatten.uniq
+      ipv4 = select { |white_ip| IPAddr.new(white_ip.ipv4, Socket::AF_INET) === IPAddr.new(ip) }
+      ipv6 = select { |white_ip| IPAddr.new(white_ip.ipv6, Socket::AF_INET6) === IPAddr.new(ip) }
+      ids = (ipv4 + ipv6).pluck(:id).flatten.uniq
       where(id: ids).any?
     end
+    # rubocop:enable Style/CaseEquality
   end
 end
