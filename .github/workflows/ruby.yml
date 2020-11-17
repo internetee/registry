@@ -1,0 +1,117 @@
+name: Github Testing
+on: [push]
+
+
+jobs:
+  test:
+    services:
+      postgres:
+        image: postgres:12
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_PASSWORD: password
+          POSTGRES_USERNAME: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-18.04]
+        ruby: [2.6, 2.7 ]
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
+    steps:
+
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+    - name: config bundler
+      run:  |
+        bundle config set without 'development staging production'
+        bundle config set deployment '[secure]'
+        bundle env
+        head -n1 $(which bundle)
+
+    - name: Set ENV for codeclimate (pull_request)
+      run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/$GITHUB_HEAD_REF:refs/remotes/origin/$GITHUB_HEAD_REF
+          echo "GIT_BRANCH=$GITHUB_HEAD_REF" >> $GITHUB_ENV
+          echo "GIT_COMMIT_SHA=$(git rev-parse origin/$GITHUB_HEAD_REF)" >> $GITHUB_ENV
+      if: github.event_name == 'pull_request'
+
+    - name: Set ENV for codeclimate (push)
+      run: |
+          echo "GIT_BRANCH=$GITHUB_REF" >> $GITHUB_ENV
+          echo "GIT_COMMIT_SHA=$GITHUB_SHA" >> $GITHUB_ENV
+      if: github.event_name == 'push'
+
+    - name: Prepare CodeClimate
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      run: |
+        curl -LSs 'https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64' >./cc-test-reporter;
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter before-build
+
+    - name: Run Tests
+      env:
+        PG_DATABASE: postgres
+        PG_HOST: localhost
+        PG_USER: postgres
+        PG_PASSWORD: password
+        PG_PORT: ${{ job.services.postgres.ports[5432] }}
+        RAILS_ENV: test
+        COVERAGE: true
+        DISABLE_SPRING: 1
+      run: |
+        cp config/application.yml.sample config/application.yml
+        cp config/database_travis.yml config/database.yml
+        echo "openssl_config_path: 'test/fixtures/files/test_ca/openssl.cnf'" >> config/application.yml
+        echo "crl_dir:      'test/fixtures/files/test_ca/crl'" >> config/application.yml
+        echo "crl_path:     'test/fixtures/files/test_ca/crl/crl.pem'" >> config/application.yml
+        echo "ca_cert_path: 'test/fixtures/files/test_ca/certs/ca.crt.pem'" >> config/application.yml
+        echo "ca_key_path:  'test/fixtures/files/test_ca/private/ca.key.pem'" >> config/application.yml
+        echo "ca_key_password: 'password'" >> config/application.yml
+        bundle exec rake db:setup:all
+        bundle exec rails test test/*
+    - name: Save coverage
+      run: ./cc-test-reporter format-coverage --output coverage/codeclimate.${{ matrix.ruby }}.json
+
+    - uses: actions/upload-artifact@v1
+      with:
+        name: coverage-${{ matrix.ruby }}
+        path: coverage/codeclimate.${{ matrix.ruby }}.json
+
+  upload_coverage:
+    runs-on: ubuntu-18.04
+
+    env:
+      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      CC_TEST_REPORTER_URL: https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+
+    needs: test
+
+    steps:
+      - name: Download test coverage reporter
+        run: curl -L $CC_TEST_REPORTER_URL > cc-test-reporter
+
+      - name: Give test coverage reporter executable permissions
+        run: chmod +x cc-test-reporter
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: coverage-2.6
+          path: coverage
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: coverage-2.7
+          path: coverage
+
+      - name: Aggregate & upload results to Code Climate
+        run: |
+          ./cc-test-reporter sum-coverage coverage/codeclimate.*.json
+          ./cc-test-reporter upload-coverage
+
