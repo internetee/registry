@@ -24,10 +24,10 @@ module Repp
       private
 
       def render_success(code: nil, message: nil, data: nil)
-        resp = { code: code || 1000, message: message || 'Command completed successfully',
+        @response = { code: code || 1000, message: message || 'Command completed successfully',
                  data: data || {} }
 
-        render(json: resp, status: :ok)
+        render(json: @response, status: :ok)
       end
 
       def epp_errors
@@ -64,10 +64,8 @@ module Repp
         @epp_errors ||= []
         @epp_errors << { code: 2304, msg: 'Command failed' } if data != {}
 
-        render(
-          json: { code: @epp_errors[0][:code].to_i, message: @epp_errors[0][:msg], data: data },
-          status: status
-        )
+        @response = { code: @epp_errors[0][:code].to_i, message: @epp_errors[0][:msg], data: data }
+        render(json: @response, status: status)
       end
 
       def basic_token
@@ -85,10 +83,8 @@ module Repp
 
         raise(ArgumentError)
       rescue NoMethodError, ArgumentError
-        render(
-          json: { code: 2202, message: 'Invalid authorization information' },
-          status: :unauthorized
-        )
+        @response = { code: 2202, message: 'Invalid authorization information' }
+        render(json: @response, status: :unauthorized)
       end
 
       def check_ip_restriction
@@ -96,17 +92,14 @@ module Repp
 
         return if allowed
 
-        render(
-          json: {
-            code: 2202,
-            message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip),
-          },
-          status: :unauthorized
-        )
+        @response = { code: 2202,
+                      message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip) }
+        render(json: @response, status: :unauthorized)
       end
 
       def not_found_error
-        render(json: { code: 2303, message: 'Object does not exist' }, status: :not_found)
+        @response = { code: 2303, message: 'Object does not exist' }
+        render(json: @response, status: :not_found)
       end
     end
   end

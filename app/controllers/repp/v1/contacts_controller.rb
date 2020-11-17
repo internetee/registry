@@ -9,8 +9,8 @@ module Repp
         record_count = current_user.registrar.contacts.count
         contacts = showable_contacts(params[:details], params[:limit] || 200,
                                      params[:offset] || 0)
-
-        render(json: { contacts: contacts, total_number_of_records: record_count }, status: :ok)
+        @response = { contacts: contacts, total_number_of_records: record_count }
+        render(json: @response, status: :ok)
       end
 
       ## GET /repp/v1/contacts/1

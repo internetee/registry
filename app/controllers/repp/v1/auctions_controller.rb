@@ -3,9 +3,9 @@ module Repp
     class AuctionsController < ActionController::API
       def index
         auctions = Auction.started
+        @response = { count: auctions.count, auctions: auctions_to_json(auctions) }
 
-        render json: { count: auctions.count,
-                       auctions: auctions_to_json(auctions) }
+        render json: @response
       end
 
       private

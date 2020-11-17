@@ -8,11 +8,11 @@ module Serializers
         @show_address = show_address
       end
 
-      def to_json(_obj)
-        json = { id: contact.code, name: contact.name, ident: ident,
-                 email: contact.email, phone: contact.phone, fax: contact.fax,
-                 auth_info: contact.auth_info, statuses: contact.statuses,
-                 disclosed_attributes: contact.disclosed_attributes }
+      def to_json(obj = contact)
+        json = { id: obj.code, name: obj.name, ident: ident,
+                 email: obj.email, phone: obj.phone, fax: obj.fax,
+                 auth_info: obj.auth_info, statuses: obj.statuses,
+                 disclosed_attributes: obj.disclosed_attributes }
 
         json[:address] = address if @show_address
 

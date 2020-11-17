@@ -26,8 +26,8 @@ module Repp
           return handle_errors if @epp_errors.any?
 
           affected, skipped = TechDomainContact.replace(@current_contact, @new_contact)
-          data = { affected_domains: affected, skipped_domains: skipped }
-          render_success(data: data)
+          @response = { affected_domains: affected, skipped_domains: skipped }
+          render_success(data: @response)
         end
 
         private
