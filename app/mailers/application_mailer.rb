@@ -10,6 +10,6 @@ class ApplicationMailer < ActionMailer::Base
     url ||= registrant_domain_update_confirm_url(domain, token: token)
     return url if base_url.blank?
 
-    "#{base_url}/confirms/#{domain.name_puny}/#{method}/#{token}"
+    "#{base_url}/confirmation/#{domain.name_puny}/#{method}/#{token}"
   end
 end
