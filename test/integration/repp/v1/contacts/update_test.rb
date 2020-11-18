@@ -101,4 +101,19 @@ class ReppV1ContactsUpdateTest < ActionDispatch::IntegrationTest
     @contact.reload
     assert @contact.legal_documents.any?
   end
+
+  def test_returns_error_if_ident_wrong_format
+    request_body =  {
+      "contact": {
+        "ident": "123"
+      }
+    }
+
+    put "/repp/v1/contacts/#{@contact.code}", headers: @auth_headers, params: request_body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal 2308, json[:code]
+    assert_equal 'Ident update is not allowed. Consider creating new contact object', json[:message]
+  end
 end

@@ -4,8 +4,9 @@ module Repp
       rescue_from ActiveRecord::RecordNotFound, with: :not_found_error
       before_action :authenticate_user
       before_action :check_ip_restriction
-      before_action :set_paper_trail_whodunnit
       attr_reader :current_user
+
+      before_action :set_paper_trail_whodunnit
 
       rescue_from ActionController::ParameterMissing do |exception|
         render json: { code: 2003, message: exception }, status: :bad_request
@@ -22,6 +23,10 @@ module Repp
       end
 
       private
+
+      def set_paper_trail_whodunnit
+        ::PaperTrail.request.whodunnit = current_user
+      end
 
       def render_success(code: nil, message: nil, data: nil)
         @response = { code: code || 1000, message: message || 'Command completed successfully',
