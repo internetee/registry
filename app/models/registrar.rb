@@ -158,6 +158,7 @@ class Registrar < ApplicationRecord
         original_nameserver.destroy!
       end
 
+      self.domains.where(name: domain_list).find_each(&:update_whois_record) if domain_list.any?
       domain_list.uniq.sort
     end
   end
