@@ -20,4 +20,20 @@ class ReplaceNameserversTest < ActiveSupport::TestCase
 
     assert_equal([], result)
   end
+
+  def test_replace_nameserver_in_bulk_respects_domain_limit_scope
+    eligible_domain = domains(:shop)
+    unscoped_domain = domains(:airport)
+
+    new_attributes = { hostname: 'ns-updated1.bestnames.test', ipv4: '192.0.3.1',
+      ipv6: '2001:db8::2' }
+
+    result = @registrar.replace_nameservers('ns1.bestnames.test', new_attributes, domains: ['shop.test'])
+    assert_equal(["shop.test"], result)
+
+    unscoped_domain.reload
+    eligible_domain.reload
+    assert eligible_domain.nameservers.where(hostname: 'ns1.bestnames.test').empty?
+    assert unscoped_domain.nameservers.where(hostname: 'ns1.bestnames.test').any?
+  end
 end
