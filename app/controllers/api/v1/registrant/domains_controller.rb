@@ -24,7 +24,7 @@ module Api
             serializer.to_json
           end
 
-          render json: {count: domains.count, domains: serialized_domains}
+          render json: { count: domains.count, domains: serialized_domains }
         end
 
         def show
