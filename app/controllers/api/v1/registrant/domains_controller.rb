@@ -18,14 +18,13 @@ module Api
                    status: :bad_request) && return
           end
 
-          @domains = current_user_domains.limit(limit).offset(offset)
-
-          serialized_domains = @domains.map do |item|
+          domains = current_user_domains
+          serialized_domains = domains.limit(limit).offset(offset).map do |item|
             serializer = Serializers::RegistrantApi::Domain.new(item)
             serializer.to_json
           end
 
-          render json: serialized_domains
+          render json: {count: domains.count, domains: serialized_domains}
         end
 
         def show
