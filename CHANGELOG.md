@@ -1,3 +1,6 @@
+19.11.2020
+* Only sponsoring registrar has access to private contact's details [#1745](https://github.com/internetee/registry/issues/1745)
+
 13.11.2020
 * Fixed per registrar epp session limit [#729](https://github.com/internetee/registry/issues/729)
 * Correct error code is returned on reaching session limit [#587](https://github.com/internetee/registry/issues/587)
