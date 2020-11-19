@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 # core
+gem 'active_interaction', '~> 3.8'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.12.1' # for dates and times
 gem 'rails', '~> 6.0'
