@@ -1,18 +1,20 @@
 require 'test_helper'
 
-class NewDomainForceDeleteTest < ActiveSupport::TestCase
+class ForceDeleteTest < ActionMailer::TestCase
   setup do
     @domain = domains(:shop)
     Setting.redemption_grace_period = 30
+    ActionMailer::Base.deliveries.clear
   end
 
   def test_schedules_force_delete_fast_track
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
 
-    @domain.schedule_force_delete(type: :fast_track)
+    @domain.schedule_force_delete(type: :fast_track, notify_by_email: true)
     @domain.reload
 
+    assert_emails 1
     assert @domain.force_delete_scheduled?
     assert_equal Date.parse('2010-08-20'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-07-06'), @domain.force_delete_start.to_date
