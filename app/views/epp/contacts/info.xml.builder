@@ -14,7 +14,11 @@ xml.epp_head do
         end
 
         xml.tag!('contact:postalInfo', type: 'int') do
-          xml.tag!('contact:name', @contact.name)
+          if can? :view_full_info, @contact, @password
+            xml.tag!('contact:name', @contact.name)
+          else
+            xml.tag!('contact:name', 'No access')
+          end
           if can? :view_full_info, @contact, @password
             xml.tag!('contact:org', @contact.org_name) if @contact.org_name.present?
 
