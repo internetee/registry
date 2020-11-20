@@ -58,18 +58,8 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
                                                notify_by_email: notify_by_email)
   end
 
-  def clear_force_delete_data
-    self.force_delete_data = nil
-  end
-
   def cancel_force_delete
-    remove_force_delete_statuses
-    restore_statuses_before_force_delete
-    clear_force_delete_data
-    self.force_delete_date = nil
-    self.force_delete_start = nil
-    save(validate: false)
-    registrar.notifications.create!(text: I18n.t('force_delete_cancelled', domain_name: name))
+    CancelForceDeleteInteraction::CancelForceDelete.run(domain: self)
   end
 
   def outzone_date
@@ -79,19 +69,5 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   def purge_date
     (force_delete_date&.beginning_of_day || valid_to + Setting.expire_warning_period.days +
       Setting.redemption_grace_period.days)
-  end
-
-  private
-
-  def restore_statuses_before_force_delete
-    self.statuses = statuses_before_force_delete
-    self.statuses_before_force_delete = nil
-  end
-
-  def remove_force_delete_statuses
-    statuses.delete(DomainStatus::FORCE_DELETE)
-    statuses.delete(DomainStatus::SERVER_RENEW_PROHIBITED)
-    statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
-    statuses.delete(DomainStatus::CLIENT_HOLD)
   end
 end
