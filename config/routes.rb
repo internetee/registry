@@ -56,6 +56,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :registrant do
         post 'auth/eid', to: 'auth#eid'
+        get 'confirms/:name/:template/:token', to: 'confirms#index', constraints: { name: /[^\/]+/ }
+        post 'confirms/:name/:template/:token/:decision', to: 'confirms#update', constraints: { name: /[^\/]+/ }
 
         resources :domains, only: %i[index show], param: :uuid do
           resource :registry_lock, only: %i[create destroy]
