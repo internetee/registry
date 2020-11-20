@@ -1,5 +1,6 @@
 20.11.2020
 * Registrant confirmation over Registrant API [#1742](https://github.com/internetee/registry/pull/1742)
+* Refactored forceDelete cancellation for interactors [#1743](https://github.com/internetee/registry/issues/1743)
 
 19.11.2020
 * Only sponsoring registrar has access to private contact's details [#1745](https://github.com/internetee/registry/issues/1745)
