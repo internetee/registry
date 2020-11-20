@@ -1,8 +1,4 @@
 class DomainCron
-  include Concerns::Job::ForceDelete
-  include Concerns::Job::ForceDeleteLogging
-  include Concerns::Job::ForceDeleteNotify
-
   def self.clean_expired_pendings
     STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?
 
@@ -80,5 +76,9 @@ class DomainCron
 
     STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{marked} of #{real} domains\n" unless Rails.env.test?
     marked
+  end
+
+  def self.start_client_hold
+    ClientHoldInteraction::SetClientHold.run!
   end
 end
