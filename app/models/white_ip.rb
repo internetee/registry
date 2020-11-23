@@ -41,21 +41,26 @@ class WhiteIp < ApplicationRecord
   class << self
     # rubocop:disable Style/CaseEquality
     def include_ip?(ip)
-      Rails.logger.info "Checking if whitelist includes ip:#{ip}"
+      Rails.logger.info "Checking if whitelist includes ip: #{ip}"
       return false if ip.blank?
 
-      where(id: ids_including(ip)).any?
+      result = where(id: ids_including(ip)).any?
+      Rails.logger.info "Result is: #{result}"
+      result
     end
 
     def ids_including(ip)
+      Rails.logger.info "Checking ip #{ip}"
       ipv4 = ipv6 = []
       if check_ip4(ip).present?
         ipv4 = select { |white_ip| IPAddr.new(white_ip.ipv4, Socket::AF_INET) === check_ip4(ip) }
       end
       if check_ip6(ip).present?
-        ipv6 = select { |white_ip| IPAddr.new(white_ip.ipv6, Socket::AF_INET6) === check_ip6 }
+        ipv6 = select { |white_ip| IPAddr.new(white_ip.ipv6, Socket::AF_INET6) === check_ip6(ip) }
       end
-      (ipv4 + ipv6).pluck(:id).flatten.uniq
+      result = (ipv4 + ipv6).pluck(:id).flatten.uniq
+      Rails.logger.info "Result is #{result}"
+      result
     end
     # rubocop:enable Style/CaseEquality
 

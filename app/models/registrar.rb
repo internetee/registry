@@ -137,7 +137,8 @@ class Registrar < ApplicationRecord
 
   def api_ip_white?(ip)
     return true unless Setting.api_ip_whitelist_enabled
-    white_ips.api.pluck(:ipv4, :ipv6).flatten.include?(ip)
+    # white_ips.api.pluck(:ipv4, :ipv6).flatten.include?(ip)
+    white_ips.api.include_ip?(ip)
   end
 
   # Audit log is needed, therefore no raw SQL
