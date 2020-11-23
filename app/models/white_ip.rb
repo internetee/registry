@@ -41,15 +41,10 @@ class WhiteIp < ApplicationRecord
   class << self
     # rubocop:disable Style/CaseEquality
     def include_ip?(ip)
-      new_ip4 = IPAddr.new(ip, Socket::AF_INET)
-      new_ip6 = IPAddr.new(ip, Socket::AF_INET6)
-
-      result = self.all.select { |white_ip| IPAddr.new(white_ip.ipv4, Socket::AF_INET) === new_ip4 ||
-                                            IPAddr.new(white_ip.ipv6, Socket::AF_INET6) === new_ip6 }
-      ids = result.pluck(:id).flatten.uniq
+      ipv4 = select { |white_ip| IPAddr.new(white_ip.ipv4, Socket::AF_INET) === IPAddr.new(ip) }
+      ipv6 = select { |white_ip| IPAddr.new(white_ip.ipv6, Socket::AF_INET6) === IPAddr.new(ip) }
+      ids = (ipv4 + ipv6).pluck(:id).flatten.uniq
       where(id: ids).any?
-    rescue IPAddr::InvalidAddressError => _e
-      false
     end
     # rubocop:enable Style/CaseEquality
   end
