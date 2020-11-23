@@ -8,7 +8,7 @@ module DomainDeleteConfirmInteraction
       log
       DomainDeleteMailer.confirmation_request(domain: domain,
                                               registrar: domain.registrar,
-                                              registrant: domain.registrant).deliver_now
+                                              registrant: domain.registrant).deliver_later
     end
 
     private
