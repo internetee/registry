@@ -1,3 +1,6 @@
+24.11.2020
+* Added subnet support for list of allowed IPs [#983](https://github.com/internetee/registry/issues/983)
+
 20.11.2020
 * Registrant confirmation over Registrant API [#1742](https://github.com/internetee/registry/pull/1742)
 * Refactored forceDelete cancellation for interactors [#1743](https://github.com/internetee/registry/issues/1743)
