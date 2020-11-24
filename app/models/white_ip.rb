@@ -40,17 +40,14 @@ class WhiteIp < ApplicationRecord
 
   class << self
     # rubocop:disable Style/CaseEquality
+    # rubocop:disable Metrics/AbcSize
     def include_ip?(ip)
-      Rails.logger.info "Checking if whitelist includes ip: #{ip}"
       return false if ip.blank?
 
-      result = where(id: ids_including(ip)).any?
-      Rails.logger.info "Result is: #{result}"
-      result
+      where(id: ids_including(ip)).any?
     end
 
     def ids_including(ip)
-      Rails.logger.info "Checking ip #{ip}"
       ipv4 = ipv6 = []
       if check_ip4(ip).present?
         ipv4 = select { |white_ip| IPAddr.new(white_ip.ipv4, Socket::AF_INET) === check_ip4(ip) }
@@ -58,11 +55,10 @@ class WhiteIp < ApplicationRecord
       if check_ip6(ip).present?
         ipv6 = select { |white_ip| IPAddr.new(white_ip.ipv6, Socket::AF_INET6) === check_ip6(ip) }
       end
-      result = (ipv4 + ipv6).pluck(:id).flatten.uniq
-      Rails.logger.info "Result is #{result}"
-      result
+      (ipv4 + ipv6).pluck(:id).flatten.uniq
     end
     # rubocop:enable Style/CaseEquality
+    # rubocop:enable Metrics/AbcSize
 
     def check_ip4(ip)
       IPAddr.new(ip, Socket::AF_INET)
@@ -75,6 +71,5 @@ class WhiteIp < ApplicationRecord
     rescue StandardError => _e
       nil
     end
-
   end
 end
