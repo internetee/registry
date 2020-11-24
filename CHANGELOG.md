@@ -1,5 +1,6 @@
 24.11.2020
 * Added subnet support for list of allowed IPs [#983](https://github.com/internetee/registry/issues/983)
+* Added contact endpoint to Restful EPP API [#1580](https://github.com/internetee/registry/issues/1580)
 
 20.11.2020
 * Registrant confirmation over Registrant API [#1742](https://github.com/internetee/registry/pull/1742)
