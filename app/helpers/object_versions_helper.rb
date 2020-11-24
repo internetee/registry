@@ -3,7 +3,7 @@ module ObjectVersionsHelper
     version.object_changes.to_h.each do |key, value|
       method_name = "#{key}=".to_sym
       if new_object.respond_to?(method_name)
-        new_object.public_send(method_name, event_value(event, value))
+        new_object.public_send(method_name, event_value(version, value))
       end
     end
   end
