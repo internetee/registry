@@ -36,8 +36,6 @@ gem 'select2-rails',    '3.5.9.3' # for autocomplete
 gem 'cancancan'
 gem 'devise', '~> 4.7'
 
-gem 'grape'
-
 # registry specfic
 gem 'data_migrate', '~> 6.1'
 gem 'isikukood' # for EE-id validation

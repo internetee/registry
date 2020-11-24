@@ -198,28 +198,6 @@ GEM
     docile (1.3.2)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dry-configurable (0.11.6)
-      concurrent-ruby (~> 1.0)
-      dry-core (~> 0.4, >= 0.4.7)
-      dry-equalizer (~> 0.2)
-    dry-container (0.7.2)
-      concurrent-ruby (~> 1.0)
-      dry-configurable (~> 0.1, >= 0.1.3)
-    dry-core (0.4.9)
-      concurrent-ruby (~> 1.0)
-    dry-equalizer (0.3.0)
-    dry-inflector (0.2.0)
-    dry-logic (1.0.7)
-      concurrent-ruby (~> 1.0)
-      dry-core (~> 0.2)
-      dry-equalizer (~> 0.2)
-    dry-types (1.4.0)
-      concurrent-ruby (~> 1.0)
-      dry-container (~> 0.3)
-      dry-core (~> 0.4, >= 0.4.4)
-      dry-equalizer (~> 0.3)
-      dry-inflector (~> 0.1, >= 0.1.2)
-      dry-logic (~> 1.0, >= 1.0.2)
     erubi (1.9.0)
     erubis (2.7.0)
     execjs (2.7.0)
@@ -228,13 +206,6 @@ GEM
       thor (~> 0.14)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-    grape (1.4.0)
-      activesupport
-      builder
-      dry-types (>= 1.1)
-      mustermann-grape (~> 1.0.0)
-      rack (>= 1.3.0)
-      rack-accept
     gyoku (1.3.1)
       builder (>= 2.1.2)
     haml (5.1.2)
@@ -314,8 +285,6 @@ GEM
     multi_json (1.15.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
-    mustermann-grape (1.0.1)
-      mustermann (>= 1.0.0)
     netrc (0.11.0)
     nio4r (2.5.4)
     nokogiri (1.10.10)
@@ -359,8 +328,6 @@ GEM
       que (~> 0.8)
       sinatra
     rack (2.2.3)
-    rack-accept (0.4.5)
-      rack (>= 0.4)
     rack-oauth2 (1.16.0)
       activesupport
       attr_required
@@ -545,7 +512,6 @@ DEPENDENCIES
   epp!
   epp-xml (= 1.1.0)!
   figaro (= 1.1.1)
-  grape
   haml (~> 5.0)
   isikukood
   iso8601 (= 0.12.1)
