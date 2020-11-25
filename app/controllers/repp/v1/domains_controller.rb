@@ -1,7 +1,9 @@
+require 'serializers/registrant_api/domain'
 module Repp
   module V1
     class DomainsController < BaseController
-      before_action :set_authorized_domain, only: [:transfer_info]
+      before_action :set_authorized_domain, only: %i[transfer_info]
+      before_action :set_domain, only: %i[show]
 
       def index
         records = current_user.registrar.domains
@@ -9,6 +11,10 @@ module Repp
         domains = domains.pluck(:name) unless index_params[:details] == 'true'
 
         render_success(data: { domains: domains, total_number_of_records: records.count })
+      end
+
+      def show
+        render_success(data: { domain: Serializers::RegistrantApi::Domain.new(@domain).to_json })
       end
 
       def transfer_info
@@ -66,12 +72,16 @@ module Repp
         params.permit(:id)
       end
 
+      def set_domain
+        @domain = Domain.find_by(registrar: current_user.registrar, name: params[:id])
+      end
+
       def set_authorized_domain
         @epp_errors ||= []
         h = {}
         h[transfer_info_params[:id].match?(/\A[0-9]+\z/) ? :id : :name] = transfer_info_params[:id]
         @domain = Domain.find_by!(h)
-
+        return if @domain.registrar == current_user.registrar
         return if @domain.transfer_code.eql?(request.headers['Auth-Code'])
 
         @epp_errors << { code: 2202, msg: I18n.t('errors.messages.epp_authorization_error') }

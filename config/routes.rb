@@ -59,7 +59,7 @@ Rails.application.routes.draw do
           end
         end
       end
-      resources :domains do
+      resources :domains, constraints: { id: /.*/ } do
         collection do
           get ':id/transfer_info', to: 'domains#transfer_info', constraints: { id: /.*/ }
           post 'transfer', to: 'domains#transfer'

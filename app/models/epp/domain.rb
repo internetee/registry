@@ -1,5 +1,5 @@
 require 'deserializers/xml/legal_document'
-
+require 'deserializers/xml/nameserver'
 class Epp::Domain < Domain
   include EppErrors
 
@@ -161,7 +161,7 @@ class Epp::Domain < Domain
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
     at[:admin_domain_contacts_attributes] = admin_domain_contacts_attrs(frame, action)
     at[:tech_domain_contacts_attributes] = tech_domain_contacts_attrs(frame, action)
-
+    puts "JHDFHJDGFKDJHF"
     pw = frame.css('authInfo > pw').text
     at[:transfer_code] = pw if pw.present?
 
@@ -193,7 +193,7 @@ class Epp::Domain < Domain
   end
 
   def nameservers_attrs(frame, action)
-    ns_list = nameservers_from(frame)
+    ns_list = ::Deserializers::Xml::Nameservers.new(frame).call
 
     if action == 'rem'
       to_destroy = []
@@ -213,21 +213,6 @@ class Epp::Domain < Domain
     else
       return ns_list
     end
-  end
-
-  def nameservers_from(frame)
-    res = []
-    frame.css('hostAttr').each do |x|
-      host_attr = {
-        hostname: x.css('hostName').first.try(:text),
-        ipv4: x.css('hostAddr[ip="v4"]').map(&:text).compact,
-        ipv6: x.css('hostAddr[ip="v6"]').map(&:text).compact
-      }
-
-      res << host_attr.delete_if { |_k, v| v.blank? }
-    end
-
-    res
   end
 
   def admin_domain_contacts_attrs(frame, action)
