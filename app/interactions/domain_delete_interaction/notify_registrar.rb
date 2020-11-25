@@ -1,5 +1,5 @@
 module DomainDeleteInteraction
-  class NotifyRegistrar < Delete
+  class NotifyRegistrar < Base
     def execute
       bye_bye = domain.versions.last
       domain.registrar.notifications.create!(
