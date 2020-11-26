@@ -12,11 +12,18 @@ module DomainUpdateConfirmInteraction
                                          RegistrantVerification::REJECTED] }
 
     def raise_errors!(domain)
-      if domain.errors.any?
-        message = "domain #{domain.name} failed with errors #{domain.errors.full_messages}"
-        throw message
-      end
+      return unless domain.errors.any?
+
+      message = "domain #{domain.name} failed with errors #{domain.errors.full_messages}"
+      throw message
+    end
+
+    def notify_registrar(message_key)
+      domain.registrar.notifications.create!(
+        text: "#{I18n.t(message_key)}: #{domain.name}",
+        attached_obj_id: domain.id,
+        attached_obj_type: domain.class.to_s
+      )
     end
   end
 end
-

@@ -6,7 +6,7 @@ module DomainUpdateConfirmInteraction
                                         registrar: domain.registrar,
                                         registrant: domain.registrant).deliver_now
 
-        domain.notify_registrar(:poll_pending_update_rejected_by_registrant)
+        notify_registrar(:poll_pending_update_rejected_by_registrant)
 
         domain.preclean_pendings
         domain.clean_pendings!
