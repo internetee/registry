@@ -8,8 +8,8 @@ module DomainUpdateConfirmInteraction
 
         notify_registrar(:poll_pending_update_rejected_by_registrant)
 
-        domain.preclean_pendings
-        domain.clean_pendings!
+        preclean_pendings
+        clean_pendings!
       end
     end
   end

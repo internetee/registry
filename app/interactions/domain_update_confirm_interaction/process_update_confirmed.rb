@@ -21,32 +21,14 @@ module DomainUpdateConfirmInteraction
       WhoisRecord.find_by(domain_id: domain.id).save # need to reload model
     end
 
-    def preclean_pendings
-      domain.registrant_verification_token = nil
-      domain.registrant_verification_asked_at = nil
-    end
-
+    # rubocop:disable Metrics/AbcSize
     def update_domain
       user = ApiUser.find(domain.pending_json['current_user_id'])
       frame = Nokogiri::XML(domain.pending_json['frame'])
       domain.upid = user.registrar.id if user.registrar
+      domain.up_date = Time.zone.now
       domain.update(frame, user, false)
     end
-
-    def clean_pendings!
-      domain.up_date = Time.zone.now
-      domain.registrant_verification_token = nil
-      domain.registrant_verification_asked_at = nil
-      domain.pending_json = {}
-      clear_statuses
-    end
-
-    def clear_statuses
-      domain.statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
-      domain.statuses.delete(DomainStatus::PENDING_UPDATE)
-      domain.statuses.delete(DomainStatus::PENDING_DELETE)
-      domain.status_notes[DomainStatus::PENDING_UPDATE] = ''
-      domain.status_notes[DomainStatus::PENDING_DELETE] = ''
-    end
+    # rubocop:enable Metrics/AbcSize
   end
 end

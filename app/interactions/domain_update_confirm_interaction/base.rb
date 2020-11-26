@@ -25,5 +25,25 @@ module DomainUpdateConfirmInteraction
         attached_obj_type: domain.class.to_s
       )
     end
+
+    def preclean_pendings
+      domain.registrant_verification_token = nil
+      domain.registrant_verification_asked_at = nil
+    end
+
+    def clean_pendings!
+      domain.registrant_verification_token = nil
+      domain.registrant_verification_asked_at = nil
+      domain.pending_json = {}
+      clear_statuses
+    end
+
+    def clear_statuses
+      domain.statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
+      domain.statuses.delete(DomainStatus::PENDING_UPDATE)
+      domain.statuses.delete(DomainStatus::PENDING_DELETE)
+      domain.status_notes[DomainStatus::PENDING_UPDATE] = ''
+      domain.status_notes[DomainStatus::PENDING_DELETE] = ''
+    end
   end
 end
