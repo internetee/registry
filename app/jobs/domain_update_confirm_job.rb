@@ -1,5 +1,7 @@
-class DomainUpdateConfirmJob < Que::Job
-  def run(domain_id, action, initiator = nil)
+class DomainUpdateConfirmJob < ApplicationJob
+  queue_as :default
+
+  def perform(domain_id, action, initiator = nil)
     ::PaperTrail.request.whodunnit = "job - #{self.class.name} - #{action} by #{initiator}"
     # it's recommended to keep transaction against job table as short as possible.
     ActiveRecord::Base.transaction do
@@ -27,7 +29,6 @@ class DomainUpdateConfirmJob < Que::Job
         domain.preclean_pendings
         domain.clean_pendings!
       end
-      destroy # it's best to destroy the job in the same transaction
     end
   end
 
