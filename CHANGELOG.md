@@ -1,3 +1,6 @@
+27.11.2020
+* Refactored delete confirmation for interactors [#1753](https://github.com/internetee/registry/issues/1753)
+
 24.11.2020
 * Added subnet support for list of allowed IPs [#983](https://github.com/internetee/registry/issues/983)
 * Added contact endpoint to Restful EPP API [#1580](https://github.com/internetee/registry/issues/1580)
