@@ -417,7 +417,7 @@ class Epp::Domain < Domain
         if statuses.include?(x)
           to_destroy << x
         else
-          add_epp_error('2303', 'status', x, [:statuses, :not_found])
+          add_epp_error('2303', 'status', x, %i[statuses not_found])
         end
       end
 
@@ -432,7 +432,7 @@ class Epp::Domain < Domain
 
     frame.css('status').each do |x|
       unless DomainStatus::CLIENT_STATUSES.include?(x['s'])
-        add_epp_error('2303', 'status', x['s'], [:statuses, :not_found])
+        add_epp_error('2303', 'status', x['s'], %i[statuses not_found])
         next
       end
 
