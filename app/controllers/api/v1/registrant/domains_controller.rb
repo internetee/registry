@@ -20,7 +20,7 @@ module Api
 
           domains = current_user_domains
           serialized_domains = domains.limit(limit).offset(offset).map do |item|
-            serializer = Serializers::RegistrantApi::Domain.new(item)
+            serializer = Serializers::RegistrantApi::Domain.new(item, simplify: true)
             serializer.to_json
           end
 
@@ -31,7 +31,7 @@ module Api
           @domain = current_user_domains.find_by(uuid: params[:uuid])
 
           if @domain
-            serializer = Serializers::RegistrantApi::Domain.new(@domain)
+            serializer = Serializers::RegistrantApi::Domain.new(@domain, simplify: false)
             render json: serializer.to_json
           else
             render json: { errors: [{ base: ['Domain not found'] }] }, status: :not_found

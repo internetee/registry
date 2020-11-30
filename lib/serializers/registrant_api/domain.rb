@@ -3,11 +3,27 @@ module Serializers
     class Domain
       attr_reader :domain
 
-      def initialize(domain)
+      def initialize(domain, simplify: false)
         @domain = domain
+        @simplify = simplify
       end
 
       def to_json
+        if simplify
+          return {
+            id: domain.uuid,
+            name: domain.name,
+            registered_at: domain.registered_at,
+            valid_to: domain.valid_to,
+            registrant_verification_asked_at: domain.registrant_verification_asked_at,
+            statuses: domain.statuses,
+            registrar: {
+              name: domain.registrar.name,
+              website: domain.registrar.website
+            }
+          }
+        end
+
         {
           id: domain.uuid,
           name: domain.name,
