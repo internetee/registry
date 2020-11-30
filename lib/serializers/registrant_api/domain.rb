@@ -9,18 +9,23 @@ module Serializers
       end
 
       def to_json
-        if simplify
+        if @simplify
           return {
             id: domain.uuid,
             name: domain.name,
             registered_at: domain.registered_at,
             valid_to: domain.valid_to,
+            outzone_at: domain.outzone_at,
             registrant_verification_asked_at: domain.registrant_verification_asked_at,
             statuses: domain.statuses,
             registrar: {
               name: domain.registrar.name,
-              website: domain.registrar.website
-            }
+              website: domain.registrar.website,
+            },
+            registrant: {
+              name: domain.registrant.name,
+              id: domain.registrant.uuid,
+            },
           }
         end
 

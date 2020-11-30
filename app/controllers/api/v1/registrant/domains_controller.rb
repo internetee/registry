@@ -7,6 +7,7 @@ module Api
         def index
           limit = params[:limit] || 200
           offset = params[:offset] || 0
+          simple = params[:simple] == 'true' || false
 
           if limit.to_i > 200 || limit.to_i < 1
             render(json: { errors: [{ limit: ['parameter is out of range'] }] },
@@ -20,7 +21,7 @@ module Api
 
           domains = current_user_domains
           serialized_domains = domains.limit(limit).offset(offset).map do |item|
-            serializer = Serializers::RegistrantApi::Domain.new(item, simplify: true)
+            serializer = Serializers::RegistrantApi::Domain.new(item, simplify: simple)
             serializer.to_json
           end
 
