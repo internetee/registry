@@ -53,13 +53,13 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   end
 
   def schedule_force_delete(type: :fast_track, notify_by_email: false)
-    ForceDeleteInteraction::SetForceDelete.run(domain: self,
-                                               type: type,
-                                               notify_by_email: notify_by_email)
+    Domains::ForceDelete::SetForceDelete.run(domain: self,
+                                             type: type,
+                                             notify_by_email: notify_by_email)
   end
 
   def cancel_force_delete
-    CancelForceDeleteInteraction::CancelForceDelete.run(domain: self)
+    Domains::CancelForceDelete::CancelForceDelete.run(domain: self)
   end
 
   def outzone_date
