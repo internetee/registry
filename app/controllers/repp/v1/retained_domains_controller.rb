@@ -3,8 +3,9 @@ module Repp
     class RetainedDomainsController < ActionController::API
       def index
         domains = RetainedDomains.new(query_params)
+        @response = { count: domains.count, domains: domains.to_jsonable }
 
-        render json: { count: domains.count, domains: domains.to_jsonable }
+        render json: @response
       end
 
       def query_params

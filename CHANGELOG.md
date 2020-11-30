@@ -1,3 +1,18 @@
+27.11.2020
+* Refactored delete confirmation for interactors [#1753](https://github.com/internetee/registry/issues/1753)
+
+24.11.2020
+* Added subnet support for list of allowed IPs [#983](https://github.com/internetee/registry/issues/983)
+* Added contact endpoint to Restful EPP API [#1580](https://github.com/internetee/registry/issues/1580)
+
+20.11.2020
+* Registrant confirmation over Registrant API [#1742](https://github.com/internetee/registry/pull/1742)
+* Refactored forceDelete cancellation for interactors [#1743](https://github.com/internetee/registry/issues/1743)
+
+19.11.2020
+* Only sponsoring registrar has access to private contact's details [#1745](https://github.com/internetee/registry/issues/1745)
+* Refactor ForceDelete [#1740](https://github.com/internetee/registry/issues/1740)
+
 13.11.2020
 * Fixed per registrar epp session limit [#729](https://github.com/internetee/registry/issues/729)
 * Correct error code is returned on reaching session limit [#587](https://github.com/internetee/registry/issues/587)
