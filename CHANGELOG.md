@@ -1,3 +1,6 @@
+30.11.2020
+* Refactor - interactors moved to domain space [#1762](https://github.com/internetee/registry/pull/1762)
+
 27.11.2020
 * Refactored delete confirmation for interactors [#1753](https://github.com/internetee/registry/issues/1753)
 
