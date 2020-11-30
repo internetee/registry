@@ -79,6 +79,6 @@ class DomainCron
   end
 
   def self.start_client_hold
-    ClientHoldInteraction::SetClientHold.run!
+    Domains::ClientHold::SetClientHold.run!
   end
 end

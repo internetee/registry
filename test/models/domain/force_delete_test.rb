@@ -206,7 +206,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.schedule_force_delete(type: :soft)
 
     travel_to Time.zone.parse('2010-08-21')
-    ClientHoldInteraction::SetClientHold.run!
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
     assert_emails 1
@@ -227,7 +227,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.schedule_force_delete(type: :soft)
 
     travel_to Time.zone.parse('2010-08-21')
-    ClientHoldInteraction::SetClientHold.run!
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
     assert_emails 1
@@ -244,7 +244,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.schedule_force_delete(type: :soft)
 
     travel_to Time.zone.parse('2010-07-06')
-    ClientHoldInteraction::SetClientHold.run!
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
     assert_not_includes(@domain.statuses, asserted_status)
@@ -259,7 +259,7 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     @domain.schedule_force_delete(type: :fast_track)
     travel_to Time.zone.parse('2010-07-25')
-    ClientHoldInteraction::SetClientHold.run!
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
     assert_includes(@domain.statuses, asserted_status)
@@ -275,7 +275,7 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     @domain.schedule_force_delete(type: :fast_track)
     travel_to Time.zone.parse('2010-07-06')
-    ClientHoldInteraction::SetClientHold.run!
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
     assert_not_includes(@domain.statuses, asserted_status)
