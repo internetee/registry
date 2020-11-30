@@ -503,6 +503,30 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_not_includes(@domain.statuses, DomainStatus::CLIENT_HOLD)
   end
 
+  def test_update_domain_returns_error_when_removing_unassigned_status
+    assert_not_includes(@domain.statuses, DomainStatus::CLIENT_HOLD)
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:name>#{@domain.name}</domain:name>
+              <domain:rem>
+                <domain:status s="clientHold"/>
+              </domain:rem>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    @domain.reload
+    assert_epp_response :object_does_not_exist
+  end
+
   private
 
   def assert_verification_and_notification_emails
