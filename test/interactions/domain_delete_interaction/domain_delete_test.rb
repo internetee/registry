@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DomainDeleteInteractionDeleteTest < ActiveSupport::TestCase
+class DomainDeleteTest < ActiveSupport::TestCase
   setup do
     @domain = domains(:shop)
   end
@@ -9,7 +9,7 @@ class DomainDeleteInteractionDeleteTest < ActiveSupport::TestCase
     @domain.update!(delete_date: '2010-07-04')
     travel_to Time.zone.parse('2010-07-05')
 
-    DomainDeleteInteraction::Delete.run(domain: @domain)
+    Domains::Delete::DoDelete.run(domain: @domain)
 
     assert @domain.destroyed?
   end
@@ -19,7 +19,7 @@ class DomainDeleteInteractionDeleteTest < ActiveSupport::TestCase
     travel_to Time.zone.parse('2010-07-05')
 
     assert_difference '@domain.registrar.notifications.count', 1 do
-      DomainDeleteInteraction::Delete.run(domain: @domain)
+      Domains::Delete::DoDelete.run(domain: @domain)
     end
   end
 end
