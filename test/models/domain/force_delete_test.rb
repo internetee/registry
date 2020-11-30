@@ -113,7 +113,7 @@ class ForceDeleteTest < ActionMailer::TestCase
 
   def test_force_delete_cannot_be_scheduled_when_a_domain_is_discarded
     @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
-    result = ForceDeleteInteraction::SetForceDelete.run(domain: @domain, type: :fast_track)
+    result = Domains::ForceDelete::SetForceDelete.run(domain: @domain, type: :fast_track)
 
     assert_not result.valid?
     assert_not @domain.force_delete_scheduled?
