@@ -1,3 +1,6 @@
+01.12.2020
+* Refactored clientHold for interactors [#1751](https://github.com/internetee/registry/issues/1751)
+
 30.11.2020
 * Refactor - interactors moved to domain space [#1762](https://github.com/internetee/registry/pull/1762)
 
