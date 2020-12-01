@@ -33,25 +33,6 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
-  def should_notify_on_soft_force_delete?
-    force_delete_scheduled? && contact_notification_sent_date.blank? &&
-      force_delete_start.to_date <= Time.zone.now.to_date && force_delete_type.to_sym == :soft &&
-      !statuses.include?(DomainStatus::CLIENT_HOLD)
-  end
-
-  def client_holdable?
-    force_delete_scheduled? && !statuses.include?(DomainStatus::CLIENT_HOLD) &&
-      force_delete_start.present? && force_delete_lte_today && force_delete_lte_valid_date
-  end
-
-  def force_delete_lte_today
-    force_delete_start + Setting.expire_warning_period.days <= Time.zone.now
-  end
-
-  def force_delete_lte_valid_date
-    force_delete_start + Setting.expire_warning_period.days <= valid_to
-  end
-
   def schedule_force_delete(type: :fast_track, notify_by_email: false)
     Domains::ForceDelete::SetForceDelete.run(domain: self,
                                              type: type,
