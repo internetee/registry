@@ -20,6 +20,6 @@ module Concerns::Domain::Deletable
   end
 
   def deletion_deadline
-    delete_date + 24.hours
+    (delete_date || Time.zone.now) + 24.hours
   end
 end
