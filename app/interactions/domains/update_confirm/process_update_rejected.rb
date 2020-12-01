@@ -11,6 +11,7 @@ module Domains
 
           preclean_pendings
           clean_pendings!
+          domain.save!
         end
       end
     end
