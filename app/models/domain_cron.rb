@@ -4,27 +4,7 @@ class DomainCron
   end
 
   def self.start_expire_period
-    ::PaperTrail.request.whodunnit = "cron - #{__method__}"
-    domains = Domain.expired
-    marked = 0
-    real = 0
-
-    domains.each do |domain|
-      next unless domain.expirable?
-      real += 1
-      domain.set_graceful_expired
-      STDOUT << "#{Time.zone.now.utc} DomainCron.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-
-      send_time = domain.valid_to + Setting.expiration_reminder_mail.to_i.days
-      saved = domain.save(validate: false)
-
-      if saved
-        DomainExpireEmailJob.enqueue(domain.id, run_at: send_time)
-        marked += 1
-      end
-    end
-
-    STDOUT << "#{Time.zone.now.utc} - Successfully expired #{marked} of #{real} domains\n" unless Rails.env.test?
+    Domains::ExpirePeriod::Start.run!
   end
 
   def self.start_redemption_grace_period
