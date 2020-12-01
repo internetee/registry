@@ -8,26 +8,8 @@ module Serializers
         @simplify = simplify
       end
 
-      def to_json
-        if @simplify
-          return {
-            id: domain.uuid,
-            name: domain.name,
-            registered_at: domain.registered_at,
-            valid_to: domain.valid_to,
-            outzone_at: domain.outzone_at,
-            registrant_verification_asked_at: domain.registrant_verification_asked_at,
-            statuses: domain.statuses,
-            registrar: {
-              name: domain.registrar.name,
-              website: domain.registrar.website,
-            },
-            registrant: {
-              name: domain.registrant.name,
-              id: domain.registrant.uuid,
-            },
-          }
-        end
+      def to_json(_obj = nil)
+        return simple_object if @simplify
 
         {
           id: domain.uuid,
@@ -69,6 +51,16 @@ module Serializers
       end
 
       private
+
+      def simple_object
+        {
+          id: domain.uuid, name: domain.name, registered_at: domain.registered_at,
+          valid_to: domain.valid_to, outzone_at: domain.outzone_at, statuses: domain.statuses,
+          registrant_verification_asked_at: domain.registrant_verification_asked_at,
+          registrar: { name: domain.registrar.name, website: domain.registrar.website },
+          registrant: { name: domain.registrant.name, id: domain.registrant.uuid }
+        }
+      end
 
       def dnssec_keys
         domain.dnskeys.map do |key|
