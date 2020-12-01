@@ -1,36 +1,6 @@
 class DomainCron
   def self.clean_expired_pendings
-    STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?
-
-    ::PaperTrail.request.whodunnit = "cron - #{__method__}"
-    expire_at = Setting.expire_pending_confirmation.hours.ago
-    count = 0
-    expired_pending_domains = Domain.where('registrant_verification_asked_at <= ?', expire_at)
-    expired_pending_domains.each do |domain|
-      unless domain.pending_update? || domain.pending_delete? || domain.pending_delete_confirmation?
-        msg = "#{Time.zone.now.utc} - ISSUE: DOMAIN #{domain.id}: #{domain.name} IS IN EXPIRED PENDING LIST, " \
-                "but no pendingDelete/pendingUpdate state present!\n"
-        STDOUT << msg unless Rails.env.test?
-        next
-      end
-      count += 1
-      if domain.pending_update?
-        RegistrantChangeExpiredEmailJob.enqueue(domain.id)
-      end
-      if domain.pending_delete? || domain.pending_delete_confirmation?
-        DomainDeleteMailer.expired(domain).deliver_now
-      end
-
-      domain.preclean_pendings
-      domain.clean_pendings!
-
-      unless Rails.env.test?
-        STDOUT << "#{Time.zone.now.utc} DomainCron.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
-      end
-      UpdateWhoisRecordJob.enqueue domain.name, 'domain'
-    end
-    STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
-    count
+    Domains::ExpiredPendings::CleanAll.run!
   end
 
   def self.start_expire_period
