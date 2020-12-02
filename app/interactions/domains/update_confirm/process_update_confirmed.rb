@@ -17,7 +17,7 @@ module Domains
         preclean_pendings
         update_domain
         clean_pendings!
-        domain.save!
+        domain.save(validate: false)
 
         WhoisRecord.find_by(domain_id: domain.id).save # need to reload model
       end
