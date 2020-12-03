@@ -33,10 +33,12 @@ module Domains
       end
 
       def clean_pendings!
+        domain.is_admin = true
         domain.registrant_verification_token = nil
         domain.registrant_verification_asked_at = nil
         domain.pending_json = {}
         clear_statuses
+        domain.save
       end
 
       def clear_statuses

@@ -3,7 +3,6 @@ module Domains
     class ProcessUpdateConfirmed < Base
       def execute
         ActiveRecord::Base.transaction do
-          domain.is_admin = true
           old_registrant = domain.registrant
           notify_registrar(:poll_pending_update_confirmed_by_registrant)
 
@@ -17,7 +16,6 @@ module Domains
         preclean_pendings
         update_domain
         clean_pendings!
-        domain.save(validate: false)
 
         WhoisRecord.find_by(domain_id: domain.id).save # need to reload model
       end

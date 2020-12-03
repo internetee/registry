@@ -84,4 +84,22 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
     assert_not @domain.statuses.include? DomainStatus::PENDING_UPDATE
     assert @domain.statuses.include? DomainStatus::INACTIVE
   end
+
+  def test_clears_pending_update_and_sets_ok_after_denial
+    epp_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<epp>\n  <command>\n    <update>\n      <update>\n        <name>#{@domain.name}</name>\n" \
+    "        <chg>\n          <registrant>#{@new_registrant.code}</registrant>\n        </chg>\n      </update>\n    </update>\n    <extension>\n      <update/>\n" \
+    "      <extdata>\n        <legalDocument type=\"pdf\">#{@legal_doc_path}</legalDocument>\n      </extdata>\n" \
+    "    </extension>\n    <clTRID>20alla-1594199756</clTRID>\n  </command>\n</epp>\n"
+    @domain.pending_json['frame'] = epp_xml
+    @domain.update(pending_json: @domain.pending_json)
+    @domain.update(statuses: [DomainStatus::OK, DomainStatus::PENDING_UPDATE])
+
+    DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::REJECTED)
+    @domain.reload
+
+    assert_not @domain.statuses.include? DomainStatus::PENDING_DELETE_CONFIRMATION
+    assert_not @domain.statuses.include? DomainStatus::PENDING_DELETE
+    assert_not @domain.statuses.include? DomainStatus::PENDING_UPDATE
+    assert @domain.statuses.include? DomainStatus::OK
+  end
 end
