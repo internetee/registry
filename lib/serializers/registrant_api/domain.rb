@@ -58,7 +58,8 @@ module Serializers
           valid_to: domain.valid_to, outzone_at: domain.outzone_at, statuses: domain.statuses,
           registrant_verification_asked_at: domain.registrant_verification_asked_at,
           registrar: { name: domain.registrar.name, website: domain.registrar.website },
-          registrant: { name: domain.registrant.name, id: domain.registrant.uuid }
+          registrant: { name: domain.registrant.name, id: domain.registrant.uuid,
+                        phone: domain.registrant.phone, email: domain.registrant.email }
         }
       end
 

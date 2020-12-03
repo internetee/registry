@@ -19,15 +19,16 @@ module Api
           end
 
           contacts = current_user_contacts.limit(limit).offset(offset)
-          serialized_contacts = contacts.collect { |contact| serialize_contact(contact) }
+          serialized_contacts = contacts.collect { |contact| serialize_contact(contact, false) }
           render json: serialized_contacts
         end
 
         def show
           contact = current_user_contacts.find_by(uuid: params[:uuid])
+          links = params[:links] == 'true'
 
           if contact
-            render json: serialize_contact(contact)
+            render json: serialize_contact(contact, links)
           else
             render json: { errors: [{ base: ['Contact not found'] }] }, status: :not_found
           end
@@ -85,7 +86,7 @@ module Api
             contact.registrar.notify(action)
           end
 
-          render json: serialize_contact(contact)
+          render json: serialize_contact(contact, false)
         end
 
         private
@@ -96,8 +97,8 @@ module Api
           current_registrant_user.direct_contacts
         end
 
-        def serialize_contact(contact)
-          Serializers::RegistrantApi::Contact.new(contact).to_json
+        def serialize_contact(contact, links)
+          Serializers::RegistrantApi::Contact.new(contact, links).to_json
         end
       end
     end
