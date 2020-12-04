@@ -8,7 +8,7 @@ class Whois::RecordTest < ActiveSupport::TestCase
     @auction = auctions(:one)
 
     @original_disclaimer = Setting.registry_whois_disclaimer
-    Setting.registry_whois_disclaimer = 'disclaimer'
+    Setting.registry_whois_disclaimer = JSON.generate({en: 'disclaimer'})
   end
 
   teardown do
@@ -16,8 +16,8 @@ class Whois::RecordTest < ActiveSupport::TestCase
   end
 
   def test_reads_disclaimer_setting
-    Setting.registry_whois_disclaimer = 'test disclaimer'
-    assert_equal 'test disclaimer', Whois::Record.disclaimer
+    Setting.registry_whois_disclaimer = JSON.generate({en: 'test_disclaimer'})
+    assert_equal Setting.registry_whois_disclaimer, Whois::Record.disclaimer
   end
 
   def test_updates_whois_record_from_auction_when_started
@@ -28,7 +28,7 @@ class Whois::RecordTest < ActiveSupport::TestCase
 
     assert_equal ({ 'name' => 'domain.test',
                     'status' => ['AtAuction'],
-                    'disclaimer' => 'disclaimer' }), @whois_record.json
+                    'disclaimer' => { 'en' => 'disclaimer' }}), @whois_record.json
   end
 
   def test_updates_whois_record_from_auction_when_no_bids
@@ -49,7 +49,7 @@ class Whois::RecordTest < ActiveSupport::TestCase
 
     assert_equal ({ 'name' => 'domain.test',
                     'status' => ['PendingRegistration'],
-                    'disclaimer' => 'disclaimer',
+                    'disclaimer' => { 'en' => 'disclaimer' },
                     'registration_deadline' => registration_deadline.try(:to_s, :iso8601) }),
                  @whois_record.json
   end
@@ -64,12 +64,12 @@ class Whois::RecordTest < ActiveSupport::TestCase
 
     assert_equal ({ 'name' => 'domain.test',
                     'status' => ['PendingRegistration'],
-                    'disclaimer' => 'disclaimer',
+                    'disclaimer' => { 'en' => 'disclaimer' },
                     'registration_deadline' => registration_deadline.try(:to_s, :iso8601) }),
                  @whois_record.json
   end
 
   def registration_deadline
-    Time.zone.now + 10.days
+    @registration_deadline ||= Time.zone.now + 10.days
   end
 end

@@ -417,7 +417,7 @@ class Epp::Domain < Domain
         if statuses.include?(x)
           to_destroy << x
         else
-          add_epp_error('2303', 'status', x, [:domain_statuses, :not_found])
+          add_epp_error('2303', 'status', x, %i[statuses not_found])
         end
       end
 
@@ -432,7 +432,7 @@ class Epp::Domain < Domain
 
     frame.css('status').each do |x|
       unless DomainStatus::CLIENT_STATUSES.include?(x['s'])
-        add_epp_error('2303', 'status', x['s'], [:domain_statuses, :not_found])
+        add_epp_error('2303', 'status', x['s'], %i[statuses not_found])
         next
       end
 
@@ -612,6 +612,7 @@ class Epp::Domain < Domain
     statuses.delete(DomainStatus::SERVER_HOLD)
     statuses.delete(DomainStatus::EXPIRED)
     statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
+    cancel_pending_delete
 
     save
   end

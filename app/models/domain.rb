@@ -320,8 +320,8 @@ class Domain < ApplicationRecord
   def renew_blocking_statuses
     disallowed = [DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
                   DomainStatus::PENDING_TRANSFER, DomainStatus::CLIENT_RENEW_PROHIBITED,
-                  DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE,
-                  DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::SERVER_RENEW_PROHIBITED]
+                  DomainStatus::PENDING_UPDATE, DomainStatus::SERVER_RENEW_PROHIBITED,
+                  DomainStatus::PENDING_DELETE_CONFIRMATION]
 
     (statuses & disallowed)
   end
@@ -384,7 +384,7 @@ class Domain < ApplicationRecord
   end
 
   def registrant_update_confirmable?(token)
-    return false if (statuses & [DomainStatus::FORCE_DELETE, DomainStatus::DELETE_CANDIDATE]).any?
+    return false if statuses.include? DomainStatus::DELETE_CANDIDATE
     return false unless pending_update?
     return false unless registrant_verification_asked?
     return false unless registrant_verification_token == token
@@ -418,7 +418,7 @@ class Domain < ApplicationRecord
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
-    DomainDeleteConfirmEmailJob.enqueue(id)
+    Domains::DeleteConfirm::SendRequest.run(domain: self)
   end
 
   def cancel_pending_delete
@@ -640,6 +640,10 @@ class Domain < ApplicationRecord
 
   def domain_name
     DNS::DomainName.new(name)
+  end
+
+  def contact_emails_verification_failed
+    contacts.select(&:email_verification_failed?)&.map(&:email)&.uniq
   end
 
   def self.to_csv

@@ -90,6 +90,9 @@ registrant_api_auth_allowed_ips: '127.0.0.1, 0.0.0.0' #ips, separated with comma
 # Bounces API
 api_shared_key: testkey
 
+# Base URL (inc. https://) of REST registrant portal
+# Leave blank to use internal registrant portal
+registrant_portal_verifications_base_url: ''
 #
 # MISC
 
@@ -172,6 +175,8 @@ tara_rant_redirect_uri: 'redirect_uri'
 
 default_email_validation_type: 'regex'
 
+
+epp_sessions_per_registrar: '4'
 
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:

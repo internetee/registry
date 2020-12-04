@@ -8,6 +8,7 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
   def test_replaces_current_registrar_nameservers
     request_body = { data: { type: 'nameserver',
                              id: 'ns1.bestnames.test',
+                             domains: [],
                              attributes: { hostname: 'new-ns.bestnames.test',
                                            ipv4: %w[192.0.2.55 192.0.2.56],
                                            ipv6: %w[2001:db8::55 2001:db8::56] } } }

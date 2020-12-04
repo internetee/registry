@@ -333,31 +333,6 @@ class Contact < ApplicationRecord
     Country.new(country_code)
   end
 
-  # TODO: refactor, it should not allow to destroy with normal destroy,
-  # no need separate method
-  # should use only in transaction
-  def destroy_and_clean frame
-    if linked?
-      errors.add(:domains, :exist)
-      return false
-    end
-
-    legal_document_data = ::Deserializers::Xml::LegalDocument.new(frame).call
-
-    if legal_document_data
-
-        doc = LegalDocument.create(
-            documentable_type: Contact,
-            document_type:     legal_document_data[:type],
-            body:              legal_document_data[:body]
-        )
-        self.legal_documents = [doc]
-        self.legal_document_id = doc.id
-        self.save
-    end
-    destroy
-  end
-
   def to_upcase_country_code
     self.ident_country_code = ident_country_code.upcase if ident_country_code
     self.country_code       = country_code.upcase if country_code

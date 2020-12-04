@@ -1,3 +1,54 @@
+01.12.2020
+* Refactored clientHold for interactors [#1751](https://github.com/internetee/registry/issues/1751)
+* Fixed internal error on removing clientHold status when not present [#1766](https://github.com/internetee/registry/issues/1766)
+
+30.11.2020
+* Refactor - interactors moved to domain space [#1762](https://github.com/internetee/registry/pull/1762)
+
+27.11.2020
+* Refactored delete confirmation for interactors [#1753](https://github.com/internetee/registry/issues/1753)
+
+24.11.2020
+* Added subnet support for list of allowed IPs [#983](https://github.com/internetee/registry/issues/983)
+* Added contact endpoint to Restful EPP API [#1580](https://github.com/internetee/registry/issues/1580)
+
+20.11.2020
+* Registrant confirmation over Registrant API [#1742](https://github.com/internetee/registry/pull/1742)
+* Refactored forceDelete cancellation for interactors [#1743](https://github.com/internetee/registry/issues/1743)
+
+19.11.2020
+* Only sponsoring registrar has access to private contact's details [#1745](https://github.com/internetee/registry/issues/1745)
+* Refactor ForceDelete [#1740](https://github.com/internetee/registry/issues/1740)
+
+13.11.2020
+* Fixed per registrar epp session limit [#729](https://github.com/internetee/registry/issues/729)
+* Correct error code is returned on reaching session limit [#587](https://github.com/internetee/registry/issues/587)
+* No logins within active session [#1313](https://github.com/internetee/registry/issues/1313)
+
+06.11.2020
+* Csv option to limit list of domains for bulk nameserver change in registrar portal [#1737](https://github.com/internetee/registry/issues/1737)
+* New forceDelete email template for invalid contact data [#1178](https://github.com/internetee/registry/issues/1178)
+
+05.11.2020
+* Registrant API contact name update feature [#1724](https://github.com/internetee/registry/issues/1724)
+* New email template for expired domains in forceDelete [#1725](https://github.com/internetee/registry/issues/1725)
+* Cancelling forceDelete (FD) restores the state of the domain prior application of FD [#1136](https://github.com/internetee/registry/issues/1136)
+
+04.11.2020
+* Email notification templates for forceDelete are now automatically selected according to registrant type [#442](https://github.com/internetee/registry/issues/442)
+
+03.11.2020
+* Fixed registrant confirmation while forcedelete is set on a domain [#1729](https://github.com/internetee/registry/issues/1729)
+* Fixed search in registrar domain view [#262](https://github.com/internetee/registry/issues/262)
+* Fixed double status issue on setting forceDelete [#1135](https://github.com/internetee/registry/issues/1135)
+
+28.10.2020
+* Domain renew now canceles pending delete process [#1664](https://github.com/internetee/registry/issues/1664)
+* Added multi-language support to whois disclaimer [#1703](https://github.com/internetee/registry/issues/1703)
+
+27.10.2020
+* Fixed 1 day delay in force delete for multi year registrations [#1720](https://github.com/internetee/registry/issues/1720)
+
 20.10.2020
 * ForceDelete mailer now respects option to not notify registrant [#1719](https://github.com/internetee/registry/pull/1719)
 

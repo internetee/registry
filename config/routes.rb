@@ -37,12 +37,35 @@ Rails.application.routes.draw do
     get 'error/:command', to: 'errors#error'
   end
 
-  mount Repp::API => '/'
-
   namespace :repp do
     namespace :v1 do
+      resources :contacts do
+        collection do
+          get 'check/:id', to: 'contacts#check'
+        end
+      end
+
+      resources :accounts do
+        collection do
+          get 'balance'
+        end
+      end
       resources :auctions, only: %i[index]
       resources :retained_domains, only: %i[index]
+      namespace :registrar do
+        resources :nameservers do
+          collection do
+            put '/', to: 'nameservers#update'
+          end
+        end
+      end
+      resources :domains do
+        collection do
+          get ':id/transfer_info', to: 'domains#transfer_info', constraints: { id: /.*/ }
+          post 'transfer', to: 'domains#transfer'
+          patch 'contacts', to: 'domains/contacts#update'
+        end
+      end
     end
   end
 
@@ -56,6 +79,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :registrant do
         post 'auth/eid', to: 'auth#eid'
+        get 'confirms/:name/:template/:token', to: 'confirms#index', constraints: { name: /[^\/]+/ }
+        post 'confirms/:name/:template/:token/:decision', to: 'confirms#update', constraints: { name: /[^\/]+/ }
 
         resources :domains, only: %i[index show], param: :uuid do
           resource :registry_lock, only: %i[create destroy]

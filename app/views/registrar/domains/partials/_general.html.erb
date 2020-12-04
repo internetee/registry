@@ -23,7 +23,7 @@
 
             <% registrant = Contact.find_by_code(@data.css('registrant').text) %>
             <dt><%= t('.registrant') %></dt>
-            <dd><%= "#{registrant.name} (#{@data.css('registrant').text})" %></dd>
+            <dd><%= registrant.registrar == current_registrar_user.registrar ? "#{registrant.name} (#{@data.css('registrant').text})" : @data.css('registrant').text %></dd>
 
             <dt><%= t('.registered') %></dt>
             <dd><%= @data.css('crDate').text %></dd>

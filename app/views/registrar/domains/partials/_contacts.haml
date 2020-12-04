@@ -13,5 +13,5 @@
         - registrant = Contact.find_by_code(x.text)
           %tr
             %td= x['type']
-            %td= registrant.name
+            %td= registrant.registrar == current_registrar_user.registrar ? registrant.name : 'N/A'
             %td= x.text

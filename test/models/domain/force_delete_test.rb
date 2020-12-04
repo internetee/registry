@@ -1,18 +1,20 @@
 require 'test_helper'
 
-class NewDomainForceDeleteTest < ActiveSupport::TestCase
+class ForceDeleteTest < ActionMailer::TestCase
   setup do
     @domain = domains(:shop)
     Setting.redemption_grace_period = 30
+    ActionMailer::Base.deliveries.clear
   end
 
   def test_schedules_force_delete_fast_track
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
 
-    @domain.schedule_force_delete(type: :fast_track)
+    @domain.schedule_force_delete(type: :fast_track, notify_by_email: true)
     @domain.reload
 
+    assert_emails 1
     assert @domain.force_delete_scheduled?
     assert_equal Date.parse('2010-08-20'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-07-06'), @domain.force_delete_start.to_date
@@ -27,8 +29,8 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     @domain.reload
 
     assert @domain.force_delete_scheduled?
-    assert_equal Date.parse('2010-09-20'), @domain.force_delete_date.to_date
-    assert_equal Date.parse('2010-08-06'), @domain.force_delete_start.to_date
+    assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
+    assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
   end
 
   def test_schedules_force_delete_soft_less_than_year_ahead
@@ -111,9 +113,12 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
 
   def test_force_delete_cannot_be_scheduled_when_a_domain_is_discarded
     @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
-    assert_raises StandardError do
-      @domain.schedule_force_delete(type: :fast_track)
-    end
+    result = Domains::ForceDelete::SetForceDelete.run(domain: @domain, type: :fast_track)
+
+    assert_not result.valid?
+    assert_not @domain.force_delete_scheduled?
+    message = ["Force delete procedure cannot be scheduled while a domain is discarded"]
+    assert_equal message, result.errors.messages[:domain]
   end
 
   def test_cancels_force_delete
@@ -137,19 +142,49 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     assert_not @domain.force_delete_scheduled?
   end
 
-  def test_cancelling_force_delete_removes_statuses_that_were_set_on_force_delete
+  def test_force_delete_does_not_double_statuses
     statuses = [
-      DomainStatus::FORCE_DELETE,
-      DomainStatus::SERVER_RENEW_PROHIBITED,
-      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+        DomainStatus::FORCE_DELETE,
+        DomainStatus::SERVER_RENEW_PROHIBITED,
+        DomainStatus::SERVER_TRANSFER_PROHIBITED,
     ]
     @domain.statuses = @domain.statuses + statuses
+    @domain.save!
+    @domain.reload
     @domain.schedule_force_delete(type: :fast_track)
+    assert_equal @domain.statuses.size, statuses.size
+  end
+
+  def test_cancelling_force_delete_removes_force_delete_status
+    @domain.schedule_force_delete(type: :fast_track)
+
+    assert @domain.statuses.include?(DomainStatus::FORCE_DELETE)
+    assert @domain.statuses.include?(DomainStatus::SERVER_RENEW_PROHIBITED)
+    assert @domain.statuses.include?(DomainStatus::SERVER_TRANSFER_PROHIBITED)
 
     @domain.cancel_force_delete
     @domain.reload
 
-    assert_empty @domain.statuses & statuses
+    assert_not @domain.statuses.include?(DomainStatus::FORCE_DELETE)
+    assert_not @domain.statuses.include?(DomainStatus::SERVER_RENEW_PROHIBITED)
+    assert_not @domain.statuses.include?(DomainStatus::SERVER_TRANSFER_PROHIBITED)
+  end
+
+  def test_cancelling_force_delete_keeps_previous_statuses
+    statuses = [
+        DomainStatus::SERVER_RENEW_PROHIBITED,
+        DomainStatus::SERVER_TRANSFER_PROHIBITED,
+    ]
+
+    @domain.statuses = statuses
+    @domain.save!
+    @domain.reload
+
+    @domain.schedule_force_delete(type: :fast_track)
+    @domain.cancel_force_delete
+    @domain.reload
+
+    assert_equal @domain.statuses, statuses
   end
 
   def test_hard_force_delete_should_have_outzone_and_purge_date_with_time
@@ -171,9 +206,10 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     @domain.schedule_force_delete(type: :soft)
 
     travel_to Time.zone.parse('2010-08-21')
-    DomainCron.start_client_hold
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
+    assert_emails 1
     assert_equal(@domain.purge_date.to_date, @domain.force_delete_date.to_date)
     assert_equal(@domain.outzone_date.to_date, @domain.force_delete_start.to_date +
         Setting.expire_warning_period.days)
@@ -191,8 +227,10 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     @domain.schedule_force_delete(type: :soft)
 
     travel_to Time.zone.parse('2010-08-21')
-    DomainCron.start_client_hold
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
+
+    assert_emails 1
     assert_includes(@domain.statuses, asserted_status)
   end
 
@@ -206,7 +244,7 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     @domain.schedule_force_delete(type: :soft)
 
     travel_to Time.zone.parse('2010-07-06')
-    DomainCron.start_client_hold
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
     assert_not_includes(@domain.statuses, asserted_status)
@@ -221,7 +259,7 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
 
     @domain.schedule_force_delete(type: :fast_track)
     travel_to Time.zone.parse('2010-07-25')
-    DomainCron.start_client_hold
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
     assert_includes(@domain.statuses, asserted_status)
@@ -237,7 +275,7 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
 
     @domain.schedule_force_delete(type: :fast_track)
     travel_to Time.zone.parse('2010-07-06')
-    DomainCron.start_client_hold
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
     assert_not_includes(@domain.statuses, asserted_status)
@@ -251,5 +289,17 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
 
     assert @domain.force_delete_scheduled?
     assert @domain.pending_update?
+  end
+
+  def test_force_delete_does_not_affect_registrant_update_confirmable
+    @domain.schedule_force_delete(type: :soft)
+    @domain.registrant_verification_asked!('test', User.last.id)
+    @domain.save!
+    @domain.reload
+
+    @domain.statuses << DomainStatus::PENDING_UPDATE
+
+    assert @domain.force_delete_scheduled?
+    assert @domain.registrant_update_confirmable?(@domain.registrant_verification_token)
   end
 end

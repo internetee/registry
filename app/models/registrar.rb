@@ -137,15 +137,18 @@ class Registrar < ApplicationRecord
 
   def api_ip_white?(ip)
     return true unless Setting.api_ip_whitelist_enabled
-    white_ips.api.pluck(:ipv4, :ipv6).flatten.include?(ip)
+
+    white_ips.api.include_ip?(ip)
   end
 
   # Audit log is needed, therefore no raw SQL
-  def replace_nameservers(hostname, new_attributes)
+  def replace_nameservers(hostname, new_attributes, domains: [])
     transaction do
       domain_list = []
 
       nameservers.where(hostname: hostname).find_each do |original_nameserver|
+        next unless domains.include?(original_nameserver.domain.name_puny) || domains.empty?
+
         new_nameserver = Nameserver.new
         new_nameserver.domain = original_nameserver.domain
         new_nameserver.attributes = new_attributes
