@@ -9,10 +9,10 @@ module Domains
         domain.save(validate: false)
         raise_errors!(domain)
 
-        send_domain_deleted_email
+        send_domain_delete_rejected_email
       end
 
-      def send_domain_deleted_email
+      def send_domain_delete_rejected_email
         if domain.registrant_verification_token.blank?
           warn "EMAIL NOT DELIVERED: registrant_verification_token is missing for #{domain.name}"
         elsif domain.registrant_verification_asked_at.blank?
