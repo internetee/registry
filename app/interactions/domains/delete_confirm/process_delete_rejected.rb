@@ -2,10 +2,8 @@ module Domains
   module DeleteConfirm
     class ProcessDeleteRejected < Base
       def execute
-        domain.statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
-        domain.notify_registrar(:poll_pending_delete_rejected_by_registrant)
-
         domain.cancel_pending_delete
+        notify_registrar(:poll_pending_delete_rejected_by_registrant)
         domain.save(validate: false)
         raise_errors!(domain)
 
