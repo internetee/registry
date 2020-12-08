@@ -1,3 +1,6 @@
+08.12.2020
+* Replaced Travis-CI with GitHub Actions [#1746](https://github.com/internetee/registry/pull/1746)
+
 01.12.2020
 * Refactored clientHold for interactors [#1751](https://github.com/internetee/registry/issues/1751)
 * Fixed internal error on removing clientHold status when not present [#1766](https://github.com/internetee/registry/issues/1766)
