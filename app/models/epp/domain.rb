@@ -1,5 +1,6 @@
 require 'deserializers/xml/legal_document'
 require 'deserializers/xml/nameserver'
+require 'deserializers/xml/domain_create'
 class Epp::Domain < Domain
   include EppErrors
 
@@ -38,6 +39,10 @@ class Epp::Domain < Domain
 
   class << self
     def new_from_epp(frame, current_user)
+      domain_create = ::Deserializers::Xml::DomainCreate.new(frame, current_user.registrar.id)
+      puts "DOMAIN CREATE ACTION"
+      puts domain_create
+
       domain = Epp::Domain.new
       domain.attributes = domain.attrs_from(frame, current_user)
       domain.attach_default_contacts
@@ -147,23 +152,19 @@ class Epp::Domain < Domain
     end if registrant_frame
 
 
-    at[:name] = frame.css('name').text if new_record?
-    at[:registrar_id] = current_user.registrar.try(:id)
-
-    period = frame.css('period').text
-    at[:period] = (period.to_i == 0) ? 1 : period.to_i
-
-    at[:period_unit] = Epp::Domain.parse_period_unit_from_frame(frame) || 'y'
-
-    at[:reserved_pw] = frame.css('reserved > pw').text
-
+    at[:name] = frame.css('name').text if new_record? # Done
+    at[:registrar_id] = current_user.registrar.try(:id) # Done
+    period = frame.css('period').text # Done
+    at[:period] = (period.to_i == 0) ? 1 : period.to_i # Done
+    at[:period_unit] = Epp::Domain.parse_period_unit_from_frame(frame) || 'y' # Done
+    at[:reserved_pw] = frame.css('reserved > pw').text # Done
+    pw = frame.css('authInfo > pw').text # Done
+    at[:transfer_code] = pw if pw.present? # Done
     # at[:statuses] = domain_statuses_attrs(frame, action)
+
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
     at[:admin_domain_contacts_attributes] = admin_domain_contacts_attrs(frame, action)
     at[:tech_domain_contacts_attributes] = tech_domain_contacts_attrs(frame, action)
-    puts "JHDFHJDGFKDJHF"
-    pw = frame.css('authInfo > pw').text
-    at[:transfer_code] = pw if pw.present?
 
     if new_record?
       dnskey_frame = frame.css('extension create')
@@ -315,6 +316,7 @@ class Epp::Domain < Domain
         add_epp_error('2303', nil, nil, [:dnskeys, :not_found]) if keys.include? nil
       end
     end
+
     errors.any? ? [] : keys
   end
 

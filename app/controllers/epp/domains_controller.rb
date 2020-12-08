@@ -28,6 +28,10 @@ module Epp
     def create
       authorize! :create, Epp::Domain
 
+      domain_params = ::Deserializers::Xml::DomainCreate.new(params[:parsed_frame], current_user.registrar.id)
+      puts "Ayy lmao"
+      puts domain_params.call
+
       if Domain.release_to_auction
         request_domain_name = params[:parsed_frame].css('name').text.strip.downcase
         domain_name = DNS::DomainName.new(SimpleIDN.to_unicode(request_domain_name))
