@@ -29,10 +29,8 @@ module Actions
       dn = DNS::DomainName.new(SimpleIDN.to_unicode(params[:name].strip.downcase))
       if dn.at_auction?
         domain.add_epp_error('2306', nil, nil, 'Parameter value policy error: domain is at auction')
-        return
       elsif dn.awaiting_payment?
         domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw element required for reserved domains')
-        return
       elsif dn.pending_registration?
         if params[:reserved_pw].blank?
           domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw element is required')
