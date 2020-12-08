@@ -15,7 +15,7 @@ module Deserializers
           registrar_id: registrar,
           registrant_id: if_present('registrant'),
           reserved_pw: if_present('reserved > pw'),
-          period: Integer(frame.css('period').text) || 1,
+          period: frame.css('period').text.present? ? Integer(frame.css('period').text) : 1,
           period_unit: frame.css('period').first ? frame.css('period').first[:unit] : 'y',
         }
 

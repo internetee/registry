@@ -8,48 +8,58 @@ module Actions
     end
 
     def call
-      validate_domain_integrity
-      assign_registrant
       assign_domain_attributes
+      validate_domain_integrity
+      return false if domain.errors[:epp_errors].any?
+
+      assign_registrant
       assign_nameservers
       assign_admin_contacts
       assign_tech_contacts
+      domain.attach_default_contacts
       assign_expiry_time
-
-      return domain unless domain.save
 
       commit
     end
 
     # Check if domain is eligible for new registration
     def validate_domain_integrity
-      return if Domain.release_to_auction
+      return unless Domain.release_to_auction
 
-      dn = DNS::DomainName.new(SimpleIDN.to_unicode(params[:name]))
-      domain.add_epp_error(2306, nil, nil, 'Parameter value policy error: domain is at auction') if dn.at_auction?
-      domain.add_epp_error(2003, nil, nil, 'Required parameter missing; reserved>pw element required for reserved domains') if dn.awaiting_payment?
-      return unless dn.pending_registration?
-
-      domain.add_epp_error(2003, nil, nil, 'Required parameter missing; reserved>pw element is required') if params[:reserved_pw].empty?
-      domain.add_epp_errpr(2202, nil, nil, 'Invalid authorization information; invalid reserved>pw value') unless dn.available_with_code?(params[:reserved_pw])
+      dn = DNS::DomainName.new(SimpleIDN.to_unicode(params[:name].strip.downcase))
+      if dn.at_auction?
+        domain.add_epp_error('2306', nil, nil, 'Parameter value policy error: domain is at auction')
+        return
+      elsif dn.awaiting_payment?
+        domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw element required for reserved domains')
+        return
+      elsif dn.pending_registration?
+        if params[:reserved_pw].blank?
+          domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw element is required')
+        else
+          unless dn.available_with_code?(params[:reserved_pw])
+            domain.add_epp_error('2202', nil, nil, 'Invalid authorization information; invalid reserved>pw value')
+          end
+        end
+      end
     end
 
     def assign_registrant
       domain.add_epp_error('2306', nil, nil, %i[registrant cannot_be_missing]) and return unless params[:registrant_id]
 
       regt = Registrant.find_by(code: params[:registrant_id])
-      domain.add_epp_error('2303', 'registrant', code, %i[registrant not_found]) and return unless regt
+      domain.add_epp_error('2303', 'registrant', params[:registrant_id], %i[registrant not_found]) and return unless regt
 
       domain.registrant = regt
     end
 
     def assign_domain_attributes
-      domain.name = params[:name]
+      domain.name = params[:name].strip.downcase
       domain.registrar = Registrar.find(params[:registrar_id])
       domain.period = params[:period]
       domain.period_unit = params[:period_unit]
-      domain.reserved_pw = params[:reserved_pw] if params[:transfer_code]
-      domain.transfer_code = params[:transfer_code] if params[:transfer_code]
+      domain.transfer_code = params[:transfer_code] if params[:transfer_code].present?
+      domain.reserved_pw = params[:reserved_pw] if params[:reserved_pw].present?
       domain.dnskeys_attributes = params[:dnskeys_attributes]
     end
 
@@ -61,7 +71,7 @@ module Actions
       attrs = []
       params[:admin_domain_contacts_attributes].each do |c|
         contact = Contact.find_by(code: c)
-        domain.add_epp_error('2303', 'contact', c, %i[domain_contacts not_found]) unless contact
+        domain.add_epp_error('2303', 'contact', c, %i[domain_contacts not_found]) unless contact.present?
         attrs << { contact_id: contact.id, contact_code_cache: contact.code } if contact
       end
 
@@ -72,7 +82,7 @@ module Actions
       attrs = []
       params[:tech_domain_contacts_attributes].each do |c|
         contact = Contact.find_by(code: c)
-        domain.add_epp_error('2303', 'contact', c, %i[domain_contacts not_found]) unless contact
+        domain.add_epp_error('2303', 'contact', c, %i[domain_contacts not_found]) unless contact.present?
         attrs << { contact_id: contact.id, contact_code_cache: contact.code } if contact
       end
 
@@ -87,8 +97,8 @@ module Actions
     end
 
     def debit_registrar
-      domain_pricelist = domain.pricelist('create', domain.period.try(:to_i), domain.period_unit)
-      if @domain_pricelist.try(:price) && domain.registrar.balance < domain_pricelist.price.amount
+      @domain_pricelist ||= domain.pricelist('create', domain.period.try(:to_i), domain.period_unit)
+      if @domain_pricelist.try(:price) && domain.registrar.balance < @domain_pricelist.price.amount
         domain.add_epp_error(2104, nil, nil, I18n.t('billing_failure_credit_balance_low'))
         return
       elsif !@domain_pricelist.try(:price)
@@ -97,12 +107,12 @@ module Actions
       end
 
       domain.registrar.debit!({ sum: @domain_pricelist.price.amount, price: @domain_pricelist,
-                                description: "#{I18n.t('create')} #{@domain.name}",
+                                description: "#{I18n.t('create')} #{domain.name}",
                                 activity_type: AccountActivity::CREATE })
     end
 
     def process_auction_and_disputes
-      dn = DNS::DomainName.new(SimpleIDN.to_unicode(domain.name))
+      dn = DNS::DomainName.new(SimpleIDN.to_unicode(params[:name]))
       Dispute.close_by_domain(domain.name)
       return unless Domain.release_to_auction && dn.pending_registration?
 
@@ -123,12 +133,17 @@ module Actions
     end
 
     def commit
-      ActiveRecord::Base.transaction do
-        debit_registrar
-        process_auction_and_disputes
-
-        domain.save
+      unless domain.valid?
+        domain.errors.delete(:name_dirty) if domain.errors[:puny_label].any?
+        return false if domain.errors.any?
       end
+      # @domain.add_legal_file_to_new(params[:parsed_frame])
+      debit_registrar
+
+      return false if domain.errors.any?
+
+      process_auction_and_disputes
+      domain.save
     end
   end
 end

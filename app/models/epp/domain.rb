@@ -37,25 +37,6 @@ class Epp::Domain < Domain
     ok
   end
 
-  class << self
-    def new_from_epp(frame, current_user)
-      domain_create = ::Deserializers::Xml::DomainCreate.new(frame, current_user.registrar.id)
-      puts "DOMAIN CREATE ACTION"
-      puts domain_create
-
-      domain = Epp::Domain.new
-      domain.attributes = domain.attrs_from(frame, current_user)
-      domain.attach_default_contacts
-
-      period = domain.period.to_i
-      plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym
-      expire_time = (Time.zone.now.advance(plural_period_unit_name => period) + 1.day).beginning_of_day
-      domain.expire_time = expire_time
-
-      domain
-    end
-  end
-
   def epp_code_map
     {
       '2002' => [ # Command use error

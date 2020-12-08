@@ -32,11 +32,11 @@ module Deserializers
       end
 
       def admin_contacts
-        frame.css('contact').map { |c| c.text if c['type'] == 'admin' }
+        frame.css('contact').select { |c| c['type'] == 'admin' }.map(&:text)
       end
 
       def tech_contacts
-        frame.css('contact').map { |c| c.text if c['type'] == 'tech' }
+        frame.css('contact').select { |c| c['type'] == 'tech' }.map(&:text)
       end
 
       def dns_keys

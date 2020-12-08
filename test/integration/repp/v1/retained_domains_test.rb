@@ -77,7 +77,7 @@ class ReppV1RetainedDomainsTest < ActionDispatch::IntegrationTest
                           status: 'disputed',
                           punycode_name: 'reserved.test' }]
 
-    assert_equal response_json[:domains], expected_objects
+    assert_equal response_json[:domains].to_set, expected_objects.to_set
   end
 
   def test_etags_cache

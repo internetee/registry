@@ -28,6 +28,7 @@ class ReppV1DomainsTransferInfoTest < ActionDispatch::IntegrationTest
   def test_respects_domain_authorization_code
     headers = @auth_headers
     headers['Auth-Code'] = 'jhfgifhdg'
+    @domain.update!(registrar: registrars(:goodnames))
 
     get "/repp/v1/domains/#{@domain.name}/transfer_info", headers: headers
     json = JSON.parse(response.body, symbolize_names: true)
