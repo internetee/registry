@@ -327,6 +327,7 @@ class Domain < ApplicationRecord
   end
 
   def notify_registrar(message_key)
+    # TODO: To be deleted with DomainDeleteConfirm refactoring
     registrar.notifications.create!(
       text: "#{I18n.t(message_key)}: #{name}",
       attached_obj_id: id,
@@ -335,11 +336,13 @@ class Domain < ApplicationRecord
   end
 
   def preclean_pendings
+    # TODO: To be deleted with refactoring
     self.registrant_verification_token = nil
     self.registrant_verification_asked_at = nil
   end
 
   def clean_pendings!
+    # TODO: To be deleted with refactoring
     preclean_pendings
     self.pending_json = {}
     statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)

@@ -508,25 +508,6 @@ class Epp::Domain < Domain
     errors.empty? && super(at)
   end
 
-  def apply_pending_update!
-    preclean_pendings
-    user  = ApiUser.find(pending_json['current_user_id'])
-    frame = Nokogiri::XML(pending_json['frame'])
-
-    self.statuses.delete(DomainStatus::PENDING_UPDATE)
-    self.upid = user.registrar.id if user.registrar
-    self.up_date = Time.zone.now
-
-    return unless update(frame, user, false)
-    clean_pendings!
-
-    save!
-
-    WhoisRecord.find_by(domain_id: id).save # need to reload model
-
-    true
-  end
-
   def apply_pending_delete!
     preclean_pendings
     statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
