@@ -56,6 +56,10 @@ module Deserializers
         end
       end
 
+      def call
+        key_data + ds_data
+      end
+
       def mark_destroy_all(dns_keys)
         # if transition support required mark_destroy dns_keys when has ds/key values otherwise ...
         dns_keys.map { |inf_data| mark(inf_data) }
