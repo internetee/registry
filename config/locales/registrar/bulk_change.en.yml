@@ -6,6 +6,7 @@ en:
         technical_contact: Technical contact
         nameserver: Nameserver
         bulk_transfer: Bulk transfer
+        bulk_renew: Bulk renew
 
       tech_contact_form:
         current_contact_id: Current contact ID
@@ -29,3 +30,7 @@ en:
         submit_btn: Transfer
         help_btn: Toggle help
         help: Transfer domains in the csv file with correct transfer code to this registrar
+
+      bulk_renew_form:
+        filter_btn: Filter
+        expire_date: Expire date

@@ -80,6 +80,7 @@ gem 'directo', github: 'internetee/directo', branch: 'master'
 
 
 group :development, :test do
+  gem 'listen'
   gem 'pry', '0.10.1'
   gem 'puma'
 end
