@@ -1,3 +1,6 @@
+09.12.2020
+* Refactored domain update confirm for interactors [#1760](https://github.com/internetee/registry/issues/1760)
+
 08.12.2020
 * Replaced Travis-CI with GitHub Actions [#1746](https://github.com/internetee/registry/pull/1746)
 * Refactored domain delete for interactors [#1755](https://github.com/internetee/registry/issues/1755)
