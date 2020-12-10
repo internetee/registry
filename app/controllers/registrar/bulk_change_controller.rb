@@ -11,8 +11,10 @@ class Registrar
     def bulk_renew
       authorize! :manage, :repp
       @expire_date = params[:expire_date].to_date
-      # binding.pry
       @domains = domains_by_date(@expire_date)
+      if domain_ids_for_bulk_renew.present?
+        flash[:notice] = t(:bulk_renew_enqueued)
+      end
       render file: 'registrar/bulk_change/new', locals: { active_tab: :bulk_renew }
     end
 
@@ -32,6 +34,10 @@ class Registrar
 
     def domains_by_date(date)
       domains_scope.where('valid_to <= ?', date)
+    end
+
+    def domain_ids_for_bulk_renew
+      params.dig('domain_ids').reject{ |id| id.blank? }
     end
   end
 end

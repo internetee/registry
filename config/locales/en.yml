@@ -662,3 +662,4 @@ en:
     iban: IBAN
   sign_in: "Sign in"
   signed_in_successfully: "Signed in successfully"
+  bulk_renew_enqueued: "Bulk renew for domains was enqueued"
