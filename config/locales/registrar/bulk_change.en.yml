@@ -35,3 +35,4 @@ en:
         filter_btn: Filter
         expire_date: Expire date until
         domain_ids: Domains for bulk renewal
+        current_balance: Current balance

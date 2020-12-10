@@ -1,6 +1,15 @@
 <%= form_with url: registrar_bulk_renew_path, multipart: true, class: 'form-horizontal' do |f|%>
     <%= render 'api_errors' %>
 
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= f.label :current_balance, t('.current_balance') %>
+        </div>
+        <div class="col-md-4">
+            <%= number_to_currency current_registrar_user.registrar.balance %>
+        </div>
+    </div>
+
 
     <div class="form-group">
         <div class="col-md-2 control-label">
