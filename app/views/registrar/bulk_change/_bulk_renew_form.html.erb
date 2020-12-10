@@ -12,6 +12,23 @@
         </div>
     </div>
 
+    <% if @domains.present? %>
+        <div class="form-group">
+            <div class="col-md-2 control-label">
+                <%= f.label :domain_ids, t('.domain_ids') %>
+            </div>
+            <div class="col-md-4">
+                <%= f.collection_check_boxes :domain_ids, @domains, :id, :name,
+                                             checked: @domains.map(&:id) do |b|%>
+                    <div class="row">
+                            <%= b.check_box %>
+                            <%= b.label %>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    <% end %>
+
     <div class="form-group">
         <div class="col-md-4 col-md-offset-2 text-right">
             <button class="btn btn-warning">

@@ -34,3 +34,4 @@ en:
       bulk_renew_form:
         filter_btn: Filter
         expire_date: Expire date until
+        domain_ids: Domains for bulk renewal
