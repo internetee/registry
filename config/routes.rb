@@ -133,8 +133,7 @@ Rails.application.routes.draw do
     end
     resources :domain_transfers, only: %i[new create]
     resource :bulk_change, controller: :bulk_change, only: :new
-    # resource :bulk_renew, controller: :bulk_renew #, only: :index
-    post '/registrar/bulk_renew/new', to: 'bulk_renew#new', as: :new_registrar_bulk_renew
+    post '/bulk_renew/new', to: 'bulk_change#bulk_renew', as: :bulk_renew
     resource :tech_contacts, only: :update
     resource :nameservers, only: :update
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do

@@ -1,14 +1,14 @@
-<%= form_tag registrar_new_registrar_bulk_renew_path, multipart: true, class: 'form-horizontal' do %>
+<%= form_with url: registrar_bulk_renew_path, multipart: true, class: 'form-horizontal' do |f|%>
     <%= render 'api_errors' %>
 
 
     <div class="form-group">
         <div class="col-md-2 control-label">
-            <%= label_tag 'expire_date', t('.expire_date') %>
+            <%= f.label :expire_date, t('.expire_date') %>
         </div>
         <div class="col-md-4">
-            <%= text_field :expire_date, params[:expire_date],
-                             class: 'form-control js-datepicker' %>
+            <%= f.text_field :expire_date, value: @expire_date,
+                               class: 'form-control js-datepicker'%>
         </div>
     </div>
 
