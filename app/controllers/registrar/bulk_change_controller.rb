@@ -13,7 +13,9 @@ class Registrar
       @expire_date = params[:expire_date].to_date
       @domains = domains_by_date(@expire_date)
       if domain_ids_for_bulk_renew.present?
-        flash[:notice] = t(:bulk_renew_enqueued)
+        domains = Epp::Domain.where(id: domain_ids_for_bulk_renew).to_a
+        task = Domains::BulkRenew::Start.run(domains: domains)
+        flash[:notice] = t(:bulk_renew_completed)
       end
       render file: 'registrar/bulk_change/new', locals: { active_tab: :bulk_renew }
     end
@@ -37,7 +39,7 @@ class Registrar
     end
 
     def domain_ids_for_bulk_renew
-      params.dig('domain_ids').reject{ |id| id.blank? }
+      params.dig('domain_ids')&.reject{ |id| id.blank? }
     end
   end
 end
