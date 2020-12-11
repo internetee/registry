@@ -5,17 +5,36 @@ module Domains
         object class: Epp::Domain
       end
       string :period_element
+      object :registrar
 
       def execute
-        period = (period_element.to_i == 0) ? 1 : period_element.to_i
-        unit = period_element[-1] || 'y'
-        task = Domains::CheckBalance::Mass.run(domains: domains,
-                                               operation: 'renew',
-                                               period: period,
-                                               unit: unit)
-        unless task.valid?
-          errors.merge!(task.errors)
+        if mass_check_balance.valid?
+          domains.each do |domain|
+            Domains::BulkRenew::SingleDomainRenew.run(domain: domain,
+                                                      period: period,
+                                                      unit: unit,
+                                                      registrar: registrar)
+          end
+        else
+          errors.merge!(mass_check_balance.errors)
         end
+      end
+
+      private
+
+      def period
+        period_element.to_i.zero? ? 1 : period_element.to_i
+      end
+
+      def unit
+        period_element[-1] || 'y'
+      end
+
+      def mass_check_balance
+        Domains::CheckBalance::Mass.run(domains: domains,
+                                        operation: 'renew',
+                                        period: period,
+                                        unit: unit)
       end
     end
   end

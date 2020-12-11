@@ -16,12 +16,14 @@ class Registrar
 
       if domain_ids_for_bulk_renew.present?
         domains = Epp::Domain.where(id: domain_ids_for_bulk_renew).to_a
-        task = Domains::BulkRenew::Start.run(domains: domains, period_element: @period)
-        if task.valid?
-          flash[:notice] = t(:bulk_renew_completed)
-        else
-          flash[:notice] = task.errors.full_messages.join(' and ')
-        end
+        task = Domains::BulkRenew::Start.run(domains: domains,
+                                             period_element: @period,
+                                             registrar: current_registrar_user.registrar)
+        flash[:notice] = if task.valid?
+                           t(:bulk_renew_completed)
+                         else
+                           task.errors.full_messages.join(' and ')
+                         end
       end
       render file: 'registrar/bulk_change/new', locals: { active_tab: :bulk_renew }
     end

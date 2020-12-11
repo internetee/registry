@@ -4,7 +4,6 @@ module Domains
       array :domains do
         object class: Epp::Domain
       end
-
       string :operation
       integer :period
       string :unit
