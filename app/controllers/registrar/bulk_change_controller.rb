@@ -12,6 +12,8 @@ class Registrar
       authorize! :manage, :repp
       @expire_date = params[:expire_date].to_date
       @domains = domains_by_date(@expire_date)
+      @period = params[:period]
+
       if domain_ids_for_bulk_renew.present?
         domains = Epp::Domain.where(id: domain_ids_for_bulk_renew).to_a
         task = Domains::BulkRenew::Start.run(domains: domains)

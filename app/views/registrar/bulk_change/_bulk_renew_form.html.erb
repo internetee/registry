@@ -21,6 +21,16 @@
         </div>
     </div>
 
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= f.label :period, t('.period'), class: 'required' %>
+        </div>
+        <div class="col-md-4">
+            <%= select_tag 'period',
+                           options_for_select(Depp::Domain::PERIODS, @period), { class: 'form-control' } %>
+        </div>
+    </div>
+
     <% if @domains.present? %>
         <div class="form-group">
             <div class="col-md-2 control-label">

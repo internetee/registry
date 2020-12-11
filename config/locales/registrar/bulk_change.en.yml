@@ -36,3 +36,4 @@ en:
         expire_date: Expire date until
         domain_ids: Domains for bulk renewal
         current_balance: Current balance
+        period: Period
