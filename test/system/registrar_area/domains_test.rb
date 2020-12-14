@@ -1,11 +1,6 @@
 require 'application_system_test_case'
 
 class RegistrarDomainsTest < ApplicationSystemTestCase
-  setup do
-    @registrar = users(:api_bestnames).registrar
-    @price = billing_prices(:renew_one_year)
-  end
-
   def test_downloads_domain_list_as_csv
     sign_in users(:api_bestnames)
     travel_to Time.zone.parse('2010-07-05 10:30')
@@ -22,23 +17,5 @@ class RegistrarDomainsTest < ApplicationSystemTestCase
     click_button 'Download CSV'
     assert_equal "attachment; filename=\"Domains_2010-07-05_10.30.csv\"; filename*=UTF-8''Domains_2010-07-05_10.30.csv", response_headers['Content-Disposition']
     assert_equal expected_csv, page.body
-  end
-
-  def test_mass_renewal
-    sign_in users(:api_bestnames)
-    travel_to Time.zone.parse('2010-07-05 10:30')
-
-    visit new_registrar_bulk_change_url
-    click_link('Bulk renew')
-    assert_text 'Current balance'
-    page.has_css?('#registrar_balance', text:
-               ApplicationController.helpers.number_to_currency(@registrar.balance))
-
-    select '1 year', from: 'Period'
-    click_button 'Filter'
-
-    @registrar.domains.pluck(:name).each do |domain_name|
-      assert_text domain_name
-    end
   end
 end
