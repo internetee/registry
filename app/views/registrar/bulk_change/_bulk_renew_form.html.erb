@@ -5,7 +5,7 @@
         <div class="col-md-2 control-label">
             <%= f.label :current_balance, t('.current_balance') %>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" id='registrar_balance'>
             <%= number_to_currency current_registrar_user.registrar.balance %>
         </div>
     </div>
