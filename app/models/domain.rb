@@ -485,12 +485,6 @@ class Domain < ApplicationRecord
     Registrant.find_by(id: pending_json['new_registrant_id'])
   end
 
-  def set_graceful_expired
-    self.outzone_at = expire_time + self.class.expire_warning_period
-    self.delete_date = outzone_at + self.class.redemption_grace_period
-    self.statuses |= [DomainStatus::EXPIRED]
-  end
-
   def pending_update?
     statuses.include?(DomainStatus::PENDING_UPDATE)
   end
