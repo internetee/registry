@@ -36,13 +36,21 @@ module Domains
                          price: domain_pricelist)
       end
 
-      def in_transaction_with_retries
-        ActiveRecord::Base.transaction(isolation: :serializable) do
-          yield if block_given?
+      def in_transaction_with_retries(&block)
+        if Rails.env.test?
+          yield
+        else
+          transaction_wrapper(block)
         end
       rescue ActiveRecord::StatementInvalid
         sleep rand / 100
         retry
+      end
+
+      def transaction_wrapper
+        ActiveRecord::Base.transaction(isolation: :serializable) do
+          yield if block_given?
+        end
       end
     end
   end

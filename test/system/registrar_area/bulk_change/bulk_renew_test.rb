@@ -6,7 +6,7 @@ class BulkRenewTest < ApplicationSystemTestCase
     @price = billing_prices(:renew_one_year)
   end
 
-  def test_mass_renewal
+  def test_shows_domain_list
     sign_in users(:api_bestnames)
     travel_to Time.zone.parse('2010-07-05 10:30')
 
@@ -22,5 +22,21 @@ class BulkRenewTest < ApplicationSystemTestCase
     @registrar.domains.pluck(:name).each do |domain_name|
       assert_text domain_name
     end
+  end
+
+  def test_makes_bulk_renew
+    sign_in users(:api_bestnames)
+    travel_to Time.zone.parse('2010-07-05 10:30')
+
+    visit new_registrar_bulk_change_url
+    click_link('Bulk renew')
+
+    select '1 year', from: 'Period'
+    click_button 'Filter'
+
+    click_button 'Filter'
+
+    assert_text 'invalid.test'
+    assert_no_text 'shop.test'
   end
 end
