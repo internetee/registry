@@ -1,3 +1,6 @@
+14.12.2020
+* Refactored domain cron jobs for interactors [#1767](https://github.com/internetee/registry/issues/1767)
+
 09.12.2020
 * Refactored domain update confirm for interactors [#1760](https://github.com/internetee/registry/issues/1760)
 
