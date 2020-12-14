@@ -7,14 +7,25 @@ module Domains
       string :operation
       integer :period
       string :unit
+      float :balance
+
+      attr_accessor :total_price
 
       def execute
+        calculate_total_price
+
+        balance >= @total_price
+      end
+
+      def calculate_total_price
+        @total_price = 0
         domains.each do |domain|
-          compose(Domains::CheckBalance::SingleDomain,
-                  domain: domain,
-                  operation: 'renew',
-                  period: period,
-                  unit: unit)
+          task = Domains::CheckBalance::SingleDomain.run(domain: domain,
+                                                         operation: 'renew',
+                                                         period: period,
+                                                         unit: unit)
+
+          task.valid? ? @total_price += task.result : errors.merge!(task.errors)
         end
       end
     end

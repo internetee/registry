@@ -8,7 +8,7 @@ module Domains
       object :registrar
 
       def execute
-        if mass_check_balance.valid?
+        if mass_check_balance.valid? && mass_check_balance.result
           domains.each do |domain|
             Domains::BulkRenew::SingleDomainRenew.run(domain: domain,
                                                       period: period,
@@ -34,7 +34,8 @@ module Domains
         Domains::CheckBalance::Mass.run(domains: domains,
                                         operation: 'renew',
                                         period: period,
-                                        unit: unit)
+                                        unit: unit,
+                                        balance: registrar.balance)
       end
     end
   end

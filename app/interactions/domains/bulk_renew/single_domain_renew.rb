@@ -8,7 +8,7 @@ module Domains
       object :registrar
 
       def execute
-        in_transaction_with_retries_do {
+        in_transaction_with_retries do
           success = domain.renew(domain.valid_to, period, unit)
 
           if success
@@ -17,7 +17,7 @@ module Domains
           else
             errors.add(:domain, I18n.t('domain_renew_error_for_domain', domain: domain.name))
           end
-        }
+        end
       end
 
       def check_balance
@@ -36,7 +36,7 @@ module Domains
                          price: domain_pricelist)
       end
 
-      def in_transaction_with_retries_do
+      def in_transaction_with_retries
         ActiveRecord::Base.transaction(isolation: :serializable) do
           yield if block_given?
         end
