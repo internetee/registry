@@ -1,3 +1,6 @@
+15.12.2020
+* improved logic for domain list request in registrant API [#1750](https://github.com/internetee/registry/pull/1750)
+
 14.12.2020
 * Refactored domain cron jobs for interactors [#1767](https://github.com/internetee/registry/issues/1767)
 
