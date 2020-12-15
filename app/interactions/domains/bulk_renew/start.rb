@@ -42,6 +42,7 @@ module Domains
 
       def manage_errors(task)
         errors.merge!(task.errors) unless task.valid?
+        errors.add(:domain, I18n.t('not_enough_funds')) unless task.result
       end
 
       def run_task(domain)

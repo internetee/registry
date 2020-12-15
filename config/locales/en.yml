@@ -590,6 +590,7 @@ en:
   billing_failure_credit_balance_low: 'Billing failure - credit balance low'
   billing_failure_credit_balance_low_for_domain: 'Billing failure - credit balance low for %{domain}'
   domain_renew_error_for_domain: 'Domain renew error for %{domain}'
+  not_enough_funds: 'Not enough funds for renew domains'
   create: 'Create'
   activity_type: 'Activity type'
   receipt_date_from: 'Receipt date from'
