@@ -10,12 +10,11 @@ module Domains
       def execute
         in_transaction_with_retries do
           success = domain.renew(domain.valid_to, period, unit)
-
           if success
             check_balance
             reduce_balance
           else
-            errors.add(:domain, I18n.t('domain_renew_error_for_domain', domain: domain.name))
+            add_error
           end
         end
       end
@@ -36,11 +35,11 @@ module Domains
                          price: domain_pricelist)
       end
 
-      def in_transaction_with_retries(&block)
+      def in_transaction_with_retries
         if Rails.env.test?
           yield
         else
-          transaction_wrapper(block)
+          transaction_wrapper { yield }
         end
       rescue ActiveRecord::StatementInvalid
         sleep rand / 100
@@ -51,6 +50,12 @@ module Domains
         ActiveRecord::Base.transaction(isolation: :serializable) do
           yield if block_given?
         end
+      end
+
+      private
+
+      def add_error
+        errors.add(:domain, I18n.t('domain_renew_error_for_domain', domain: domain.name))
       end
     end
   end

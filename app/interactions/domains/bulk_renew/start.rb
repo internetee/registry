@@ -8,19 +8,21 @@ module Domains
       object :registrar
 
       def execute
-        if mass_check_balance.valid? && mass_check_balance.result
+        if renewable?
           domains.each do |domain|
-            Domains::BulkRenew::SingleDomainRenew.run(domain: domain,
-                                                      period: period,
-                                                      unit: unit,
-                                                      registrar: registrar)
+            task = run_task(domain)
+            manage_errors(task)
           end
         else
-          errors.merge!(mass_check_balance.errors)
+          manage_errors(mass_check_balance)
         end
       end
 
       private
+
+      def renewable?
+        mass_check_balance.valid? && mass_check_balance.result
+      end
 
       def period
         period_element.to_i.zero? ? 1 : period_element.to_i
@@ -36,6 +38,17 @@ module Domains
                                         period: period,
                                         unit: unit,
                                         balance: registrar.balance)
+      end
+
+      def manage_errors(task)
+        errors.merge!(task.errors) unless task.valid?
+      end
+
+      def run_task(domain)
+        Domains::BulkRenew::SingleDomainRenew.run(domain: domain,
+                                                  period: period,
+                                                  unit: unit,
+                                                  registrar: registrar)
       end
     end
   end
