@@ -37,13 +37,17 @@ module Epp
     end
 
     def update
-      authorize! :update, @domain, @password
+      authorize!(:update, @domain, @password)
 
-      updated = @domain.update(params[:parsed_frame], current_user)
-      (handle_errors(@domain) && return) unless updated
-
-      pending = @domain.epp_pending_update.present?
-      render_epp_response "/epp/domains/success#{'_pending' if pending}"
+      registrar_id = current_user.registrar.id
+      update_params = ::Deserializers::Xml::DomainUpdate.new(params[:parsed_frame], registrar_id).call
+      action = Actions::DomainUpdate.new(@domain, update_params, false)
+      if action.call
+        pending = @domain.epp_pending_update.present?
+        render_epp_response("/epp/domains/success#{'_pending' if pending}")
+      else
+        handle_errors(@domain)
+      end
     end
 
     def delete

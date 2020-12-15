@@ -1,6 +1,7 @@
 require 'deserializers/xml/legal_document'
 require 'deserializers/xml/nameserver'
 require 'deserializers/xml/domain_create'
+require 'deserializers/xml/domain_update'
 class Epp::Domain < Domain
   include EppErrors
 
@@ -116,6 +117,7 @@ class Epp::Domain < Domain
   def attrs_from(frame, current_user, action = nil)
     at = {}.with_indifferent_access
 
+    # KORRAS
     registrant_frame = frame.css('registrant').first
     code = registrant_frame.try(:text)
     if code.present?
@@ -131,7 +133,7 @@ class Epp::Domain < Domain
     else
       add_epp_error('2306', nil, nil, [:registrant, :cannot_be_missing])
     end if registrant_frame
-
+   # KORRAS
 
     at[:name] = frame.css('name').text if new_record? # Done
     at[:registrar_id] = current_user.registrar.try(:id) # Done
@@ -434,7 +436,7 @@ class Epp::Domain < Domain
     at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
     at[:statuses] =
-      statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
+statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
 
     if errors.empty? && verify
       self.upid = current_user.registrar.id if current_user.registrar

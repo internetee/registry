@@ -14,7 +14,8 @@ module Deserializers
 
       def call
         obj = { domain: frame.css('name')&.text, registrant: registrant, contacts: contacts,
-                auth_info: if_present('pw'), nameservers: nameservers, dns_keys: dns_keys }
+                auth_info: if_present('authInfo > pw'), nameservers: nameservers, dns_keys: dns_keys,
+                registrar_id: registrar, statuses: statuses, reserved_pw: if_present('reserved > pw') }
 
         obj.reject { |_key, val| val.blank? }
       end
@@ -41,14 +42,14 @@ module Deserializers
       def nameservers
         nameservers = []
         frame.css('add > ns > hostAttr').each do |ns|
-          nsrv = { nameserver: ns.css('hostName').text, host_addr: [], action: 'add' }
-          ns.css('hostAddr').each { |ha| nsrv[:host_addr] << { proto: ha.attr('ip').to_s.downcase, addr: ha.text } }
+          nsrv = Deserializers::Xml::Nameserver.new(ns).call
+          nsrv[:action] = 'add'
           nameservers << nsrv
         end
 
         frame.css('rem > ns > hostAttr').each do |ns|
-          nsrv = { nameserver: ns.css('hostName').text, host_addr: [], action: 'rem' }
-          ns.css('hostAddr').each { |ha| nsrv[:host_addr] << { proto: ha.attr('ip').to_s.downcase, addr: ha.text } }
+          nsrv = Deserializers::Xml::Nameserver.new(ns).call
+          nsrv[:action] = 'rem'
           nameservers << nsrv
         end
 
@@ -64,6 +65,17 @@ module Deserializers
         return unless (added + removed).present?
 
         added + removed
+      end
+
+      def statuses
+        return unless frame.css('status').present?
+
+        statuses = []
+
+        frame.css('add > status').each { |entry| statuses << { status: entry.attr('s').to_s, action: 'add' } }
+        frame.css('rem > status').each { |entry| statuses << { status: entry.attr('s').to_s, action: 'rem' } }
+
+        statuses
       end
 
       def if_present(css_path)
