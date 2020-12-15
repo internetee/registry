@@ -33,6 +33,7 @@ en:
 
       bulk_renew_form:
         filter_btn: Filter
+        renew_btn: Renew
         expire_date: Expire date until
         domain_ids: Domains for bulk renewal
         current_balance: Current balance

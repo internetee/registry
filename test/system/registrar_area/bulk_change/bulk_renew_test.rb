@@ -30,11 +30,9 @@ class BulkRenewTest < ApplicationSystemTestCase
 
     visit new_registrar_bulk_change_url
     click_link('Bulk renew')
-
     select '1 year', from: 'Period'
     click_button 'Filter'
-
-    click_button 'Filter'
+    click_button 'Renew'
 
     assert_text 'invalid.test'
     assert_no_text 'shop.test'

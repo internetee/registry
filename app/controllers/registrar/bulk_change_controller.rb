@@ -12,15 +12,21 @@ class Registrar
       authorize! :manage, :repp
       set_form_data
 
-      if domain_ids_for_bulk_renew.present?
+      if ready_to_renew?
         domains = Epp::Domain.where(id: domain_ids_for_bulk_renew).to_a
         task = renew_task(domains)
         flash[:notice] = flash_message(task)
+      else
+        flash[:notice] = nil
       end
       render file: 'registrar/bulk_change/new', locals: { active_tab: :bulk_renew }
     end
 
     private
+
+    def ready_to_renew?
+      domain_ids_for_bulk_renew.present? && params[:renew].present?
+    end
 
     def set_form_data
       @expire_date = params[:expire_date].to_date

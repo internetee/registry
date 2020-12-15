@@ -48,11 +48,10 @@
         </div>
     <% end %>
 
-    <div class="form-group">
-        <div class="col-md-4 col-md-offset-2 text-right">
-            <button class="btn btn-warning">
-                <%= t '.filter_btn' %>
-            </button>
-        </div>
+    <div class="form-group pull-left">
+        <%= f.submit "#{t '.filter_btn'}", name: 'filter', class: 'btn btn-warning' %>
+        <% if @domains.present? %>
+            <%= f.submit "#{t '.renew_btn'}", name: 'renew', class: 'btn btn-primary' %>
+        <% end %>
     </div>
 <% end %>
