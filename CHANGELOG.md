@@ -1,3 +1,6 @@
+16.12.2020
+* Refactored domain delete confirmation for interactors [#1769](https://github.com/internetee/registry/issues/1769)
+
 15.12.2020
 * Improved logic for domain list request in registrant API [#1750](https://github.com/internetee/registry/pull/1750)
 * Refactored Whois update job for interactors [#1771](https://github.com/internetee/registry/issues/1771)
