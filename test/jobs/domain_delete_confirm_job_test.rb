@@ -18,7 +18,7 @@ class DomainDeleteConfirmJobTest < ActiveSupport::TestCase
       new_registrant_email: @new_registrant.email,
       current_user_id: @user.id })
 
-    DomainDeleteConfirmJob.enqueue(@domain.id, RegistrantVerification::REJECTED)
+    DomainDeleteConfirmJob.perform_now(@domain.id, RegistrantVerification::REJECTED)
 
     last_registrar_notification = @domain.registrar.notifications.last
     assert_equal(last_registrar_notification.attached_obj_id, @domain.id)
@@ -31,7 +31,7 @@ class DomainDeleteConfirmJobTest < ActiveSupport::TestCase
       new_registrant_email: @new_registrant.email,
       current_user_id: @user.id })
 
-    DomainDeleteConfirmJob.enqueue(@domain.id, RegistrantVerification::CONFIRMED)
+    DomainDeleteConfirmJob.perform_now(@domain.id, RegistrantVerification::CONFIRMED)
 
     last_registrar_notification = @domain.registrar.notifications.last
     assert_equal(last_registrar_notification.attached_obj_id, @domain.id)
@@ -51,7 +51,7 @@ class DomainDeleteConfirmJobTest < ActiveSupport::TestCase
     assert @domain.registrant_delete_confirmable?(@domain.registrant_verification_token)
     assert_equal @user.id, @domain.pending_json['current_user_id']
 
-    DomainDeleteConfirmJob.enqueue(@domain.id, RegistrantVerification::CONFIRMED)
+    DomainDeleteConfirmJob.perform_now(@domain.id, RegistrantVerification::CONFIRMED)
     @domain.reload
 
     assert @domain.statuses.include? DomainStatus::PENDING_DELETE
@@ -72,7 +72,7 @@ class DomainDeleteConfirmJobTest < ActiveSupport::TestCase
     assert @domain.registrant_delete_confirmable?(@domain.registrant_verification_token)
     assert_equal @user.id, @domain.pending_json['current_user_id']
 
-    DomainDeleteConfirmJob.enqueue(@domain.id, RegistrantVerification::REJECTED)
+    DomainDeleteConfirmJob.perform_now(@domain.id, RegistrantVerification::REJECTED)
     @domain.reload
 
     assert_equal ['ok'], @domain.statuses
