@@ -65,6 +65,8 @@ module Actions
     end
 
     def assign_dnssec_modifications
+      return unless params[:dns_keys]
+
       dnskeys = []
       params[:dns_keys].select { |dk| dk[:action] == 'rem' }.each do |key|
         dnkey = domain.dnskeys.find_by(key.except(:action))
@@ -73,6 +75,13 @@ module Actions
       end
 
       params[:dns_keys].select { |dk| dk[:action] == 'add' }.each do |key|
+        if key[:pubKey] && !Setting.key_data_allowed
+          domain.add_epp_error('2306', nil, nil, %i[dnskeys key_data_not_allowed])
+        end
+        if key[:digest] && !Setting.ds_data_allowed
+          domain.add_epp_error('2306', nil, nil, %i[dnskeys ds_data_not_allowed])
+        end
+
         dnskeys << key.except(:action)
       end
 
@@ -216,10 +225,10 @@ module Actions
       return false if domain.errors[:epp_errors].any?
       return false unless domain.valid?
 
-      if verify_registrant_change? && Setting.request_confirmation_on_registrant_change_enabled
-        return if bypass_verify
+      if verify_registrant_change? && !bypass_verify &&
+         Setting.request_confirmation_on_registrant_change_enabled && !bypass_verify
 
-        domain.registrant_verification_asked!(params.to_s, params[:registrar_id])
+        domain.registrant_verification_asked!(params, params[:registrar_id])
       end
 
       return false if domain.errors[:epp_errors].any?
