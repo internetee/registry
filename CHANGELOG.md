@@ -1,3 +1,6 @@
+17.12.2020
+* New API for registering bounced emails [#1687](https://github.com/internetee/registry/pull/1687)
+
 16.12.2020
 * Refactored domain delete confirmation for interactors [#1769](https://github.com/internetee/registry/issues/1769)
 
