@@ -17,6 +17,7 @@ module Actions
       assign_admin_contact_changes
       assign_tech_contact_changes
       assign_requested_statuses
+      assign_dnssec_modifications
 
       commit
     end
@@ -61,6 +62,21 @@ module Actions
       return unless nameservers.present?
 
       domain.nameservers_attributes = nameservers
+    end
+
+    def assign_dnssec_modifications
+      dnskeys = []
+      params[:dns_keys].select { |dk| dk[:action] == 'rem' }.each do |key|
+        dnkey = domain.dnskeys.find_by(key.except(:action))
+        domain.add_epp_error('2303', nil, nil, %i[dnskeys not_found]) unless dnkey
+        dnskeys << { id: dnkey.id, _destroy: 1 } if dnkey
+      end
+
+      params[:dns_keys].select { |dk| dk[:action] == 'add' }.each do |key|
+        dnskeys << key.except(:action)
+      end
+
+      domain.dnskeys_attributes = dnskeys
     end
 
     def assign_admin_contact_changes
