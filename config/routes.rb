@@ -90,7 +90,7 @@ Rails.application.routes.draw do
       end
 
       resources :auctions, only: %i[index show update], param: :uuid
-
+      resources :bounces, only: %i[create]
     end
 
     match '*all', controller: 'cors', action: 'cors_preflight_check', via: [:options],
@@ -320,6 +320,7 @@ Rails.application.routes.draw do
     resources :delayed_jobs
     resources :epp_logs
     resources :repp_logs
+    resources :bounced_mail_addresses, only: %i[index show destroy]
 
     authenticate :admin_user do
       mount Que::Web, at: 'que'
