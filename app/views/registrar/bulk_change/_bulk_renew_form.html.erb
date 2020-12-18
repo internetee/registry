@@ -37,8 +37,8 @@
                 <%= f.label :domain_ids, t('.domain_ids') %>
             </div>
             <div class="col-md-4">
-                <%= f.collection_check_boxes :domain_ids, @domains, :id, :name,
-                                             checked: @domains.map(&:id) do |b|%>
+                <%= f.collection_check_boxes :domain_ids, @domains, :name, :name,
+                                             checked: @domains.map(&:name) do |b|%>
                     <div class="row">
                             <%= b.check_box %>
                             <%= b.label %>

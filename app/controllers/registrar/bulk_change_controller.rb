@@ -13,12 +13,14 @@ class Registrar
       set_form_data
 
       if ready_to_renew?
-        domains = Epp::Domain.where(id: domain_ids_for_bulk_renew).to_a
-        task = renew_task(domains)
-        flash[:notice] = flash_message(task)
+        res = Depp::Domain.bulk_renew(domain_ids_for_bulk_renew, params[:period],
+                                      current_registrar_user.registrar)
+
+        flash_message(JSON.parse(res))
       else
         flash[:notice] = nil
       end
+
       render file: 'registrar/bulk_change/new', locals: { active_tab: :bulk_renew }
     end
 
@@ -60,12 +62,8 @@ class Registrar
                                     registrar: current_registrar_user.registrar)
     end
 
-    def flash_message(task)
-      if task.valid?
-        t(:bulk_renew_completed)
-      else
-        task.errors.full_messages.join(' and ')
-      end
+    def flash_message(res)
+      flash[:notice] = res['code'] == 1000 ? t(:bulk_renew_completed) : res['message']
     end
   end
 end
