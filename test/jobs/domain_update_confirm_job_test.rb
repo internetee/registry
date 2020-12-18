@@ -1,4 +1,5 @@
 require "test_helper"
+require 'deserializers/xml/domain_update'
 
 class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
   def setup
@@ -40,7 +41,9 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
     "        <chg>\n          <registrant>#{@new_registrant.code}</registrant>\n        </chg>\n      </update>\n    </update>\n    <extension>\n      <update/>\n" \
     "      <extdata>\n        <legalDocument type=\"pdf\">#{@legal_doc_path}</legalDocument>\n      </extdata>\n" \
     "    </extension>\n    <clTRID>20alla-1594199756</clTRID>\n  </command>\n</epp>\n"
-    @domain.pending_json['frame'] = epp_xml
+    parsed_frame = Deserializers::Xml::DomainUpdate.new(Nokogiri::XML(epp_xml), @domain.registrar.id).call
+
+    @domain.pending_json['frame'] = parsed_frame
     @domain.update(pending_json: @domain.pending_json)
 
     @domain.reload
@@ -55,7 +58,9 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
     "        <chg>\n          <registrant>#{@new_registrant.code}</registrant>\n        </chg>\n      </update>\n    </update>\n    <extension>\n      <update/>\n" \
     "      <extdata>\n        <legalDocument type=\"pdf\">#{@legal_doc_path}</legalDocument>\n      </extdata>\n" \
     "    </extension>\n    <clTRID>20alla-1594199756</clTRID>\n  </command>\n</epp>\n"
-    @domain.pending_json['frame'] = epp_xml
+    parsed_frame = Deserializers::Xml::DomainUpdate.new(Nokogiri::XML(epp_xml), @domain.registrar.id).call
+
+    @domain.pending_json['frame'] = parsed_frame
     @domain.update(pending_json: @domain.pending_json)
 
     DomainUpdateConfirmJob.enqueue(@domain.id, RegistrantVerification::REJECTED)

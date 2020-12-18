@@ -129,75 +129,10 @@ class Epp::Domain < Domain
     self.legal_document_id = doc.id
   end
 
-  def update(frame, current_user, verify = true)
-    return super if frame.blank?
-
-    if discarded?
-      add_epp_error('2304', nil, nil, 'Object status prohibits operation')
-      return
-    end
-
-    at = {}.with_indifferent_access
-    at.deep_merge!(attrs_from(frame.css('chg'), current_user, 'chg'))
-    at.deep_merge!(attrs_from(frame.css('rem'), current_user, 'rem'))
-
-    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
-      frame.css("legalDocument").first.content = doc.path if doc&.persisted?
-      self.legal_document_id = doc.id
-    end
-
-    at_add = attrs_from(frame.css('add'), current_user, 'add')
-    at[:nameservers_attributes] += at_add[:nameservers_attributes]
-    at[:admin_domain_contacts_attributes] += at_add[:admin_domain_contacts_attributes]
-    at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
-    at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
-    at[:statuses] =
-statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
-
-    if errors.empty? && verify
-      self.upid = current_user.registrar.id if current_user.registrar
-      self.up_date = Time.zone.now
-    end
-
-    registrant_verification_needed = false
-    # registrant block may not be present, so we need this to rule out false positives
-    if frame.css('registrant').text.present?
-      registrant_verification_needed = (registrant.code != frame.css('registrant').text)
-    end
-
-    if registrant_verification_needed && disputed?
-      disputed_pw = frame.css('reserved > pw').text
-      if disputed_pw.blank?
-        add_epp_error('2304', nil, nil, 'Required parameter missing; reserved' \
-        'pw element required for dispute domains')
-      else
-        dispute = Dispute.active.find_by(domain_name: name, password: disputed_pw)
-        if dispute
-          Dispute.close_by_domain(name)
-          registrant_verification_needed = false # Prevent asking current registrant confirmation
-        else
-          add_epp_error('2202', nil, nil, 'Invalid authorization information; '\
-          'invalid reserved>pw value')
-        end
-      end
-    end
-
-    unverified_registrant_params = frame.css('registrant').present? &&
-                                   frame.css('registrant').attr('verified').to_s.downcase != 'yes'
-
-    if registrant_verification_needed && errors.empty? && verify &&
-       Setting.request_confirmation_on_registrant_change_enabled &&
-       unverified_registrant_params
-      registrant_verification_asked!(frame.to_s, current_user.id) unless disputed?
-    end
-
-    errors.empty? && super(at)
-  end
-
   def apply_pending_update!
     preclean_pendings
     user  = ApiUser.find(pending_json['current_user_id'])
-    frame = pending_json['frame'].with_indifferent_access
+    frame = pending_json['frame'] ? pending_json['frame'].with_indifferent_access : {}
 
     self.statuses.delete(DomainStatus::PENDING_UPDATE)
     self.upid = user.registrar.id if user.registrar
