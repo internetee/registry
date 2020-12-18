@@ -14,7 +14,7 @@ class Registrar
 
       if ready_to_renew?
         res = Depp::Domain.bulk_renew(domain_ids_for_bulk_renew, params[:period],
-                                      current_registrar_user.registrar)
+                                      current_registrar_user)
 
         flash_message(JSON.parse(res))
       else
