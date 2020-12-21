@@ -1,0 +1,9 @@
+<% if @api_errors %>
+    <div class="alert alert-danger">
+        <ul>
+            <% @api_errors.each do |error| %>
+                <li><%= error[:title] %></li>
+            <% end %>
+        </ul>
+    </div>
+<% end %>

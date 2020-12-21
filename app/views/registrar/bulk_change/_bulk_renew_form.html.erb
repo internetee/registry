@@ -1,0 +1,57 @@
+<%= form_with url: registrar_bulk_renew_path, multipart: true, class: 'form-horizontal' do |f|%>
+    <%= render 'api_errors' %>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= f.label :current_balance, t('.current_balance') %>
+        </div>
+        <div class="col-md-4" id='registrar_balance'>
+            <%= number_to_currency current_registrar_user.registrar.balance %>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= f.label :expire_date, t('.expire_date') %>
+        </div>
+        <div class="col-md-4">
+            <%= f.text_field :expire_date, value: @expire_date,
+                               class: 'form-control js-datepicker'%>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= f.label :period, t('.period'), class: 'required' %>
+        </div>
+        <div class="col-md-4">
+            <%= select_tag 'period',
+                           options_for_select(Depp::Domain::PERIODS, @period), { class: 'form-control' } %>
+        </div>
+    </div>
+
+    <% if @domains.present? %>
+        <div class="form-group">
+            <div class="col-md-2 control-label">
+                <%= f.label :domain_ids, t('.domain_ids') %>
+            </div>
+            <div class="col-md-4">
+                <%= f.collection_check_boxes :domain_ids, @domains, :name, :name,
+                                             checked: @domains.map(&:name) do |b|%>
+                    <div class="row">
+                            <%= b.check_box %>
+                            <%= b.label %>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    <% end %>
+
+    <div class="form-group pull-left">
+        <%= f.submit "#{t '.filter_btn'}", name: 'filter', class: 'btn btn-warning' %>
+        <% if @domains.present? %>
+            <%= f.submit "#{t '.renew_btn'}", name: 'renew', class: 'btn btn-primary' %>
+        <% end %>
+    </div>
+<% end %>
