@@ -51,7 +51,7 @@ jobs:
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       run: |
-        curl -LSs 'https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64' >./cc-test-reporter;
+        curl -LSs 'https://codeclimate.com/downloads/test-reporter/test-reporter-0.8.0-linux-amd64' >./cc-test-reporter;
         chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
 
@@ -89,7 +89,7 @@ jobs:
 
     env:
       CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-      CC_TEST_REPORTER_URL: https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+      CC_TEST_REPORTER_URL: https://codeclimate.com/downloads/test-reporter/test-reporter-0.8.0-linux-amd64
 
     needs: test
 
