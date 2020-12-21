@@ -1,5 +1,5 @@
 module Domains
-  module DeleteConfirm
+  module DeleteConfirmEmail
     class SendRequest < ActiveInteraction::Base
       object :domain,
              class: Domain,

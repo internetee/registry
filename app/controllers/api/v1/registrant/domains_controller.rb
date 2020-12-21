@@ -7,6 +7,7 @@ module Api
         def index
           limit = params[:limit] || 200
           offset = params[:offset] || 0
+          simple = params[:simple] == 'true' || false
 
           if limit.to_i > 200 || limit.to_i < 1
             render(json: { errors: [{ limit: ['parameter is out of range'] }] },
@@ -18,21 +19,20 @@ module Api
                    status: :bad_request) && return
           end
 
-          @domains = current_user_domains.limit(limit).offset(offset)
-
-          serialized_domains = @domains.map do |item|
-            serializer = Serializers::RegistrantApi::Domain.new(item)
+          domains = current_user_domains
+          serialized_domains = domains.limit(limit).offset(offset).map do |item|
+            serializer = Serializers::RegistrantApi::Domain.new(item, simplify: simple)
             serializer.to_json
           end
 
-          render json: serialized_domains
+          render json: { count: domains.count, domains: serialized_domains }
         end
 
         def show
           @domain = current_user_domains.find_by(uuid: params[:uuid])
 
           if @domain
-            serializer = Serializers::RegistrantApi::Domain.new(@domain)
+            serializer = Serializers::RegistrantApi::Domain.new(@domain, simplify: false)
             render json: serializer.to_json
           else
             render json: { errors: [{ base: ['Domain not found'] }] }, status: :not_found

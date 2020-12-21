@@ -421,7 +421,7 @@ class Domain < ApplicationRecord
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
-    Domains::DeleteConfirm::SendRequest.run(domain: self)
+    Domains::DeleteConfirmEmail::SendRequest.run(domain: self)
   end
 
   def cancel_pending_delete
