@@ -28,20 +28,35 @@ class BulkRenewTest < ApplicationSystemTestCase
     sign_in users(:api_bestnames)
     travel_to Time.zone.parse('2010-07-05 10:30')
 
+    req_body = { domains: ["shop.test", "airport.test", "library.test", "invalid.test"], renew_period: "1y" }
+    stub_request(:post, "#{ENV['repp_url']}domains/renew/bulk").with(body: req_body)
+    .to_return(status: 400, body: {
+        code: 2304,
+        message: "Domain renew error for invalid.test",
+        data: {}
+      }.to_json)
+
     visit new_registrar_bulk_change_url
     click_link('Bulk renew')
     select '1 year', from: 'Period'
     click_button 'Filter'
     click_button 'Renew'
 
-    assert_text 'invalid.test'
-    assert_no_text 'shop.test'
+    assert_text 'Domain renew error for invalid.test'
   end
 
   def test_bulk_renew_checks_balance
     sign_in users(:api_bestnames)
     @price.update(price_cents: 99999999)
     travel_to Time.zone.parse('2010-07-05 10:30')
+
+    req_body = { domains: ["shop.test", "airport.test", "library.test", "invalid.test"], renew_period: "1y" }
+    stub_request(:post, "#{ENV['repp_url']}domains/renew/bulk").with(body: req_body)
+    .to_return(status: 400, body: {
+        code: 2304,
+        message: "Not enough funds for renew domains",
+        data: {}
+      }.to_json)
 
     visit new_registrar_bulk_change_url
     click_link('Bulk renew')

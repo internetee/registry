@@ -13,7 +13,7 @@ class Registrar
       set_form_data
 
       if ready_to_renew?
-        res = Depp::Domain.bulk_renew(domain_ids_for_bulk_renew, params[:period],
+        res = ReppApi.bulk_renew(domain_ids_for_bulk_renew, params[:period],
                                       current_registrar_user)
 
         flash_message(JSON.parse(res))

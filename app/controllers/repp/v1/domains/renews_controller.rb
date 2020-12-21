@@ -9,8 +9,8 @@ module Repp
           renew = run_bulk_renew_task(@domains, bulk_renew_params[:renew_period])
           return render_success(data: { updated_domains: @domains.map(&:name) }) if renew.valid?
 
-          @epp_errors << { code: 2304,
-                           msg: renew.errors.keys.map { |k, _v| renew.errors[k] }.join(',') }
+          @epp_errors << { code: 2002,
+                           msg: renew.errors.keys.map { |k, _v| renew.errors[k] }.join(', ') }
           handle_errors
         end
 
@@ -21,7 +21,7 @@ module Repp
           periods = Depp::Domain::PERIODS.map { |p| p[1] }
           return if periods.include? bulk_renew_params[:renew_period]
 
-          @epp_errors << { code: 2005, msg: "Invalid renew period" }
+          @epp_errors << { code: 2005, msg: 'Invalid renew period' }
         end
 
         def select_renewable_domains

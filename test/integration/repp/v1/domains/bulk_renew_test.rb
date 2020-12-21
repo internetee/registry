@@ -6,7 +6,6 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
     @user = users(:api_bestnames)
     token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
     token = "Basic #{token}"
-    @domain = domains(:hospital)
 
     @auth_headers = { 'Authorization' => token }
   end
@@ -20,15 +19,22 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
       ],
       "renew_period": "1y"
     }
-    post "/repp/v1/domains/renew/bulk", headers: @auth_headers, params: payload
-    json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :ok
-    assert_equal 1000, json[:code]
-    assert_equal 'Command completed successfully', json[:message]
-    assert json[:data][:updated_domains].include? 'shop.test'
-    assert json[:data][:updated_domains].include? 'airport.test'
-    assert json[:data][:updated_domains].include? 'library.test'
+    assert_changes -> { Domain.find_by(name: 'shop.test').valid_to } do
+      assert_changes -> { Domain.find_by(name: 'airport.test').valid_to } do
+        assert_changes -> { Domain.find_by(name: 'library.test').valid_to } do
+          post "/repp/v1/domains/renew/bulk", headers: @auth_headers, params: payload
+          json = JSON.parse(response.body, symbolize_names: true)
+
+          assert_response :ok
+          assert_equal 1000, json[:code]
+          assert_equal 'Command completed successfully', json[:message]
+          assert json[:data][:updated_domains].include? 'shop.test'
+          assert json[:data][:updated_domains].include? 'airport.test'
+          assert json[:data][:updated_domains].include? 'library.test'
+        end
+      end
+    end
   end
 
   def test_throws_error_when_domain_not_renewable
@@ -38,12 +44,14 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
       ],
       "renew_period": "1y"
     }
-    post "/repp/v1/domains/renew/bulk", headers: @auth_headers, params: payload
-    json = JSON.parse(response.body, symbolize_names: true)
+    assert_no_changes -> { Domain.find_by(name: 'invalid.test').valid_to } do
+      post "/repp/v1/domains/renew/bulk", headers: @auth_headers, params: payload
+      json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :bad_request
-    assert_equal 2304, json[:code]
-    assert_equal 'Domain renew error for invalid.test', json[:message]
+      assert_response :bad_request
+      assert_equal 2002, json[:code]
+      assert_equal 'Domain renew error for invalid.test', json[:message]
+    end
   end
 
   def test_throws_error_when_not_enough_balance
@@ -54,12 +62,15 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
       ],
       "renew_period": "1y"
     }
-    post "/repp/v1/domains/renew/bulk", headers: @auth_headers, params: payload
-    json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :bad_request
-    assert_equal 2304, json[:code]
-    assert_equal 'Not enough funds for renew domains', json[:message]
+    assert_no_changes -> { Domain.find_by(name: 'invalid.test').valid_to } do
+      post "/repp/v1/domains/renew/bulk", headers: @auth_headers, params: payload
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      assert_response :bad_request
+      assert_equal 2002, json[:code]
+      assert_equal 'Not enough funds for renew domains', json[:message]
+    end
   end
 
   def test_throws_error_if_invalid_renew_period

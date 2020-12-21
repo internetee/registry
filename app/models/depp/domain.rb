@@ -30,16 +30,6 @@ module Depp
       ['10 years', '10y'],
     ]
 
-    def self.bulk_renew(domains, period, registrar)
-      payload = { domains: domains, renew_period: period }
-      token = Base64.urlsafe_encode64("#{registrar.username}:#{registrar.plain_text_password}")
-      headers = { Authorization: "Basic #{token}" }
-
-      RestClient.post("http://localhost:3000/repp/v1/domains/renew/bulk", payload, headers)
-    rescue RestClient::ExceptionWithResponse => e
-      e.response
-    end
-
     def initialize(args = {})
       self.current_user = args[:current_user]
       self.epp_xml = EppXml::Domain.new(cl_trid_prefix: current_user.tag)
