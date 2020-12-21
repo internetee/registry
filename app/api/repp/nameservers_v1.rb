@@ -29,7 +29,7 @@ module Repp
           ipv6: params[:data][:attributes][:ipv6],
         }
 
-        domains = params[:data][:domains] || []
+        domains = params[:data][:domains].map(&:downcase) || []
 
         begin
           affected_domains = current_user.registrar.replace_nameservers(hostname, new_attributes,
