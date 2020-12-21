@@ -1,3 +1,6 @@
+21.12.2020
+* Bulk renew for REPP and registrar [#1763](https://github.com/internetee/registry/issues/1763)
+
 17.12.2020
 * New API for registering bounced emails [#1687](https://github.com/internetee/registry/pull/1687)
 
