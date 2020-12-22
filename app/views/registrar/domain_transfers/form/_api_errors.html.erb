@@ -1,8 +1,12 @@
 <% if @api_errors %>
     <div class="alert alert-danger">
         <ul>
+            <% if @api_errors.is_a?(String) %>
+            <li><%= @api_errors %></li>
+            <% else %>
             <% @api_errors.each do |error| %>
                 <li><%= error[:title] %></li>
+            <% end %>
             <% end %>
         </ul>
     </div>
