@@ -3,6 +3,7 @@ module Repp
     class BaseController < ActionController::API
       rescue_from ActiveRecord::RecordNotFound, with: :not_found_error
       before_action :authenticate_user
+      before_action :validate_webclient_ca
       before_action :check_ip_restriction
       attr_reader :current_user
 
@@ -93,12 +94,29 @@ module Repp
       end
 
       def check_ip_restriction
-        allowed = @current_user.registrar.api_ip_white?(request.ip)
-
-        return if allowed
+        return if webclient_request?
+        return if @current_user.registrar.api_ip_white?(request.ip)
 
         @response = { code: 2202,
                       message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip) }
+        render(json: @response, status: :unauthorized)
+      end
+
+      def webclient_request?
+        return if Rails.env.test?
+        ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
+      end
+
+      def validate_webclient_ca
+        return unless webclient_request?
+
+        request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']
+        webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
+        return if request_name == webclient_cn
+
+        @response = { code: 2202,
+                      message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip) }
+
         render(json: @response, status: :unauthorized)
       end
 
