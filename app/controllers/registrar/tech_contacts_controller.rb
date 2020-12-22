@@ -43,16 +43,16 @@ class Registrar
       if response.code == '200'
         notices = [t('.replaced')]
 
-        notices << "#{t('.affected_domains')}: #{parsed_response[:affected_domains].join(', ')}"
+        notices << "#{t('.affected_domains')}: #{parsed_response[:data][:affected_domains].join(', ')}"
 
-        if parsed_response[:skipped_domains]
-          notices << "#{t('.skipped_domains')}: #{parsed_response[:skipped_domains].join(', ')}"
+        if parsed_response[:data][:skipped_domains]
+          notices << "#{t('.skipped_domains')}: #{parsed_response[:data][:skipped_domains].join(', ')}"
         end
 
         flash[:notice] = notices
         redirect_to registrar_domains_url
       else
-        @error = parsed_response[:error]
+        @error = parsed_response[:message]
         render file: 'registrar/bulk_change/new', locals: { active_tab: :technical_contact }
       end
     end
