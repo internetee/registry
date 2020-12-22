@@ -49,10 +49,10 @@ class Registrar
           notices << "#{t('.skipped_domains')}: #{parsed_response[:data][:skipped_domains].join(', ')}"
         end
 
-        flash[:notice] = notices
+        flash[:notice] = notices.join(', ')
         redirect_to registrar_domains_url
       else
-        @error = parsed_response[:message]
+        @error = response.code == '404' ? 'Contact(s) not found' : parsed_response[:message]
         render file: 'registrar/bulk_change/new', locals: { active_tab: :technical_contact }
       end
     end
