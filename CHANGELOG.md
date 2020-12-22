@@ -1,3 +1,6 @@
+22.12.2020
+* SSL CA verification fix for Bulk renew [#1778](https://github.com/internetee/registry/pull/1778)
+
 21.12.2020
 * Bulk renew for REPP and registrar [#1763](https://github.com/internetee/registry/issues/1763)
 
