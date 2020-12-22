@@ -19,7 +19,11 @@ Content-Length: 37
 Content-Type: application/json
 
 {
-  "balance": "324.45",
-  "currency": "EUR"
+    "code": 1000,
+    "message": "Command completed successfully",
+    "data": {
+        "balance": "356.0",
+        "currency": "EUR"
+    }
 }
 ```

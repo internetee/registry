@@ -5,6 +5,7 @@ class RegistrantChange
   end
 
   def confirm
+    Dispute.close_by_domain(@domain.name) if @domain.disputed?
     notify_registrant
   end
 

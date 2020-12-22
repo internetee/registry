@@ -1,10 +1,9 @@
 require 'deserializers/xml/contact_update'
-
+require 'deserializers/xml/contact_create'
 module Epp
   class ContactsController < BaseController
     before_action :find_contact, only: [:info, :update, :delete]
     before_action :find_password, only: [:info, :update, :delete]
-    helper_method :address_processing?
 
     def info
       authorize! :info, @contact, @password
@@ -21,25 +20,13 @@ module Epp
 
     def create
       authorize! :create, Epp::Contact
-      frame = params[:parsed_frame]
-      @contact = Epp::Contact.new(frame, current_user.registrar)
 
-      @contact.add_legal_file_to_new(frame)
-      @contact.generate_code
+      @contact = Epp::Contact.new(params[:parsed_frame], current_user.registrar)
+      collected_data = ::Deserializers::Xml::ContactCreate.new(params[:parsed_frame])
+      action = Actions::ContactCreate.new(@contact, collected_data.legal_document,
+                                          collected_data.ident)
 
-      if @contact.save
-        if !address_processing? && address_given?
-          @response_code = 1100
-          @response_description = t('epp.contacts.completed_without_address')
-        else
-          @response_code = 1000
-          @response_description = t('epp.contacts.completed')
-        end
-
-        render_epp_response '/epp/contacts/save'
-      else
-        handle_errors(@contact)
-      end
+      action_call_response(action: action)
     end
 
     def update
@@ -52,29 +39,18 @@ module Epp
                                           collected_data.ident,
                                           current_user)
 
-      if action.call
-        if !address_processing? && address_given?
-          @response_code = 1100
-          @response_description = t('epp.contacts.completed_without_address')
-        else
-          @response_code = 1000
-          @response_description = t('epp.contacts.completed')
-        end
-
-        render_epp_response 'epp/contacts/save'
-      else
-        handle_errors(@contact)
-      end
+      action_call_response(action: action)
     end
 
     def delete
       authorize! :delete, @contact, @password
-
-      if @contact.destroy_and_clean(params[:parsed_frame])
-        render_epp_response '/epp/contacts/delete'
-      else
+      action = Actions::ContactDelete.new(@contact, params[:legal_document])
+      unless action.call
         handle_errors(@contact)
+        return
       end
+
+      render_epp_response '/epp/contacts/delete'
     end
 
     def renew
@@ -90,6 +66,26 @@ module Epp
     end
 
     private
+
+    def opt_addr?
+      !Contact.address_processing? && address_given?
+    end
+
+    def action_call_response(action:)
+      # rubocop:disable Style/AndOr
+      (handle_errors(@contact) and return) unless action.call
+      # rubocop:enable Style/AndOr
+
+      if opt_addr?
+        @response_code = 1100
+        @response_description = t('epp.contacts.completed_without_address')
+      else
+        @response_code = 1000
+        @response_description = t('epp.contacts.completed')
+      end
+
+      render_epp_response('epp/contacts/save')
+    end
 
     def find_password
       @password = params[:parsed_frame].css('authInfo pw').text
@@ -129,8 +125,7 @@ module Epp
         'postalInfo > addr > cc',
       ]
 
-      required_attributes.concat(address_attributes) if address_processing?
-
+      required_attributes.concat(address_attributes) if Contact.address_processing?
       requires(*required_attributes)
       ident = params[:parsed_frame].css('ident')
 
@@ -205,10 +200,6 @@ module Epp
 
     def address_given?
       params[:parsed_frame].css('postalInfo addr').size != 0
-    end
-
-    def address_processing?
-      Contact.address_processing?
     end
   end
 end

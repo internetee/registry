@@ -36,6 +36,7 @@ module DomainNameRegistry
 
     # Autoload all model subdirs
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '**/')]
+    config.autoload_paths += Dir[Rails.root.join('app', 'interactions', '**/')]
     config.eager_load_paths << config.root.join('lib', 'validators')
     config.watchable_dirs['lib'] = %i[rb]
 

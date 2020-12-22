@@ -29,6 +29,16 @@ class RegistrarAreaBaseTestTest < ApplicationSystemTestCase
     assert_button 'Login'
   end
 
+  def test_user_can_access_when_ip_is_whitelisted_with_subnet
+    white_ips(:one).update!(ipv4: '127.0.0.1/32', interfaces: [WhiteIp::REGISTRAR])
+    Setting.registrar_ip_whitelist_enabled = true
+
+    visit new_registrar_user_session_url
+
+    assert_no_text 'Access denied from IP 127.0.0.1'
+    assert_button 'Login'
+  end
+
   def test_user_can_access_when_ip_is_not_whitelisted_and_whitelist_is_disabled
     Setting.registrar_ip_whitelist_enabled = false
     WhiteIp.delete_all

@@ -60,12 +60,14 @@ class APINameserversPutTest < ApplicationIntegrationTest
         headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_response 200
-    assert_equal ({ data: { type: 'nameserver',
+    assert_equal ({ code: 1000,
+                    message: 'Command completed successfully',
+                    data: { type: 'nameserver',
                             id: 'ns55.bestnames.test',
                             attributes: { hostname: 'ns55.bestnames.test',
                                           ipv4: ['192.0.2.55'],
-                                          ipv6: ['2001:db8::55'] } },
-                    affected_domains: ["airport.test", "shop.test"] }),
+                                          ipv6: ['2001:db8::55'] },
+                    affected_domains: ["airport.test", "shop.test"] }}),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
@@ -85,7 +87,7 @@ class APINameserversPutTest < ApplicationIntegrationTest
         headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_response 404
-    assert_equal ({ errors: [{ title: 'Hostname non-existent.test does not exist' }] }),
+    assert_equal ({code: 2303, message: 'Object does not exist' }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
@@ -96,7 +98,8 @@ class APINameserversPutTest < ApplicationIntegrationTest
         headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_response 400
-    assert_equal ({ errors: [{ title: 'Hostname is missing' }] }),
+    assert_equal ({ code: 2003,
+                    message: 'param is missing or the value is empty: hostname' }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 

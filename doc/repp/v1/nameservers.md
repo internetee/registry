@@ -10,15 +10,15 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Basic dGVzdDp0ZXN0dGVzdA==
 {
-    "data":{
-        "type": "nameserver",
-        "id": "ns1.example.com",
-        "attributes": {
-            "hostname": "new-ns1.example.com",
-            "ipv4": ["192.0.2.1", "192.0.2.2"],
-            "ipv6": ["2001:db8::1", "2001:db8::2"]
-        },
+  "data": {
+    "type": "nameserver",
+    "id": "ns1.example.com",
+    "attributes": {
+      "hostname": "new-ns1.example.com",
+      "ipv4": ["192.0.2.1", "192.0.2.2"],
+      "ipv6": ["2001:db8::1", "2001:db8::2"]
     }
+  }
 }
 ```
 
@@ -27,16 +27,26 @@ Authorization: Basic dGVzdDp0ZXN0dGVzdA==
 HTTP/1.1 200
 Content-Type: application/json
 {
-    "data":{
+    "code": 1000,
+    "message": "Command completed successfully",
+    "data": {
         "type": "nameserver",
         "id": "new-ns1.example.com",
         "attributes": {
             "hostname": "new-ns1.example.com",
-            "ipv4": ["192.0.2.1", "192.0.2.2"],
-            "ipv6": ["2001:db8::1", "2001:db8::2"]
-        }
-    },
-    "affected_domains": ["example.com", "example.org"]
+            "ipv4": [
+                "192.0.2.1",
+                "192.0.2.2"
+            ],
+            "ipv6": [
+                "2001:db8::1",
+                "2001:db8::2"
+            ]
+        },
+        "affected_domains": [
+            "private.ee"
+        ]
+    }
 }
 ```
 
@@ -44,14 +54,10 @@ Content-Type: application/json
 ```
 HTTP/1.1 400
 Content-Type: application/json
+
 {
-    "errors":[
-        {
-            "title":"ns1.example.com does not exist"
-        },
-        {
-            "title":"192.0.2.1 is not a valid IPv4 address"
-        }
-    ]
+    "code": 2005,
+    "message": "IPv4 is invalid [ipv4]",
+    "data": {}
 }
 ```

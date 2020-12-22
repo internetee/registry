@@ -44,7 +44,7 @@ class EppContactInfoBaseTest < EppTestCase
                                                                     contact: xml_schema).text
   end
 
-  def test_hides_password_when_current_registrar_is_not_sponsoring
+  def test_hides_password_and_name_when_current_registrar_is_not_sponsoring
     non_sponsoring_registrar = registrars(:goodnames)
     @contact.update!(registrar: non_sponsoring_registrar)
 
@@ -70,6 +70,7 @@ class EppContactInfoBaseTest < EppTestCase
     assert_epp_response :completed_successfully
     response_xml = Nokogiri::XML(response.body)
     assert_nil response_xml.at_xpath('//contact:authInfo', contact: xml_schema)
+    assert_equal 'No access', response_xml.at_xpath('//contact:name', contact: xml_schema).text
   end
 
   private

@@ -19,6 +19,10 @@
             <li class="<%= 'active' if active_tab == :bulk_transfer %>">
                 <a href="#bulk_transfer" data-toggle="tab"><%= t '.bulk_transfer' %></a>
             </li>
+
+            <li class="<%= 'active' if active_tab == :bulk_renew %>">
+                <a href="#bulk_renew" data-toggle="tab"><%= t '.bulk_renew' %></a>
+            </li>
         </ul>
 
         <div class="tab-content">
@@ -33,5 +37,9 @@
 
             <div class="tab-pane<%= ' active' if active_tab == :bulk_transfer %>" id="bulk_transfer">
                 <%= render 'bulk_transfer_form' %>
+            </div>
+
+            <div class="tab-pane<%= ' active' if active_tab == :bulk_renew %>" id="bulk_renew">
+                <%= render 'bulk_renew_form' %>
             </div>
         </div>

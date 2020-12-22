@@ -49,12 +49,13 @@ class Registrar
 
       if response.code == '200'
         notices = [t('.replaced')]
-        notices << "#{t('.affected_domains')}: #{parsed_response[:affected_domains].join(', ')}"
+        notices << "#{t('.affected_domains')}: " \
+                   "#{parsed_response[:data][:affected_domains].join(', ')}"
 
-        flash[:notice] = notices
+        flash[:notice] = notices.join(', ')
         redirect_to registrar_domains_url
       else
-        @api_errors = parsed_response[:errors]
+        @api_errors = parsed_response[:message]
         render file: 'registrar/bulk_change/new', locals: { active_tab: :nameserver }
       end
     end

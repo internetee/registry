@@ -1,14 +1,15 @@
 module Serializers
   module RegistrantApi
     class Contact
-      attr_reader :contact
+      attr_reader :contact, :links
 
-      def initialize(contact)
+      def initialize(contact, links)
         @contact = contact
+        @links = links
       end
 
-      def to_json
-        {
+      def to_json(_obj = nil)
+        obj = {
           id: contact.uuid,
           name: contact.name,
           code: contact.code,
@@ -31,6 +32,10 @@ module Serializers
           statuses: contact.statuses,
           disclosed_attributes: contact.disclosed_attributes,
         }
+
+        obj[:links] = contact.related_domains if @links
+
+        obj
       end
     end
   end

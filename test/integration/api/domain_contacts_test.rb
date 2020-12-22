@@ -27,8 +27,8 @@ class APIDomainContactsTest < ApplicationIntegrationTest
           headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_response :ok
-    assert_equal ({ affected_domains: %w[airport.test shop.test],
-                    skipped_domains: [] }),
+    assert_equal ({ code: 1000, message: 'Command completed successfully', data: { affected_domains: %w[airport.test shop.test],
+                    skipped_domains: [] }}),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
@@ -42,7 +42,7 @@ class APIDomainContactsTest < ApplicationIntegrationTest
 
     assert_response :ok
     assert_equal %w[airport.test shop.test], JSON.parse(response.body,
-                                                        symbolize_names: true)[:skipped_domains]
+                                                        symbolize_names: true)[:data][:skipped_domains]
   end
 
   def test_keep_other_tech_contacts_intact
@@ -66,10 +66,8 @@ class APIDomainContactsTest < ApplicationIntegrationTest
                                                  new_contact_id: 'william-002' },
           headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
 
-    assert_response :bad_request
-    assert_equal ({ error: { type: 'invalid_request_error',
-                             param: 'current_contact_id',
-                             message: 'No such contact: jack-001' } }),
+    assert_response :not_found
+    assert_equal ({ code: 2303, message: 'Object does not exist' }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
@@ -77,10 +75,8 @@ class APIDomainContactsTest < ApplicationIntegrationTest
     patch '/repp/v1/domains/contacts', params: { current_contact_id: 'non-existent',
                                                  new_contact_id: 'john-001' },
           headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert_response :bad_request
-    assert_equal ({ error: { type: 'invalid_request_error',
-                             param: 'current_contact_id',
-                             message: 'No such contact: non-existent' } }),
+    assert_response :not_found
+    assert_equal ({ code: 2303, message: 'Object does not exist' }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
@@ -88,10 +84,8 @@ class APIDomainContactsTest < ApplicationIntegrationTest
     patch '/repp/v1/domains/contacts', params: { current_contact_id: 'william-001',
                                                  new_contact_id: 'non-existent' },
           headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert_response :bad_request
-    assert_equal ({ error: { type: 'invalid_request_error',
-                             param: 'new_contact_id',
-                             message: 'No such contact: non-existent' } }),
+    assert_response :not_found
+    assert_equal ({code: 2303, message: 'Object does not exist'}),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
@@ -100,9 +94,7 @@ class APIDomainContactsTest < ApplicationIntegrationTest
                                                  new_contact_id: 'invalid' },
           headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response :bad_request
-    assert_equal ({ error: { type: 'invalid_request_error',
-                             param: 'new_contact_id',
-                             message: 'New contact must be valid' } }),
+    assert_equal ({ code: 2304, message: 'New contact must be valid', data: {} }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
@@ -111,8 +103,7 @@ class APIDomainContactsTest < ApplicationIntegrationTest
                                                  new_contact_id: 'william-001' },
           headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response :bad_request
-    assert_equal ({ error: { type: 'invalid_request_error',
-                             message: 'New contact ID must be different from current contact ID' } }),
+    assert_equal ({ code: 2304, message: 'New contact must be different from current', data: {} }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 

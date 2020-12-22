@@ -5,7 +5,7 @@
   .col-md-8
     = render 'registrar/contacts/form/general', f: f
 
-- if address_processing?
+- if Contact.address_processing?
   .row
     .col-md-8
       = render 'registrar/contacts/form/address', f: f

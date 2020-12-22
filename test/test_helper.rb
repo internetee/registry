@@ -6,6 +6,7 @@ if ENV['COVERAGE']
     add_filter '/lib/core_monkey_patches/'
     add_filter '/lib/daemons/'
     add_filter '/lib/gem_monkey_patches/'
+    add_filter '/lib/tasks/'
   end
 end
 

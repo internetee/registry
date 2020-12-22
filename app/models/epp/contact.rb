@@ -30,12 +30,13 @@ class Epp::Contact < Contact
       at
     end
 
-    def new(frame, registrar)
+    def new(frame, registrar, epp: true)
       return super if frame.blank?
 
+      attrs = epp ? attrs_from(frame, new_record: true) : frame
       super(
-        attrs_from(frame, new_record: true).merge(
-          code: frame.css('id').text,
+        attrs.merge(
+          code: epp ? frame.css('id').text : frame[:id],
           registrar: registrar
         )
       )

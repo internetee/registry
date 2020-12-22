@@ -1,0 +1,10 @@
+one:
+  email: bounced@registry.test
+  message_id: 010f0174a0c7d348-ea6e2fc1-0854-4073-b71f-5cecf9b0d0b2-000000
+  bounce_type: Permanent
+  bounce_subtype: General
+  action: failed
+  status: '5.1.1'
+  diagnostic: 'smtp; 550 5.1.1 user unknown'
+  created_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+  updated_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>

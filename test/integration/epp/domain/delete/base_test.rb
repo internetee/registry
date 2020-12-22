@@ -35,7 +35,6 @@ class EppDomainDeleteBaseTest < EppTestCase
     XML
 
     post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
-    # binding.pry
     assert_includes Domain.find_by(name: 'invalid.test').statuses, DomainStatus::PENDING_DELETE_CONFIRMATION
     assert_epp_response :completed_successfully_action_pending
   end
@@ -90,7 +89,9 @@ class EppDomainDeleteBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    perform_enqueued_jobs do
+      post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
     @domain.reload
 
     assert @domain.registrant_verification_asked?
@@ -121,7 +122,9 @@ class EppDomainDeleteBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    perform_enqueued_jobs do
+      post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
     @domain.reload
 
     assert_not @domain.registrant_verification_asked?
@@ -152,7 +155,9 @@ class EppDomainDeleteBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    perform_enqueued_jobs do
+      post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
     @domain.reload
 
     assert_not @domain.registrant_verification_asked?

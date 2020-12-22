@@ -588,6 +588,9 @@ en:
   create_bank_transaction: 'Create bank transaction'
   create_new_invoice: 'Create new invoice'
   billing_failure_credit_balance_low: 'Billing failure - credit balance low'
+  billing_failure_credit_balance_low_for_domain: 'Billing failure - credit balance low for %{domain}'
+  domain_renew_error_for_domain: 'Domain renew error for %{domain}'
+  not_enough_funds: 'Not enough funds for renew domains'
   create: 'Create'
   activity_type: 'Activity type'
   receipt_date_from: 'Receipt date from'
@@ -602,6 +605,7 @@ en:
   notes: Notes
   active_price_for_this_operation_is: 'Active price for this operation is %{price}'
   active_price_missing_for_this_operation: 'Active price missing for this operation!'
+  active_price_missing_for_operation_with_domain: 'Active price missing for operation with %{domain}'
   valid_to_from: 'Valid to from'
   valid_to_until: 'Valid to until'
   registrant_ident: 'Registrant ident'
@@ -662,3 +666,4 @@ en:
     iban: IBAN
   sign_in: "Sign in"
   signed_in_successfully: "Signed in successfully"
+  bulk_renew_completed: "Bulk renew for domains completed"

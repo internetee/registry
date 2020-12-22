@@ -417,7 +417,7 @@ class Epp::Domain < Domain
         if statuses.include?(x)
           to_destroy << x
         else
-          add_epp_error('2303', 'status', x, [:domain_statuses, :not_found])
+          add_epp_error('2303', 'status', x, %i[statuses not_found])
         end
       end
 
@@ -432,7 +432,7 @@ class Epp::Domain < Domain
 
     frame.css('status').each do |x|
       unless DomainStatus::CLIENT_STATUSES.include?(x['s'])
-        add_epp_error('2303', 'status', x['s'], [:domain_statuses, :not_found])
+        add_epp_error('2303', 'status', x['s'], %i[statuses not_found])
         next
       end
 
@@ -506,25 +506,6 @@ class Epp::Domain < Domain
     end
 
     errors.empty? && super(at)
-  end
-
-  def apply_pending_update!
-    preclean_pendings
-    user  = ApiUser.find(pending_json['current_user_id'])
-    frame = Nokogiri::XML(pending_json['frame'])
-
-    self.statuses.delete(DomainStatus::PENDING_UPDATE)
-    self.upid = user.registrar.id if user.registrar
-    self.up_date = Time.zone.now
-
-    return unless update(frame, user, false)
-    clean_pendings!
-
-    save!
-
-    WhoisRecord.find_by(domain_id: id).save # need to reload model
-
-    true
   end
 
   def apply_pending_delete!

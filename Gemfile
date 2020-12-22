@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 # core
+gem 'active_interaction', '~> 3.8'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.12.1' # for dates and times
 gem 'rails', '~> 6.0'
@@ -34,8 +35,6 @@ gem 'sass-rails'
 gem 'select2-rails',    '3.5.9.3' # for autocomplete
 gem 'cancancan'
 gem 'devise', '~> 4.7'
-
-gem 'grape'
 
 # registry specfic
 gem 'data_migrate', '~> 6.1'
@@ -74,15 +73,11 @@ gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'domain_name'
 gem 'haml', '~> 5.0'
+gem 'rexml'
 gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
 
 gem 'directo', github: 'internetee/directo', branch: 'master'
 
-group :development do
-  # deploy
-  gem 'listen', '3.2.1'
-  gem 'mina', '0.3.1' # for fast deployment
-end
 
 group :development, :test do
   gem 'pry', '0.10.1'

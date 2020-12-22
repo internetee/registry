@@ -17,7 +17,7 @@ module Actions
     def call
       maybe_remove_address
       maybe_update_statuses
-      maybe_update_ident
+      maybe_update_ident if ident.present?
       maybe_attach_legal_doc
       commit
     end
@@ -53,7 +53,11 @@ module Actions
     end
 
     def maybe_update_ident
-      return unless ident[:ident]
+      unless ident.is_a?(Hash)
+        contact.add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident'))
+        @error = true
+        return
+      end
 
       if contact.identifier.valid?
         submitted_ident = ::Contact::Ident.new(code: ident[:ident],
