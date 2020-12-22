@@ -10,13 +10,24 @@ class ReppApi
 
   def self.request(request, uri, registrar:)
     request.basic_auth(registrar.username, registrar.plain_text_password) if registrar
-    http = Net::HTTP.start(uri.hostname, uri.port, use_ssl: (uri.scheme == 'https'))
-    unless Rails.env.test?
-      http.cert = OpenSSL::X509::Certificate.new(File.read(ENV['cert_path']))
-      http.key = OpenSSL::PKey::RSA.new(File.read(ENV['key_path']))
-    end
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Rails.env.development? || Rails.env.test?
+    client_cert = Rails.env.test? ? nil : File.read(ENV['cert_path'])
+    client_key = Rails.env.test? ? nil : File.read(ENV['key_path'])
+    params = ReppApi.compose_ca_auth_params(uri, client_cert, client_key)
 
-    http.request(request)
+    Net::HTTP.start(uri.hostname, uri.port, params) do |http|
+      http.request(request)
+    end
+  end
+
+  def self.compose_ca_auth_params(uri, client_cert, client_key)
+    params = { use_ssl: (uri.scheme == 'https') }
+    params[:verify_mode] = OpenSSL::SSL::VERIFY_NONE if Rails.env.test? || Rails.env.development?
+
+    unless Rails.env.test?
+      params[:cert] = OpenSSL::X509::Certificate.new(client_cert)
+      params[:key] = OpenSSL::PKey::RSA.new(client_key)
+    end
+
+    params
   end
 end
