@@ -1,3 +1,6 @@
+23.12.2020
+* fix for REPP logging and registrar portal communication [#1782](https://github.com/internetee/registry/pull/1782)
+
 22.12.2020
 * SSL CA verification fix for Bulk renew [#1778](https://github.com/internetee/registry/pull/1778)
 
