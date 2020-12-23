@@ -104,6 +104,7 @@ module Repp
 
       def webclient_request?
         return if Rails.env.test?
+
         ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
       end
 
