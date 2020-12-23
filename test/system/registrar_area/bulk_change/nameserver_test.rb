@@ -15,10 +15,12 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
     request_stub = stub_request(:put, /registrar\/nameservers/).with(body: request_body,
                                                                      headers: { 'Content-type' => Mime[:json] },
                                                                      basic_auth: ['test_goodnames', 'testtest'])
-                     .to_return(body: { data: [{
-                                                 type: 'nameserver',
-                                                 id: 'new-ns.bestnames.test'}],
-                                        affected_domains: ["airport.test", "shop.test"]}.to_json, status: 200)
+                     .to_return(body: { data: {
+                                            type: 'nameserver',
+                                            id: 'new-ns.bestnames.test',
+                                            affected_domains: ["airport.test", "shop.test"]
+                                        }
+                                      }.to_json, status: 200)
 
     visit registrar_domains_url
     click_link 'Bulk change'
@@ -38,7 +40,7 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
 
   def test_fails_gracefully
     stub_request(:put, /registrar\/nameservers/).to_return(status: 400,
-                                                           body: { errors: [{ title: 'epic fail' }] }.to_json,
+                                                           body: { message: 'epic fail' }.to_json,
                                                            headers: { 'Content-type' => Mime[:json] })
 
     visit registrar_domains_url
