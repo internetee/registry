@@ -72,8 +72,8 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
                                                                      basic_auth: ['test_goodnames', 'testtest'])
                    .to_return(body: { data: {
                      type: 'nameserver',
-                     id: 'new-ns.bestnames.test'},
-                     affected_domains: ["shop.test"]}.to_json, status: 200)
+                     id: 'new-ns.bestnames.test',
+                     affected_domains: ["shop.test"]}}.to_json, status: 200)
 
     visit registrar_domains_url
     click_link 'Bulk change'
