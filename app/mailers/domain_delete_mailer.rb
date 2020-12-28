@@ -1,12 +1,8 @@
 class DomainDeleteMailer < ApplicationMailer
-  def self.force_delete_templates
-    %w[private_person legal_person]
-  end
-
   def confirmation_request(domain:, registrar:, registrant:)
     @domain = DomainPresenter.new(domain: domain, view: view_context)
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
-    @confirmation_url = confirmation_url(domain)
+    @confirmation_url = registrant_confirm_url(domain: domain, method: 'delete')
 
     subject = default_i18n_subject(domain_name: domain.name)
     mail(to: registrant.email, subject: subject)
@@ -51,10 +47,6 @@ class DomainDeleteMailer < ApplicationMailer
   end
 
   private
-
-  def confirmation_url(domain)
-    registrant_domain_delete_confirm_url(domain, token: domain.registrant_verification_token)
-  end
 
   def forced_email_from
     ENV['action_mailer_force_delete_from'] || self.class.default[:from]

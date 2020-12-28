@@ -1,3 +1,63 @@
+23.12.2020
+* fix for REPP logging and registrar portal communication [#1782](https://github.com/internetee/registry/pull/1782)
+
+22.12.2020
+* SSL CA verification fix for Bulk renew [#1778](https://github.com/internetee/registry/pull/1778)
+
+21.12.2020
+* Bulk renew for REPP and registrar [#1763](https://github.com/internetee/registry/issues/1763)
+
+17.12.2020
+* New API for registering bounced emails [#1687](https://github.com/internetee/registry/pull/1687)
+
+16.12.2020
+* Refactored domain delete confirmation for interactors [#1769](https://github.com/internetee/registry/issues/1769)
+
+15.12.2020
+* Improved logic for domain list request in registrant API [#1750](https://github.com/internetee/registry/pull/1750)
+* Refactored Whois update job for interactors [#1771](https://github.com/internetee/registry/issues/1771)
+
+14.12.2020
+* Refactored domain cron jobs for interactors [#1767](https://github.com/internetee/registry/issues/1767)
+
+09.12.2020
+* Refactored domain update confirm for interactors [#1760](https://github.com/internetee/registry/issues/1760)
+
+08.12.2020
+* Replaced Travis-CI with GitHub Actions [#1746](https://github.com/internetee/registry/pull/1746)
+* Refactored domain delete for interactors [#1755](https://github.com/internetee/registry/issues/1755)
+
+01.12.2020
+* Refactored clientHold for interactors [#1751](https://github.com/internetee/registry/issues/1751)
+* Fixed internal error on removing clientHold status when not present [#1766](https://github.com/internetee/registry/issues/1766)
+
+30.11.2020
+* Refactor - interactors moved to domain space [#1762](https://github.com/internetee/registry/pull/1762)
+
+27.11.2020
+* Refactored delete confirmation for interactors [#1753](https://github.com/internetee/registry/issues/1753)
+
+24.11.2020
+* Added subnet support for list of allowed IPs [#983](https://github.com/internetee/registry/issues/983)
+* Added contact endpoint to Restful EPP API [#1580](https://github.com/internetee/registry/issues/1580)
+
+20.11.2020
+* Registrant confirmation over Registrant API [#1742](https://github.com/internetee/registry/pull/1742)
+* Refactored forceDelete cancellation for interactors [#1743](https://github.com/internetee/registry/issues/1743)
+
+19.11.2020
+* Only sponsoring registrar has access to private contact's details [#1745](https://github.com/internetee/registry/issues/1745)
+* Refactor ForceDelete [#1740](https://github.com/internetee/registry/issues/1740)
+
+13.11.2020
+* Fixed per registrar epp session limit [#729](https://github.com/internetee/registry/issues/729)
+* Correct error code is returned on reaching session limit [#587](https://github.com/internetee/registry/issues/587)
+* No logins within active session [#1313](https://github.com/internetee/registry/issues/1313)
+
+06.11.2020
+* Csv option to limit list of domains for bulk nameserver change in registrar portal [#1737](https://github.com/internetee/registry/issues/1737)
+* New forceDelete email template for invalid contact data [#1178](https://github.com/internetee/registry/issues/1178)
+
 05.11.2020
 * Registrant API contact name update feature [#1724](https://github.com/internetee/registry/issues/1724)
 * New email template for expired domains in forceDelete [#1725](https://github.com/internetee/registry/issues/1725)

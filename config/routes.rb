@@ -37,12 +37,36 @@ Rails.application.routes.draw do
     get 'error/:command', to: 'errors#error'
   end
 
-  mount Repp::API => '/'
-
   namespace :repp do
     namespace :v1 do
+      resources :contacts do
+        collection do
+          get 'check/:id', to: 'contacts#check'
+        end
+      end
+
+      resources :accounts do
+        collection do
+          get 'balance'
+        end
+      end
       resources :auctions, only: %i[index]
       resources :retained_domains, only: %i[index]
+      namespace :registrar do
+        resources :nameservers do
+          collection do
+            put '/', to: 'nameservers#update'
+          end
+        end
+      end
+      resources :domains do
+        collection do
+          get ':id/transfer_info', to: 'domains#transfer_info', constraints: { id: /.*/ }
+          post 'transfer', to: 'domains#transfer'
+          patch 'contacts', to: 'domains/contacts#update'
+          post 'renew/bulk', to: 'domains/renews#bulk_renew'
+        end
+      end
     end
   end
 
@@ -56,6 +80,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :registrant do
         post 'auth/eid', to: 'auth#eid'
+        get 'confirms/:name/:template/:token', to: 'confirms#index', constraints: { name: /[^\/]+/ }
+        post 'confirms/:name/:template/:token/:decision', to: 'confirms#update', constraints: { name: /[^\/]+/ }
 
         resources :domains, only: %i[index show], param: :uuid do
           resource :registry_lock, only: %i[create destroy]
@@ -65,7 +91,7 @@ Rails.application.routes.draw do
       end
 
       resources :auctions, only: %i[index show update], param: :uuid
-
+      resources :bounces, only: %i[create]
     end
 
     match '*all', controller: 'cors', action: 'cors_preflight_check', via: [:options],
@@ -108,6 +134,7 @@ Rails.application.routes.draw do
     end
     resources :domain_transfers, only: %i[new create]
     resource :bulk_change, controller: :bulk_change, only: :new
+    post '/bulk_renew/new', to: 'bulk_change#bulk_renew', as: :bulk_renew
     resource :tech_contacts, only: :update
     resource :nameservers, only: :update
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
@@ -296,6 +323,7 @@ Rails.application.routes.draw do
     resources :epp_logs
     resources :repp_logs
     resources :mass_actions, only: %i[index create]
+    resources :bounced_mail_addresses, only: %i[index show destroy]
 
     authenticate :admin_user do
       mount Que::Web, at: 'que'

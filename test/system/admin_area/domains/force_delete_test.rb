@@ -44,7 +44,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     end
 
     @domain.reload
-    assert_equal template_name, @domain.template_name
+    assert_equal @domain.notification_template, @domain.template_name
   end
 
   def test_uses_legal_template_if_registrant_org
@@ -57,7 +57,23 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     end
 
     @domain.reload
-    assert_equal template_name, @domain.template_name
+    assert_equal @domain.notification_template, @domain.template_name
+  end
+
+  def test_uses_legal_template_if_invalid_email
+    verification = @domain.contacts.first.email_verification
+    verification.update(verified_at: Time.zone.now - 1.day, success: false)
+
+    assert_equal @domain.notification_template, 'invalid_email'
+
+    assert_emails 0 do
+      visit edit_admin_domain_url(@domain)
+      find(:css, '#soft_delete').set(true)
+      click_link_or_button 'Force delete domain'
+    end
+
+    @domain.reload
+    assert_equal @domain.notification_template, @domain.template_name
   end
 
   def test_allows_to_skip_notifying_registrant_and_admin_contacts_by_email
@@ -86,11 +102,5 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     visit edit_admin_domain_url(@domain)
     assert_no_button 'Schedule force delete'
     assert_no_link 'Schedule force delete'
-  end
-
-  private
-
-  def template_name
-    @domain.registrant.org? ? 'legal_person' : 'private_person'
   end
 end

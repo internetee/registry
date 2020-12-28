@@ -1,18 +1,20 @@
 require 'test_helper'
 
-class NewDomainForceDeleteTest < ActiveSupport::TestCase
+class ForceDeleteTest < ActionMailer::TestCase
   setup do
     @domain = domains(:shop)
     Setting.redemption_grace_period = 30
+    ActionMailer::Base.deliveries.clear
   end
 
   def test_schedules_force_delete_fast_track
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
 
-    @domain.schedule_force_delete(type: :fast_track)
+    @domain.schedule_force_delete(type: :fast_track, notify_by_email: true)
     @domain.reload
 
+    assert_emails 1
     assert @domain.force_delete_scheduled?
     assert_equal Date.parse('2010-08-20'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-07-06'), @domain.force_delete_start.to_date
@@ -111,9 +113,12 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
 
   def test_force_delete_cannot_be_scheduled_when_a_domain_is_discarded
     @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
-    assert_raises StandardError do
-      @domain.schedule_force_delete(type: :fast_track)
-    end
+    result = Domains::ForceDelete::SetForceDelete.run(domain: @domain, type: :fast_track)
+
+    assert_not result.valid?
+    assert_not @domain.force_delete_scheduled?
+    message = ["Force delete procedure cannot be scheduled while a domain is discarded"]
+    assert_equal message, result.errors.messages[:domain]
   end
 
   def test_cancels_force_delete
@@ -201,9 +206,10 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     @domain.schedule_force_delete(type: :soft)
 
     travel_to Time.zone.parse('2010-08-21')
-    DomainCron.start_client_hold
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
+    assert_emails 1
     assert_equal(@domain.purge_date.to_date, @domain.force_delete_date.to_date)
     assert_equal(@domain.outzone_date.to_date, @domain.force_delete_start.to_date +
         Setting.expire_warning_period.days)
@@ -221,8 +227,10 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     @domain.schedule_force_delete(type: :soft)
 
     travel_to Time.zone.parse('2010-08-21')
-    DomainCron.start_client_hold
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
+
+    assert_emails 1
     assert_includes(@domain.statuses, asserted_status)
   end
 
@@ -236,7 +244,7 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
     @domain.schedule_force_delete(type: :soft)
 
     travel_to Time.zone.parse('2010-07-06')
-    DomainCron.start_client_hold
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
     assert_not_includes(@domain.statuses, asserted_status)
@@ -251,7 +259,7 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
 
     @domain.schedule_force_delete(type: :fast_track)
     travel_to Time.zone.parse('2010-07-25')
-    DomainCron.start_client_hold
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
     assert_includes(@domain.statuses, asserted_status)
@@ -267,7 +275,7 @@ class NewDomainForceDeleteTest < ActiveSupport::TestCase
 
     @domain.schedule_force_delete(type: :fast_track)
     travel_to Time.zone.parse('2010-07-06')
-    DomainCron.start_client_hold
+    Domains::ClientHold::SetClientHold.run!
     @domain.reload
 
     assert_not_includes(@domain.statuses, asserted_status)

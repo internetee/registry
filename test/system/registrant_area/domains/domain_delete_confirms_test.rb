@@ -1,6 +1,7 @@
 require 'application_system_test_case'
 
 class DomainDeleteConfirmsTest < ApplicationSystemTestCase
+  include ActionMailer::TestHelper
   setup do
     @user = users(:registrant)
     sign_in @user
@@ -13,7 +14,9 @@ class DomainDeleteConfirmsTest < ApplicationSystemTestCase
   def test_enqueues_approve_job_after_verification
     visit registrant_domain_delete_confirm_url(@domain.id, token: @domain.registrant_verification_token)
 
-    click_on 'Confirm domain delete'
+    perform_enqueued_jobs do
+      click_on 'Confirm domain delete'
+    end
     assert_text 'Domain registrant change has successfully received.'
 
     @domain.reload
@@ -23,7 +26,9 @@ class DomainDeleteConfirmsTest < ApplicationSystemTestCase
   def test_enqueues_reject_job_after_verification
     visit registrant_domain_delete_confirm_url(@domain.id, token: @domain.registrant_verification_token)
 
-    click_on 'Reject domain delete'
+    perform_enqueued_jobs do
+      click_on 'Reject domain delete'
+    end
     assert_text 'Domain registrant change has been rejected successfully.'
 
     @domain.reload

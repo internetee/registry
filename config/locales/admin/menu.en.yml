@@ -15,6 +15,7 @@ en:
         reserved_domains: Reserved domains
         disputed_domains: Disputed domains
         mass_actions: Mass actions
+        bounced_email_addresses: Bounced emails
         epp_log: EPP log
         repp_log: REPP log
         que: Que

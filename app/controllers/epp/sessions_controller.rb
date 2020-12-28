@@ -79,19 +79,32 @@ module Epp
 
       if success && EppSession.limit_reached?(@api_user.registrar)
         epp_errors << {
-          msg: 'Authentication error; server closing connection (connection limit reached)',
-          code: '2501'
+          msg: 'Session limit exceeded; server closing connection (connection limit reached)',
+          code: '2502',
         }
 
         success = false
       end
 
       if success
-        if params[:parsed_frame].css('newPW').first
-          unless @api_user.update(plain_text_password: params[:parsed_frame].css('newPW').first.text)
-            handle_errors(@api_user) and return
+        new_password = params[:parsed_frame].at_css('newPW')&.text
+        password_change = new_password.present?
+
+        if password_change
+          @api_user.plain_text_password = new_password
+          @api_user.save!
         end
-      end
+
+        already_authenticated = EppSession.exists?(session_id: epp_session_id)
+
+        if already_authenticated
+          epp_errors << {
+            msg: 'Command use error; Already authenticated',
+            code: 2002,
+          }
+          handle_errors
+          return
+        end
 
         epp_session = EppSession.new
         epp_session.session_id = epp_session_id
@@ -100,8 +113,8 @@ module Epp
         render_epp_response('login_success')
       else
         handle_errors
+      end
     end
-  end
 
     def ip_white?
       webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
@@ -125,7 +138,7 @@ module Epp
       @api_user = current_user # cache current_user for logging
       epp_session.destroy
       render_epp_response('logout')
-  end
+    end
 
     ### HELPER METHODS ###
 

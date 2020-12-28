@@ -327,6 +327,7 @@ class Domain < ApplicationRecord
   end
 
   def notify_registrar(message_key)
+    # TODO: To be deleted with DomainDeleteConfirm refactoring
     registrar.notifications.create!(
       text: "#{I18n.t(message_key)}: #{name}",
       attached_obj_id: id,
@@ -335,11 +336,13 @@ class Domain < ApplicationRecord
   end
 
   def preclean_pendings
+    # TODO: To be deleted with refactoring
     self.registrant_verification_token = nil
     self.registrant_verification_asked_at = nil
   end
 
   def clean_pendings!
+    # TODO: To be deleted with refactoring
     preclean_pendings
     self.pending_json = {}
     statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
@@ -418,7 +421,7 @@ class Domain < ApplicationRecord
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
-    DomainDeleteConfirmEmailJob.enqueue(id)
+    Domains::DeleteConfirmEmail::SendRequest.run(domain: self)
   end
 
   def cancel_pending_delete
@@ -480,12 +483,6 @@ class Domain < ApplicationRecord
     return '' if pending_json.blank?
     return '' if pending_json['new_registrant_id'].blank?
     Registrant.find_by(id: pending_json['new_registrant_id'])
-  end
-
-  def set_graceful_expired
-    self.outzone_at = expire_time + self.class.expire_warning_period
-    self.delete_date = outzone_at + self.class.redemption_grace_period
-    self.statuses |= [DomainStatus::EXPIRED]
   end
 
   def pending_update?
@@ -640,6 +637,10 @@ class Domain < ApplicationRecord
 
   def domain_name
     DNS::DomainName.new(name)
+  end
+
+  def contact_emails_verification_failed
+    contacts.select(&:email_verification_failed?)&.map(&:email)&.uniq
   end
 
   def self.to_csv

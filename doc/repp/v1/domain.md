@@ -25,44 +25,52 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 808
 Content-Type: application/json
 
 {
-  "domains": [
-    {
-      "id": 1,
-      "name": "domain0.ee",
-      "registrar_id": 2,
-      "registered_at": "2015-09-09T09:11:14.861Z",
-      "status": null,
-      "valid_from": "2015-09-09T09:11:14.861Z",
-      "valid_to": "2016-09-09T09:11:14.861Z",
-      "registrant_id": 1,
-      "transfer_code": "98oiewslkfkd",
-      "created_at": "2015-09-09T09:11:14.861Z",
-      "updated_at": "2015-09-09T09:11:14.860Z",
-      "name_dirty": "domain0.ee",
-      "name_puny": "domain0.ee",
-      "period": 1,
-      "period_unit": "y",
-      "creator_str": null,
-      "updator_str": null,
-      "outzone_at": "2016-09-24T09:11:14.861Z",
-      "delete_date": "2016-10-24",
-      "registrant_verification_asked_at": null,
-      "registrant_verification_token": null,
-      "pending_json": {
-      },
-      "force_delete_date": null,
-      "statuses": [
-        "ok"
-      ],
-      "status_notes": {
+  "code": 1000,
+  "message": "Command completed successfully",
+  "data": {
+    "domains": [
+      {
+        "id": 7,
+        "name": "private.ee",
+        "registrar_id": 2,
+        "valid_to": "2022-09-23T00:00:00.000+03:00",
+        "registrant_id": 11,
+        "created_at": "2020-09-22T14:16:47.420+03:00",
+        "updated_at": "2020-10-21T13:31:43.733+03:00",
+        "name_dirty": "private.ee",
+        "name_puny": "private.ee",
+        "period": 1,
+        "period_unit": "y",
+        "creator_str": "2-ApiUser: test",
+        "updator_str": null,
+        "outzone_at": null,
+        "delete_date": null,
+        "registrant_verification_asked_at": null,
+        "registrant_verification_token": null,
+        "pending_json": {},
+        "force_delete_date": null,
+        "statuses": [
+          "serverRenewProhibited"
+        ],
+        "status_notes": {
+          "ok": "",
+          "serverRenewProhibited": ""
+        },
+        "upid": null,
+        "up_date": null,
+        "uuid": "6b6affa7-1449-4bd8-acf5-8b4752406705",
+        "locked_by_registrant_at": null,
+        "force_delete_start": null,
+        "force_delete_data": null,
+        "auth_info": "367b1e6d1f0d9aa190971ad8f571cd4d",
+        "valid_from": "2020-09-22T14:16:47.420+03:00"
       }
-    }
-  ],
-  "total_number_of_records": 2
+    ],
+    "total_number_of_records": 10
+  }
 }
 ```
 
@@ -83,14 +91,17 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 54
 Content-Type: application/json
 
 {
-  "domains": [
-    "domain1.ee"
-  ],
-  "total_number_of_records": 2
+    "code": 1000,
+    "message": "Command completed successfully",
+    "data": {
+        "domains": [
+            "private.ee",
+        ],
+        "total_number_of_records": 1
+    }
 }
 ```
 
@@ -117,65 +128,68 @@ Please note that domain transfer/authorisation code must be placed in header - *
 ```
 HTTP/1.1 200 OK
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 784
 Content-Type: application/json
-
 {
-  "domain":"ee-test.ee",
-  "registrant":{
-    "code":"EE:R1",
-    "name":"Registrant",
-    "ident":"17612535",
-    "ident_type":"org",
-    "ident_country_code":"EE",
-    "phone":"+372.1234567",
-    "email":"registrant@cache.ee",
-    "street":"Businesstreet 1",
-    "city":"Tallinn",
-    "zip":"10101",
-    "country_code":"EE",
-    "statuses":[
-      "ok",
-      "linked"
-    ]
-  },
-  "admin_contacts":[
-    {
-      "code":"EE:A1",
-      "name":"Admin Contact",
-      "ident":"17612535376",
-      "ident_type":"priv",
-      "ident_country_code":"EE",
-      "phone":"+372.7654321",
-      "email":"admin@cache.ee",
-      "street":"Adminstreet 2",
-      "city":"Tallinn",
-      "zip":"12345",
-      "country_code":"EE",
-      "statuses":[
-        "ok",
-        "linked"
+  "code": 1000,
+  "message": "Command completed successfully",
+  "data": {
+      "domain":"ee-test.ee",
+      "registrant":{
+        "code":"EE:R1",
+        "name":"Registrant",
+        "ident":"17612535",
+        "ident_type":"org",
+        "ident_country_code":"EE",
+        "phone":"+372.1234567",
+        "email":"registrant@cache.ee",
+        "street":"Businesstreet 1",
+        "city":"Tallinn",
+        "zip":"10101",
+        "country_code":"EE",
+        "statuses":[
+          "ok",
+          "linked"
+        ]
+      },
+      "admin_contacts":[
+        {
+          "code":"EE:A1",
+          "name":"Admin Contact",
+          "ident":"17612535376",
+          "ident_type":"priv",
+          "ident_country_code":"EE",
+          "phone":"+372.7654321",
+          "email":"admin@cache.ee",
+          "street":"Adminstreet 2",
+          "city":"Tallinn",
+          "zip":"12345",
+          "country_code":"EE",
+          "statuses":[
+            "ok",
+            "linked"
+          ]
+        }
+      ],
+      "tech_contacts":[
+        {
+          "code":"EE:T1",
+          "name":"Tech Contact",
+          "ident":"17612536",
+          "ident_type":"org",
+          "ident_country_code":"EE",
+          "phone":"+372.7654321",
+          "email":"tech@cache.ee",
+          "street":"Techstreet 1",
+          "city":"Tallinn",
+          "zip":"12345",
+          "country_code":"EE",
+          "statuses":[
+            "ok",
+            "linked"
+          ]
+        }
       ]
     }
-  ],
-  "tech_contacts":[
-    {
-      "code":"EE:T1",
-      "name":"Tech Contact",
-      "ident":"17612536",
-      "ident_type":"org",
-      "ident_country_code":"EE",
-      "phone":"+372.7654321",
-      "email":"tech@cache.ee",
-      "street":"Techstreet 1",
-      "city":"Tallinn",
-      "zip":"12345",
-      "country_code":"EE",
-      "statuses":[
-        "ok",
-        "linked"
-      ]
-    }
-  ]
+  }
 }
 ```

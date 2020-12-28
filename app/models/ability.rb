@@ -110,6 +110,7 @@ class Ability
     can :create, :zonefile
     can :access, :settings_menu
     can :manage, :mass_actions
+    can :manage, BouncedMailAddress
   end
 
   def static_registrant

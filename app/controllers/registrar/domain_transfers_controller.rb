@@ -15,12 +15,12 @@ class Registrar
         csv.each do |row|
           domain_name = row['Domain']
           transfer_code = row['Transfer code']
-          domain_transfers << { 'domainName' => domain_name, 'transferCode' => transfer_code }
+          domain_transfers << { 'domain_name' => domain_name, 'transfer_code' => transfer_code }
         end
 
-        uri = URI.parse("#{ENV['repp_url']}domain_transfers")
+        uri = URI.parse("#{ENV['repp_url']}domains/transfer")
         request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
-        request.body = { data: { domainTransfers: domain_transfers } }.to_json
+        request.body = { data: { domain_transfers: domain_transfers } }.to_json
         request.basic_auth(current_registrar_user.username,
                            current_registrar_user.plain_text_password)
 
@@ -55,10 +55,12 @@ class Registrar
         parsed_response = JSON.parse(response.body, symbolize_names: true)
 
         if response.code == '200'
-          flash[:notice] = t '.transferred', count: parsed_response[:data].size
+          failed = parsed_response[:data][:failed].each(&:domain_name).join(', ')
+          flash[:notice] = t('.transferred', count: parsed_response[:data][:success].size,
+                                             failed: failed)
           redirect_to registrar_domains_url
         else
-          @api_errors = parsed_response[:errors]
+          @api_errors = parsed_response[:message]
           render file: 'registrar/bulk_change/new', locals: { active_tab: :bulk_transfer }
         end
       else
