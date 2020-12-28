@@ -23,7 +23,8 @@ class MassAction
       dn = Domain.find_by(name_puny: e['domain_name'])
       log[:fail] << e['domain_name'] and next unless dn
 
-      dn.schedule_force_delete(type: :soft, reason: e['delete_reason'])
+      dn.schedule_force_delete(type: :soft, notify_by_email: false, reason: e['delete_reason'])
+
       log[:ok] << dn.name
     end
 
@@ -32,7 +33,7 @@ class MassAction
 
   def self.force_delete_entries_valid?(entries)
     entries.each do |e|
-      reasons = %w[ENTITY_BURIED EMAIL PHONE]
+      reasons = %w[ENTITY_BURIED INVALID_EMAIL INVALID_PHONE]
       return false unless e['domain_name'].present? && reasons.include?(e['delete_reason'])
     end
 

@@ -8,7 +8,7 @@ module Domains
           send_email
           domain.update(contact_notification_sent_date: Time.zone.today)
         else
-          domain.update(template_name: domain.notification_template)
+          domain.update(template_name: domain.notification_template(explicit: reason))
         end
       end
 
