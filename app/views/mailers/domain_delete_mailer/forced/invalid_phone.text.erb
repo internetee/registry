@@ -1,6 +1,6 @@
 <p>Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt</p>
 
-<p>Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et domeeni <%= @domain.name %> kontaktandmed on puudulikud - telefoninumber <%= @domain.registrant.phone %></p>
+<p>Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et domeeni <%= @domain.name %>  kontakti(de) telefoni number või numbrid on puudulikud.</p>
 
 <p>Et see olukord on vastuolus .ee <a href='https://www.internet.ee/domains/ee-domain-regulation'>domeenireeglitega</a> algatas EIS <%= @delete_period_length %> päeva pikkuse kustutusmenetluse. Menetluse käigus on domeen <%= @expire_warning_period %> esimest päeva internetis kättesaadav.</p>
 
@@ -17,7 +17,7 @@
 
 <p>Dear registrant/administrative contact of .ee domain,</p>
 
-<p>Estonian Internet Foundation has learned that contact data of the domain <%= @domain.name %> s invalid - phone number <%= @domain.registrant.phone %>.</p>
+<p>Estonian Internet Foundation has learned that contact(s) phone number data of the domain <%= @domain.name %> are invalid.</p>
 
 <p>Since this is a violation of <a href='https://www.internet.ee/domains/ee-domain-regulation'>Estonian domain regulations</a>, <%= @delete_period_length %>-day deletion process has started for the <%= @domain.name %> domain. For the first <%= @expire_warning_period %> days the domain will remain available on the Internet during the deletion process.</p>
 
@@ -33,7 +33,7 @@
 
 <p>Уважаемый регистрант/административный контакт домена .ee</p>
 
-<p>Целевому учреждению Eesti Internet (EIS) стало известно, что контактные данные домена <%= @domain.name %> неверны - телефонный номер <%= @domain.registrant.phone %>.</p>
+<p>Целевому учреждению Eesti Internet (EIS) стало известно, что контактные данные домена <%= @domain.name %> неверны - телефонные номера.</p>
 
 <p>Так как это является нарушением <a href='https://www.internet.ee/domains/ee-domain-regulation'>Правил домена .ee</a>, <%= @delete_period_length %>-дневный процесс удаления начат для доменного имени <%= @domain.name %>. В течение первых <%= @expire_warning_period %> дней домен будет доступен в интернете.</p>
 
