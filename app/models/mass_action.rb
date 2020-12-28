@@ -14,6 +14,7 @@ class MassAction
   def self.process_force_delete(entries)
     return false unless force_delete_entries_valid?(entries)
 
+    STDOUT << 'PASSSß'
     apply_force_deletes(entries)
   end
 
@@ -26,6 +27,7 @@ class MassAction
       dn.schedule_force_delete(type: :soft, notify_by_email: false, reason: e['delete_reason'])
 
       log[:ok] << dn.name
+      STDOUT << 'OOOOK'
     end
 
     log
