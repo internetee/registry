@@ -18,6 +18,7 @@ module Actions
       assign_tech_contact_changes
       assign_requested_statuses
       assign_dnssec_modifications
+      maybe_attach_legal_doc
 
       commit
     end
@@ -189,7 +190,6 @@ module Actions
         if domain.statuses.include?(s[:status])
           rem << s[:status]
         else
-          STDOUT << 'AAAAAH'
           domain.add_epp_error('2303', 'status', s[:status], %i[statuses not_found])
           invalid = true
         end
@@ -224,15 +224,7 @@ module Actions
     end
 
     def maybe_attach_legal_doc
-      return unless legal_document
-
-      doc = LegalDocument.create(
-        documentable_type: Contact,
-        document_type: legal_document[:type], body: legal_document[:body]
-      )
-
-      contact.legal_documents = [doc]
-      contact.legal_document_id = doc.id
+      Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
     end
 
     def commit

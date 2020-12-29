@@ -19,6 +19,7 @@ module Deserializers
         obj[:tech_domain_contacts_attributes] = tech_contacts
         obj[:nameservers_attributes] = nameservers
         obj[:dnskeys_attributes] = dns_keys
+        obj[:legal_document] = legal_document
 
         obj
       end
@@ -41,6 +42,10 @@ module Deserializers
 
       def dns_keys
         @dns_keys ||= ::Deserializers::Xml::DnssecKeys.new(frame).key_data
+      end
+
+      def legal_document
+        @legal_document ||= ::Deserializers::Xml::LegalDocument.new(frame).call
       end
     end
   end

@@ -114,21 +114,6 @@ class Epp::Domain < Domain
     admin_contacts << registrant if admin_domain_contacts.blank? && !registrant.org?
   end
 
-  # Adding legal doc to domain and
-  # if something goes wrong - raise Rollback error
-  def add_legal_file_to_new frame
-    legal_document_data = ::Deserializers::Xml::LegalDocument.new(frame).call
-    return unless legal_document_data
-    return if legal_document_data[:body].starts_with?(ENV['legal_documents_dir'])
-
-    doc = LegalDocument.create(documentable_type: Domain, document_type: legal_document_data[:type],
-                               body: legal_document_data[:body])
-    self.legal_documents = [doc]
-
-    frame.css("legalDocument").first.content = doc.path if doc&.persisted?
-    self.legal_document_id = doc.id
-  end
-
   def apply_pending_delete!
     preclean_pendings
     statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)

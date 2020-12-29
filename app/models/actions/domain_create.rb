@@ -18,6 +18,7 @@ module Actions
       assign_tech_contacts
       domain.attach_default_contacts
       assign_expiry_time
+      maybe_attach_legal_doc
 
       commit
     end
@@ -30,25 +31,33 @@ module Actions
       if dn.at_auction?
         domain.add_epp_error('2306', nil, nil, 'Parameter value policy error: domain is at auction')
       elsif dn.awaiting_payment?
-        domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw element required for reserved domains')
+        domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw element' \
+        ' required for reserved domains')
       elsif dn.pending_registration?
         if params[:reserved_pw].blank?
-          domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw element is required')
+          domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw ' \
+          'element is required')
         else
           unless dn.available_with_code?(params[:reserved_pw])
-            domain.add_epp_error('2202', nil, nil, 'Invalid authorization information; invalid reserved>pw value')
+            domain.add_epp_error('2202', nil, nil, 'Invalid authorization information; invalid ' \
+            'reserved>pw value')
           end
         end
       end
     end
 
     def assign_registrant
-      domain.add_epp_error('2306', nil, nil, %i[registrant cannot_be_missing]) and return unless params[:registrant_id]
+      unless params[:registrant_id]
+        domain.add_epp_error('2306', nil, nil, %i[registrant cannot_be_missing])
+        return
+      end
 
       regt = Registrant.find_by(code: params[:registrant_id])
-      domain.add_epp_error('2303', 'registrant', params[:registrant_id], %i[registrant not_found]) and return unless regt
-
-      domain.registrant = regt
+      if regt
+        domain.registrant = regt
+      else
+        domain.add_epp_error('2303', 'registrant', params[:registrant_id], %i[registrant not_found])
+      end
     end
 
     def assign_domain_attributes
@@ -90,8 +99,8 @@ module Actions
     def assign_expiry_time
       period = domain.period.to_i
       plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym
-      expire_time = (Time.zone.now.advance(plural_period_unit_name => period) + 1.day).beginning_of_day
-      domain.expire_time = expire_time
+      exp = (Time.zone.now.advance(plural_period_unit_name => period) + 1.day).beginning_of_day
+      domain.expire_time = exp
     end
 
     def debit_registrar
@@ -119,15 +128,7 @@ module Actions
     end
 
     def maybe_attach_legal_doc
-      return unless legal_document
-
-      doc = LegalDocument.create(
-        documentable_type: Contact,
-        document_type: legal_document[:type], body: legal_document[:body]
-      )
-
-      contact.legal_documents = [doc]
-      contact.legal_document_id = doc.id
+      Actions::BaseAction.attach_legal_doc_to_new(domain, params[:legal_document], domain: true)
     end
 
     def commit
@@ -135,9 +136,8 @@ module Actions
         domain.errors.delete(:name_dirty) if domain.errors[:puny_label].any?
         return false if domain.errors.any?
       end
-      # @domain.add_legal_file_to_new(params[:parsed_frame])
-      debit_registrar
 
+      debit_registrar
       return false if domain.errors.any?
 
       process_auction_and_disputes
