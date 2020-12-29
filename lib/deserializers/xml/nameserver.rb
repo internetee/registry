@@ -11,7 +11,7 @@ module Deserializers
         {
           hostname: frame.css('hostName').text,
           ipv4: frame.css('hostAddr[ip="v4"]').map(&:text).compact,
-          ipv6: frame.css('hostAddr[ip="v6"]').map(&:text).compact
+          ipv6: frame.css('hostAddr[ip="v6"]').map(&:text).compact,
         }
       end
     end

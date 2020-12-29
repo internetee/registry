@@ -33,7 +33,10 @@ module Actions
     def assign_new_registrant
       return unless params[:registrant]
 
-      domain.add_epp_error('2306', nil, nil, %i[registrant cannot_be_missing]) unless params[:registrant][:code]
+      unless params[:registrant][:code]
+        domain.add_epp_error('2306', nil, nil, %i[registrant cannot_be_missing])
+      end
+
       regt = Registrant.find_by(code: params[:registrant][:code])
       if regt.present?
         return if domain.registrant == regt
@@ -51,7 +54,10 @@ module Actions
       nameservers = []
       params[:nameservers].select { |ns| ns[:action] == 'rem' }.each do |ns_attr|
         ns = domain.nameservers.find_by_hash_params(ns_attr.except(:action)).first
-        domain.add_epp_error('2303', 'hostAttr', ns_attr[:hostname], %i[nameservers not_found]) and break unless ns
+        unless ns
+          domain.add_epp_error('2303', 'hostAttr', ns_attr[:hostname], %i[nameservers not_found])
+          break
+        end
         nameservers << { id: ns.id, _destroy: 1 }
       end
 
@@ -59,7 +65,7 @@ module Actions
         nameservers << ns_attr.except(:action)
       end
 
-      return unless nameservers.present?
+      return if nameservers.blank?
 
       domain.nameservers_attributes = nameservers
     end
@@ -95,7 +101,8 @@ module Actions
       contacts = params[:contacts].select { |c| c[:type] == 'admin' }
 
       if contacts.present? && domain.admin_change_prohibited?
-        domain.add_epp_error('2304', 'admin', DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+        domain.add_epp_error('2304', 'admin', DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED,
+                             I18n.t(:object_status_prohibits_operation))
         return
       end
 
@@ -109,10 +116,11 @@ module Actions
       end
 
       contacts.select { |c| c[:action] == 'add' }.each do |c|
-        contact = Epp::Contact.find_by_epp_code(c[:code])
+        contact = Epp::Contact.find_by(code: c[:code])
         if contact.present?
           if contact.org?
-            domain.add_epp_error('2306', 'contact', c[:code], %i[domain_contacts admin_contact_can_be_only_private_person])
+            domain.add_epp_error('2306', 'contact', c[:code],
+                                 %i[domain_contacts admin_contact_can_be_only_private_person])
           else
             props << { contact_id: contact.id, contact_code_cache: contact.code }
           end
@@ -121,7 +129,7 @@ module Actions
         end
       end
 
-      return unless props.present?
+      return if props.blank?
 
       domain.admin_domain_contacts_attributes = props
     end
@@ -133,7 +141,8 @@ module Actions
       contacts = params[:contacts].select { |c| c[:type] == 'tech' }
 
       if contacts.present? && domain.tech_change_prohibited?
-        domain.add_epp_error('2304', 'tech', DomainStatus::SERVER_TECH_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+        domain.add_epp_error('2304', 'tech', DomainStatus::SERVER_TECH_CHANGE_PROHIBITED,
+                             I18n.t(:object_status_prohibits_operation))
         return
       end
 
@@ -147,7 +156,7 @@ module Actions
       end
 
       contacts.select { |c| c[:action] == 'add' }.each do |c|
-        contact = Epp::Contact.find_by_epp_code(c[:code])
+        contact = Epp::Contact.find_by(code: c[:code])
         if contact.present?
           props << { contact_id: contact.id, contact_code_cache: contact.code }
         else
@@ -155,7 +164,7 @@ module Actions
         end
       end
 
-      return unless props.present?
+      return if props.blank?
 
       domain.tech_domain_contacts_attributes = props
     end
@@ -203,10 +212,12 @@ module Actions
           Dispute.close_by_domain(domain.name)
           return false
         else
-          domain.add_epp_error('2202', nil, nil, 'Invalid authorization information; invalid reserved>pw value')
+          domain.add_epp_error('2202', nil, nil,
+                               'Invalid authorization information; invalid reserved>pw value')
         end
       else
-        domain.add_epp_error('2304', nil, nil, 'Required parameter missing; reservedpw element required for dispute domains')
+        domain.add_epp_error('2304', nil, nil, "Required parameter missing; reservedpw element " \
+        'required for dispute domains')
       end
 
       true

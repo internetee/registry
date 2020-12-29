@@ -69,7 +69,7 @@ module Actions
       attrs = []
       params[:admin_domain_contacts_attributes].each do |c|
         contact = Contact.find_by(code: c)
-        domain.add_epp_error('2303', 'contact', c, %i[domain_contacts not_found]) unless contact.present?
+        domain.add_epp_error('2303', 'contact', c, %i[domain_contacts not_found]) if contact.blank?
         attrs << { contact_id: contact.id, contact_code_cache: contact.code } if contact
       end
 
@@ -80,7 +80,7 @@ module Actions
       attrs = []
       params[:tech_domain_contacts_attributes].each do |c|
         contact = Contact.find_by(code: c)
-        domain.add_epp_error('2303', 'contact', c, %i[domain_contacts not_found]) unless contact.present?
+        domain.add_epp_error('2303', 'contact', c, %i[domain_contacts not_found]) if contact.blank?
         attrs << { contact_id: contact.id, contact_code_cache: contact.code } if contact
       end
 
@@ -104,9 +104,9 @@ module Actions
         return
       end
 
-      domain.registrar.debit!({ sum: @domain_pricelist.price.amount, price: @domain_pricelist,
-                                description: "#{I18n.t('create')} #{domain.name}",
-                                activity_type: AccountActivity::CREATE })
+      domain.registrar.debit!(sum: @domain_pricelist.price.amount, price: @domain_pricelist,
+                              description: "#{I18n.t('create')} #{domain.name}",
+                              activity_type: AccountActivity::CREATE)
     end
 
     def process_auction_and_disputes

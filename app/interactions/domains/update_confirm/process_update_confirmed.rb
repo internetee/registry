@@ -24,13 +24,10 @@ module Domains
         user  = ApiUser.find(domain.pending_json['current_user_id'])
         frame = domain.pending_json['frame'] ? domain.pending_json['frame'].with_indifferent_access : {}
 
-        #self.statuses.delete(DomainStatus::PENDING_UPDATE)
         domain.upid = user.registrar.id if user.registrar
         domain.up_date = Time.zone.now
 
         Actions::DomainUpdate.new(domain, frame, true).call
-
-        #save!
       end
     end
   end

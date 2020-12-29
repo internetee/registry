@@ -14,8 +14,9 @@ module Deserializers
 
       def call
         obj = { domain: frame.css('name')&.text, registrant: registrant, contacts: contacts,
-                auth_info: if_present('authInfo > pw'), nameservers: nameservers, dns_keys: dns_keys,
-                registrar_id: registrar, statuses: statuses, reserved_pw: if_present('reserved > pw') }
+                auth_info: if_present('authInfo > pw'), nameservers: nameservers,
+                registrar_id: registrar, statuses: statuses, dns_keys: dns_keys,
+                reserved_pw: if_present('reserved > pw') }
 
         obj.reject { |_key, val| val.blank? }
       end
@@ -23,7 +24,8 @@ module Deserializers
       def registrant
         return if frame.css('chg > registrant').blank?
 
-        { code: frame.css('chg > registrant').text, verified: frame.css('chg > registrant').attr('verified').to_s.downcase == 'yes' }
+        { code: frame.css('chg > registrant').text,
+          verified: frame.css('chg > registrant').attr('verified').to_s.downcase == 'yes' }
       end
 
       def contacts
@@ -36,7 +38,7 @@ module Deserializers
           contacts << { code: c.text, type: c['type'], action: 'rem' }
         end
 
-        contacts.present? ? contacts : nil
+        contacts.presence
       end
 
       def nameservers
@@ -53,7 +55,7 @@ module Deserializers
           nameservers << nsrv
         end
 
-        nameservers.present? ? nameservers : nil
+        nameservers.presence
       end
 
       def dns_keys
@@ -62,18 +64,23 @@ module Deserializers
         removed = ::Deserializers::Xml::DnssecKeys.new(frame.css('rem')).call
         removed.each { |k| k[:action] = 'rem' }
 
-        return unless (added + removed).present?
+        return if (added + removed).blank?
 
         added + removed
       end
 
       def statuses
-        return unless frame.css('status').present?
+        return if frame.css('status').blank?
 
         statuses = []
 
-        frame.css('add > status').each { |entry| statuses << { status: entry.attr('s').to_s, action: 'add' } }
-        frame.css('rem > status').each { |entry| statuses << { status: entry.attr('s').to_s, action: 'rem' } }
+        frame.css('add > status').each do |e|
+          statuses << { status: e.attr('s').to_s, action: 'add' }
+        end
+
+        frame.css('rem > status').each do |e|
+          statuses << { status: e.attr('s').to_s, action: 'rem' }
+        end
 
         statuses
       end

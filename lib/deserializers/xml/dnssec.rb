@@ -3,9 +3,10 @@ module Deserializers
     class DnssecKey
       attr_reader :frame, :dsa
 
-      KEY_INTERFACE = { flags: 'flags', protocol: 'protocol', alg: 'alg', public_key: 'pubKey' }
+      KEY_INTERFACE = { flags: 'flags', protocol: 'protocol', alg: 'alg',
+                        public_key: 'pubKey' }.freeze
       DS_INTERFACE  = { ds_key_tag: 'keyTag', ds_alg: 'alg', ds_digest_type: 'digestType',
-                        ds_digest: 'digest' }
+                        ds_digest: 'digest' }.freeze
 
       def initialize(frame, dsa)
         @frame = frame

@@ -129,26 +129,6 @@ class Epp::Domain < Domain
     self.legal_document_id = doc.id
   end
 
-  def apply_pending_update!
-    preclean_pendings
-    user  = ApiUser.find(pending_json['current_user_id'])
-    frame = pending_json['frame'] ? pending_json['frame'].with_indifferent_access : {}
-
-    self.statuses.delete(DomainStatus::PENDING_UPDATE)
-    self.upid = user.registrar.id if user.registrar
-    self.up_date = Time.zone.now
-
-    return unless Actions::DomainUpdate.new(self, frame, true).call
-
-    clean_pendings!
-
-    save!
-
-    WhoisRecord.find_by(domain_id: id).save # need to reload model
-
-    true
-  end
-
   def apply_pending_delete!
     preclean_pendings
     statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)

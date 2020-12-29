@@ -40,7 +40,8 @@ module Epp
       authorize!(:update, @domain, @password)
 
       registrar_id = current_user.registrar.id
-      update_params = ::Deserializers::Xml::DomainUpdate.new(params[:parsed_frame], registrar_id).call
+      update_params = ::Deserializers::Xml::DomainUpdate.new(params[:parsed_frame],
+                                                             registrar_id).call
       action = Actions::DomainUpdate.new(@domain, update_params, false)
       if action.call
         pending = @domain.epp_pending_update.present?
