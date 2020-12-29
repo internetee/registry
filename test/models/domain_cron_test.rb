@@ -19,7 +19,9 @@ class DomainCronTest < ActiveSupport::TestCase
                     registrant_verification_token: 'test',
                     statuses: [DomainStatus::PENDING_DELETE_CONFIRMATION])
 
-    DomainCron.clean_expired_pendings
+    perform_enqueued_jobs do
+      DomainCron.clean_expired_pendings
+    end
 
     assert_emails 1
   end
@@ -84,7 +86,9 @@ class DomainCronTest < ActiveSupport::TestCase
     assert @domain.pending_update?
     @domain.reload
 
-    DomainCron.clean_expired_pendings
+    perform_enqueued_jobs do
+      DomainCron.clean_expired_pendings
+    end
     @domain.reload
 
     assert_not @domain.pending_update?

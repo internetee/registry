@@ -169,16 +169,19 @@ module Actions
       invalid = false
       params[:statuses].each do |s|
         unless DomainStatus::CLIENT_STATUSES.include?(s[:status])
-          domain.add_epp_error('2303', 'status', s[:status], %i[domain_statuses not_found])
+          domain.add_epp_error('2303', 'status', s[:status], %i[statuses not_found])
           invalid = true
         end
       end
+
+      return if invalid
 
       params[:statuses].select { |s| s[:action] == 'rem' }.each do |s|
         if domain.statuses.include?(s[:status])
           rem << s[:status]
         else
-          domain.add_epp_error('2303', 'status', s[:status], %i[domain_statuses not_found])
+          STDOUT << 'AAAAAH'
+          domain.add_epp_error('2303', 'status', s[:status], %i[statuses not_found])
           invalid = true
         end
       end

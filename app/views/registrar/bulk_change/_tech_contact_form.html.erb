@@ -1,7 +1,7 @@
 <%= form_tag registrar_tech_contacts_path, method: :patch, class: 'form-horizontal' do %>
     <% if @error %>
         <div class="alert alert-danger">
-            <%= @error[:message] %>
+            <%= @error %>
         </div>
     <% end %>
 

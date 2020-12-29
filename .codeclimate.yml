@@ -20,6 +20,9 @@ plugins:
     channel: eslint-5
   fixme:
     enabled: true
+    checks:
+      TODO:
+        enabled: false
   rubocop:
     enabled: true
     channel: rubocop-0-74

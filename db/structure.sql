@@ -476,6 +476,43 @@ ALTER SEQUENCE public.blocked_domains_id_seq OWNED BY public.blocked_domains.id;
 
 
 --
+-- Name: bounced_mail_addresses; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE public.bounced_mail_addresses (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    message_id character varying NOT NULL,
+    bounce_type character varying NOT NULL,
+    bounce_subtype character varying NOT NULL,
+    action character varying NOT NULL,
+    status character varying NOT NULL,
+    diagnostic character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: bounced_mail_addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bounced_mail_addresses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bounced_mail_addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bounced_mail_addresses_id_seq OWNED BY public.bounced_mail_addresses.id;
+
+
+--
 -- Name: certificates; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
@@ -2662,6 +2699,13 @@ ALTER TABLE ONLY public.blocked_domains ALTER COLUMN id SET DEFAULT nextval('pub
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.bounced_mail_addresses ALTER COLUMN id SET DEFAULT nextval('public.bounced_mail_addresses_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.certificates ALTER COLUMN id SET DEFAULT nextval('public.certificates_id_seq'::regclass);
 
 
@@ -2876,14 +2920,14 @@ ALTER TABLE ONLY public.log_payment_orders ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
--- Name: log_prices id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_prices ALTER COLUMN id SET DEFAULT nextval('public.log_prices_id_seq'::regclass);
 
 
 --
--- Name: log_registrant_verifications id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_registrant_verifications ALTER COLUMN id SET DEFAULT nextval('public.log_registrant_verifications_id_seq'::regclass);
@@ -3098,6 +3142,14 @@ ALTER TABLE ONLY public.bank_transactions
 
 ALTER TABLE ONLY public.blocked_domains
     ADD CONSTRAINT blocked_domains_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: bounced_mail_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY public.bounced_mail_addresses
+    ADD CONSTRAINT bounced_mail_addresses_pkey PRIMARY KEY (id);
 
 
 --
@@ -3349,7 +3401,7 @@ ALTER TABLE ONLY public.log_payment_orders
 
 
 --
--- Name: log_prices log_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: log_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_prices
@@ -3357,7 +3409,7 @@ ALTER TABLE ONLY public.log_prices
 
 
 --
--- Name: log_registrant_verifications log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_registrant_verifications
@@ -4906,5 +4958,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200902131603'),
 ('20200908131554'),
 ('20200910085157'),
-('20200910102028');
+('20200910102028'),
+('20200916125326');
+
 

@@ -55,10 +55,12 @@ class Registrar
         parsed_response = JSON.parse(response.body, symbolize_names: true)
 
         if response.code == '200'
-          flash[:notice] = t '.transferred', count: parsed_response[:data].size
+          failed = parsed_response[:data][:failed].each(&:domain_name).join(', ')
+          flash[:notice] = t('.transferred', count: parsed_response[:data][:success].size,
+                                             failed: failed)
           redirect_to registrar_domains_url
         else
-          @api_errors = parsed_response[:errors]
+          @api_errors = parsed_response[:message]
           render file: 'registrar/bulk_change/new', locals: { active_tab: :bulk_transfer }
         end
       else

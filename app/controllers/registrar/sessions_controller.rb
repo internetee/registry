@@ -62,6 +62,7 @@ class Registrar
 
     def find_user_by_idc_and_allowed(idc)
       return User.new unless idc
+
       possible_users = ApiUser.where(identity_code: idc) || User.new
       possible_users.each do |selected_user|
         if selected_user.registrar.white_ips.registrar_area.include_ip?(request.ip)

@@ -347,17 +347,22 @@ class Contact < ApplicationRecord
     @desc = {}
 
     registrant_domains.each do |dom|
-      @desc[dom.name] ||= []
-      @desc[dom.name] << :registrant
+      @desc[dom.name] ||= { id: dom.uuid, roles: [] }
+      @desc[dom.name][:roles] << :registrant
     end
 
     domain_contacts.each do |dc|
-      @desc[dc.domain.name] ||= []
-      @desc[dc.domain.name] << dc.name.downcase.to_sym
+      @desc[dc.domain.name] ||= { id: dc.domain.uuid, roles: [] }
+      @desc[dc.domain.name][:roles] << dc.name.downcase.to_sym
       @desc[dc.domain.name] = @desc[dc.domain.name].compact
     end
 
     @desc
+  end
+
+  def related_domains
+    a = related_domain_descriptions
+    a.keys.map { |d| { name: d, id: a[d][:id], roles: a[d][:roles] } }
   end
 
   def status_notes_array=(notes)

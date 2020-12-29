@@ -4,7 +4,7 @@ require 'serializers/registrant_api/contact'
 class SerializersRegistrantApiContactTest < ActiveSupport::TestCase
   def setup
     @contact = contacts(:william)
-    @serializer = Serializers::RegistrantApi::Contact.new(@contact)
+    @serializer = Serializers::RegistrantApi::Contact.new(@contact, false)
     @json = @serializer.to_json
   end
 

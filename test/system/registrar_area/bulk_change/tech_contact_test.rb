@@ -9,8 +9,8 @@ class RegistrarAreaTechContactBulkChangeTest < ApplicationSystemTestCase
     request_stub = stub_request(:patch, /domains\/contacts/)
                      .with(body: { current_contact_id: 'william-001', new_contact_id: 'john-001' },
                            basic_auth: ['test_bestnames', 'testtest'])
-                     .to_return(body: { affected_domains: %w[foo.test bar.test],
-                                        skipped_domains: %w[baz.test qux.test] }.to_json,
+                     .to_return(body: { data: { affected_domains: %w[foo.test bar.test],
+                                        skipped_domains: %w[baz.test qux.test] } }.to_json,
                                 status: 200)
 
     visit registrar_domains_url
@@ -30,7 +30,7 @@ class RegistrarAreaTechContactBulkChangeTest < ApplicationSystemTestCase
   def test_fails_gracefully
     stub_request(:patch, /domains\/contacts/)
       .to_return(status: 400,
-                 body: { error: { message: 'epic fail' } }.to_json,
+                 body: { message: 'epic fail' }.to_json,
                  headers: { 'Content-type' => Mime[:json] })
 
     visit registrar_domains_url

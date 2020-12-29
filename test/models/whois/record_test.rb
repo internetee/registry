@@ -70,6 +70,6 @@ class Whois::RecordTest < ActiveSupport::TestCase
   end
 
   def registration_deadline
-    Time.zone.now + 10.days
+    @registration_deadline ||= Time.zone.now + 10.days
   end
 end
