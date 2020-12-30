@@ -148,10 +148,12 @@ class Registrar < ApplicationRecord
       failed_list = []
 
       nameservers.where(hostname: hostname).find_each do |origin|
-        next unless domains.include?(origin.domain.name) || domains.empty?
+        idn = origin.domain.name
+        puny = origin.domain.name_puny
+        next unless domains.include?(idn) || domains.include?(puny) || domains.empty?
 
         if origin.domain.nameservers.where(hostname: new_attributes[:hostname]).any?
-          failed_list << origin.domain.name
+          failed_list << idn
           next
         end
 
@@ -160,7 +162,7 @@ class Registrar < ApplicationRecord
         new_nameserver.attributes = new_attributes
         new_nameserver.save!
 
-        domain_list << origin.domain.name
+        domain_list << idn
 
         origin.destroy!
       end
