@@ -51,6 +51,10 @@ class Registrar
         notices = [t('.replaced')]
         notices << "#{t('.affected_domains')}: " \
                    "#{parsed_response[:data][:affected_domains].join(', ')}"
+        if parsed_response[:data][:skipped_domains]
+          notices << "#{t('.skipped_domains')}: " \
+          "#{parsed_response[:data][:skipped_domains].join(', ')}"
+        end
 
         flash[:notice] = notices.join(', ')
         redirect_to registrar_domains_url

@@ -145,22 +145,28 @@ class Registrar < ApplicationRecord
   def replace_nameservers(hostname, new_attributes, domains: [])
     transaction do
       domain_list = []
+      failed_list = []
 
-      nameservers.where(hostname: hostname).find_each do |original_nameserver|
-        next unless domains.include?(original_nameserver.domain.name) || domains.empty?
+      nameservers.where(hostname: hostname).find_each do |origin|
+        next unless domains.include?(origin.domain.name) || domains.empty?
+
+        if origin.domain.nameservers.where(hostname: new_attributes[:hostname]).any?
+          failed_list << origin.domain.name
+          next
+        end
 
         new_nameserver = Nameserver.new
-        new_nameserver.domain = original_nameserver.domain
+        new_nameserver.domain = origin.domain
         new_nameserver.attributes = new_attributes
         new_nameserver.save!
 
-        domain_list << original_nameserver.domain.name
+        domain_list << origin.domain.name
 
-        original_nameserver.destroy!
+        origin.destroy!
       end
 
       self.domains.where(name: domain_list).find_each(&:update_whois_record) if domain_list.any?
-      domain_list.uniq.sort
+      [domain_list.uniq.sort, failed_list.uniq.sort]
     end
   end
 

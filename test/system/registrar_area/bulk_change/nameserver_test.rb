@@ -18,7 +18,8 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
                      .to_return(body: { data: {
                                             type: 'nameserver',
                                             id: 'new-ns.bestnames.test',
-                                            affected_domains: ["airport.test", "shop.test"]
+                                            affected_domains: ["airport.test", "shop.test"],
+                                            skipped_domains: []
                                         }
                                       }.to_json, status: 200)
 
@@ -73,7 +74,8 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
                    .to_return(body: { data: {
                      type: 'nameserver',
                      id: 'new-ns.bestnames.test',
-                     affected_domains: ["shop.test"]}}.to_json, status: 200)
+                     affected_domains: ["shop.test"],
+                     skipped_domains: []}}.to_json, status: 200)
 
     visit registrar_domains_url
     click_link 'Bulk change'

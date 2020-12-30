@@ -4,3 +4,4 @@ en:
       update:
         replaced: Nameserver have been successfully replaced
         affected_domains: Affected domains
+        skipped_domains: Skipped domains
