@@ -1,11 +1,11 @@
 <div class="page-header">
-  <h1>Mass actions</h1>
+  <h1>Bulk actions</h1>
 </div>
 
 <div class="panel panel-default">
   <div class="panel-heading">Bulk Domain Force Delete</div>
   <div class="panel-body">
-    <p>Triggers <b>soft</b> force delete procedure for uploaded domain list. List must be in <b>CSV</b> format. Each domain entry must be on separate line. Line must include <b>domain_name</b> (puny) followed with <b>delete_reason</b>, separated by comma.</p>
+    <p>Triggers <b>soft</b> force delete procedure for uploaded domain list. List must be in <b>CSV</b> format. First row of the CSV file must contain column headings with <b>domain_name</b> for the first and <b>delete_reason</b> for the second column. Each domain entry must be on separate line. Domain names are expected to be in punycode format, valid reasons are listed below.</p>
     <p>Allowed delete reasons: <b>ENTITY_BURIED</b> | <b>INVALID_PHONE</b> | <b>INVALID_EMAIL</b></p>
     <%= form_tag admin_mass_actions_path, multipart: true, method: :post do %>
       <%= label_tag :entry_list %>
