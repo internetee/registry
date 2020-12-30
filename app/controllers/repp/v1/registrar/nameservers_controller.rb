@@ -6,9 +6,9 @@ module Repp
 
         def update
           affected, errored = current_user.registrar
-                                 .replace_nameservers(hostname,
-                                                      hostname_params[:data][:attributes],
-                                                      domains: domains_from_params)
+                                          .replace_nameservers(hostname,
+                                                               hostname_params[:data][:attributes],
+                                                               domains: domains_from_params)
 
           render_success(data: data_format_for_success(affected, errored))
         rescue ActiveRecord::RecordInvalid => e

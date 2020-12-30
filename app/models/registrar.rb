@@ -144,6 +144,7 @@ class Registrar < ApplicationRecord
   # Audit log is needed, therefore no raw SQL
   def replace_nameservers(hostname, new_attributes, domains: [])
     transaction do
+      domain_scope = domains.dup
       domain_list = []
       failed_list = []
 
@@ -162,13 +163,14 @@ class Registrar < ApplicationRecord
         new_nameserver.attributes = new_attributes
         new_nameserver.save!
 
+        domain_scope.delete_if { |i| i == idn || i == puny }
         domain_list << idn
 
         origin.destroy!
       end
 
       self.domains.where(name: domain_list).find_each(&:update_whois_record) if domain_list.any?
-      [domain_list.uniq.sort, failed_list.uniq.sort]
+      [domain_list.uniq.sort, (domain_scope + failed_list).uniq.sort]
     end
   end
 
