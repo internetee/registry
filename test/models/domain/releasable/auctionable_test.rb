@@ -58,6 +58,20 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
     end
   end
 
+  def test_updates_whois
+    @domain.update!(delete_date: '2010-07-04')
+    travel_to Time.zone.parse('2010-07-05')
+
+    Domain.release_domains
+
+    whois_record = Whois::Record.find_by(name: @domain.name)
+
+    json = { "name"=>@domain.name,
+             "status"=>["AtAuction"],
+             "disclaimer"=> Setting.registry_whois_disclaimer }
+    assert_equal whois_record.json, json
+  end
+
   def test_notifies_registrar
     @domain.update!(delete_date: '2010-07-04')
     travel_to Time.zone.parse('2010-07-05')
