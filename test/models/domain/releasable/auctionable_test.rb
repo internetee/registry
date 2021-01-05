@@ -25,6 +25,7 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
   def test_skips_auction_when_domains_is_blocked
     assert_equal 'shop.test', @domain.name
     blocked_domains(:one).update!(name: 'shop.test')
+    @domain.save!(validate: false)
 
     @domain.release
 
@@ -34,6 +35,7 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
   def test_skips_auction_when_domains_is_reserved
     assert_equal 'shop.test', @domain.name
     reserved_domains(:one).update!(name: 'shop.test')
+    @domain.save!(validate: false)
 
     @domain.release
 
@@ -58,7 +60,7 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
     end
   end
 
-  def test_updates_whois
+  def test_updates_whois_server
     @domain.update!(delete_date: '2010-07-04')
     travel_to Time.zone.parse('2010-07-05')
 

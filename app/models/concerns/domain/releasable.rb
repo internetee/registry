@@ -39,9 +39,12 @@ module Concerns
 
       def release
         if release_to_auction
-          transaction do
+          with_lock do
+            to_stdout "Checking if domain_name is auctionable: #{domain_name.auctionable?}"
             domain_name.sell_at_auction if domain_name.auctionable?
+            to_stdout 'Destroying domain'
             destroy!
+            to_stdout 'Sending registrar notification'
             registrar.notifications.create!(text: "#{I18n.t(:domain_deleted)}: #{name}",
                                             attached_obj_id: id,
                                             attached_obj_type: self.class)
@@ -49,6 +52,11 @@ module Concerns
         else
           discard
         end
+      end
+
+      def to_stdout(message)
+        time = Time.zone.now.utc
+        STDOUT << "#{time} - #{message}\n" unless Rails.env.test?
       end
     end
   end
