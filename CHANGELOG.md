@@ -1,4 +1,5 @@
 05.01.2021
+* Fixed ok/inactive bug together with disclosed contact atribute handling [#1786](https://github.com/internetee/registry/pull/1786)
 * Ident data to simplified domain list in registrant APO to help with sorting and filtering [#1783](https://github.com/internetee/registry/pull/1783)
 * Bumped Nokogiri to 1.11.0 [#1785](https://github.com/internetee/registry/pull/1785)
 
