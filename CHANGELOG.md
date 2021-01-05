@@ -1,5 +1,6 @@
 05.01.2021
 * Ident data to simplified domain list in registrant APO to help with sorting and filtering [#1783](https://github.com/internetee/registry/pull/1783)
+* Bumped Nokogiri to 1.11.0 [#1785](https://github.com/internetee/registry/pull/1785)
 
 23.12.2020
 * fix for REPP logging and registrar portal communication [#1782](https://github.com/internetee/registry/pull/1782)
