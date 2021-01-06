@@ -1,6 +1,5 @@
 module Whois
   class Record < Whois::Server
-    include ToStdout
     self.table_name = 'whois_records'
 
     def self.disclaimer
@@ -13,16 +12,16 @@ module Whois
         update!(json: { name: auction.domain,
                         status: ['AtAuction'],
                         disclaimer: self.class.disclaimer })
-        to_stdout "Updated from auction WHOIS record #{inspect}"
+        ToStdout.msg "Updated from auction WHOIS record #{inspect}"
       elsif auction.no_bids?
-        to_stdout "Destroying WHOIS record #{inspect}"
+        ToStdout.msg "Destroying WHOIS record #{inspect}"
         destroy!
       elsif auction.awaiting_payment? || auction.payment_received?
         update!(json: { name: auction.domain,
                         status: ['PendingRegistration'],
                         disclaimer: self.class.disclaimer,
                         registration_deadline: auction.whois_deadline })
-        to_stdout "Updated from auction WHOIS record #{inspect}"
+        ToStdout.msg "Updated from auction WHOIS record #{inspect}"
       end
     end
     # rubocop:enable Metrics/AbcSize

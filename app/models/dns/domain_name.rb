@@ -2,7 +2,6 @@ module DNS
   # Namespace is needed, because a class with the same name is defined by `domain_name` gem,
   # a dependency of `actionmailer`,
   class DomainName
-    include ToStdout
     def initialize(name)
       @name = name
     end
@@ -37,7 +36,7 @@ module DNS
       auction = Auction.new
       auction.domain = name
       auction.start
-      to_stdout "Created the auction: #{auction.inspect}"
+      ToStdout.msg "Created the auction: #{auction.inspect}"
       update_whois_from_auction(auction)
     end
 
@@ -102,8 +101,8 @@ module DNS
       whois_record = Whois::Record.find_or_create_by!(name: name) do |record|
         record.json = {}
       end
-      to_stdout "Starting to update WHOIS record #{whois_record.inspect}\n\n"\
-                "from auction #{auction.inspect}"
+      ToStdout.msg "Starting to update WHOIS record #{whois_record.inspect}\n\n"\
+                   "from auction #{auction.inspect}"
       whois_record.update_from_auction(auction)
     end
   end
