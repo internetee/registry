@@ -109,6 +109,7 @@ class Ability
     can :destroy, :pending
     can :create, :zonefile
     can :access, :settings_menu
+    can :manage, :mass_actions
     can :manage, BouncedMailAddress
   end
 
