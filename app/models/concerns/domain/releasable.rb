@@ -39,7 +39,6 @@ module Concerns
 
       def release
         if release_to_auction
-          lock!
           to_stdout 'Destroying domain'
           destroy!
           to_stdout "Checking if domain_name is auctionable: #{domain_name.auctionable?}"
@@ -52,11 +51,6 @@ module Concerns
         else
           discard
         end
-      end
-
-      def to_stdout(message)
-        time = Time.zone.now.utc
-        STDOUT << "#{time} - #{message}\n" unless Rails.env.test?
       end
     end
   end

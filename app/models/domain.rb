@@ -10,6 +10,7 @@ class Domain < ApplicationRecord
   include Concerns::Domain::RegistryLockable
   include Concerns::Domain::Releasable
   include Concerns::Domain::Disputable
+  include ToStdout
 
   attr_accessor :roles
 
