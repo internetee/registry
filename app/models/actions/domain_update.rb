@@ -12,12 +12,12 @@ module Actions
       @changes_registrant = false
 
       validate_domain_integrity
-      assign_new_registrant
-      assign_nameserver_modifications
-      assign_admin_contact_changes
-      assign_tech_contact_changes
-      assign_requested_statuses
-      assign_dnssec_modifications
+      assign_new_registrant if params[:registrant]
+      assign_nameserver_modifications if params[:nameservers]
+      assign_admin_contact_changes if params[:contacts]
+      assign_tech_contact_changes if params[:contacts]
+      assign_requested_statuses if params[:statuses]
+      assign_dnssec_modifications if params[:dns_keys]
       maybe_attach_legal_doc
 
       commit
@@ -32,173 +32,158 @@ module Actions
     end
 
     def assign_new_registrant
-      return unless params[:registrant]
-
       unless params[:registrant][:code]
         domain.add_epp_error('2306', nil, nil, %i[registrant cannot_be_missing])
       end
 
       regt = Registrant.find_by(code: params[:registrant][:code])
-      if regt.present?
-        return if domain.registrant == regt
-
-        @changes_registrant = true if domain.registrant.ident != regt.ident
-        domain.registrant = regt
-      else
+      unless regt
         domain.add_epp_error('2303', 'registrant', params[:registrant_id], %i[registrant not_found])
+        return
       end
+
+      replace_domain_registrant(regt)
+    end
+
+    def replace_domain_registrant(new_registrant)
+      return if domain.registrant == new_registrant
+
+      @changes_registrant = true if domain.registrant.ident != new_registrant.ident
+      domain.registrant = new_registrant
     end
 
     def assign_nameserver_modifications
-      return unless params[:nameservers]
-
-      nameservers = []
-      params[:nameservers].select { |ns| ns[:action] == 'rem' }.each do |ns_attr|
-        ns = domain.nameservers.find_by_hash_params(ns_attr.except(:action)).first
-        unless ns
-          domain.add_epp_error('2303', 'hostAttr', ns_attr[:hostname], %i[nameservers not_found])
-          break
+      @nameservers = []
+      params[:nameservers].each do |ns_attr|
+        case ns_attr[:action]
+        when 'rem'
+          validate_ns_integrity(ns_attr)
+        when 'add'
+          @nameservers << ns_attr.except(:action)
         end
-        nameservers << { id: ns.id, _destroy: 1 }
       end
 
-      params[:nameservers].select { |ns| ns[:action] == 'add' }.each do |ns_attr|
-        nameservers << ns_attr.except(:action)
+      domain.nameservers_attributes = @nameservers if @nameservers.present?
+    end
+
+    def validate_ns_integrity(ns_attr)
+      ns = domain.nameservers.find_by_hash_params(ns_attr.except(:action)).first
+      if ns
+        @nameservers << { id: ns.id, _destroy: 1 }
+      else
+        domain.add_epp_error('2303', 'hostAttr', ns_attr[:hostname], %i[nameservers not_found])
       end
-
-      return if nameservers.blank?
-
-      domain.nameservers_attributes = nameservers
     end
 
     def assign_dnssec_modifications
-      return unless params[:dns_keys]
+      @dnskeys = []
 
-      dnskeys = []
-      params[:dns_keys].select { |dk| dk[:action] == 'rem' }.each do |key|
-        dnkey = domain.dnskeys.find_by(key.except(:action))
-        domain.add_epp_error('2303', nil, nil, %i[dnskeys not_found]) unless dnkey
-        dnskeys << { id: dnkey.id, _destroy: 1 } if dnkey
-      end
-
-      params[:dns_keys].select { |dk| dk[:action] == 'add' }.each do |key|
-        if key[:pubKey] && !Setting.key_data_allowed
-          domain.add_epp_error('2306', nil, nil, %i[dnskeys key_data_not_allowed])
+      params[:dns_key].each do |key|
+        case key[:action]
+        when 'add'
+          validate_dnskey_integrity(key) && dnskeys << key.except(:action)
+        when 'rem'
+          assign_removable_dnskey(key)
         end
-        if key[:digest] && !Setting.ds_data_allowed
-          domain.add_epp_error('2306', nil, nil, %i[dnskeys ds_data_not_allowed])
-        end
-
-        dnskeys << key.except(:action)
       end
 
       domain.dnskeys_attributes = dnskeys
     end
 
+    def validate_dnskey_integrity(key)
+      if key[:pubKey] && !Setting.key_data_allowed
+        domain.add_epp_error('2306', nil, nil, %i[dnskeys key_data_not_allowed])
+      elsif key[:digest] && !Setting.ds_data_allowed
+        domain.add_epp_error('2306', nil, nil, %i[dnskeys ds_data_not_allowed])
+      end
+
+      dnskeys << key.except(:action)
+    end
+
+    def assign_removable_dnskey(key)
+      dnkey = domain.dnskeys.find_by(key.except(:action))
+      domain.add_epp_error('2303', nil, nil, %i[dnskeys not_found]) unless dnkey
+
+      @dnskeys << { id: dnkey.id, _destroy: 1 } if dnkey
+    end
+
     def assign_admin_contact_changes
-      return unless params[:contacts]
+      props = gather_domain_contacts(params[:contacts].select { |c| c[:type] == 'admin' })
 
-      props = []
-      contacts = params[:contacts].select { |c| c[:type] == 'admin' }
-
-      if contacts.present? && domain.admin_change_prohibited?
+      if props.any? && domain.admin_change_prohibited?
         domain.add_epp_error('2304', 'admin', DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED,
                              I18n.t(:object_status_prohibits_operation))
-        return
+      elsif props.present?
+        domain.admin_domain_contacts_attributes = props
       end
-
-      contacts.select { |c| c[:action] == 'rem' }.each do |c|
-        dc = domain.admin_domain_contacts.find_by(contact_code_cache: c[:code])
-        if dc.present?
-          props << { id: dc.id, _destroy: 1 }
-        else
-          domain.add_epp_error('2303', 'contact', c[:code], %i[domain_contacts not_found])
-        end
-      end
-
-      contacts.select { |c| c[:action] == 'add' }.each do |c|
-        contact = Epp::Contact.find_by(code: c[:code])
-        if contact.present?
-          if contact.org?
-            domain.add_epp_error('2306', 'contact', c[:code],
-                                 %i[domain_contacts admin_contact_can_be_only_private_person])
-          else
-            props << { contact_id: contact.id, contact_code_cache: contact.code }
-          end
-        else
-          domain.add_epp_error('2303', 'contact', c[:code], %i[domain_contacts not_found])
-        end
-      end
-
-      return if props.blank?
-
-      domain.admin_domain_contacts_attributes = props
     end
 
     def assign_tech_contact_changes
-      return unless params[:contacts]
+      props = gather_domain_contacts(params[:contacts].select { |c| c[:type] == 'tech' },
+                                     admin: false)
 
-      props = []
-      contacts = params[:contacts].select { |c| c[:type] == 'tech' }
-
-      if contacts.present? && domain.tech_change_prohibited?
+      if props.any? && domain.tech_change_prohibited?
         domain.add_epp_error('2304', 'tech', DomainStatus::SERVER_TECH_CHANGE_PROHIBITED,
                              I18n.t(:object_status_prohibits_operation))
-        return
+      elsif props.present?
+        domain.tech_domain_contacts_attributes = props
+      end
+    end
+
+    def gather_domain_contacts(contacts, admin: true)
+      props = []
+
+      contacts.each do |c|
+        contact = contact_for_action(action: c[:action], method: admin ? 'admin' : 'tech',
+                                     code: c[:code])
+        entry = assign_contact(contact, add: c[:action] == 'add', admin: admin)
+        props << entry if entry.is_a?(Hash)
       end
 
-      contacts.select { |c| c[:action] == 'rem' }.each do |c|
-        dc = domain.tech_domain_contacts.find_by(contact_code_cache: c[:code])
-        if dc.present?
-          props << { id: dc.id, _destroy: 1 }
-        else
-          domain.add_epp_error('2303', 'contact', c[:code], %i[domain_contacts not_found])
-        end
+      props
+    end
+
+    def contact_for_action(action:, method:, code:)
+      return Epp::Contact.find_by(code: code) if action == 'add'
+      return domain.admin_domain_contacts.find_by(contact_code_cache: code) if method == 'admin'
+
+      domain.tech_domain_contacts.find_by(contact_code_cache: code)
+    end
+
+    def assign_contact(obj, add: false, admin: true)
+      if obj.blank?
+        domain.add_epp_error('2303', 'contact', obj[:code], %i[domain_contacts not_found])
+      elsif obj.org? && admin
+        domain.add_epp_error('2306', 'contact', obj[:code],
+                             %i[domain_contacts admin_contact_can_be_only_private_person])
+      else
+        add ? { contact_id: obj.id, contact_code_cache: obj.code } : { id: obj.id, _destroy: 1 }
       end
-
-      contacts.select { |c| c[:action] == 'add' }.each do |c|
-        contact = Epp::Contact.find_by(code: c[:code])
-        if contact.present?
-          props << { contact_id: contact.id, contact_code_cache: contact.code }
-        else
-          domain.add_epp_error('2303', 'contact', c[:code], %i[domain_contacts not_found])
-        end
-      end
-
-      return if props.blank?
-
-      domain.tech_domain_contacts_attributes = props
     end
 
     def assign_requested_statuses
-      return unless params[:statuses]
-
       rem = []
       add = []
 
-      invalid = false
       params[:statuses].each do |s|
-        unless DomainStatus::CLIENT_STATUSES.include?(s[:status])
-          domain.add_epp_error('2303', 'status', s[:status], %i[statuses not_found])
-          invalid = true
+        status, action = s.slice(:status, :action)
+        if permitted_status?(status, action)
+          action == 'add' ? add << status : rem << action
         end
       end
 
-      return if invalid
+      domain.statuses = domain.statuses - rem + add unless domain.errors.any?
+    end
 
-      params[:statuses].select { |s| s[:action] == 'rem' }.each do |s|
-        if domain.statuses.include?(s[:status])
-          rem << s[:status]
-        else
-          domain.add_epp_error('2303', 'status', s[:status], %i[statuses not_found])
-          invalid = true
-        end
+    def permitted_status?(status, action)
+      if DomainStatus::CLIENT_STATUSES.include?(status) &&
+         (domain.statuses.include?(status) || action == 'add')
+
+        true
+      else
+        domain.add_epp_error('2303', 'status', s[:status], %i[statuses not_found])
+        false
       end
-
-      params[:statuses].select { |s| s[:action] == 'add' }.each { |s| add << s[:status] }
-      return if invalid
-
-      domain.statuses = domain.statuses - rem + add
     end
 
     def verify_registrant_change?
@@ -216,7 +201,7 @@ module Actions
                                'Invalid authorization information; invalid reserved>pw value')
         end
       else
-        domain.add_epp_error('2304', nil, nil, "Required parameter missing; reservedpw element " \
+        domain.add_epp_error('2304', nil, nil, 'Required parameter missing; reservedpw element ' \
         'required for dispute domains')
       end
 

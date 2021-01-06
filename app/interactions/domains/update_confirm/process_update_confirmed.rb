@@ -22,7 +22,7 @@ module Domains
 
       def update_domain
         frame_json = domain.pending_json['frame']
-        user  = ApiUser.find(domain.pending_json['current_user_id'])
+        user = ApiUser.find(domain.pending_json['current_user_id'])
         frame = frame_json ? frame_json.with_indifferent_access : {}
 
         domain.upid = user.registrar.id if user.registrar
