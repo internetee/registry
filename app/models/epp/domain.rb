@@ -29,7 +29,7 @@ class Epp::Domain < Domain
     active_techs = tech_domain_contacts.select { |x| !x.marked_for_destruction? }
 
     # validate registrant here as well
-    ([registrant] + active_admins + active_techs).each do |x|
+    ([Contact.find_by(code: registrant.code)] + active_admins + active_techs).each do |x|
       unless x.valid?
         add_epp_error('2304', nil, nil, I18n.t(:contact_is_not_valid, value: x.code))
         ok = false

@@ -59,7 +59,8 @@ module Serializers
           registrant_verification_asked_at: domain.registrant_verification_asked_at,
           registrar: { name: domain.registrar.name, website: domain.registrar.website },
           registrant: { name: domain.registrant.name, id: domain.registrant.uuid,
-                        phone: domain.registrant.phone, email: domain.registrant.email }
+                        phone: domain.registrant.phone, email: domain.registrant.email,
+                        ident: domain.registrant.ident }
         }
       end
 
