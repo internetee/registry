@@ -574,7 +574,7 @@ class Domain < ApplicationRecord
 
     if statuses.empty? && valid?
       statuses << DomainStatus::OK
-    elsif (statuses.length > 1 && active?) || !valid?
+    elsif (statuses.length > 1) || !valid?
       statuses.delete(DomainStatus::OK)
     end
 
