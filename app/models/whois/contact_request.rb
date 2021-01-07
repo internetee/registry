@@ -15,23 +15,19 @@ module Whois
     attr_readonly :secret,
                   :valid_to
 
-    # before_create do
-    #   create_random_secret
-    #   set_valid_to_at_24_hours_from_now
-    # end
-
     def self.record(params)
-      contact_request = self.class.new(params)
+      contact_request = new(params)
       contact_request.secret = create_random_secret
       contact_request.valid_to = set_valid_to_at_24_hours_from_now
+      contact_request.status = STATUS_NEW
       contact_request.save!
     end
 
-    def create_random_secret
+    def self.create_random_secret
       SecureRandom.hex(64)
     end
 
-    def set_valid_to_at_24_hours_from_now
+    def self.set_valid_to_at_24_hours_from_now
       (Time.zone.now + 24.hours)
     end
   end

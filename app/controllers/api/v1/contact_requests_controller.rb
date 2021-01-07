@@ -5,12 +5,16 @@ module Api
 
       # POST api/v1/contact_requests/
       def create
-        return head(:bad_request) unless contact_request_params[:contact_request][:email].present?
+        return head(:bad_request) unless contact_request_params[:email].present?
 
-        Whois::ContactRequest.record(bounce_params)
+        Whois::ContactRequest.record(contact_request_params)
         head(:created)
       rescue ActionController::ParameterMissing
         head(:bad_request)
+      end
+
+      def update
+
       end
 
       def contact_request_params
