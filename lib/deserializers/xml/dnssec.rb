@@ -47,14 +47,16 @@ module Deserializers
 
         # schema validation prevents both in the same parent node
         if frame.css('dsData').present?
-          frame.css('dsData').each do |ds_data|
-            @ds_data << Deserializers::Xml::DnssecKey.new(ds_data, true).call
-          end
-        else
-          frame.css('keyData').each do |key|
-            @key_data << Deserializers::Xml::DnssecKey.new(key, false).call
-          end
+          frame.css('dsData').each { |k| @ds_data << key_from_params(k, dsa: true) }
         end
+
+        return if frame.css('keyData').blank?
+
+        frame.css('keyData').each { |k| @key_data << key_from_params(k, dsa: false) }
+      end
+
+      def key_from_params(obj, dsa: false)
+        Deserializers::Xml::DnssecKey.new(obj, dsa).call
       end
 
       def call
@@ -67,9 +69,8 @@ module Deserializers
       end
 
       def mark_destroy(dns_keys)
-        (ds_data.present? ? ds_filter(dns_keys) : kd_filter(dns_keys)).map do |inf_data|
-          inf_data.blank? ? nil : mark(inf_data)
-        end
+        data = ds_data.present? ? ds_filter(dns_keys) : kd_filter(dns_keys)
+        data.each { |inf_data| inf_data.blank? ? nil : mark(inf_data) }
       end
 
       private

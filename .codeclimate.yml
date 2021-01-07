@@ -30,6 +30,9 @@ checks:
   method-lines:
     config:
       threshold: 40
+  method-count:
+    config:
+      threshold: 25
 exclude_patterns:
   - "app/models/version/"
   - "bin/"

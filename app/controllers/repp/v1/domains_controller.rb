@@ -81,6 +81,11 @@ module Repp
         h = {}
         h[transfer_info_params[:id].match?(/\A[0-9]+\z/) ? :id : :name] = transfer_info_params[:id]
         @domain = Domain.find_by!(h)
+
+        validate_registrar_authorization
+      end
+
+      def validate_registrar_authorization
         return if @domain.registrar == current_user.registrar
         return if @domain.transfer_code.eql?(request.headers['Auth-Code'])
 

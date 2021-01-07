@@ -1,5 +1,5 @@
 module Actions
-  class DomainCreate
+  class DomainCreate # rubocop:disable Metrics/ClassLength
     attr_reader :domain, :params
 
     def initialize(domain, params)
@@ -14,8 +14,7 @@ module Actions
 
       assign_registrant
       assign_nameservers
-      assign_admin_contacts
-      assign_tech_contacts
+      assign_domain_contacts
       domain.attach_default_contacts
       assign_expiry_time
       maybe_attach_legal_doc
@@ -27,21 +26,25 @@ module Actions
     def validate_domain_integrity
       return unless Domain.release_to_auction
 
-      dn = DNS::DomainName.new(SimpleIDN.to_unicode(params[:name].strip.downcase))
+      dn = DNS::DomainName.new(domain.name)
       if dn.at_auction?
         domain.add_epp_error('2306', nil, nil, 'Parameter value policy error: domain is at auction')
       elsif dn.awaiting_payment?
         domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw element' \
         ' required for reserved domains')
       elsif dn.pending_registration?
-        if params[:reserved_pw].blank?
-          domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw ' \
-          'element is required')
-        else
-          unless dn.available_with_code?(params[:reserved_pw])
-            domain.add_epp_error('2202', nil, nil, 'Invalid authorization information; invalid ' \
-            'reserved>pw value')
-          end
+        validate_reserved_password(dn)
+      end
+    end
+
+    def validate_reserved_password(domain_name)
+      if params[:reserved_pw].blank?
+        domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw ' \
+        'element is required')
+      else
+        unless domain_name.available_with_code?(params[:reserved_pw])
+          domain.add_epp_error('2202', nil, nil, 'Invalid authorization information; invalid ' \
+          'reserved>pw value')
         end
       end
     end
@@ -63,85 +66,108 @@ module Actions
     def assign_domain_attributes
       domain.name = params[:name].strip.downcase
       domain.registrar = Registrar.find(params[:registrar_id])
-      domain.period = params[:period]
-      domain.period_unit = params[:period_unit]
+      assign_domain_period
+      assign_domain_auth_codes
+      domain.dnskeys_attributes = params[:dnskeys_attributes]
+    end
+
+    def assign_domain_auth_codes
       domain.transfer_code = params[:transfer_code] if params[:transfer_code].present?
       domain.reserved_pw = params[:reserved_pw] if params[:reserved_pw].present?
-      domain.dnskeys_attributes = params[:dnskeys_attributes]
+    end
+
+    def assign_domain_period
+      domain.period = params[:period]
+      domain.period_unit = params[:period_unit]
     end
 
     def assign_nameservers
       domain.nameservers_attributes = params[:nameservers_attributes]
     end
 
-    def assign_admin_contacts
-      attrs = []
-      params[:admin_domain_contacts_attributes].each do |c|
-        contact = Contact.find_by(code: c)
-        domain.add_epp_error('2303', 'contact', c, %i[domain_contacts not_found]) if contact.blank?
-        attrs << { contact_id: contact.id, contact_code_cache: contact.code } if contact
+    def assign_contact(contact_code, admin: true)
+      contact = Contact.find_by(code: contact_code)
+      arr = admin ? @admin_contacts : @tech_contacts
+      if contact
+        arr << { contact_id: contact.id, contact_code_cache: contact.code }
+      else
+        domain.add_epp_error('2303', 'contact', contact_code, %i[domain_contacts not_found])
       end
-
-      domain.admin_domain_contacts_attributes = attrs
     end
 
-    def assign_tech_contacts
-      attrs = []
-      params[:tech_domain_contacts_attributes].each do |c|
-        contact = Contact.find_by(code: c)
-        domain.add_epp_error('2303', 'contact', c, %i[domain_contacts not_found]) if contact.blank?
-        attrs << { contact_id: contact.id, contact_code_cache: contact.code } if contact
-      end
+    def assign_domain_contacts
+      @admin_contacts = []
+      @tech_contacts = []
+      params[:admin_domain_contacts_attributes].each { |c| assign_contact(c) }
+      params[:tech_domain_contacts_attributes].each { |c| assign_contact(c, admin: false) }
 
-      domain.tech_domain_contacts_attributes = attrs
+      domain.admin_domain_contacts_attributes = @admin_contacts
+      domain.tech_domain_contacts_attributes = @tech_contacts
     end
 
     def assign_expiry_time
-      period = domain.period.to_i
+      period = Integer(domain.period)
       plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym
       exp = (Time.zone.now.advance(plural_period_unit_name => period) + 1.day).beginning_of_day
       domain.expire_time = exp
     end
 
-    def debit_registrar
-      @domain_pricelist ||= domain.pricelist('create', domain.period.try(:to_i), domain.period_unit)
-      if @domain_pricelist.try(:price) && domain.registrar.balance < @domain_pricelist.price.amount
-        domain.add_epp_error(2104, nil, nil, I18n.t('billing_failure_credit_balance_low'))
-        return
-      elsif !@domain_pricelist.try(:price)
+    def action_billable?
+      unless domain_pricelist&.price
         domain.add_epp_error(2104, nil, nil, I18n.t(:active_price_missing_for_this_operation))
-        return
+        return false
       end
 
-      domain.registrar.debit!(sum: @domain_pricelist.price.amount, price: @domain_pricelist,
+      if domain.registrar.balance < domain_pricelist.price.amount
+        domain.add_epp_error(2104, nil, nil, I18n.t('billing_failure_credit_balance_low'))
+        return false
+      end
+
+      true
+    end
+
+    def debit_registrar
+      return unless action_billable?
+
+      domain.registrar.debit!(sum: domain_pricelist.price.amount, price: domain_pricelist,
                               description: "#{I18n.t('create')} #{domain.name}",
                               activity_type: AccountActivity::CREATE)
     end
 
-    def process_auction_and_disputes
-      dn = DNS::DomainName.new(SimpleIDN.to_unicode(params[:name]))
-      Dispute.close_by_domain(domain.name)
-      return unless Domain.release_to_auction && dn.pending_registration?
+    def domain_pricelist
+      @domain_pricelist ||= domain.pricelist('create', domain.period.try(:to_i), domain.period_unit)
 
-      auction = Auction.find_by(domain: domain.name, status: Auction.statuses[:payment_received])
-      auction.domain_registered!
+      @domain_pricelist
     end
 
     def maybe_attach_legal_doc
       Actions::BaseAction.attach_legal_doc_to_new(domain, params[:legal_document], domain: true)
     end
 
+    def process_auction_and_disputes
+      dn = DNS::DomainName.new(domain.name)
+      Dispute.close_by_domain(domain.name)
+      return unless Domain.release_to_auction && dn.pending_registration?
+
+      Auction.find_by(domain: domain.name,
+                      status: Auction.statuses[:payment_received])&.domain_registered!
+    end
+
     def commit
-      unless domain.valid?
-        domain.errors.delete(:name_dirty) if domain.errors[:puny_label].any?
-        return false if domain.errors.any?
-      end
+      return false if validation_process_errored?
 
       debit_registrar
       return false if domain.errors.any?
 
       process_auction_and_disputes
       domain.save
+    end
+
+    def validation_process_errored?
+      return if domain.valid?
+
+      domain.errors.delete(:name_dirty) if domain.errors[:puny_label].any?
+      domain.errors.any?
     end
   end
 end

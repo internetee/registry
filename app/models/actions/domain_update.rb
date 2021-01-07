@@ -1,26 +1,28 @@
 module Actions
-  class DomainUpdate
+  class DomainUpdate # rubocop:disable Metrics/ClassLength
     attr_reader :domain, :params, :bypass_verify
 
     def initialize(domain, params, bypass_verify)
       @domain = domain
       @params = params
       @bypass_verify = bypass_verify
+      @changes_registrant = false
     end
 
     def call
-      @changes_registrant = false
-
       validate_domain_integrity
       assign_new_registrant if params[:registrant]
-      assign_nameserver_modifications if params[:nameservers]
-      assign_admin_contact_changes if params[:contacts]
-      assign_tech_contact_changes if params[:contacts]
-      assign_requested_statuses if params[:statuses]
-      assign_dnssec_modifications if params[:dns_keys]
+      assign_relational_modifications
+      assign_requested_statuses
       maybe_attach_legal_doc
 
       commit
+    end
+
+    def assign_relational_modifications
+      assign_nameserver_modifications if params[:nameservers]
+      assign_dnssec_modifications if params[:dns_keys]
+      (assign_admin_contact_changes && assign_tech_contact_changes) if params[:contacts]
     end
 
     def validate_domain_integrity
@@ -67,7 +69,7 @@ module Actions
     end
 
     def validate_ns_integrity(ns_attr)
-      ns = domain.nameservers.find_by_hash_params(ns_attr.except(:action)).first
+      ns = domain.nameservers.from_hash_params(ns_attr.except(:action)).first
       if ns
         @nameservers << { id: ns.id, _destroy: 1 }
       else
@@ -78,16 +80,16 @@ module Actions
     def assign_dnssec_modifications
       @dnskeys = []
 
-      params[:dns_key].each do |key|
+      params[:dns_keys].each do |key|
         case key[:action]
         when 'add'
-          validate_dnskey_integrity(key) && dnskeys << key.except(:action)
+          validate_dnskey_integrity(key) && @dnskeys << key.except(:action)
         when 'rem'
           assign_removable_dnskey(key)
         end
       end
 
-      domain.dnskeys_attributes = dnskeys
+      domain.dnskeys_attributes = @dnskeys
     end
 
     def validate_dnskey_integrity(key)
@@ -136,7 +138,7 @@ module Actions
       contacts.each do |c|
         contact = contact_for_action(action: c[:action], method: admin ? 'admin' : 'tech',
                                      code: c[:code])
-        entry = assign_contact(contact, add: c[:action] == 'add', admin: admin)
+        entry = assign_contact(contact, add: c[:action] == 'add', admin: admin, code: c[:code])
         props << entry if entry.is_a?(Hash)
       end
 
@@ -150,11 +152,11 @@ module Actions
       domain.tech_domain_contacts.find_by(contact_code_cache: code)
     end
 
-    def assign_contact(obj, add: false, admin: true)
+    def assign_contact(obj, add: false, admin: true, code:)
       if obj.blank?
-        domain.add_epp_error('2303', 'contact', obj[:code], %i[domain_contacts not_found])
+        domain.add_epp_error('2303', 'contact', code, %i[domain_contacts not_found])
       elsif obj.org? && admin
-        domain.add_epp_error('2306', 'contact', obj[:code],
+        domain.add_epp_error('2306', 'contact', code,
                              %i[domain_contacts admin_contact_can_be_only_private_person])
       else
         add ? { contact_id: obj.id, contact_code_cache: obj.code } : { id: obj.id, _destroy: 1 }
@@ -162,70 +164,82 @@ module Actions
     end
 
     def assign_requested_statuses
-      rem = []
-      add = []
+      return unless params[:statuses]
 
-      params[:statuses].each do |s|
-        status, action = s.slice(:status, :action)
-        if permitted_status?(status, action)
-          action == 'add' ? add << status : rem << action
-        end
-      end
+      @rem = []
+      @add = []
+      @failed = false
 
-      domain.statuses = domain.statuses - rem + add unless domain.errors.any?
+      params[:statuses].each { |s| verify_status_eligiblity(s) }
+      domain.statuses = (domain.statuses - @rem + @add) unless @failed
+    end
+
+    def verify_status_eligiblity(status_entry)
+      status, action = status_entry.select_keys(:status, :action)
+      return unless permitted_status?(status, action)
+
+      action == 'add' ? @add << status : @rem << status
     end
 
     def permitted_status?(status, action)
       if DomainStatus::CLIENT_STATUSES.include?(status) &&
          (domain.statuses.include?(status) || action == 'add')
-
-        true
-      else
-        domain.add_epp_error('2303', 'status', s[:status], %i[statuses not_found])
-        false
+        return true
       end
+
+      domain.add_epp_error('2303', 'status', status, %i[statuses not_found])
+      @failed = true
+      false
     end
 
     def verify_registrant_change?
-      return false unless @changes_registrant
-      return false if params[:registrant][:verified] == true
+      return if !@changes_registrant || params[:registrant][:verified] == true
       return true unless domain.disputed?
+      return validate_dispute_case if params[:reserved_pw]
 
-      if params[:reserved_pw]
-        dispute = Dispute.active.find_by(domain_name: domain.name, password: params[:reserved_pw])
-        if dispute
-          Dispute.close_by_domain(domain.name)
-          return false
-        else
-          domain.add_epp_error('2202', nil, nil,
-                               'Invalid authorization information; invalid reserved>pw value')
-        end
-      else
-        domain.add_epp_error('2304', nil, nil, 'Required parameter missing; reservedpw element ' \
-        'required for dispute domains')
-      end
+      domain.add_epp_error('2304', nil, nil, 'Required parameter missing; reservedpw element ' \
+                           'required for dispute domains')
 
       true
+    end
+
+    def validate_dispute_case
+      dispute = Dispute.active.find_by(domain_name: domain.name, password: params[:reserved_pw])
+      if dispute
+        Dispute.close_by_domain(domain.name)
+        false
+      else
+        domain.add_epp_error('2202', nil, nil,
+                             'Invalid authorization information; invalid reserved>pw value')
+        true
+      end
     end
 
     def maybe_attach_legal_doc
       Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
     end
 
-    def commit
-      return false if domain.errors[:epp_errors].any?
-      return false unless domain.valid?
-
+    def ask_registrant_verification
       if verify_registrant_change? && !bypass_verify &&
-         Setting.request_confirmation_on_registrant_change_enabled && !bypass_verify
+         Setting.request_confirmation_on_registrant_change_enabled
 
         domain.registrant_verification_asked!(params, params[:registrar_id])
       end
+    end
 
-      return false if domain.errors[:epp_errors].any?
-      return false unless domain.valid?
+    def commit
+      return false if any_errors?
+
+      ask_registrant_verification
+      return false if any_errors?
 
       domain.save
+    end
+
+    def any_errors?
+      return true if domain.errors[:epp_errors].any? || domain.invalid?
+
+      false
     end
   end
 end

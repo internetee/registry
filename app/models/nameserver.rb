@@ -63,7 +63,7 @@ class Nameserver < ApplicationRecord
   end
 
   class << self
-    def find_by_hash_params params
+    def from_hash_params params
       params = params.with_indifferent_access
       rel = all
       rel = rel.where(hostname: params[:hostname])

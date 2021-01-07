@@ -1,8 +1,7 @@
 module Deserializers
   module Xml
     class Domain
-      attr_reader :frame
-      attr_reader :registrar
+      attr_reader :frame, :registrar
 
       def initialize(frame, registrar)
         @frame = frame
@@ -15,13 +14,22 @@ module Deserializers
           registrar_id: registrar,
           registrant_id: if_present('registrant'),
           reserved_pw: if_present('reserved > pw'),
-          period: frame.css('period').text.present? ? Integer(frame.css('period').text) : 1,
-          period_unit: frame.css('period').first ? frame.css('period').first[:unit] : 'y',
         }
+
+        attributes.merge!(assign_period_attributes)
 
         pw = frame.css('authInfo > pw').text
         attributes[:transfer_code] = pw if pw.present?
         attributes.compact
+      end
+
+      def assign_period_attributes
+        period = frame.css('period')
+
+        {
+          period: period.text.present? ? Integer(period.text) : 1,
+          period_unit: period.first ? period.first[:unit] : 'y',
+        }
       end
 
       def if_present(css_path)

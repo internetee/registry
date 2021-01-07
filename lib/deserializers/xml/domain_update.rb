@@ -42,20 +42,18 @@ module Deserializers
       end
 
       def nameservers
-        nameservers = []
-        frame.css('add > ns > hostAttr').each do |ns|
-          nsrv = Deserializers::Xml::Nameserver.new(ns).call
-          nsrv[:action] = 'add'
-          nameservers << nsrv
-        end
+        @nameservers = []
 
-        frame.css('rem > ns > hostAttr').each do |ns|
-          nsrv = Deserializers::Xml::Nameserver.new(ns).call
-          nsrv[:action] = 'rem'
-          nameservers << nsrv
-        end
+        frame.css('add > ns > hostAttr').each { |ns| assign_ns(ns) }
+        frame.css('rem > ns > hostAttr').each { |ns| assign_ns(ns, add: false) }
 
-        nameservers.presence
+        @nameservers.presence
+      end
+
+      def assign_ns(nameserver, add: true)
+        nsrv = Deserializers::Xml::Nameserver.new(nameserver).call
+        nsrv[:action] = add ? 'add' : 'rem'
+        @nameservers << nsrv
       end
 
       def dns_keys
@@ -72,17 +70,12 @@ module Deserializers
       def statuses
         return if frame.css('status').blank?
 
-        statuses = []
+        s = []
 
-        frame.css('add > status').each do |e|
-          statuses << { status: e.attr('s').to_s, action: 'add' }
-        end
+        frame.css('add > status').each { |e| s << { status: e.attr('s'), action: 'add' } }
+        frame.css('rem > status').each { |e| s << { status: e.attr('s'), action: 'rem' } }
 
-        frame.css('rem > status').each do |e|
-          statuses << { status: e.attr('s').to_s, action: 'rem' }
-        end
-
-        statuses
+        s
       end
 
       def legal_document
