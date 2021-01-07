@@ -92,7 +92,6 @@ Rails.application.routes.draw do
 
       resources :auctions, only: %i[index show update], param: :uuid
       resources :bounces, only: %i[create]
-      resources :contact_requests, only: %i[create]
     end
 
     match '*all', controller: 'cors', action: 'cors_preflight_check', via: [:options],
