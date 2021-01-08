@@ -92,7 +92,12 @@ Rails.application.routes.draw do
 
       resources :auctions, only: %i[index show update], param: :uuid
       resources :bounces, only: %i[create]
-      resources :contact_requests, only: %i[create update]
+
+      namespace :whois do
+        post 'contact_requests', to: 'contact_requests#create', as: 'contact_requests'
+      end
+
+      # put 'contact_requests', to: 'contact_request#create', as: 'contact_requests'
     end
 
     match '*all', controller: 'cors', action: 'cors_preflight_check', via: [:options],

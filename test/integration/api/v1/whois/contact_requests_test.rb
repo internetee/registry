@@ -8,11 +8,11 @@ class ApiV1ContactRequestTest < ActionDispatch::IntegrationTest
   end
 
   def test_authorizes_api_request
-    post api_v1_contact_requests_path, params: @json_body, headers: @headers
+    post api_v1_whois_contact_requests_path, params: @json_body, headers: @headers
     assert_response :created
 
     invalid_headers = { "Authorization": "Basic invalid_api_key" }
-    post api_v1_contact_requests_path, params: @json_body, headers: invalid_headers
+    post api_v1_whois_contact_requests_path, params: @json_body, headers: invalid_headers
     assert_response :unauthorized
   end
 
@@ -21,11 +21,11 @@ class ApiV1ContactRequestTest < ActionDispatch::IntegrationTest
     random_mail = "#{rand(10000..99999)}@registry.test"
     request_body['contact_request']['email'] = random_mail
 
-    post api_v1_contact_requests_path, params: request_body, headers: @headers
+    post api_v1_whois_contact_requests_path, params: request_body, headers: @headers
     assert_response :created
 
     contact_request = Whois::ContactRequest.last
-    assert contact_request.email = random_mail
+    assert_equal contact_request.email, random_mail
     assert Whois::ContactRequest::STATUS_NEW, contact_request.status
   end
 
