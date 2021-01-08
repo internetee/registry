@@ -7,7 +7,7 @@ module Api
       def create
         return head(:bad_request) unless contact_request_params[:email].present?
 
-        Whois::ContactRequest.record(contact_request_params)
+        ContactRequest.record(contact_request_params)
         head(:created)
       rescue ActionController::ParameterMissing
         head(:bad_request)
