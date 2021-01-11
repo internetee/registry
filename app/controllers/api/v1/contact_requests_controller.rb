@@ -16,13 +16,18 @@ module Api
       def update
         return head(:bad_request) if params[:id].blank?
 
-        record = ContactRequest.find_by(id: params[:id])
-        return head(:not_found) unless record
+        result = process_id(params[:id])
+        head(result)
+      end
+
+      def process_id(id)
+        record = ContactRequest.find_by(id: id)
+        return :not_found unless record
 
         record.update_status(contact_request_params[:status])
-        head(:ok)
+        :ok
       rescue StandardError
-        head(:bad_request)
+        :bad_request
       end
 
       def contact_request_params
