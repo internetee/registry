@@ -31,7 +31,7 @@ class Epp::Domain < Domain
     # validate registrant here as well
     ([Contact.find_by(code: registrant.code)] + active_admins + active_techs).each do |x|
       unless x.valid?
-        add_epp_error('2304', nil, nil, I18n.t(:contact_is_not_valid, value: x.code))
+        add_epp_error('2304', nil, nil, I18n.t(:contact_is_not_valid, value: x.try(:code)))
         ok = false
       end
     end

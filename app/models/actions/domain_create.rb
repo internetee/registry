@@ -64,11 +64,14 @@ module Actions
     end
 
     def assign_domain_attributes
+      puts "FOOOK"
+      puts params
+      puts "AYYYYY #{params[:name]}"
       domain.name = params[:name].strip.downcase
       domain.registrar = Registrar.find(params[:registrar_id])
       assign_domain_period
       assign_domain_auth_codes
-      domain.dnskeys_attributes = params[:dnskeys_attributes]
+      domain.dnskeys_attributes = params[:dnskeys_attributes] if params[:dnskeys_attributes]
     end
 
     def assign_domain_auth_codes
@@ -82,7 +85,7 @@ module Actions
     end
 
     def assign_nameservers
-      domain.nameservers_attributes = params[:nameservers_attributes]
+      domain.nameservers_attributes = params[:nameservers_attributes] if params[:nameservers_attributes]
     end
 
     def assign_contact(contact_code, admin: true)
@@ -98,14 +101,16 @@ module Actions
     def assign_domain_contacts
       @admin_contacts = []
       @tech_contacts = []
-      params[:admin_domain_contacts_attributes].each { |c| assign_contact(c) }
-      params[:tech_domain_contacts_attributes].each { |c| assign_contact(c, admin: false) }
+      params[:admin_domain_contacts_attributes]&.each { |c| assign_contact(c) }
+      params[:tech_domain_contacts_attributes]&.each { |c| assign_contact(c, admin: false) }
 
       domain.admin_domain_contacts_attributes = @admin_contacts
       domain.tech_domain_contacts_attributes = @tech_contacts
     end
 
     def assign_expiry_time
+      return unless domain.period
+
       period = Integer(domain.period)
       plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym
       exp = (Time.zone.now.advance(plural_period_unit_name => period) + 1.day).beginning_of_day

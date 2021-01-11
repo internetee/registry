@@ -3,6 +3,7 @@ module Repp
   module V1
     class DomainsController < BaseController
       before_action :set_authorized_domain, only: %i[transfer_info]
+      before_action :forward_registrar_id, only: %i[create]
       before_action :set_domain, only: %i[show]
 
       def index
@@ -15,6 +16,18 @@ module Repp
 
       def show
         render_success(data: { domain: Serializers::RegistrantApi::Domain.new(@domain).to_json })
+      end
+
+      ## POST /repp/v1/domains
+      def create
+        authorize!(:create, Epp::Domain)
+        puts params
+        @domain = Epp::Domain.new
+        action = Actions::DomainCreate.new(@domain, domain_create_params)
+
+        handle_errors(@domain) and return unless action.call
+
+        render_success(create_update_success_body)
       end
 
       def transfer_info
@@ -72,6 +85,10 @@ module Repp
         params.permit(:id)
       end
 
+      def forward_registrar_id
+        params[:domain][:registrar_id] = current_user.registrar.id
+      end
+
       def set_domain
         @domain = Domain.find_by(registrar: current_user.registrar, name: params[:id])
       end
@@ -104,6 +121,13 @@ module Repp
       def index_params
         params.permit(:limit, :offset, :details)
       end
+
+      def domain_create_params
+        params.require(:domain).require([:name, :registrant_id, :period, :period_unit])
+        params.require(:domain).permit(:name, :registrant_id, :period, :period_unit, :registrar_id)
+
+      end
+
     end
   end
 end
