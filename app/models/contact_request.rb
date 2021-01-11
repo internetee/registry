@@ -23,6 +23,11 @@ class ContactRequest < ApplicationRecord
     contact_request.save!
   end
 
+  def update_status(status)
+    self.status = status
+    save!
+  end
+
   def self.create_random_secret
     SecureRandom.hex(64)
   end

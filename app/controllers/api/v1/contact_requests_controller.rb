@@ -9,14 +9,24 @@ module Api
 
         ContactRequest.save_record(contact_request_params)
         head(:created)
-      rescue ActionController::ParameterMissing
+      rescue StandardError
         head(:bad_request)
       end
 
-      def update; end
+      def update
+        return head(:bad_request) if params[:id].blank?
+
+        record = ContactRequest.find_by(id: params[:id])
+        return head(:not_found) unless record
+
+        record.update_status(contact_request_params[:status])
+        head(:ok)
+      rescue StandardError
+        head(:bad_request)
+      end
 
       def contact_request_params
-        params.require(:contact_request).permit(:email, :whois_record_id, :name, :status, :id)
+        params.require(:contact_request).permit(:email, :whois_record_id, :name, :status)
       end
     end
   end
