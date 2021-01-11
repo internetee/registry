@@ -110,8 +110,10 @@ class Epp::Domain < Domain
 
   def attach_default_contacts
     return if registrant.blank?
-    tech_contacts << registrant if tech_domain_contacts.blank?
-    admin_contacts << registrant if admin_domain_contacts.blank? && !registrant.org?
+    registrant_obj = Contact.find_by(code: registrant.code)
+
+    tech_contacts << registrant_obj if tech_domain_contacts.blank?
+    admin_contacts << registrant_obj if admin_domain_contacts.blank? && !registrant.org?
   end
 
   def apply_pending_delete!
