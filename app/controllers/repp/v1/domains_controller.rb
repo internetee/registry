@@ -21,13 +21,12 @@ module Repp
       ## POST /repp/v1/domains
       def create
         authorize!(:create, Epp::Domain)
-        puts params
         @domain = Epp::Domain.new
         action = Actions::DomainCreate.new(@domain, domain_create_params)
 
         handle_errors(@domain) and return unless action.call
 
-        render_success(create_update_success_body)
+        render_success(data: { domain: { name: @domain.name } })
       end
 
       def transfer_info
@@ -125,7 +124,6 @@ module Repp
       def domain_create_params
         params.require(:domain).require([:name, :registrant_id, :period, :period_unit])
         params.require(:domain).permit(:name, :registrant_id, :period, :period_unit, :registrar_id)
-
       end
 
     end

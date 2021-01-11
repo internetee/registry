@@ -64,9 +64,6 @@ module Actions
     end
 
     def assign_domain_attributes
-      puts "FOOOK"
-      puts params
-      puts "AYYYYY #{params[:name]}"
       domain.name = params[:name].strip.downcase
       domain.registrar = Registrar.find(params[:registrar_id])
       assign_domain_period
