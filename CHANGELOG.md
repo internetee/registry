@@ -1,4 +1,6 @@
 06.01.2021
+* IMproved tests whois update for bulk nameserver change [#1739](https://github.com/internetee/registry/issues/1739)
+* Bulk ForceDelete funcionality in admin [#1177](https://github.com/internetee/registry/issues/1177)
 * Reverted Nokogiri bump due to dependency conflicts in production [#1787](https://github.com/internetee/registry/pull/1787)
 
 05.01.2021

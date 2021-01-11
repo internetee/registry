@@ -19,7 +19,10 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     end
   end
 
-  def notification_template
+  def notification_template(explicit: nil)
+    reason = explicit&.downcase
+    return reason if %w[invalid_email invalid_phone].include?(reason)
+
     if contact_emails_verification_failed.present?
       'invalid_email'
     elsif registrant.org?
@@ -33,9 +36,8 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
-  def schedule_force_delete(type: :fast_track, notify_by_email: false)
-    Domains::ForceDelete::SetForceDelete.run(domain: self,
-                                             type: type,
+  def schedule_force_delete(type: :fast_track, notify_by_email: false, reason: nil)
+    Domains::ForceDelete::SetForceDelete.run(domain: self, type: type, reason: reason,
                                              notify_by_email: notify_by_email)
   end
 

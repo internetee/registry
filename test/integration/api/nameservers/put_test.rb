@@ -67,7 +67,8 @@ class APINameserversPutTest < ApplicationIntegrationTest
                             attributes: { hostname: 'ns55.bestnames.test',
                                           ipv4: ['192.0.2.55'],
                                           ipv6: ['2001:db8::55'] },
-                    affected_domains: ["airport.test", "shop.test"] }}),
+                    affected_domains: ["airport.test", "shop.test"],
+                    skipped_domains: [] }}),
                  JSON.parse(response.body, symbolize_names: true)
   end
 

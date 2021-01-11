@@ -48,16 +48,23 @@ class Registrar
       parsed_response = JSON.parse(response.body, symbolize_names: true)
 
       if response.code == '200'
-        notices = [t('.replaced')]
-        notices << "#{t('.affected_domains')}: " \
-                   "#{parsed_response[:data][:affected_domains].join(', ')}"
-
-        flash[:notice] = notices.join(', ')
-        redirect_to registrar_domains_url
+        redirect_to(registrar_domains_url,
+                    flash: { notice: compose_notice_message(parsed_response) })
       else
         @api_errors = parsed_response[:message]
         render file: 'registrar/bulk_change/new', locals: { active_tab: :nameserver }
       end
+    end
+
+    def compose_notice_message(res)
+      notices = ["#{t('.replaced')}. #{t('.affected_domains')}: " \
+      "#{res[:data][:affected_domains].join(', ')}"]
+
+      if res[:data][:skipped_domains]
+        notices << "#{t('.skipped_domains')}: #{res[:data][:skipped_domains].join(', ')}"
+      end
+
+      notices.join(', ')
     end
 
     def domain_list_from_csv

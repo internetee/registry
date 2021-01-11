@@ -322,6 +322,7 @@ Rails.application.routes.draw do
     resources :delayed_jobs
     resources :epp_logs
     resources :repp_logs
+    resources :mass_actions, only: %i[index create]
     resources :bounced_mail_addresses, only: %i[index show destroy]
 
     authenticate :admin_user do
