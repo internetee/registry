@@ -1,3 +1,6 @@
+14.01.2021
+* Fixed IDN and punycode support for REPP domain transfer_info request [#1801](https://github.com/internetee/registry/issues/1801)
+
 06.01.2021
 * IMproved tests whois update for bulk nameserver change [#1739](https://github.com/internetee/registry/issues/1739)
 * Bulk ForceDelete funcionality in admin [#1177](https://github.com/internetee/registry/issues/1177)
