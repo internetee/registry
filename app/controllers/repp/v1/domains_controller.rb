@@ -68,14 +68,19 @@ module Repp
 
       def set_authorized_domain
         @epp_errors ||= []
-        h = {}
-        h[transfer_info_params[:id].match?(/\A[0-9]+\z/) ? :id : :name] = transfer_info_params[:id]
-        @domain = Domain.find_by!(h)
+        @domain = domain_from_url_hash
 
         return if @domain.transfer_code.eql?(request.headers['Auth-Code'])
 
         @epp_errors << { code: 2202, msg: I18n.t('errors.messages.epp_authorization_error') }
         handle_errors
+      end
+
+      def domain_from_url_hash
+        entry = transfer_info_params[:id]
+        return Domain.find(entry) if entry.match?(/\A[0-9]+\z/)
+
+        Domain.find_by!('name = ? OR name_puny = ?', entry, entry)
       end
 
       def limit
