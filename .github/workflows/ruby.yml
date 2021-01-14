@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-18.04]
-        ruby: [ 2.7, 3.0 ]
+        ruby: [ 2.7  ]
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
     steps:
@@ -99,11 +99,6 @@ jobs:
 
       - name: Give test coverage reporter executable permissions
         run: chmod +x cc-test-reporter
-
-      - uses: actions/download-artifact@v1
-        with:
-          name: coverage-2.6
-          path: coverage
 
       - uses: actions/download-artifact@v1
         with:
