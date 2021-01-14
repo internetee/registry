@@ -1,7 +1,7 @@
 module Repp
   module V1
     class BaseController < ActionController::API
-      rescue_from ActiveRecord::RecordNotFound, with: :not_found_error
+      around_action :log_request
       before_action :authenticate_user
       before_action :validate_webclient_ca
       before_action :check_ip_restriction
@@ -9,21 +9,31 @@ module Repp
 
       before_action :set_paper_trail_whodunnit
 
-      rescue_from ActionController::ParameterMissing do |exception|
-        render json: { code: 2003, message: exception }, status: :bad_request
+      private
+
+      def log_request
+        yield
+      rescue ActiveRecord::RecordNotFound
+        @response = { code: 2303, message: 'Object does not exist' }
+        render(json: @response, status: :not_found)
+      rescue ActionController::ParameterMissing => e
+        @response = { code: 2003, message: e }
+        render(json: @response, status: :bad_request)
+      ensure
+        create_repp_log
       end
 
-      after_action do
+      # rubocop:disable Metrics/AbcSize
+      def create_repp_log
         ApiLog::ReppLog.create(
           request_path: request.path, request_method: request.request_method,
           request_params: request.params.except('route_info').to_json, uuid: request.try(:uuid),
-          response: @response.to_json, response_code: status, ip: request.ip,
+          response: @response.to_json, response_code: response.status, ip: request.ip,
           api_user_name: current_user.try(:username),
           api_user_registrar: current_user.try(:registrar).try(:to_s)
         )
       end
-
-      private
+      # rubocop:enable Metrics/AbcSize
 
       def set_paper_trail_whodunnit
         ::PaperTrail.request.whodunnit = current_user
@@ -119,11 +129,6 @@ module Repp
                       message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip) }
 
         render(json: @response, status: :unauthorized)
-      end
-
-      def not_found_error
-        @response = { code: 2303, message: 'Object does not exist' }
-        render(json: @response, status: :not_found)
       end
     end
   end
