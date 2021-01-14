@@ -37,4 +37,17 @@ class ReppV1DomainsTransferInfoTest < ActionDispatch::IntegrationTest
     assert_equal 'Authorization error', json[:message]
     assert_empty json[:data]
   end
+
+  def test_processes_puny_domains
+    @domain.update(name_puny: 'xn--prototp-s2aa.ee')
+
+    headers = @auth_headers
+    headers['Auth-Code'] = @domain.transfer_code
+
+    get "/repp/v1/domains/xn--prototp-s2aa.ee/transfer_info", headers: headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+  end
 end
