@@ -2,6 +2,12 @@ module Whois
   class Record < Whois::Server
     self.table_name = 'whois_records'
 
+    def self.without_auctions
+      ids = Whois::Record.all.select { |record| Auction.where(domain: record.name).blank? }
+                         .pluck(:id)
+      Whois::Record.where(id: ids)
+    end
+
     def self.disclaimer
       Setting.registry_whois_disclaimer
     end
