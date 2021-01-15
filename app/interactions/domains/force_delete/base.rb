@@ -10,6 +10,9 @@ module Domains
       boolean :notify_by_email,
               default: false,
               description: 'Do we need to send email notification'
+      string  :reason,
+              default: nil,
+              description: 'Which mail template to use explicitly'
 
       validates :type, inclusion: { in: %i[fast_track soft] }
     end

@@ -5,25 +5,31 @@ module Repp
         before_action :verify_nameserver_existance, only: %i[update]
 
         def update
-          domains = params[:data][:domains] || []
-          affected = current_user.registrar
-                                 .replace_nameservers(hostname,
-                                                      hostname_params[:data][:attributes],
-                                                      domains: domains)
+          affected, errored = current_user.registrar
+                                          .replace_nameservers(hostname,
+                                                               hostname_params[:data][:attributes],
+                                                               domains: domains_from_params)
 
-          render_success(data: data_format_for_success(affected))
+          render_success(data: data_format_for_success(affected, errored))
         rescue ActiveRecord::RecordInvalid => e
           handle_errors(e.record)
         end
 
         private
 
-        def data_format_for_success(affected_domains)
+        def domains_from_params
+          return [] unless params[:data][:domains]
+
+          params[:data][:domains].map(&:downcase)
+        end
+
+        def data_format_for_success(affected_domains, errored_domains)
           {
             type: 'nameserver',
             id: params[:data][:attributes][:hostname],
             attributes: params[:data][:attributes],
             affected_domains: affected_domains,
+            skipped_domains: errored_domains,
           }
         end
 
