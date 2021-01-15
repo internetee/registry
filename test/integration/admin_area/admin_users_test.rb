@@ -6,9 +6,12 @@ class AdminAreaAdminUsersIntegrationTest < ApplicationSystemTestCase
     include ActionView::Helpers::NumberHelper
 
     setup do
+        
         @original_default_language = Setting.default_language
         sign_in users(:admin)
     end
+
+    # option_select = '//div[@class="selectize-input items has-options full has-items"]'
 
     # "/admin/admin_users"
     def test_create_new_admin_user
@@ -73,6 +76,64 @@ class AdminAreaAdminUsersIntegrationTest < ApplicationSystemTestCase
 
         click_on 'Save'
         assert_text 'Record updated'
-
     end
+
+    def test_edit_exist_record_with_invalid_data
+        visit admin_admin_users_path
+        click_on 'New admin user'
+
+        fill_in 'Username', with: 'test_user_name'
+        fill_in 'Password', with: 'test_password'
+        fill_in 'Password confirmation', with: 'test_password'
+        fill_in 'Identity code', with: '38903110313'
+        fill_in 'Email', with: 'oleg@tester.ee'
+
+        select 'Estonia', from: 'admin_user_country_code', match: :first
+        select 'User', from: 'admin_user_roles_', match: :first
+
+        click_on 'Save'
+        assert_text 'Record created'
+
+        visit admin_admin_users_path
+        click_on 'test_user_name'
+
+        assert_text 'General'
+        click_on 'Edit'
+
+        fill_in 'Password', with: 'test_password'
+        fill_in 'Password confirmation', with: 'test_password2'
+
+        click_on 'Save'
+        assert_text 'Failed to update record'
+    end
+
+    # TODO
+    # def test_delete_exist_record
+    #     visit admin_admin_users_path
+    #     click_on 'New admin user'
+
+    #     fill_in 'Username', with: 'test_user_name'
+    #     fill_in 'Password', with: 'test_password'
+    #     fill_in 'Password confirmation', with: 'test_password'
+    #     fill_in 'Identity code', with: '38903110313'
+    #     fill_in 'Email', with: 'oleg@tester.ee'
+
+    #     select 'Estonia', from: 'admin_user_country_code', match: :first
+    #     select 'User', from: 'admin_user_roles_', match: :first
+
+    #     click_on 'Save'
+    #     assert_text 'Record created'
+
+    #     visit admin_admin_users_path
+    #     click_on 'test_user_name'
+
+    #     assert_text 'General'
+    #     click_on 'Delete'
+
+    #     accept_prompt(with: 'Are you sure?') do
+    #         click_link('Ok')
+    #     end
+
+    #     assert_text ' Record deleted'
+    # end
 end

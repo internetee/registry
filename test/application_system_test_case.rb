@@ -13,6 +13,7 @@ class ApplicationSystemTestCase < ActionDispatch::IntegrationTest
     WebMock.reset!
     Capybara.reset_sessions!
     Capybara.use_default_driver
+    
   end
 end
 
@@ -28,17 +29,21 @@ class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--window-size=1400,1400')
 
+    
+
     Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+    Capybara.exact = true
   end
 
   Capybara.server = :puma, { Silent: true }
 
   def setup
     DatabaseCleaner.start
-
+    
     super
 
     Capybara.current_driver = :chrome
+    
   end
 
   def teardown
