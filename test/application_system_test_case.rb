@@ -32,7 +32,7 @@ class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
     
 
     Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
-    Capybara.exact = true
+
   end
 
   Capybara.server = :puma, { Silent: true }

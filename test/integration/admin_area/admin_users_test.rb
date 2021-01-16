@@ -1,69 +1,65 @@
 require 'test_helper'
 require 'application_system_test_case'
 
-class AdminAreaAdminUsersIntegrationTest < ApplicationSystemTestCase
+class AdminAreaAdminUsersIntegrationTest < JavaScriptApplicationSystemTestCase
     include Devise::Test::IntegrationHelpers
     include ActionView::Helpers::NumberHelper
 
     setup do
-        
+        WebMock.allow_net_connect!
         @original_default_language = Setting.default_language
         sign_in users(:admin)
     end
 
-    # option_select = '//div[@class="selectize-input items has-options full has-items"]'
-
-    # "/admin/admin_users"
-    def test_create_new_admin_user
+    # Helpers funcs
+    def createNewAdminUser(valid)
         visit admin_admin_users_path
         click_on 'New admin user'
 
         fill_in 'Username', with: 'test_user_name'
-        fill_in 'Password', with: 'test_password'
-        fill_in 'Password confirmation', with: 'test_password'
+        # If valid=true creating valid user, if else, then with invalid data
+        if valid
+            fill_in 'Password', with: 'test_password'
+            fill_in 'Password confirmation', with: 'test_password'
+        else
+            fill_in 'Password', with: 'test_password'
+            fill_in 'Password confirmation', with: 'test_password2'
+        end
         fill_in 'Identity code', with: '38903110313'
         fill_in 'Email', with: 'oleg@tester.ee'
 
         select 'Estonia', from: 'admin_user_country_code', match: :first
-        select 'User', from: 'admin_user_roles_', match: :first
+
+        # option_select = '//div[@class="selectize-input items has-options full has-items"]'
+        # find(:xpath, ".//table/tr").click
+        # select 'User', from: 'admin_user_roles_', match: :first
+        select_element = find(:xpath, "/html/body/div[2]/form/div[2]/div/div[7]/div[2]/div/div[1]")
+        select_element.click
+
+        # /html/body/div[2]/form/div[2]/div/div[7]/div[2]/div/div[2]/div/div[1]
+        option_element = find(:xpath, "/html/body/div[2]/form/div[2]/div/div[7]/div[2]/div/div[2]/div/div[1]")
+        option_element.click
 
         click_on 'Save'
-        assert_text 'Record created'
+        if valid
+            assert_text 'Record created'
+        else
+            assert_text 'Failed to create record'
+        end
     end
 
+    # Tests
     # "/admin/admin_users"
+    def test_create_new_admin_user
+        createNewAdminUser(true)
+    end
+
     def test_create_with_invalid_data_new_admin_user
-        visit admin_admin_users_path
-        click_on 'New admin user'
-
-        fill_in 'Username', with: 'test_user_name'
-        fill_in 'Password', with: 'test_password'
-        fill_in 'Password confirmation', with: 'test_password2'
-        fill_in 'Identity code', with: '38903110313'
-        fill_in 'Email', with: 'oleg@tester.ee'
-
-        select 'Estonia', from: 'admin_user_country_code', match: :first
-        select 'User', from: 'admin_user_roles_', match: :first
-
-        click_on 'Save'
-        assert_text 'Failed to create record'
+        createNewAdminUser(false)
     end
 
     def test_edit_successfully_exist_record
-        visit admin_admin_users_path
-        click_on 'New admin user'
-
-        fill_in 'Username', with: 'test_user_name'
-        fill_in 'Password', with: 'test_password'
-        fill_in 'Password confirmation', with: 'test_password'
-        fill_in 'Identity code', with: '38903110313'
-        fill_in 'Email', with: 'oleg@tester.ee'
-
-        select 'Estonia', from: 'admin_user_country_code', match: :first
-        select 'User', from: 'admin_user_roles_', match: :first
-
-        click_on 'Save'
-        assert_text 'Record created'
+        createNewAdminUser(true)
 
         visit admin_admin_users_path
         click_on 'test_user_name'
@@ -79,20 +75,7 @@ class AdminAreaAdminUsersIntegrationTest < ApplicationSystemTestCase
     end
 
     def test_edit_exist_record_with_invalid_data
-        visit admin_admin_users_path
-        click_on 'New admin user'
-
-        fill_in 'Username', with: 'test_user_name'
-        fill_in 'Password', with: 'test_password'
-        fill_in 'Password confirmation', with: 'test_password'
-        fill_in 'Identity code', with: '38903110313'
-        fill_in 'Email', with: 'oleg@tester.ee'
-
-        select 'Estonia', from: 'admin_user_country_code', match: :first
-        select 'User', from: 'admin_user_roles_', match: :first
-
-        click_on 'Save'
-        assert_text 'Record created'
+        createNewAdminUser(true)
 
         visit admin_admin_users_path
         click_on 'test_user_name'
@@ -107,33 +90,18 @@ class AdminAreaAdminUsersIntegrationTest < ApplicationSystemTestCase
         assert_text 'Failed to update record'
     end
 
-    # TODO
-    # def test_delete_exist_record
-    #     visit admin_admin_users_path
-    #     click_on 'New admin user'
+    def test_delete_exist_record
+        createNewAdminUser(true)
 
-    #     fill_in 'Username', with: 'test_user_name'
-    #     fill_in 'Password', with: 'test_password'
-    #     fill_in 'Password confirmation', with: 'test_password'
-    #     fill_in 'Identity code', with: '38903110313'
-    #     fill_in 'Email', with: 'oleg@tester.ee'
+        visit admin_admin_users_path
+        click_on 'test_user_name'
 
-    #     select 'Estonia', from: 'admin_user_country_code', match: :first
-    #     select 'User', from: 'admin_user_roles_', match: :first
+        assert_text 'General'
+        click_on 'Delete'
 
-    #     click_on 'Save'
-    #     assert_text 'Record created'
+        # Accept to delete in modal window
+        page.driver.browser.switch_to.alert.accept
 
-    #     visit admin_admin_users_path
-    #     click_on 'test_user_name'
-
-    #     assert_text 'General'
-    #     click_on 'Delete'
-
-    #     accept_prompt(with: 'Are you sure?') do
-    #         click_link('Ok')
-    #     end
-
-    #     assert_text ' Record deleted'
-    # end
+        assert_text 'Record deleted'
+    end
 end
