@@ -67,8 +67,4 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
     assert_text @domain.name
   end
 
-  def test_set_domain
-    assert_equal @blocked_domain.name, BlockedDomain.find(name: @blocked_domain.name)
-  end
-
 end
