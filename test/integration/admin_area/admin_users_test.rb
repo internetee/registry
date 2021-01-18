@@ -30,17 +30,16 @@ class AdminAreaAdminUsersIntegrationTest < JavaScriptApplicationSystemTestCase
 
         select 'Estonia', from: 'admin_user_country_code', match: :first
 
-        # option_select = '//div[@class="selectize-input items has-options full has-items"]'
-        # find(:xpath, ".//table/tr").click
-        # select 'User', from: 'admin_user_roles_', match: :first
+        # '//div[@class="selectize-input items has-options full has-items"]'
         select_element = find(:xpath, "/html/body/div[2]/form/div[2]/div/div[7]/div[2]/div/div[1]")
         select_element.click
 
-        # /html/body/div[2]/form/div[2]/div/div[7]/div[2]/div/div[2]/div/div[1]
         option_element = find(:xpath, "/html/body/div[2]/form/div[2]/div/div[7]/div[2]/div/div[2]/div/div[1]")
         option_element.click
 
         click_on 'Save'
+
+        # if user created with valid data then record successfuly, else it failed
         if valid
             assert_text 'Record created'
         else
