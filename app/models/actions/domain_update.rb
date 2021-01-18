@@ -55,7 +55,6 @@ module Actions
     end
 
     def assign_nameserver_modifications
-      puts "ASSIGNING"
       @nameservers = []
       params[:nameservers].each do |ns_attr|
         case ns_attr[:action]
@@ -80,17 +79,16 @@ module Actions
 
     def assign_dnssec_modifications
       @dnskeys = []
-
       params[:dns_keys].each do |key|
         case key[:action]
         when 'add'
-          validate_dnskey_integrity(key) && @dnskeys << key.except(:action)
+          validate_dnskey_integrity(key)
         when 'rem'
           assign_removable_dnskey(key)
         end
       end
 
-      domain.dnskeys_attributes = @dnskeys
+      domain.dnskeys_attributes = @dnskeys.uniq
     end
 
     def validate_dnskey_integrity(key)
@@ -100,7 +98,7 @@ module Actions
         domain.add_epp_error('2306', nil, nil, %i[dnskeys ds_data_not_allowed])
       end
 
-      dnskeys << key.except(:action)
+      @dnskeys << key.except(:action)
     end
 
     def assign_removable_dnskey(key)

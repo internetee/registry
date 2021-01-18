@@ -24,8 +24,8 @@ module Repp
           render_success(data: { domain: { name: @domain.name } })
         end
 
-        api :POST, '/repp/v1/domains/:domain/nameservers/:nameserver'
-        desc 'Modifiy nameserver for domain'
+        api :PUT, '/repp/v1/domains/:domain/nameservers/:nameserver'
+        desc 'Modify nameserver for domain'
         param :nameserver, Hash, required: true, desc: 'Nameserver parameters' do
           param :hostname, String, required: true, desc: 'Nameserver hostname'
           param :ipv4, Array, required: false, desc: 'Array of IPv4 values'

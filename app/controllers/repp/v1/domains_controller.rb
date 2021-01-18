@@ -63,6 +63,7 @@ module Repp
       param :domain, Hash, required: true, desc: 'Changes of domain object' do
         param :registrant, Hash, required: false, desc: 'New registrant object' do
           param :code, String, required: true, desc: 'New registrant contact code'
+          param :verified, [true, false], required: false, desc: 'Registrant change is already verified'
         end
         param :auth_info, String, required: false, desc: 'New authorization code'
       end
