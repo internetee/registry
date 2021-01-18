@@ -7,8 +7,8 @@ module Api
       def create
         return head(:bad_request) if contact_request_params[:email].blank?
 
-        ContactRequest.save_record(contact_request_params)
-        head(:created)
+        contact_request = ContactRequest.save_record(contact_request_params)
+        render json: contact_request, status: :created
       rescue StandardError
         head(:bad_request)
       end
@@ -16,8 +16,7 @@ module Api
       def update
         return head(:bad_request) if params[:id].blank?
 
-        result = process_id(params[:id])
-        head(result)
+        process_id(params[:id])
       end
 
       def process_id(id)
@@ -25,9 +24,9 @@ module Api
         return :not_found unless record
 
         record.update_status(contact_request_params)
-        :ok
+        render json: record, status: :ok
       rescue StandardError
-        :bad_request
+        head :bad_request
       end
 
       def contact_request_params

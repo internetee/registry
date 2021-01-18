@@ -21,6 +21,7 @@ class ContactRequest < ApplicationRecord
     contact_request.valid_to = set_valid_to_24_hours_from_now
     contact_request.status = STATUS_NEW
     contact_request.save!
+    contact_request
   end
 
   def update_status(params)
