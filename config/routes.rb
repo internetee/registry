@@ -62,7 +62,9 @@ Rails.application.routes.draw do
       resources :domains, constraints: { id: /.*/ } do
         resources :nameservers, only: %i[create destroy], constraints: { id: /.*/ }, controller: 'domains/nameservers'
         resources :dnssec, only: %i[index create], constraints: { id: /.*/ }, controller: 'domains/dnssec'
+        resources :contacts, only: %i[index create], constraints: { id: /.*/ }, controller: 'domains/contacts'
         match "dnssec", to: "domains/dnssec#destroy", via: "delete", defaults: { id: nil }
+        match "contacts", to: "domains/contacts#destroy", via: "delete", defaults: { id: nil }
         collection do
           get ':id/transfer_info', to: 'domains#transfer_info', constraints: { id: /.*/ }
           post 'transfer', to: 'domains#transfer'

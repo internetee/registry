@@ -154,7 +154,7 @@ module Actions
     def assign_contact(obj, add: false, admin: true, code:)
       if obj.blank?
         domain.add_epp_error('2303', 'contact', code, %i[domain_contacts not_found])
-      elsif obj.org? && admin
+      elsif obj.try(:org?) && admin && add
         domain.add_epp_error('2306', 'contact', code,
                              %i[domain_contacts admin_contact_can_be_only_private_person])
       else
