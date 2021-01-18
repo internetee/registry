@@ -9,7 +9,7 @@ module Repp
 
       before_action :set_paper_trail_whodunnit
 
-      rescue_from ActionController::ParameterMissing do |exception|
+      rescue_from ActionController::ParameterMissing, Apipie::ParamInvalid, Apipie::ParamMissing do |exception|
         render json: { code: 2003, message: exception }, status: :bad_request
       end
 

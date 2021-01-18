@@ -145,6 +145,8 @@ GEM
     akami (1.3.1)
       gyoku (>= 0.4.0)
       nokogiri
+    apipie-rails (0.5.18)
+      rails (>= 4.1)
     attr_required (1.0.1)
     autoprefixer-rails (10.0.0.2)
       execjs
@@ -485,6 +487,7 @@ DEPENDENCIES
   active_interaction (~> 3.8)
   activerecord-import
   airbrake
+  apipie-rails (~> 0.5.18)
   bootsnap (>= 1.1.0)
   bootstrap-sass (~> 3.4)
   cancancan

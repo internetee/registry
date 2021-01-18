@@ -92,3 +92,5 @@ group :test do
   gem 'webdrivers'
   gem 'webmock'
 end
+
+gem "apipie-rails", "~> 0.5.18"

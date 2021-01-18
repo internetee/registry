@@ -4,7 +4,7 @@ module Repp
     class DomainsController < BaseController
       before_action :set_authorized_domain, only: %i[transfer_info]
       before_action :forward_registrar_id, only: %i[create]
-      before_action :set_domain, only: %i[show]
+      before_action :set_domain, only: %i[show update]
 
       def index
         records = current_user.registrar.domains
@@ -18,13 +18,61 @@ module Repp
         render_success(data: { domain: Serializers::RegistrantApi::Domain.new(@domain).to_json })
       end
 
-      ## POST /repp/v1/domains
+      api :POST, '/repp/v1/domains'
+      desc 'Creates new domain'
+      param :domain, Hash, required: true, desc: 'Parameters for new domain' do
+        param :name, String, required: true, desc: 'Domain name to be registered'
+        param :registrant_id, String, required: true, desc: 'Registrant contact code'
+        param :period, Integer, required: true, desc: 'Registration period in months or years'
+        param :period_unit, String, required: true, desc: 'Period type (month m) or (year y)'
+        param :nameservers_attributes, Array, required: false, desc: 'Domain nameservers' do
+          param :hostname, String, required: true, desc: 'Nameserver hostname'
+          param :ipv4, Array, desc: 'Array of IPv4 addresses'
+          param :ipv6, Array, desc: 'Array of IPv4 addresses'
+        end
+        param :admin_domain_contacts_attributes, Array, required: false, desc: 'Admin domain contacts codes'
+        param :admin_domain_contacts_attributes, Array, required: false, desc: 'Tech domain contacts codes'
+        param :dnskeys_attributes, Array, required: false, desc: 'DNSSEC keys for domain' do
+          param :flags, String, required: true, desc: 'Flag of DNSSEC key'
+          param :protocol, String, required: true, desc: 'Protocol of DNSSEC key'
+          param :alg, String, required: true, desc: 'Algorithm of DNSSEC key'
+          param :public_key, String, required: true, desc: 'Public key of DNSSEC key'
+        end
+      end
+      returns code: 200, desc: 'Successful domain registration response' do
+        property :code, Integer, desc: 'EPP code'
+        property :message, String, desc: 'EPP code explanation'
+        property :data, Hash do
+          property :domain, Hash do
+            property :name, String, 'Domain name'
+          end
+        end
+      end
       def create
         authorize!(:create, Epp::Domain)
         @domain = Epp::Domain.new
         action = Actions::DomainCreate.new(@domain, domain_create_params)
 
         handle_errors(@domain) and return unless action.call
+
+        render_success(data: { domain: { name: @domain.name } })
+      end
+
+      api :PUT, 'repp/v1/domains/:id'
+      param :id, String, desc: 'Domain name in IDN / Puny format'
+      param :domain, Hash, required: true, desc: 'Changes of domain object' do
+        param :registrant, Hash, required: false, desc: 'New registrant object' do
+          param :code, String, required: true, desc: 'New registrant contact code'
+        end
+        param :auth_info, String, required: false, desc: 'New authorization code'
+      end
+      def update
+        action = Actions::DomainUpdate.new(@domain, params[:domain], current_user)
+
+        unless action.call
+          handle_errors(@domain)
+          return
+        end
 
         render_success(data: { domain: { name: @domain.name } })
       end
@@ -89,7 +137,7 @@ module Repp
       end
 
       def set_domain
-        @domain = Domain.find_by(registrar: current_user.registrar, name: params[:id])
+        @domain = Epp::Domain.find_by!(registrar: current_user.registrar, name: params[:id])
       end
 
       def set_authorized_domain
@@ -125,7 +173,6 @@ module Repp
         params.require(:domain).require([:name, :registrant_id, :period, :period_unit])
         params.require(:domain).permit(:name, :registrant_id, :period, :period_unit, :registrar_id)
       end
-
     end
   end
 end

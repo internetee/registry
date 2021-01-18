@@ -55,6 +55,7 @@ module Actions
     end
 
     def assign_nameserver_modifications
+      puts "ASSIGNING"
       @nameservers = []
       params[:nameservers].each do |ns_attr|
         case ns_attr[:action]
