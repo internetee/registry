@@ -520,6 +520,7 @@ class Epp::Domain < Domain
 
   def attach_legal_document(legal_document_data)
     return unless legal_document_data
+    return unless legal_document_data[:body]
     return if legal_document_data[:body].starts_with?(ENV['legal_documents_dir'])
 
     legal_documents.create(
