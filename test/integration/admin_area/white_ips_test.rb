@@ -1,5 +1,3 @@
-# admin_registrar_white_ips GET             /admin/registrars/:registrar_id/white_ips(.:format) 
-
 require 'test_helper'
 require 'application_system_test_case'
 
