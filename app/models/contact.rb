@@ -361,8 +361,9 @@ class Contact < ApplicationRecord
   end
 
   def related_domains
-    a = related_domain_descriptions
-    a.keys.map { |d| { name: d, id: a[d][:id], roles: a[d][:roles] } }
+    dom_id = DomainContact.select(:domain_id).where(contact_id: id).map(&:domain_id).uniq
+    res = Domain.where(id: dom_id).or(Domain.where(registrant_id: id)).select(:name, :uuid)
+    res.pluck(:name, :uuid).map { |name, id| { name: name, id: id } }
   end
 
   def status_notes_array=(notes)
