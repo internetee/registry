@@ -3,16 +3,16 @@ require 'application_system_test_case'
 
 class AdminAreaAccountActivitiesIntegrationTest < ApplicationSystemTestCase
     # /admin/account_activities
-    include Devise::Test::IntegrationHelpers
-    include ActionView::Helpers::NumberHelper
-
     setup do
         sign_in users(:admin)
         @original_default_language = Setting.default_language
     end
-
-
-    # TESTS
-    # TODO
+    # TODO:
+    # Should create some account activities
+    
+    # def test_show_account_activities_page
+    #     visit admin_account_activities_path
+    #     assert_text 'Account activities'
+    # end
 
 end
