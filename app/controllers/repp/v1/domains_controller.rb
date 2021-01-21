@@ -6,6 +6,8 @@ module Repp
       before_action :forward_registrar_id, only: %i[create]
       before_action :set_domain, only: %i[show update]
 
+      api :GET, '/repp/v1/domains'
+      desc 'Get all existing domains'
       def index
         records = current_user.registrar.domains
         domains = records.limit(limit).offset(offset)
@@ -14,12 +16,14 @@ module Repp
         render_success(data: { domains: domains, total_number_of_records: records.count })
       end
 
+      api :GET, '/repp/v1/domains/:domain_name'
+      desc 'Get a specific domain'
       def show
         render_success(data: { domain: Serializers::RegistrantApi::Domain.new(@domain).to_json })
       end
 
       api :POST, '/repp/v1/domains'
-      desc 'Creates new domain'
+      desc 'Create a new domain'
       param :domain, Hash, required: true, desc: 'Parameters for new domain' do
         param :name, String, required: true, desc: 'Domain name to be registered'
         param :registrant_id, String, required: true, desc: 'Registrant contact code'
@@ -58,7 +62,8 @@ module Repp
         render_success(data: { domain: { name: @domain.name } })
       end
 
-      api :PUT, 'repp/v1/domains/:id'
+      api :PUT, '/repp/v1/domains/:domain_name'
+      desc 'Update existing domain'
       param :id, String, desc: 'Domain name in IDN / Puny format'
       param :domain, Hash, required: true, desc: 'Changes of domain object' do
         param :registrant, Hash, required: false, desc: 'New registrant object' do
@@ -78,6 +83,8 @@ module Repp
         render_success(data: { domain: { name: @domain.name } })
       end
 
+      api :GET, '/repp/v1/domains/:domain_name/transfer_info'
+      desc "Retrieve specific domain's transfer info"
       def transfer_info
         contact_fields = %i[code name ident ident_type ident_country_code phone email street city
                             zip country_code statuses]
@@ -92,6 +99,8 @@ module Repp
         render_success(data: data)
       end
 
+      api :POST, '/repp/v1/domains/:domain_name/transfer'
+      desc 'Transfer specific domain'
       def transfer
         @errors ||= []
         @successful = []
@@ -102,6 +111,8 @@ module Repp
 
         render_success(data: { success: @successful, failed: @errors })
       end
+
+      private
 
       def initiate_transfer(transfer)
         domain = Epp::Domain.find_or_initialize_by(name: transfer[:domain_name])
@@ -115,8 +126,6 @@ module Repp
                        errors: domain.errors[:epp_errors] }
         end
       end
-
-      private
 
       def transfer_params
         params.require(:data).require(:domain_transfers).each do |t|

@@ -5,7 +5,7 @@ module Repp
         before_action :set_domain, only: %i[index create destroy]
 
         api :GET, '/repp/v1/domains/:domain_name/dnssec'
-        desc "View all domain's DNSSEC keys"
+        desc "View specific domain's DNSSEC keys"
         def index
           dnssec_keys = @domain.dnskeys
           data = { dns_keys: dnssec_keys.as_json(only: %i[flags alg protocol public_key]) }
@@ -13,7 +13,7 @@ module Repp
         end
 
         api :POST, '/repp/v1/domains/:domain_name/dnssec'
-        desc 'Add new DNSSEC key(s) to domain'
+        desc 'Create a new DNSSEC key(s) for domain'
         param :dns_keys, Array, required: true, desc: 'Array of new DNSSEC keys' do
           param :flags, String, required: true, desc: '256 (KSK) or 257 (ZSK)'
           param :protocol, String, required: true, desc: 'Key protocol (3)'

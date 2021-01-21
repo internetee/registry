@@ -4,7 +4,8 @@ module Repp
     class ContactsController < BaseController
       before_action :find_contact, only: %i[show update destroy]
 
-      ## GET /repp/v1/contacts
+      api :get, '/repp/v1/contacts'
+      desc 'Get all existing contacts'
       def index
         record_count = current_user.registrar.contacts.count
         contacts = showable_contacts(params[:details], params[:limit] || 200,
@@ -13,14 +14,16 @@ module Repp
         render(json: @response, status: :ok)
       end
 
-      ## GET /repp/v1/contacts/1
+      api :get, '/repp/v1/contacts/:contact_code'
+      desc 'Get a specific contact'
       def show
         serializer = ::Serializers::Repp::Contact.new(@contact,
                                                       show_address: Contact.address_processing?)
         render_success(data: serializer.to_json)
       end
 
-      ## GET /repp/v1/contacts/check/1
+      api :get, '/repp/v1/contacts/check/:contact_code'
+      desc 'Check contact code availability'
       def check
         contact = Epp::Contact.find_by(code: params[:id])
         data = { contact: { id: params[:id], available: contact.nil? } }
@@ -28,7 +31,8 @@ module Repp
         render_success(data: data)
       end
 
-      ## POST /repp/v1/contacts
+      api :POST, '/repp/v1/contacts'
+      desc 'Create a new contact'
       def create
         @contact = Epp::Contact.new(contact_params_with_address, current_user.registrar, epp: false)
         action = Actions::ContactCreate.new(@contact, params[:legal_document],
@@ -42,7 +46,8 @@ module Repp
         render_success(create_update_success_body)
       end
 
-      ## PUT /repp/v1/contacts/1
+      api :PUT, '/repp/v1/contacts/:contact_code'
+      desc 'Update existing contact'
       def update
         action = Actions::ContactUpdate.new(@contact, contact_params_with_address(required: false),
                                             params[:legal_document],
@@ -56,6 +61,8 @@ module Repp
         render_success(create_update_success_body)
       end
 
+      api :DELETE, '/repp/v1/contacts/:contact_code'
+      desc 'Delete a specific contact'
       def destroy
         action = Actions::ContactDelete.new(@contact, params[:legal_document])
         unless action.call
