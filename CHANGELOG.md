@@ -1,3 +1,6 @@
+21.01.2021
+* Registrant API: optimised contact linking [#1807](https://github.com/internetee/registry/pull/1807)
+
 14.01.2021
 * Fixed IDN and punycode support for REPP domain transfer_info request [#1801](https://github.com/internetee/registry/issues/1801)
 
