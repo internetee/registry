@@ -40,7 +40,9 @@ module Repp
           @domain = Epp::Domain.find_by(registrar: registrar, name: params[:domain_id])
           @domain ||= Epp::Domain.find_by!(registrar: registrar, name_puny: params[:domain_id])
 
-          @domain
+          return @domain if @domain
+
+          raise ActiveRecord::RecordNotFound
         end
 
         def renew_params

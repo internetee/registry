@@ -15,19 +15,12 @@ module Actions
     end
 
     def renew
-      period = params[:period]
-      unit = params[:period_unit]
-
       task = Domains::BulkRenew::SingleDomainRenew.run(domain: domain,
         period: params[:period],
         unit: params[:period_unit],
         registrar: user)
 
-      return true if task
-
-      puts task.errors
-
-      false
+      task.valid?
     end
   end
 end
