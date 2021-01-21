@@ -7,7 +7,7 @@ class AdminEppLogsIntegrationTest < ApplicationSystemTestCase
         sign_in users(:admin)
     end
 
-    def test_helper_test
+    def send_epp_request_hello
         request_xml = <<-XML
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
@@ -26,15 +26,17 @@ class AdminEppLogsIntegrationTest < ApplicationSystemTestCase
 
     def test_show_epp_log_page
         visit admin_epp_logs_path
-        test_helper_test
+        send_epp_request_hello
         visit admin_epp_logs_path
-        puts find(:xpath, "//table").native
+        
         find(:xpath, "//tbody/tr/td/a", match: :first).click
         assert_text 'Details'
     end
 
     def test_dates_sort
         Capybara.exact = true
+        visit admin_epp_logs_path
+        send_epp_request_hello
         visit admin_epp_logs_path
 
         find(:xpath, "//a[contains(text(), 'Created at')]", match: :first).click
