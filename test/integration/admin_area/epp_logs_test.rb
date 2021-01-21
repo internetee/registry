@@ -28,7 +28,7 @@ class AdminEppLogsIntegrationTest < ApplicationSystemTestCase
         visit admin_epp_logs_path
         test_helper_test
         visit admin_epp_logs_path
-
+        puts find(:xpath, "//table").native
         find(:xpath, "//tbody/tr/td/a", match: :first).click
         assert_text 'Details'
     end
