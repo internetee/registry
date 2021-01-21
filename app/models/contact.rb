@@ -360,9 +360,11 @@ class Contact < ApplicationRecord
     @desc
   end
 
+  # Limits returned objects to 11
   def related_domains
-    a = related_domain_descriptions
-    a.keys.map { |d| { name: d, id: a[d][:id], roles: a[d][:roles] } }
+    ids = DomainContact.select(:domain_id).where(contact_id: id).limit(11).map(&:domain_id).uniq
+    res = Domain.where(id: ids).or(Domain.where(registrant_id: id)).select(:name, :uuid).limit(11)
+    res.pluck(:name, :uuid).map { |name, id| { name: name, id: id } }
   end
 
   def status_notes_array=(notes)

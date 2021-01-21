@@ -57,6 +57,15 @@ class RegistrantApiContactsTest < ApplicationIntegrationTest
     assert_equal({ errors: [base: ['Not authorized']] }, json_body)
   end
 
+  def test_gets_contact_domain_links_when_requested
+    get "/api/v1/registrant/contacts/#{@contact.uuid}?links=true", headers: @auth_headers
+
+    expected_links = @contact.domains.uniq.map { |d| { name: d.name, id: d.uuid }}
+    assert_response :ok
+    response_json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_empty expected_links - response_json[:links]
+  end
   private
 
   def auth_token
