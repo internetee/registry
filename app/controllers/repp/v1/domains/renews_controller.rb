@@ -9,11 +9,12 @@ module Repp
         api :POST, 'repp/v1/domains/:domain_name/renew'
         desc 'Renew domain'
         param :renew, Hash, required: true, desc: 'Renew parameters' do
-          param :renew_period, Integer, required: true, desc: 'Renew period. Month (m) or year (y)'
+          param :period, Integer, required: true, desc: 'Renew period. Month (m) or year (y)'
           param :period_unit, String, required: true, desc: 'For how many months or years to renew'
         end
         def create
-          action = Actions::DomainUpdate.new(@domain, renew_params[:renew], current_user)
+          authorize!(:renew, @domain)
+          action = Actions::DomainRenew.new(@domain, renew_params[:renew], current_user.registrar)
 
           unless action.call
             handle_errors(@domain)
