@@ -14,7 +14,7 @@ class AdminEppLogsIntegrationTest < ApplicationSystemTestCase
 
     def test_show_epp_log_page
         visit admin_epp_logs_path
-        find(:xpath, "//tbody/tr/td/a", match: :first).click
+        find(:css, ".table > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(1) > a:nth-child(1)", match: :first).click
         assert_text 'Details'
     end
 
