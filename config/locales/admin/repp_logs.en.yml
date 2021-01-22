@@ -4,3 +4,5 @@ en:
       index:
         title: REPP log
         reset_btn: Reset
+      show:
+        title: REPP log

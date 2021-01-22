@@ -13,6 +13,8 @@ module Domains
 
         errors.add(:domain, I18n.t(:active_price_missing_for_operation_with_domain,
                                    domain: domain.name))
+
+        domain.add_epp_error(2104, nil, nil, I18n.t(:active_price_missing_for_this_operation))
         false
       end
 

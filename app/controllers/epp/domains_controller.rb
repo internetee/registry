@@ -77,6 +77,7 @@ module Epp
 
     def renew
       authorize! :renew, @domain
+      @domain.validate_exp_dates(params[:parsed_frame].css('curExpDate').text)
 
       registrar_id = current_user.registrar.id
       renew_params = ::Deserializers::Xml::Domain.new(params[:parsed_frame],
