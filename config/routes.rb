@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       resources :auctions, only: %i[index]
       resources :retained_domains, only: %i[index]
       namespace :registrar do
+        resources :notifications, only: [:index, :show, :update]
         resources :nameservers do
           collection do
             put '/', to: 'nameservers#update'

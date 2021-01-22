@@ -35,7 +35,7 @@ module Repp
           param :ipv6, Array, desc: 'Array of IPv4 addresses'
         end
         param :admin_domain_contacts_attributes, Array, required: false, desc: 'Admin domain contacts codes'
-        param :admin_domain_contacts_attributes, Array, required: false, desc: 'Tech domain contacts codes'
+        param :tech_domain_contacts_attributes, Array, required: false, desc: 'Tech domain contacts codes'
         param :dnskeys_attributes, Array, required: false, desc: 'DNSSEC keys for domain' do
           param :flags, String, required: true, desc: 'Flag of DNSSEC key'
           param :protocol, String, required: true, desc: 'Protocol of DNSSEC key'
@@ -143,6 +143,8 @@ module Repp
       end
 
       def forward_registrar_id
+        return unless params[:domain]
+
         params[:domain][:registrar_id] = current_user.registrar.id
       end
 
