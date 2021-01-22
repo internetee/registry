@@ -78,42 +78,14 @@ module Epp
     def renew
       authorize! :renew, @domain
 
-      period_element = params[:parsed_frame].css('period').text
-      period = (period_element.to_i == 0) ? 1 : period_element.to_i
-      period_unit = Epp::Domain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y'
-
-      balance_ok?('renew', period, period_unit) # loading pricelist
-
-      begin
-        ActiveRecord::Base.transaction(isolation: :serializable) do
-          @domain.reload
-
-          success = @domain.renew(
-            params[:parsed_frame].css('curExpDate').text,
-            period, period_unit
-          )
-
-          if success
-            unless balance_ok?('renew', period, period_unit)
-              handle_errors
-              fail ActiveRecord::Rollback
-            end
-
-            current_user.registrar.debit!({
-                                            sum: @domain_pricelist.price.amount,
-                                            description: "#{I18n.t('renew')} #{@domain.name}",
-                                            activity_type: AccountActivity::RENEW,
-                                            price: @domain_pricelist
-                                          })
-
-            render_epp_response '/epp/domains/renew'
-          else
-            handle_errors(@domain)
-          end
-        end
-      rescue ActiveRecord::StatementInvalid => e
-        sleep rand / 100
-        retry
+      registrar_id = current_user.registrar.id
+      renew_params = ::Deserializers::Xml::Domain.new(params[:parsed_frame],
+                                                      registrar_id).call
+      action = Actions::DomainRenew.new(@domain, renew_params, current_user.registrar)
+      if action.call
+        render_epp_response '/epp/domains/renew'
+      else
+        handle_errors(@domain)
       end
     end
 
