@@ -3,6 +3,7 @@ require 'test_helper'
 class EppDomainTransferRequestTest < EppTestCase
   def setup
     @domain = domains(:shop)
+    @domain_library = domains(:library)
     @new_registrar = registrars(:goodnames)
     @original_transfer_wait_time = Setting.transfer_wait_time
     Setting.transfer_wait_time = 0
@@ -63,14 +64,12 @@ class EppDomainTransferRequestTest < EppTestCase
   def test_transfer_domain_with_contacts_if_admin_and_tech_and_registrant_are_shared
     registrar_id = @domain.registrar.id
     new_contact = Contact.find_by(registrar_id: registrar_id)
-
-    @domain.domain_contacts[0].update!(contact_id: new_contact.id)
-    @domain.domain_contacts[1].update!(contact_id: new_contact.id)
+    
+    @domain.admin_domain_contacts[0].update!(contact_id: new_contact.id)
+    @domain.tech_domain_contacts[0].update!(contact_id: new_contact.id)
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
-
-    @domain.reload
 
     assert_epp_response :completed_successfully
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
