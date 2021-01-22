@@ -64,6 +64,11 @@
                 <span class="glyphicon glyphicon-search"></span>
                 &nbsp;
             </button>
+            <button class="btn">
+                <%= link_to "", admin_domains_path(format: :csv),
+                    "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => t('.download_csv_btn'),
+                    class: 'glyphicon glyphicon-list-alt' %>
+            </button>
             <%= link_to t('.reset_btn'), admin_domains_path, class: 'btn btn-default' %>
         </div>
     </div>
