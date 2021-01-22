@@ -14,16 +14,11 @@ class EppDomainTransferRequestTest < EppTestCase
 
   def test_new_contacts_should_be_created_after_transfer_domain
     registrar_id = @domain.registrar.id
-    contacts_id_values = []
 
-    contact_id = Contact.find_by(registrar_id: registrar_id)
+    new_contact = Contact.find_by(registrar_id: registrar_id)
 
-    @domain.domain_contacts[0].update!(contact_id: contact_id.id)
-    @domain.domain_contacts[1].update!(contact_id: contact_id.id)
-    
-    @domain.domain_contacts.each do |contact|
-      contacts_id_values.push(contact.contact_id)
-    end
+    @domain.domain_contacts[0].update!(contact_id: new_contact.id)
+    @domain.domain_contacts[1].update!(contact_id: new_contact.id)
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
@@ -31,7 +26,9 @@ class EppDomainTransferRequestTest < EppTestCase
     @domain.reload
 
     assert_epp_response :completed_successfully
-    assert_equal @domain.domain_contacts[0].contact_id, @domain.domain_contacts[1].contact_id
+
+    result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
+    assert_equal result_hash[new_contact.id], 2
   end
 
   def test_transfers_domain_at_once
