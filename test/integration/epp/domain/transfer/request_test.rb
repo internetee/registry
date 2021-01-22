@@ -14,12 +14,9 @@ class EppDomainTransferRequestTest < EppTestCase
 
   def test_transfer_domain_with_contacts_if_registrant_and_tech_are_shared
     registrar_id = @domain.registrar.id
-
     new_contact = Contact.find_by(registrar_id: registrar_id)
 
     @domain.domain_contacts[1].update!(contact_id: new_contact.id)
-
-    puts @domain.domain_contacts[1].contact_id
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
@@ -27,16 +24,12 @@ class EppDomainTransferRequestTest < EppTestCase
     @domain.reload
 
     assert_epp_response :completed_successfully
-
-    puts @domain.domain_contacts[1].contact_id
-
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
     assert_equal result_hash[new_contact.id], 1
   end
 
   def test_transfer_domain_with_contacts_if_registrant_and_admin_are_shared
     registrar_id = @domain.registrar.id
-
     new_contact = Contact.find_by(registrar_id: registrar_id)
 
     @domain.domain_contacts[0].update!(contact_id: new_contact.id)
