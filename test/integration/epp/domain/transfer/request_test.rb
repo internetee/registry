@@ -18,15 +18,32 @@ class EppDomainTransferRequestTest < EppTestCase
     new_contact = Contact.find_by(registrar_id: registrar_id)
 
     @domain.tech_domain_contacts[0].update!(contact_id: new_contact.id)
+    @domain.reload
+
+    puts
+    puts "test_transfer_domain_with_contacts_if_registrant_and_tech_are_shared"
+    puts "Registrar id #{new_contact.id}"
+    puts "Tech #{@domain.tech_domain_contacts[0].contact_id}"
+    puts "Tech #{@domain.tech_domain_contacts[1].contact_id}"
+    puts "Admin #{@domain.admin_domain_contacts[0].contact_id}"
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     @domain.reload
 
+    registrar_id = @domain.registrar.id
+    new_contact_2 = Contact.find_by(registrar_id: registrar_id)
+
+    puts "Registrar id #{new_contact_2.id}"
+    puts "Tech #{@domain.tech_domain_contacts[0].contact_id}"
+    puts "Tech #{@domain.tech_domain_contacts[1].contact_id}"
+    puts "Admin #{@domain.admin_domain_contacts[0].contact_id}"
+
     assert_epp_response :completed_successfully
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    puts "Shared registrar and tech: #{result_hash}"
+
+    puts "Result hash #{result_hash}"
     assert result_hash[new_contact.id] < 2
   end
 
@@ -35,15 +52,31 @@ class EppDomainTransferRequestTest < EppTestCase
     new_contact = Contact.find_by(registrar_id: registrar_id)
 
     @domain.admin_domain_contacts[0].update!(contact_id: new_contact.id)
+    @domain.reload
+
+    puts
+    puts "test_transfer_domain_with_contacts_if_registrant_and_admin_are_shared"
+    puts "Registrar id #{new_contact.id}"
+    puts "Tech 1 #{@domain.tech_domain_contacts[0].contact_id}" # ?????
+    puts "Tech 2 #{@domain.tech_domain_contacts[1].contact_id}"
+    puts "Admin #{@domain.admin_domain_contacts[0].contact_id}"
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     @domain.reload
 
+    registrar_id = @domain.registrar.id
+    new_contact_2 = Contact.find_by(registrar_id: registrar_id)
+
+    puts "Registrar id #{new_contact_2.id}"
+    puts "Tech 1 #{@domain.tech_domain_contacts[0].contact_id}"
+    puts "Tech 2 #{@domain.tech_domain_contacts[1].contact_id}"
+    puts "Admin #{@domain.admin_domain_contacts[0].contact_id}"
+
     assert_epp_response :completed_successfully
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    puts "Shared registrar and tech: #{result_hash}"
+    puts "Result hash #{result_hash}"
     assert result_hash[new_contact.id] < 2
   end
 
