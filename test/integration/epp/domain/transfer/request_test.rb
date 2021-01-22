@@ -54,7 +54,9 @@ class EppDomainTransferRequestTest < EppTestCase
 
     assert_epp_response :completed_successfully
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    
+    puts @domain.admin_domain_contacts[0].contact_id
+    puts @domain.tech_domain_contacts[0].contact_id
+    puts result_hash
     assert result_hash[new_contact.id] < 2
   end
 
