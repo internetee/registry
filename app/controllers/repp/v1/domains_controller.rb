@@ -99,8 +99,8 @@ module Repp
         render_success(data: data)
       end
 
-      api :POST, '/repp/v1/domains/:domain_name/transfer'
-      desc 'Transfer specific domain'
+      api :POST, '/repp/v1/domains/transfer'
+      desc 'Transfer multiple domains'
       def transfer
         @errors ||= []
         @successful = []
@@ -111,8 +111,6 @@ module Repp
 
         render_success(data: { success: @successful, failed: @errors })
       end
-
-      private
 
       def initiate_transfer(transfer)
         domain = Epp::Domain.find_or_initialize_by(name: transfer[:domain_name])
@@ -126,6 +124,8 @@ module Repp
                        errors: domain.errors[:epp_errors] }
         end
       end
+
+      private
 
       def transfer_params
         params.require(:data).require(:domain_transfers).each do |t|
