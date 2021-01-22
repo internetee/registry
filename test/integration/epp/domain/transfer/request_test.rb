@@ -41,6 +41,7 @@ class EppDomainTransferRequestTest < EppTestCase
     new_contact = Contact.find_by(registrar_id: registrar_id)
 
     @domain.admin_domain_contacts[0].update!(contact_id: new_contact.id)
+    @domain.tech_domain_contacts[0].update!(contact_id: '999914115') # ?????????
     
     # ????????? need to find out
     @domain.tech_domain_contacts[1].delete
