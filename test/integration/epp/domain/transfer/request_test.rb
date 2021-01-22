@@ -17,7 +17,7 @@ class EppDomainTransferRequestTest < EppTestCase
     registrar_id = @domain.registrar.id
     new_contact = Contact.find_by(registrar_id: registrar_id)
 
-    @domain.domain_contacts[1].update!(contact_id: new_contact.id)
+    @domain.tech_domain_contacts[0].update!(contact_id: new_contact.id)
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
@@ -33,7 +33,7 @@ class EppDomainTransferRequestTest < EppTestCase
     registrar_id = @domain.registrar.id
     new_contact = Contact.find_by(registrar_id: registrar_id)
 
-    @domain.domain_contacts[0].update!(contact_id: new_contact.id)
+    @domain.admin_domain_contacts[0].update!(contact_id: new_contact.id)
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
