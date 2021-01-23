@@ -3,7 +3,7 @@ require 'test_helper'
 class EppDomainTransferRequestTest < EppTestCase
   def setup
     @domain = domains(:shop)
-    @contact = contacts(:william)
+    @contact = contacts(:jane)
     @new_registrar = registrars(:goodnames)
     @original_transfer_wait_time = Setting.transfer_wait_time
     Setting.transfer_wait_time = 0
