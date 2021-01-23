@@ -13,27 +13,35 @@ class EppDomainTransferRequestTest < EppTestCase
     Setting.transfer_wait_time = @original_transfer_wait_time
   end
 
-  # def test_transfer_domain_with_contacts_if_registrant_and_tech_are_shared
-  #   registrar_id = @domain.registrar.id
-  #   new_contact = Contact.find_by(registrar_id: registrar_id)
+  def test_transfer_domain_with_contacts_if_registrant_and_tech_are_shared
+    registrar_id = @domain.registrar.id
+    new_contact = Contact.find_by(registrar_id: registrar_id)
 
-  #   @domain.tech_domain_contacts[0].update!(contact_id: new_contact.id)
-  #   @domain.reload
+    @domain.tech_domain_contacts[0].update!(contact_id: new_contact.id)
 
-  #   post epp_transfer_path, params: { frame: request_xml },
-  #          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    # ????????
+    @domain.tech_domain_contacts[1].delete
+    @domain.reload
+    # ???????
 
-  #   @domain.reload
+    post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
-  #   contact = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
+    @domain.reload
 
-  #   assert_epp_response :completed_successfully
-  #   result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-  #   assert result_hash[new_contact.id] < 2
+    contact_fresh = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
 
-  #   result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
-  #   assert result_hash_codes[contact.code] < 2
-  # end
+    assert_epp_response :completed_successfully
+    result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
+    assert result_hash[new_contact.id] < 2
+
+    result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
+    assert result_hash_codes[contact_fresh.code] < 2
+
+    assert_equal new_contact.phone, contact_fresh.phone
+    assert_equal new_contact.name, contact_fresh.name
+    assert_equal new_contact.ident, contact_fresh.ident
+  end
 
   # # ???????????????????
   # def test_transfer_domain_with_contacts_if_registrant_and_admin_are_shared
