@@ -25,14 +25,14 @@ class EppDomainTransferRequestTest < EppTestCase
 
     @domain.reload
 
-    registrar_id = @domain.registrar.id
-    new_contact_2 = Contact.find_by(registrar_id: registrar_id)
-
+    contact = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
 
     assert_epp_response :completed_successfully
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-
     assert result_hash[new_contact.id] < 2
+
+    result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
+    assert result_hash_codes[contact.code] < 2
   end
 
   # ???????????????????
@@ -53,13 +53,20 @@ class EppDomainTransferRequestTest < EppTestCase
 
     @domain.reload
 
+    contact_one = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
+    contact_two = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
+
     assert_epp_response :completed_successfully
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
     assert result_hash[new_contact.id] < 2
+
+    result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
+    assert result_hash_codes[contact_one.code] < 2
+    assert result_hash_codes[contact_two.code] < 2
+
   end
 
   def test_transfer_domain_with_contacts_if_admin_and_tech_are_shared
-    
     contact_id = @domain.domain_contacts[0].contact_id
     @domain.domain_contacts[1].update!(contact_id: contact_id)
 
