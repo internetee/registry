@@ -3,7 +3,7 @@ require 'test_helper'
 class EppDomainTransferRequestTest < EppTestCase
   def setup
     @domain = domains(:shop)
-    @domain_library = domains(:library)
+    @contact = contacts(:william)
     @new_registrar = registrars(:goodnames)
     @original_transfer_wait_time = Setting.transfer_wait_time
     Setting.transfer_wait_time = 0
@@ -67,22 +67,26 @@ class EppDomainTransferRequestTest < EppTestCase
   end
 
   def test_transfer_domain_with_contacts_if_admin_and_tech_are_shared
-    contact_id = @domain.domain_contacts[0].contact_id
-    @domain.domain_contacts[1].update!(contact_id: contact_id)
+    @domain.admin_domain_contacts[0].update!(contact_id: @contact.id)
+    @domain.tech_domain_contacts[0].update!(contact_id: @contact.id)
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     @domain.reload
 
-    contact = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
+    contact_fresh = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
 
     assert_epp_response :completed_successfully
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    assert_equal result_hash[contact_id], 2
+    assert_equal result_hash[contact_fresh.original_id], 2
 
     result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
-    assert result_hash_codes[contact.code] > 1
+    assert result_hash_codes[contact_fresh.code] > 1
+
+    assert_equal @contact.phone, contact_fresh.phone
+    assert_equal @contact.name, contact_fresh.name
+    assert_equal @contact.ident, contact_fresh.ident
   end
 
   def test_transfer_domain_with_contacts_if_admin_and_tech_and_registrant_are_shared
