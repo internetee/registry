@@ -13,58 +13,58 @@ class EppDomainTransferRequestTest < EppTestCase
     Setting.transfer_wait_time = @original_transfer_wait_time
   end
 
-  def test_transfer_domain_with_contacts_if_registrant_and_tech_are_shared
-    registrar_id = @domain.registrar.id
-    new_contact = Contact.find_by(registrar_id: registrar_id)
+  # def test_transfer_domain_with_contacts_if_registrant_and_tech_are_shared
+  #   registrar_id = @domain.registrar.id
+  #   new_contact = Contact.find_by(registrar_id: registrar_id)
 
-    @domain.tech_domain_contacts[0].update!(contact_id: new_contact.id)
-    @domain.reload
+  #   @domain.tech_domain_contacts[0].update!(contact_id: new_contact.id)
+  #   @domain.reload
 
-    post epp_transfer_path, params: { frame: request_xml },
-           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+  #   post epp_transfer_path, params: { frame: request_xml },
+  #          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
-    @domain.reload
+  #   @domain.reload
 
-    contact = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
+  #   contact = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
 
-    assert_epp_response :completed_successfully
-    result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    assert result_hash[new_contact.id] < 2
+  #   assert_epp_response :completed_successfully
+  #   result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
+  #   assert result_hash[new_contact.id] < 2
 
-    result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
-    assert result_hash_codes[contact.code] < 2
-  end
+  #   result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
+  #   assert result_hash_codes[contact.code] < 2
+  # end
 
-  # ???????????????????
-  def test_transfer_domain_with_contacts_if_registrant_and_admin_are_shared
-    registrar_id = @domain.registrar.id
-    new_contact = Contact.find_by(registrar_id: registrar_id)
+  # # ???????????????????
+  # def test_transfer_domain_with_contacts_if_registrant_and_admin_are_shared
+  #   registrar_id = @domain.registrar.id
+  #   new_contact = Contact.find_by(registrar_id: registrar_id)
 
-    @domain.admin_domain_contacts[0].update!(contact_id: new_contact.id)
-    @domain.tech_domain_contacts[0].update!(contact_id: '999914115') # ?????????
+  #   @domain.admin_domain_contacts[0].update!(contact_id: new_contact.id)
+  #   @domain.tech_domain_contacts[0].update!(contact_id: '999914115') # ?????????
     
-    # ????????? need to find out
-    @domain.tech_domain_contacts[1].delete
-    @domain.reload
-    # ??????????????????????????
+  #   # ????????? need to find out
+  #   @domain.tech_domain_contacts[1].delete
+  #   @domain.reload
+  #   # ??????????????????????????
 
-    post epp_transfer_path, params: { frame: request_xml },
-           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+  #   post epp_transfer_path, params: { frame: request_xml },
+  #          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
-    @domain.reload
+  #   @domain.reload
 
-    contact_one = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
-    contact_two = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
+  #   contact_one = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
+  #   contact_two = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
 
-    assert_epp_response :completed_successfully
-    result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    assert result_hash[new_contact.id] < 2
+  #   assert_epp_response :completed_successfully
+  #   result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
+  #   assert result_hash[new_contact.id] < 2
 
-    result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
-    assert result_hash_codes[contact_one.code] < 2
-    assert result_hash_codes[contact_two.code] < 2
+  #   result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
+  #   assert result_hash_codes[contact_one.code] < 2
+  #   assert result_hash_codes[contact_two.code] < 2
 
-  end
+  # end
 
   def test_transfer_domain_with_contacts_if_admin_and_tech_are_shared
     @domain.admin_domain_contacts[0].update!(contact_id: @contact.id)
@@ -89,27 +89,27 @@ class EppDomainTransferRequestTest < EppTestCase
     assert_equal @contact.ident, contact_fresh.ident
   end
 
-  def test_transfer_domain_with_contacts_if_admin_and_tech_and_registrant_are_shared
-    registrar_id = @domain.registrar.id
-    new_contact = Contact.find_by(registrar_id: registrar_id)
+  # def test_transfer_domain_with_contacts_if_admin_and_tech_and_registrant_are_shared
+  #   registrar_id = @domain.registrar.id
+  #   new_contact = Contact.find_by(registrar_id: registrar_id)
     
-    @domain.admin_domain_contacts[0].update!(contact_id: new_contact.id)
-    @domain.tech_domain_contacts[0].update!(contact_id: new_contact.id)
+  #   @domain.admin_domain_contacts[0].update!(contact_id: new_contact.id)
+  #   @domain.tech_domain_contacts[0].update!(contact_id: new_contact.id)
 
-    post epp_transfer_path, params: { frame: request_xml },
-           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+  #   post epp_transfer_path, params: { frame: request_xml },
+  #          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
-    @domain.reload
+  #   @domain.reload
 
-    contact = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
+  #   contact = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
 
-    assert_epp_response :completed_successfully
-    result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    assert_equal result_hash[new_contact.id], 2
+  #   assert_epp_response :completed_successfully
+  #   result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
+  #   assert_equal result_hash[new_contact.id], 2
     
-    result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
-    assert result_hash_codes[contact.code] > 1
-  end
+  #   result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
+  #   assert result_hash_codes[contact.code] > 1
+  # end
 
   def test_transfers_domain_at_once
     post epp_transfer_path, params: { frame: request_xml },
