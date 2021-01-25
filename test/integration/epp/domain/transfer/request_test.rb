@@ -14,10 +14,7 @@ class EppDomainTransferRequestTest < EppTestCase
   end
 
   def test_transfer_domain_with_contacts_if_registrant_and_tech_are_shared
-    registrar_id = @domain.registrar.id
-    new_contact = Contact.find_by(registrar_id: registrar_id)
-
-    @domain.tech_domain_contacts[0].update!(contact_id: new_contact.id)
+    @domain.tech_domain_contacts[0].update!(contact_id: @domain.registrant.id)
 
     # ????????
     @domain.tech_domain_contacts[1].delete
@@ -27,31 +24,23 @@ class EppDomainTransferRequestTest < EppTestCase
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
+    assert_epp_response :completed_successfully
+    
     @domain.reload
 
-    admin = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
     tech = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
 
-    assert_epp_response :completed_successfully
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    assert result_hash[new_contact.id] < 2
+    assert result_hash[@domain.registrant.original_id] < 2
 
     result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
     assert result_hash_codes[tech.code] < 2
 
-    refute_equal admin, tech
-
-    # Contacts must belong to the same registrar
-    new_registrar = Contact.find_by(registrar_id: @domain.registrar.id)
-
-    assert_equal admin.registrar_id == tech.registrar_id, admin.registrar_id == new_registrar.registrar_id
+    assert_equal tech.registrar_id, @domain.registrar.id
   end
 
   def test_transfer_domain_with_contacts_if_registrant_and_admin_are_shared
-    registrar_id = @domain.registrar.id
-    new_contact = Contact.find_by(registrar_id: registrar_id)
-
-    @domain.admin_domain_contacts[0].update!(contact_id: new_contact.id)
+    @domain.admin_domain_contacts[0].update!(contact_id: @domain.registrant.id)
     @domain.tech_domain_contacts[0].update!(contact_id: @contact.id)
     
     # ????????? need to find out
@@ -62,25 +51,21 @@ class EppDomainTransferRequestTest < EppTestCase
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
+    assert_epp_response :completed_successfully
+    
     @domain.reload
 
     admin = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
     tech = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
 
-    assert_epp_response :completed_successfully
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    assert result_hash[new_contact.id] < 2
+    assert result_hash[@domain.registrant.original_id] < 2
 
     result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
     assert result_hash_codes[admin.code] < 2
     assert result_hash_codes[tech.code] < 2
 
-    refute_equal admin, tech
-
-    # Contacts must belong to the same registrar
-    new_registrar = Contact.find_by(registrar_id: @domain.registrar.id)
-
-    assert_equal admin.registrar_id == tech.registrar_id, admin.registrar_id == new_registrar.registrar_id
+    assert_equal admin.registrar_id, @domain.registrar.id
   end
 
   def test_transfer_domain_with_contacts_if_admin_and_tech_are_shared
@@ -95,31 +80,29 @@ class EppDomainTransferRequestTest < EppTestCase
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
+    assert_epp_response :completed_successfully
+
     @domain.reload
 
     admin = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
     tech = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
 
-    assert_epp_response :completed_successfully
+    
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
     assert_equal result_hash[admin.original_id], 2
 
     result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
     assert result_hash_codes[admin.code] > 1
 
-    # Contacts must belong to the same registrar
-    new_registrar = Contact.find_by(registrar_id: @domain.registrar.id)
+    # Contacts must belong to the same registrant
 
-    assert_equal admin.registrar_id == tech.registrar_id, admin.registrar_id == new_registrar.registrar_id
-    assert_equal admin.id, tech.id
+    assert_equal admin.registrar_id, @domain.registrar.id
+    assert_equal tech.registrar_id, @domain.registrar.id
   end
 
   def test_transfer_domain_with_contacts_if_admin_and_tech_and_registrant_are_shared
-    registrar_id = @domain.registrar.id
-    contact = Contact.find_by(registrar_id: registrar_id)
-    
-    @domain.admin_domain_contacts[0].update!(contact_id: contact.id)
-    @domain.tech_domain_contacts[0].update!(contact_id: contact.id)
+    @domain.tech_domain_contacts[0].update!(contact_id: @domain.registrant.id)
+    @domain.admin_domain_contacts[0].update!(contact_id: @domain.registrant.id)
 
     # ??????????????
     @domain.tech_domain_contacts[1].delete
@@ -129,27 +112,23 @@ class EppDomainTransferRequestTest < EppTestCase
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
-    @domain.reload
-    contact_fresh = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
-
-    @domain.registrar.id
-    contact = Contact.find_by(registrar_id: registrar_id)
-
-    one = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
-    two = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
-
     assert_epp_response :completed_successfully
+
+    @domain.reload
+
+    admin = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
+    tech = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
+
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    assert_equal result_hash[contact.id], 2
+    assert_equal result_hash[@domain.registrant.original_id], 2
     
     result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
-    assert result_hash_codes[contact_fresh.code] > 1
+    assert result_hash_codes[@domain.registrant.code] > 1
 
-    # Contacts must belong to the same registrar
-    new_registrar = Contact.find_by(registrar_id: @domain.registrar.id)
+    # Contacts must belong to the same registrant
 
-    assert_equal one.id, two.id
-    assert_equal one.registrar_id == two.registrar_id, two.registrar_id == new_registrar.registrar_id
+    assert_equal admin.registrar_id, @domain.registrar.id
+    assert_equal tech.registrar_id, @domain.registrar.id
   end
 
   def test_transfers_domain_at_once
