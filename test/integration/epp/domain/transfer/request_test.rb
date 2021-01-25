@@ -30,12 +30,7 @@ class EppDomainTransferRequestTest < EppTestCase
 
     tech = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
 
-    result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    assert result_hash[@domain.registrant.original_id] < 2
-
-    result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
-    assert result_hash_codes[tech.code] < 2
-
+    assert_equal @domain.contacts.where(original_id: @domain.registrant.original_id).count, 1
     assert_equal tech.registrar_id, @domain.registrar.id
   end
 
@@ -56,15 +51,8 @@ class EppDomainTransferRequestTest < EppTestCase
     @domain.reload
 
     admin = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
-    tech = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
 
-    result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    assert result_hash[@domain.registrant.original_id] < 2
-
-    result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
-    assert result_hash_codes[admin.code] < 2
-    assert result_hash_codes[tech.code] < 2
-
+    assert_equal @domain.contacts.where(original_id: @domain.registrant.original_id).count, 1
     assert_equal admin.registrar_id, @domain.registrar.id
   end
 
@@ -87,13 +75,8 @@ class EppDomainTransferRequestTest < EppTestCase
     admin = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
     tech = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
 
-    
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    assert_equal result_hash[admin.original_id], 2
-
-    result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
-    assert result_hash_codes[admin.code] > 1
-
+    assert result_hash[admin.original_id], 2
     # Contacts must belong to the same registrant
 
     assert_equal admin.registrar_id, @domain.registrar.id
@@ -119,12 +102,10 @@ class EppDomainTransferRequestTest < EppTestCase
     admin = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
     tech = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
 
-    result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
-    assert_equal result_hash[@domain.registrant.original_id], 2
-    
-    result_hash_codes = @domain.contacts.pluck(:code).group_by(&:itself).transform_values(&:count)
-    assert result_hash_codes[@domain.registrant.code] > 1
+    assert_equal @domain.contacts.where(original_id: @domain.registrant.original_id).count, 2
 
+    result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
+    assert result_hash[@domain.registrant.original_id], 2
     # Contacts must belong to the same registrant
 
     assert_equal admin.registrar_id, @domain.registrar.id
