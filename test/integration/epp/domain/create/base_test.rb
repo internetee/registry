@@ -2,6 +2,51 @@ require 'test_helper'
 
 class EppDomainCreateBaseTest < EppTestCase
 
+  def test_some_test
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+
+    pub_key = "AwEAAddt2AkLf\n
+    \n
+    YGKgiEZB5SmIF8E\n
+    vrjxNMH6HtxWEA4RJ9Ao6LCWheg8"
+
+    request_xml = <<-XML
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <command>
+        <create>
+          <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:name>#{name}</domain:name>
+            <domain:registrant>#{registrant.code}</domain:registrant>
+          </domain:create>
+        </create>
+        <extension>
+        <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+        <secDNS:keyData>
+          <secDNS:flags>257</secDNS:flags>
+          <secDNS:protocol>3</secDNS:protocol>
+          <secDNS:alg>8</secDNS:alg>
+          <secDNS:pubKey>#{pub_key}</secDNS:pubKey>
+        </secDNS:keyData>
+      </secDNS:create>
+          <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+          </eis:extdata>
+        </extension>
+      </command>
+    </epp>
+    XML
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    assert_epp_response :parameter_value_syntax_error
+  end
+
+
   def test_not_registers_domain_without_legaldoc
     now = Time.zone.parse('2010-07-05')
     travel_to now
