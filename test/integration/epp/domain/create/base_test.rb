@@ -10,7 +10,7 @@ class EppDomainCreateBaseTest < EppTestCase
     pub_key = "AwEAAddt2AkLf\n
     \n
     YGKgiEZB5SmIF8E\n
-    vrjxNMH6HtxWEA4RJ9Ao6LCWheg8"
+    vrjxNMH6HtxW\rEA4RJ9Ao6LCWheg8"
 
     request_xml = <<-XML
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
