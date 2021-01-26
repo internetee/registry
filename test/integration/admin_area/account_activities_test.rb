@@ -14,12 +14,26 @@ class AdminAreaAccountActivitiesIntegrationTest < ApplicationSystemTestCase
         assert_text 'Account activities'
     end
 
-    def test_invalid_date_account_activities
+    def test_default_url_params
         account_activities(:one).update(sum: "123.00")
-        account_activities(:one).update(created_at: "0000-12-12")
-        visit admin_account_activities_path
-        assert_text 'Account activities'
+        visit admin_root_path
+        click_link_or_button 'Settings', match: :first
+        find(:xpath, "//ul/li/a[text()='Account activities']").click
+        
+        assert has_current_path?(admin_account_activities_path(created_after: 'today'))
+    end
 
-        puts find(:xpath, "//body").native
+    def test_download_account_activity
+        now = Time.zone.parse('2010-07-05 08:00')
+        travel_to now
+        account_activities(:one).update(sum: "123.00")
+    
+        get admin_account_activities_path(format: :csv)
+    
+        assert_response :ok
+        assert_equal "text/csv", response.headers['Content-Type']
+        assert_equal %(attachment; filename="account_activities_#{Time.zone.now.to_formatted_s(:number)}.csv"; filename*=UTF-8''account_activities_#{Time.zone.now.to_formatted_s(:number)}.csv),
+                     response.headers['Content-Disposition']
+        assert_not_empty response.body
     end
 end
