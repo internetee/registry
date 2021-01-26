@@ -1,3 +1,6 @@
+26.01.2021
+* Ruby update to 2.7 [#1791](https://github.com/internetee/registry/issues/1791)
+
 21.01.2021
 * Registrant API: optimised contact linking [#1807](https://github.com/internetee/registry/pull/1807)
 
