@@ -1,3 +1,4 @@
+require 'deserializers/xml/domain_delete'
 module Epp
   class DomainsController < BaseController
     before_action :find_domain, only: %i[info renew update transfer delete]
@@ -43,28 +44,22 @@ module Epp
       update_params = ::Deserializers::Xml::DomainUpdate.new(params[:parsed_frame],
                                                              registrar_id).call
       action = Actions::DomainUpdate.new(@domain, update_params, false)
-      if action.call
-        pending = @domain.epp_pending_update.present?
-        render_epp_response("/epp/domains/success#{'_pending' if pending}")
-      else
-        handle_errors(@domain)
-      end
+      (handle_errors(@domain) and return) unless action.call
+
+      pending = @domain.epp_pending_update.present?
+      render_epp_response("/epp/domains/success#{'_pending' if pending}")
     end
 
     def delete
-      authorize! :delete, @domain, @password
+      authorize!(:delete, @domain, @password)
+      frame = params[:parsed_frame]
+      delete_params = ::Deserializers::Xml::DomainDelete.new(frame).call
+      action = Actions::DomainDelete.new(@domain, delete_params, current_user.registrar)
 
-      (handle_errors(@domain) && return) unless @domain.can_be_deleted?
+      (handle_errors(@domain) and return) unless action.call
 
-      if @domain.epp_destroy(params[:parsed_frame], current_user.id)
-        if @domain.epp_pending_delete.present?
-          render_epp_response '/epp/domains/success_pending'
-        else
-          render_epp_response '/epp/domains/success'
-        end
-      else
-        handle_errors(@domain)
-      end
+      pending = @domain.epp_pending_delete.present?
+      render_epp_response("/epp/domains/success#{'_pending' if pending}")
     end
 
     def check

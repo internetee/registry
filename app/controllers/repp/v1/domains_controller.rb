@@ -2,8 +2,8 @@ require 'serializers/registrant_api/domain'
 module Repp
   module V1
     class DomainsController < BaseController
-      before_action :set_authorized_domain, only: %i[transfer_info]
-      before_action :forward_registrar_id, only: %i[create]
+      before_action :set_authorized_domain, only: %i[transfer_info destroy]
+      before_action :forward_registrar_id, only: %i[create destroy]
       before_action :set_domain, only: %i[show update]
 
       api :GET, '/repp/v1/domains'
@@ -112,6 +112,20 @@ module Repp
         render_success(data: { success: @successful, failed: @errors })
       end
 
+      api :DELETE, '/repp/v1/domains/:domain_name'
+      desc 'Delete specific domain'
+      param :delete, Hash, required: true, desc: 'Object holding verified key' do
+        param :verified, [true, false], required: true, desc: 'Whether to ask registrant verification or not'
+      end
+      def destroy
+        action = Actions::DomainDelete.new(@domain, params, current_user.registrar)
+        handle_errors(@domain) and return unless action.call
+
+        render_success(data: { domain: { name: @domain.name }})
+      end
+
+      private
+
       def initiate_transfer(transfer)
         domain = Epp::Domain.find_or_initialize_by(name: transfer[:domain_name])
         action = Actions::DomainTransfer.new(domain, transfer[:transfer_code],
@@ -124,8 +138,6 @@ module Repp
                        errors: domain.errors[:epp_errors] }
         end
       end
-
-      private
 
       def transfer_params
         params.require(:data).require(:domain_transfers).each do |t|
@@ -156,7 +168,7 @@ module Repp
         @epp_errors ||= []
         h = {}
         h[transfer_info_params[:id].match?(/\A[0-9]+\z/) ? :id : :name] = transfer_info_params[:id]
-        @domain = Domain.find_by!(h)
+        @domain = Epp::Domain.find_by!(h)
 
         validate_registrar_authorization
       end
