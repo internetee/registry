@@ -312,6 +312,7 @@ class Epp::Domain < Domain
     keys = []
     return keys if frame.blank?
     inf_data = DnsSecKeys.new(frame)
+    add_epp_error('2005', nil, nil, %i[dnskeys invalid]) if not_base64?(inf_data)
 
     if  action == 'rem' &&
         frame.css('rem > all').first.try(:text) == 'true'
@@ -331,6 +332,16 @@ class Epp::Domain < Domain
       end
     end
     errors.any? ? [] : keys
+  end
+
+  def not_base64?(inf_data)
+    inf_data.key_data.any? do |key|
+      value = key[:public_key]
+
+      !value.is_a?(String) || Base64.strict_encode64(Base64.strict_decode64(value)) != value
+    end
+  rescue ArgumentError
+    true
   end
 
   class DnsSecKeys
@@ -381,7 +392,7 @@ class Epp::Domain < Domain
 
     def key_data_from(frame)
       xm_copy frame, KEY_INTERFACE
-   end
+    end
 
     def ds_data_from(frame)
       frame.css('dsData').each do |ds_data|
