@@ -27,28 +27,21 @@ module Repp
         desc 'Link new contact(s) to domain'
         param_group :contacts_apidoc
         def create
-          contact_create_params[:contacts].each { |c| c[:action] = 'add' }
-          action = Actions::DomainUpdate.new(@domain, contact_create_params, current_user)
-
-          unless action.call
-            handle_errors(@domain)
-            return
-          end
-
-          render_success(data: { domain: { name: @domain.name } })
+          cta('add')
         end
 
         api :DELETE, '/repp/v1/domains/:domain_name/contacts'
         desc 'Remove contact(s) from domain'
         param_group :contacts_apidoc
         def destroy
-          contact_create_params[:contacts].each { |c| c[:action] = 'rem' }
+          cta('rem')
+        end
+
+        def cta(action = 'add')
+          contact_create_params[:contacts].each { |c| c[:action] = action }
           action = Actions::DomainUpdate.new(@domain, contact_create_params, current_user)
 
-          unless action.call
-            handle_errors(@domain)
-            return
-          end
+          handle_errors(@domain) and return unless action.call
 
           render_success(data: { domain: { name: @domain.name } })
         end
