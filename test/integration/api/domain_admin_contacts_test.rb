@@ -107,6 +107,24 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
                  JSON.parse(response.body, symbolize_names: true)
   end
 
+  def test_admin_bulk_changed_when_domain_update_prohibited
+    domains(:shop).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
+
+    shop_admin_contact = Contact.find_by(code: 'jane-001')
+    assert domains(:shop).admin_contacts.include?(shop_admin_contact)
+
+    patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: 'jane-001',
+                                                 new_contact_id: 'john-001' },
+                                                 headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
+
+    assert_response :ok
+    assert_equal ({ code: 1000,
+                    message: 'Command completed successfully',
+                    data: { affected_domains: ["airport.test"],
+                    skipped_domains: ["shop.test"] }}),
+            JSON.parse(response.body, symbolize_names: true)
+  end
+
   private
 
   def http_auth_key
