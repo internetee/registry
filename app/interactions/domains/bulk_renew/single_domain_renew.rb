@@ -9,6 +9,7 @@ module Domains
 
       def execute
         in_transaction_with_retries do
+          check_balance
           success = domain.renew(domain.valid_to, period, unit)
           if success
             check_balance

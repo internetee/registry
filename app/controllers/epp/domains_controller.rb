@@ -72,7 +72,7 @@ module Epp
 
     def renew
       authorize! :renew, @domain
-      @domain.validate_exp_dates(params[:parsed_frame].css('curExpDate').text)
+      return handle_errors(@domain) if invalid_expiry_date?
 
       registrar_id = current_user.registrar.id
       renew_params = ::Deserializers::Xml::Domain.new(params[:parsed_frame],
@@ -226,6 +226,11 @@ module Epp
     def check_client_hold
       statuses = params[:parsed_frame].css('status').map { |element| element['s'] }
       statuses == [::DomainStatus::CLIENT_HOLD]
+    end
+
+    def invalid_expiry_date?
+      @domain.validate_exp_dates(params[:parsed_frame].css('curExpDate').text)
+      @domain.errors[:epp_errors].any?
     end
 
     def balance_ok?(operation, period = nil, unit = nil)
