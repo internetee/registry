@@ -1,3 +1,6 @@
+27.01.2021
+* Figaro update to 1.2.0 [#1823](https://github.com/internetee/registry/pull/1823)
+
 26.01.2021
 * Ruby update to 2.7 [#1791](https://github.com/internetee/registry/issues/1791)
 
