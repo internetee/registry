@@ -2,7 +2,7 @@ require 'test_helper'
 
 class EppDomainCreateBaseTest < EppTestCase
 
-  def test_some_test
+  def test_illegal_chars_in_dns_key
     name = "new.#{dns_zones(:one).origin}"
     contact = contacts(:john)
     registrant = contact.becomes(Registrant)
