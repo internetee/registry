@@ -3,10 +3,6 @@ require 'application_system_test_case'
 
 class AdminAreaCertificatesIntegrationTest < JavaScriptApplicationSystemTestCase
 
-    # admin_api_user_certificates
-    # /admin/api_users/:api_user_id/
-    # /admin/api_users/:api_user_id/certificates
-
     setup do
         WebMock.allow_net_connect!
         sign_in users(:admin)
@@ -36,7 +32,6 @@ class AdminAreaCertificatesIntegrationTest < JavaScriptApplicationSystemTestCase
         assert_text 'Record deleted'        
     end
 
-    # download_csr_admin_api_user_certificate GET  /admin/api_users/:api_user_id/certificates/:id/download_csr(.:format)
     def test_download_csr
         get download_csr_admin_api_user_certificate_path(api_user_id: @apiuser.id, id: @certificate.id)
     
@@ -46,31 +41,32 @@ class AdminAreaCertificatesIntegrationTest < JavaScriptApplicationSystemTestCase
         assert_not_empty response.body
     end
 
-    # TODO
-    # ActiveRecord::Deadlocked: PG::TRDeadlockDetected: ERROR:  deadlock detected
-    # download_crt_admin_api_user_certificate GET  /admin/api_users/:api_user_id/certificates/:id/download_crt(.:format)
-
-    # def test_download_crt
-    #     get download_crt_admin_api_user_certificate_path(api_user_id: @apiuser.id, id: @certificate.id)
+    def test_download_crt
+        get download_crt_admin_api_user_certificate_path(api_user_id: @apiuser.id, id: @certificate.id)
     
-    #     assert_response :ok
-    #     assert_equal 'application/octet-stream', response.headers['Content-Type']
-    #     assert_equal "attachment; filename=\"test_bestnames.crt.pem\"; filename*=UTF-8''test_bestnames.crt.pem", response.headers['Content-Disposition']
-    #     assert_not_empty response.body
-    # end
+        assert_response :ok
+        assert_equal 'application/octet-stream', response.headers['Content-Type']
+        assert_equal "attachment; filename=\"test_bestnames.crt.pem\"; filename*=UTF-8''test_bestnames.crt.pem", response.headers['Content-Disposition']
+        assert_not_empty response.body
+    end
 
     def test_failed_to_revoke_certificate
         show_certificate_info
 
         find(:xpath, "//a[text()='Revoke this certificate']").click
         assert_text 'Failed to update record'
+    end
 
-        # element = find(:xpath, "//body").native.attribute('outerHTML')
-        # puts element
+    def test_new_api_user
+        visit new_admin_registrar_api_user_path(registrar_id: registrars(:bestnames).id)
 
-        # find(:xpath, "/html/body/div[2]/div[5]/div/div/div[1]/div[2]/a[2]").click
+        fill_in 'Username', with: 'testapiuser'
+        fill_in 'Password', with: 'secretpassword'
+        fill_in 'Identity code', with: '60305062718'
 
-        # assert_text 'Record deleted'
+        click_on 'Create API user'
+
+        assert_text 'API user has been successfully created'
     end
 
 end
