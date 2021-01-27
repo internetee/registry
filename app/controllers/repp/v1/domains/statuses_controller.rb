@@ -33,16 +33,6 @@ module Repp
 
         private
 
-        def set_domain
-          registrar = current_user.registrar
-          @domain = Epp::Domain.find_by(registrar: registrar, name: params[:domain_id])
-          @domain ||= Epp::Domain.find_by!(registrar: registrar, name_puny: params[:domain_id])
-
-          return @domain if @domain
-
-          raise(ActiveRecord::RecordNotFound)
-        end
-
         def verify_status
           allowed_statuses = [DomainStatus::CLIENT_HOLD].freeze
           stat = params[:id]

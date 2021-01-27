@@ -40,14 +40,6 @@ module Repp
 
         private
 
-        def set_domain
-          registrar = current_user.registrar
-          @domain = Epp::Domain.find_by(registrar: registrar, name: params[:domain_id])
-          @domain ||= Epp::Domain.find_by!(registrar: registrar, name_puny: params[:domain_id])
-
-          @domain
-        end
-
         def set_nameserver
           @nameserver = @domain.nameservers.find_by!(hostname: params[:id])
         end

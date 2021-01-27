@@ -165,7 +165,11 @@ module Repp
       end
 
       def set_domain
-        @domain = Epp::Domain.find_by!(registrar: current_user.registrar, name: params[:id])
+        registrar = current_user.registrar
+        @domain = Epp::Domain.find_by(registrar: registrar, name: params[:id])
+        @domain ||= Epp::Domain.find_by!(registrar: registrar, name_puny: params[:id])
+
+        @domain
       end
 
       def set_authorized_domain
