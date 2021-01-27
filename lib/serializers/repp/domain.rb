@@ -29,7 +29,8 @@ module Serializers
 
       def dnssec_keys
         domain.dnskeys.map do |nssec|
-          { flags: nsec.flags, protocol: nssec.protocol, alg: nssec.alg, public_key: nssec.public_key }
+          { flags: nssec.flags, protocol: nssec.protocol, alg: nssec.alg,
+            public_key: nssec.public_key }
         end
       end
     end

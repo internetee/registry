@@ -1,4 +1,4 @@
-require 'serializers/registrant_api/domain'
+require 'serializers/repp/domain'
 module Repp
   module V1
     class DomainsController < BaseController
@@ -13,13 +13,17 @@ module Repp
         domains = records.limit(limit).offset(offset)
         domains = domains.pluck(:name) unless index_params[:details] == 'true'
 
+        if index_params[:details] == 'true'
+          domains = domains.map { |d| Serializers::Repp::Domain.new(d).to_json }
+        end
+
         render_success(data: { domains: domains, total_number_of_records: records.count })
       end
 
       api :GET, '/repp/v1/domains/:domain_name'
       desc 'Get a specific domain'
       def show
-        render_success(data: { domain: Serializers::RegistrantApi::Domain.new(@domain).to_json })
+        render_success(data: { domain: Serializers::Repp::Domain.new(@domain).to_json })
       end
 
       api :POST, '/repp/v1/domains'
