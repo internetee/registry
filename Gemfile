@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 # core
 gem 'active_interaction', '~> 3.8'
+gem 'apipie-rails', '~> 0.5.18'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.12.1' # for dates and times
 gem 'rails', '~> 6.0'
@@ -78,7 +79,6 @@ gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
 
 gem 'directo', github: 'internetee/directo', branch: 'master'
 
-
 group :development, :test do
   gem 'pry', '0.10.1'
   gem 'puma'
@@ -92,5 +92,3 @@ group :test do
   gem 'webdrivers'
   gem 'webmock'
 end
-
-gem "apipie-rails", "~> 0.5.18"

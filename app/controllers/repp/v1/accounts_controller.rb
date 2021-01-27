@@ -1,7 +1,6 @@
 module Repp
   module V1
     class AccountsController < BaseController
-
       api :GET, '/repp/v1/accounts/balance'
       desc "Get account's balance"
       def balance

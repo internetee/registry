@@ -8,10 +8,12 @@ module Repp
         desc 'Get the latest unread poll message'
         def index
           @notification = current_user.unread_notifications.order('created_at DESC').take
-          render_success(data: nil) and return unless @notification
 
-          data = @notification.as_json(only: [:id, :text, :attached_obj_id,
-                                              :attached_obj_type])
+          # rubocop:disable Style/AndOr
+          render_success(data: nil) and return unless @notification
+          # rubocop:enable Style/AndOr
+
+          data = @notification.as_json(only: %i[id text attached_obj_id attached_obj_type])
 
           render_success(data: data)
         end
@@ -20,8 +22,7 @@ module Repp
         desc 'Get a specific poll message'
         def show
           @notification = current_user.registrar.notifications.find(params[:id])
-          data = @notification.as_json(only: [:id, :text, :attached_obj_id,
-                                              :attached_obj_type])
+          data = @notification.as_json(only: %i[id text attached_obj_id attached_obj_type])
 
           render_success(data: data)
         end
@@ -29,10 +30,12 @@ module Repp
         api :PUT, '/repp/v1/registrar/notifications'
         desc 'Mark poll message as read'
         param :notification, Hash, required: true do
-          param :read, [true], required: true, desc: "Set as true to mark as read"
+          param :read, [true], required: true, desc: 'Set as true to mark as read'
         end
         def update
+          # rubocop:disable Style/AndOr
           handle_errors(@notification) and return unless @notification.mark_as_read
+          # rubocop:enable Style/AndOr
 
           render_success(data: { notification_id: @notification.id, read: true })
         end

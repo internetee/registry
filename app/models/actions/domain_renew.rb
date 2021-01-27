@@ -21,9 +21,9 @@ module Actions
       end
 
       task = Domains::BulkRenew::SingleDomainRenew.run(domain: domain,
-        period: params[:period],
-        unit: params[:period_unit],
-        registrar: user)
+                                                       period: params[:period],
+                                                       unit: params[:period_unit],
+                                                       registrar: user)
 
       task.valid?
     end

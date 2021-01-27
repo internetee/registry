@@ -82,7 +82,9 @@ module Actions
     end
 
     def assign_nameservers
-      domain.nameservers_attributes = params[:nameservers_attributes] if params[:nameservers_attributes]
+      return unless params[:nameservers_attributes]
+
+      domain.nameservers_attributes = params[:nameservers_attributes]
     end
 
     def assign_contact(contact_code, admin: true)

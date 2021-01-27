@@ -24,8 +24,9 @@ module Repp
         private
 
         def set_domain
+          domain_id = transfer_params[:domain_id]
           h = {}
-          h[transfer_params[:domain_id].match?(/\A[0-9]+\z/) ? :id : :name] = transfer_params[:domain_id]
+          h[domain_id.match?(/\A[0-9]+\z/) ? :id : :name] = domain_id
           @domain = Epp::Domain.find_by!(h)
         end
 

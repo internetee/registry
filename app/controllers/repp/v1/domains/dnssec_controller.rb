@@ -4,6 +4,13 @@ module Repp
       class DnssecController < BaseController
         before_action :set_domain, only: %i[index create destroy]
 
+        def_param_group :dns_keys_apidoc do
+          param :flags, String, required: true, desc: '256 (KSK) or 257 (ZSK)'
+          param :protocol, String, required: true, desc: 'Key protocol (3)'
+          param :alg, String, required: true, desc: 'DNSSEC key algorithm (3,5,6,7,8,10,13,14)'
+          param :public_key, String, required: true, desc: 'DNSSEC public key'
+        end
+
         api :GET, '/repp/v1/domains/:domain_name/dnssec'
         desc "View specific domain's DNSSEC keys"
         def index
@@ -15,10 +22,7 @@ module Repp
         api :POST, '/repp/v1/domains/:domain_name/dnssec'
         desc 'Create a new DNSSEC key(s) for domain'
         param :dns_keys, Array, required: true, desc: 'Array of new DNSSEC keys' do
-          param :flags, String, required: true, desc: '256 (KSK) or 257 (ZSK)'
-          param :protocol, String, required: true, desc: 'Key protocol (3)'
-          param :alg, String, required: true, desc: 'DNSSEC key algorithm (3,5,6,7,8,10,13,14)'
-          param :public_key, String, required: true, desc: 'DNSSEC public key'
+          param_group :dns_keys_apidoc, DnssecController
         end
         def create
           dnssec_params[:dnssec][:dns_keys].each { |n| n[:action] = 'add' }
@@ -33,11 +37,8 @@ module Repp
         end
 
         api :DELETE, 'repp/v1/domains/:domain_name/dnssec'
-        param :dns_keys, Array, required: true, desc: 'Array of removable DNSSEC keys' do
-          param :flags, String, required: true, desc: '256 (KSK) or 257 (ZSK)'
-          param :protocol, String, required: true, desc: 'Key protocol (3)'
-          param :alg, String, required: true, desc: 'DNSSEC key algorithm (3,5,6,7,8,10,13,14)'
-          param :public_key, String, required: true, desc: 'DNSSEC public key'
+        param :dns_keys, Array, required: true, desc: 'Array of new DNSSEC keys' do
+          param_group :dns_keys_apidoc, DnssecController
         end
         def destroy
           dnssec_params[:dnssec][:dns_keys].each { |n| n[:action] = 'rem' }

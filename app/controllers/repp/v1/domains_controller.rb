@@ -38,13 +38,12 @@ module Repp
           param :ipv4, Array, desc: 'Array of IPv4 addresses'
           param :ipv6, Array, desc: 'Array of IPv4 addresses'
         end
-        param :admin_domain_contacts_attributes, Array, required: false, desc: 'Admin domain contacts codes'
-        param :tech_domain_contacts_attributes, Array, required: false, desc: 'Tech domain contacts codes'
+        param :admin_domain_contacts_attributes, Array, required: false,
+                                                        desc: 'Admin domain contacts codes'
+        param :tech_domain_contacts_attributes, Array, required: false,
+                                                       desc: 'Tech domain contacts codes'
         param :dnskeys_attributes, Array, required: false, desc: 'DNSSEC keys for domain' do
-          param :flags, String, required: true, desc: 'Flag of DNSSEC key'
-          param :protocol, String, required: true, desc: 'Protocol of DNSSEC key'
-          param :alg, String, required: true, desc: 'Algorithm of DNSSEC key'
-          param :public_key, String, required: true, desc: 'Public key of DNSSEC key'
+          param_group :dns_keys_apidoc, Repp::V1::Domains::DnssecController
         end
       end
       returns code: 200, desc: 'Successful domain registration response' do
@@ -61,7 +60,9 @@ module Repp
         @domain = Epp::Domain.new
         action = Actions::DomainCreate.new(@domain, domain_create_params)
 
+        # rubocop:disable Style/AndOr
         handle_errors(@domain) and return unless action.call
+        # rubocop:enable Style/AndOr
 
         render_success(data: { domain: { name: @domain.name } })
       end
@@ -72,7 +73,8 @@ module Repp
       param :domain, Hash, required: true, desc: 'Changes of domain object' do
         param :registrant, Hash, required: false, desc: 'New registrant object' do
           param :code, String, required: true, desc: 'New registrant contact code'
-          param :verified, [true, false], required: false, desc: 'Registrant change is already verified'
+          param :verified, [true, false], required: false,
+                                          desc: 'Registrant change is already verified'
         end
         param :auth_info, String, required: false, desc: 'New authorization code'
       end
@@ -119,13 +121,17 @@ module Repp
       api :DELETE, '/repp/v1/domains/:domain_name'
       desc 'Delete specific domain'
       param :delete, Hash, required: true, desc: 'Object holding verified key' do
-        param :verified, [true, false], required: true, desc: 'Whether to ask registrant verification or not'
+        param :verified, [true, false], required: true,
+                                        desc: 'Whether to ask registrant verification or not'
       end
       def destroy
         action = Actions::DomainDelete.new(@domain, params, current_user.registrar)
-        handle_errors(@domain) and return unless action.call
 
-        render_success(data: { domain: { name: @domain.name }})
+        # rubocop:disable Style/AndOr
+        handle_errors(@domain) and return unless action.call
+        # rubocop:enable Style/AndOr
+
+        render_success(data: { domain: { name: @domain.name } })
       end
 
       private
@@ -202,8 +208,8 @@ module Repp
       end
 
       def domain_create_params
-        params.require(:domain).require([:name, :registrant_id, :period, :period_unit])
-        params.require(:domain).permit(:name, :registrant_id, :period, :period_unit, :registrar_id)
+        params.require(:domain).require(%i[name registrant_id period period_unit])
+        params.require(:domain).permit(%i[name registrant_id period period_unit registrar_id])
       end
     end
   end

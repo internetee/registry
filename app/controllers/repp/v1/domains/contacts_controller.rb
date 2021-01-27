@@ -6,6 +6,13 @@ module Repp
         before_action :set_new_contact, only: [:update]
         before_action :set_domain, only: %i[index create destroy]
 
+        def_param_group :contacts_apidoc do
+          param :contacts, Array, required: true, desc: 'Array of new linked contacts' do
+            param :code, String, required: true, desc: 'Contact code'
+            param :type, String, required: true, desc: 'Role of contact (admin/tech)'
+          end
+        end
+
         api :GET, '/repp/v1/domains/:domain_name/contacts'
         desc "View domain's admin and tech contacts"
         def index
@@ -17,11 +24,8 @@ module Repp
         end
 
         api :POST, '/repp/v1/domains/:domain_name/contacts'
-        desc "Link new contact(s) to domain"
-        param :contacts, Array, required: true, desc: 'Array of new linked contacts' do
-          param :code, String, required: true, desc: 'Contact code'
-          param :type, String, required: true, desc: 'Role of contact (admin/tech)'
-        end
+        desc 'Link new contact(s) to domain'
+        param_group :contacts_apidoc
         def create
           contact_create_params[:contacts].each { |c| c[:action] = 'add' }
           action = Actions::DomainUpdate.new(@domain, contact_create_params, current_user)
@@ -35,11 +39,8 @@ module Repp
         end
 
         api :DELETE, '/repp/v1/domains/:domain_name/contacts'
-        desc "Remove contact(s) from domain"
-        param :contacts, Array, required: true, desc: 'Array of new linked contacts' do
-          param :code, String, required: true, desc: 'Contact code'
-          param :type, String, required: true, desc: 'Role of contact (admin/tech)'
-        end
+        desc 'Remove contact(s) from domain'
+        param_group :contacts_apidoc
         def destroy
           contact_create_params[:contacts].each { |c| c[:action] = 'rem' }
           action = Actions::DomainUpdate.new(@domain, contact_create_params, current_user)

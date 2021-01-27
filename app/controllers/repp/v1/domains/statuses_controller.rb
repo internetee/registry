@@ -4,14 +4,14 @@ module Repp
       class StatusesController < BaseController
         before_action :set_domain, only: %i[update destroy]
         before_action :verify_status
-        before_action :verify_status_removal, only: [:destroy]
-        before_action :verify_status_create, only: [:update]
 
         api :DELETE, '/repp/v1/domains/:domain_name/statuses/:status'
         desc 'Remove status from specific domain'
         param :domain_name, String, required: true, desc: 'Domain name'
         param :status, String, required: true, desc: 'Status to be removed'
         def destroy
+          return editing_failed unless @domain.statuses.include?(params[:id])
+
           @domain.statuses = @domain.statuses.delete(params[:id])
           if @domain.save
             render_success
@@ -25,8 +25,12 @@ module Repp
         param :domain_name, String, required: true, desc: 'Domain name'
         param :status, String, required: true, desc: 'Status to be added'
         def update
+          return editing_failed if @domain.statuses.include?(params[:id])
+
           @domain.statuses = @domain.statuses << params[:id]
+          # rubocop:disable Style/AndOr
           handle_errors(@domain) and return unless @domain.save
+          # rubocop:enable Style/AndOr
 
           render_success(data: { domain: @domain.name, status: params[:id] })
         end
@@ -39,23 +43,16 @@ module Repp
 
           return if allowed_statuses.include?(stat)
 
-          @domain.add_epp_error('2306', nil, nil, "#{I18n.t(:client_side_status_editing_error)}: status #{stat}")
+          @domain.add_epp_error('2306', nil, nil,
+                                "#{I18n.t(:client_side_status_editing_error)}: status #{stat}")
           handle_errors(@domain)
         end
 
-        def verify_status_removal
+        def editing_failed
           stat = params[:id]
-          return if @domain.statuses.include?(stat)
 
-          @domain.add_epp_error('2306', nil, nil, "#{I18n.t(:client_side_status_editing_error)}: status #{stat}")
-          handle_errors(@domain)
-        end
-
-        def verify_status_create
-          stat = params[:id]
-          return unless @domain.statuses.include?(stat)
-
-          @domain.add_epp_error('2306', nil, nil, "#{I18n.t(:client_side_status_editing_error)}: status #{stat}")
+          @domain.add_epp_error('2306', nil, nil,
+                                "#{I18n.t(:client_side_status_editing_error)}: status #{stat}")
           handle_errors(@domain)
         end
       end
