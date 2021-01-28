@@ -25,6 +25,7 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
   def test_skips_auction_when_domains_is_blocked
     assert_equal 'shop.test', @domain.name
     blocked_domains(:one).update!(name: 'shop.test')
+    @domain.save!(validate: false)
 
     @domain.release
 
@@ -34,6 +35,7 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
   def test_skips_auction_when_domains_is_reserved
     assert_equal 'shop.test', @domain.name
     reserved_domains(:one).update!(name: 'shop.test')
+    @domain.save!(validate: false)
 
     @domain.release
 
@@ -56,6 +58,24 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
     assert_difference 'Domain.count', -1 do
       Domain.release_domains
     end
+  end
+
+  def test_updates_whois_server
+    @domain.update!(delete_date: '2010-07-04')
+    travel_to Time.zone.parse('2010-07-05')
+    old_whois = @domain.whois_record
+
+    Domain.release_domains
+
+    assert_raises ActiveRecord::RecordNotFound do
+      old_whois.reload
+    end
+
+    whois_record = Whois::Record.find_by(name: @domain.name)
+    json = { "name"=>@domain.name,
+             "status"=>["AtAuction"],
+             "disclaimer"=> Setting.registry_whois_disclaimer }
+    assert_equal whois_record.json, json
   end
 
   def test_notifies_registrar
