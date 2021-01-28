@@ -1,6 +1,7 @@
 28.01.2021
 * Improved DNSSEC key validation for illegal characters [#1790](https://github.com/internetee/registry/issues/1790)
 * Fix for whois record creation issue on releasing domain to auction [#1139](https://github.com/internetee/registry/issues/1139)
+* Improved registrar account activity tests [#1824](https://github.com/internetee/registry/pull/1824)
 
 27.01.2021
 * Figaro update to 1.2.0 [#1823](https://github.com/internetee/registry/pull/1823)
