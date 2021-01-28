@@ -16,10 +16,8 @@ class EppDomainTransferRequestTest < EppTestCase
   def test_transfer_domain_with_contacts_if_registrant_and_tech_are_shared
     @domain.tech_domain_contacts[0].update!(contact_id: @domain.registrant.id)
 
-    # ????????
     @domain.tech_domain_contacts[1].delete
     @domain.reload
-    # ???????
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
@@ -38,10 +36,8 @@ class EppDomainTransferRequestTest < EppTestCase
     @domain.admin_domain_contacts[0].update!(contact_id: @domain.registrant.id)
     @domain.tech_domain_contacts[0].update!(contact_id: @contact.id)
     
-    # ????????? need to find out
     @domain.tech_domain_contacts[1].delete
     @domain.reload
-    # ??????????????????????????
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
@@ -60,10 +56,8 @@ class EppDomainTransferRequestTest < EppTestCase
     @domain.admin_domain_contacts[0].update!(contact_id: @contact.id)
     @domain.tech_domain_contacts[0].update!(contact_id: @contact.id)
 
-    # ??????????????
     @domain.tech_domain_contacts[1].delete
     @domain.reload
-    # ??????????????
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
@@ -77,7 +71,6 @@ class EppDomainTransferRequestTest < EppTestCase
 
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
     assert result_hash[admin.original_id], 2
-    # Contacts must belong to the same registrant
 
     assert_equal admin.registrar_id, @domain.registrar.id
     assert_equal tech.registrar_id, @domain.registrar.id
@@ -87,10 +80,8 @@ class EppDomainTransferRequestTest < EppTestCase
     @domain.tech_domain_contacts[0].update!(contact_id: @domain.registrant.id)
     @domain.admin_domain_contacts[0].update!(contact_id: @domain.registrant.id)
 
-    # ??????????????
     @domain.tech_domain_contacts[1].delete
     @domain.reload
-    # ??????????????
 
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
@@ -106,7 +97,6 @@ class EppDomainTransferRequestTest < EppTestCase
 
     result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
     assert result_hash[@domain.registrant.original_id], 2
-    # Contacts must belong to the same registrant
 
     assert_equal admin.registrar_id, @domain.registrar.id
     assert_equal tech.registrar_id, @domain.registrar.id
