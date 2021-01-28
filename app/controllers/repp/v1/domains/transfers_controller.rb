@@ -31,7 +31,7 @@ module Repp
         end
 
         def transfer_params
-          params.permit!
+          params.permit(:domain_id, transfer: [:transfer_code])
         end
       end
     end

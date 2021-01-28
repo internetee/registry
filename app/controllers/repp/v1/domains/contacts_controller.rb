@@ -38,7 +38,7 @@ module Repp
         end
 
         def cta(action = 'add')
-          contact_create_params[:contacts].each { |c| c[:action] = action }
+          params[:contacts].each { |c| c[:action] = action }
           action = Actions::DomainUpdate.new(@domain, contact_create_params, current_user)
 
           # rubocop:disable Style/AndOr
@@ -76,7 +76,7 @@ module Repp
         private
 
         def contact_create_params
-          params.permit!
+          params.permit(:domain_id, contacts: [%i[action code type]])
         end
 
         def contact_params

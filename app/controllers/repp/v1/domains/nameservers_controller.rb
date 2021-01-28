@@ -13,8 +13,8 @@ module Repp
           param :ipv6, Array, required: false, desc: 'Array of IPv6 values'
         end
         def create
-          nameserver_params[:nameservers].each { |n|  n[:action] = 'add' }
-          action = Actions::DomainUpdate.new(@domain, params, current_user)
+          params[:nameservers].each { |n| n[:action] = 'add' }
+          action = Actions::DomainUpdate.new(@domain, nameserver_params, current_user)
 
           unless action.call
             handle_errors(@domain)
@@ -45,7 +45,7 @@ module Repp
         end
 
         def nameserver_params
-          params.permit!
+          params.permit(:domain_id, nameservers: [[:hostname, :action, ipv4: [], ipv6: []]])
         end
       end
     end

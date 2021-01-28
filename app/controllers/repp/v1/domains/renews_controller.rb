@@ -36,7 +36,7 @@ module Repp
         private
 
         def renew_params
-          params.permit!
+          params.permit(:domain_id, renew: %i[period period_unit])
         end
 
         def validate_renew_period

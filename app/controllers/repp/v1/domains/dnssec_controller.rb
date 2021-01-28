@@ -37,8 +37,8 @@ module Repp
         end
 
         def cta(action = 'add')
-          dnssec_params[:dnssec][:dns_keys].each { |n| n[:action] = action }
-          action = Actions::DomainUpdate.new(@domain, dnssec_params[:dnssec], current_user)
+          params[:dns_keys].each { |n| n[:action] = action }
+          action = Actions::DomainUpdate.new(@domain, dnssec_params, current_user)
 
           # rubocop:disable Style/AndOr
           (handle_errors(@domain) and return) unless action.call
@@ -50,7 +50,7 @@ module Repp
         private
 
         def dnssec_params
-          params.permit!
+          params.permit(:domain_id, dns_keys: [%i[action flags protocol alg public_key]])
         end
       end
     end
