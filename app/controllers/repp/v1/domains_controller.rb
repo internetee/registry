@@ -1,7 +1,7 @@
 require 'serializers/repp/domain'
 module Repp
   module V1
-    class DomainsController < BaseController
+    class DomainsController < BaseController # rubocop:disable Metrics/ClassLength
       before_action :set_authorized_domain, only: %i[transfer_info destroy]
       before_action :forward_registrar_id, only: %i[create destroy]
       before_action :set_domain, only: %i[show update]
@@ -11,13 +11,9 @@ module Repp
       def index
         records = current_user.registrar.domains
         domains = records.limit(limit).offset(offset)
-        domains = domains.pluck(:name) unless index_params[:details] == 'true'
 
-        if index_params[:details] == 'true'
-          domains = domains.map { |d| Serializers::Repp::Domain.new(d).to_json }
-        end
-
-        render_success(data: { domains: domains, total_number_of_records: records.count })
+        render_success(data: { domains: serialized_domains(domains),
+                               total_number_of_records: records.count })
       end
 
       api :GET, '/repp/v1/domains/:domain_name'
@@ -135,6 +131,12 @@ module Repp
       end
 
       private
+
+      def serialized_domains(domains)
+        return domains.pluck(:name) unless index_params[:details] == 'true'
+
+        domains.map { |d| Serializers::Repp::Domain.new(d).to_json }
+      end
 
       def initiate_transfer(transfer)
         domain = Epp::Domain.find_or_initialize_by(name: transfer[:domain_name])

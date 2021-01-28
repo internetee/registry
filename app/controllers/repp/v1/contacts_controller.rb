@@ -1,7 +1,7 @@
 require 'serializers/repp/contact'
 module Repp
   module V1
-    class ContactsController < BaseController
+    class ContactsController < BaseController # rubocop:disable Metrics/ClassLength
       before_action :find_contact, only: %i[show update destroy]
 
       api :get, '/repp/v1/contacts'

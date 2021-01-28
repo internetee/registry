@@ -1,6 +1,6 @@
 module Repp
   module V1
-    class BaseController < ActionController::API
+    class BaseController < ActionController::API # rubocop:disable Metrics/ClassLength
       rescue_from ActiveRecord::RecordNotFound, with: :not_found_error
       before_action :authenticate_user
       before_action :validate_webclient_ca

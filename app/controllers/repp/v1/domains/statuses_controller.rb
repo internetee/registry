@@ -10,7 +10,7 @@ module Repp
         param :domain_name, String, required: true, desc: 'Domain name'
         param :status, String, required: true, desc: 'Status to be removed'
         def destroy
-          return editing_failed unless @domain.statuses.include?(params[:id])
+          return editing_failed unless domain_with_status?(params[:id])
 
           @domain.statuses = @domain.statuses.delete(params[:id])
           if @domain.save
@@ -25,17 +25,21 @@ module Repp
         param :domain_name, String, required: true, desc: 'Domain name'
         param :status, String, required: true, desc: 'Status to be added'
         def update
-          return editing_failed if @domain.statuses.include?(params[:id])
+          return editing_failed if domain_with_status?(params[:id])
 
-          @domain.statuses = @domain.statuses << params[:id]
-          # rubocop:disable Style/AndOr
-          handle_errors(@domain) and return unless @domain.save
-          # rubocop:enable Style/AndOr
-
-          render_success(data: { domain: @domain.name, status: params[:id] })
+          @domain.statuses << params[:id]
+          if @domain.save
+            render_success(data: { domain: @domain.name, status: params[:id] })
+          else
+            handle_errors(@domain)
+          end
         end
 
         private
+
+        def domain_with_status?
+          @domain.statuses.include?(params[:id])
+        end
 
         def verify_status
           allowed_statuses = [DomainStatus::CLIENT_HOLD].freeze

@@ -65,7 +65,7 @@ module Actions
 
     def assign_domain_attributes
       domain.name = params[:name].strip.downcase
-      domain.registrar = Registrar.find(params[:registrar_id])
+      domain.registrar = current_registrar
       assign_domain_period
       assign_domain_auth_codes
       domain.dnskeys_attributes = params[:dnskeys_attributes] if params[:dnskeys_attributes]
@@ -111,9 +111,12 @@ module Actions
       return unless domain.period
 
       period = Integer(domain.period)
+      domain.expire_time = calculate_expiry(period)
+    end
+
+    def calculate_expiry(period)
       plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym
-      exp = (Time.zone.now.advance(plural_period_unit_name => period) + 1.day).beginning_of_day
-      domain.expire_time = exp
+      (Time.zone.now.advance(plural_period_unit_name => period) + 1.day).beginning_of_day
     end
 
     def action_billable?
@@ -172,6 +175,10 @@ module Actions
 
       domain.errors.delete(:name_dirty) if domain.errors[:puny_label].any?
       domain.errors.any?
+    end
+
+    def current_registrar
+      Registrar.find(params[:registrar_id])
     end
   end
 end

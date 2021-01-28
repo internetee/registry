@@ -39,11 +39,15 @@ module Actions
       true
     end
 
+    def ask_delete_verification
+      domain.registrant_verification_asked!(params, user.id)
+      domain.pending_delete!
+      domain.manage_automatic_statuses
+    end
+
     def destroy
       if verify?
-        domain.registrant_verification_asked!(params, user.id)
-        domain.pending_delete!
-        domain.manage_automatic_statuses
+        ask_delete_verification
       else
         domain.set_pending_delete!
       end

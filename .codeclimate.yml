@@ -13,7 +13,8 @@ plugins:
     enabled: true
     config:
       languages:
-      - ruby
+        ruby:
+          mass_threshold: 26
       - javascript
   eslint:
     enabled: true

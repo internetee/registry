@@ -11,15 +11,15 @@ module Actions
     end
 
     def call
-      renew
+      if !domain.renewable? || domain.invalid?
+        domain.add_renew_epp_errors
+        false
+      else
+        renew
+      end
     end
 
     def renew
-      if !domain.renewable? || domain.invalid?
-        domain.add_renew_epp_errors
-        return
-      end
-
       task = Domains::BulkRenew::SingleDomainRenew.run(domain: domain,
                                                        period: params[:period],
                                                        unit: params[:period_unit],
