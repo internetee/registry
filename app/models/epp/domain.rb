@@ -162,6 +162,9 @@ class Epp::Domain < Domain
     at[:admin_domain_contacts_attributes] = admin_domain_contacts_attrs(frame, action)
     at[:tech_domain_contacts_attributes] = tech_domain_contacts_attrs(frame, action)
 
+    check_for_same_contacts(at[:admin_domain_contacts_attributes], 'admin')
+    check_for_same_contacts(at[:tech_domain_contacts_attributes], 'tech')
+
     pw = frame.css('authInfo > pw').text
     at[:transfer_code] = pw if pw.present?
 
@@ -176,6 +179,11 @@ class Epp::Domain < Domain
     at
   end
 
+  def check_for_same_contacts(contacts, contact_type)
+    return unless contacts.uniq.count != contacts.count
+
+    add_epp_error('2306', contact_type, nil, %i[domain_contacts invalid])
+  end
 
   # Adding legal doc to domain and
   # if something goes wrong - raise Rollback error
