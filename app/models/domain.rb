@@ -78,7 +78,7 @@ class Domain < ApplicationRecord
     true
   end
 
-  after_commit :update_whois_record, unless: -> { domain_name.at_auction? }
+  after_commit :update_whois_record
 
   after_create :update_reserved_domains
   def update_reserved_domains
