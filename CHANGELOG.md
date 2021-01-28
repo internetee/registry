@@ -1,3 +1,6 @@
+28.01.2021
+* Fix for whois record creation issue on releasing domain to auction [#1139](https://github.com/internetee/registry/issues/1139)
+
 27.01.2021
 * Figaro update to 1.2.0 [#1823](https://github.com/internetee/registry/pull/1823)
 
