@@ -13,30 +13,30 @@ class EppDomainCreateBaseTest < EppTestCase
     vrjxNMH6HtxW\rEA4RJ9Ao6LCWheg8"
 
     request_xml = <<-XML
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-      <command>
-        <create>
-          <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-            <domain:name>#{name}</domain:name>
-            <domain:registrant>#{registrant.code}</domain:registrant>
-          </domain:create>
-        </create>
-        <extension>
-        <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
-        <secDNS:keyData>
-          <secDNS:flags>257</secDNS:flags>
-          <secDNS:protocol>3</secDNS:protocol>
-          <secDNS:alg>8</secDNS:alg>
-          <secDNS:pubKey>#{pub_key}</secDNS:pubKey>
-        </secDNS:keyData>
-      </secDNS:create>
-          <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-            <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
-          </eis:extdata>
-        </extension>
-      </command>
-    </epp>
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+            </domain:create>
+          </create>
+          <extension>
+          <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+          <secDNS:keyData>
+            <secDNS:flags>257</secDNS:flags>
+            <secDNS:protocol>3</secDNS:protocol>
+            <secDNS:alg>8</secDNS:alg>
+            <secDNS:pubKey>#{pub_key}</secDNS:pubKey>
+          </secDNS:keyData>
+        </secDNS:create>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
     XML
     assert_no_difference 'Domain.count' do
       post epp_create_path, params: { frame: request_xml },
@@ -84,25 +84,25 @@ class EppDomainCreateBaseTest < EppTestCase
     registrant = contact.becomes(Registrant)
 
     request_xml = <<-XML
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-      <command>
-        <create>
-          <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-            <domain:name>#{name}</domain:name>
-            <domain:registrant>#{registrant.code}</domain:registrant>
-            <domain:contact type="admin">#{contacts(:jane).code}</domain:contact>
-            <domain:contact type="tech">#{contacts(:william).code}</domain:contact>
-          </domain:create>
-        </create>
-        <extension>
-          <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-            <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
-          </eis:extdata>
-        </extension>
-      </command>
-    </epp>
-  XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contacts(:jane).code}</domain:contact>
+              <domain:contact type="tech">#{contacts(:william).code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
 
     assert_difference 'Domain.count' do
       post epp_create_path, params: { frame: request_xml },
@@ -158,28 +158,26 @@ class EppDomainCreateBaseTest < EppTestCase
     registrant = contact.becomes(Registrant)
 
     request_xml = <<-XML
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-      <command>
-        <create>
-          <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-            <domain:name>#{name}</domain:name>
-            <domain:registrant>#{registrant.code}</domain:registrant>
-            <domain:contact type="admin">#{contact.code}</domain:contact>
-            <domain:contact type="admin">#{contact.code}</domain:contact>
-            <domain:contact type="tech">#{contact.code}</domain:contact>
-          </domain:create>
-        </create>
-        <extension>
-          <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-            <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
-          </eis:extdata>
-        </extension>
-      </command>
-    </epp>
-  XML
-
-
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
 
     assert_no_difference 'Domain.count' do
       post epp_create_path, params: { frame: request_xml },
@@ -197,26 +195,26 @@ class EppDomainCreateBaseTest < EppTestCase
     registrant = contact.becomes(Registrant)
 
     request_xml = <<-XML
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-      <command>
-        <create>
-          <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-            <domain:name>#{name}</domain:name>
-            <domain:registrant>#{registrant.code}</domain:registrant>
-            <domain:contact type="admin">#{contact.code}</domain:contact>
-            <domain:contact type="tech">#{contact.code}</domain:contact>
-            <domain:contact type="tech">#{contact.code}</domain:contact>
-          </domain:create>
-        </create>
-        <extension>
-          <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-            <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
-          </eis:extdata>
-        </extension>
-      </command>
-    </epp>
-  XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
 
     assert_no_difference 'Domain.count' do
       post epp_create_path, params: { frame: request_xml },
@@ -235,25 +233,25 @@ class EppDomainCreateBaseTest < EppTestCase
     contact_two = contacts(:william)
 
     request_xml = <<-XML
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-      <command>
-        <create>
-          <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-            <domain:name>#{name}</domain:name>
-            <domain:registrant>#{registrant.code}</domain:registrant>
-            <domain:contact type="admin">#{contact.code}</domain:contact>
-            <domain:contact type="admin">#{contact.code}</domain:contact>
-            <domain:contact type="tech">#{contact_two.code}</domain:contact>
-          </domain:create>
-        </create>
-        <extension>
-          <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-            <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
-          </eis:extdata>
-        </extension>
-      </command>
-    </epp>
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact_two.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
     XML
 
     assert_no_difference 'Domain.count' do
@@ -273,25 +271,25 @@ class EppDomainCreateBaseTest < EppTestCase
     contact_two = contacts(:william)
 
     request_xml = <<-XML
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-      <command>
-        <create>
-          <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-            <domain:name>#{name}</domain:name>
-            <domain:registrant>#{registrant.code}</domain:registrant>
-            <domain:contact type="admin">#{contact_two.code}</domain:contact>
-            <domain:contact type="tech">#{contact.code}</domain:contact>
-            <domain:contact type="tech">#{contact.code}</domain:contact>
-          </domain:create>
-        </create>
-        <extension>
-          <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-            <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
-          </eis:extdata>
-        </extension>
-      </command>
-    </epp>
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contact_two.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
     XML
 
     assert_no_difference 'Domain.count' do
