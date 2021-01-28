@@ -27,8 +27,17 @@ module Admin
           params[:q][:name_matches] = n_cache # we don't want to show wildcards in search form
         end
       end
-
       @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+
+      respond_to do |format|
+        format.html do
+          @domains
+        end
+        format.csv do
+          raw_csv = @domains.to_csv
+          send_data raw_csv, filename: 'domains.csv', type: "#{Mime[:csv]}; charset=utf-8"
+        end
+      end
     end
 
     def show

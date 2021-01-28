@@ -8,6 +8,8 @@ $(window).load ->
 
   $('[data-toggle="popover"]').popover()
 
+  $('[data-toggle="tooltip"]').tooltip()
+
   # doublescroll
   $('[data-doublescroll]').doubleScroll({
     onlyIfScroll: false,

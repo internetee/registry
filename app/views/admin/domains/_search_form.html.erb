@@ -6,7 +6,7 @@
                 <%= f.search_field :name_matches, value: params[:q][:name_matches], class: 'form-control', placeholder: t(:name) %>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form-group">
                 <%= f.label :registrant_ident, for: nil %>
                 <%= f.search_field :registrant_ident_eq, class: 'form-control', placeholder: t(:registrant_ident) %>
@@ -18,7 +18,7 @@
                 <%= f.search_field :contacts_ident_eq, class: 'form-control', placeholder: t(:contact_ident) %>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="form-group">
                 <%= f.label :nameserver_hostname, for: nil %>
                 <%= f.search_field :nameservers_hostname_eq, class: 'form-control', placeholder: t(:nameserver_hostname) %>
@@ -26,7 +26,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <div class="form-group">
                 <%= f.label :registrar_name, for: nil %>
                 <%= f.select :registrar_id_eq, Registrar.all.map { |x| [x, x.id] }, { include_blank: true }, class: 'form-control selectize' %>
@@ -38,7 +38,7 @@
                 <%= f.search_field :valid_to_gteq, value: params[:q][:valid_to_gteq], class: 'form-control js-datepicker', placeholder: t(:valid_to_from) %>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="form-group">
                 <%= f.label :valid_to_until, for: nil %>
                 <%= f.search_field :valid_to_lteq, value: params[:q][:valid_to_lteq], class: 'form-control js-datepicker', placeholder: t(:valid_to_until) %>
@@ -46,7 +46,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <div class="form-group">
                 <%= label_tag :status, nil, for: nil %>
                 <%= select_tag :statuses_contains, options_for_select(DomainStatus::STATUSES, params[:statuses_contains]), { multiple: true, class: 'form-control js-combobox' } %>
@@ -58,13 +58,17 @@
                 <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page) %>
             </div>
         </div>
-        <div class="col-md-3 actions">
+        <div class="col-md-4 actions">
             <button class="btn btn-primary">
                 &nbsp;
                 <span class="glyphicon glyphicon-search"></span>
                 &nbsp;
             </button>
+            <%= link_to t('.download_csv_btn'), admin_domains_path(format: :csv, params: params.permit!),
+                        "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => t('.download_csv_btn'),
+                        class: 'btn btn-default' %>
             <%= link_to t('.reset_btn'), admin_domains_path, class: 'btn btn-default' %>
+
         </div>
     </div>
 <% end %>
