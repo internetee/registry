@@ -120,34 +120,33 @@ class EppDomainCreateBaseTest < EppTestCase
     registrant = contact.becomes(Registrant)
 
     request_xml = <<-XML
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-      <command>
-        <create>
-          <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-            <domain:name>#{name}</domain:name>
-            <domain:registrant>#{registrant.code}</domain:registrant>
-            <domain:contact type="admin">#{contact.code}</domain:contact>
-            <domain:contact type="admin">#{contact.code}</domain:contact>
-            <domain:contact type="tech">#{contact.code}</domain:contact>
-            <domain:contact type="tech">#{contact.code}</domain:contact>
-          </domain:create>
-        </create>
-        <extension>
-          <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-            <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
-          </eis:extdata>
-        </extension>
-      </command>
-    </epp>
-  XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
 
-  
-
-  assert_no_difference 'Domain.count' do
-    post epp_create_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+
     assert_epp_response :parameter_value_policy_error
   end
 
@@ -180,7 +179,7 @@ class EppDomainCreateBaseTest < EppTestCase
     </epp>
   XML
 
-  
+
 
   assert_no_difference 'Domain.count' do
     post epp_create_path, params: { frame: request_xml },
