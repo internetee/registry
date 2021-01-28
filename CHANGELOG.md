@@ -1,3 +1,24 @@
+28.01.2021
+* Fixed transfer with shared admin and tech contacts [#1808](https://github.com/internetee/registry/issues/1808)
+* Improved DNSSEC key validation for illegal characters [#1790](https://github.com/internetee/registry/issues/1790)
+* Fix for whois record creation issue on releasing domain to auction [#1139](https://github.com/internetee/registry/issues/1139)
+* Improved registrar account activity tests [#1824](https://github.com/internetee/registry/pull/1824)
+
+27.01.2021
+* Figaro update to 1.2.0 [#1823](https://github.com/internetee/registry/pull/1823)
+
+26.01.2021
+* Ruby update to 2.7 [#1791](https://github.com/internetee/registry/issues/1791)
+
+21.01.2021
+* Registrant API: optimised contact linking [#1807](https://github.com/internetee/registry/pull/1807)
+
+20.01.2021
+* Fixed legaldoc assignment issue on registrant confirmation [#1806](https://github.com/internetee/registry/pull/1806)
+
+14.01.2021
+* Fixed IDN and punycode support for REPP domain transfer_info request [#1801](https://github.com/internetee/registry/issues/1801)
+
 06.01.2021
 * IMproved tests whois update for bulk nameserver change [#1739](https://github.com/internetee/registry/issues/1739)
 * Bulk ForceDelete funcionality in admin [#1177](https://github.com/internetee/registry/issues/1177)

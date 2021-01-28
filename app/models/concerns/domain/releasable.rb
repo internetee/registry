@@ -39,13 +39,15 @@ module Concerns
 
       def release
         if release_to_auction
-          transaction do
-            domain_name.sell_at_auction if domain_name.auctionable?
-            destroy!
-            registrar.notifications.create!(text: "#{I18n.t(:domain_deleted)}: #{name}",
-                                            attached_obj_id: id,
-                                            attached_obj_type: self.class)
-          end
+          ToStdout.msg 'Destroying domain'
+          destroy!
+          ToStdout.msg "Checking if domain_name is auctionable: #{domain_name.auctionable?}"
+          domain_name.sell_at_auction if domain_name.auctionable?
+
+          ToStdout.msg 'Sending registrar notification'
+          registrar.notifications.create!(text: "#{I18n.t(:domain_deleted)}: #{name}",
+                                          attached_obj_id: id,
+                                          attached_obj_type: self.class)
         else
           discard
         end

@@ -92,18 +92,20 @@ module Actions
     end
 
     def validate_dnskey_integrity(key)
-      if key[:pubKey] && !Setting.key_data_allowed
+      if key[:public_key] && !Setting.key_data_allowed
         domain.add_epp_error('2306', nil, nil, %i[dnskeys key_data_not_allowed])
-      elsif key[:digest] && !Setting.ds_data_allowed
+      elsif key[:ds_digest] && !Setting.ds_data_allowed
         domain.add_epp_error('2306', nil, nil, %i[dnskeys ds_data_not_allowed])
       end
+
+      verify_public_key_integrity(key)
 
       @dnskeys << key.except(:action)
     end
 
     def assign_removable_dnskey(key)
       dnkey = domain.dnskeys.find_by(key.except(:action))
-      domain.add_epp_error('2303', nil, nil, %i[dnskeys not_found]) unless dnkey
+      domain.add_epp_error(2303, nil, nil, %i[dnskeys not_found]) unless dnkey
 
       @dnskeys << { id: dnkey.id, _destroy: 1 } if dnkey
     end
@@ -239,6 +241,17 @@ module Actions
       return true if domain.errors[:epp_errors].any? || domain.invalid?
 
       false
+    end
+
+    def verify_public_key_integrity(dnssec)
+      return if dnssec[:public_key].blank?
+
+      value = dnssec[:public_key]
+      if !value.is_a?(String) || Base64.strict_encode64(Base64.strict_decode64(value)) != value
+        domain.add_epp_error('2005', nil, nil, %i[dnskeys invalid])
+      end
+    rescue ArgumentError
+      domain.add_epp_error('2005', nil, nil, %i[dnskeys invalid])
     end
   end
 end

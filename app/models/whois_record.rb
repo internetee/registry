@@ -97,7 +97,7 @@ class WhoisRecord < ApplicationRecord
   end
 
   def destroy_whois_record
-    Whois::Record.where(name: name).delete_all
+    Whois::Record.without_auctions.where(name: name).delete_all
   end
 
   private

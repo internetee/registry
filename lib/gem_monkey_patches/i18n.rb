@@ -5,6 +5,7 @@ module I18n
     alias_method :original_localize, :localize
 
     def localize(object, options = {})
+      options.merge!({ default: '-' })
       object.present? ? original_localize(object, options) : ''
     end
   end

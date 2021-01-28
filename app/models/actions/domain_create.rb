@@ -68,7 +68,25 @@ module Actions
       domain.registrar = current_registrar
       assign_domain_period
       assign_domain_auth_codes
-      domain.dnskeys_attributes = params[:dnskeys_attributes] if params[:dnskeys_attributes]
+      assign_dnskeys
+    end
+
+    def assign_dnskeys
+      return unless params[:dnskeys_attributes]&.any?
+
+      params[:dnskeys_attributes].each { |dk| verify_public_key_integrity(dk) }
+      params.dnskeys_attributes = params[:dnskeys_attributes]
+    end
+
+    def verify_public_key_integrity(dnssec)
+      return if dnssec[:public_key].blank?
+
+      value = dnssec[:public_key]
+      if !value.is_a?(String) || Base64.strict_encode64(Base64.strict_decode64(value)) != value
+        domain.add_epp_error(2005, nil, nil, %i[dnskeys invalid])
+      end
+    rescue ArgumentError
+      domain.add_epp_error(2005, nil, nil, %i[dnskeys invalid])
     end
 
     def assign_domain_auth_codes

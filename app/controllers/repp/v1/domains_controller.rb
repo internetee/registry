@@ -3,6 +3,7 @@ module Repp
   module V1
     class DomainsController < BaseController # rubocop:disable Metrics/ClassLength
       before_action :set_authorized_domain, only: %i[transfer_info destroy]
+      before_action :validate_registrar_authorization, only: %i[transfer_info destroy]
       before_action :forward_registrar_id, only: %i[create destroy]
       before_action :set_domain, only: %i[show update]
 
@@ -182,11 +183,7 @@ module Repp
 
       def set_authorized_domain
         @epp_errors ||= []
-        h = {}
-        h[transfer_info_params[:id].match?(/\A[0-9]+\z/) ? :id : :name] = transfer_info_params[:id]
-        @domain = Epp::Domain.find_by!(h)
-
-        validate_registrar_authorization
+        @domain = domain_from_url_hash
       end
 
       def validate_registrar_authorization
@@ -195,6 +192,13 @@ module Repp
 
         @epp_errors << { code: 2202, msg: I18n.t('errors.messages.epp_authorization_error') }
         handle_errors
+      end
+
+      def domain_from_url_hash
+        entry = transfer_info_params[:id]
+        return Domain.find(entry) if entry.match?(/\A[0-9]+\z/)
+
+        Domain.find_by!('name = ? OR name_puny = ?', entry, entry)
       end
 
       def limit

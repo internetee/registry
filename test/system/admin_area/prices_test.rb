@@ -20,6 +20,7 @@ class AdminAreaPricesTest < ApplicationSystemTestCase
     fill_in 'Valid from', with: effective_date
     click_on 'Create price'
 
+
     assert_text 'Price has been created'
     assert_text I18n.localize(effective_date)
   end

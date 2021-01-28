@@ -10,7 +10,7 @@ gem 'rest-client'
 gem 'uglifier'
 
 # load env
-gem 'figaro', '1.1.1'
+gem 'figaro', '~> 1.2'
 
 # model related
 gem 'activerecord-import'
