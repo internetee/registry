@@ -17,4 +17,5 @@ class RegistrarAreaDomainsIntegrationTest < ApplicationIntegrationTest
                  response.headers['Content-Disposition']
     assert_not_empty response.body
   end
+
 end
