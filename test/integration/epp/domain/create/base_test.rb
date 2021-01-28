@@ -104,9 +104,9 @@ class EppDomainCreateBaseTest < EppTestCase
     </epp>
   XML
 
-  assert_difference 'Domain.count' do
-    post epp_create_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :completed_successfully
   end
@@ -181,9 +181,9 @@ class EppDomainCreateBaseTest < EppTestCase
 
 
 
-  assert_no_difference 'Domain.count' do
-    post epp_create_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
     assert_epp_response :parameter_value_policy_error
@@ -218,12 +218,12 @@ class EppDomainCreateBaseTest < EppTestCase
     </epp>
   XML
 
-  assert_no_difference 'Domain.count' do
-    post epp_create_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
-  assert_epp_response :parameter_value_policy_error
+    assert_epp_response :parameter_value_policy_error
   end
 
   def test_create_domain_with_array_of_not_unique_admin_but_tech_another_one
@@ -254,14 +254,14 @@ class EppDomainCreateBaseTest < EppTestCase
         </extension>
       </command>
     </epp>
-  XML
+    XML
 
-  assert_no_difference 'Domain.count' do
-    post epp_create_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
-  end
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
 
-  assert_epp_response :parameter_value_policy_error
+    assert_epp_response :parameter_value_policy_error
   end
 
   def test_create_domain_with_array_of_not_unique_techs_but_admin_another_one
@@ -292,14 +292,14 @@ class EppDomainCreateBaseTest < EppTestCase
         </extension>
       </command>
     </epp>
-  XML
+    XML
 
-  assert_no_difference 'Domain.count' do
-    post epp_create_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
-  end
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
 
-  assert_epp_response :parameter_value_policy_error
+    assert_epp_response :parameter_value_policy_error
   end
 
   def test_registers_new_domain_with_required_attributes
