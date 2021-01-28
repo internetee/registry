@@ -41,7 +41,9 @@ module Repp
           contact_create_params[:contacts].each { |c| c[:action] = action }
           action = Actions::DomainUpdate.new(@domain, contact_create_params, current_user)
 
+          # rubocop:disable Style/AndOr
           handle_errors(@domain) and return unless action.call
+          # rubocop:enable Style/AndOr
 
           render_success(data: { domain: { name: @domain.name } })
         end

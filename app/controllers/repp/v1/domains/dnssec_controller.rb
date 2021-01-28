@@ -25,15 +25,7 @@ module Repp
           param_group :dns_keys_apidoc, DnssecController
         end
         def create
-          dnssec_params[:dnssec][:dns_keys].each { |n| n[:action] = 'add' }
-          action = Actions::DomainUpdate.new(@domain, dnssec_params[:dnssec], current_user)
-
-          unless action.call
-            handle_errors(@domain)
-            return
-          end
-
-          render_success(data: { domain: { name: @domain.name } })
+          cta('add')
         end
 
         api :DELETE, 'repp/v1/domains/:domain_name/dnssec'
@@ -41,13 +33,16 @@ module Repp
           param_group :dns_keys_apidoc, DnssecController
         end
         def destroy
-          dnssec_params[:dnssec][:dns_keys].each { |n| n[:action] = 'rem' }
+          cta('rem')
+        end
+
+        def cta(action = 'add')
+          dnssec_params[:dnssec][:dns_keys].each { |n| n[:action] = action }
           action = Actions::DomainUpdate.new(@domain, dnssec_params[:dnssec], current_user)
 
-          unless action.call
-            handle_errors(@domain)
-            return
-          end
+          # rubocop:disable Style/AndOr
+          (handle_errors(@domain) and return) unless action.call
+          # rubocop:enable Style/AndOr
 
           render_success(data: { domain: { name: @domain.name } })
         end
