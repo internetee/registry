@@ -1,4 +1,5 @@
 28.01.2021
+* Fixed transfer with shared admin and tech contacts [#1808](https://github.com/internetee/registry/issues/1808)
 * Improved DNSSEC key validation for illegal characters [#1790](https://github.com/internetee/registry/issues/1790)
 * Fix for whois record creation issue on releasing domain to auction [#1139](https://github.com/internetee/registry/issues/1139)
 * Improved registrar account activity tests [#1824](https://github.com/internetee/registry/pull/1824)
