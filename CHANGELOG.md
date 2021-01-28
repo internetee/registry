@@ -1,4 +1,5 @@
 28.01.2021
+* Improved DNSSEC key validation for illegal characters [#1790](https://github.com/internetee/registry/issues/1790)
 * Fix for whois record creation issue on releasing domain to auction [#1139](https://github.com/internetee/registry/issues/1139)
 
 27.01.2021
