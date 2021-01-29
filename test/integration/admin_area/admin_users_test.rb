@@ -73,11 +73,11 @@ class AdminAreaAdminUsersIntegrationTest < JavaScriptApplicationSystemTestCase
     fill_in 'Username', with: 'test_user_name'
     # If valid=true creating valid user, if else, then with invalid data
     if valid
-        fill_in 'Password', with: 'test_password'
-        fill_in 'Password confirmation', with: 'test_password'
+      fill_in 'Password', with: 'test_password'
+      fill_in 'Password confirmation', with: 'test_password'
     else
-        fill_in 'Password', with: 'test_password'
-        fill_in 'Password confirmation', with: 'test_password2'
+      fill_in 'Password', with: 'test_password'
+      fill_in 'Password confirmation', with: 'test_password2'
     end
     fill_in 'Identity code', with: '38903110313'
     fill_in 'Email', with: 'oleg@tester.ee'
@@ -93,9 +93,9 @@ class AdminAreaAdminUsersIntegrationTest < JavaScriptApplicationSystemTestCase
     click_on 'Save'
 
     if valid
-        assert_text 'Record created'
+      assert_text 'Record created'
     else
-        assert_text 'Failed to create record'
+      assert_text 'Failed to create record'
     end
   end
 end
