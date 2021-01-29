@@ -128,5 +128,13 @@ class Dnskey < ApplicationRecord
     def bin_to_hex(s)
       s.each_byte.map { |b| format('%02X', b) }.join
     end
+
+    def pub_key_base64?(pub)
+      return unless pub&.is_a?(String)
+
+      Base64.strict_encode64(Base64.strict_decode64(pub)) == pub
+    rescue ArgumentError
+      false
+    end
   end
 end

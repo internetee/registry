@@ -74,18 +74,13 @@ module Actions
     def assign_dnskeys
       return unless params[:dnskeys_attributes]&.any?
 
-      params[:dnskeys_attributes].each { |dk| verify_public_key_integrity(dk) }
-      params.dnskeys_attributes = params[:dnskeys_attributes]
+      params[:dnskeys_attributes].each { |dk| verify_public_key_integrity(dk[:public_key]) }
+      domain.dnskeys_attributes = params[:dnskeys_attributes]
     end
 
-    def verify_public_key_integrity(dnssec)
-      return if dnssec[:public_key].blank?
+    def verify_public_key_integrity(pub)
+      return if Dnskey.pub_key_base64?(pub)
 
-      value = dnssec[:public_key]
-      if !value.is_a?(String) || Base64.strict_encode64(Base64.strict_decode64(value)) != value
-        domain.add_epp_error(2005, nil, nil, %i[dnskeys invalid])
-      end
-    rescue ArgumentError
       domain.add_epp_error(2005, nil, nil, %i[dnskeys invalid])
     end
 

@@ -214,8 +214,11 @@ module Repp
       end
 
       def domain_create_params
-        params.require(:domain).require(%i[name registrant_id period period_unit])
-        params.require(:domain).permit(%i[name registrant_id period period_unit registrar_id])
+        params.require(:domain).permit(:name, :registrant_id, :period, :period_unit, :registrar_id,
+                                       dnskeys_attributes: [%i[flags alg protocol public_key]],
+                                       nameservers_attributes: [[:hostname, ipv4: [], ipv6: []]],
+                                       admin_domain_contacts_attributes: [],
+                                       tech_domain_contacts_attributes: [])
       end
     end
   end

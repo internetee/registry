@@ -14,7 +14,7 @@ module Actions
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
       assign_requested_statuses
-      maybe_attach_legal_doc
+      Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
 
       commit
     end
@@ -98,7 +98,7 @@ module Actions
         domain.add_epp_error('2306', nil, nil, %i[dnskeys ds_data_not_allowed])
       end
 
-      verify_public_key_integrity(key)
+      verify_public_key_integrity(key[:public_key])
 
       @dnskeys << key.except(:action)
     end
@@ -216,10 +216,6 @@ module Actions
       end
     end
 
-    def maybe_attach_legal_doc
-      Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
-    end
-
     def ask_registrant_verification
       if verify_registrant_change? && !bypass_verify &&
          Setting.request_confirmation_on_registrant_change_enabled
@@ -243,15 +239,10 @@ module Actions
       false
     end
 
-    def verify_public_key_integrity(dnssec)
-      return if dnssec[:public_key].blank?
+    def verify_public_key_integrity(pub)
+      return if Dnskey.pub_key_base64?(pub)
 
-      value = dnssec[:public_key]
-      if !value.is_a?(String) || Base64.strict_encode64(Base64.strict_decode64(value)) != value
-        domain.add_epp_error('2005', nil, nil, %i[dnskeys invalid])
-      end
-    rescue ArgumentError
-      domain.add_epp_error('2005', nil, nil, %i[dnskeys invalid])
+      domain.add_epp_error(2005, nil, nil, %i[dnskeys invalid])
     end
   end
 end

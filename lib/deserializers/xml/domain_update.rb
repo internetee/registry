@@ -10,13 +10,14 @@ module Deserializers
       def initialize(frame, registrar)
         @frame = frame
         @registrar = registrar
+        @legal_document ||= ::Deserializers::Xml::LegalDocument.new(frame).call
       end
 
       def call
         obj = { domain: frame.css('name')&.text, registrant: registrant, contacts: contacts,
                 auth_info: if_present('authInfo > pw'), nameservers: nameservers,
                 registrar_id: registrar, statuses: statuses, dns_keys: dns_keys,
-                reserved_pw: if_present('reserved > pw'), legal_document: legal_document }
+                reserved_pw: if_present('reserved > pw'), legal_document: @legal_document }
 
         obj.reject { |_key, val| val.blank? }
       end
@@ -76,10 +77,6 @@ module Deserializers
         frame.css('rem > status').each { |e| s << { status: e.attr('s'), action: 'rem' } }
 
         s
-      end
-
-      def legal_document
-        @legal_document ||= ::Deserializers::Xml::LegalDocument.new(frame).call
       end
 
       def if_present(css_path)
