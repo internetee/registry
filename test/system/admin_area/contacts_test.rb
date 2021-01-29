@@ -8,8 +8,6 @@ class AdminContactsTest < ApplicationSystemTestCase
     sign_in users(:admin)
   end
 
-
-  # admin_contact
   def test_update_contact
     visit admin_contact_path(id: @contact.id)
     assert_text "#{@contact.name}"

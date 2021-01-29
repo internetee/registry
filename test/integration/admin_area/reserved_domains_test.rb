@@ -45,5 +45,4 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
 
         assert_text 'Domain updated!'
     end
-
 end

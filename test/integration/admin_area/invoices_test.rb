@@ -11,13 +11,9 @@ class AdminAreaInvoicesIntegrationTest < ApplicationIntegrationTest
 
     assert_text 'Create new invoice'
     select 'Best Names', from: 'deposit_registrar_id', match: :first
-
     fill_in 'Amount', with: '1000'
-
     click_on 'Save'
 
-    # TODO
-    # Should be assert_text 'Record created'
     assert_equal page.status_code, 200
   end
 

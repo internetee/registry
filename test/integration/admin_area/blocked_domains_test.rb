@@ -11,25 +11,6 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
     @blocked_domain = blocked_domains(:one)
   end
 
-  # HELPERS
-  def visit_admin_blocked_domains_path
-    visit admin_blocked_domains_path
-    assert_text 'Blocked domains'
-  end
-
-  def add_domain_into_blocked_list(value)
-    click_on 'New blocked domain'
-    assert_text 'Add domain to blocked list'
-
-    fill_in 'Name', with: @domain.name
-    click_on 'Save'
-
-    return assert_text 'Domain added!' if value
-    return assert_text 'Failed to add domain!'
-  end
-
-  # ------------------------------------------------------------
-  # TESTs
   def test_page_successfully_loaded
     visit_admin_blocked_domains_path
   end
@@ -67,4 +48,21 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
     assert_text @domain.name
   end
 
+  private
+
+  def visit_admin_blocked_domains_path
+    visit admin_blocked_domains_path
+    assert_text 'Blocked domains'
+  end
+
+  def add_domain_into_blocked_list(value)
+    click_on 'New blocked domain'
+    assert_text 'Add domain to blocked list'
+
+    fill_in 'Name', with: @domain.name
+    click_on 'Save'
+
+    return assert_text 'Domain added!' if value
+    return assert_text 'Failed to add domain!'
+  end
 end
