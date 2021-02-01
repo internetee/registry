@@ -9,12 +9,7 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
 
     @admin_new.update(ident: @admin_current.ident,
                       ident_type: @admin_current.ident_type,
-                      ident_country_code: @admin_current.ident_country_code,
-                      name: @admin_current.name,
-                      email: @admin_current.email,
-                      phone: @admin_current.phone,
-                      fax: @admin_current.fax,
-                      org_name: @admin_current.org_name)
+                      ident_country_code: @admin_current.ident_country_code)
   end
 
   def test_replace_all_admin_contacts_when_ident_data_doesnt_match
@@ -49,7 +44,7 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
                                                  new_contact_id: @admin_new.code },
           headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
 
-    assert domains(:shop).admin_contacts.find_by(code: @admin_current.code)
+    assert domains(:airport).admin_contacts.find_by(code: @admin_current.code)
   end
 
   def test_return_affected_domains_in_alphabetical_order

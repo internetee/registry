@@ -11,6 +11,13 @@ module Concerns::Contact::Identical
     ident_country_code
     org_name
   ]
+
+  IDENTICAL_ATTRIBUTES = %w[
+    ident
+    ident_type
+    ident_country_code
+  ]
+
   private_constant :IDENTIFIABLE_ATTRIBUTES
 
   def identical(registrar)
@@ -21,7 +28,7 @@ module Concerns::Contact::Identical
   end
 
   def identical_to?(contact)
-    IDENTIFIABLE_ATTRIBUTES.all? do |attribute|
+    IDENTICAL_ATTRIBUTES.all? do |attribute|
       self.attributes[attribute] == contact.attributes[attribute]
     end
   end
