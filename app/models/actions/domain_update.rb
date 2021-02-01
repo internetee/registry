@@ -22,7 +22,10 @@ module Actions
     def assign_relational_modifications
       assign_nameserver_modifications if params[:nameservers]
       assign_dnssec_modifications if params[:dns_keys]
-      (assign_admin_contact_changes && assign_tech_contact_changes) if params[:contacts]
+      return unless params[:contacts]
+
+      assign_admin_contact_changes
+      assign_tech_contact_changes
     end
 
     def validate_domain_integrity
@@ -147,10 +150,11 @@ module Actions
     end
 
     def contact_for_action(action:, method:, code:)
-      return Epp::Contact.find_by(code: code) if action == 'add'
-      return domain.admin_domain_contacts.find_by(contact_code_cache: code) if method == 'admin'
+      contact = Epp::Contact.find_by(code: code)
+      return contact if action == 'add' || !contact
+      return domain.admin_domain_contacts.find_by(contact_id: contact.id) if method == 'admin'
 
-      domain.tech_domain_contacts.find_by(contact_code_cache: code)
+      domain.tech_domain_contacts.find_by(contact_id: contact.id)
     end
 
     def assign_contact(obj, add: false, admin: true, code:)
