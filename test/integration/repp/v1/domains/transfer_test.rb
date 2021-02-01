@@ -10,6 +10,34 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     @auth_headers = { 'Authorization' => token }
   end
 
+  def test_transfers_scoped_domain
+    refute @domain.registrar == @user.registrar
+    payload = { transfer: { transfer_code: @domain.transfer_code } }
+    post "/repp/v1/domains/#{@domain.name}/transfer", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+    @domain.reload
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+
+    assert_equal @domain.registrar, @user.registrar
+  end
+
+  def test_does_not_transfer_scoped_domain_with_invalid_transfer_code
+    refute @domain.registrar == @user.registrar
+    payload = { transfer: { transfer_code: 'invalid' } }
+    post "/repp/v1/domains/#{@domain.name}/transfer", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+    @domain.reload
+
+    assert_response :bad_request
+    assert_equal 2202, json[:code]
+    assert_equal 'Invalid authorization information', json[:message]
+
+    refute @domain.registrar == @user.registrar
+  end
+
   def test_transfers_domain
     payload = {
       "data": {
