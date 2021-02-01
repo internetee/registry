@@ -24,7 +24,6 @@ module Actions
                                                        period: params[:period],
                                                        unit: params[:period_unit],
                                                        registrar: user)
-
       task.valid?
     end
   end
