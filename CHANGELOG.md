@@ -1,3 +1,6 @@
+01.02.2021
+* Improved tests for admin interface [#1805](https://github.com/internetee/registry/pull/1805)
+
 28.01.2021
 * Fixed transfer with shared admin and tech contacts [#1808](https://github.com/internetee/registry/issues/1808)
 * Improved error handling with double admin/tech contacts [#1758](https://github.com/internetee/registry/issues/1758)
