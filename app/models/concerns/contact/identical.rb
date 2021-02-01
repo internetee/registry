@@ -16,7 +16,7 @@ module Concerns::Contact::Identical
     ident
     ident_type
     ident_country_code
-  ]
+  ].freeze
 
   private_constant :IDENTIFIABLE_ATTRIBUTES
 
@@ -29,7 +29,7 @@ module Concerns::Contact::Identical
 
   def identical_to?(contact)
     IDENTICAL_ATTRIBUTES.all? do |attribute|
-      self.attributes[attribute] == contact.attributes[attribute]
+      attributes[attribute] == contact.attributes[attribute]
     end
   end
 

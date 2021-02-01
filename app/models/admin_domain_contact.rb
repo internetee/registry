@@ -1,4 +1,6 @@
 class AdminDomainContact < DomainContact
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def self.replace(current_contact, new_contact)
     affected_domains = []
     skipped_domains = []
@@ -19,4 +21,6 @@ class AdminDomainContact < DomainContact
     end
     [affected_domains.sort, skipped_domains.sort]
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 end
