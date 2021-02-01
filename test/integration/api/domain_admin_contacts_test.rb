@@ -4,7 +4,7 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
   setup do
     @admin_current = domains(:shop).admin_contacts.find_by(code: 'jane-001')
     domain = domains(:airport)
-    domain.admin_contacts = [@admin_current]
+    domain.admin_contacts << @admin_current
     @admin_new = contacts(:william)
 
     @admin_new.update(ident: @admin_current.ident,
@@ -48,6 +48,8 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
   end
 
   def test_return_affected_domains_in_alphabetical_order
+    domain = domains(:airport)
+    domain.admin_contacts = [@admin_current]
     patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: @admin_current.code,
                                                  new_contact_id: @admin_new.code },
           headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
@@ -124,23 +126,15 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
                  JSON.parse(response.body, symbolize_names: true)
   end
 
-  def test_disallow_self_replacement
-    patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: @admin_current.code,
-                                                 new_contact_id: @admin_current.code },
-          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert_response :bad_request
-    assert_equal ({ code: 2304, message: 'New contact must be different from current', data: {} }),
-                 JSON.parse(response.body, symbolize_names: true)
-  end
-
   def test_admin_bulk_changed_when_domain_update_prohibited
     domains(:shop).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
+    domains(:airport).admin_contacts = [@admin_current]
 
     shop_admin_contact = Contact.find_by(code: 'jane-001')
     assert domains(:shop).admin_contacts.include?(shop_admin_contact)
 
-    patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: 'jane-001',
-                                                 new_contact_id: 'john-001' },
+    patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: @admin_current.code,
+                                                 new_contact_id: @admin_new.code },
                                                  headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_response :ok
