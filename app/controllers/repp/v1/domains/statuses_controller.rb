@@ -6,9 +6,9 @@ module Repp
         before_action :verify_status
 
         api :DELETE, '/repp/v1/domains/:domain_name/statuses/:status'
+        param :domain_name, String, desc: 'Domain name'
+        param :status, String, desc: 'Status to be removed'
         desc 'Remove status from specific domain'
-        param :domain_name, String, required: true, desc: 'Domain name'
-        param :status, String, required: true, desc: 'Status to be removed'
         def destroy
           return editing_failed unless domain_with_status?(params[:id])
 
@@ -21,9 +21,9 @@ module Repp
         end
 
         api :PUT, '/repp/v1/domains/:domain_name/statuses/:status'
+        param :domain_name, String, desc: 'Domain name'
+        param :status, String, desc: 'Status to be added'
         desc 'Add status to specific domain'
-        param :domain_name, String, required: true, desc: 'Domain name'
-        param :status, String, required: true, desc: 'Status to be added'
         def update
           return editing_failed if domain_with_status?(params[:id])
 
@@ -37,8 +37,8 @@ module Repp
 
         private
 
-        def domain_with_status?
-          @domain.statuses.include?(params[:id])
+        def domain_with_status?(status)
+          @domain.statuses.include?(status)
         end
 
         def verify_status
