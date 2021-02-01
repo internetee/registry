@@ -17,7 +17,6 @@ class AdminDomainContact < DomainContact
         skipped_domains << admin_contact.domain.name
       end
     end
-
     [affected_domains.sort, skipped_domains.sort]
   end
 end
