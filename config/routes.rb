@@ -64,6 +64,7 @@ Rails.application.routes.draw do
           get ':id/transfer_info', to: 'domains#transfer_info', constraints: { id: /.*/ }
           post 'transfer', to: 'domains#transfer'
           patch 'contacts', to: 'domains/contacts#update'
+          patch 'admin_contacts', to: 'domains/admin_contacts#update'
           post 'renew/bulk', to: 'domains/renews#bulk_renew'
         end
       end

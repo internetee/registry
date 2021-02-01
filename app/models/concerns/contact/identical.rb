@@ -20,6 +20,12 @@ module Concerns::Contact::Identical
       .where.not(id: id).take
   end
 
+  def identical_to?(contact)
+    IDENTIFIABLE_ATTRIBUTES.all? do |attribute|
+      self.attributes[attribute] == contact.attributes[attribute]
+    end
+  end
+
   private
 
   def identifiable_hash
