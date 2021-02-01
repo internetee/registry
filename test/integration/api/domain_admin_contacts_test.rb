@@ -3,6 +3,8 @@ require 'test_helper'
 class APIDomainAdminContactsTest < ApplicationIntegrationTest
   setup do
     @admin_current = domains(:shop).admin_contacts.find_by(code: 'jane-001')
+    domain = domains(:airport)
+    domain.admin_contacts = [@admin_current]
     @admin_new = contacts(:william)
 
     @admin_new.update(ident: @admin_current.ident,
