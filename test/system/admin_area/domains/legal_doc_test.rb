@@ -15,7 +15,7 @@ class AdminAreaDomainsLegalDocTest < ApplicationSystemTestCase
   def test_absent_doc_downloading_without_errors
     visit admin_domain_url(@domain)
     assert_nothing_raised do
-      click_on "#{@document.created_at}"
+      click_on "#{@document.created_at}", match: :first
     end
   end
 end

@@ -11,6 +11,7 @@ en:
 
       search_form:
         reset_btn: Reset
+        download_csv_btn: CSV
 
       form:
         pending_delete: &pending_delete
