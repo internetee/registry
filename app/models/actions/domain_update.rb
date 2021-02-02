@@ -28,6 +28,12 @@ module Actions
       assign_tech_contact_changes
     end
 
+    def check_for_same_contacts(contacts, contact_type)
+      return unless contacts.uniq.count != contacts.count
+
+      domain.add_epp_error('2306', contact_type, nil, %i[domain_contacts invalid])
+    end
+
     def validate_domain_integrity
       domain.auth_info = params[:auth_info] if params[:auth_info]
 
@@ -97,13 +103,11 @@ module Actions
     def validate_dnskey_integrity(key)
       if key[:public_key] && !Setting.key_data_allowed
         domain.add_epp_error('2306', nil, nil, %i[dnskeys key_data_not_allowed])
-      elsif key[:ds_digest] && !Setting.ds_data_allowed
-        domain.add_epp_error('2306', nil, nil, %i[dnskeys ds_data_not_allowed])
+      elsif Dnskey.pub_key_base64?(key[:public_key])
+        @dnskeys << key.except(:action)
+      else
+        domain.add_epp_error(2005, nil, nil, %i[dnskeys invalid])
       end
-
-      verify_public_key_integrity(key[:public_key])
-
-      @dnskeys << key.except(:action)
     end
 
     def assign_removable_dnskey(key)
@@ -121,6 +125,7 @@ module Actions
                              I18n.t(:object_status_prohibits_operation))
       elsif props.present?
         domain.admin_domain_contacts_attributes = props
+        check_for_same_contacts(props, 'admin')
       end
     end
 
@@ -133,6 +138,7 @@ module Actions
                              I18n.t(:object_status_prohibits_operation))
       elsif props.present?
         domain.tech_domain_contacts_attributes = props
+        check_for_same_contacts(props, 'tech')
       end
     end
 
@@ -240,12 +246,6 @@ module Actions
       return true if domain.errors[:epp_errors].any? || domain.invalid?
 
       false
-    end
-
-    def verify_public_key_integrity(pub)
-      return if Dnskey.pub_key_base64?(pub)
-
-      domain.add_epp_error(2005, nil, nil, %i[dnskeys invalid])
     end
   end
 end

@@ -7,6 +7,9 @@ prepare:
 plugins:
   brakeman:
     enabled: true
+    checks:
+      mass_assign_permit!:
+        enabled: false
   bundler-audit:
     enabled: true
   duplication:

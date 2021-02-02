@@ -22,7 +22,7 @@ module Repp
         desc 'Get a specific poll message'
         def show
           @notification = current_user.registrar.notifications.find(params[:id])
-          data = @notification.as_json(only: %i[id text attached_obj_id attached_obj_type])
+          data = @notification.as_json(only: %i[id text attached_obj_id attached_obj_type read])
 
           render_success(data: data)
         end

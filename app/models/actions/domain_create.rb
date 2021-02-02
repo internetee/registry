@@ -22,6 +22,22 @@ module Actions
       commit
     end
 
+    def check_contact_duplications
+      if check_for_same_contacts(@admin_contacts, 'admin') &&
+         check_for_same_contacts(@tech_contacts, 'tech')
+        true
+      else
+        false
+      end
+    end
+
+    def check_for_same_contacts(contacts, contact_type)
+      return true unless contacts.uniq.count != contacts.count
+
+      domain.add_epp_error('2306', contact_type, nil, %i[domain_contacts invalid])
+      false
+    end
+
     # Check if domain is eligible for new registration
     def validate_domain_integrity
       return unless Domain.release_to_auction
@@ -118,6 +134,7 @@ module Actions
 
       domain.admin_domain_contacts_attributes = @admin_contacts
       domain.tech_domain_contacts_attributes = @tech_contacts
+      check_contact_duplications
     end
 
     def assign_expiry_time
@@ -174,7 +191,7 @@ module Actions
     end
 
     def commit
-      return false if validation_process_errored?
+      return false if domain.errors[:epp_errors].any? || validation_process_errored?
 
       debit_registrar
       return false if domain.errors.any?

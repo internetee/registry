@@ -8,6 +8,7 @@ class Dnskey < ApplicationRecord
   validate :validate_algorithm
   validate :validate_protocol
   validate :validate_flags
+  validate :validate_public_key
 
   before_save lambda {
     generate_digest if will_save_change_to_public_key? && !will_save_change_to_ds_digest?
@@ -113,6 +114,12 @@ class Dnskey < ApplicationRecord
     end
 
     self.ds_key_tag = ((c & 0xFFFF) + (c >> 16)) & 0xFFFF
+  end
+
+  def validate_public_key
+    return if Dnskey.pub_key_base64?(public_key)
+
+    errors.add(:public_key, :invalid)
   end
 
   class << self

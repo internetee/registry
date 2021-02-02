@@ -1,7 +1,13 @@
+01.02.2021
+* Improved tests for admin interface [#1805](https://github.com/internetee/registry/pull/1805)
+
 28.01.2021
 * Fixed transfer with shared admin and tech contacts [#1808](https://github.com/internetee/registry/issues/1808)
+* Improved error handling with double admin/tech contacts [#1758](https://github.com/internetee/registry/issues/1758)
+* Added CSV export option to admin [#1775](https://github.com/internetee/registry/issues/1775)
 * Improved DNSSEC key validation for illegal characters [#1790](https://github.com/internetee/registry/issues/1790)
 * Fix for whois record creation issue on releasing domain to auction [#1139](https://github.com/internetee/registry/issues/1139)
+* Fix for handling malformed request frames [#1825](https://github.com/internetee/registry/issues/1825)
 * Improved registrar account activity tests [#1824](https://github.com/internetee/registry/pull/1824)
 
 27.01.2021
