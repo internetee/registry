@@ -1,3 +1,6 @@
+02.02.2021
+* Fixed updateProhibited status not affecting bulk tech contact change operation [#1820](https://github.com/internetee/registry/pull/1820)
+
 01.02.2021
 * Improved tests for admin interface [#1805](https://github.com/internetee/registry/pull/1805)
 
