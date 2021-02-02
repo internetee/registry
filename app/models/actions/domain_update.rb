@@ -223,7 +223,6 @@ module Actions
     def ask_registrant_verification
       if verify_registrant_change? && !bypass_verify &&
          Setting.request_confirmation_on_registrant_change_enabled
-
         domain.registrant_verification_asked!(params, params[:registrar_id])
       end
     end

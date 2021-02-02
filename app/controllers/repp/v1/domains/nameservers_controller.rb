@@ -28,7 +28,7 @@ module Repp
         desc 'Delete specific nameserver from domain'
         def destroy
           nameserver = { nameservers: [{ hostname: params[:id], action: 'rem' }] }
-          action = Actions::DomainUpdate.new(@domain, nameserver, current_user)
+          action = Actions::DomainUpdate.new(@domain, nameserver, false)
 
           unless action.call
             handle_errors(@domain)

@@ -38,7 +38,7 @@ module Repp
 
         def cta(action = 'add')
           params[:dns_keys].each { |n| n[:action] = action }
-          action = Actions::DomainUpdate.new(@domain, dnssec_params, current_user)
+          action = Actions::DomainUpdate.new(@domain, dnssec_params, false)
 
           # rubocop:disable Style/AndOr
           (handle_errors(@domain) and return) unless action.call

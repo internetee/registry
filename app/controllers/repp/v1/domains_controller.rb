@@ -76,7 +76,7 @@ module Repp
         param :auth_info, String, required: false, desc: 'New authorization code'
       end
       def update
-        action = Actions::DomainUpdate.new(@domain, params[:domain], current_user)
+        action = Actions::DomainUpdate.new(@domain, params[:domain], false)
 
         unless action.call
           handle_errors(@domain)

@@ -39,7 +39,7 @@ module Repp
 
         def cta(action = 'add')
           params[:contacts].each { |c| c[:action] = action }
-          action = Actions::DomainUpdate.new(@domain, contact_create_params, current_user)
+          action = Actions::DomainUpdate.new(@domain, contact_create_params, false)
 
           # rubocop:disable Style/AndOr
           handle_errors(@domain) and return unless action.call
