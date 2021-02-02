@@ -6,7 +6,7 @@ class TechDomainContact < DomainContact
     tech_contacts = where(contact: current_contact)
 
     tech_contacts.each do |tech_contact|
-      if tech_contact.domain.discarded?
+      if tech_contact.domain.bulk_update_prohibited?
         skipped_domains << tech_contact.domain.name
         next
       end
@@ -18,7 +18,6 @@ class TechDomainContact < DomainContact
         skipped_domains << tech_contact.domain.name
       end
     end
-
     [affected_domains.sort, skipped_domains.sort]
   end
 end

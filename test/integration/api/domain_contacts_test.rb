@@ -107,6 +107,24 @@ class APIDomainContactsTest < ApplicationIntegrationTest
                  JSON.parse(response.body, symbolize_names: true)
   end
 
+  def test_tech_bulk_changed_when_domain_update_prohibited
+    domains(:shop).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
+
+    shop_tech_contact = Contact.find_by(code: 'william-001')
+    assert domains(:shop).tech_contacts.include?(shop_tech_contact)
+
+    patch '/repp/v1/domains/contacts', params: { current_contact_id: 'william-001',
+                                                 new_contact_id: 'john-001' },
+                                                 headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
+
+    assert_response :ok
+    assert_equal ({ code: 1000,
+                    message: 'Command completed successfully',
+                    data: { affected_domains: ["airport.test"],
+                    skipped_domains: ["shop.test"] }}),
+            JSON.parse(response.body, symbolize_names: true)
+  end
+
   private
 
   def http_auth_key
