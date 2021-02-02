@@ -178,7 +178,9 @@ module Repp
         @domain = Epp::Domain.find_by(registrar: registrar, name: params[:id])
         @domain ||= Epp::Domain.find_by!(registrar: registrar, name_puny: params[:id])
 
-        @domain
+        return @domain if @domain
+
+        raise ActiveRecord::RecordNotFound
       end
 
       def set_authorized_domain
@@ -196,9 +198,9 @@ module Repp
 
       def domain_from_url_hash
         entry = transfer_info_params[:id]
-        return Domain.find(entry) if entry.match?(/\A[0-9]+\z/)
+        return Epp::Domain.find(entry) if entry.match?(/\A[0-9]+\z/)
 
-        Domain.find_by!('name = ? OR name_puny = ?', entry, entry)
+        Epp::Domain.find_by!('name = ? OR name_puny = ?', entry, entry)
       end
 
       def limit

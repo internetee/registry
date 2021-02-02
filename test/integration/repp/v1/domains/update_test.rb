@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ReppV1DomainsCreateTest < ActionDispatch::IntegrationTest
+class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:api_bestnames)
     @domain = domains(:shop)
