@@ -30,7 +30,9 @@ class RegistrantUser < User
     Contact.registrant_user_direct_contacts(self)
   end
 
-  def domains
+  def domains(admin: false)
+    return Domain.registrant_user_admin_registrant_domains(self) if admin
+
     Domain.registrant_user_domains(self)
   end
 

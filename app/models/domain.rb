@@ -198,6 +198,15 @@ class Domain < ApplicationRecord
       Setting.nameserver_required
     end
 
+    def registrant_user_admin_registrant_domains(registrant_user)
+      companies = Contact.registrant_user_company_contacts(registrant_user)
+      from(
+        "(#{registrant_user_administered_domains(registrant_user).to_sql} UNION " \
+        "#{registrant_user_company_registrant(registrant_user).to_sql} UNION " \
+        "#{registrant_user_domains_company(companies, except_tech: true).to_sql}) AS domains"
+      )
+    end
+
     def registrant_user_domains(registrant_user)
       from(
         "(#{registrant_user_domains_by_registrant(registrant_user).to_sql} UNION " \
@@ -255,8 +264,10 @@ class Domain < ApplicationRecord
       where(registrant: companies)
     end
 
-    def registrant_user_domains_company(companies)
-      joins(:domain_contacts).where(domain_contacts: { contact: companies })
+    def registrant_user_domains_company(companies, except_tech: false)
+      request = { contact: companies }
+      request[:type] = [AdminDomainContact.name] if except_tech
+      joins(:domain_contacts).where(domain_contacts: request)
     end
   end
 
