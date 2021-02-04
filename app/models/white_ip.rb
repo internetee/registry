@@ -50,10 +50,10 @@ class WhiteIp < ApplicationRecord
     def ids_including(ip)
       ipv4 = ipv6 = []
       if check_ip4(ip).present?
-        ipv4 = select { |white_ip| IPAddr.new(white_ip.ipv4, Socket::AF_INET) === check_ip4(ip) }
+        ipv4 = select { |white_ip| check_ip4(white_ip.ipv4) === check_ip4(ip) }
       end
       if check_ip6(ip).present?
-        ipv6 = select { |white_ip| IPAddr.new(white_ip.ipv6, Socket::AF_INET6) === check_ip6(ip) }
+        ipv6 = select { |white_ip| check_ip6(white_ip.ipv6) === check_ip6(ip) }
       end
       (ipv4 + ipv6).pluck(:id).flatten.uniq
     end
