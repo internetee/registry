@@ -36,7 +36,9 @@ class RegistrantUser < User
     Domain.registrant_user_domains(self)
   end
 
-  def direct_domains
+  def direct_domains(admin: false)
+    return Domain.registrant_user_direct_admin_registrant_domains(self) if admin
+
     Domain.registrant_user_direct_domains(self)
   end
 

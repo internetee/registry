@@ -44,7 +44,7 @@ module Api
         def current_user_domains
           current_registrant_user.domains(admin: params[:tech] != 'true')
         rescue CompanyRegister::NotAvailableError
-          current_registrant_user.direct_domains
+          current_registrant_user.direct_domains(admin: params[:tech] != 'true')
         end
       end
     end
