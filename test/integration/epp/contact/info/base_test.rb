@@ -46,6 +46,7 @@ class EppContactInfoBaseTest < EppTestCase
 
   def test_get_info_about_contact_with_prefix
     @contact.update_columns(code: 'TEST:JOHN-001')
+    assert @contact.code, 'TEST:JOHN-001'
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -71,6 +72,7 @@ class EppContactInfoBaseTest < EppTestCase
 
   def test_get_info_about_contact_without_prefix
     @contact.update_columns(code: 'TEST:JOHN-001')
+    assert @contact.code, 'TEST:JOHN-001'
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
