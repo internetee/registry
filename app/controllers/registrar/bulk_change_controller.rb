@@ -26,19 +26,11 @@ class Registrar
 
     private
 
-    def process_response(response:, start_notice: "", active_tab:)
+    def process_response(response:, start_notice: '', active_tab:)
       parsed_response = JSON.parse(response.body, symbolize_names: true)
 
       if response.code == '200'
-        notices = [start_notice]
-
-        notices << "#{t('registrar.tech_contacts.process_request.affected_domains')}: " \
-                   "#{parsed_response[:data][:affected_domains].join(', ')}"
-
-        if parsed_response[:data][:skipped_domains]
-          notices << "#{t('registrar.tech_contacts.process_request.skipped_domains')}: " \
-                     "#{parsed_response[:data][:skipped_domains].join(', ')}"
-        end
+        notices = success_notices(parsed_response, start_notice)
 
         flash[:notice] = notices.join(', ')
         redirect_to registrar_domains_url
@@ -46,6 +38,19 @@ class Registrar
         @error = response.code == '404' ? 'Contact(s) not found' : parsed_response[:message]
         render file: 'registrar/bulk_change/new', locals: { active_tab: active_tab }
       end
+    end
+
+    def success_notices(parsed_response, start_notice)
+      notices = [start_notice]
+
+      notices << "#{t('.affected_domains')}: " \
+                   "#{parsed_response[:data][:affected_domains].join(', ')}"
+
+      if parsed_response[:data][:skipped_domains]
+        notices << "#{t('.skipped_domains')}: " \
+                     "#{parsed_response[:data][:skipped_domains].join(', ')}"
+      end
+      notices
     end
 
     def do_request(request, uri)

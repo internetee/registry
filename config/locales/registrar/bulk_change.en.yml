@@ -4,6 +4,7 @@ en:
       new:
         header: Bulk change
         technical_contact: Technical contact
+        admin_contact: Admin contact
         nameserver: Nameserver
         bulk_transfer: Bulk transfer
         bulk_renew: Bulk renew
@@ -38,3 +39,5 @@ en:
         domain_ids: Domains for bulk renewal
         current_balance: Current balance
         period: Period
+  affected_domains: Affected domains
+  skipped_domains: Skipped domains

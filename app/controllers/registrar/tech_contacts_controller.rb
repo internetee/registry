@@ -15,7 +15,7 @@ class Registrar
 
       response = do_request(request, uri)
 
-      start_notice = t('registrar.tech_contacts.process_request.replaced')
+      start_notice = t('.replaced')
 
       process_response(response: response,
                        start_notice: start_notice,
