@@ -4,8 +4,13 @@ class WhiteIp < ApplicationRecord
 
   validate :valid_ipv4?
   validate :valid_ipv6?
-
   validate :validate_ipv4_and_ipv6
+  before_save :normalize_blank_values
+
+  def normalize_blank_values
+    %i[ipv4 ipv6].each { |c| self[c].present? || self[c] = nil }
+  end
+
   def validate_ipv4_and_ipv6
     return if ipv4.present? || ipv6.present?
     errors.add(:base, I18n.t(:ipv4_or_ipv6_must_be_present))
