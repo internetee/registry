@@ -25,7 +25,8 @@ module Api
             serializer.to_json
           end
 
-          render json: { count: domains.count, domains: serialized_domains }
+          render json: { total: current_user_domains_total_count, count: domains.count,
+                         domains: serialized_domains }
         end
 
         def show
@@ -40,6 +41,12 @@ module Api
         end
 
         private
+
+        def current_user_domains_total_count
+          current_registrant_user.domains.count
+        rescue CompanyRegister::NotAvailableError
+          current_registrant_user.direct_domains.count
+        end
 
         def current_user_domains
           current_registrant_user.domains(admin: params[:tech] != 'true')
