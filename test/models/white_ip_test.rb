@@ -41,7 +41,7 @@ class WhiteIpTest < ActiveSupport::TestCase
   def test_validates_include_empty_ipv4
     white_ip = WhiteIp.new
 
-    white_ip.ipv4 = ''
+    white_ip.ipv4 = nil
     white_ip.ipv6 = '001:0db8:85a3:0000:0000:8a2e:0370:7334'
     white_ip.registrar = registrars(:bestnames)
 
