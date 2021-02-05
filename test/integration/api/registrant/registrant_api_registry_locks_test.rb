@@ -130,7 +130,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
     response_json = JSON.parse(response.body, symbolize_names: true)
 
     assert_equal({ name: 'Best Names', website: 'https://bestnames.test' }, response_json[:registrar])
-    assert_equal({name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}, response_json[:registrant])
+    assert_equal({name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957', org: false}, response_json[:registrant])
     assert_equal([{name: 'Jane',
                    id: '9db3de62-2414-4487-bee2-d5c155567768',
                    email: 'jane@mail.test'
