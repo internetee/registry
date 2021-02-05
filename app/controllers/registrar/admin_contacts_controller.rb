@@ -1,7 +1,7 @@
 class Registrar
-  class TechContactsController < BulkChangeController
-    BASE_URL = URI.parse("#{ENV['repp_url']}domains/contacts").freeze
-    ACTIVE_TAB = :technical_contact
+  class AdminContactsController < BulkChangeController
+    BASE_URL = URI.parse("#{ENV['repp_url']}domains/admin_contacts").freeze
+    ACTIVE_TAB = :admin_contact
 
     def update
       authorize! :manage, :repp

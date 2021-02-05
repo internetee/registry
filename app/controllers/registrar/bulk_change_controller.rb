@@ -26,6 +26,15 @@ class Registrar
 
     private
 
+    def form_request(uri)
+      request = Net::HTTP::Patch.new(uri)
+      request.set_form_data(current_contact_id: params[:current_contact_id],
+                            new_contact_id: params[:new_contact_id])
+      request.basic_auth(current_registrar_user.username,
+                         current_registrar_user.plain_text_password)
+      request
+    end
+
     def process_response(response:, start_notice: '', active_tab:)
       parsed_response = JSON.parse(response.body, symbolize_names: true)
 

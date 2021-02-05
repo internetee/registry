@@ -16,8 +16,10 @@ plugins:
     enabled: true
     config:
       languages:
-      - ruby
-      - javascript
+        ruby:
+          mass_threshold: 100
+        javascript:
+          mass_threshold: 100
   eslint:
     enabled: true
     channel: eslint-5

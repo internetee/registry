@@ -1,0 +1,6 @@
+en:
+  registrar:
+    admin_contacts:
+      update:
+        replaced: Admin contacts have been successfully replaced.
+  replaced: Technical contacts have been successfully replaced.

@@ -137,6 +137,7 @@ Rails.application.routes.draw do
     resource :bulk_change, controller: :bulk_change, only: :new
     post '/bulk_renew/new', to: 'bulk_change#bulk_renew', as: :bulk_renew
     resource :tech_contacts, only: :update
+    resource :admin_contacts, only: :update
     resource :nameservers, only: :update
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
       member do
