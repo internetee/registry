@@ -26,6 +26,36 @@ class Registrar
 
     private
 
+    def do_request(request, uri)
+      if Rails.env.test?
+        response = Net::HTTP.start(uri.hostname, uri.port,
+                                   use_ssl: (uri.scheme == 'https'),
+                                   verify_mode: OpenSSL::SSL::VERIFY_NONE) do |http|
+          http.request(request)
+        end
+      elsif Rails.env.development?
+        client_cert = File.read(ENV['cert_path'])
+        client_key = File.read(ENV['key_path'])
+        response = Net::HTTP.start(uri.hostname, uri.port,
+                                   use_ssl: (uri.scheme == 'https'),
+                                   verify_mode: OpenSSL::SSL::VERIFY_NONE,
+                                   cert: OpenSSL::X509::Certificate.new(client_cert),
+                                   key: OpenSSL::PKey::RSA.new(client_key)) do |http|
+          http.request(request)
+        end
+      else
+        client_cert = File.read(ENV['cert_path'])
+        client_key = File.read(ENV['key_path'])
+        response = Net::HTTP.start(uri.hostname, uri.port,
+                                   use_ssl: (uri.scheme == 'https'),
+                                   cert: OpenSSL::X509::Certificate.new(client_cert),
+                                   key: OpenSSL::PKey::RSA.new(client_key)) do |http|
+          http.request(request)
+        end
+      end
+      response
+    end
+
     def ready_to_renew?
       domain_ids_for_bulk_renew.present? && params[:renew].present?
     end
