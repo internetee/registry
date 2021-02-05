@@ -26,34 +26,68 @@ class Registrar
 
     private
 
-    def do_request(request, uri)
-      if Rails.env.test?
-        response = Net::HTTP.start(uri.hostname, uri.port,
-                                   use_ssl: (uri.scheme == 'https'),
-                                   verify_mode: OpenSSL::SSL::VERIFY_NONE) do |http|
-          http.request(request)
+    def process_response(response:, start_notice: "", active_tab:)
+      parsed_response = JSON.parse(response.body, symbolize_names: true)
+
+      if response.code == '200'
+        notices = [start_notice]
+
+        notices << "#{t('registrar.tech_contacts.process_request.affected_domains')}: " \
+                   "#{parsed_response[:data][:affected_domains].join(', ')}"
+
+        if parsed_response[:data][:skipped_domains]
+          notices << "#{t('registrar.tech_contacts.process_request.skipped_domains')}: " \
+                     "#{parsed_response[:data][:skipped_domains].join(', ')}"
         end
-      elsif Rails.env.development?
-        client_cert = File.read(ENV['cert_path'])
-        client_key = File.read(ENV['key_path'])
-        response = Net::HTTP.start(uri.hostname, uri.port,
-                                   use_ssl: (uri.scheme == 'https'),
-                                   verify_mode: OpenSSL::SSL::VERIFY_NONE,
-                                   cert: OpenSSL::X509::Certificate.new(client_cert),
-                                   key: OpenSSL::PKey::RSA.new(client_key)) do |http|
-          http.request(request)
-        end
+
+        flash[:notice] = notices.join(', ')
+        redirect_to registrar_domains_url
       else
-        client_cert = File.read(ENV['cert_path'])
-        client_key = File.read(ENV['key_path'])
-        response = Net::HTTP.start(uri.hostname, uri.port,
-                                   use_ssl: (uri.scheme == 'https'),
-                                   cert: OpenSSL::X509::Certificate.new(client_cert),
-                                   key: OpenSSL::PKey::RSA.new(client_key)) do |http|
-          http.request(request)
-        end
+        @error = response.code == '404' ? 'Contact(s) not found' : parsed_response[:message]
+        render file: 'registrar/bulk_change/new', locals: { active_tab: active_tab }
       end
+    end
+
+    def do_request(request, uri)
+      response = if Rails.env.test?
+                   do_test_request(request, uri)
+                 elsif Rails.env.development?
+                   do_dev_request(request, uri)
+                 else
+                   do_live_request(request, uri)
+                 end
       response
+    end
+
+    def do_live_request(request, uri)
+      client_cert = File.read(ENV['cert_path'])
+      client_key = File.read(ENV['key_path'])
+      Net::HTTP.start(uri.hostname, uri.port,
+                      use_ssl: (uri.scheme == 'https'),
+                      cert: OpenSSL::X509::Certificate.new(client_cert),
+                      key: OpenSSL::PKey::RSA.new(client_key)) do |http|
+        http.request(request)
+      end
+    end
+
+    def do_dev_request(request, uri)
+      client_cert = File.read(ENV['cert_path'])
+      client_key = File.read(ENV['key_path'])
+      Net::HTTP.start(uri.hostname, uri.port,
+                      use_ssl: (uri.scheme == 'https'),
+                      verify_mode: OpenSSL::SSL::VERIFY_NONE,
+                      cert: OpenSSL::X509::Certificate.new(client_cert),
+                      key: OpenSSL::PKey::RSA.new(client_key)) do |http|
+        http.request(request)
+      end
+    end
+
+    def do_test_request(request, uri)
+      Net::HTTP.start(uri.hostname, uri.port,
+                      use_ssl: (uri.scheme == 'https'),
+                      verify_mode: OpenSSL::SSL::VERIFY_NONE) do |http|
+        http.request(request)
+      end
     end
 
     def ready_to_renew?
