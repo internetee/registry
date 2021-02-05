@@ -4,7 +4,7 @@ module Repp
     class DomainsController < BaseController # rubocop:disable Metrics/ClassLength
       before_action :set_authorized_domain, only: %i[transfer_info destroy]
       before_action :validate_registrar_authorization, only: %i[transfer_info destroy]
-      before_action :forward_registrar_id, only: %i[create destroy]
+      before_action :forward_registrar_id, only: %i[create update destroy]
       before_action :set_domain, only: %i[show update]
 
       api :GET, '/repp/v1/domains'
