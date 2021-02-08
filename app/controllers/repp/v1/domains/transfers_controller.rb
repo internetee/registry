@@ -10,7 +10,7 @@ module Repp
           param :transfer_code, String, required: true, desc: 'Renew period. Month (m) or year (y)'
         end
         def create
-          action = ::Actions::DomainTransfer.new(@domain, transfer_params[:transfer][:transfer_code],
+          action = Actions::DomainTransfer.new(@domain, transfer_params[:transfer][:transfer_code],
                                                current_user.registrar)
 
           unless action.call

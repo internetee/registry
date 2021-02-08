@@ -14,7 +14,7 @@ module Repp
         end
         def create
           params[:nameservers].each { |n| n[:action] = 'add' }
-          action = ::Actions::DomainUpdate.new(@domain, nameserver_params, current_user)
+          action = Actions::DomainUpdate.new(@domain, nameserver_params, current_user)
 
           unless action.call
             handle_errors(@domain)
@@ -28,7 +28,7 @@ module Repp
         desc 'Delete specific nameserver from domain'
         def destroy
           nameserver = { nameservers: [{ hostname: params[:id], action: 'rem' }] }
-          action = ::Actions::DomainUpdate.new(@domain, nameserver, false)
+          action = Actions::DomainUpdate.new(@domain, nameserver, false)
 
           unless action.call
             handle_errors(@domain)

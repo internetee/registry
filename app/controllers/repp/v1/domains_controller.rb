@@ -55,7 +55,7 @@ module Repp
       def create
         authorize!(:create, Epp::Domain)
         @domain = Epp::Domain.new
-        action = ::Actions::DomainCreate.new(@domain, domain_create_params)
+        action = Actions::DomainCreate.new(@domain, domain_create_params)
 
         # rubocop:disable Style/AndOr
         handle_errors(@domain) and return unless action.call
@@ -76,7 +76,7 @@ module Repp
         param :auth_info, String, required: false, desc: 'New authorization code'
       end
       def update
-        action = ::Actions::DomainUpdate.new(@domain, params[:domain], false)
+        action = Actions::DomainUpdate.new(@domain, params[:domain], false)
 
         unless action.call
           handle_errors(@domain)
@@ -122,7 +122,7 @@ module Repp
                                         desc: 'Whether to ask registrant verification or not'
       end
       def destroy
-        action = ::Actions::DomainDelete.new(@domain, params, current_user.registrar)
+        action = Actions::DomainDelete.new(@domain, params, current_user.registrar)
 
         # rubocop:disable Style/AndOr
         handle_errors(@domain) and return unless action.call
@@ -141,7 +141,7 @@ module Repp
 
       def initiate_transfer(transfer)
         domain = Epp::Domain.find_or_initialize_by(name: transfer[:domain_name])
-        action = ::Actions::DomainTransfer.new(domain, transfer[:transfer_code],
+        action = Actions::DomainTransfer.new(domain, transfer[:transfer_code],
                                              current_user.registrar)
 
         if action.call

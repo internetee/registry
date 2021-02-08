@@ -35,7 +35,7 @@ module Repp
       desc 'Create a new contact'
       def create
         @contact = Epp::Contact.new(contact_params_with_address, current_user.registrar, epp: false)
-        action = ::Actions::ContactCreate.new(@contact, params[:legal_document],
+        action = Actions::ContactCreate.new(@contact, params[:legal_document],
                                             contact_ident_params)
 
         unless action.call
@@ -49,7 +49,7 @@ module Repp
       api :PUT, '/repp/v1/contacts/:contact_code'
       desc 'Update existing contact'
       def update
-        action = ::Actions::ContactUpdate.new(@contact, contact_params_with_address(required: false),
+        action = Actions::ContactUpdate.new(@contact, contact_params_with_address(required: false),
                                             params[:legal_document],
                                             contact_ident_params(required: false), current_user)
 
@@ -64,7 +64,7 @@ module Repp
       api :DELETE, '/repp/v1/contacts/:contact_code'
       desc 'Delete a specific contact'
       def destroy
-        action = ::Actions::ContactDelete.new(@contact, params[:legal_document])
+        action = Actions::ContactDelete.new(@contact, params[:legal_document])
         unless action.call
           handle_errors(@contact)
           return
