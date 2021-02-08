@@ -12,9 +12,6 @@ module Domains
         if domain_pricelist.try(:price)
           price = domain_pricelist.price.amount
           return price if balance_ok?(price)
-
-          domain.add_epp_error(2104, nil, nil, I18n.t(:not_enough_funds))
-          errors.add(:domain, I18n.t(:billing_failure_credit_balance_low, domain: domain.name))
         else
           domain.add_epp_error(2104, nil, nil, I18n.t(:active_price_missing_for_this_operation))
           errors.add(:domain, I18n.t(:active_price_missing_for_operation_with_domain,
@@ -27,7 +24,13 @@ module Domains
       private
 
       def balance_ok?(price)
-        domain.registrar.cash_account.balance >= price
+        if domain.registrar.cash_account.balance >= price
+          true
+        else
+          domain.add_epp_error(2104, nil, nil, I18n.t(:not_enough_funds))
+          errors.add(:domain, I18n.t(:billing_failure_credit_balance_low, domain: domain.name))
+          false
+        end
       end
 
       def domain_pricelist
