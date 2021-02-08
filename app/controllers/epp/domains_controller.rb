@@ -32,7 +32,7 @@ module Epp
       registrar_id = current_user.registrar.id
       @domain = Epp::Domain.new
       data = ::Deserializers::Xml::DomainCreate.new(params[:parsed_frame], registrar_id).call
-      action = Actions::DomainCreate.new(@domain, data)
+      action = ::Actions::DomainCreate.new(@domain, data)
 
       action.call ? render_epp_response('/epp/domains/create') : handle_errors(@domain)
     end
@@ -43,7 +43,7 @@ module Epp
       registrar_id = current_user.registrar.id
       update_params = ::Deserializers::Xml::DomainUpdate.new(params[:parsed_frame],
                                                              registrar_id).call
-      action = Actions::DomainUpdate.new(@domain, update_params, false)
+      action = ::Actions::DomainUpdate.new(@domain, update_params, false)
       (handle_errors(@domain) and return) unless action.call
 
       pending = @domain.epp_pending_update.present?
@@ -54,7 +54,7 @@ module Epp
       authorize!(:delete, @domain, @password)
       frame = params[:parsed_frame]
       delete_params = ::Deserializers::Xml::DomainDelete.new(frame).call
-      action = Actions::DomainDelete.new(@domain, delete_params, current_user.registrar)
+      action = ::Actions::DomainDelete.new(@domain, delete_params, current_user.registrar)
 
       (handle_errors(@domain) and return) unless action.call
 
@@ -77,7 +77,7 @@ module Epp
       registrar_id = current_user.registrar.id
       renew_params = ::Deserializers::Xml::Domain.new(params[:parsed_frame],
                                                       registrar_id).call
-      action = Actions::DomainRenew.new(@domain, renew_params, current_user.registrar)
+      action = ::Actions::DomainRenew.new(@domain, renew_params, current_user.registrar)
       if action.call
         render_epp_response '/epp/domains/renew'
       else

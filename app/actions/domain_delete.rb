@@ -23,7 +23,7 @@ module Actions
     end
 
     def maybe_attach_legal_doc
-      Actions::BaseAction.attach_legal_doc_to_new(domain, params[:legal_document], domain: true)
+      ::Actions::BaseAction.attach_legal_doc_to_new(domain, params[:legal_document], domain: true)
     end
 
     def verify_not_discarded

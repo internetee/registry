@@ -23,7 +23,7 @@ module Epp
 
       @contact = Epp::Contact.new(params[:parsed_frame], current_user.registrar)
       collected_data = ::Deserializers::Xml::ContactCreate.new(params[:parsed_frame])
-      action = Actions::ContactCreate.new(@contact, collected_data.legal_document,
+      action = ::Actions::ContactCreate.new(@contact, collected_data.legal_document,
                                           collected_data.ident)
 
       action_call_response(action: action)
@@ -33,7 +33,7 @@ module Epp
       authorize! :update, @contact, @password
 
       collected_data = ::Deserializers::Xml::ContactUpdate.new(params[:parsed_frame])
-      action = Actions::ContactUpdate.new(@contact,
+      action = ::Actions::ContactUpdate.new(@contact,
                                           collected_data.contact,
                                           collected_data.legal_document,
                                           collected_data.ident,
@@ -44,7 +44,7 @@ module Epp
 
     def delete
       authorize! :delete, @contact, @password
-      action = Actions::ContactDelete.new(@contact, params[:legal_document])
+      action = ::Actions::ContactDelete.new(@contact, params[:legal_document])
       unless action.call
         handle_errors(@contact)
         return

@@ -25,7 +25,7 @@ module Domains
         frame = frame_json ? frame_json.with_indifferent_access : {}
         assign_domain_update_meta
 
-        Actions::DomainUpdate.new(domain, frame, true).call
+        ::Actions::DomainUpdate.new(domain, frame, true).call
       end
 
       def assign_domain_update_meta

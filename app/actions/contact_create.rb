@@ -59,7 +59,7 @@ module Actions
     end
 
     def maybe_attach_legal_doc
-      Actions::BaseAction.attach_legal_doc_to_new(contact, legal_document, domain: false)
+      ::Actions::BaseAction.attach_legal_doc_to_new(contact, legal_document, domain: false)
     end
 
     def commit

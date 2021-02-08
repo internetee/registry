@@ -14,7 +14,7 @@ module Actions
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
       assign_requested_statuses
-      Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
+      ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
 
       commit
     end

@@ -23,7 +23,7 @@ module Actions
     end
 
     def maybe_attach_legal_doc
-      Actions::BaseAction.maybe_attach_legal_doc(contact, legal_document)
+      ::Actions::BaseAction.maybe_attach_legal_doc(contact, legal_document)
     end
 
     def commit
