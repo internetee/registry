@@ -16,8 +16,8 @@ class RegistrarAreaTechContactBulkChangeTest < ApplicationSystemTestCase
     visit registrar_domains_url
     click_link 'Bulk change'
 
-    fill_in 'Current contact ID', with: 'william-001'
-    fill_in 'New contact ID', with: 'john-001'
+    find('.current_tech_contact').fill_in 'Current contact ID', with: 'william-001'
+    find('.new_tech_contact').fill_in 'New contact ID', with: 'john-001'
     click_on 'Replace technical contacts'
 
     assert_requested request_stub
@@ -36,8 +36,8 @@ class RegistrarAreaTechContactBulkChangeTest < ApplicationSystemTestCase
     visit registrar_domains_url
     click_link 'Bulk change'
 
-    fill_in 'Current contact ID', with: 'william-001'
-    fill_in 'New contact ID', with: 'john-001'
+    find('.current_tech_contact').fill_in 'Current contact ID', with: 'william-001'
+    find('.new_tech_contact').fill_in 'New contact ID', with: 'john-001'
     click_on 'Replace technical contacts'
 
     assert_text 'epic fail'
