@@ -155,7 +155,7 @@ GEM
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-ses (1.37.0)
+    aws-sdk-sesv2 (1.16.0)
       aws-sdk-core (~> 3, >= 3.112.0)
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.2.2)
@@ -497,7 +497,7 @@ DEPENDENCIES
   active_interaction (~> 3.8)
   activerecord-import
   airbrake
-  aws-sdk-ses (~> 1.37)
+  aws-sdk-sesv2 (~> 1.16)
   bootsnap (>= 1.1.0)
   bootstrap-sass (~> 3.4)
   cancancan
