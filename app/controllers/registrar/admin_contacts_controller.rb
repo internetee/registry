@@ -5,7 +5,6 @@ class Registrar
 
     def update
       authorize! :manage, :repp
-
       uri = BASE_URL
       request = form_request(uri)
       response = do_request(request, uri)
