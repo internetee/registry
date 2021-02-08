@@ -17,7 +17,8 @@ module Domains
           errors.add(:domain, I18n.t(:billing_failure_credit_balance_low, domain: domain.name))
         else
           domain.add_epp_error(2104, nil, nil, I18n.t(:active_price_missing_for_this_operation))
-          errors.add(:domain, I18n.t(:active_price_missing_for_operation_with_domain, domain: domain.name))
+          errors.add(:domain, I18n.t(:active_price_missing_for_operation_with_domain,
+                                     domain: domain.name))
         end
 
         false
