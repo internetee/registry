@@ -30,14 +30,14 @@ class BouncedMailAddress < ApplicationRecord
   def destroy_aws_suppression
     return unless BouncedMailAddress.ses_configured?
 
-    res = Aws::SESV2::Client.new.delete_suppressed_destination({ email_address: email })
+    res = Aws::SESV2::Client.new.delete_suppressed_destination(email_address: email)
     res.successful?
   rescue Aws::SESV2::Errors::ServiceError => e
     logger.warn("Suppression not removed. #{e}")
   end
 
   def self.ses_configured?
-    ses ||= Aws::SES::Client.new
+    ses ||= Aws::SESV2::Client.new
     ses.config.credentials.access_key_id.present?
   rescue Aws::Errors::MissingRegionError
     false
