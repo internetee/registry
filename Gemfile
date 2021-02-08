@@ -92,3 +92,5 @@ group :test do
   gem 'webdrivers'
   gem 'webmock'
 end
+
+gem "aws-sdk-ses", "~> 1.37"
