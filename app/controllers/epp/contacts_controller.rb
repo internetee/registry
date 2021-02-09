@@ -93,7 +93,11 @@ module Epp
 
     def find_contact
       code = params[:parsed_frame].css('id').text.strip.upcase
-      @contact = Epp::Contact.find_by!(code: code)
+      reg_code = current_user.registrar.code.upcase
+      arr = [code, "#{reg_code}:#{code}", "CID:#{code}", "CID:#{reg_code}:#{code}"]
+
+      contact = arr.find { |c| Epp::Contact.find_by(code: c).present? }
+      @contact = Epp::Contact.find_by!(code: contact || code)
     end
 
     #
