@@ -1,0 +1,8 @@
+new:
+  whois_record_id: 1
+  email: aaa@bbb.com
+  name: Testname
+  status: new
+  secret: somesecret
+  valid_to: 2010-07-05
+
