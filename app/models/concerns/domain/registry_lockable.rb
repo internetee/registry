@@ -12,6 +12,7 @@ module Concerns
           statuses << DomainStatus::SERVER_DELETE_PROHIBITED
           statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
           self.locked_by_registrant_at = Time.zone.now
+          alert_registrar_lock_changes!
 
           save!
         end
@@ -42,9 +43,20 @@ module Concerns
           statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
           statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
           self.locked_by_registrant_at = nil
+          alert_registrar_lock_changes!
 
           save!
         end
+      end
+
+      def alert_registrar_lock_changes!
+        translation = locked_by_registrant? ? 'locked' : 'unlocked'
+        registrar.notifications.create!(
+          text: I18n.t("notifications.texts.registrar_#{translation}",
+                       domain_name: name),
+          attached_obj_id: name,
+          attached_obj_type: self.class.name
+        )
       end
     end
   end
