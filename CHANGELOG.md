@@ -1,3 +1,6 @@
+09.02.2021
+* Added new endpoint for WHOIS contact requests [#1794](https://github.com/internetee/registry/pull/1794)
+
 05.02.2021
 * Fixed IPv4 empty string issue in case of IPv6 only entries for IP whitelist [#1833](https://github.com/internetee/registry/issues/1833)
 
