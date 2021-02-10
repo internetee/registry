@@ -26,7 +26,7 @@ class EppContactCheckBaseTest < EppTestCase
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
-    assert_equal 'john-001', response_xml.at_xpath('//contact:id', contact: xml_schema).text
+    assert_equal "#{@contact.registrar.code}:JOHN-001".upcase, response_xml.at_xpath('//contact:id', contact: xml_schema).text
   end
 
   def test_contact_is_available
@@ -96,6 +96,58 @@ class EppContactCheckBaseTest < EppTestCase
 
     response_xml = Nokogiri::XML(response.body)
     assert_equal 3, response_xml.xpath('//contact:cd', contact: xml_schema).size
+  end
+
+  def test_check_contact_with_prefix
+    @contact.update_columns(code: "#{@contact.registrar.code}:JOHN-001".upcase)
+    assert @contact.code, "#{@contact.registrar.code}:JOHN-001".upcase
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <check>
+            <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:id>TEST:JOHN-001</contact:id>
+            </contact:check>
+          </check>
+        </command>
+      </epp>
+    XML
+
+    post epp_check_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully
+    assert_equal 'TEST:JOHN-001', response_xml.at_xpath('//contact:id', contact: xml_schema).text
+    assert_equal 'in use', response_xml.at_xpath('//contact:reason', contact: xml_schema).text
+  end
+
+  def test_check_contact_without_prefix
+    @contact.update_columns(code: "#{@contact.registrar.code}:JOHN-001".upcase)
+    assert @contact.code, "#{@contact.registrar.code}:JOHN-001".upcase
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <check>
+            <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:id>JOHN-001</contact:id>
+            </contact:check>
+          </check>
+        </command>
+      </epp>
+    XML
+
+    post epp_check_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully
+    assert_equal "#{@contact.registrar.code}:JOHN-001".upcase, response_xml.at_xpath('//contact:id', contact: xml_schema).text
+    assert_equal 'in use', response_xml.at_xpath('//contact:reason', contact: xml_schema).text
   end
 
   private

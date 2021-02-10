@@ -44,16 +44,10 @@ class Epp::Contact < Contact
 
     def check_availability(codes, reg:)
       codes = [codes] if codes.is_a?(String)
-      codes = codes.map { |c| c.include?(':') ? c : "#{reg}:#{c}" }
-
       res = []
-      codes.each do |x|
-        contact = find_by_epp_code(x)
-        if contact
-          res << { code: contact.code, avail: 0, reason: 'in use' }
-        else
-          res << { code: x, avail: 1 }
-        end
+      codes.map { |c| c.strip.upcase }.map { |c| c.include?(':') ? c : "#{reg}:#{c}" }.each do |x|
+        c = find_by_epp_code(x)
+        res << c ? { code: c.code, avail: 0, reason: 'in use' } : { code: x, avail: 1 }
       end
 
       res
