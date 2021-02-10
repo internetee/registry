@@ -1,3 +1,7 @@
+10.02.2021
+* Option to remove email addresses from AWS SES Supression list [#1839](https://github.com/internetee/registry/issues/1839)
+* Added separate key for bounce API [#1842](https://github.com/internetee/registry/pull/1842)
+
 09.02.2021
 * Added new endpoint for WHOIS contact requests [#1794](https://github.com/internetee/registry/pull/1794)
 
