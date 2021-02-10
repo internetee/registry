@@ -14,7 +14,7 @@ module Epp
       authorize! :check, Epp::Contact
 
       ids = params[:parsed_frame].css('id').map(&:text)
-      @results = Epp::Contact.check_availability(ids)
+      @results = Epp::Contact.check_availability(ids, reg: current_user.registrar.code)
       render_epp_response '/epp/contacts/check'
     end
 
