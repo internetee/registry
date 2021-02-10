@@ -94,7 +94,7 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
     assert_equal(200, response.status)
 
     response_json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal response_json[:domains].length, 4
+    assert_equal response_json[:domains].length, response_json[:count]
     assert_equal response_json[:total], 5
   end
 
