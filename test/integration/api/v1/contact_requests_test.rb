@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ApiV1ContactRequestTest < ActionDispatch::IntegrationTest
   def setup
-    @api_key = "Basic #{ENV['api_shared_key']}"
+    @api_key = "Basic #{ENV['rwhois_internal_api_shared_key']}"
     @headers = { "Authorization": "#{@api_key}" }
     @json_create = { "contact_request": valid_contact_request_create }.as_json
     @json_update = { "contact_request": valid_contact_request_update }.as_json
