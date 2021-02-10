@@ -38,6 +38,20 @@ class WhiteIpTest < ActiveSupport::TestCase
     assert white_ip.valid?
   end
 
+  def test_validates_include_empty_ipv4
+    white_ip = WhiteIp.new
+
+    white_ip.ipv4 = nil
+    white_ip.ipv6 = '001:0db8:85a3:0000:0000:8a2e:0370:7334'
+    white_ip.registrar = registrars(:bestnames)
+
+    assert_nothing_raised { white_ip.save }
+    assert white_ip.valid?
+    
+    assert WhiteIp.include_ip?(white_ip.ipv6)
+    assert_not WhiteIp.include_ip?('192.168.1.1')
+  end
+
   private
 
   def valid_white_ip

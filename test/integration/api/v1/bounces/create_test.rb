@@ -2,7 +2,7 @@ require 'test_helper'
 
 class BouncesApiV1CreateTest < ActionDispatch::IntegrationTest
   def setup
-    @api_key = "Basic #{ENV['api_shared_key']}"
+    @api_key = "Basic #{ENV['rwhois_bounces_api_shared_key']}"
     @headers = { "Authorization": "#{@api_key}" }
     @json_body = { "data": valid_bounce_request }.as_json
   end

@@ -35,7 +35,6 @@ class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
 
   def setup
     DatabaseCleaner.start
-
     super
 
     Capybara.current_driver = :chrome
