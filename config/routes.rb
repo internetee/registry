@@ -91,6 +91,7 @@ Rails.application.routes.draw do
       end
 
       resources :auctions, only: %i[index show update], param: :uuid
+      resources :contact_requests, only: %i[create update], param: :id
       resources :bounces, only: %i[create]
     end
 

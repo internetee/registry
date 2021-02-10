@@ -87,8 +87,11 @@ sk_digi_doc_service_name: 'Testimine'
 registrant_api_base_url:
 registrant_api_auth_allowed_ips: '127.0.0.1, 0.0.0.0' #ips, separated with commas
 
-# Bounces API
-api_shared_key: testkey
+# Shared key for REST-WHOIS Bounces API incl. CERT
+rwhois_bounces_api_shared_key: testkey
+
+# Link to REST-WHOIS API
+rwhois_internal_api_shared_key: testkey
 
 # Base URL (inc. https://) of REST registrant portal
 # Leave blank to use internal registrant portal
