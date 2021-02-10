@@ -89,6 +89,15 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
     end
   end  
 
+  def test_domains_total_if_an_incomplete_list_is_returned
+    get '/api/v1/registrant/domains', headers: @auth_headers, params: { 'offset' => 0 }
+    assert_equal(200, response.status)
+
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal response_json[:domains].length, 4
+    assert_equal response_json[:total], 5
+  end
+
   def test_root_accepts_limit_and_offset_parameters
     get '/api/v1/registrant/domains', params: { 'limit' => 2, 'offset' => 0 },
         headers: @auth_headers
