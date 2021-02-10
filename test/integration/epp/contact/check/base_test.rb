@@ -52,7 +52,8 @@ class EppContactCheckBaseTest < EppTestCase
   end
 
   def test_contact_is_unavailable
-    assert_equal 'john-001', @contact.code
+    @contact.update_columns(code: "#{@contact.registrar.code}:JOHN-001".upcase)
+    assert @contact.code, "#{@contact.registrar.code}:JOHN-001".upcase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -108,7 +109,7 @@ class EppContactCheckBaseTest < EppTestCase
         <command>
           <check>
             <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
-              <contact:id>TEST:JOHN-001</contact:id>
+              <contact:id>BESTNAMES:JOHN-001</contact:id>
             </contact:check>
           </check>
         </command>
@@ -120,7 +121,7 @@ class EppContactCheckBaseTest < EppTestCase
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
-    assert_equal 'TEST:JOHN-001', response_xml.at_xpath('//contact:id', contact: xml_schema).text
+    assert_equal "#{@contact.registrar.code}:JOHN-001".upcase, response_xml.at_xpath('//contact:id', contact: xml_schema).text
     assert_equal 'in use', response_xml.at_xpath('//contact:reason', contact: xml_schema).text
   end
 
