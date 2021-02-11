@@ -60,7 +60,10 @@ module Billing
     def self.price_for(zone, operation_category, duration)
       lists = valid.where(zone: zone, operation_category: operation_category, duration: duration)
       return lists.first if lists.count == 1
+
       lists.order(valid_from: :desc).first
+    rescue ActiveRecord::StatementInvalid
+      nil
     end
 
     def name
