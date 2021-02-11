@@ -61,7 +61,7 @@ module Actions
 
       @changes_registrant = true if domain.registrant.ident != new_registrant.ident
       if @changes_registrant && domain.registrant_change_prohibited?
-        domain.add_epp_error(2304, "status", DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED,
+        domain.add_epp_error(2304, 'status', DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED,
                              I18n.t(:object_status_prohibits_operation))
       else
         domain.registrant = new_registrant
