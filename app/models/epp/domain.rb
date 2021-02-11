@@ -208,7 +208,7 @@ class Epp::Domain < Domain
   end
 
   def add_renew_epp_errors
-    if renew_blocking_statuses.any? && !renewable?
+    if renew_blocking_statuses.any? || !renewable?
       add_epp_error('2304', 'status', renew_blocking_statuses,
                     I18n.t('object_status_prohibits_operation'))
     end
