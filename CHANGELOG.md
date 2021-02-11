@@ -1,3 +1,17 @@
+10.02.2021
+* Admin contact bulk change option for registrars [#1764](https://github.com/internetee/registry/issues/1764)
+* Option to remove email addresses from AWS SES Supression list [#1839](https://github.com/internetee/registry/issues/1839)
+* Added separate key for bounce API [#1842](https://github.com/internetee/registry/pull/1842)
+
+09.02.2021
+* Added new endpoint for WHOIS contact requests [#1794](https://github.com/internetee/registry/pull/1794)
+
+05.02.2021
+* Fixed IPv4 empty string issue in case of IPv6 only entries for IP whitelist [#1833](https://github.com/internetee/registry/issues/1833)
+
+02.02.2021
+* Fixed updateProhibited status not affecting bulk tech contact change operation [#1820](https://github.com/internetee/registry/pull/1820)
+
 01.02.2021
 * Improved tests for admin interface [#1805](https://github.com/internetee/registry/pull/1805)
 

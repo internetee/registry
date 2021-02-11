@@ -1,4 +1,4 @@
-<%= form_tag registrar_tech_contacts_path, method: :patch, class: 'form-horizontal' do %>
+<%= form_tag registrar_admin_contacts_path, method: :patch, class: 'form-horizontal' do %>
     <% if @error %>
         <div class="alert alert-danger">
             <%= @error %>
@@ -6,11 +6,16 @@
     <% end %>
 
     <div class="form-group">
+        <div class="row">
+            <div class="col-md-6 control-label">
+              <p><%= t '.comment' %></p>
+            </div>
+        </div>
         <div class="col-md-2 control-label">
             <%= label_tag :current_contact_id, t('.current_contact_id') %>
         </div>
 
-        <div class="col-md-4 current_tech_contact">
+        <div class="col-md-4 current_admin_contact">
             <%= text_field_tag :current_contact_id, params[:current_contact_id],
                                list: :contacts,
                                required: true,
@@ -24,7 +29,7 @@
             <%= label_tag :new_contact_id, t('.new_contact_id') %>
         </div>
 
-        <div class="col-md-4 new_tech_contact">
+        <div class="col-md-4 new_admin_contact">
             <%= text_field_tag :new_contact_id, params[:new_contact_id],
                                list: :contacts,
                                required: true,

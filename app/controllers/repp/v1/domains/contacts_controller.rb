@@ -1,9 +1,7 @@
 module Repp
   module V1
     module Domains
-      class ContactsController < BaseController
-        before_action :set_current_contact, only: [:update]
-        before_action :set_new_contact, only: [:update]
+      class ContactsController < BaseContactsController
         before_action :set_domain, only: %i[index create destroy]
 
         def_param_group :contacts_apidoc do
@@ -48,19 +46,8 @@ module Repp
           render_success(data: { domain: { name: @domain.name } })
         end
 
-        def set_current_contact
-          @current_contact = current_user.registrar.contacts.find_by!(
-            code: contact_params[:current_contact_id]
-          )
-        end
-
-        def set_new_contact
-          @new_contact = current_user.registrar.contacts.find_by!(code: params[:new_contact_id])
-        end
-
         def update
-          @epp_errors ||= []
-          @epp_errors << { code: 2304, msg: 'New contact must be valid' } if @new_contact.invalid?
+          super
 
           if @new_contact == @current_contact
             @epp_errors << { code: 2304, msg: 'New contact must be different from current' }
@@ -77,11 +64,6 @@ module Repp
 
         def contact_create_params
           params.permit(:domain_id, contacts: [%i[action code type]])
-        end
-
-        def contact_params
-          params.require(%i[current_contact_id new_contact_id])
-          params.permit(:current_contact_id, :new_contact_id)
         end
       end
     end
