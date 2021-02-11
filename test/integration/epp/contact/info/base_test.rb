@@ -44,6 +44,58 @@ class EppContactInfoBaseTest < EppTestCase
                                                                     contact: xml_schema).text
   end
 
+  def test_get_info_about_contact_with_prefix
+    @contact.update_columns(code: 'TEST:JOHN-001')
+    assert @contact.code, 'TEST:JOHN-001'
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <info>
+            <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:id>TEST:JOHN-001</contact:id>
+            </contact:info>
+          </info>
+        </command>
+      </epp>
+    XML
+
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully
+    assert_equal 'TEST:JOHN-001', response_xml.at_xpath('//contact:id', contact: xml_schema).text
+    assert_equal '+555.555', response_xml.at_xpath('//contact:voice', contact: xml_schema).text
+  end
+
+  def test_get_info_about_contact_without_prefix
+    @contact.update_columns(code: "#{@contact.registrar.code}:JOHN-001".upcase)
+    assert @contact.code, "#{@contact.registrar.code}:JOHN-001".upcase
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <info>
+            <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:id>JOHN-001</contact:id>
+            </contact:info>
+          </info>
+        </command>
+      </epp>
+    XML
+
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully
+    assert_equal "#{@contact.registrar.code}:JOHN-001".upcase, response_xml.at_xpath('//contact:id', contact: xml_schema).text
+    assert_equal '+555.555', response_xml.at_xpath('//contact:voice', contact: xml_schema).text
+  end
+
   def test_hides_password_and_name_when_current_registrar_is_not_sponsoring
     non_sponsoring_registrar = registrars(:goodnames)
     @contact.update!(registrar: non_sponsoring_registrar)
