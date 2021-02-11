@@ -1,3 +1,6 @@
+11.02.2021
+* Poll messages on locking and unlocking a domain [#1828](https://github.com/internetee/registry/issues/1828)
+
 10.02.2021
 * Admin contact bulk change option for registrars [#1764](https://github.com/internetee/registry/issues/1764)
 * Option to remove email addresses from AWS SES Supression list [#1839](https://github.com/internetee/registry/issues/1839)
