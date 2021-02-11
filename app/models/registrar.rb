@@ -153,7 +153,7 @@ class Registrar < ApplicationRecord
         puny = origin.domain.name_puny
         next unless domains.include?(idn) || domains.include?(puny) || domains.empty?
 
-        if origin.domain.nameservers.where(hostname: new_attributes[:hostname]).any?
+        if domain_not_updatable?(hostname: new_attributes[:hostname], domain: origin.domain)
           failed_list << idn
           next
         end
@@ -201,6 +201,10 @@ class Registrar < ApplicationRecord
   end
 
   private
+
+  def domain_not_updatable?(hostname:, domain:)
+    domain.nameservers.where(hostname: hostname).any? || domain.bulk_update_prohibited?
+  end
 
   def set_defaults
     self.language = Setting.default_language unless language
