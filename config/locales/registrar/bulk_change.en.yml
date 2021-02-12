@@ -4,6 +4,7 @@ en:
       new:
         header: Bulk change
         technical_contact: Technical contact
+        admin_contact: Admin contact
         nameserver: Nameserver
         bulk_transfer: Bulk transfer
         bulk_renew: Bulk renew
@@ -16,6 +17,19 @@ en:
         help: >-
           Replace technical contact specified in "current contact ID" with the one in "new
           contact ID" on any domain registered under this registrar
+
+      admin_contact_form:
+        current_contact_id: Current admin contact ID
+        new_contact_id: New admin contact ID
+        submit_btn: Replace admin contacts
+        help_btn: Toggle help
+        help: >-
+          Replace admin contact specified in "current contact ID" with the one in "new
+          contact ID" on any domain registered under this registrar. Contact idents must
+          be the same
+        comment: >-
+          Bulk admin change is only allowed in case of old and new contact are sharing identical
+          ident data ie for updating contact information.
 
       nameserver_form:
         ip_hint: One IP per line
@@ -38,3 +52,5 @@ en:
         domain_ids: Domains for bulk renewal
         current_balance: Current balance
         period: Period
+  affected_domains: Affected domains
+  skipped_domains: Skipped domains

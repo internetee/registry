@@ -6,3 +6,5 @@ en:
         It was associated with registrant %{old_registrant_code}
         and contacts %{old_contacts_codes}.
       contact_update: Contact %{contact} has been updated by registrant
+      registrar_locked: Domain %{domain_name} has been locked by registrant
+      registrar_unlocked: Domain %{domain_name} has been unlocked by registrant

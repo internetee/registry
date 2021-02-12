@@ -1,3 +1,36 @@
+11.02.2021
+* Poll messages on locking and unlocking a domain [#1828](https://github.com/internetee/registry/issues/1828)
+* Registrar's prefix is now checked and added to contact id for info and check requests [#1832](https://github.com/internetee/registry/issues/1832)
+
+10.02.2021
+* Admin contact bulk change option for registrars [#1764](https://github.com/internetee/registry/issues/1764)
+* Option to remove email addresses from AWS SES Supression list [#1839](https://github.com/internetee/registry/issues/1839)
+* Added separate key for bounce API [#1842](https://github.com/internetee/registry/pull/1842)
+
+09.02.2021
+* Added new endpoint for WHOIS contact requests [#1794](https://github.com/internetee/registry/pull/1794)
+
+05.02.2021
+* Fixed IPv4 empty string issue in case of IPv6 only entries for IP whitelist [#1833](https://github.com/internetee/registry/issues/1833)
+
+02.02.2021
+* Fixed updateProhibited status not affecting bulk tech contact change operation [#1820](https://github.com/internetee/registry/pull/1820)
+
+01.02.2021
+* Improved tests for admin interface [#1805](https://github.com/internetee/registry/pull/1805)
+
+28.01.2021
+* Fixed transfer with shared admin and tech contacts [#1808](https://github.com/internetee/registry/issues/1808)
+* Improved error handling with double admin/tech contacts [#1758](https://github.com/internetee/registry/issues/1758)
+* Added CSV export option to admin [#1775](https://github.com/internetee/registry/issues/1775)
+* Improved DNSSEC key validation for illegal characters [#1790](https://github.com/internetee/registry/issues/1790)
+* Fix for whois record creation issue on releasing domain to auction [#1139](https://github.com/internetee/registry/issues/1139)
+* Fix for handling malformed request frames [#1825](https://github.com/internetee/registry/issues/1825)
+* Improved registrar account activity tests [#1824](https://github.com/internetee/registry/pull/1824)
+
+27.01.2021
+* Figaro update to 1.2.0 [#1823](https://github.com/internetee/registry/pull/1823)
+
 26.01.2021
 * Ruby update to 2.7 [#1791](https://github.com/internetee/registry/issues/1791)
 

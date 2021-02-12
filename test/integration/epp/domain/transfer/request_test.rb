@@ -3,6 +3,7 @@ require 'test_helper'
 class EppDomainTransferRequestTest < EppTestCase
   def setup
     @domain = domains(:shop)
+    @contact = contacts(:jane)
     @new_registrar = registrars(:goodnames)
     @original_transfer_wait_time = Setting.transfer_wait_time
     Setting.transfer_wait_time = 0
@@ -10,6 +11,95 @@ class EppDomainTransferRequestTest < EppTestCase
 
   def teardown
     Setting.transfer_wait_time = @original_transfer_wait_time
+  end
+
+  def test_transfer_domain_with_contacts_if_registrant_and_tech_are_shared
+    @domain.tech_domain_contacts[0].update!(contact_id: @domain.registrant.id)
+
+    @domain.tech_domain_contacts[1].delete
+    @domain.reload
+
+    post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+
+    assert_epp_response :completed_successfully
+    
+    @domain.reload
+
+    tech = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
+
+    assert_equal @domain.contacts.where(original_id: @domain.registrant.original_id).count, 1
+    assert_equal tech.registrar_id, @domain.registrar.id
+  end
+
+  def test_transfer_domain_with_contacts_if_registrant_and_admin_are_shared
+    @domain.admin_domain_contacts[0].update!(contact_id: @domain.registrant.id)
+    @domain.tech_domain_contacts[0].update!(contact_id: @contact.id)
+    
+    @domain.tech_domain_contacts[1].delete
+    @domain.reload
+
+    post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+
+    assert_epp_response :completed_successfully
+    
+    @domain.reload
+
+    admin = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
+
+    assert_equal @domain.contacts.where(original_id: @domain.registrant.original_id).count, 1
+    assert_equal admin.registrar_id, @domain.registrar.id
+  end
+
+  def test_transfer_domain_with_contacts_if_admin_and_tech_are_shared
+    @domain.admin_domain_contacts[0].update!(contact_id: @contact.id)
+    @domain.tech_domain_contacts[0].update!(contact_id: @contact.id)
+
+    @domain.tech_domain_contacts[1].delete
+    @domain.reload
+
+    post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+
+    assert_epp_response :completed_successfully
+
+    @domain.reload
+
+    admin = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
+    tech = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
+
+    result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
+    assert result_hash[admin.original_id], 2
+
+    assert_equal admin.registrar_id, @domain.registrar.id
+    assert_equal tech.registrar_id, @domain.registrar.id
+  end
+
+  def test_transfer_domain_with_contacts_if_admin_and_tech_and_registrant_are_shared
+    @domain.tech_domain_contacts[0].update!(contact_id: @domain.registrant.id)
+    @domain.admin_domain_contacts[0].update!(contact_id: @domain.registrant.id)
+
+    @domain.tech_domain_contacts[1].delete
+    @domain.reload
+
+    post epp_transfer_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+
+    assert_epp_response :completed_successfully
+
+    @domain.reload
+
+    admin = Contact.find_by(id: @domain.admin_domain_contacts[0].contact_id)
+    tech = Contact.find_by(id: @domain.tech_domain_contacts[0].contact_id)
+
+    assert_equal @domain.contacts.where(original_id: @domain.registrant.original_id).count, 2
+
+    result_hash = @domain.contacts.pluck(:original_id).group_by(&:itself).transform_values(&:count)
+    assert result_hash[@domain.registrant.original_id], 2
+
+    assert_equal admin.registrar_id, @domain.registrar.id
+    assert_equal tech.registrar_id, @domain.registrar.id
   end
 
   def test_transfers_domain_at_once

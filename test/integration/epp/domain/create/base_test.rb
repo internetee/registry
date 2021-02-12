@@ -2,6 +2,51 @@ require 'test_helper'
 
 class EppDomainCreateBaseTest < EppTestCase
 
+  def test_illegal_chars_in_dns_key
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+
+    pub_key = "AwEAAddt2AkLf\n
+    \n
+    YGKgiEZB5SmIF8E\n
+    vrjxNMH6HtxW\rEA4RJ9Ao6LCWheg8"
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+            </domain:create>
+          </create>
+          <extension>
+          <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+          <secDNS:keyData>
+            <secDNS:flags>257</secDNS:flags>
+            <secDNS:protocol>3</secDNS:protocol>
+            <secDNS:alg>8</secDNS:alg>
+            <secDNS:pubKey>#{pub_key}</secDNS:pubKey>
+          </secDNS:keyData>
+        </secDNS:create>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    assert_epp_response :parameter_value_syntax_error
+  end
+
+
   def test_not_registers_domain_without_legaldoc
     now = Time.zone.parse('2010-07-05')
     travel_to now
@@ -29,6 +74,230 @@ class EppDomainCreateBaseTest < EppTestCase
     end
 
     assert_epp_response :required_parameter_missing
+  end
+
+  def test_create_domain_with_unique_contact
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contacts(:jane).code}</domain:contact>
+              <domain:contact type="tech">#{contacts(:william).code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    assert_epp_response :completed_successfully
+  end
+
+
+  def test_create_domain_with_array_of_not_unique_admins_and_techs
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    assert_epp_response :parameter_value_policy_error
+  end
+
+  def test_create_domain_with_array_of_not_unique_admins
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    assert_epp_response :parameter_value_policy_error
+  end
+
+  def test_create_domain_with_array_of_not_unique_techs
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    assert_epp_response :parameter_value_policy_error
+  end
+
+  def test_create_domain_with_array_of_not_unique_admin_but_tech_another_one
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+    contact_two = contacts(:william)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="admin">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact_two.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    assert_epp_response :parameter_value_policy_error
+  end
+
+  def test_create_domain_with_array_of_not_unique_techs_but_admin_another_one
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+    contact_two = contacts(:william)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{contact_two.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+              <domain:contact type="tech">#{contact.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    assert_epp_response :parameter_value_policy_error
   end
 
   def test_registers_new_domain_with_required_attributes

@@ -1,5 +1,6 @@
 class BouncedMailAddress < ApplicationRecord
   validates :email, :message_id, :bounce_type, :bounce_subtype, :action, :status, presence: true
+  after_destroy :destroy_aws_suppression
 
   def bounce_reason
     "#{action} (#{status} #{diagnostic})"
@@ -24,5 +25,21 @@ class BouncedMailAddress < ApplicationRecord
       status: bounced_record['status'],
       diagnostic: bounced_record['diagnosticCode'],
     }
+  end
+
+  def destroy_aws_suppression
+    return unless BouncedMailAddress.ses_configured?
+
+    res = Aws::SESV2::Client.new.delete_suppressed_destination(email_address: email)
+    res.successful?
+  rescue Aws::SESV2::Errors::ServiceError => e
+    logger.warn("Suppression not removed. #{e}")
+  end
+
+  def self.ses_configured?
+    ses ||= Aws::SESV2::Client.new
+    ses.config.credentials.access_key_id.present?
+  rescue Aws::Errors::MissingRegionError
+    false
   end
 end

@@ -4,11 +4,12 @@ require 'auth_token/auth_token_creator'
 class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   setup do
     @contact = contacts(:john)
+    @contact_org = contacts(:acme_ltd)
 
     @original_address_processing = Setting.address_processing
     @original_fax_enabled_setting = ENV['fax_enabled']
-
     @user = users(:registrant)
+    
   end
 
   teardown do
@@ -87,6 +88,32 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_response :ok
     @contact.reload
     assert_equal Contact::Address.new('new street', '92837', 'new city', 'new state', 'RU'),
+                 @contact.address
+  end
+
+  def test_update_address_when_enabled_without_address_params
+    Setting.address_processing = true
+
+    patch api_v1_registrant_contact_path(@contact.uuid), params: { address: { } },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+
+    assert_response :bad_request
+    @contact.reload
+    assert_equal Contact::Address.new(nil, nil, nil, nil, nil),
+                 @contact.address
+  end
+
+  def test_update_address_when_enabled_without_address_params
+    Setting.address_processing = true
+
+    patch api_v1_registrant_contact_path(@contact.uuid), params: { },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+
+    assert_response :bad_request
+    @contact.reload
+    assert_equal Contact::Address.new(nil, nil, nil, nil, nil),
                  @contact.address
   end
 
@@ -209,6 +236,21 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_response :bad_request
     assert_equal ({ errors: { phone: ['Phone nr is invalid'] } }), JSON.parse(response.body,
                                                                               symbolize_names: true)
+  end
+
+  def test_org_disclosed_attributes
+    patch api_v1_registrant_contact_path(@contact_org.uuid), params: { disclosed_attributes: ["some_attr"]  },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+
+    assert_response :bad_request
+    
+    err_msg = "Legal person's data is visible by default and cannot be concealed. Please remove this parameter."
+    
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    response_msg = response_json[:errors][0][:disclosed_attributes][0]
+
+    assert_equal err_msg, response_msg
   end
 
   def test_unmanaged_contact_cannot_be_updated

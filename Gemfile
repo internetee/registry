@@ -9,7 +9,7 @@ gem 'rest-client'
 gem 'uglifier'
 
 # load env
-gem 'figaro', '1.1.1'
+gem 'figaro', '~> 1.2'
 
 # model related
 gem 'activerecord-import'
@@ -92,3 +92,5 @@ group :test do
   gem 'webdrivers'
   gem 'webmock'
 end
+
+gem 'aws-sdk-sesv2', '~> 1.16'

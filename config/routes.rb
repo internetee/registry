@@ -64,6 +64,7 @@ Rails.application.routes.draw do
           get ':id/transfer_info', to: 'domains#transfer_info', constraints: { id: /.*/ }
           post 'transfer', to: 'domains#transfer'
           patch 'contacts', to: 'domains/contacts#update'
+          patch 'admin_contacts', to: 'domains/admin_contacts#update'
           post 'renew/bulk', to: 'domains/renews#bulk_renew'
         end
       end
@@ -91,6 +92,7 @@ Rails.application.routes.draw do
       end
 
       resources :auctions, only: %i[index show update], param: :uuid
+      resources :contact_requests, only: %i[create update], param: :id
       resources :bounces, only: %i[create]
     end
 
@@ -136,6 +138,7 @@ Rails.application.routes.draw do
     resource :bulk_change, controller: :bulk_change, only: :new
     post '/bulk_renew/new', to: 'bulk_change#bulk_renew', as: :bulk_renew
     resource :tech_contacts, only: :update
+    resource :admin_contacts, only: :update
     resource :nameservers, only: :update
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
       member do

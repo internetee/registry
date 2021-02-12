@@ -15,12 +15,22 @@ xml.epp_head do
       end if @object
     end
 
-    if @notification.action&.contact
-      render(partial: 'epp/poll/action',
-             locals: {
-               builder: xml,
-               action: @notification.action
-             })
+    if @notification.action&.contact || @notification.registry_lock?
+      if @notification.registry_lock?
+        state = @notification.text.include?('unlocked') ? 'unlock' : 'lock'
+        xml.extension do
+          xml.tag!('changePoll:changeData',
+                   'xmlns:changePoll': 'https://epp.tld.ee/schema/changePoll-1.0.xsd') do
+            xml.tag!('changePoll:operation', state)
+          end
+        end
+      else
+        render(partial: 'epp/poll/action',
+               locals: {
+                 builder: xml,
+                 action: @notification.action,
+               })
+      end
     end
 
     render('epp/shared/trID', builder: xml)
