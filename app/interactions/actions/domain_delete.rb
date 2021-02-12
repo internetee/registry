@@ -51,10 +51,6 @@ module Actions
       else
         domain.set_pending_delete!
       end
-
-      return false if domain.errors.any?
-      return false if domain.errors[:epp_errors].any?
-
       true
     end
   end
