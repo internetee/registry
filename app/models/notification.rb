@@ -25,6 +25,10 @@ class Notification < ApplicationRecord
     ''
   end
 
+  def registry_lock?
+    text.include?('has been locked') || text.include?('has been unlocked')
+  end
+
   private
 
   def set_defaults
