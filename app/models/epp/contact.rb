@@ -83,7 +83,8 @@ class Epp::Contact < Contact
         [:code, :epp_id_taken]
       ],
       '2305' => [ # Association exists
-        [:domains, :exist]
+        [:domains, :exist],
+        [:domains, :delete_prohibited],
       ]
     }
   end

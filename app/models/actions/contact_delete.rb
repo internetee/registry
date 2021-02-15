@@ -19,6 +19,11 @@ module Actions
         return
       end
 
+      if contact.delete_prohibited?
+        contact.errors.add(:status, :delete_prohibited)
+        return
+      end
+
       commit
     end
 

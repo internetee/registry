@@ -25,6 +25,8 @@ en:
               email_regex_check_error: Invalid format
             domains:
               exist: 'Object association prohibits operation'
+            status:
+              delete_prohibited: Contact delete prohibited by status
             statuses:
               not_uniq: 'not uniq'
             country_code:
