@@ -74,4 +74,50 @@ class ReppV1RegistrarNameserversTest < ActionDispatch::IntegrationTest
     assert_equal 2005, json[:code]
     assert_equal 'IPv6 is invalid [ipv6]', json[:message]
   end
+
+  def test_ipv4_isnt_array
+    nameserver = nameservers(:shop_ns1)
+    payload = {
+      "data": {
+        "id": nameserver.hostname,
+        "type": "nameserver",
+        "domains": ["shop.test", "airport.test", "library.test", "metro.test"],
+        "attributes": {
+          "hostname": nameserver.hostname,
+          "ipv4": "1.1.1.1",
+          "ipv6": ["2620:119:352::36"]
+        }
+      }
+    }
+
+    put '/repp/v1/registrar/nameservers', headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal 2005, json[:code]
+    assert_equal 'IPv4 should be array [ipv4]', json[:message]
+  end
+
+  def test_ipv6_isnt_array
+    nameserver = nameservers(:shop_ns1)
+    payload = {
+      "data": {
+        "id": nameserver.hostname,
+        "type": "nameserver",
+        "domains": ["shop.test", "airport.test", "library.test", "metro.test"],
+        "attributes": {
+          "hostname": nameserver.hostname,
+          "ipv4": ["1.1.1.1"],
+          "ipv6": "2620:119:352::36"
+        }
+      }
+    }
+
+    put '/repp/v1/registrar/nameservers', headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal 2005, json[:code]
+    assert_equal 'IPv6 should be array [ipv6]', json[:message]
+  end
 end
