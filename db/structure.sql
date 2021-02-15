@@ -226,7 +226,8 @@ CREATE TABLE public.account_activities (
     creator_str character varying,
     updator_str character varying,
     activity_type character varying,
-    price_id integer
+    price_id integer,
+    new_balance numeric(10,2)
 );
 
 
@@ -4959,6 +4960,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200908131554'),
 ('20200910085157'),
 ('20200910102028'),
-('20200916125326');
+('20200916125326'),
+('20210215101019');
 
 
