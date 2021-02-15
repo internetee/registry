@@ -47,4 +47,22 @@ class ReppV1ContactsTechReplaceTest < ActionDispatch::IntegrationTest
     assert_equal 2304, json[:code]
     assert_equal 'New contact must be different from current', json[:message]
   end
+
+  def test_domain_has_status_tech_change_prohibited
+    domain_shop = domains(:shop)
+    domain_shop_tech_contact_id = domain_shop.tech_domain_contacts[0][:contact_id]
+    old_contact = Contact.find_by(id: domain_shop_tech_contact_id)
+    new_contact = contacts(:john)
+    
+    domain_shop.update(statuses: [DomainStatus::SERVER_TECH_CHANGE_PROHIBITED])
+    domain_shop.reload
+    assert domain_shop.statuses.include? DomainStatus::SERVER_TECH_CHANGE_PROHIBITED
+
+    payload = { current_contact_id: old_contact.code, new_contact_id: new_contact.code }
+    patch "/repp/v1/domains/contacts", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_equal json[:data][:skipped_domains], ["shop.test"]
+    assert domain_shop.contacts.find_by(id: domain_shop_tech_contact_id).present?
+  end
 end
