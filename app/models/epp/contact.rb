@@ -82,9 +82,11 @@ class Epp::Contact < Contact
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
       ],
+      '2304' => [ # Status prohibits operation
+        [:statuses, :delete_prohibited],
+      ],
       '2305' => [ # Association exists
         [:domains, :exist],
-        [:domains, :delete_prohibited],
       ]
     }
   end

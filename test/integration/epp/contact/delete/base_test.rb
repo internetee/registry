@@ -51,7 +51,7 @@ class EppContactDeleteBaseTest < EppTestCase
         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert Contact.exists?(id: contact.id)
-    assert_epp_response :object_association_prohibits_operation
+    assert_epp_response :object_status_prohibits_operation
   end
 
   def test_delete_contact_with_client_delete_prohibited
@@ -78,7 +78,7 @@ class EppContactDeleteBaseTest < EppTestCase
         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert Contact.exists?(id: contact.id)
-    assert_epp_response :object_association_prohibits_operation
+    assert_epp_response :object_status_prohibits_operation
   end
 
   def test_undeletable_cannot_be_deleted

@@ -20,7 +20,7 @@ module Actions
       end
 
       if contact.delete_prohibited?
-        contact.errors.add(:status, :delete_prohibited)
+        contact.errors.add(:statuses, :delete_prohibited)
         return
       end
 
