@@ -2,10 +2,9 @@ module Repp
   module V1
     class AccountsController < BaseController
       def balance
-        return activity if params[:detailed] == 'true'
-
         resp = { balance: current_user.registrar.cash_account.balance,
                  currency: current_user.registrar.cash_account.currency }
+        resp[:activities] = activities if params[:detailed] == 'true'
         render_success(data: resp)
       end
 
@@ -17,22 +16,21 @@ module Repp
       end
 
       def activities
-        bal = current_user.registrar.cash_account.balance
-        act = []
         activities = current_user.registrar.cash_account.activities.order(created_at: :desc)
+        activities = activities.where('created_at >= ?', params[:from]) if params[:from]
+        activities = activities.where('created_at <= ?', params[:until]) if params[:until]
+        arr = []
         activities.each do |a|
-          act << {
+          arr << {
             created_at: a.created_at,
             description: a.description,
             type: a.activity_type == 'add_credit' ? 'credit' : 'debit',
             sum: a.sum,
-            balance: bal,
+            balance: a.new_balance,
           }
-
-          bal = a.activity_type == 'add_credit' ? bal = bal + a.sum : bal - a.sum
         end
 
-        act
+        arr
       end
     end
   end

@@ -13,10 +13,6 @@ class ReppV1BalanceTest < ActionDispatch::IntegrationTest
     get '/repp/v1/accounts/balance', headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
-    puts response.body
-    puts @registrar.registrar.cash_account.balance
-    puts @registrar.registrar.cash_account.currency
-
     assert_response :ok
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
@@ -28,7 +24,7 @@ class ReppV1BalanceTest < ActionDispatch::IntegrationTest
     started_from = "2020-01-01"
     end_to = DateTime.current.to_date.to_s(:db)
 
-    get "/repp/v1/accounts/balance?detailed=true&started_from=#{started_from}&end_to=#{end_to}", headers: @auth_headers
+    get "/repp/v1/accounts/balance?detailed=true&from=#{started_from}&until=#{end_to}", headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
