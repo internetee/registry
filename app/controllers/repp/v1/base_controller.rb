@@ -16,8 +16,11 @@ module Repp
       rescue ActiveRecord::RecordNotFound
         @response = { code: 2303, message: 'Object does not exist' }
         render(json: @response, status: :not_found)
-      rescue ActionController::ParameterMissing, Apipie::ParamInvalid, Apipie::ParamMissing => e
+      rescue ActionController::ParameterMissing, Apipie::ParamMissing => e
         @response = { code: 2003, message: e }
+        render(json: @response, status: :bad_request)
+      rescue Apipie::ParamInvalid => e
+        @response = { code: 2005, message: e }
         render(json: @response, status: :bad_request)
       ensure
         create_repp_log
