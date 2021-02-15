@@ -9,7 +9,7 @@ module Repp
         param :data, Hash, required: true, desc: 'Object holding nameserver changes' do
           param :type, String, required: true, desc: 'Always set as "nameserver"'
           param :id, String, required: true, desc: 'Hostname of replacable nameserver'
-          param :domains, Array, required: true, desc: 'Array of domain names qualified for ' \
+          param :domains, Array, required: false, desc: 'Array of domain names qualified for ' \
                                                        'nameserver replacement'
           param :attributes, Hash, required: true, desc: 'Object holding new nameserver values' do
             param :hostname, String, required: true, desc: 'New hostname of nameserver'
