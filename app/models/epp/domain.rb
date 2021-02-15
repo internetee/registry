@@ -495,7 +495,7 @@ class Epp::Domain < Domain
     registrant_verification_needed = false
     # registrant block may not be present, so we need this to rule out false positives
     if frame.css('registrant').text.present?
-      registrant_verification_needed = (registrant.code != frame.css('registrant').text)
+      registrant_verification_needed = verification_needed?(code: frame.css('registrant').text)
     end
 
     if registrant_verification_needed && disputed?
@@ -797,5 +797,14 @@ class Epp::Domain < Domain
 
       result
     end
+  end
+
+  private
+
+  def verification_needed?(code:)
+    new_registrant = Registrant.find_by(code: code)
+    return false if new_registrant.try(:identical_to?, registrant)
+
+    registrant.code != code
   end
 end
