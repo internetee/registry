@@ -41,4 +41,26 @@ class ReppV1DomainsRenewsTest < ActionDispatch::IntegrationTest
 
     assert @domain.valid_to, original_valid_to
   end
+
+  def test_some_test
+    days_to_renew_domain_before_expire = setting_entries(:days_to_renew_domain_before_expire)
+    days_to_renew_domain_before_expire.update(value: '1')
+    days_to_renew_domain_before_expire.reload
+
+    original_valid_to = @domain.valid_to
+    travel_to @domain.valid_to - 3.days 
+
+    one_year = billing_prices(:renew_one_year)
+    one_year.update(valid_from: @domain.valid_to - 5.days)
+    one_year.reload
+
+    @auth_headers['Content-Type'] = 'application/json'
+    payload = { renew: { period: 1, period_unit: 'y' } }
+    post "/repp/v1/domains/#{@domain.name}/renew", headers: @auth_headers, params: payload.to_json
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal 2304, json[:code]
+    assert_equal 'Object status prohibits operation', json[:message]
+  end
 end
