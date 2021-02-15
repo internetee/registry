@@ -120,4 +120,33 @@ class ReppV1RegistrarNameserversTest < ActionDispatch::IntegrationTest
     assert_equal 2005, json[:code]
     assert_equal 'IPv6 should be array [ipv6]', json[:message]
   end
+
+  def test_bulk_nameservers_change_in_array_of_domains
+    domain_shop = domains(:shop)
+    domain_airport = domains(:airport)
+
+    payload = {
+      "data": {
+        "type": "nameserver",
+        "id": "ns1.bestnames.test",
+        "domains": ["shop.test", "airport.test"],
+        "attributes": {
+          "hostname": "ns4.bestnames.test",
+          "ipv4": ["192.168.1.1"],
+          "ipv6": ["2620:119:35::36"]
+        }
+      }
+    }
+
+    put '/repp/v1/registrar/nameservers', headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+    domain_airport.reload
+    domain_shop.reload
+
+    refute domain_shop.nameservers.find_by(hostname: 'ns1.bestnames.test').present?
+    assert domain_shop.nameservers.find_by(hostname: 'ns4.bestnames.test').present?
+    assert_equal({ hostname: "ns4.bestnames.test", ipv4: ["192.168.1.1"], ipv6: ["2620:119:35::36"] }, json[:data][:attributes])
+    assert json[:data][:affected_domains].include? 'airport.test'
+    assert json[:data][:affected_domains].include? 'shop.test'
+  end
 end
