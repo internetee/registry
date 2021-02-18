@@ -123,6 +123,15 @@ class AdminUserTest < ActiveSupport::TestCase
     assert user.valid?
   end
 
+  def test_min_password_length
+    assert_equal AdminUser.min_password_length, 8
+  end
+
+  def test_country_instance
+    user = valid_user
+    assert user.country.present?
+  end
+
   private
 
   def valid_user
