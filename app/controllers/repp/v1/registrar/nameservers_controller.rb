@@ -13,8 +13,8 @@ module Repp
                                                        'nameserver replacement'
           param :attributes, Hash, required: true, desc: 'Object holding new nameserver values' do
             param :hostname, String, required: true, desc: 'New hostname of nameserver'
-            param :ipv4, Array, required: false, desc: 'Array of fixed IPv4 addresses'
-            param :ipv6, Array, required: false, desc: 'Array of fixed IPv6 addresses'
+            param :ipv4, Array, of: String, required: false, desc: 'Array of fixed IPv4 addresses'
+            param :ipv6, Array, of: String, required: false, desc: 'Array of fixed IPv6 addresses'
           end
         end
         def update

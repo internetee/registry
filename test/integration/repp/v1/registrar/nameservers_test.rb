@@ -95,7 +95,7 @@ class ReppV1RegistrarNameserversTest < ActionDispatch::IntegrationTest
 
     assert_response :bad_request
     assert_equal 2005, json[:code]
-    assert_equal 'IPv4 should be array [ipv4]', json[:message]
+    assert json[:message].include? 'Must be an array of String'
   end
 
   def test_ipv6_isnt_array
@@ -118,7 +118,7 @@ class ReppV1RegistrarNameserversTest < ActionDispatch::IntegrationTest
 
     assert_response :bad_request
     assert_equal 2005, json[:code]
-    assert_equal 'IPv6 should be array [ipv6]', json[:message]
+    assert json[:message].include? 'Must be an array of String'
   end
 
   def test_bulk_nameservers_change_in_array_of_domains
