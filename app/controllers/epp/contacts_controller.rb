@@ -14,7 +14,7 @@ module Epp
       authorize! :check, Epp::Contact
 
       ids = params[:parsed_frame].css('id').map(&:text)
-      @results = Epp::Contact.check_availability(ids)
+      @results = Epp::Contact.check_availability(ids, reg: current_user.registrar.code)
       render_epp_response '/epp/contacts/check'
     end
 
@@ -93,7 +93,11 @@ module Epp
 
     def find_contact
       code = params[:parsed_frame].css('id').text.strip.upcase
-      @contact = Epp::Contact.find_by!(code: code)
+      reg_code = current_user.registrar.code.upcase
+      arr = [code, "#{reg_code}:#{code}", "CID:#{code}", "CID:#{reg_code}:#{code}"]
+
+      contact = arr.find { |c| Epp::Contact.find_by(code: c).present? }
+      @contact = Epp::Contact.find_by!(code: contact || code)
     end
 
     #

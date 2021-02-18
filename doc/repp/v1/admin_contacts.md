@@ -1,11 +1,11 @@
-# Tech domain contacts
+# Admin domain contacts
 
-## PATCH https://repp.internet.ee/v1/domains/contacts
-Replaces technical domain contacts of the current registrar.
+## PATCH https://repp.internet.ee/v1/domains/admin_contacts
+Replaces admin domain contacts of the current registrar.
 
 ### Example request
 ```
-PATCH /repp/v1/domains/contacts HTTP/1.1
+PATCH /repp/v1/domains/admin_contacts HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 Authorization: Basic dGVzdDp0ZXN0dGVzdA==
