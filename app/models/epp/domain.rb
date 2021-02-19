@@ -612,7 +612,6 @@ class Epp::Domain < Domain
 
     statuses.delete(DomainStatus::SERVER_HOLD)
     statuses.delete(DomainStatus::EXPIRED)
-    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
     cancel_pending_delete
 
     save
