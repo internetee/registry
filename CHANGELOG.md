@@ -1,6 +1,7 @@
 19.02.2021
 * Update prohibited staatus is kept after renew [#1843](https://github.com/internetee/registry/issues/1843)
 * Fixed clientHold and serverManualInzone status conflict issue [#1845](https://github.com/internetee/registry/issues/1845)
+* Replacing registrant object with another that has the same ident data set does not require registrant verification [#1852](https://github.com/internetee/registry/issues/1852)
 
 11.02.2021
 * Poll messages on locking and unlocking a domain [#1828](https://github.com/internetee/registry/issues/1828)
