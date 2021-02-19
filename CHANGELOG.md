@@ -1,3 +1,6 @@
+19.02.2021
+* Fixed clientHold and serverManualInzone status conflict issue [#1845](https://github.com/internetee/registry/issues/1845)
+
 11.02.2021
 * Poll messages on locking and unlocking a domain [#1828](https://github.com/internetee/registry/issues/1828)
 * Registrar's prefix is now checked and added to contact id for info and check requests [#1832](https://github.com/internetee/registry/issues/1832)
