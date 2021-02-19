@@ -1,4 +1,5 @@
 19.02.2021
+* Update prohibited staatus is kept after renew [#1843](https://github.com/internetee/registry/issues/1843)
 * Fixed clientHold and serverManualInzone status conflict issue [#1845](https://github.com/internetee/registry/issues/1845)
 
 11.02.2021
