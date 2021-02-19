@@ -234,6 +234,19 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_includes(@domain.statuses, asserted_status)
   end
 
+  def test_client_hold_prohibits_manual_inzone
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    @domain.update(template_name: 'legal_person')
+    travel_to Time.zone.parse('2010-07-05')
+    @domain.schedule_force_delete(type: :soft)
+    travel_to Time.zone.parse('2010-08-21')
+    Domains::ClientHold::SetClientHold.run!
+    @domain.reload
+
+    @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE
+    assert_not @domain.valid?
+  end
+
   def test_force_delete_soft_year_ahead_not_sets_client_hold_before_threshold
     asserted_status = DomainStatus::CLIENT_HOLD
 
