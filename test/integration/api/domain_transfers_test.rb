@@ -68,12 +68,15 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
 
     post '/repp/v1/domains/transfer', params: request_params, as: :json,
          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
-    
+
     assert_response :ok
     assert_equal ({ code: 1000,
                     message: 'Command completed successfully',
                     data: { success: [],
-                    failed: [{ type: "domain_transfer", domain_name: "shop.test" }] }}),
+                    failed: [{ type: "domain_transfer",
+                               domain_name: "shop.test",
+                               errors: [{:code=>"2304", :msg=>"Object status prohibits operation"}] }],
+                    }}),
                 JSON.parse(response.body, symbolize_names: true)
   end
 

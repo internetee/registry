@@ -108,15 +108,18 @@ class APINameserversPutTest < ApplicationIntegrationTest
     domains(:shop).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
 
     params = { data: { type: 'nameserver', id: domains(:shop).nameservers.hostnames[0],
-                       attributes: { hostname: 'ns55.bestnames.test' } } } 
+                       attributes: { hostname: 'ns55.bestnames.test' } } }
     put '/repp/v1/registrar/nameservers', params: params, as: :json,
         headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
-    
+
         assert_response :ok
         assert_equal ({ code: 1000,
                     message: 'Command completed successfully',
-                    data: { affected_domains: ["airport.test"],
-                    skipped_domains: ["shop.test"] }}),
+                    data: { type: "nameserver",
+                            id: "ns55.bestnames.test",
+                            attributes: {hostname: "ns55.bestnames.test"},
+                            affected_domains: ["airport.test"],
+                            skipped_domains: ["shop.test"]}}),
             JSON.parse(response.body, symbolize_names: true)
   end
 
