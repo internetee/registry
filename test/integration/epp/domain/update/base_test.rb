@@ -62,6 +62,27 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_epp_response :object_status_prohibits_operation
   end
 
+  def test_prohibited_domain_cannot_be_updated
+    @domain.update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>shop.test</domain:name>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_epp_response :object_status_prohibits_operation
+  end
+
   def test_does_not_return_server_delete_prohibited_status_when_pending_update_status_is_set
     @domain.update!(statuses: [DomainStatus::SERVER_DELETE_PROHIBITED,
                                DomainStatus::PENDING_UPDATE])
