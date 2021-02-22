@@ -27,6 +27,60 @@ class EppContactDeleteBaseTest < EppTestCase
     assert_epp_response :completed_successfully
   end
 
+  def test_delete_contact_with_server_delete_prohibited
+    contact = deletable_contact
+    contact.update(statuses: Contact::SERVER_DELETE_PROHIBITED)
+    assert contact.statuses.include? Contact::SERVER_DELETE_PROHIBITED
+
+    contact.update_columns(code: contact.code.upcase)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+          <command>
+            <delete>
+              <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+                <contact:id>#{contact.code.upcase}</contact:id>
+              </contact:delete>
+            </delete>
+          </command>
+        </epp>
+    XML
+
+    post epp_delete_path, params: { frame: request_xml },
+        headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert Contact.exists?(id: contact.id)
+    assert_epp_response :object_status_prohibits_operation
+  end
+
+  def test_delete_contact_with_client_delete_prohibited
+    contact = deletable_contact
+    contact.update(statuses: Contact::CLIENT_DELETE_PROHIBITED)
+    assert contact.statuses.include? Contact::CLIENT_DELETE_PROHIBITED
+
+    contact.update_columns(code: contact.code.upcase)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+          <command>
+            <delete>
+              <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+                <contact:id>#{contact.code.upcase}</contact:id>
+              </contact:delete>
+            </delete>
+          </command>
+        </epp>
+    XML
+
+    post epp_delete_path, params: { frame: request_xml },
+        headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert Contact.exists?(id: contact.id)
+    assert_epp_response :object_status_prohibits_operation
+  end
+
   def test_undeletable_cannot_be_deleted
     contact = contacts(:john)
     assert_not contact.deletable?
