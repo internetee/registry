@@ -63,6 +63,23 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
     assert_equal 1, @new_registrar.contacts.where(name: 'William').size
   end
 
+  def test_bulk_transfer_if_domain_has_update_prohibited_status
+    domains(:shop).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
+
+    post '/repp/v1/domains/transfer', params: request_params, as: :json,
+         headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
+
+    assert_response :ok
+    assert_equal ({ code: 1000,
+                    message: 'Command completed successfully',
+                    data: { success: [],
+                    failed: [{ type: "domain_transfer",
+                               domain_name: "shop.test",
+                               errors: [{:code=>"2304", :msg=>"Object status prohibits operation"}] }],
+                    }}),
+                JSON.parse(response.body, symbolize_names: true)
+  end
+
   private
 
   def request_params

@@ -34,6 +34,33 @@ class ReppV1RegistrarNameserversTest < ActionDispatch::IntegrationTest
     assert json[:data][:affected_domains].include? 'shop.test'
   end
 
+  def test_fails_to_update_if_prohibited
+    domain = domains(:shop)
+    domain.update(statuses: [DomainStatus::CLIENT_UPDATE_PROHIBITED])
+    nameserver = nameservers(:shop_ns1)
+    payload = {
+      "data": {
+        "id": nameserver.hostname,
+        "type": "nameserver",
+        "attributes": {
+          "hostname": "#{nameserver.hostname}.test",
+          "ipv4": ["1.1.1.1"]
+        }
+      }
+    }
+
+    put '/repp/v1/registrar/nameservers', headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+    assert_equal({ hostname: "#{nameserver.hostname}.test", ipv4: ["1.1.1.1"] }, json[:data][:attributes])
+    assert_equal({ hostname: "#{nameserver.hostname}.test", ipv4: ["1.1.1.1"] }, json[:data][:attributes])
+    assert json[:data][:affected_domains].include? 'airport.test'
+    assert json[:data][:skipped_domains].include? 'shop.test'
+  end
+
   def test_nameserver_with_hostname_must_exist
     payload = {
       "data": {
