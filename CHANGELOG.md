@@ -1,3 +1,26 @@
+22.02.2021
+* serverDeleteProhibited prohibts delete action [#1849](https://github.com/internetee/registry/issues/1849)
+
+19.02.2021
+* Update prohibited staatus is kept after renew [#1843](https://github.com/internetee/registry/issues/1843)
+* Fixed clientHold and serverManualInzone status conflict issue [#1845](https://github.com/internetee/registry/issues/1845)
+* Replacing registrant object with another that has the same ident data set does not require registrant verification [#1852](https://github.com/internetee/registry/issues/1852)
+
+11.02.2021
+* Poll messages on locking and unlocking a domain [#1828](https://github.com/internetee/registry/issues/1828)
+* Registrar's prefix is now checked and added to contact id for info and check requests [#1832](https://github.com/internetee/registry/issues/1832)
+
+10.02.2021
+* Admin contact bulk change option for registrars [#1764](https://github.com/internetee/registry/issues/1764)
+* Option to remove email addresses from AWS SES Supression list [#1839](https://github.com/internetee/registry/issues/1839)
+* Added separate key for bounce API [#1842](https://github.com/internetee/registry/pull/1842)
+
+09.02.2021
+* Added new endpoint for WHOIS contact requests [#1794](https://github.com/internetee/registry/pull/1794)
+
+05.02.2021
+* Fixed IPv4 empty string issue in case of IPv6 only entries for IP whitelist [#1833](https://github.com/internetee/registry/issues/1833)
+
 02.02.2021
 * Fixed updateProhibited status not affecting bulk tech contact change operation [#1820](https://github.com/internetee/registry/pull/1820)
 

@@ -37,6 +37,29 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_keeps_update_prohibited_status
+    domain = domains(:shop)
+    domain.update(statuses: [DomainStatus::CLIENT_UPDATE_PROHIBITED, DomainStatus::SERVER_UPDATE_PROHIBITED])
+    payload = {
+      "domains": [
+        'shop.test'
+      ],
+      "renew_period": "1y"
+    }
+
+    assert_changes -> { Domain.find_by(name: 'shop.test').valid_to } do
+      post "/repp/v1/domains/renew/bulk", headers: @auth_headers, params: payload
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      assert_response :ok
+      assert_equal 1000, json[:code]
+      assert_equal 'Command completed successfully', json[:message]
+      assert json[:data][:updated_domains].include? 'shop.test'
+    end
+    domain.reload
+    assert_equal domain.statuses, [DomainStatus::CLIENT_UPDATE_PROHIBITED, DomainStatus::SERVER_UPDATE_PROHIBITED]
+  end
+
   def test_throws_error_when_domain_not_renewable
     payload = {
       "domains": [

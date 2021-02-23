@@ -1,7 +1,7 @@
 module Api
   module V1
     class BouncesController < BaseController
-      before_action :authenticate_shared_key
+      before_action :validate_shared_key_integrity
 
       # POST api/v1/bounces/
       def create
@@ -19,6 +19,13 @@ module Api
         end
 
         params.require(:data)
+      end
+
+      private
+
+      def validate_shared_key_integrity
+        api_key = "Basic #{ENV['rwhois_bounces_api_shared_key']}"
+        head(:unauthorized) unless api_key == request.authorization
       end
     end
   end

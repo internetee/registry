@@ -11,7 +11,7 @@ module Api
       end
 
       def authenticate_shared_key
-        api_key = "Basic #{ENV['api_shared_key']}"
+        api_key = "Basic #{ENV['rwhois_internal_api_shared_key']}"
         head(:unauthorized) unless api_key == request.authorization
       end
 

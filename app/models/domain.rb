@@ -107,13 +107,13 @@ class Domain < ApplicationRecord
 
   validate :status_is_consistant
   def status_is_consistant
-      has_error = (statuses.include?(DomainStatus::SERVER_HOLD) && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
-      unless has_error
-        if (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::PENDING_DELETE, DomainStatus::FORCE_DELETE]).any?
-          has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
-        end
+    has_error = (hold_status? && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
+    unless has_error
+      if (statuses & DELETE_STATUSES).any?
+        has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
       end
-      errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
+    end
+    errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
   end
 
   attr_accessor :is_admin

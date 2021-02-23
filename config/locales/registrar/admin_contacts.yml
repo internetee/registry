@@ -1,11 +1,11 @@
 en:
   registrar:
-    tech_contacts:
+    admin_contacts:
       update:
-        replaced: Technical contacts have been successfully replaced.
+        replaced: Admin contacts have been successfully replaced.
         affected_domains: Affected domains
         skipped_domains: Skipped domains
       process_request:
         affected_domains: Affected domains
         skipped_domains: Skipped domains
-  replaced: Technical contacts have been successfully replaced.
+  replaced: Admin contacts have been successfully replaced.
