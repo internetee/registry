@@ -19,6 +19,9 @@ module Api
           token = create_token(user)
 
           if token
+            msg = "Bearer for #{eid_params[:first_name]} #{eid_params[:last_name]} " \
+                  "(#{eid_params[:ident]}) - '#{token[:access_token]}'"
+            ToStdout.msg(msg) unless Rails.env.production?
             render json: token
           else
             render json: { errors: [{ base: ['Cannot create generate session token'] }] }
