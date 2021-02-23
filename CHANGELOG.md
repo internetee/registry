@@ -1,4 +1,5 @@
 23.02.2021
+* UpdateProhibited status affects bulk actions in REPP [#1818](https://github.com/internetee/registry/issues/1818)
 * Registrant api domain request now excludes tech only domains by default [#1836](https://github.com/internetee/registry/pull/1836)
 
 22.02.2021
