@@ -4,6 +4,8 @@ module Api
   module V1
     module Registrant
       class DomainsController < ::Api::V1::Registrant::BaseController
+        before_action :set_tech_flag, only: [:show]
+
         def index
           limit = params[:limit] || 200
           offset = params[:offset] || 0
@@ -41,6 +43,12 @@ module Api
         end
 
         private
+
+        def set_tech_flag
+          # current_user_domains scope depends on tech flag
+          # However, if it's not present, tech contact can not see specific domain entry at all.
+          params.merge!(tech: 'true')
+        end
 
         def current_user_domains_total_count
           current_registrant_user.domains.count
