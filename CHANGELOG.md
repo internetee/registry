@@ -1,4 +1,5 @@
 26.02.2021
+* Domain delete is not affected by updateProhibited [#1844](https://github.com/internetee/registry/issues/1844)
 * Registrant API fix for handling eidas personal identificators [#1864](https://github.com/internetee/registry/pull/1864)
 
 23.02.2021
