@@ -76,7 +76,7 @@ class RegistrantUser < User
       return false unless user_data[:last_name]
 
       user_data[:country_code] ||= 'EE'
-      %i[ident country_code].each { |f| user_data[f].upcase! if user_data[f].is_a?(String) }
+      user_data[:country_code].upcase! if user_data[:country_code].is_a?(String)
 
       find_or_create_by_user_data(user_data)
     end

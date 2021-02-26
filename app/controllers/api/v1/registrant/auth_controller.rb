@@ -40,7 +40,7 @@ module Api
             obj.require(key)
           end
 
-          params.permit(required_params)
+          params.permit(required_params + [:country_code])
         end
 
         def create_token(user)
