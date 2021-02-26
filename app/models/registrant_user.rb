@@ -9,7 +9,7 @@ class RegistrantUser < User
   delegate :can?, :cannot?, to: :ability
 
   def ident
-    registrant_ident.to_s.split('-').last
+    registrant_ident.to_s[3..]
   end
 
   def country
@@ -18,6 +18,8 @@ class RegistrantUser < User
   end
 
   def companies(company_register = CompanyRegister::Client.new)
+    return [] if ident.include?('-')
+
     company_register.representation_rights(citizen_personal_code: ident,
                                            citizen_country_code: country.alpha3)
   end
