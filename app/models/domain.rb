@@ -202,7 +202,7 @@ class Domain < ApplicationRecord
       companies = Contact.registrant_user_company_contacts(registrant_user)
       from(
         "(#{registrant_user_administered_domains(registrant_user).to_sql} UNION " \
-        "#{registrant_user_company_registrant(registrant_user).to_sql} UNION " \
+        "#{registrant_user_company_registrant(companies).to_sql} UNION " \
         "#{registrant_user_domains_company(companies, except_tech: true).to_sql}) AS domains"
       )
     end
