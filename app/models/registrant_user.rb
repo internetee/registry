@@ -9,7 +9,7 @@ class RegistrantUser < User
   delegate :can?, :cannot?, to: :ability
 
   def ident
-    registrant_ident.to_s.split('-').last
+    registrant_ident.to_s.slice(3)
   end
 
   def country
