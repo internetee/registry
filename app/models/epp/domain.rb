@@ -465,7 +465,7 @@ class Epp::Domain < Domain
   def update(frame, current_user, verify = true)
     return super if frame.blank?
 
-    if discarded?
+    if discarded? || statuses_blocks_update?
       add_epp_error('2304', nil, nil, 'Object status prohibits operation')
       return
     end
