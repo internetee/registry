@@ -11,12 +11,21 @@ module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
           lambda {
             where("(force_delete_data->>'contact_notification_sent_date') is null")
           }
+
+    HOLD_STATUSES = [
+      DomainStatus::SERVER_HOLD,
+      DomainStatus::CLIENT_HOLD,
+    ].freeze
   end
 
   class_methods do
     def force_delete_scheduled
       where('force_delete_start <= ?', Time.zone.now)
     end
+  end
+
+  def hold_status?
+    HOLD_STATUSES.any? { |status| statuses.include? status }
   end
 
   def notification_template(explicit: nil)

@@ -107,13 +107,13 @@ class Domain < ApplicationRecord
 
   validate :status_is_consistant
   def status_is_consistant
-      has_error = (statuses.include?(DomainStatus::SERVER_HOLD) && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
-      unless has_error
-        if (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::PENDING_DELETE, DomainStatus::FORCE_DELETE]).any?
-          has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
-        end
+    has_error = (hold_status? && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
+    unless has_error
+      if (statuses & DELETE_STATUSES).any?
+        has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
       end
-      errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
+    end
+    errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
   end
 
   attr_accessor :is_admin
@@ -198,6 +198,23 @@ class Domain < ApplicationRecord
       Setting.nameserver_required
     end
 
+    def registrant_user_admin_registrant_domains(registrant_user)
+      companies = Contact.registrant_user_company_contacts(registrant_user)
+      from(
+        "(#{registrant_user_administered_domains(registrant_user).to_sql} UNION " \
+        "#{registrant_user_company_registrant(companies).to_sql} UNION " \
+        "#{registrant_user_domains_company(companies, except_tech: true).to_sql}) AS domains"
+      )
+    end
+
+    def registrant_user_direct_admin_registrant_domains(registrant_user)
+      from(
+        "(#{registrant_user_direct_domains_by_registrant(registrant_user).to_sql} UNION " \
+        "#{registrant_user_direct_domains_by_contact(registrant_user,
+                                                     except_tech: true).to_sql}) AS domains"
+      )
+    end
+
     def registrant_user_domains(registrant_user)
       from(
         "(#{registrant_user_domains_by_registrant(registrant_user).to_sql} UNION " \
@@ -247,16 +264,20 @@ class Domain < ApplicationRecord
       where(registrant: registrant_user.direct_contacts)
     end
 
-    def registrant_user_direct_domains_by_contact(registrant_user)
-      joins(:domain_contacts).where(domain_contacts: { contact_id: registrant_user.direct_contacts })
+    def registrant_user_direct_domains_by_contact(registrant_user, except_tech: false)
+      request = { contact_id: registrant_user.direct_contacts }
+      request[:type] = [AdminDomainContact.name] if except_tech
+      joins(:domain_contacts).where(domain_contacts: request)
     end
 
     def registrant_user_company_registrant(companies)
       where(registrant: companies)
     end
 
-    def registrant_user_domains_company(companies)
-      joins(:domain_contacts).where(domain_contacts: { contact: companies })
+    def registrant_user_domains_company(companies, except_tech: false)
+      request = { contact: companies }
+      request[:type] = [AdminDomainContact.name] if except_tech
+      joins(:domain_contacts).where(domain_contacts: request)
     end
   end
 

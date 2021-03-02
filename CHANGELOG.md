@@ -1,3 +1,19 @@
+26.02.2021
+* Domain delete is not affected by updateProhibited [#1844](https://github.com/internetee/registry/issues/1844)
+* Registrant API fix for handling eidas personal identificators [#1864](https://github.com/internetee/registry/pull/1864)
+
+23.02.2021
+* UpdateProhibited status affects bulk actions in REPP [#1818](https://github.com/internetee/registry/issues/1818)
+* Registrant api domain request now excludes tech only domains by default [#1836](https://github.com/internetee/registry/pull/1836)
+
+22.02.2021
+* serverDeleteProhibited prohibts delete action [#1849](https://github.com/internetee/registry/issues/1849)
+
+19.02.2021
+* Update prohibited staatus is kept after renew [#1843](https://github.com/internetee/registry/issues/1843)
+* Fixed clientHold and serverManualInzone status conflict issue [#1845](https://github.com/internetee/registry/issues/1845)
+* Replacing registrant object with another that has the same ident data set does not require registrant verification [#1852](https://github.com/internetee/registry/issues/1852)
+
 11.02.2021
 * Poll messages on locking and unlocking a domain [#1828](https://github.com/internetee/registry/issues/1828)
 * Registrar's prefix is now checked and added to contact id for info and check requests [#1832](https://github.com/internetee/registry/issues/1832)

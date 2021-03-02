@@ -1,6 +1,12 @@
 module Concerns::Domain::Deletable
   extend ActiveSupport::Concern
 
+  DELETE_STATUSES = [
+    DomainStatus::PENDING_DELETE_CONFIRMATION,
+    DomainStatus::PENDING_DELETE,
+    DomainStatus::FORCE_DELETE,
+  ].freeze
+
   private
 
   def delete_later

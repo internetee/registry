@@ -5,9 +5,10 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
   def setup
     super
 
-    @domain = domains(:hospital)
+    @domain = domains(:airport)
     @registrant = @domain.registrant
     @user = users(:registrant)
+    domains(:metro).tech_domain_contacts.update(contact_id: @registrant.id)
     @auth_headers = { 'HTTP_AUTHORIZATION' => auth_token }
   end
 
@@ -19,7 +20,7 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
 
     assert_equal('hospital.test', domain[:name])
     assert_equal('5edda1a5-3548-41ee-8b65-6d60daf85a37', domain[:id])
-    assert_equal({name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'}, domain[:registrant])
+    assert_equal({name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957', org: false}, domain[:registrant])
     assert_equal([{name: 'John',
                    id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957',
                    email: 'john@inbox.test'}],
@@ -55,6 +56,46 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
 
     array_of_domain_registrars = response_json[:domains].map { |x| x[:registrar] }
     assert(array_of_domain_registrars.include?({name: 'Good Names', website: nil}))
+  end
+
+  def test_return_domain_list_with_registrants_and_admins
+    domains(:hospital).admin_domain_contacts.update(contact_id: contacts(:william).id)
+    domains(:hospital).update(registrant: contacts(:william).becomes(Registrant)) 
+
+    get '/api/v1/registrant/domains', headers: @auth_headers, params: { 'offset' => 0 }
+    assert_equal(200, response.status)
+
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    response_json[:domains].each do |x| 
+      if x[:registrant][:org] == false
+        x[:tech_contacts].each do |s|
+          assert_not s[:name].include?(@registrant.name)
+        end
+      end
+    end
+  end
+
+  def test_return_domain_list_with_registrants_and_admins_tech
+    get '/api/v1/registrant/domains', headers: @auth_headers, params: { 'offset' => 0, 'tech' => true }
+    assert_equal(200, response.status)
+
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    response_json[:domains].each do |x| 
+      if x[:name] == 'metro.test'
+        x[:tech_contacts].each do |s|
+            assert s[:name].include?(@registrant.name)
+        end
+      end
+    end
+  end  
+
+  def test_domains_total_if_an_incomplete_list_is_returned
+    get '/api/v1/registrant/domains', headers: @auth_headers, params: { 'offset' => 0 }
+    assert_equal(200, response.status)
+
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal response_json[:domains].length, response_json[:count]
+    assert_equal response_json[:total], 5
   end
 
   def test_root_accepts_limit_and_offset_parameters
