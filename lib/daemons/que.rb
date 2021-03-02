@@ -17,10 +17,10 @@ if defined?(::Rails) && Rails.respond_to?(:application)
   Rails.application.eager_load!
 end
 
-Que.logger.level  = Logger.const_get((ENV['QUE_LOG_LEVEL'] || 'INFO').upcase)
-Que.worker_count  = 1
-Que.wake_interval = (ENV['QUE_WAKE_INTERVAL'] || 1).to_f
-Que.mode          = :async
+# Que.logger.level  = Logger.const_get((ENV['QUE_LOG_LEVEL'] || 'INFO').upcase)
+# Que.worker_count  = 1
+# Que.wake_interval = (ENV['QUE_WAKE_INTERVAL'] || 1).to_f
+# Que.mode          = :async
 
 # When changing how signals are caught, be sure to test the behavior with
 # the rake task in tasks/safe_shutdown.rb.
@@ -32,7 +32,7 @@ end
 
 at_exit do
   $stdout.puts "Finishing Que's current jobs before exiting..."
-  Que.worker_count = 0
+  # Que.worker_count = 0
   Que.mode = :off
   $stdout.puts "Que's jobs finished, exiting..."
 end
