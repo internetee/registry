@@ -1,5 +1,4 @@
 class VerifyEmailsJob < ApplicationJob
-  queue_as :default
   discard_on StandardError
 
   def perform(verification_id)

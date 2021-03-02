@@ -1,5 +1,4 @@
 class RegenerateRegistrarWhoisesJob < ApplicationJob
-  queue_as :default
   retry_on StandardError, wait: 2.seconds, attempts: 3
 
   def perform(registrar_id)
