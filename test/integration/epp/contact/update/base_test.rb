@@ -325,6 +325,104 @@ class EppContactUpdateBaseTest < EppTestCase
     assert_nil @contact.state
   end
 
+  def test_update_contact_with_update_prohibited
+    @contact.update(statuses: [Contact::CLIENT_UPDATE_PROHIBITED])
+    @contact.update_columns(code: @contact.code.upcase)
+
+    street = '123 Example'
+    city = 'Tallinn'
+    state = 'Harjumaa'
+    zip = '123456'
+    country_code = 'EE'
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:id>#{@contact.code}</contact:id>
+              <contact:chg>
+                <contact:postalInfo>
+                  <contact:addr>
+                    <contact:street>#{street}</contact:street>
+                    <contact:city>#{city}</contact:city>
+                    <contact:sp>#{state}</contact:sp>
+                    <contact:pc>#{zip}</contact:pc>
+                    <contact:cc>#{country_code}</contact:cc>
+                  </contact:addr>
+                </contact:postalInfo>
+              </contact:chg>
+            </contact:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    @contact.reload
+
+    assert_not_equal city, @contact.city
+    assert_not_equal street, @contact.street
+    assert_not_equal zip, @contact.zip
+    assert_not_equal country_code, @contact.country_code
+    assert_not_equal state, @contact.state
+
+    assert_epp_response :object_status_prohibits_operation
+  end
+
+  def test_legal_document
+    assert_equal 'john-001', @contact.code
+    assert_not_equal 'new name', @contact.name
+    assert_not_equal 'new-email@inbox.test', @contact.email
+    assert_not_equal '+123.4', @contact.phone
+
+    Setting.request_confirmation_on_domain_deletion_enabled = false
+
+    # https://github.com/internetee/registry/issues/415
+    @contact.update_columns(code: @contact.code.upcase)
+
+    assert_not @contact.legal_documents.present?
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:id>john-001</contact:id>
+              <contact:chg>
+                <contact:postalInfo>
+                  <contact:name>new name</contact:name>
+                </contact:postalInfo>
+                <contact:voice>+123.4</contact:voice>
+                <contact:email>new-email@inbox.test</contact:email>
+              </contact:chg>
+            </contact:update>
+          </update>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference -> { @contact.legal_documents.reload.size } do
+      post epp_update_path, params: { frame: request_xml },
+          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+      @contact.reload
+    end
+    
+    assert_epp_response :completed_successfully
+    assert_equal 'new name', @contact.name
+    assert_equal 'new-email@inbox.test', @contact.email
+    assert_equal '+123.4', @contact.phone
+  end
+
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)
