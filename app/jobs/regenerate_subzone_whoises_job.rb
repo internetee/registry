@@ -1,6 +1,4 @@
 class RegenerateSubzoneWhoisesJob < ApplicationJob
-  queue_as :default
-
   def perform
     subzones = DNS::Zone.all
 
