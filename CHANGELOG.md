@@ -1,5 +1,5 @@
 03.03.2021
-* email notification is now sent in case of pendingupdate expiry [#1736](https://github.com/internetee/registry/pull/1736)
+* Email notification is sent in case of pendingupdate expiry [#897](https://github.com/internetee/registry/issues/897)
 
 26.02.2021
 * Domain delete is not affected by updateProhibited [#1844](https://github.com/internetee/registry/issues/1844)
