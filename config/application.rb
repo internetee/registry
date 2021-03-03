@@ -44,7 +44,7 @@ module DomainNameRegistry
 
     config.active_record.schema_format = :sql
 
-    config.active_job.queue_adapter = :que
+    config.active_job.queue_adapter = :sidekiq
 
     config.generators do |g|
       g.stylesheets false
@@ -79,6 +79,14 @@ module DomainNameRegistry
 
     config.action_view.default_form_builder = 'DefaultFormBuilder'
     config.secret_key_base = Figaro.env.secret_key_base
+
+    # nil will use the "default" queue
+    # some of these options will not work with your Rails version
+    # add/remove as necessary
+    config.action_mailer.deliver_later_queue_name = nil # defaults to "mailers"
+    config.active_storage.queues.analysis   = nil       # defaults to "active_storage_analysis"
+    config.active_storage.queues.purge      = nil       # defaults to "active_storage_purge"
+    config.active_storage.queues.mirror     = nil       # defaults to "active_storage_mirror"
 
     # Using `Rails.application.config.active_record.belongs_to_required_by_default` in
     # `new_framework_defaults.rb` has no effect in Rails 5.0.x.

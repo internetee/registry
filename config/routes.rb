@@ -1,4 +1,5 @@
 require_dependency 'epp_constraint'
+require 'sidekiq/web'
 
 Rails.application.routes.draw do
   # https://github.com/internetee/epp_proxy#translation-of-epp-calls
@@ -302,7 +303,8 @@ Rails.application.routes.draw do
     resources :bounced_mail_addresses, only: %i[index show destroy]
 
     authenticate :admin_user do
-      mount Que::Web, at: 'que'
+      # mount Que::Web, at: 'que'
+      mount Sidekiq::Web, at: 'sidekiq'
     end
   end
 
