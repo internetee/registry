@@ -10,11 +10,7 @@ class StartTest < ActiveSupport::TestCase
   end
 
   def test_sets_expired
-    job_count = lambda do
-      QueJob.where("args->>0 = '#{@domain.id}'", job_class: DomainExpireEmailJob.name).count
-    end
-
-    assert_difference job_count, 1 do
+    Sidekiq::Testing.fake! do
       perform_enqueued_jobs do
         DomainCron.start_expire_period
       end

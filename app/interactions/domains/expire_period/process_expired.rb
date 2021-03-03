@@ -11,7 +11,7 @@ module Domains
 
         saved = domain.save(validate: false)
 
-        DomainExpireEmailJob.enqueue(domain.id, run_at: send_time) if saved
+        DomainExpireEmailJob.set(wait_until: send_time).perform_later(domain.id) if saved
       end
 
       def set_graceful_expired

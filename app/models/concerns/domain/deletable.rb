@@ -19,8 +19,12 @@ module Domain::Deletable
   end
 
   def do_not_delete_later
-    # Que job can be manually deleted in admin area UI
-    QueJob.find_by("args->>0 = '#{id}'", job_class: DomainDeleteJob.name)&.destroy
+    return if Rails.env.test?
+
+    jobs = Sidekiq::ScheduledSet.new.select do |job|
+      job.args.first['job_class'] == 'DomainDeleteJob' && job.args.first['arguments'] == [id]
+    end
+    jobs.each(&:delete)
   end
 
   def deletion_time_span

@@ -12,7 +12,8 @@ class RegistrantChangeExpiredEmailJob < ApplicationJob
   private
 
   def log(domain)
-    message = "Send RegistrantChangeMailer#expired email for domain #{domain.name} (##{domain.id}) to #{domain.new_registrant_email}"
+    message = 'Send RegistrantChangeMailer#expired email for domain '\
+               "#{domain.name} (##{domain.id}) to #{domain.new_registrant_email}"
     logger.info(message)
   end
 

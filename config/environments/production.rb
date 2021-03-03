@@ -87,8 +87,3 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end
-
-# In off mode, queueing a job will simply insert it into the database -
-# the current process will make no effort to run it.
-# You should use this if you want to use a dedicated process to work tasks
-Que.mode = :off

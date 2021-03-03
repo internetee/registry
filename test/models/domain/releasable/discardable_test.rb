@@ -1,4 +1,6 @@
 require 'test_helper'
+require 'sidekiq/testing'
+Sidekiq::Testing.fake!
 
 class DomainReleasableDiscardableTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
@@ -44,11 +46,7 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
 
     Domain.release_domains
 
-    job_count = lambda do
-      QueJob.where("args->>0 = '#{@domain.id}'", job_class: DomainDeleteJob.name).count
-    end
-
-    assert_no_difference job_count, 'A domain should not be discarded again' do
+    assert_no_enqueued_jobs do
       Domain.release_domains
     end
   end
@@ -104,7 +102,8 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
 
   def test_keeping_a_domain_cancels_domain_deletion
     @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
-    @domain.keep
-    assert_nil QueJob.find_by("args->>0 = '#{@domain.id}'", job_class: DomainDeleteJob.name)
+    assert_no_enqueued_jobs only: DomainDeleteJob do
+      @domain.keep
+    end
   end
 end
