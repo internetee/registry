@@ -18,7 +18,8 @@ module Domains
         RegistrantChangeMailer.expired(domain: domain,
                                        registrar: domain.registrar,
                                        registrant: domain.registrant,
-                                       send_to: domain.new_registrant_email).deliver_later
+                                       send_to: [domain.new_registrant_email,
+                                                 domain.registrant.email]).deliver_later
       end
 
       def notify_pending_delete

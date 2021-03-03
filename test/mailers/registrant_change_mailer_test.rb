@@ -73,10 +73,12 @@ class RegistrantChangeMailerTest < ActionMailer::TestCase
     email = RegistrantChangeMailer.expired(domain: @domain,
                                            registrar: @domain.registrar,
                                            registrant: @domain.registrant,
-                                           send_to: @domain.new_registrant_email).deliver_now
+                                           send_to: [@domain.new_registrant_email,
+                                                     @domain.registrant.email],
+                                           ).deliver_now
 
     assert_emails 1
-    assert_equal ['william@inbox.test'], email.to
+    assert_equal ['william@inbox.test', @domain.registrant.email], email.to
     assert_equal 'Domeeni shop.test registreerija vahetuse taotlus on tühistatud' \
                  ' / shop.test registrant change cancelled', email.subject
   end
