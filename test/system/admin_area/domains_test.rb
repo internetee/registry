@@ -1,4 +1,7 @@
 require 'application_system_test_case'
+require 'sidekiq/testing'
+
+Sidekiq::Testing.fake!
 
 class AdminDomainsTestTest < ApplicationSystemTestCase
   setup do

@@ -14,7 +14,7 @@ module Domains
         return unless saved
 
         recipients.each do |recipient|
-          DomainExpireEmailJob.enqueue(domain.id, recipient, run_at: send_time)
+          DomainExpireEmailJob.set(wait_until: send_time).perform_later(domain.id, recipient)
         end
       end
 
