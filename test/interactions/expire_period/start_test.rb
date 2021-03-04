@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'sidekiq/testing'
 
 class StartTest < ActiveSupport::TestCase
   include ActionMailer::TestHelper
@@ -11,7 +10,7 @@ class StartTest < ActiveSupport::TestCase
   end
 
   def test_sets_expired
-    Sidekiq::Testing.inline! do
+    Sidekiq::Testing.fake! do
       perform_enqueued_jobs do
         DomainCron.start_expire_period
       end
