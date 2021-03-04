@@ -178,10 +178,6 @@ class DNS::ZoneTest < ActiveSupport::TestCase
     assert_nil Whois::Record.find_by(name: subzone.origin)
   end
 
-  def test_generate_zonefile
-    
-  end
-
   private
 
   def valid_zone
