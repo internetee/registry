@@ -1,3 +1,6 @@
+04.03.2021
+* Removed old registrant portal from the project [#1826](https://github.com/internetee/registry/issues/1826)
+
 03.03.2021
 * Email notification is sent in case of pendingupdate expiry [#897](https://github.com/internetee/registry/issues/897)
 
