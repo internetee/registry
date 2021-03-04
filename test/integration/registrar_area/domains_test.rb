@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class RegistrarAreaDomainsIntegrationTest < ApplicationIntegrationTest
+  include FormTagHelper
+
   setup do
     sign_in users(:api_bestnames)
   end
