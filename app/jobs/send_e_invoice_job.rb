@@ -1,4 +1,5 @@
 class SendEInvoiceJob < ApplicationJob
+  queue_as :default
   discard_on HTTPClient::TimeoutError
 
   def perform(invoice_id, payable = true)

@@ -1,4 +1,6 @@
 class DisputeStatusUpdateJob < ApplicationJob
+  queue_as :default
+
   def perform(logger: Logger.new(STDOUT))
     @logger = logger
 
