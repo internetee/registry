@@ -13,7 +13,7 @@ module Concerns
       end
 
       def paid?
-        account_activity.present?
+        account_activity
       end
 
       def receipt_date

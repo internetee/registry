@@ -1,7 +1,6 @@
-class DomainDeleteJob < ApplicationJob
-  queue_as :default
+class DomainDeleteJob < Que::Job
 
-  def perform(domain_id)
+  def run(domain_id)
     domain = Domain.find(domain_id)
 
     Domains::Delete::DoDelete.run(domain: domain)

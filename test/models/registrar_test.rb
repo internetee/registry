@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrarTest < ActiveJob::TestCase
+class RegistrarTest < ActiveSupport::TestCase
   setup do
     @registrar = registrars(:bestnames)
     @original_default_language = Setting.default_language
@@ -213,9 +213,7 @@ class RegistrarTest < ActiveJob::TestCase
   def test_issues_e_invoice_along_with_invoice
     EInvoice::Providers::TestProvider.deliveries.clear
 
-    perform_enqueued_jobs do
-      @registrar.issue_prepayment_invoice(100)
-    end
+    @registrar.issue_prepayment_invoice(100)
 
     assert_equal 1, EInvoice::Providers::TestProvider.deliveries.count
   end

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ContactTest < ActiveJob::TestCase
+class ContactTest < ActiveSupport::TestCase
   setup do
     @contact = contacts(:john)
     @old_validation_type = Truemail.configure.default_validation_type
@@ -328,9 +328,7 @@ class ContactTest < ActiveJob::TestCase
     @contact.name = 'SomeReallyWeirdRandomTestName'
     domain = @contact.registrant_domains.first
 
-    perform_enqueued_jobs do
-      @contact.save!
-    end
+    @contact.save!
 
     assert_equal domain.whois_record.try(:json).try(:[], 'registrant'), @contact.name
   end

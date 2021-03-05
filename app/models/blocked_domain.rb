@@ -34,6 +34,6 @@ class BlockedDomain < ApplicationRecord
   end
 
   def remove_data
-    UpdateWhoisRecordJob.perform_later name, 'blocked'
+    UpdateWhoisRecordJob.enqueue name, 'blocked'
   end
 end

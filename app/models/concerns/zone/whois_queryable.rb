@@ -13,7 +13,7 @@ module Concerns
       end
 
       def update_whois_record
-        UpdateWhoisRecordJob.perform_later origin, 'zone'
+        UpdateWhoisRecordJob.enqueue origin, 'zone'
       end
 
       def generate_data

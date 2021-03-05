@@ -1,6 +1,6 @@
 require "test_helper"
 
-class VerifyEmailsJobTest < ActiveJob::TestCase
+class VerifyEmailsJobTest < ActiveSupport::TestCase
   def setup
     @contact = contacts(:john)
     @invalid_contact = contacts(:invalid_email)
@@ -33,9 +33,7 @@ class VerifyEmailsJobTest < ActiveJob::TestCase
   end
 
   def test_job_checks_if_email_valid
-    perform_enqueued_jobs do
-      VerifyEmailsJob.perform_now(@contact_verification.id)
-    end
+    VerifyEmailsJob.run(@contact_verification.id)
     @contact_verification.reload
 
     assert @contact_verification.success
@@ -46,18 +44,14 @@ class VerifyEmailsJobTest < ActiveJob::TestCase
     @contact_verification.update(success: true, verified_at: old_verified_at)
     assert @contact_verification.recently_verified?
 
-    perform_enqueued_jobs do
-      VerifyEmailsJob.perform_now(@contact_verification.id)
-    end
+    VerifyEmailsJob.run(@contact_verification.id)
     @contact_verification.reload
 
     assert_in_delta @contact_verification.verified_at.to_i, old_verified_at.to_i, 1
   end
 
   def test_job_checks_if_email_invalid
-    perform_enqueued_jobs do
-      VerifyEmailsJob.perform_now(@invalid_contact_verification.id)
-    end
+    VerifyEmailsJob.run(@invalid_contact_verification.id)
     @contact_verification.reload
 
     refute @contact_verification.success

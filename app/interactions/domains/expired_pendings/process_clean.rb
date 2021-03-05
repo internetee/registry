@@ -9,7 +9,7 @@ module Domains
         clean_pendings
 
         to_stdout("DomainCron.clean_expired_pendings: ##{domain.id} (#{domain.name})")
-        UpdateWhoisRecordJob.perform_later domain.name, 'domain'
+        UpdateWhoisRecordJob.enqueue domain.name, 'domain'
       end
 
       private

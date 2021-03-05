@@ -1,6 +1,6 @@
 require "test_helper"
 
-class DisputeStatusUpdateJobTest < ActiveJob::TestCase
+class DisputeStatusUpdateJobTest < ActiveSupport::TestCase
   setup do
     travel_to Time.zone.parse('2010-10-05')
     @logger = Rails.logger
@@ -8,13 +8,13 @@ class DisputeStatusUpdateJobTest < ActiveJob::TestCase
 
   def test_nothing_is_raised
     assert_nothing_raised do
-      DisputeStatusUpdateJob.perform_now(logger: @logger)
+      DisputeStatusUpdateJob.run(logger: @logger)
     end
   end
 
   def test_whois_data_added_when_dispute_activated
     dispute = disputes(:future)
-    DisputeStatusUpdateJob.perform_now(logger: @logger)
+    DisputeStatusUpdateJob.run(logger: @logger)
 
     whois_record = Whois::Record.find_by(name: dispute.domain_name)
     assert whois_record.present?
@@ -25,7 +25,7 @@ class DisputeStatusUpdateJobTest < ActiveJob::TestCase
     dispute = disputes(:active)
     dispute.update!(starts_at: Time.zone.today - 3.years - 1.day)
 
-    DisputeStatusUpdateJob.perform_now(logger: @logger)
+    DisputeStatusUpdateJob.run(logger: @logger)
     dispute.reload
 
     assert dispute.closed
@@ -37,9 +37,7 @@ class DisputeStatusUpdateJobTest < ActiveJob::TestCase
   def test_registered_domain_whois_data_is_added
     Dispute.create(domain_name: 'shop.test', starts_at: '2010-07-05')
     travel_to Time.zone.parse('2010-07-05')
-    perform_enqueued_jobs do
-      DisputeStatusUpdateJob.perform_now(logger: @logger)
-    end
+    DisputeStatusUpdateJob.run(logger: @logger)
 
     whois_record = Whois::Record.find_by(name: 'shop.test')
     assert_includes whois_record.json['status'], 'disputed'
@@ -55,9 +53,7 @@ class DisputeStatusUpdateJobTest < ActiveJob::TestCase
                   force_delete_date: nil)
 
     # Dispute status is added automatically if starts_at is not in future
-    perform_enqueued_jobs do
-      Dispute.create(domain_name: 'shop.test', starts_at: Time.zone.parse('2010-07-05'))
-    end
+    Dispute.create(domain_name: 'shop.test', starts_at: Time.zone.parse('2010-07-05'))
     domain.reload
 
     whois_record = Whois::Record.find_by(name: 'shop.test')
@@ -66,9 +62,7 @@ class DisputeStatusUpdateJobTest < ActiveJob::TestCase
     # Dispute status is removed night time day after it's ended
     travel_to Time.zone.parse('2010-07-05') + 3.years + 1.day
 
-    perform_enqueued_jobs do
-      DisputeStatusUpdateJob.perform_now(logger: @logger)
-    end
+    DisputeStatusUpdateJob.run(logger: @logger)
 
     whois_record.reload
     assert_not whois_record.json['status'].include? 'disputed'

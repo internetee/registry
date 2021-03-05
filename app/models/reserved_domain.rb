@@ -59,6 +59,6 @@ class ReservedDomain < ApplicationRecord
   alias_method :update_whois_record, :generate_data
 
   def remove_data
-    UpdateWhoisRecordJob.perform_later name, 'reserved'
+    UpdateWhoisRecordJob.enqueue name, 'reserved'
   end
 end

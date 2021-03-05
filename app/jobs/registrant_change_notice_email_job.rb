@@ -1,7 +1,5 @@
-class RegistrantChangeNoticeEmailJob < ApplicationJob
-  queue_as :default
-
-  def perform(domain_id, new_registrant_id)
+class RegistrantChangeNoticeEmailJob < Que::Job
+  def run(domain_id, new_registrant_id)
     domain = Domain.find(domain_id)
     new_registrant = Registrant.find(new_registrant_id)
     log(domain, new_registrant)

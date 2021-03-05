@@ -92,13 +92,12 @@ class EppDomainDeleteBaseTest < EppTestCase
     perform_enqueued_jobs do
       post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-
     @domain.reload
 
     assert @domain.registrant_verification_asked?
     assert @domain.pending_delete_confirmation?
-    assert_epp_response :completed_successfully_action_pending
     assert_emails 1
+    assert_epp_response :completed_successfully_action_pending
   end
 
   def test_skips_registrant_confirmation_when_not_required

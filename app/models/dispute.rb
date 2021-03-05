@@ -84,7 +84,7 @@ class Dispute < ApplicationRecord
   end
 
   def remove_data
-    UpdateWhoisRecordJob.perform_later domain_name, 'disputed'
+    UpdateWhoisRecordJob.enqueue domain_name, 'disputed'
   end
 
   def fill_empty_passwords

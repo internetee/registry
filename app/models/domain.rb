@@ -387,8 +387,8 @@ class Domain < ApplicationRecord
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
 
-    RegistrantChangeConfirmEmailJob.perform_later(id, new_registrant_id)
-    RegistrantChangeNoticeEmailJob.perform_later(id, new_registrant_id)
+    RegistrantChangeConfirmEmailJob.enqueue(id, new_registrant_id)
+    RegistrantChangeNoticeEmailJob.enqueue(id, new_registrant_id)
 
     reload
 
@@ -617,7 +617,7 @@ class Domain < ApplicationRecord
   end
 
   def update_whois_record
-    UpdateWhoisRecordJob.perform_later name, 'domain'
+    UpdateWhoisRecordJob.enqueue name, 'domain'
   end
 
   def status_notes_array=(notes)

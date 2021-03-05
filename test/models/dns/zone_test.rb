@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DNS::ZoneTest < ActiveJob::TestCase
+class DNS::ZoneTest < ActiveSupport::TestCase
   def test_valid_zone_fixture_is_valid
     assert valid_zone.valid?, proc { valid_zone.errors.full_messages }
   end
@@ -134,9 +134,7 @@ class DNS::ZoneTest < ActiveJob::TestCase
     subzone = dns_zones(:one).dup
 
     subzone.origin = 'sub.zone'
-    perform_enqueued_jobs do
-      subzone.save
-    end
+    subzone.save
 
     whois_record = Whois::Record.find_by(name: subzone.origin)
     assert whois_record.present?
@@ -146,9 +144,7 @@ class DNS::ZoneTest < ActiveJob::TestCase
     subzone = dns_zones(:one).dup
 
     subzone.origin = 'sub.zone'
-    perform_enqueued_jobs do
-      subzone.save
-    end
+    subzone.save
 
     whois_record = Whois::Record.find_by(name: subzone.origin)
     assert whois_record.present?
@@ -174,15 +170,11 @@ class DNS::ZoneTest < ActiveJob::TestCase
     subzone = dns_zones(:one).dup
 
     subzone.origin = 'sub.zone'
-    perform_enqueued_jobs do
-      subzone.save
-    end
+    subzone.save
 
     assert Whois::Record.find_by(name: subzone.origin).present?
 
-    perform_enqueued_jobs do
-      subzone.destroy
-    end
+    subzone.destroy
     assert_nil Whois::Record.find_by(name: subzone.origin)
   end
 
