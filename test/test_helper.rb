@@ -18,9 +18,6 @@ require 'capybara/rails'
 require 'capybara/minitest'
 require 'webmock/minitest'
 require 'support/assertions/epp_assertions'
-require 'sidekiq/testing'
-
-Sidekiq::Testing.fake!
 
 
 # `bin/rails test` is not the same as `bin/rake test`.
