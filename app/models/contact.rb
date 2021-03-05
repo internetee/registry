@@ -4,11 +4,11 @@ class Contact < ApplicationRecord
   include Versions # version/contact_version.rb
   include EppErrors
   include UserEvents
-  include Concerns::Contact::Transferable
-  include Concerns::Contact::Identical
-  include Concerns::Contact::Disclosable
-  include Concerns::Contact::Archivable
-  include Concerns::EmailVerifable
+  include Contact::Transferable
+  include Contact::Identical
+  include Contact::Disclosable
+  include Contact::Archivable
+  include EmailVerifable
 
   belongs_to :original, class_name: self.name
   belongs_to :registrar, required: true

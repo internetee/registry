@@ -1,4 +1,4 @@
-class Registrar::DomainListCSVPresenter
+class Registrar::DomainListCsvPresenter
   def initialize(domains:, view:)
     @domains = domains
     @view = view

@@ -247,9 +247,21 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :version_domain_versions do
+      collection do
+        get 'search' => 'domain_versions#search', via: [:get, :post], as: :search
+      end
+    end
+
     resources :contact_versions do
       collection do
         get 'search'
+      end
+    end
+
+    resources :version_contact_versions do
+      collection do
+        get 'search' => 'contact_versions#search', via: [:get, :post], as: :search
       end
     end
 

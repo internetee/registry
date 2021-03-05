@@ -1,4 +1,4 @@
-module Concerns::Domain::Expirable
+module Domain::Expirable
   extend ActiveSupport::Concern
 
   included do

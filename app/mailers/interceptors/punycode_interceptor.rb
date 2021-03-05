@@ -1,4 +1,4 @@
-class PunycodeInterceptor
+class Interceptors::PunycodeInterceptor
   class << self
     def delivering_email(message)
       message.from = encode_addresses_as_punycode(message.from)

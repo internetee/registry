@@ -1,4 +1,4 @@
-class RegistrantVerificationVersion < PaperTrail::Version
+class Version::RegistrantVerificationVersion < PaperTrail::Version
   include VersionSession
   self.table_name    = :log_registrant_verifications
   self.sequence_name = :log_registrant_verifications_id_seq
