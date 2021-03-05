@@ -1,4 +1,4 @@
-class DomainExpireEmailJob < ApplicationJob
+class DomainExpireEmailJob < Que::Job
   def perform(domain_id)
     domain = Domain.find(domain_id)
 
