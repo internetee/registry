@@ -12,6 +12,26 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
     @bounced_mail.action = 'failed'
     @bounced_mail.status = '5.1.1'
     @bounced_mail.diagnostic =  'smtp; 550 5.1.1 user unknown'
+
+    @contact_email = "john@inbox.test"
+  end
+
+  def test_force_delete_related_domains
+    @bounced_mail.email = @contact_email
+    contact = Contact.find_by(email: @bounced_mail.email)
+    domain_contacts = DomainContact.where(contact: contact)
+    
+    domain_contacts.each do |domain_contact|
+      statuses = [DomainStatus::FORCE_DELETE, DomainStatus::SERVER_RENEW_PROHIBITED, DomainStatus::SERVER_TRANSFER_PROHIBITED]
+      domain_contact.domain.update(statuses: statuses)
+    end
+    domain_contacts.reload
+
+    domain_contacts.each do |domain_contact|
+      assert domain_contact.domain.statuses.include? DomainStatus::FORCE_DELETE
+      assert domain_contact.domain.statuses.include? DomainStatus::SERVER_RENEW_PROHIBITED
+      assert domain_contact.domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
+    end
   end
 
   def test_email_is_required
