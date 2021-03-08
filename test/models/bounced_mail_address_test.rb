@@ -20,12 +20,6 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
     @bounced_mail.email = @contact_email
     contact = Contact.find_by(email: @bounced_mail.email)
     domain_contacts = DomainContact.where(contact: contact)
-    
-    domain_contacts.each do |domain_contact|
-      statuses = [DomainStatus::FORCE_DELETE, DomainStatus::SERVER_RENEW_PROHIBITED, DomainStatus::SERVER_TRANSFER_PROHIBITED]
-      domain_contact.domain.update(statuses: statuses)
-    end
-    domain_contacts.reload
 
     domain_contacts.each do |domain_contact|
       assert domain_contact.domain.statuses.include? DomainStatus::FORCE_DELETE
