@@ -7,7 +7,7 @@ class VersionsTest < ActiveSupport::TestCase
     @nameserver.update(hostname: 'ns99.bestnames.test')
     @ignored_column_title = Nameserver.ignored_columns.first
 
-    version = NameserverVersion.last
+    version = Version::NameserverVersion.last
     hash = version.object
     hash[@ignored_column_title] = 123456
     version.update(object: hash)

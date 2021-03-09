@@ -1,5 +1,5 @@
 module Authorization
-  class RestrictedIP
+  class RestrictedIp
     def initialize(ip)
       @ip = ip
     end

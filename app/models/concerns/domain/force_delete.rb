@@ -1,4 +1,4 @@
-module Concerns::Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
+module Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   extend ActiveSupport::Concern
 
   included do

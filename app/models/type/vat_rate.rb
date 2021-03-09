@@ -1,5 +1,5 @@
 module Type
-  class VATRate < ActiveRecord::Type::Decimal
+  class VatRate < ActiveRecord::Type::Decimal
     def deserialize(value)
       super * 100 if value
     end

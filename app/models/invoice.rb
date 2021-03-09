@@ -1,8 +1,8 @@
 class Invoice < ApplicationRecord
   include Versions
-  include Concerns::Invoice::Cancellable
-  include Concerns::Invoice::Payable
-  include Concerns::Invoice::BookKeeping
+  include Invoice::Cancellable
+  include Invoice::Payable
+  include Invoice::BookKeeping
 
   belongs_to :buyer, class_name: 'Registrar'
   has_one  :account_activity
@@ -34,7 +34,7 @@ class Invoice < ApplicationRecord
   before_create :calculate_total, unless: :total?
   before_create :apply_default_buyer_vat_no, unless: :buyer_vat_no?
 
-  attribute :vat_rate, ::Type::VATRate.new
+  attribute :vat_rate, ::Type::VatRate.new
 
   def set_invoice_number
     last_no = Invoice.order(number: :desc).limit(1).pluck(:number).first

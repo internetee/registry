@@ -1,4 +1,4 @@
-module Concerns::Domain::Deletable
+module Domain::Deletable
   extend ActiveSupport::Concern
 
   DELETE_STATUSES = [

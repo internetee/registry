@@ -1,16 +1,16 @@
 class Domain < ApplicationRecord
   include UserEvents
   include Versions # version/domain_version.rb
-  include Concerns::Domain::Expirable
-  include Concerns::Domain::Activatable
-  include Concerns::Domain::ForceDelete
-  include Concerns::Domain::Discardable
-  include Concerns::Domain::Deletable
-  include Concerns::Domain::Transferable
-  include Concerns::Domain::RegistryLockable
-  include Concerns::Domain::Releasable
-  include Concerns::Domain::Disputable
-  include Concerns::Domain::BulkUpdatable
+  include Domain::Expirable
+  include Domain::Activatable
+  include Domain::ForceDelete
+  include Domain::Discardable
+  include Domain::Deletable
+  include Domain::Transferable
+  include Domain::RegistryLockable
+  include Domain::Releasable
+  include Domain::Disputable
+  include Domain::BulkUpdatable
 
   attr_accessor :roles
 

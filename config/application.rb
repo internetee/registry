@@ -17,7 +17,7 @@ end
 module DomainNameRegistry
   class Application < Rails::Application
     config.load_defaults 6.0
-    config.autoloader = :classic # Do not use zeitwerk for now
+    config.autoloader = :zeitwerk # Do not use zeitwerk for now
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -35,9 +35,9 @@ module DomainNameRegistry
     # config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
 
     # Autoload all model subdirs
-    config.autoload_paths += Dir[Rails.root.join('app', 'models', '**/')]
-    config.autoload_paths += Dir[Rails.root.join('app', 'lib', '**/')]
-    config.autoload_paths += Dir[Rails.root.join('app', 'interactions', '**/')]
+    # config.autoload_paths += Dir[Rails.root.join('app', 'models', '**/')]
+    # config.autoload_paths += Dir[Rails.root.join('app', 'lib', '**/')]
+    # config.autoload_paths += Dir[Rails.root.join('app', 'interactions', '**/')]
     config.eager_load_paths << config.root.join('lib', 'validators')
     config.eager_load_paths << config.root.join('app', 'lib')
     config.watchable_dirs['lib'] = %i[rb]
@@ -72,8 +72,7 @@ module DomainNameRegistry
     }
     config.action_mailer.default_options = { from: ENV['action_mailer_default_from'] }
 
-    require "#{Rails.root}/app/mailers/interceptors/punycode_interceptor"
-    ActionMailer::Base.register_interceptor(PunycodeInterceptor)
+    config.action_mailer.interceptors = ["Interceptors::PunycodeInterceptor"]
 
     config.action_view.default_form_builder = 'DefaultFormBuilder'
     config.secret_key_base = Figaro.env.secret_key_base

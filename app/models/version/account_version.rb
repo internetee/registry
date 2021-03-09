@@ -1,4 +1,4 @@
-class AccountVersion < PaperTrail::Version
+class Version::AccountVersion < PaperTrail::Version
   self.table_name    = :log_accounts
   self.sequence_name = :log_accounts_id_seq
 end

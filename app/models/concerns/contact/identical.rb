@@ -1,4 +1,4 @@
-module Concerns::Contact::Identical
+module Contact::Identical
   extend ActiveSupport::Concern
 
   IDENTIFIABLE_ATTRIBUTES = %w[
