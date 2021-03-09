@@ -23,14 +23,15 @@ module Api
         record = ContactRequest.find_by(id: id)
         return :not_found unless record
 
-        record.update_status(contact_request_params)
+        record.update_record(contact_request_params)
         render json: record, status: :ok
       rescue StandardError
         head :bad_request
       end
 
       def contact_request_params
-        params.require(:contact_request).permit(:email, :whois_record_id, :name, :status, :ip)
+        params.require(:contact_request).permit(:email, :whois_record_id, :name, :status, :ip,
+                                                :message_id)
       end
     end
   end
