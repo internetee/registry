@@ -1,3 +1,7 @@
+09.03.2021
+* AWS message id saving over API [#1877](https://github.com/internetee/registry/pull/1877)
+* Enabled Zeitwerk autoloader [#1872](https://github.com/internetee/registry/issues/1872)
+
 04.03.2021
 * Removed old registrant portal from the project [#1826](https://github.com/internetee/registry/issues/1826)
 
