@@ -24,9 +24,10 @@ class ContactRequest < ApplicationRecord
     contact_request
   end
 
-  def update_status(params)
-    self.status = params['status']
-    self.ip_address = params['ip']
+  def update_record(params)
+    self.status = params['status'] if params['status']
+    self.ip_address = params['ip'] if params['ip']
+    self.message_id = params['ip'] if params['message_id']
     save!
   end
 
