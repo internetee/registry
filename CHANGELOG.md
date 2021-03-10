@@ -1,3 +1,6 @@
+10.03.2021
+* Registrant API returns full contact details for admin contacts [#1876](https://github.com/internetee/registry/pull/1876)
+
 09.03.2021
 * AWS message id saving over API [#1877](https://github.com/internetee/registry/pull/1877)
 * Enabled Zeitwerk autoloader [#1872](https://github.com/internetee/registry/issues/1872)
