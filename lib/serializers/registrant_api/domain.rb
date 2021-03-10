@@ -25,6 +25,11 @@ module Serializers
           registrant: {
             name: domain.registrant.name,
             id: domain.registrant.uuid,
+            ident: domain.registrant.ident,
+            ident_type: domain.registrant.ident_type,
+            ident_country_code: domain.registrant.ident_country_code,
+            phone: domain.registrant.phone,
+            email: domain.registrant.email,
             org: domain.registrant.org?,
           },
           tech_contacts: contacts(:tech),
