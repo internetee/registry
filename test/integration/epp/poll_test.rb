@@ -26,6 +26,31 @@ class EppPollTest < EppTestCase
     assert_equal 'Your domain has been updated', xml_doc.at_css('msgQ msg').text
   end
 
+  def test_does_not_drop_error_if_old_version
+    version = Version::DomainVersion.last
+    @notification.update(attached_obj_type: 'DomainVersion', attached_obj_id: version.id)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <poll op="req"/>
+        </command>
+      </epp>
+    XML
+    assert_nothing_raised do
+      post epp_poll_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    xml_doc = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully_ack_to_dequeue
+    assert_equal 2.to_s, xml_doc.at_css('msgQ')[:count]
+    assert_equal @notification.id.to_s, xml_doc.at_css('msgQ')[:id]
+    assert_equal Time.zone.parse('2010-07-05').utc.xmlschema, xml_doc.at_css('msgQ qDate').text
+    assert_equal 'Your domain has been updated', xml_doc.at_css('msgQ msg').text
+  end
+
   def test_return_action_data_when_present
     @notification.update!(action: actions(:contact_update))
 
