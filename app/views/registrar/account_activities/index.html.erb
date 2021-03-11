@@ -14,7 +14,7 @@
             <table class="table table-hover table-condensed">
                 <thead>
                 <tr>
-                    <th class="col-xs-5">
+                    <th class="col-xs-3">
                         <%= sort_link(@q, 'description') %>
                     </th>
                     <th class="col-xs-2">
@@ -25,6 +25,9 @@
                     </th>
                     <th class="col-xs-2">
                         <%= sort_link(@q, 'sum') %>
+                    </th>
+                    <th class="col-xs-2">
+                        <%= sort_link(@q, 'new_balance', 'New balance') %>
                     </th>
                 </tr>
                 </thead>
@@ -44,6 +47,9 @@
                         <% s = x.sum > 0.0 ? "+#{x.sum} #{x.currency}" : "#{x.sum} #{x.currency}" %>
                         <td class="<%= c %>">
                             <%= s %>
+                        </td>
+                        <td>
+                            <%= x.new_balance.present? ? "#{currency(x.new_balance)} EUR" : 'N/A' %>
                         </td>
                     </tr>
                 <% end %>

@@ -13,6 +13,9 @@ class AccountActivity < ApplicationRecord
   def update_balance
     account.balance += sum
     account.save
+
+    self.new_balance = account.balance
+    save
   end
 
   class << self
