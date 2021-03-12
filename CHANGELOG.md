@@ -1,3 +1,6 @@
+12.03.2021
+* Removed old classnames from notifications [#1878](https://github.com/internetee/registry/pull/1878)
+
 11.03.2021
 * Account activity in registrar and REPP now return balance with each record [#1819](https://github.com/internetee/registry/issues/1819)
 * Fixed CookieOverflow error with large authentication service keys [#1879](https://github.com/internetee/registry/pull/1879)
