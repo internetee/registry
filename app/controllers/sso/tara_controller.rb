@@ -14,7 +14,7 @@ module Sso
 
     # rubocop:disable Style/AndOr
     def callback(user, registrar: true)
-      session[:omniauth_hash] = user_hash
+      session[:omniauth_hash] = user_hash.delete_if { |key, _| key == 'credentials' }
       (show_error(registrar: registrar) and return) unless user
 
       flash[:notice] = t(:signed_in_successfully)

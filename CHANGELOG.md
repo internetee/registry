@@ -1,3 +1,81 @@
+12.03.2021
+* Removed old classnames from notifications [#1878](https://github.com/internetee/registry/pull/1878)
+
+11.03.2021
+* Account activity in registrar and REPP now return balance with each record [#1819](https://github.com/internetee/registry/issues/1819)
+* Fixed CookieOverflow error with large authentication service keys [#1879](https://github.com/internetee/registry/pull/1879)
+
+10.03.2021
+* Registrant API returns full contact details for admin contacts [#1876](https://github.com/internetee/registry/pull/1876)
+
+09.03.2021
+* AWS message id saving over API [#1877](https://github.com/internetee/registry/pull/1877)
+* Enabled Zeitwerk autoloader [#1872](https://github.com/internetee/registry/issues/1872)
+
+04.03.2021
+* Removed old registrant portal from the project [#1826](https://github.com/internetee/registry/issues/1826)
+
+03.03.2021
+* Email notification is sent in case of pendingupdate expiry [#897](https://github.com/internetee/registry/issues/897)
+
+26.02.2021
+* Domain delete is not affected by updateProhibited [#1844](https://github.com/internetee/registry/issues/1844)
+* Registrant API fix for handling eidas personal identificators [#1864](https://github.com/internetee/registry/pull/1864)
+
+23.02.2021
+* UpdateProhibited status affects bulk actions in REPP [#1818](https://github.com/internetee/registry/issues/1818)
+* Registrant api domain request now excludes tech only domains by default [#1836](https://github.com/internetee/registry/pull/1836)
+
+22.02.2021
+* serverDeleteProhibited prohibts delete action [#1849](https://github.com/internetee/registry/issues/1849)
+
+19.02.2021
+* Update prohibited staatus is kept after renew [#1843](https://github.com/internetee/registry/issues/1843)
+* Fixed clientHold and serverManualInzone status conflict issue [#1845](https://github.com/internetee/registry/issues/1845)
+* Replacing registrant object with another that has the same ident data set does not require registrant verification [#1852](https://github.com/internetee/registry/issues/1852)
+
+11.02.2021
+* Poll messages on locking and unlocking a domain [#1828](https://github.com/internetee/registry/issues/1828)
+* Registrar's prefix is now checked and added to contact id for info and check requests [#1832](https://github.com/internetee/registry/issues/1832)
+
+10.02.2021
+* Admin contact bulk change option for registrars [#1764](https://github.com/internetee/registry/issues/1764)
+* Option to remove email addresses from AWS SES Supression list [#1839](https://github.com/internetee/registry/issues/1839)
+* Added separate key for bounce API [#1842](https://github.com/internetee/registry/pull/1842)
+
+09.02.2021
+* Added new endpoint for WHOIS contact requests [#1794](https://github.com/internetee/registry/pull/1794)
+
+05.02.2021
+* Fixed IPv4 empty string issue in case of IPv6 only entries for IP whitelist [#1833](https://github.com/internetee/registry/issues/1833)
+
+02.02.2021
+* Fixed updateProhibited status not affecting bulk tech contact change operation [#1820](https://github.com/internetee/registry/pull/1820)
+
+01.02.2021
+* Improved tests for admin interface [#1805](https://github.com/internetee/registry/pull/1805)
+
+28.01.2021
+* Fixed transfer with shared admin and tech contacts [#1808](https://github.com/internetee/registry/issues/1808)
+* Improved error handling with double admin/tech contacts [#1758](https://github.com/internetee/registry/issues/1758)
+* Added CSV export option to admin [#1775](https://github.com/internetee/registry/issues/1775)
+* Improved DNSSEC key validation for illegal characters [#1790](https://github.com/internetee/registry/issues/1790)
+* Fix for whois record creation issue on releasing domain to auction [#1139](https://github.com/internetee/registry/issues/1139)
+* Fix for handling malformed request frames [#1825](https://github.com/internetee/registry/issues/1825)
+* Improved registrar account activity tests [#1824](https://github.com/internetee/registry/pull/1824)
+
+27.01.2021
+* Figaro update to 1.2.0 [#1823](https://github.com/internetee/registry/pull/1823)
+
+26.01.2021
+* Ruby update to 2.7 [#1791](https://github.com/internetee/registry/issues/1791)
+
+21.01.2021
+* Registrant API: optimised contact linking [#1807](https://github.com/internetee/registry/pull/1807)
+
+20.01.2021
+* Fixed legaldoc assignment issue on registrant confirmation [#1806](https://github.com/internetee/registry/pull/1806)
+
 14.01.2021
 * Fixed IDN and punycode support for REPP domain transfer_info request [#1801](https://github.com/internetee/registry/issues/1801)
 

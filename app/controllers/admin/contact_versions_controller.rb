@@ -2,12 +2,12 @@ module Admin
   class ContactVersionsController < BaseController
     include ObjectVersionsHelper
 
-    load_and_authorize_resource
+    load_and_authorize_resource class: Version::ContactVersion
 
     def index
       params[:q] ||= {}
 
-      @q = ContactVersion.search(params[:q])
+      @q = Version::ContactVersion.search(params[:q])
       @versions = @q.result.page(params[:page])
       search_params = params[:q].deep_dup
 
@@ -23,7 +23,7 @@ module Admin
         end
       end
 
-      versions = ContactVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
+      versions = Version::ContactVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
       @q = versions.search(params[:q])
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
@@ -32,8 +32,8 @@ module Admin
 
     def show
       per_page = 7
-      @version = ContactVersion.find(params[:id])
-      @versions = ContactVersion.where(item_id: @version.item_id).order(created_at: :desc, id: :desc)
+      @version = Version::ContactVersion.find(params[:id])
+      @versions = Version::ContactVersion.where(item_id: @version.item_id).order(created_at: :desc, id: :desc)
       @versions_map = @versions.all.map(&:id)
 
       # what we do is calc amount of results until needed version
@@ -49,7 +49,7 @@ module Admin
     end
 
     def search
-      render json: ContactVersion.search_by_query(params[:q])
+      render json: Version::ContactVersion.search_by_query(params[:q])
     end
 
     def create_where_string(key, value)

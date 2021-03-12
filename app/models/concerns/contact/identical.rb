@@ -1,4 +1,4 @@
-module Concerns::Contact::Identical
+module Contact::Identical
   extend ActiveSupport::Concern
 
   IDENTIFIABLE_ATTRIBUTES = %w[
@@ -11,6 +11,13 @@ module Concerns::Contact::Identical
     ident_country_code
     org_name
   ]
+
+  IDENTICAL_ATTRIBUTES = %w[
+    ident
+    ident_type
+    ident_country_code
+  ].freeze
+
   private_constant :IDENTIFIABLE_ATTRIBUTES
 
   def identical(registrar)
@@ -18,6 +25,12 @@ module Concerns::Contact::Identical
       .where(["statuses = ?::character varying[]", "{#{read_attribute(:statuses).join(',')}}"])
       .where(registrar: registrar)
       .where.not(id: id).take
+  end
+
+  def identical_to?(contact)
+    IDENTICAL_ATTRIBUTES.all? do |attribute|
+      attributes[attribute] == contact.attributes[attribute]
+    end
   end
 
   private

@@ -1,0 +1,11 @@
+en:
+  registrar:
+    admin_contacts:
+      update:
+        replaced: Admin contacts have been successfully replaced.
+        affected_domains: Affected domains
+        skipped_domains: Skipped domains
+      process_request:
+        affected_domains: Affected domains
+        skipped_domains: Skipped domains
+  replaced: Admin contacts have been successfully replaced.

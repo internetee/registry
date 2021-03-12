@@ -6,8 +6,8 @@ class ArchivableContactTest < ActiveSupport::TestCase
   end
 
   def test_contact_is_archivable_when_it_was_linked_and_inactivity_period_has_passed
-    DomainVersion.stub(:was_contact_linked?, true) do
-      DomainVersion.stub(:contact_unlinked_more_than?, true) do
+    Version::DomainVersion.stub(:was_contact_linked?, true) do
+      Version::DomainVersion.stub(:contact_unlinked_more_than?, true) do
         assert @contact.archivable?
       end
     end
@@ -18,7 +18,7 @@ class ArchivableContactTest < ActiveSupport::TestCase
     @contact.created_at = Time.zone.parse('2010-07-05 00:00:00')
     travel_to Time.zone.parse('2010-07-05 00:00:01')
 
-    DomainVersion.stub(:was_contact_linked?, false) do
+    Version::DomainVersion.stub(:was_contact_linked?, false) do
       assert @contact.archivable?
     end
   end
@@ -28,14 +28,14 @@ class ArchivableContactTest < ActiveSupport::TestCase
     @contact.created_at = Time.zone.parse('2010-07-05')
     travel_to Time.zone.parse('2010-07-05')
 
-    DomainVersion.stub(:contact_unlinked_more_than?, false) do
+    Version::DomainVersion.stub(:contact_unlinked_more_than?, false) do
       assert_not @contact.archivable?
     end
   end
 
   def test_contact_is_not_archivable_when_it_was_ever_linked_but_linked_within_inactivity_period
-    DomainVersion.stub(:was_contact_linked?, true) do
-      DomainVersion.stub(:contact_unlinked_more_than?, false) do
+    Version::DomainVersion.stub(:was_contact_linked?, true) do
+      Version::DomainVersion.stub(:contact_unlinked_more_than?, false) do
         assert_not @contact.archivable?
       end
     end
@@ -73,7 +73,7 @@ class ArchivableContactTest < ActiveSupport::TestCase
   def archivable_contact
     contact = contacts(:john)
     Setting.orphans_contacts_in_months = 0
-    DomainVersion.delete_all
+    Version::DomainVersion.delete_all
 
     other_contact = contacts(:william)
     assert_not_equal other_contact, contact

@@ -12,9 +12,11 @@ module Epp
       @notification = current_user.unread_notifications.order('created_at DESC').take
 
       render_epp_response 'epp/poll/poll_no_messages' and return unless @notification
+
       if @notification.attached_obj_type && @notification.attached_obj_id
         begin
-          @object = Object.const_get(@notification.attached_obj_type).find(@notification.attached_obj_id)
+          @object = object_by_type(@notification.attached_obj_type)
+                    .find(@notification.attached_obj_id)
         rescue => problem
           # the data model might be inconsistent; or ...
           # this could happen if the registrar does not dequeue messages, and then the domain was deleted
@@ -29,6 +31,12 @@ module Epp
       end
 
       render_epp_response 'epp/poll/poll_req'
+    end
+
+    def object_by_type(object_type)
+      Object.const_get(object_type)
+    rescue NameError
+      Object.const_get("Version::#{object_type}")
     end
 
     def ack_poll

@@ -1,4 +1,4 @@
-class DomainVersion < PaperTrail::Version
+class Version::DomainVersion < PaperTrail::Version
   include VersionSession
 
   self.table_name    = :log_domains

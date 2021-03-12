@@ -162,6 +162,9 @@ class Epp::Domain < Domain
     at[:admin_domain_contacts_attributes] = admin_domain_contacts_attrs(frame, action)
     at[:tech_domain_contacts_attributes] = tech_domain_contacts_attrs(frame, action)
 
+    check_for_same_contacts(at[:admin_domain_contacts_attributes], 'admin')
+    check_for_same_contacts(at[:tech_domain_contacts_attributes], 'tech')
+
     pw = frame.css('authInfo > pw').text
     at[:transfer_code] = pw if pw.present?
 
@@ -176,6 +179,11 @@ class Epp::Domain < Domain
     at
   end
 
+  def check_for_same_contacts(contacts, contact_type)
+    return unless contacts.uniq.count != contacts.count
+
+    add_epp_error('2306', contact_type, nil, %i[domain_contacts invalid])
+  end
 
   # Adding legal doc to domain and
   # if something goes wrong - raise Rollback error
@@ -312,6 +320,7 @@ class Epp::Domain < Domain
     keys = []
     return keys if frame.blank?
     inf_data = DnsSecKeys.new(frame)
+    add_epp_error('2005', nil, nil, %i[dnskeys invalid]) if not_base64?(inf_data)
 
     if  action == 'rem' &&
         frame.css('rem > all').first.try(:text) == 'true'
@@ -331,6 +340,16 @@ class Epp::Domain < Domain
       end
     end
     errors.any? ? [] : keys
+  end
+
+  def not_base64?(inf_data)
+    inf_data.key_data.any? do |key|
+      value = key[:public_key]
+
+      !value.is_a?(String) || Base64.strict_encode64(Base64.strict_decode64(value)) != value
+    end
+  rescue ArgumentError
+    true
   end
 
   class DnsSecKeys
@@ -381,7 +400,7 @@ class Epp::Domain < Domain
 
     def key_data_from(frame)
       xm_copy frame, KEY_INTERFACE
-   end
+    end
 
     def ds_data_from(frame)
       frame.css('dsData').each do |ds_data|
@@ -446,7 +465,7 @@ class Epp::Domain < Domain
   def update(frame, current_user, verify = true)
     return super if frame.blank?
 
-    if discarded?
+    if discarded? || statuses_blocks_update?
       add_epp_error('2304', nil, nil, 'Object status prohibits operation')
       return
     end
@@ -476,7 +495,7 @@ class Epp::Domain < Domain
     registrant_verification_needed = false
     # registrant block may not be present, so we need this to rule out false positives
     if frame.css('registrant').text.present?
-      registrant_verification_needed = (registrant.code != frame.css('registrant').text)
+      registrant_verification_needed = verification_needed?(code: frame.css('registrant').text)
     end
 
     if registrant_verification_needed && disputed?
@@ -520,6 +539,7 @@ class Epp::Domain < Domain
 
   def attach_legal_document(legal_document_data)
     return unless legal_document_data
+    return unless legal_document_data[:body]
     return if legal_document_data[:body].starts_with?(ENV['legal_documents_dir'])
 
     legal_documents.create(
@@ -592,7 +612,6 @@ class Epp::Domain < Domain
 
     statuses.delete(DomainStatus::SERVER_HOLD)
     statuses.delete(DomainStatus::EXPIRED)
-    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
     cancel_pending_delete
 
     save
@@ -777,5 +796,14 @@ class Epp::Domain < Domain
 
       result
     end
+  end
+
+  private
+
+  def verification_needed?(code:)
+    new_registrant = Registrant.find_by(code: code)
+    return false if new_registrant.try(:identical_to?, registrant)
+
+    registrant.code != code
   end
 end

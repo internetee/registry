@@ -1,7 +1,7 @@
-# Domain contacts
+# Tech domain contacts
 
 ## PATCH https://repp.internet.ee/v1/domains/contacts
-Replaces all domain contacts of the current registrar.
+Replaces technical domain contacts of the current registrar.
 
 ### Example request
 ```

@@ -12,6 +12,10 @@
                 <a href="#technical_contact" data-toggle="tab"><%= t '.technical_contact' %></a>
             </li>
 
+            <li class="<%= 'active' if active_tab == :admin_contact %>">
+                <a href="#admin_contact" data-toggle="tab"><%= t '.admin_contact' %></a>
+            </li>
+
             <li class="<%= 'active' if active_tab == :nameserver %>">
                 <a href="#nameserver" data-toggle="tab"><%= t '.nameserver' %></a>
             </li>
@@ -29,6 +33,11 @@
             <div class="tab-pane<%= ' active' if active_tab == :technical_contact %>"
                  id="technical_contact">
                 <%= render 'tech_contact_form', available_contacts: available_contacts %>
+            </div>
+
+            <div class="tab-pane<%= ' active' if active_tab == :admin_contact %>"
+                 id="admin_contact">
+                <%= render 'admin_contact_form', available_contacts: available_contacts %>
             </div>
 
             <div class="tab-pane<%= ' active' if active_tab == :nameserver %>" id="nameserver">

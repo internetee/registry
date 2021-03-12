@@ -4,6 +4,35 @@ class AdminAreaBankStatementTest < ApplicationSystemTestCase
   setup do
     sign_in users(:admin)
     travel_to Time.zone.parse('2010-07-05 00:30:00')
+
+    @invoice = invoices(:one)
+  end
+
+  def test_update_bank_statement
+    visit admin_bank_statement_path(id: @invoice.id)
+    
+    click_link_or_button 'Add'
+
+    fill_in 'Description', with: 'Invoice with id 123'
+    fill_in 'Reference number', with: '1232'
+    fill_in 'Sum', with: '500'
+    fill_in 'Paid at', with: Time.zone.today.to_s
+
+    click_link_or_button 'Save'
+    assert_text 'Bank transaction'
+
+    click_link_or_button 'Edit'
+    fill_in 'Description', with: 'Invoice with id 123'
+    click_link_or_button 'Save'
+
+    assert_text 'Record updated'
+  end
+
+  def test_bind_bank
+    visit admin_bank_statement_path(id: @invoice.id)
+    click_link_or_button 'Bind invoices'
+
+    assert_text 'No invoices were binded'
   end
 
   def test_can_create_statement_manually

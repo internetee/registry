@@ -24,7 +24,7 @@ module Api
         end
 
         def show
-          contact = current_user_contacts.find_by(uuid: params[:uuid])
+          contact = representable_contact(params[:uuid])
           links = params[:links] == 'true'
 
           if contact
@@ -90,6 +90,22 @@ module Api
         end
 
         private
+
+        def representable_contact(uuid)
+          country = current_registrant_user.country.alpha2
+          contact = Contact.find_by(uuid: uuid, ident: current_registrant_user.ident,
+                                    ident_type: 'priv', ident_country_code: country)
+          return contact if contact
+
+          Contact.find_by(uuid: uuid, ident_type: 'org', ident: company_codes,
+                          ident_country_code: country)
+        rescue CompanyRegister::NotAvailableError
+          nil
+        end
+
+        def company_codes
+          current_registrant_user.companies.collect(&:registration_number)
+        end
 
         def current_user_contacts
           current_registrant_user.contacts(representable: false)

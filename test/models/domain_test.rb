@@ -69,6 +69,12 @@ class DomainTest < ActiveSupport::TestCase
 
     domain.name = 'xn--mnchen-3ya.test'
     assert domain.valid?
+
+    domain.name = '####'
+    assert domain.invalid?
+
+    domain.name = 'https://example.test'
+    assert domain.invalid?
   end
 
   def test_invalid_when_name_is_already_taken

@@ -89,8 +89,8 @@ class Ability
     can :manage, BlockedDomain
     can :manage, ReservedDomain
     can :manage, DNS::Zone
-    can :manage, DomainVersion
-    can :manage, ContactVersion
+    can :manage, Version::DomainVersion
+    can :manage, Version::ContactVersion
     can :manage, Billing::Price
     can :manage, User
     can :manage, ApiUser

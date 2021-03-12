@@ -1,5 +1,11 @@
-module Concerns::Domain::Deletable
+module Domain::Deletable
   extend ActiveSupport::Concern
+
+  DELETE_STATUSES = [
+    DomainStatus::PENDING_DELETE_CONFIRMATION,
+    DomainStatus::PENDING_DELETE,
+    DomainStatus::FORCE_DELETE,
+  ].freeze
 
   private
 

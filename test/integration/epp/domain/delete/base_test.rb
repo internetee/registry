@@ -133,6 +133,40 @@ class EppDomainDeleteBaseTest < EppTestCase
     assert_epp_response :completed_successfully
   end
 
+  def test_deletes_on_update_prohibited
+    assert_equal 'shop.test', @domain.name
+    @domain.update(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
+    Setting.request_confirmation_on_domain_deletion_enabled = false
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <delete>
+            <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>shop.test</domain:name>
+            </domain:delete>
+          </delete>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    perform_enqueued_jobs do
+      post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    @domain.reload
+
+    assert_not @domain.registrant_verification_asked?
+    assert_not @domain.pending_delete_confirmation?
+    assert_no_emails
+    assert_epp_response :completed_successfully
+  end
+
   def test_skips_registrant_confirmation_when_required_but_already_verified_by_registrar
     assert_equal 'shop.test', @domain.name
     Setting.request_confirmation_on_domain_deletion_enabled = true

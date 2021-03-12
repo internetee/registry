@@ -9,7 +9,7 @@ class RegistrantUser < User
   delegate :can?, :cannot?, to: :ability
 
   def ident
-    registrant_ident.to_s.split('-').last
+    registrant_ident.to_s[3..]
   end
 
   def country
@@ -18,6 +18,8 @@ class RegistrantUser < User
   end
 
   def companies(company_register = CompanyRegister::Client.new)
+    return [] if ident.include?('-')
+
     company_register.representation_rights(citizen_personal_code: ident,
                                            citizen_country_code: country.alpha3)
   end
@@ -30,11 +32,15 @@ class RegistrantUser < User
     Contact.registrant_user_direct_contacts(self)
   end
 
-  def domains
+  def domains(admin: false)
+    return Domain.registrant_user_admin_registrant_domains(self) if admin
+
     Domain.registrant_user_domains(self)
   end
 
-  def direct_domains
+  def direct_domains(admin: false)
+    return Domain.registrant_user_direct_admin_registrant_domains(self) if admin
+
     Domain.registrant_user_direct_domains(self)
   end
 
@@ -72,7 +78,7 @@ class RegistrantUser < User
       return false unless user_data[:last_name]
 
       user_data[:country_code] ||= 'EE'
-      %i[ident country_code].each { |f| user_data[f].upcase! if user_data[f].is_a?(String) }
+      user_data[:country_code].upcase! if user_data[:country_code].is_a?(String)
 
       find_or_create_by_user_data(user_data)
     end

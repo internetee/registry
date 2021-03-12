@@ -63,6 +63,27 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_epp_response :object_status_prohibits_operation
   end
 
+  def test_prohibited_domain_cannot_be_updated
+    @domain.update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>shop.test</domain:name>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_epp_response :object_status_prohibits_operation
+  end
+
   def test_does_not_return_server_delete_prohibited_status_when_pending_update_status_is_set
     @domain.update!(statuses: [DomainStatus::SERVER_DELETE_PROHIBITED,
                                DomainStatus::PENDING_UPDATE])
@@ -122,6 +143,46 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert @domain.registrant_verification_asked?
     assert_includes @domain.statuses, DomainStatus::PENDING_UPDATE
     assert_verification_and_notification_emails
+  end
+
+  def test_domain_should_doesnt_have_pending_update_when_updated_registrant_with_same_idents_data
+    assert_not @domain.statuses.include? "pendingUpdate"
+
+    old_registrant = @domain.registrant
+    new_registrant = contacts(:william).becomes(Registrant)
+
+    new_registrant.update(ident: old_registrant.ident)
+    new_registrant.update(ident_country_code: old_registrant.ident_country_code)
+    new_registrant.update(ident_type: old_registrant.ident_type)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{@domain.name}</domain:name>
+                <domain:chg>
+                  <domain:registrant verified="no">#{new_registrant.code}</domain:registrant>
+                </domain:chg>
+            </domain:update>
+          </update>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    @domain.reload
+    assert_epp_response :completed_successfully
+
+    assert_equal @domain.registrant, new_registrant
+    assert_not @domain.statuses.include? "pendingUpdate"
   end
 
   def test_requires_verification_from_current_registrant_when_not_yet_verified_by_registrar

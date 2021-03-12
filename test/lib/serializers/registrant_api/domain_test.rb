@@ -30,8 +30,15 @@ class SerializersRegistrantApiDomainTest < ActiveSupport::TestCase
     assert_equal({name: 'Best Names', website: 'https://bestnames.test' }, @json[:registrar])
   end
 
-  def test_returns_registrant_name_and_uuid
-    assert_equal({name: 'John', id: 'eb2f2766-b44c-4e14-9f16-32ab1a7cb957'},
+  def test_returns_registrant_name_uuid_and_org
+    assert_equal({:name=>"John", 
+                  :id=>"eb2f2766-b44c-4e14-9f16-32ab1a7cb957", 
+                  :ident=>"1234", 
+                  :ident_type=>"priv", 
+                  :ident_country_code=>"US", 
+                  :phone=>"+555.555", 
+                  :email=>"john@inbox.test", 
+                  :org=>false},
                  @json[:registrant])
   end
 

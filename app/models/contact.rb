@@ -4,11 +4,11 @@ class Contact < ApplicationRecord
   include Versions # version/contact_version.rb
   include EppErrors
   include UserEvents
-  include Concerns::Contact::Transferable
-  include Concerns::Contact::Identical
-  include Concerns::Contact::Disclosable
-  include Concerns::Contact::Archivable
-  include Concerns::EmailVerifable
+  include Contact::Transferable
+  include Contact::Identical
+  include Contact::Disclosable
+  include Contact::Archivable
+  include EmailVerifable
 
   belongs_to :original, class_name: self.name
   belongs_to :registrar, required: true
@@ -360,9 +360,11 @@ class Contact < ApplicationRecord
     @desc
   end
 
+  # Limits returned objects to 11
   def related_domains
-    a = related_domain_descriptions
-    a.keys.map { |d| { name: d, id: a[d][:id], roles: a[d][:roles] } }
+    ids = DomainContact.select(:domain_id).where(contact_id: id).limit(11).map(&:domain_id).uniq
+    res = Domain.where(id: ids).or(Domain.where(registrant_id: id)).select(:name, :uuid).limit(11)
+    res.pluck(:name, :uuid).map { |name, id| { name: name, id: id } }
   end
 
   def status_notes_array=(notes)

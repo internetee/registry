@@ -1,4 +1,4 @@
-module Concerns::Domain::Transferable
+module Domain::Transferable
   extend ActiveSupport::Concern
 
   included do
@@ -31,7 +31,9 @@ module Concerns::Domain::Transferable
       DomainStatus::PENDING_TRANSFER,
       DomainStatus::FORCE_DELETE,
       DomainStatus::SERVER_TRANSFER_PROHIBITED,
-      DomainStatus::CLIENT_TRANSFER_PROHIBITED
+      DomainStatus::CLIENT_TRANSFER_PROHIBITED,
+      DomainStatus::SERVER_UPDATE_PROHIBITED,
+      DomainStatus::CLIENT_UPDATE_PROHIBITED,
     ]).empty?
   end
 
@@ -59,7 +61,7 @@ module Concerns::Domain::Transferable
     copied_ids = []
     domain_contacts.each do |dc|
       contact = Contact.find(dc.contact_id)
-      next if copied_ids.include?(contact.id) || contact.registrar == new_registrar
+      next if copied_ids.include?(uniq_contact_hash(dc)) || contact.registrar == new_registrar
 
       if registrant_id_was == contact.id # registrant was copied previously, do not copy it again
         oc = OpenStruct.new(id: registrant_id)
@@ -72,7 +74,11 @@ module Concerns::Domain::Transferable
       else
         dc.update(contact_id: oc.id)
       end
-      copied_ids << contact.id
+      copied_ids << uniq_contact_hash(dc)
     end
+  end
+
+  def uniq_contact_hash(contact)
+    Digest::SHA1.hexdigest(contact.contact_id.to_s + contact.type)
   end
 end

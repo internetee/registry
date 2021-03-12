@@ -7,14 +7,19 @@ prepare:
 plugins:
   brakeman:
     enabled: true
+    checks:
+      mass_assign_permit!:
+        enabled: false
   bundler-audit:
     enabled: true
   duplication:
     enabled: true
     config:
       languages:
-      - ruby
-      - javascript
+        ruby:
+          mass_threshold: 100
+        javascript:
+          mass_threshold: 100
   eslint:
     enabled: true
     channel: eslint-5
@@ -26,6 +31,9 @@ plugins:
   rubocop:
     enabled: true
     channel: rubocop-0-74
+    checks:
+      Rubocop/Style/ClassAndModuleChildren:
+        enabled: false
 checks:
   method-lines:
     config:

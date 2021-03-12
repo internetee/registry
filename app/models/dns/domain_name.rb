@@ -36,6 +36,7 @@ module DNS
       auction = Auction.new
       auction.domain = name
       auction.start
+      ToStdout.msg "Created the auction: #{auction.inspect}"
       update_whois_from_auction(auction)
     end
 
@@ -100,7 +101,8 @@ module DNS
       whois_record = Whois::Record.find_or_create_by!(name: name) do |record|
         record.json = {}
       end
-
+      ToStdout.msg "Starting to update WHOIS record #{whois_record.inspect}\n\n"\
+                   "from auction #{auction.inspect}"
       whois_record.update_from_auction(auction)
     end
   end

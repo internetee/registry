@@ -64,6 +64,7 @@ Rails.application.routes.draw do
           get ':id/transfer_info', to: 'domains#transfer_info', constraints: { id: /.*/ }
           post 'transfer', to: 'domains#transfer'
           patch 'contacts', to: 'domains/contacts#update'
+          patch 'admin_contacts', to: 'domains/admin_contacts#update'
           post 'renew/bulk', to: 'domains/renews#bulk_renew'
         end
       end
@@ -91,6 +92,7 @@ Rails.application.routes.draw do
       end
 
       resources :auctions, only: %i[index show update], param: :uuid
+      resources :contact_requests, only: %i[create update], param: :id
       resources :bounces, only: %i[create]
     end
 
@@ -136,6 +138,7 @@ Rails.application.routes.draw do
     resource :bulk_change, controller: :bulk_change, only: :new
     post '/bulk_renew/new', to: 'bulk_change#bulk_renew', as: :bulk_renew
     resource :tech_contacts, only: :update
+    resource :admin_contacts, only: :update
     resource :nameservers, only: :update
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
       member do
@@ -188,35 +191,8 @@ Rails.application.routes.draw do
     end
   end
 
-  scope :registrant do
-    devise_scope :registrant_user do
-      get 'sign_in', to: 'registrant/sessions#new', as: :new_registrant_user_session
-      post 'sessions', to: 'registrant/sessions#create', as: :registrant_user_session
-      delete 'sign_out', to: 'registrant/sessions#destroy', as: :destroy_registrant_user_session
-
-      # TARA
-      match '/open_id/callback', via: %i[get post], to: 'sso/tara#registrant_callback'
-      match '/open_id/cancel', via: %i[get post delete], to: 'sso/tara#cancel'
-    end
-  end
-
   namespace :registrant do
-    root 'domains#index'
-
-    # POST /registrant/sign_in is not used
     devise_for :users, path: '', class_name: 'RegistrantUser'
-
-    resources :registrars, only: :show
-    # resources :companies, only: :index
-    resources :domains, only: %i[index show] do
-      resources :contacts, only: %i[show edit update]
-      member do
-        get 'confirmation'
-      end
-    end
-
-    resources :domain_update_confirms, only: %i[show update]
-    resources :domain_delete_confirms, only: %i[show update]
   end
 
   # ADMIN ROUTES
@@ -271,9 +247,21 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :version_domain_versions do
+      collection do
+        get 'search' => 'domain_versions#search', via: [:get, :post], as: :search
+      end
+    end
+
     resources :contact_versions do
       collection do
         get 'search'
+      end
+    end
+
+    resources :version_contact_versions do
+      collection do
+        get 'search' => 'contact_versions#search', via: [:get, :post], as: :search
       end
     end
 
