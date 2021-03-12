@@ -1,5 +1,6 @@
 12.03.2021
 * Removed old classnames from notifications [#1878](https://github.com/internetee/registry/pull/1878)
+* improved test coverage [#1860](https://github.com/internetee/registry/pull/1860)
 * added test for whois record delete [#1811](https://github.com/internetee/registry/pull/1811)
 
 11.03.2021
