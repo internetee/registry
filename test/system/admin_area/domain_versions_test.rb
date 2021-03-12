@@ -5,6 +5,7 @@ class DomainVersionsTest < ApplicationSystemTestCase
     super
 
     @registrar = registrars(:bestnames)
+    @domain = domains(:shop)
 
     create_domain_with_history
     sign_in users(:admin)
@@ -58,5 +59,36 @@ class DomainVersionsTest < ApplicationSystemTestCase
 
     assert_text 'Best Names'
     assert_text '23.04.18, 18:50 update 1-AdminUser'
+  end
+
+  def test_search_registrant_param
+    visit admin_domain_versions_path
+    fill_in 'Registrant', with: @domain.registrant, match: :first
+    find('.btn.btn-primary').click
+
+    assert_equal current_url,
+      'http://www.example.com/admin/domain_versions?q[name]=&q[registrant]=John&q[registrar]=&q[event]=&results_per_page='
+  end
+
+  def test_search_registrar_param
+    visit admin_domain_versions_path
+    find('#q_registrar').set(@domain.registrar)
+    find('.btn.btn-primary').click
+
+    assert_equal current_url,
+      'http://www.example.com/admin/domain_versions?q[name]=&q[registrant]=&q[registrar]=Best+Names&q[event]=&results_per_page='
+  end
+
+  def test_search_name_param
+    visit admin_domain_versions_path
+    fill_in 'Name', with: @domain.name, match: :first
+    find('.btn.btn-primary').click
+
+    assert_equal current_url,
+      'http://www.example.com/admin/domain_versions?q[name]=shop.test&q[registrant]=&q[registrar]=&q[event]=&results_per_page='
+  end
+
+  def test_search_event_param
+    # TODO
   end
 end

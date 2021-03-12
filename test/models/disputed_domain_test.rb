@@ -16,6 +16,20 @@ class DisputedDomainTest < ActiveSupport::TestCase
     @dispute.reload
 
     assert @dispute.closed
+    assert @dispute.forward_to_auction_if_possible
+
+    n = Whois::Record.find_by(name: @dispute.domain_name)
+    assert @dispute.remove_whois_data(n)
+  end
+
+  def test_invalid_auth 
+    travel_to Time.zone.parse('2010-10-05')
+    assert_not Dispute.valid_auth?(nil, nil)
+  end
+
+  def test_valid_auth
+    travel_to Time.zone.parse('2010-10-05')
+    assert Dispute.valid_auth?(@dispute.domain_name, @dispute.password)
   end
 
   def test_syncs_password_to_reserved

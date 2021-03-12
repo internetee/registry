@@ -9,7 +9,7 @@ class AdminContactsTest < ApplicationSystemTestCase
   end
 
   def test_update_contact
-    visit admin_contact_path(id: @contact.id)
+    visit admin_contact_path(@contact.id)
     assert_text "#{@contact.name}"
 
     click_on 'Edit statuses'
