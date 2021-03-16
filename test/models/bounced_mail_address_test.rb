@@ -20,6 +20,7 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
     domain_contacts = Contact.where(email: @contact_email).map(&:domain_contacts).flatten
 
     domain_contacts.each do |domain_contact|
+      domain_contact.domain.update(valid_to: Time.zone.now + 5.years)
       assert_not domain_contact.domain.statuses.include? DomainStatus::FORCE_DELETE
       assert_not domain_contact.domain.statuses.include? DomainStatus::SERVER_RENEW_PROHIBITED
       assert_not domain_contact.domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
@@ -29,7 +30,8 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
     @bounced_mail.save
 
     domain_contacts.each do |domain_contact|
-      assert_equal domain_contact.domain.force_delete_type, 'soft'
+      domain_contact.reload
+      assert_equal 'soft', domain_contact.domain.force_delete_type
       assert domain_contact.domain.force_delete_scheduled?
       assert domain_contact.domain.statuses.include? DomainStatus::FORCE_DELETE
       assert domain_contact.domain.statuses.include? DomainStatus::SERVER_RENEW_PROHIBITED
