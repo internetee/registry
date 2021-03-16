@@ -60,6 +60,20 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
     assert_equal domain.statuses, [DomainStatus::CLIENT_UPDATE_PROHIBITED, DomainStatus::SERVER_UPDATE_PROHIBITED]
   end
 
+  def test_multi_domains_сannot_be_renewed_with_renew_prohibited_status
+    array_domains = [domains(:shop), domains(:airport)]
+    payload = {
+      "domains": array_domains.pluck(:name),
+      "renew_period": "1y"
+    }
+
+    array_domains.each do |domain|
+      set_status_for_domain(domain, [DomainStatus::CLIENT_RENEW_PROHIBITED, DomainStatus::SERVER_RENEW_PROHIBITED])
+    end
+
+    assert_renew_prohibited_domains(array_domains, payload)
+  end
+
   def test_throws_error_when_domain_not_renewable
     payload = {
       "domains": [
@@ -110,5 +124,37 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
     assert_response :bad_request
     assert_equal 2005, json[:code]
     assert_equal 'Invalid renew period', json[:message]
+  end
+
+  private
+
+  def set_status_for_domain(domain, statuses) 
+    domain.update(statuses: statuses)
+
+    if statuses.size > 1
+      statuses.each do |status|
+        assert domain.statuses.include? status
+      end
+    else
+      assert domain.statuses.include? statuses
+    end
+  end
+
+  def bulk_renew(payload)
+    post "/repp/v1/domains/renew/bulk", headers: @auth_headers, params: payload
+    JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def assert_renew_prohibited_domains(domains, payload)
+    assert_no_changes -> { Domain.where(name: domains).pluck(:valid_to) } do
+      json = bulk_renew(payload)
+      
+      assert_response :bad_request
+      assert_equal 2002, json[:code]
+      assert domains.all? do |domain|
+        json[:message].include? "Domain renew error for #{domain.name}"
+      end
+      assert json[:data].empty?
+    end
   end
 end
