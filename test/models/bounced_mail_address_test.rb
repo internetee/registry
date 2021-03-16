@@ -17,10 +17,7 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
   end
 
   def test_soft_force_delete_related_domains
-    contacts = Contact.where(email: @contact_email)
-    contacts.each do |contact|
-      domain_contacts = DomainContact.where(contact: contact)
-    end
+    domain_contacts = Contact.where(email: @contact_email).map(&:domain_contacts).flatten
 
     domain_contacts.each do |domain_contact|
       assert_not domain_contact.domain.statuses.include? DomainStatus::FORCE_DELETE
@@ -30,7 +27,6 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
 
     @bounced_mail.email = @contact_email
     @bounced_mail.save
-    contacts = Contact.where(email: @bounced_mail.email)
 
     domain_contacts.each do |domain_contact|
       assert_equal domain_contact.domain.force_delete_type, 'soft'
@@ -42,34 +38,23 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
   end
 
   def test_soft_force_delete_if_domain_has_force_delete_status
-    contacts = Contact.where(email: @contact_email)
-    contacts.each do |contact|
-      domain_contacts = DomainContact.where(contact: contact)
+    domain_contacts = Contact.where(email: @contact_email).map(&:domain_contacts).flatten
+    perform_enqueued_jobs do
+      domain_contacts.each do |domain_contact|
+        domain_contact.domain.update(valid_to: Time.zone.now + 5.years)
+        domain_contact.domain.schedule_force_delete(type: :soft, notify_by_email: false, reason: 'test')
+      end
     end
-
-    domain_contacts.each do |domain_contact|
-      domain_contact.domain.update(statuses: [DomainStatus::FORCE_DELETE, DomainStatus::SERVER_RENEW_PROHIBITED, DomainStatus::SERVER_TRANSFER_PROHIBITED])
-    end
-
-    force_delete_date = domain_contacts[0].domain.force_delete_date
-
-    domain_contacts.each do |domain_contact|
-      assert domain_contact.domain.statuses.include? DomainStatus::FORCE_DELETE
-      assert domain_contact.domain.statuses.include? DomainStatus::SERVER_RENEW_PROHIBITED
-      assert domain_contact.domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
-    end
+    force_delete_date = domain_contacts.map(&:domain).each.pluck(:force_delete_date).sample
+    assert_not_nil force_delete_date
 
     @bounced_mail.email = @contact_email
     @bounced_mail.save
-    contacts = Contact.where(email: @bounced_mail.email)
 
-    domain_contacts.each do |domain_contact|
-      assert_equal domain_contact.domain.force_delete_date, force_delete_date
-      assert_equal domain_contact.domain.force_delete_type, 'soft'
+    domain_contacts.all? do |domain_contact|
+      assert_equal force_delete_date, domain_contact.domain.force_delete_date
+      assert_equal 'soft', domain_contact.domain.force_delete_type
       assert domain_contact.domain.force_delete_scheduled?
-      assert domain_contact.domain.statuses.include? DomainStatus::FORCE_DELETE
-      assert domain_contact.domain.statuses.include? DomainStatus::SERVER_RENEW_PROHIBITED
-      assert domain_contact.domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
     end
   end
 
