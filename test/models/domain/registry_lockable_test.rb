@@ -7,6 +7,32 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
     @domain = domains(:airport)
   end
 
+  def test_user_can_set_lock_for_domain_if_it_has_any_prohibited_status
+    refute(@domain.locked_by_registrant?)
+    @domain.update(statuses: [DomainStatus::SERVER_TRANSFER_PROHIBITED])
+
+    @domain.apply_registry_lock #Raise validation error
+
+    check_statuses_lockable_domain
+    assert(@domain.locked_by_registrant?)
+  end
+
+  def test_lockable_domain_if_remove_some_prohibited_status
+    refute(@domain.locked_by_registrant?)
+    @domain.apply_registry_lock
+    check_statuses_lockable_domain
+    assert(@domain.locked_by_registrant?)
+
+    statuses = @domain.statuses - [DomainStatus::SERVER_UPDATE_PROHIBITED]
+    @domain.update(statuses: statuses)
+
+    assert @domain.statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
+    assert @domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
+    assert_not @domain.statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
+    
+    assert(@domain.locked_by_registrant?)
+  end
+
   def test_registry_lock_on_lockable_domain
     refute(@domain.locked_by_registrant?)
     @domain.apply_registry_lock
@@ -68,5 +94,16 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
     @domain.statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
 
     refute(@domain.remove_registry_lock)
+  end
+
+  private
+
+  def check_statuses_lockable_domain
+    assert_equal(
+      [DomainStatus::SERVER_UPDATE_PROHIBITED,
+       DomainStatus::SERVER_DELETE_PROHIBITED,
+       DomainStatus::SERVER_TRANSFER_PROHIBITED],
+      @domain.statuses
+    )
   end
 end
