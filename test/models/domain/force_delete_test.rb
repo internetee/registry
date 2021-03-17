@@ -344,10 +344,10 @@ class ForceDeleteTest < ActionMailer::TestCase
     Truemail.configure.default_validation_type = :regex
 
     contact = @domain.admin_contacts.first
-    contact.update(email: 'some@strangesentence@internet.ee')
+    contact.update_attribute(:email, 'some@strangesentence@internet.ee')
+    contact.email_verification.verify
 
     assert contact.email_verification_failed?
-    assert contact.invalid?
 
     @domain.reload
 

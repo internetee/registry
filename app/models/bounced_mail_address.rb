@@ -45,6 +45,6 @@ class BouncedMailAddress < ApplicationRecord
   end
 
   def force_delete_from_bounce
-    Domains::ForceDeleteBounce::Base.run(bounced_mail_address: self)
+    Domains::ForceDeleteEmail::Base.run(email: email)
   end
 end
