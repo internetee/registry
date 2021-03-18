@@ -23,6 +23,8 @@ module Epp
     rescue_from ActiveRecord::RecordNotFound, with: :respond_with_object_does_not_exist_error
     before_action :set_paper_trail_whodunnit
 
+    EIGHT_MEGABYTES = 8_388_608
+
     protected
 
     def respond_with_command_failed_error(exception)
@@ -62,11 +64,15 @@ module Epp
       return if %w[hello error].include?(params[:action])
       schema.validate(params[:nokogiri_frame]).each do |error|
         epp_errors << {
-          code: 2001,
+          code: error_code(error),
           msg: error
         }
       end
       handle_errors and return if epp_errors.any?
+    end
+
+    def error_code(error)
+      error.str1.present? && error.str1.size > EIGHT_MEGABYTES ? 2306 : 2001
     end
 
     def schema

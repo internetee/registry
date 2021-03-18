@@ -73,7 +73,7 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-    
+
     assert_epp_response :parameter_value_policy_error
   end
 
@@ -82,9 +82,8 @@ class EppDomainCreateBaseTest < EppTestCase
     contact = contacts(:john)
     registrant = contact.becomes(Registrant)
 
-    # 8388608 bites == 8 mb
-    bignum_legaldoc = 't' * 8388608
-    bignum_legaldoc+= "t"
+    # 8388608 bytes == 8 mb
+    bignum_legaldoc = 't' * (8388608 + 1)
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -109,7 +108,7 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-    
+
     assert_epp_response :parameter_value_policy_error
   end
 
@@ -118,7 +117,7 @@ class EppDomainCreateBaseTest < EppTestCase
     contact = contacts(:john)
     registrant = contact.becomes(Registrant)
 
-    # 8388608 bites == 8 mb
+    # 8388608 bytes == 8 mb
     bignum_legaldoc = 't' * 8388608
 
     request_xml = <<-XML
@@ -139,12 +138,12 @@ class EppDomainCreateBaseTest < EppTestCase
         </command>
       </epp>
     XML
-    
+
     assert_difference 'Domain.count' do
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
-    
+
     assert_epp_response :completed_successfully
   end
 
