@@ -23,8 +23,6 @@ module Epp
     rescue_from ActiveRecord::RecordNotFound, with: :respond_with_object_does_not_exist_error
     before_action :set_paper_trail_whodunnit
 
-    EIGHT_MEGABYTES = 8_388_608
-
     protected
 
     def respond_with_command_failed_error(exception)
@@ -72,7 +70,7 @@ module Epp
     end
 
     def error_code(error)
-      error.str1.present? && error.str1.size > EIGHT_MEGABYTES ? 2306 : 2001
+      error.str1.present? && error.str1.size > LegalDocument::MAX_BODY_SIZE ? 2306 : 2001
     end
 
     def schema

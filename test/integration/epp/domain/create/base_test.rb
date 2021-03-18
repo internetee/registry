@@ -82,8 +82,7 @@ class EppDomainCreateBaseTest < EppTestCase
     contact = contacts(:john)
     registrant = contact.becomes(Registrant)
 
-    # 8388608 bytes == 8 mb
-    bignum_legaldoc = 't' * (8388608 + 1)
+    bignum_legaldoc = 't' * (LegalDocument::MAX_BODY_SIZE + 1)
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -117,8 +116,7 @@ class EppDomainCreateBaseTest < EppTestCase
     contact = contacts(:john)
     registrant = contact.becomes(Registrant)
 
-    # 8388608 bytes == 8 mb
-    bignum_legaldoc = 't' * 8388608
+    bignum_legaldoc = 't' * LegalDocument::MAX_BODY_SIZE
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>

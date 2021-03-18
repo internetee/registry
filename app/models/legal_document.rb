@@ -1,6 +1,7 @@
 class LegalDocument < ApplicationRecord
   include EppErrors
   MIN_BODY_SIZE = (1.37 * 3.kilobytes).ceil
+  MAX_BODY_SIZE = 8.megabytes
 
   if ENV['legal_document_types'].present?
     TYPES = ENV['legal_document_types'].split(',').map(&:strip)
