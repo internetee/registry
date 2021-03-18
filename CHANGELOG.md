@@ -1,3 +1,6 @@
+18.03.2021
+* Added tests for renew and domain status management [#1886](https://github.com/internetee/registry/pull/1886)
+
 12.03.2021
 * Removed old classnames from notifications [#1878](https://github.com/internetee/registry/pull/1878)
 * improved test coverage [#1860](https://github.com/internetee/registry/pull/1860)
