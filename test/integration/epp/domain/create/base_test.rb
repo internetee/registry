@@ -82,7 +82,7 @@ class EppDomainCreateBaseTest < EppTestCase
     contact = contacts(:john)
     registrant = contact.becomes(Registrant)
 
-    bignum_legaldoc = 't' * (LegalDocument::MAX_BODY_SIZE + 1)
+    bignum_legaldoc = Base64.encode64('t' * (LegalDocument::MAX_BODY_SIZE + 1)).gsub(/\n/,"")
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -109,6 +109,8 @@ class EppDomainCreateBaseTest < EppTestCase
     end
 
     assert_epp_response :parameter_value_policy_error
+    error_description = 'legalDocument size should be less than 8mB'
+    assert response.body.include? error_description
   end
 
   def test_upper_limit_of_value_legal_document

@@ -62,15 +62,11 @@ module Epp
       return if %w[hello error].include?(params[:action])
       schema.validate(params[:nokogiri_frame]).each do |error|
         epp_errors << {
-          code: error_code(error),
+          code: 2001,
           msg: error
         }
       end
       handle_errors and return if epp_errors.any?
-    end
-
-    def error_code(error)
-      error.str1.present? && error.str1.size > LegalDocument::MAX_BODY_SIZE ? 2306 : 2001
     end
 
     def schema

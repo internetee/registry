@@ -21,14 +21,19 @@ class LegalDocument < ApplicationRecord
 
   def epp_code_map
     {
-        '2306' => [
-            [:body, :length]
-        ]
+      '2306' => [
+        %i[body length_more_than],
+        %i[body length_less_than],
+      ]
     }
   end
 
   def val_body_length
-    errors.add(:body, :length) if body.nil? || body.size < MIN_BODY_SIZE
+    if body.nil? || body.size < MIN_BODY_SIZE
+      errors.add(:body, :length_more_than)
+    elsif body.size > MAX_BODY_SIZE
+      errors.add(:body, :length_less_than)
+    end
   end
 
   def save_to_filesystem
