@@ -6,7 +6,11 @@ module Domains
 
       def execute
         domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
-        domains = domain_contacts.map(&:domain).flatten
+        registrant_ids = Registrant.where(email: email).pluck(:id)
+
+        domains = domain_contacts.map(&:domain).flatten +
+                  Domain.where(registrant_id: registrant_ids)
+
         domains.each do |domain|
           next if domain.force_delete_scheduled?
 
