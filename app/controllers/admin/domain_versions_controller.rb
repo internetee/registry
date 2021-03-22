@@ -2,12 +2,12 @@ module Admin
   class DomainVersionsController < BaseController
     include ObjectVersionsHelper
 
-    load_and_authorize_resource
+    load_and_authorize_resource class: Version::DomainVersion
 
     def index
       params[:q] ||= {}
 
-      @q = DomainVersion.includes(:item).search(params[:q])
+      @q = Version::DomainVersion.includes(:item).search(params[:q])
       @versions = @q.result.page(params[:page])
       search_params = params[:q].deep_dup
 
@@ -40,7 +40,7 @@ module Admin
       whereS += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrars.present?
       whereS += "  AND 1=0" if registrars == []
 
-      versions = DomainVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
+      versions = Version::DomainVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
       @q = versions.search(params[:q])
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
@@ -50,8 +50,8 @@ module Admin
 
     def show
       per_page = 7
-      @version = DomainVersion.find(params[:id])
-      @versions = DomainVersion.where(item_id: @version.item_id).order(created_at: :desc, id: :desc)
+      @version = Version::DomainVersion.find(params[:id])
+      @versions = Version::DomainVersion.where(item_id: @version.item_id).order(created_at: :desc, id: :desc)
       @versions_map = @versions.all.map(&:id)
 
       # what we do is calc amount of results until needed version
@@ -67,7 +67,7 @@ module Admin
     end
 
     def search
-      render json: DomainVersion.search_by_query(params[:q])
+      render json: Version::DomainVersion.search_by_query(params[:q])
     end
 
     def create_where_string(key, value)

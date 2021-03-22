@@ -1,4 +1,4 @@
-module Concerns::Domain::Discardable
+module Domain::Discardable
   extend ActiveSupport::Concern
 
   def keep

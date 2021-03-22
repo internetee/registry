@@ -11,6 +11,7 @@ module Actions
     end
 
     def call
+      domain.is_renewal = true
       if !domain.renewable? || domain.invalid?
         domain.add_renew_epp_errors
         false

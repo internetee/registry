@@ -14,7 +14,7 @@ class ArchiveContactsTaskTest < ActiveSupport::TestCase
   def archivable_contact
     contact = contacts(:john)
     Setting.orphans_contacts_in_months = 0
-    DomainVersion.delete_all
+    Version::DomainVersion.delete_all
 
     other_contact = contacts(:william)
     assert_not_equal other_contact, contact

@@ -1,4 +1,4 @@
-module Concerns::Billing::Price::Expirable
+module Billing::Price::Expirable
   extend ActiveSupport::Concern
 
   class_methods do

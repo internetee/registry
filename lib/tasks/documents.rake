@@ -16,8 +16,8 @@ namespace :documents do
       next if x.documentable_id.blank?
 
       document_type = case x.documentable_type
-                        when 'Domain' then DomainVersion
-                        when 'Contact'then ContactVersion
+                        when 'Domain' then Version::DomainVersion
+                        when 'Contact'then Version::ContactVersion
                       end
 
       dc = document_type.where(item_id: x.documentable_id)

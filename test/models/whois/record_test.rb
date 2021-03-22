@@ -15,6 +15,11 @@ class Whois::RecordTest < ActiveSupport::TestCase
     Setting.registry_whois_disclaimer = @original_disclaimer
   end
 
+  def test_whois_records_without_auction
+    domain = Whois::Record.without_auctions
+    assert_equal domain[0].name, 'shop.test'
+  end
+
   def test_reads_disclaimer_setting
     Setting.registry_whois_disclaimer = JSON.generate({en: 'test_disclaimer'})
     assert_equal Setting.registry_whois_disclaimer, Whois::Record.disclaimer

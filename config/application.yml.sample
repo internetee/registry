@@ -170,7 +170,7 @@ tara_issuer: 'https://tara-test.ria.ee'
 tara_identifier: 'identifier'
 tara_secret: 'secret'
 tara_redirect_uri: 'redirect_url'
-tara_keys: "{\"kty\":\"RSA\",\"kid\":\"de6cc4\",\"n\":\"jWwAjT_03ypme9ZWeSe7c-jY26NO50Wo5I1LBnPW2JLc0dPMj8v7y4ehiRpClYNTaSWcLd4DJmlKXDXXudEUWwXa7TtjBFJfzlZ-1u0tDvJ-H9zv9MzO7UhUFytztUEMTrtStdhGbzkzdEZZCgFYeo2i33eXxzIR1nGvI05d9Y-e_LHnNE2ZKTa89BC7ZiCXq5nfAaCgQna_knh4kFAX-KgiPRAtsiDHcAWKcBY3qUVcb-5XAX8p668MlGLukzsh5tFkQCbJVyNtmlbIHdbGvVHPb8C0H3oLYciv1Fjy_tS1lO7OT_cb3GVp6Ql-CG0uED_8pkpVtfsGRviub4_ElQ\",\"e\":\"AQAB\"}"
+tara_keys: "{\"kty\":\"RSA\",\"kid\":\"public:xWbbVoYq9EwMqphp\",\"n\":\"2vlgaxaUJYUWjkNM_b-ruADW3gyGnkPvxDyEXWeLyP668vn5aTrSdZ42psr6Vpu6V1MEjMr27bnE7swqndfmspqJHKlp47fO9orWWNGmrHFtClxU36wqFiIg9V39hbHdoXqZVdLywwjx6KLgsuYff95KvwfDqUK9IxxADm91ckD9m9aoQaPTrn8KsB9uhkyEchejNHRg7EGZDvWHF-aiQHCMnieSowiapPd7kTYGemPMheVyY_Zwvyya8DkvjnVa8HlrmbzjMjGdSRq5dVL0lCxb4-OlZ-QZuORUBqZ5xEAhWg2Jl6oG0slj3z8l_fd7l2oj7THNoepYWTnzUDxsN1hvRLzFnJh8MNUklYHWf8CFrwmPdqGDs0jeLP2v7X8LJeQ-Ly3GHsUBai1aVORZXCHq1Tzt2XyQhvPVt_3WoaVKJBi4hjz0CLKlSE0eUv9TWL58CU76tU98dxOwSb6hhqEu3xn6mLApyyEZzeUdYdJutDFQuTYz2pb1yqMFqlp2LHa49p7Q5TvBp4pKOxwjrqnlKTsasL8BU2vA9xHuEEYttVzAPWjH_5-BfoJ8GKQTLaXc6LOmWIZcMDVM8QEOkLXQdUtlaPVz-2wl9Q_FwhoBzXSZujEYQVcSZznxIdNyV4nvn2mo56isITX18PTcdyZ4V-wWlS5PuUNVVRQHWE0\",\"e\":\"AQAB\"}"
 
 tara_rant_identifier: 'identifier'
 tara_rant_secret: 'secret'

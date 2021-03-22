@@ -1,8 +1,8 @@
 class Registrar < ApplicationRecord
   include Versions # version/registrar_version.rb
-  include Concerns::Registrar::BookKeeping
-  include Concerns::EmailVerifable
-  include Concerns::Registrar::LegalDoc
+  include Registrar::BookKeeping
+  include EmailVerifable
+  include Registrar::LegalDoc
 
   has_many :domains, dependent: :restrict_with_error
   has_many :contacts, dependent: :restrict_with_error
@@ -30,7 +30,7 @@ class Registrar < ApplicationRecord
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
 
-  attribute :vat_rate, ::Type::VATRate.new
+  attribute :vat_rate, ::Type::VatRate.new
   after_initialize :set_defaults
 
   validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
@@ -153,7 +153,7 @@ class Registrar < ApplicationRecord
         puny = origin.domain.name_puny
         next unless domains.include?(idn) || domains.include?(puny) || domains.empty?
 
-        if origin.domain.nameservers.where(hostname: new_attributes[:hostname]).any?
+        if domain_not_updatable?(hostname: new_attributes[:hostname], domain: origin.domain)
           failed_list << idn
           next
         end
@@ -201,6 +201,10 @@ class Registrar < ApplicationRecord
   end
 
   private
+
+  def domain_not_updatable?(hostname:, domain:)
+    domain.nameservers.where(hostname: hostname).any? || domain.bulk_update_prohibited?
+  end
 
   def set_defaults
     self.language = Setting.default_language unless language

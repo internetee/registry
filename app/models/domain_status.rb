@@ -109,14 +109,12 @@ class DomainStatus < ApplicationRecord
   DELETE_PROHIBIT_STATES = [
       DomainStatus::CLIENT_DELETE_PROHIBITED,
       DomainStatus::SERVER_DELETE_PROHIBITED,
-      DomainStatus::CLIENT_UPDATE_PROHIBITED,
-      DomainStatus::SERVER_UPDATE_PROHIBITED,
       DomainStatus::PENDING_CREATE,
       DomainStatus::PENDING_RENEW,
       DomainStatus::PENDING_TRANSFER,
       DomainStatus::PENDING_UPDATE,
       DomainStatus::PENDING_DELETE
-  ]
+  ].freeze
 
   def epp_code_map
     {

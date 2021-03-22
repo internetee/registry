@@ -21,7 +21,7 @@ class ReppV1RetainedDomainsTest < ActionDispatch::IntegrationTest
                           status: 'reserved',
                           punycode_name: 'reserved.test' }]
 
-    assert_equal response_json[:domains], expected_objects
+    assert_empty response_json[:domains] - expected_objects
   end
 
   def test_get_index_with_type_parameter

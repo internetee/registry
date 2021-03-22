@@ -1,4 +1,4 @@
-module Concerns::Domain::Activatable
+module Domain::Activatable
   extend ActiveSupport::Concern
 
   def active?

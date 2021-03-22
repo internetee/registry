@@ -1,3 +1,44 @@
+18.03.2021
+* Added tests for renew and domain status management [#1886](https://github.com/internetee/registry/pull/1886)
+
+12.03.2021
+* Removed old classnames from notifications [#1878](https://github.com/internetee/registry/pull/1878)
+* improved test coverage [#1860](https://github.com/internetee/registry/pull/1860)
+* added test for whois record delete [#1811](https://github.com/internetee/registry/pull/1811)
+
+11.03.2021
+* Account activity in registrar and REPP now return balance with each record [#1819](https://github.com/internetee/registry/issues/1819)
+* Fixed CookieOverflow error with large authentication service keys [#1879](https://github.com/internetee/registry/pull/1879)
+
+10.03.2021
+* Registrant API returns full contact details for admin contacts [#1876](https://github.com/internetee/registry/pull/1876)
+
+09.03.2021
+* AWS message id saving over API [#1877](https://github.com/internetee/registry/pull/1877)
+* Enabled Zeitwerk autoloader [#1872](https://github.com/internetee/registry/issues/1872)
+
+04.03.2021
+* Removed old registrant portal from the project [#1826](https://github.com/internetee/registry/issues/1826)
+
+03.03.2021
+* Email notification is sent in case of pendingupdate expiry [#897](https://github.com/internetee/registry/issues/897)
+
+26.02.2021
+* Domain delete is not affected by updateProhibited [#1844](https://github.com/internetee/registry/issues/1844)
+* Registrant API fix for handling eidas personal identificators [#1864](https://github.com/internetee/registry/pull/1864)
+
+23.02.2021
+* UpdateProhibited status affects bulk actions in REPP [#1818](https://github.com/internetee/registry/issues/1818)
+* Registrant api domain request now excludes tech only domains by default [#1836](https://github.com/internetee/registry/pull/1836)
+
+22.02.2021
+* serverDeleteProhibited prohibts delete action [#1849](https://github.com/internetee/registry/issues/1849)
+
+19.02.2021
+* Update prohibited staatus is kept after renew [#1843](https://github.com/internetee/registry/issues/1843)
+* Fixed clientHold and serverManualInzone status conflict issue [#1845](https://github.com/internetee/registry/issues/1845)
+* Replacing registrant object with another that has the same ident data set does not require registrant verification [#1852](https://github.com/internetee/registry/issues/1852)
+
 11.02.2021
 * Poll messages on locking and unlocking a domain [#1828](https://github.com/internetee/registry/issues/1828)
 * Registrar's prefix is now checked and added to contact id for info and check requests [#1832](https://github.com/internetee/registry/issues/1832)

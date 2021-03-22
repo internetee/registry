@@ -201,7 +201,6 @@ class Epp::Domain < Domain
 
     statuses.delete(DomainStatus::SERVER_HOLD)
     statuses.delete(DomainStatus::EXPIRED)
-    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
     cancel_pending_delete
 
     save
@@ -386,5 +385,14 @@ class Epp::Domain < Domain
 
       result
     end
+  end
+
+  private
+
+  def verification_needed?(code:)
+    new_registrant = Registrant.find_by(code: code)
+    return false if new_registrant.try(:identical_to?, registrant)
+
+    registrant.code != code
   end
 end

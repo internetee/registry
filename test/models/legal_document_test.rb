@@ -5,6 +5,10 @@ class LegalDocumentTest < ActiveSupport::TestCase
     assert valid_legal_document.valid?, proc { valid_legal_document.errors.full_messages }
   end
 
+  def test_duplicate_legal_docs 
+    assert LegalDocument.remove_duplicates
+  end
+
   private
 
   def valid_legal_document

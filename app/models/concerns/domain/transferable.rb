@@ -1,4 +1,4 @@
-module Concerns::Domain::Transferable
+module Domain::Transferable
   extend ActiveSupport::Concern
 
   included do
@@ -31,7 +31,9 @@ module Concerns::Domain::Transferable
       DomainStatus::PENDING_TRANSFER,
       DomainStatus::FORCE_DELETE,
       DomainStatus::SERVER_TRANSFER_PROHIBITED,
-      DomainStatus::CLIENT_TRANSFER_PROHIBITED
+      DomainStatus::CLIENT_TRANSFER_PROHIBITED,
+      DomainStatus::SERVER_UPDATE_PROHIBITED,
+      DomainStatus::CLIENT_UPDATE_PROHIBITED,
     ]).empty?
   end
 
