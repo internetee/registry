@@ -17,7 +17,7 @@ class ReppV1DomainsCreateTest < ActionDispatch::IntegrationTest
     payload = {
       domain: {
         name: 'domeener.test',
-        registrant_id: contact.code,
+        registrant: contact.code,
         period: 1,
         period_unit: 'y'
       }
@@ -39,7 +39,7 @@ class ReppV1DomainsCreateTest < ActionDispatch::IntegrationTest
     payload = {
       domain: {
         name: 'domeener.test',
-        registrant_id: contact.code,
+        registrant: contact.code,
         period: 3,
         period_unit: 'y'
       }
@@ -61,7 +61,7 @@ class ReppV1DomainsCreateTest < ActionDispatch::IntegrationTest
     payload = {
       domain: {
         name: 'domeener.test',
-        registrant_id: contact.code,
+        registrant: contact.code,
         period: 1,
         period_unit: 'y',
         nameservers_attributes: [
@@ -91,7 +91,7 @@ class ReppV1DomainsCreateTest < ActionDispatch::IntegrationTest
     payload = {
       domain: {
         name: 'domeener.test',
-        registrant_id: contact.code,
+        registrant: contact.code,
         period: 1,
         period_unit: 'y',
         admin_contacts: [ admin_contact.code ],

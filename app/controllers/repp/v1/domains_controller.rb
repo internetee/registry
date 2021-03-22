@@ -27,7 +27,7 @@ module Repp
       desc 'Create a new domain'
       param :domain, Hash, required: true, desc: 'Parameters for new domain' do
         param :name, String, required: true, desc: 'Domain name to be registered'
-        param :registrant_id, String, required: true, desc: 'Registrant contact code'
+        param :registrant, String, required: true, desc: 'Registrant contact code'
         param :period, Integer, required: true, desc: 'Registration period in months or years'
         param :period_unit, String, required: true, desc: 'Period type (month m) or (year y)'
         param :nameservers_attributes, Array, required: false, desc: 'Domain nameservers' do
@@ -170,7 +170,7 @@ module Repp
       def forward_registrar_id
         return unless params[:domain]
 
-        params[:domain][:registrar_id] = current_user.registrar.id
+        params[:domain][:registrar] = current_user.registrar.id
       end
 
       def set_domain
@@ -216,7 +216,7 @@ module Repp
       end
 
       def domain_create_params
-        params.require(:domain).permit(:name, :registrant_id, :period, :period_unit, :registrar_id,
+        params.require(:domain).permit(:name, :registrant, :period, :period_unit, :registrar,
                                        dnskeys_attributes: [%i[flags alg protocol public_key]],
                                        nameservers_attributes: [[:hostname, ipv4: [], ipv6: []]],
                                        admin_contacts: [],

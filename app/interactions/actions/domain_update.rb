@@ -49,7 +49,7 @@ module Actions
 
       regt = Registrant.find_by(code: params[:registrant][:code])
       unless regt
-        domain.add_epp_error('2303', 'registrant', params[:registrant_id], %i[registrant not_found])
+        domain.add_epp_error('2303', 'registrant', params[:registrant], %i[registrant not_found])
         return
       end
 
@@ -234,7 +234,7 @@ module Actions
     def ask_registrant_verification
       if verify_registrant_change? && !bypass_verify &&
          Setting.request_confirmation_on_registrant_change_enabled
-        domain.registrant_verification_asked!(params, params[:registrar_id])
+        domain.registrant_verification_asked!(params, params[:registrar])
       end
     end
 

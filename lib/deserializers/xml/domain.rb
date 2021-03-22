@@ -11,8 +11,8 @@ module Deserializers
       def call
         attributes = {
           name: if_present('name'),
-          registrar_id: registrar,
-          registrant_id: if_present('registrant'),
+          registrar: registrar,
+          registrant: if_present('registrant'),
           reserved_pw: if_present('reserved > pw'),
         }
 

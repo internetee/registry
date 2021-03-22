@@ -66,16 +66,16 @@ module Actions
     end
 
     def assign_registrant
-      unless params[:registrant_id]
+      unless params[:registrant]
         domain.add_epp_error('2306', nil, nil, %i[registrant cannot_be_missing])
         return
       end
 
-      regt = Registrant.find_by(code: params[:registrant_id])
+      regt = Registrant.find_by(code: params[:registrant])
       if regt
         domain.registrant = regt
       else
-        domain.add_epp_error('2303', 'registrant', params[:registrant_id], %i[registrant not_found])
+        domain.add_epp_error('2303', 'registrant', params[:registrant], %i[registrant not_found])
       end
     end
 
@@ -207,7 +207,7 @@ module Actions
     end
 
     def current_registrar
-      Registrar.find(params[:registrar_id])
+      Registrar.find(params[:registrar])
     end
   end
 end
