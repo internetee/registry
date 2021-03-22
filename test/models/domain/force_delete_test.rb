@@ -325,8 +325,10 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
+    email = @domain.admin_contacts.first.email
+    asserted_text = "Invalid email: #{email}"
 
-    prepare_bounced_email_address(@domain.admin_contacts.first.email)
+    prepare_bounced_email_address(email)
 
     @domain.reload
 
@@ -334,14 +336,18 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_equal 'invalid_email', @domain.template_name
     assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
+    notification = @domain.registrar.notifications.last
+    assert notification.text.include? asserted_text
   end
 
   def test_schedules_force_delete_after_registrant_bounce
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
+    email = @domain.registrant.email
+    asserted_text = "Invalid email: #{email}"
 
-    prepare_bounced_email_address(@domain.registrant.email)
+    prepare_bounced_email_address(email)
 
     @domain.reload
 
@@ -349,17 +355,21 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_equal 'invalid_email', @domain.template_name
     assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
+    notification = @domain.registrar.notifications.last
+    assert notification.text.include? asserted_text
   end
 
   def test_schedules_force_delete_invalid_contact
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
+    email = 'some@strangesentence@internet.ee'
+    asserted_text = "Invalid email: #{email}"
 
     Truemail.configure.default_validation_type = :regex
 
     contact = @domain.admin_contacts.first
-    contact.update_attribute(:email, 'some@strangesentence@internet.ee')
+    contact.update_attribute(:email, email)
     contact.email_verification.verify
 
     assert contact.email_verification_failed?
@@ -370,6 +380,8 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_equal 'invalid_email', @domain.template_name
     assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
+    notification = @domain.registrar.notifications.last
+    assert notification.text.include? asserted_text
   end
 
   def prepare_bounced_email_address(email)
