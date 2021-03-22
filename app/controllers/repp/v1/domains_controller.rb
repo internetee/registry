@@ -28,6 +28,8 @@ module Repp
       param :domain, Hash, required: true, desc: 'Parameters for new domain' do
         param :name, String, required: true, desc: 'Domain name to be registered'
         param :registrant, String, required: true, desc: 'Registrant contact code'
+        param :reserved_pw, String, required: false, desc: 'Reserved password for domain'
+        param :transfer_code, String, required: false, desc: 'Desired transfer code for domain'
         param :period, Integer, required: true, desc: 'Registration period in months or years'
         param :period_unit, String, required: true, desc: 'Period type (month m) or (year y)'
         param :nameservers_attributes, Array, required: false, desc: 'Domain nameservers' do
@@ -71,7 +73,7 @@ module Repp
           param :verified, [true, false], required: false,
                                           desc: 'Registrant change is already verified'
         end
-        param :auth_info, String, required: false, desc: 'New authorization code'
+        param :transfer_code, String, required: false, desc: 'New authorization code'
       end
       def update
         action = Actions::DomainUpdate.new(@domain, params[:domain], false)
@@ -215,10 +217,10 @@ module Repp
 
       def domain_create_params
         params.require(:domain).permit(:name, :registrant, :period, :period_unit, :registrar,
+                                       :transfer_code, :reserved_pw,
                                        dnskeys_attributes: [%i[flags alg protocol public_key]],
                                        nameservers_attributes: [[:hostname, ipv4: [], ipv6: []]],
-                                       admin_contacts: [],
-                                       tech_contacts: [])
+                                       admin_contacts: [], tech_contacts: [])
       end
     end
   end

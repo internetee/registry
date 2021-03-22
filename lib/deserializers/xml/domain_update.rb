@@ -15,7 +15,7 @@ module Deserializers
 
       def call
         obj = { domain: frame.css('name')&.text, registrant: registrant, contacts: contacts,
-                auth_info: if_present('authInfo > pw'), nameservers: nameservers,
+                transfer_code: if_present('authInfo > pw'), nameservers: nameservers,
                 registrar_id: registrar, statuses: statuses, dns_keys: dns_keys,
                 reserved_pw: if_present('reserved > pw'), legal_document: @legal_document }
 

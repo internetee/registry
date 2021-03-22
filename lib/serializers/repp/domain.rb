@@ -12,7 +12,7 @@ module Serializers
           name: obj.name, registrant: obj.registrant.code, created_at: obj.created_at,
           updated_at: obj.updated_at, expire_time: obj.expire_time, outzone_at: obj.outzone_at,
           delete_date: obj.delete_date, force_delete_date: obj.force_delete_date,
-          authorization_code: obj.auth_info, contacts: contacts, nameservers: nameservers,
+          transfer_code: obj.auth_info, contacts: contacts, nameservers: nameservers,
           dnssec_keys: dnssec_keys, statuses: obj.statuses
         }
 

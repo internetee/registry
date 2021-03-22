@@ -35,7 +35,7 @@ module Actions
     end
 
     def validate_domain_integrity
-      domain.auth_info = params[:auth_info] if params[:auth_info]
+      domain.auth_info = params[:transfer_code] if params[:transfer_code]
 
       return unless domain.discarded?
 

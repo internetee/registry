@@ -110,4 +110,28 @@ class ReppV1DomainsCreateTest < ActionDispatch::IntegrationTest
     assert_equal tech_contact, domain.tech_domain_contacts.first.contact
     assert_equal admin_contact, domain.admin_domain_contacts.first.contact
   end
+
+  def test_creates_new_domain_with_desired_transfer_code
+    @auth_headers['Content-Type'] = 'application/json'
+    contact = contacts(:john)
+
+    payload = {
+      domain: {
+        name: 'domeener.test',
+        registrant: contact.code,
+        transfer_code: 'ABADIATS',
+        period: 1,
+        period_unit: 'y'
+      }
+    }
+
+    post "/repp/v1/domains", headers: @auth_headers, params: payload.to_json
+    json = JSON.parse(response.body, symbolize_names: true)
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+
+    assert @user.registrar.domains.find_by(name: 'domeener.test').present?
+    assert_equal 'ABADIATS', @user.registrar.domains.find_by(name: 'domeener.test').transfer_code
+  end
 end
