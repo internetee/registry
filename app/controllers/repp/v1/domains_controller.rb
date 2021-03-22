@@ -35,10 +35,8 @@ module Repp
           param :ipv4, Array, desc: 'Array of IPv4 addresses'
           param :ipv6, Array, desc: 'Array of IPv4 addresses'
         end
-        param :admin_contacts, Array, required: false,
-                                                        desc: 'Admin domain contacts codes'
-        param :tech_contacts, Array, required: false,
-                                                       desc: 'Tech domain contacts codes'
+        param :admin_contacts, Array, required: false, desc: 'Admin domain contacts codes'
+        param :tech_contacts, Array, required: false, desc: 'Tech domain contacts codes'
         param :dnskeys_attributes, Array, required: false, desc: 'DNSSEC keys for domain' do
           param_group :dns_keys_apidoc, Repp::V1::Domains::DnssecController
         end

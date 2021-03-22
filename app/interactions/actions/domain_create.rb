@@ -144,7 +144,8 @@ module Actions
       domain.expire_time = calculate_expiry(period)
     end
 
-    def calculate_expiry(period)      plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym
+    def calculate_expiry(period)
+      plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym
       (Time.zone.now.advance(plural_period_unit_name => period) + 1.day).beginning_of_day
     end
 
