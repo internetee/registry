@@ -15,8 +15,8 @@ module Deserializers
 
       def call
         obj = domain
-        obj[:admin_domain_contacts_attributes] = admin_contacts
-        obj[:tech_domain_contacts_attributes] = tech_contacts
+        obj[:admin_contacts] = admin_contacts
+        obj[:tech_contacts] = tech_contacts
         obj[:nameservers_attributes] = nameservers
         obj[:dnskeys_attributes] = dns_keys
         obj[:legal_document] = legal_document

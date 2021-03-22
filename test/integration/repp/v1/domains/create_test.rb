@@ -94,8 +94,8 @@ class ReppV1DomainsCreateTest < ActionDispatch::IntegrationTest
         registrant_id: contact.code,
         period: 1,
         period_unit: 'y',
-        admin_domain_contacts_attributes: [ admin_contact.code ],
-        tech_domain_contacts_attributes: [ tech_contact.code ],
+        admin_contacts: [ admin_contact.code ],
+        tech_contacts: [ tech_contact.code ],
       }
     }
 

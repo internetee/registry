@@ -35,9 +35,9 @@ module Repp
           param :ipv4, Array, desc: 'Array of IPv4 addresses'
           param :ipv6, Array, desc: 'Array of IPv4 addresses'
         end
-        param :admin_domain_contacts_attributes, Array, required: false,
+        param :admin_contacts, Array, required: false,
                                                         desc: 'Admin domain contacts codes'
-        param :tech_domain_contacts_attributes, Array, required: false,
+        param :tech_contacts, Array, required: false,
                                                        desc: 'Tech domain contacts codes'
         param :dnskeys_attributes, Array, required: false, desc: 'DNSSEC keys for domain' do
           param_group :dns_keys_apidoc, Repp::V1::Domains::DnssecController
@@ -219,8 +219,8 @@ module Repp
         params.require(:domain).permit(:name, :registrant_id, :period, :period_unit, :registrar_id,
                                        dnskeys_attributes: [%i[flags alg protocol public_key]],
                                        nameservers_attributes: [[:hostname, ipv4: [], ipv6: []]],
-                                       admin_domain_contacts_attributes: [],
-                                       tech_domain_contacts_attributes: [])
+                                       admin_contacts: [],
+                                       tech_contacts: [])
       end
     end
   end

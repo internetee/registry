@@ -129,8 +129,8 @@ module Actions
     def assign_domain_contacts
       @admin_contacts = []
       @tech_contacts = []
-      params[:admin_domain_contacts_attributes]&.each { |c| assign_contact(c) }
-      params[:tech_domain_contacts_attributes]&.each { |c| assign_contact(c, admin: false) }
+      params[:admin_contacts]&.each { |c| assign_contact(c) }
+      params[:tech_contacts]&.each { |c| assign_contact(c, admin: false) }
 
       domain.admin_domain_contacts_attributes = @admin_contacts
       domain.tech_domain_contacts_attributes = @tech_contacts
@@ -144,8 +144,7 @@ module Actions
       domain.expire_time = calculate_expiry(period)
     end
 
-    def calculate_expiry(period)
-      plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym
+    def calculate_expiry(period)      plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym
       (Time.zone.now.advance(plural_period_unit_name => period) + 1.day).beginning_of_day
     end
 
