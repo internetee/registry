@@ -1,5 +1,6 @@
 class EmailAddressVerification < ApplicationRecord
   RECENTLY_VERIFIED_PERIOD = 1.month
+  after_save :check_force_delete
 
   scope :not_verified_recently, lambda {
     where('verified_at IS NULL or verified_at < ?', verification_period)
@@ -38,6 +39,12 @@ class EmailAddressVerification < ApplicationRecord
 
   def verified?
     success
+  end
+
+  def check_force_delete
+    return unless failed?
+
+    Domains::ForceDeleteEmail::Base.run(email: email)
   end
 
   def verify

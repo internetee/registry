@@ -43,8 +43,11 @@ class DomainExpireMailer < ApplicationMailer
 
   # Needed because there are invalid emails in the database, which have been imported from legacy app
   def filter_invalid_emails(emails:, domain:)
-    emails.select do |email|
-      valid = EmailValidator.new(email).valid?
+    old_validation_type = Truemail.configure.default_validation_type
+    Truemail.configure.default_validation_type = :regex
+
+    results = emails.select do |email|
+      valid = Truemail.valid?(email)
 
       unless valid
         logger.info("Unable to send DomainExpireMailer#expired email for domain #{domain.name} (##{domain.id})" \
@@ -53,5 +56,7 @@ class DomainExpireMailer < ApplicationMailer
 
       valid
     end
+    Truemail.configure.default_validation_type = old_validation_type
+    results
   end
 end

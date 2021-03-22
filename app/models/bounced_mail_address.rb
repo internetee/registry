@@ -1,6 +1,7 @@
 class BouncedMailAddress < ApplicationRecord
   validates :email, :message_id, :bounce_type, :bounce_subtype, :action, :status, presence: true
   after_destroy :destroy_aws_suppression
+  after_create :force_delete_from_bounce
 
   def bounce_reason
     "#{action} (#{status} #{diagnostic})"
@@ -41,5 +42,9 @@ class BouncedMailAddress < ApplicationRecord
     ses.config.credentials.access_key_id.present?
   rescue Aws::Errors::MissingRegionError
     false
+  end
+
+  def force_delete_from_bounce
+    Domains::ForceDeleteEmail::Base.run(email: email)
   end
 end

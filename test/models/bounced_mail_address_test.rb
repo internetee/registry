@@ -12,6 +12,52 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
     @bounced_mail.action = 'failed'
     @bounced_mail.status = '5.1.1'
     @bounced_mail.diagnostic =  'smtp; 550 5.1.1 user unknown'
+
+    @contact_email = "john@inbox.test"
+  end
+
+  def test_soft_force_delete_related_domains
+    domain_contacts = Contact.where(email: @contact_email).map(&:domain_contacts).flatten
+
+    domain_contacts.each do |domain_contact|
+      domain_contact.domain.update(valid_to: Time.zone.now + 5.years)
+      assert_not domain_contact.domain.statuses.include? DomainStatus::FORCE_DELETE
+      assert_not domain_contact.domain.statuses.include? DomainStatus::SERVER_RENEW_PROHIBITED
+      assert_not domain_contact.domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
+    end
+
+    @bounced_mail.email = @contact_email
+    @bounced_mail.save
+
+    domain_contacts.each do |domain_contact|
+      domain_contact.reload
+      assert_equal 'soft', domain_contact.domain.force_delete_type
+      assert domain_contact.domain.force_delete_scheduled?
+      assert domain_contact.domain.statuses.include? DomainStatus::FORCE_DELETE
+      assert domain_contact.domain.statuses.include? DomainStatus::SERVER_RENEW_PROHIBITED
+      assert domain_contact.domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
+    end
+  end
+
+  def test_soft_force_delete_if_domain_has_force_delete_status
+    domain_contacts = Contact.where(email: @contact_email).map(&:domain_contacts).flatten
+    perform_enqueued_jobs do
+      domain_contacts.each do |domain_contact|
+        domain_contact.domain.update(valid_to: Time.zone.now + 5.years)
+        domain_contact.domain.schedule_force_delete(type: :soft, notify_by_email: false, reason: 'test')
+      end
+    end
+    force_delete_date = domain_contacts.map(&:domain).each.pluck(:force_delete_date).sample
+    assert_not_nil force_delete_date
+
+    @bounced_mail.email = @contact_email
+    @bounced_mail.save
+
+    domain_contacts.all? do |domain_contact|
+      assert_equal force_delete_date, domain_contact.domain.force_delete_date
+      assert_equal 'soft', domain_contact.domain.force_delete_type
+      assert domain_contact.domain.force_delete_scheduled?
+    end
   end
 
   def test_email_is_required

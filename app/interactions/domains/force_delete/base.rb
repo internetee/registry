@@ -13,6 +13,9 @@ module Domains
       string  :reason,
               default: nil,
               description: 'Which mail template to use explicitly'
+      string  :email,
+              default: nil,
+              description: 'Possible invalid email to notify on'
 
       validates :type, inclusion: { in: %i[fast_track soft] }
     end

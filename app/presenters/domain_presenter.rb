@@ -1,5 +1,5 @@
 class DomainPresenter
-  delegate :name, :transfer_code, :registrant, :registrant_id, to: :domain
+  delegate :name, :transfer_code, :registrant, :registrant_id, :id, to: :domain
 
   def initialize(domain:, view:)
     @domain = domain
