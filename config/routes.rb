@@ -61,7 +61,7 @@ Rails.application.routes.draw do
         end
       end
       resources :domains, constraints: { id: /.*/ } do
-        resources :nameservers, only: %i[create destroy], constraints: { id: /.*/ }, controller: 'domains/nameservers'
+        resources :nameservers, only: %i[index create destroy], constraints: { id: /.*/ }, controller: 'domains/nameservers'
         resources :dnssec, only: %i[index create], constraints: { id: /.*/ }, controller: 'domains/dnssec'
         resources :contacts, only: %i[index create], constraints: { id: /.*/ }, controller: 'domains/contacts'
         resources :renew, only: %i[create], constraints: { id: /.*/ }, controller: 'domains/renews'

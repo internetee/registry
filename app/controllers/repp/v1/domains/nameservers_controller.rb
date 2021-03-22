@@ -2,8 +2,16 @@ module Repp
   module V1
     module Domains
       class NameserversController < BaseController
-        before_action :set_domain, only: %i[create destroy]
+        before_action :set_domain, only: %i[index create destroy]
         before_action :set_nameserver, only: %i[destroy]
+
+        api :GET, '/repp/v1/domains/:domain_name/nameservers'
+        desc "Get domain's nameservers"
+        def index
+          nameservers = @domain.nameservers
+          data = { nameservers: nameservers.as_json(only: %i[hostname ipv4 ipv6]) }
+          render_success(data: data)
+        end
 
         api :POST, '/repp/v1/domains/:domain_name/nameservers'
         desc 'Create new nameserver for domain'
