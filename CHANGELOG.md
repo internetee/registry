@@ -1,3 +1,6 @@
+22.03.2021
+* Bounced emails trigger soft ForceDelete procedure [#1838](https://github.com/internetee/registry/issues/1838)
+
 18.03.2021
 * Added tests for renew and domain status management [#1886](https://github.com/internetee/registry/pull/1886)
 
