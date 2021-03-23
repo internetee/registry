@@ -5,7 +5,7 @@ module Repp
       before_action :set_authorized_domain, only: %i[transfer_info destroy]
       before_action :validate_registrar_authorization, only: %i[transfer_info destroy]
       before_action :forward_registrar_id, only: %i[create update destroy]
-      before_action :set_domain, only: %i[show update]
+      before_action :set_domain, only: %i[update]
 
       api :GET, '/repp/v1/domains'
       desc 'Get all existing domains'
@@ -20,7 +20,10 @@ module Repp
       api :GET, '/repp/v1/domains/:domain_name'
       desc 'Get a specific domain'
       def show
-        render_success(data: { domain: Serializers::Repp::Domain.new(@domain).to_json })
+        @domain = Epp::Domain.find_by!(name: params[:id])
+        sponsored = @domain.registrar == current_user.registrar
+        render_success(data: { domain: Serializers::Repp::Domain.new(@domain,
+                                                                     sponsored: sponsored).to_json })
       end
 
       api :POST, '/repp/v1/domains'

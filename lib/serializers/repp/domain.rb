@@ -3,8 +3,9 @@ module Serializers
     class Domain
       attr_reader :domain
 
-      def initialize(domain)
+      def initialize(domain, sponsored: true)
         @domain = domain
+        @sponsored = sponsored
       end
 
       def to_json(obj = domain)
@@ -12,10 +13,10 @@ module Serializers
           name: obj.name, registrant: obj.registrant.code, created_at: obj.created_at,
           updated_at: obj.updated_at, expire_time: obj.expire_time, outzone_at: obj.outzone_at,
           delete_date: obj.delete_date, force_delete_date: obj.force_delete_date,
-          transfer_code: obj.auth_info, contacts: contacts, nameservers: nameservers,
-          dnssec_keys: dnssec_keys, statuses: obj.statuses
+          contacts: contacts, nameservers: nameservers, dnssec_keys: dnssec_keys,
+          statuses: obj.statuses, registrar: registrar
         }
-
+        json[:transfer_code] = obj.auth_info if @sponsored
         json
       end
 
@@ -32,6 +33,10 @@ module Serializers
           { flags: nssec.flags, protocol: nssec.protocol, alg: nssec.alg,
             public_key: nssec.public_key }
         end
+      end
+
+      def registrar
+        { name: domain.registrar.name, website: domain.registrar.website }
       end
     end
   end
