@@ -29,6 +29,7 @@ module Deserializers
         {
           period: period.text.present? ? Integer(period.text) : 1,
           period_unit: period.first ? period.first[:unit] : 'y',
+          exp_date: if_present('curExpDate'),
         }
       end
 

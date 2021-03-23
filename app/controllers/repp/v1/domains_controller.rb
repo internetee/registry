@@ -21,9 +21,9 @@ module Repp
       desc 'Get a specific domain'
       def show
         @domain = Epp::Domain.find_by!(name: params[:id])
-        sponsored = @domain.registrar == current_user.registrar
+        sponsor = @domain.registrar == current_user.registrar
         render_success(data: { domain: Serializers::Repp::Domain.new(@domain,
-                                                                     sponsored: sponsored).to_json })
+                                                                     sponsored: sponsor).to_json })
       end
 
       api :POST, '/repp/v1/domains'

@@ -8,6 +8,7 @@ module Serializers
         @sponsored = sponsored
       end
 
+      # rubocop:disable Metrics/AbcSize
       def to_json(obj = domain)
         json = {
           name: obj.name, registrant: obj.registrant.code, created_at: obj.created_at,
@@ -19,6 +20,7 @@ module Serializers
         json[:transfer_code] = obj.auth_info if @sponsored
         json
       end
+      # rubocop:enable Metrics/AbcSize
 
       def contacts
         domain.domain_contacts.map { |c| { code: c.contact_code_cache, type: c.type } }

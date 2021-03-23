@@ -15,7 +15,7 @@ class ReppV1DomainsRenewsTest < ActionDispatch::IntegrationTest
     travel_to Time.zone.parse('2010-07-05')
 
     @auth_headers['Content-Type'] = 'application/json'
-    payload = { renew: { period: 1, period_unit: 'y' } }
+    payload = { renew: { period: 1, period_unit: 'y', exp_date: original_valid_to } }
     post "/repp/v1/domains/#{@domain.name}/renew", headers: @auth_headers, params: payload.to_json
     json = JSON.parse(response.body, symbolize_names: true)
 
@@ -31,7 +31,7 @@ class ReppV1DomainsRenewsTest < ActionDispatch::IntegrationTest
     travel_to Time.zone.parse('2010-07-05')
 
     @auth_headers['Content-Type'] = 'application/json'
-    payload = { renew: { period: 100, period_unit: 'y' } }
+    payload = { renew: { period: 100, period_unit: 'y', exp_date: original_valid_to } }
     post "/repp/v1/domains/#{@domain.name}/renew", headers: @auth_headers, params: payload.to_json
     json = JSON.parse(response.body, symbolize_names: true)
 
@@ -48,14 +48,14 @@ class ReppV1DomainsRenewsTest < ActionDispatch::IntegrationTest
     days_to_renew_domain_before_expire.reload
 
     original_valid_to = @domain.valid_to
-    travel_to @domain.valid_to - 3.days 
+    travel_to @domain.valid_to - 3.days
 
     one_year = billing_prices(:renew_one_year)
     one_year.update(valid_from: @domain.valid_to - 5.days)
     one_year.reload
 
     @auth_headers['Content-Type'] = 'application/json'
-    payload = { renew: { period: 1, period_unit: 'y' } }
+    payload = { renew: { period: 1, period_unit: 'y', exp_date: original_valid_to } }
     post "/repp/v1/domains/#{@domain.name}/renew", headers: @auth_headers, params: payload.to_json
     json = JSON.parse(response.body, symbolize_names: true)
 

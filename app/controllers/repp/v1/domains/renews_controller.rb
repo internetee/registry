@@ -11,6 +11,7 @@ module Repp
         param :renew, Hash, required: true, desc: 'Renew parameters' do
           param :period, Integer, required: true, desc: 'Renew period. Month (m) or year (y)'
           param :period_unit, String, required: true, desc: 'For how many months or years to renew'
+          param :exp_date, String, required: true, desc: 'Current expiry date for domain'
         end
         def create
           authorize!(:renew, @domain)
@@ -36,7 +37,7 @@ module Repp
         private
 
         def renew_params
-          params.permit(:domain_id, renew: %i[period period_unit])
+          params.permit(:domain_id, renew: %i[period period_unit exp_date])
         end
 
         def validate_renew_period

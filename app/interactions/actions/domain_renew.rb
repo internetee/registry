@@ -16,11 +16,14 @@ module Actions
         domain.add_renew_epp_errors
         false
       else
+        domain.validate_exp_dates(params[:exp_date])
         renew
       end
     end
 
     def renew
+      return false if domain.errors[:epp_errors].any?
+
       task = Domains::BulkRenew::SingleDomainRenew.run(domain: domain,
                                                        period: params[:period],
                                                        unit: params[:period_unit],
