@@ -1,3 +1,6 @@
+23.03.2021
+* Expiration mailer ignores bounced addresses and send each email separately [#1888](https://github.com/internetee/registry/issues/1888)
+
 22.03.2021
 * Bounced emails trigger soft ForceDelete procedure [#1838](https://github.com/internetee/registry/issues/1838)
 
