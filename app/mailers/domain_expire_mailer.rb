@@ -1,32 +1,28 @@
 class DomainExpireMailer < ApplicationMailer
-  attr_accessor :domain, :registrar
+  attr_accessor :domain, :registrar, :email
 
-  def expired(domain:, registrar:)
-    process_mail(domain: domain, registrar: registrar, method_name: __method__.to_s)
+  def expired(domain:, registrar:, email:)
+    process_mail(domain: domain, registrar: registrar, email: email, method_name: __method__.to_s)
   end
 
-  def expired_soft(domain:, registrar:)
-    process_mail(domain: domain, registrar: registrar, method_name: __method__.to_s)
+  def expired_soft(domain:, registrar:, email:)
+    process_mail(domain: domain, registrar: registrar, email: email, method_name: __method__.to_s)
   end
 
   private
 
-  def process_mail(domain:, registrar:, method_name:)
+  def process_mail(domain:, registrar:, email:, method_name:)
     init(domain, registrar)
 
     logger.info("Send DomainExpireMailer##{method_name} email for #{domain.name} (##{domain.id})" \
-    " to #{recipient(domain).join(', ')}")
+    " to #{email}")
 
-    mail(to: recipient(domain), subject: subject(method_name))
+    mail(to: email, subject: subject(method_name))
   end
 
   def init(domain, registrar)
     @domain = domain_presenter(domain: domain)
     @registrar = registrar_presenter(registrar: registrar)
-  end
-
-  def recipient(domain)
-    filter_invalid_emails(emails: domain.primary_contact_emails, domain: @domain)
   end
 
   def subject(method_name)
@@ -39,24 +35,5 @@ class DomainExpireMailer < ApplicationMailer
 
   def registrar_presenter(registrar:)
     RegistrarPresenter.new(registrar: registrar, view: view_context)
-  end
-
-  # Needed because there are invalid emails in the database, which have been imported from legacy app
-  def filter_invalid_emails(emails:, domain:)
-    old_validation_type = Truemail.configure.default_validation_type
-    Truemail.configure.default_validation_type = :regex
-
-    results = emails.select do |email|
-      valid = Truemail.valid?(email)
-
-      unless valid
-        logger.info("Unable to send DomainExpireMailer#expired email for domain #{domain.name} (##{domain.id})" \
-        " to invalid recipient #{email}")
-      end
-
-      valid
-    end
-    Truemail.configure.default_validation_type = old_validation_type
-    results
   end
 end

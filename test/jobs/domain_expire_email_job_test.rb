@@ -6,10 +6,11 @@ class DomainExpireEmailJobTest < ActiveSupport::TestCase
     travel_to Time.zone.parse('2010-08-06')
     @domain.update(valid_to: Time.now - 1.day)
     @domain.reload
+    @email = @domain.registrant.email
   end
 
   def test_domain_expire
-    success = DomainExpireEmailJob.run(@domain.id)
+    success = DomainExpireEmailJob.run(@domain.id, @email)
     assert success
   end
 
@@ -18,7 +19,7 @@ class DomainExpireEmailJobTest < ActiveSupport::TestCase
     @domain.reload
     assert_equal ['serverForceDelete'], @domain.statuses
 
-    success = DomainExpireEmailJob.run(@domain.id)
+    success = DomainExpireEmailJob.run(@domain.id, @email)
     assert success
 
     statuses = @domain.statuses
