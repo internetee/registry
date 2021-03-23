@@ -632,6 +632,12 @@ class Domain < ApplicationRecord
     (admin_contacts.emails + [registrant.email]).uniq
   end
 
+  def expired_domain_contact_emails
+    force_delete_contact_emails.reject do |email|
+      BouncedMailAddress.where(email: email).count.positive?
+    end
+  end
+
   def force_delete_contact_emails
     (primary_contact_emails + tech_contacts.pluck(:email) +
       ["info@#{name}", "#{prepared_domain_name}@#{name}"]).uniq

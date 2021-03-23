@@ -11,7 +11,11 @@ module Domains
 
         saved = domain.save(validate: false)
 
-        DomainExpireEmailJob.enqueue(domain.id, run_at: send_time) if saved
+        return unless saved
+
+        recipients.each do |recipient|
+          DomainExpireEmailJob.enqueue(domain.id, recipient, run_at: send_time)
+        end
       end
 
       def set_graceful_expired
@@ -22,6 +26,23 @@ module Domains
 
       def send_time
         domain.valid_to + Setting.expiration_reminder_mail.to_i.days
+      end
+
+      def recipients
+        filter_invalid_emails(domain.expired_domain_contact_emails)
+      end
+
+      def filter_invalid_emails(emails)
+        emails.select do |email|
+          valid = Truemail.valid?(email)
+
+          unless valid
+            logger.info('Unable to send DomainExpireMailer#expired email for'\
+                        "domain #{domain.name} (##{domain.id}) to invalid recipient #{email}")
+          end
+
+          valid
+        end
       end
     end
   end
