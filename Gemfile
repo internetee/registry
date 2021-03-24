@@ -64,8 +64,10 @@ gem 'omniauth-tara', github: 'internetee/omniauth-tara'
 
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.1.0', github: 'internetee/epp-xml'
-gem 'sidekiq'
+gem 'que'
 gem 'daemons-rails', '1.2.1'
+gem 'que-web'
+gem 'sidekiq'
 gem 'pdfkit'
 gem 'jquery-ui-rails', '5.0.5'
 gem 'airbrake'
