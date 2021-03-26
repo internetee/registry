@@ -1,3 +1,6 @@
+25.03.2021
+* Gem Security updates [#1892](https://github.com/internetee/registry/pull/1892)
+
 23.03.2021
 * Expiration mailer ignores bounced addresses and send each email separately [#1888](https://github.com/internetee/registry/issues/1888)
 
