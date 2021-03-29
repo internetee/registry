@@ -1,3 +1,6 @@
+29.03.2021
+* Full EPP functionality to REPP API [#1756](https://github.com/internetee/registry/issues/1756)
+
 25.03.2021
 * Gem Security updates [#1892](https://github.com/internetee/registry/pull/1892)
 
