@@ -1,6 +1,6 @@
 module Repp
   module V1
-    class BaseController < ActionController::API
+    class BaseController < ActionController::API # rubocop:disable Metrics/ClassLength
       around_action :log_request
       before_action :authenticate_user
       before_action :validate_webclient_ca
@@ -16,8 +16,11 @@ module Repp
       rescue ActiveRecord::RecordNotFound
         @response = { code: 2303, message: 'Object does not exist' }
         render(json: @response, status: :not_found)
-      rescue ActionController::ParameterMissing => e
+      rescue ActionController::ParameterMissing, Apipie::ParamMissing => e
         @response = { code: 2003, message: e }
+        render(json: @response, status: :bad_request)
+      rescue Apipie::ParamInvalid => e
+        @response = { code: 2005, message: e }
         render(json: @response, status: :bad_request)
       ensure
         create_repp_log
@@ -34,6 +37,16 @@ module Repp
         )
       end
       # rubocop:enable Metrics/AbcSize
+
+      def set_domain
+        registrar = current_user.registrar
+        @domain = Epp::Domain.find_by(registrar: registrar, name: params[:domain_id])
+        @domain ||= Epp::Domain.find_by!(registrar: registrar, name_puny: params[:domain_id])
+
+        return @domain if @domain
+
+        raise ActiveRecord::RecordNotFound
+      end
 
       def set_paper_trail_whodunnit
         ::PaperTrail.request.whodunnit = current_user

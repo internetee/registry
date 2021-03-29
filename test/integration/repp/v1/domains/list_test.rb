@@ -51,4 +51,17 @@ class ReppV1DomainsListTest < ActionDispatch::IntegrationTest
 
     assert_equal (@user.registrar.domains.count - offset), json[:data][:domains].length
   end
+
+  def test_returns_specific_domain_details_by_name
+    domain = domains(:shop)
+    get "/repp/v1/domains/#{domain.name}", headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+
+    serialized_domain = Serializers::Repp::Domain.new(domain).to_json
+    assert_equal serialized_domain.as_json, json[:data][:domain].as_json
+  end
 end

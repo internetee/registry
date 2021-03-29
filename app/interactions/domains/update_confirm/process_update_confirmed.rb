@@ -20,15 +20,20 @@ module Domains
         WhoisRecord.find_by(domain_id: domain.id).save # need to reload model
       end
 
-      # rubocop:disable Metrics/AbcSize
       def update_domain
+        frame_json = domain.pending_json['frame']
+        frame = frame_json ? frame_json.with_indifferent_access : {}
+        assign_domain_update_meta
+
+        Actions::DomainUpdate.new(domain, frame, true).call
+      end
+
+      def assign_domain_update_meta
         user = ApiUser.find(domain.pending_json['current_user_id'])
-        frame = Nokogiri::XML(domain.pending_json['frame'])
+
         domain.upid = user.registrar.id if user.registrar
         domain.up_date = Time.zone.now
-        domain.update(frame, user, false)
       end
-      # rubocop:enable Metrics/AbcSize
     end
   end
 end

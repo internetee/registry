@@ -1,3 +1,4 @@
+require 'deserializers/xml/domain_delete'
 module Epp
   class DomainsController < BaseController
     before_action :find_domain, only: %i[info renew update transfer delete]
@@ -26,104 +27,39 @@ module Epp
     end
 
     def create
-      authorize! :create, Epp::Domain
+      authorize!(:create, Epp::Domain)
 
-      if Domain.release_to_auction
-        request_domain_name = params[:parsed_frame].css('name').text.strip.downcase
-        domain_name = DNS::DomainName.new(SimpleIDN.to_unicode(request_domain_name))
+      registrar_id = current_user.registrar.id
+      @domain = Epp::Domain.new
+      data = ::Deserializers::Xml::DomainCreate.new(params[:parsed_frame], registrar_id).call
+      action = Actions::DomainCreate.new(@domain, data)
 
-        if domain_name.at_auction?
-          epp_errors << {
-            code: '2306',
-            msg: 'Parameter value policy error: domain is at auction',
-          }
-          handle_errors
-          return
-        elsif domain_name.awaiting_payment?
-          epp_errors << {
-            code: '2003',
-            msg: 'Required parameter missing; reserved>pw element required for reserved domains',
-          }
-          handle_errors
-          return
-        elsif domain_name.pending_registration?
-          registration_code = params[:parsed_frame].css('reserved > pw').text
-
-          if registration_code.empty?
-            epp_errors << {
-              code: '2003',
-              msg: 'Required parameter missing; reserved>pw element is required',
-            }
-            handle_errors
-            return
-          end
-
-          unless domain_name.available_with_code?(registration_code)
-            epp_errors << {
-              code: '2202',
-              msg: 'Invalid authorization information; invalid reserved>pw value',
-            }
-            handle_errors
-            return
-          end
-        end
-      end
-
-      @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
-      handle_errors(@domain) and return if @domain.errors.any?
-      @domain.valid?
-      @domain.errors.delete(:name_dirty) if @domain.errors[:puny_label].any?
-      handle_errors(@domain) and return if @domain.errors.any?
-      handle_errors and return unless balance_ok?('create') # loads pricelist in this method
-
-      ActiveRecord::Base.transaction do
-        @domain.add_legal_file_to_new(params[:parsed_frame])
-
-        if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
-          current_user.registrar.debit!({
-                                          sum: @domain_pricelist.price.amount,
-                                          description: "#{I18n.t('create')} #{@domain.name}",
-                                          activity_type: AccountActivity::CREATE,
-                                          price: @domain_pricelist
-                                        })
-
-          if Domain.release_to_auction && domain_name.pending_registration?
-            active_auction = Auction.find_by(domain: domain_name.to_s,
-                                             status: Auction.statuses[:payment_received])
-            active_auction.domain_registered!
-          end
-          Dispute.close_by_domain(@domain.name)
-          render_epp_response '/epp/domains/create'
-        else
-          handle_errors(@domain)
-        end
-      end
+      action.call ? render_epp_response('/epp/domains/create') : handle_errors(@domain)
     end
 
     def update
-      authorize! :update, @domain, @password
+      authorize!(:update, @domain, @password)
 
-      updated = @domain.update(params[:parsed_frame], current_user)
-      (handle_errors(@domain) && return) unless updated
+      registrar_id = current_user.registrar.id
+      update_params = ::Deserializers::Xml::DomainUpdate.new(params[:parsed_frame],
+                                                             registrar_id).call
+      action = Actions::DomainUpdate.new(@domain, update_params, false)
+      (handle_errors(@domain) and return) unless action.call
 
       pending = @domain.epp_pending_update.present?
-      render_epp_response "/epp/domains/success#{'_pending' if pending}"
+      render_epp_response("/epp/domains/success#{'_pending' if pending}")
     end
 
     def delete
-      authorize! :delete, @domain, @password
+      authorize!(:delete, @domain, @password)
+      frame = params[:parsed_frame]
+      delete_params = ::Deserializers::Xml::DomainDelete.new(frame).call
+      action = Actions::DomainDelete.new(@domain, delete_params, current_user.registrar)
 
-      (handle_errors(@domain) && return) unless @domain.can_be_deleted?
+      (handle_errors(@domain) and return) unless action.call
 
-      if @domain.epp_destroy(params[:parsed_frame], current_user.id)
-        if @domain.epp_pending_delete.present?
-          render_epp_response '/epp/domains/success_pending'
-        else
-          render_epp_response '/epp/domains/success'
-        end
-      else
-        handle_errors(@domain)
-      end
+      pending = @domain.epp_pending_delete.present?
+      render_epp_response("/epp/domains/success#{'_pending' if pending}")
     end
 
     def check
@@ -137,42 +73,15 @@ module Epp
     def renew
       authorize! :renew, @domain
 
-      period_element = params[:parsed_frame].css('period').text
-      period = (period_element.to_i == 0) ? 1 : period_element.to_i
-      period_unit = Epp::Domain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y'
+      registrar_id = current_user.registrar.id
+      renew_params = ::Deserializers::Xml::Domain.new(params[:parsed_frame],
+                                                      registrar_id).call
 
-      balance_ok?('renew', period, period_unit) # loading pricelist
-
-      begin
-        ActiveRecord::Base.transaction(isolation: :serializable) do
-          @domain.reload
-
-          success = @domain.renew(
-            params[:parsed_frame].css('curExpDate').text,
-            period, period_unit
-          )
-
-          if success
-            unless balance_ok?('renew', period, period_unit)
-              handle_errors
-              fail ActiveRecord::Rollback
-            end
-
-            current_user.registrar.debit!({
-                                            sum: @domain_pricelist.price.amount,
-                                            description: "#{I18n.t('renew')} #{@domain.name}",
-                                            activity_type: AccountActivity::RENEW,
-                                            price: @domain_pricelist
-                                          })
-
-            render_epp_response '/epp/domains/renew'
-          else
-            handle_errors(@domain)
-          end
-        end
-      rescue ActiveRecord::StatementInvalid => e
-        sleep rand / 100
-        retry
+      action = Actions::DomainRenew.new(@domain, renew_params, current_user.registrar)
+      if action.call
+        render_epp_response '/epp/domains/renew'
+      else
+        handle_errors(@domain)
       end
     end
 

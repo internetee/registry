@@ -9,6 +9,7 @@ module Domains
 
       def execute
         in_transaction_with_retries do
+          check_balance
           success = domain.renew(domain.valid_to, period, unit)
           if success
             check_balance
@@ -55,6 +56,7 @@ module Domains
       private
 
       def add_error
+        domain.add_epp_error(2104, nil, nil, I18n.t(:domain_renew_error_for_domain))
         errors.add(:domain, I18n.t('domain_renew_error_for_domain', domain: domain.name))
       end
     end

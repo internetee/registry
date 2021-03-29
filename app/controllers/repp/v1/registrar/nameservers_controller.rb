@@ -4,6 +4,19 @@ module Repp
       class NameserversController < BaseController
         before_action :verify_nameserver_existance, only: %i[update]
 
+        api :PUT, 'repp/v1/registrar/nameservers'
+        desc 'bulk nameserver change'
+        param :data, Hash, required: true, desc: 'Object holding nameserver changes' do
+          param :type, String, required: true, desc: 'Always set as "nameserver"'
+          param :id, String, required: true, desc: 'Hostname of replacable nameserver'
+          param :domains, Array, required: false, desc: 'Array of domain names qualified for ' \
+                                                       'nameserver replacement'
+          param :attributes, Hash, required: true, desc: 'Object holding new nameserver values' do
+            param :hostname, String, required: true, desc: 'New hostname of nameserver'
+            param :ipv4, Array, of: String, required: false, desc: 'Array of fixed IPv4 addresses'
+            param :ipv6, Array, of: String, required: false, desc: 'Array of fixed IPv6 addresses'
+          end
+        end
         def update
           affected, errored = current_user.registrar
                                           .replace_nameservers(hostname,

@@ -513,7 +513,7 @@ class Domain < ApplicationRecord
 
   # depricated not used, not valid
   def update_prohibited?
-    pending_update_prohibited? && pending_delete_prohibited?
+    (statuses & DomainStatus::UPDATE_PROHIBIT_STATES).present?
   end
 
   # public api

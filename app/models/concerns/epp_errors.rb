@@ -86,6 +86,8 @@ module EppErrors
       end
     end
     nil
+  rescue NameError
+    nil
   end
 
   def construct_msg_args_and_value(epp_error_args)

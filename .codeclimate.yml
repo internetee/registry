@@ -15,6 +15,7 @@ plugins:
   duplication:
     enabled: true
     config:
+      count_threshold: 3
       languages:
         ruby:
           mass_threshold: 100
@@ -38,6 +39,9 @@ checks:
   method-lines:
     config:
       threshold: 40
+  method-count:
+    config:
+      threshold: 25
 exclude_patterns:
   - "app/models/version/"
   - "bin/"

@@ -8,6 +8,7 @@ class Dnskey < ApplicationRecord
   validate :validate_algorithm
   validate :validate_protocol
   validate :validate_flags
+  validate :validate_public_key
 
   before_save lambda {
     generate_digest if will_save_change_to_public_key? && !will_save_change_to_ds_digest?
@@ -115,6 +116,12 @@ class Dnskey < ApplicationRecord
     self.ds_key_tag = ((c & 0xFFFF) + (c >> 16)) & 0xFFFF
   end
 
+  def validate_public_key
+    return if Dnskey.pub_key_base64?(public_key)
+
+    errors.add(:public_key, :invalid)
+  end
+
   class << self
     def int_to_hex(s)
       s = s.to_s(16)
@@ -127,6 +134,14 @@ class Dnskey < ApplicationRecord
 
     def bin_to_hex(s)
       s.each_byte.map { |b| format('%02X', b) }.join
+    end
+
+    def pub_key_base64?(pub)
+      return unless pub&.is_a?(String)
+
+      Base64.strict_encode64(Base64.strict_decode64(pub)) == pub
+    rescue ArgumentError
+      false
     end
   end
 end

@@ -106,7 +106,7 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
 
       assert_response :bad_request
       assert_equal 2002, json[:code]
-      assert_equal 'Not enough funds for renew domains', json[:message]
+      assert_equal 'Domain Billing failure - credit balance low', json[:message]
     end
   end
 

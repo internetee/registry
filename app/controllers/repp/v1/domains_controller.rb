@@ -1,16 +1,96 @@
+require 'serializers/repp/domain'
 module Repp
   module V1
-    class DomainsController < BaseController
-      before_action :set_authorized_domain, only: [:transfer_info]
+    class DomainsController < BaseController # rubocop:disable Metrics/ClassLength
+      before_action :set_authorized_domain, only: %i[transfer_info destroy]
+      before_action :validate_registrar_authorization, only: %i[transfer_info destroy]
+      before_action :forward_registrar_id, only: %i[create update destroy]
+      before_action :set_domain, only: %i[update]
 
+      api :GET, '/repp/v1/domains'
+      desc 'Get all existing domains'
       def index
         records = current_user.registrar.domains
         domains = records.limit(limit).offset(offset)
-        domains = domains.pluck(:name) unless index_params[:details] == 'true'
 
-        render_success(data: { domains: domains, total_number_of_records: records.count })
+        render_success(data: { domains: serialized_domains(domains),
+                               total_number_of_records: records.count })
       end
 
+      api :GET, '/repp/v1/domains/:domain_name'
+      desc 'Get a specific domain'
+      def show
+        @domain = Epp::Domain.find_by!(name: params[:id])
+        sponsor = @domain.registrar == current_user.registrar
+        render_success(data: { domain: Serializers::Repp::Domain.new(@domain,
+                                                                     sponsored: sponsor).to_json })
+      end
+
+      api :POST, '/repp/v1/domains'
+      desc 'Create a new domain'
+      param :domain, Hash, required: true, desc: 'Parameters for new domain' do
+        param :name, String, required: true, desc: 'Domain name to be registered'
+        param :registrant, String, required: true, desc: 'Registrant contact code'
+        param :reserved_pw, String, required: false, desc: 'Reserved password for domain'
+        param :transfer_code, String, required: false, desc: 'Desired transfer code for domain'
+        param :period, Integer, required: true, desc: 'Registration period in months or years'
+        param :period_unit, String, required: true, desc: 'Period type (month m) or (year y)'
+        param :nameservers_attributes, Array, required: false, desc: 'Domain nameservers' do
+          param :hostname, String, required: true, desc: 'Nameserver hostname'
+          param :ipv4, Array, desc: 'Array of IPv4 addresses'
+          param :ipv6, Array, desc: 'Array of IPv4 addresses'
+        end
+        param :admin_contacts, Array, required: false, desc: 'Admin domain contacts codes'
+        param :tech_contacts, Array, required: false, desc: 'Tech domain contacts codes'
+        param :dnskeys_attributes, Array, required: false, desc: 'DNSSEC keys for domain' do
+          param_group :dns_keys_apidoc, Repp::V1::Domains::DnssecController
+        end
+      end
+      returns code: 200, desc: 'Successful domain registration response' do
+        property :code, Integer, desc: 'EPP code'
+        property :message, String, desc: 'EPP code explanation'
+        property :data, Hash do
+          property :domain, Hash do
+            property :name, String, 'Domain name'
+          end
+        end
+      end
+      def create
+        authorize!(:create, Epp::Domain)
+        @domain = Epp::Domain.new
+        action = Actions::DomainCreate.new(@domain, domain_create_params)
+
+        # rubocop:disable Style/AndOr
+        handle_errors(@domain) and return unless action.call
+        # rubocop:enable Style/AndOr
+
+        render_success(data: { domain: { name: @domain.name } })
+      end
+
+      api :PUT, '/repp/v1/domains/:domain_name'
+      desc 'Update existing domain'
+      param :id, String, desc: 'Domain name in IDN / Puny format'
+      param :domain, Hash, required: true, desc: 'Changes of domain object' do
+        param :registrant, Hash, required: false, desc: 'New registrant object' do
+          param :code, String, required: true, desc: 'New registrant contact code'
+          param :verified, [true, false], required: false,
+                                          desc: 'Registrant change is already verified'
+        end
+        param :transfer_code, String, required: false, desc: 'New authorization code'
+      end
+      def update
+        action = Actions::DomainUpdate.new(@domain, params[:domain], false)
+
+        unless action.call
+          handle_errors(@domain)
+          return
+        end
+
+        render_success(data: { domain: { name: @domain.name } })
+      end
+
+      api :GET, '/repp/v1/domains/:domain_name/transfer_info'
+      desc "Retrieve specific domain's transfer info"
       def transfer_info
         contact_fields = %i[code name ident ident_type ident_country_code phone email street city
                             zip country_code statuses]
@@ -25,6 +105,8 @@ module Repp
         render_success(data: data)
       end
 
+      api :POST, '/repp/v1/domains/transfer'
+      desc 'Transfer multiple domains'
       def transfer
         @errors ||= []
         @successful = []
@@ -34,6 +116,30 @@ module Repp
         end
 
         render_success(data: { success: @successful, failed: @errors })
+      end
+
+      api :DELETE, '/repp/v1/domains/:domain_name'
+      desc 'Delete specific domain'
+      param :delete, Hash, required: true, desc: 'Object holding verified key' do
+        param :verified, [true, false], required: true,
+                                        desc: 'Whether to ask registrant verification or not'
+      end
+      def destroy
+        action = Actions::DomainDelete.new(@domain, params, current_user.registrar)
+
+        # rubocop:disable Style/AndOr
+        handle_errors(@domain) and return unless action.call
+        # rubocop:enable Style/AndOr
+
+        render_success(data: { domain: { name: @domain.name } })
+      end
+
+      private
+
+      def serialized_domains(domains)
+        return domains.pluck(:name) unless index_params[:details] == 'true'
+
+        domains.map { |d| Serializers::Repp::Domain.new(d).to_json }
       end
 
       def initiate_transfer(transfer)
@@ -48,8 +154,6 @@ module Repp
                        errors: domain.errors[:epp_errors] }
         end
       end
-
-      private
 
       def transfer_params
         params.require(:data).require(:domain_transfers).each do |t|
@@ -66,10 +170,29 @@ module Repp
         params.permit(:id)
       end
 
+      def forward_registrar_id
+        return unless params[:domain]
+
+        params[:domain][:registrar] = current_user.registrar.id
+      end
+
+      def set_domain
+        registrar = current_user.registrar
+        @domain = Epp::Domain.find_by(registrar: registrar, name: params[:id])
+        @domain ||= Epp::Domain.find_by!(registrar: registrar, name_puny: params[:id])
+
+        return @domain if @domain
+
+        raise ActiveRecord::RecordNotFound
+      end
+
       def set_authorized_domain
         @epp_errors ||= []
         @domain = domain_from_url_hash
+      end
 
+      def validate_registrar_authorization
+        return if @domain.registrar == current_user.registrar
         return if @domain.transfer_code.eql?(request.headers['Auth-Code'])
 
         @epp_errors << { code: 2202, msg: I18n.t('errors.messages.epp_authorization_error') }
@@ -78,9 +201,9 @@ module Repp
 
       def domain_from_url_hash
         entry = transfer_info_params[:id]
-        return Domain.find(entry) if entry.match?(/\A[0-9]+\z/)
+        return Epp::Domain.find(entry) if entry.match?(/\A[0-9]+\z/)
 
-        Domain.find_by!('name = ? OR name_puny = ?', entry, entry)
+        Epp::Domain.find_by!('name = ? OR name_puny = ?', entry, entry)
       end
 
       def limit
@@ -93,6 +216,14 @@ module Repp
 
       def index_params
         params.permit(:limit, :offset, :details)
+      end
+
+      def domain_create_params
+        params.require(:domain).permit(:name, :registrant, :period, :period_unit, :registrar,
+                                       :transfer_code, :reserved_pw,
+                                       dnskeys_attributes: [%i[flags alg protocol public_key]],
+                                       nameservers_attributes: [[:hostname, ipv4: [], ipv6: []]],
+                                       admin_contacts: [], tech_contacts: [])
       end
     end
   end

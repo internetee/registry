@@ -42,14 +42,7 @@ module Actions
     end
 
     def maybe_attach_legal_doc
-      return unless legal_document
-
-      document = contact.legal_documents.create(
-        document_type: legal_document[:type],
-        body: legal_document[:body]
-      )
-
-      contact.legal_document_id = document.id
+      ::Actions::BaseAction.maybe_attach_legal_doc(contact, legal_document)
     end
 
     def maybe_update_ident

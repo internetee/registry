@@ -59,15 +59,7 @@ module Actions
     end
 
     def maybe_attach_legal_doc
-      return unless legal_document
-
-      doc = LegalDocument.create(
-        documentable_type: Contact,
-        document_type: legal_document[:type], body: legal_document[:body]
-      )
-
-      contact.legal_documents = [doc]
-      contact.legal_document_id = doc.id
+      ::Actions::BaseAction.attach_legal_doc_to_new(contact, legal_document, domain: false)
     end
 
     def commit
