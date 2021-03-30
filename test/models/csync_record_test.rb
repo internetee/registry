@@ -163,7 +163,7 @@ class CsyncRecordTest < ActiveSupport::TestCase
       CsyncRecord.by_domain_name(@domain.name).record_new_scan(scanner_result)
     end
 
-    assert_equal 2, @domain.dnskeys.count
+    assert_equal 1, @domain.dnskeys.count
     assert_equal scanner_result[:pub], @domain.dnskeys.last.public_key
 
     mail = ActionMailer::Base.deliveries.last

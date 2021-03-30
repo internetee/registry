@@ -9,12 +9,3 @@ one:
   minimum_ttl: 1
   email: admin@registry.test
   master_nameserver: ns.test
-subzone:
-    origin: 'sub.zone'
-    ttl: 1
-    refresh: 1
-    retry: 1
-    expire: 1
-    minimum_ttl: 1
-    email: admin@registry.test
-    master_nameserver: ns.test
