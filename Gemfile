@@ -5,7 +5,8 @@ gem 'active_interaction', '~> 3.8'
 gem 'apipie-rails', '~> 0.5.18'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.12.1' # for dates and times
-gem 'mimemagic', '~> 0.3.7'
+gem 'mime-types-data'
+gem 'mimemagic', '0.3.10'
 gem 'rails', '~> 6.0'
 gem 'rest-client'
 gem 'uglifier'
