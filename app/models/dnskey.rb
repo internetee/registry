@@ -28,7 +28,7 @@ class Dnskey < ApplicationRecord
   PROTOCOLS = %w(3)
   FLAGS = %w(0 256 257) # 256 = ZSK, 257 = KSK
   DS_DIGEST_TYPE = [1,2]
-
+  RESOLVERS = ENV['dnssec_resolver_ips'].to_s.strip.split(', ').freeze
   self.ignored_columns = %w[legacy_domain_id]
 
   def epp_code_map
@@ -120,6 +120,26 @@ class Dnskey < ApplicationRecord
     return if Dnskey.pub_key_base64?(public_key)
 
     errors.add(:public_key, :invalid)
+  end
+
+  def self.new_from_csync(cdnskey:, domain:)
+    cdnskey ||= '' # avoid strip() issues for gibberish key
+
+    flags, proto, alg, pub = cdnskey.strip.split(' ')
+    Dnskey.new(domain: domain, flags: flags, protocol: proto, alg: alg, public_key: pub)
+  end
+
+  def ds_rr
+    # Break the DNSSEC trust chain as we are not able to fake RRSIG's
+    Dnsruby::Dnssec.clear_trust_anchors
+    Dnsruby::Dnssec.clear_trusted_keys
+
+    # Basically let's configure domain as root anchor. We can still verify
+    # RRSIG's / DNSKEY targeted by DS of this domain
+    generate_digest
+    generate_ds_key_tag
+    Dnsruby::RR.create("#{domain.name}. 3600 IN DS #{ds_key_tag} #{ds_alg} " \
+    "#{ds_digest_type} #{ds_digest}")
   end
 
   class << self
