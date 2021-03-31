@@ -6,9 +6,18 @@ module Domain::RegistryLockable
     return if locked_by_registrant?
 
     transaction do
-      statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
-      statuses << DomainStatus::SERVER_DELETE_PROHIBITED
-      statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
+      if !statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
+        statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
+      end
+
+      if !statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
+        statuses << DomainStatus::SERVER_DELETE_PROHIBITED
+      end
+
+      if !statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED 
+        statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
+      end
+      
       self.locked_by_registrant_at = Time.zone.now
       alert_registrar_lock_changes!(lock: true)
 
