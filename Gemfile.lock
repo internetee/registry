@@ -529,7 +529,7 @@ DEPENDENCIES
   jquery-ui-rails (= 5.0.5)
   kaminari
   lhv!
-  mimemagic (~> 0.3.7)
+  mimemagic (~> 0.3.10)
   minitest (~> 5.14)
   money-rails
   nokogiri (~> 1.10.0)
