@@ -1988,6 +1988,40 @@ CREATE TABLE public.log_users (
     uuid character varying
 );
 
+--
+-- Name: csync_records; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.csync_records (
+                                      id bigint NOT NULL,
+                                      domain_id bigint NOT NULL,
+                                      cdnskey character varying NOT NULL,
+                                      action character varying NOT NULL,
+                                      times_scanned integer DEFAULT 0 NOT NULL,
+                                      last_scan timestamp without time zone NOT NULL,
+                                      created_at timestamp(6) without time zone NOT NULL,
+                                      updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: csync_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.csync_records_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: csync_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.csync_records_id_seq OWNED BY public.csync_records.id;
+
 
 --
 -- Name: log_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
@@ -2251,6 +2285,12 @@ CREATE TABLE public.registrant_verifications (
     action character varying NOT NULL,
     domain_id integer NOT NULL,
     action_type character varying NOT NULL,
+    creator_id integer,
+    updater_id integer,
+    session character varying,
+    children json,
+    ident_updated_at timestamp without time zone,
+    uuid character varying,
     creator_str character varying,
     updator_str character varying
 );
@@ -3017,10 +3057,16 @@ ALTER TABLE ONLY public.que_jobs ALTER COLUMN job_id SET DEFAULT nextval('public
 
 ALTER TABLE ONLY public.registrant_verifications ALTER COLUMN id SET DEFAULT nextval('public.registrant_verifications_id_seq'::regclass);
 
-
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
+
+ALTER TABLE ONLY public.accounts ALTER COLUMN id SET DEFAULT nextval('public.accounts_id_seq'::regclass);
+
+
+ALTER TABLE ONLY public.log_invoices
+    ADD CONSTRAINT log_invoices_pkey PRIMARY KEY (id);
+
 
 ALTER TABLE ONLY public.registrars ALTER COLUMN id SET DEFAULT nextval('public.registrars_id_seq'::regclass);
 
@@ -3028,8 +3074,21 @@ ALTER TABLE ONLY public.registrars ALTER COLUMN id SET DEFAULT nextval('public.r
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
+ALTER TABLE ONLY public.disputes ALTER COLUMN id SET DEFAULT nextval('public.disputes_id_seq'::regclass);
+
+ALTER TABLE ONLY public.log_nameservers
+    ADD CONSTRAINT log_nameservers_pkey PRIMARY KEY (id);
+
 
 ALTER TABLE ONLY public.reserved_domains ALTER COLUMN id SET DEFAULT nextval('public.reserved_domains_id_seq'::regclass);
+
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.setting_entries ALTER COLUMN id SET DEFAULT nextval('public.setting_entries_id_seq'::regclass);
 
 
 --
@@ -3049,6 +3108,285 @@ ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.set
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
+
+ALTER TABLE ONLY public.domains ALTER COLUMN id SET DEFAULT nextval('public.domains_id_seq'::regclass);
+
+
+--
+-- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_address_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_address_verifications_id_seq'::regclass);
+
+
+--
+-- Name: white_ips id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_validations ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_validations_id_seq'::regclass);
+
+
+--
+-- Name: whois_records id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_addresses_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_verifications_id_seq'::regclass);
+
+
+--
+-- Name: zones id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.epp_sessions ALTER COLUMN id SET DEFAULT nextval('public.epp_sessions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.invoice_items ALTER COLUMN id SET DEFAULT nextval('public.invoice_items_id_seq'::regclass);
+
+
+--
+-- Name: invoices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.invoices ALTER COLUMN id SET DEFAULT nextval('public.invoices_id_seq'::regclass);
+
+
+--
+-- Name: legal_documents id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.legal_documents ALTER COLUMN id SET DEFAULT nextval('public.legal_documents_id_seq'::regclass);
+
+
+--
+-- Name: log_account_activities id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_account_activities ALTER COLUMN id SET DEFAULT nextval('public.log_account_activities_id_seq'::regclass);
+
+
+--
+-- Name: log_accounts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_accounts ALTER COLUMN id SET DEFAULT nextval('public.log_accounts_id_seq'::regclass);
+
+
+--
+-- Name: log_actions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_actions ALTER COLUMN id SET DEFAULT nextval('public.log_actions_id_seq'::regclass);
+
+
+--
+-- Name: log_bank_statements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_bank_statements ALTER COLUMN id SET DEFAULT nextval('public.log_bank_statements_id_seq'::regclass);
+
+
+--
+-- Name: log_bank_transactions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_bank_transactions ALTER COLUMN id SET DEFAULT nextval('public.log_bank_transactions_id_seq'::regclass);
+
+
+--
+-- Name: log_blocked_domains id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_blocked_domains ALTER COLUMN id SET DEFAULT nextval('public.log_blocked_domains_id_seq'::regclass);
+
+
+--
+-- Name: log_certificates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_certificates ALTER COLUMN id SET DEFAULT nextval('public.log_certificates_id_seq'::regclass);
+
+
+--
+-- Name: log_contacts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_contacts ALTER COLUMN id SET DEFAULT nextval('public.log_contacts_id_seq'::regclass);
+
+
+--
+-- Name: log_dnskeys id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_dnskeys ALTER COLUMN id SET DEFAULT nextval('public.log_dnskeys_id_seq'::regclass);
+
+
+--
+-- Name: log_domain_contacts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_domain_contacts ALTER COLUMN id SET DEFAULT nextval('public.log_domain_contacts_id_seq'::regclass);
+
+
+--
+-- Name: log_domains id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_domains ALTER COLUMN id SET DEFAULT nextval('public.log_domains_id_seq'::regclass);
+
+
+--
+-- Name: log_invoice_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_invoice_items ALTER COLUMN id SET DEFAULT nextval('public.log_invoice_items_id_seq'::regclass);
+
+
+--
+-- Name: log_invoices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_invoices ALTER COLUMN id SET DEFAULT nextval('public.log_invoices_id_seq'::regclass);
+
+
+--
+-- Name: log_nameservers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_nameservers ALTER COLUMN id SET DEFAULT nextval('public.log_nameservers_id_seq'::regclass);
+
+
+--
+-- Name: log_notifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_notifications ALTER COLUMN id SET DEFAULT nextval('public.log_notifications_id_seq'::regclass);
+
+
+--
+-- Name: log_payment_orders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_payment_orders ALTER COLUMN id SET DEFAULT nextval('public.log_payment_orders_id_seq'::regclass);
+
+
+--
+-- Name: log_registrant_verifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_registrant_verifications ALTER COLUMN id SET DEFAULT nextval('public.log_registrant_verifications_id_seq'::regclass);
+
+
+--
+-- Name: log_registrars id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_registrars ALTER COLUMN id SET DEFAULT nextval('public.log_registrars_id_seq'::regclass);
+
+
+--
+-- Name: log_reserved_domains id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_reserved_domains ALTER COLUMN id SET DEFAULT nextval('public.log_reserved_domains_id_seq'::regclass);
+
+
+--
+-- Name: log_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_settings ALTER COLUMN id SET DEFAULT nextval('public.log_settings_id_seq'::regclass);
+
+
+--
+-- Name: log_users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_users ALTER COLUMN id SET DEFAULT nextval('public.log_users_id_seq'::regclass);
+
+
+--
+-- Name: log_white_ips id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_white_ips ALTER COLUMN id SET DEFAULT nextval('public.log_white_ips_id_seq'::regclass);
+
+
+--
+-- Name: nameservers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nameservers ALTER COLUMN id SET DEFAULT nextval('public.nameservers_id_seq'::regclass);
+
+
+--
+-- Name: notifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('public.notifications_id_seq'::regclass);
+
+
+--
+-- Name: payment_orders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_orders ALTER COLUMN id SET DEFAULT nextval('public.payment_orders_id_seq'::regclass);
+
+
+--
+-- Name: prices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prices ALTER COLUMN id SET DEFAULT nextval('public.prices_id_seq'::regclass);
+
+
+--
+-- Name: que_jobs job_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.que_jobs ALTER COLUMN job_id SET DEFAULT nextval('public.que_jobs_job_id_seq'::regclass);
+
+
+--
+-- Name: registrant_verifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registrant_verifications ALTER COLUMN id SET DEFAULT nextval('public.registrant_verifications_id_seq'::regclass);
+
+
+--
+-- Name: registrars id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registrars ALTER COLUMN id SET DEFAULT nextval('public.registrars_id_seq'::regclass);
+
+
+--
+-- Name: reserved_domains id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reserved_domains ALTER COLUMN id SET DEFAULT nextval('public.reserved_domains_id_seq'::regclass);
+
+
+--
+-- Name: settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.settings_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+ALTER TABLE ONLY public.log_prices
+    ADD CONSTRAINT log_prices_pkey PRIMARY KEY (id);
+
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
@@ -3370,22 +3708,6 @@ ALTER TABLE ONLY public.log_invoice_items
 
 
 --
--- Name: log_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
---
-
-ALTER TABLE ONLY public.log_invoices
-    ADD CONSTRAINT log_invoices_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_nameservers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
---
-
-ALTER TABLE ONLY public.log_nameservers
-    ADD CONSTRAINT log_nameservers_pkey PRIMARY KEY (id);
-
-
---
 -- Name: log_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
@@ -3399,14 +3721,6 @@ ALTER TABLE ONLY public.log_notifications
 
 ALTER TABLE ONLY public.log_payment_orders
     ADD CONSTRAINT log_payment_orders_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_prices
-    ADD CONSTRAINT log_prices_pkey PRIMARY KEY (id);
 
 
 --
@@ -4007,6 +4321,17 @@ CREATE INDEX index_log_dnskeys_on_item_type_and_item_id ON public.log_dnskeys US
 
 
 --
+-- Name: csync_records id; Type: DEFAULT; Schema: public; Owner: -
+--
+ALTER TABLE ONLY public.csync_records ALTER COLUMN id SET DEFAULT nextval('public.csync_records_id_seq'::regclass);
+
+--
+-- Name: index_csync_records_on_domain_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_csync_records_on_domain_id ON public.csync_records USING btree (domain_id);
+
+--
 -- Name: index_log_dnskeys_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
@@ -4313,9 +4638,8 @@ CREATE UNIQUE INDEX unique_data_migrations ON public.data_migrations USING btree
 
 CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING btree (version);
 
-
 --
--- Name: contacts_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: contacts contacts_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.contacts
@@ -4521,6 +4845,19 @@ ALTER TABLE ONLY public.nameservers
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT user_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
 
+--
+-- Name: csync_records csync_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.csync_records
+    ADD CONSTRAINT csync_records_pkey PRIMARY KEY (id);
+
+--
+-- Name: csync_records fk_rails_5df85aeb13; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.csync_records
+    ADD CONSTRAINT fk_rails_5df85aeb13 FOREIGN KEY (domain_id) REFERENCES public.domains(id);
 
 --
 -- PostgreSQL database dump complete
@@ -4951,6 +5288,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200605100827'),
 ('20200610090110'),
 ('20200630081231'),
+('20200605125332'),
 ('20200714115338'),
 ('20200807110611'),
 ('20200811074839'),
@@ -4961,6 +5299,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200910085157'),
 ('20200910102028'),
 ('20200916125326'),
-('20210215101019');
-
-
+('20200917104213'),
+('20210215101019'),
+('20200921084356');

@@ -1,0 +1,14 @@
+Tere,
+<br><br>
+Oleme eemaldanud Teie domeeni <%= @domain.name %> DNSSEC kirjed registrist.
+
+Domeeni <%= @domain.name %> DNSSEC on nüüd välja lülitatud.
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+<hr>
+<br><br>
+Hi,
+<br><br>
+We have removed DNSSEC data in our registry for domain <%= @domain.name %>.
+<br>
+DNSSEC has been turned off for <%= @domain.name %> as of now.
+<%= render 'mailers/shared/signatures/signature.en.html' %>
