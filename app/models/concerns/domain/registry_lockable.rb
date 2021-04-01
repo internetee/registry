@@ -1,14 +1,16 @@
 module Domain::RegistryLockable
   extend ActiveSupport::Concern
 
+  LOCK_STATUSES = [DomainStatus::SERVER_UPDATE_PROHIBITED,
+                   DomainStatus::SERVER_DELETE_PROHIBITED,
+                   DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
+
   def apply_registry_lock
     return unless registry_lockable?
     return if locked_by_registrant?
 
     transaction do
-      statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
-      statuses << DomainStatus::SERVER_DELETE_PROHIBITED
-      statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
+      self.statuses |= LOCK_STATUSES
       self.locked_by_registrant_at = Time.zone.now
       alert_registrar_lock_changes!(lock: true)
 
@@ -26,20 +28,16 @@ module Domain::RegistryLockable
   def locked_by_registrant?
     return false unless locked_by_registrant_at
 
-    lock_statuses = [DomainStatus::SERVER_UPDATE_PROHIBITED,
-                     DomainStatus::SERVER_DELETE_PROHIBITED,
-                     DomainStatus::SERVER_TRANSFER_PROHIBITED]
-
-    (statuses & lock_statuses).count == 3
+    (statuses & LOCK_STATUSES).count == 3
   end
 
   def remove_registry_lock
     return unless locked_by_registrant?
 
     transaction do
-      statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
-      statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
-      statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
+      LOCK_STATUSES.each do |domain_status|
+        statuses.delete(domain_status)
+      end
       self.locked_by_registrant_at = nil
       alert_registrar_lock_changes!(lock: false)
 
