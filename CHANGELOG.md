@@ -1,3 +1,6 @@
+01.04.2021
+* Fixed registry locking issue if any of the satuses were removed separately [#1884](https://github.com/internetee/registry/issues/1884)
+
 31.03.2021
 * Implemented child to parent syncronisation (csync) for cdnskeys [#658](https://github.com/internetee/registry/issues/658)
 
