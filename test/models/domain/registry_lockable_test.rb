@@ -104,6 +104,5 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
                     DomainStatus::SERVER_TRANSFER_PROHIBITED]
 
     @domain.statuses.include? lock_statuses
-      
   end
 end
