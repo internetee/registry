@@ -1,8 +1,6 @@
 module Domain::RegistryLockable
   extend ActiveSupport::Concern
 
-  # status_notes public.hstore,
-
   LOCK_STATUSES = [DomainStatus::SERVER_UPDATE_PROHIBITED,
                    DomainStatus::SERVER_DELETE_PROHIBITED,
                    DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
@@ -11,11 +9,7 @@ module Domain::RegistryLockable
     return unless registry_lockable?
     return if locked_by_registrant?
 
-    self.locked_domain_statuses_history = self.statuses.map do |status|
-      if LOCK_STATUSES.include? status
-        status
-      end
-    end
+    put_statuses_to_json_history_before_locked
 
     transaction do
       self.statuses |= LOCK_STATUSES
@@ -44,9 +38,7 @@ module Domain::RegistryLockable
 
     transaction do
       LOCK_STATUSES.each do |domain_status|
-        unless self.locked_domain_statuses_history.include? domain_status
-          statuses.delete(domain_status)
-        end 
+        delete_domain_statuses_which_not_declared_before domain_status
       end
       self.locked_by_registrant_at = nil
       alert_registrar_lock_changes!(lock: false)
@@ -63,5 +55,17 @@ module Domain::RegistryLockable
       attached_obj_id: name,
       attached_obj_type: self.class.name
     )
+  end
+
+  private
+
+  def put_statuses_to_json_history_before_locked
+    self.locked_domain_statuses_history = statuses.map do |status|
+      status if LOCK_STATUSES.include? status
+    end
+  end
+
+  def delete_domain_statuses_which_not_declared_before(domain_status)
+    statuses.delete(domain_status) unless locked_domain_statuses_history.include? domain_status
   end
 end
