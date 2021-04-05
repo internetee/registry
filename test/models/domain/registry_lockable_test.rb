@@ -38,9 +38,21 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
     @domain.apply_registry_lock
     assert @domain.locked_by_registrant?
     assert_equal @domain.statuses.sort, Domain::RegistryLockable::LOCK_STATUSES.sort
+    assert @domain.locked_domain_statuses_history.include? DomainStatus::SERVER_UPDATE_PROHIBITED
 
     @domain.remove_registry_lock
     assert @domain.statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
+  end
+
+  def test_clear_locked_domain_statuses_history
+    @domain.update(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
+    @domain.apply_registry_lock
+
+    assert @domain.locked_by_registrant?
+    assert @domain.locked_domain_statuses_history.include? DomainStatus::SERVER_UPDATE_PROHIBITED
+    @domain.remove_registry_lock
+
+    assert_nil @domain.locked_domain_statuses_history
   end
 
   def test_registry_lock_on_lockable_domain

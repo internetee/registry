@@ -12,6 +12,28 @@ class ForceDeleteTest < ActionMailer::TestCase
     Truemail.configure.default_validation_type = @old_validation_type
   end
 
+  def test_restore_domain_statuses_after_soft_force_delete
+    @domain.update(statuses: [DomainStatus::SERVER_RENEW_PROHIBITED])
+    @domain.schedule_force_delete(type: :soft)
+    
+    assert @domain.force_delete_scheduled?
+    assert @domain.force_delete_domain_statuses_history.include? DomainStatus::SERVER_RENEW_PROHIBITED
+
+    @domain.cancel_force_delete
+    assert @domain.statuses.include? DomainStatus::SERVER_RENEW_PROHIBITED
+  end
+
+  def test_clear_force_delete_domain_statuses_history
+    @domain.update(statuses: [DomainStatus::SERVER_RENEW_PROHIBITED])
+    @domain.schedule_force_delete(type: :soft)
+    
+    assert @domain.force_delete_scheduled?
+    assert @domain.force_delete_domain_statuses_history.include? DomainStatus::SERVER_RENEW_PROHIBITED
+    @domain.cancel_force_delete
+
+    assert_nil @domain.force_delete_domain_statuses_history
+  end
+
   def test_schedules_force_delete_fast_track
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')

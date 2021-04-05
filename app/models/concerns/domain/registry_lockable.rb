@@ -41,6 +41,7 @@ module Domain::RegistryLockable
         delete_domain_statuses_which_not_declared_before domain_status
       end
       self.locked_by_registrant_at = nil
+      clear_locked_domain_statuses_history
       alert_registrar_lock_changes!(lock: false)
 
       save!
@@ -67,5 +68,9 @@ module Domain::RegistryLockable
 
   def delete_domain_statuses_which_not_declared_before(domain_status)
     statuses.delete(domain_status) unless locked_domain_statuses_history.include? domain_status
+  end
+
+  def clear_locked_domain_statuses_history
+    self.locked_domain_statuses_history = nil
   end
 end
