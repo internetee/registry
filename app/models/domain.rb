@@ -16,6 +16,9 @@ class Domain < ApplicationRecord
 
   attr_accessor :legal_document_id
 
+  # serialize :json_statuses_history, HashSerializer
+  store_accessor :json_statuses_history, :force_delete_domain_statuses_history, :locked_domain_statuses_history
+
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
   alias_attribute :auth_info, :transfer_code # Old attribute name; for PaperTrail
