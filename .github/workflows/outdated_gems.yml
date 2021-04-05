@@ -1,0 +1,33 @@
+name: 'Check outdated gems'
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  outdated_gems:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-18.04 ]
+        ruby: [ 2.7 ]
+    runs-on: ${{ matrix.os }}
+    name: Outdated gems
+    steps:
+      - name: Checkout gemfiles
+        uses: Bhacaz/checkout-files@v1
+        with:
+          files: Gemfile Gemfile.lock .ruby-version
+          token: ${{ secrets.GH_TOKEN }}
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+      - name: 'Pull outdated gem action script'
+        uses: actions/checkout@v2
+        with:
+          repository: 'Bhacaz/bundler-outdated-action'
+      - name: 'Check outdated gems'
+        run: 'ruby main.rb'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GEMFILE_REPOSITORY: ${{ github.repository }}
