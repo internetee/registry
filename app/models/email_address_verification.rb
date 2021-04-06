@@ -42,9 +42,11 @@ class EmailAddressVerification < ApplicationRecord
   end
 
   def check_force_delete
-    return unless failed?
-
-    Domains::ForceDeleteEmail::Base.run(email: email)
+    if failed?
+      Domains::ForceDeleteEmail::Base.run(email: email)
+    else
+      Domains::ForceDeleteLift::Base.run(email: email)
+    end
   end
 
   def verify
