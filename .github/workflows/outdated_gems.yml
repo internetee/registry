@@ -1,9 +1,9 @@
 name: 'Check outdated gems'
 
-on:
-  push:
-    branches:
-      - master
+on: [push]
+#  push:
+#    branches:
+#      - master
 
 jobs:
   outdated_gems:
@@ -11,7 +11,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-18.04 ]
-        ruby: [ 2.7 ]
     runs-on: ${{ matrix.os }}
     name: Outdated gems
     steps:
