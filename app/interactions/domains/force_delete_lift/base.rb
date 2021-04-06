@@ -1,17 +1,14 @@
 module Domains
   module ForceDeleteLift
     class Base < ActiveInteraction::Base
-      string :email,
-             description: 'Email to check if ForceDelete needs to be lifted'
+      object :domain,
+             class: Domain,
+             description: 'Domain to check if ForceDelete needs to be listed'
 
       def execute
-        domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
-        registrant_ids = Registrant.where(email: email).pluck(:id)
+        prepare_email_verifications(domain)
 
-        domains = domain_contacts.map(&:domain).flatten +
-          Domain.where(registrant_id: registrant_ids)
-
-        domains.each { |domain| lift_force_delete(domain) if force_delete_condition(domain) }
+        lift_force_delete(domain) if force_delete_condition(domain)
       end
 
       private
@@ -25,6 +22,11 @@ module Domains
           domain.template_name == 'invalid_email' &&
           domain.contacts.all? { |contact| contact.email_verification.verified? } &&
           domain.registrant.email_verification.verified?
+      end
+
+      def prepare_email_verifications(domain)
+        domain.registrant.email_verification.verify
+        domain.contacts.each { |contact| contact.email_verification.verify }
       end
     end
   end
