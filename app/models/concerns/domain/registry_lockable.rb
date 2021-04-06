@@ -9,7 +9,7 @@ module Domain::RegistryLockable
     return unless registry_lockable?
     return if locked_by_registrant?
 
-    put_statuses_to_json_history_before_locked
+    save_statuses_history
 
     transaction do
       self.statuses |= LOCK_STATUSES
@@ -38,7 +38,7 @@ module Domain::RegistryLockable
 
     transaction do
       LOCK_STATUSES.each do |domain_status|
-        delete_domain_statuses_which_not_declared_before domain_status
+        remove_predetermined_statuses domain_status
       end
       self.locked_by_registrant_at = nil
       clear_locked_domain_statuses_history
@@ -60,13 +60,13 @@ module Domain::RegistryLockable
 
   private
 
-  def put_statuses_to_json_history_before_locked
+  def save_statuses_history
     self.locked_domain_statuses_history = statuses.map do |status|
       status if LOCK_STATUSES.include? status
     end
   end
 
-  def delete_domain_statuses_which_not_declared_before(domain_status)
+  def remove_predetermined_statuses(domain_status)
     statuses.delete(domain_status) unless locked_domain_statuses_history.include? domain_status
   end
 
