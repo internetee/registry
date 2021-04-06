@@ -668,6 +668,10 @@ class Domain < ApplicationRecord
     end
   end
 
+  def all_related_emails
+    (admin_contacts.emails +  tech_contacts.emails + [registrant.email]).uniq
+  end
+
   def force_delete_contact_emails
     (primary_contact_emails + tech_contacts.pluck(:email) +
       ["info@#{name}", "#{prepared_domain_name}@#{name}"]).uniq

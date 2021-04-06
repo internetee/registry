@@ -384,6 +384,59 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert notification.text.include? asserted_text
   end
 
+  def test_lifts_force_delete_if_contact_fixed
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    assert_not @domain.force_delete_scheduled?
+    travel_to Time.zone.parse('2010-07-05')
+    email = 'some@strangesentence@internet.ee'
+
+    Truemail.configure.default_validation_type = :regex
+
+    contact = @domain.admin_contacts.first
+    contact.update_attribute(:email, email)
+    contact.email_verification.verify
+
+    assert contact.email_verification_failed?
+
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+    contact.update_attribute(:email, 'aaa@bbb.com')
+    contact.email_verification.verify
+
+    assert_not contact.email_verification_failed?
+    CheckForceDeleteLift.perform_now
+
+    @domain.reload
+    assert_not @domain.force_delete_scheduled?
+  end
+  def test_lifts_force_delete_after_bounce_changes
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    assert_not @domain.force_delete_scheduled?
+    travel_to Time.zone.parse('2010-07-05')
+    email = @domain.registrant.email
+    asserted_text = "Invalid email: #{email}"
+
+    prepare_bounced_email_address(email)
+
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+    assert_equal 'invalid_email', @domain.template_name
+    assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
+    assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
+    notification = @domain.registrar.notifications.last
+    assert notification.text.include? asserted_text
+
+    @domain.registrant.update(email: 'aaa@bbb.com')
+    @domain.registrant.email_verification.verify
+    assert_not @domain.registrant.email_verification_failed?
+    CheckForceDeleteLift.perform_now
+
+    @domain.reload
+    assert_not @domain.force_delete_scheduled?
+  end
+
   def prepare_bounced_email_address(email)
     @bounced_mail = BouncedMailAddress.new
     @bounced_mail.email = email
