@@ -19,14 +19,28 @@ module Domains
 
       def force_delete_condition(domain)
         domain.force_delete_scheduled? &&
-          domain.template_name == 'invalid_email' &&
-          domain.contacts.all? { |contact| contact.email_verification.verified? } &&
+          template_of_invalid_email?(domain) &&
+          contact_emails_valid?(domain) &&
+          bounces_absent?(domain)
+      end
+
+      def template_of_invalid_email?(domain)
+        domain.template_name == 'invalid_email'
+      end
+
+      def contact_emails_valid?(domain)
+        domain.contacts.all? { |contact| contact.email_verification.verified? } &&
           domain.registrant.email_verification.verified?
       end
 
       def prepare_email_verifications(domain)
         domain.registrant.email_verification.verify
         domain.contacts.each { |contact| contact.email_verification.verify }
+      end
+
+      def bounces_absent?(domain)
+        emails = domain.all_related_emails
+        BouncedMailAddress.where(email: emails).empty?
       end
     end
   end
