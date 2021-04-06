@@ -1,4 +1,7 @@
-01.04.2021
+06.04.2021
+* Replacing invalid email cancels force delete [#1898](https://github.com/internetee/registry/issues/1898)
+
+08.04.2021
 * Fixed registry locking issue if any of the satuses were removed separately [#1884](https://github.com/internetee/registry/issues/1884)
 
 31.03.2021
