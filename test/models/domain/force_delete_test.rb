@@ -17,6 +17,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.schedule_force_delete(type: :soft)
     
     assert @domain.force_delete_scheduled?
+
     assert @domain.force_delete_domain_statuses_history.include? DomainStatus::SERVER_RENEW_PROHIBITED
 
     @domain.cancel_force_delete
