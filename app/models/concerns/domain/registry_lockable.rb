@@ -55,6 +55,4 @@ module Domain::RegistryLockable
       attached_obj_type: self.class.name
     )
   end
-
-  private
 end

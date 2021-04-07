@@ -558,8 +558,8 @@ class Domain < ApplicationRecord
   # special handling for admin changing status
   def admin_status_update(update)
     # check for deleted status
-    self.admin_store_statuses_history = statuses
 
+    update(admin_store_statuses_history: update)
     statuses.each do |s|
       unless update.include? s
         case s
