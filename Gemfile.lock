@@ -452,7 +452,7 @@ GEM
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
-    truemail (1.9.2)
+    truemail (2.2.3)
       simpleidn (~> 0.1.1)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
@@ -558,7 +558,7 @@ DEPENDENCIES
   selectize-rails (= 0.12.1)
   simplecov (= 0.17.1)
   simpleidn (= 0.1.1)
-  truemail (~> 1.7)
+  truemail (~> 2.2)
   uglifier
   validates_email_format_of (= 1.6.3)
   webdrivers
