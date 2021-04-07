@@ -288,7 +288,7 @@ GEM
       nokogiri (~> 1)
       rake
     mini_mime (1.0.3)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.5.0)
     minitest (5.14.4)
     monetize (1.9.4)
       money (~> 6.12)
@@ -305,8 +305,11 @@ GEM
       ruby2_keywords (~> 0.0.1)
     netrc (0.11.0)
     nio4r (2.5.7)
-    nokogiri (1.10.10)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.11.0)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
+    nokogiri (1.11.0-x86_64-linux)
+      racc (~> 1.4)
     nori (2.6.0)
     omniauth (1.9.1)
       hashie (>= 3.4.6)
@@ -342,6 +345,7 @@ GEM
       erubis
       que (~> 0.8)
       sinatra
+    racc (1.5.2)
     rack (2.2.3)
     rack-oauth2 (1.16.0)
       activesupport
@@ -538,7 +542,7 @@ DEPENDENCIES
   mimemagic (= 0.3.10)
   minitest (~> 5.14)
   money-rails
-  nokogiri (~> 1.10.0)
+  nokogiri (~> 1.11.0)
   omniauth
   omniauth-rails_csrf_protection
   omniauth-tara!
