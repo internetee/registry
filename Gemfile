@@ -83,7 +83,7 @@ gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
 gem 'directo', github: 'internetee/directo', branch: 'master'
 
 group :development, :test do
-  gem 'pry', '0.10.1'
+  gem 'pry', '0.14.0'
   gem 'puma'
 end
 
