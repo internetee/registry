@@ -557,9 +557,17 @@ class Domain < ApplicationRecord
 
   # special handling for admin changing status
   def admin_status_update(update)
+    lock_statuses = [DomainStatus::SERVER_UPDATE_PROHIBITED,
+    DomainStatus::SERVER_DELETE_PROHIBITED,
+    DomainStatus::SERVER_TRANSFER_PROHIBITED]
     # check for deleted status
+    update(admin_store_statuses_history: update) unless locked_by_registrant?
 
-    update(admin_store_statuses_history: update)
+    if locked_by_registrant?
+      result = update.reject { |status| lock_statuses.include? status }
+      update(admin_store_statuses_history: result)
+
+    end
     statuses.each do |s|
       unless update.include? s
         case s

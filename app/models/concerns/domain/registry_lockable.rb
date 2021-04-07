@@ -40,6 +40,7 @@ module Domain::RegistryLockable
       end
       self.locked_by_registrant_at = nil
       self.statuses = admin_store_statuses_history || []
+      admin_store_statuses_history = nil
       alert_registrar_lock_changes!(lock: false)
 
       save!
