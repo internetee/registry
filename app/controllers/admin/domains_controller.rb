@@ -53,8 +53,9 @@ module Admin
       dp = ignore_empty_statuses
       @domain.is_admin = true
       @domain.admin_status_update dp[:statuses]
-
       if @domain.update(dp)
+        @domain.admin_store_statuses_history = @domain.statuses
+        @domain.save
         flash[:notice] = I18n.t('domain_updated')
         redirect_to [:admin, @domain]
       else

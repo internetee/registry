@@ -18,7 +18,7 @@ class Domain < ApplicationRecord
 
   store_accessor :json_statuses_history,
                  :force_delete_domain_statuses_history,
-                 :locked_domain_statuses_history
+                 :admin_store_statuses_history
 
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
@@ -558,6 +558,8 @@ class Domain < ApplicationRecord
   # special handling for admin changing status
   def admin_status_update(update)
     # check for deleted status
+    self.admin_store_statuses_history = statuses
+
     statuses.each do |s|
       unless update.include? s
         case s

@@ -34,25 +34,19 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
   end
 
   def test_restore_domain_statuses_after_unlock
-    @domain.update(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
+    @domain.statuses = [DomainStatus::SERVER_UPDATE_PROHIBITED]
+    @domain.admin_store_statuses_history = [DomainStatus::SERVER_UPDATE_PROHIBITED]
+    @domain.save
+    assert @domain.admin_store_statuses_history.include? DomainStatus::SERVER_UPDATE_PROHIBITED
+
     @domain.apply_registry_lock
     assert @domain.locked_by_registrant?
     assert_equal @domain.statuses.sort, Domain::RegistryLockable::LOCK_STATUSES.sort
-    assert @domain.locked_domain_statuses_history.include? DomainStatus::SERVER_UPDATE_PROHIBITED
 
     @domain.remove_registry_lock
     assert @domain.statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
-  end
-
-  def test_clear_locked_domain_statuses_history
-    @domain.update(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
-    @domain.apply_registry_lock
-
-    assert @domain.locked_by_registrant?
-    assert @domain.locked_domain_statuses_history.include? DomainStatus::SERVER_UPDATE_PROHIBITED
-    @domain.remove_registry_lock
-
-    assert_nil @domain.locked_domain_statuses_history
+    assert_not @domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
+    assert_not @domain.statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
   end
 
   def test_registry_lock_on_lockable_domain
