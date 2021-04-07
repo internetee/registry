@@ -1,3 +1,11 @@
+07.04.2021
+* Bump donwload-artifact to 2.0.9 [#1904](https://github.com/internetee/registry/pull/1904)
+* Bump upload-artifact to 2.2.3 [#1905](https://github.com/internetee/registry/pull/1905)
+* Bump select2-rails to 4.0.13 [#1906](https://github.com/internetee/registry/pull/1906)
+* Bump pry to 0.14.0 [#1907](https://github.com/internetee/registry/pull/1907)
+* Bump truemail to 2.2.3 [#1908](https://github.com/internetee/registry/pull/1908)
+* Bump paper_trail to 12.0.0 [#1909](https://github.com/internetee/registry/pull/1909)
+
 06.04.2021
 * Replacing invalid email cancels force delete [#1898](https://github.com/internetee/registry/issues/1898)
 
