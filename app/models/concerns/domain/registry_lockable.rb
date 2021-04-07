@@ -11,13 +11,16 @@ module Domain::RegistryLockable
 
     save_statuses_history
 
-    transaction do
-      self.statuses |= LOCK_STATUSES
-      self.locked_by_registrant_at = Time.zone.now
-      alert_registrar_lock_changes!(lock: true)
+    # transaction do
+    #   self.statuses |= LOCK_STATUSES
+    #   self.locked_by_registrant_at = Time.zone.now
+    #   alert_registrar_lock_changes!(lock: true)
 
-      save!
-    end
+    #   save!
+    # end
+        # Domains::ForceDelete::SetForceDelete.run(domain: self, type: type, reason: reason,
+    # notify_by_email: notify_by_email, email: email)
+    Domain::RegistryLockable::SetRegistratLock.run(domain: self)
   end
 
   def registry_lockable?
