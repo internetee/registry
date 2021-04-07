@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - npm
+      - dependencies
+
+  - package-ecosystem: "bundler"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - bundler
+      - dependencies
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - github-actions
+      - dependencies
