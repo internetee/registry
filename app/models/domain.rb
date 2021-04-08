@@ -559,16 +559,24 @@ class Domain < ApplicationRecord
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
+  def update_unless_locked_by_registrant(update)
+    update(admin_store_statuses_history: update) unless locked_by_registrant?
+  end
+
+  def update_not_by_locked_statuses(update)
+    return unless locked_by_registrant?
+
+    result = update.reject { |status| LOCK_STATUSES.include? status }
+    update(admin_store_statuses_history: result)
+  end
+
   # special handling for admin changing status
   def admin_status_update(update)
-    # check for deleted status
-    update(admin_store_statuses_history: update) unless locked_by_registrant?
+    update_unless_locked_by_registrant(update)
 
-    if locked_by_registrant?
-      result = update.reject { |status| LOCK_STATUSES.include? status }
-      update(admin_store_statuses_history: result)
-    end
-    
+    update_not_by_locked_statuses(update)
+
+    # check for deleted status
     statuses.each do |s|
       unless update.include? s
         case s
