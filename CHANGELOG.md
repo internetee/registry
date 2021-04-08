@@ -1,5 +1,6 @@
 08.04.2021
 * Registry lock does not affect statuses set by system or admin [#1900](https://github.com/internetee/registry/issues/1900)
+* Invalid email address is added to the forcedelete notes in admin with starting ForceDelete process [#1899](https://github.com/internetee/registry/issues/1899)
 
 07.04.2021
 * Bump donwload-artifact to 2.0.9 [#1904](https://github.com/internetee/registry/pull/1904)
