@@ -12,9 +12,17 @@ class Domain < ApplicationRecord
   include Domain::Disputable
   include Domain::BulkUpdatable
 
+  LOCK_STATUSES = [DomainStatus::SERVER_UPDATE_PROHIBITED,
+                   DomainStatus::SERVER_DELETE_PROHIBITED,
+                   DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
+
   attr_accessor :roles
 
   attr_accessor :legal_document_id
+
+  store_accessor :json_statuses_history,
+                 :force_delete_domain_statuses_history,
+                 :admin_store_statuses_history
 
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
@@ -551,8 +559,23 @@ class Domain < ApplicationRecord
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
+  def update_unless_locked_by_registrant(update)
+    update(admin_store_statuses_history: update) unless locked_by_registrant?
+  end
+
+  def update_not_by_locked_statuses(update)
+    return unless locked_by_registrant?
+
+    result = update.reject { |status| LOCK_STATUSES.include? status }
+    update(admin_store_statuses_history: result)
+  end
+
   # special handling for admin changing status
   def admin_status_update(update)
+    update_unless_locked_by_registrant(update)
+
+    update_not_by_locked_statuses(update)
+
     # check for deleted status
     statuses.each do |s|
       unless update.include? s
