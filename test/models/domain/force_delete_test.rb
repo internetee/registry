@@ -403,6 +403,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_equal 'invalid_email', @domain.template_name
     assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
+    assert_equal @domain.status_notes[DomainStatus::FORCE_DELETE], email
     notification = @domain.registrar.notifications.last
     assert notification.text.include? asserted_text
   end
@@ -432,7 +433,9 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     @domain.reload
     assert_not @domain.force_delete_scheduled?
+    assert_nil @domain.status_notes[DomainStatus::FORCE_DELETE]
   end
+
   def test_lifts_force_delete_after_bounce_changes
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?

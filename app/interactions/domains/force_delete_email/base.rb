@@ -21,6 +21,12 @@ module Domains
                                      notify_by_email: true,
                                      reason: 'invalid_email',
                                      email: email)
+        save_status_note(domain)
+      end
+
+      def save_status_note(domain)
+        domain.status_notes[DomainStatus::FORCE_DELETE] = email
+        domain.save(validate: false)
       end
     end
   end
