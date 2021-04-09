@@ -34,11 +34,15 @@ class EmailAddressVerification < ApplicationRecord
   end
 
   def failed?
-    verified_at.present? && !success
+    bounce_present? || (verified_at.present? && !success)
   end
 
   def verified?
     success
+  end
+
+  def bounce_present?
+    BouncedMailAddress.find_by(email: email).present?
   end
 
   def check_force_delete
