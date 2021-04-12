@@ -488,7 +488,7 @@ GEM
     websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    whenever (0.9.4)
+    whenever (1.0.0)
       chronic (>= 0.6.3)
     wkhtmltopdf-binary (0.12.5.4)
     xpath (3.2.0)
@@ -561,7 +561,7 @@ DEPENDENCIES
   validates_email_format_of (= 1.6.3)
   webdrivers
   webmock
-  whenever (= 0.9.4)
+  whenever (= 1.0.0)
   wkhtmltopdf-binary (~> 0.12.5.1)
 
 BUNDLED WITH
