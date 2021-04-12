@@ -1,3 +1,9 @@
+12.04.2021
+* Que replaced by Sidekiq and set handling for failing email jobs [#645](https://github.com/internetee/registry/issues/645)
+* Bump coderay to 1.1.3 [#1918](https://github.com/internetee/registry/pull/1918)
+* Bump webmock to 3.12.2 [#1919](https://github.com/internetee/registry/pull/1919)
+* Bump whenever to 1.0.0 [#1921](https://github.com/internetee/registry/pull/1921)
+
 08.04.2021
 * Registry lock does not affect statuses set by system or admin [#1900](https://github.com/internetee/registry/issues/1900)
 * Invalid email address is added to the forcedelete notes in admin with starting ForceDelete process [#1899](https://github.com/internetee/registry/issues/1899)
