@@ -29,11 +29,11 @@ gem 'nokogiri', '~> 1.10.0'
 
 # style
 gem 'bootstrap-sass', '~> 3.4'
+gem 'coderay',          '1.1.3'   # xml console visualize
 gem 'coffee-rails', '>= 5.0'
 gem 'jquery-rails'
 gem 'selectize-rails', '0.12.1' # include selectize.js for select
 gem 'kaminari'
-gem 'coderay',          '1.1.0'   # xml console visualize
 gem 'sass-rails'
 gem 'select2-rails',    '4.0.13' # for autocomplete
 gem 'cancancan'
