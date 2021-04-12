@@ -18,6 +18,9 @@ require 'capybara/rails'
 require 'capybara/minitest'
 require 'webmock/minitest'
 require 'support/assertions/epp_assertions'
+require 'sidekiq/testing'
+
+Sidekiq::Testing.fake!
 
 
 # `bin/rails test` is not the same as `bin/rake test`.
@@ -26,6 +29,8 @@ require 'support/assertions/epp_assertions'
 require 'rake'
 Rake::Task.clear
 Rails.application.load_tasks
+
+ActiveJob::Base.queue_adapter = :test
 
 class CompanyRegisterClientStub
   Company = Struct.new(:registration_number, :company_name)

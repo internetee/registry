@@ -11,7 +11,7 @@ module Invoice::Payable
   end
 
   def paid?
-    account_activity
+    account_activity.present?
   end
 
   def receipt_date

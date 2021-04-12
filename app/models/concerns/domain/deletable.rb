@@ -7,17 +7,24 @@ module Domain::Deletable
     DomainStatus::FORCE_DELETE,
   ].freeze
 
+  def deletion_time
+    @deletion_time ||= Time.zone.at(rand(deletion_time_span))
+  end
+
   private
 
   def delete_later
-    deletion_time = Time.zone.at(rand(deletion_time_span))
-    DomainDeleteJob.enqueue(id, run_at: deletion_time, priority: 1)
+    DomainDeleteJob.set(wait_until: deletion_time).perform_later(id)
     logger.info "Domain #{name} is scheduled to be deleted around #{deletion_time}"
   end
 
   def do_not_delete_later
-    # Que job can be manually deleted in admin area UI
-    QueJob.find_by("args->>0 = '#{id}'", job_class: DomainDeleteJob.name)&.destroy
+    return if Rails.env.test?
+
+    jobs = Sidekiq::ScheduledSet.new.select do |job|
+      job.args.first['job_class'] == 'DomainDeleteJob' && job.args.first['arguments'] == [id]
+    end
+    jobs.each(&:delete)
   end
 
   def deletion_time_span

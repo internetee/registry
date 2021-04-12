@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class CsyncJob < Que::Job
-  def run(generate: false)
+class CsyncJob < ApplicationJob
+  def perform(generate: false)
     @store = {}
     @input_store = { secure: {}, insecure: {} }
     @results = {}

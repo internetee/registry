@@ -12,7 +12,7 @@ class DomainDeleteJobTest < ActiveSupport::TestCase
     dom = Domain.find_by(id: @domain.id)
     assert dom
 
-    DomainDeleteJob.run(@domain.id)
+    DomainDeleteJob.perform_now(@domain.id)
 
     dom = Domain.find_by(id: @domain.id)
     assert_nil dom

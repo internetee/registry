@@ -14,14 +14,14 @@ class CsyncJobTest < ActiveSupport::TestCase
     expected_contents = "[secure]\nns1.bestnames.test shop.test\nns2.bestnames.test shop.test\n" \
     "[insecure]\nns1.bestnames.test airport.test metro.test\nns2.bestnames.test airport.test\n"
 
-    CsyncJob.run(generate: true)
+    CsyncJob.perform_now(generate: true)
 
     assert_equal expected_contents, IO.read(ENV['cdns_scanner_input_file'])
   end
 
   def test_creates_csync_record_when_new_cdnskey_discovered
     assert_nil @domain.csync_record
-    CsyncJob.run
+    CsyncJob.perform_now
 
     @domain.reload
     assert @domain.csync_record
@@ -35,7 +35,7 @@ class CsyncJobTest < ActiveSupport::TestCase
   def test_creates_dnskey_after_required_cycles
     assert_equal 0, @domain.dnskeys.count
     assert_nil @domain.csync_record
-    CsyncJob.run # Creates initial CsyncRecord for domain
+    CsyncJob.perform_now # Creates initial CsyncRecord for domain
 
     @domain.reload
     assert @domain.csync_record.present?
@@ -46,7 +46,7 @@ class CsyncJobTest < ActiveSupport::TestCase
 
     CsyncRecord.stub :by_domain_name, @domain.csync_record do
       @domain.csync_record.stub :dnssec_validates?, true do
-        CsyncJob.run
+        CsyncJob.perform_now
       end
     end
 
@@ -58,13 +58,13 @@ class CsyncJobTest < ActiveSupport::TestCase
 
   def test_sends_mail_to_contacts_if_dnskey_updated
     assert_emails 1 do
-      CsyncJob.run
+      CsyncJob.perform_now
       @domain.reload
 
       CsyncRecord.stub :by_domain_name, @domain.csync_record do
         @domain.csync_record.stub :dnssec_validates?, true do
           2.times do
-            CsyncJob.run
+            CsyncJob.perform_now
           end
         end
       end

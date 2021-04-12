@@ -56,7 +56,7 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
-  # config.active_job.queue_adapter     = :resque
+  config.active_job.queue_adapter = :que
   # config.active_job.queue_name_prefix = "domain_name_registry_#{Rails.env}"
   config.action_mailer.perform_caching = false
 
@@ -87,8 +87,3 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end
-
-# In off mode, queueing a job will simply insert it into the database -
-# the current process will make no effort to run it.
-# You should use this if you want to use a dedicated process to work tasks
-Que.mode = :off

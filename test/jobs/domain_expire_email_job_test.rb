@@ -9,18 +9,12 @@ class DomainExpireEmailJobTest < ActiveSupport::TestCase
     @email = @domain.registrant.email
   end
 
-  def test_domain_expire
-    success = DomainExpireEmailJob.run(@domain.id, @email)
-    assert success
-  end
-
   def test_domain_expire_with_force_delete
     @domain.update(statuses: [DomainStatus::FORCE_DELETE])
     @domain.reload
     assert_equal ['serverForceDelete'], @domain.statuses
 
-    success = DomainExpireEmailJob.run(@domain.id, @email)
-    assert success
+    DomainExpireEmailJob.perform_now(@domain.id, @email)
 
     statuses = @domain.statuses
     statuses.delete(DomainStatus::FORCE_DELETE)

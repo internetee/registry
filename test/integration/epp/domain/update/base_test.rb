@@ -2,6 +2,7 @@ require 'test_helper'
 
 class EppDomainUpdateBaseTest < EppTestCase
   include ActionMailer::TestHelper
+  include ActiveJob::TestHelper
 
   setup do
     @domain = domains(:shop)
@@ -134,15 +135,17 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_update_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_no_enqueued_jobs
+    assert_enqueued_jobs 3 do
+      post epp_update_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
     @domain.reload
 
     assert_epp_response :completed_successfully_action_pending
     assert_not_equal new_registrant, @domain.registrant
     assert @domain.registrant_verification_asked?
     assert_includes @domain.statuses, DomainStatus::PENDING_UPDATE
-    assert_verification_and_notification_emails
   end
 
   def test_domain_should_doesnt_have_pending_update_when_updated_registrant_with_same_idents_data
@@ -211,15 +214,17 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_update_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_no_enqueued_jobs
+    assert_enqueued_jobs 3 do
+      post epp_update_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
     @domain.reload
 
     assert_epp_response :completed_successfully_action_pending
     assert_not_equal new_registrant, @domain.registrant
     assert @domain.registrant_verification_asked?
     assert_includes @domain.statuses, DomainStatus::PENDING_UPDATE
-    assert_verification_and_notification_emails
   end
 
   def test_updates_registrant_when_legaldoc_is_not_mandatory
@@ -247,15 +252,17 @@ class EppDomainUpdateBaseTest < EppTestCase
       </epp>
     XML
 
-    post epp_update_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_no_enqueued_jobs
+    assert_enqueued_jobs 3 do
+      post epp_update_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
     @domain.reload
 
     assert_epp_response :completed_successfully_action_pending
     assert_not_equal new_registrant, @domain.registrant
     assert @domain.registrant_verification_asked?
     assert_includes @domain.statuses, DomainStatus::PENDING_UPDATE
-    assert_verification_and_notification_emails
   end
 
   def test_dows_not_update_registrant_when_legaldoc_is_mandatory

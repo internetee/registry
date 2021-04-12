@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DomainReleasableAuctionableTest < ActiveSupport::TestCase
+class DomainReleasableAuctionableTest < ActiveJob::TestCase
   # Needed for `test_updates_whois` test because of `after_commit :update_whois_record` in Domain
   self.use_transactional_tests = false
 
@@ -65,7 +65,9 @@ class DomainReleasableAuctionableTest < ActiveSupport::TestCase
     travel_to Time.zone.parse('2010-07-05')
     old_whois = @domain.whois_record
 
-    Domain.release_domains
+    perform_enqueued_jobs do
+      Domain.release_domains
+    end
 
     assert_raises ActiveRecord::RecordNotFound do
       old_whois.reload
