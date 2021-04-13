@@ -18,7 +18,7 @@ Documentation
 
 * [EPP documentation](/doc/epp)
 * [EPP request-response examples](/doc/epp-examples.md)
-* [REPP documentation](/doc/repp-doc.md)
+* [REPP documentation](https://internetee.github.io/repp-apidoc/)
 
 Installation
 ------------
