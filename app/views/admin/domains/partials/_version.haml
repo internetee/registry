@@ -139,7 +139,7 @@
       %td{colspan: 9}
         = preserve do
           %pre
-            - formatted_req = Nokogiri::XML(domain.pending_json['frame'])
+            - formatted_req = Nokogiri::XML(domain.pending_json['frame'].to_json)
             - if formatted_req.errors.none?
               = formatted_req
             - else
