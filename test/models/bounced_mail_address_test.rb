@@ -117,6 +117,15 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
     assert_equal 'smtp; 550 5.1.1 user unknown', bounced_mail.diagnostic
   end
 
+  def test_email_with_bounce_considered_nonverified
+    BouncedMailAddress.record(sns_bounce_payload)
+    bounced_mail = BouncedMailAddress.last
+    registrant = domains(:shop).registrant
+
+    assert_equal registrant.email, bounced_mail.email
+    assert registrant.email_verification.failed?
+  end
+
   def sns_bounce_payload
     {
       "notificationType": "Bounce",
