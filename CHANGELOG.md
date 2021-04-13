@@ -1,3 +1,6 @@
+13.04.2021
+* Bounce list invalidates all contacts with the address [#1837](https://github.com/internetee/registry/issues/1837)
+
 12.04.2021
 * Que replaced by Sidekiq and set handling for failing email jobs [#645](https://github.com/internetee/registry/issues/645)
 * Bump coderay to 1.1.3 [#1918](https://github.com/internetee/registry/pull/1918)
