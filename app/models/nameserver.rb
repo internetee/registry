@@ -58,8 +58,8 @@ class Nameserver < ApplicationRecord
   end
 
   def hostname=(hostname)
-    self[:hostname] = SimpleIDN.to_unicode(hostname).gsub(/\.+$/, '')
-    self[:hostname_puny] = SimpleIDN.to_ascii(hostname).gsub(/\.+$/, '')
+    self[:hostname] = SimpleIDN.to_unicode(hostname)&.gsub(/\.+$/, '')
+    self[:hostname_puny] = SimpleIDN.to_ascii(hostname)&.gsub(/\.+$/, '')
   end
 
   class << self
