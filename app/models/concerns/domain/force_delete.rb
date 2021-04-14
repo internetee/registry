@@ -1,10 +1,6 @@
 module Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
   extend ActiveSupport::Concern
 
-  FORCE_DELETE_STATUSES = [DomainStatus::FORCE_DELETE,
-                           DomainStatus::SERVER_RENEW_PROHIBITED,
-                           DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
-
   included do
     store_accessor :force_delete_data,
                    :force_delete_type,
@@ -56,7 +52,6 @@ module Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
 
   def cancel_force_delete
     Domains::CancelForceDelete::CancelForceDelete.run(domain: self)
-    # self.statuses = force_delete_domain_statuses_history
   end
 
   def outzone_date

@@ -2,12 +2,10 @@ module Domains
   module CancelForceDelete
     class RemoveForceDeleteStatuses < Base
       def execute
-        domain_statuses = [DomainStatus::FORCE_DELETE,
-                           DomainStatus::SERVER_RENEW_PROHIBITED,
-                           DomainStatus::SERVER_TRANSFER_PROHIBITED,
-                           DomainStatus::CLIENT_HOLD]
-        rejected_statuses = domain.statuses.reject { |a| domain_statuses.include? a }
-        domain.statuses = rejected_statuses
+        domain.statuses.delete(DomainStatus::FORCE_DELETE)
+        domain.statuses.delete(DomainStatus::SERVER_RENEW_PROHIBITED)
+        domain.statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
+        domain.statuses.delete(DomainStatus::CLIENT_HOLD)
         domain.save(validate: false)
       end
     end

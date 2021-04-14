@@ -27,16 +27,6 @@ class DomainTest < ActiveSupport::TestCase
     assert domains(:invalid).invalid?
   end
 
-  def test_valid_domain_statuses_history
-    @domain.force_delete_domain_statuses_history = [DomainStatus::SERVER_UPDATE_PROHIBITED, DomainStatus::SERVER_TRANSFER_PROHIBITED]
-    @domain.admin_store_statuses_history = [DomainStatus::SERVER_UPDATE_PROHIBITED]
-    assert @domain.valid?
-    
-    assert @domain.json_statuses_history['force_delete_domain_statuses_history'].include? 'serverUpdateProhibited'
-    assert @domain.json_statuses_history['force_delete_domain_statuses_history'].include? 'serverTransferProhibited'
-    assert_equal @domain.json_statuses_history['admin_store_statuses_history'], ['serverUpdateProhibited']
-  end
-
   # https://www.internet.ee/domeenid/ee-domeenireeglid#domeeninimede-registreerimine
   def test_validates_name_format
     assert_equal dns_zones(:one).origin, 'test'

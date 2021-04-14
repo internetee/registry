@@ -3,6 +3,7 @@ require 'test_helper'
 class DomainRegistryLockableTest < ActiveSupport::TestCase
   def setup
     super
+
     @domain = domains(:airport)
   end
 
@@ -30,56 +31,6 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
     assert_not @domain.statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
     
     assert_not(@domain.locked_by_registrant?)
-  end
-
-  def test_remove_lockalable_statuses_after_admin_intervention
-    @domain.apply_registry_lock
-    assert @domain.locked_by_registrant?
-    assert_equal @domain.statuses.sort, Domain::RegistryLockable::LOCK_STATUSES.sort
-
-    deleted_status = @domain.statuses - [DomainStatus::SERVER_DELETE_PROHIBITED]
-    @domain.update(statuses: deleted_status)
-    assert_not @domain.locked_by_registrant?
-
-    @domain.apply_registry_lock
-    assert @domain.locked_by_registrant?
-    @domain.remove_registry_lock
-
-    assert_not @domain.statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
-    assert_not @domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
-    assert_not @domain.statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
-  end
-
-  def test_restore_domain_statuses_after_unlock
-    @domain.statuses = [DomainStatus::SERVER_UPDATE_PROHIBITED]
-    @domain.admin_store_statuses_history = [DomainStatus::SERVER_UPDATE_PROHIBITED]
-    @domain.save
-    assert @domain.admin_store_statuses_history.include? DomainStatus::SERVER_UPDATE_PROHIBITED
-
-    @domain.apply_registry_lock
-    assert @domain.locked_by_registrant?
-    assert_equal @domain.statuses.sort, Domain::RegistryLockable::LOCK_STATUSES.sort
-
-    @domain.remove_registry_lock
-    assert @domain.statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
-    assert_not @domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
-    assert_not @domain.statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
-  end
-
-  def test_add_additinal_status_for_locked_domain
-    @domain.apply_registry_lock
-    assert @domain.locked_by_registrant?
-    assert_equal @domain.statuses.sort, Domain::RegistryLockable::LOCK_STATUSES.sort
-
-    @domain.statuses += [DomainStatus::SERVER_RENEW_PROHIBITED]
-    @domain.admin_store_statuses_history = [DomainStatus::SERVER_RENEW_PROHIBITED]
-    @domain.save
-
-    @domain.remove_registry_lock
-    assert @domain.statuses.include? DomainStatus::SERVER_RENEW_PROHIBITED
-    assert_not @domain.statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
-    assert_not @domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
-    assert_not @domain.statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
   end
 
   def test_registry_lock_on_lockable_domain
