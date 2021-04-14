@@ -1,3 +1,6 @@
+14.04.2021
+* REPP documentation update with github pages styled doc [#1896](https://github.com/internetee/registry/issues/1896)
+
 13.04.2021
 * Bounce list invalidates all contacts with the address [#1837](https://github.com/internetee/registry/issues/1837)
 
