@@ -5,6 +5,10 @@ module Domains
         time = Time.zone.now.utc
         STDOUT << "#{time} - #{message}\n" unless Rails.env.test?
       end
+
+      def logger
+        @logger ||= Logger.new(Rails.root.join('log', 'domain_expire_period.log'))
+      end
     end
   end
 end
