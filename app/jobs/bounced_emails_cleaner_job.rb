@@ -3,8 +3,8 @@ class BouncedEmailsCleanerJob < ApplicationJob
 
   def perform
     BouncedMailAddress.find_each do |bounce|
-        count = Contact.where(email: bounce.email).count
-        bounce.destroy if count.zero?
+      count = Contact.where(email: bounce.email).count
+      bounce.destroy if count.zero?
     end
   end
 end
