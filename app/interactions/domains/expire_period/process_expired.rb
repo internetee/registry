@@ -37,7 +37,7 @@ module Domains
           valid = Truemail.valid?(email)
 
           unless valid
-            logger.info('Unable to send DomainExpireMailer#expired email for'\
+            logger.info('Unable to send DomainExpireMailer#expired email for '\
                         "domain #{domain.name} (##{domain.id}) to invalid recipient #{email}")
           end
 
