@@ -33,6 +33,8 @@ class Domain < ApplicationRecord
   has_many :tech_domain_contacts
   accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true, reject_if: :tech_change_prohibited?
 
+  ID_CHAR_LIMIT = 8
+
   def registrant_change_prohibited?
     statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
   end
@@ -331,7 +333,12 @@ class Domain < ApplicationRecord
   end
 
   def roid
-    "EIS-#{id}"
+    id_size = id.to_s.size
+    if id_size <= ID_CHAR_LIMIT
+      "EIS-#{id}"
+    else
+      roid_with_prefix(id_size)
+    end
   end
 
   def puny_label
@@ -733,5 +740,14 @@ class Domain < ApplicationRecord
 
   def self.uses_zone?(zone)
     exists?(["name ILIKE ?", "%.#{zone.origin}"])
+  end
+
+  private
+
+  def roid_with_prefix(id_size)
+    id_delta = id_size - ID_CHAR_LIMIT
+    id_prefix = id.to_s.split(//).first(id_delta).join('').to_s
+    id_postfix = id.to_s.split(//).last(id_size - id_delta).join('').to_s
+    "EIS#{id_prefix}-#{id_postfix}"
   end
 end

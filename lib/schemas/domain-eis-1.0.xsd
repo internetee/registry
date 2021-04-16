@@ -414,6 +414,7 @@ than English.
     <enumeration value="serverAdminChangeProhibited"/>
     <enumeration value="serverTechChangeProhibited"/>
     <enumeration value="deleteCandidate"/>
+    <enumeration value="disputed"/>
   </restriction>
 </simpleType>
 
