@@ -69,7 +69,7 @@ gem 'daemons-rails', '1.2.1'
 gem 'que-web'
 gem 'sidekiq'
 gem 'pdfkit'
-gem 'jquery-ui-rails', '5.0.5'
+gem 'jquery-ui-rails', '6.0.1'
 gem 'airbrake'
 
 gem 'company_register', github: 'internetee/company_register',

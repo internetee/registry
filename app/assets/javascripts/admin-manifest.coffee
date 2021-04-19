@@ -5,7 +5,7 @@
 #= require admin/autocomplete
 #= require jquery.nested_attributes
 #= require selectize
-#= require jquery-ui/datepicker
+#= require jquery-ui/widgets/datepicker
 #= require select2
 #= require jquery.doubleScroll
 

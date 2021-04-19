@@ -188,7 +188,7 @@ class CsyncRecordTest < ActiveSupport::TestCase
     assert @domain.dnskeys.empty?
 
     mail = ActionMailer::Base.deliveries.last
-    assert_equal (@domain.contacts.map(&:email) << @domain.registrant.email).uniq, mail.to
+    assert_equal (@domain.contacts.map(&:email) << @domain.registrant.email).uniq.sort, mail.to.sort
     assert_equal mail.subject, "Teie domeeni #{@domain.name} DNSSEC andmed on eemaldatud / DNSSEC data for #{@domain.name} has been removed"
   end
 
