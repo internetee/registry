@@ -18,6 +18,20 @@ module Repp
           render_success(data: data)
         end
 
+        api :GET, '/repp/v1/registrar/notifications/all_notifications'
+        desc 'Get the all unread poll messages'
+        def all_notifications
+          records = current_user.unread_notifications.order('created_at DESC').all
+          @notification = records.limit(limit).offset(offset)
+          # rubocop:disable Style/AndOr
+          render_success(data: nil) and return unless @notification
+          # rubocop:enable Style/AndOr
+
+          data = @notification.as_json(only: %i[id text attached_obj_id attached_obj_type])
+
+          render_success(data: data)
+        end
+
         api :GET, '/repp/v1/registrar/notifications/:notification_id'
         desc 'Get a specific poll message'
         def show
@@ -44,6 +58,18 @@ module Repp
 
         def set_notification
           @notification = current_user.unread_notifications.find(params[:id])
+        end
+
+        def limit
+          index_params[:limit] || 200
+        end
+  
+        def offset
+          index_params[:offset] || 0
+        end
+
+        def index_params
+          params.permit(:limit, :offset)
         end
       end
     end
