@@ -3,7 +3,7 @@
 #= require bootstrap-sprockets
 #= require typeahead.bundle.min
 #= require jquery.nested_attributes
-#= require jquery-ui/datepicker
+#= require jquery-ui/widgets/datepicker
 #= require select2
 #= require datepicker
 
