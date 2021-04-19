@@ -63,7 +63,7 @@ module Repp
         def limit
           index_params[:limit] || 200
         end
-  
+
         def offset
           index_params[:offset] || 0
         end

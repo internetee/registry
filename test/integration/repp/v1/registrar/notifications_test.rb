@@ -9,6 +9,17 @@ class ReppV1RegistrarNotificationsTest < ActionDispatch::IntegrationTest
     @auth_headers = { 'Authorization' => token }
   end
 
+  def test_all_unreaded_poll_messages
+    notification = @user.registrar.notifications.where(read: false).order(created_at: :desc).all
+    get "/repp/v1/registrar/notifications/all_notifications", headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal notification.count, json[:data].count
+    assert_equal json[:data].first[:text], notification.first.text
+    assert_equal json[:data].last[:text], notification.last.text
+  end
+
   def test_gets_latest_unread_poll_message
     notification = @user.registrar.notifications.where(read: false).order(created_at: :desc).first
     get "/repp/v1/registrar/notifications", headers: @auth_headers
