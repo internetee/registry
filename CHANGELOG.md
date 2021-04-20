@@ -1,3 +1,10 @@
+19.04.2021
+* Bump truemail to 2.3.4 [#1931](https://github.com/internetee/registry/pull/1931)
+* Bump pry to 0.14.1 [#1932](https://github.com/internetee/registry/pull/1932)
+* Bump pg to 1.2.3 [#1933](https://github.com/internetee/registry/pull/1933)
+* Bump sidekiq to 6.2.1 [#1934](https://github.com/internetee/registry/pull/1934)
+* Bump jquery-ui-rails to 6.0.1 [#1935](https://github.com/internetee/registry/pull/1935)
+
 14.04.2021
 * REPP documentation update with github pages styled doc [#1896](https://github.com/internetee/registry/issues/1896)
 
