@@ -13,6 +13,8 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
                                       total: payment_amount,
                                       currency: @payment_currency,
                                       reference_no: @payment_reference_number)
+    @account_activity = account_activities(:one)
+
     Setting.registry_iban = beneficiary_iban
 
     Lhv::ConnectApi.class_eval do
@@ -25,6 +27,29 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
         message = OpenStruct.new(bank_account_iban: beneficiary_iban,
                                  credit_transactions: [transaction])
         [message]
+      end
+    end
+  end
+
+  def test_cannot_create_new_invoice_if_transaction_binded_to_paid_invoice
+    @invoice.update(total: 10)
+    assert_not @invoice.paid?
+
+    @account_activity.update(activity_type: "add_credit", bank_transaction: nil)
+    @invoice.update(account_activity: @account_activity, total: 10)
+    assert @invoice.paid?
+
+    transaction = BankTransaction.new
+    transaction.description = "Invoice no. #{@invoice.number}"
+    transaction.sum = 10
+    transaction.reference_no = @invoice.reference_no
+    transaction.save
+    assert transaction.valid?
+
+    assert_no_difference 'AccountActivity.count' do
+      assert_no_difference 'Invoice.count' do
+        Invoice.create_from_transaction!(transaction) unless transaction.autobindable?
+        transaction.autobind_invoice
       end
     end
   end
