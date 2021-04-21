@@ -14,6 +14,7 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
                                       currency: @payment_currency,
                                       reference_no: @payment_reference_number)
     @account_activity = account_activities(:one)
+    @account = accounts(:cash)
 
     Setting.registry_iban = beneficiary_iban
 
@@ -48,8 +49,13 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
 
     assert_no_difference 'AccountActivity.count' do
       assert_no_difference 'Invoice.count' do
-        Invoice.create_from_transaction!(transaction) unless transaction.autobindable?
-        transaction.autobind_invoice
+        assert_no_difference -> {@account.balance} do
+          unless transaction.non_canceled?
+            Invoice.create_from_transaction!(transaction) unless transaction.autobindable?
+            transaction.autobind_invoice
+            @account.reload
+          end
+        end
       end
     end
   end
@@ -114,7 +120,7 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
       run_task
     end
 
-    assert_changes -> { registrar.invoices.count } do
+    assert_no_changes -> { registrar.invoices.count } do
       run_task
     end
   end

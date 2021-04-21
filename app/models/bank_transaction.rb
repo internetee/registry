@@ -27,6 +27,16 @@ class BankTransaction < ApplicationRecord
                           .find_by(total: sum)
   end
 
+  def non_canceled?
+    paid_invoices = registrar.invoices
+                             .order(created_at: :asc)
+                             .non_cancelled
+                             .where(total: sum)
+    return true if paid_invoices.any?(&:paid?)
+
+    false
+  end
+
   def registrar
     @registrar ||= Invoice.find_by(reference_no: parsed_ref_number)&.buyer
   end
