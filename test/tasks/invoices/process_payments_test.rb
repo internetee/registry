@@ -33,28 +33,16 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
   end
 
   def test_cannot_create_new_invoice_if_transaction_binded_to_paid_invoice
-    @invoice.update(total: 10)
     assert_not @invoice.paid?
 
     @account_activity.update(activity_type: "add_credit", bank_transaction: nil)
-    @invoice.update(account_activity: @account_activity, total: 10)
+    @invoice.update(account_activity: @account_activity, total: @payment_amount)
     assert @invoice.paid?
-
-    transaction = BankTransaction.new
-    transaction.description = "Invoice no. #{@invoice.number}"
-    transaction.sum = 10
-    transaction.reference_no = @invoice.reference_no
-    transaction.save
-    assert transaction.valid?
 
     assert_no_difference 'AccountActivity.count' do
       assert_no_difference 'Invoice.count' do
         assert_no_difference -> {@account.balance} do
-          unless transaction.non_canceled?
-            Invoice.create_from_transaction!(transaction) unless transaction.autobindable?
-            transaction.autobind_invoice
-            @account.reload
-          end
+          capture_io { run_task }
         end
       end
     end
