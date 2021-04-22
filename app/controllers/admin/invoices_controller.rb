@@ -20,6 +20,23 @@ module Admin
       end
     end
 
+    def cancel_paid
+      invoice_id = params[:invoice_id]
+      invoice = Invoice.find(invoice_id)
+
+      account_activity = AccountActivity.find_by(invoice_id: invoice_id)
+      account_activity_dup = account_activity.dup
+      account_activity_dup.sum = -account_activity.sum
+
+      if account_activity_dup.save and invoice.update(cancelled_at: Time.zone.today)
+        flash[:notice] = t(:payment_was_cancelled)
+        redirect_to admin_invoices_path
+      else
+        flash[:alert] = t(:failed_to_payment_cancel)
+        redirect_to admin_invoices_path
+      end
+    end
+
     def index
       @q = Invoice.includes(:account_activity).search(params[:q])
       @q.sorts = 'number desc' if @q.sorts.empty?

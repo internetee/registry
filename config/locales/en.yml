@@ -293,6 +293,9 @@ en:
   record_deleted: 'Record deleted'
   failed_to_delete_record: 'Failed to delete record'
 
+  payment_was_cancelled: 'Payment was cancelled'
+  failed_to_payment_cancel: 'Failed to payment cancel'
+
   authentication_error: 'Authentication error'
 
   sign_in_cancelled: "Sign in cancelled"
@@ -601,6 +604,7 @@ en:
   no_transfers_found: 'No transfers found'
   parameter_value_range_error: 'Parameter value range error: %{key}'
   payment_received: 'Payment received'
+  cancel_payment: 'Cancel Payment'
   api_user_not_found: 'API user not found'
   notes: Notes
   active_price_for_this_operation_is: 'Active price for this operation is %{price}'
