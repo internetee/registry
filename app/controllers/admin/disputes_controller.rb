@@ -38,7 +38,7 @@ module Admin
 
     # PATCH/PUT /admin/disputes/1
     def update
-      if @dispute.update(dispute_params.except(:domain_name))
+      if @dispute.update(dispute_params.except(:domain_name, :starts_at))
         redirect_to admin_disputes_url, notice: 'Dispute was successfully updated.'
       else
         render :edit
@@ -68,7 +68,9 @@ module Admin
 
     # Only allow a trusted parameter "white list" through.
     def dispute_params
-      params.require(:dispute).permit(:domain_name, :password, :starts_at, :comment)
+      params.require(:dispute)
+            .permit(:domain_name, :password, :starts_at, :comment)
+            .with_defaults(starts_at: Time.zone.today)
     end
   end
 end

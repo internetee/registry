@@ -22,7 +22,6 @@ class AdminDisputesSystemTest < ApplicationSystemTestCase
 
     fill_in 'Domain name', with: 'hospital.test'
     fill_in 'Password', with: '1234'
-    fill_in 'Starts at', with: (Time.zone.today - 2.years).to_s
     fill_in 'Comment', with: 'Sample comment'
     click_on 'Save'
 
@@ -38,7 +37,6 @@ class AdminDisputesSystemTest < ApplicationSystemTestCase
 
     fill_in 'Domain name', with: 'nonexistant.test'
     fill_in 'Password', with: '1234'
-    fill_in 'Starts at', with: Time.zone.today.to_s
     fill_in 'Comment', with: 'Sample comment'
     click_on 'Save'
 
@@ -46,30 +44,14 @@ class AdminDisputesSystemTest < ApplicationSystemTestCase
     assert_text 'nonexistant.test'
   end
 
-  def test_throws_error_if_starts_at_is_in_future
-    assert_nil Dispute.active.find_by(domain_name: 'disputed.test')
-
-    visit admin_disputes_path
-    click_on 'New disputed domain'
-
-    fill_in 'Domain name', with: 'disputed.test'
-    fill_in 'Password', with: '1234'
-    fill_in 'Starts at', with: (Time.zone.today + 2.day).to_s
-    fill_in 'Comment', with: 'Sample comment'
-    click_on 'Save'
-
-    assert_text "Can not be greater than today's date"
-  end
-
   def test_updates_dispute
     assert_not_equal Time.zone.today, @dispute.starts_at
 
     visit edit_admin_dispute_path(@dispute)
-    fill_in 'Starts at', with: Time.zone.today.to_s
+    fill_in 'Comment', with: 'Sample comment with new text'
     click_link_or_button 'Save'
 
     assert_text 'Dispute was successfully updated'
-    assert_text Time.zone.today
   end
 
   def test_deletes_dispute
@@ -79,11 +61,11 @@ class AdminDisputesSystemTest < ApplicationSystemTestCase
   end
 
   def test_can_not_create_overlapping_dispute
+    travel_to @dispute.starts_at + 1.day
     visit admin_disputes_path
     click_on 'New disputed domain'
 
     fill_in 'Domain name', with: 'active-dispute.test'
-    fill_in 'Starts at', with: @dispute.starts_at + 1.day
     click_on 'Save'
 
     assert_text 'Dispute already exists for this domain at given timeframe'
