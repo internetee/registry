@@ -26,7 +26,7 @@ module Admin
 
       account_activity = AccountActivity.find_by(invoice_id: invoice_id)
       account_activity_dup = account_activity.dup
-      account_activity_dup.sum = -account_activity.sum
+      account_activity_dup.sum = -account_activity.sum.to_i
 
       if account_activity_dup.save and invoice.update(cancelled_at: Time.zone.today)
         flash[:notice] = t(:payment_was_cancelled)

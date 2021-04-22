@@ -4,6 +4,23 @@ class AdminAreaInvoicesIntegrationTest < ApplicationIntegrationTest
   setup do
     @invoice = invoices(:one)
     sign_in users(:admin)
+    
+    @account = accounts(:cash)
+    @registrar = registrars(:bestnames)
+  end
+  
+  def test_cancel_paid_invoice
+    @invoice.account_activity.update(sum: 10)
+    assert @invoice.paid?
+
+    assert_equal @registrar.balance, 100
+
+    assert_no_difference 'Invoice.count' do
+      assert_difference 'AccountActivity.count' do
+        post cancel_paid_admin_invoices_path(id: @invoice.id) + "?invoice_id=#{@invoice.id}"
+      end
+    end
+    assert_equal @registrar.balance, 90
   end
 
   def test_create_new_invoice
