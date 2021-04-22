@@ -24,17 +24,12 @@ module Admin
       invoice_id = params[:invoice_id]
       invoice = Invoice.find(invoice_id)
 
-      account_activity = AccountActivity.find_by(invoice_id: invoice_id)
-      account_activity_dup = account_activity.dup
-      account_activity_dup.sum = -account_activity.sum.to_i
-
-      if account_activity_dup.save and invoice.update(cancelled_at: Time.zone.today)
+      if account_activity_with_negative_sum(invoice)
         flash[:notice] = t(:payment_was_cancelled)
-        redirect_to admin_invoices_path
       else
         flash[:alert] = t(:failed_to_payment_cancel)
-        redirect_to admin_invoices_path
       end
+      redirect_to admin_invoices_path
     end
 
     def index
@@ -59,6 +54,13 @@ module Admin
 
     def deposit_params
       params.require(:deposit).permit(:amount, :description, :registrar_id)
+    end
+
+    def account_activity_with_negative_sum(invoice)
+      account_activity = AccountActivity.find_by(invoice_id: invoice.id)
+      account_activity_dup = account_activity.dup
+      account_activity_dup.sum = -account_activity.sum.to_i
+      account_activity_dup.save && invoice.update(cancelled_at: Time.zone.today)
     end
   end
 end

@@ -33,8 +33,6 @@ class BankTransaction < ApplicationRecord
                              .non_cancelled
                              .where(total: sum)
     return true if paid_invoices.any?(&:paid?)
-
-    false
   end
 
   def registrar
