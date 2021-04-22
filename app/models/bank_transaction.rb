@@ -1,5 +1,6 @@
 class BankTransaction < ApplicationRecord
   include Versions
+  include TransactionPaidInvoices
   belongs_to :bank_statement
   has_one :account_activity
 
@@ -15,24 +16,6 @@ class BankTransaction < ApplicationRecord
     return unless binded?
 
     account_activity.invoice
-  end
-
-  def invoice
-    return unless registrar
-
-    @invoice ||= registrar.invoices
-                          .order(created_at: :asc)
-                          .unpaid
-                          .non_cancelled
-                          .find_by(total: sum)
-  end
-
-  def non_canceled?
-    paid_invoices = registrar.invoices
-                             .order(created_at: :asc)
-                             .non_cancelled
-                             .where(total: sum)
-    return true if paid_invoices.any?(&:paid?)
   end
 
   def registrar

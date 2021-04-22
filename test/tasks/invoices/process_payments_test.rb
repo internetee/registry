@@ -35,7 +35,7 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
   def test_cannot_create_new_invoice_if_transaction_binded_to_paid_invoice
     assert_not @invoice.paid?
 
-    @account_activity.update(activity_type: "add_credit", bank_transaction: nil)
+    @account_activity.update(activity_type: "add_credit", bank_transaction: nil, created_at: Time.zone.today - 1.day, creator_str: 'AdminUser')
     @invoice.update(account_activity: @account_activity, total: @payment_amount)
     assert @invoice.paid?
 
@@ -44,6 +44,20 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
         assert_no_difference -> {@account.balance} do
           capture_io { run_task }
         end
+      end
+    end
+  end
+
+  def test_if_invoice_is_overdue_than_48_hours
+    assert_not @invoice.paid?
+
+    @account_activity.update(activity_type: "add_credit", bank_transaction: nil, created_at: Time.zone.today - 3.days, creator_str: 'AdminUser')
+    @invoice.update(account_activity: @account_activity, total: @payment_amount)
+    assert @invoice.paid?
+
+    assert_difference 'AccountActivity.count' do
+      assert_difference 'Invoice.count' do
+        capture_io { run_task }
       end
     end
   end
@@ -108,7 +122,7 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
       run_task
     end
 
-    assert_no_changes -> { registrar.invoices.count } do
+    assert_changes -> { registrar.invoices.count } do
       run_task
     end
   end
