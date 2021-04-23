@@ -14,6 +14,6 @@ class BouncedEmailsCleanerJob < ApplicationJob
   private
 
   def logger
-    @logger ||= Logger.new(Rails.root.join('log', 'deleted_bounced_mails.log'))
+    @logger ||= Rails.logger
   end
 end
