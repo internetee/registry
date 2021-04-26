@@ -94,5 +94,7 @@ module DomainNameRegistry
     # Not supported by `paper_trail` gem < 5.0
     # https://github.com/paper-trail-gem/paper_trail/issues/682
     config.active_record.belongs_to_required_by_default = false
+
+    config.action_dispatch.trusted_proxies = %w(127.0.0.1/32).map { |proxy| IPAddr.new(proxy) }
   end
 end
