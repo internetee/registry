@@ -103,7 +103,7 @@ module Epp
         @errors += obj.errors[:epp_errors]
       end
 
-      if params[:parsed_frame].at_css('update')
+      if params[:parsed_frame]&.at_css('update')
         @errors.each_with_index do |errors, index|
           if errors[:code] == '2304' &&
             errors[:value].present? &&
