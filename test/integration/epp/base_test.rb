@@ -34,6 +34,13 @@ class EppBaseTest < EppTestCase
     end
   end
 
+  def test_additional_error
+    get '/epp/error', params: { frame: valid_request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert_epp_response :unknown_command
+  end
+
   def test_validates_request_xml
     invalid_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
