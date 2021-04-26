@@ -1,4 +1,4 @@
-class AddPricelist < ActiveRecord::Migration
+class AddPricelist < ActiveRecord::Migration[6.0]
   def change
     create_table :pricelists do |t|
       t.string   :name

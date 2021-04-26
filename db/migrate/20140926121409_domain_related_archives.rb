@@ -1,4 +1,4 @@
-class DomainRelatedArchives < ActiveRecord::Migration
+class DomainRelatedArchives < ActiveRecord::Migration[6.0]
   def change
     tables = [:domain_versions, :nameserver_versions, :domain_status_versions ]
     tables.each do |table|

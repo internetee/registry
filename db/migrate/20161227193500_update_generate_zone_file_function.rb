@@ -1,4 +1,4 @@
-class UpdateGenerateZoneFileFunction < ActiveRecord::Migration
+class UpdateGenerateZoneFileFunction < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       CREATE OR REPLACE FUNCTION generate_zonefile(i_origin character varying) RETURNS text

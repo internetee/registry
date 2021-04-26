@@ -1,4 +1,4 @@
-class PrefixRegistrarsAddressColumns < ActiveRecord::Migration
+class PrefixRegistrarsAddressColumns < ActiveRecord::Migration[6.0]
   def change
     rename_column :registrars, :street, :address_street
     rename_column :registrars, :zip, :address_zip

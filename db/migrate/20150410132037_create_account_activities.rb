@@ -1,4 +1,4 @@
-class CreateAccountActivities < ActiveRecord::Migration
+class CreateAccountActivities < ActiveRecord::Migration[6.0]
   def change
     create_table :account_activites do |t|
       t.integer :account_id

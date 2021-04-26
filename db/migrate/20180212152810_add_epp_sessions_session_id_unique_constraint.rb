@@ -1,4 +1,4 @@
-class AddEppSessionsSessionIdUniqueConstraint < ActiveRecord::Migration
+class AddEppSessionsSessionIdUniqueConstraint < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       ALTER TABLE epp_sessions ADD CONSTRAINT unique_session_id UNIQUE (session_id)

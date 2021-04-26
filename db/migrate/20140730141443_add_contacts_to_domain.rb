@@ -1,4 +1,4 @@
-class AddContactsToDomain < ActiveRecord::Migration
+class AddContactsToDomain < ActiveRecord::Migration[6.0]
   def change
     create_table :domain_contacts do |t|
       t.integer :contact_id

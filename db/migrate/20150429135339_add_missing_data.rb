@@ -1,4 +1,4 @@
-class AddMissingData < ActiveRecord::Migration
+class AddMissingData < ActiveRecord::Migration[6.0]
   def change
     return if Rails.env == 'development'
     return if Rails.env == 'test'

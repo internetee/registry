@@ -1,4 +1,4 @@
-class CreateApiLogTables < ActiveRecord::Migration
+class CreateApiLogTables < ActiveRecord::Migration[6.0]
   def connection
     ApiLog::Db.connection
   end

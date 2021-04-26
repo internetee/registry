@@ -1,4 +1,4 @@
-class AddSerialToZonefileProcedure < ActiveRecord::Migration
+class AddSerialToZonefileProcedure < ActiveRecord::Migration[6.0]
   # rubocop:disable Metrics/MethodLength
   def up
     execute <<-SQL

@@ -1,4 +1,4 @@
-class AddIdentAutofill < ActiveRecord::Migration
+class AddIdentAutofill < ActiveRecord::Migration[6.0]
   def change
     execute <<-SQL
     CREATE OR REPLACE FUNCTION fill_ident_country()

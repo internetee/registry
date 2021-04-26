@@ -1,4 +1,4 @@
-class Init < ActiveRecord::Migration
+class Init < ActiveRecord::Migration[6.0]
   def change
     create_table :domains do |t|
       t.string :name # ascii, utf8 will be converted on the fly

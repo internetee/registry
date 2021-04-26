@@ -1,4 +1,4 @@
-class AddAddressAttributes < ActiveRecord::Migration
+class AddAddressAttributes < ActiveRecord::Migration[6.0]
   def change
     add_column :contacts, :city, :string
     add_column :contacts, :street, :text

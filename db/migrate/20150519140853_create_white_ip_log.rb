@@ -1,4 +1,4 @@
-class CreateWhiteIpLog < ActiveRecord::Migration
+class CreateWhiteIpLog < ActiveRecord::Migration[6.0]
   def change
     create_table :log_white_ips do |t|
       t.string   "item_type",      null: false

@@ -1,4 +1,4 @@
-class AddMatchingColumn < ActiveRecord::Migration
+class AddMatchingColumn < ActiveRecord::Migration[6.0]
 
   def change
     tables = [:log_account_activities, :log_accounts, :log_addresses, :log_api_users, :log_bank_statements,

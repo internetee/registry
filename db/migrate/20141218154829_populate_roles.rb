@@ -1,4 +1,4 @@
-class PopulateRoles < ActiveRecord::Migration
+class PopulateRoles < ActiveRecord::Migration[6.0]
   def change
     rename_column :roles, :name, :code
     remove_column :users, :admin, :boolean

@@ -1,4 +1,4 @@
-class AddMetaToDomain < ActiveRecord::Migration
+class AddMetaToDomain < ActiveRecord::Migration[6.0]
   def change
     rename_column :log_domains, :nameserver_version_ids, :nameserver_ids
     add_column    :log_domains,   :tech_contact_ids, :text, array: true, default: []

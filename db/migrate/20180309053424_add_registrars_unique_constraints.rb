@@ -1,4 +1,4 @@
-class AddRegistrarsUniqueConstraints < ActiveRecord::Migration
+class AddRegistrarsUniqueConstraints < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       ALTER TABLE registrars ADD CONSTRAINT unique_name UNIQUE (name);

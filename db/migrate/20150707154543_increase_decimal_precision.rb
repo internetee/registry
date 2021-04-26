@@ -1,4 +1,4 @@
-class IncreaseDecimalPrecision < ActiveRecord::Migration
+class IncreaseDecimalPrecision < ActiveRecord::Migration[6.0]
   def change
     change_column :account_activities, :sum, :decimal, precision: 10, scale: 2
     change_column :accounts, :balance, :decimal, precision: 10, scale: 2, default: 0.0, null: false

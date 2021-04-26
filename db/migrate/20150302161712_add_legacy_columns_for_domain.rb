@@ -1,4 +1,4 @@
-class AddLegacyColumnsForDomain < ActiveRecord::Migration
+class AddLegacyColumnsForDomain < ActiveRecord::Migration[6.0]
   def change
     add_column :domains, :legacy_id, :integer
     add_column :domains, :legacy_registrar_id, :integer

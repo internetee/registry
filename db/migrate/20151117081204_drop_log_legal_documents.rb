@@ -1,4 +1,4 @@
-class DropLogLegalDocuments < ActiveRecord::Migration
+class DropLogLegalDocuments < ActiveRecord::Migration[6.0]
   def up
     drop_table :log_legal_documents
     remove_column :legal_documents, :updated_at

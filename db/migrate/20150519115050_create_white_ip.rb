@@ -1,4 +1,4 @@
-class CreateWhiteIp < ActiveRecord::Migration
+class CreateWhiteIp < ActiveRecord::Migration[6.0]
   def change
     create_table :white_ips do |t|
       t.integer :registrar_id

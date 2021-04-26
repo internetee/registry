@@ -1,4 +1,4 @@
-class AddDecimalType < ActiveRecord::Migration
+class AddDecimalType < ActiveRecord::Migration[6.0]
   def change
     {
       'account_activities': ['sum'],

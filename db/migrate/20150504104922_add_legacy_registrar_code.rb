@@ -1,4 +1,4 @@
-class AddLegacyRegistrarCode < ActiveRecord::Migration
+class AddLegacyRegistrarCode < ActiveRecord::Migration[6.0]
   def change
     legacy_codes = [
         [1, "EEDIRECT"],

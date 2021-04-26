@@ -1,4 +1,4 @@
-class AddAuctionsUuidUniqConstraint < ActiveRecord::Migration
+class AddAuctionsUuidUniqConstraint < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       ALTER TABLE auctions ADD CONSTRAINT uniq_uuid UNIQUE (uuid)

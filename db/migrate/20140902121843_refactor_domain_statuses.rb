@@ -1,4 +1,4 @@
-class RefactorDomainStatuses < ActiveRecord::Migration
+class RefactorDomainStatuses < ActiveRecord::Migration[6.0]
   def change
     add_column :domain_statuses, :value, :string
     remove_column :domain_statuses, :setting_id

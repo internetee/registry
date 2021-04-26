@@ -1,4 +1,4 @@
-class CreateCertificates < ActiveRecord::Migration
+class CreateCertificates < ActiveRecord::Migration[6.0]
   def change
     create_table :certificates do |t|
       t.integer :api_user_id

@@ -1,4 +1,4 @@
-class AddUniqueIndexToZoneOrigin < ActiveRecord::Migration
+class AddUniqueIndexToZoneOrigin < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       ALTER TABLE zones ADD CONSTRAINT unique_zone_origin UNIQUE (origin)

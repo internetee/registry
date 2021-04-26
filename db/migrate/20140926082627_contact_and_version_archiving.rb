@@ -1,4 +1,4 @@
-class ContactAndVersionArchiving < ActiveRecord::Migration
+class ContactAndVersionArchiving < ActiveRecord::Migration[6.0]
   def change
     create_table :contact_versions do |t|
       t.string   :item_type, :null => false

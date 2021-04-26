@@ -1,4 +1,4 @@
-class DataUpdate < ActiveRecord::Migration
+class DataUpdate < ActiveRecord::Migration[6.0]
   def change
     # Registrar.where(
       # name: 'EIS',

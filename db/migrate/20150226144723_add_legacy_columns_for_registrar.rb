@@ -1,4 +1,4 @@
-class AddLegacyColumnsForRegistrar < ActiveRecord::Migration
+class AddLegacyColumnsForRegistrar < ActiveRecord::Migration[6.0]
   def change
     add_column :registrars, :url, :string
     add_column :registrars, :directo_handle, :string

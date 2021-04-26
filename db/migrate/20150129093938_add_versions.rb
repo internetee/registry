@@ -1,4 +1,4 @@
-class AddVersions < ActiveRecord::Migration
+class AddVersions < ActiveRecord::Migration[6.0]
   def change
     if ActiveRecord::Base.connection.table_exists? 'versions'
       rename_table :versions, :depricated_versions

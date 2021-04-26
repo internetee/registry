@@ -1,4 +1,4 @@
-class DropAllVersionsDisabledByDefault < ActiveRecord::Migration
+class DropAllVersionsDisabledByDefault < ActiveRecord::Migration[6.0]
   def change
     # All versions are depricated by log_* tables
 

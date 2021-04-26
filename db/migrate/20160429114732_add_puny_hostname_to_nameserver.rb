@@ -1,4 +1,4 @@
-class AddPunyHostnameToNameserver < ActiveRecord::Migration
+class AddPunyHostnameToNameserver < ActiveRecord::Migration[6.0]
 
   def change
 

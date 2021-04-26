@@ -1,4 +1,4 @@
-class CreateInvoiceItems < ActiveRecord::Migration
+class CreateInvoiceItems < ActiveRecord::Migration[6.0]
   def change
     create_table :invoice_items do |t|
       t.integer :invoice_id

@@ -1,4 +1,4 @@
-class AddInvoiceColumns < ActiveRecord::Migration
+class AddInvoiceColumns < ActiveRecord::Migration[6.0]
   def change
     # invoice info
     # invoice number comes from id # e-invoice

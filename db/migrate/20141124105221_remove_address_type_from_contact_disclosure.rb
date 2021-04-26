@@ -1,4 +1,4 @@
-class RemoveAddressTypeFromContactDisclosure < ActiveRecord::Migration
+class RemoveAddressTypeFromContactDisclosure < ActiveRecord::Migration[6.0]
   def change
     remove_column :contact_disclosures, :int_name, :boolean
     remove_column :contact_disclosures, :int_org_name, :boolean

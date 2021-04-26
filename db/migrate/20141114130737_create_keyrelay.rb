@@ -1,4 +1,4 @@
-class CreateKeyrelay < ActiveRecord::Migration
+class CreateKeyrelay < ActiveRecord::Migration[6.0]
   def change
     create_table :keyrelays do |t|
       t.integer :domain_id

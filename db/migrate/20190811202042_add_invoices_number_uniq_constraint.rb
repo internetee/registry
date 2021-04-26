@@ -1,4 +1,4 @@
-class AddInvoicesNumberUniqConstraint < ActiveRecord::Migration
+class AddInvoicesNumberUniqConstraint < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       ALTER TABLE invoices ADD CONSTRAINT unique_number UNIQUE (number)

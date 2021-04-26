@@ -1,4 +1,4 @@
-class RefactorRoles < ActiveRecord::Migration
+class RefactorRoles < ActiveRecord::Migration[6.0]
   def up
     add_column :users, :roles, :string, array: true
 

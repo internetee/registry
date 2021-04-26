@@ -1,4 +1,4 @@
-class CreateBusinessRegistryCaches < ActiveRecord::Migration
+class CreateBusinessRegistryCaches < ActiveRecord::Migration[6.0]
   def change
     create_table :business_registry_caches do |t|
       t.string   :ident

@@ -1,4 +1,4 @@
-class NameAndPasswordForReservedDomain < ActiveRecord::Migration
+class NameAndPasswordForReservedDomain < ActiveRecord::Migration[6.0]
   def up
     add_column :reserved_domains, :name, :string
     add_column :reserved_domains, :password, :string

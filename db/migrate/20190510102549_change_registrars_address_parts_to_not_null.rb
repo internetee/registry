@@ -1,4 +1,4 @@
-class ChangeRegistrarsAddressPartsToNotNull < ActiveRecord::Migration
+class ChangeRegistrarsAddressPartsToNotNull < ActiveRecord::Migration[6.0]
   def change
     change_column_null :registrars, :address_street, false
     change_column_null :registrars, :address_zip, false

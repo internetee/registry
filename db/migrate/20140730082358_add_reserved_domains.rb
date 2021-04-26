@@ -1,4 +1,4 @@
-class AddReservedDomains < ActiveRecord::Migration
+class AddReservedDomains < ActiveRecord::Migration[6.0]
   def up
     create_table :reserved_domains do |t|
       t.string :name
