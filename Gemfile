@@ -92,7 +92,7 @@ group :test do
   gem 'capybara'
   gem 'database_cleaner'
   gem 'minitest', '~> 5.14'
-  gem 'simplecov', '0.17.1', require: false # CC last supported v0.17
+  gem 'simplecov', '0.21.2', require: false # CC last supported v0.17
   gem 'webdrivers'
   gem 'webmock'
 end
