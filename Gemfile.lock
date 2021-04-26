@@ -420,7 +420,7 @@ GEM
       nori (~> 2.4)
       wasabi (~> 3.4)
     select2-rails (4.0.13)
-    selectize-rails (0.12.1)
+    selectize-rails (0.12.6)
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
@@ -560,7 +560,7 @@ DEPENDENCIES
   rexml
   sass-rails
   select2-rails (= 4.0.13)
-  selectize-rails (= 0.12.1)
+  selectize-rails (= 0.12.6)
   sidekiq
   simplecov (= 0.17.1)
   simpleidn (= 0.2.1)
