@@ -16,6 +16,21 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
     @contact_email = "john@inbox.test"
   end
 
+  def test_remove_bounced_email_after_changed_related_email
+    @bounced_mail.update(email: @contact_email)
+    @bounced_mail.save
+
+    contacts_with_bounced_mails = Contact.where(email: @contact_email)
+    contacts_with_bounced_mails.each do |contact|
+      contact.email = "sara@inbox.com"
+      contact.save
+    end
+
+    BouncedEmailsCleanerJob.perform_now
+
+    assert_nil BouncedMailAddress.find_by(email: @contact_email)
+  end
+
   def test_soft_force_delete_related_domains
     domain_contacts = Contact.where(email: @contact_email).map(&:domain_contacts).flatten
 
