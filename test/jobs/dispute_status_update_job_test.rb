@@ -56,7 +56,7 @@ class DisputeStatusUpdateJobTest < ActiveJob::TestCase
 
     # Dispute status is added automatically if starts_at is not in future
     perform_enqueued_jobs do
-      Dispute.create(domain_name: 'shop.test', starts_at: Time.zone.parse('2010-07-05'))
+      Dispute.create(domain_name: 'shop.test', starts_at: Time.zone.today)
     end
     domain.reload
 

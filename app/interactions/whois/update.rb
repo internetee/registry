@@ -13,7 +13,7 @@ module Whois
       Array(names).each do |name|
         record = find_record(klass, name)
         if record
-          Whois::UpdateRecord.run(record: record, type: type)
+          Whois::UpdateRecord.run(record: { klass: klass.to_s, id: record.id, type: type })
         else
           Whois::DeleteRecord.run(name: name, type: type)
         end

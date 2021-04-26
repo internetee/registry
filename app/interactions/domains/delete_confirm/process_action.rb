@@ -7,9 +7,9 @@ module Domains
 
         case action
         when RegistrantVerification::CONFIRMED
-          compose(ProcessDeleteConfirmed, inputs)
+          compose(ProcessDeleteConfirmed, inputs.to_h)
         when RegistrantVerification::REJECTED
-          compose(ProcessDeleteRejected, inputs)
+          compose(ProcessDeleteRejected, inputs.to_h)
         end
       end
     end

@@ -2,12 +2,12 @@ module Domains
   module ForceDelete
     class SetForceDelete < Base
       def execute
-        compose(CheckDiscarded, inputs)
-        compose(PrepareDomain, inputs)
-        compose(SetStatus, inputs)
-        compose(PostSetProcess, inputs)
-        compose(NotifyRegistrar, inputs)
-        compose(NotifyByEmail, inputs)
+        compose(CheckDiscarded, inputs.to_h)
+        compose(PrepareDomain, inputs.to_h)
+        compose(SetStatus, inputs.to_h)
+        compose(PostSetProcess, inputs.to_h)
+        compose(NotifyRegistrar, inputs.to_h)
+        compose(NotifyByEmail, inputs.to_h)
       end
     end
   end

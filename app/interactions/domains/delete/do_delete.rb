@@ -6,7 +6,7 @@ module Domains
         WhoisRecord.where(domain_id: domain.id).destroy_all
 
         domain.destroy
-        compose(Domains::Delete::NotifyRegistrar, inputs)
+        Domains::Delete::NotifyRegistrar.run(inputs.to_h)
       end
     end
   end

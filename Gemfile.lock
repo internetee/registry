@@ -112,8 +112,8 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    active_interaction (3.8.3)
-      activemodel (>= 4, < 7)
+    active_interaction (4.0.0)
+      activemodel (>= 5, < 7)
     activejob (6.0.3.6)
       activesupport (= 6.0.3.6)
       globalid (>= 0.3.6)
@@ -507,7 +507,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  active_interaction (~> 3.8)
+  active_interaction (~> 4.0)
   activerecord-import
   airbrake
   apipie-rails (~> 0.5.18)
