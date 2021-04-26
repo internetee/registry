@@ -1,3 +1,13 @@
+26.04.2021
+* Disputed status is removed on registrant change and status added to schema [#1927](https://github.com/internetee/registry/issues/1927)
+* Bounce list record is removed one there are no active contacts with the address [#1912](https://github.com/internetee/registry/issues/1912)
+* Bump data_migrate to 7.0.0 [#1946](https://github.com/internetee/registry/pull/1946)
+* Bump selectize-rails to 0.12.6 [#1947](https://github.com/internetee/registry/pull/1947)
+* Bump active_interaction to 4.0.0 [#1948](https://github.com/internetee/registry/pull/1948)
+* Bump rexml to 3.2.5 [#1949](https://github.com/internetee/registry/pull/1949)
+* Syslog support to staging.rb [#1951](https://github.com/internetee/registry/pull/1951)
+* Explicit rails versioning to migrations [#1953](https://github.com/internetee/registry/pull/1953)
+
 19.04.2021
 * Bump truemail to 2.3.4 [#1931](https://github.com/internetee/registry/pull/1931)
 * Bump pry to 0.14.1 [#1932](https://github.com/internetee/registry/pull/1932)
