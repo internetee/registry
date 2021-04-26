@@ -202,8 +202,9 @@ GEM
     daemons-rails (1.2.1)
       daemons
       multi_json (~> 1.0)
-    data_migrate (6.7.0)
-      rails (>= 5.0)
+    data_migrate (7.0.0)
+      activerecord (>= 5.0)
+      railties (>= 5.0)
     database_cleaner (2.0.1)
       database_cleaner-active_record (~> 2.0.0)
     database_cleaner-active_record (2.0.0)
@@ -280,7 +281,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
-    marcel (1.0.0)
+    marcel (1.0.1)
     method_source (1.0.0)
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
@@ -288,7 +289,7 @@ GEM
     mimemagic (0.3.10)
       nokogiri (~> 1)
       rake
-    mini_mime (1.0.3)
+    mini_mime (1.1.0)
     mini_portile2 (2.4.0)
     minitest (5.14.4)
     monetize (1.9.4)
@@ -520,7 +521,7 @@ DEPENDENCIES
   company_register!
   countries
   daemons-rails (= 1.2.1)
-  data_migrate (~> 6.1)
+  data_migrate (~> 7.0)
   database_cleaner
   devise (~> 4.7)
   digidoc_client!

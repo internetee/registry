@@ -40,7 +40,7 @@ gem 'cancancan'
 gem 'devise', '~> 4.7'
 
 # registry specfic
-gem 'data_migrate', '~> 6.1'
+gem 'data_migrate', '~> 7.0'
 gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
 gem 'simpleidn', '0.2.1' # For punycode
