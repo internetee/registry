@@ -8,7 +8,7 @@ module Epp
     before_action :ensure_session_id_passed
     before_action :generate_svtrid
     before_action :latin_only
-    before_action :validate_against_schema
+    # before_action :validate_against_schema
     before_action :validate_request
     before_action :enforce_epp_session_timeout, if: :signed_in?
     before_action :iptables_counter_update, if: :signed_in?
@@ -113,7 +113,6 @@ module Epp
           end
         end
       end
-
       @errors.uniq!
 
       render_epp_response '/epp/error'
