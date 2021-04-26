@@ -43,10 +43,10 @@ class Dispute < ApplicationRecord
   end
 
   def generate_data
-    return if starts_at > Time.zone.today || expires_at < Time.zone.today
+    return false if starts_at > Time.zone.today || expires_at < Time.zone.today
 
     domain&.mark_as_disputed
-    return if domain
+    return true if domain
 
     wr = Whois::Record.find_or_initialize_by(name: domain_name)
     wr.json = @json = generate_json(wr, domain_status: 'disputed')

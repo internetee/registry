@@ -16,4 +16,4 @@ en:
       form:
         password_hint: Generated automatically if left blank
         optional: Not required by default
-        past_or_today: Can not be greater than today's date
+        today: Will be explicitely set as today on creation, cannot be changed

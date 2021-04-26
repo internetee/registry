@@ -209,9 +209,9 @@ module Actions
     end
 
     def verify_registrant_change?
-      return if !@changes_registrant || params[:registrant][:verified] == true
-      return true unless domain.disputed?
       return validate_dispute_case if params[:reserved_pw]
+      return false if !@changes_registrant || params[:registrant][:verified] == true
+      return true unless domain.disputed?
 
       domain.add_epp_error('2304', nil, nil, 'Required parameter missing; reservedpw element ' \
                            'required for dispute domains')

@@ -301,7 +301,7 @@ class EppDomainUpdateBaseTest < EppTestCase
     current = @domain.registrant
     new_registrant = contacts(:william)
     new_registrant.update(
-                          ident: current.ident, 
+                          ident: current.ident,
                           ident_type: current.ident_type,
                           ident_country_code: current.ident_country_code
                           )
@@ -331,7 +331,7 @@ class EppDomainUpdateBaseTest < EppTestCase
     headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
 
-    # NOTE: completed_successfully_action_pending 
+    # NOTE: completed_successfully_action_pending
     assert_epp_response :completed_successfully
     refute_includes @domain.statuses, DomainStatus::PENDING_UPDATE
 
@@ -411,6 +411,48 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert new_registrant, @domain.registrant
     assert_not @domain.registrant_verification_asked?
     assert_not @domain.disputed?
+    assert_no_emails
+  end
+
+  def test_dispute_password_mandatory_when_registrant_changed
+    Setting.request_confirmation_on_registrant_change_enabled = true
+    dispute = disputes(:expired)
+    dispute.update!(starts_at: Time.zone.now, expires_at: Time.zone.now + 5.days, closed: nil)
+    new_registrant = contacts(:william)
+
+    assert @domain.disputed?
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <update>
+            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+              <domain:name>#{@domain.name}</domain:name>
+                <domain:chg>
+                  <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
+                </domain:chg>
+            </domain:update>
+          </update>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+              <eis:reserved>
+                <eis:pw>'123456'</eis:pw>
+              </eis:reserved>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    @domain.reload
+
+    assert_epp_response :invalid_authorization_information
+    assert_not_equal new_registrant, @domain.registrant
+    assert @domain.disputed?
     assert_no_emails
   end
 
