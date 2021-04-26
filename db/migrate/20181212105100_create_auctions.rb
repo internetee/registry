@@ -1,4 +1,4 @@
-class CreateAuctions < ActiveRecord::Migration
+class CreateAuctions < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       CREATE TYPE auction_status AS ENUM (

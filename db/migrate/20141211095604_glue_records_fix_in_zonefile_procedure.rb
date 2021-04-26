@@ -1,4 +1,4 @@
-class GlueRecordsFixInZonefileProcedure < ActiveRecord::Migration
+class GlueRecordsFixInZonefileProcedure < ActiveRecord::Migration[6.0]
     # rubocop:disable Metrics/MethodLength
   def up
     execute <<-SQL

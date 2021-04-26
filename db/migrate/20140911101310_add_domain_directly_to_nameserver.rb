@@ -1,4 +1,4 @@
-class AddDomainDirectlyToNameserver < ActiveRecord::Migration
+class AddDomainDirectlyToNameserver < ActiveRecord::Migration[6.0]
   def change
     add_column :nameservers, :domain_id, :integer
     remove_column :nameservers, :ns_set_id

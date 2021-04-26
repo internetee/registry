@@ -1,4 +1,4 @@
-class RemoveLogDomainStatuses < ActiveRecord::Migration
+class RemoveLogDomainStatuses < ActiveRecord::Migration[6.0]
   def change
     drop_table :log_domain_statuses
   end

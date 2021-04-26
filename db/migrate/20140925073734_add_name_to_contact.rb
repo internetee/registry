@@ -1,4 +1,4 @@
-class AddNameToContact < ActiveRecord::Migration
+class AddNameToContact < ActiveRecord::Migration[6.0]
   def change
     remove_column :addresses, :name, :string
     remove_column :addresses, :org_name, :string

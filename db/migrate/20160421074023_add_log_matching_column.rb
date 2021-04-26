@@ -1,4 +1,4 @@
-class AddLogMatchingColumn < ActiveRecord::Migration
+class AddLogMatchingColumn < ActiveRecord::Migration[6.0]
 
   def change
     

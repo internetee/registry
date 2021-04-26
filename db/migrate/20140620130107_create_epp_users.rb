@@ -1,4 +1,4 @@
-class CreateEppUsers < ActiveRecord::Migration
+class CreateEppUsers < ActiveRecord::Migration[6.0]
   def change
     create_table :epp_users do |t|
       t.integer :registrar_id

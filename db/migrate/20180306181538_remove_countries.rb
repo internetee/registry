@@ -1,4 +1,4 @@
-class RemoveCountries < ActiveRecord::Migration
+class RemoveCountries < ActiveRecord::Migration[6.0]
   def change
     drop_table :countries
   end

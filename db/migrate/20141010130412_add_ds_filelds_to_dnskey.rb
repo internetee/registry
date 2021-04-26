@@ -1,4 +1,4 @@
-class AddDsFileldsToDnskey < ActiveRecord::Migration
+class AddDsFileldsToDnskey < ActiveRecord::Migration[6.0]
   def change
     add_column :dnskeys, :ds_key_tag, :string
     add_column :dnskeys, :ds_alg, :integer

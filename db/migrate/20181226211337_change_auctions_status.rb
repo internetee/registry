@@ -1,4 +1,4 @@
-class ChangeAuctionsStatus < ActiveRecord::Migration
+class ChangeAuctionsStatus < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
 
   def change

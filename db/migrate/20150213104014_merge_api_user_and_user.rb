@@ -1,4 +1,4 @@
-class MergeApiUserAndUser < ActiveRecord::Migration
+class MergeApiUserAndUser < ActiveRecord::Migration[6.0]
   def change
     add_column :users, :registrar_id, :integer
     add_column :users, :active, :boolean, default: false

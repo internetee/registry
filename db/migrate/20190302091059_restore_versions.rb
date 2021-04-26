@@ -1,4 +1,4 @@
-class RestoreVersions < ActiveRecord::Migration
+class RestoreVersions < ActiveRecord::Migration[6.0]
   def change
     drop_table :versions
 

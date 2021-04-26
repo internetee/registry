@@ -1,4 +1,4 @@
-class CreateDelegationSigner < ActiveRecord::Migration
+class CreateDelegationSigner < ActiveRecord::Migration[6.0]
   def change
     create_table :delegation_signers do |t|
       t.integer :domain_id

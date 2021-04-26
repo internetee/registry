@@ -1,4 +1,4 @@
-class AddRegistrarsNotNullConstraints < ActiveRecord::Migration
+class AddRegistrarsNotNullConstraints < ActiveRecord::Migration[6.0]
   def change
     change_column_null :registrars, :name, false
     change_column_null :registrars, :reg_no, false

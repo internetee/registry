@@ -1,4 +1,4 @@
-class UpdateDomainContactData < ActiveRecord::Migration
+class UpdateDomainContactData < ActiveRecord::Migration[6.0]
   def change
     DomainContact.all.each do |dc|
       case dc.contact_type

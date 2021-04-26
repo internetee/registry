@@ -1,4 +1,4 @@
-class CreateBlockedDomains < ActiveRecord::Migration
+class CreateBlockedDomains < ActiveRecord::Migration[6.0]
   def change
     create_table :blocked_domains do |t|
       t.string :names, array: true

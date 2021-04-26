@@ -1,4 +1,4 @@
-class CreateZonefileSetting < ActiveRecord::Migration
+class CreateZonefileSetting < ActiveRecord::Migration[6.0]
   # rubocop:disable Metrics/MethodLength
   def change
     create_table :zonefile_settings do |t|

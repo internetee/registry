@@ -1,4 +1,4 @@
-class AddCreatorAndUpdater < ActiveRecord::Migration
+class AddCreatorAndUpdater < ActiveRecord::Migration[6.0]
   def change
     %w(address contact_disclosure contact contact_status country dnskey 
     domain_contact domain domain_status domain_transfer api_user keyrelay 

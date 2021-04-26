@@ -1,4 +1,4 @@
-class CreateNameserversCache < ActiveRecord::Migration
+class CreateNameserversCache < ActiveRecord::Migration[6.0]
   def up
     create_table :cached_nameservers, id: false do |t|
       t.string :hostname

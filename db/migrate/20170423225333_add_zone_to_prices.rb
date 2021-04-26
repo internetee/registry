@@ -1,4 +1,4 @@
-class AddZoneToPrices < ActiveRecord::Migration
+class AddZoneToPrices < ActiveRecord::Migration[6.0]
   def up
     add_reference :prices, :zone, index: true
     add_foreign_key :prices, :zones

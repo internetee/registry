@@ -1,4 +1,4 @@
-class ChangeInvoicesRequiredColumnsToNotNull < ActiveRecord::Migration
+class ChangeInvoicesRequiredColumnsToNotNull < ActiveRecord::Migration[6.0]
   def change
     change_column_null :invoices, :buyer_id, false
     change_column_null :invoices, :seller_reg_no, false

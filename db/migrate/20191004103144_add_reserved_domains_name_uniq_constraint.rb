@@ -1,4 +1,4 @@
-class AddReservedDomainsNameUniqConstraint < ActiveRecord::Migration
+class AddReservedDomainsNameUniqConstraint < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       ALTER TABLE reserved_domains ADD CONSTRAINT uniq_reserved_domains_name UNIQUE (name);

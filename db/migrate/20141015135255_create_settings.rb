@@ -1,4 +1,4 @@
-class CreateSettings < ActiveRecord::Migration
+class CreateSettings < ActiveRecord::Migration[6.0]
   def self.up
     drop_table :settings
     create_table :settings do |t|

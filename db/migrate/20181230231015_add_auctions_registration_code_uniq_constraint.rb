@@ -1,4 +1,4 @@
-class AddAuctionsRegistrationCodeUniqConstraint < ActiveRecord::Migration
+class AddAuctionsRegistrationCodeUniqConstraint < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       ALTER TABLE auctions ADD CONSTRAINT unique_registration_code UNIQUE (registration_code)

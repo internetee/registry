@@ -1,4 +1,4 @@
-class CreateLogActions < ActiveRecord::Migration
+class CreateLogActions < ActiveRecord::Migration[6.0]
   def change
     create_table :log_actions do |t|
       t.string :item_type, null: false

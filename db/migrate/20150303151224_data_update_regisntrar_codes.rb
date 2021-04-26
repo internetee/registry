@@ -1,4 +1,4 @@
-class DataUpdateRegisntrarCodes < ActiveRecord::Migration
+class DataUpdateRegisntrarCodes < ActiveRecord::Migration[6.0]
   def change
     puts 'Registrar code updates:'
     Registrar.all.each do |r|

@@ -1,4 +1,4 @@
-class AddDnskeyRangeValidation < ActiveRecord::Migration
+class AddDnskeyRangeValidation < ActiveRecord::Migration[6.0]
   def change
     sg = SettingGroup.find_by(code: 'domain_validation')
     sg.settings << Setting.create(code: 'dnskeys_min_count'.underscore, value: '0')

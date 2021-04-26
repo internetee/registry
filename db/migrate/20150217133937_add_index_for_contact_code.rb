@@ -1,4 +1,4 @@
-class AddIndexForContactCode < ActiveRecord::Migration
+class AddIndexForContactCode < ActiveRecord::Migration[6.0]
   def change
     add_index :contacts, :code
   end

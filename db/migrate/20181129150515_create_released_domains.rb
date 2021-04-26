@@ -1,4 +1,4 @@
-class CreateReleasedDomains < ActiveRecord::Migration
+class CreateReleasedDomains < ActiveRecord::Migration[6.0]
   def change
     create_table :released_domains do |t|
       t.string :name, null: false

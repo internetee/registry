@@ -1,4 +1,4 @@
-class CreateEppSessions < ActiveRecord::Migration
+class CreateEppSessions < ActiveRecord::Migration[6.0]
   def change
     create_table :epp_sessions do |t|
       t.string :session_id

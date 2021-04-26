@@ -1,4 +1,4 @@
-class PopulateGeneralDomainSettings < ActiveRecord::Migration
+class PopulateGeneralDomainSettings < ActiveRecord::Migration[6.0]
   def change
     SettingGroup.create(
       code: 'domain_general',

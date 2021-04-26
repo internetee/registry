@@ -1,4 +1,4 @@
-class AddDeviseAttributes < ActiveRecord::Migration
+class AddDeviseAttributes < ActiveRecord::Migration[6.0]
   def change
     add_column :users, :encrypted_password, :string, null: true, default: ""
     add_column :users, :remember_created_at, :datetime, null: true

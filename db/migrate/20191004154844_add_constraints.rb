@@ -1,4 +1,4 @@
-class AddConstraints < ActiveRecord::Migration
+class AddConstraints < ActiveRecord::Migration[6.0]
   def change
     change_column_null :registrant_verifications, :domain_name, false
     change_column_null :registrant_verifications, :verification_token, false

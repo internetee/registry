@@ -1,4 +1,4 @@
-class CreateBanklinkTransactions < ActiveRecord::Migration
+class CreateBanklinkTransactions < ActiveRecord::Migration[6.0]
   def change
     create_table :banklink_transactions do |t|
       t.string :vk_service

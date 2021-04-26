@@ -1,4 +1,4 @@
-class AddEeDomainObjects < ActiveRecord::Migration
+class AddEeDomainObjects < ActiveRecord::Migration[6.0]
   # rubocop:disable Metrics/MethodLength
   def up
     r = Registrar.create!(

@@ -1,4 +1,4 @@
-class AddDnskeySettings < ActiveRecord::Migration
+class AddDnskeySettings < ActiveRecord::Migration[6.0]
   def change
     sg = SettingGroup.create(code: 'dnskeys')
     sg.settings << Setting.create(code: Setting::DS_ALGORITHM, value: 1)

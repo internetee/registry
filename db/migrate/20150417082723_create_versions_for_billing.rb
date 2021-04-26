@@ -1,4 +1,4 @@
-class CreateVersionsForBilling < ActiveRecord::Migration
+class CreateVersionsForBilling < ActiveRecord::Migration[6.0]
   def change
 
     add_column :account_activities, :creator_str, :string

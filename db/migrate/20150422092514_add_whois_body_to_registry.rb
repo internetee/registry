@@ -1,4 +1,4 @@
-class AddWhoisBodyToRegistry < ActiveRecord::Migration
+class AddWhoisBodyToRegistry < ActiveRecord::Migration[6.0]
   def change
     create_table :whois_bodies, force: :cascade do |t|
       t.integer  :domain_id

@@ -1,5 +1,5 @@
 # Unique constraint is needed to prevent accidental duplicate values in fixtures to appear in DB
-class AddContactsAndDomainsUuidUniqConstraint < ActiveRecord::Migration
+class AddContactsAndDomainsUuidUniqConstraint < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       ALTER TABLE contacts ADD CONSTRAINT uniq_contact_uuid UNIQUE (uuid);

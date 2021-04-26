@@ -1,4 +1,4 @@
-class AddCodeCacheForDomainContact < ActiveRecord::Migration
+class AddCodeCacheForDomainContact < ActiveRecord::Migration[6.0]
   def change
     add_column :domain_contacts, :contact_code_cache, :string
 

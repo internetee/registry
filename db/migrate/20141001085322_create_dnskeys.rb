@@ -1,4 +1,4 @@
-class CreateDnskeys < ActiveRecord::Migration
+class CreateDnskeys < ActiveRecord::Migration[6.0]
   def change
     create_table :dnskeys do |t|
       t.integer :domain_id

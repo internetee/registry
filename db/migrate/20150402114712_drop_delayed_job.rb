@@ -1,4 +1,4 @@
-class DropDelayedJob < ActiveRecord::Migration
+class DropDelayedJob < ActiveRecord::Migration[6.0]
   def change
     drop_table :delayed_jobs
   end

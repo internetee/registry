@@ -1,4 +1,4 @@
-class UpcaseAllContactCodes < ActiveRecord::Migration
+class UpcaseAllContactCodes < ActiveRecord::Migration[6.0]
   def change
     puts 'Update contact code to upcase...'
     @i = 0

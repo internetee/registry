@@ -1,4 +1,4 @@
-class AddInvoicesDueDateConstraint < ActiveRecord::Migration
+class AddInvoicesDueDateConstraint < ActiveRecord::Migration[6.0]
   def up
     execute <<~SQL
       ALTER TABLE invoices ADD CONSTRAINT invoices_due_date_is_not_before_issue_date

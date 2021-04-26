@@ -1,4 +1,4 @@
-class AddInvoiceItemsQuantityConstraint < ActiveRecord::Migration
+class AddInvoiceItemsQuantityConstraint < ActiveRecord::Migration[6.0]
   def up
     execute <<~SQL
       ALTER TABLE invoice_items ADD CONSTRAINT invoice_items_quantity_is_positive

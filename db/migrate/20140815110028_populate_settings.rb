@@ -1,4 +1,4 @@
-class PopulateSettings < ActiveRecord::Migration
+class PopulateSettings < ActiveRecord::Migration[6.0]
   def change
     SettingGroup.create(
       code: 'domain_validation',

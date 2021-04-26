@@ -1,4 +1,4 @@
-class CorrectSettings < ActiveRecord::Migration
+class CorrectSettings < ActiveRecord::Migration[6.0]
   def up
     drop_table :setting_groups
 

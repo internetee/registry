@@ -1,4 +1,4 @@
-class AddRegistrantVerifications < ActiveRecord::Migration
+class AddRegistrantVerifications < ActiveRecord::Migration[6.0]
   def change
     create_table :registrant_verifications do |t|
       t.string :domain_name

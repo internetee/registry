@@ -1,4 +1,4 @@
-class CleanRedundantFields < ActiveRecord::Migration
+class CleanRedundantFields < ActiveRecord::Migration[6.0]
   def change
     drop_table :domain_nameservers
     remove_column :domains, :admin_contact_id

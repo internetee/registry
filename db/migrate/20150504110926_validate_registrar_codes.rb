@@ -1,4 +1,4 @@
-class ValidateRegistrarCodes < ActiveRecord::Migration
+class ValidateRegistrarCodes < ActiveRecord::Migration[6.0]
   def change
     Registrar.all.each do |registrar|
       if registrar.code.present?

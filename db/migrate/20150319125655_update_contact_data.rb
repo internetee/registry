@@ -1,4 +1,4 @@
-class UpdateContactData < ActiveRecord::Migration
+class UpdateContactData < ActiveRecord::Migration[6.0]
   def change
     Address.all.each do |a|
       c = a.contact

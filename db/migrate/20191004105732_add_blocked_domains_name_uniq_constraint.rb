@@ -1,4 +1,4 @@
-class AddBlockedDomainsNameUniqConstraint < ActiveRecord::Migration
+class AddBlockedDomainsNameUniqConstraint < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       ALTER TABLE blocked_domains ADD CONSTRAINT uniq_blocked_domains_name UNIQUE (name);

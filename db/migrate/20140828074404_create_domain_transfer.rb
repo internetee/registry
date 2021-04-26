@@ -1,4 +1,4 @@
-class CreateDomainTransfer < ActiveRecord::Migration
+class CreateDomainTransfer < ActiveRecord::Migration[6.0]
   def change
     create_table :domain_transfers do |t|
       t.integer :domain_id
