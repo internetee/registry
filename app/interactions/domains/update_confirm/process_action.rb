@@ -7,9 +7,9 @@ module Domains
 
         case action
         when RegistrantVerification::CONFIRMED
-          compose(ProcessUpdateConfirmed, inputs)
+          Domains::UpdateConfirm::ProcessUpdateConfirmed.run(inputs.to_h)
         when RegistrantVerification::REJECTED
-          compose(ProcessUpdateRejected, inputs)
+          Domains::UpdateConfirm::ProcessUpdateRejected.run(inputs.to_h)
         end
       end
     end

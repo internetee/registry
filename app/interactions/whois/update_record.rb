@@ -1,12 +1,14 @@
 module Whois
   class UpdateRecord < ActiveInteraction::Base
-    interface :record
-    string :type
-
-    validates :type, inclusion: { in: %w[reserved blocked domain disputed zone] }
+    hash :record do
+      string :klass
+      integer :id
+      string :type
+    end
 
     def execute
-      send "update_#{type}", record
+      data = record['klass'].constantize.find_by(id: record['id'])
+      send "update_#{record['type']}", data
     end
 
     def update_domain(domain)
