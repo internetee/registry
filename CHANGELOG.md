@@ -7,6 +7,7 @@
 * Bump rexml to 3.2.5 [#1949](https://github.com/internetee/registry/pull/1949)
 * Syslog support to staging.rb [#1951](https://github.com/internetee/registry/pull/1951)
 * Explicit rails versioning to migrations [#1953](https://github.com/internetee/registry/pull/1953)
+* Fixed Sidekiq web,session_secret warning [#1940](https://github.com/internetee/registry/issues/1940)
 
 19.04.2021
 * Bump truemail to 2.3.4 [#1931](https://github.com/internetee/registry/pull/1931)
