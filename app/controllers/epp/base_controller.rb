@@ -8,7 +8,7 @@ module Epp
     before_action :ensure_session_id_passed
     before_action :generate_svtrid
     before_action :latin_only
-    # before_action :validate_against_schema
+    before_action :validate_against_schema
     before_action :validate_request
     before_action :enforce_epp_session_timeout, if: :signed_in?
     before_action :iptables_counter_update, if: :signed_in?
@@ -22,6 +22,8 @@ module Epp
     rescue_from AuthorizationError, with: :respond_with_authorization_error
     rescue_from ActiveRecord::RecordNotFound, with: :respond_with_object_does_not_exist_error
     before_action :set_paper_trail_whodunnit
+
+    skip_before_action :validate_against_schema
 
     protected
 
