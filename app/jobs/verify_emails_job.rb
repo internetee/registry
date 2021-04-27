@@ -45,3 +45,7 @@ class VerifyEmailsJob < ApplicationJob
     logger.error message
   end
 end
+
+Sidekiq::Cron::Job.new(name: 'VerifyEmailsJob - every month',
+                       cron: '0 0 01 1 * ?',
+                       class: 'VerifyEmailsJob') unless Rails.env.test? || Rails.env.development?

@@ -326,6 +326,7 @@ Rails.application.routes.draw do
     authenticate :admin_user do
       mount Que::Web, at: 'que'
       mount Sidekiq::Web, at: 'sidekiq'
+      require 'sidekiq/cron/web'
     end
   end
 
