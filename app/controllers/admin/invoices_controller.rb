@@ -60,7 +60,10 @@ module Admin
       account_activity = AccountActivity.find_by(invoice_id: invoice.id)
       account_activity_dup = account_activity.dup
       account_activity_dup.sum = -account_activity.sum.to_i
-      account_activity_dup.save && invoice.update(cancelled_at: Time.zone.today)
+      account_activity_dup.save
+      account_activity.update(invoice_id: nil)
+      account_activity_dup.update(invoice_id: nil)
+      account_activity.save && account_activity_dup.save
     end
   end
 end
