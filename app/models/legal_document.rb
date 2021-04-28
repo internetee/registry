@@ -21,7 +21,7 @@ class LegalDocument < ApplicationRecord
 
   def epp_code_map
     {
-      '2306' => [
+      '2308' => [
         %i[body length_more_than],
         %i[body length_less_than],
       ]

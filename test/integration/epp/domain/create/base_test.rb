@@ -74,7 +74,7 @@ class EppDomainCreateBaseTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
-    assert_epp_response :parameter_value_policy_error
+    assert_epp_response :data_management_policy_violation
   end
 
   def test_too_big_legal_document
@@ -108,8 +108,8 @@ class EppDomainCreateBaseTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
-    assert_epp_response :parameter_value_policy_error
-    error_description = 'legalDocument size should be less than 8mB'
+    assert_epp_response :data_management_policy_violation
+    error_description = 'Legaldoc size exceeds maximum allowed size of 8mB'
     assert response.body.include? error_description
   end
 
