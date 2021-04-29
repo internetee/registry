@@ -231,6 +231,9 @@ Rails.application.routes.draw do
     end
 
     resources :invoices, except: %i[edit update destroy] do
+      collection do
+        post ':id/cancel_paid', to: 'invoices#cancel_paid', as: 'cancel_paid'
+      end
       resource :delivery, controller: 'invoices/delivery', only: %i[new create]
 
       member do
