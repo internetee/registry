@@ -537,6 +537,44 @@ ALTER SEQUENCE public.certificates_id_seq OWNED BY public.certificates.id;
 
 
 --
+-- Name: contact_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.contact_requests (
+    id integer NOT NULL,
+    whois_record_id integer NOT NULL,
+    secret character varying NOT NULL,
+    email character varying NOT NULL,
+    name character varying NOT NULL,
+    valid_to timestamp without time zone NOT NULL,
+    status character varying DEFAULT 'new'::character varying NOT NULL,
+    ip_address inet,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    message_id character varying
+);
+
+
+--
+-- Name: contact_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.contact_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contact_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.contact_requests_id_seq OWNED BY public.contact_requests.id;
+
+
+--
 -- Name: contacts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2602,7 +2640,6 @@ CREATE TABLE public.whois_records (
     id integer NOT NULL,
     domain_id integer,
     name character varying,
-    body text,
     json json,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -2733,6 +2770,13 @@ ALTER TABLE ONLY public.bounced_mail_addresses ALTER COLUMN id SET DEFAULT nextv
 --
 
 ALTER TABLE ONLY public.certificates ALTER COLUMN id SET DEFAULT nextval('public.certificates_id_seq'::regclass);
+
+
+--
+-- Name: contact_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contact_requests ALTER COLUMN id SET DEFAULT nextval('public.contact_requests_id_seq'::regclass);
 
 
 --
@@ -3191,6 +3235,14 @@ ALTER TABLE ONLY public.bounced_mail_addresses
 
 ALTER TABLE ONLY public.certificates
     ADD CONSTRAINT certificates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contact_requests contact_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contact_requests
+    ADD CONSTRAINT contact_requests_pkey PRIMARY KEY (id);
 
 
 --
@@ -3778,6 +3830,34 @@ CREATE INDEX index_accounts_on_registrar_id ON public.accounts USING btree (regi
 --
 
 CREATE INDEX index_certificates_on_api_user_id ON public.certificates USING btree (api_user_id);
+
+
+--
+-- Name: index_contact_requests_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contact_requests_on_email ON public.contact_requests USING btree (email);
+
+
+--
+-- Name: index_contact_requests_on_ip_address; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contact_requests_on_ip_address ON public.contact_requests USING btree (ip_address);
+
+
+--
+-- Name: index_contact_requests_on_secret; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_contact_requests_on_secret ON public.contact_requests USING btree (secret);
+
+
+--
+-- Name: index_contact_requests_on_whois_record_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contact_requests_on_whois_record_id ON public.contact_requests USING btree (whois_record_id);
 
 
 --
@@ -4895,11 +4975,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180327151906'),
 ('20180331200125'),
 ('20180422154642'),
+('20180515105348'),
 ('20180612042234'),
 ('20180612042625'),
 ('20180612042953'),
 ('20180613030330'),
 ('20180613045614'),
+('20180627115124'),
 ('20180713154915'),
 ('20180801114403'),
 ('20180808064402'),
@@ -4924,6 +5006,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181017154143'),
 ('20181017205123'),
 ('20181022100114'),
+('20181102124618'),
 ('20181108154921'),
 ('20181129150515'),
 ('20181212105100'),
@@ -5016,6 +5099,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200908131554'),
 ('20200910085157'),
 ('20200910102028'),
+('20200914073130'),
 ('20200916125326'),
 ('20200917104213'),
 ('20200921084356'),
