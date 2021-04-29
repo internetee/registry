@@ -1,5 +1,6 @@
 29.04.2021
 * Admin is able to cancel invoice payments [#1937](https://github.com/internetee/registry/issues/1937)
+* Bump nokogiri to 1.11.3 [#1920](https://github.com/internetee/registry/pull/1920)
 
 26.04.2021
 * Disputed status is removed on registrant change and status added to schema [#1927](https://github.com/internetee/registry/issues/1927)
