@@ -63,7 +63,13 @@ module Admin
       account_activity_dup.save
       account_activity.update(invoice_id: nil)
       account_activity_dup.update(invoice_id: nil)
+      mark_cancelled_payment_order(invoice)
       account_activity.save && account_activity_dup.save
+    end
+
+    def mark_cancelled_payment_order(invoice)
+      payment_order = invoice.payment_orders.last
+      payment_order.update(notes: 'Cancelled')
     end
   end
 end
