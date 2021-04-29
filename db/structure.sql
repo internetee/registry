@@ -1,29 +1,13 @@
----
---- PostgreSQL database dump
----
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
+SET row_security = off;
 
 --
 -- Name: btree_gist; Type: EXTENSION; Schema: -; Owner: -
@@ -210,7 +194,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: account_activities; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: account_activities; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.account_activities (
@@ -251,7 +235,7 @@ ALTER SEQUENCE public.account_activities_id_seq OWNED BY public.account_activiti
 
 
 --
--- Name: accounts; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: accounts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.accounts (
@@ -287,7 +271,7 @@ ALTER SEQUENCE public.accounts_id_seq OWNED BY public.accounts.id;
 
 
 --
--- Name: actions; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: actions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.actions (
@@ -319,7 +303,7 @@ ALTER SEQUENCE public.actions_id_seq OWNED BY public.actions.id;
 
 
 --
--- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.ar_internal_metadata (
@@ -331,7 +315,7 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
--- Name: auctions; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: auctions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.auctions (
@@ -365,7 +349,7 @@ ALTER SEQUENCE public.auctions_id_seq OWNED BY public.auctions.id;
 
 
 --
--- Name: bank_statements; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: bank_statements; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.bank_statements (
@@ -400,7 +384,7 @@ ALTER SEQUENCE public.bank_statements_id_seq OWNED BY public.bank_statements.id;
 
 
 --
--- Name: bank_transactions; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: bank_transactions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.bank_transactions (
@@ -444,7 +428,7 @@ ALTER SEQUENCE public.bank_transactions_id_seq OWNED BY public.bank_transactions
 
 
 --
--- Name: blocked_domains; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: blocked_domains; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.blocked_domains (
@@ -477,7 +461,7 @@ ALTER SEQUENCE public.blocked_domains_id_seq OWNED BY public.blocked_domains.id;
 
 
 --
--- Name: bounced_mail_addresses; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: bounced_mail_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.bounced_mail_addresses (
@@ -514,7 +498,7 @@ ALTER SEQUENCE public.bounced_mail_addresses_id_seq OWNED BY public.bounced_mail
 
 
 --
--- Name: certificates; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: certificates; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.certificates (
@@ -553,7 +537,7 @@ ALTER SEQUENCE public.certificates_id_seq OWNED BY public.certificates.id;
 
 
 --
--- Name: contacts; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: contacts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.contacts (
@@ -611,7 +595,42 @@ ALTER SEQUENCE public.contacts_id_seq OWNED BY public.contacts.id;
 
 
 --
--- Name: data_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: csync_records; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.csync_records (
+    id bigint NOT NULL,
+    domain_id bigint NOT NULL,
+    cdnskey character varying NOT NULL,
+    action character varying NOT NULL,
+    times_scanned integer DEFAULT 0 NOT NULL,
+    last_scan timestamp without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: csync_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.csync_records_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: csync_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.csync_records_id_seq OWNED BY public.csync_records.id;
+
+
+--
+-- Name: data_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.data_migrations (
@@ -620,7 +639,7 @@ CREATE TABLE public.data_migrations (
 
 
 --
--- Name: directos; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: directos; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.directos (
@@ -655,7 +674,7 @@ ALTER SEQUENCE public.directos_id_seq OWNED BY public.directos.id;
 
 
 --
--- Name: disputes; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: disputes; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.disputes (
@@ -692,7 +711,7 @@ ALTER SEQUENCE public.disputes_id_seq OWNED BY public.disputes.id;
 
 
 --
--- Name: dnskeys; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: dnskeys; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.dnskeys (
@@ -733,7 +752,7 @@ ALTER SEQUENCE public.dnskeys_id_seq OWNED BY public.dnskeys.id;
 
 
 --
--- Name: domain_contacts; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: domain_contacts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.domain_contacts (
@@ -771,7 +790,7 @@ ALTER SEQUENCE public.domain_contacts_id_seq OWNED BY public.domain_contacts.id;
 
 
 --
--- Name: domain_transfers; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: domain_transfers; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.domain_transfers (
@@ -808,7 +827,7 @@ ALTER SEQUENCE public.domain_transfers_id_seq OWNED BY public.domain_transfers.i
 
 
 --
--- Name: domains; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: domains; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.domains (
@@ -867,7 +886,7 @@ ALTER SEQUENCE public.domains_id_seq OWNED BY public.domains.id;
 
 
 --
--- Name: email_address_verifications; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: email_address_verifications; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.email_address_verifications (
@@ -899,7 +918,7 @@ ALTER SEQUENCE public.email_address_verifications_id_seq OWNED BY public.email_a
 
 
 --
--- Name: email_addresses_validations; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: email_addresses_validations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.email_addresses_validations (
@@ -929,7 +948,7 @@ ALTER SEQUENCE public.email_addresses_validations_id_seq OWNED BY public.email_a
 
 
 --
--- Name: email_addresses_verifications; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: email_addresses_verifications; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.email_addresses_verifications (
@@ -959,7 +978,7 @@ ALTER SEQUENCE public.email_addresses_verifications_id_seq OWNED BY public.email
 
 
 --
--- Name: epp_sessions; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: epp_sessions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.epp_sessions (
@@ -991,7 +1010,7 @@ ALTER SEQUENCE public.epp_sessions_id_seq OWNED BY public.epp_sessions.id;
 
 
 --
--- Name: invoice_items; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: invoice_items; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.invoice_items (
@@ -1029,7 +1048,7 @@ ALTER SEQUENCE public.invoice_items_id_seq OWNED BY public.invoice_items.id;
 
 
 --
--- Name: invoices; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: invoices; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.invoices (
@@ -1100,7 +1119,7 @@ ALTER SEQUENCE public.invoices_id_seq OWNED BY public.invoices.id;
 
 
 --
--- Name: legal_documents; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: legal_documents; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.legal_documents (
@@ -1135,7 +1154,7 @@ ALTER SEQUENCE public.legal_documents_id_seq OWNED BY public.legal_documents.id;
 
 
 --
--- Name: log_account_activities; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_account_activities; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_account_activities (
@@ -1173,7 +1192,7 @@ ALTER SEQUENCE public.log_account_activities_id_seq OWNED BY public.log_account_
 
 
 --
--- Name: log_accounts; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_accounts (
@@ -1211,7 +1230,7 @@ ALTER SEQUENCE public.log_accounts_id_seq OWNED BY public.log_accounts.id;
 
 
 --
--- Name: log_actions; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_actions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_actions (
@@ -1249,7 +1268,7 @@ ALTER SEQUENCE public.log_actions_id_seq OWNED BY public.log_actions.id;
 
 
 --
--- Name: log_bank_statements; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_bank_statements; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_bank_statements (
@@ -1287,7 +1306,7 @@ ALTER SEQUENCE public.log_bank_statements_id_seq OWNED BY public.log_bank_statem
 
 
 --
--- Name: log_bank_transactions; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_bank_transactions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_bank_transactions (
@@ -1325,7 +1344,7 @@ ALTER SEQUENCE public.log_bank_transactions_id_seq OWNED BY public.log_bank_tran
 
 
 --
--- Name: log_blocked_domains; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_blocked_domains; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_blocked_domains (
@@ -1363,7 +1382,7 @@ ALTER SEQUENCE public.log_blocked_domains_id_seq OWNED BY public.log_blocked_dom
 
 
 --
--- Name: log_certificates; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_certificates; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_certificates (
@@ -1401,7 +1420,7 @@ ALTER SEQUENCE public.log_certificates_id_seq OWNED BY public.log_certificates.i
 
 
 --
--- Name: log_contacts; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_contacts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_contacts (
@@ -1440,7 +1459,7 @@ ALTER SEQUENCE public.log_contacts_id_seq OWNED BY public.log_contacts.id;
 
 
 --
--- Name: log_dnskeys; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_dnskeys; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_dnskeys (
@@ -1478,7 +1497,7 @@ ALTER SEQUENCE public.log_dnskeys_id_seq OWNED BY public.log_dnskeys.id;
 
 
 --
--- Name: log_domain_contacts; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_domain_contacts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_domain_contacts (
@@ -1516,7 +1535,7 @@ ALTER SEQUENCE public.log_domain_contacts_id_seq OWNED BY public.log_domain_cont
 
 
 --
--- Name: log_domains; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_domains; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_domains (
@@ -1554,7 +1573,7 @@ ALTER SEQUENCE public.log_domains_id_seq OWNED BY public.log_domains.id;
 
 
 --
--- Name: log_invoice_items; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_invoice_items; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_invoice_items (
@@ -1592,7 +1611,7 @@ ALTER SEQUENCE public.log_invoice_items_id_seq OWNED BY public.log_invoice_items
 
 
 --
--- Name: log_invoices; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_invoices; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_invoices (
@@ -1630,7 +1649,7 @@ ALTER SEQUENCE public.log_invoices_id_seq OWNED BY public.log_invoices.id;
 
 
 --
--- Name: log_nameservers; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_nameservers; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_nameservers (
@@ -1668,7 +1687,7 @@ ALTER SEQUENCE public.log_nameservers_id_seq OWNED BY public.log_nameservers.id;
 
 
 --
--- Name: log_notifications; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_notifications; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_notifications (
@@ -1706,7 +1725,7 @@ ALTER SEQUENCE public.log_notifications_id_seq OWNED BY public.log_notifications
 
 
 --
--- Name: log_payment_orders; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_payment_orders; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_payment_orders (
@@ -1819,7 +1838,7 @@ ALTER SEQUENCE public.log_registrant_verifications_id_seq OWNED BY public.log_re
 
 
 --
--- Name: log_registrars; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_registrars; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_registrars (
@@ -1857,7 +1876,7 @@ ALTER SEQUENCE public.log_registrars_id_seq OWNED BY public.log_registrars.id;
 
 
 --
--- Name: log_reserved_domains; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_reserved_domains; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_reserved_domains (
@@ -1895,7 +1914,7 @@ ALTER SEQUENCE public.log_reserved_domains_id_seq OWNED BY public.log_reserved_d
 
 
 --
--- Name: log_setting_entries; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_setting_entries; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_setting_entries (
@@ -1933,7 +1952,7 @@ ALTER SEQUENCE public.log_setting_entries_id_seq OWNED BY public.log_setting_ent
 
 
 --
--- Name: log_settings; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_settings; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_settings (
@@ -1971,7 +1990,7 @@ ALTER SEQUENCE public.log_settings_id_seq OWNED BY public.log_settings.id;
 
 
 --
--- Name: log_users; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_users (
@@ -1987,40 +2006,6 @@ CREATE TABLE public.log_users (
     children json,
     uuid character varying
 );
-
---
--- Name: csync_records; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.csync_records (
-                                      id bigint NOT NULL,
-                                      domain_id bigint NOT NULL,
-                                      cdnskey character varying NOT NULL,
-                                      action character varying NOT NULL,
-                                      times_scanned integer DEFAULT 0 NOT NULL,
-                                      last_scan timestamp without time zone NOT NULL,
-                                      created_at timestamp(6) without time zone NOT NULL,
-                                      updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: csync_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.csync_records_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: csync_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.csync_records_id_seq OWNED BY public.csync_records.id;
 
 
 --
@@ -2043,7 +2028,7 @@ ALTER SEQUENCE public.log_users_id_seq OWNED BY public.log_users.id;
 
 
 --
--- Name: log_white_ips; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_white_ips; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.log_white_ips (
@@ -2081,7 +2066,7 @@ ALTER SEQUENCE public.log_white_ips_id_seq OWNED BY public.log_white_ips.id;
 
 
 --
--- Name: nameservers; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: nameservers; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.nameservers (
@@ -2119,7 +2104,7 @@ ALTER SEQUENCE public.nameservers_id_seq OWNED BY public.nameservers.id;
 
 
 --
--- Name: notifications; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: notifications; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.notifications (
@@ -2157,7 +2142,7 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
--- Name: payment_orders; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: payment_orders; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.payment_orders (
@@ -2194,7 +2179,7 @@ ALTER SEQUENCE public.payment_orders_id_seq OWNED BY public.payment_orders.id;
 
 
 --
--- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: prices; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.prices (
@@ -2232,7 +2217,7 @@ ALTER SEQUENCE public.prices_id_seq OWNED BY public.prices.id;
 
 
 --
--- Name: que_jobs; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: que_jobs; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.que_jobs (
@@ -2274,7 +2259,7 @@ ALTER SEQUENCE public.que_jobs_job_id_seq OWNED BY public.que_jobs.job_id;
 
 
 --
--- Name: registrant_verifications; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: registrant_verifications; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.registrant_verifications (
@@ -2316,7 +2301,7 @@ ALTER SEQUENCE public.registrant_verifications_id_seq OWNED BY public.registrant
 
 
 --
--- Name: registrars; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: registrars; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.registrars (
@@ -2371,7 +2356,7 @@ ALTER SEQUENCE public.registrars_id_seq OWNED BY public.registrars.id;
 
 
 --
--- Name: reserved_domains; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: reserved_domains; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.reserved_domains (
@@ -2406,7 +2391,7 @@ ALTER SEQUENCE public.reserved_domains_id_seq OWNED BY public.reserved_domains.i
 
 
 --
--- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.schema_migrations (
@@ -2415,7 +2400,7 @@ CREATE TABLE public.schema_migrations (
 
 
 --
--- Name: setting_entries; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: setting_entries; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.setting_entries (
@@ -2451,7 +2436,7 @@ ALTER SEQUENCE public.setting_entries_id_seq OWNED BY public.setting_entries.id;
 
 
 --
--- Name: settings; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: settings; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.settings (
@@ -2487,7 +2472,7 @@ ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.users (
@@ -2539,7 +2524,7 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: versions; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: versions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.versions (
@@ -2574,7 +2559,7 @@ ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 
 --
--- Name: white_ips; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: white_ips; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.white_ips (
@@ -2610,7 +2595,7 @@ ALTER SEQUENCE public.white_ips_id_seq OWNED BY public.white_ips.id;
 
 
 --
--- Name: whois_records; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: whois_records; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.whois_records (
@@ -2645,7 +2630,7 @@ ALTER SEQUENCE public.whois_records_id_seq OWNED BY public.whois_records.id;
 
 
 --
--- Name: zones; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: zones; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.zones (
@@ -2688,460 +2673,154 @@ ALTER SEQUENCE public.zones_id_seq OWNED BY public.zones.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: account_activities id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.account_activities ALTER COLUMN id SET DEFAULT nextval('public.account_activities_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.accounts ALTER COLUMN id SET DEFAULT nextval('public.accounts_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: actions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.actions ALTER COLUMN id SET DEFAULT nextval('public.actions_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: auctions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.auctions ALTER COLUMN id SET DEFAULT nextval('public.auctions_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: bank_statements id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bank_statements ALTER COLUMN id SET DEFAULT nextval('public.bank_statements_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: bank_transactions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bank_transactions ALTER COLUMN id SET DEFAULT nextval('public.bank_transactions_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: blocked_domains id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.blocked_domains ALTER COLUMN id SET DEFAULT nextval('public.blocked_domains_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: bounced_mail_addresses id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bounced_mail_addresses ALTER COLUMN id SET DEFAULT nextval('public.bounced_mail_addresses_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: certificates id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificates ALTER COLUMN id SET DEFAULT nextval('public.certificates_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: contacts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.contacts ALTER COLUMN id SET DEFAULT nextval('public.contacts_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: csync_records id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.csync_records ALTER COLUMN id SET DEFAULT nextval('public.csync_records_id_seq'::regclass);
+
+
+--
+-- Name: directos id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.directos ALTER COLUMN id SET DEFAULT nextval('public.directos_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: disputes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.disputes ALTER COLUMN id SET DEFAULT nextval('public.disputes_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: dnskeys id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.dnskeys ALTER COLUMN id SET DEFAULT nextval('public.dnskeys_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: domain_contacts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domain_contacts ALTER COLUMN id SET DEFAULT nextval('public.domain_contacts_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: domain_transfers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domain_transfers ALTER COLUMN id SET DEFAULT nextval('public.domain_transfers_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: domains id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domains ALTER COLUMN id SET DEFAULT nextval('public.domains_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: email_address_verifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.email_address_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_address_verifications_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: email_addresses_validations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.email_addresses_validations ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_validations_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: email_addresses_verifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.email_addresses_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_verifications_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: epp_sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.epp_sessions ALTER COLUMN id SET DEFAULT nextval('public.epp_sessions_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.invoice_items ALTER COLUMN id SET DEFAULT nextval('public.invoice_items_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.invoices ALTER COLUMN id SET DEFAULT nextval('public.invoices_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.legal_documents ALTER COLUMN id SET DEFAULT nextval('public.legal_documents_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_account_activities ALTER COLUMN id SET DEFAULT nextval('public.log_account_activities_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_accounts ALTER COLUMN id SET DEFAULT nextval('public.log_accounts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_actions ALTER COLUMN id SET DEFAULT nextval('public.log_actions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_bank_statements ALTER COLUMN id SET DEFAULT nextval('public.log_bank_statements_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_bank_transactions ALTER COLUMN id SET DEFAULT nextval('public.log_bank_transactions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_blocked_domains ALTER COLUMN id SET DEFAULT nextval('public.log_blocked_domains_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_certificates ALTER COLUMN id SET DEFAULT nextval('public.log_certificates_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_contacts ALTER COLUMN id SET DEFAULT nextval('public.log_contacts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_dnskeys ALTER COLUMN id SET DEFAULT nextval('public.log_dnskeys_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_domain_contacts ALTER COLUMN id SET DEFAULT nextval('public.log_domain_contacts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_domains ALTER COLUMN id SET DEFAULT nextval('public.log_domains_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_invoice_items ALTER COLUMN id SET DEFAULT nextval('public.log_invoice_items_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_invoices ALTER COLUMN id SET DEFAULT nextval('public.log_invoices_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_nameservers ALTER COLUMN id SET DEFAULT nextval('public.log_nameservers_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_notifications ALTER COLUMN id SET DEFAULT nextval('public.log_notifications_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_payment_orders ALTER COLUMN id SET DEFAULT nextval('public.log_payment_orders_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_prices ALTER COLUMN id SET DEFAULT nextval('public.log_prices_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_registrant_verifications ALTER COLUMN id SET DEFAULT nextval('public.log_registrant_verifications_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_registrars ALTER COLUMN id SET DEFAULT nextval('public.log_registrars_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_reserved_domains ALTER COLUMN id SET DEFAULT nextval('public.log_reserved_domains_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_setting_entries ALTER COLUMN id SET DEFAULT nextval('public.log_setting_entries_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_settings ALTER COLUMN id SET DEFAULT nextval('public.log_settings_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_users ALTER COLUMN id SET DEFAULT nextval('public.log_users_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.log_white_ips ALTER COLUMN id SET DEFAULT nextval('public.log_white_ips_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nameservers ALTER COLUMN id SET DEFAULT nextval('public.nameservers_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('public.notifications_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.payment_orders ALTER COLUMN id SET DEFAULT nextval('public.payment_orders_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.prices ALTER COLUMN id SET DEFAULT nextval('public.prices_id_seq'::regclass);
-
-
---
--- Name: job_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.que_jobs ALTER COLUMN job_id SET DEFAULT nextval('public.que_jobs_job_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.registrant_verifications ALTER COLUMN id SET DEFAULT nextval('public.registrant_verifications_id_seq'::regclass);
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.accounts ALTER COLUMN id SET DEFAULT nextval('public.accounts_id_seq'::regclass);
-
-
-ALTER TABLE ONLY public.log_invoices
-    ADD CONSTRAINT log_invoices_pkey PRIMARY KEY (id);
-
-
-ALTER TABLE ONLY public.registrars ALTER COLUMN id SET DEFAULT nextval('public.registrars_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-ALTER TABLE ONLY public.disputes ALTER COLUMN id SET DEFAULT nextval('public.disputes_id_seq'::regclass);
-
-ALTER TABLE ONLY public.log_nameservers
-    ADD CONSTRAINT log_nameservers_pkey PRIMARY KEY (id);
-
-
-ALTER TABLE ONLY public.reserved_domains ALTER COLUMN id SET DEFAULT nextval('public.reserved_domains_id_seq'::regclass);
-
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.setting_entries ALTER COLUMN id SET DEFAULT nextval('public.setting_entries_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.setting_entries ALTER COLUMN id SET DEFAULT nextval('public.setting_entries_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.settings_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.domains ALTER COLUMN id SET DEFAULT nextval('public.domains_id_seq'::regclass);
-
-
---
--- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.email_address_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_address_verifications_id_seq'::regclass);
-
-
---
--- Name: white_ips id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.email_addresses_validations ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_validations_id_seq'::regclass);
-
-
---
--- Name: whois_records id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.email_addresses_verifications ALTER COLUMN id SET DEFAULT nextval('public.email_addresses_verifications_id_seq'::regclass);
-
-
---
--- Name: zones id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.epp_sessions ALTER COLUMN id SET DEFAULT nextval('public.epp_sessions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: invoice_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.invoice_items ALTER COLUMN id SET DEFAULT nextval('public.invoice_items_id_seq'::regclass);
@@ -3274,6 +2953,13 @@ ALTER TABLE ONLY public.log_payment_orders ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: log_prices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_prices ALTER COLUMN id SET DEFAULT nextval('public.log_prices_id_seq'::regclass);
+
+
+--
 -- Name: log_registrant_verifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3292,6 +2978,13 @@ ALTER TABLE ONLY public.log_registrars ALTER COLUMN id SET DEFAULT nextval('publ
 --
 
 ALTER TABLE ONLY public.log_reserved_domains ALTER COLUMN id SET DEFAULT nextval('public.log_reserved_domains_id_seq'::regclass);
+
+
+--
+-- Name: log_setting_entries id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_setting_entries ALTER COLUMN id SET DEFAULT nextval('public.log_setting_entries_id_seq'::regclass);
 
 
 --
@@ -3372,6 +3065,13 @@ ALTER TABLE ONLY public.reserved_domains ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: setting_entries id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.setting_entries ALTER COLUMN id SET DEFAULT nextval('public.setting_entries_id_seq'::regclass);
+
+
+--
 -- Name: settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3384,43 +3084,37 @@ ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.set
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
-ALTER TABLE ONLY public.log_prices
-    ADD CONSTRAINT log_prices_pkey PRIMARY KEY (id);
-
-
-ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
-
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: white_ips id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.white_ips ALTER COLUMN id SET DEFAULT nextval('public.white_ips_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: whois_records id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.whois_records ALTER COLUMN id SET DEFAULT nextval('public.whois_records_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: zones id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.zones ALTER COLUMN id SET DEFAULT nextval('public.zones_id_seq'::regclass);
 
 
 --
--- Name: account_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: account_activities account_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.account_activities
@@ -3428,7 +3122,7 @@ ALTER TABLE ONLY public.account_activities
 
 
 --
--- Name: accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.accounts
@@ -3436,7 +3130,7 @@ ALTER TABLE ONLY public.accounts
 
 
 --
--- Name: actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: actions actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.actions
@@ -3444,7 +3138,7 @@ ALTER TABLE ONLY public.actions
 
 
 --
--- Name: ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ar_internal_metadata
@@ -3452,7 +3146,7 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
--- Name: auctions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: auctions auctions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.auctions
@@ -3460,7 +3154,7 @@ ALTER TABLE ONLY public.auctions
 
 
 --
--- Name: bank_statements_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: bank_statements bank_statements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bank_statements
@@ -3468,7 +3162,7 @@ ALTER TABLE ONLY public.bank_statements
 
 
 --
--- Name: bank_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: bank_transactions bank_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bank_transactions
@@ -3476,7 +3170,7 @@ ALTER TABLE ONLY public.bank_transactions
 
 
 --
--- Name: blocked_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: blocked_domains blocked_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.blocked_domains
@@ -3484,7 +3178,7 @@ ALTER TABLE ONLY public.blocked_domains
 
 
 --
--- Name: bounced_mail_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: bounced_mail_addresses bounced_mail_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bounced_mail_addresses
@@ -3492,7 +3186,7 @@ ALTER TABLE ONLY public.bounced_mail_addresses
 
 
 --
--- Name: certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: certificates certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.certificates
@@ -3500,7 +3194,7 @@ ALTER TABLE ONLY public.certificates
 
 
 --
--- Name: contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: contacts contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.contacts
@@ -3508,7 +3202,15 @@ ALTER TABLE ONLY public.contacts
 
 
 --
--- Name: directos_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: csync_records csync_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.csync_records
+    ADD CONSTRAINT csync_records_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: directos directos_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.directos
@@ -3516,7 +3218,7 @@ ALTER TABLE ONLY public.directos
 
 
 --
--- Name: disputes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: disputes disputes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.disputes
@@ -3524,7 +3226,7 @@ ALTER TABLE ONLY public.disputes
 
 
 --
--- Name: dnskeys_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: dnskeys dnskeys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.dnskeys
@@ -3532,7 +3234,7 @@ ALTER TABLE ONLY public.dnskeys
 
 
 --
--- Name: domain_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: domain_contacts domain_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domain_contacts
@@ -3540,7 +3242,7 @@ ALTER TABLE ONLY public.domain_contacts
 
 
 --
--- Name: domain_transfers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: domain_transfers domain_transfers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domain_transfers
@@ -3548,7 +3250,7 @@ ALTER TABLE ONLY public.domain_transfers
 
 
 --
--- Name: domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: domains domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domains
@@ -3556,7 +3258,7 @@ ALTER TABLE ONLY public.domains
 
 
 --
--- Name: email_address_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: email_address_verifications email_address_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.email_address_verifications
@@ -3564,7 +3266,7 @@ ALTER TABLE ONLY public.email_address_verifications
 
 
 --
--- Name: email_addresses_validations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: email_addresses_validations email_addresses_validations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.email_addresses_validations
@@ -3572,7 +3274,7 @@ ALTER TABLE ONLY public.email_addresses_validations
 
 
 --
--- Name: email_addresses_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: email_addresses_verifications email_addresses_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.email_addresses_verifications
@@ -3580,7 +3282,7 @@ ALTER TABLE ONLY public.email_addresses_verifications
 
 
 --
--- Name: epp_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: epp_sessions epp_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.epp_sessions
@@ -3588,7 +3290,7 @@ ALTER TABLE ONLY public.epp_sessions
 
 
 --
--- Name: invoice_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: invoice_items invoice_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.invoice_items
@@ -3596,7 +3298,7 @@ ALTER TABLE ONLY public.invoice_items
 
 
 --
--- Name: invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: invoices invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.invoices
@@ -3604,7 +3306,7 @@ ALTER TABLE ONLY public.invoices
 
 
 --
--- Name: legal_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: legal_documents legal_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.legal_documents
@@ -3612,7 +3314,7 @@ ALTER TABLE ONLY public.legal_documents
 
 
 --
--- Name: log_account_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_account_activities log_account_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_account_activities
@@ -3620,7 +3322,7 @@ ALTER TABLE ONLY public.log_account_activities
 
 
 --
--- Name: log_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_accounts log_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_accounts
@@ -3628,7 +3330,7 @@ ALTER TABLE ONLY public.log_accounts
 
 
 --
--- Name: log_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_actions log_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_actions
@@ -3636,7 +3338,7 @@ ALTER TABLE ONLY public.log_actions
 
 
 --
--- Name: log_bank_statements_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_bank_statements log_bank_statements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_bank_statements
@@ -3644,7 +3346,7 @@ ALTER TABLE ONLY public.log_bank_statements
 
 
 --
--- Name: log_bank_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_bank_transactions log_bank_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_bank_transactions
@@ -3652,7 +3354,7 @@ ALTER TABLE ONLY public.log_bank_transactions
 
 
 --
--- Name: log_blocked_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_blocked_domains log_blocked_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_blocked_domains
@@ -3660,7 +3362,7 @@ ALTER TABLE ONLY public.log_blocked_domains
 
 
 --
--- Name: log_certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_certificates log_certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_certificates
@@ -3668,7 +3370,7 @@ ALTER TABLE ONLY public.log_certificates
 
 
 --
--- Name: log_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_contacts log_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_contacts
@@ -3676,7 +3378,7 @@ ALTER TABLE ONLY public.log_contacts
 
 
 --
--- Name: log_dnskeys_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_dnskeys log_dnskeys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_dnskeys
@@ -3684,7 +3386,7 @@ ALTER TABLE ONLY public.log_dnskeys
 
 
 --
--- Name: log_domain_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_domain_contacts log_domain_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_domain_contacts
@@ -3692,7 +3394,7 @@ ALTER TABLE ONLY public.log_domain_contacts
 
 
 --
--- Name: log_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_domains log_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_domains
@@ -3700,7 +3402,7 @@ ALTER TABLE ONLY public.log_domains
 
 
 --
--- Name: log_invoice_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_invoice_items log_invoice_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_invoice_items
@@ -3708,7 +3410,23 @@ ALTER TABLE ONLY public.log_invoice_items
 
 
 --
--- Name: log_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_invoices log_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_invoices
+    ADD CONSTRAINT log_invoices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: log_nameservers log_nameservers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_nameservers
+    ADD CONSTRAINT log_nameservers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: log_notifications log_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_notifications
@@ -3716,7 +3434,7 @@ ALTER TABLE ONLY public.log_notifications
 
 
 --
--- Name: log_payment_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_payment_orders log_payment_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_payment_orders
@@ -3724,7 +3442,15 @@ ALTER TABLE ONLY public.log_payment_orders
 
 
 --
--- Name: log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: log_prices log_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_prices
+    ADD CONSTRAINT log_prices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: log_registrant_verifications log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_registrant_verifications
@@ -3732,7 +3458,7 @@ ALTER TABLE ONLY public.log_registrant_verifications
 
 
 --
--- Name: log_registrars_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_registrars log_registrars_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_registrars
@@ -3740,7 +3466,7 @@ ALTER TABLE ONLY public.log_registrars
 
 
 --
--- Name: log_reserved_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_reserved_domains log_reserved_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_reserved_domains
@@ -3748,7 +3474,7 @@ ALTER TABLE ONLY public.log_reserved_domains
 
 
 --
--- Name: log_setting_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_setting_entries log_setting_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_setting_entries
@@ -3756,7 +3482,7 @@ ALTER TABLE ONLY public.log_setting_entries
 
 
 --
--- Name: log_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_settings log_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_settings
@@ -3764,7 +3490,7 @@ ALTER TABLE ONLY public.log_settings
 
 
 --
--- Name: log_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_users log_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_users
@@ -3772,7 +3498,7 @@ ALTER TABLE ONLY public.log_users
 
 
 --
--- Name: log_white_ips_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_white_ips log_white_ips_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.log_white_ips
@@ -3780,7 +3506,7 @@ ALTER TABLE ONLY public.log_white_ips
 
 
 --
--- Name: nameservers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: nameservers nameservers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.nameservers
@@ -3788,7 +3514,7 @@ ALTER TABLE ONLY public.nameservers
 
 
 --
--- Name: notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: notifications notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.notifications
@@ -3796,7 +3522,7 @@ ALTER TABLE ONLY public.notifications
 
 
 --
--- Name: payment_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: payment_orders payment_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.payment_orders
@@ -3804,7 +3530,7 @@ ALTER TABLE ONLY public.payment_orders
 
 
 --
--- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: prices prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.prices
@@ -3812,7 +3538,7 @@ ALTER TABLE ONLY public.prices
 
 
 --
--- Name: que_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: que_jobs que_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.que_jobs
@@ -3820,7 +3546,7 @@ ALTER TABLE ONLY public.que_jobs
 
 
 --
--- Name: registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: registrant_verifications registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.registrant_verifications
@@ -3828,7 +3554,7 @@ ALTER TABLE ONLY public.registrant_verifications
 
 
 --
--- Name: registrars_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: registrars registrars_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.registrars
@@ -3836,7 +3562,7 @@ ALTER TABLE ONLY public.registrars
 
 
 --
--- Name: reserved_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: reserved_domains reserved_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.reserved_domains
@@ -3844,7 +3570,7 @@ ALTER TABLE ONLY public.reserved_domains
 
 
 --
--- Name: setting_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: setting_entries setting_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.setting_entries
@@ -3852,7 +3578,7 @@ ALTER TABLE ONLY public.setting_entries
 
 
 --
--- Name: settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: settings settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.settings
@@ -3860,7 +3586,7 @@ ALTER TABLE ONLY public.settings
 
 
 --
--- Name: uniq_blocked_domains_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: blocked_domains uniq_blocked_domains_name; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.blocked_domains
@@ -3868,7 +3594,7 @@ ALTER TABLE ONLY public.blocked_domains
 
 
 --
--- Name: uniq_contact_of_type_per_domain; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: domain_contacts uniq_contact_of_type_per_domain; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domain_contacts
@@ -3876,7 +3602,7 @@ ALTER TABLE ONLY public.domain_contacts
 
 
 --
--- Name: uniq_contact_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: contacts uniq_contact_uuid; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.contacts
@@ -3884,7 +3610,7 @@ ALTER TABLE ONLY public.contacts
 
 
 --
--- Name: uniq_domain_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: domains uniq_domain_uuid; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domains
@@ -3892,7 +3618,7 @@ ALTER TABLE ONLY public.domains
 
 
 --
--- Name: uniq_hostname_per_domain; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: nameservers uniq_hostname_per_domain; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.nameservers
@@ -3900,7 +3626,7 @@ ALTER TABLE ONLY public.nameservers
 
 
 --
--- Name: uniq_reserved_domains_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: reserved_domains uniq_reserved_domains_name; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.reserved_domains
@@ -3908,7 +3634,7 @@ ALTER TABLE ONLY public.reserved_domains
 
 
 --
--- Name: uniq_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: auctions uniq_uuid; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.auctions
@@ -3916,7 +3642,7 @@ ALTER TABLE ONLY public.auctions
 
 
 --
--- Name: unique_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: registrars unique_code; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.registrars
@@ -3924,7 +3650,7 @@ ALTER TABLE ONLY public.registrars
 
 
 --
--- Name: unique_contact_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: contacts unique_contact_code; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.contacts
@@ -3932,7 +3658,7 @@ ALTER TABLE ONLY public.contacts
 
 
 --
--- Name: unique_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: registrars unique_name; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.registrars
@@ -3940,7 +3666,7 @@ ALTER TABLE ONLY public.registrars
 
 
 --
--- Name: unique_number; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: invoices unique_number; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.invoices
@@ -3948,7 +3674,7 @@ ALTER TABLE ONLY public.invoices
 
 
 --
--- Name: unique_reference_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: registrars unique_reference_no; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.registrars
@@ -3956,7 +3682,7 @@ ALTER TABLE ONLY public.registrars
 
 
 --
--- Name: unique_registration_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: auctions unique_registration_code; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.auctions
@@ -3964,7 +3690,7 @@ ALTER TABLE ONLY public.auctions
 
 
 --
--- Name: unique_session_id; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: epp_sessions unique_session_id; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.epp_sessions
@@ -3972,7 +3698,7 @@ ALTER TABLE ONLY public.epp_sessions
 
 
 --
--- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: zones unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.zones
@@ -3980,7 +3706,7 @@ ALTER TABLE ONLY public.zones
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users
@@ -3988,7 +3714,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: versions versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.versions
@@ -3996,7 +3722,7 @@ ALTER TABLE ONLY public.versions
 
 
 --
--- Name: white_ips_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: white_ips white_ips_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.white_ips
@@ -4004,7 +3730,7 @@ ALTER TABLE ONLY public.white_ips
 
 
 --
--- Name: whois_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: whois_records whois_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.whois_records
@@ -4012,7 +3738,7 @@ ALTER TABLE ONLY public.whois_records
 
 
 --
--- Name: zones_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: zones zones_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.zones
@@ -4020,310 +3746,60 @@ ALTER TABLE ONLY public.zones
 
 
 --
--- Name: index_account_activities_on_account_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_account_activities_on_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_account_activities_on_account_id ON public.account_activities USING btree (account_id);
 
 
 --
--- Name: index_account_activities_on_bank_transaction_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_account_activities_on_bank_transaction_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_account_activities_on_bank_transaction_id ON public.account_activities USING btree (bank_transaction_id);
 
 
 --
--- Name: index_account_activities_on_invoice_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_account_activities_on_invoice_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_account_activities_on_invoice_id ON public.account_activities USING btree (invoice_id);
 
 
 --
--- Name: index_accounts_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_accounts_on_registrar_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_accounts_on_registrar_id ON public.accounts USING btree (registrar_id);
 
 
 --
--- Name: index_certificates_on_api_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_certificates_on_api_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_certificates_on_api_user_id ON public.certificates USING btree (api_user_id);
 
 
 --
--- Name: index_contacts_on_code; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_contacts_on_code; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_contacts_on_code ON public.contacts USING btree (code);
 
 
 --
--- Name: index_contacts_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_contacts_on_registrar_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_contacts_on_registrar_id ON public.contacts USING btree (registrar_id);
 
 
 --
--- Name: index_contacts_on_registrar_id_and_ident_type; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_contacts_on_registrar_id_and_ident_type; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_contacts_on_registrar_id_and_ident_type ON public.contacts USING btree (registrar_id, ident_type);
 
-
---
--- Name: index_directos_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_directos_on_item_type_and_item_id ON public.directos USING btree (item_type, item_id);
-
-
---
--- Name: index_dnskeys_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_dnskeys_on_domain_id ON public.dnskeys USING btree (domain_id);
-
-
---
--- Name: index_dnskeys_on_legacy_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_dnskeys_on_legacy_domain_id ON public.dnskeys USING btree (legacy_domain_id);
-
-
---
--- Name: index_domain_contacts_on_contact_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_domain_contacts_on_contact_id ON public.domain_contacts USING btree (contact_id);
-
-
---
--- Name: index_domain_contacts_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_domain_contacts_on_domain_id ON public.domain_contacts USING btree (domain_id);
-
-
---
--- Name: index_domain_transfers_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_domain_transfers_on_domain_id ON public.domain_transfers USING btree (domain_id);
-
-
---
--- Name: index_domains_on_delete_date; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_domains_on_delete_date ON public.domains USING btree (delete_date);
-
-
---
--- Name: index_domains_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE UNIQUE INDEX index_domains_on_name ON public.domains USING btree (name);
-
-
---
--- Name: index_domains_on_outzone_at; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_domains_on_outzone_at ON public.domains USING btree (outzone_at);
-
-
---
--- Name: index_domains_on_registrant_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_domains_on_registrant_id ON public.domains USING btree (registrant_id);
-
-
---
--- Name: index_domains_on_registrant_verification_asked_at; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_domains_on_registrant_verification_asked_at ON public.domains USING btree (registrant_verification_asked_at);
-
-
---
--- Name: index_domains_on_registrant_verification_token; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_domains_on_registrant_verification_token ON public.domains USING btree (registrant_verification_token);
-
-
---
--- Name: index_domains_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_domains_on_registrar_id ON public.domains USING btree (registrar_id);
-
-
---
--- Name: index_domains_on_statuses; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_domains_on_statuses ON public.domains USING gin (statuses);
-
-
---
--- Name: index_email_address_verifications_on_domain; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_email_address_verifications_on_domain ON public.email_address_verifications USING btree (domain);
-
-
---
--- Name: index_epp_sessions_on_updated_at; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_epp_sessions_on_updated_at ON public.epp_sessions USING btree (updated_at);
-
-
---
--- Name: index_invoice_items_on_invoice_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_invoice_items_on_invoice_id ON public.invoice_items USING btree (invoice_id);
-
-
---
--- Name: index_invoices_on_buyer_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_invoices_on_buyer_id ON public.invoices USING btree (buyer_id);
-
-
---
--- Name: index_legal_documents_on_checksum; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_legal_documents_on_checksum ON public.legal_documents USING btree (checksum);
-
-
---
--- Name: index_legal_documents_on_documentable_type_and_documentable_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_legal_documents_on_documentable_type_and_documentable_id ON public.legal_documents USING btree (documentable_type, documentable_id);
-
-
---
--- Name: index_log_account_activities_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_account_activities_on_item_type_and_item_id ON public.log_account_activities USING btree (item_type, item_id);
-
-
---
--- Name: index_log_account_activities_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_account_activities_on_whodunnit ON public.log_account_activities USING btree (whodunnit);
-
-
---
--- Name: index_log_accounts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_accounts_on_item_type_and_item_id ON public.log_accounts USING btree (item_type, item_id);
-
-
---
--- Name: index_log_accounts_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_accounts_on_whodunnit ON public.log_accounts USING btree (whodunnit);
-
-
---
--- Name: index_log_bank_statements_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_bank_statements_on_item_type_and_item_id ON public.log_bank_statements USING btree (item_type, item_id);
-
-
---
--- Name: index_log_bank_statements_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_bank_statements_on_whodunnit ON public.log_bank_statements USING btree (whodunnit);
-
-
---
--- Name: index_log_bank_transactions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_bank_transactions_on_item_type_and_item_id ON public.log_bank_transactions USING btree (item_type, item_id);
-
-
---
--- Name: index_log_bank_transactions_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_bank_transactions_on_whodunnit ON public.log_bank_transactions USING btree (whodunnit);
-
-
---
--- Name: index_log_blocked_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_blocked_domains_on_item_type_and_item_id ON public.log_blocked_domains USING btree (item_type, item_id);
-
-
---
--- Name: index_log_blocked_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_blocked_domains_on_whodunnit ON public.log_blocked_domains USING btree (whodunnit);
-
-
---
--- Name: index_log_certificates_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_certificates_on_item_type_and_item_id ON public.log_certificates USING btree (item_type, item_id);
-
-
---
--- Name: index_log_certificates_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_certificates_on_whodunnit ON public.log_certificates USING btree (whodunnit);
-
-
---
--- Name: index_log_contacts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_contacts_on_item_type_and_item_id ON public.log_contacts USING btree (item_type, item_id);
-
-
---
--- Name: index_log_contacts_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_contacts_on_whodunnit ON public.log_contacts USING btree (whodunnit);
-
-
---
--- Name: index_log_dnskeys_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
---
-
-CREATE INDEX index_log_dnskeys_on_item_type_and_item_id ON public.log_dnskeys USING btree (item_type, item_id);
-
-
---
--- Name: csync_records id; Type: DEFAULT; Schema: public; Owner: -
---
-ALTER TABLE ONLY public.csync_records ALTER COLUMN id SET DEFAULT nextval('public.csync_records_id_seq'::regclass);
 
 --
 -- Name: index_csync_records_on_domain_id; Type: INDEX; Schema: public; Owner: -
@@ -4331,312 +3807,559 @@ ALTER TABLE ONLY public.csync_records ALTER COLUMN id SET DEFAULT nextval('publi
 
 CREATE UNIQUE INDEX index_csync_records_on_domain_id ON public.csync_records USING btree (domain_id);
 
+
 --
--- Name: index_log_dnskeys_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_directos_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_directos_on_item_type_and_item_id ON public.directos USING btree (item_type, item_id);
+
+
+--
+-- Name: index_dnskeys_on_domain_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dnskeys_on_domain_id ON public.dnskeys USING btree (domain_id);
+
+
+--
+-- Name: index_dnskeys_on_legacy_domain_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dnskeys_on_legacy_domain_id ON public.dnskeys USING btree (legacy_domain_id);
+
+
+--
+-- Name: index_domain_contacts_on_contact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domain_contacts_on_contact_id ON public.domain_contacts USING btree (contact_id);
+
+
+--
+-- Name: index_domain_contacts_on_domain_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domain_contacts_on_domain_id ON public.domain_contacts USING btree (domain_id);
+
+
+--
+-- Name: index_domain_transfers_on_domain_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domain_transfers_on_domain_id ON public.domain_transfers USING btree (domain_id);
+
+
+--
+-- Name: index_domains_on_delete_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domains_on_delete_date ON public.domains USING btree (delete_date);
+
+
+--
+-- Name: index_domains_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_domains_on_name ON public.domains USING btree (name);
+
+
+--
+-- Name: index_domains_on_outzone_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domains_on_outzone_at ON public.domains USING btree (outzone_at);
+
+
+--
+-- Name: index_domains_on_registrant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domains_on_registrant_id ON public.domains USING btree (registrant_id);
+
+
+--
+-- Name: index_domains_on_registrant_verification_asked_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domains_on_registrant_verification_asked_at ON public.domains USING btree (registrant_verification_asked_at);
+
+
+--
+-- Name: index_domains_on_registrant_verification_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domains_on_registrant_verification_token ON public.domains USING btree (registrant_verification_token);
+
+
+--
+-- Name: index_domains_on_registrar_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domains_on_registrar_id ON public.domains USING btree (registrar_id);
+
+
+--
+-- Name: index_domains_on_statuses; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domains_on_statuses ON public.domains USING gin (statuses);
+
+
+--
+-- Name: index_email_address_verifications_on_domain; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_email_address_verifications_on_domain ON public.email_address_verifications USING btree (domain);
+
+
+--
+-- Name: index_epp_sessions_on_updated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_epp_sessions_on_updated_at ON public.epp_sessions USING btree (updated_at);
+
+
+--
+-- Name: index_invoice_items_on_invoice_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_invoice_items_on_invoice_id ON public.invoice_items USING btree (invoice_id);
+
+
+--
+-- Name: index_invoices_on_buyer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_invoices_on_buyer_id ON public.invoices USING btree (buyer_id);
+
+
+--
+-- Name: index_legal_documents_on_checksum; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_legal_documents_on_checksum ON public.legal_documents USING btree (checksum);
+
+
+--
+-- Name: index_legal_documents_on_documentable_type_and_documentable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_legal_documents_on_documentable_type_and_documentable_id ON public.legal_documents USING btree (documentable_type, documentable_id);
+
+
+--
+-- Name: index_log_account_activities_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_account_activities_on_item_type_and_item_id ON public.log_account_activities USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_account_activities_on_whodunnit; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_account_activities_on_whodunnit ON public.log_account_activities USING btree (whodunnit);
+
+
+--
+-- Name: index_log_accounts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_accounts_on_item_type_and_item_id ON public.log_accounts USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_accounts_on_whodunnit; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_accounts_on_whodunnit ON public.log_accounts USING btree (whodunnit);
+
+
+--
+-- Name: index_log_bank_statements_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_bank_statements_on_item_type_and_item_id ON public.log_bank_statements USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_bank_statements_on_whodunnit; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_bank_statements_on_whodunnit ON public.log_bank_statements USING btree (whodunnit);
+
+
+--
+-- Name: index_log_bank_transactions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_bank_transactions_on_item_type_and_item_id ON public.log_bank_transactions USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_bank_transactions_on_whodunnit; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_bank_transactions_on_whodunnit ON public.log_bank_transactions USING btree (whodunnit);
+
+
+--
+-- Name: index_log_blocked_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_blocked_domains_on_item_type_and_item_id ON public.log_blocked_domains USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_blocked_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_blocked_domains_on_whodunnit ON public.log_blocked_domains USING btree (whodunnit);
+
+
+--
+-- Name: index_log_certificates_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_certificates_on_item_type_and_item_id ON public.log_certificates USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_certificates_on_whodunnit; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_certificates_on_whodunnit ON public.log_certificates USING btree (whodunnit);
+
+
+--
+-- Name: index_log_contacts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_contacts_on_item_type_and_item_id ON public.log_contacts USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_contacts_on_whodunnit; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_contacts_on_whodunnit ON public.log_contacts USING btree (whodunnit);
+
+
+--
+-- Name: index_log_dnskeys_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_dnskeys_on_item_type_and_item_id ON public.log_dnskeys USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_dnskeys_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_dnskeys_on_whodunnit ON public.log_dnskeys USING btree (whodunnit);
 
 
 --
--- Name: index_log_domain_contacts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_domain_contacts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_domain_contacts_on_item_type_and_item_id ON public.log_domain_contacts USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_domain_contacts_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_domain_contacts_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_domain_contacts_on_whodunnit ON public.log_domain_contacts USING btree (whodunnit);
 
 
 --
--- Name: index_log_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_domains_on_item_type_and_item_id ON public.log_domains USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_domains_on_whodunnit ON public.log_domains USING btree (whodunnit);
 
 
 --
--- Name: index_log_invoice_items_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_invoice_items_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_invoice_items_on_item_type_and_item_id ON public.log_invoice_items USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_invoice_items_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_invoice_items_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_invoice_items_on_whodunnit ON public.log_invoice_items USING btree (whodunnit);
 
 
 --
--- Name: index_log_invoices_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_invoices_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_invoices_on_item_type_and_item_id ON public.log_invoices USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_invoices_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_invoices_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_invoices_on_whodunnit ON public.log_invoices USING btree (whodunnit);
 
 
 --
--- Name: index_log_nameservers_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_nameservers_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_nameservers_on_item_type_and_item_id ON public.log_nameservers USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_nameservers_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_nameservers_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_nameservers_on_whodunnit ON public.log_nameservers USING btree (whodunnit);
 
 
 --
--- Name: index_log_notifications_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_notifications_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_notifications_on_item_type_and_item_id ON public.log_notifications USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_notifications_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_notifications_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_notifications_on_whodunnit ON public.log_notifications USING btree (whodunnit);
 
 
 --
--- Name: index_log_registrant_verifications_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_registrant_verifications_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_registrant_verifications_on_item_type_and_item_id ON public.log_registrant_verifications USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_registrant_verifications_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_registrant_verifications_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_registrant_verifications_on_whodunnit ON public.log_registrant_verifications USING btree (whodunnit);
 
 
 --
--- Name: index_log_registrars_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_registrars_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_registrars_on_item_type_and_item_id ON public.log_registrars USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_registrars_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_registrars_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_registrars_on_whodunnit ON public.log_registrars USING btree (whodunnit);
 
 
 --
--- Name: index_log_reserved_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_reserved_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_reserved_domains_on_item_type_and_item_id ON public.log_reserved_domains USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_reserved_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_reserved_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_reserved_domains_on_whodunnit ON public.log_reserved_domains USING btree (whodunnit);
 
 
 --
--- Name: index_log_setting_entries_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_setting_entries_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_setting_entries_on_item_type_and_item_id ON public.log_setting_entries USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_setting_entries_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_setting_entries_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_setting_entries_on_whodunnit ON public.log_setting_entries USING btree (whodunnit);
 
 
 --
--- Name: index_log_settings_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_settings_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_settings_on_item_type_and_item_id ON public.log_settings USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_settings_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_settings_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_settings_on_whodunnit ON public.log_settings USING btree (whodunnit);
 
 
 --
--- Name: index_log_users_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_users_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_users_on_item_type_and_item_id ON public.log_users USING btree (item_type, item_id);
 
 
 --
--- Name: index_log_users_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_log_users_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_users_on_whodunnit ON public.log_users USING btree (whodunnit);
 
 
 --
--- Name: index_nameservers_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_nameservers_on_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_nameservers_on_domain_id ON public.nameservers USING btree (domain_id);
 
 
 --
--- Name: index_notifications_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_notifications_on_registrar_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_notifications_on_registrar_id ON public.notifications USING btree (registrar_id);
 
 
 --
--- Name: index_payment_orders_on_invoice_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_payment_orders_on_invoice_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_payment_orders_on_invoice_id ON public.payment_orders USING btree (invoice_id);
 
 
 --
--- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_prices_on_zone_id ON public.prices USING btree (zone_id);
 
 
 --
--- Name: index_registrant_verifications_on_created_at; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_registrant_verifications_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_registrant_verifications_on_created_at ON public.registrant_verifications USING btree (created_at);
 
 
 --
--- Name: index_registrant_verifications_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_registrant_verifications_on_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_verifications USING btree (domain_id);
 
 
 --
--- Name: index_setting_entries_on_code; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_setting_entries_on_code; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_setting_entries_on_code ON public.setting_entries USING btree (code);
 
 
 --
--- Name: index_settings_on_thing_type_and_thing_id_and_var; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_settings_on_thing_type_and_thing_id_and_var; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_settings_on_thing_type_and_thing_id_and_var ON public.settings USING btree (thing_type, thing_id, var);
 
 
 --
--- Name: index_users_on_identity_code; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_users_on_identity_code; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_users_on_identity_code ON public.users USING btree (identity_code);
 
 
 --
--- Name: index_users_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_users_on_registrar_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_id);
 
 
 --
--- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING btree (item_type, item_id);
 
 
 --
--- Name: index_whois_records_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_whois_records_on_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_whois_records_on_domain_id ON public.whois_records USING btree (domain_id);
 
 
 --
--- Name: index_whois_records_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_whois_records_on_registrar_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_whois_records_on_registrar_id ON public.whois_records USING btree (registrar_id);
 
 
 --
--- Name: log_contacts_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: log_contacts_object_legacy_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX log_contacts_object_legacy_id ON public.log_contacts USING btree ((((object ->> 'legacy_id'::text))::integer));
 
 
 --
--- Name: log_dnskeys_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: log_dnskeys_object_legacy_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX log_dnskeys_object_legacy_id ON public.log_contacts USING btree ((((object ->> 'legacy_domain_id'::text))::integer));
 
 
 --
--- Name: log_domains_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: log_domains_object_legacy_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX log_domains_object_legacy_id ON public.log_contacts USING btree ((((object ->> 'legacy_id'::text))::integer));
 
 
 --
--- Name: log_nameservers_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: log_nameservers_object_legacy_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX log_nameservers_object_legacy_id ON public.log_contacts USING btree ((((object ->> 'legacy_domain_id'::text))::integer));
 
 
 --
--- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX unique_data_migrations ON public.data_migrations USING btree (version);
 
 
 --
--- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING btree (version);
+
 
 --
 -- Name: contacts contacts_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
@@ -4647,7 +4370,7 @@ ALTER TABLE ONLY public.contacts
 
 
 --
--- Name: domain_contacts_contact_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: domain_contacts domain_contacts_contact_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domain_contacts
@@ -4655,7 +4378,7 @@ ALTER TABLE ONLY public.domain_contacts
 
 
 --
--- Name: domain_contacts_domain_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: domain_contacts domain_contacts_domain_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domain_contacts
@@ -4663,7 +4386,7 @@ ALTER TABLE ONLY public.domain_contacts
 
 
 --
--- Name: domains_registrant_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: domains domains_registrant_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domains
@@ -4671,7 +4394,7 @@ ALTER TABLE ONLY public.domains
 
 
 --
--- Name: domains_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: domains domains_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domains
@@ -4679,7 +4402,7 @@ ALTER TABLE ONLY public.domains
 
 
 --
--- Name: fk_rails_242b91538b; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: invoices fk_rails_242b91538b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.invoices
@@ -4687,7 +4410,7 @@ ALTER TABLE ONLY public.invoices
 
 
 --
--- Name: fk_rails_36cff3de9c; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: white_ips fk_rails_36cff3de9c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.white_ips
@@ -4695,162 +4418,12 @@ ALTER TABLE ONLY public.white_ips
 
 
 --
--- Name: fk_rails_59c422f73d; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: domain_transfers fk_rails_59c422f73d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.domain_transfers
     ADD CONSTRAINT fk_rails_59c422f73d FOREIGN KEY (old_registrar_id) REFERENCES public.registrars(id);
 
-
---
--- Name: fk_rails_78c376257f; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.prices
-    ADD CONSTRAINT fk_rails_78c376257f FOREIGN KEY (zone_id) REFERENCES public.zones(id);
-
-
---
--- Name: fk_rails_833ed7f3c0; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.domain_transfers
-    ADD CONSTRAINT fk_rails_833ed7f3c0 FOREIGN KEY (new_registrar_id) REFERENCES public.registrars(id);
-
-
---
--- Name: fk_rails_86cd2b09f5; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.account_activities
-    ADD CONSTRAINT fk_rails_86cd2b09f5 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
-
-
---
--- Name: fk_rails_87b8e40c63; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.domain_transfers
-    ADD CONSTRAINT fk_rails_87b8e40c63 FOREIGN KEY (domain_id) REFERENCES public.domains(id);
-
-
---
--- Name: fk_rails_8c6b5c12eb; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.actions
-    ADD CONSTRAINT fk_rails_8c6b5c12eb FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: fk_rails_8f9734b530; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.notifications
-    ADD CONSTRAINT fk_rails_8f9734b530 FOREIGN KEY (action_id) REFERENCES public.actions(id);
-
-
---
--- Name: fk_rails_a5ae3c203d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.actions
-    ADD CONSTRAINT fk_rails_a5ae3c203d FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
-
-
---
--- Name: fk_rails_adff2dc8e3; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.epp_sessions
-    ADD CONSTRAINT fk_rails_adff2dc8e3 FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: fk_rails_b80dbb973d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.account_activities
-    ADD CONSTRAINT fk_rails_b80dbb973d FOREIGN KEY (bank_transaction_id) REFERENCES public.bank_transactions(id);
-
-
---
--- Name: fk_rails_c9f635c0b3; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.accounts
-    ADD CONSTRAINT fk_rails_c9f635c0b3 FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
-
-
---
--- Name: fk_rails_ce38d749f6; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.account_activities
-    ADD CONSTRAINT fk_rails_ce38d749f6 FOREIGN KEY (invoice_id) REFERENCES public.invoices(id);
-
-
---
--- Name: fk_rails_d2cc3c2fa9; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.account_activities
-    ADD CONSTRAINT fk_rails_d2cc3c2fa9 FOREIGN KEY (price_id) REFERENCES public.prices(id);
-
-
---
--- Name: fk_rails_f41617a0e9; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.registrant_verifications
-    ADD CONSTRAINT fk_rails_f41617a0e9 FOREIGN KEY (domain_id) REFERENCES public.domains(id);
-
-
---
--- Name: fk_rails_f9dc5857c3; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.payment_orders
-    ADD CONSTRAINT fk_rails_f9dc5857c3 FOREIGN KEY (invoice_id) REFERENCES public.invoices(id);
-
-
---
--- Name: invoice_items_invoice_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.invoice_items
-    ADD CONSTRAINT invoice_items_invoice_id_fk FOREIGN KEY (invoice_id) REFERENCES public.invoices(id);
-
-
---
--- Name: messages_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.notifications
-    ADD CONSTRAINT messages_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
-
-
---
--- Name: nameservers_domain_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nameservers
-    ADD CONSTRAINT nameservers_domain_id_fk FOREIGN KEY (domain_id) REFERENCES public.domains(id);
-
-
---
--- Name: user_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT user_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
-
---
--- Name: csync_records csync_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.csync_records
-    ADD CONSTRAINT csync_records_pkey PRIMARY KEY (id);
 
 --
 -- Name: csync_records fk_rails_5df85aeb13; Type: FK CONSTRAINT; Schema: public; Owner: -
@@ -4859,11 +4432,156 @@ ALTER TABLE ONLY public.csync_records
 ALTER TABLE ONLY public.csync_records
     ADD CONSTRAINT fk_rails_5df85aeb13 FOREIGN KEY (domain_id) REFERENCES public.domains(id);
 
+
+--
+-- Name: prices fk_rails_78c376257f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prices
+    ADD CONSTRAINT fk_rails_78c376257f FOREIGN KEY (zone_id) REFERENCES public.zones(id);
+
+
+--
+-- Name: domain_transfers fk_rails_833ed7f3c0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_transfers
+    ADD CONSTRAINT fk_rails_833ed7f3c0 FOREIGN KEY (new_registrar_id) REFERENCES public.registrars(id);
+
+
+--
+-- Name: account_activities fk_rails_86cd2b09f5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_activities
+    ADD CONSTRAINT fk_rails_86cd2b09f5 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
+
+
+--
+-- Name: domain_transfers fk_rails_87b8e40c63; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_transfers
+    ADD CONSTRAINT fk_rails_87b8e40c63 FOREIGN KEY (domain_id) REFERENCES public.domains(id);
+
+
+--
+-- Name: actions fk_rails_8c6b5c12eb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.actions
+    ADD CONSTRAINT fk_rails_8c6b5c12eb FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: notifications fk_rails_8f9734b530; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT fk_rails_8f9734b530 FOREIGN KEY (action_id) REFERENCES public.actions(id);
+
+
+--
+-- Name: actions fk_rails_a5ae3c203d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.actions
+    ADD CONSTRAINT fk_rails_a5ae3c203d FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
+
+
+--
+-- Name: epp_sessions fk_rails_adff2dc8e3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.epp_sessions
+    ADD CONSTRAINT fk_rails_adff2dc8e3 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: account_activities fk_rails_b80dbb973d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_activities
+    ADD CONSTRAINT fk_rails_b80dbb973d FOREIGN KEY (bank_transaction_id) REFERENCES public.bank_transactions(id);
+
+
+--
+-- Name: accounts fk_rails_c9f635c0b3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT fk_rails_c9f635c0b3 FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
+
+
+--
+-- Name: account_activities fk_rails_ce38d749f6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_activities
+    ADD CONSTRAINT fk_rails_ce38d749f6 FOREIGN KEY (invoice_id) REFERENCES public.invoices(id);
+
+
+--
+-- Name: account_activities fk_rails_d2cc3c2fa9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_activities
+    ADD CONSTRAINT fk_rails_d2cc3c2fa9 FOREIGN KEY (price_id) REFERENCES public.prices(id);
+
+
+--
+-- Name: registrant_verifications fk_rails_f41617a0e9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.registrant_verifications
+    ADD CONSTRAINT fk_rails_f41617a0e9 FOREIGN KEY (domain_id) REFERENCES public.domains(id);
+
+
+--
+-- Name: payment_orders fk_rails_f9dc5857c3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_orders
+    ADD CONSTRAINT fk_rails_f9dc5857c3 FOREIGN KEY (invoice_id) REFERENCES public.invoices(id);
+
+
+--
+-- Name: invoice_items invoice_items_invoice_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.invoice_items
+    ADD CONSTRAINT invoice_items_invoice_id_fk FOREIGN KEY (invoice_id) REFERENCES public.invoices(id);
+
+
+--
+-- Name: notifications messages_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT messages_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
+
+
+--
+-- Name: nameservers nameservers_domain_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nameservers
+    ADD CONSTRAINT nameservers_domain_id_fk FOREIGN KEY (domain_id) REFERENCES public.domains(id);
+
+
+--
+-- Name: users user_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT user_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
+
+
 --
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user",public;
+SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20140616073945'),
@@ -5286,9 +5004,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200518104105'),
 ('20200529115011'),
 ('20200605100827'),
+('20200605125332'),
 ('20200610090110'),
 ('20200630081231'),
-('20200605125332'),
 ('20200714115338'),
 ('20200807110611'),
 ('20200811074839'),
@@ -5300,5 +5018,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200910102028'),
 ('20200916125326'),
 ('20200917104213'),
-('20210215101019'),
-('20200921084356');
+('20200921084356'),
+('20210215101019');
+
+
