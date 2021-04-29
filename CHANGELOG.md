@@ -1,3 +1,6 @@
+29.04.2021
+* Admin is able to cancel invoice payments [#1937](https://github.com/internetee/registry/issues/1937)
+
 26.04.2021
 * Disputed status is removed on registrant change and status added to schema [#1927](https://github.com/internetee/registry/issues/1927)
 * Bounce list record is removed one there are no active contacts with the address [#1912](https://github.com/internetee/registry/issues/1912)
