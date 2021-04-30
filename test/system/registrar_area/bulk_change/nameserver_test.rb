@@ -94,4 +94,23 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
     assert_text 'Nameserver have been successfully replaced'
     assert_text 'Affected domains: shop.test'
   end
+
+  def test_replaces_nameservers_with_invalid_domains_list
+    visit registrar_domains_url
+    click_link 'Bulk change'
+    click_link 'Nameserver'
+
+    fill_in 'Old hostname', with: 'ns1.bestnames.test'
+    fill_in 'New hostname', with: 'new-ns.bestnames.test'
+    fill_in 'ipv4', with: "192.0.2.55\n192.0.2.56"
+    fill_in 'ipv6', with: "2001:db8::55\n2001:db8::56"
+    attach_file :puny_file, Rails.root.join('test', 'fixtures', 'files', 'invalid_domains_for_ns_replacement.csv').to_s
+
+    assert_no_changes -> { Domain.find_by(name: 'shop.test').nameservers } do
+      click_on 'Replace nameserver'
+    end
+
+    assert_text 'CSV scoped domain list seems empty. Make sure that domains are added and ' \
+    '"domain_name" header is present.'
+  end
 end
