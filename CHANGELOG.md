@@ -1,3 +1,6 @@
+30.04.2021
+* Fixed error message on oversized legaldocs [#1880](https://github.com/internetee/registry/issues/1880)
+
 29.04.2021
 * Admin is able to cancel invoice payments [#1937](https://github.com/internetee/registry/issues/1937)
 * Bump nokogiri to 1.11.3 [#1920](https://github.com/internetee/registry/pull/1920)
