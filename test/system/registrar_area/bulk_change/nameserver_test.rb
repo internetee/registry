@@ -96,6 +96,26 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
   end
 
   def test_replaces_nameservers_with_invalid_domains_list
+    request_body = { data: { type: 'nameserver',
+      id: 'ns1.bestnames.test',
+      domains: ['shop.test'],
+      attributes: { hostname: 'new-ns.bestnames.test',
+                    ipv4: %w[192.0.2.55 192.0.2.56],
+                    ipv6: %w[2001:db8::55 2001:db8::56] } } }
+
+    request_stub = stub_request(:put, /registrar\/nameservers/).
+      with(
+        body: "{\"data\":{\"type\":\"nameserver\",\"id\":\"ns1.bestnames.test\",\"domains\":[],\"attributes\":{\"hostname\":\"new-ns.bestnames.test\",\"ipv4\":[\"192.0.2.55\",\"192.0.2.56\"],\"ipv6\":[\"2001:db8::55\",\"2001:db8::56\"]}}}",
+        headers: {
+        'Accept'=>'*/*',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Authorization'=>'Basic dGVzdF9nb29kbmFtZXM6dGVzdHRlc3Q=',
+        'Content-Type'=>'application/json',
+        'Host'=>'epp:3000',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: "", headers: {})
+
     visit registrar_domains_url
     click_link 'Bulk change'
     click_link 'Nameserver'
@@ -109,6 +129,8 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
     assert_no_changes -> { Domain.find_by(name: 'shop.test').nameservers } do
       click_on 'Replace nameserver'
     end
+
+    assert_requested request_stub
 
     assert_text 'CSV scoped domain list seems empty. Make sure that domains are added and ' \
     '"domain_name" header is present.'

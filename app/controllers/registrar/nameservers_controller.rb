@@ -7,6 +7,7 @@ class Registrar
       ipv6 = params[:ipv6].split("\r\n")
 
       domains = domain_list_from_csv
+      
       return csv_list_empty_guard if domains == []
 
       uri = URI.parse("#{ENV['repp_url']}registrar/nameservers")
@@ -53,7 +54,11 @@ class Registrar
       return if params[:puny_file].blank?
 
       domains = []
-      CSV.read(params[:puny_file].path, headers: true).map { |b| domains << b['domain_name'] }
+      csv = CSV.read(params[:puny_file].path, headers: true)
+
+      return if csv['domain_name'].blank?
+      csv.map { |b| domains << b['domain_name'] }
+
       domains.compact
     rescue CSV::MalformedCSVError
       []
