@@ -1,3 +1,6 @@
+03.05.2021
+* Imporved error handling on invalid XML over EPP [#1952](https://github.com/internetee/registry/pull/1952)
+
 30.04.2021
 * Fixed error message on oversized legaldocs [#1880](https://github.com/internetee/registry/issues/1880)
 
