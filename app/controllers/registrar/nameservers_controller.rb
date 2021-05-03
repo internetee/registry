@@ -27,7 +27,7 @@ class Registrar
                     flash: { notice: compose_notice_message(parsed_response) })
       else
         @api_errors = parsed_response[:message]
-        render file: 'registrar/bulk_change/new', locals: { active_tab: :nameserver }
+        render 'registrar/bulk_change/new', locals: { active_tab: :nameserver }
       end
     end
 
