@@ -151,7 +151,7 @@ module Repp
           @successful << { type: 'domain_transfer', domain_name: domain.name }
         else
           @errors << { type: 'domain_transfer', domain_name: domain.name,
-                       errors: domain.errors[:epp_errors] }
+                       errors: domain.errors.where(:epp_errors)[0].options }
         end
       end
 

@@ -78,7 +78,7 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
-    assert_equal 'Object status prohibits operation', json[:data][:failed][0][:errors][0][:msg]
+    assert_equal 'Object status prohibits operation', json[:data][:failed][0][:errors][:msg]
 
     @domain.reload
 
@@ -100,7 +100,7 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
-    assert_equal "Invalid authorization information", json[:data][:failed][0][:errors][0][:msg]
+    assert_equal "Invalid authorization information", json[:data][:failed][0][:errors][:msg]
   end
 
   def test_does_not_transfer_domain_to_same_registrar
@@ -121,7 +121,7 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
-    assert_equal 'Domain already belongs to the querying registrar', json[:data][:failed][0][:errors][0][:msg]
+    assert_equal 'Domain already belongs to the querying registrar', json[:data][:failed][0][:errors][:msg]
 
     @domain.reload
 
@@ -146,7 +146,7 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
-    assert_equal 'Object is not eligible for transfer', json[:data][:failed][0][:errors][0][:msg]
+    assert_equal 'Object is not eligible for transfer', json[:data][:failed][0][:errors][:msg]
 
     @domain.reload
 

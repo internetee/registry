@@ -1,5 +1,8 @@
 module EppErrors
   extend ActiveSupport::Concern
+  included do
+    attr_accessor :epp_errors
+  end
 
   def construct_epp_errors
     epp_errors = []
@@ -19,9 +22,7 @@ module EppErrors
 
       epp_errors << collect_parent_errors(attr, errors)
     end
-
-    errors.add(:epp_errors, epp_errors)
-    errors[:epp_errors].flatten!
+    errors.add(:epp_errors, epp_errors) unless epp_errors.empty?
   end
 
   def collect_parent_errors(attr, errors)

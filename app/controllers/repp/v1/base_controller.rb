@@ -67,7 +67,7 @@ module Repp
         @epp_errors ||= []
 
         obj&.construct_epp_errors
-        @epp_errors += obj.errors[:epp_errors] if obj
+        @epp_errors += obj.errors.where(:epp_errors).map(&:options) if obj
 
         format_epp_errors if update
         @epp_errors.uniq!

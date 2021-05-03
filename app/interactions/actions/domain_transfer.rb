@@ -13,8 +13,8 @@ module Actions
     end
 
     def call
-      return unless domain_exists?
-      return unless valid_transfer_code?
+      return false unless domain_exists?
+      return false unless valid_transfer_code?
 
       run_validations
 
