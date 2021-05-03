@@ -286,7 +286,7 @@ GEM
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2021.0225)
-    mimemagic (0.3.10)
+    mimemagic (0.4.3)
       nokogiri (~> 1)
       rake
     mini_mime (1.1.0)
@@ -544,7 +544,7 @@ DEPENDENCIES
   kaminari
   lhv!
   mime-types-data
-  mimemagic (= 0.3.10)
+  mimemagic (= 0.4.3)
   minitest (~> 5.14)
   money-rails
   nokogiri (~> 1.11.3)
