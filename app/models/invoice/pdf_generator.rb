@@ -14,9 +14,7 @@ class Invoice
     private
 
     def invoice_html
-      view = ActionView::Base.new(ActionController::Base.view_paths, invoice: invoice)
-      view.class_eval { include ApplicationHelper }
-      view.render(file: 'invoice/pdf', layout: false)
+      ApplicationController.render(template: 'invoice/pdf', assigns: { invoice: invoice } )
     end
   end
 end
