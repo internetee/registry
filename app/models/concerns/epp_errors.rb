@@ -6,8 +6,8 @@ module EppErrors
 
   def construct_epp_errors
     epp_errors = []
-    errors.messages.each do |attr, errors|
-      attr = attr.to_s.split('.')[0].to_sym
+    errors.each do |error|
+      attr = error.attribute.to_s.split('.')[0].to_sym
       next if attr == :epp_errors
 
       if self.class.reflect_on_association(attr)
@@ -20,9 +20,9 @@ module EppErrors
         next
       end
 
-      epp_errors << collect_parent_errors(attr, errors)
+      epp_errors << collect_parent_errors(attr, error.message)
     end
-    errors.add(:epp_errors, epp_errors) unless epp_errors.empty?
+    errors.add(:epp_errors, epp_errors.flatten) unless epp_errors.empty?
   end
 
   def collect_parent_errors(attr, errors)

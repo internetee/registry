@@ -102,7 +102,7 @@ module Epp
 
       if obj
         obj.construct_epp_errors
-        @errors += obj.errors[:epp_errors]
+        @errors += obj.errors.where[:epp_errors].flatten
       end
 
       if params[:parsed_frame]&.at_css('update')
