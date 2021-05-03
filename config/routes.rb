@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
     post 'command/poll', to: 'polls#poll', as: 'poll', constraints: EppConstraint.new(:poll)
     get 'error/:command', to: 'errors#error'
+    get 'error', to: 'errors#command_handler'
   end
 
   namespace :repp do

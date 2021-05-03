@@ -23,6 +23,8 @@ module Epp
     rescue_from ActiveRecord::RecordNotFound, with: :respond_with_object_does_not_exist_error
     before_action :set_paper_trail_whodunnit
 
+    skip_before_action :validate_against_schema
+
     protected
 
     def respond_with_command_failed_error(exception)
@@ -103,7 +105,7 @@ module Epp
         @errors += obj.errors[:epp_errors]
       end
 
-      if params[:parsed_frame].at_css('update')
+      if params[:parsed_frame]&.at_css('update')
         @errors.each_with_index do |errors, index|
           if errors[:code] == '2304' &&
             errors[:value].present? &&
@@ -113,7 +115,6 @@ module Epp
           end
         end
       end
-
       @errors.uniq!
 
       render_epp_response '/epp/error'
