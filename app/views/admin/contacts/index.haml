@@ -28,7 +28,7 @@
         .col-md-3
           .form-group
             = label_tag t(:country)
-            = select_tag '[q][country_code_eq]', SortedCountry.all_options(params[:q][:country_code_eq]), { include_blank: true, placeholder: t(:choose), class: 'form-control selectize' }
+            = select_tag '[q][country_code_eq]', ApplicationController.helpers.all_country_options(params[:q][:country_code_eq]), { include_blank: true, placeholder: t(:choose), class: 'form-control selectize' }
         .col-md-6
           .form-group
             = label_tag t(:contact_type)

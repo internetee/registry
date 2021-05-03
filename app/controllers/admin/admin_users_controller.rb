@@ -34,7 +34,7 @@ module Admin
       params[:admin_user].delete(:password) if params[:admin_user][:password].blank?
       params[:admin_user].delete(:password_confirmation) if params[:admin_user][:password_confirmation].blank?
 
-      if @admin_user.update_attributes(admin_user_params)
+      if @admin_user.update(admin_user_params)
         flash[:notice] = I18n.t('record_updated')
         redirect_to [:admin, @admin_user]
       else

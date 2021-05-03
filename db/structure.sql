@@ -537,6 +537,43 @@ ALTER SEQUENCE public.certificates_id_seq OWNED BY public.certificates.id;
 
 
 --
+-- Name: contact_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.contact_requests (
+                                         id integer NOT NULL,
+                                         whois_record_id integer NOT NULL,
+                                         secret character varying NOT NULL,
+                                         email character varying NOT NULL,
+                                         name character varying NOT NULL,
+                                         valid_to timestamp without time zone NOT NULL,
+                                         status character varying DEFAULT 'new'::character varying NOT NULL,
+                                         ip_address inet,
+                                         created_at timestamp without time zone NOT NULL,
+                                         updated_at timestamp without time zone NOT NULL,
+                                         message_id character varying
+);
+
+
+--
+-- Name: contact_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.contact_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contact_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.contact_requests_id_seq OWNED BY public.contact_requests.id;
+
+--
 -- Name: contacts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2736,6 +2773,13 @@ ALTER TABLE ONLY public.certificates ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: contact_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contact_requests ALTER COLUMN id SET DEFAULT nextval('public.contact_requests_id_seq'::regclass);
+
+
+--
 -- Name: contacts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3191,6 +3235,14 @@ ALTER TABLE ONLY public.bounced_mail_addresses
 
 ALTER TABLE ONLY public.certificates
     ADD CONSTRAINT certificates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contact_requests contact_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contact_requests
+    ADD CONSTRAINT contact_requests_pkey PRIMARY KEY (id);
 
 
 --
@@ -3778,6 +3830,34 @@ CREATE INDEX index_accounts_on_registrar_id ON public.accounts USING btree (regi
 --
 
 CREATE INDEX index_certificates_on_api_user_id ON public.certificates USING btree (api_user_id);
+
+
+--
+-- Name: index_contact_requests_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contact_requests_on_email ON public.contact_requests USING btree (email);
+
+
+--
+-- Name: index_contact_requests_on_ip_address; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contact_requests_on_ip_address ON public.contact_requests USING btree (ip_address);
+
+
+--
+-- Name: index_contact_requests_on_secret; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_contact_requests_on_secret ON public.contact_requests USING btree (secret);
+
+
+--
+-- Name: index_contact_requests_on_whois_record_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contact_requests_on_whois_record_id ON public.contact_requests USING btree (whois_record_id);
 
 
 --
