@@ -70,7 +70,7 @@ epp_port: '700'
 cert_path: '/home/registry/registry/shared/ca/certs/webclient.cert.pem'
 key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
 epp_hostname: 'registry.gitlab.eu'
-repp_url: 'https://repp.gitlab.eu/repp/v1/'
+repp_url: 'http://epp:3000/repp/v1/'
 
 # Estonian Company Register
 company_register_username:
