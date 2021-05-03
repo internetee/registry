@@ -1,5 +1,8 @@
 03.05.2021
 * Imporved error handling on invalid XML over EPP [#1952](https://github.com/internetee/registry/pull/1952)
+* Bump nokogiri to 1.11.3 [#1961](https://github.com/internetee/registry/pull/1961)
+* Bump bootsnap to 1.7.4 [#1963](https://github.com/internetee/registry/pull/1963)
+* Bump truemail to 2.4.0 [#1964](https://github.com/internetee/registry/pull/1964)
 
 30.04.2021
 * Fixed error message on oversized legaldocs [#1880](https://github.com/internetee/registry/issues/1880)
