@@ -25,7 +25,7 @@ gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and 
 
 # 0.7.3 is the latest for Rails 4.2, however, it is absent on Rubygems server
 # https://github.com/huacnlee/rails-settings-cached/issues/165
-gem 'nokogiri', '~> 1.11.0'
+gem 'nokogiri', '~> 1.11.3'
 
 # style
 gem 'bootstrap-sass', '~> 3.4'
