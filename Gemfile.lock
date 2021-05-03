@@ -461,7 +461,7 @@ GEM
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
-    truemail (2.3.4)
+    truemail (2.4.0)
       simpleidn (~> 0.2.1)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
@@ -568,7 +568,7 @@ DEPENDENCIES
   sidekiq
   simplecov (= 0.17.1)
   simpleidn (= 0.2.1)
-  truemail (~> 2.3)
+  truemail (~> 2.4)
   uglifier
   validates_email_format_of (= 1.6.3)
   webdrivers
