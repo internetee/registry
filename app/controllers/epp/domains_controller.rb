@@ -90,10 +90,9 @@ module Epp
       action = params[:parsed_frame].css('transfer').first[:op]
 
       if @domain.non_transferable?
-        epp_errors << {
-          code: '2304',
-          msg: I18n.t(:object_status_prohibits_operation),
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2304',
+                       msg: I18n.t(:object_status_prohibits_operation))
         handle_errors
         return
       end
@@ -102,10 +101,9 @@ module Epp
       wrong_transfer_code = provided_transfer_code != @domain.transfer_code
 
       if wrong_transfer_code
-        epp_errors << {
-          code: '2202',
-          msg: 'Invalid authorization information',
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2202',
+                       msg: 'Invalid authorization information')
         handle_errors
         return
       end
@@ -120,10 +118,9 @@ module Epp
       if @domain_transfer
         render_epp_response '/epp/domains/transfer'
       else
-        epp_errors << {
-          code: '2303',
-          msg: I18n.t('no_transfers_found')
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2303',
+                       msg: I18n.t('no_transfers_found'))
         handle_errors
       end
     end
@@ -184,11 +181,10 @@ module Epp
     def validate_transfer
       # period element is disabled for now
       if params[:parsed_frame].css('period').any?
-        epp_errors << {
-          code: '2307',
-          msg: I18n.t(:unimplemented_object_service),
-          value: { obj: 'period' }
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2307',
+                       msg: I18n.t(:unimplemented_object_service),
+                       value: { obj: 'period' })
       end
 
       requires 'transfer > transfer'
@@ -217,10 +213,10 @@ module Epp
       return true if Setting.client_status_editing_enabled
       return true if check_client_hold
       return true if params[:parsed_frame].css('status').empty?
-      epp_errors << {
-        code: '2306',
-        msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
-      }
+      epp_errors.add(:epp_errors,
+                     code: '2306',
+                     msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
+      )
     end
 
     def check_client_hold
@@ -232,17 +228,15 @@ module Epp
       @domain_pricelist = @domain.pricelist(operation, period.try(:to_i), unit)
       if @domain_pricelist.try(:price) # checking if price list is not found
         if current_user.registrar.balance < @domain_pricelist.price.amount
-          epp_errors << {
-            code: '2104',
-            msg: I18n.t('billing_failure_credit_balance_low')
-          }
+          epp_errors.add(:epp_errors,
+                         code: '2104',
+                         msg: I18n.t('billing_failure_credit_balance_low'))
           return false
         end
       else
-        epp_errors << {
-          code: '2104',
-          msg: I18n.t(:active_price_missing_for_this_operation)
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2104',
+                       msg: I18n.t(:active_price_missing_for_this_operation))
         return false
       end
       true

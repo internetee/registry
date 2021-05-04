@@ -5,35 +5,41 @@ module EppErrors
   end
 
   def construct_epp_errors
-    epp_errors = []
+    epp_errors = ActiveModel::Errors.new(self)
     errors.each do |error|
       attr = error.attribute.to_s.split('.')[0].to_sym
       next if attr == :epp_errors
 
       if self.class.reflect_on_association(attr)
-        epp_errors << collect_child_errors(attr)
+        collect_child_errors(attr).each do |child_error|
+          epp_errors.import child_error
+        end
       end
 
       if self.class.reflect_on_aggregation(attr)
         aggregation = send(attr)
-        epp_errors << collect_aggregation_errors(aggregation)
+        collect_aggregation_errors(aggregation).each do |aggregation_error|
+          epp_errors.import aggregation_error
+        end
         next
       end
-
-      epp_errors << collect_parent_errors(attr, error.message)
+      collect_parent_errors(attr, error.message).each do |parent_error|
+        epp_errors.import parent_error
+      end
     end
-    errors.add(:epp_errors, epp_errors.flatten) unless epp_errors.empty?
+    epp_errors.each { |epp_error| errors.import epp_error}
+    errors
   end
 
   def collect_parent_errors(attr, errors)
     errors = [errors] if errors.is_a?(String)
 
-    epp_errors = []
+    epp_errors = ActiveModel::Errors.new(self)
     errors.each do |err|
       code, value = find_epp_code_and_value(err)
       next unless code
       msg = attr.to_sym == :base ? err : "#{err} [#{attr}]"
-      epp_errors << { code: code, msg: msg, value: value }
+      epp_errors.add(attr, code: code, msg: msg, value: value)
     end
     epp_errors
   end
@@ -41,12 +47,13 @@ module EppErrors
   def collect_child_errors(attr)
     macro = self.class.reflect_on_association(attr).macro
     multi = [:has_and_belongs_to_many, :has_many]
-    # single = [:belongs_to, :has_one]
 
-    epp_errors = []
+    epp_errors = ActiveModel::Errors.new(self)
     send(attr).each do |x|
-      x.errors.messages.each do |attribute, errors|
-        epp_errors << x.collect_parent_errors(attribute, errors)
+      x.errors.each do |error|
+        x.collect_parent_errors(error.attribute, error.message).each do |parent_error|
+          epp_errors.import parent_error
+        end
       end
     end if multi.include?(macro)
 
