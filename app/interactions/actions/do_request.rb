@@ -14,6 +14,8 @@ module Actions
                    do_live_request(@request, @uri)
                  end
       response
+    rescue StandardError
+      response.fail!(error: StandardError.message)
     end
 
     def do_live_request(request, uri)
