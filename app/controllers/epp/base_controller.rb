@@ -94,7 +94,7 @@ module Epp
     end
 
     def handle_errors(obj = nil)
-      @errors ||= []
+      @errors ||= ActiveModel::Errors.new(self)
 
       if obj
         obj.construct_epp_errors

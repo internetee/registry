@@ -113,11 +113,20 @@ module EppErrors
   end
 
   def add_epp_error(code, obj, val, msg)
-    errors[:epp_errors] ||= []
     t = errors.generate_message(*msg) if msg.is_a?(Array)
     t = msg if msg.is_a?(String)
     err = { code: code, msg: t }
+    val = check_for_status(code, obj, val)
     err[:value] = { val: val, obj: obj } if val.present?
-    errors[:epp_errors] << err
+    self.errors.add(:epp_errors, err)
+  end
+
+  def check_for_status(code, obj, val)
+    if code == '2304' && val.present? && val == DomainStatus::SERVER_DELETE_PROHIBITED &&
+       obj == 'status'
+      DomainStatus::PENDING_UPDATE
+    else
+      val
+    end
   end
 end

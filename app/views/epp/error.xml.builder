@@ -2,7 +2,7 @@ xml.epp_head do
   xml.response do
     @errors.each do |error|
       x = error&.options
-      next if x.empty?
+      next if x.empty? || x == { value: nil }
       xml.result('code' => x[:code]) do
         xml.msg(x[:msg], 'lang' => 'en')
         model_name = resource ? resource.model_name.singular.sub('epp_','') : controller.controller_name.singularize

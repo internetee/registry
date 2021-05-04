@@ -55,13 +55,13 @@ module Epp
 
     def renew
       authorize! :renew, Epp::Contact
-      epp_errors << { code: '2101', msg: t(:'errors.messages.unimplemented_command') }
+      epp_errors.add(:epp_errors, code: '2101', msg: t(:'errors.messages.unimplemented_command'))
       handle_errors
     end
 
     def transfer
       authorize! :transfer, Epp::Contact
-      epp_errors << { code: '2101', msg: t(:'errors.messages.unimplemented_command') }
+      epp_errors.add(:epp_errors, code: '2101', msg: t(:'errors.messages.unimplemented_command'))
       handle_errors
     end
 

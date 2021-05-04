@@ -44,7 +44,10 @@ module Epp
       update_params = ::Deserializers::Xml::DomainUpdate.new(params[:parsed_frame],
                                                              registrar_id).call
       action = Actions::DomainUpdate.new(@domain, update_params, false)
-      (handle_errors(@domain) and return) unless action.call
+      unless action.call
+        handle_errors(@domain)
+        return
+      end
 
       pending = @domain.epp_pending_update.present?
       render_epp_response("/epp/domains/success#{'_pending' if pending}")
