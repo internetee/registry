@@ -6,21 +6,19 @@ class Registrar
       ipv4 = params[:ipv4].split("\r\n")
       ipv6 = params[:ipv6].split("\r\n")
 
+      uri = URI.parse("#{ENV['repp_url']}registrar/nameservers")
+
       domains = domain_list_from_csv
 
       return csv_list_empty_guard if domains == []
 
-      uri = URI.parse("#{ENV['repp_url']}registrar/nameservers")
-      request = Net::HTTP::Put.new(uri, 'Content-Type' => 'application/json')
-      request.body = { data: { type: 'nameserver', id: params[:old_hostname],
-                               domains: domains || [],
-                               attributes: { hostname: params[:new_hostname],
-                                             ipv4: ipv4,
-                                             ipv6: ipv6 } } }.to_json
-      request.basic_auth(current_registrar_user.username,
-                         current_registrar_user.plain_text_password)
-
-      response = do_request(request, uri)
+      options = {
+        uri: uri,
+        ipv4: ipv4,
+        ipv6: ipv6,
+      }
+      action = Actions::BulkNameserversChange.new(params, domains, current_registrar_user, options)
+      response = action.call
 
       parsed_response = JSON.parse(response.body, symbolize_names: true)
 

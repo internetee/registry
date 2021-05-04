@@ -7,7 +7,10 @@ class Registrar
       authorize! :manage, :repp
       uri = BASE_URL
       request = form_request(uri)
-      response = do_request(request, uri)
+
+      action = Actions::DoRequest.new(request, uri)
+      response = action.call
+
       start_notice = t('.replaced')
 
       process_response(response: response,
