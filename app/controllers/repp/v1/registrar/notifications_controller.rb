@@ -30,9 +30,9 @@ module Repp
 
           data = @notification.as_json(only: %i[id text attached_obj_id attached_obj_type])
 
-          default_count = 200
-
-          message = "Command completed successfully. The total notifications are #{records.count}. Returns only #{@notification.count}. Limit by default is #{limit}. To change the amount of data returned, use the parameters limit and offset in url."
+          message = 'Command completed successfully.'\
+                    " Returning #{@notification.count} out of #{records.count}."\
+                    ' Use URL parameters :limit and :offset to list other messages if needed.'
           render_success(data: data, message: message)
         end
 
