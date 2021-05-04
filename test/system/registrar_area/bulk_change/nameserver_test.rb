@@ -96,38 +96,23 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
   end
 
   def test_replaces_nameservers_with_invalid_domains_list
-    request_body = { data: { type: 'nameserver',
-      id: 'ns1.bestnames.test',
-     domains: [],
-     attributes: { hostname: 'new-ns.bestnames.test',
-                   ipv4: %w[192.0.2.55 192.0.2.56],
-                   ipv6: %w[2001:db8::55 2001:db8::56] } } }
-    request_stub = stub_request(:put, "http://epp:3000/repp/v1/registrar/nameservers").
-                    with(
-                      body: request_body,
-                      headers: {
-                      'Accept'=>'*/*',
-                      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-                      'Authorization'=>'Basic dGVzdF9nb29kbmFtZXM6dGVzdHRlc3Q=',
-                      'Content-Type'=>'application/json',
-                      'Host'=>'epp:3000',
-                      'User-Agent'=>'Ruby'
-                      }).
-                    to_return(status: 200, body: "", headers: {})
+    nameserver = nameservers(:shop_ns1)
 
-visit registrar_domains_url
-click_link 'Bulk change'
-click_link 'Nameserver'
+    visit registrar_domains_url
+    click_link 'Bulk change'
+    click_link 'Nameserver'
 
-fill_in 'Old hostname', with: 'ns1.bestnames.test'
-fill_in 'New hostname', with: 'new-ns.bestnames.test'
-fill_in 'ipv4', with: "192.0.2.55\n192.0.2.56"
-fill_in 'ipv6', with: "2001:db8::55\n2001:db8::56"
-attach_file :puny_file, Rails.root.join('test', 'fixtures', 'files', 'invalid_domains_for_ns_replacement.csv').to_s
+    fill_in 'Old hostname', with: nameserver.hostname
+    fill_in 'New hostname', with: 'new-ns.bestnames.test'
+    fill_in 'ipv4', with: "192.0.2.55\n192.0.2.56"
+    fill_in 'ipv6', with: "2001:db8::55\n2001:db8::56"
+    attach_file :puny_file, Rails.root.join('test', 'fixtures', 'files', 'invalid_domains_for_ns_replacement.csv').to_s
 
-click_on 'Replace nameserver'
+    assert_no_changes -> { nameserver.hostname } do
+      click_on 'Replace nameserver'
+    end
 
-assert_requested request_stub
-assert_current_path registrar_domains_path
+    assert_current_path registrar_domains_path    
+    assert_text 'CSV scoped domain list seems empty. Make sure that domains are added and "domain_name" header is present.'
   end
 end
