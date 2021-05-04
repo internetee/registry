@@ -22,6 +22,7 @@ module Repp
         desc 'Get the all unread poll messages'
         def all_notifications
           records = current_user.unread_notifications.order('created_at DESC').all
+
           @notification = records.limit(limit).offset(offset)
           # rubocop:disable Style/AndOr
           render_success(data: nil) and return unless @notification
@@ -29,7 +30,10 @@ module Repp
 
           data = @notification.as_json(only: %i[id text attached_obj_id attached_obj_type])
 
-          render_success(data: data)
+          default_count = 200
+
+          message = "Command completed successfully. The total notifications are #{records.count}. Returns only #{@notification.count}. Limit by default is #{limit}. To change the amount of data returned, use the parameters limit and offset in url."
+          render_success(data: data, message: message)
         end
 
         api :GET, '/repp/v1/registrar/notifications/:notification_id'
