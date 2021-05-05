@@ -61,7 +61,7 @@ module EppErrors
   end
 
   def collect_aggregation_errors(aggregation)
-    epp_errors = []
+    epp_errors = ActiveModel::Errors.new(self)
 
     aggregation.errors.details.each do |attr, error_details|
       error_details.each do |error_detail|
@@ -77,7 +77,7 @@ module EppErrors
             message = "#{aggregation.model_name.human} #{message.camelize(:lower)}"
           end
 
-          epp_errors << { code: epp_code, msg: message }
+          epp_errors.add(attr, code: epp_code, msg: message)
         end
       end
     end
