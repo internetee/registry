@@ -108,13 +108,12 @@ module Repp
       api :POST, '/repp/v1/domains/transfer'
       desc 'Transfer multiple domains'
       def transfer
-        @errors ||= ActiveModel::Errors.new(self)
+        @errors ||= []
         @successful = []
 
         transfer_params[:domain_transfers].each do |transfer|
           initiate_transfer(transfer)
         end
-
         render_success(data: { success: @successful, failed: @errors })
       end
 
@@ -150,9 +149,8 @@ module Repp
         if action.call
           @successful << { type: 'domain_transfer', domain_name: domain.name }
         else
-          domain.errors.where(:epp_errors).each do |domain_error|
-            @errors.import domain_error
-          end
+          @errors << { type: 'domain_transfer', domain_name: domain.name,
+                       errors: domain.errors.where(:epp_errors).first.options }
         end
       end
 
@@ -196,7 +194,7 @@ module Repp
         return if @domain.registrar == current_user.registrar
         return if @domain.transfer_code.eql?(request.headers['Auth-Code'])
 
-        @epp_errors << { code: 2202, msg: I18n.t('errors.messages.epp_authorization_error') }
+        @epp_errors.add(:epp_errors, code: 2202, msg: I18n.t('errors.messages.epp_authorization_error'))
         handle_errors
       end
 
