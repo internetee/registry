@@ -14,7 +14,7 @@ class Invoice
     private
 
     def invoice_html
-      ApplicationController.render(template: 'invoice/pdf', assigns: { invoice: invoice } )
+      ApplicationController.render(template: 'invoice/pdf', assigns: { invoice: invoice })
     end
   end
 end

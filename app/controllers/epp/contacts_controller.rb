@@ -173,8 +173,7 @@ module Epp
 
       epp_errors.add(:epp_errors,
                      code: '2306',
-                     msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]"
-      )
+                     msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]")
     end
 
     def fax_disabled
@@ -190,8 +189,7 @@ module Epp
       return true if params[:parsed_frame].css('status').empty?
       epp_errors.add(:epp_errors,
                      code: '2306',
-                     msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
-      )
+                     msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]")
     end
 
     def address_given?

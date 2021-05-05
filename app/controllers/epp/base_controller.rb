@@ -163,9 +163,12 @@ module Epp
         else
           missing = el.present? ? el.text.blank? : true
         end
+        next unless missing
+
         epp_errors.add(:epp_errors,
                        code: '2003',
-                       message: I18n.t('errors.messages.required_parameter_missing', key: "#{full_selector} [#{attr}]")) if missing
+                       message: I18n.t('errors.messages.required_parameter_missing',
+                                       key: "#{full_selector} [#{attr}]"))
       end
 
       missing ? false : el # return last selector if it was present
@@ -185,7 +188,8 @@ module Epp
       unless attribute
         epp_errors.add(:epp_errors,
                        code: '2003',
-                       msg: I18n.t('errors.messages.required_parameter_missing', key: attribute_selector))
+                       msg: I18n.t('errors.messages.required_parameter_missing',
+                                   key: attribute_selector))
         return
       end
 
@@ -221,7 +225,8 @@ module Epp
 
       epp_errors.add(:epp_errors,
                      code: '2306',
-                     msg: I18n.t(:exactly_one_parameter_required, params: full_selectors.join(' OR ')))
+                     msg: I18n.t(:exactly_one_parameter_required,
+                                 params: full_selectors.join(' OR ')))
     end
 
     def mutually_exclusive(*selectors)
@@ -230,7 +235,8 @@ module Epp
 
       epp_errors.add(:epp_errors,
                      code: '2306',
-                     msg: I18n.t(:mutally_exclusive_params, params: full_selectors.join(', ')))
+                     msg: I18n.t(:mutally_exclusive_params,
+                                 params: full_selectors.join(', ')))
     end
 
     def optional(selector, *validations)
@@ -273,9 +279,11 @@ module Epp
 
     def xml_attrs_present?(ph, attributes) # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
       attributes.each do |x|
+        next if has_attribute(ph, x)
+
         epp_errors.add(:epp_errors,
                        code: '2003',
-                       msg: I18n.t('errors.messages.required_parameter_missing', key: x.last)) unless has_attribute(ph, x)
+                       msg: I18n.t('errors.messages.required_parameter_missing', key: x.last))
       end
       epp_errors.empty?
     end

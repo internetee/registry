@@ -561,7 +561,7 @@ DEPENDENCIES
   puma
   que
   que-web
-  rails (~> 6.1)
+  rails (~> 6.0)
   ransack (~> 2.3)
   rest-client
   rexml
@@ -580,4 +580,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.5.1)
 
 BUNDLED WITH
-   2.2.15
+   2.2.16

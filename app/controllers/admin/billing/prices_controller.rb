@@ -81,7 +81,9 @@ module Admin
         ]
 
         allowed = params.require(:price).permit(*allowed_params)
-        allowed[:duration] = ActiveSupport::Duration.build(allowed[:duration].to_i) if allowed[:duration]
+        if allowed[:duration]
+          allowed[:duration] = ActiveSupport::Duration.build(allowed[:duration].to_i)
+        end
         allowed
       end
 

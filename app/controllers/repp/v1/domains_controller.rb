@@ -194,7 +194,9 @@ module Repp
         return if @domain.registrar == current_user.registrar
         return if @domain.transfer_code.eql?(request.headers['Auth-Code'])
 
-        @epp_errors.add(:epp_errors, code: 2202, msg: I18n.t('errors.messages.epp_authorization_error'))
+        @epp_errors.add(:epp_errors,
+                        code: 2202,
+                        msg: I18n.t('errors.messages.epp_authorization_error'))
         handle_errors
       end
 

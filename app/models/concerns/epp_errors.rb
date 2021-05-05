@@ -27,7 +27,7 @@ module EppErrors
         epp_errors.import parent_error
       end
     end
-    epp_errors.each { |epp_error| errors.import epp_error}
+    epp_errors.each { |epp_error| errors.import epp_error }
     errors
   end
 
@@ -49,13 +49,16 @@ module EppErrors
     multi = [:has_and_belongs_to_many, :has_many]
 
     epp_errors = ActiveModel::Errors.new(self)
-    send(attr).each do |x|
-      x.errors.each do |error|
-        x.collect_parent_errors(error.attribute, error.message).each do |parent_error|
-          epp_errors.import parent_error
+
+    if multi.include?(macro)
+      send(attr).each do |x|
+        x.errors.each do |error|
+          x.collect_parent_errors(error.attribute, error.message).each do |parent_error|
+            epp_errors.import parent_error
+          end
         end
       end
-    end if multi.include?(macro)
+    end
 
     epp_errors
   end

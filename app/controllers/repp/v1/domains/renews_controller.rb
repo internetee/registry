@@ -30,7 +30,7 @@ module Repp
           return render_success(data: { updated_domains: @domains.map(&:name) }) if renew.valid?
 
           msg = renew.errors.keys.map { |k, _v| renew.errors[k] }.join(', ')
-          @epp_errors.add(:epp_errors, msg: msg , code: '2002')
+          @epp_errors.add(:epp_errors, msg: msg, code: '2002')
           handle_errors
         end
 
@@ -45,7 +45,7 @@ module Repp
           periods = Depp::Domain::PERIODS.map { |p| p[1] }
           return if periods.include? bulk_renew_params[:renew_period]
 
-          @epp_errors.add(:epp_errors, msg: 'Invalid renew period' , code: '2005')
+          @epp_errors.add(:epp_errors, msg: 'Invalid renew period', code: '2005')
         end
 
         def select_renewable_domains
@@ -54,7 +54,7 @@ module Repp
           if bulk_renew_params[:domains].instance_of?(Array)
             @domains = bulk_renew_domains
           else
-            @epp_errors.add(:epp_errors, msg: 'Domains attribute must be an array' , code: '2005')
+            @epp_errors.add(:epp_errors, msg: 'Domains attribute must be an array', code: '2005')
           end
 
           return handle_errors if @epp_errors.any?
@@ -78,11 +78,11 @@ module Repp
           bulk_renew_params[:domains].each do |idn|
             domain = Epp::Domain.find_by(name: idn)
             domains << domain if domain
-            unless domain
-              @epp_errors.add(:epp_errors,
-                              msg: "Object does not exist: #{idn}",
-                              code: '2304')
-            end
+            next if domain
+
+            @epp_errors.add(:epp_errors,
+                            msg: "Object does not exist: #{idn}",
+                            code: '2304')
           end
 
           domains

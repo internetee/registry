@@ -63,7 +63,7 @@ module Repp
         @epp_errors ||= ActiveModel::Errors.new(self)
       end
 
-      def handle_errors(obj = nil, update: false)
+      def handle_errors(obj = nil)
         @epp_errors ||= ActiveModel::Errors.new(self)
 
         if obj
@@ -78,8 +78,8 @@ module Repp
         @epp_errors ||= ActiveModel::Errors.new(self)
         @epp_errors.add(:epp_errors, msg: 'Command failed', code: '2304') if data != {}
 
-        error_options = @epp_errors.errors.uniq.
-          select { |error| error.options[:code].present? }[0].options
+        error_options = @epp_errors.errors.uniq
+                                   .select { |error| error.options[:code].present? }[0].options
 
         @response = { code: error_options[:code].to_i, message: error_options[:msg], data: data }
         render(json: @response, status: status)
