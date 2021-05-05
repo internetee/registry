@@ -60,40 +60,28 @@ module Repp
       end
 
       def epp_errors
-        @epp_errors ||= []
+        @epp_errors ||= ActiveModel::Errors.new(self)
       end
 
       def handle_errors(obj = nil, update: false)
-        @epp_errors ||= []
+        @epp_errors ||= ActiveModel::Errors.new(self)
 
-        obj&.construct_epp_errors
-        @epp_errors += obj.errors.where(:epp_errors).map(&:options) if obj
-
-        format_epp_errors if update
-        @epp_errors.uniq!
+        if obj
+          obj.construct_epp_errors
+          obj.errors.each { |error| @epp_errors.import error }
+        end
 
         render_epp_error
       end
 
-      def format_epp_errors
-        @epp_errors.each_with_index do |error, index|
-          blocked_by_delete_prohibited?(error, index)
-        end
-      end
-
-      def blocked_by_delete_prohibited?(error, index)
-        if error[:code] == 2304 && error[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
-           error[:value][:obj] == 'status'
-
-          @epp_errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
-        end
-      end
-
       def render_epp_error(status = :bad_request, data = {})
-        @epp_errors ||= []
-        @epp_errors << { code: 2304, msg: 'Command failed' } if data != {}
+        @epp_errors ||= ActiveModel::Errors.new(self)
+        @epp_errors.add(:epp_errors, msg: 'Command failed', code: '2304') if data != {}
 
-        @response = { code: @epp_errors[0][:code].to_i, message: @epp_errors[0][:msg], data: data }
+        error_options = @epp_errors.errors.uniq.
+          select { |error| error.options[:code].present? }[0].options
+
+        @response = { code: error_options[:code].to_i, message: error_options[:msg], data: data }
         render(json: @response, status: status)
       end
 
