@@ -17,10 +17,10 @@ module Repp
         @response = { code: 2303, message: 'Object does not exist' }
         render(json: @response, status: :not_found)
       rescue ActionController::ParameterMissing, Apipie::ParamMissing => e
-        @response = { code: 2003, message: e }
+        @response = { code: 2003, message: e.message.gsub(/\n/, '. ') }
         render(json: @response, status: :bad_request)
       rescue Apipie::ParamInvalid => e
-        @response = { code: 2005, message: e }
+        @response = { code: 2005, message: e.message.gsub(/\n/, '. ') }
         render(json: @response, status: :bad_request)
       ensure
         create_repp_log
