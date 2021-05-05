@@ -14,8 +14,8 @@ module Actions
                    do_live_request(@request, @uri)
                  end
       response
-    rescue StandardError
-      response.fail!(error: StandardError.message)
+    rescue StandardError, OpenURI::HTTPError => e
+      Rails.logger.debug e.message
     end
 
     def do_live_request(request, uri)
