@@ -25,7 +25,11 @@ module Domains
                                                          period: period,
                                                          unit: unit)
 
-          task.valid? ? @total_price += task.result : errors.merge!(task.errors)
+          if task.valid?
+            @total_price += task.result
+          else
+            task.errors.each { |task_error| errors.import task_error }
+          end
         end
       end
     end

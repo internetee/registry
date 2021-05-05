@@ -108,7 +108,7 @@ module Repp
       api :POST, '/repp/v1/domains/transfer'
       desc 'Transfer multiple domains'
       def transfer
-        @errors ||= []
+        @errors ||= ActiveModel::Errors.new(self)
         @successful = []
 
         transfer_params[:domain_transfers].each do |transfer|
@@ -150,8 +150,9 @@ module Repp
         if action.call
           @successful << { type: 'domain_transfer', domain_name: domain.name }
         else
-          @errors << { type: 'domain_transfer', domain_name: domain.name,
-                       errors: domain.errors.where(:epp_errors)[0].options }
+          domain.errors.where(:epp_errors).each do |domain_error|
+            @errors.import domain_error
+          end
         end
       end
 
@@ -187,7 +188,7 @@ module Repp
       end
 
       def set_authorized_domain
-        @epp_errors ||= []
+        @epp_errors ||= ActiveModel::Errors.new(self)
         @domain = domain_from_url_hash
       end
 
