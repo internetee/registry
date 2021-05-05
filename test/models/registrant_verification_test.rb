@@ -16,7 +16,7 @@ class RegistrantVerificationTest < ActiveSupport::TestCase
     random_action = "random#{rand(100)}"
 
     assert_difference -> { Version::RegistrantVerificationVersion.count } do
-      registrant_verification.update_attributes!(action: random_action)
+      registrant_verification.update!(action: random_action)
     end
   end
 
