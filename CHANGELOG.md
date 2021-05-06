@@ -1,3 +1,8 @@
+06.05.2021
+* list all unread polls for REPP [#1936](https://github.com/internetee/registry/pull/1936)
+* Bump Rails to 6.1.3.1 [#1962](https://github.com/internetee/registry/pull/1962)
+* Bump mimemagic to 0.4.3 [](https://github.com/internetee/registry/pull/1960)
+
 03.05.2021
 * Imporved error handling on invalid XML over EPP [#1952](https://github.com/internetee/registry/pull/1952)
 * Bump bootsnap to 1.7.4 [#1963](https://github.com/internetee/registry/pull/1963)
