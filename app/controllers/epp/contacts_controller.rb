@@ -55,13 +55,13 @@ module Epp
 
     def renew
       authorize! :renew, Epp::Contact
-      epp_errors << { code: '2101', msg: t(:'errors.messages.unimplemented_command') }
+      epp_errors.add(:epp_errors, code: '2101', msg: t(:'errors.messages.unimplemented_command'))
       handle_errors
     end
 
     def transfer
       authorize! :transfer, Epp::Contact
-      epp_errors << { code: '2101', msg: t(:'errors.messages.unimplemented_command') }
+      epp_errors.add(:epp_errors, code: '2101', msg: t(:'errors.messages.unimplemented_command'))
       handle_errors
     end
 
@@ -72,9 +72,10 @@ module Epp
     end
 
     def action_call_response(action:)
-      # rubocop:disable Style/AndOr
-      (handle_errors(@contact) and return) unless action.call
-      # rubocop:enable Style/AndOr
+      unless action.call
+        handle_errors(@contact)
+        return
+      end
 
       if opt_addr?
         @response_code = 1100
@@ -134,24 +135,16 @@ module Epp
       ident = params[:parsed_frame].css('ident')
 
       if ident.present? && ident.attr('type').blank?
-        epp_errors << {
-          code: '2003',
-          msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'type')
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2003',
+                       msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'type'))
       end
 
       if ident.present? && ident.text != 'birthday' && ident.attr('cc').blank?
-        epp_errors << {
-          code: '2003',
-          msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'cc')
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2003',
+                       msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'cc'))
       end
-      # if ident.present? && ident.attr('cc').blank?
-      # epp_errors << {
-      # code: '2003',
-      # msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'cc')
-      # }
-      # end
       contact_org_disabled
       fax_disabled
       status_editing_disabled
@@ -178,28 +171,25 @@ module Epp
       return true if ENV['contact_org_enabled'] == 'true'
       return true if params[:parsed_frame].css('postalInfo org').text.blank?
 
-      epp_errors << {
-        code: '2306',
-        msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]"
-      }
+      epp_errors.add(:epp_errors,
+                     code: '2306',
+                     msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]")
     end
 
     def fax_disabled
       return true if ENV['fax_enabled'] == 'true'
       return true if params[:parsed_frame].css('fax').text.blank?
-      epp_errors << {
-        code: '2306',
-        msg: "#{I18n.t(:contact_fax_error)}: fax [fax]"
-      }
+      epp_errors.add(:epp_errors,
+                     code: '2306',
+                     msg: "#{I18n.t(:contact_fax_error)}: fax [fax]")
     end
 
     def status_editing_disabled
       return true if Setting.client_status_editing_enabled
       return true if params[:parsed_frame].css('status').empty?
-      epp_errors << {
-        code: '2306',
-        msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
-      }
+      epp_errors.add(:epp_errors,
+                     code: '2306',
+                     msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]")
     end
 
     def address_given?

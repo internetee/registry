@@ -60,19 +60,19 @@ class Dnskey < ApplicationRecord
   def validate_algorithm
     return if alg.blank?
     return if ALGORITHMS.include?(alg.to_s)
-    errors.add(:alg, :invalid, values: ALGORITHMS.join(', '))
+    errors.add(:alg, :invalid, values: "Valid algorithms are: #{ALGORITHMS.join(', ')}")
   end
 
   def validate_protocol
     return if protocol.blank?
     return if PROTOCOLS.include?(protocol.to_s)
-    errors.add(:protocol, :invalid, values: PROTOCOLS.join(', '))
+    errors.add(:protocol, :invalid, values: "Valid protocols are: #{PROTOCOLS.join(', ')}")
   end
 
   def validate_flags
     return if flags.blank?
     return if FLAGS.include?(flags.to_s)
-    errors.add(:flags, :invalid, values: FLAGS.join(', '))
+    errors.add(:flags, :invalid, values: "Valid flags are: #{FLAGS.join(', ')}")
   end
 
   def generate_digest

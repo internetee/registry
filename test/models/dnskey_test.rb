@@ -15,29 +15,29 @@ class DnskeyTest < ActiveSupport::TestCase
     dns.protocol = 3
     dns.alg = 8
     dns.public_key = @dnskey
-    
+
     assert dns.save
   end
 
   def test_invalid_algrorithm
     dns = Dnskey.new
     dns.alg = 666
-    errors = dns.validate_algorithm
-    assert_equal errors, ['Valid algorithms are: 3, 5, 6, 7, 8, 10, 13, 14']
+    errors = dns.validate_algorithm.options[:values]
+    assert_equal errors, 'Valid algorithms are: 3, 5, 6, 7, 8, 10, 13, 14'
   end
 
   def test_invalid_protocol
     dns = Dnskey.new
     dns.protocol = 666
-    errors = dns.validate_protocol
-    assert_equal errors, ['Valid protocols are: 3']
+    errors = dns.validate_protocol.options[:values]
+    assert_equal errors, 'Valid protocols are: 3'
   end
 
   def test_invalid_flags
     dns = Dnskey.new
     dns.flags = 666
-    errors = dns.validate_flags
-    assert_equal errors, ['Valid flags are: 0, 256, 257']
+    errors = dns.validate_flags.options[:values]
+    assert_equal errors, 'Valid flags are: 0, 256, 257'
   end
 
   def test_ds_digest_type_one
@@ -49,7 +49,7 @@ class DnskeyTest < ActiveSupport::TestCase
     dns.protocol = 3
     dns.alg = 8
     dns.public_key = @dnskey
-    
+
     assert dns.save
 
     assert_equal dns.ds_digest_type, 1

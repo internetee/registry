@@ -110,7 +110,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
   def test_multi_year_purchases_have_duration_assigned
     activity = account_activities(:one)
     price = billing_prices(:create_one_year)
-    price.update(duration: '3 years')
+    price.update(duration: 3.years)
     activity.update(activity_type: 'create', price: price)
 
     response = <<-XML
@@ -157,7 +157,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
 
     activity = account_activities(:one)
     price = billing_prices(:create_one_year)
-    price.update(duration: '3 years')
+    price.update(duration: 3.years)
     activity.update(activity_type: 'create', price: price)
 
     # Creating account activity for second action

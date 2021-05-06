@@ -100,7 +100,7 @@ class APINameserversPutTest < ApplicationIntegrationTest
 
     assert_response 400
     assert_equal ({ code: 2003,
-                    message: 'param is missing or the value is empty: hostname' }),
+                    message: 'param is missing or the value is empty: hostname. Did you mean?  hostname' }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 

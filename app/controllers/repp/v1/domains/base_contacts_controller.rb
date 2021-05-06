@@ -15,8 +15,12 @@ module Repp
         end
 
         def update
-          @epp_errors ||= []
-          @epp_errors << { code: 2304, msg: 'New contact must be valid' } if @new_contact.invalid?
+          @epp_errors ||= ActiveModel::Errors.new(self)
+          return unless @new_contact.invalid?
+
+          @epp_errors.add(:epp_errors,
+                          msg: 'New contact must be valid',
+                          code: '2304')
         end
 
         private

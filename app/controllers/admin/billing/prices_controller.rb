@@ -40,7 +40,6 @@ module Admin
 
       def create
         @price = ::Billing::Price.new(price_params)
-
         if @price.save
           flash[:notice] = t('.created')
           redirect_to_index
@@ -50,7 +49,7 @@ module Admin
       end
 
       def update
-        if @price.update_attributes(price_params)
+        if @price.update(price_params.compact_blank)
           flash[:notice] = t('.updated')
           redirect_to_index
         else
@@ -81,7 +80,11 @@ module Admin
           valid_to
         ]
 
-        params.require(:price).permit(*allowed_params)
+        allowed = params.require(:price).permit(*allowed_params)
+        if allowed[:duration]
+          allowed[:duration] = ActiveSupport::Duration.build(allowed[:duration].to_i)
+        end
+        allowed
       end
 
       def search_params
@@ -104,8 +107,7 @@ module Admin
       end
 
       def durations
-        durations = ::Billing::Price::durations
-        durations.collect { |duration| [duration.sub('mon', 'month'), duration] }
+        ::Billing::Price::durations
       end
 
       def statuses

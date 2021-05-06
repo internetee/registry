@@ -5,7 +5,7 @@ class Registrar
     def new
       authorize! :manage, :repp
       @expire_date = Time.zone.now.to_date
-      render file: 'registrar/bulk_change/new', locals: { active_tab: default_tab }
+      render 'registrar/bulk_change/new', locals: { active_tab: default_tab }
     end
 
     def bulk_renew
@@ -21,7 +21,7 @@ class Registrar
         flash[:notice] = nil
       end
 
-      render file: 'registrar/bulk_change/new', locals: { active_tab: :bulk_renew }
+      render 'registrar/bulk_change/new', locals: { active_tab: :bulk_renew }
     end
 
     private
@@ -45,7 +45,7 @@ class Registrar
         redirect_to registrar_domains_url
       else
         @error = response.code == '404' ? 'Contact(s) not found' : parsed_response[:message]
-        render file: 'registrar/bulk_change/new', locals: { active_tab: active_tab }
+        render 'registrar/bulk_change/new', locals: { active_tab: active_tab }
       end
     end
 

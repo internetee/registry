@@ -36,7 +36,7 @@ class Registrar
           redirect_to registrar_domains_url
         else
           @api_errors = parsed_response[:message]
-          render file: 'registrar/bulk_change/new', locals: { active_tab: :bulk_transfer }
+          render 'registrar/bulk_change/new', locals: { active_tab: :bulk_transfer }
         end
       else
         params[:request] = true # EPP domain:transfer "op" attribute

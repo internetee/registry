@@ -28,27 +28,24 @@ module Epp
     protected
 
     def respond_with_command_failed_error(exception)
-      epp_errors << {
-        code: '2400',
-        msg: 'Command failed',
-      }
+      epp_errors.add(:epp_errors,
+                     code: '2400',
+                     message: 'Command failed')
       handle_errors
       log_exception(exception)
     end
 
     def respond_with_object_does_not_exist_error
-      epp_errors << {
-        code: '2303',
-        msg: 'Object does not exist',
-      }
+      epp_errors.add(:epp_errors,
+                     code: '2303',
+                     msg: 'Object does not exist')
       handle_errors
     end
 
     def respond_with_authorization_error
-      epp_errors << {
-        code: '2201',
-        msg: 'Authorization error',
-      }
+      epp_errors.add(:epp_errors,
+                     code: '2201',
+                     msg: 'Authorization error')
       handle_errors
     end
 
@@ -63,10 +60,9 @@ module Epp
     def validate_against_schema
       return if %w[hello error].include?(params[:action])
       schema.validate(params[:nokogiri_frame]).each do |error|
-        epp_errors << {
-          code: 2001,
-          msg: error
-        }
+        epp_errors.add(:epp_errors,
+                       code: 2001,
+                       msg: error)
       end
       handle_errors and return if epp_errors.any?
     end
@@ -94,28 +90,16 @@ module Epp
 
     # ERROR + RESPONSE HANDLING
     def epp_errors
-      @errors ||= []
+      @errors ||= ActiveModel::Errors.new(self)
     end
 
     def handle_errors(obj = nil)
-      @errors ||= []
+      @errors ||= ActiveModel::Errors.new(self)
 
       if obj
         obj.construct_epp_errors
-        @errors += obj.errors[:epp_errors]
+        obj.errors.each { |error| @errors.import error }
       end
-
-      if params[:parsed_frame]&.at_css('update')
-        @errors.each_with_index do |errors, index|
-          if errors[:code] == '2304' &&
-            errors[:value].present? &&
-            errors[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
-            errors[:value][:obj] == 'status'
-            @errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
-          end
-        end
-      end
-      @errors.uniq!
 
       render_epp_response '/epp/error'
     end
@@ -133,10 +117,9 @@ module Epp
         return true
       end
 
-      epp_errors << {
-        msg: 'Parameter value policy error. Allowed only Latin characters.',
-        code: '2306'
-      }
+      epp_errors.add(:epp_errors,
+                     msg: 'Parameter value policy error. Allowed only Latin characters.',
+                     code: '2306')
 
       handle_errors and return false
     end
@@ -180,10 +163,12 @@ module Epp
         else
           missing = el.present? ? el.text.blank? : true
         end
-        epp_errors << {
-          code: '2003',
-          msg: I18n.t('errors.messages.required_parameter_missing', key: "#{full_selector} [#{attr}]")
-        } if missing
+        next unless missing
+
+        epp_errors.add(:epp_errors,
+                       code: '2003',
+                       message: I18n.t('errors.messages.required_parameter_missing',
+                                       key: "#{full_selector} [#{attr}]"))
       end
 
       missing ? false : el # return last selector if it was present
@@ -201,25 +186,23 @@ module Epp
       attribute = element[attribute_selector]
 
       unless attribute
-        epp_errors << {
-          code: '2003',
-          msg: I18n.t('errors.messages.required_parameter_missing', key: attribute_selector)
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2003',
+                       msg: I18n.t('errors.messages.required_parameter_missing',
+                                   key: attribute_selector))
         return
       end
 
       return if options[:values].include?(attribute)
 
       if options[:policy]
-        epp_errors << {
-          code: '2306',
-          msg: I18n.t('attribute_is_invalid', attribute: attribute_selector)
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2306',
+                       msg: I18n.t('attribute_is_invalid', attribute: attribute_selector))
       else
-        epp_errors << {
-          code: '2004',
-          msg: I18n.t('parameter_value_range_error', key: attribute_selector)
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2004',
+                       msg: I18n.t('parameter_value_range_error', key: attribute_selector))
       end
     end
 
@@ -231,30 +214,29 @@ module Epp
       attribute = element[attribute_selector]
       return if (attribute && options[:values].include?(attribute)) || !attribute
 
-      epp_errors << {
-        code: '2306',
-        msg: I18n.t('attribute_is_invalid', attribute: attribute_selector)
-      }
+      epp_errors.add(:epp_errors,
+                     code: '2306',
+                     msg: I18n.t('attribute_is_invalid', attribute: attribute_selector))
     end
 
     def exactly_one_of(*selectors)
       full_selectors = create_full_selectors(*selectors)
       return if element_count(*full_selectors, use_prefix: false) == 1
 
-      epp_errors << {
-        code: '2306',
-        msg: I18n.t(:exactly_one_parameter_required, params: full_selectors.join(' OR '))
-      }
+      epp_errors.add(:epp_errors,
+                     code: '2306',
+                     msg: I18n.t(:exactly_one_parameter_required,
+                                 params: full_selectors.join(' OR ')))
     end
 
     def mutually_exclusive(*selectors)
       full_selectors = create_full_selectors(*selectors)
       return if element_count(*full_selectors, use_prefix: false) <= 1
 
-      epp_errors << {
-        code: '2306',
-        msg: I18n.t(:mutally_exclusive_params, params: full_selectors.join(', '))
-      }
+      epp_errors.add(:epp_errors,
+                     code: '2306',
+                     msg: I18n.t(:mutally_exclusive_params,
+                                 params: full_selectors.join(', ')))
     end
 
     def optional(selector, *validations)
@@ -265,8 +247,8 @@ module Epp
 
       validations.each do |x|
         validator = "#{x.first[0]}_validator".camelize.constantize
-        err = validator.validate_epp(selector.split(' ').last, value)
-        epp_errors << err if err
+        result = validator.validate_epp(selector.split(' ').last, value)
+        epp_errors.add(:epp_errors, result) if result
       end
     end
 
@@ -297,10 +279,11 @@ module Epp
 
     def xml_attrs_present?(ph, attributes) # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
       attributes.each do |x|
-        epp_errors << {
-          code: '2003',
-          msg: I18n.t('errors.messages.required_parameter_missing', key: x.last)
-        } unless has_attribute(ph, x)
+        next if has_attribute(ph, x)
+
+        epp_errors.add(:epp_errors,
+                       code: '2003',
+                       msg: I18n.t('errors.messages.required_parameter_missing', key: x.last))
       end
       epp_errors.empty?
     end
@@ -355,10 +338,9 @@ module Epp
 
     def enforce_epp_session_timeout
       if epp_session.timed_out?
-        epp_errors << {
-          code: '2201',
-          msg: 'Authorization error: Session timeout',
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2201',
+                       msg: 'Authorization error: Session timeout')
         handle_errors
         epp_session.destroy!
       else

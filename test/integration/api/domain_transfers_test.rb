@@ -75,7 +75,7 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
                     data: { success: [],
                     failed: [{ type: "domain_transfer",
                                domain_name: "shop.test",
-                               errors: [{:code=>"2304", :msg=>"Object status prohibits operation"}] }],
+                               errors: {:code=>"2304", :msg=>"Object status prohibits operation"} }],
                     }}),
                 JSON.parse(response.body, symbolize_names: true)
   end

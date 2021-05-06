@@ -1,5 +1,6 @@
 module Billing
   class Price < ApplicationRecord
+    attribute :duration, :interval
     include Billing::Price::Expirable
     include Versions
 
@@ -8,33 +9,37 @@ module Billing
 
     validates :price, :valid_from, :operation_category, :duration, presence: true
     validates :operation_category, inclusion: { in: Proc.new { |price| price.class.operation_categories } }
-    validates :duration, inclusion: { in: Proc.new { |price| price.class.durations } }
+    validates :duration, inclusion: { in: Proc.new { |price| price.class.durations.values } }, if: :should_validate_duration?
 
     alias_attribute :effect_time, :valid_from
     alias_attribute :expire_time, :valid_to
     monetize :price_cents, allow_nil: true, numericality: { greater_than_or_equal_to: 0 }
     after_initialize :init_values
 
+    def should_validate_duration?
+      new_record? || duration_changed?
+    end
+
     def self.operation_categories
       %w[create renew]
     end
 
     def self.durations
-      [
-        '3 mons',
-        '6 mons',
-        '9 mons',
-        '1 year',
-        '2 years',
-        '3 years',
-        '4 years',
-        '5 years',
-        '6 years',
-        '7 years',
-        '8 years',
-        '9 years',
-        '10 years',
-      ]
+      {
+        '3 months' => 3.months,
+        '6 months' => 6.months,
+        '9 months' => 9.months,
+        '1 year' => 1.year,
+        '2 years' => 2.years,
+        '3 years' => 3.years,
+        '4 years' => 4.years,
+        '5 years' => 5.years,
+        '6 years' => 6.years,
+        '7 years' => 7.years,
+        '8 years' => 8.years,
+        '9 years' => 9.years,
+        '10 years' => 10.years,
+      }
     end
 
     def self.statuses

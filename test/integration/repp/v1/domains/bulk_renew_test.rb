@@ -92,7 +92,10 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
   end
 
   def test_throws_error_when_not_enough_balance
-    billing_prices(:renew_one_year).update(price_cents: 99999999)
+    price = Billing::Price.last
+    price.price_cents = 99999999
+    price.save(validate: false)
+
     payload = {
       "domains": [
         'invalid.test',
@@ -106,7 +109,7 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
 
       assert_response :bad_request
       assert_equal 2002, json[:code]
-      assert_equal 'Domain Billing failure - credit balance low', json[:message]
+      assert_equal 'Billing failure - credit balance low', json[:message]
     end
   end
 
@@ -128,7 +131,7 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
 
   private
 
-  def set_status_for_domain(domain, statuses) 
+  def set_status_for_domain(domain, statuses)
     domain.update(statuses: statuses)
 
     if statuses.size > 1
@@ -148,7 +151,7 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
   def assert_renew_prohibited_domains(domains, payload)
     assert_no_changes -> { Domain.where(name: domains).pluck(:valid_to) } do
       json = bulk_renew(payload)
-      
+
       assert_response :bad_request
       assert_equal 2002, json[:code]
       assert domains.all? do |domain|

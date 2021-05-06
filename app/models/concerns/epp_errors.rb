@@ -1,38 +1,45 @@
 module EppErrors
   extend ActiveSupport::Concern
+  included do
+    attr_accessor :epp_errors
+  end
 
   def construct_epp_errors
-    epp_errors = []
-    errors.messages.each do |attr, errors|
-      attr = attr.to_s.split('.')[0].to_sym
+    epp_errors = ActiveModel::Errors.new(self)
+    errors.each do |error|
+      attr = error.attribute.to_s.split('.')[0].to_sym
       next if attr == :epp_errors
 
       if self.class.reflect_on_association(attr)
-        epp_errors << collect_child_errors(attr)
+        collect_child_errors(attr).each do |child_error|
+          epp_errors.import child_error
+        end
       end
 
       if self.class.reflect_on_aggregation(attr)
         aggregation = send(attr)
-        epp_errors << collect_aggregation_errors(aggregation)
+        collect_aggregation_errors(aggregation).each do |aggregation_error|
+          epp_errors.import aggregation_error
+        end
         next
       end
-
-      epp_errors << collect_parent_errors(attr, errors)
+      collect_parent_errors(attr, error.message).each do |parent_error|
+        epp_errors.import parent_error
+      end
     end
-
-    errors.add(:epp_errors, epp_errors)
-    errors[:epp_errors].flatten!
+    epp_errors.each { |epp_error| errors.import epp_error }
+    errors
   end
 
   def collect_parent_errors(attr, errors)
     errors = [errors] if errors.is_a?(String)
 
-    epp_errors = []
+    epp_errors = ActiveModel::Errors.new(self)
     errors.each do |err|
       code, value = find_epp_code_and_value(err)
       next unless code
       msg = attr.to_sym == :base ? err : "#{err} [#{attr}]"
-      epp_errors << { code: code, msg: msg, value: value }
+      epp_errors.add(attr, code: code, msg: msg, value: value)
     end
     epp_errors
   end
@@ -40,20 +47,24 @@ module EppErrors
   def collect_child_errors(attr)
     macro = self.class.reflect_on_association(attr).macro
     multi = [:has_and_belongs_to_many, :has_many]
-    # single = [:belongs_to, :has_one]
 
-    epp_errors = []
-    send(attr).each do |x|
-      x.errors.messages.each do |attribute, errors|
-        epp_errors << x.collect_parent_errors(attribute, errors)
+    epp_errors = ActiveModel::Errors.new(self)
+
+    if multi.include?(macro)
+      send(attr).each do |x|
+        x.errors.each do |error|
+          x.collect_parent_errors(error.attribute, error.message).each do |parent_error|
+            epp_errors.import parent_error
+          end
+        end
       end
-    end if multi.include?(macro)
+    end
 
     epp_errors
   end
 
   def collect_aggregation_errors(aggregation)
-    epp_errors = []
+    epp_errors = ActiveModel::Errors.new(self)
 
     aggregation.errors.details.each do |attr, error_details|
       error_details.each do |error_detail|
@@ -69,7 +80,7 @@ module EppErrors
             message = "#{aggregation.model_name.human} #{message.camelize(:lower)}"
           end
 
-          epp_errors << { code: epp_code, msg: message }
+          epp_errors.add(attr, code: epp_code, msg: message)
         end
       end
     end
@@ -105,11 +116,20 @@ module EppErrors
   end
 
   def add_epp_error(code, obj, val, msg)
-    errors[:epp_errors] ||= []
     t = errors.generate_message(*msg) if msg.is_a?(Array)
     t = msg if msg.is_a?(String)
     err = { code: code, msg: t }
+    val = check_for_status(code, obj, val)
     err[:value] = { val: val, obj: obj } if val.present?
-    errors[:epp_errors] << err
+    self.errors.add(:epp_errors, err)
+  end
+
+  def check_for_status(code, obj, val)
+    if code == '2304' && val.present? && val == DomainStatus::SERVER_DELETE_PROHIBITED &&
+       obj == 'status'
+      DomainStatus::PENDING_UPDATE
+    else
+      val
+    end
   end
 end

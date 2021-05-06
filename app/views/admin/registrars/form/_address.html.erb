@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-md-7">
                         <%= f.select :address_country_code,
-                                     SortedCountry.all_options(f.object.address_country_code), {},
+                                     ApplicationController.helpers.all_country_options(f.object.address_country_code), {},
                                      required: true, class: 'form-control' %>
                         <span class="help-block"><%= t '.country_hint' %></span>
                     </div>

@@ -65,7 +65,7 @@ class Billing::PriceTest < ActiveSupport::TestCase
     price.duration = 'invalid'
     assert price.invalid?
 
-    price.duration = Billing::Price.durations.first
+    price.duration = Billing::Price.durations.values.first
     assert price.valid?
   end
 
@@ -75,21 +75,21 @@ class Billing::PriceTest < ActiveSupport::TestCase
   end
 
   def test_returns_durations
-    durations = [
-      '3 mons',
-      '6 mons',
-      '9 mons',
-      '1 year',
-      '2 years',
-      '3 years',
-      '4 years',
-      '5 years',
-      '6 years',
-      '7 years',
-      '8 years',
-      '9 years',
-      '10 years',
-    ]
+    durations = {
+      '3 months' => 3.months,
+      '6 months' => 6.months,
+      '9 months' => 9.months,
+      '1 year' => 1.year,
+      '2 years'=> 2.years,
+      '3 years'=> 3.years,
+      '4 years'=> 4.years,
+      '5 years'=> 5.years,
+      '6 years'=> 6.years,
+      '7 years'=> 7.years,
+      '8 years'=> 8.years,
+      '9 years'=> 9.years,
+      '10 years'=> 10.years,
+    }
     assert_equal durations, Billing::Price.durations
   end
 
