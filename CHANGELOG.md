@@ -1,5 +1,5 @@
 06.05.2021
-* list all unread polls for REPP [#1936](https://github.com/internetee/registry/pull/1936)
+* List all unread polls option for REPP [#1936](https://github.com/internetee/registry/pull/1936)
 * Bump Rails to 6.1.3.1 [#1962](https://github.com/internetee/registry/pull/1962)
 * Bump mimemagic to 0.4.3 [](https://github.com/internetee/registry/pull/1960)
 
