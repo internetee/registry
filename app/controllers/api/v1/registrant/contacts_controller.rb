@@ -35,6 +35,8 @@ module Api
         end
 
         def update
+          logger.debug 'Received update request'
+          logger.debug params
           contact = current_user_contacts.find_by!(uuid: params[:uuid])
           contact.name = params[:name] if params[:name].present?
           contact.email = params[:email] if params[:email].present?
@@ -44,6 +46,8 @@ module Api
           # https://github.com/rails/rails/pull/13157
           reparsed_request_json = ActiveSupport::JSON.decode(request.body.string)
                                                      .with_indifferent_access
+          logger.debug 'Reparsed request is following'
+          logger.debug "#{reparsed_request_json}"
           disclosed_attributes = reparsed_request_json[:disclosed_attributes]
 
           if disclosed_attributes
@@ -56,6 +60,8 @@ module Api
 
             contact.disclosed_attributes = disclosed_attributes
           end
+
+          logger.debug "Setting.address_processing is set to #{Setting.address_processing}"
 
           if Setting.address_processing && params[:address]
             address = Contact::Address.new(params[:address][:street],
@@ -75,6 +81,7 @@ module Api
             contact.fax = params[:fax] if params[:fax].present?
           end
 
+          logger.debug "ENV['fax_enabled'] is set to #{ENV['fax_enabled']}"
           if ENV['fax_enabled'] != 'true' && params[:fax]
             error_msg = 'Fax processing is disabled and therefore cannot be updated'
             render json: { errors: [{ address: [error_msg] }] }, status: :bad_request and return
@@ -115,6 +122,10 @@ module Api
 
         def serialize_contact(contact, links)
           Serializers::RegistrantApi::Contact.new(contact, links).to_json
+        end
+
+        def logger
+          Rails.logger
         end
       end
     end
