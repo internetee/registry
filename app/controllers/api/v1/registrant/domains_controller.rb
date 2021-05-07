@@ -6,10 +6,12 @@ module Api
       class DomainsController < ::Api::V1::Registrant::BaseController
         before_action :set_tech_flag, only: [:show]
 
+        LIMIT_DOMAIN_TOTAL = 3000.freeze
+
         def index
           limit = params[:limit] || 200
           offset = params[:offset] || 0
-          simple = params[:simple] == 'true' || false
+          simple = params[:simple] == 'true' || false         
 
           if limit.to_i > 200 || limit.to_i < 1
             render(json: { errors: [{ limit: ['parameter is out of range'] }] },
@@ -57,9 +59,23 @@ module Api
         end
 
         def current_user_domains
+          return initialization_count_of__domains if params[:tech] == 'init'
+
           current_registrant_user.domains(admin: params[:tech] != 'true')
         rescue CompanyRegister::NotAvailableError
+          return initialization_count_of__direct_domains if params[:tech] == 'init'
+
           current_registrant_user.direct_domains(admin: params[:tech] != 'true')
+        end
+
+        def initialization_count_of__direct_domains
+          return current_registrant_user.direct_domains(admin: false) if current_user_domains_total_count < LIMIT_DOMAIN_TOTAL
+          current_registrant_user.direct_domains(admin: true)
+        end
+
+        def initialization_count_of__domains
+          return current_registrant_user.domains(admin: false) if current_user_domains_total_count < LIMIT_DOMAIN_TOTAL
+          current_registrant_user.domains(admin: true)
         end
       end
     end
