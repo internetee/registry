@@ -29,10 +29,16 @@ module Domains
       end
 
       def assign_domain_update_meta
-        user = ApiUser.find_by(id: domain.pending_json['current_user_id'])
+        user = ApiUser.find_by(id: user_id) if user_id.present? && user_id.is_a?(String)
 
         domain.upid = user.registrar.id if user.present? && user.registrar
         domain.up_date = Time.zone.now
+      end
+
+      private
+
+      def user_id
+        @user_id ||= domain.pending_json.dig('current_user_id')
       end
     end
   end

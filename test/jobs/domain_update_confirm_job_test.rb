@@ -127,6 +127,29 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
     assert @domain.statuses.include? DomainStatus::DISPUTED
   end
 
+  def test_works_id_current_user_id_broken
+    epp_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<epp>\n  <command>\n    <update>\n      <update>\n        <name>#{@domain.name}</name>\n" \
+    "        <chg>\n          <registrant>#{@new_registrant.code}</registrant>\n        </chg>\n      </update>\n    </update>\n    <extension>\n      <update/>\n" \
+    "      <extdata>\n        <legalDocument type=\"pdf\">#{@legal_doc_path}</legalDocument>\n      </extdata>\n" \
+    "    </extension>\n    <clTRID>20alla-1594199756</clTRID>\n  </command>\n</epp>\n"
+    parsed_frame = Deserializers::Xml::DomainUpdate.new(Nokogiri::XML(epp_xml), @domain.registrar.id).call
+
+    @domain.pending_json['frame'] = parsed_frame
+    @domain.pending_json['current_user_id'] = { key: 'some_value'}
+    @domain.update(pending_json: @domain.pending_json)
+    @domain.update(statuses: [DomainStatus::DELETE_CANDIDATE, DomainStatus::DISPUTED])
+
+    assert_nothing_raised do
+      DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::CONFIRMED)
+    end
+    @domain.reload
+
+    assert_not @domain.statuses.include? DomainStatus::PENDING_DELETE_CONFIRMATION
+    assert_not @domain.statuses.include? DomainStatus::PENDING_DELETE
+    assert @domain.statuses.include? DomainStatus::DELETE_CANDIDATE
+    assert @domain.statuses.include? DomainStatus::DISPUTED
+  end
+
   def test_clears_pending_update_and_inactive_after_denial
     epp_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<epp>\n  <command>\n    <update>\n      <update>\n        <name>#{@domain.name}</name>\n" \
     "        <chg>\n          <registrant>#{@new_registrant.code}</registrant>\n        </chg>\n      </update>\n    </update>\n    <extension>\n      <update/>\n" \
