@@ -1,3 +1,11 @@
+10.05.2021
+* Domain update confirmation fix [#1975](https://github.com/internetee/registry/pull/1975)
+* Bump bootsnap to 1.7.5 [#1970](https://github.com/internetee/registry/pull/1970)
+* Bump truemail to 2.4.1 [#1971](https://github.com/internetee/registry/pull/1971)
+* Bump devise to 4.8.0 [#1972](https://github.com/internetee/registry/pull/1972)
+* Bump iso8601 to 0.13.0 [#1973](https://github.com/internetee/registry/pull/1973)
+* Bump puma to 5.3.0 [#1974](https://github.com/internetee/registry/pull/1974)
+
 06.05.2021
 * List all unread polls option for REPP [#1936](https://github.com/internetee/registry/pull/1936)
 * Bump Rails to 6.1.3.1 [#1962](https://github.com/internetee/registry/pull/1962)
