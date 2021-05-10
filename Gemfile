@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'active_interaction', '~> 4.0'
 gem 'apipie-rails', '~> 0.5.18'
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'iso8601', '0.12.1' # for dates and times
+gem 'iso8601', '0.13.0' # for dates and times
 gem 'mime-types-data'
 gem 'mimemagic', '0.4.3'
 gem 'rails', '~>  6.1.3.2'
