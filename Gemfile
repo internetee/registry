@@ -37,7 +37,7 @@ gem 'kaminari'
 gem 'sass-rails'
 gem 'select2-rails',    '4.0.13' # for autocomplete
 gem 'cancancan'
-gem 'devise', '~> 4.7'
+gem 'devise', '~> 4.8'
 
 # registry specfic
 gem 'data_migrate', '~> 7.0'
