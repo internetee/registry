@@ -59,12 +59,12 @@ module Api
         end
 
         def current_user_domains
-          initialization_count_of__domains
+          init_count_of_domains
         rescue CompanyRegister::NotAvailableError
-          initialization_count_of__direct_domains
+          init_count_of_direct_domains
         end
 
-        def initialization_count_of__direct_domains
+        def init_count_of_direct_domains
           if params[:tech] == 'init'
             if current_user_domains_total_count < LIMIT_DOMAIN_TOTAL
               return current_registrant_user.direct_domains(admin: false)
@@ -76,7 +76,7 @@ module Api
           current_registrant_user.direct_domains(admin: params[:tech] != 'true')
         end
 
-        def initialization_count_of__domains
+        def init_count_of_domains
           if params[:tech] == 'init'
             if current_user_domains_total_count < LIMIT_DOMAIN_TOTAL
               return current_registrant_user.domains(admin: false)
