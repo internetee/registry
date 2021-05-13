@@ -50,7 +50,9 @@ module Repp
           super
 
           if @new_contact == @current_contact
-            @epp_errors << { code: 2304, msg: 'New contact must be different from current' }
+            @epp_errors.add(:epp_errors,
+                            msg: 'New contact must be different from current',
+                            code: '2304')
           end
 
           return handle_errors if @epp_errors.any?

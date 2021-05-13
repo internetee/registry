@@ -1,6 +1,7 @@
 class LegalDocument < ApplicationRecord
   include EppErrors
   MIN_BODY_SIZE = (1.37 * 3.kilobytes).ceil
+  MAX_BODY_SIZE = 8.megabytes
 
   if ENV['legal_document_types'].present?
     TYPES = ENV['legal_document_types'].split(',').map(&:strip)
@@ -20,14 +21,19 @@ class LegalDocument < ApplicationRecord
 
   def epp_code_map
     {
-        '2306' => [
-            [:body, :length]
-        ]
+      '2308' => [
+        %i[body length_more_than],
+        %i[body length_less_than],
+      ]
     }
   end
 
   def val_body_length
-    errors.add(:body, :length) if body.nil? || body.size < MIN_BODY_SIZE
+    if body.nil? || body.size < MIN_BODY_SIZE
+      errors.add(:body, :length_more_than)
+    elsif body.size > MAX_BODY_SIZE
+      errors.add(:body, :length_less_than)
+    end
   end
 
   def save_to_filesystem

@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
     post 'command/poll', to: 'polls#poll', as: 'poll', constraints: EppConstraint.new(:poll)
     get 'error/:command', to: 'errors#error'
+    get 'error', to: 'errors#command_handler'
   end
 
   namespace :repp do
@@ -54,7 +55,11 @@ Rails.application.routes.draw do
       resources :auctions, only: %i[index]
       resources :retained_domains, only: %i[index]
       namespace :registrar do
-        resources :notifications, only: [:index, :show, :update]
+        resources :notifications, only: [:index, :show, :update] do
+          collection do
+            get '/all_notifications', to: 'notifications#all_notifications'
+          end
+        end
         resources :nameservers do
           collection do
             put '/', to: 'nameservers#update'
@@ -231,6 +236,9 @@ Rails.application.routes.draw do
     end
 
     resources :invoices, except: %i[edit update destroy] do
+      collection do
+        post ':id/cancel_paid', to: 'invoices#cancel_paid', as: 'cancel_paid'
+      end
       resource :delivery, controller: 'invoices/delivery', only: %i[new create]
 
       member do

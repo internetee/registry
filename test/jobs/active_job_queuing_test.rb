@@ -13,8 +13,9 @@ class ActiveJobQueuingTest < ActiveJob::TestCase
 
   def test_job_retried_after_error
     assert_no_enqueued_jobs
-    assert_raises StandardError do
-      assert_performed_jobs 3 do
+
+    assert_performed_jobs 3 do
+      assert_raises StandardError do
         TestRetriedJob.perform_later
       end
     end

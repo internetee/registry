@@ -138,7 +138,8 @@ en:
         legal_document:
           attributes:
             body:
-              length: 'Parameter value policy error: legalDocument size should be more than 3kB'
+              length_more_than: 'Parameter value policy error: Legaldoc size is less than minimum allowed size of 3kB'
+              length_less_than: 'Parameter value policy error: Legaldoc size exceeds maximum allowed size of 8mB'
 
 
     attributes:
@@ -292,6 +293,9 @@ en:
   failed_to_update_record: 'Failed to update record'
   record_deleted: 'Record deleted'
   failed_to_delete_record: 'Failed to delete record'
+
+  payment_was_cancelled: 'Payment was cancelled'
+  failed_to_payment_cancel: 'Failed to payment cancel'
 
   authentication_error: 'Authentication error'
 
@@ -601,6 +605,7 @@ en:
   no_transfers_found: 'No transfers found'
   parameter_value_range_error: 'Parameter value range error: %{key}'
   payment_received: 'Payment received'
+  cancel_payment: 'Cancel Payment'
   api_user_not_found: 'API user not found'
   notes: Notes
   active_price_for_this_operation_is: 'Active price for this operation is %{price}'

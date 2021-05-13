@@ -396,10 +396,9 @@ sudo apt-get install libxext-dev libxrender1 fontconfig
 
 * [Testing](/doc/testing.md)
 
-###  Travis CI
+###  Github Actions CI
 
-* Travis is configured to build against master and staging branches by default.
-* Notification emails are sent to committer by default.
+* Github Actions CI is configured to build all the PRs.
 
 ### EPP web client
 

@@ -62,7 +62,7 @@ module ApplicationHelper
     if model.updator.kind_of?(RegistrantUser)
       model.updator
     else
-      link_to(model.updator, ['admin', model.updator])
+      link_to(model.updator, [:admin, model.updator])
     end
   end
 

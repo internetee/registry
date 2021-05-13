@@ -43,11 +43,11 @@ module Epp
       @notification = current_user.unread_notifications.find_by(id: params[:parsed_frame].css('poll').first['msgID'])
 
       unless @notification
-        epp_errors << {
-          code: '2303',
-          msg: I18n.t('message_was_not_found'),
-          value: { obj: 'msgID', val: params[:parsed_frame].css('poll').first['msgID'] }
-        }
+        epp_errors.add(:epp_errors,
+                       code: '2303',
+                       msg: I18n.t('message_was_not_found'),
+                       value: { obj: 'msgID',
+                                val: params[:parsed_frame].css('poll').first['msgID'] })
         handle_errors and return
       end
 

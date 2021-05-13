@@ -541,6 +541,7 @@ ALTER SEQUENCE public.certificates_id_seq OWNED BY public.certificates.id;
 --
 
 CREATE TABLE public.contact_requests (
+
     id integer NOT NULL,
     whois_record_id integer NOT NULL,
     secret character varying NOT NULL,
@@ -552,6 +553,7 @@ CREATE TABLE public.contact_requests (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     message_id character varying
+
 );
 
 
@@ -572,7 +574,6 @@ CREATE SEQUENCE public.contact_requests_id_seq
 --
 
 ALTER SEQUENCE public.contact_requests_id_seq OWNED BY public.contact_requests.id;
-
 
 --
 -- Name: contacts; Type: TABLE; Schema: public; Owner: -

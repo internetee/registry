@@ -1,3 +1,28 @@
+10.05.2021
+* Domain update confirmation fix [#1975](https://github.com/internetee/registry/pull/1975)
+* Bump bootsnap to 1.7.5 [#1970](https://github.com/internetee/registry/pull/1970)
+* Bump truemail to 2.4.1 [#1971](https://github.com/internetee/registry/pull/1971)
+* Bump devise to 4.8.0 [#1972](https://github.com/internetee/registry/pull/1972)
+* Bump iso8601 to 0.13.0 [#1973](https://github.com/internetee/registry/pull/1973)
+* Bump puma to 5.3.0 [#1974](https://github.com/internetee/registry/pull/1974)
+
+06.05.2021
+* List all unread polls option for REPP [#1936](https://github.com/internetee/registry/pull/1936)
+* Bump Rails to 6.1.3.1 [#1962](https://github.com/internetee/registry/pull/1962)
+* Bump mimemagic to 0.4.3 [](https://github.com/internetee/registry/pull/1960)
+
+03.05.2021
+* Imporved error handling on invalid XML over EPP [#1952](https://github.com/internetee/registry/pull/1952)
+* Bump bootsnap to 1.7.4 [#1963](https://github.com/internetee/registry/pull/1963)
+* Bump truemail to 2.4.0 [#1964](https://github.com/internetee/registry/pull/1964)
+
+30.04.2021
+* Fixed error message on oversized legaldocs [#1880](https://github.com/internetee/registry/issues/1880)
+
+29.04.2021
+* Admin is able to cancel invoice payments [#1937](https://github.com/internetee/registry/issues/1937)
+* Bump nokogiri to 1.11.3 [#1920](https://github.com/internetee/registry/pull/1920)
+
 26.04.2021
 * Disputed status is removed on registrant change and status added to schema [#1927](https://github.com/internetee/registry/issues/1927)
 * Bounce list record is removed one there are no active contacts with the address [#1912](https://github.com/internetee/registry/issues/1912)

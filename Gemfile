@@ -4,10 +4,10 @@ source 'https://rubygems.org'
 gem 'active_interaction', '~> 4.0'
 gem 'apipie-rails', '~> 0.5.18'
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'iso8601', '0.12.1' # for dates and times
+gem 'iso8601', '0.13.0' # for dates and times
 gem 'mime-types-data'
-gem 'mimemagic', '0.3.10'
-gem 'rails', '~> 6.0'
+gem 'mimemagic', '0.4.3'
+gem 'rails', '~>  6.1.3.2'
 gem 'rest-client'
 gem 'uglifier'
 
@@ -20,12 +20,12 @@ gem 'paper_trail', '~> 12.0'
 gem 'pg',                        '1.2.3'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 2.3'
-gem 'truemail', '~> 2.3' # validates email by regexp, mail server existence and address existence
+gem 'truemail', '~> 2.4' # validates email by regexp, mail server existence and address existence
 gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and RFC 3696
 
 # 0.7.3 is the latest for Rails 4.2, however, it is absent on Rubygems server
 # https://github.com/huacnlee/rails-settings-cached/issues/165
-gem 'nokogiri', '~> 1.11.0'
+gem 'nokogiri', '~> 1.11.3'
 
 # style
 gem 'bootstrap-sass', '~> 3.4'
@@ -37,7 +37,7 @@ gem 'kaminari'
 gem 'sass-rails'
 gem 'select2-rails',    '4.0.13' # for autocomplete
 gem 'cancancan'
-gem 'devise', '~> 4.7'
+gem 'devise', '~> 4.8'
 
 # registry specfic
 gem 'data_migrate', '~> 7.0'

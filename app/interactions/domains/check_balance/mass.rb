@@ -20,12 +20,14 @@ module Domains
       def calculate_total_price
         @total_price = 0
         domains.each do |domain|
-          task = Domains::CheckBalance::SingleDomain.run(domain: domain,
-                                                         operation: 'renew',
-                                                         period: period,
-                                                         unit: unit)
+          task = Domains::CheckBalance::SingleDomain.run(domain: domain, operation: 'renew',
+                                                         period: period, unit: unit)
 
-          task.valid? ? @total_price += task.result : errors.merge!(task.errors)
+          if task.valid?
+            @total_price += task.result
+          else
+            task.errors.each { |task_error| errors.import task_error }
+          end
         end
       end
     end

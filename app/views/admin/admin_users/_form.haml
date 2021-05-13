@@ -35,14 +35,14 @@
         .col-md-4.control-label
           = f.label :country_code, t(:country), class: 'required'
         .col-md-8
-          = f.select :country_code, SortedCountry.all_options(f.object.country_code), {}, required: true, class: 'form-control'
+          = f.select :country_code, ApplicationController.helpers.all_country_options(f.object.country_code), {}, required: true, class: 'form-control'
       %hr
       .form-group
         .col-md-4.control-label
           = f.label :role, nil, class: 'required'
         .col-md-8
-          = select_tag 'admin_user[roles][]', 
-            options_for_select(AdminUser::ROLES.map {|x| [t(x), x] }, 
+          = select_tag 'admin_user[roles][]',
+            options_for_select(AdminUser::ROLES.map {|x| [t(x), x] },
             @admin_user.roles.try(:first)), class: 'form-control selectize'
 
   %hr

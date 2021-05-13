@@ -34,6 +34,26 @@ class EppBaseTest < EppTestCase
     end
   end
 
+  def test_additional_error
+    get '/epp/error', params: { frame: valid_request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert_epp_response :unknown_command
+  end
+
+  def test_error_with_unknown_command
+    invalid_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epsdp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      </epp>
+    XML
+
+    get '/epp/error', params: { frame: invalid_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert_epp_response :unknown_command
+  end
+
   def test_validates_request_xml
     invalid_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -43,7 +63,7 @@ class EppBaseTest < EppTestCase
     post valid_command_path, params: { frame: invalid_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
-    assert_epp_response :syntax_error
+    assert_epp_response :required_parameter_missing
   end
 
   def test_anonymous_user

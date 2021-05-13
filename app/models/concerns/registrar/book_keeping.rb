@@ -40,8 +40,8 @@ module Registrar::BookKeeping
 
   def fetch_invoice_lines(activity, lines)
     price = load_price(activity)
-    if price.duration.include? 'year'
-      price.duration.to_i.times do |duration|
+    if price.duration.in_years.to_i >= 1
+      price.duration.in_years.to_i.times do |duration|
         lines << new_monthly_invoice_line(activity: activity, duration: duration + 1).as_json
       end
     else
@@ -67,9 +67,9 @@ module Registrar::BookKeeping
   end
 
   def finalize_invoice_line(line, price:, activity:, duration:)
-    yearly = price.duration.include?('year')
+    yearly = price.duration.in_years.to_i >= 1
 
-    line['price'] = yearly ? (price.price.amount / price.duration.to_i) : price.price.amount
+    line['price'] = yearly ? (price.price.amount / price.duration.in_years.to_i) : price.price.amount
     line['description'] = description_in_language(price: price, yearly: yearly)
 
     if duration.present?
@@ -90,7 +90,7 @@ module Registrar::BookKeeping
     locale_string = "registrar.invoice_#{timeframe_string}_product_description"
 
     I18n.with_locale(language == 'en' ? 'en' : 'et') do
-      I18n.t(locale_string, tld: ".#{price.zone_name}", length: price.duration.to_i)
+      I18n.t(locale_string, tld: ".#{price.zone_name}", length: price.duration.in_years.to_i)
     end
   end
 
