@@ -160,7 +160,7 @@ class DomainStatus < ApplicationRecord
         ['TechChangeProhibited', SERVER_TECH_CHANGE_PROHIBITED],
         ['UpdateProhibited', SERVER_UPDATE_PROHIBITED],
         ['DeleteProhibited', SERVER_DELETE_PROHIBITED],
-        ['ServerReleaseProhibited', SERVER_RELEASE_PROHIBITED],
+        ['ReleaseProhibited', SERVER_RELEASE_PROHIBITED],
       ]
     end
 

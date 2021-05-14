@@ -51,8 +51,18 @@ class DomainReleasableDiscardableTest < ActiveSupport::TestCase
     end
   end
 
-  def test_ignores_domains_with_server_delete_prohibited_status
+  def test_does_not_ignore_domains_with_server_delete_prohibited_status
     @domain.update!(delete_date: '2010-07-04', statuses: [DomainStatus::SERVER_DELETE_PROHIBITED])
+    travel_to Time.zone.parse('2010-07-05')
+
+    Domain.release_domains
+    @domain.reload
+
+    assert @domain.discarded?
+  end
+
+  def test_ignores_domains_with_server_release_prohibited_status
+    @domain.update!(delete_date: '2010-07-04', statuses: [DomainStatus::SERVER_RELEASE_PROHIBITED])
     travel_to Time.zone.parse('2010-07-05')
 
     Domain.release_domains

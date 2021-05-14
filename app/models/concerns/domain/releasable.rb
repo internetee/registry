@@ -4,7 +4,6 @@ module Domain::Releasable
   class_methods do
     def release_domains
       releasable_domains.each do |domain|
-
         domain.release
         yield domain if block_given?
       end
