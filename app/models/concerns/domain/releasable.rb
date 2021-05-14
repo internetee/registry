@@ -4,7 +4,6 @@ module Domain::Releasable
   class_methods do
     def release_domains
       releasable_domains.each do |domain|
-        return if domain.statuses.include? 'serverReleaseProhibited'
 
         domain.release
         yield domain if block_given?
@@ -19,14 +18,14 @@ module Domain::Releasable
           ' AND ? != ALL(coalesce(statuses, array[]::varchar[]))',
               Time.zone.today,
               Time.zone.today,
-              DomainStatus::SERVER_DELETE_PROHIBITED)
+              DomainStatus::SERVER_RELEASE_PROHIBITED)
       else
         where('(delete_date <= ? OR force_delete_date <= ?)' \
           ' AND ? != ALL(coalesce(statuses, array[]::varchar[])) AND' \
               ' ? != ALL(COALESCE(statuses, array[]::varchar[]))',
               Time.zone.today,
               Time.zone.today,
-              DomainStatus::SERVER_DELETE_PROHIBITED,
+              DomainStatus::SERVER_RELEASE_PROHIBITED,
               DomainStatus::DELETE_CANDIDATE)
       end
     end
