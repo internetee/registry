@@ -4,6 +4,8 @@ module Domain::Releasable
   class_methods do
     def release_domains
       releasable_domains.each do |domain|
+        return if domain.statuses.include? 'serverReleaseProhibited'
+
         domain.release
         yield domain if block_given?
       end
