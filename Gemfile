@@ -15,7 +15,6 @@ gem 'uglifier'
 gem 'figaro', '~> 1.2'
 
 # model related
-gem 'activerecord-import'
 gem 'paper_trail', '~> 12.0'
 gem 'pg',                        '1.2.3'
 # 1.8 is for Rails < 5.0

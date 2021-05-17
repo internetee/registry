@@ -124,8 +124,6 @@ GEM
     activerecord (6.1.3.2)
       activemodel (= 6.1.3.2)
       activesupport (= 6.1.3.2)
-    activerecord-import (1.0.8)
-      activerecord (>= 3.2)
     activestorage (6.1.3.2)
       actionpack (= 6.1.3.2)
       activejob (= 6.1.3.2)
@@ -515,7 +513,6 @@ PLATFORMS
 
 DEPENDENCIES
   active_interaction (~> 4.0)
-  activerecord-import
   airbrake
   apipie-rails (~> 0.5.18)
   aws-sdk-sesv2 (~> 1.16)

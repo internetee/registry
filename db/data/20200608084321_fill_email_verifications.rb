@@ -12,7 +12,8 @@ class FillEmailVerifications < ActiveRecord::Migration[6.0]
     # result = emails.map do |email|
     #   { email: email, domain: domain(email) }
     # end
-    # EmailAddressVerification.import result, batch_size: 500
+    # EmailAddressVerification.import result, batch_size: 500 #deprecated/removed
+    # need to use insert_all if uncommented
   end
 
   def down
