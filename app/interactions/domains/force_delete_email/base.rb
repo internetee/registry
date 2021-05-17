@@ -12,7 +12,7 @@ module Domains
                   Domain.where(registrant_id: registrant_ids)
 
         domains.each do |domain| 
-          if domain.force_delete_scheduled?
+          if domain.force_delete_scheduled? && !domain.status_notes[DomainStatus::FORCE_DELETE].nil?
             added_additional_email_into_notes(domain)
           else
             process_force_delete(domain)
@@ -38,9 +38,6 @@ module Domains
       end
 
       def save_status_note(domain)
-        # puts "Is blank? #{domain.status_notes[DomainStatus::FORCE_DELETE].blank?}" -> true
-        # puts "Is nil? #{domain.status_notes[DomainStatus::FORCE_DELETE].nil?}" -> true
-        # puts "Is present? #{domain.status_notes[DomainStatus::FORCE_DELETE].present?}" -> false
         domain.status_notes[DomainStatus::FORCE_DELETE] = email
         domain.save(validate: false)
       end
