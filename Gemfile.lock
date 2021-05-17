@@ -206,7 +206,7 @@ GEM
     daemons-rails (1.2.1)
       daemons
       multi_json (~> 1.0)
-    data_migrate (7.0.0)
+    data_migrate (7.0.1)
       activerecord (>= 5.0)
       railties (>= 5.0)
     database_cleaner (2.0.1)
