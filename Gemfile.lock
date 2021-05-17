@@ -311,10 +311,10 @@ GEM
       ruby2_keywords (~> 0.0.1)
     netrc (0.11.0)
     nio4r (2.5.7)
-    nokogiri (1.11.3)
+    nokogiri (1.11.4)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
-    nokogiri (1.11.3-x86_64-linux)
+    nokogiri (1.11.4-x86_64-linux)
       racc (~> 1.4)
     nori (2.6.0)
     omniauth (1.9.1)
@@ -550,7 +550,7 @@ DEPENDENCIES
   mimemagic (= 0.4.3)
   minitest (~> 5.14)
   money-rails
-  nokogiri (~> 1.11.3)
+  nokogiri (~> 1.11.4)
   omniauth
   omniauth-rails_csrf_protection
   omniauth-tara!
