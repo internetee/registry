@@ -1,3 +1,11 @@
+17.05.2021
+* Bump webmock to 3.13.0 [#1979](https://github.com/internetee/registry/pull/1979)
+* Bump Nokogiri to 1.11.4 [#1980](https://github.com/internetee/registry/pull/1980)
+* Bump airbrake to 11.0.3 [#1981](https://github.com/internetee/registry/pull/1981)
+* Bump puma to 5.3.1 [#1982](https://github.com/internetee/registry/pull/1982)
+* Bump data_migrate to 7.0.1 [#1983](https://github.com/internetee/registry/pull/1983)
+* Removed activerecord_import gem [#1984](https://github.com/internetee/registry/pull/1984)
+
 10.05.2021
 * Domain update confirmation fix [#1975](https://github.com/internetee/registry/pull/1975)
 * Bump bootsnap to 1.7.5 [#1970](https://github.com/internetee/registry/pull/1970)
