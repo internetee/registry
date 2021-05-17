@@ -5,7 +5,7 @@ module Domains
         domain.force_delete_data = nil
         domain.force_delete_date = nil
         domain.force_delete_start = nil
-        domain.status_notes[DomainStatus::FORCE_DELETE] = nil
+        domain.status_notes[DomainStatus::FORCE_DELETE] = ''
         domain.save(validate: false)
       end
     end
