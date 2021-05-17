@@ -11,7 +11,7 @@ module Domains
         domains = domain_contacts.map(&:domain).flatten +
                   Domain.where(registrant_id: registrant_ids)
 
-        domains.each do |domain| 
+        domains.each do |domain|
           if domain.force_delete_scheduled? && !domain.status_notes[DomainStatus::FORCE_DELETE].nil?
             added_additional_email_into_notes(domain)
           else
@@ -31,8 +31,8 @@ module Domains
       end
 
       def added_additional_email_into_notes(domain)
-        if !domain.status_notes[DomainStatus::FORCE_DELETE].include? email
-          domain.status_notes[DomainStatus::FORCE_DELETE].concat(" " + email)
+        unless domain.status_notes[DomainStatus::FORCE_DELETE].include? email
+          domain.status_notes[DomainStatus::FORCE_DELETE].concat(' ' + email)
           domain.save(validate: false)
         end
       end
