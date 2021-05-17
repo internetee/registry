@@ -414,8 +414,6 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
     assert @domain.status_notes[DomainStatus::FORCE_DELETE].include? email_one
     assert @domain.status_notes[DomainStatus::FORCE_DELETE].include? email_two
-    notification = @domain.registrar.notifications.last
-    assert notification.text.include? asserted_text
   end
 
   def test_lifts_force_delete_if_contact_fixed

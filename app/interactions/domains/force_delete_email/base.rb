@@ -12,15 +12,19 @@ module Domains
                   Domain.where(registrant_id: registrant_ids)
 
         domains.each do |domain|
-          if domain.force_delete_scheduled? && !domain.status_notes[DomainStatus::FORCE_DELETE].nil?
-            added_additional_email_into_notes(domain)
-          else
-            process_force_delete(domain)
-          end
+          before_execute_force_delete(domain)
         end
       end
 
       private
+
+      def before_execute_force_delete(domain)
+        if domain.force_delete_scheduled? && !domain.status_notes[DomainStatus::FORCE_DELETE].nil?
+          added_additional_email_into_notes(domain)
+        else
+          process_force_delete(domain)
+        end
+      end
 
       def process_force_delete(domain)
         domain.schedule_force_delete(type: :soft,
@@ -31,10 +35,10 @@ module Domains
       end
 
       def added_additional_email_into_notes(domain)
-        unless domain.status_notes[DomainStatus::FORCE_DELETE].include? email
-          domain.status_notes[DomainStatus::FORCE_DELETE].concat(' ' + email)
-          domain.save(validate: false)
-        end
+        return if domain.status_notes[DomainStatus::FORCE_DELETE].include? email
+
+        domain.status_notes[DomainStatus::FORCE_DELETE].concat(' ' + email)
+        domain.save(validate: false)
       end
 
       def save_status_note(domain)
