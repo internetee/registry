@@ -99,8 +99,19 @@ class DomainReleasableAuctionableTest < ActiveJob::TestCase
     assert_not @domain.domain_name.at_auction?
   end
 
-  def test_ignores_domains_with_server_delete_prohibited_status
+  def test_does_not_ignore_domains_with_server_delete_prohibited_status
     @domain.update!(delete_date: '2010-07-04', statuses: [DomainStatus::SERVER_DELETE_PROHIBITED])
+    travel_to Time.zone.parse('2010-07-05')
+
+    assert_changes 'Domain.count' do
+      Domain.release_domains
+    end
+
+    assert @domain.domain_name.at_auction?
+  end
+
+  def test_ignores_domains_with_server_release_prohibited_status
+    @domain.update!(delete_date: '2010-07-04', statuses: [DomainStatus::SERVER_RELEASE_PROHIBITED])
     travel_to Time.zone.parse('2010-07-05')
 
     assert_no_difference 'Domain.count' do

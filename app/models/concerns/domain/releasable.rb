@@ -17,14 +17,14 @@ module Domain::Releasable
           ' AND ? != ALL(coalesce(statuses, array[]::varchar[]))',
               Time.zone.today,
               Time.zone.today,
-              DomainStatus::SERVER_DELETE_PROHIBITED)
+              DomainStatus::SERVER_RELEASE_PROHIBITED)
       else
         where('(delete_date <= ? OR force_delete_date <= ?)' \
           ' AND ? != ALL(coalesce(statuses, array[]::varchar[])) AND' \
               ' ? != ALL(COALESCE(statuses, array[]::varchar[]))',
               Time.zone.today,
               Time.zone.today,
-              DomainStatus::SERVER_DELETE_PROHIBITED,
+              DomainStatus::SERVER_RELEASE_PROHIBITED,
               DomainStatus::DELETE_CANDIDATE)
       end
     end
