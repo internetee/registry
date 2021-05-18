@@ -5,7 +5,8 @@ class MigrateQueJobs < ActiveRecord::Migration[6.0]
         logger.info "Skipped Que job migration: #{job.inspect}"
       else
         args = job.args
-        job.job_class.constantize.perform_later(args)
+
+        job.job_class.constantize.set(wait_until: job.run_at).perform_later(args)
       end
     end
   end
