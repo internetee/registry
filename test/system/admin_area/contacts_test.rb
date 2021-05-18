@@ -25,10 +25,16 @@ class AdminContactsTest < ApplicationSystemTestCase
     assert_text('william-001')
     assert_text('william-002')
     assert_text('acme-ltd-001')
+    assert_text(@contact.name)
+    assert_text(@contact.code.to_s)
+    assert_text(@contact.email)
+    assert_text(@contact.registrar.name)
   end
 
   def test_display_details
-    visit admin_contact_path(@contact)
+    assert_nothing_raised do
+      visit admin_contact_path(@contact)
+    end
 
     assert_text('Street Main Street City New York Postcode 12345 ' \
                 'State New York State Country United States of America')

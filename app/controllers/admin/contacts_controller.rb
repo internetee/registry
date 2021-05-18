@@ -14,7 +14,7 @@ module Admin
       end
 
       contacts = Contact.includes(:registrar).joins(:registrar)
-                        .select('contacts.*, registrars.name')
+                        .select('contacts.*, registrars.name as registrars_name')
       contacts = contacts.filter_by_states(params[:statuses_contains].join(',')) if params[:statuses_contains]
       contacts = filter_by_flags(contacts)
 
