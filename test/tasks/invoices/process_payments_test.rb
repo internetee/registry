@@ -32,6 +32,34 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
     end
   end
 
+  def test_not_raises_error_if_bad_reference
+    @payment_description = 'some weird description 252923'
+    beneficiary_iban = 'GB33BUKB20201555555555'
+
+    Lhv::ConnectApi.class_eval do
+      define_method :credit_debit_notification_messages do
+        transaction = OpenStruct.new(amount: @payment_amount,
+                                     currency: @payment_currency,
+                                     date: @payment_date,
+                                     payment_reference_number: @payment_reference_number,
+                                     payment_description: @payment_description)
+        message = OpenStruct.new(bank_account_iban: beneficiary_iban,
+                                 credit_transactions: [transaction])
+        [message]
+      end
+    end
+
+    assert_no_difference 'AccountActivity.count' do
+      assert_no_difference 'Invoice.count' do
+        assert_no_difference -> {@account.balance} do
+          assert_nothing_raised do
+            capture_io { run_task }
+          end
+        end
+      end
+    end
+  end
+
   def test_cannot_create_new_invoice_if_transaction_binded_to_paid_invoice
     assert_not @invoice.paid?
 
