@@ -51,7 +51,7 @@ module ApplicationHelper
     return model.creator if model.creator.is_a? String
 
     # can be api user or some other user
-    link_to(model.creator, ['admin', model.creator])
+    link_to(model.creator, [:admin, model.creator])
   end
 
   def updator_link(model)
