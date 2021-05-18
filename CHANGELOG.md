@@ -1,6 +1,7 @@
 18.05.2021
 * Fixed internal error on contact creation with duplicate contact id [#1987](https://github.com/internetee/registry/issues/1987)
 * Fixed internal error on accessing contact details in admin portal [#1990](https://github.com/internetee/registry/issues/1990)
+* Fixed payment processing with numeric non regerence value in description [#1991](https://github.com/internetee/registry/issues/1991)
 
 17.05.2021
 * Bump webmock to 3.13.0 [#1979](https://github.com/internetee/registry/pull/1979)
