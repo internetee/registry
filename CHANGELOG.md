@@ -1,4 +1,5 @@
 18.05.2021
+* Added serverReleaseProhibited status [#1885](https://github.com/internetee/registry/issues/1885)
 * Fixed internal error on contact creation with duplicate contact id [#1987](https://github.com/internetee/registry/issues/1987)
 * Fixed internal error on accessing contact details in admin portal [#1990](https://github.com/internetee/registry/issues/1990)
 * Fixed payment processing with numeric non regerence value in description [#1991](https://github.com/internetee/registry/issues/1991)
