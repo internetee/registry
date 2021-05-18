@@ -40,6 +40,8 @@ namespace :invoices do
                                      description: incoming_transaction.payment_description }
           transaction = bank_statement.bank_transactions.create!(transaction_attributes)
 
+          next if transaction.registrar.blank?
+
           unless transaction.non_canceled?
             Invoice.create_from_transaction!(transaction) unless transaction.autobindable?
             transaction.autobind_invoice
