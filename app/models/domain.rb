@@ -424,8 +424,9 @@ class Domain < ApplicationRecord
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
 
-    RegistrantChangeConfirmEmailJob.perform_later(id, new_registrant_id)
-    RegistrantChangeNoticeEmailJob.perform_later(id, new_registrant_id)
+    send_time = Time.zone.now + 1.minute
+    RegistrantChangeConfirmEmailJob.set(wait_until: send_time).perform_later(id, new_registrant_id)
+    RegistrantChangeNoticeEmailJob.set(wait_until: send_time).perform_later(id, new_registrant_id)
 
     reload
 
