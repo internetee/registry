@@ -9,7 +9,7 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @original_address_processing = Setting.address_processing
     @original_fax_enabled_setting = ENV['fax_enabled']
     @user = users(:registrant)
-    
+
   end
 
   teardown do
@@ -160,6 +160,21 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_equal %w[name], @contact.disclosed_attributes
   end
 
+  def test_updates_org_person_data
+    name = 'SomeWeirdName'
+    @contact.update!(ident_type: Contact::ORG,
+                     disclosed_attributes: %w[])
+
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { disclosed_attributes: %w[], name: name },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    @contact.reload
+
+    assert_response :ok
+    assert_equal name, @contact.name
+  end
+
   def test_conceal_private_persons_data
     @contact.update!(ident_type: Contact::PRIV, disclosed_attributes: %w[name])
 
@@ -244,9 +259,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
           headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :bad_request
-    
+
     err_msg = "Legal person's data is visible by default and cannot be concealed. Please remove this parameter."
-    
+
     response_json = JSON.parse(response.body, symbolize_names: true)
     response_msg = response_json[:errors][0][:disclosed_attributes][0]
 
