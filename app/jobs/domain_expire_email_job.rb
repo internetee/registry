@@ -1,7 +1,8 @@
 class DomainExpireEmailJob < ApplicationJob
   def perform(domain_id, email)
-    domain = Domain.find(domain_id)
+    domain = Domain.find_by(id: domain_id)
 
+    return if domain.blank?
     return if domain.registered?
 
     attrs = {

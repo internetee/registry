@@ -18,12 +18,14 @@ namespace :migrate_jobs do
     else
       args = que_job.args
       time = que_job.run_at
+      time = Time.zone.now + 1.minute if time < Time.zone.now
 
-      que_job.job_class.constantize.set(wait_until: time).perform_later(args)
+      que_job.job_class.constantize.set(wait_until: time).perform_later(*args)
     end
   end
 
   def skip_condition(que_job)
-    que_job.last_error.present? || !(que_job.job_class.constantize < ApplicationJob)
+    que_job.last_error.present? || !(que_job.job_class.constantize < ApplicationJob) ||
+      !(que_job.job_class == 'DomainExpireEmailJob')
   end
 end
