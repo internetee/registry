@@ -1,3 +1,6 @@
+19.05.2021
+* Fix for contact update via registrant portal [#1968](https://github.com/internetee/registry/pull/1968)
+
 18.05.2021
 * Added serverReleaseProhibited status [#1885](https://github.com/internetee/registry/issues/1885)
 * Fixed internal error on contact creation with duplicate contact id [#1987](https://github.com/internetee/registry/issues/1987)
