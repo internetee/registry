@@ -1,6 +1,7 @@
 19.05.2021
 * Fix for contact update via registrant portal [#1968](https://github.com/internetee/registry/pull/1968)
 * REPP is returning domain count with domain list for improved pagination handling [#1969](https://github.com/internetee/registry/pull/1969)
+* Fix for registrant change confirmation broken link [#1994](https://github.com/internetee/registry/issues/1994)
 
 18.05.2021
 * Added serverReleaseProhibited status [#1885](https://github.com/internetee/registry/issues/1885)
