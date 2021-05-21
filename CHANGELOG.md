@@ -1,3 +1,6 @@
+21.05.2021
+* Tech contacts do not receive expiration emails any more [#1996](https://github.com/internetee/registry/issues/1996)
+
 20.05.2021
 * Moved data migrationd from whois project to registry [#1928](https://github.com/internetee/registry/issues/1928)
 
