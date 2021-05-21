@@ -1,2 +1,2 @@
 require 'application_service'
-require 'xsd/util'
+require 'xsd/schema'

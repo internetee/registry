@@ -1,6 +1,7 @@
 module Xsd
-  class Util < ApplicationService
+  class Schema < ApplicationService
     SCHEMA_PATH = 'lib/schemas/'.freeze
+    BASE_URL = 'https://epp.tld.ee/schema/'.freeze
 
     attr_reader :xsd_schemas, :for_prefix
 
@@ -10,8 +11,13 @@ module Xsd
       @xsd_schemas = Dir.entries(schema_path).select { |f| File.file? File.join(schema_path, f) }
     end
 
+    def self.filename(*args, &block)
+      new(*args, &block).call
+    end
+
     def call
-      latest(for_prefix)
+      filename = latest(for_prefix)
+      BASE_URL + filename
     end
 
     private
