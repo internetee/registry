@@ -4,10 +4,10 @@ class EppContactBaseTest < EppTestCase
   def test_non_existent_contact
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>non-existent</contact:id>
             </contact:info>
           </info>

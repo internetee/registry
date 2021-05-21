@@ -1,8 +1,8 @@
 class EppConstraint
   OBJECT_TYPES = {
-    domain: { domain: 'https://epp.tld.ee/schema/domain-eis-1.0.xsd' },
-    contact: { contact: 'https://epp.tld.ee/schema/contact-ee-1.1.xsd' }
-  }
+    domain: { domain: Xsd::Schema.filename(for_prefix: 'domain-eis') },
+    contact: { contact: Xsd::Schema.filename(for_prefix: 'contact-ee') },
+  }.freeze
 
   def initialize(type)
     @type = type

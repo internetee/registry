@@ -8,10 +8,10 @@ class EppContactCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:create xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:postalInfo>
                 <contact:name>#{name}</contact:name>
               </contact:postalInfo>
@@ -20,7 +20,7 @@ class EppContactCreateBaseTest < EppTestCase
             </contact:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:ident type="priv" cc="US">any</eis:ident>
             </eis:extdata>
           </extension>
@@ -48,10 +48,10 @@ class EppContactCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:create xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:postalInfo>
                 <contact:name>#{name}</contact:name>
               </contact:postalInfo>
@@ -60,7 +60,7 @@ class EppContactCreateBaseTest < EppTestCase
             </contact:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:ident type="priv" cc="US">any</eis:ident>
             </eis:extdata>
           </extension>
@@ -83,10 +83,10 @@ class EppContactCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:create xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>#{code}</contact:id>
               <contact:postalInfo>
                 <contact:name>#{name}</contact:name>
@@ -96,7 +96,7 @@ class EppContactCreateBaseTest < EppTestCase
             </contact:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:ident type="priv" cc="US">any</eis:ident>
             </eis:extdata>
           </extension>
@@ -114,10 +114,10 @@ class EppContactCreateBaseTest < EppTestCase
   def test_fails_when_required_attributes_are_missing
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:create xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:postalInfo>
                 <contact:name>\s</contact:name>
               </contact:postalInfo>
@@ -126,7 +126,7 @@ class EppContactCreateBaseTest < EppTestCase
             </contact:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:ident type="priv" cc="US">test</eis:ident>
             </eis:extdata>
           </extension>
@@ -148,10 +148,10 @@ class EppContactCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:create xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:postalInfo>
                 <contact:name>#{name}</contact:name>
                 <contact:addr>
@@ -167,7 +167,7 @@ class EppContactCreateBaseTest < EppTestCase
             </contact:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:ident type="priv" cc="US">123</eis:ident>
             </eis:extdata>
           </extension>
@@ -207,10 +207,10 @@ class EppContactCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:create xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:postalInfo>
                 <contact:name>#{name}</contact:name>
                 <contact:addr>
@@ -226,7 +226,7 @@ class EppContactCreateBaseTest < EppTestCase
             </contact:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:ident type="priv" cc="US">123</eis:ident>
             </eis:extdata>
           </extension>

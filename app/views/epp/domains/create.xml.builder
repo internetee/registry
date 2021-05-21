@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('domain:creData', 'xmlns:domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd') do
+      xml.tag!('domain:creData', 'xmlns:domain' => Xsd::Schema.filename(for_prefix: 'domain-eis')) do
         xml.tag!('domain:name', @domain.name)
         xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
         xml.tag!('domain:exDate', @domain.valid_to.iso8601)

@@ -18,10 +18,10 @@ class EppContactInfoBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>john-001</contact:id>
             </contact:info>
           </info>
@@ -50,10 +50,10 @@ class EppContactInfoBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>TEST:JOHN-001</contact:id>
             </contact:info>
           </info>
@@ -76,10 +76,10 @@ class EppContactInfoBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>JOHN-001</contact:id>
             </contact:info>
           </info>
@@ -105,10 +105,10 @@ class EppContactInfoBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>#{@contact.code}</contact:id>
             </contact:info>
           </info>
@@ -128,6 +128,6 @@ class EppContactInfoBaseTest < EppTestCase
   private
 
   def xml_schema
-    'https://epp.tld.ee/schema/contact-ee-1.1.xsd'
+    Xsd::Schema.filename(for_prefix: 'contact-ee')
   end
 end

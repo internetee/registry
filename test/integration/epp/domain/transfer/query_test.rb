@@ -6,19 +6,19 @@ class EppDomainTransferQueryTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     xml_doc = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
-    assert_equal 'shop.test', xml_doc.xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
-    assert_equal 'serverApproved', xml_doc.xpath('//domain:trStatus', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
-    assert_equal 'goodnames', xml_doc.xpath('//domain:reID', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
-    assert_equal 'bestnames', xml_doc.xpath('//domain:acID', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
+    assert_equal 'shop.test', xml_doc.xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
+    assert_equal 'serverApproved', xml_doc.xpath('//domain:trStatus', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
+    assert_equal 'goodnames', xml_doc.xpath('//domain:reID', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
+    assert_equal 'bestnames', xml_doc.xpath('//domain:acID', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
   end
 
   def test_wrong_transfer_code
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <transfer op="query">
-            <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw>wrong</domain:pw>
@@ -47,10 +47,10 @@ class EppDomainTransferQueryTest < EppTestCase
   def request_xml
     <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <transfer op="query">
-            <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw>65078d5</domain:pw>

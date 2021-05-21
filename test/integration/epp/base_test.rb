@@ -44,7 +44,7 @@ class EppBaseTest < EppTestCase
   def test_error_with_unknown_command
     invalid_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epsdp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epsdp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
       </epp>
     XML
 
@@ -57,7 +57,7 @@ class EppBaseTest < EppTestCase
   def test_validates_request_xml
     invalid_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
       </epp>
     XML
     post valid_command_path, params: { frame: invalid_xml },
@@ -69,10 +69,10 @@ class EppBaseTest < EppTestCase
   def test_anonymous_user
     xml_of_epp_command_that_requires_authentication = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -93,10 +93,10 @@ class EppBaseTest < EppTestCase
 
     xml_of_epp_command_that_requires_authorization = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -119,10 +119,10 @@ class EppBaseTest < EppTestCase
 
     authentication_enabled_epp_request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -146,10 +146,10 @@ class EppBaseTest < EppTestCase
 
     authentication_enabled_epp_request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -175,7 +175,7 @@ class EppBaseTest < EppTestCase
   def valid_request_xml
     <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <hello/>
       </epp>
     XML

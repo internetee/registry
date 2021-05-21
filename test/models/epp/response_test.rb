@@ -4,7 +4,7 @@ class EppResponseTest < ActiveSupport::TestCase
   def test_creates_new_response_from_xml_doc
     xml = <<-XML
       <?xml version="1.0" encoding="UTF-8"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
         <response>
           <result code="1000">
             <msg>any</msg>

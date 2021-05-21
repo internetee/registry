@@ -9,10 +9,10 @@ class EppContactDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>#{contact.code}</contact:id>
             </contact:delete>
           </delete>
@@ -36,10 +36,10 @@ class EppContactDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-        <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
           <command>
             <delete>
-              <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
                 <contact:id>#{contact.code.upcase}</contact:id>
               </contact:delete>
             </delete>
@@ -63,10 +63,10 @@ class EppContactDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-        <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
           <command>
             <delete>
-              <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
                 <contact:id>#{contact.code.upcase}</contact:id>
               </contact:delete>
             </delete>
@@ -90,10 +90,10 @@ class EppContactDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>#{contact.code}</contact:id>
             </contact:delete>
           </delete>

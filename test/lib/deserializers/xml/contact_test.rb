@@ -14,10 +14,10 @@ class DeserializersXmlContactTest < ActiveSupport::TestCase
   def test_handles_update
     xml_string = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>john-001</contact:id>
               <contact:chg>
                 <contact:postalInfo>
@@ -48,10 +48,10 @@ class DeserializersXmlContactTest < ActiveSupport::TestCase
 
     xml_string = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:create xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:postalInfo>
                 <contact:name>#{name}</contact:name>
               </contact:postalInfo>
@@ -60,7 +60,7 @@ class DeserializersXmlContactTest < ActiveSupport::TestCase
             </contact:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:ident type="priv" cc="US">any</eis:ident>
             </eis:extdata>
           </extension>
@@ -76,10 +76,10 @@ class DeserializersXmlContactTest < ActiveSupport::TestCase
   def test_handles_statuses
     xml_string = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>john-001</contact:id>
               <contact:chg>
                 <contact:postalInfo>

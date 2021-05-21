@@ -18,15 +18,15 @@ class EppDomainDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>invalid.test</domain:name>
             </domain:delete>
           </delete>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -45,15 +45,15 @@ class EppDomainDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -73,15 +73,15 @@ class EppDomainDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -107,15 +107,15 @@ class EppDomainDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -141,15 +141,15 @@ class EppDomainDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -174,15 +174,15 @@ class EppDomainDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete verified="yes" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:delete verified="yes" xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -207,10 +207,10 @@ class EppDomainDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -229,15 +229,15 @@ class EppDomainDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
             </eis:extdata>
           </extension>

@@ -19,10 +19,10 @@ class EppContactUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>john-001</contact:id>
               <contact:chg>
                 <contact:postalInfo>
@@ -56,10 +56,10 @@ class EppContactUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>john-001</contact:id>
               <contact:chg>
                 <contact:email>john-new@inbox.test</contact:email>
@@ -85,10 +85,10 @@ class EppContactUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>john-001</contact:id>
               <contact:chg>
                 <contact:email>john@inbox.test</contact:email>
@@ -117,10 +117,10 @@ class EppContactUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>john-001</contact:id>
               <contact:chg>
                 <contact:email>john-new@inbox.test</contact:email>
@@ -142,10 +142,10 @@ class EppContactUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>non-existing</contact:id>
               <contact:chg>
                 <contact:postalInfo>
@@ -173,10 +173,10 @@ class EppContactUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>#{@contact.code}</contact:id>
               <contact:chg>
                 <contact:postalInfo>
@@ -185,7 +185,7 @@ class EppContactUpdateBaseTest < EppTestCase
             </contact:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:ident cc="#{@contact.ident_country_code}" type="#{@contact.ident_type}">#{new_ident_code}</eis:ident>
             </eis:extdata>
           </extension>
@@ -208,10 +208,10 @@ class EppContactUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>#{@contact.code}</contact:id>
               <contact:chg>
                 <contact:postalInfo/>
@@ -219,7 +219,7 @@ class EppContactUpdateBaseTest < EppTestCase
             </contact:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:ident cc="US" type="priv">#{@contact.ident}</eis:ident>
             </eis:extdata>
           </extension>
@@ -244,10 +244,10 @@ class EppContactUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+    <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
       <command>
         <update>
-          <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+          <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
             <contact:id>#{@contact.code}</contact:id>
             <contact:chg>
               <contact:postalInfo>
@@ -290,10 +290,10 @@ class EppContactUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+    <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
       <command>
         <update>
-          <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+          <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
             <contact:id>#{@contact.code}</contact:id>
             <contact:chg>
               <contact:postalInfo>
@@ -337,10 +337,10 @@ class EppContactUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>#{@contact.code}</contact:id>
               <contact:chg>
                 <contact:postalInfo>
@@ -388,10 +388,10 @@ class EppContactUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>john-001</contact:id>
               <contact:chg>
                 <contact:postalInfo>
@@ -403,7 +403,7 @@ class EppContactUpdateBaseTest < EppTestCase
             </contact:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -416,7 +416,7 @@ class EppContactUpdateBaseTest < EppTestCase
           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
       @contact.reload
     end
-    
+
     assert_epp_response :completed_successfully
     assert_equal 'new name', @contact.name
     assert_equal 'new-email@inbox.test', @contact.email

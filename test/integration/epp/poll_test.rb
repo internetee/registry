@@ -9,7 +9,7 @@ class EppPollTest < EppTestCase
   def test_return_latest_notification_when_queue_is_not_empty
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <poll op="req"/>
         </command>
@@ -32,7 +32,7 @@ class EppPollTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <poll op="req"/>
         </command>
@@ -56,7 +56,7 @@ class EppPollTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <poll op="req"/>
         </command>
@@ -66,7 +66,7 @@ class EppPollTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     xml_doc = Nokogiri::XML(response.body)
-    namespace = 'https://epp.tld.ee/schema/changePoll-1.0.xsd'
+    namespace = Xsd::Schema.filename(for_prefix: 'changePoll')
     assert_equal 'update', xml_doc.xpath('//changePoll:operation', 'changePoll' => namespace).text
     assert_equal Time.zone.parse('2010-07-05').utc.xmlschema,
                  xml_doc.xpath('//changePoll:date', 'changePoll' => namespace).text
@@ -81,7 +81,7 @@ class EppPollTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <poll op="req"/>
         </command>
@@ -98,7 +98,7 @@ class EppPollTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <poll op="ack" msgID="#{notification.id}"/>
         </command>
@@ -121,7 +121,7 @@ class EppPollTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <poll op="ack" msgID="#{notification.id}"/>
         </command>
@@ -138,7 +138,7 @@ class EppPollTest < EppTestCase
   def test_notification_not_found
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <poll op="ack" msgID="0"/>
         </command>
@@ -153,7 +153,7 @@ class EppPollTest < EppTestCase
   def test_anonymous_user_cannot_access
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <poll op="req"/>
         </command>

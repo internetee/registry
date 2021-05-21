@@ -5,12 +5,12 @@ xml.epp_head do
     xml.svcMenu do
       xml.version '1.0'
       xml.lang 'en'
-      xml.objURI 'https://epp.tld.ee/schema/domain-eis-1.0.xsd'
-      xml.objURI 'https://epp.tld.ee/schema/contact-ee-1.1.xsd'
+      xml.objURI Xsd::Schema.filename(for_prefix: 'domain-eis')
+      xml.objURI Xsd::Schema.filename(for_prefix: 'contact-ee')
       xml.objURI 'urn:ietf:params:xml:ns:host-1.0'
       xml.svcExtension do
         xml.extURI 'urn:ietf:params:xml:ns:secDNS-1.1'
-        xml.extURI 'https://epp.tld.ee/schema/eis-1.0.xsd'
+        xml.extURI Xsd::Schema.filename(for_prefix: 'eis')
       end
     end
 
