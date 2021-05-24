@@ -1,8 +1,13 @@
+24.05.2021
+* Bump puma to 5.3.2 [#1999](https://github.com/internetee/registry/pull/1999)
+* Bump nokogiri to 1.11.5 [#2000](https://github.com/internetee/registry/pull/2000)
+* BUmp truemail to 2.4.2 [#2001](https://github.com/internetee/registry/pull/2001)
+
 21.05.2021
 * Tech contacts do not receive expiration emails any more [#1996](https://github.com/internetee/registry/issues/1996)
 
 20.05.2021
-* Moved data migrationd from whois project to registry [#1928](https://github.com/internetee/registry/issues/1928)
+* Moved data migrations from whois project to registry [#1928](https://github.com/internetee/registry/issues/1928)
 
 19.05.2021
 * Fix for contact update via registrant portal [#1968](https://github.com/internetee/registry/pull/1968)
