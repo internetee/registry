@@ -25,6 +25,7 @@ class EppDomainInfoBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    p response_xml
     assert_epp_response :completed_successfully
     assert_equal 'shop.test', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
     assert_equal 'ok', response_xml.at_xpath('//domain:status', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")['s']
@@ -46,6 +47,37 @@ class EppDomainInfoBaseTest < EppTestCase
                           valid_to: Time.zone.parse('2010-07-07'))
 
     domain.versions.destroy_all
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+        <command>
+          <info>
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+              <domain:name>shop.test</domain:name>
+            </domain:info>
+          </info>
+        </command>
+      </epp>
+    XML
+
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully
+    schema = EPP_ALL_SCHEMA
+
+    schema_validation_errors = schema.validate(response_xml)
+    assert_equal 0, schema_validation_errors.size
+  end
+
+  def test_returns_valid_response_if_release_prohibited
+    domain = domains(:shop)
+    domain.update_columns(statuses: [DomainStatus::SERVER_RELEASE_PROHIBITED],
+                          created_at: Time.now - 5.days,
+                          creator_str: 'test',
+                          delete_date: Time.now - 1.day)
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
