@@ -25,8 +25,11 @@ class EppDomainInfoBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    p response_xml
+
+    schema_version = return_xml_domain_schema_version(response_xml)
+   
     assert_epp_response :completed_successfully
+    assert schema_version >= 1.1
     assert_equal 'shop.test', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
     assert_equal 'ok', response_xml.at_xpath('//domain:status', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")['s']
     assert_equal 'john-001', response_xml.at_xpath('//domain:registrant', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text

@@ -22,7 +22,6 @@ require 'sidekiq/testing'
 
 Sidekiq::Testing.fake!
 
-
 # `bin/rails test` is not the same as `bin/rake test`.
 # All tasks will be loaded (and executed) twice when using the former without `Rake::Task.clear`.
 # https://github.com/rails/rails/issues/28786
@@ -69,4 +68,13 @@ end
 
 class EppTestCase < ActionDispatch::IntegrationTest
   include Assertions::EppAssertions
+
+  def return_xml_domain_schema_version(response_xml)
+    version_regex = /-\d+\S\d+/
+    domain_schema_tag = response_xml.to_s.scan(/xmlns:domain\S+/)
+    schema_path = domain_schema_tag.to_s.match(%r{https?://\S+})[0]
+    version = schema_path.to_s.match(version_regex)[0]
+
+    -version.to_f
+  end
 end

@@ -18,4 +18,5 @@ class XsdSchemaTest < ActiveSupport::TestCase
 
     assert_equal Xsd::Schema::BASE_URL + 'abcde-fghij-1.3.xsd', filename
   end
+
 end
