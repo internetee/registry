@@ -20,7 +20,7 @@ xml.epp_head do
         state = @notification.text.include?('unlocked') ? 'unlock' : 'lock'
         xml.extension do
           xml.tag!('changePoll:changeData',
-                   'xmlns:changePoll': 'https://epp.tld.ee/schema/changePoll-1.0.xsd') do
+                   'xmlns:changePoll': Xsd::Schema.filename(for_prefix: 'changePoll')) do
             xml.tag!('changePoll:operation', state)
           end
         end

@@ -5,10 +5,10 @@ class EppContactTransferBaseTest < EppTestCase
   def test_not_implemented
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <transfer op="request">
-            <contact:transfer xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+            <contact:transfer xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
               <contact:id>any</contact:id>
             </contact:transfer>
           </transfer>

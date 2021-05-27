@@ -7,8 +7,9 @@ xml.epp_head do
       xml.result('code' => x[:code]) do
         xml.msg(x[:msg], 'lang' => 'en')
         model_name = resource ? resource.model_name.singular.sub('epp_','') : controller.controller_name.singularize
+        prefix = model_name == 'poll' ? 'changePoll' : model_name + '-eis'
 
-        xml.value("xmlns:#{model_name}" => "https://epp.tld.ee/schema/#{model_name}-eis-1.0.xsd") do
+        xml.value("xmlns:#{model_name}" => Xsd::Schema.filename(for_prefix: prefix)) do
           value = x[:value][:val]
           attrs = {}
           attrs["s"] = value if x[:value][:obj] == "status"

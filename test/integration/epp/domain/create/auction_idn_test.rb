@@ -21,16 +21,16 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>xn--pramiid-n2a.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -56,16 +56,16 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>püramiid.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -90,16 +90,16 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>xn--pramiid-n2a.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -124,16 +124,16 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>püramiid.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -159,16 +159,16 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>püramiid.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
               <eis:reserved>
                 <eis:pw>auction001</eis:pw>
@@ -196,16 +196,16 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>xn--pramiid-n2a.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
               <eis:reserved>
                 <eis:pw>auction001</eis:pw>

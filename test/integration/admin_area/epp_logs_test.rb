@@ -16,7 +16,7 @@ class AdminEppLogsIntegrationTest < ApplicationSystemTestCase
     visit admin_epp_logs_path
     send_epp_request_hello
     visit admin_epp_logs_path
-      
+
     find(:xpath, "//tbody/tr/td/a", match: :first).click
     assert_text 'Details'
   end
@@ -34,14 +34,14 @@ class AdminEppLogsIntegrationTest < ApplicationSystemTestCase
     date_now = Date.today.to_s(:db)
 
     assert_match /#{date_now}/, epp_log_date
-  end    
+  end
 
   private
 
   def send_epp_request_hello
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <hello/>
       </epp>
       XML

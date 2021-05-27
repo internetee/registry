@@ -14,10 +14,10 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
             </domain:create>
@@ -31,7 +31,7 @@ class EppDomainCreateBaseTest < EppTestCase
             <secDNS:pubKey>#{pub_key}</secDNS:pubKey>
           </secDNS:keyData>
         </secDNS:create>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -53,16 +53,16 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -86,16 +86,16 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{bignum_legaldoc}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -122,16 +122,16 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{bignum_legaldoc}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -158,10 +158,10 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
             </domain:create>
@@ -187,10 +187,10 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
               <domain:contact type="admin">#{contacts(:jane).code}</domain:contact>
@@ -198,7 +198,7 @@ class EppDomainCreateBaseTest < EppTestCase
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -223,10 +223,10 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
               <domain:contact type="admin">#{contact.code}</domain:contact>
@@ -236,7 +236,7 @@ class EppDomainCreateBaseTest < EppTestCase
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -261,10 +261,10 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
               <domain:contact type="admin">#{contact.code}</domain:contact>
@@ -273,7 +273,7 @@ class EppDomainCreateBaseTest < EppTestCase
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -298,10 +298,10 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
               <domain:contact type="admin">#{contact.code}</domain:contact>
@@ -310,7 +310,7 @@ class EppDomainCreateBaseTest < EppTestCase
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -336,10 +336,10 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
               <domain:contact type="admin">#{contact.code}</domain:contact>
@@ -348,7 +348,7 @@ class EppDomainCreateBaseTest < EppTestCase
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -374,10 +374,10 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
               <domain:contact type="admin">#{contact_two.code}</domain:contact>
@@ -386,7 +386,7 @@ class EppDomainCreateBaseTest < EppTestCase
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -411,16 +411,16 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -459,10 +459,10 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
             </domain:create>
@@ -495,10 +495,10 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{registrant.code}</domain:registrant>
             </domain:create>
@@ -529,16 +529,16 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{reserved_domain.name}</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
               <eis:reserved>
                 <eis:pw>#{registration_code}</eis:pw>
@@ -565,10 +565,10 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{name}</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
               <domain:authInfo>
@@ -577,7 +577,7 @@ class EppDomainCreateBaseTest < EppTestCase
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -598,16 +598,16 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{blocked_domain}</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -628,16 +628,16 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{SimpleIDN.to_ascii('blockedäöüõ.test')}</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -655,16 +655,16 @@ class EppDomainCreateBaseTest < EppTestCase
   def test_reserved_domain_cannot_be_registered_with_wrong_registration_code
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{reserved_domains(:one).name}</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
               <eis:reserved>
                 <eis:pw>wrong</eis:pw>
@@ -687,16 +687,16 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{reserved_domain.name}</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -717,16 +717,16 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>new.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -745,17 +745,17 @@ class EppDomainCreateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <create>
-            <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>new.test</domain:name>
               <domain:period unit="m">2</domain:period>
               <domain:registrant>john-001</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>

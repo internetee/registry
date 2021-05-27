@@ -11,10 +11,10 @@ class EppDomainRenewBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <renew>
-            <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:renew xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domain.name}</domain:name>
               <domain:curExpDate>#{domain.expire_time.to_date}</domain:curExpDate>
               <domain:period unit="y">1</domain:period>
@@ -42,10 +42,10 @@ class EppDomainRenewBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <renew>
-            <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:renew xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domain.name}</domain:name>
               <domain:curExpDate>#{domain.expire_time.to_date}</domain:curExpDate>
               <domain:period unit="y">1</domain:period>
@@ -69,10 +69,10 @@ class EppDomainRenewBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <renew>
-            <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:renew xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domain.name}</domain:name>
               <domain:curExpDate>#{domain.valid_to.to_date}</domain:curExpDate>
               <domain:period unit="m">1</domain:period>
@@ -97,10 +97,10 @@ class EppDomainRenewBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <renew>
-            <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:renew xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domain.name}</domain:name>
               <domain:curExpDate>#{domain.valid_to.to_date}</domain:curExpDate>
               <domain:period unit="m">1</domain:period>
@@ -125,10 +125,10 @@ class EppDomainRenewBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <renew>
-            <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:renew xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domain.name}</domain:name>
               <domain:curExpDate>#{domain.expire_time.to_date}</domain:curExpDate>
               <domain:period unit="y">1</domain:period>
@@ -152,10 +152,10 @@ class EppDomainRenewBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <renew>
-            <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:renew xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domain.name}</domain:name>
               <domain:curExpDate>#{domain.expire_time.to_date}</domain:curExpDate>
               <domain:period unit="m">2</domain:period>
@@ -180,10 +180,10 @@ class EppDomainRenewBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <renew>
-            <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:renew xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domain.name}</domain:name>
               <domain:curExpDate>#{provided_expiration_date}</domain:curExpDate>
             </domain:renew>
@@ -211,10 +211,10 @@ class EppDomainRenewBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <renew>
-            <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:renew xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{domain.name}</domain:name>
               <domain:curExpDate>#{domain.expire_time.to_date}</domain:curExpDate>
               <domain:period unit="y">1</domain:period>

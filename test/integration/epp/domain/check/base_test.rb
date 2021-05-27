@@ -4,10 +4,10 @@ class EppDomainCheckBaseTest < EppTestCase
   def test_returns_valid_response
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <check>
-            <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:check xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>some.test</domain:name>
             </domain:check>
           </check>
@@ -20,16 +20,16 @@ class EppDomainCheckBaseTest < EppTestCase
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
-    assert_equal 'some.test', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
+    assert_equal 'some.test', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
   end
 
   def test_domain_is_available_when_not_registered_or_blocked
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <check>
-            <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:check xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>available.test</domain:name>
             </domain:check>
           </check>
@@ -41,8 +41,8 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '1', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
-    assert_nil response_xml.at_xpath('//domain:reason', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')
+    assert_equal '1', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")['avail']
+    assert_nil response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")
   end
 
   def test_domain_is_available_when_reserved
@@ -50,10 +50,10 @@ class EppDomainCheckBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <check>
-            <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:check xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>reserved.test</domain:name>
             </domain:check>
           </check>
@@ -65,17 +65,17 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '1', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
-    assert_nil response_xml.at_xpath('//domain:reason', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')
+    assert_equal '1', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")['avail']
+    assert_nil response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")
   end
 
   def test_domain_is_unavailable_when_format_is_invalid
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <check>
-            <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:check xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>invalid</domain:name>
             </domain:check>
           </check>
@@ -87,8 +87,8 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
-    assert_equal 'invalid format', response_xml.at_xpath('//domain:reason', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
+    assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")['avail']
+    assert_equal 'invalid format', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
   end
 
   def test_domain_is_unavailable_when_registered
@@ -96,10 +96,10 @@ class EppDomainCheckBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <check>
-            <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:check xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>shop.test</domain:name>
             </domain:check>
           </check>
@@ -111,8 +111,8 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
-    assert_equal 'in use', response_xml.at_xpath('//domain:reason', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
+    assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")['avail']
+    assert_equal 'in use', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
   end
 
   def test_domain_is_unavailable_when_blocked
@@ -120,10 +120,10 @@ class EppDomainCheckBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <check>
-            <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:check xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>blocked.test</domain:name>
             </domain:check>
           </check>
@@ -135,8 +135,8 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
-    assert_equal 'Blocked', response_xml.at_xpath('//domain:reason', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
+    assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")['avail']
+    assert_equal 'Blocked', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
   end
 
   def test_domain_is_unavailable_when_zone_with_the_same_origin_exists
@@ -144,10 +144,10 @@ class EppDomainCheckBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <check>
-            <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:check xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>test</domain:name>
             </domain:check>
           </check>
@@ -159,17 +159,17 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd')['avail']
-    assert_equal 'Zone with the same origin exists', response_xml.at_xpath('//domain:reason', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
+    assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")['avail']
+    assert_equal 'Zone with the same origin exists', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
   end
 
   def test_multiple_domains
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <check>
-            <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:check xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>one.test</domain:name>
               <domain:name>two.test</domain:name>
               <domain:name>three.test</domain:name>
@@ -183,6 +183,6 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal 3, response_xml.xpath('//domain:cd', 'domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd').size
+    assert_equal 3, response_xml.xpath('//domain:cd', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").size
   end
 end

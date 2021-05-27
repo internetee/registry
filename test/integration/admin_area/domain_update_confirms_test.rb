@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'application_system_test_case'
 
-class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCase  
+class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCase
   setup do
     WebMock.allow_net_connect!
     sign_in users(:admin)
@@ -15,10 +15,10 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
     puts new_registrant.name
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{new_registrant.code}</domain:registrant>
@@ -26,7 +26,7 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
             </domain:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -50,10 +50,10 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
     @domain.registrant
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{new_registrant.code}</domain:registrant>
@@ -61,7 +61,7 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
             </domain:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
