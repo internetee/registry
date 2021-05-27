@@ -6,6 +6,10 @@ class CsyncJobTest < ActiveSupport::TestCase
   setup do
     @dnskey = dnskeys(:one)
     @domain = domains(:shop)
+    dirname = File.dirname(ENV['cdns_scanner_input_file'])
+
+    FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
+    FileUtils.touch(ENV['cdns_scanner_input_file']) unless File.exists?(ENV['cdns_scanner_input_file'])
   end
 
   def test_generates_input_file_for_cdnskey_scanner
@@ -16,6 +20,21 @@ class CsyncJobTest < ActiveSupport::TestCase
 
     CsyncJob.perform_now(generate: true)
 
+    assert_equal expected_contents, IO.read(ENV['cdns_scanner_input_file'])
+  end
+
+  def test_generates_input_file_from_name_puny
+    @domain.update(name: 'pööriöö.ee', name_puny: 'xn--pri-snaaca.ee')
+    @domain.save(validate: false)
+    @nameserver = @domain.nameservers.first
+    @nameserver.update(hostname: 'täpiline.ee', hostname_puny: 'xn--theke1-bua.ee')
+    @domain.reload
+    @dnskey.update(domain: @domain)
+
+    expected_contents = "[secure]\nns2.bestnames.test #{@domain.name_puny}\n#{@nameserver.hostname_puny} #{@domain.name_puny}\n" \
+    "[insecure]\nns2.bestnames.test airport.test\nns1.bestnames.test airport.test metro.test\n"
+
+    CsyncJob.perform_now(generate: true)
     assert_equal expected_contents, IO.read(ENV['cdns_scanner_input_file'])
   end
 

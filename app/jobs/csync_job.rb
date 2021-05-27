@@ -83,9 +83,9 @@ class CsyncJob < ApplicationJob
   # From this point we're working on generating input for cdnskey-scanner
   def gather_pollable_domains
     @logger.info 'CsyncJob Generate: Gathering current domain(s) data'
-    Nameserver.select(:hostname, :domain_id).all.each do |ns|
+    Nameserver.select(:hostname_puny, :domain_id).all.each do |ns|
       %i[secure insecure].each do |i|
-        @input_store[i][ns.hostname] = [] unless @input_store[i].key? ns.hostname
+        @input_store[i][ns.hostname_puny] = [] unless @input_store[i].key? ns.hostname_puny
       end
 
       append_domains_to_list(ns)
@@ -94,14 +94,16 @@ class CsyncJob < ApplicationJob
 
   def append_domains_to_list(nameserver)
     Domain.where(id: nameserver.domain_id).all.each do |domain|
-      @input_store[domain.dnskeys.any? ? :secure : :insecure][nameserver.hostname].push domain.name
+      key = domain.dnskeys.any? ? :secure : :insecure
+      hostname = nameserver.hostname_puny || nameserver.hostname
+      @input_store[key][hostname].push domain.name_puny
     end
   end
 
   def generate_scanner_input
     @logger.info 'CsyncJob Generate: Gathering current domain(s) data'
     gather_pollable_domains
-
+    check_directory
     out_file = File.new(ENV['cdns_scanner_input_file'], 'w+')
 
     %i[secure insecure].each do |state|
@@ -111,6 +113,15 @@ class CsyncJob < ApplicationJob
 
     out_file.close
     @logger.info 'CsyncJob Generate: Finished writing output to ' + ENV['cdns_scanner_input_file']
+  end
+
+  def check_directory
+    dirname = File.dirname(ENV['cdns_scanner_input_file'])
+
+    FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
+    return if File.exist?(ENV['cdns_scanner_input_file'])
+
+    FileUtils.touch(ENV['cdns_scanner_input_file'])
   end
 
   def create_input_lines(out_file, state)
