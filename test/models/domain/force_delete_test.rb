@@ -385,6 +385,37 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert notification.text.include? asserted_text
   end
 
+  def test_domain_should_have_several_bounced_emails
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    assert_not @domain.force_delete_scheduled?
+    travel_to Time.zone.parse('2010-07-05')
+    email_one = 'one@strangesentence@internet.ee'
+    email_two = 'two@strangesentence@internet.ee'
+    asserted_text_one = "Invalid email: #{email_one}"
+    asserted_text_two = "Invalid email: #{email_two}"
+
+    contact_one = @domain.admin_contacts.first
+    contact_one.update_attribute(:email, email_one)
+    contact_one.email_verification.verify
+
+    assert contact_one.email_verification_failed?
+
+    contact_two = @domain.admin_contacts.first
+    contact_two.update_attribute(:email, email_two)
+    contact_two.email_verification.verify
+
+    assert contact_one.email_verification_failed?
+
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+    assert_equal 'invalid_email', @domain.template_name
+    assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
+    assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
+    assert @domain.status_notes[DomainStatus::FORCE_DELETE].include? email_one
+    assert @domain.status_notes[DomainStatus::FORCE_DELETE].include? email_two
+  end
+
   def test_lifts_force_delete_if_contact_fixed
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?
