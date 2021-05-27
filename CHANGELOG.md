@@ -1,6 +1,7 @@
 27.05.2021
 * fixed error handling on invalid date format for epp contact create [#2006](https://github.com/internetee/registry/issues/2006)
 * csync input file with puycode values [#2003](https://github.com/internetee/registry/issues/2003)
+* autoloading newest db schema file versions [#1976](https://github.com/internetee/registry/issues/1976)
 * ForceDelete notes are updated with additionally found email addresses [#1913](https://github.com/internetee/registry/issues/1913)
 
 24.05.2021
