@@ -1,3 +1,8 @@
+27.05.2021
+* fixed error handling on invalid date format for epp contact create [#2006](https://github.com/internetee/registry/issues/2006)
+* csync input file with puycode values [#2003](https://github.com/internetee/registry/issues/2003)
+* ForceDelete notes are updated with additionally found email addresses [#1913](https://github.com/internetee/registry/issues/1913)
+
 24.05.2021
 * Bump puma to 5.3.2 [#1999](https://github.com/internetee/registry/pull/1999)
 * Bump nokogiri to 1.11.5 [#2000](https://github.com/internetee/registry/pull/2000)
