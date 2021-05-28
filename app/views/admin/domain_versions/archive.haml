@@ -67,7 +67,7 @@
                   - else
                     - contact = Contact.all_versions_for([domain.registrant_id], version.created_at).first
                     - if contact.nil? && ver = Version::ContactVersion.where(item_id: domain.registrant_id).last
-                      - contact = Contact.new(ver.object.to_h.merge(ver.object_changes.to_h&.slice(*valid_columns)))
+                      - contact = Contact.new(ver.object.to_h.merge(ver.object_changes.to_h&.slice(*Domain&.column_names)))
                     = contact.try(:name)
                     = "&#160;".html_safe
                     = "(#{t(:deleted)})"
