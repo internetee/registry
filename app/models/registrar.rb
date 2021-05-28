@@ -101,7 +101,8 @@ class Registrar < ApplicationRecord
     )
 
     unless payable
-      InvoiceMailer.invoice_email(invoice: invoice, recipient: billing_email).deliver_now
+      InvoiceMailer.invoice_email(invoice: invoice, recipient: billing_email, paid: !payable)
+                   .deliver_later(wait: 1.minute)
     end
 
     SendEInvoiceJob.perform_later(invoice.id, payable)
