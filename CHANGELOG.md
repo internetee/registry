@@ -1,3 +1,6 @@
+28.05.2021
+* fix for legacy contact object errors in admin [#2010](https://github.com/internetee/registry/pull/2010)
+
 27.05.2021
 * fixed error handling on invalid date format for epp contact create [#2006](https://github.com/internetee/registry/issues/2006)
 * csync input file with puycode values [#2003](https://github.com/internetee/registry/issues/2003)
