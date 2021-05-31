@@ -15,7 +15,7 @@ module Invoice::Cancellable
   end
 
   def cancelled?
-    cancelled_at
+    cancelled_at.present?
   end
 
   def not_cancelled?

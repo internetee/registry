@@ -105,7 +105,7 @@ class Registrar < ApplicationRecord
                    .deliver_later(wait: 1.minute)
     end
 
-    SendEInvoiceJob.perform_later(invoice.id, payable)
+    SendEInvoiceJob.perform_now(invoice.id, payable)
 
     invoice
   end

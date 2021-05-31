@@ -22,6 +22,30 @@ namespace :invoices do
       end
     end
 
+    process_transactions(incoming_transactions)
+
+    puts "Transactions processed: #{incoming_transactions.size}"
+  end
+
+  task test_payments: :environment do
+    registrar = Invoice.last.buyer
+    transactions = [OpenStruct.new(amount: 0.1,
+                                   currency: 'EUR',
+                                   date: Time.zone.today,
+                                   payment_reference_number: registrar.reference_no,
+                                   payment_description: "description #{registrar.reference_no}")]
+    process_transactions(transactions)
+    puts 'Last registrar invoice is'
+    pp registrar.invoices.last
+    puts "Last invoice paid at #{registrar.invoices.last.receipt_date}"
+  end
+
+  def log(msg)
+    @log ||= Logger.new(STDOUT)
+    @log.info(msg)
+  end
+
+  def process_transactions(incoming_transactions)
     if incoming_transactions.any?
       log 'Got incoming transactions'
       log incoming_transactions
@@ -51,12 +75,5 @@ namespace :invoices do
     else
       log 'Got no incoming transactions parsed, aborting'
     end
-
-    puts "Transactions processed: #{incoming_transactions.size}"
-  end
-
-  def log(msg)
-    @log ||= Logger.new(STDOUT)
-    @log.info(msg)
   end
 end
