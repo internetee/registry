@@ -105,7 +105,7 @@ class Invoice < ApplicationRecord
   end
 
   def do_not_send_e_invoice?
-    e_invoice_sent? || cancelled? || paid?
+    e_invoice_sent? || cancelled?
   end
 
   def e_invoice_sent?
