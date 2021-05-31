@@ -1,5 +1,5 @@
 31.05.2021
-* Bump nokogiri to 1.11.6 ["2012](https://github.com/internetee/registry/pull/2012)
+* Bump nokogiri to 1.11.6 [#2012](https://github.com/internetee/registry/pull/2012)
 * Bump cancancan to 3.2.2 [#2013](https://github.com/internetee/registry/pull/2013)
 * Bump e_invoice to 7832ef6 [#2010](https://github.com/internetee/registry/pull/2014)
 * Bump active_interaction to 4.0.1 [#2015](https://github.com/internetee/registry/pull/2015)
