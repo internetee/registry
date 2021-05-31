@@ -18,7 +18,7 @@ GIT
 
 GIT
   remote: https://github.com/internetee/e_invoice.git
-  revision: 1e83e0b9d502d0a96d7bbbf9235a6621591d4e66
+  revision: 7832ef67ae9168bbb6aaba67dce6a69424234ff4
   branch: master
   specs:
     e_invoice (0.1.0)
@@ -292,7 +292,8 @@ GEM
       nokogiri (~> 1)
       rake
     mini_mime (1.0.3)
-    mini_portile2 (2.5.1)
+    mini_portile2 (2.5.2)
+      net-ftp (~> 0.1)
     minitest (5.14.4)
     monetize (1.9.4)
       money (~> 6.12)
@@ -307,6 +308,10 @@ GEM
     multi_json (1.15.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
+    net-ftp (0.1.2)
+      net-protocol
+      time
+    net-protocol (0.1.0)
     netrc (0.11.0)
     nio4r (2.5.7)
     nokogiri (1.11.5)
@@ -462,6 +467,7 @@ GEM
     temple (0.8.2)
     thor (1.1.0)
     tilt (2.0.10)
+    time (0.1.0)
     truemail (2.4.2)
       simpleidn (~> 0.2.1)
     tzinfo (2.0.4)
