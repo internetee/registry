@@ -69,12 +69,23 @@ end
 class EppTestCase < ActionDispatch::IntegrationTest
   include Assertions::EppAssertions
 
-  def return_xml_domain_schema_version(response_xml)
-    version_regex = /-\d+\S\d+/
-    domain_schema_tag = response_xml.to_s.scan(/xmlns:domain\S+/)
-    schema_path = domain_schema_tag.to_s.match(%r{https?://\S+})[0]
-    version = schema_path.to_s.match(version_regex)[0]
+  def assert_schema_is_bigger(response_xml, prefix, version)
+    schema_version = prefix_schema_tag(prefix, response_xml)
 
-    -version.to_f
+    assert schema_version >= version
+  end
+
+  private
+
+  def prefix_schema_tag(prefix, response_xml)
+    if Xsd::Schema::PREFIXES.include? prefix
+      version_regex = /-\d+\S\d+/
+      domain_schema_tag = response_xml.to_s.scan(%r{https://epp.tld.ee/schema/#{prefix}\S+})
+      version = domain_schema_tag.to_s.match(version_regex)[0]
+
+      -version.to_f
+    else
+      raise Exception.new('Wrong prefix')
+    end
   end
 end

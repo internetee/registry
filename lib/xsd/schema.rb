@@ -3,6 +3,22 @@ module Xsd
     SCHEMA_PATH = 'lib/schemas/'.freeze
     BASE_URL = 'https://epp.tld.ee/schema/'.freeze
 
+    PREFIXES = %w[
+      domain-eis
+      all-ee
+      changePoll
+      airport
+      contact
+      contact-ee
+      contact-eis
+      eis
+      epp
+      epp-ee
+      eppcom
+      host
+      secDNS
+    ].freeze
+
     attr_reader :xsd_schemas, :for_prefix
 
     def initialize(params)
