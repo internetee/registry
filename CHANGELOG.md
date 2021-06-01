@@ -1,3 +1,6 @@
+01.06.2021
+* Fix unpaiable invoices - setting receipt date and sending e-invoice [#2009](https://github.com/internetee/registry/issues/2009)
+
 31.05.2021
 * Bump nokogiri to 1.11.6 [#2012](https://github.com/internetee/registry/pull/2012)
 * Bump cancancan to 3.2.2 [#2013](https://github.com/internetee/registry/pull/2013)
