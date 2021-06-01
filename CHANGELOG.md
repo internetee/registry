@@ -1,5 +1,6 @@
 01.06.2021
 * Fix unpaiable invoices - setting receipt date and sending e-invoice [#2009](https://github.com/internetee/registry/issues/2009)
+* Added check to make sure domain is not in acution before adding it [#2015](https://github.com/internetee/registry/pull/2015)
 
 31.05.2021
 * Bump nokogiri to 1.11.6 [#2012](https://github.com/internetee/registry/pull/2012)
