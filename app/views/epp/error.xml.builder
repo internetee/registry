@@ -2,7 +2,7 @@ xml.epp_head do
   xml.response do
     @errors.each do |error|
       x = error&.options
-      next if x.empty? || x == { value: nil }
+      next if x.empty? || x == { value: nil } || x[:code].blank?
 
       xml.result('code' => x[:code]) do
         xml.msg(x[:msg], 'lang' => 'en')

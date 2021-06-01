@@ -671,9 +671,8 @@ class Domain < ApplicationRecord
   end
 
   def expired_domain_contact_emails
-    force_delete_contact_emails.reject do |email|
-      BouncedMailAddress.where(email: email).count.positive?
-    end
+    (primary_contact_emails +
+    ["info@#{name}", "#{prepared_domain_name}@#{name}"]).uniq
   end
 
   def all_related_emails

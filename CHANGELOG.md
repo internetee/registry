@@ -1,3 +1,29 @@
+31.05.2021
+* Bump nokogiri to 1.11.6 [#2012](https://github.com/internetee/registry/pull/2012)
+* Bump cancancan to 3.2.2 [#2013](https://github.com/internetee/registry/pull/2013)
+* Bump e_invoice to 7832ef6 [#2010](https://github.com/internetee/registry/pull/2014)
+* Bump active_interaction to 4.0.1 [#2015](https://github.com/internetee/registry/pull/2015)
+
+28.05.2021
+* fix for legacy contact object errors in admin [#2010](https://github.com/internetee/registry/pull/2010)
+
+27.05.2021
+* fixed error handling on invalid date format for epp contact create [#2006](https://github.com/internetee/registry/issues/2006)
+* csync input file with puycode values [#2003](https://github.com/internetee/registry/issues/2003)
+* autoloading newest db schema file versions [#1976](https://github.com/internetee/registry/issues/1976)
+* ForceDelete notes are updated with additionally found email addresses [#1913](https://github.com/internetee/registry/issues/1913)
+
+24.05.2021
+* Bump puma to 5.3.2 [#1999](https://github.com/internetee/registry/pull/1999)
+* Bump nokogiri to 1.11.5 [#2000](https://github.com/internetee/registry/pull/2000)
+* BUmp truemail to 2.4.2 [#2001](https://github.com/internetee/registry/pull/2001)
+
+21.05.2021
+* Tech contacts do not receive expiration emails any more [#1996](https://github.com/internetee/registry/issues/1996)
+
+20.05.2021
+* Moved data migrations from whois project to registry [#1928](https://github.com/internetee/registry/issues/1928)
+
 19.05.2021
 * Fix for contact update via registrant portal [#1968](https://github.com/internetee/registry/pull/1968)
 * REPP is returning domain count with domain list for improved pagination handling [#1969](https://github.com/internetee/registry/pull/1969)

@@ -1,5 +1,6 @@
 shop_ns1:
   hostname: ns1.bestnames.test
+  hostname_puny: ns1.bestnames.test
   ipv4:
     - 192.0.2.1
   ipv6:
@@ -8,6 +9,7 @@ shop_ns1:
 
 shop_ns2:
   hostname: ns2.bestnames.test
+  hostname_puny: ns2.bestnames.test
   ipv4:
     - 192.0.2.2
   ipv6:
@@ -16,6 +18,7 @@ shop_ns2:
 
 airport_ns1:
   hostname: ns1.bestnames.test
+  hostname_puny: ns1.bestnames.test
   ipv4:
     - 192.0.2.2
   ipv6:
@@ -24,6 +27,7 @@ airport_ns1:
 
 airport_ns2:
   hostname: ns2.bestnames.test
+  hostname_puny: ns2.bestnames.test
   ipv4:
     - 192.0.2.0
     - 192.0.2.3
@@ -34,4 +38,5 @@ airport_ns2:
 
 metro_ns1:
   hostname: ns1.bestnames.test
+  hostname_puny: ns1.bestnames.test
   domain: metro
