@@ -86,7 +86,7 @@ module DNS
     attr_reader :name
 
     def not_auctionable?
-      blocked? || reserved? || disputed?
+      blocked? || reserved? || disputed? || pending_auction.present?
     end
 
     def zone_with_same_origin?
