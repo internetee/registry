@@ -32,6 +32,21 @@ class DomainReleasableAuctionableTest < ActiveJob::TestCase
     assert_not @domain.domain_name.at_auction?
   end
 
+  def test_skips_auction_when_auction_present
+    assert_equal 'shop.test', @domain.name
+    Auction.create!(domain: @domain.name, status: Auction.statuses[:started])
+
+    assert_difference '@domain.registrar.notifications.count', 1 do
+      assert_no_difference 'Auction.count' do
+        @domain.release
+      end
+    end
+
+    assert_raises ActiveRecord::RecordNotFound do
+      @domain.reload
+    end
+  end
+
   def test_skips_auction_when_domains_is_reserved
     assert_equal 'shop.test', @domain.name
     reserved_domains(:one).update!(name: 'shop.test')
