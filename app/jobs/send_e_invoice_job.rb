@@ -21,7 +21,7 @@ class SendEInvoiceJob < ApplicationJob
   end
 
   def process(invoice:, payable:)
-    invoice.to_e_invoice(payable: payable).deliver
+    invoice.to_e_invoice(payable: payable).deliver unless Rails.env.development?
     invoice.update(e_invoice_sent_at: Time.zone.now)
     log_success(invoice)
   end

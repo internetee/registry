@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ProcessPaymentsTaskTest < ActiveSupport::TestCase
+class ProcessPaymentsTaskTest < ActiveJob::TestCase
   setup do
     @payment_amount = payment_amount = 0.1
     @payment_currency = payment_currency = 'EUR'
@@ -158,6 +158,28 @@ class ProcessPaymentsTaskTest < ActiveSupport::TestCase
   def test_topup_creates_invoice_with_total_of_transactioned_amount
     registrar = registrars(:bestnames)
     run_task
+
+    assert_equal 0.1, registrar.invoices.last.total
+  end
+
+  def test_topup_creates_invoice_and_send_it_as_paid
+    registrar = registrars(:bestnames)
+    @invoice.payment_orders.destroy_all
+    @invoice.destroy
+
+    perform_enqueued_jobs do
+      run_task
+    end
+
+    invoice = Invoice.last
+    assert invoice.paid?
+    assert_not invoice.e_invoice_sent_at.blank?
+
+    pdf_source = Invoice::PdfGenerator.new(invoice)
+    pdf_source.send(:invoice_html).include?('Receipt date')
+
+    email= ActionMailer::Base.deliveries.last
+    assert email.subject.include?('already paid')
 
     assert_equal 0.1, registrar.invoices.last.total
   end

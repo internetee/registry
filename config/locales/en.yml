@@ -470,7 +470,8 @@ en:
   price: 'Price'
   total: 'Total'
   paid_at: 'Paid at'
-  invoice: 'Invoice'
+  invoice:
+    already_paid: " (already paid)"
   bank_statements: 'Bank statements'
   back_to_bank_statements: 'Back to bank statements'
   back_to_bank_statement: 'Back to bank statement'
