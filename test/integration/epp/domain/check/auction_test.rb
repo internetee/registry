@@ -32,6 +32,7 @@ class EppDomainCheckAuctionTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['avail']
     assert_equal 'Domain is at auction', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
@@ -57,6 +58,7 @@ class EppDomainCheckAuctionTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['avail']
     assert_equal 'Domain is at auction', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
@@ -82,6 +84,7 @@ class EppDomainCheckAuctionTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['avail']
     assert_equal 'Domain is at auction', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
@@ -107,6 +110,7 @@ class EppDomainCheckAuctionTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['avail']
     assert_equal 'Awaiting payment', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
@@ -132,6 +136,7 @@ class EppDomainCheckAuctionTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal '1', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['avail']
     assert_nil response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")

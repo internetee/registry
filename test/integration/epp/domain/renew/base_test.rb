@@ -26,6 +26,9 @@ class EppDomainRenewBaseTest < EppTestCase
 
     post epp_renew_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     domain.reload
 
     assert_epp_response :completed_successfully
@@ -57,6 +60,9 @@ class EppDomainRenewBaseTest < EppTestCase
 
     post epp_renew_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     domain.reload
 
     assert_epp_response :completed_successfully
@@ -87,6 +93,9 @@ class EppDomainRenewBaseTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
       domain.reload
     end
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :object_status_prohibits_operation
   end
 
@@ -115,6 +124,9 @@ class EppDomainRenewBaseTest < EppTestCase
            headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
       domain.reload
     end
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :authorization_error
   end
 
@@ -143,6 +155,9 @@ class EppDomainRenewBaseTest < EppTestCase
            headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
       domain.reload
     end
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :billing_failure
   end
 
@@ -170,6 +185,9 @@ class EppDomainRenewBaseTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
       domain.reload
     end
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :billing_failure
   end
 
@@ -197,6 +215,9 @@ class EppDomainRenewBaseTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
       domain.reload
     end
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :parameter_value_policy_error
   end
 
@@ -226,6 +247,10 @@ class EppDomainRenewBaseTest < EppTestCase
 
     post epp_renew_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     domain.reload
 
     assert_epp_response :object_status_prohibits_operation

@@ -22,6 +22,8 @@ class EppDomainTransferRequestTest < EppTestCase
     post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
 
     @domain.reload
@@ -43,6 +45,8 @@ class EppDomainTransferRequestTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     assert_epp_response :completed_successfully
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     @domain.reload
 
@@ -63,6 +67,8 @@ class EppDomainTransferRequestTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     assert_epp_response :completed_successfully
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     @domain.reload
 
@@ -87,6 +93,8 @@ class EppDomainTransferRequestTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     assert_epp_response :completed_successfully
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     @domain.reload
 
@@ -106,6 +114,8 @@ class EppDomainTransferRequestTest < EppTestCase
     post epp_transfer_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     assert_epp_response :completed_successfully
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
   end
 
   def test_creates_new_domain_transfer
@@ -113,11 +123,15 @@ class EppDomainTransferRequestTest < EppTestCase
       post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
   end
 
   def test_approves_automatically_if_auto_approval_is_enabled
     post epp_transfer_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal 'serverApproved', Nokogiri::XML(response.body).xpath('//domain:trStatus', 'domain' =>
       "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
   end
@@ -125,6 +139,8 @@ class EppDomainTransferRequestTest < EppTestCase
   def test_assigns_new_registrar
     post epp_transfer_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     @domain.reload
     assert_equal @new_registrar, @domain.registrar
   end
@@ -135,6 +151,8 @@ class EppDomainTransferRequestTest < EppTestCase
     post epp_transfer_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     @domain.reload
     refute_equal @domain.transfer_code, @old_transfer_code
   end
@@ -146,6 +164,8 @@ class EppDomainTransferRequestTest < EppTestCase
       post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts
@@ -153,11 +173,15 @@ class EppDomainTransferRequestTest < EppTestCase
       post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
   end
 
   def test_reuses_identical_contact
     post epp_transfer_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal 1, @new_registrar.contacts.where(name: 'William').size
   end
 
@@ -166,6 +190,8 @@ class EppDomainTransferRequestTest < EppTestCase
       post epp_transfer_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
   end
 
   def test_non_transferable_domain
@@ -177,6 +203,8 @@ class EppDomainTransferRequestTest < EppTestCase
 
     assert_equal registrars(:bestnames), domains(:shop).registrar
     assert_epp_response :object_status_prohibits_operation
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
   end
 
   def test_discarded_domain_cannot_be_transferred
@@ -188,6 +216,8 @@ class EppDomainTransferRequestTest < EppTestCase
 
     assert_equal registrars(:bestnames), @domain.registrar
     assert_epp_response :object_is_not_eligible_for_transfer
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
   end
 
   def test_same_registrar
@@ -196,6 +226,8 @@ class EppDomainTransferRequestTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :use_error
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
   end
 
   def test_wrong_transfer_code
@@ -220,6 +252,8 @@ class EppDomainTransferRequestTest < EppTestCase
     @domain.reload
 
     assert_epp_response :invalid_authorization_information
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     refute_equal @new_registrar, @domain.registrar
   end
 

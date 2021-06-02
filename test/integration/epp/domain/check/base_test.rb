@@ -20,6 +20,7 @@ class EppDomainCheckBaseTest < EppTestCase
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
+    assert_correct_against_schema response_xml
     assert_equal 'some.test', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
   end
 
@@ -41,6 +42,7 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal '1', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['avail']
     assert_nil response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")
   end
@@ -65,6 +67,7 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal '1', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['avail']
     assert_nil response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")
   end
@@ -87,6 +90,7 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['avail']
     assert_equal 'invalid format', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
   end
@@ -111,6 +115,7 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['avail']
     assert_equal 'in use', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
   end
@@ -135,6 +140,7 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['avail']
     assert_equal 'Blocked', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
   end
@@ -159,6 +165,7 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal '0', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['avail']
     assert_equal 'Zone with the same origin exists', response_xml.at_xpath('//domain:reason', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
   end
@@ -183,6 +190,7 @@ class EppDomainCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal 3, response_xml.xpath('//domain:cd', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").size
   end
 end
