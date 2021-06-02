@@ -144,10 +144,7 @@ class EppDomainInfoBaseTest < EppTestCase
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
-    schema = EPP_ALL_SCHEMA
-
-    schema_validation_errors = schema.validate(response_xml)
-    assert_equal 0, schema_validation_errors.size
+    assert_correct_against_schema response_xml
   end
 
   def test_reveals_transfer_code_when_domain_is_owned_by_current_user
@@ -173,6 +170,7 @@ class EppDomainInfoBaseTest < EppTestCase
     assert_equal '65078d5',
                  response_xml.at_xpath('//domain:authInfo/domain:pw',
                                        'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s).text
+    assert_correct_against_schema response_xml
   end
 
   # Transfer code is the only info we conceal from other registrars, hence a bit oddly-looking
@@ -203,6 +201,7 @@ class EppDomainInfoBaseTest < EppTestCase
     assert_equal '65078d5',
                  response_xml.at_xpath('//domain:authInfo/domain:pw',
                                        'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s).text
+    assert_correct_against_schema response_xml
   end
 
   def test_conceals_transfer_code_when_domain_is_not_owned_by_current_user
@@ -226,6 +225,7 @@ class EppDomainInfoBaseTest < EppTestCase
                         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_nil response_xml.at_xpath('//domain:authInfo/domain:pw',
                                      'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s)
   end
