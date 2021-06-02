@@ -116,10 +116,7 @@ class EppDomainInfoBaseTest < EppTestCase
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
-    schema = EPP_ALL_SCHEMA
-
-    schema_validation_errors = schema.validate(response_xml)
-    assert_equal 0, schema_validation_errors.size
+    assert_correct_against_schema response_xml
   end
 
   def test_returns_valid_response_if_release_prohibited
