@@ -21,7 +21,7 @@ module UserEvents
           Registrar.find(cr_registrar_id).code
         else
           # cr_id optional for domain, but required for contact; but we want something here anyway
-          self.creator_str # Fallback if we failed, maybe we can find a string here
+          self.creator_str || self.registrar.code # Fallback
         end
       end
     end

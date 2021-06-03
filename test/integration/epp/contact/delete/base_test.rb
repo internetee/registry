@@ -24,6 +24,9 @@ class EppContactDeleteBaseTest < EppTestCase
       post epp_delete_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
   end
 
@@ -50,6 +53,8 @@ class EppContactDeleteBaseTest < EppTestCase
     post epp_delete_path, params: { frame: request_xml },
         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert Contact.exists?(id: contact.id)
     assert_epp_response :object_status_prohibits_operation
   end
@@ -77,6 +82,8 @@ class EppContactDeleteBaseTest < EppTestCase
     post epp_delete_path, params: { frame: request_xml },
         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert Contact.exists?(id: contact.id)
     assert_epp_response :object_status_prohibits_operation
   end
@@ -105,6 +112,8 @@ class EppContactDeleteBaseTest < EppTestCase
       post epp_delete_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :object_association_prohibits_operation
   end
 

@@ -25,6 +25,7 @@ class EppContactCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal "#{@contact.registrar.code}:JOHN-001".upcase, response_xml.at_xpath('//contact:id', contact: xml_schema).text
   end
@@ -47,6 +48,7 @@ class EppContactCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal '1', response_xml.at_xpath('//contact:id', contact: xml_schema)['avail']
     assert_nil response_xml.at_xpath('//contact:reason', contact: xml_schema)
   end
@@ -72,6 +74,7 @@ class EppContactCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal '0', response_xml.at_xpath('//contact:id', contact: xml_schema)['avail']
     assert_equal 'in use', response_xml.at_xpath('//contact:reason', contact: xml_schema).text
   end
@@ -96,6 +99,7 @@ class EppContactCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal 3, response_xml.xpath('//contact:cd', contact: xml_schema).size
   end
 
@@ -120,6 +124,7 @@ class EppContactCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal "#{@contact.registrar.code}:JOHN-001".upcase, response_xml.at_xpath('//contact:id', contact: xml_schema).text
     assert_equal 'in use', response_xml.at_xpath('//contact:reason', contact: xml_schema).text
@@ -146,6 +151,7 @@ class EppContactCheckBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal "#{@contact.registrar.code}:JOHN-001".upcase, response_xml.at_xpath('//contact:id', contact: xml_schema).text
     assert_equal 'in use', response_xml.at_xpath('//contact:reason', contact: xml_schema).text

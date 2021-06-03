@@ -33,6 +33,7 @@ class EppContactInfoBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal 'JOHN-001', response_xml.at_xpath('//contact:id', contact: xml_schema).text
     assert_equal 'ok', response_xml.at_xpath('//contact:status', contact: xml_schema)['s']
@@ -65,6 +66,7 @@ class EppContactInfoBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal 'TEST:JOHN-001', response_xml.at_xpath('//contact:id', contact: xml_schema).text
     assert_equal '+555.555', response_xml.at_xpath('//contact:voice', contact: xml_schema).text
@@ -91,6 +93,7 @@ class EppContactInfoBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal "#{@contact.registrar.code}:JOHN-001".upcase, response_xml.at_xpath('//contact:id', contact: xml_schema).text
     assert_equal '+555.555', response_xml.at_xpath('//contact:voice', contact: xml_schema).text
@@ -121,6 +124,7 @@ class EppContactInfoBaseTest < EppTestCase
 
     assert_epp_response :completed_successfully
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_nil response_xml.at_xpath('//contact:authInfo', contact: xml_schema)
     assert_equal 'No access', response_xml.at_xpath('//contact:name', contact: xml_schema).text
   end
