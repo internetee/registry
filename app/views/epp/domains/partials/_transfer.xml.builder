@@ -1,4 +1,4 @@
-builder.tag!('domain:trnData', 'xmlns:domain' => Xsd::Schema.filename(for_prefix: 'domain-eis')) do
+builder.tag!('domain:trnData', 'xmlns:domain' => Xsd::Schema.filename(for_prefix: 'domain-ee')) do
   builder.tag!('domain:name', dt.domain_name)
   builder.tag!('domain:trStatus', dt.status)
   builder.tag!('domain:reID', dt.new_registrar.code)

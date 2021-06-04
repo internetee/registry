@@ -21,7 +21,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>invalid.test</domain:name>
             </domain:delete>
           </delete>
@@ -48,7 +48,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -76,7 +76,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -110,7 +110,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -144,7 +144,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -177,7 +177,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete verified="yes" xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:delete verified="yes" xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -210,7 +210,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -232,7 +232,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
