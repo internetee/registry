@@ -7,7 +7,7 @@ xml.epp_head do
       xml.result('code' => x[:code]) do
         xml.msg(x[:msg], 'lang' => 'en')
         model_name = resource ? resource.model_name.singular.sub('epp_','') : controller.controller_name.singularize
-        prefix = model_name == 'poll' ? 'changePoll' : model_name + '-eis'
+        prefix = model_name == 'poll' ? 'changePoll' : model_name + '-ee'
 
         xml.value("xmlns:#{model_name}" => Xsd::Schema.filename(for_prefix: prefix)) do
           value = x[:value][:val]
