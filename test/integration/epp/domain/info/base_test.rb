@@ -13,7 +13,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
             </domain:info>
           </info>
@@ -27,13 +27,13 @@ class EppDomainInfoBaseTest < EppTestCase
     response_xml = Nokogiri::XML(response.body)
 
     assert_epp_response :completed_successfully
-    assert assert_schema_is_bigger(response_xml, 'domain-eis', 1.1)
-    assert_equal 'shop.test', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
-    assert_equal 'ok', response_xml.at_xpath('//domain:status', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")['s']
-    assert_equal 'john-001', response_xml.at_xpath('//domain:registrant', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
-    assert_equal '2010-07-05T00:00:00+03:00', response_xml.at_xpath('//domain:crDate', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
-    assert_equal '2010-07-06T00:00:00+03:00', response_xml.at_xpath('//domain:upDate', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
-    assert_equal '2010-07-07T00:00:00+03:00', response_xml.at_xpath('//domain:exDate', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
+    assert assert_schema_is_bigger(response_xml, 'domain-ee', 1.1)
+    assert_equal 'shop.test', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
+    assert_equal 'ok', response_xml.at_xpath('//domain:status', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['s']
+    assert_equal 'john-001', response_xml.at_xpath('//domain:registrant', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
+    assert_equal '2010-07-05T00:00:00+03:00', response_xml.at_xpath('//domain:crDate', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
+    assert_equal '2010-07-06T00:00:00+03:00', response_xml.at_xpath('//domain:upDate', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
+    assert_equal '2010-07-07T00:00:00+03:00', response_xml.at_xpath('//domain:exDate', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
   end
 
   def test_returns_valid_response_if_disputed
@@ -54,7 +54,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
             </domain:info>
           </info>
@@ -70,6 +70,7 @@ class EppDomainInfoBaseTest < EppTestCase
     schema = EPP_ALL_SCHEMA
 
     schema_validation_errors = schema.validate(response_xml)
+	p schema_validation_errors
     assert_equal 0, schema_validation_errors.size
   end
 
@@ -85,7 +86,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
             </domain:info>
           </info>
@@ -112,7 +113,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
             </domain:info>
           </info>
@@ -124,7 +125,7 @@ class EppDomainInfoBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '65078d5', response_xml.at_xpath('//domain:authInfo/domain:pw', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
+    assert_equal '65078d5', response_xml.at_xpath('//domain:authInfo/domain:pw', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
   end
 
   # Transfer code is the only info we conceal from other registrars, hence a bit oddly-looking
@@ -137,7 +138,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw>65078d5</domain:pw>
@@ -152,7 +153,7 @@ class EppDomainInfoBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '65078d5', response_xml.at_xpath('//domain:authInfo/domain:pw', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
+    assert_equal '65078d5', response_xml.at_xpath('//domain:authInfo/domain:pw', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
   end
 
   def test_conceals_transfer_code_when_domain_is_not_owned_by_current_user
@@ -161,7 +162,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw></domain:pw>
@@ -177,6 +178,6 @@ class EppDomainInfoBaseTest < EppTestCase
 
     response_xml = Nokogiri::XML(response.body)
     assert_nil response_xml.at_xpath('//domain:authInfo/domain:pw',
-                                     'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}")
+                                     'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")
   end
 end

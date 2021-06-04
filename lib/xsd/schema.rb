@@ -4,6 +4,7 @@ module Xsd
     BASE_URL = 'https://epp.tld.ee/schema/'.freeze
 
     PREFIXES = %w[
+	  domain-ee
       domain-eis
       all-ee
       changePoll
