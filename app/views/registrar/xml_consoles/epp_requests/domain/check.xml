@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <check>
       <domain:check
-       xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+       xmlns:domain="https://epp.tld.ee/schema/domain-ee-1.1.xsd">
         <domain:name>example.ee</domain:name>
       </domain:check>
     </check>
