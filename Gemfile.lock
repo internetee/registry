@@ -28,7 +28,8 @@ GIT
 
 GIT
   remote: https://github.com/internetee/epp-xml.git
-  revision: 27959f8cb244ea5eabaeeee747984988b454e840
+  revision: 687514dc239d22b29d0138d83c909d70d19dc06d
+  branch: update-paths-for-new-domain-schema
   specs:
     epp-xml (1.1.0)
       activesupport (>= 4.1)
@@ -583,4 +584,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.5.1)
 
 BUNDLED WITH
-   2.2.17
+   2.2.19
