@@ -48,9 +48,18 @@ class CsyncJob < ApplicationJob
     scanner_results
 
     @results.keys.each do |domain|
-      next unless qualified_for_monitoring?(domain, @results[domain])
+      begin
+        next unless qualified_for_monitoring?(domain, @results[domain])
 
-      CsyncRecord.by_domain_name(domain)&.record_new_scan(@results[domain][:ns].first)
+        CsyncRecord.by_domain_name(domain)&.record_new_scan(@results[domain][:ns].first)
+      rescue StandardError => e
+        error_message <<-ERROR
+          CsyncRecord error on domain #{domain}, nameserver #{@results[domain][:ns].first},
+          error: #{e}
+        ERROR
+        @logger.error error_message
+        next
+      end
     end
   end
 
