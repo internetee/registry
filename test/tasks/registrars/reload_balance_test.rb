@@ -19,6 +19,18 @@ class ReloadBalanceTaskTest < ActiveSupport::TestCase
     assert_equal reload_amount, invoice.subtotal
   end
 
+  def test_issues_invoice_when_auto_reload_is_enabled_and_threshold_reached
+    reload_amount = 100
+    registrar = registrar_with_auto_reload_enabled_and_threshold_reached(reload_amount)
+
+    assert_difference -> { registrar.invoices.count } do
+      capture_io { run_task }
+    end
+
+    invoice = registrar.invoices.last
+    assert_equal Time.zone.today, invoice.e_invoice_sent_at.to_date
+  end
+
   def test_skips_issuing_invoice_when_threshold_is_not_reached
     registrar = registrar_with_auto_reload_enabled_and_threshold_not_reached
 
