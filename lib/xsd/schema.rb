@@ -8,7 +8,6 @@ module Xsd
       domain-eis
       all-ee
       changePoll
-      airport
       contact
       contact-ee
       contact-eis

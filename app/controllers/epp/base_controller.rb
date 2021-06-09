@@ -127,6 +127,7 @@ module Epp
     # VALIDATION
     def validate_request
       validation_method = "validate_#{params[:action]}"
+
       return unless respond_to?(validation_method, true)
       send(validation_method)
 
