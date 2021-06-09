@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+<epp xmlns="epp-ee">
   <command>
     <info>
       <domain:info
-       xmlns:domain="https://epp.tld.ee/schema/domain-ee-1.1.xsd">
+       xmlns:domain="domain-ee">
         <domain:name hosts="all">example.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>

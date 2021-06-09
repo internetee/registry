@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+<epp xmlns="epp-ee">
   <command>
     <renew>
       <domain:renew
-       xmlns:domain="https://epp.tld.ee/schema/domain-ee-1.1.xsd">
+       xmlns:domain="domain-ee">
         <domain:name>example.ee</domain:name>
         <domain:curExpDate>2014-08-07</domain:curExpDate>
         <domain:period unit="y">1</domain:period>

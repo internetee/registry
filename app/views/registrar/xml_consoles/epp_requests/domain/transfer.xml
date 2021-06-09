@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+<epp xmlns="epp-ee">
   <command>
     <transfer op="request">
       <domain:transfer
-       xmlns:domain="https://epp.tld.ee/schema/domain-ee-1.1.xsd">
+       xmlns:domain="domain-ee">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="JD1234-REP">2BARfoo</domain:pw>
@@ -11,7 +11,7 @@
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'ee')}">
+      <eis:extdata xmlns:eis="eis">
         <eis:legalDocument type="pdf">
           dGVzdCBmYWlsCg==
         </eis:legalDocument>
