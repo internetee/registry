@@ -655,7 +655,7 @@ class Domain < ApplicationRecord
   end
 
   def update_whois_record
-    UpdateWhoisRecordJob.perform_later name, 'domain'
+    UpdateWhoisRecordJob.set(wait: 1.minute).perform_later name, 'domain'
   end
 
   def status_notes_array=(notes)
