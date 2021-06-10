@@ -73,12 +73,6 @@ GIT
       nokogiri (>= 1.4.0)
       savon (>= 2.4.0)
 
-PATH
-  remote: /shared/shunter
-  specs:
-    shunter (0.1.0)
-      redis (~> 4.2)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -571,7 +565,6 @@ DEPENDENCIES
   sass-rails
   select2-rails (= 4.0.13)
   selectize-rails (= 0.12.6)
-  shunter!
   sidekiq
   simplecov (= 0.17.1)
   simpleidn (= 0.2.1)
@@ -584,4 +577,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.5.1)
 
 BUNDLED WITH
-   2.2.19
+   2.2.17
