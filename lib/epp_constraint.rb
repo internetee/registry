@@ -11,6 +11,8 @@ class EppConstraint
   # creates parsed_frame, detects epp request object
   def matches?(request)
     # TODO: Maybe move this to controller to keep params clean
+    return redirect_to_error_controller(request) if request.params[:action] == 'wrong_schema'
+
     request.params[:raw_frame] = request.params[:raw_frame].gsub!(/(?<=>)(.*?)(?=<)/) { |s| s.strip} if request.params[:raw_frame]
     request.params[:nokogiri_frame] ||= Nokogiri::XML(request.params[:raw_frame] || request.params[:frame])
     request.params[:parsed_frame]   ||= request.params[:nokogiri_frame].dup.remove_namespaces!
@@ -21,6 +23,11 @@ class EppConstraint
     end
 
     request.params[:epp_object_type] = @type
+    true
+  end
+
+  def redirect_to_error_controller(request)
+    request.params[:epp_object_type] = @error
     true
   end
 end

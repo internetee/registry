@@ -34,6 +34,18 @@ Rails.application.routes.draw do
       end
     end
 
+    constraints(EppConstraint.new(:error)) do
+      controller('errors') do
+        post 'command/create', to: 'errors#wrong_schema'
+        post 'command/update', to: 'errors#wrong_schema'
+        post 'command/info', to: 'errors#wrong_schema'
+        post 'command/check', to: 'errors#wrong_schema'
+        post 'command/transfer', to: 'errors#wrong_schema'
+        post 'command/renew', to: 'errors#wrong_schema'
+        post 'command/delete', to: 'errors#wrong_schema'
+      end
+    end
+
     post 'command/poll', to: 'polls#poll', as: 'poll', constraints: EppConstraint.new(:poll)
     get 'error/:command', to: 'errors#error'
     get 'error', to: 'errors#command_handler'

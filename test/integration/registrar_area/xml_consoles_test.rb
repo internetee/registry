@@ -6,7 +6,7 @@ class RegistrarXmlConsolesIntegrationTest < ApplicationIntegrationTest
   end
 
   def test_check_schema_path
-    post registrar_xml_console_path,  params: { payload: payload, frame: payload },
+    post registrar_xml_console_path,  params: { frame: payload },
                                       headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_response :ok
