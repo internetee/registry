@@ -10,6 +10,7 @@ gem 'mimemagic', '0.4.3'
 gem 'rails', '~>  6.1.3.2'
 gem 'rest-client'
 gem 'uglifier'
+gem 'shunter', path: '/shared/shunter/'
 
 # load env
 gem 'figaro', '~> 1.2'
