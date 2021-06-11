@@ -4,10 +4,10 @@ namespace :collect_invalid_contacts do
     prepare_csv_file
 
     Contact.all.each do |contact|
-      result = Truemail.validate(contact.email, with: :mx)
-      if !result.result.success && !validate_puny_code(contact.email)
-        collect_data_for_csv(contact, result.result)
-      end
+      email = convert_to_unicode(contact.email)
+      result = Truemail.validate(email, with: :mx)
+
+      collect_data_for_csv(contact, result.result) unless result.result.success
     end
   end
 end
@@ -45,13 +45,12 @@ end
 
 def collect_data_for_csv(contact, result)
   domains = find_related_domains(contact)
+  domains.reject! { |dom| dom.statuses.include? DomainStatus::FORCE_DELETE }
 
   CSV.open('invalid_emails.csv', 'a') do |csv|
     domains.each do |domain|
       attrs = []
-      attrs.push(domain.name)
-      attrs.push(contact.email)
-      attrs.push(result.errors)
+      attrs.push(domain.name, contact.email, result.errors)
 
       csv << attrs
     end
@@ -68,6 +67,12 @@ def prepare_csv_file
   csv << headers
 end
 
-def validate_puny_code(email)
-  email.include?('xn--')
+def convert_to_unicode(email)
+  original_domain = Mail::Address.new(email).domain
+  decoded_domain = SimpleIDN.to_unicode(original_domain)
+
+  original_local = Mail::Address.new(email).local
+  decoded_local = SimpleIDN.to_unicode(original_local)
+
+  "#{decoded_local}@#{decoded_domain}"
 end
