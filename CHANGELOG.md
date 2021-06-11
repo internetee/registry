@@ -1,3 +1,6 @@
+11.06.2021
+* Csync fix for invalid dns records [#2024](https://github.com/internetee/registry/issues/2024)
+
 08.06.2021
 * Fixed e-invoices sending on auto-topup [#2022](https://github.com/internetee/registry/issues/2022)
 * Bump nokogiri to 1.11.7 [#2021](https://github.com/internetee/registry/pull/2021)
