@@ -32,7 +32,7 @@ module Depp
 
     def initialize(args = {})
       self.current_user = args[:current_user]
-      self.epp_xml = EppXml::Domain.new(cl_trid_prefix: current_user.tag)
+      self.epp_xml = EppXml::Domain.new(cl_trid_prefix: current_user.tag, schema_prefix: 'domain-ee', schema_version: '1.1')
     end
 
     def info(domain_name)

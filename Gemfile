@@ -62,7 +62,7 @@ gem 'omniauth-tara', github: 'internetee/omniauth-tara'
 
 
 gem 'epp', github: 'internetee/epp', branch: :master
-gem 'epp-xml', '1.1.0', github: 'internetee/epp-xml', branch: 'update-paths-for-new-domain-schema'
+gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: '11-flexible-paths-for-schemes'
 gem 'que'
 gem 'daemons-rails', '1.2.1'
 gem 'que-web'

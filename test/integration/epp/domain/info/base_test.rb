@@ -22,18 +22,67 @@ class EppDomainInfoBaseTest < EppTestCase
     XML
 
     post epp_info_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+                        headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
 
     assert_epp_response :completed_successfully
     assert assert_schema_is_bigger(response_xml, 'domain-ee', 1.1)
-    assert_equal 'shop.test', response_xml.at_xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
-    assert_equal 'ok', response_xml.at_xpath('//domain:status', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")['s']
-    assert_equal 'john-001', response_xml.at_xpath('//domain:registrant', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
-    assert_equal '2010-07-05T00:00:00+03:00', response_xml.at_xpath('//domain:crDate', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
-    assert_equal '2010-07-06T00:00:00+03:00', response_xml.at_xpath('//domain:upDate', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
-    assert_equal '2010-07-07T00:00:00+03:00', response_xml.at_xpath('//domain:exDate', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
+    assert_equal 'shop.test',
+                 response_xml.at_xpath('//domain:name',
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s).text
+    assert_equal 'ok',
+                 response_xml.at_xpath('//domain:status',
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s)['s']
+    assert_equal 'john-001',
+                 response_xml.at_xpath('//domain:registrant',
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s).text
+    assert_equal '2010-07-05T00:00:00+03:00',
+                 response_xml.at_xpath('//domain:crDate',
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s).text
+    assert_equal '2010-07-06T00:00:00+03:00',
+                 response_xml.at_xpath('//domain:upDate',
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s).text
+    assert_equal '2010-07-07T00:00:00+03:00',
+                 response_xml.at_xpath('//domain:exDate',
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s).text
+  end
+
+  def test_returns_valid_response_if_schema_version_is_previous
+    dispute = disputes(:expired)
+    dispute.update!(starts_at: Time.zone.now, expires_at: Time.zone.now + 5.days, closed: nil)
+
+    domain = domains(:shop)
+    domain.update_columns(statuses: [DomainStatus::DISPUTED],
+                          created_at: Time.zone.parse('2010-07-05'),
+                          updated_at: Time.zone.parse('2010-07-06'),
+                          creator_str: 'test',
+                          valid_to: Time.zone.parse('2010-07-07'))
+
+    domain.versions.destroy_all
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+        <command>
+          <info>
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+              <domain:name>shop.test</domain:name>
+            </domain:info>
+          </info>
+        </command>
+      </epp>
+    XML
+
+    post epp_info_path, params: { frame: request_xml },
+                        headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully
+    schema = EPP_ALL_SCHEMA
+
+    schema_validation_errors = schema.validate(response_xml)
+    assert_equal 0, schema_validation_errors.size
   end
 
   def test_returns_valid_response_if_disputed
@@ -63,14 +112,13 @@ class EppDomainInfoBaseTest < EppTestCase
     XML
 
     post epp_info_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+                        headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
     schema = EPP_ALL_SCHEMA
 
     schema_validation_errors = schema.validate(response_xml)
-	p schema_validation_errors
     assert_equal 0, schema_validation_errors.size
   end
 
@@ -95,7 +143,7 @@ class EppDomainInfoBaseTest < EppTestCase
     XML
 
     post epp_info_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+                        headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
@@ -122,10 +170,12 @@ class EppDomainInfoBaseTest < EppTestCase
     XML
 
     post epp_info_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+                        headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '65078d5', response_xml.at_xpath('//domain:authInfo/domain:pw', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
+    assert_equal '65078d5',
+                 response_xml.at_xpath('//domain:authInfo/domain:pw',
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s).text
   end
 
   # Transfer code is the only info we conceal from other registrars, hence a bit oddly-looking
@@ -150,10 +200,12 @@ class EppDomainInfoBaseTest < EppTestCase
     XML
 
     post epp_info_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+                        headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     response_xml = Nokogiri::XML(response.body)
-    assert_equal '65078d5', response_xml.at_xpath('//domain:authInfo/domain:pw', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
+    assert_equal '65078d5',
+                 response_xml.at_xpath('//domain:authInfo/domain:pw',
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s).text
   end
 
   def test_conceals_transfer_code_when_domain_is_not_owned_by_current_user
@@ -174,10 +226,10 @@ class EppDomainInfoBaseTest < EppTestCase
     XML
 
     post epp_info_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
+                        headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
 
     response_xml = Nokogiri::XML(response.body)
     assert_nil response_xml.at_xpath('//domain:authInfo/domain:pw',
-                                     'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}")
+                                     'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s)
   end
 end

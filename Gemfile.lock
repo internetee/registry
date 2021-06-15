@@ -28,10 +28,10 @@ GIT
 
 GIT
   remote: https://github.com/internetee/epp-xml.git
-  revision: 687514dc239d22b29d0138d83c909d70d19dc06d
-  branch: update-paths-for-new-domain-schema
+  revision: b821c16a002722709a0fdf3d1aa23606ed7d62ff
+  branch: 11-flexible-paths-for-schemes
   specs:
-    epp-xml (1.1.0)
+    epp-xml (1.2.0)
       activesupport (>= 4.1)
       builder (~> 3.2)
 
@@ -541,7 +541,7 @@ DEPENDENCIES
   domain_name
   e_invoice!
   epp!
-  epp-xml (= 1.1.0)!
+  epp-xml (= 1.2.0)!
   figaro (~> 1.2)
   haml (~> 5.0)
   isikukood
@@ -584,4 +584,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.5.1)
 
 BUNDLED WITH
-   2.2.19
+   2.2.20
