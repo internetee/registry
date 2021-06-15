@@ -6,6 +6,9 @@ module Epp
     before_action :set_paper_trail_whodunnit
     before_action :parse_schemas_prefix_and_version
 
+    THROTTLED_ACTIONS = %i[info renew update transfer delete].freeze
+    include Shunter::Integration::Throttle
+
     def info
       authorize! :info, @domain
 
@@ -130,6 +133,11 @@ module Epp
     end
 
     private
+
+    def throttled_user
+      authorize!(:throttled_user, @domain) unless current_user
+      current_user
+    end
 
     def validate_info
       @prefix = 'info > info >'

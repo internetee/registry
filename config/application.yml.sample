@@ -197,6 +197,7 @@ test:
   cdns_scanner_output_file: 'test/fixtures/files/cdns_output.txt'
   dnssec_resolver_ips: 8.8.8.8, 8.8.4.4
   legal_documents_dir: 'test/fixtures/files'
+  shunter_default_adapter: "Shunter::Adapters::Memory"
 
   openssl_config_path: 'test/fixtures/files/test_ca/openssl.cnf'
   crl_dir: 'test/fixtures/files/test_ca/crl'
