@@ -53,7 +53,7 @@ class CsyncJob < ApplicationJob
 
         CsyncRecord.by_domain_name(domain)&.record_new_scan(@results[domain][:ns].first)
       rescue StandardError => e
-        error_message <<-ERROR
+        error_message = <<-ERROR
           CsyncRecord error on domain #{domain}, nameserver #{@results[domain][:ns].first},
           error: #{e}
         ERROR
