@@ -1,3 +1,6 @@
+16.06.2021
+* Support for multiple schema versions [#2030](https://github.com/internetee/registry/issues/2030)
+
 14.06.2021
 * Task for scanning trhough email addresses and assess the data quality in the registry [#2029](https://github.com/internetee/registry/pull/2029)
 * Bump countries to 4.0.0 [#2031](https://github.com/internetee/registry/pull/2031)
