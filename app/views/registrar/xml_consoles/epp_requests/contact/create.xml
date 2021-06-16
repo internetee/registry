@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+<epp xmlns="epp-ee">
   <command>
     <create>
-      <contact:create xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+      <contact:create xmlns:contact="contact-ee">
         <contact:postalInfo>
           <contact:name>Sillius Soddus</contact:name>
           <contact:addr>
@@ -20,7 +20,7 @@
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+      <eis:extdata xmlns:eis="eis">
         <eis:ident type="org" cc="EE">123</eis:ident>
         <eis:legalDocument type="pdf">
           dGVzdCBmYWlsCg==

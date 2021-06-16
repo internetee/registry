@@ -15,7 +15,7 @@ class EppResponseResultCodeTest < ActiveSupport::TestCase
   end
 
   def test_invalid_code_value
-    invalid_code_value = 0000
+    invalid_code_value = 0o000
     refute_includes Epp::Response::Result::Code.codes.values, invalid_code_value
 
     e = assert_raises ArgumentError do
@@ -38,6 +38,7 @@ class EppResponseResultCodeTest < ActiveSupport::TestCase
       required_parameter_missing: 2003,
       parameter_value_range_error: 2004,
       parameter_value_syntax_error: 2005,
+      wrong_schema: 2100,
       billing_failure: 2104,
       unimplemented: 2101,
       object_is_not_eligible_for_renewal: 2105,
@@ -51,7 +52,7 @@ class EppResponseResultCodeTest < ActiveSupport::TestCase
       data_management_policy_violation: 2308,
       command_failed: 2400,
       authentication_error_server_closing_connection: 2501,
-      session_limit_exceeded_server_closing_connection: 2502,
+      session_limit_exceeded_server_closing_connection: 2502
     }
     assert_equal codes, Epp::Response::Result::Code.codes
   end
@@ -70,6 +71,7 @@ class EppResponseResultCodeTest < ActiveSupport::TestCase
       2003 => 'Required parameter missing',
       2004 => 'Parameter value range error',
       2005 => 'Parameter value syntax error',
+      2100 => 'Wrong schema',
       2101 => 'Unimplemented command',
       2104 => 'Billing failure',
       2105 => 'Object is not eligible for renewal',
@@ -83,7 +85,7 @@ class EppResponseResultCodeTest < ActiveSupport::TestCase
       2308 => 'Data management policy violation',
       2400 => 'Command failed',
       2501 => 'Authentication error; server closing connection',
-      2502 => 'Session limit exceeded; server closing connection',
+      2502 => 'Session limit exceeded; server closing connection'
     }
     assert_equal descriptions, Epp::Response::Result::Code.default_descriptions
   end

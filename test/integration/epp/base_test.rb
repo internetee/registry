@@ -18,25 +18,44 @@ class EppBaseTest < EppTestCase
   def test_internal_error
     Rails.application.routes.draw do
       post 'epp/command/internal_error', to: 'dummy_epp#internal_error',
-           constraints: EppConstraint.new(:poll)
+                                         constraints: EppConstraint.new(:poll)
     end
 
     begin
       assert_difference 'ApiLog::EppLog.count' do
         post '/epp/command/internal_error', params: { frame: valid_request_xml },
-             headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+                                            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
       end
       assert_epp_response :command_failed
-    rescue
+    rescue StandardError
       raise
     ensure
       Rails.application.reload_routes!
     end
   end
 
+  def test_wrong_path_xml
+    wrong_path_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+        <command>
+          <info>
+            <domain:info xmlns:domain="https://dsfs.sdf.sdf">
+              <domain:name>#{domains(:shop).name}</domain:name>
+            </domain:info>
+          </info>
+        </command>
+      </epp>
+    XML
+    post epp_info_path, params: { frame: wrong_path_xml },
+                        headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert_epp_response :wrong_schema
+  end
+
   def test_additional_error
     get '/epp/error', params: { frame: valid_request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+                      headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_epp_response :unknown_command
   end
@@ -49,7 +68,7 @@ class EppBaseTest < EppTestCase
     XML
 
     get '/epp/error', params: { frame: invalid_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+                      headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_epp_response :unknown_command
   end
@@ -61,7 +80,7 @@ class EppBaseTest < EppTestCase
       </epp>
     XML
     post valid_command_path, params: { frame: invalid_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+                             headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     assert_epp_response :required_parameter_missing
   end
@@ -72,7 +91,7 @@ class EppBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -80,7 +99,7 @@ class EppBaseTest < EppTestCase
       </epp>
     XML
     post epp_info_path, params: { frame: xml_of_epp_command_that_requires_authentication },
-         headers: { 'HTTP_COOKIE' => 'session=non-existent' }
+                        headers: { 'HTTP_COOKIE' => 'session=non-existent' }
 
     assert_epp_response :authorization_error
   end
@@ -96,7 +115,7 @@ class EppBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -104,7 +123,7 @@ class EppBaseTest < EppTestCase
       </epp>
     XML
     post epp_info_path, params: { frame: xml_of_epp_command_that_requires_authorization },
-         headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
+                        headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
 
     assert_epp_response :authorization_error
   end
@@ -122,7 +141,7 @@ class EppBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -130,7 +149,7 @@ class EppBaseTest < EppTestCase
       </epp>
     XML
     post '/epp/command/info', params: { frame: authentication_enabled_epp_request_xml },
-         headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
+                              headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
 
     assert_epp_response :authorization_error
     assert_nil EppSession.find_by(session_id: session.session_id)
@@ -149,7 +168,7 @@ class EppBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -158,7 +177,7 @@ class EppBaseTest < EppTestCase
     XML
 
     post '/epp/command/info', params: { frame: authentication_enabled_epp_request_xml },
-         headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
+                              headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
 
     session.reload
 

@@ -6,13 +6,13 @@ module Depp
 
     attr_accessor :name, :current_user, :epp_xml
 
-    STATUSES = %w(
+    STATUSES = %w[
       clientDeleteProhibited
       clientHold
       clientRenewProhibited
       clientTransferProhibited
       clientUpdateProhibited
-    )
+    ].freeze
 
     PERIODS = [
       ['3 months', '3m'],
@@ -28,11 +28,15 @@ module Depp
       ['8 years', '8y'],
       ['9 years', '9y'],
       ['10 years', '10y'],
-    ]
+    ].freeze
 
     def initialize(args = {})
       self.current_user = args[:current_user]
-      self.epp_xml = EppXml::Domain.new(cl_trid_prefix: current_user.tag)
+      self.epp_xml = EppXml::Domain.new(
+        cl_trid_prefix: current_user.tag,
+        schema_prefix: 'domain-ee',
+        schema_version: '1.1'
+      )
     end
 
     def info(domain_name)
@@ -49,6 +53,11 @@ module Depp
       current_user.request(xml)
     end
 
+    def hostname_present
+      domain_params[:nameservers_attributes]
+        .select { |_key, value| value['hostname'].present? }.any?
+    end
+
     def create(domain_params)
       dns_hash = {}
       keys = Domain.create_dnskeys_hash(domain_params)
@@ -57,22 +66,22 @@ module Depp
       period = domain_params[:period].to_i.to_s
       period_unit = domain_params[:period][-1].to_s
 
-      if domain_params[:nameservers_attributes].select { |key, value| value['hostname'].present? }.any?
-        xml = epp_xml.create({
-          name: { value: domain_params[:name] },
-          period: { value: period, attrs: { unit: period_unit } },
-          ns: Domain.create_nameservers_hash(domain_params),
-          registrant: { value: domain_params[:registrant] },
-          _anonymus: Domain.create_contacts_hash(domain_params)
-        }, dns_hash, Domain.construct_custom_params_hash(domain_params))
-      else
-        xml = epp_xml.create({
-          name: { value: domain_params[:name] },
-          period: { value: period, attrs: { unit: period_unit } },
-          registrant: { value: domain_params[:registrant] },
-          _anonymus: Domain.create_contacts_hash(domain_params)
-        }, dns_hash, Domain.construct_custom_params_hash(domain_params))
-      end
+      xml = if hostname_present
+              epp_xml.create({
+                               name: { value: domain_params[:name] },
+                               period: { value: period, attrs: { unit: period_unit } },
+                               ns: Domain.create_nameservers_hash(domain_params),
+                               registrant: { value: domain_params[:registrant] },
+                               _anonymus: Domain.create_contacts_hash(domain_params)
+                             }, dns_hash, Domain.construct_custom_params_hash(domain_params))
+            else
+              epp_xml.create({
+                               name: { value: domain_params[:name] },
+                               period: { value: period, attrs: { unit: period_unit } },
+                               registrant: { value: domain_params[:registrant] },
+                               _anonymus: Domain.create_contacts_hash(domain_params)
+                             }, dns_hash, Domain.construct_custom_params_hash(domain_params))
+            end
 
       current_user.request(xml)
     end
@@ -92,9 +101,10 @@ module Depp
 
     def delete(domain_params)
       xml = epp_xml.delete({
-        name: { value: domain_params[:name] }},
-        Depp::Domain.construct_custom_params_hash(domain_params),
-        (domain_params[:verified].present? && 'yes'))
+                             name: { value: domain_params[:name] },
+                           },
+                           Depp::Domain.construct_custom_params_hash(domain_params),
+                           (domain_params[:verified].present? && 'yes'))
 
       current_user.request(xml)
     end
@@ -104,10 +114,10 @@ module Depp
       period_unit = params[:period][-1].to_s
 
       current_user.request(epp_xml.renew(
-        name: { value: params[:domain_name] },
-        curExpDate: { value: params[:cur_exp_date] },
-        period: { value: period, attrs: { unit: period_unit } }
-      ))
+                             name: { value: params[:domain_name] },
+                             curExpDate: { value: params[:cur_exp_date] },
+                             period: { value: period, attrs: { unit: period_unit } }
+                           ))
     end
 
     def transfer(params)
@@ -117,9 +127,9 @@ module Depp
       op = params[:reject] ? 'reject' : op
 
       current_user.request(epp_xml.transfer({
-        name: { value: params[:domain_name] },
-        authInfo: { pw: { value: params[:transfer_code] } }
-      }, op, Domain.construct_custom_params_hash(params)))
+                                              name: { value: params[:domain_name] },
+                                              authInfo: { pw: { value: params[:transfer_code] } }
+                                            }, op, Domain.construct_custom_params_hash(params)))
     end
 
     def confirm_transfer(domain_params)
@@ -127,9 +137,9 @@ module Depp
       pw = data.css('pw').text
 
       xml = epp_xml.transfer({
-        name: { value: domain_params[:name] },
-        authInfo: { pw: { value: pw } }
-      }, 'approve')
+                               name: { value: domain_params[:name] },
+                               authInfo: { pw: { value: pw } }
+                             }, 'approve')
 
       current_user.request(xml)
     end
@@ -171,24 +181,25 @@ module Depp
             hostname: x.css('hostName').text,
             ipv4: Array(x.css('hostAddr[ip="v4"]')).map(&:text).join(','),
             ipv6: Array(x.css('hostAddr[ip="v6"]')).map(&:text).join(',')
-           }
+          }
         end
 
         data.css('keyData').each_with_index do |x, i|
           ret[:dnskeys_attributes][i] = {
-              flags: x.css('flags').text,
-              protocol: x.css('protocol').text,
-              alg: x.css('alg').text,
-              public_key: x.css('pubKey').text,
-              ds_key_tag: x.css('keyTag').first.try(:text),
-              ds_alg: x.css('alg').first.try(:text),
-              ds_digest_type: x.css('digestType').first.try(:text),
-              ds_digest: x.css('digest').first.try(:text)
+            flags: x.css('flags').text,
+            protocol: x.css('protocol').text,
+            alg: x.css('alg').text,
+            public_key: x.css('pubKey').text,
+            ds_key_tag: x.css('keyTag').first.try(:text),
+            ds_alg: x.css('alg').first.try(:text),
+            ds_digest_type: x.css('digestType').first.try(:text),
+            ds_digest: x.css('digest').first.try(:text)
           }
         end
 
         data.css('status').each_with_index do |x, i|
           next unless STATUSES.include?(x['s'])
+
           ret[:statuses_attributes][i] = {
             code: x['s'],
             description: x.text
@@ -203,7 +214,7 @@ module Depp
         if domain_params[:legal_document].present?
           type = domain_params[:legal_document].original_filename.split('.').last.downcase
           custom_params[:_anonymus] << {
-            legalDocument: { value: Base64.encode64(domain_params[:legal_document].read), attrs: { type:  type } }
+            legalDocument: { value: Base64.encode64(domain_params[:legal_document].read), attrs: { type: type } }
           }
         end
 
@@ -231,9 +242,12 @@ module Depp
         rem_arr << { ns: rem_ns } if rem_ns.any?
         rem_arr << { _anonymus: rem_anon } if rem_anon.any?
 
-        if domain_params[:registrant] != old_domain_params[:registrant]
-          chg = [{ registrant: { value: domain_params[:registrant] } }] if !domain_params[:verified].present?
-          chg = [{ registrant: { value: domain_params[:registrant], attrs: { verified: 'yes' } } }] if domain_params[:verified]
+        return if domain_params[:registrant] == old_domain_params[:registrant]
+
+        chg = [{ registrant: { value: domain_params[:registrant] } }]
+        if domain_params[:verified].blank? && (domain_params[:verified])
+          chg = [{ registrant: { value: domain_params[:registrant],
+                                 attrs: { verified: 'yes' } } }]
         end
 
         add_arr = nil if add_arr.none?
@@ -263,13 +277,17 @@ module Depp
 
           host_attr = []
           host_attr << { hostName: { value: v['hostname'] } }
-          v['ipv4'].to_s.split(",").each do |ip|
-            host_attr << { hostAddr: { value: ip, attrs: { ip: 'v4' } } }
-          end if v['ipv4'].present?
+          if v['ipv4'].present?
+            v['ipv4'].to_s.split(',').each do |ip|
+              host_attr << { hostAddr: { value: ip, attrs: { ip: 'v4' } } }
+            end
+          end
 
-          v['ipv6'].to_s.split(",").each do |ip|
-            host_attr << { hostAddr: { value: ip, attrs: { ip: 'v6' } } }
-          end if v['ipv6'].present?
+          if v['ipv6'].present?
+            v['ipv6'].to_s.split(',').each do |ip|
+              host_attr << { hostAddr: { value: ip, attrs: { ip: 'v6' } } }
+            end
+          end
 
           ret << { hostAttr: host_attr }
         end
@@ -281,6 +299,7 @@ module Depp
         ret = []
         domain_params[:contacts_attributes].each do |_k, v|
           next if v['code'].blank?
+
           ret << {
             contact: { value: v['code'], attrs: { type: v['type'] } }
           }
@@ -294,9 +313,11 @@ module Depp
         domain_params[:dnskeys_attributes].each do |_k, v|
           if v['ds_key_tag'].blank?
             kd = create_key_data_hash(v)
-            ret << {
-              keyData: kd
-            } if kd
+            if kd
+              ret << {
+                keyData: kd
+              }
+            end
           else
             ret << {
               dsData: [
@@ -315,6 +336,7 @@ module Depp
 
       def create_key_data_hash(key_data_params)
         return nil if key_data_params['public_key'].blank?
+
         {
           flags: { value: key_data_params['flags'] },
           protocol: { value: key_data_params['protocol'] },
@@ -331,6 +353,6 @@ module Depp
         end
         ret
       end
-    end
+  end
   end
 end

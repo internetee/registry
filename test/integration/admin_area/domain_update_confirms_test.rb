@@ -18,7 +18,7 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{new_registrant.code}</domain:registrant>
@@ -53,7 +53,7 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{new_registrant.code}</domain:registrant>

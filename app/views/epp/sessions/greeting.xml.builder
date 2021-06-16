@@ -5,7 +5,7 @@ xml.epp_head do
     xml.svcMenu do
       xml.version '1.0'
       xml.lang 'en'
-      xml.objURI Xsd::Schema.filename(for_prefix: 'domain-eis')
+      xml.objURI Xsd::Schema.filename(for_prefix: 'domain-ee')
       xml.objURI Xsd::Schema.filename(for_prefix: 'contact-ee')
       xml.objURI 'urn:ietf:params:xml:ns:host-1.0'
       xml.svcExtension do

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+<epp xmlns="epp-ee">
   <command>
     <info>
       <domain:info
-       xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+       xmlns:domain="domain-ee">
         <domain:name hosts="all">example.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>

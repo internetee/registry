@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+<epp xmlns="epp-ee">
   <command>
     <create>
       <domain:create
-       xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+       xmlns:domain="domain-ee">
         <domain:name>example.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -31,7 +31,7 @@
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+      <eis:extdata xmlns:eis="eis">
         <eis:legalDocument type="pdf">
           dGVzdCBmYWlsCg==
         </eis:legalDocument>

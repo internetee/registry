@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+<epp xmlns="epp-ee">
   <command>
     <check>
       <contact:check
-       xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+       xmlns:contact="contact-ee">
         <contact:id>sh8013</contact:id>
       </contact:check>
     </check>

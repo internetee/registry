@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+<epp xmlns="epp-ee">
   <command>
     <renew>
       <domain:renew
-       xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+       xmlns:domain="domain-ee">
         <domain:name>example.ee</domain:name>
         <domain:curExpDate>2014-08-07</domain:curExpDate>
         <domain:period unit="y">1</domain:period>

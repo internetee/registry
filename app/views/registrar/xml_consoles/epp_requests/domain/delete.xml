@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+<epp xmlns="epp-ee">
   <command>
     <delete>
       <domain:delete
-       xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+       xmlns:domain="domain-ee">
         <domain:name>example.ee</domain:name>
       </domain:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+      <eis:extdata xmlns:eis="eis">
         <eis:legalDocument type="pdf">
           dGVzdCBmYWlsCg==
         </eis:legalDocument>

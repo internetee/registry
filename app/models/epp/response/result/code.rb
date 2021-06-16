@@ -17,6 +17,7 @@ module Epp
           required_parameter_missing: 2003,
           parameter_value_range_error: 2004,
           parameter_value_syntax_error: 2005,
+          wrong_schema: 2100,
           unimplemented: 2101,
           billing_failure: 2104,
           object_is_not_eligible_for_renewal: 2105,
@@ -47,6 +48,7 @@ module Epp
           2003 => 'Required parameter missing',
           2004 => 'Parameter value range error',
           2005 => 'Parameter value syntax error',
+          2100 => 'Wrong schema',
           2101 => 'Unimplemented command',
           2104 => 'Billing failure',
           2105 => 'Object is not eligible for renewal',
@@ -79,6 +81,7 @@ module Epp
         def initialize(value)
           value = value.to_i
           raise ArgumentError, "Invalid value: #{value}" unless KEY_TO_VALUE.value?(value)
+
           @value = value
         end
 

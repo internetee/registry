@@ -119,7 +119,7 @@ class EppDomainTransferRequestTest < EppTestCase
     post epp_transfer_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_goodnames' }
     assert_equal 'serverApproved', Nokogiri::XML(response.body).xpath('//domain:trStatus', 'domain' =>
-      "#{Xsd::Schema.filename(for_prefix: 'domain-eis')}").text
+      "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
   end
 
   def test_assigns_new_registrar
@@ -204,7 +204,7 @@ class EppDomainTransferRequestTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <transfer op="request">
-            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw>wrong</domain:pw>
@@ -231,7 +231,7 @@ class EppDomainTransferRequestTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <transfer op="request">
-            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-eis')}">
+            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw>65078d5</domain:pw>
