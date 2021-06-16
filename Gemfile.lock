@@ -28,8 +28,8 @@ GIT
 
 GIT
   remote: https://github.com/internetee/epp-xml.git
-  revision: b821c16a002722709a0fdf3d1aa23606ed7d62ff
-  branch: 11-flexible-paths-for-schemes
+  revision: cab8ba4d07b16e664b8ae6d3c6a6821e89a48b78
+  branch: master
   specs:
     epp-xml (1.2.0)
       activesupport (>= 4.1)
