@@ -89,4 +89,24 @@ class CsyncJobTest < ActiveSupport::TestCase
       end
     end
   end
+
+  def test_does_not_update_if_whitespaces_in_dnskey
+    @dnskey = dnskeys(:with_whitespace)
+    @domain = domains(:library)
+    @dnskey.domain_id = @domain.id
+    @dnskey.save(validate: false)
+    pubkey = @dnskey.public_key
+
+    CsyncJob.perform_now
+    @domain.reload
+
+    2.times do
+      CsyncJob.perform_now
+    end
+
+    @domain.reload
+    @dnskey.reload
+    assert_equal @dnskey, @domain.dnskeys.last
+    assert_equal pubkey, @domain.dnskeys.last.public_key
+  end
 end
