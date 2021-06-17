@@ -1,5 +1,5 @@
 namespace :collect_invalid_contacts do
-  desc 'Starts collect invalid validation contacts'
+  desc 'Starts collect invalid business contacts'
   task all_domains: :environment do
     prepare_csv_file
 
