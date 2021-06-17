@@ -5,6 +5,9 @@ class EppDomainTransferQueryTest < EppTestCase
     post epp_transfer_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     xml_doc = Nokogiri::XML(response.body)
+
+    assert_correct_against_schema xml_doc
+
     assert_epp_response :completed_successfully
     assert_equal 'shop.test', xml_doc.xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
     assert_equal 'serverApproved', xml_doc.xpath('//domain:trStatus', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
@@ -32,6 +35,8 @@ class EppDomainTransferQueryTest < EppTestCase
     post epp_transfer_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :invalid_authorization_information
   end
 
@@ -39,6 +44,8 @@ class EppDomainTransferQueryTest < EppTestCase
     domains(:shop).transfers.delete_all
     post epp_transfer_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :object_does_not_exist
   end
 

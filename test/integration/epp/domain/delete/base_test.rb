@@ -35,6 +35,8 @@ class EppDomainDeleteBaseTest < EppTestCase
     XML
 
     post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_includes Domain.find_by(name: 'invalid.test').statuses, DomainStatus::PENDING_DELETE_CONFIRMATION
     assert_epp_response :completed_successfully_action_pending
   end
@@ -64,6 +66,8 @@ class EppDomainDeleteBaseTest < EppTestCase
     assert_no_difference 'Domain.count' do
       post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :object_status_prohibits_operation
   end
 
@@ -92,6 +96,8 @@ class EppDomainDeleteBaseTest < EppTestCase
     perform_enqueued_jobs do
       post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     @domain.reload
 
@@ -126,6 +132,9 @@ class EppDomainDeleteBaseTest < EppTestCase
     perform_enqueued_jobs do
       post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     @domain.reload
 
     assert_not @domain.registrant_verification_asked?
@@ -160,6 +169,9 @@ class EppDomainDeleteBaseTest < EppTestCase
     perform_enqueued_jobs do
       post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     @domain.reload
 
     assert_not @domain.registrant_verification_asked?
@@ -193,6 +205,8 @@ class EppDomainDeleteBaseTest < EppTestCase
     perform_enqueued_jobs do
       post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     @domain.reload
 
     assert_not @domain.registrant_verification_asked?
@@ -219,6 +233,8 @@ class EppDomainDeleteBaseTest < EppTestCase
     XML
 
     post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :completed_successfully
   end
@@ -246,6 +262,8 @@ class EppDomainDeleteBaseTest < EppTestCase
     XML
 
     post epp_delete_path, params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :object_status_prohibits_operation
   end

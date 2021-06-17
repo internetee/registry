@@ -43,6 +43,9 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     refute Domain.where(name: @idn_auction.domain).exists?
 
     @idn_auction.reload
@@ -78,6 +81,9 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames'}
     end
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     refute Domain.where(name: @idn_auction.domain).exists?
 
     @idn_auction.reload
@@ -112,6 +118,9 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames'}
     end
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     refute Domain.where(name: @idn_auction.domain).exists?
 
     @idn_auction.reload
@@ -145,6 +154,9 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames'}
     end
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     refute Domain.where(name: @idn_auction.domain).exists?
 
@@ -184,6 +196,9 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames'}
     end
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     @idn_auction.reload
     assert @idn_auction.domain_registered?
     assert Domain.where(name: @idn_auction.domain).exists?
@@ -220,6 +235,9 @@ class EppDomainCreateAuctionIdnTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames'}
     end
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     @idn_auction.reload
     assert @idn_auction.domain_registered?

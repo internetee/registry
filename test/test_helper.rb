@@ -75,6 +75,13 @@ class EppTestCase < ActionDispatch::IntegrationTest
     assert schema_version >= version
   end
 
+  def assert_correct_against_schema(response_xml, message = nil)
+    schema = EPP_ALL_SCHEMA
+
+    schema_validation_errors = schema.validate(response_xml)
+    assert_equal 0, schema_validation_errors.size, message
+  end
+
   private
 
   def prefix_schema_tag(prefix, response_xml)

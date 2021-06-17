@@ -19,6 +19,8 @@ class EppContactTransferBaseTest < EppTestCase
     post epp_transfer_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :unimplemented
   end
 end

@@ -35,6 +35,8 @@ class EppDomainCreateAuctionTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :completed_successfully
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
   end
 
   def test_registers_domain_with_correct_registration_code_after_another_auction_when_payment_is_received
@@ -73,6 +75,8 @@ class EppDomainCreateAuctionTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
     assert_epp_response :completed_successfully
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
   end
 
   def test_registers_domain_with_correct_registration_code_when_payment_is_received
@@ -109,6 +113,8 @@ class EppDomainCreateAuctionTest < EppTestCase
     @auction.reload
     assert @auction.domain_registered?
     assert_epp_response :completed_successfully
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
   end
 
   def test_domain_cannot_be_registered_without_registration_code
@@ -138,6 +144,8 @@ class EppDomainCreateAuctionTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :required_parameter_missing
   end
 
@@ -171,6 +179,8 @@ class EppDomainCreateAuctionTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :invalid_authorization_information
   end
 
@@ -203,6 +213,8 @@ class EppDomainCreateAuctionTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :required_parameter_missing
   end
 
@@ -231,6 +243,8 @@ class EppDomainCreateAuctionTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :parameter_value_policy_error
   end
 end

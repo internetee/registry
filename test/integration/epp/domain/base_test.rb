@@ -17,7 +17,9 @@ class EppDomainBaseTest < EppTestCase
     post epp_info_path, params: { frame: request_xml },
                         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
+    response_xml = Nokogiri::XML(response.body)
     assert_epp_response :object_does_not_exist
+    assert_correct_against_schema response_xml
   end
 
   def test_invalid_path

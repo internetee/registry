@@ -38,6 +38,8 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     @domain.reload
     assert_equal 'f0ff7d17b0', @domain.transfer_code
     assert_epp_response :completed_successfully
@@ -82,6 +84,8 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :object_status_prohibits_operation
   end
 
@@ -106,6 +110,7 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     assert_epp_response :object_status_prohibits_operation
     response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_equal DomainStatus::PENDING_UPDATE, response_xml.at_xpath('//domain:status', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
   end
 
@@ -142,6 +147,8 @@ class EppDomainUpdateBaseTest < EppTestCase
     end
     @domain.reload
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully_action_pending
     assert_not_equal new_registrant, @domain.registrant
     assert @domain.registrant_verification_asked?
@@ -183,6 +190,8 @@ class EppDomainUpdateBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
     assert_epp_response :completed_successfully
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_equal @domain.registrant, new_registrant
     assert_not @domain.statuses.include? "pendingUpdate"
@@ -221,6 +230,8 @@ class EppDomainUpdateBaseTest < EppTestCase
     end
     @domain.reload
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully_action_pending
     assert_not_equal new_registrant, @domain.registrant
     assert @domain.registrant_verification_asked?
@@ -259,6 +270,8 @@ class EppDomainUpdateBaseTest < EppTestCase
     end
     @domain.reload
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully_action_pending
     assert_not_equal new_registrant, @domain.registrant
     assert @domain.registrant_verification_asked?
@@ -290,6 +303,8 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :required_parameter_missing
     Setting.legal_document_is_mandatory = old_value
   end
@@ -332,6 +347,8 @@ class EppDomainUpdateBaseTest < EppTestCase
     @domain.reload
 
     # NOTE: completed_successfully_action_pending
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     refute_includes @domain.statuses, DomainStatus::PENDING_UPDATE
 
@@ -365,6 +382,8 @@ class EppDomainUpdateBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_not @domain.registrant_verification_asked?
     refute_includes @domain.statuses, DomainStatus::PENDING_UPDATE
@@ -407,6 +426,8 @@ class EppDomainUpdateBaseTest < EppTestCase
                           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert new_registrant, @domain.registrant
     assert_not @domain.registrant_verification_asked?
@@ -450,6 +471,8 @@ class EppDomainUpdateBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :invalid_authorization_information
     assert_not_equal new_registrant, @domain.registrant
     assert @domain.disputed?
@@ -486,6 +509,8 @@ class EppDomainUpdateBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal new_registrant, @domain.registrant
     assert_not @domain.registrant_verification_asked?
@@ -523,6 +548,8 @@ class EppDomainUpdateBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal new_registrant, @domain.registrant
     assert_not @domain.registrant_verification_asked?
@@ -562,6 +589,8 @@ class EppDomainUpdateBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal new_registrant, @domain.registrant
     assert_not @domain.registrant_verification_asked?
@@ -599,6 +628,9 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     @domain.reload
 
     assert_epp_response :completed_successfully
@@ -624,6 +656,9 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     @domain.reload
     assert_epp_response :completed_successfully
     assert_includes(@domain.statuses, DomainStatus::CLIENT_HOLD)
@@ -652,6 +687,9 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     @domain.reload
     assert_epp_response :completed_successfully
     assert_not_includes(@domain.statuses, DomainStatus::CLIENT_HOLD)
@@ -677,6 +715,9 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
     @domain.reload
     assert_epp_response :object_does_not_exist
   end

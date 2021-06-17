@@ -2,6 +2,7 @@ require 'deserializers/xml/legal_document'
 
 class Contact < ApplicationRecord
   include Versions # version/contact_version.rb
+  include Roids
   include EppErrors
   include UserEvents
   include Contact::Transferable
@@ -257,10 +258,6 @@ class Contact < ApplicationRecord
 
       where(id: total_ids)
     end
-  end
-
-  def roid
-    "EIS-#{id}"
   end
 
   # kind of decorator in order to always return statuses

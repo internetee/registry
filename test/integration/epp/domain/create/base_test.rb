@@ -42,6 +42,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :parameter_value_syntax_error
   end
@@ -73,6 +75,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :data_management_policy_violation
   end
@@ -107,6 +111,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :data_management_policy_violation
     error_description = 'Legaldoc size exceeds maximum allowed size of 8mB'
@@ -143,6 +149,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :completed_successfully
   end
@@ -174,6 +182,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :required_parameter_missing
   end
@@ -210,6 +220,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
   end
 
@@ -248,6 +260,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :parameter_value_policy_error
   end
@@ -285,6 +299,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :parameter_value_policy_error
   end
@@ -322,6 +338,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :parameter_value_policy_error
   end
@@ -360,6 +378,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :parameter_value_policy_error
   end
@@ -398,6 +418,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :parameter_value_policy_error
   end
@@ -432,6 +454,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :completed_successfully
 
@@ -475,6 +499,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :completed_successfully
 
@@ -510,6 +536,9 @@ class EppDomainCreateBaseTest < EppTestCase
 
     post epp_create_path, params: { frame: request_xml },
                           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
 
     assert_epp_response :required_parameter_missing
     Setting.legal_document_is_mandatory = false
@@ -553,6 +582,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
 
     reserved_domain.reload
@@ -588,6 +619,8 @@ class EppDomainCreateBaseTest < EppTestCase
     post epp_create_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal transfer_code, Domain.find_by(name: name).transfer_code
   end
@@ -619,6 +652,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :data_management_policy_violation
   end
 
@@ -649,6 +684,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :data_management_policy_violation
   end
 
@@ -679,6 +716,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :invalid_authorization_information
   end
 
@@ -708,6 +747,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :required_parameter_missing
   end
 
@@ -737,6 +778,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :billing_failure
   end
 
@@ -766,6 +809,8 @@ class EppDomainCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :billing_failure
   end
 end

@@ -41,6 +41,8 @@ class EppContactUpdateBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @contact.reload
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal 'new name', @contact.name
     assert_equal 'new-email@inbox.test', @contact.email
@@ -73,6 +75,8 @@ class EppContactUpdateBaseTest < EppTestCase
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_emails 1
   end
 
@@ -101,7 +105,8 @@ class EppContactUpdateBaseTest < EppTestCase
 
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
-
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_no_emails
   end
 
@@ -133,7 +138,8 @@ class EppContactUpdateBaseTest < EppTestCase
 
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
-
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_no_emails
   end
 
@@ -160,7 +166,8 @@ class EppContactUpdateBaseTest < EppTestCase
 
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
-
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :object_does_not_exist
   end
 
@@ -196,6 +203,8 @@ class EppContactUpdateBaseTest < EppTestCase
       post epp_update_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :data_management_policy_violation
   end
 
@@ -228,7 +237,8 @@ class EppContactUpdateBaseTest < EppTestCase
     XML
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
-
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
   end
 
@@ -269,6 +279,8 @@ class EppContactUpdateBaseTest < EppTestCase
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     @contact.reload
 
@@ -315,6 +327,8 @@ class EppContactUpdateBaseTest < EppTestCase
     post epp_update_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_without_address
     @contact.reload
 
@@ -362,6 +376,8 @@ class EppContactUpdateBaseTest < EppTestCase
     post epp_update_path, params: { frame: request_xml },
           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     @contact.reload
 
     assert_not_equal city, @contact.city
@@ -417,6 +433,8 @@ class EppContactUpdateBaseTest < EppTestCase
       @contact.reload
     end
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     assert_equal 'new name', @contact.name
     assert_equal 'new-email@inbox.test', @contact.email

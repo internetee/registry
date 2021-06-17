@@ -33,6 +33,8 @@ class EppContactCreateBaseTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     contact = Contact.find_by(name: name)
     assert_equal name, contact.name
@@ -74,6 +76,8 @@ class EppContactCreateBaseTest < EppTestCase
           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :parameter_value_syntax_error
   end
 
@@ -109,6 +113,8 @@ class EppContactCreateBaseTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :parameter_value_syntax_error
   end
 
@@ -143,6 +149,8 @@ class EppContactCreateBaseTest < EppTestCase
     post epp_create_path, params: { frame: request_xml },
          headers: { 'HTTP_COOKIE' => "session=#{session.session_id}" }
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     contact = Contact.find_by(name: name)
     assert_equal "#{session.user.registrar.code}:#{code}".upcase, contact.code
   end
@@ -174,6 +182,8 @@ class EppContactCreateBaseTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :required_parameter_missing
   end
 
@@ -216,6 +226,8 @@ class EppContactCreateBaseTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_without_address
     contact = Contact.find_by(name: name)
     assert_equal name, contact.name
@@ -275,6 +287,8 @@ class EppContactCreateBaseTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
 
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     contact = Contact.find_by(name: name)
     assert_equal name, contact.name
