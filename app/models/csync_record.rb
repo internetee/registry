@@ -102,7 +102,7 @@ class CsyncRecord < ApplicationRecord
   end
 
   def self.by_domain_name(domain_name)
-    domain = Domain.find_by(name: domain_name)
+    domain = Domain.find_by(name: domain_name) || Domain.find_by(name_puny: domain_name)
     log.info "CsyncRecord: '#{domain_name}' not in zone. Not initializing record." unless domain
     CsyncRecord.find_or_initialize_by(domain: domain) if domain
   end
