@@ -1,21 +1,28 @@
 class ScanCsvRegistryBusinnesContactsJob < ApplicationJob
-	FILE_NAME = './ettevotja_rekvisiidid_init.csv'.freeze
+  FILE_NAME = './ettevotja_rekvisiidid_init.csv'.freeze
+
   def perform
-		BusinessRegistryContact.delete_all
+    BusinessRegistryContact.delete_all
 
-		return p 'File not exist!' unless File.exist?(FILE_NAME)
+    return p 'File not exist!' unless File.exist?(FILE_NAME)
 
-		CSV.foreach(FILE_NAME, headers: true, col_sep: ";") do |row|
-			name = row[0]
-			code = row[1]
-			status = row[5]
+    enumurate_csv_file
+  end
 
-			record = BusinessRegistryContact.create({
-				name: name,
-				registry_code: code,
-				status: status
-			})
-			p "#{record} is successfully created - #{BusinessRegistryContact.count} count"
-  	end
-	end
+  private
+
+  def enumurate_csv_file
+    i = 0
+    CSV.foreach(FILE_NAME, headers: true, col_sep: ';') do |row|
+      record = BusinessRegistryContact.create(
+        name: row[0],
+        registry_code: row[1],
+        status: row[5]
+      )
+
+      i += 1
+
+      p "#{record} is successfully created - #{i} count"
+    end
+  end
 end
