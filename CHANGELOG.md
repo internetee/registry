@@ -1,4 +1,5 @@
 16.06.2021
+* New domain and all-ee schema versions for serverReleaseProhibited status [#2004](https://github.com/internetee/registry/issues/2004)
 * Support for multiple schema versions [#2030](https://github.com/internetee/registry/issues/2030)
 
 14.06.2021
