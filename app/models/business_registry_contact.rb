@@ -1,0 +1,2 @@
+class BusinessRegistryContact < ApplicationRecord
+end

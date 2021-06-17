@@ -498,6 +498,39 @@ ALTER SEQUENCE public.bounced_mail_addresses_id_seq OWNED BY public.bounced_mail
 
 
 --
+-- Name: business_registry_contacts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.business_registry_contacts (
+    id bigint NOT NULL,
+    name character varying,
+    registry_code character varying,
+    status character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: business_registry_contacts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.business_registry_contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: business_registry_contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.business_registry_contacts_id_seq OWNED BY public.business_registry_contacts.id;
+
+
+--
 -- Name: certificates; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -541,7 +574,6 @@ ALTER SEQUENCE public.certificates_id_seq OWNED BY public.certificates.id;
 --
 
 CREATE TABLE public.contact_requests (
-
     id integer NOT NULL,
     whois_record_id integer NOT NULL,
     secret character varying NOT NULL,
@@ -553,7 +585,6 @@ CREATE TABLE public.contact_requests (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     message_id character varying
-
 );
 
 
@@ -574,6 +605,7 @@ CREATE SEQUENCE public.contact_requests_id_seq
 --
 
 ALTER SEQUENCE public.contact_requests_id_seq OWNED BY public.contact_requests.id;
+
 
 --
 -- Name: contacts; Type: TABLE; Schema: public; Owner: -
@@ -2767,6 +2799,13 @@ ALTER TABLE ONLY public.bounced_mail_addresses ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: business_registry_contacts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.business_registry_contacts ALTER COLUMN id SET DEFAULT nextval('public.business_registry_contacts_id_seq'::regclass);
+
+
+--
 -- Name: certificates id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3228,6 +3267,14 @@ ALTER TABLE ONLY public.blocked_domains
 
 ALTER TABLE ONLY public.bounced_mail_addresses
     ADD CONSTRAINT bounced_mail_addresses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: business_registry_contacts business_registry_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.business_registry_contacts
+    ADD CONSTRAINT business_registry_contacts_pkey PRIMARY KEY (id);
 
 
 --
@@ -5104,6 +5151,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200916125326'),
 ('20200917104213'),
 ('20200921084356'),
-('20210215101019');
+('20210215101019'),
+('20210616112332');
 
 
