@@ -1,3 +1,7 @@
+18.06.2021
+* Fixed domain update bug in registrar [#2041](https://github.com/internetee/registry/issues/2041)
+* Added Business registry open data validator [#1851](https://github.com/internetee/registry/issues/1851)
+
 17.06.2021
 * Automatic response validation against epp schemas [#1930](https://github.com/internetee/registry/issues/1930)
 
