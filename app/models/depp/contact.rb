@@ -3,9 +3,9 @@ module Depp
     include ActiveModel::Model
 
     attr_accessor :id, :name, :email, :phone, :org_name,
-      :ident, :ident_type, :ident_country_code,
-      :street, :city, :zip, :state, :country_code,
-      :password, :legal_document, :statuses, :code
+                  :ident, :ident_type, :ident_country_code,
+                  :street, :city, :zip, :state, :country_code,
+                  :password, :legal_document, :statuses, :code
 
     DISABLED = 'Disabled'
     DISCLOSURE_TYPES = [DISABLED, '1', '0']
@@ -78,7 +78,7 @@ module Depp
       def user=(user)
         @user = user
         @epp_xml = EppXml::Contact.new(cl_trid_prefix: user.tag, schema_prefix: 'contact-ee',
-        schema_version: '1.1')
+                                       schema_version: '1.1')
       end
 
       def info_xml(id, password = nil)
@@ -237,11 +237,11 @@ module Depp
 
       case action
       when :create
-        ident = ident_xml[:_anonymus].try(:first) 
+        ident = ident_xml[:_anonymus].try(:first)
       when :update
         # detect if any ident has changed, nb! ident and self.ident is not always same
         if !(ident == self.ident && ident == self.ident_type && ident_country_code == self.ident_country_code)
-          ident = ident_xml[:_anonymus].try(:first) 
+          ident = ident_xml[:_anonymus].try(:first)
         end
       end
 
