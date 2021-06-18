@@ -77,7 +77,8 @@ module Depp
 
       def user=(user)
         @user = user
-        @epp_xml = EppXml::Contact.new(cl_trid_prefix: user.tag)
+        @epp_xml = EppXml::Contact.new(cl_trid_prefix: user.tag, schema_prefix: 'contact-ee',
+        schema_version: '1.1')
       end
 
       def info_xml(id, password = nil)
