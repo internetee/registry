@@ -35,7 +35,7 @@ jobs:
 
       - name: Set config files for build
         run: |
-          cp config/customization.yml.sample config/customization.yml
+          cp config/application.yml.sample config/application.yml
           cp config/database.yml.sample config/database.yml
           ls -l config/
 
