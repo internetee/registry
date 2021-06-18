@@ -53,11 +53,6 @@ module Depp
       current_user.request(xml)
     end
 
-    def hostname_present
-      domain_params[:nameservers_attributes]
-        .select { |_key, value| value['hostname'].present? }.any?
-    end
-
     def create(domain_params)
       dns_hash = {}
       keys = Domain.create_dnskeys_hash(domain_params)
@@ -66,7 +61,8 @@ module Depp
       period = domain_params[:period].to_i.to_s
       period_unit = domain_params[:period][-1].to_s
 
-      xml = if hostname_present
+      xml = if domain_params[:nameservers_attributes]
+               .select { |_key, value| value['hostname'].present? }.any?
               epp_xml.create({
                                name: { value: domain_params[:name] },
                                period: { value: period, attrs: { unit: period_unit } },
@@ -242,12 +238,11 @@ module Depp
         rem_arr << { ns: rem_ns } if rem_ns.any?
         rem_arr << { _anonymus: rem_anon } if rem_anon.any?
 
-        return if domain_params[:registrant] == old_domain_params[:registrant]
-
-        chg = [{ registrant: { value: domain_params[:registrant] } }]
-        if domain_params[:verified].blank? && (domain_params[:verified])
-          chg = [{ registrant: { value: domain_params[:registrant],
-                                 attrs: { verified: 'yes' } } }]
+        if domain_params[:registrant] != old_domain_params[:registrant]
+          chg = [{ registrant: { value: domain_params[:registrant] } }] unless domain_params[:verified].present?
+          if domain_params[:verified]
+            chg = [{ registrant: { value: domain_params[:registrant], attrs: { verified: 'yes' } } }]
+          end
         end
 
         add_arr = nil if add_arr.none?
