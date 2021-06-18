@@ -24,14 +24,19 @@ def magic_with_contacts(contacts)
   CSV.open('invalid_business_contacts.csv', 'w') do |csv|
     csv << HEADERS
     contacts.each do |contact|
-      domains = searching_domains(contact)
-
+      domains = domain_filter(contact)
       domains.each do |domain|
         registrar = Registrar.find_by(id: domain.registrar_id)
         csv << [domain.name, contact.id, contact.name, contact.ident, registrar.name]
       end
     end
   end
+end
+
+def domain_filter(contact)
+  domains = searching_domains(contact)
+  domains.reject! { |dom| dom.statuses.include? DomainStatus::FORCE_DELETE }
+  domains
 end
 
 def searching_domains(contact)
