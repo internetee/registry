@@ -134,11 +134,6 @@ module Epp
 
     private
 
-    def throttled_user
-      authorize!(:throttled_user, @domain) unless current_user
-      current_user
-    end
-
     def validate_info
       @prefix = 'info > info >'
       requires('name')

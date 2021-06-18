@@ -21,11 +21,21 @@ module Epp
     rescue_from StandardError, with: :respond_with_command_failed_error
     rescue_from AuthorizationError, with: :respond_with_authorization_error
     rescue_from ActiveRecord::RecordNotFound, with: :respond_with_object_does_not_exist_error
+    rescue_from Shunter::ThrottleError, with: :respond_with_session_limit_exceeded_error
+
     before_action :set_paper_trail_whodunnit
 
     skip_before_action :validate_against_schema
 
     protected
+
+    def respond_with_session_limit_exceeded_error(exception)
+      epp_errors.add(:epp_errors,
+                     code: '2502',
+                     message: 'Session limit exceeded, try again later')
+      handle_errors
+      log_exception(exception)
+    end
 
     def respond_with_command_failed_error(exception)
       epp_errors.add(:epp_errors,
@@ -50,6 +60,11 @@ module Epp
     end
 
     private
+
+    def throttled_user
+      authorize!(:throttled_user, @domain) unless current_user
+      current_user
+    end
 
     def wrap_exceptions
       yield
