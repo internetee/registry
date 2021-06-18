@@ -9,6 +9,7 @@ namespace :contacts do
       contacts << contact unless checking_contacts(contact)
     end
 
+    contacts.select! { |c| c.ident_country_code == 'EE' }
     magic_with_contacts(contacts)
   end
 end
