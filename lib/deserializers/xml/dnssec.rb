@@ -41,7 +41,7 @@ module Deserializers
     class DnssecKeys
       attr_reader :frame, :key_data, :ds_data
 
-      def initialize(frame)
+      def initialize(frame, domain_name = nil)
         @key_data = []
         @ds_data = []
 
@@ -50,9 +50,25 @@ module Deserializers
           frame.css('dsData').each { |k| @ds_data << key_from_params(k, dsa: true) }
         end
 
-        return if frame.css('keyData').blank?
+        if frame.css('all')&.text == 'true'
+          keys_from_domain_name(domain_name)
+        elsif frame.css('keyData').present?
+          frame.css('keyData').each { |k| @key_data << key_from_params(k, dsa: false) }
+        end
+      end
 
-        frame.css('keyData').each { |k| @key_data << key_from_params(k, dsa: false) }
+      def keys_from_domain_name(domain_name)
+        domain = Epp::Domain.find_by(name: domain_name)
+        return unless domain
+
+        domain.dnskeys.each do |key|
+          @key_data << {
+            flags: key.flags,
+            protocol: key.protocol,
+            alg: key.alg,
+            public_key: key.public_key,
+          }
+        end
       end
 
       def key_from_params(obj, dsa: false)
