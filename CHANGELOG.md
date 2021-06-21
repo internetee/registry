@@ -1,3 +1,6 @@
+21.06.2021
+* punycode support for csync [#2036](https://github.com/internetee/registry/issues/2036)
+
 18.06.2021
 * Fixed domain update bug in registrar [#2041](https://github.com/internetee/registry/issues/2041)
 * Added Business registry open data validator [#1851](https://github.com/internetee/registry/issues/1851)
