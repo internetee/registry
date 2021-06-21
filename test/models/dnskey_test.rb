@@ -23,7 +23,7 @@ class DnskeyTest < ActiveSupport::TestCase
     dns = Dnskey.new
     dns.alg = 666
     errors = dns.validate_algorithm.options[:values]
-    assert_equal errors, 'Valid algorithms are: 3, 5, 6, 7, 8, 10, 13, 14'
+    assert_equal errors, "Valid algorithms are: #{Dnskey::ALGORITHMS.join(', ')}"
   end
 
   def test_invalid_protocol
