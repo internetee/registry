@@ -10,6 +10,7 @@ gem 'mimemagic', '0.4.3'
 gem 'rails', '~> 6.1.4'
 gem 'rest-client'
 gem 'uglifier'
+gem 'passenger', '>= 5.3.2', require: 'phusion_passenger/rack_handler'
 
 # load env
 gem 'figaro', '~> 1.2'
