@@ -17,6 +17,37 @@ class EppDomainUpdateBaseTest < EppTestCase
       @original_registrant_change_verification
   end
 
+  def test_update_dnskey_with_invalid_alg
+    request_xml = <<~XML
+            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+            <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+              <command>
+                <update>
+                  <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+                    <domain:name>shop.test</domain:name>
+                  </domain:update>
+                </update>
+      <extension>
+            <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+              <secDNS:add><secDNS:keyData>
+      	  <secDNS:flags>257</secDNS:flags>
+      	  <secDNS:protocol>3</secDNS:protocol>
+      	  <secDNS:alg>666</secDNS:alg>
+      	  <secDNS:pubKey>P25MwGXr2sTbxdOIKRNbSC8bUO2CObo4/T8kMFoKcgs=</secDNS:pubKey>
+      	</secDNS:keyData></secDNS:add>
+            </secDNS:update>
+          </extension>
+              </command>
+            </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :parameter_value_syntax_error
+  end
+
   def test_update_domain
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
