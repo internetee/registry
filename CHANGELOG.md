@@ -1,4 +1,5 @@
 21.06.2021
+* fixed error message for unsupported algorithms [#2033](https://github.com/internetee/registry/issues/2033)
 * enabled suport for 2 additional dnssec algorithms - 15 (Ed25519) and 16 (Ed448) [#2034](https://github.com/internetee/registry/issues/2034)
 * fixed dnssec rem all bug in epp [#2035](https://github.com/internetee/registry/issues/2035)
 * punycode support for csync [#2036](https://github.com/internetee/registry/issues/2036)
