@@ -14,8 +14,10 @@ module Depp
       ['8 - RSA/SHA-256', 8],
       ['10 - RSA/SHA-512', 10],
       ['13 - ECDSA Curve P-256 with SHA-256', 13],
-      ['14 - ECDSA Curve P-384 with SHA-384', 14]
-    ]
+      ['14 - ECDSA Curve P-384 with SHA-384', 14],
+      ['15 - Ed25519', 15],
+      ['16 - Ed448', 16],
+    ].freeze
 
     PROTOCOLS = [3]
 
