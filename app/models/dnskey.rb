@@ -34,9 +34,12 @@ class Dnskey < ApplicationRecord
   def epp_code_map
     {
       '2005' => [
-        [:alg, :invalid, { value: { obj: 'alg', val: alg }, values: ALGORITHMS.join(', ') }],
-        [:protocol, :invalid, { value: { obj: 'protocol', val: protocol }, values: PROTOCOLS.join(', ') }],
-        [:flags, :invalid, { value: { obj: 'flags', val: flags }, values: FLAGS.join(', ') }]
+        [:alg, :invalid, { value: { obj: 'alg', val: alg },
+                           values: "Valid algorithms are: #{ALGORITHMS.join(', ')}" }],
+        [:protocol, :invalid, { value: { obj: 'protocol', val: protocol },
+                                values: "Valid protocols are: #{PROTOCOLS.join(', ')}" }],
+        [:flags, :invalid, { value: { obj: 'flags', val: flags },
+                             values: "Valid protocols are: #{PROTOCOLS.join(', ')}" }],
       ],
       '2302' => [
         [:public_key, :taken, { value: { obj: 'pubKey', val: public_key } }]
@@ -60,7 +63,7 @@ class Dnskey < ApplicationRecord
   def validate_algorithm
     return if alg.blank?
     return if ALGORITHMS.include?(alg.to_s)
-    errors.add(:alg, :invalid, values: "#{ALGORITHMS.join(', ')}")
+    errors.add(:alg, :invalid, values: "Valid algorithms are: #{ALGORITHMS.join(', ')}")
   end
 
   def validate_protocol
