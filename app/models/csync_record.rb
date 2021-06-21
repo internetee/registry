@@ -90,13 +90,19 @@ class CsyncRecord < ApplicationRecord
   def validate_unique_pub_key
     return false unless domain
     return true if disable_requested?
-    return true unless domain.dnskeys.where(public_key: dnskey.public_key).any?
+    return true unless dnskey_already_present?
 
     errors.add(:public_key, 'already tied to this domain')
   end
 
+  # since dnskeys stored in DB may include whitespace chars, we could not find them by
+  # 'where' clause using dnskey.public_key being stripped of whitespaces by csync generator
+  def dnskey_already_present?
+    domain.dnskeys.pluck(:public_key).map { |key| key.gsub(/\s+/, '') }.include? dnskey.public_key
+  end
+
   def self.by_domain_name(domain_name)
-    domain = Domain.find_by(name: domain_name)
+    domain = Domain.find_by(name: domain_name) || Domain.find_by(name_puny: domain_name)
     log.info "CsyncRecord: '#{domain_name}' not in zone. Not initializing record." unless domain
     CsyncRecord.find_or_initialize_by(domain: domain) if domain
   end
@@ -112,8 +118,11 @@ class CsyncRecord < ApplicationRecord
   end
 
   def log
-    @log ||= Rails.env.test? ? logger : Logger.new(STDOUT)
-    @log
+    self.class.log
+  end
+
+  def self.log
+    Rails.env.test? ? logger : Logger.new(STDOUT)
   end
 
   def validate_csync_action

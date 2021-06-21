@@ -8,3 +8,13 @@ one:
   ds_alg: 13
   ds_digest_type: 2
   ds_digest: 39456058862EA09DD96992ED2BDAFAEDE8C7E949589E3DA903A46F4F9CD373EA
+with_whitespace:
+  domain:
+  flags: 257
+  protocol: 3
+  alg: 13
+  public_key: mdsswUyr3DPW132mOi8V9xE SWE8jTo0dxCjjnopKl+GqJxpVXckHAeF+KkxLbxILfDLUT0rAK9iUzy1L53eKGQ==
+  ds_key_tag: 2371
+  ds_alg: 13
+  ds_digest_type: 2
+  ds_digest: 39456058862EA09DD96992ED2BDAFAEDE8C7E949589E3DA903A46F4F9CD373EA
