@@ -60,7 +60,8 @@ module Deserializers
       def dns_keys
         added = ::Deserializers::Xml::DnssecKeys.new(frame.css('add')).call
         added.each { |k| k[:action] = 'add' }
-        removed = ::Deserializers::Xml::DnssecKeys.new(frame.css('rem')).call
+        removed = ::Deserializers::Xml::DnssecKeys.new(frame.css('rem'),
+                                                       frame.css('name')&.text).call
         removed.each { |k| k[:action] = 'rem' }
 
         return if (added + removed).blank?
