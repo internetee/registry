@@ -1,9 +1,6 @@
 name: build and deploy staging
 
 on:
-  push:
-    branches:
-      - "build-deploy-st"
 
   pull_request:
     paths-ignore:
