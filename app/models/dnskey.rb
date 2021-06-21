@@ -60,7 +60,7 @@ class Dnskey < ApplicationRecord
   def validate_algorithm
     return if alg.blank?
     return if ALGORITHMS.include?(alg.to_s)
-    errors.add(:alg, :invalid, values: "Valid algorithms are: #{ALGORITHMS.join(', ')}")
+    errors.add(:alg, :invalid, values: "#{ALGORITHMS.join(', ')}")
   end
 
   def validate_protocol
