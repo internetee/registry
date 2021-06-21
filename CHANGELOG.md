@@ -1,4 +1,5 @@
 21.06.2021
+* fixed dnssec rem all bug in epp [#2035](https://github.com/internetee/registry/issues/2035)
 * punycode support for csync [#2036](https://github.com/internetee/registry/issues/2036)
 
 18.06.2021
