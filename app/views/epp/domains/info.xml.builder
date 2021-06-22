@@ -5,7 +5,8 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag! 'domain:infData', 'xmlns:domain' => Xsd::Schema.filename(for_prefix: 'domain-ee') do
+      xml.tag! 'domain:infData',
+               'xmlns:domain' => Xsd::Schema.filename(for_prefix: @schema_prefix) do
         xml.tag!('domain:name', @domain.name)
         xml.tag!('domain:roid', @domain.roid)
         @domain.statuses.each do |s|

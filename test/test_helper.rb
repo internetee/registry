@@ -95,4 +95,10 @@ class EppTestCase < ActionDispatch::IntegrationTest
       raise Exception.new('Wrong prefix')
     end
   end
+
+  #  The prefix and version of the response are returned are these variants - res[:prefix] res[:version]
+  def parsing_schemas_prefix_and_version(response)
+    xml = response.gsub!(/(?<=>)(.*?)(?=<)/, &:strip)
+    xml.to_s.match(/xmlns:domain=\"https:\/\/epp.tld.ee\/schema\/(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/)
+  end
 end

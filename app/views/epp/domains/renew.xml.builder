@@ -5,7 +5,8 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('domain:renData', 'xmlns:domain' => Xsd::Schema.filename(for_prefix: 'domain-ee')) do
+      xml.tag!('domain:renData',
+               'xmlns:domain' => Xsd::Schema.filename(for_prefix: @schema_prefix)) do
         xml.tag!('domain:name', @domain[:name])
         xml.tag!('domain:exDate', @domain.valid_to.iso8601)
       end
