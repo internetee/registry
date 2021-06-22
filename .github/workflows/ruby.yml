@@ -79,7 +79,7 @@ jobs:
     - name: Save coverage
       run: ./cc-test-reporter format-coverage --output coverage/codeclimate.${{ matrix.ruby }}.json
 
-    - uses: actions/upload-artifact@v2.2.3
+    - uses: actions/upload-artifact@v2.2.4
       with:
         name: coverage-${{ matrix.ruby }}
         path: coverage/codeclimate.${{ matrix.ruby }}.json
