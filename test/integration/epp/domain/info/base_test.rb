@@ -77,12 +77,12 @@ class EppDomainInfoBaseTest < EppTestCase
     post epp_info_path, params: { frame: request_xml },
                         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
-    response_xml = Nokogiri::XML(response.body)
     assert_epp_response :completed_successfully
-    schema = EPP_ALL_SCHEMA
 
-    schema_validation_errors = schema.validate(response_xml)
-    assert_equal 0, schema_validation_errors.size
+    res = parsing_schemas_prefix_and_version(response.body)
+
+    assert_equal res[:prefix], 'domain-eis'
+    assert_equal res[:version], '1.0'
   end
 
   def test_returns_valid_response_if_disputed

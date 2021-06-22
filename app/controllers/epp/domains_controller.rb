@@ -4,6 +4,7 @@ module Epp
     before_action :find_domain, only: %i[info renew update transfer delete]
     before_action :find_password, only: %i[info update transfer delete]
     before_action :set_paper_trail_whodunnit
+    before_action :parse_schemas_prefix_and_version
 
     def info
       authorize! :info, @domain
@@ -242,6 +243,15 @@ module Epp
         return false
       end
       true
+    end
+
+    def parse_schemas_prefix_and_version
+      return unless params[:frame]
+
+      xml = params[:frame].gsub!(/(?<=>)(.*?)(?=<)/, &:strip).to_s
+      res = xml.match(/xmlns:domain=\"https:\/\/epp.tld.ee\/schema\/(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/)
+      @schema_version = res[:version]
+      @schema_prefix = res[:prefix]
     end
   end
 end
