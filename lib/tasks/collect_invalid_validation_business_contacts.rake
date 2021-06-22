@@ -3,35 +3,30 @@ HEADERS = %w[domain id name code registrar].freeze
 namespace :contacts do
   desc 'Starts collect invalid validation contacts'
   task scan_org: :environment do
-    contacts = []
+    csv = CSV.open('invalid_business_contacts.csv', 'w')
+    csv << HEADERS
 
-    Contact.where(ident_type: 'org').each do |contact|
-      contacts << contact unless checking_contacts(contact)
+    Contact.where(ident_type: 'org').find_in_batches do |contact_group|
+      contact_group.each do |contact|
+        next if checking_contacts(contact)
+
+        domains = domain_filter(contact)
+        domains.each do |domain|
+          registrar = Registrar.find_by(id: domain.registrar_id)
+          csv << [domain.name, contact.id, contact.name, contact.ident, registrar.name]
+        end
+      end
     end
-
-    contacts.select! { |c| c.ident_country_code == 'EE' }
-    magic_with_contacts(contacts)
   end
 end
 
 def checking_contacts(contact)
+  return true unless contact.ident_country_code == 'EE'
+
   c = BusinessRegistryContact.find_by(registry_code: contact.ident)
   return false if c.nil? || c.status == 'N'
 
   true
-end
-
-def magic_with_contacts(contacts)
-  CSV.open('invalid_business_contacts.csv', 'w') do |csv|
-    csv << HEADERS
-    contacts.each do |contact|
-      domains = domain_filter(contact)
-      domains.each do |domain|
-        registrar = Registrar.find_by(id: domain.registrar_id)
-        csv << [domain.name, contact.id, contact.name, contact.ident, registrar.name]
-      end
-    end
-  end
 end
 
 def domain_filter(contact)
@@ -44,20 +39,8 @@ def searching_domains(contact)
   registrant_domains = Domain.where(registrant_id: contact.id)
 
   tech_domains = collect_tech_domains(contact)
-  admin_domains = collect_admin_domains(contact)
 
-  tech_domains | admin_domains | registrant_domains
-end
-
-def collect_admin_domains(contact)
-  admin_domains = []
-
-  admin_contacts = AdminDomainContact.where(contact_id: contact.id)
-  admin_contacts.each do |c|
-    admin_domains << Domain.find(c.domain_id)
-  end
-
-  admin_domains
+  tech_domains | registrant_domains
 end
 
 def collect_tech_domains(contact)
