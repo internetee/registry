@@ -1,6 +1,10 @@
 22.06.2021
 * quickfix for supporting multiple schemas in epp responses [#2046](https://github.com/internetee/registry/issues/2046)
 * optimisation for busines reg open data scanner [#2049](https://github.com/internetee/registry/issues/2049)
+* bump cancancan to 3.3.0 [#2051](https://github.com/internetee/registry/pull/2051)
+* bump truemail to 2.4.3 [#2053](https://github.com/internetee/registry/pull/2053)
+* bump actions/download-artifact to 2.0.10 [#2054](https://github.com/internetee/registry/pull/2054)
+* bump actions/upload-artifact to 2.2.4 [#2055](https://github.com/internetee/registry/pull/2055)
 
 21.06.2021
 * fixed error message for unsupported algorithms [#2033](https://github.com/internetee/registry/issues/2033)
