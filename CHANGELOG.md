@@ -1,3 +1,8 @@
+25.06.2021
+* Malformed csv files cause hard fail to the request to avoid unwanted results [#1813](https://github.com/internetee/registry/issues/1813)
+* e-invoice gem update to 312cac1 [#2052](https://github.com/internetee/registry/pull/2052)
+* Bump bindata to 2.4.10 [#2060](https://github.com/internetee/registry/pull/2060)
+
 22.06.2021
 * quickfix for supporting multiple schemas in epp responses [#2046](https://github.com/internetee/registry/issues/2046)
 * optimisation for busines reg open data scanner [#2049](https://github.com/internetee/registry/issues/2049)
