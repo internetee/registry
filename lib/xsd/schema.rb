@@ -3,8 +3,8 @@ module Xsd
     SCHEMA_PATH = 'lib/schemas/'.freeze
     BASE_URL = 'https://epp.tld.ee/schema/'.freeze
 
-    REGEX_PREFIX_WITH_DASH = /(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/
-    REGEX_PREFIX_WITHOUT_DASH = /(?<prefix>\w+)-(?<version>\w.\w).xsd/
+    REGEX_PREFIX_WITH_DASH = /(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/.freeze
+    REGEX_PREFIX_WITHOUT_DASH = /(?<prefix>\w+)-(?<version>\w.\w).xsd/.freeze
 
     PREFIXES = %w[
       domain-ee
@@ -47,14 +47,19 @@ module Xsd
       schemas = schemas_by_name[prefix]
 
       schemas.each do |schema|
-        result = return_some(schema)
-        actual_schema = schema if result[:version] == @for_version
-
-        actual_schema = 'epp-ee-1.0.xsd' if result[:prefix] == 'epp-ee'
-        actual_schema = 'eis-1.0.xsd' if result[:prefix] == 'eis'
+        actual_schema = assigment_actual_version(schema)
       end
 
       actual_schema
+    end
+
+    def assigment_actual_version(schema)
+      result = return_some(schema)
+      actual_schema = schema if result[:version] == @for_version
+
+      actual_schema = 'epp-ee-1.0.xsd' if result[:prefix] == 'epp-ee'
+      actual_schema = 'eis-1.0.xsd' if result[:prefix] == 'eis'
+      actual_schema.to_s
     end
 
     def return_some(data)
