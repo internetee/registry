@@ -6,19 +6,19 @@ class Registrar
       ipv4 = params[:ipv4].split("\r\n")
       ipv6 = params[:ipv6].split("\r\n")
 
+      uri = URI.parse("#{ENV['repp_url']}registrar/nameservers")
+
       domains = domain_list_from_csv
 
-      uri = URI.parse("#{ENV['repp_url']}registrar/nameservers")
-      request = Net::HTTP::Put.new(uri, 'Content-Type' => 'application/json')
-      request.body = { data: { type: 'nameserver', id: params[:old_hostname],
-                               domains: domains,
-                               attributes: { hostname: params[:new_hostname],
-                                             ipv4: ipv4,
-                                             ipv6: ipv6 } } }.to_json
-      request.basic_auth(current_registrar_user.username,
-                         current_registrar_user.plain_text_password)
+      return csv_list_empty_guard if domains == []
 
-      response = do_request(request, uri)
+      options = {
+        uri: uri,
+        ipv4: ipv4,
+        ipv6: ipv6,
+      }
+      action = Actions::BulkNameserversChange.new(params, domains, current_registrar_user, options)
+      response = action.call
 
       parsed_response = JSON.parse(response.body, symbolize_names: true)
 
@@ -42,12 +42,25 @@ class Registrar
       notices.join(', ')
     end
 
+    def csv_list_empty_guard
+      notice = 'CSV scoped domain list seems empty. Make sure that domains are added and ' \
+      '"domain_name" header is present.'
+      redirect_to(registrar_domains_url, flash: { notice: notice })
+    end
+
     def domain_list_from_csv
-      return [] if params[:puny_file].blank?
+      return if params[:puny_file].blank?
 
       domains = []
-      CSV.read(params[:puny_file].path, headers: true).each { |b| domains << b['domain_name'] }
-      domains
+      csv = CSV.read(params[:puny_file].path, headers: true)
+
+      return [] if csv['domain_name'].blank?
+
+      csv.map { |b| domains << b['domain_name'] }
+
+      domains.compact
+    rescue CSV::MalformedCSVError
+      []
     end
   end
 end

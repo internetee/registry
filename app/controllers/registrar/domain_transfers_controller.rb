@@ -24,8 +24,8 @@ class Registrar
         request.basic_auth(current_registrar_user.username,
                            current_registrar_user.plain_text_password)
 
-
-        response = do_request(request, uri)
+        action = Actions::DoRequest.new(request, uri)
+        response = action.call
 
         parsed_response = JSON.parse(response.body, symbolize_names: true)
 
