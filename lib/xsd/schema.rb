@@ -19,11 +19,12 @@ module Xsd
       secDNS
     ].freeze
 
-    attr_reader :xsd_schemas, :for_prefix
+    attr_reader :xsd_schemas, :for_prefix, :for_version
 
     def initialize(params)
       schema_path = params.fetch(:schema_path, SCHEMA_PATH)
       @for_prefix = params.fetch(:for_prefix)
+			@for_version = params.fetch(:for_version, '1.1')
       @xsd_schemas = Dir.entries(schema_path).select { |f| File.file? File.join(schema_path, f) }
     end
 
@@ -38,9 +39,41 @@ module Xsd
 
     private
 
+		# xml = response.gsub!(/(?<=>)(.*?)(?=<)/, &:strip)
+		# xml.to_s.match(/xmlns:domain=\"https:\/\/epp.tld.ee\/schema\/(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/)
+		# The prefix and version of the response are returned are these variants - res[:prefix] res[:version]
+	
     def latest(prefix)
-      schemas_by_name[prefix].last
+      schemas = schemas_by_name[prefix]
+
+			actual_schema = ''
+
+			schemas.each do |schema|
+				result = return_some(schema)
+
+				if result[:version] == @for_version
+					actual_schema = schema
+				end
+
+				if result[:prefix] == 'epp-ee'
+					actual_schema = 'epp-ee-1.0.xsd'
+				end
+
+					if result[:prefix] == 'eis'
+					actual_schema = 'eis-1.0.xsd'
+				end
+			end
+
+			actual_schema
     end
+
+		def return_some(data)
+			res = data.to_s.match(/(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/)
+
+			res = data.to_s.match(/(?<prefix>\w+)-(?<version>\w.\w).xsd/) if res.nil?
+
+			res
+		end
 
     def basename(filename)
       File.basename(filename, '.xsd')

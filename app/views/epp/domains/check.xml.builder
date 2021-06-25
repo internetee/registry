@@ -6,7 +6,7 @@ xml.epp_head do
 
     xml.resData do
       xml.tag!('domain:chkData',
-               'xmlns:domain' => Xsd::Schema.filename(for_prefix: @schema_prefix)) do
+               'xmlns:domain' => Xsd::Schema.filename(for_prefix: @schema_prefix, for_version: @schema_version)) do
         @domains.each do |x|
           xml.tag!('domain:cd') do
             xml.tag!('domain:name', x[:name], 'avail' => x[:avail])

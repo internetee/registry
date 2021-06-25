@@ -1,8 +1,8 @@
 class EppConstraint
   OBJECT_TYPES = {
     domain: [
-      { domain: Xsd::Schema.filename(for_prefix: 'domain-ee') },
-      { domain: Xsd::Schema.filename(for_prefix: 'domain-eis') },
+      { domain: Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1') },
+      { domain: Xsd::Schema.filename(for_prefix: 'domain-eis', for_version: '1.0') },
     ],
     contact: { contact: Xsd::Schema.filename(for_prefix: 'contact-ee') },
   }.freeze

@@ -38,6 +38,7 @@ class EppDomainCreateBaseTest < EppTestCase
         </command>
       </epp>
     XML
+
     assert_no_difference 'Domain.count' do
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
