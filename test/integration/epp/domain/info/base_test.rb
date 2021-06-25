@@ -48,6 +48,46 @@ class EppDomainInfoBaseTest < EppTestCase
                                        'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee').to_s).text
   end
 
+  def test_return_wrong_schema_with_invalid_version
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+        <command>
+          <info>
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.0')}">
+              <domain:name>shop.test</domain:name>
+            </domain:info>
+          </info>
+        </command>
+      </epp>
+    XML
+
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert_epp_response :wrong_schema
+  end
+
+  def test_return_valid_response_if_specify_the_version
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+        <command>
+          <info>
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+              <domain:name>shop.test</domain:name>
+            </domain:info>
+          </info>
+        </command>
+      </epp>
+    XML
+
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert_epp_response :completed_successfully
+  end
+
   def test_returns_valid_response_if_schema_version_is_previous
     dispute = disputes(:expired)
     dispute.update!(starts_at: Time.zone.now, expires_at: Time.zone.now + 5.days, closed: nil)

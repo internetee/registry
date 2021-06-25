@@ -3,6 +3,9 @@ module Xsd
     SCHEMA_PATH = 'lib/schemas/'.freeze
     BASE_URL = 'https://epp.tld.ee/schema/'.freeze
 
+    REGEX_PREFIX_WITH_DASH = /(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/
+    REGEX_PREFIX_WITHOUT_DASH = /(?<prefix>\w+)-(?<version>\w.\w).xsd/
+
     PREFIXES = %w[
       domain-ee
       domain-eis
@@ -24,7 +27,7 @@ module Xsd
     def initialize(params)
       schema_path = params.fetch(:schema_path, SCHEMA_PATH)
       @for_prefix = params.fetch(:for_prefix)
-			@for_version = params.fetch(:for_version, '1.1')
+      @for_version = params.fetch(:for_version, '1.1')
       @xsd_schemas = Dir.entries(schema_path).select { |f| File.file? File.join(schema_path, f) }
     end
 
@@ -33,47 +36,32 @@ module Xsd
     end
 
     def call
-      filename = latest(for_prefix)
+      filename = get_schema(for_prefix)
       BASE_URL + filename
     end
 
     private
 
-		# xml = response.gsub!(/(?<=>)(.*?)(?=<)/, &:strip)
-		# xml.to_s.match(/xmlns:domain=\"https:\/\/epp.tld.ee\/schema\/(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/)
-		# The prefix and version of the response are returned are these variants - res[:prefix] res[:version]
-	
-    def latest(prefix)
+    def get_schema(prefix)
+      actual_schema = ''
       schemas = schemas_by_name[prefix]
 
-			actual_schema = ''
+      schemas.each do |schema|
+        result = return_some(schema)
+        actual_schema = schema if result[:version] == @for_version
 
-			schemas.each do |schema|
-				result = return_some(schema)
+        actual_schema = 'epp-ee-1.0.xsd' if result[:prefix] == 'epp-ee'
+        actual_schema = 'eis-1.0.xsd' if result[:prefix] == 'eis'
+      end
 
-				if result[:version] == @for_version
-					actual_schema = schema
-				end
-
-				if result[:prefix] == 'epp-ee'
-					actual_schema = 'epp-ee-1.0.xsd'
-				end
-
-					if result[:prefix] == 'eis'
-					actual_schema = 'eis-1.0.xsd'
-				end
-			end
-
-			actual_schema
+      actual_schema
     end
 
-		def return_some(data)
-			res = data.to_s.match(/(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/)
-
-			res = data.to_s.match(/(?<prefix>\w+)-(?<version>\w.\w).xsd/) if res.nil?
-
-			res
-		end
+    def return_some(data)
+      res = data.to_s.match(REGEX_PREFIX_WITH_DASH)
+      res = data.to_s.match(REGEX_PREFIX_WITHOUT_DASH) if res.nil?
+      res
+    end
 
     def basename(filename)
       File.basename(filename, '.xsd')
