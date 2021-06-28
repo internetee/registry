@@ -133,7 +133,7 @@ class EppDomainTransferRequestTest < EppTestCase
     response_xml = Nokogiri::XML(response.body)
     assert_correct_against_schema response_xml
     assert_equal 'serverApproved', Nokogiri::XML(response.body).xpath('//domain:trStatus', 'domain' =>
-      "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
+      "#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}").text
   end
 
   def test_assigns_new_registrar
@@ -233,10 +233,10 @@ class EppDomainTransferRequestTest < EppTestCase
   def test_wrong_transfer_code
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <transfer op="request">
-            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw>wrong</domain:pw>
@@ -262,10 +262,10 @@ class EppDomainTransferRequestTest < EppTestCase
   def request_xml
     <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <transfer op="request">
-            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw>65078d5</domain:pw>
@@ -273,7 +273,7 @@ class EppDomainTransferRequestTest < EppTestCase
             </domain:transfer>
           </transfer>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>

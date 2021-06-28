@@ -13,16 +13,16 @@ class EppDomainCreateAuctionTest < EppTestCase
   def test_registers_domain_without_registration_code_when_not_at_auction
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <create>
-            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>not-at-auction.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -50,16 +50,16 @@ class EppDomainCreateAuctionTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <create>
-            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>auction.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
               <eis:reserved>
                 <eis:pw>auction002</eis:pw>
@@ -85,16 +85,16 @@ class EppDomainCreateAuctionTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <create>
-            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>auction.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
               <eis:reserved>
                 <eis:pw>auction001</eis:pw>
@@ -123,16 +123,16 @@ class EppDomainCreateAuctionTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <create>
-            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>auction.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -155,16 +155,16 @@ class EppDomainCreateAuctionTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <create>
-            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>auction.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
               <eis:reserved>
                 <eis:pw>wrong</eis:pw>
@@ -189,16 +189,16 @@ class EppDomainCreateAuctionTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <create>
-            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>auction.test</domain:name>
               <domain:registrant>#{contacts(:john).code}</domain:registrant>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
               <eis:reserved>
                 <eis:pw>test</eis:pw>
@@ -223,15 +223,15 @@ class EppDomainCreateAuctionTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <create>
-            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>auction.test</domain:name>
             </domain:create>
           </create>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">test</eis:legalDocument>
             </eis:extdata>
           </extension>

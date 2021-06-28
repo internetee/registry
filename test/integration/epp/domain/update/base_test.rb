@@ -20,10 +20,10 @@ class EppDomainUpdateBaseTest < EppTestCase
   def test_update_dnskey_with_invalid_alg
     request_xml = <<~XML
             <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-            <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+            <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
               <command>
                 <update>
-                  <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+                  <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
                     <domain:name>shop.test</domain:name>
                   </domain:update>
                 </update>
@@ -51,10 +51,10 @@ class EppDomainUpdateBaseTest < EppTestCase
   def test_update_domain
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>shop.test</domain:name>
                 <domain:chg>
                   <domain:authInfo>
@@ -81,10 +81,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>shop.test</domain:name>
             </domain:update>
           </update>
@@ -102,10 +102,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>shop.test</domain:name>
             </domain:update>
           </update>
@@ -125,10 +125,10 @@ class EppDomainUpdateBaseTest < EppTestCase
                                DomainStatus::PENDING_UPDATE])
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
             </domain:update>
           </update>
@@ -142,7 +142,7 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_epp_response :object_status_prohibits_operation
     response_xml = Nokogiri::XML(response.body)
     assert_correct_against_schema response_xml
-    assert_equal DomainStatus::PENDING_UPDATE, response_xml.at_xpath('//domain:status', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee')}").text
+    assert_equal DomainStatus::PENDING_UPDATE, response_xml.at_xpath('//domain:status', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}").text
   end
 
   def test_requires_verification_from_current_registrant_when_provided_registrant_is_a_new_one
@@ -152,10 +152,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{new_registrant.code}</domain:registrant>
@@ -163,7 +163,7 @@ class EppDomainUpdateBaseTest < EppTestCase
             </domain:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -198,10 +198,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="no">#{new_registrant.code}</domain:registrant>
@@ -209,7 +209,7 @@ class EppDomainUpdateBaseTest < EppTestCase
             </domain:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -235,10 +235,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="no">#{new_registrant.code}</domain:registrant>
@@ -246,7 +246,7 @@ class EppDomainUpdateBaseTest < EppTestCase
             </domain:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -280,10 +280,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="no">#{new_registrant.code}</domain:registrant>
@@ -318,10 +318,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="no">#{new_registrant.code}</domain:registrant>
@@ -354,10 +354,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
           <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-          <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+          <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
             <command>
               <update>
-                <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+                <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
                   <domain:name>#{@domain.name}</domain:name>
                     <domain:chg>
                       <domain:registrant>#{new_registrant.code}</domain:registrant>
@@ -365,7 +365,7 @@ class EppDomainUpdateBaseTest < EppTestCase
                 </domain:update>
               </update>
               <extension>
-                <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+                <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
                   <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
                 </eis:extdata>
               </extension>
@@ -390,10 +390,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{@domain.registrant.code}</domain:registrant>
@@ -401,7 +401,7 @@ class EppDomainUpdateBaseTest < EppTestCase
             </domain:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -431,10 +431,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{new_registrant.code}</domain:registrant>
@@ -442,7 +442,7 @@ class EppDomainUpdateBaseTest < EppTestCase
             </domain:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
               <eis:reserved>
                 <eis:pw>#{dispute.password}</eis:pw>
@@ -476,10 +476,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
@@ -487,7 +487,7 @@ class EppDomainUpdateBaseTest < EppTestCase
             </domain:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
               <eis:reserved>
                 <eis:pw>'123456'</eis:pw>
@@ -517,10 +517,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{new_registrant.code}</domain:registrant>
@@ -528,7 +528,7 @@ class EppDomainUpdateBaseTest < EppTestCase
             </domain:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -556,10 +556,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
@@ -567,7 +567,7 @@ class EppDomainUpdateBaseTest < EppTestCase
             </domain:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -597,10 +597,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
@@ -608,7 +608,7 @@ class EppDomainUpdateBaseTest < EppTestCase
             </domain:update>
           </update>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
             </eis:extdata>
           </extension>
@@ -636,10 +636,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{@domain.name}</domain:name>
               <domain:rem>
                 <domain:ns>
@@ -671,10 +671,10 @@ class EppDomainUpdateBaseTest < EppTestCase
   def test_update_domain_allows_add_of_client_hold
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>shop.test</domain:name>
                 <domain:add>
                   <domain:status s="clientHold" lang="en">Test</domain:status>
@@ -702,10 +702,10 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>shop.test</domain:name>
                 <domain:rem>
                   <domain:status s="clientHold" lang="en">Test</domain:status>
@@ -730,10 +730,10 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_not_includes(@domain.statuses, DomainStatus::CLIENT_HOLD)
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
             <domain:name>#{@domain.name}</domain:name>
               <domain:rem>
                 <domain:status s="clientHold"/>

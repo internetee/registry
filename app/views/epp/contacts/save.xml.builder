@@ -5,9 +5,10 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('contact:creData', 'xmlns:contact' => Xsd::Schema.filename(for_prefix: 'contact-ee')) do
-         xml.tag!('contact:id', @contact.code)
-         xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
+      xml.tag!('contact:creData', 'xmlns:contact' =>
+        Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')) do
+        xml.tag!('contact:id', @contact.code)
+        xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
       end
     end
 

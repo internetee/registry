@@ -27,7 +27,7 @@ module Xsd
     def initialize(params)
       schema_path = params.fetch(:schema_path, SCHEMA_PATH)
       @for_prefix = params.fetch(:for_prefix)
-      @for_version = params.fetch(:for_version, '1.1')
+      @for_version = params[:for_version] || '1.1'
       @xsd_schemas = Dir.entries(schema_path).select { |f| File.file? File.join(schema_path, f) }
     end
 
@@ -48,21 +48,20 @@ module Xsd
 
       schemas.each do |schema|
         actual_schema = assigment_actual_version(schema)
+        break unless actual_schema.empty?
       end
 
       actual_schema
     end
 
     def assigment_actual_version(schema)
-      result = return_some(schema)
+      result = return_parsed_schema(schema)
       actual_schema = schema if result[:version] == @for_version
 
-      actual_schema = 'epp-ee-1.0.xsd' if result[:prefix] == 'epp-ee'
-      actual_schema = 'eis-1.0.xsd' if result[:prefix] == 'eis'
       actual_schema.to_s
     end
 
-    def return_some(data)
+    def return_parsed_schema(data)
       res = data.to_s.match(REGEX_PREFIX_WITH_DASH)
       res = data.to_s.match(REGEX_PREFIX_WITHOUT_DASH) if res.nil?
       res

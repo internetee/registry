@@ -2,9 +2,10 @@ class EppConstraint
   OBJECT_TYPES = {
     domain: [
       { domain: Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1') },
+      { domain: Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2') },
       { domain: Xsd::Schema.filename(for_prefix: 'domain-eis', for_version: '1.0') },
     ],
-    contact: { contact: Xsd::Schema.filename(for_prefix: 'contact-ee') },
+    contact: { contact: Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1') },
   }.freeze
 
   def initialize(type)

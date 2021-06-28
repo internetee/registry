@@ -29,15 +29,33 @@ class Registrar
       render plain: xml
     end
 
-    protected
+    private
 
     def prepare_payload(xml, cl_trid)
       PREFS.map do |pref|
-        xml.gsub!('"' + pref.to_s + '"',
-                  "\"#{Xsd::Schema.filename(for_prefix: pref.to_s)}\"")
+        xml = load_schema_by_prefix(pref, xml)
       end
 
       xml.gsub!('<clTRID>ABC-12345</clTRID>', "<clTRID>#{cl_trid}</clTRID>")
+      xml
+    end
+
+    def load_schema_by_prefix(pref, xml)
+      case pref
+      when 'epp-ee'
+        insert_prefix_and_version(xml, pref, '1.0')
+      when 'eis'
+        insert_prefix_and_version(xml, pref, '1.0')
+      when 'contact-ee'
+        insert_prefix_and_version(xml, pref, '1.1')
+      else
+        insert_prefix_and_version(xml, pref, '1.1')
+      end
+    end
+
+    def insert_prefix_and_version(xml, pref, version)
+      xml.gsub!('"' + pref.to_s + '"',
+                "\"#{Xsd::Schema.filename(for_prefix: pref.to_s, for_version: version)}\"")
       xml
     end
   end
