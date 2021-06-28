@@ -7,4 +7,5 @@ et:
     month_names: [~, Jaanuar, Veebruar, Märts, Aprill, Mai, Juuni, Juuli, August, September, Oktoober, November, Detsember]
   emails: "Meillaadressid"
   invoice:
+    title: 'Arve'
     already_paid: " (juba makstud)"
