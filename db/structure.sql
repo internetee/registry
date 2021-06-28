@@ -66,6 +66,17 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
+-- Name: email_verification_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.email_verification_type AS ENUM (
+    'regex',
+    'mx',
+    'smtp'
+);
+
+
+--
 -- Name: generate_zonefile(character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -963,10 +974,12 @@ ALTER SEQUENCE public.domains_id_seq OWNED BY public.domains.id;
 
 CREATE TABLE public.email_address_verifications (
     id bigint NOT NULL,
-    email public.citext NOT NULL,
     verified_at timestamp without time zone,
-    success boolean DEFAULT false NOT NULL,
-    domain public.citext NOT NULL
+    email_verifable_type character varying,
+    email_verifable_id bigint,
+    result jsonb,
+    times_scanned integer,
+    type public.email_verification_type
 );
 
 
@@ -3987,13 +4000,6 @@ CREATE INDEX index_domains_on_delete_date ON public.domains USING btree (delete_
 
 
 --
--- Name: index_domains_on_json_statuses_history; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_domains_on_json_statuses_history ON public.domains USING gin (json_statuses_history);
-
-
---
 -- Name: index_domains_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4043,10 +4049,10 @@ CREATE INDEX index_domains_on_statuses ON public.domains USING gin (statuses);
 
 
 --
--- Name: index_email_address_verifications_on_domain; Type: INDEX; Schema: public; Owner: -
+-- Name: index_email_address_verifications_on_email_verifable; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_email_address_verifications_on_domain ON public.email_address_verifications USING btree (domain);
+CREATE INDEX index_email_address_verifications_on_email_verifable ON public.email_address_verifications USING btree (email_verifable_type, email_verifable_id);
 
 
 --
@@ -5161,6 +5167,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200921084356'),
 ('20210215101019'),
 ('20210616112332'),
+('20210628090353'),
 ('20210708131814');
 
 
