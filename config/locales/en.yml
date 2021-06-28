@@ -471,6 +471,7 @@ en:
   total: 'Total'
   paid_at: 'Paid at'
   invoice:
+    title: 'Invoice'
     already_paid: " (already paid)"
   bank_statements: 'Bank statements'
   back_to_bank_statements: 'Back to bank statements'

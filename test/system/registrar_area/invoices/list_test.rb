@@ -13,6 +13,11 @@ class ListInvoicesTest < ApplicationSystemTestCase
     assert_text "Your current account balance is 100,00 EUR"
   end
 
+  def test_shows_invoice_title
+    visit registrar_invoices_path
+    assert_text 'Invoice', minimum: 2
+  end
+
   def test_shows_invoice_owned_by_current_user
     owning_registrar = registrars(:bestnames)
     assert_equal owning_registrar, @user.registrar
