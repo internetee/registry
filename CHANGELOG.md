@@ -1,5 +1,6 @@
 28.06.2021
 * Registrar: fixed invoice colum title in billing view [#2062](https://github.com/internetee/registry/issues/2062)
+* Improved support for multiple schema versions [#2058](https://github.com/internetee/registry/issues/2058)
 
 25.06.2021
 * Malformed csv files cause hard fail to the request to avoid unwanted results [#1813](https://github.com/internetee/registry/issues/1813)
