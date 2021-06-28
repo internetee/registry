@@ -3,7 +3,7 @@ module Builder
     def epp_head
       instruct!
       epp(
-        'xmlns' => ::Xsd::Schema.filename(for_prefix: 'epp-ee'),
+        'xmlns' => ::Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0'),
         'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
         'xsi:schemaLocation' => 'lib/schemas/epp-ee-1.0.xsd'
       ) do

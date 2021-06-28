@@ -5,10 +5,10 @@ class DeserializersXmlIdentTest < ActiveSupport::TestCase
   def test_returns_empty_hash_when_not_present
     xml_string = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>john-001</contact:id>
               <contact:chg>
                 <contact:postalInfo>
@@ -31,10 +31,10 @@ class DeserializersXmlIdentTest < ActiveSupport::TestCase
   def test_returns_empty_hash_when_not_valid
     xml_string = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>FIRST0:SH2027223711</contact:id>
               <contact:authInfo>
                 <contact:pw>wrong password</contact:pw>
@@ -42,7 +42,7 @@ class DeserializersXmlIdentTest < ActiveSupport::TestCase
             </contact:delete>
           </delete>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:ident cc="EE">37605030299</eis:ident>
               <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
             </eis:extdata>
@@ -60,10 +60,10 @@ class DeserializersXmlIdentTest < ActiveSupport::TestCase
   def test_returns_complete_hash_when_valid
     xml_string = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>FIRST0:SH2027223711</contact:id>
               <contact:authInfo>
                 <contact:pw>wrong password</contact:pw>
@@ -71,7 +71,7 @@ class DeserializersXmlIdentTest < ActiveSupport::TestCase
             </contact:delete>
           </delete>
           <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis')}">
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
               <eis:ident type="priv" cc="EE">37605030299</eis:ident>
               <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
             </eis:extdata>

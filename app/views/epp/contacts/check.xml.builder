@@ -5,7 +5,8 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('contact:chkData', 'xmlns:contact' => Xsd::Schema.filename(for_prefix: 'contact-ee')) do
+      xml.tag!('contact:chkData', 'xmlns:contact' =>
+        Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')) do
         @results.each do |result|
           xml.tag!('contact:cd') do
             xml.tag! "contact:id", result[:code], avail: result[:avail]

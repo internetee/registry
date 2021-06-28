@@ -9,10 +9,10 @@ class EppContactDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>#{contact.code}</contact:id>
             </contact:delete>
           </delete>
@@ -39,10 +39,10 @@ class EppContactDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-        <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+        <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
           <command>
             <delete>
-              <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+              <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
                 <contact:id>#{contact.code.upcase}</contact:id>
               </contact:delete>
             </delete>
@@ -68,10 +68,10 @@ class EppContactDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-        <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+        <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
           <command>
             <delete>
-              <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+              <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
                 <contact:id>#{contact.code.upcase}</contact:id>
               </contact:delete>
             </delete>
@@ -97,10 +97,10 @@ class EppContactDeleteBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:delete xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>#{contact.code}</contact:id>
             </contact:delete>
           </delete>

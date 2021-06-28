@@ -37,7 +37,7 @@ class EppBaseTest < EppTestCase
   def test_wrong_path_xml
     wrong_path_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
             <domain:info xmlns:domain="https://dsfs.sdf.sdf">
@@ -63,7 +63,7 @@ class EppBaseTest < EppTestCase
   def test_error_with_unknown_command
     invalid_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epsdp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epsdp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
       </epp>
     XML
 
@@ -76,7 +76,7 @@ class EppBaseTest < EppTestCase
   def test_validates_request_xml
     invalid_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
       </epp>
     XML
     post valid_command_path, params: { frame: invalid_xml },
@@ -88,10 +88,10 @@ class EppBaseTest < EppTestCase
   def test_anonymous_user
     xml_of_epp_command_that_requires_authentication = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -112,10 +112,10 @@ class EppBaseTest < EppTestCase
 
     xml_of_epp_command_that_requires_authorization = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -138,10 +138,10 @@ class EppBaseTest < EppTestCase
 
     authentication_enabled_epp_request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -165,10 +165,10 @@ class EppBaseTest < EppTestCase
 
     authentication_enabled_epp_request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
               <domain:name>#{domains(:shop).name}</domain:name>
             </domain:info>
           </info>
@@ -194,7 +194,7 @@ class EppBaseTest < EppTestCase
   def valid_request_xml
     <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <hello/>
       </epp>
     XML

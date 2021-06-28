@@ -15,7 +15,7 @@ class EppLoginTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <login>
             <clID>#{user.username}</clID>
@@ -25,8 +25,8 @@ class EppLoginTest < EppTestCase
               <lang>en</lang>
             </options>
             <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee')}</objURI>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
             </svcs>
@@ -50,7 +50,7 @@ class EppLoginTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <login>
             <clID>#{user.username}</clID>
@@ -60,8 +60,8 @@ class EppLoginTest < EppTestCase
               <lang>en</lang>
             </options>
             <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee')}</objURI>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
             </svcs>
@@ -84,7 +84,7 @@ class EppLoginTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <login>
             <clID>#{user.username}</clID>
@@ -94,8 +94,8 @@ class EppLoginTest < EppTestCase
               <lang>en</lang>
             </options>
             <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee')}</objURI>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
             </svcs>
@@ -118,7 +118,7 @@ class EppLoginTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <login>
             <clID>#{user.username}</clID>
@@ -129,8 +129,8 @@ class EppLoginTest < EppTestCase
               <lang>en</lang>
             </options>
             <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee')}</objURI>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
             </svcs>
@@ -154,7 +154,7 @@ class EppLoginTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <login>
             <clID>#{user.username}</clID>
@@ -164,8 +164,8 @@ class EppLoginTest < EppTestCase
               <lang>en</lang>
             </options>
             <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee')}</objURI>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
             </svcs>

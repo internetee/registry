@@ -10,10 +10,10 @@ class EppContactCheckBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <check>
-            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>john-001</contact:id>
             </contact:check>
           </check>
@@ -33,10 +33,10 @@ class EppContactCheckBaseTest < EppTestCase
   def test_contact_is_available
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <check>
-            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>non-existing-id</contact:id>
             </contact:check>
           </check>
@@ -59,10 +59,10 @@ class EppContactCheckBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <check>
-            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>john-001</contact:id>
             </contact:check>
           </check>
@@ -82,10 +82,10 @@ class EppContactCheckBaseTest < EppTestCase
   def test_multiple_contacts
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <check>
-            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>one.test</contact:id>
               <contact:id>two.test</contact:id>
               <contact:id>three.test</contact:id>
@@ -109,10 +109,10 @@ class EppContactCheckBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <check>
-            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>BESTNAMES:JOHN-001</contact:id>
             </contact:check>
           </check>
@@ -136,10 +136,10 @@ class EppContactCheckBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <check>
-            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:check xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>JOHN-001</contact:id>
             </contact:check>
           </check>
@@ -160,6 +160,6 @@ class EppContactCheckBaseTest < EppTestCase
   private
 
   def xml_schema
-    Xsd::Schema.filename(for_prefix: 'contact-ee')
+    Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')
   end
 end

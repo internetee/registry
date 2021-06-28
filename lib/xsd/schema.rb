@@ -3,6 +3,9 @@ module Xsd
     SCHEMA_PATH = 'lib/schemas/'.freeze
     BASE_URL = 'https://epp.tld.ee/schema/'.freeze
 
+    REGEX_PREFIX_WITH_DASH = /(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/.freeze
+    REGEX_PREFIX_WITHOUT_DASH = /(?<prefix>\w+)-(?<version>\w.\w).xsd/.freeze
+
     PREFIXES = %w[
       domain-ee
       domain-eis
@@ -19,11 +22,12 @@ module Xsd
       secDNS
     ].freeze
 
-    attr_reader :xsd_schemas, :for_prefix
+    attr_reader :xsd_schemas, :for_prefix, :for_version
 
     def initialize(params)
       schema_path = params.fetch(:schema_path, SCHEMA_PATH)
       @for_prefix = params.fetch(:for_prefix)
+      @for_version = params[:for_version] || '1.1'
       @xsd_schemas = Dir.entries(schema_path).select { |f| File.file? File.join(schema_path, f) }
     end
 
@@ -32,14 +36,35 @@ module Xsd
     end
 
     def call
-      filename = latest(for_prefix)
+      filename = get_schema(for_prefix)
       BASE_URL + filename
     end
 
     private
 
-    def latest(prefix)
-      schemas_by_name[prefix].last
+    def get_schema(prefix)
+      actual_schema = ''
+      schemas = schemas_by_name[prefix]
+
+      schemas.each do |schema|
+        actual_schema = assigment_actual_version(schema)
+        break unless actual_schema.empty?
+      end
+
+      actual_schema
+    end
+
+    def assigment_actual_version(schema)
+      result = return_parsed_schema(schema)
+      actual_schema = schema if result[:version] == @for_version
+
+      actual_schema.to_s
+    end
+
+    def return_parsed_schema(data)
+      res = data.to_s.match(REGEX_PREFIX_WITH_DASH)
+      res = data.to_s.match(REGEX_PREFIX_WITHOUT_DASH) if res.nil?
+      res
     end
 
     def basename(filename)

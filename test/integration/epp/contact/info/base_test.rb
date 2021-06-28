@@ -18,10 +18,10 @@ class EppContactInfoBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>john-001</contact:id>
             </contact:info>
           </info>
@@ -51,10 +51,10 @@ class EppContactInfoBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>TEST:JOHN-001</contact:id>
             </contact:info>
           </info>
@@ -78,10 +78,10 @@ class EppContactInfoBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>JOHN-001</contact:id>
             </contact:info>
           </info>
@@ -108,10 +108,10 @@ class EppContactInfoBaseTest < EppTestCase
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee')}">
+            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
               <contact:id>#{@contact.code}</contact:id>
             </contact:info>
           </info>
@@ -132,6 +132,6 @@ class EppContactInfoBaseTest < EppTestCase
   private
 
   def xml_schema
-    Xsd::Schema.filename(for_prefix: 'contact-ee')
+    Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')
   end
 end

@@ -41,7 +41,7 @@ class AdminEppLogsIntegrationTest < ApplicationSystemTestCase
   def send_epp_request_hello
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <hello/>
       </epp>
       XML
