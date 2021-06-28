@@ -1,3 +1,6 @@
+28.06.2021
+* Registrar: fixed invoice colum title in billing view [#2062](https://github.com/internetee/registry/issues/2062)
+
 25.06.2021
 * Malformed csv files cause hard fail to the request to avoid unwanted results [#1813](https://github.com/internetee/registry/issues/1813)
 * e-invoice gem update to 312cac1 [#2052](https://github.com/internetee/registry/pull/2052)
