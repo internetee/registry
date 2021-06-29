@@ -1,3 +1,7 @@
+29.06.2021
+* Bump active_interaction to 4.0.3 [#2066](https://github.com/internetee/registry/pull/2066)
+* Bump rails to 6.1.4 [#2067](https://github.com/internetee/registry/pull/2067)
+
 28.06.2021
 * Registrar: fixed invoice colum title in billing view [#2062](https://github.com/internetee/registry/issues/2062)
 * Improved support for multiple schema versions [#2058](https://github.com/internetee/registry/issues/2058)
