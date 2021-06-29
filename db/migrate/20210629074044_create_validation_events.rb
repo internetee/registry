@@ -7,7 +7,7 @@ class CreateValidationEvents < ActiveRecord::Migration[6.1]
 
     create_table :validation_events do |t|
       t.jsonb :event_data
-      t.boolean :result
+      t.boolean :success
       t.references :validation_eventable, polymorphic: true
 
       t.timestamps

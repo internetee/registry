@@ -2612,7 +2612,7 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 CREATE TABLE public.validation_events (
     id bigint NOT NULL,
     event_data jsonb,
-    result boolean,
+    success boolean,
     validation_eventable_type character varying,
     validation_eventable_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
