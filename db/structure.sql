@@ -66,17 +66,6 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
--- Name: email_verification_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.email_verification_type AS ENUM (
-    'regex',
-    'mx',
-    'smtp'
-);
-
-
---
 -- Name: generate_zonefile(character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -974,12 +963,10 @@ ALTER SEQUENCE public.domains_id_seq OWNED BY public.domains.id;
 
 CREATE TABLE public.email_address_verifications (
     id bigint NOT NULL,
+    email public.citext NOT NULL,
     verified_at timestamp without time zone,
-    email_verifable_type character varying,
-    email_verifable_id bigint,
-    result jsonb,
-    times_scanned integer,
-    type public.email_verification_type
+    success boolean DEFAULT false NOT NULL,
+    domain public.citext NOT NULL
 );
 
 
@@ -4049,10 +4036,10 @@ CREATE INDEX index_domains_on_statuses ON public.domains USING gin (statuses);
 
 
 --
--- Name: index_email_address_verifications_on_email_verifable; Type: INDEX; Schema: public; Owner: -
+-- Name: index_email_address_verifications_on_domain; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_email_address_verifications_on_email_verifable ON public.email_address_verifications USING btree (email_verifable_type, email_verifable_id);
+CREATE INDEX index_email_address_verifications_on_domain ON public.email_address_verifications USING btree (domain);
 
 
 --

@@ -1,20 +1,15 @@
 module EmailVerifable
   extend ActiveSupport::Concern
 
-  included do
-    has_many :email_address_verifications, as: :email_verifable
-  end
-
   def email_verification
-    # EmailAddressVerification.find_or_create_by(email: unicode_email, domain: domain(email))
-    email_address_verification
+    EmailAddressVerification.find_or_create_by(email: unicode_email, domain: domain(email))
   end
 
   def billing_email_verification
-    # return unless attribute_names.include?('billing_email')
-    #
-    # EmailAddressVerification.find_or_create_by(email: unicode_billing_email,
-    #                                            domain: domain(billing_email))
+    return unless attribute_names.include?('billing_email')
+
+    EmailAddressVerification.find_or_create_by(email: unicode_billing_email,
+                                               domain: domain(billing_email))
   end
 
   def email_verification_failed?

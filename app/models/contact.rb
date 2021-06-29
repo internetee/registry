@@ -25,8 +25,8 @@ class Contact < ApplicationRecord
   alias_attribute :copy_from_id, :original_id # Old attribute name; for PaperTrail
 
   scope :email_verification_failed, lambda {
-    # joins('LEFT JOIN email_address_verifications emv ON contacts.email = emv.email')
-    #   .where('success = false and verified_at IS NOT NULL')
+    joins('LEFT JOIN email_address_verifications emv ON contacts.email = emv.email')
+      .where('success = false and verified_at IS NOT NULL')
   }
 
   NAME_REGEXP = /([\u00A1-\u00B3\u00B5-\u00BF\u0021-\u0026\u0028-\u002C\u003A-\u0040]|
