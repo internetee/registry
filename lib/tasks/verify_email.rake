@@ -1,3 +1,6 @@
+require 'optparse'
+require 'rake_option_parser_boilerplate'
+
 namespace :verify_email do
   desc 'Stars verifying email jobs for all the domain'
   task all_domains: :environment do
@@ -21,5 +24,26 @@ namespace :verify_email do
     verifications_by_domain.map { |ver| VerifyEmailsJob.perform_later(ver.id) }
   end
 
-  desc 'Starts verifying email jobs with check level and '
+  # bundle exec rake verify_email:check_all -- -d=shop.test --check_level=mx --spam_protect=true
+  # bundle exec rake verify_email:check_all -- -dshop.test -cmx -strue
+  desc 'Starts verifying email jobs with optional check level and spam protection'
+  task :check_all do
+    options = {
+      domain_name: 'shop.test',
+      check_level: 'regex',
+      spam_protect: false,
+    }
+    banner = 'Usage: rake verify_email:check_all -- [options]'
+    options = RakeOptionParserBoilerplate.process_args(options: options,
+                                                       banner: banner,
+                                                       hash: opts_hash)
+  end
+end
+
+def opts_hash
+  {
+    domain_name: ['-d [DOMAIN_NAME]', '--domain_name [DOMAIN_NAME]', String],
+    check_level: ['-c [CHECK_LEVEL]', '--check_level [CHECK_LEVEL]', String],
+    spam_protect: ['-s [SPAM_PROTECT]', '--spam_protect [SPAM_PROTECT]', FalseClass],
+  }
 end
