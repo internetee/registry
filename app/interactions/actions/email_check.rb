@@ -9,16 +9,17 @@ module Actions
     end
 
     def call
-      result = check_email
+      parsed_email = EmailAddressConverter.punycode_to_unicode(email)
+      result = check_email(parsed_email)
       save_result(result)
-      log_failure(result) unless result.success
+      result.success ? log_success : log_failure(result)
       result.success
     end
 
     private
 
-    def check_email
-      Truemail.validate(email, with: check_level).result
+    def check_email(parsed_email)
+      Truemail.validate(parsed_email, with: check_level).result
     end
 
     def save_result(result)
@@ -44,6 +45,10 @@ module Actions
     def log_failure(result)
       logger.info "Failed to validate email #{email} for the #{log_object_id}."
       logger.info "Validation level #{check_level}, the result was #{result}"
+    end
+
+    def log_success
+      logger.info "Successfully validated email #{email} for the #{log_object_id}."
     end
 
     def log_object_id

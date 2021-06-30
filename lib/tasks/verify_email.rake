@@ -20,4 +20,6 @@ namespace :verify_email do
                                                       .by_domain(args[:domain_name])
     verifications_by_domain.map { |ver| VerifyEmailsJob.perform_later(ver.id) }
   end
+
+  desc 'Starts verifying email jobs with check level and '
 end
