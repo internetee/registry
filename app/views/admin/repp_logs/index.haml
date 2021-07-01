@@ -8,11 +8,11 @@
         .col-md-3
           .form-group
             = f.label :request_path
-            = f.select :request_path_eq, [[t(:choose),''], '/repp/v1/domains', '/repp/v1/contacts'], {}, class: 'form-control selectize', placeholder: t(:choose)
+            = f.select :request_path_eq, [[t(:choose),''], '/repp/v1/domains', '/repp/v1/contacts'], {}, class: 'form-control js-combobox', placeholder: t(:choose)
         .col-md-3
           .form-group
             = f.label :request_method
-            = f.select :request_method_eq, [[t(:choose),''], 'GET', 'POST', 'PUT', 'DELETE'], {}, class: 'form-control selectize', placeholder: t(:choose)
+            = f.select :request_method_eq, [[t(:choose),''], 'GET', 'POST', 'PUT', 'DELETE'], {}, class: 'form-control js-combobox', placeholder: t(:choose)
         .col-md-3
           .form-group
             = f.label :response_code

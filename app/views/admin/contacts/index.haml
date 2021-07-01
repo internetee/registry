@@ -19,7 +19,7 @@
         .col-md-3
           .form-group
             = label_tag t(:ident_type)
-            = select_tag '[q][ident_type_eq]', options_for_select(ident_types, params[:q][:ident_type_eq]), { include_blank: true, placeholder: t(:choose), class: 'form-control selectize' }
+            = select_tag '[q][ident_type_eq]', options_for_select(ident_types, params[:q][:ident_type_eq]), { include_blank: true, placeholder: t(:choose), class: 'form-control js-combobox' }
       .row
         .col-md-3
           .form-group
@@ -28,7 +28,7 @@
         .col-md-3
           .form-group
             = label_tag t(:country)
-            = select_tag '[q][country_code_eq]', ApplicationController.helpers.all_country_options(params[:q][:country_code_eq]), { include_blank: true, placeholder: t(:choose), class: 'form-control selectize' }
+            = select_tag '[q][country_code_eq]', options_for_select(ApplicationController.helpers.all_country_options(params[:q][:country_code_eq]), params[:q][:country_code_eq]), { multiple: false, placeholder: t(:choose), class: 'form-control js-combobox' }
         .col-md-6
           .form-group
             = label_tag t(:contact_type)
@@ -37,7 +37,7 @@
         .col-md-3
           .form-group
             = f.label t(:registrar_name)
-            = f.select :registrar_id_eq, Registrar.all.map { |x| [x, x.id] }, { include_blank: true }, class: 'form-control selectize', placeholder: t(:choose)
+            = f.select :registrar_id_eq, Registrar.all.map { |x| [x, x.id] }, { include_blank: true }, class: 'form-control js-combobox', placeholder: t(:choose)
         .col-md-3
           .form-group
             = f.label t(:created_at_from)
