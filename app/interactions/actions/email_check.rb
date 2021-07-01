@@ -19,7 +19,7 @@ module Actions
     private
 
     def check_email(parsed_email)
-      Truemail.validate(parsed_email, with: check_level).result
+      Truemail.validate(parsed_email, with: check_level.to_sym).result
     end
 
     def save_result(result)

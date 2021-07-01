@@ -17,8 +17,6 @@ module EmailAddressConverter
     "#{local}@#{domain}"&.downcase
   end
 
-  private
-
   def domain(email)
     Mail::Address.new(email).domain&.downcase || 'not_found'
   rescue Mail::Field::IncompleteParseError

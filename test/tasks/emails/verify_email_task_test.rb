@@ -5,8 +5,6 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
   def setup
     @contact = contacts(:john)
     @invalid_contact = contacts(:invalid_email)
-    @contact_verification = @contact.email_verification
-    @invalid_contact_verification = @invalid_contact.email_verification
 
     @default_whitelist = Truemail.configure.whitelisted_domains
     @default_blacklist = Truemail.configure.blacklisted_domains
@@ -36,32 +34,15 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
   def test_tasks_verifies_emails
     capture_io { run_task }
 
-    @contact_verification.reload
-    @invalid_contact_verification.reload
-
-    assert @contact_verification.verified?
-    assert @invalid_contact_verification.failed?
-  end
-
-  def test_domain_task_verifies_for_one_domain
-    capture_io { run_single_domain_task(@contact_verification.domain) }
-
-    @contact_verification.reload
-    @invalid_contact_verification.reload
-
-    assert @contact_verification.verified?
-    assert @invalid_contact_verification.not_verified?
+    assert ValidationEvent.validated_ids_by(Contact).include? @contact.id
+    assert @contact.validation_events.last.success
+    refute @invalid_contact.validation_events.last.success
+    refute ValidationEvent.validated_ids_by(Contact).include? @invalid_contact.id
   end
 
   def run_task
     perform_enqueued_jobs do
-      Rake::Task['verify_email:all_domains'].execute
-    end
-  end
-
-  def run_single_domain_task(domain)
-    perform_enqueued_jobs do
-      Rake::Task["verify_email:domain"].invoke(domain)
+      Rake::Task['verify_email:check_all'].execute
     end
   end
 end

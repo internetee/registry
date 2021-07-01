@@ -1,6 +1,10 @@
 module EmailVerifable
   extend ActiveSupport::Concern
 
+  included do
+    scope :recently_not_validated, -> { where.not(id: ValidationEvent.validated_ids_by(name)) }
+  end
+
   def email_verification
     EmailAddressVerification.find_or_create_by(email: unicode_email, domain: domain(email))
   end
@@ -16,6 +20,7 @@ module EmailVerifable
     email_verification&.failed?
   end
 
+  # TODO: The following methods are deprecated and need to be moved to ValidationEvent class
   class_methods do
     def domain(email)
       Mail::Address.new(email).domain&.downcase || 'not_found'
