@@ -13,6 +13,7 @@ class Registrar < ApplicationRecord
   has_many :nameservers, through: :domains
   has_many :whois_records
   has_many :white_ips, dependent: :destroy
+  has_many :validation_events, as: :validation_eventable
 
   delegate :balance, to: :cash_account, allow_nil: true
 

@@ -7,6 +7,8 @@
 class ValidationEvent < ApplicationRecord
   enum event_type: ValidationEvent::EventType::TYPES, _suffix: true
   VALIDATION_PERIOD = 1.month.ago.freeze
+  VALID_CHECK_LEVELS = %w[regex mx smtp].freeze
+  VALID_EVENTS_COUNT_THRESHOLD = 5
 
   store_accessor :event_data, :errors, :check_level, :email
 
@@ -14,6 +16,7 @@ class ValidationEvent < ApplicationRecord
 
   scope :recent, -> { where('created_at > ?', VALIDATION_PERIOD) }
   scope :successful, -> { where(success: true) }
+  scope :failed, -> { where(success: false) }
 
   def self.validated_ids_by(klass)
     recent.successful.where('validation_eventable_type = ?', klass)

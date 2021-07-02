@@ -16,7 +16,7 @@
 
             <dt><%= Registrar.human_attribute_name :billing_email %></dt>
             <dd>
-                <%= verified_email_span(registrar.billing_email_verification) %>
+                <%= registrar.billing_email %>
             </dd>
 
             <dt><%= Registrar.human_attribute_name :reference_no %></dt>

@@ -101,7 +101,7 @@
               %td= link_to(contact, admin_contact_path(contact))
               %td= contact.code
               %td= ident_for(contact)
-              %td= verified_email_span(contact.email_verification)
+              %td= contact.email
               %td= l(contact.created_at, format: :short)
               %td
                 - if contact.registrar

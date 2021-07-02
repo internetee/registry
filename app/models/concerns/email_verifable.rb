@@ -5,92 +5,56 @@ module EmailVerifable
     scope :recently_not_validated, -> { where.not(id: ValidationEvent.validated_ids_by(name)) }
   end
 
-  def email_verification
-    EmailAddressVerification.find_or_create_by(email: unicode_email, domain: domain(email))
-  end
-
-  def billing_email_verification
-    return unless attribute_names.include?('billing_email')
-
-    EmailAddressVerification.find_or_create_by(email: unicode_billing_email,
-                                               domain: domain(billing_email))
-  end
-
   def email_verification_failed?
-    email_verification&.failed?
+    email_validations_present?(valid: false)
   end
 
-  # TODO: The following methods are deprecated and need to be moved to ValidationEvent class
-  class_methods do
-    def domain(email)
-      Mail::Address.new(email).domain&.downcase || 'not_found'
-    rescue Mail::Field::IncompleteParseError
-      'not_found'
+  def email_validations_present?(valid: true)
+    base_scope = valid ? recent_email_validations : recent_failed_email_validations
+    check_levels = ValidationEvent::VALID_CHECK_LEVELS
+    event_count_sum = 0
+    check_levels.each do |level|
+      event_count = base_scope.select { |event| event.check_level == level }.count
+      event_count_sum += event_count
     end
 
-    def local(email)
-      Mail::Address.new(email).local&.downcase || email
-    rescue Mail::Field::IncompleteParseError
-      email
-    end
-
-    def punycode_to_unicode(email)
-      return email if domain(email) == 'not_found'
-
-      local = local(email)
-      domain = SimpleIDN.to_unicode(domain(email))
-      "#{local}@#{domain}"&.downcase
-    end
-
-    def unicode_to_punycode(email)
-      return email if domain(email) == 'not_found'
-
-      local = local(email)
-      domain = SimpleIDN.to_ascii(domain(email))
-      "#{local}@#{domain}"&.downcase
-    end
+    event_count_sum > ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD
   end
 
-  def unicode_billing_email
-    self.class.punycode_to_unicode(billing_email)
+  def recent_email_validations
+    validation_events.email_validation_event_type.successful.recent
   end
 
-  def unicode_email
-    self.class.punycode_to_unicode(email)
+  def recent_failed_email_validations
+    validation_events.email_validation_event_type.failed.recent
   end
 
-  def domain(email)
-    SimpleIDN.to_unicode(self.class.domain(email))
-  end
-
-  def punycode_to_unicode(email)
-    self.class.punycode_to_unicode(email)
-  end
-
+  # TODO: Validation method, needs to be changed
   def correct_email_format
     return if email.blank?
 
-    result = email_verification.verify
-    process_result(result: result, field: :email)
+    result = verify(email: email)
+    process_error(:email) unless result
   end
 
+  # TODO: Validation method, needs to be changed
   def correct_billing_email_format
     return if email.blank?
 
-    result = billing_email_verification.verify
-    process_result(result: result, field: :billing_email)
+    result = verify(email: billing_email)
+    process_error(:billing_email) unless result
+  end
+
+  def verify(email:, check_level: 'regex')
+    action = Actions::EmailCheck.new(email: email,
+                                     validation_eventable: self,
+                                     check_level: check_level)
+    action.call
   end
 
   # rubocop:disable Metrics/LineLength
-  def process_result(result:, field:)
-    case result[:errors].keys.first
-    when :smtp
-      errors.add(field, I18n.t('activerecord.errors.models.contact.attributes.email.email_smtp_check_error'))
-    when :mx
-      errors.add(field, I18n.t('activerecord.errors.models.contact.attributes.email.email_mx_check_error'))
-    when :regex
-      errors.add(field, I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'))
-    end
+  def process_error(field)
+    errors.add(field, I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'))
   end
   # rubocop:enable Metrics/LineLength
 end

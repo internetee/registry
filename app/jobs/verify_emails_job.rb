@@ -1,6 +1,5 @@
 class VerifyEmailsJob < ApplicationJob
   discard_on StandardError
-  VALID_CHECK_LEVELS = %w[regex mx smtp].freeze
 
   def perform(contact_id:, check_level: 'regex')
     contact = Contact.find_by(id: contact_id)
@@ -23,12 +22,16 @@ class VerifyEmailsJob < ApplicationJob
   end
 
   def validate_check_level(check_level)
-    return if VALID_CHECK_LEVELS.include? check_level
+    return if valid_check_levels.include? check_level
 
     raise StandardError, "Check level #{check_level} is invalid"
   end
 
   def logger
     @logger ||= Rails.logger
+  end
+
+  def valid_check_levels
+    ValidationEvent::VALID_CHECK_LEVELS
   end
 end

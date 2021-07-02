@@ -1,37 +1,6 @@
 class EmailAddressVerification < ApplicationRecord
   RECENTLY_VERIFIED_PERIOD = 1.month
-  after_save :check_force_delete
-
-  scope :not_verified_recently, lambda {
-    where('verified_at IS NULL or verified_at < ?', verification_period)
-  }
-
-  scope :verified_recently, lambda {
-    where('verified_at IS NOT NULL and verified_at >= ?', verification_period).where(success: true)
-  }
-
-  scope :verification_failed, lambda {
-    where.not(verified_at: nil).where(success: false)
-  }
-
-  scope :by_domain, ->(domain_name) { where(domain: domain_name) }
-
-  def recently_verified?
-    verified_at.present? &&
-      verified_at > verification_period
-  end
-
-  def verification_period
-    self.class.verification_period
-  end
-
-  def self.verification_period
-    Time.zone.now - RECENTLY_VERIFIED_PERIOD
-  end
-
-  def not_verified?
-    verified_at.blank? && !success
-  end
+  # after_save :check_force_delete
 
   def failed?
     bounce_present? || (verified_at.present? && !success)

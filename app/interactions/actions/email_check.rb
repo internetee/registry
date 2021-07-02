@@ -24,6 +24,9 @@ module Actions
 
     def save_result(result)
       validation_eventable.validation_events.create(validation_event_attrs(result))
+    rescue ActiveRecord::RecordNotSaved
+      logger.info "Cannot save validation result for #{log_object_id}"
+      true
     end
 
     def validation_event_attrs(result)
