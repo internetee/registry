@@ -1,10 +1,8 @@
-HEADERS = %w[domain id name code registrar].freeze
-
 namespace :contacts do
   desc 'Starts collect invalid validation contacts'
   task scan_org: :environment do
     csv = CSV.open('invalid_business_contacts.csv', 'w')
-    csv << HEADERS
+    csv << set_headers
 
     Contact.where(ident_type: 'org').find_in_batches do |contact_group|
       contact_group.each do |contact|
@@ -17,7 +15,14 @@ namespace :contacts do
         end
       end
     end
+    csv.close
   end
+end
+
+private
+
+def set_headers
+  %w[domain id name code registrar]
 end
 
 def checking_contacts(contact)
