@@ -27,8 +27,8 @@ module Domains
       end
 
       def contact_emails_valid?(domain)
-        domain.contacts.all? { |contact| contact.email_verification.verified? } &&
-          domain.registrant.email_verification.verified?
+        domain.contacts.all(&:need_to_lift_force_delete?) &&
+          domain.registrant.need_to_lift_force_delete?
       end
 
       def bounces_absent?(domain)

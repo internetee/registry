@@ -19,7 +19,11 @@ module Actions
     private
 
     def check_email(parsed_email)
-      Truemail.validate(parsed_email, with: check_level.to_sym).result
+      Truemail.validate(parsed_email, with: calculate_check_level).result
+    end
+
+    def calculate_check_level
+      Rails.env.test? && check_level == 'smtp' ? :mx : check_level.to_sym
     end
 
     def save_result(result)

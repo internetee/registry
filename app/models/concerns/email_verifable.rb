@@ -6,30 +6,26 @@ module EmailVerifable
   end
 
   def email_verification_failed?
-    email_validations_present?(valid: false)
+    need_to_start_force_delete?
   end
 
-  def email_validations_present?(valid: true)
-    base_scope = valid ? recent_email_validations : recent_failed_email_validations
-    check_levels = ValidationEvent::VALID_CHECK_LEVELS
-    event_count_sum = 0
-    check_levels.each do |level|
-      event_count = base_scope.select { |event| event.check_level == level }.count
-      event_count_sum += event_count
+  def need_to_start_force_delete?
+    ValidationEvent::INVALID_EVENTS_COUNT_BY_LEVEL.any? do |level, count|
+      validation_events.recent.order(id: :desc).limit(count).all? do |event|
+        event.check_level == level.to_s && event.failed?
+      end
     end
-
-    event_count_sum > ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD
   end
 
-  def recent_email_validations
-    validation_events.email_validation_event_type.successful.recent
+  def need_to_lift_force_delete?
+    validation_events.recent.failed.empty? ||
+      ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL.any? do |level, count|
+        validation_events.recent.order(id: :desc).limit(count).all? do |event|
+          event.check_level == level.to_s && event.successful?
+        end
+      end
   end
 
-  def recent_failed_email_validations
-    validation_events.email_validation_event_type.failed.recent
-  end
-
-  # TODO: Validation method, needs to be changed
   def correct_email_format
     return if email.blank?
 
@@ -37,12 +33,15 @@ module EmailVerifable
     process_error(:email) unless result
   end
 
-  # TODO: Validation method, needs to be changed
   def correct_billing_email_format
     return if email.blank?
 
     result = verify(email: billing_email)
     process_error(:billing_email) unless result
+  end
+
+  def verify_email(check_level: 'regex')
+    verify(email: email, check_level: check_level)
   end
 
   def verify(email:, check_level: 'regex')

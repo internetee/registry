@@ -393,7 +393,10 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     contact = @domain.admin_contacts.first
     contact.update_attribute(:email, email)
-    contact.email_verification.verify
+
+    ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD.times do
+      contact.verify_email
+    end
 
     assert contact.email_verification_failed?
 
@@ -414,20 +417,18 @@ class ForceDeleteTest < ActionMailer::TestCase
     travel_to Time.zone.parse('2010-07-05')
     email_one = '`@internet.ee'
     email_two = '@@internet.ee'
-    asserted_text_one = "Invalid email: #{email_one}"
-    asserted_text_two = "Invalid email: #{email_two}"
 
     contact_one = @domain.admin_contacts.first
     contact_one.update_attribute(:email, email_one)
-    contact_one.email_verification.verify
+    contact_one.verify_email
 
-    assert contact_one.email_verification_failed?
+    assert contact_one.need_to_start_force_delete?
 
     contact_two = @domain.admin_contacts.first
     contact_two.update_attribute(:email, email_two)
-    contact_two.email_verification.verify
+    contact_two.verify_email
 
-    assert contact_one.email_verification_failed?
+    assert contact_two.need_to_start_force_delete?
 
     @domain.reload
 
@@ -449,7 +450,7 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     contact = @domain.admin_contacts.first
     contact.update_attribute(:email, email)
-    contact.email_verification.verify
+    contact.verify_email
 
     assert contact.email_verification_failed?
 
@@ -457,7 +458,11 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     assert @domain.force_delete_scheduled?
     contact.update_attribute(:email, 'aaa@bbb.com')
-    contact.email_verification.verify
+    contact.reload
+    contact.verify_email
+
+    assert contact.need_to_lift_force_delete?
+    refute contact.need_to_start_force_delete?
 
     assert_not contact.email_verification_failed?
     CheckForceDeleteLift.perform_now
@@ -486,8 +491,8 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert notification.text.include? asserted_text
 
     @domain.registrant.update(email: 'aaa@bbb.com')
-    @domain.registrant.email_verification.verify
-    assert_not @domain.registrant.email_verification_failed?
+    @domain.registrant.verify_email
+    assert @domain.registrant.need_to_lift_force_delete?
     CheckForceDeleteLift.perform_now
 
     @domain.reload
