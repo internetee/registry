@@ -19,7 +19,7 @@
         .col-md-3
           .form-group
             = label_tag t(:ident_type)
-            = select_tag '[q][ident_type_eq]', options_for_select(ident_types, params[:q][:ident_type_eq]), { include_blank: true, placeholder: t(:choose), class: 'form-control js-combobox' }
+            = select_tag '[q][ident_type_eq]', options_for_select(ident_types, params[:q][:ident_type_eq]), { placeholder: t(:choose), multiple: true, class: 'form-control js-combobox' }
       .row
         .col-md-3
           .form-group
