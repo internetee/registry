@@ -1,19 +1,21 @@
 module Admin
   class DomainsController < BaseController
+    include AdminDomains
     before_action :set_domain, only: %i[show edit update keep]
     authorize_resource
 
     def index
       params[:q] ||= {}
-      domains = if params[:statuses_contains]
-                  Domain.includes(:registrar, :registrant).where(
-                    'domains.statuses @> ?::varchar[]', "{#{params[:statuses_contains].join(',')}}"
-                  )
-                else
-                  Domain.includes(:registrar, :registrant)
-                end
+      if params[:statuses_contains]
+        domains = Domain.includes(:registrar, :registrant).where(
+          "domains.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+        )
+      else
+        domains = Domain.includes(:registrar, :registrant)
+      end
 
-      domains = get_domains_which_related_to_registrars
+      domains = return_domains_which_related_to_registrars
+
 
       normalize_search_parameters do
         @q = domains.search(params[:q])
@@ -61,7 +63,7 @@ module Admin
         redirect_to [:admin, @domain]
       else
         build_associations
-        flash.now[:alert] = I18n.t('failed_to_update_domain') + ' ' + @domain.errors.full_messages.join(', ')
+        flash.now[:alert] = I18n.t('failed_to_update_domain') + ' ' + @domain.errors.full_messages.join(", ")
         render 'edit'
       end
     end
@@ -107,23 +109,13 @@ module Admin
       begin
         end_time = params[:q][:valid_to_lteq].try(:to_date)
         params[:q][:valid_to_lteq] = end_time.try(:end_of_day)
-      rescue StandardError
+      rescue
         logger.warn('Invalid date')
       end
 
       yield
 
       params[:q][:valid_to_lteq] = ca_cache
-    end
-
-    def get_domains_which_related_to_registrars
-      if params[:registrar_id_eq]
-        Domain.includes(:registrar, :registrant).where(
-          registrar: params[:registrar_id_eq]
-        )
-      else
-        Domain.includes(:registrar, :registrant)
-      end
     end
   end
 end
