@@ -94,7 +94,7 @@ class ContactTest < ActiveJob::TestCase
     Truemail.configure.default_validation_type = :regex
 
     contact = valid_contact
-    contact.email = 'some@strangesentence@internet.ee'
+    contact.email = '`@internet.ee'
     assert contact.invalid?
     assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'), contact.errors.messages[:email].first
   end
