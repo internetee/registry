@@ -1,3 +1,9 @@
+06.07.2021
+* admin dropdown filter ui fix [#2065](https://github.com/internetee/registry/issues/2065)
+* Bump truemail to 2.4.4 [#2071](https://github.com/internetee/registry/pull/2071)
+* Bump active_interaction to 4.0.4 [#2072](https://github.com/internetee/registry/pull/2072)
+* Bump mime-types.data to 3.2021.0704 [#2073](https://github.com/internetee/registry/pull/2073)
+
 29.06.2021
 * Bump active_interaction to 4.0.3 [#2066](https://github.com/internetee/registry/pull/2066)
 * Bump rails to 6.1.4 [#2067](https://github.com/internetee/registry/pull/2067)
