@@ -9,8 +9,7 @@ module Actions
     end
 
     def call
-      parsed_email = EmailAddressConverter.punycode_to_unicode(email)
-      result = check_email(parsed_email)
+      result = check_email(email)
       save_result(result)
       result.success ? log_success : log_failure(result)
       result.success

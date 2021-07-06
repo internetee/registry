@@ -16,7 +16,7 @@ class ValidationEventTest < ActiveSupport::TestCase
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
-    email = 'some@strangesentence@internet.ee'
+    email = '~@internet.ee'
 
     contact = @domain.admin_contacts.first
     contact.update_attribute(:email, email)

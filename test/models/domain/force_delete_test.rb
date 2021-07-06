@@ -6,6 +6,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     Setting.redemption_grace_period = 30
     ActionMailer::Base.deliveries.clear
     @old_validation_type = Truemail.configure.default_validation_type
+    ValidationEvent.destroy_all
   end
 
   teardown do
@@ -441,9 +442,9 @@ class ForceDeleteTest < ActionMailer::TestCase
   end
 
   def test_lifts_force_delete_if_contact_fixed
+    travel_to Time.zone.parse('2010-07-05')
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?
-    travel_to Time.zone.parse('2010-07-05')
     email = '`@internet.ee'
 
     Truemail.configure.default_validation_type = :regex
