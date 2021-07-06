@@ -34,7 +34,7 @@ class DomainExpireMailerTest < ActionMailer::TestCase
     email_address = domain.registrar.email
     assert_not domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
-    email = 'some@strangesentence@internet.ee'
+    email = '`@internet.ee'
 
     Truemail.configure.default_validation_type = :regex
 

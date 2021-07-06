@@ -74,7 +74,7 @@ class RegistrarTest < ActiveJob::TestCase
     Truemail.configure.default_validation_type = :regex
 
     registrar = valid_registrar
-    registrar.email = 'some@strangesentence@internet.ee'
+    registrar.email = '`@internet.ee'
     registrar.billing_email = nil
 
     assert registrar.invalid?
@@ -112,7 +112,7 @@ class RegistrarTest < ActiveJob::TestCase
     Truemail.configure.default_validation_type = :regex
 
     registrar = valid_registrar
-    registrar.billing_email = 'some@strangesentence@internet.ee'
+    registrar.billing_email = '`@strangesentence@internet.ee'
 
     assert registrar.invalid?
     assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'), registrar.errors.messages[:billing_email].first

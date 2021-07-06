@@ -363,7 +363,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
-    email = 'some@strangesentence@internet.ee'
+    email = '`@internet.ee'
     asserted_text = "Invalid email: #{email}"
 
     Truemail.configure.default_validation_type = :regex
@@ -389,8 +389,8 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
-    email_one = 'one@strangesentence@internet.ee'
-    email_two = 'two@strangesentence@internet.ee'
+    email_one = '`@internet.ee'
+    email_two = '@@internet.ee'
     asserted_text_one = "Invalid email: #{email_one}"
     asserted_text_two = "Invalid email: #{email_two}"
 
@@ -420,7 +420,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
-    email = 'some@strangesentence@internet.ee'
+    email = '`@internet.ee'
 
     Truemail.configure.default_validation_type = :regex
 
