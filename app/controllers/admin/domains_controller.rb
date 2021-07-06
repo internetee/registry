@@ -1,6 +1,5 @@
 module Admin
   class DomainsController < BaseController
-    include AdminDomains
     before_action :set_domain, only: %i[show edit update keep]
     authorize_resource
 
@@ -13,9 +12,6 @@ module Admin
       else
         domains = Domain.includes(:registrar, :registrant)
       end
-
-      domains = return_domains_which_related_to_registrars
-
 
       normalize_search_parameters do
         @q = domains.search(params[:q])
