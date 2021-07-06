@@ -29,7 +29,7 @@
   <div class="col-md-5">
     <div class="form-group">
       <%= f.label :registrar_name, for: nil %>
-      <%= select_tag 'q[registrar_id_eq]', options_for_select(Registrar.all.map { |x| [x, x.id] }, params[:q][:registrar_id_eq]), { multiple: true, class: 'form-control js-combobox' } %>
+      <%= select_tag :registrar_id_eq, options_for_select(Registrar.all.map { |x| [x, x.id] }, params[:registrar_id_eq]), { multiple: true, class: 'form-control js-combobox' } %>
     </div>
   </div>
   <div class="col-md-3">
