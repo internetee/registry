@@ -60,7 +60,7 @@ class BankTransaction < ApplicationRecord
 
     invoice = Invoice.find_by(number: invoice_no)
     errors.add(:base, I18n.t('invoice_was_not_found')) unless invoice
-    validate_invoice_data(invoice)
+    validate_invoice_data(invoice) if invoice
     return if errors.any?
 
     create_internal_payment_record(channel: (manual ? 'admin_payment' : nil), invoice: invoice,
