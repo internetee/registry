@@ -29,6 +29,7 @@ class Contact < ApplicationRecord
   }
 
   validates :name, :email, presence: true
+  validates :name, format: { with: /\A[a-zA-Z\s]+\Z/, message: :invalid }
   validates :street, :city, :zip, :country_code, presence: true, if: lambda {
     self.class.address_processing?
   }
