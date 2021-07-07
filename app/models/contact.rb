@@ -29,7 +29,11 @@ class Contact < ApplicationRecord
   }
 
   validates :name, :email, presence: true
-  validates :name, format: { with: /\A[a-zA-Z\s]+\Z/, message: :invalid }
+
+  NAME_REGEXP = /([\u00A1-\u00B3\u00B5-\u00BF\u0021-\u0026\u0028-\u002C\u003A-\u0040]|
+    [\u005B-\u005F\u007B-\u007E\u2040-\u206F\u20A0-\u20BF\u2100-\u218F])/x
+  validates :name, format: { without: NAME_REGEXP, message: :invalid }
+
   validates :street, :city, :zip, :country_code, presence: true, if: lambda {
     self.class.address_processing?
   }
