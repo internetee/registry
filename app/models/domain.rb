@@ -112,7 +112,7 @@ class Domain < ApplicationRecord
     has_error = (hold_status? && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
     unless has_error
       if (statuses & DELETE_STATUSES).any?
-        has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
+        has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED unless locked_by_registrant?
       end
     end
     errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error

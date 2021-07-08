@@ -28,7 +28,7 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
 
 		assert @domain.statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
     assert @domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
-    assert_not @domain.statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
+    assert @domain.statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
 	end
 
   def test_lockable_domain_if_remove_some_prohibited_status
