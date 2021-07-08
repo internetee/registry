@@ -87,7 +87,7 @@ class EppContactCreateBaseTest < EppTestCase
     phone = '+1.2'
     birthday_wrong_format = '1111-22-33'
     birthday_above_valid_range = '1800-01-01'
-    birthday_below_valid_range = '2008-07-09'
+    birthday_below_valid_range = '2050-07-09'
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>

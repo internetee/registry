@@ -8,6 +8,9 @@ class Epp::Contact < Contact
   # disable STI, there is type column present
   self.inheritance_column = :sti_disabled
 
+  VALID_BIRTH_DATE_FROM = Time.zone.today - 150.years
+  VALID_BIRTH_DATE_TO = Time.zone.tomorrow
+
   before_validation :manage_permissions
 
   def manage_permissions
@@ -21,14 +24,18 @@ class Epp::Contact < Contact
   def validate_birthday_ident
     return unless Depp::Contact::SELECTION_TYPES[2].include?(ident_type)
 
-    if (Date.parse(ident) rescue ArgumentError) == ArgumentError
+    if begin
+      Date.parse(ident)
+    rescue StandardError
+      ArgumentError
+    end == ArgumentError
       add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident_date_format'))
       @error = true
       return
     end
 
     contact_ident_date = Date.parse(ident)
-    valid_time_range = (Date.today - 125.years)...(Date.tomorrow - 18.years)
+    valid_time_range = VALID_BIRTH_DATE_FROM...VALID_BIRTH_DATE_TO
     return if valid_time_range.cover?(contact_ident_date)
 
     add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident_date_range'))
