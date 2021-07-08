@@ -16,6 +16,26 @@ class Epp::Contact < Contact
     throw(:abort)
   end
 
+  validate :validate_birthday_ident
+
+  def validate_birthday_ident
+    return unless Depp::Contact::SELECTION_TYPES[2].include?(ident_type)
+
+    if (Date.parse(ident) rescue ArgumentError) == ArgumentError
+      add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident_date_format'))
+      @error = true
+      return
+    end
+
+    contact_ident_date = Date.parse(ident)
+    valid_time_range = (Date.today - 125.years)...(Date.tomorrow - 18.years)
+    return if valid_time_range.cover?(contact_ident_date)
+
+    add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident_date_range'))
+    @error = true
+    nil
+  end
+
   class << self
     # support legacy search
     def find_by_epp_code(code)

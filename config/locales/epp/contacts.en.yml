@@ -8,6 +8,12 @@ en:
         valid_ident: >-
           Ident update is not allowed.
           Consider creating new contact object
+        valid_ident_date_format: >-
+          Ident update is not allowed.
+          Date format is invalid
+        valid_ident_date_range: >-
+          Ident update is not allowed.
+          Age must be over 18 and under 125
         ident_update: >-
           Only ident type and country can be updated in case of invalid ident.
           Please create new contact object to update ident code

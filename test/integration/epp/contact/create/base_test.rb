@@ -81,6 +81,67 @@ class EppContactCreateBaseTest < EppTestCase
     assert_epp_response :parameter_value_syntax_error
   end
 
+  def test_responses_with_error_on_invalid_birthday_date
+    name = 'new'
+    email = 'new@registrar.test'
+    phone = '+1.2'
+    birthday_wrong_format = '1111-22-33'
+    birthday_above_valid_range = '1800-01-01'
+    birthday_below_valid_range = '2008-07-09'
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:postalInfo>
+                <contact:name>#{name}</contact:name>
+              </contact:postalInfo>
+              <contact:voice>#{phone}</contact:voice>
+              <contact:email>#{email}</contact:email>
+            </contact:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:ident type="birthday" cc="LV">#{birthday_wrong_format}</eis:ident>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+
+    assert_no_difference 'Contact.count' do
+      post epp_create_path, params: { frame: request_xml },
+                            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :data_management_policy_violation
+
+    request_xml.sub! ">#{birthday_wrong_format}<", ">#{birthday_above_valid_range}<"
+    assert_no_difference 'Contact.count' do
+      post epp_create_path, params: { frame: request_xml },
+                            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :data_management_policy_violation
+
+    request_xml.sub! ">#{birthday_above_valid_range}<", ">#{birthday_below_valid_range}<"
+    assert_no_difference 'Contact.count' do
+      post epp_create_path, params: { frame: request_xml },
+                            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :data_management_policy_violation
+  end
+
   def test_responces_error_with_email_error
     name = 'new'
     email = 'new@registrar@test'
