@@ -24,11 +24,9 @@ class Epp::Contact < Contact
   def validate_birthday_ident
     return unless Depp::Contact::SELECTION_TYPES[2].include?(ident_type)
 
-    if begin
+    begin
       Date.parse(ident)
-    rescue StandardError
-      ArgumentError
-    end == ArgumentError
+    rescue ArgumentError
       add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident_date_format'))
       @error = true
       return
