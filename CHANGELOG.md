@@ -1,3 +1,6 @@
+08.07.2021
+* improved contact name validation [#1795](https://github.com/internetee/registry/issues/1795)
+
 06.07.2021
 * admin dropdown filter ui fix [#2065](https://github.com/internetee/registry/issues/2065)
 * Bump truemail to 2.4.4 [#2071](https://github.com/internetee/registry/pull/2071)
