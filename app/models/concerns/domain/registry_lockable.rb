@@ -5,9 +5,13 @@ module Domain::RegistryLockable
                    DomainStatus::SERVER_DELETE_PROHIBITED,
                    DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
 
+		# add to force delete update prodibited and delete prohibited
+		# force delete has serverForceDelete, serverRenewProhibited, serverTransferProgiv
+
   def apply_registry_lock
     return unless registry_lockable?
     return if locked_by_registrant?
+
 
     transaction do
       self.statuses |= LOCK_STATUSES
@@ -22,7 +26,7 @@ module Domain::RegistryLockable
     (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION,
                  DomainStatus::PENDING_CREATE, DomainStatus::PENDING_UPDATE,
                  DomainStatus::PENDING_DELETE, DomainStatus::PENDING_RENEW,
-                 DomainStatus::PENDING_TRANSFER, DomainStatus::FORCE_DELETE]).empty?
+                 DomainStatus::PENDING_TRANSFER]).empty?
   end
 
   def locked_by_registrant?

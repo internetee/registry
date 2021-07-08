@@ -17,6 +17,20 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
     assert(@domain.locked_by_registrant?)
   end
 
+
+	def test_set_lock_for_domain_with_force_delete_status
+		@domain.schedule_force_delete(type: :soft)
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+		
+		assert @domain.apply_registry_lock
+
+		assert @domain.statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
+    assert @domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
+    assert_not @domain.statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
+	end
+
   def test_lockable_domain_if_remove_some_prohibited_status
     refute(@domain.locked_by_registrant?)
     @domain.apply_registry_lock
