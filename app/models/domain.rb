@@ -22,6 +22,10 @@ class Domain < ApplicationRecord
   alias_attribute :auth_info, :transfer_code # Old attribute name; for PaperTrail
   alias_attribute :registered_at, :created_at
 
+  store_accessor :json_statuses_history,
+                 :force_delete_domain_statuses_history,
+                 :admin_store_statuses_history
+
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
 
