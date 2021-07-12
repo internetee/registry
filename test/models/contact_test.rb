@@ -32,16 +32,6 @@ class ContactTest < ActiveJob::TestCase
     assert contact.invalid?
   end
 
-  def test_allowed_and_disallowed_symbols_for_name
-    contact = valid_contact
-    contact.name = 'MARY ÄNN O’CONNEŽ-ŠUSLIK'
-    assert contact.valid?
-    contact.name = 'Boğaçhan Çağlayan'
-    assert contact.valid?
-    contact.name = '# "¤ #" ¤ "?'
-    assert contact.invalid?
-  end
-
   def test_validates_code_format
     contact = valid_contact.dup
     max_length = 100
