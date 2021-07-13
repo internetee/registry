@@ -115,7 +115,7 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    active_interaction (4.0.4)
+    active_interaction (4.0.5)
       activemodel (>= 5, < 7)
       activesupport (>= 5, < 7)
     activejob (6.1.4)
