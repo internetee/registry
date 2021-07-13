@@ -14,7 +14,7 @@
             - opts  = [[t(:choose),''], 'contact', 'domain', 'poll']
             - opts += [params[:q][:request_object_cont]] if params[:q].present? && params[:q][:request_object_cont].present?
             = f.label :request_object
-            = f.select :request_object_cont, opts, {}, class: 'form-control js-combobox', placeholder: t(:choose)
+            = f.select :request_object_cont, opts, {}, class: 'form-control selectize_create', placeholder: t(:choose)
         .col-md-3
           .form-group
             = f.label :request_successful
