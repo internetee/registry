@@ -23,8 +23,7 @@ class MigrateBeforeForceDeleteStatusesJob < ApplicationJob
   end
 
   def migrate_data_to_statuses_history(domain)
-    domain.force_delete_domain_statuses_history = domain.statuses_before_force_delete
-    domain.save
+    domain.update(force_delete_domain_statuses_history: domain.statuses_before_force_delete)
   rescue StandardError => e
     logger.warn "#{domain.name} crashed!"
     logger.warn e.to_s

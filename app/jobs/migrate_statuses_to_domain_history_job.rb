@@ -23,8 +23,7 @@ class MigrateStatusesToDomainHistoryJob < ApplicationJob
   end
 
   def migrate_data_to_admin_store_field(domain)
-    domain.admin_store_statuses_history = domain.statuses
-    domain.save
+    domain.update(admin_store_statuses_history: domain.statuses)
   rescue StandardError => e
     logger.warn "#{domain.name} crashed!"
     logger.warn e.to_s
