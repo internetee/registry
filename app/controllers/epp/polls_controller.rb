@@ -24,9 +24,8 @@ module Epp
           # SELECT messages.id, domains.name, messages.body FROM messages LEFT OUTER
           # JOIN domains ON attached_obj_id::INTEGER = domains.id
           # WHERE attached_obj_type = 'Epp::Domain' AND name IS NULL;
-
-          Rails.logger.error 'orphan message, error ignored: ' + problem.to_s
-          # now we should dequeue or delete the messages avoid duplicate log alarms
+          message = 'orphan message, domain deleted, registrar should dequeue: '
+          Rails.logger.error message + problem.to_s
         end
       end
 
