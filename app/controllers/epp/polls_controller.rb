@@ -27,7 +27,6 @@ module Epp
 
           Rails.logger.error 'orphan message, error ignored: ' + problem.to_s
           # now we should dequeue or delete the messages avoid duplicate log alarms
-          @notification.mark_as_read
         end
       end
 
