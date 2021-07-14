@@ -180,6 +180,19 @@ class BankTransactionTest < ActiveSupport::TestCase
     statement.description = "all invalid 12 123 55 77777 --"
     assert_nil statement.parsed_ref_number
   end
+
+  def test_manual_bind_with_wrong_ref_number
+    invoice_ref_no = '1111'
+    bank_transaction_ref_no = '9999'
+    create_payable_invoice(number: '2222', total: 10, reference_no: invoice_ref_no)
+    transaction = BankTransaction.new(description: 'invoice #2222',
+                                      sum: 10,
+                                      reference_no: bank_transaction_ref_no)
+
+    assert_difference 'AccountActivity.count' do
+      transaction.bind_invoice('2222')
+    end
+  end
   private
 
   def create_payable_invoice(attributes)
