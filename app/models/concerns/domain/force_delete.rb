@@ -1,5 +1,9 @@
-module Domain::ForceDelete # rubocop:disable Metrics/ModuleLength
+module Domain::ForceDelete
   extend ActiveSupport::Concern
+
+  FORCE_DELETE_STATUSES = [DomainStatus::FORCE_DELETE,
+                           DomainStatus::SERVER_RENEW_PROHIBITED,
+                           DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
 
   included do
     store_accessor :force_delete_data,

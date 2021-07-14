@@ -22,6 +22,10 @@ class Domain < ApplicationRecord
   alias_attribute :auth_info, :transfer_code # Old attribute name; for PaperTrail
   alias_attribute :registered_at, :created_at
 
+  store_accessor :json_statuses_history,
+                 :force_delete_domain_statuses_history,
+                 :admin_store_statuses_history
+
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
 
@@ -549,8 +553,22 @@ class Domain < ApplicationRecord
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
+  def update_unless_locked_by_registrant(update)
+    update(admin_store_statuses_history: update) unless locked_by_registrant?
+  end
+
+  def update_not_by_locked_statuses(update)
+    return unless locked_by_registrant?
+
+    result = update.reject { |status| RegistryLockable::LOCK_STATUSES.include? status }
+    update(admin_store_statuses_history: result)
+  end
+
   # special handling for admin changing status
   def admin_status_update(update)
+    update_unless_locked_by_registrant(update)
+
+    update_not_by_locked_statuses(update)
     # check for deleted status
     statuses.each do |s|
       unless update.include? s
