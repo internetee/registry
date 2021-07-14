@@ -26,31 +26,6 @@ class EppPollTest < EppTestCase
     assert_equal 'Your domain has been updated', xml_doc.at_css('msgQ msg').text
   end
 
-  def test_clears_orphan_messages_if_any
-    # To check if we are clearing orphan messages we need to create a message not linked to any
-    # existing Epp::Domain
-
-    orphan_notification = @notification.dup
-    orphan_notification.attached_obj_type = Epp::Domain
-    orphan_notification.attached_obj_id = rand(Epp::Domain.first.id-1)
-    orphan_notification.save!
-    assert orphan_notification.unread?
-
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
-        <command>
-          <poll op="req"/>
-        </command>
-      </epp>
-    XML
-    post epp_poll_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
-
-    orphan_notification.reload
-    refute orphan_notification.unread?
-  end
-
   def test_does_not_drop_error_if_old_version
     version = Version::DomainVersion.last
     @notification.update(attached_obj_type: 'DomainVersion', attached_obj_id: version.id)
