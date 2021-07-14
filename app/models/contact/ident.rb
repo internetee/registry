@@ -20,7 +20,7 @@ class Contact::Ident
       '2003' => [
         %i[code blank],
         %i[type blank],
-        %i[country_code blank]
+        %i[country_code blank],
       ],
       '2005' => [
         %i[base mismatch],
@@ -28,7 +28,7 @@ class Contact::Ident
         %i[code invalid_reg_no],
         %i[code invalid_iso8601_date],
         %i[code invalid_birth_date],
-        %i[country_code invalid_iso31661_alpha2]
+        %i[country_code invalid_iso31661_alpha2],
       ]
     }
   end
