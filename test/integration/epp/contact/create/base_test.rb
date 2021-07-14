@@ -119,7 +119,7 @@ class EppContactCreateBaseTest < EppTestCase
 
     response_xml = Nokogiri::XML(response.body)
     assert_correct_against_schema response_xml
-    assert_epp_response :data_management_policy_violation
+    assert_epp_response :parameter_value_syntax_error
 
     request_xml.sub! ">#{birthday_wrong_format}<", ">#{birthday_above_valid_range}<"
     assert_no_difference 'Contact.count' do
@@ -129,7 +129,7 @@ class EppContactCreateBaseTest < EppTestCase
 
     response_xml = Nokogiri::XML(response.body)
     assert_correct_against_schema response_xml
-    assert_epp_response :data_management_policy_violation
+    assert_epp_response :parameter_value_syntax_error
 
     request_xml.sub! ">#{birthday_above_valid_range}<", ">#{birthday_below_valid_range}<"
     assert_no_difference 'Contact.count' do
@@ -139,7 +139,7 @@ class EppContactCreateBaseTest < EppTestCase
 
     response_xml = Nokogiri::XML(response.body)
     assert_correct_against_schema response_xml
-    assert_epp_response :data_management_policy_violation
+    assert_epp_response :parameter_value_syntax_error
   end
 
   def test_responces_error_with_email_error
