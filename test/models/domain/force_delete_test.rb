@@ -12,6 +12,41 @@ class ForceDeleteTest < ActionMailer::TestCase
     Truemail.configure.default_validation_type = @old_validation_type
   end
 
+  def test_restore_domain_statuses_after_soft_force_delete
+    @domain.update(statuses: [DomainStatus::SERVER_RENEW_PROHIBITED])
+    @domain.schedule_force_delete(type: :soft)
+
+    assert @domain.force_delete_scheduled?
+
+    assert @domain.force_delete_domain_statuses_history.include? DomainStatus::SERVER_RENEW_PROHIBITED
+
+    @domain.cancel_force_delete
+    assert @domain.statuses.include? DomainStatus::SERVER_RENEW_PROHIBITED
+  end
+
+  # def test_restore_domain_statuses_if_status_set_after_fc
+  #   @domain.schedule_force_delete(type: :soft)
+
+  #   assert @domain.force_delete_scheduled?
+
+  #   @domain.update(statuses: [DomainStatus::SERVER_RENEW_PROHIBITED])
+  #   assert @domain.force_delete_domain_statuses_history.include? DomainStatus::SERVER_RENEW_PROHIBITED
+
+  #   @domain.cancel_force_delete
+  #   assert @domain.statuses.include? DomainStatus::SERVER_RENEW_PROHIBITED
+  # end
+
+  def test_clear_force_delete_domain_statuses_history
+    @domain.update(statuses: [DomainStatus::SERVER_RENEW_PROHIBITED])
+    @domain.schedule_force_delete(type: :soft)
+
+    assert @domain.force_delete_scheduled?
+    assert @domain.force_delete_domain_statuses_history.include? DomainStatus::SERVER_RENEW_PROHIBITED
+    @domain.cancel_force_delete
+
+    assert_nil @domain.force_delete_domain_statuses_history
+  end
+
   def test_schedules_force_delete_fast_track
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
@@ -56,7 +91,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     statuses_to_be_added = [
       DomainStatus::FORCE_DELETE,
       DomainStatus::SERVER_RENEW_PROHIBITED,
-      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED
     ]
 
     @domain.schedule_force_delete(type: :soft)
@@ -68,7 +103,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     statuses_to_be_added = [
       DomainStatus::FORCE_DELETE,
       DomainStatus::SERVER_RENEW_PROHIBITED,
-      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED
     ]
 
     @domain.schedule_force_delete(type: :fast_track)
@@ -79,7 +114,7 @@ class ForceDeleteTest < ActionMailer::TestCase
   def test_scheduling_force_delete_allows_domain_deletion
     statuses_to_be_removed = [
       DomainStatus::CLIENT_DELETE_PROHIBITED,
-      DomainStatus::SERVER_DELETE_PROHIBITED,
+      DomainStatus::SERVER_DELETE_PROHIBITED
     ]
 
     @domain.statuses = statuses_to_be_removed + %w[other-status]
@@ -94,7 +129,7 @@ class ForceDeleteTest < ActionMailer::TestCase
       DomainStatus::PENDING_UPDATE,
       DomainStatus::PENDING_TRANSFER,
       DomainStatus::PENDING_RENEW,
-      DomainStatus::PENDING_CREATE,
+      DomainStatus::PENDING_CREATE
     ]
 
     @domain.statuses = statuses_to_be_removed + %w[other-status]
@@ -122,7 +157,7 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     assert_not result.valid?
     assert_not @domain.force_delete_scheduled?
-    message = ["Force delete procedure cannot be scheduled while a domain is discarded"]
+    message = ['Force delete procedure cannot be scheduled while a domain is discarded']
     assert_equal message, result.errors.messages[:domain]
   end
 
@@ -149,9 +184,9 @@ class ForceDeleteTest < ActionMailer::TestCase
 
   def test_force_delete_does_not_double_statuses
     statuses = [
-        DomainStatus::FORCE_DELETE,
-        DomainStatus::SERVER_RENEW_PROHIBITED,
-        DomainStatus::SERVER_TRANSFER_PROHIBITED,
+      DomainStatus::FORCE_DELETE,
+      DomainStatus::SERVER_RENEW_PROHIBITED,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED
     ]
     @domain.statuses = @domain.statuses + statuses
     @domain.save!
@@ -177,8 +212,8 @@ class ForceDeleteTest < ActionMailer::TestCase
 
   def test_cancelling_force_delete_keeps_previous_statuses
     statuses = [
-        DomainStatus::SERVER_RENEW_PROHIBITED,
-        DomainStatus::SERVER_TRANSFER_PROHIBITED,
+      DomainStatus::SERVER_RENEW_PROHIBITED,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED
     ]
 
     @domain.statuses = statuses
@@ -479,7 +514,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     @bounced_mail.bounce_subtype = 'General'
     @bounced_mail.action = 'failed'
     @bounced_mail.status = '5.1.1'
-    @bounced_mail.diagnostic =  'smtp; 550 5.1.1 user unknown'
+    @bounced_mail.diagnostic = 'smtp; 550 5.1.1 user unknown'
     @bounced_mail.save!
   end
 end
