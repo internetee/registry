@@ -106,7 +106,7 @@ class BankTransaction < ApplicationRecord
   private
 
   def reset_pending_registrar_balance_reload
-    return unless registrar.present? && registrar.settings['balance_auto_reload']
+    return unless registrar.settings['balance_auto_reload']
 
     registrar.settings['balance_auto_reload'].delete('pending')
     registrar.save!
