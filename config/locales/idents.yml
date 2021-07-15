@@ -9,3 +9,4 @@ en:
             code:
               invalid_national_id: does not conform to national identification number format of %{country}
               invalid_reg_no: does not conform to registration number format of %{country}
+              invalid_birth_date: Birth date is invalid, age must be over 0 and under 150

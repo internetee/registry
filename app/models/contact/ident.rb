@@ -13,20 +13,22 @@ class Contact::Ident
   validates :type, presence: true, inclusion: { in: proc { types } }
   validates :country_code, presence: true, iso31661_alpha2: true
   validates_with MismatchValidator
+  validates_with BirthDateValidator, if: :birthday?
 
   def self.epp_code_map
     {
       '2003' => [
-        [:code, :blank],
-        [:type, :blank],
-        [:country_code, :blank]
+        %i[code blank],
+        %i[type blank],
+        %i[country_code blank],
       ],
       '2005' => [
-        [:base, :mismatch],
-        [:code, :invalid_national_id],
-        [:code, :invalid_reg_no],
-        [:code, :invalid_iso8601_date],
-        [:country_code, :invalid_iso31661_alpha2]
+        %i[base mismatch],
+        %i[code invalid_national_id],
+        %i[code invalid_reg_no],
+        %i[code invalid_iso8601_date],
+        %i[code invalid_birth_date],
+        %i[country_code invalid_iso31661_alpha2],
       ]
     }
   end
