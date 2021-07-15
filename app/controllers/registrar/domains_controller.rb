@@ -132,6 +132,7 @@ class Registrar
       @data = @domain.delete(params[:domain])
       @results = @data.css('result')
       if response_ok?
+        flash[:notice] = t('.deleting_request')
         redirect_to info_registrar_domains_url(domain_name: params[:domain][:name])
       else
         params[:domain_name] = params[:domain][:name]
