@@ -136,6 +136,12 @@ class BankTransactionTest < ActiveSupport::TestCase
     assert transaction.errors.full_messages.include?('Invoice and transaction sums do not match')
   end
 
+  def test_binds_without_invoice_no
+    transaction = BankTransaction.new(sum: 9)
+    transaction.bind_invoice('')
+    assert transaction.errors.full_messages.include?('Invoice was not found')
+  end
+
   def test_overpayment_is_not_matched_with_invoice
     create_payable_invoice(number: '2222', total: 10)
     transaction = BankTransaction.new(sum: 11)
