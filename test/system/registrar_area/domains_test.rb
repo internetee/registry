@@ -18,20 +18,4 @@ class RegistrarDomainsTest < ApplicationSystemTestCase
     assert_equal "attachment; filename=\"Domains_2010-07-05_10.30.csv\"; filename*=UTF-8''Domains_2010-07-05_10.30.csv", response_headers['Content-Disposition']
     assert_equal expected_csv, page.body
   end
-
-  def test_delete_domain
-    sign_in users(:api_bestnames)
-    visit registrar_domains_path
-    click_link_or_button 'airport.test'
-
-    assert_text 'Delete'
-
-    click_link_or_button 'Delete'
-    click_link_or_button 'Delete'
-    visit registrar_domains_url
-    click_link_or_button 'airport.test'
-
-    assert_no_button 'Delete'
-    assert_text 'pendingDelete'
-  end
 end
