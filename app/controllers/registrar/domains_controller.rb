@@ -64,6 +64,7 @@ class Registrar
     def info
       authorize! :info, Depp::Domain
       @data = @domain.info(params[:domain_name]) if params[:domain_name]
+      @pending_delete = domain_delete_pending(@data)
       @client_holded = client_holded(@data)
       if response_ok?
         render 'info'
@@ -131,6 +132,7 @@ class Registrar
       @data = @domain.delete(params[:domain])
       @results = @data.css('result')
       if response_ok?
+        flash[:notice] = t('.deleting_request')
         redirect_to info_registrar_domains_url(domain_name: params[:domain][:name])
       else
         params[:domain_name] = params[:domain][:name]
@@ -180,6 +182,11 @@ class Registrar
     def client_holded(data)
       data.css('status')&.map { |element| element.attribute('s').value }
          &.any? { |status| status == DomainStatus::CLIENT_HOLD }
+    end
+
+    def domain_delete_pending(data)
+      data.css('status')&.map { |element| element.attribute('s').value }
+        &.any? { |status| status.include?(DomainStatus::PENDING_DELETE) }
     end
 
     def contacts
