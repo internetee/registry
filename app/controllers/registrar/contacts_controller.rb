@@ -83,7 +83,7 @@ class Registrar
 
     def update
       authorize! :edit, Depp::Contact
-      @contact = Depp::Contact.find_by_id(contact_params[:id])
+      @contact = Depp::Contact.new(contact_params)
 
       if @contact.update_attributes(contact_params)
         redirect_to registrar_contact_url(@contact.id)
