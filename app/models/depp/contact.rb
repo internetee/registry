@@ -172,9 +172,9 @@ module Depp
     end
 
     def update_attributes(params)
-      self.ident_country_code ||= params[:ident_country_code]
-      self.ident_type ||= params[:ident_type]
-      self.ident ||= params[:ident]
+      self.ident_country_code = params[:ident_country_code]
+      self.ident_type   = params[:ident_type]
+      self.ident        = params[:ident]
 
       self.name  = params[:name]
       self.email = params[:email]
