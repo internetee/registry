@@ -40,6 +40,11 @@ class ContactTest < ActiveJob::TestCase
     assert contact.valid?
     contact.name = '# "¤ #" ¤ "?'
     assert contact.invalid?
+
+    contact.country_code = 'FI'
+    contact.ident_type = Contact::ORG
+    contact.ident = '1234'
+    assert contact.valid?
   end
 
   def test_validates_code_format

@@ -14,6 +14,7 @@ en:
               too_long_contact_code: "Contact code is too long, max 100 characters"
             name:
               blank: "Required parameter missing - name"
+              invalid: "Name is invalid"
             phone:
               blank: "Required parameter missing - phone"
               invalid: "Phone nr is invalid"
