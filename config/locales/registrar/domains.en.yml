@@ -16,6 +16,9 @@ en:
       info:
         transfer_btn: Transfer
 
+      destroy:
+        deleting_request: Domain deletion request was sent
+
       search_form:
         download_btn: Download CSV
         reset_btn: Reset

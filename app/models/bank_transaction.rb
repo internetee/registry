@@ -59,7 +59,6 @@ class BankTransaction < ApplicationRecord
     end
 
     invoice = Invoice.find_by(number: invoice_no)
-    errors.add(:base, I18n.t('invoice_was_not_found')) unless invoice
     validate_invoice_data(invoice)
     return if errors.any?
 
@@ -68,6 +67,11 @@ class BankTransaction < ApplicationRecord
   end
 
   def validate_invoice_data(invoice)
+    unless invoice
+      errors.add(:base, I18n.t('invoice_was_not_found'))
+      return
+    end
+
     if invoice.paid?
       errors.add(:base, I18n.t('invoice_is_already_binded'))
       return

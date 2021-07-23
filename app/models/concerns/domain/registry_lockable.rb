@@ -36,9 +36,10 @@ module Domain::RegistryLockable
 
     transaction do
       LOCK_STATUSES.each do |domain_status|
-        statuses.delete(domain_status)
+        statuses.delete([domain_status])
       end
       self.locked_by_registrant_at = nil
+      self.statuses = admin_store_statuses_history || []
       alert_registrar_lock_changes!(lock: false)
 
       save!

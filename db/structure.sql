@@ -933,7 +933,8 @@ CREATE TABLE public.domains (
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     locked_by_registrant_at timestamp without time zone,
     force_delete_start timestamp without time zone,
-    force_delete_data public.hstore
+    force_delete_data public.hstore,
+    json_statuses_history jsonb
 );
 
 
@@ -3986,6 +3987,13 @@ CREATE INDEX index_domains_on_delete_date ON public.domains USING btree (delete_
 
 
 --
+-- Name: index_domains_on_json_statuses_history; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domains_on_json_statuses_history ON public.domains USING gin (json_statuses_history);
+
+
+--
 -- Name: index_domains_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5152,6 +5160,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200917104213'),
 ('20200921084356'),
 ('20210215101019'),
-('20210616112332');
+('20210616112332'),
+('20210708131814');
 
 

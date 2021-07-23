@@ -1,3 +1,8 @@
+08.07.2021
+* improved contact name validation [#1795](https://github.com/internetee/registry/issues/1795)
+* orphaned poll messages are automatically dequed [#2026](https://github.com/internetee/registry/issues/2026)
+* fixed registrant change with force delete set [#2077](https://github.com/internetee/registry/issues/2077)
+
 06.07.2021
 * admin dropdown filter ui fix [#2065](https://github.com/internetee/registry/issues/2065)
 * Bump truemail to 2.4.4 [#2071](https://github.com/internetee/registry/pull/2071)

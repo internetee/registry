@@ -48,7 +48,7 @@ module Repp
         api :PUT, '/repp/v1/registrar/notifications'
         desc 'Mark poll message as read'
         param :notification, Hash, required: true do
-          param :read, [true], required: true, desc: 'Set as true to mark as read'
+          param :read, [true, 'true'], required: true, desc: 'Set as true to mark as read'
         end
         def update
           # rubocop:disable Style/AndOr
