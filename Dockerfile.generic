@@ -1,4 +1,4 @@
-FROM internetee/ruby:2.7-buster
+FROM internetee/ruby3_passenger_node14:1.0.19EE
 LABEL org.opencontainers.image.source=https://github.com/internetee/registry
 ARG RAILS_ENV
 
