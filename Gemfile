@@ -7,10 +7,10 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.13.0' # for dates and times
 gem 'mime-types-data'
 gem 'mimemagic', '0.4.3'
-gem 'rails', '~> 6.1.4'
+gem 'passenger', '>= 5.3.2', require: 'phusion_passenger/rack_handler'
+gem 'rails', '~>  6.1.3.2'
 gem 'rest-client'
 gem 'uglifier'
-gem 'passenger', '>= 5.3.2', require: 'phusion_passenger/rack_handler'
 
 # load env
 gem 'figaro', '~> 1.2'
