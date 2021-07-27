@@ -1,8 +1,10 @@
 FROM internetee/ruby3_passenger_node14:1.0.19EE
 LABEL org.opencontainers.image.source=https://github.com/internetee/registry
 ARG RAILS_ENV
+ARG SECRET_KEY_BASE
 
 ENV RAILS_ENV "$RAILS_ENV"
+ENV SECRET_KEY_BASE "$SECRET_KEY_BASE"
 RUN mkdir -p /opt/webapps/app/tmp/pids
 WORKDIR /opt/webapps/app
 COPY Gemfile Gemfile.lock ./
