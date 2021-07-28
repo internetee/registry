@@ -1,3 +1,20 @@
+28.07.2021
+* limited contact name validation only for private registrants [#2102](https://github.com/internetee/registry/pull/2102)
+* fixed REPP boolean value bug [#2098](https://github.com/internetee/registry/pull/2098)
+* fixed bank transaction binding in admin [#1788](https://github.com/internetee/registry/issues/1788)
+* Registrar: fiex ui issue with contact ident data update [#1797](https://github.com/internetee/registry/issues/1797)
+* Registrar: removed delete option for domains already in pendingDelete state [#1798](https://github.com/internetee/registry/issues/1798)
+* Registrar: improved birtdate validation [#1796](https://github.com/internetee/registry/issues/1796)
+* improved status storing for improved status managment with setting and removing status sets like forceDelete and registry lock [#2080](https://github.com/internetee/registry/issues/2080)
+* reverted orphaned poll message autodeque [#2092](https://github.com/internetee/registry/pull/2092)
+* Bump bootsnap to 1.7.6 [#2104](https://github.com/internetee/registry/pull/2104)
+* Bump apipie-rails to 0.5.19 [#2103](https://github.com/internetee/registry/pull/2103)
+* Bump countries to 4.0.1 [#2100](https://github.com/internetee/registry/pull/2100)
+* Bump addressable to 2.8.0 [#2085](https://github.com/internetee/registry/pull/2085)
+* Bump data_migrate to 7.0.2 [#2086](https://github.com/internetee/registry/pull/2086)
+* Bump active_interaction to 4.0.5 [#2087](https://github.com/internetee/registry/pull/2087)
+* Bump truemail to 2.4.6 [#2088](https://github.com/internetee/registry/pull/2088)
+
 08.07.2021
 * improved contact name validation [#1795](https://github.com/internetee/registry/issues/1795)
 * orphaned poll messages are automatically dequed [#2026](https://github.com/internetee/registry/issues/2026)
