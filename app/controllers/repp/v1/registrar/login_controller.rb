@@ -12,7 +12,7 @@ module Repp
           render_success(data: nil) and return unless @login
           # rubocop:enable Style/AndOr
 
-          data = @login.as_json()
+          data = @login.as_json
 
           render_success(data: data)
         end
