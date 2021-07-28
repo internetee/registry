@@ -14,7 +14,7 @@ WORKDIR /opt/webapps/app
 COPY Gemfile Gemfile.lock ./
 RUN gem install bundler && bundle install --jobs 20 --retry 5
 COPY . .
-RUN touch log/airbrake.log
+#RUN mkdir log
 
 
 RUN bundle exec rails assets:precompile
