@@ -37,8 +37,10 @@ jobs:
           echo "SHORT_TAG=RC-$SHORT_SHA" >> $GITHUB_ENV
 
       - name: Set config files for build
+        env:
+          ST_APP: ${{ secrets.ST_APPLICATION_YML}}
         run: |
-          cp config/application.yml.sample config/application.yml
+          echo $ST_APP | base64 -di > config/application.yml
           cp config/database.yml.sample config/database.yml
           ls -l config/
 
