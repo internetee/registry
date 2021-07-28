@@ -1,4 +1,4 @@
-FROM internetee/ruby3_passenger_node14:1.0.19EE
+FROM internetee/ruby:2.7
 LABEL org.opencontainers.image.source=https://github.com/internetee/registry
 ARG YARN_VER='1.22.10'
 ARG RAILS_ENV
