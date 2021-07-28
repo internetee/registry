@@ -1,15 +1,22 @@
 FROM internetee/ruby3_passenger_node14:1.0.19EE
 LABEL org.opencontainers.image.source=https://github.com/internetee/registry
+ARG YARN_VER='1.22.10'
 ARG RAILS_ENV
 ARG SECRET_KEY_BASE
 
 ENV RAILS_ENV "$RAILS_ENV"
 ENV SECRET_KEY_BASE "$SECRET_KEY_BASE"
+
+RUN npm install -g yarn@"$YARN_VER"
+
 RUN mkdir -p /opt/webapps/app/tmp/pids
 WORKDIR /opt/webapps/app
 COPY Gemfile Gemfile.lock ./
 RUN gem install bundler && bundle config set without 'development test' && bundle install --jobs 20 --retry 5
 COPY . .
 RUN mkdir log
+
+
+RUN bundle exec rails assets:precompile
 
 EXPOSE 3000
