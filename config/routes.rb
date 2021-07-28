@@ -72,6 +72,11 @@ Rails.application.routes.draw do
             get '/all_notifications', to: 'notifications#all_notifications'
           end
         end
+        resource :login, only: [:index] do
+          collection do
+            get '/', to: 'login#index'
+          end
+        end
         resources :nameservers do
           collection do
             put '/', to: 'nameservers#update'
