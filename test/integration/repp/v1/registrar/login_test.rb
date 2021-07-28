@@ -3,7 +3,6 @@ require 'test_helper'
 class ReppV1LoginTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:api_bestnames)
-    @registrar = @user.registrar
     token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
     token = "Basic #{token}"
 
@@ -15,8 +14,8 @@ class ReppV1LoginTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
-    assert_equal json[:data][:email], @registrar.email
-    assert_equal json[:data][:id], @registrar.id
+    assert_equal json[:data][:username], @user.username
+    assert_equal json[:data][:identity_code], @user.identity_code
   end
 
   def test_invalid_login
