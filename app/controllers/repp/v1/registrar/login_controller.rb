@@ -6,7 +6,7 @@ module Repp
         desc 'check login user and return data'
 
         def index
-          @login = current_user
+          @login = current_user.registrar
 
           # rubocop:disable Style/AndOr
           render_success(data: nil) and return unless @login
