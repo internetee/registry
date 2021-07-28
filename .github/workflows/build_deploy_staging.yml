@@ -40,6 +40,7 @@ jobs:
         env:
           ST_APP: ${{ secrets.ST_APPLICATION_YML}}
         run: |
+          mkdir log
           echo $ST_APP | base64 -di > config/application.yml
           cp config/database.yml.sample config/database.yml
           ls -l config/
