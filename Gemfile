@@ -7,6 +7,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.13.0' # for dates and times
 gem 'mime-types-data'
 gem 'mimemagic', '0.4.3'
+gem 'puma'
 gem 'rails', '~>  6.1.4'
 gem 'rest-client'
 gem 'uglifier'
@@ -84,7 +85,6 @@ gem 'directo', github: 'internetee/directo', branch: 'master'
 
 group :development, :test do
   gem 'pry', '0.14.1'
-  gem 'puma'
 end
 
 group :test do
