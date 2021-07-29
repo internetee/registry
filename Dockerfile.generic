@@ -12,10 +12,8 @@ RUN npm install -g yarn@"$YARN_VER"
 RUN mkdir -p /opt/webapps/app/tmp/pids
 WORKDIR /opt/webapps/app
 COPY Gemfile Gemfile.lock ./
-RUN gem install bundler && bundle install --jobs 20 --retry 5
+RUN gem install bundler && bundle config set without 'development test' && bundle install --jobs 20 --retry 5
 COPY . .
-#RUN mkdir log
-
 
 RUN bundle exec rails assets:precompile
 
