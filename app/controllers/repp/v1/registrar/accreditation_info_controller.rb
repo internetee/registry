@@ -1,8 +1,8 @@
 module Repp
   module V1
     module Registrar
-      class LoginController < BaseController
-        api :GET, 'repp/v1/registrar/login'
+      class AccreditationInfoController < BaseController
+        api :GET, 'repp/v1/registrar/accreditation_info'
         desc 'check login user and return data'
 
         def index

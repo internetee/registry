@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ReppV1LoginTest < ActionDispatch::IntegrationTest
+class ReppV1AccreditationInfoTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:api_bestnames)
     token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
@@ -10,7 +10,7 @@ class ReppV1LoginTest < ActionDispatch::IntegrationTest
   end
 
   def test_valid_login
-    get '/repp/v1/registrar/login', headers: @auth_headers
+    get '/repp/v1/registrar/accreditation_info', headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
@@ -24,7 +24,7 @@ class ReppV1LoginTest < ActionDispatch::IntegrationTest
 
     auth_headers = { 'Authorization' => token }
 
-    get '/repp/v1/registrar/login', headers: auth_headers
+    get '/repp/v1/registrar/accreditation_info', headers: auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :unauthorized

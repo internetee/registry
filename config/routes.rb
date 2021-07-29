@@ -72,9 +72,9 @@ Rails.application.routes.draw do
             get '/all_notifications', to: 'notifications#all_notifications'
           end
         end
-        resource :login, only: [:index] do
+        resource :accreditation_info, only: [:index] do
           collection do
-            get '/', to: 'login#index'
+            get '/', to: 'accreditation_info#index'
           end
         end
         resources :nameservers do
