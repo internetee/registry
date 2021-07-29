@@ -1,0 +1,138 @@
+name: build and deploy staging
+
+on:
+
+  pull_request:
+    paths-ignore:
+      - 'CHANGELOG.md'
+      - 'README.md'
+      - 'yarn.lock'
+      - 'package.json'
+    branches: [master]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+      - unlocked
+
+jobs:
+
+  build:
+    if: github.event.pull_request.draft == false
+
+    runs-on: ubuntu-20.04
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Set image tag
+        run: |
+          SHORT_SHA=$(echo $GITHUB_SHA | cut -c 1-7) #pr-s test commit of merged state
+          echo "TAG=ghcr.io/internetee/registry:RC-$SHORT_SHA" >> $GITHUB_ENV
+          echo "SHORT_TAG=RC-$SHORT_SHA" >> $GITHUB_ENV
+
+      - name: Set config files for build
+        env:
+          ST_APP: ${{ secrets.ST_APPLICATION_YML}}
+        run: |
+          mkdir log
+          echo $ST_APP | base64 -di > config/application.yml
+          cp config/database.yml.sample config/database.yml
+          ls -l config/
+
+      - name: Build image
+        env:
+          KEY_BASE: ${{ secrets.KEY_BASE}}
+        run: |
+          docker build -t $TAG --build-arg RAILS_ENV=staging --build-arg SECRET_KEY_BASE="$KEY_BASE" -f Dockerfile.generic .
+
+      - name: Push Docker image to gh container registry
+        env:
+          PASSWORD: ${{ secrets.GHCR }}
+        run: |
+          echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
+          docker push $TAG
+
+      - name: Get pull request reference number
+        run: |
+          echo "$GITHUB_REF"
+          echo "PR_REF=$(cat /home/runner/work/_temp/_github_workflow/event.json | jq -r '.number')" >> $GITHUB_ENV
+          echo $(cat /home/runner/work/_temp/_github_workflow/event.json | jq -r '.number')
+
+      - name: Get repo name
+        run: |
+          OIFS=$IFS
+          IFS='/'
+          read -a parts <<< "$GITHUB_REPOSITORY"
+          IFS=OIFS
+          echo "REPO=${parts[1]}" >> $GITHUB_ENV
+
+      - name: Set deploy config
+        env:
+          OVPN: ${{ secrets.OVPN }}
+          VPN_PWD: ${{ secrets.VPN_PWD }}
+          P12: ${{ secrets.P12 }}
+          K_CONFIG: ${{ secrets.KUBE_CONFIG }}
+          SSH_KEY: ${{ secrets.EISBOT_SSH_KEY }}
+        run: |
+          echo $VPN_PWD | base64 -di > client.pwd
+          chmod 0600 client.pwd
+          echo $OVPN | base64 -di >  config.ovpn
+          echo $P12 | base64 -di > cert.p12
+          mkdir -p ~/.ssh
+          echo $SSH_KEY | base64 -di > ~/.ssh/key
+          chmod 0600 ~/.ssh/key
+          mkdir -p $REPO/$PR_REF
+          cd $REPO/$PR_REF
+          echo "$SHORT_SHA" > TAG
+          echo $K_CONFIG | base64 -di > kubeconfig
+          chmod 0600 kubeconfig
+
+      - name: Install Open VPN
+        run: sudo apt-get install openvpn
+
+      - name: Deploy from remote server
+        timeout-minutes: 5
+        run: |
+          sudo openvpn --config config.ovpn --askpass client.pwd --auth-nocache --daemon&
+          sleep 15
+          ping -c 1 192.168.99.12
+          eval `ssh-agent`
+          touch ~/.ssh/known_hosts
+          ssh-add ~/.ssh/key
+          ssh-keyscan 192.168.99.12 > ~/.ssh/known_hosts
+          rsync -av "$REPO" runner@192.168.99.12:/home/runner/
+          ssh -T runner@192.168.99.12 << EOSSH
+          bash
+          cd "$REPO"/"$PR_REF"
+          export KUBECONFIG=./kubeconfig
+          helm repo add eisrepo https://internetee.github.io/helm-charts/
+          helm repo update
+          helm upgrade --install registry-st-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry -n registry-staging
+          rm kubeconfig
+          echo "server obs.tld.ee
+          zone pilv.tld.ee
+          update add registry-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
+          send
+          " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key
+          if [ "$?" -eq "0" ]; then
+              echo "CNAME update success"
+          else
+              echo "CNAME update failed"
+          fi
+          EOSSH
+
+      - name: Notify developers
+        timeout-minutes: 1
+        env:
+          NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL}}
+        run: |
+          curl -i -X POST --data-urlencode 'payload={
+            "text": "##### Build and deploy from pull request has been succesful :tada:\n
+            | Project    | Branch                 | :net:                                  |
+            |:-----------|:----------------------:|:--------------------------------------:|
+            | **'$REPO'**|'${{ github.head_ref }}'| https://registry-'$PR_REF'.pilv.tld.ee |
+            "
+            }' $NOTIFICATION_URL
