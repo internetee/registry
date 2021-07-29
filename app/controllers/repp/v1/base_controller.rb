@@ -120,7 +120,7 @@ module Repp
       end
 
       def validate_webclient_ca
-        return if webclient_request?
+        return unless webclient_request?
 
         request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']
         webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
