@@ -1,5 +1,7 @@
 <h1>Bounced Mail Addresses</h1>
 
+<%= render 'application/pagination' %>
+
 <div class="row">
     <div class="row">
         <div class="col-md-12">
@@ -31,6 +33,16 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <%= paginate @bounced_mail_addresses %>
+    </div>
+    <div class="col-md-6 text-right">
+        <div class="pagination">
+            <%= t(:result_count, count: @count) %>
         </div>
     </div>
 </div>

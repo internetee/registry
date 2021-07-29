@@ -1,6 +1,8 @@
 - content_for :actions do
   = link_to(t(:add), new_admin_invoice_path, class: 'btn btn-primary')
 = render 'shared/title', name: t(:invoices)
+= render 'application/pagination'
+
 .row
   .col-md-12
     .table-responsive
@@ -32,5 +34,8 @@
               - else
                 %td.text-danger= t(:unpaid)
 .row
-  .col-md-12
+  .col-md-6
     = paginate @invoices
+  .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @count)

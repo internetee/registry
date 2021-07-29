@@ -23,6 +23,7 @@ module Admin
       @q.sorts = 'id desc' if @q.sorts.empty?
 
       @account_activities = @q.result.page(params[:page]).per(params[:results_per_page])
+      @count = @q.result.count
 
       if params[:page] && params[:page].to_i > 1
         @sum = @q.result.limit(@account_activities.offset_value).sum(:sum) +

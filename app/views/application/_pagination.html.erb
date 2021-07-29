@@ -1,0 +1,17 @@
+<%= search_form_for([:admin, @q], html: { class: 'form-horizontal', autocomplete: 'off' }) do |f| %>
+    <div class="pull-right">
+        <div class=".text-right">
+            <div class="form-inline">
+                <%= label_tag t(:results_per_page) %>
+                <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page) %>
+                <button class="btn btn-primary" align="right">
+                    &nbsp;
+                    <span class="glyphicon glyphicon-ok push-right"></span>
+                    &nbsp;
+                </button>
+            </div>
+        </div>
+    </div>
+<% end %>
+
+<div class="row form-group"></div>

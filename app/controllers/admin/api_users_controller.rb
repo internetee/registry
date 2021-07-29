@@ -5,6 +5,8 @@ module Admin
     def index
       @q = ApiUser.includes(:registrar).search(params[:q])
       @api_users = @q.result.page(params[:page])
+      @count = @q.result.count
+      @api_users = @api_users.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
     end
 
     def new

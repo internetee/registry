@@ -29,6 +29,8 @@ module Admin
         @q.sorts = ['zone_id asc', 'duration asc', 'operation_category asc',
                     'valid_from desc', 'valid_to asc'] if @q.sorts.empty?
         @prices = @q.result.page(params[:page])
+        @count = @q.result.count
+        @prices = @q.result.page(params[:page]).per(params[:results_per_page])
       end
 
       def new

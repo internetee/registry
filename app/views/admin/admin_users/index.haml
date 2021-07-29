@@ -1,6 +1,7 @@
 - content_for :actions do
   = link_to(t('.new_btn'), new_admin_admin_user_path, class: 'btn btn-primary')
 = render 'shared/title', name: t('.title')
+= render 'application/pagination'
 
 .row
   .col-md-12
@@ -27,5 +28,7 @@
               - else
                 %td
 .row
-  .col-md-12
+  .col-md-6
     = paginate @admin_users
+  .col-md-6.text-right
+    = t(:result_count, count: @count)

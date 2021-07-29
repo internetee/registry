@@ -11,6 +11,7 @@
 </div>
 
 <% if @zones.present? %>
+    <%= render 'application/pagination' %>
     <table class="table table-hover table-bordered table-wrapped">
         <thead>
             <tr>
@@ -26,3 +27,13 @@
 <% else %>
     <div class="alert alert-info"><%= t '.not_found' %></div>
 <% end %>
+<div class="row">
+    <div class="col-md-6">
+        <%= paginate @zones %>
+    </div>
+    <div class="col-md-6 text-right">
+        <div class="pagination">
+            <%= t(:result_count, count: @count) %>
+        </div>
+    </div>
+</div>

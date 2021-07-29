@@ -2,6 +2,8 @@
     <h1><%= t '.header' %></h1>
 </div>
 
+<%= render 'application/pagination' %>
+
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
@@ -29,7 +31,12 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <%= paginate @api_users %>
+    </div>
+    <div class="col-md-6 text-right">
+        <div class="pagination">
+            <%= t(:result_count, count: @count) %>
+        </div>
     </div>
 </div>

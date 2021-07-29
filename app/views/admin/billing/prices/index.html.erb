@@ -33,8 +33,13 @@
     </table>
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <%= paginate @prices %>
+        </div>
+        <div class="col-md-6 text-right">
+            <div class="pagination">
+                <%= t(:result_count, count: @count) %>
+            </div>
         </div>
     </div>
 <% else %>

@@ -5,7 +5,9 @@ module Admin
 
     # GET /bounced_mail_addresses
     def index
-      @bounced_mail_addresses = BouncedMailAddress.all.order(created_at: :desc)
+      @q = BouncedMailAddress.all.order(created_at: :desc).search(params[:q])
+      @bounced_mail_addresses = @q.result.page(params[:page]).per(params[:results_per_page])
+      @count = @q.result.count
     end
 
     # GET /bounced_mail_addresses/1
