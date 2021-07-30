@@ -8,8 +8,7 @@ module Admin
       @q = BankStatement.search(params[:q])
       @q.sorts = 'id desc' if @q.sorts.empty?
       @bank_statements = @q.result.page(params[:page])
-      @count = @q.result.count
-      @bank_statements = @bank_statements.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+      @bank_statements = @bank_statements.per(params[:results_per_page]) if paginate?
     end
 
     def show

@@ -5,7 +5,7 @@ module Admin
     def index
       @q = ApiUser.includes(:registrar).search(params[:q])
       @api_users = @q.result.page(params[:page])
-      api_users_paginate if params[:results_per_page].to_i.positive?
+      @api_users = @api_users.per(params[:results_per_page]) if paginate?
     end
 
     def new
@@ -56,10 +56,6 @@ module Admin
 
     def registrar
       Registrar.find(params[:registrar_id])
-    end
-
-    def api_users_paginate
-      @api_users = @api_users.per(params[:results_per_page])
     end
   end
 end

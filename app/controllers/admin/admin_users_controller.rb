@@ -7,7 +7,7 @@ module Admin
       @q = AdminUser.search(params[:q])
       @admin_users = @q.result.page(params[:page]).order(:username)
       @count = @q.result.count
-      @admin_users = @admin_users.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+      @admin_users = @admin_users.per(params[:results_per_page]) if paginate?
     end
 
     def new
