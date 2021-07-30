@@ -16,9 +16,9 @@ module Admin
         search_params.delete(:registrant)
       end
 
-      if search_params[:registrar].present?
-        registrars = Registrar.where("name ilike ?", "%#{search_params[:registrar].strip}%")
-        search_params.delete(:registrar)
+      if search_params[:whodunnit].present?
+        registrars = Registrar.where("name ilike ?", "%#{search_params[:whodunnit].strip}%")
+        search_params.delete(:whodunnit)
       end
 
       whereS = "1=1"
