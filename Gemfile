@@ -77,7 +77,7 @@ gem 'company_register', github: 'internetee/company_register',
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'domain_name'
-gem 'haml', '~> 5.0'
+gem 'haml', '~> 5.2'
 gem 'rexml'
 gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
 
