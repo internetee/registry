@@ -96,4 +96,4 @@ group :test do
   gem 'webmock'
 end
 
-gem 'aws-sdk-sesv2', '~> 1.16'
+gem 'aws-sdk-sesv2', '~> 1.19'
