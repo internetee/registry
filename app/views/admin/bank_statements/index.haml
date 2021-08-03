@@ -1,6 +1,7 @@
 - content_for :actions do
   = link_to(t(:add), new_admin_bank_statement_path, class: 'btn btn-primary')
 = render 'shared/title', name: t(:bank_statements)
+= render 'application/pagination'
 
 .row
   .col-md-12
@@ -28,5 +29,8 @@
               - sc = 'text-danger' if x.not_binded?
               %td{class: sc}= t(x.status)
 .row
-  .col-md-12
+  .col-md-6
     = paginate @bank_statements
+  .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @q.result.count)

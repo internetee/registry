@@ -17,5 +17,9 @@ module Admin
     def user_for_paper_trail
       current_admin_user ? current_admin_user.id_role_username : 'anonymous'
     end
+
+    def paginate?
+      params[:results_per_page].to_i.positive?
+    end
   end
 end

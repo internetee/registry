@@ -8,6 +8,7 @@ module Admin
     def index
       @q = Registrar.joins(:accounts).ordered.search(params[:q])
       @registrars = @q.result.page(params[:page])
+      @registrars = @registrars.per(params[:results_per_page]) if paginate?
     end
 
     def new

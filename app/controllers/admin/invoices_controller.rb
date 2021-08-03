@@ -36,6 +36,7 @@ module Admin
       @q = Invoice.includes(:account_activity).search(params[:q])
       @q.sorts = 'number desc' if @q.sorts.empty?
       @invoices = @q.result.page(params[:page])
+      @invoices = @invoices.per(params[:results_per_page]) if paginate?
     end
 
     def show; end

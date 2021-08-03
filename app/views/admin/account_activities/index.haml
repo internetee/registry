@@ -46,5 +46,8 @@
             %td{class: 'text-right'}= t(:total)
             %td{class: total > 0 ? 'text-success' : 'text-danger'}= total > 0 ? "+#{total} EUR" : "#{total} EUR"
 .row
-  .col-md-12
+  .col-md-6
     = paginate @account_activities
+  .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @count)

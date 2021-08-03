@@ -5,6 +5,7 @@ module Admin
     def index
       @q = ApiUser.includes(:registrar).search(params[:q])
       @api_users = @q.result.page(params[:page])
+      @api_users = @api_users.per(params[:results_per_page]) if paginate?
     end
 
     def new

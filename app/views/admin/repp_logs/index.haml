@@ -43,6 +43,10 @@
 %hr
 .row
   .col-md-12
+    = paginate @repp_logs
+    .pull-right
+      .pagination
+        = t(:result_count, count: @count) if @count > 0
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
         %thead
@@ -66,3 +70,6 @@
 .row
   .col-md-12
     = paginate @repp_logs
+    .pull-right
+      .pagination
+        = t(:result_count, count: @count)
