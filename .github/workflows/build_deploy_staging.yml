@@ -69,6 +69,15 @@ jobs:
           IFS=OIFS
           echo "REPO=${parts[1]}" >> $GITHUB_ENV
 
+      # - name: Create epp proxy conf
+      #   env:
+      #     EPPROXY_CONF: ${{ secrets.EPPROXY_CONF }}
+      #   run: |
+      #     echo $EPPROXY_CONF | base64 -di > sys.config
+      #     sed -i -e 's/{epp_session_url, "https://registry.test/epp/session/"},/{epp_session_url, "https://registry-'$PR_REF'.pilv.tld.ee/epp/session/"},/' sys.config
+      #     sed -i -e 's/{epp_session_url, "https://registry.test/epp/command/"},/{epp_session_url, "https://registry-'$PR_REF'.pilv.tld.ee/epp/command/"},/' sys.config
+      #     sed -i -e 's/{epp_session_url, "https://registry.test/epp/error/"},/{epp_session_url, "https://registry-'$PR_REF'.pilv.tld.ee/epp/error/"},/' sys.config
+
       - name: Set deploy config
         env:
           OVPN: ${{ secrets.OVPN }}
@@ -76,6 +85,7 @@ jobs:
           P12: ${{ secrets.P12 }}
           K_CONFIG: ${{ secrets.KUBE_CONFIG }}
           SSH_KEY: ${{ secrets.EISBOT_SSH_KEY }}
+          EPPROXY_CONF: ${{ secrets.EPPROXY_CONF }}
         run: |
           echo $VPN_PWD | base64 -di > client.pwd
           chmod 0600 client.pwd
@@ -89,6 +99,10 @@ jobs:
           echo "$SHORT_SHA" > TAG
           echo $K_CONFIG | base64 -di > kubeconfig
           chmod 0600 kubeconfig
+          echo $EPPROXY_CONF | base64 -di > sys.config
+          sed -i -e 's/{epp_session_url, "https:\/\/localhost\/epp\/session\/"},/{epp_session_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/session\/"},/' sys.config
+          sed -i -e 's/{epp_command_url, "https:\/\/localhost\/epp\/command\/"},/{epp_session_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/command\/"},/' sys.config
+          sed -i -e 's/{epp_error_url, "https:\/\/localhost\/epp\/error\/"},/{epp_session_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/error\/"},/' sys.config
 
       - name: Install Open VPN
         run: sudo apt-get install openvpn
