@@ -15,7 +15,9 @@ class ReppV1AccreditationInfoTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
     assert_equal json[:data][:username], @user.username
-    assert_equal json[:data][:identity_code], @user.identity_code
+    assert json[:data][:roles].include? 'super'
+    assert_equal json[:data][:registrar_name], 'Best Names'
+    assert_equal json[:data][:registrar_reg_no], '1234'
   end
 
   def test_invalid_login

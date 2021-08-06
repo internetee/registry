@@ -6,21 +6,31 @@ module Repp
         desc 'check login user and return data'
 
         def index
-          @login = current_user
+          login = current_user
           registrar = current_user.registrar
 
-          # name = registrar.name
-          # reg_no = registrar.reg_no
-
           # rubocop:disable Style/AndOr
-          render_success(data: nil) and return unless @login
+          render_success(data: nil) and return unless login
           # rubocop:enable Style/AndOr
 
-          data = @login.as_json(only: %i[id username name reg_no uuid roles accreditation_date accreditation_expire_date])
-          data[:registrar_name] = registrar.name
-          data[:registrar_reg_no] = registrar.reg_no
+          data = set_values_to_data(login: login, registrar: registrar)
 
           render_success(data: data)
+        end
+
+        private
+
+        def set_values_to_data(login:, registrar:)
+          data = login.as_json(only: %i[id
+                                        username
+                                        name
+                                        uuid
+                                        roles
+                                        accreditation_date
+                                        accreditation_expire_date])
+          data[:registrar_name] = registrar.name
+          data[:registrar_reg_no] = registrar.reg_no
+          data
         end
       end
     end

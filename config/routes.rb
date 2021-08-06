@@ -75,7 +75,7 @@ Rails.application.routes.draw do
         resource :accreditation, only: [:index] do
           collection do
             get '/get_info', to: 'accreditation_info#index'
-            get '/push_results', to: 'accreditation_results#index'
+            post '/push_results', to: 'accreditation_results#create'
           end
         end
         resources :nameservers do
