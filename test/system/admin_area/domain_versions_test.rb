@@ -72,7 +72,7 @@ class DomainVersionsTest < ApplicationSystemTestCase
 
   def test_search_registrar_param
     visit admin_domain_versions_path
-    find('#q_registrar').set(@domain.registrar)
+    find('#_q_registrar').find(:option, @domain.registrar).select_option
     find('.btn.btn-primary').click
 
     assert_equal current_url,

@@ -16,9 +16,9 @@ module Admin
         search_params.delete(:registrant)
       end
 
-      if search_params[:whodunnit].present?
-        registrars = Registrar.where("name ilike ?", "%#{search_params[:whodunnit].strip}%")
-        search_params.delete(:whodunnit)
+      if search_params[:registrar].present?
+        registrars = Registrar.where("name ilike ?", "%#{search_params[:registrar].strip}%")
+        search_params.delete(:registrar)
       end
 
       whereS = "1=1"
@@ -45,7 +45,6 @@ module Admin
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
       render "admin/domain_versions/archive"
-
     end
 
     def show
