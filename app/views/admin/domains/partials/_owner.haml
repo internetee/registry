@@ -3,17 +3,17 @@
     %h3.panel-title= t('.title')
   .panel-body
     %dl.dl-horizontal
-      %dt= t(:name)
-      %dd= link_to @domain.registrant, admin_contact_path(@domain.registrant)
+      %dt.left_25= t(:name)
+      %dd.left_25= link_to @domain.registrant, admin_contact_path(@domain.registrant)
 
-      %dt= t(:id)
-      %dd= @domain.registrant.code
+      %dt.left_25= t(:id)
+      %dd.left_25= @domain.registrant.code
 
-      %dt= t(:identity_code)
-      %dd= @domain.registrant.ident
+      %dt.left_25= t(:identity_code)
+      %dd.left_25= @domain.registrant.ident
 
-      %dt= t(:email)
-      %dd= @domain.registrant.email
+      %dt.left_25= t(:email)
+      %dd.left_25= @domain.registrant.email
 
-      %dt= t(:phone)
-      %dd= @domain.registrant.phone
+      %dt.left_25= t(:phone)
+      %dd.left_25= @domain.registrant.phone
