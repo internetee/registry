@@ -3,44 +3,44 @@
     %h3.panel-title= t(:general)
   .panel-body
     %dl.dl-horizontal
-      %dt= t(:id)
-      %dd= @contact.code
+      %dt.left_25= t(:id)
+      %dd.left_25= @contact.code
 
-      %dt= Contact.human_attribute_name :auth_info
-      %dd
+      %dt.left_25= Contact.human_attribute_name :auth_info
+      %dd.left_25
         = tag :input, type: 'text', value: @contact.auth_info, readonly: true,
             class: 'form-control input-sm'
 
       %br
 
-      %dt= t(:ident)
-      %dd= ident_for(@contact)
+      %dt.left_25= t(:ident)
+      %dd.left_25= ident_for(@contact)
 
-      %dt= t(:email)
-      %dd= verified_email_span(@contact.email_verification)
+      %dt.left_25= t(:email)
+      %dd.left_25= verified_email_span(@contact.email_verification)
 
-      %dt= t(:phone)
-      %dd= @contact.phone
+      %dt.left_25= t(:phone)
+      %dd.left_25= @contact.phone
 
       - if @contact.fax
-        %dt= t(:fax)
-        %dd= @contact.fax
+        %dt.left_25= t(:fax)
+        %dd.left_25= @contact.fax
 
       %br
 
-      %dt= t('.created')
-      %dd
+      %dt.left_25= t('.created')
+      %dd.left_25
         = l(@contact.created_at, format: :short)
         by
         = creator_link(@contact)
 
-      %dt= t('.updated')
-      %dd
+      %dt.left_25= t('.updated')
+      %dd.left_25
         = l(@contact.updated_at, format: :short)
         by
         = updator_link(@contact)
 
-      %dt= t(:registrar_name)
-      %dd
+      %dt.left_25= t(:registrar_name)
+      %dd.left_25
         - if @contact.registrar.present?
           = link_to(@contact.registrar, admin_registrar_path(@contact.registrar))
