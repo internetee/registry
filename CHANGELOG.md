@@ -1,3 +1,11 @@
+03.08.2021
+* Added missing pagination options to admin [#339](https://github.com/internetee/registry/issues/339)
+* Bump haml to 5.2.2 [#2110](https://github.com/internetee/registry/pull/2110)
+* Bump aws-sdk-sesv2 to 1.19.0 [#2111](https://github.com/internetee/registry/pull/2111)
+* Bump nokogiri to 1.12.0 [#2112](https://github.com/internetee/registry/pull/2112)
+* Bump puma to 5.4.0 [#2113](https://github.com/internetee/registry/pull/2113)
+* Bump bootsnap to 1.7.7 [#2114](https://github.com/internetee/registry/pull/2114)
+
 28.07.2021
 * limited contact name validation only for private registrants [#2102](https://github.com/internetee/registry/pull/2102)
 * fixed REPP boolean value bug [#2098](https://github.com/internetee/registry/pull/2098)
