@@ -15,7 +15,7 @@
         .col-md-3
           .form-group
             = label_tag t(:registrar_name)
-            = f.search_field :registrar, value: params[:q][:registrar], class: 'form-control', placeholder: t('.registrant')
+            = select_tag '[q][registrar]', options_for_select(Registrar.all.map { |x| [x, x.name] }, selected: params[:q][:registrar]), { include_blank: true, class: 'form-control', placeholder: t('.registrant')}
         .col-md-3
           .form-group
             = label_tag :action
