@@ -3,6 +3,8 @@
 * Created at filter added to domain listing in admin [#502](https://github.com/internetee/registry/issues/502)
 * UI fix to fit long email addresses in admin [#523](https://github.com/internetee/registry/issues/523)
 * Fixed manual invoice binding in admin [#2095](https://github.com/internetee/registry/issues/2095)
+* Bump webmock to 3.14.0 [#2118](https://github.com/internetee/registry/pull/2118)
+* Bump nokogiri to 1.12.2 [#2119](https://github.com/internetee/registry/pull/2119)
 
 03.08.2021
 * Added missing pagination options to admin [#339](https://github.com/internetee/registry/issues/339)
