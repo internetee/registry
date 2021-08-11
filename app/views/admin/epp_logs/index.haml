@@ -36,11 +36,12 @@
           .form-group
             = f.label t(:created_before)
             = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control js-datepicker', placeholder: t(:created_before)
-        .col-md-3{style: 'padding-top: 25px;'}
+        .col-md-3{style: 'padding-top: 25px;float:right;padding-right: 0px;'}
           %button.btn.btn-primary
             &nbsp;
             %span.glyphicon.glyphicon-search
             &nbsp;
+          = link_to(t('.csv_btn'), admin_epp_logs_path(format: :csv, params: params.permit!), class: 'btn btn-default')
           = link_to(t('.reset_btn'), admin_epp_logs_path, class: 'btn btn-default')
 .row
   .col-md-12
@@ -49,6 +50,7 @@
     .pull-right
       .pagination
         = t(:result_count, count: @count) if @count > 0
+    .row
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
         %thead

@@ -1,4 +1,5 @@
 class ReservedDomain < ApplicationRecord
+  extend CsvReportHelper
   include Versions # version/reserved_domain_version.rb
   include WhoisStatusPopulate
   before_save :fill_empty_passwords

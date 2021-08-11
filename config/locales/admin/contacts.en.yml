@@ -3,6 +3,7 @@ en:
     contacts:
       index:
         reset_btn: Reset
+        csv_btn: CSV
 
       edit:
         new_status_btn: Add new status

@@ -36,6 +36,19 @@ class AdminEppLogsIntegrationTest < ApplicationSystemTestCase
     assert_match /#{date_now}/, epp_log_date
   end
 
+  def test_download_epp_logs
+    now = Time.zone.parse('2010-07-05 08:00')
+    travel_to now
+
+    get admin_epp_logs_path(format: :csv)
+
+    assert_response :ok
+    assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
+    assert_equal %(attachment; filename="epp_logs_#{Time.zone.now.to_formatted_s(:number)}.csv"; filename*=UTF-8''epp_logs_#{Time.zone.now.to_formatted_s(:number)}.csv),
+                 response.headers['Content-Disposition']
+    assert_not_empty response.body
+  end
+
   private
 
   def send_epp_request_hello

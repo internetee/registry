@@ -13,6 +13,18 @@ module Admin
       @epp_logs = @epp_logs.page(params[:page])
       @count = @q.result.count
       @epp_logs = @epp_logs.per(params[:results_per_page]) if paginate?
+
+      respond_to do |format|
+        format.html do
+          render 'admin/epp_logs/index'
+        end
+        format.csv do
+          raw_csv = @q.result.to_csv
+          send_data raw_csv,
+                    filename: "epp_logs_#{Time.zone.now.to_formatted_s(:number)}.csv",
+                    type: "#{Mime[:csv]}; charset=utf-8"
+        end
+      end
     end
 
     def show

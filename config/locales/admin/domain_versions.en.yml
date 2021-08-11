@@ -3,6 +3,7 @@ en:
     domain_versions:
       archive:
         reset_btn: Reset
+        csv_btn: CSV
         registrant_placeholder: Registrant
         registrant: Registrant
 

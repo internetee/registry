@@ -4,6 +4,7 @@ en:
       index:
         title: REPP log
         reset_btn: Reset
+        csv_btn: CSV
       show:
         title: REPP log
 

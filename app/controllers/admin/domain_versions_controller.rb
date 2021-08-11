@@ -44,7 +44,18 @@ module Admin
       @q = versions.search(params[:q])
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
-      render "admin/domain_versions/archive"
+
+      respond_to do |format|
+        format.html do
+          render 'admin/domain_versions/archive'
+        end
+        format.csv do
+          raw_csv = @q.result.to_csv
+          send_data raw_csv,
+                    filename: "domain_history_#{Time.zone.now.to_formatted_s(:number)}.csv",
+                    type: "#{Mime[:csv]}; charset=utf-8"
+        end
+      end
     end
 
     def show

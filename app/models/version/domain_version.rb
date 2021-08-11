@@ -1,4 +1,5 @@
 class Version::DomainVersion < PaperTrail::Version
+  extend CsvReportHelper
   include VersionSession
 
   self.table_name    = :log_domains

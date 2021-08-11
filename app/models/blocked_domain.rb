@@ -1,5 +1,6 @@
 class BlockedDomain < ApplicationRecord
   include Versions
+  extend CsvReportHelper
   before_save   :generate_data
   after_destroy :remove_data
 

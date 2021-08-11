@@ -10,6 +10,18 @@ module Admin
       params[:q] ||= {}
       @disputes = sortable_dispute_query_for(Dispute.active.all, params[:q])
       @closed_disputes = sortable_dispute_query_for(Dispute.closed.all, params[:q], closed: true)
+
+      respond_to do |format|
+        format.html do
+          render 'admin/disputes/index'
+        end
+        format.csv do
+          raw_csv = @q.result.to_csv
+          send_data raw_csv,
+                    filename: "disputes_#{Time.zone.now.to_formatted_s(:number)}.csv",
+                    type: "#{Mime[:csv]}; charset=utf-8"
+        end
+      end
     end
 
     # GET /admin/disputes/1

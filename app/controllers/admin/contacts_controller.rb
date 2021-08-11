@@ -24,6 +24,18 @@ module Admin
       end
 
       @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+
+      respond_to do |format|
+        format.html do
+          @contacts
+        end
+        format.csv do
+          raw_csv = @q.result.distinct.to_csv
+          send_data raw_csv,
+                    filename: "contacts_#{Time.zone.now.to_formatted_s(:number)}.csv",
+                    type: "#{Mime[:csv]}; charset=utf-8"
+        end
+      end
     end
 
     def filter_by_flags(contacts)

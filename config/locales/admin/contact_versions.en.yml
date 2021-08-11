@@ -3,3 +3,4 @@ en:
     contact_versions:
       index:
         reset_btn: Reset
+        csv_btn: CSV
