@@ -1,3 +1,6 @@
+11.08.2021
+* Fixed manual invoice binding in admin [#2095](https://github.com/internetee/registry/issues/2095)
+
 03.08.2021
 * Added missing pagination options to admin [#339](https://github.com/internetee/registry/issues/339)
 * Bump haml to 5.2.2 [#2110](https://github.com/internetee/registry/pull/2110)
