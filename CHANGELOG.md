@@ -1,4 +1,5 @@
 11.08.2021
+* Created at filter added to domain listing in admin [#502](https://github.com/internetee/registry/issues/502)
 * Fixed manual invoice binding in admin [#2095](https://github.com/internetee/registry/issues/2095)
 
 03.08.2021
