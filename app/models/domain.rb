@@ -1,5 +1,5 @@
 class Domain < ApplicationRecord
-  extend CsvReportHelper
+  extend ToCsv
   include UserEvents
   include Roids
   include Versions # version/domain_version.rb

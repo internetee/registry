@@ -1,5 +1,5 @@
 module ApiLog
   class ReppLog < Db
-    extend CsvReportHelper
+    extend ToCsv
   end
 end

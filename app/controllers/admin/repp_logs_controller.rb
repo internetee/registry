@@ -14,17 +14,7 @@ module Admin
       @count = @q.result.count
       @repp_logs = @repp_logs.per(params[:results_per_page]) if paginate?
 
-      respond_to do |format|
-        format.html do
-          render 'admin/repp_logs/index'
-        end
-        format.csv do
-          raw_csv = @q.result.to_csv
-          send_data raw_csv,
-                    filename: "repp_logs_#{Time.zone.now.to_formatted_s(:number)}.csv",
-                    type: "#{Mime[:csv]}; charset=utf-8"
-        end
-      end
+      render_by_format('admin/repp_logs/index', 'repp_logs')
     end
 
     def show
@@ -44,7 +34,6 @@ module Admin
 
         params[:q][:created_at_gteq] = Date.send(default_date).strftime("%Y-%m-%d")
       end
-
     end
   end
 end

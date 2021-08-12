@@ -1,4 +1,4 @@
-module CsvReportHelper
+module ToCsv
   def to_csv
     CSV.generate do |csv|
       csv << column_names

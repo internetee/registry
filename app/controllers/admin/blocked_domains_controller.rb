@@ -9,17 +9,7 @@ module Admin
       @domains = @q.result.page(params[:page])
       @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 
-      respond_to do |format|
-        format.html do
-          render 'admin/blocked_domains/index'
-        end
-        format.csv do
-          raw_csv = @q.result.to_csv
-          send_data raw_csv,
-                    filename: "blocked_domains_#{Time.zone.now.to_formatted_s(:number)}.csv",
-                    type: "#{Mime[:csv]}; charset=utf-8"
-        end
-      end
+      render_by_format('admin/blocked_domains/index', 'blocked_domains')
     end
 
     def new

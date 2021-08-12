@@ -1,5 +1,5 @@
 class Version::ContactVersion < PaperTrail::Version
-  extend CsvReportHelper
+  extend ToCsv
   include VersionSession
 
   self.table_name    = :log_contacts
