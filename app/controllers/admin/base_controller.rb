@@ -24,9 +24,7 @@ module Admin
 
     def render_by_format(page, filename)
       respond_to do |format|
-        format.html do
-          render page
-        end
+        format.html { render page }
         format.csv do
           raw_csv = @q.result.to_csv
           send_data raw_csv,
