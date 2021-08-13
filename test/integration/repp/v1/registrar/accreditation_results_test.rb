@@ -1,12 +1,12 @@
 require 'test_helper'
 
 class ReppV1AccreditationResultsTest < ActionDispatch::IntegrationTest
-  TEMPARY_SECRET_KEY = 'tempary-secret-key'.freeze
+  TEMPORARY_SECRET_KEY = 'temporary-secret-key'.freeze
 
   def setup
     @user = users(:api_bestnames)
 
-    token = "Basic #{TEMPARY_SECRET_KEY}"
+    token = "Basic #{TEMPORARY_SECRET_KEY}"
 
     @auth_headers = { 'Authorization' => token }
   end
@@ -25,7 +25,7 @@ class ReppV1AccreditationResultsTest < ActionDispatch::IntegrationTest
 
   def test_should_return_valid_response_invalid_authorization
     post '/repp/v1/registrar/accreditation/push_results',
-      headers: { 'Authorization' => 'Basic tempary-secret-ke'},
+      headers: { 'Authorization' => 'Basic temporary-secret-ke'},
       params: {accreditation_result: {username: @user.username, result: true} }
     json = JSON.parse(response.body, symbolize_names: true)
 

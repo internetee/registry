@@ -4,7 +4,7 @@ module Repp
       class AccreditationResultsController < ActionController::API
         before_action :authenticate_shared_key
 
-        TEMPARY_SECRET_KEY = 'tempary-secret-key'.freeze
+        TEMPORARY_SECRET_KEY = 'temporary-secret-key'.freeze
 
         api :POST, 'repp/v1/registrar/accreditation/push_results'
         desc 'added datetime results'
@@ -35,7 +35,7 @@ module Repp
         end
 
         def authenticate_shared_key
-          api_key = "Basic #{TEMPARY_SECRET_KEY}"
+          api_key = "Basic #{TEMPORARY_SECRET_KEY}"
           render_failed unless api_key == request.authorization
         end
 
