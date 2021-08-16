@@ -1,5 +1,4 @@
 class Domain < ApplicationRecord
-  extend ToCsv
   include UserEvents
   include Roids
   include Versions # version/domain_version.rb
@@ -279,6 +278,21 @@ class Domain < ApplicationRecord
         "(#{registrant_user_company_registrant(companies).to_sql} UNION "\
         "#{registrant_user_domains_company(companies).to_sql}) AS domains"
       )
+    end
+
+    def to_csv
+      CSV.generate do |csv|
+        headers = column_names.dup
+        swap_elements(headers, [[0, 1], [1, 5]])
+        headers[0] = 'Domain'
+        headers[1] = headers[1].humanize
+        csv << headers
+        all.find_each do |item|
+          row = item.attributes.values_at(*column_names)
+          swap_elements(row, [[0, 1], [1, 5]])
+          csv << row
+        end
+      end
     end
 
     private
@@ -740,5 +754,12 @@ class Domain < ApplicationRecord
 
   def self.uses_zone?(zone)
     exists?(["name ILIKE ?", "%.#{zone.origin}"])
+  end
+
+  def swap_elements(array, indexes)
+    indexes.each do |index|
+      array[index[0]], array[index[1]] = array[index[1]], array[index[0]]
+    end
+    array
   end
 end
