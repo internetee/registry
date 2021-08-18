@@ -13,6 +13,8 @@ module Admin
       @repp_logs = @repp_logs.page(params[:page])
       @count = @q.result.count
       @repp_logs = @repp_logs.per(params[:results_per_page]) if paginate?
+
+      render_by_format('admin/repp_logs/index', 'repp_logs')
     end
 
     def show
@@ -32,7 +34,6 @@ module Admin
 
         params[:q][:created_at_gteq] = Date.send(default_date).strftime("%Y-%m-%d")
       end
-
     end
   end
 end

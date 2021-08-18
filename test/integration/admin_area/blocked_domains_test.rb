@@ -3,7 +3,7 @@ require 'application_system_test_case'
 
 
 # /admin/blocked_domains
-class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCase  
+class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCase
   setup do
     WebMock.allow_net_connect!
     sign_in users(:admin)
@@ -46,6 +46,19 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
     find(:xpath, "//span[@class='glyphicon glyphicon-search']").click
 
     assert_text @domain.name
+  end
+
+  def test_download_blocked_domains
+    now = Time.zone.parse('2010-07-05 08:00')
+    travel_to now
+
+    get admin_blocked_domains_path(format: :csv)
+
+    assert_response :ok
+    assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
+    assert_equal %(attachment; filename="blocked_domains_#{Time.zone.now.to_formatted_s(:number)}.csv"; filename*=UTF-8''blocked_domains_#{Time.zone.now.to_formatted_s(:number)}.csv),
+                 response.headers['Content-Disposition']
+    assert_not_empty response.body
   end
 
   private

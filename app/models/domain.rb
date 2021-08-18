@@ -280,6 +280,21 @@ class Domain < ApplicationRecord
       )
     end
 
+    def to_csv
+      CSV.generate do |csv|
+        headers = column_names.dup
+        swap_elements(headers, [[0, 1], [1, 5]])
+        headers[0] = 'Domain'
+        headers[1] = headers[1].humanize
+        csv << headers
+        all.find_each do |item|
+          row = item.attributes.values_at(*column_names)
+          swap_elements(row, [[0, 1], [1, 5]])
+          csv << row
+        end
+      end
+    end
+
     private
 
     def registrant_user_domains_by_registrant(registrant_user)
@@ -720,15 +735,6 @@ class Domain < ApplicationRecord
     contacts.select(&:email_verification_failed?)&.map(&:email)&.uniq
   end
 
-  def self.to_csv
-    CSV.generate do |csv|
-      csv << column_names
-      all.each do |domain|
-        csv << domain.attributes.values_at(*column_names)
-      end
-    end
-  end
-
   def self.pdf(html)
     kit = PDFKit.new(html)
     kit.to_pdf
@@ -748,5 +754,12 @@ class Domain < ApplicationRecord
 
   def self.uses_zone?(zone)
     exists?(["name ILIKE ?", "%.#{zone.origin}"])
+  end
+
+  def self.swap_elements(array, indexes)
+    indexes.each do |index|
+      array[index[0]], array[index[1]] = array[index[1]], array[index[0]]
+    end
+    array
   end
 end

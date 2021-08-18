@@ -13,6 +13,8 @@ module Admin
       @epp_logs = @epp_logs.page(params[:page])
       @count = @q.result.count
       @epp_logs = @epp_logs.per(params[:results_per_page]) if paginate?
+
+      render_by_format('admin/epp_logs/index', 'epp_logs')
     end
 
     def show
@@ -31,7 +33,6 @@ module Admin
 
         params[:q][:created_at_gteq] = Date.send(default_date).strftime("%Y-%m-%d")
       end
-
     end
   end
 end

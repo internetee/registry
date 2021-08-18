@@ -26,7 +26,7 @@ class ContactVersionsTest < ApplicationSystemTestCase
       VALUES ('Contact', 75, 'update', '1-AdminUser',
       '{"id": 75, "code": "test_code", "auth_info": "8b4d462aa04194ca78840a", "registrar_id": #{@registrar.id}, "old_field": "value",
         "legal_id": "123"}',
-      '{"other_made_up_field": "value"}', 
+      '{"other_made_up_field": "value"}',
       '2018-04-23 15:50:48.113491', '2018-04-23 12:44:56',
       '{"legal_documents":[null]}', null, null
       )
@@ -55,5 +55,18 @@ class ContactVersionsTest < ApplicationSystemTestCase
 
     assert_text 'Best Names'
     assert_text '23.04.18, 18:50 update 1-AdminUser'
+  end
+
+  def test_download_contact_history
+    now = Time.zone.parse('2010-07-05 08:00')
+    travel_to now
+
+    get admin_contact_versions_path(format: :csv)
+
+    assert_response :ok
+    assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
+    assert_equal %(attachment; filename="contact_history_#{Time.zone.now.to_formatted_s(:number)}.csv"; filename*=UTF-8''contact_history_#{Time.zone.now.to_formatted_s(:number)}.csv),
+                 response.headers['Content-Disposition']
+    assert_not_empty response.body
   end
 end

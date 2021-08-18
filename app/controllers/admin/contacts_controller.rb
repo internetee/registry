@@ -24,6 +24,8 @@ module Admin
       end
 
       @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+
+      render_by_format('admin/contacts/index', 'contacts')
     end
 
     def filter_by_flags(contacts)

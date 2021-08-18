@@ -4,5 +4,6 @@ en:
       index:
         title: EPP log
         reset_btn: Reset
+        csv_btn: CSV
       show:
         title: EPP log

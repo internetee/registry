@@ -5,3 +5,4 @@ en:
         title: Blocked domains
         new_btn: New blocked domain
         reset_btn: Reset
+        csv_btn: CSV

@@ -12,7 +12,7 @@ class AdminAreaCsvTest < ApplicationSystemTestCase
     travel_to Time.zone.parse('2010-07-05 10:30')
     visit admin_domains_url
     click_link('CSV')
-    assert_equal "attachment; filename=\"domains.csv\"; filename*=UTF-8''domains.csv", response_headers['Content-Disposition']
+    assert_equal "attachment; filename=\"domains_#{Time.zone.now.to_formatted_s(:number)}.csv\"; filename*=UTF-8''domains_#{Time.zone.now.to_formatted_s(:number)}.csv", response_headers['Content-Disposition']
     assert_equal expected_csv, page.body
   end
 end

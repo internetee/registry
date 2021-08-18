@@ -44,7 +44,8 @@ module Admin
       @q = versions.search(params[:q])
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
-      render "admin/domain_versions/archive"
+
+      render_by_format('admin/domain_versions/archive', 'domain_history')
     end
 
     def show

@@ -88,6 +88,19 @@ class DomainVersionsTest < ApplicationSystemTestCase
       'http://www.example.com/admin/domain_versions?q[name]=shop.test&q[registrant]=&q[registrar]=&q[event]=&results_per_page='
   end
 
+  def test_download_domain_history
+    now = Time.zone.parse('2010-07-05 08:00')
+    travel_to now
+
+    get admin_domain_versions_path(format: :csv)
+
+    assert_response :ok
+    assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
+    assert_equal %(attachment; filename="domain_history_#{Time.zone.now.to_formatted_s(:number)}.csv"; filename*=UTF-8''domain_history_#{Time.zone.now.to_formatted_s(:number)}.csv),
+                 response.headers['Content-Disposition']
+    assert_not_empty response.body
+  end
+
   def test_search_event_param
     # TODO
   end

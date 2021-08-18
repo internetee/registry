@@ -9,6 +9,8 @@ module Admin
       @q = domains.search(params[:q])
       @domains = @q.result.page(params[:page])
       @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+
+      render_by_format('admin/reserved_domains/index', 'reserved_domains')
     end
 
     def new

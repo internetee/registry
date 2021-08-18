@@ -29,15 +29,7 @@ module Admin
       end
       @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 
-      respond_to do |format|
-        format.html do
-          @domains
-        end
-        format.csv do
-          raw_csv = @domains.to_csv
-          send_data raw_csv, filename: 'domains.csv', type: "#{Mime[:csv]}; charset=utf-8"
-        end
-      end
+      render_by_format('admin/domains/index', 'domains')
     end
 
     def show

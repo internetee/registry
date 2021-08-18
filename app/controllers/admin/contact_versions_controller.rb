@@ -28,6 +28,7 @@ module Admin
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 
+      render_by_format('admin/contact_versions/index', 'contact_history')
     end
 
     def show

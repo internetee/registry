@@ -10,6 +10,8 @@ module Admin
       params[:q] ||= {}
       @disputes = sortable_dispute_query_for(Dispute.active.all, params[:q])
       @closed_disputes = sortable_dispute_query_for(Dispute.closed.all, params[:q], closed: true)
+
+      render_by_format('admin/disputes/index', 'disputes')
     end
 
     # GET /admin/disputes/1

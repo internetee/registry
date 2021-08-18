@@ -32,12 +32,13 @@
                     <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page) %>
                 </div>
             </div>
-            <div class="col-md-3" style="padding-top: 25px;">
+            <div class="col-md-4" style="padding-top: 25px;">
                 <button class="btn btn-primary">
                     &nbsp;
                     <span class="glyphicon glyphicon-search"></span>
                     &nbsp;
                 </button>
+                <%= link_to(t('.csv_btn'), admin_disputes_path(format: :csv, params: params.permit!), class: 'btn btn-default') %>
                 <%= link_to(t('.reset_btn'), admin_disputes_path, class: 'btn btn-default') %>
             </div>
         </div>
