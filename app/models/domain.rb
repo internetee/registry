@@ -756,7 +756,7 @@ class Domain < ApplicationRecord
     exists?(["name ILIKE ?", "%.#{zone.origin}"])
   end
 
-  def swap_elements(array, indexes)
+  def self.swap_elements(array, indexes)
     indexes.each do |index|
       array[index[0]], array[index[1]] = array[index[1]], array[index[0]]
     end
