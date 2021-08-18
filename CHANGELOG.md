@@ -1,4 +1,6 @@
 18.08.2021
+* Added csv export functionality to admin [#500](https://github.com/internetee/registry/issues/500)
+* Admin domain list csv is now compatible with bulk transfer [#670](https://github.com/internetee/registry/issues/670)
 * Bump truemail to 2.4.8 [#2121](https://github.com/internetee/registry/pull/2121)
 * Bump nokogiri to 1.12.3 [#2122](https://github.com/internetee/registry/pull/2122)
 
