@@ -1,3 +1,7 @@
+18.08.2021
+* Bump truemail to 2.4.8 [#2121](https://github.com/internetee/registry/pull/2121)
+* Bump nokogiri to 1.12.3 [#2122](https://github.com/internetee/registry/pull/2122)
+
 11.08.2021
 * Registrar filters as dropdown in admin [#501](https://github.com/internetee/registry/issues/501)
 * Created at filter added to domain listing in admin [#502](https://github.com/internetee/registry/issues/502)
