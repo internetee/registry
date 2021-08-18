@@ -3,6 +3,7 @@ require 'application_system_test_case'
 class AdminAccountsSystemTest < ApplicationSystemTestCase
   setup do
     sign_in users(:admin)
+    @account = registrars(:bestnames).cash_account
   end
 
   def test_download_accounts
@@ -16,5 +17,17 @@ class AdminAccountsSystemTest < ApplicationSystemTestCase
     assert_equal %(attachment; filename="accounts_#{Time.zone.now.to_formatted_s(:number)}.csv"; filename*=UTF-8''accounts_#{Time.zone.now.to_formatted_s(:number)}.csv),
                  response.headers['Content-Disposition']
     assert_not_empty response.body
+  end
+
+  def test_change_account_balance
+    puts @account.inspect
+    visit edit_admin_account_path(@account)
+    assert_button 'Save'
+    assert_field 'Balance'
+    fill_in 'Balance', with: '234'
+    click_on 'Save'
+
+    assert_text 'Account has been successfully updated'
+    assert_text '234'
   end
 end
