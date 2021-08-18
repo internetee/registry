@@ -1,0 +1,52 @@
+<%= form_for([:admin, @account], html: { class: 'form-horizontal', autocomplete: 'off' }) do |f| %>
+    <%= render 'form_errors', target: @account %>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <div class="col-md-4 control-label">
+                    <%= f.label :id, nil, class: 'required' %>
+                </div>
+                <div class="col-md-7">
+                    <%= f.text_field :id, required: true, autofocus: true,
+                                     class: 'form-control', disabled: true %>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4 control-label">
+                    <%= f.label :currency, nil, class: 'required' %>
+                </div>
+                <div class="col-md-7">
+                    <%= f.text_field :currency, required: true, class: 'form-control', disabled: true %>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4 control-label">
+                    <%= f.label :balance %>
+                </div>
+                <div class="col-md-7">
+                    <%= f.text_field(:balance, class: 'form-control') %>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4 control-label">
+                    <%= f.label :description %>
+                </div>
+                <div class="col-md-7">
+                    <%= text_area_tag :description, params[:description], class: 'form-control' %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-8 text-right">
+            <%= button_tag t('.save_btn'), class: 'btn btn-warning' %>
+        </div>
+    </div>
+<% end %>

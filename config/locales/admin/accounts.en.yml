@@ -1,0 +1,21 @@
+en:
+  admin:
+    accounts:
+      index:
+        header: Accounts
+
+      update:
+        updated: Account has been successfully updated
+
+      form:
+        update_btn: Update account
+        reset_btn: Reset
+        save_btn: Save
+
+      search_form:
+        registrar_name: Registrar
+        reset_btn: Reset
+        download_csv_btn: CSV
+
+      account:
+        edit_balance: Edit balance

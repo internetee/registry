@@ -45,7 +45,7 @@
                             <%= x.reg_no %>
                         </td>
                         <td>
-                            <%= "#{x.balance}" %>
+                            <%= link_to "#{x.balance}", edit_admin_account_path(x.cash_account) %>
                         </td>
                         <td>
                             <%= "#{x.test_registrar}" %>

@@ -358,6 +358,7 @@ en:
   contact_org_error: 'Parameter value policy error. Org must be blank'
   contact_fax_error: 'Parameter value policy error. Fax must be blank'
   invoices: 'Invoices'
+  accounts: 'Accounts'
   no_such_user: 'No such user'
   phone_no: 'Phone number'
   confirmation_sms_was_sent_to_your_phone_verification_code_is: 'Confirmation sms was sent to your phone. Verification code is %{code}.'
