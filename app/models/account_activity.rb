@@ -8,6 +8,7 @@ class AccountActivity < ApplicationRecord
   CREATE = 'create'
   RENEW = 'renew'
   ADD_CREDIT = 'add_credit'
+  UPDATE_CREDIT = 'update_credit'
 
   after_create :update_balance
   def update_balance
@@ -20,7 +21,7 @@ class AccountActivity < ApplicationRecord
 
   class << self
     def types_for_select
-      [CREATE, RENEW, ADD_CREDIT].map { |x| [I18n.t(x), x] }
+      [CREATE, RENEW, ADD_CREDIT, UPDATE_CREDIT].map { |x| [I18n.t(x), x] }
     end
 
     def to_csv

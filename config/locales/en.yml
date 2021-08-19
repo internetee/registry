@@ -603,6 +603,7 @@ en:
   receipt_date_from: 'Receipt date from'
   receipt_date_until: 'Receipt date until'
   add_credit: 'Add credit'
+  update_credit: 'Update credit'
   invalid_yaml: 'Invalid YAML'
   reserved_pw: 'Reserved pw'
   no_transfers_found: 'No transfers found'

@@ -30,7 +30,7 @@ module Admin
                                      sum: @sum,
                                      currency: @account.currency,
                                      description: params[:description],
-                                     activity_type: AccountActivity::ADD_CREDIT)
+                                     activity_type: AccountActivity::UPDATE_CREDIT)
 
       if activity.save
         true
