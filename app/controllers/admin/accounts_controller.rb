@@ -5,7 +5,7 @@ module Admin
     def index
       @q = Account.includes(:registrar).search(params[:q])
       @accounts = @q.result.page(params[:page])
-      @accounts = @accounts.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+      @accounts = @accounts.per(params[:results_per_page]) if paginate?
 
       render_by_format('admin/accounts/index', 'accounts')
     end
