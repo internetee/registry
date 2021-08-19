@@ -2,6 +2,8 @@ require_dependency 'epp_constraint'
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  get 'practice/index'
+  get 'practice/contact'
   # https://github.com/internetee/epp_proxy#translation-of-epp-calls
   namespace :epp do
     constraints(EppConstraint.new(:session)) do
