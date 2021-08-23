@@ -1,5 +1,7 @@
 en:
   edit_balance: Edit balance
+  invalid_balance: The balance must be a number
+
   admin:
     accounts:
       index:
