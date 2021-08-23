@@ -19,12 +19,12 @@ module Admin
                                                   params[:account][:balance],
                                                   params[:description],
                                                   AccountActivity::UPDATE_CREDIT)
-      unless action.call
+      if action.call
+        redirect_to admin_accounts_path, notice: t('.updated')
+      else
         flash[:alert] = t('invalid_balance')
         render 'edit'
       end
-
-      redirect_to admin_accounts_path, notice: t('.updated') if action.call
     end
 
     private
