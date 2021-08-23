@@ -15,16 +15,16 @@ module Admin
     def edit; end
 
     def update
-      if @account.valid?
-        action = Actions::AccountActivityCreate.new(@account,
-                                                    params[:account][:balance],
-                                                    params[:description],
-                                                    AccountActivity::UPDATE_CREDIT)
-        redirect_to admin_accounts_path, notice: t('.updated') && return if action.call
+      action = Actions::AccountActivityCreate.new(@account,
+                                                  params[:account][:balance],
+                                                  params[:description],
+                                                  AccountActivity::UPDATE_CREDIT)
+      unless action.call
+        flash[:alert] = t('invalid_balance')
+        render 'edit'
       end
 
-      flash[:alert] = t('invalid_balance')
-      render 'edit'
+      redirect_to admin_accounts_path, notice: t('.updated') if action.call
     end
 
     private
