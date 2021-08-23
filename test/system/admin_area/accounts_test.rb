@@ -20,7 +20,6 @@ class AdminAccountsSystemTest < ApplicationSystemTestCase
   end
 
   def test_change_account_balance
-    puts @account.inspect
     visit edit_admin_account_path(@account)
     assert_button 'Save'
     assert_field 'Balance'

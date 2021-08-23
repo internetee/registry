@@ -17,27 +17,22 @@ module Admin
     def update
       if @account.valid?
         @sum = params[:account][:balance].to_f - @account.balance
-        redirect_to admin_accounts_path, notice: t('.updated') if create_activity
+        action = Actions::AccountActivityCreate.new(@account,
+                                                    @sum,
+                                                    params[:description],
+                                                    AccountActivity::UPDATE_CREDIT)
+
+        unless action.call
+          handle_errors(@account)
+          render 'edit'
+        end
+        redirect_to admin_accounts_path, notice: t('.updated')
       else
         render 'edit'
       end
     end
 
     private
-
-    def create_activity
-      activity = AccountActivity.new(account: @account,
-                                     sum: @sum,
-                                     currency: @account.currency,
-                                     description: params[:description],
-                                     activity_type: AccountActivity::UPDATE_CREDIT)
-
-      if activity.save
-        true
-      else
-        false
-      end
-    end
 
     def account_params
       params.require(:account).permit(:id, :currency, :balance)
