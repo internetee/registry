@@ -26,11 +26,5 @@ module Admin
         render 'edit'
       end
     end
-
-    private
-
-    def account_params
-      params.require(:account).permit(:id, :currency, :balance)
-    end
   end
 end

@@ -21,7 +21,7 @@ module Actions
     end
 
     def validate_new_balance
-      return if @new_balance.blank?
+      @error = true and return if @new_balance.blank?
 
       begin
         !Float(@new_balance).nil?
