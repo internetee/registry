@@ -21,12 +21,14 @@ module Actions
     end
 
     def validate_new_balance
-      @error = true and return if @new_balance.blank?
-
-      begin
-        !Float(@new_balance).nil?
-      rescue StandardError
+      if @new_balance.blank?
         @error = true
+      else
+        begin
+          !Float(@new_balance).nil?
+        rescue StandardError
+          @error = true
+        end
       end
     end
 
