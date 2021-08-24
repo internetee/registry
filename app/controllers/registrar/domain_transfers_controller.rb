@@ -30,7 +30,7 @@ class Registrar
         parsed_response = JSON.parse(response.body, symbolize_names: true)
 
         if response.code == '200'
-          failed = parsed_response[:data][:failed].each(&:domain_name).join(', ')
+          failed = parsed_response[:data][:failed].pluck(:domain_name).join(', ')
           flash[:notice] = t('.transferred', count: parsed_response[:data][:success].size,
                                              failed: failed)
           redirect_to registrar_domains_url
