@@ -1,3 +1,6 @@
+24.08.2021
+* Fixed bulk transfer internal error [#2123](https://github.com/internetee/registry/issues/2123)
+
 18.08.2021
 * Added csv export functionality to admin [#500](https://github.com/internetee/registry/issues/500)
 * Admin domain list csv is now compatible with bulk transfer [#670](https://github.com/internetee/registry/issues/670)
