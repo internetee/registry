@@ -15,7 +15,7 @@
             <dd><%= registrar.code %></dd>
 
             <dt><%= Registrar.human_attribute_name :balance %></dt>
-            <dd><%= number_to_currency registrar.balance %></dd>
+            <dd><%= link_to (number_to_currency registrar.balance), edit_admin_account_path(registrar.cash_account) %></dd>
 
             <dt><%= Registrar.human_attribute_name :website %></dt>
             <dd><%= registrar.website %></dd>

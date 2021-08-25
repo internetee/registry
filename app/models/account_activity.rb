@@ -5,9 +5,10 @@ class AccountActivity < ApplicationRecord
   belongs_to :invoice
   belongs_to :price, class_name: 'Billing::Price'
 
-  CREATE = 'create'
-  RENEW = 'renew'
-  ADD_CREDIT = 'add_credit'
+  CREATE = 'create'.freeze
+  RENEW = 'renew'.freeze
+  ADD_CREDIT = 'add_credit'.freeze
+  UPDATE_CREDIT = 'update_credit'.freeze
 
   after_create :update_balance
   def update_balance
@@ -20,7 +21,7 @@ class AccountActivity < ApplicationRecord
 
   class << self
     def types_for_select
-      [CREATE, RENEW, ADD_CREDIT].map { |x| [I18n.t(x), x] }
+      [CREATE, RENEW, ADD_CREDIT, UPDATE_CREDIT].map { |x| [I18n.t(x), x] }
     end
 
     def to_csv

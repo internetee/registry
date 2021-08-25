@@ -1,0 +1,7 @@
+<tr>
+    <td><%= account.id %></td>
+    <td><%= account.balance %></td>
+    <td><%= account.currency %></td>
+    <td><%= link_to account.registrar, admin_registrar_path(account.registrar) %></td>
+    <td><%= link_to(t(:edit_balance), edit_admin_account_path(account), class: 'btn btn-primary btn-xs') %></td>
+</tr>

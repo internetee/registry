@@ -236,6 +236,7 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :accounts
     resources :account_activities
 
     resources :bank_statements do
