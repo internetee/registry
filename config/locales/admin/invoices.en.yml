@@ -10,3 +10,7 @@ en:
 
       cancel:
         cancelled: Invoice has been cancelled
+
+      search_form:
+        download_btn: CSV
+        reset_btn: Reset

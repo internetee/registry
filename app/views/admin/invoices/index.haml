@@ -1,7 +1,7 @@
 - content_for :actions do
   = link_to(t(:add), new_admin_invoice_path, class: 'btn btn-primary')
 = render 'shared/title', name: t(:invoices)
-= render 'application/pagination'
+= render 'search_form'
 
 .row
   .col-md-12
@@ -33,6 +33,7 @@
                 %td.text-grey= t(:cancelled)
               - else
                 %td.text-danger= t(:unpaid)
+
 .row
   .col-md-6
     = paginate @invoices

@@ -33,10 +33,17 @@ module Admin
     end
 
     def index
-      @q = Invoice.includes(:account_activity).search(params[:q])
+      params[:q] ||= {}
+
+      invoices = filter_by_status
+      invoices = filter_by_receipt_date(invoices)
+
+      @q = invoices.search(params[:q])
       @q.sorts = 'number desc' if @q.sorts.empty?
       @invoices = @q.result.page(params[:page])
       @invoices = @invoices.per(params[:results_per_page]) if paginate?
+
+      render_by_format('admin/invoices/index', 'invoices')
     end
 
     def show; end
@@ -71,6 +78,30 @@ module Admin
     def mark_cancelled_payment_order(invoice)
       payment_order = invoice.payment_orders.last
       payment_order.update(notes: 'Cancelled')
+    end
+
+    def filter_by_status
+      case params[:status]
+      when 'Paid'
+        Invoice.includes(:account_activity, :buyer).where.not(account_activity: { id: nil })
+      when 'Unpaid'
+        Invoice.includes(:account_activity, :buyer).where(account_activity: { id: nil })
+      when 'Cancelled'
+        Invoice.includes(:account_activity, :buyer).where.not(cancelled_at: nil)
+      else
+        Invoice.includes(:account_activity, :buyer)
+      end
+    end
+
+    def filter_by_receipt_date(invoices)
+      if params[:q][:receipt_date_gteq].present?
+        invoices = invoices.where(account_activity:
+                                    { created_at: Time.parse(params[:q][:receipt_date_gteq])..Float::INFINITY })
+      end
+
+      return invoices unless params[:q][:receipt_date_lteq].present?
+
+      invoices.where(account_activity: { created_at: -Float::INFINITY..Time.parse(params[:q][:receipt_date_lteq]) })
     end
   end
 end
