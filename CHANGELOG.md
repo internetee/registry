@@ -1,3 +1,10 @@
+25.08.2021
+* Admin: added option to update registrar credit balance [#714](https://github.com/internetee/registry/issues/714)
+* Bump webdriver to 4.6.1 [#2128](https://github.com/internetee/registry/pull/2128)
+* Bump sidekiq to 6.2.2 [#2129](https://github.com/internetee/registry/pull/2129)
+* Bump truemail to 2.4.9 [#2130](https://github.com/internetee/registry/pull/2130)
+* Bump rails to 6.1.4.1 [#2131](https://github.com/internetee/registry/pull/2131)
+
 24.08.2021
 * Fixed bulk transfer internal error [#2123](https://github.com/internetee/registry/issues/2123)
 
