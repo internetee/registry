@@ -40,7 +40,6 @@ module Admin
       @q.sorts = 'number desc' if @q.sorts.empty?
       @invoices = @q.result.page(params[:page])
       @invoices = @invoices.per(params[:results_per_page]) if paginate?
-
       render_by_format('admin/invoices/index', 'invoices')
     end
 
@@ -84,10 +83,8 @@ module Admin
         Invoice.includes(:account_activity, :buyer).where.not(account_activity: { id: nil })
       when 'Unpaid'
         Invoice.includes(:account_activity, :buyer).where(account_activity: { id: nil })
-      when 'Cancelled'
-        Invoice.includes(:account_activity, :buyer).where.not(cancelled_at: nil)
-      else
-        Invoice.includes(:account_activity, :buyer)
+      when 'Cancelled' then Invoice.includes(:account_activity, :buyer).where.not(cancelled_at: nil)
+      else Invoice.includes(:account_activity, :buyer)
       end
     end
 
