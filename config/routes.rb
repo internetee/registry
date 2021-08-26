@@ -126,6 +126,13 @@ Rails.application.routes.draw do
         resources :companies, only: %i[index]
       end
 
+      namespace :accreditation_center do
+        resource :domains, only: [ :show ], param: :name
+        resource :contacts, only: [ :show ], param: :id
+        # resource :auth, only: [ :index ]
+        get 'auth', to: 'auth#index'
+      end
+
       resources :auctions, only: %i[index show update], param: :uuid
       resources :contact_requests, only: %i[create update], param: :id
       resources :bounces, only: %i[create]
