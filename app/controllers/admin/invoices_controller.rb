@@ -21,8 +21,7 @@ module Admin
     end
 
     def cancel_paid
-      invoice_id = params[:invoice_id]
-      invoice = Invoice.find(invoice_id)
+      invoice = Invoice.find(params[:invoice_id])
 
       if account_activity_with_negative_sum(invoice)
         flash[:notice] = t(:payment_was_cancelled)
@@ -40,6 +39,7 @@ module Admin
       @q.sorts = 'number desc' if @q.sorts.empty?
       @invoices = @q.result.page(params[:page])
       @invoices = @invoices.per(params[:results_per_page]) if paginate?
+
       render_by_format('admin/invoices/index', 'invoices')
     end
 
