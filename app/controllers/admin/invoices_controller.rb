@@ -33,8 +33,6 @@ module Admin
     end
 
     def index
-      params[:q] ||= {}
-
       invoices = filter_by_status
       invoices = filter_by_receipt_date(invoices)
 
@@ -95,13 +93,14 @@ module Admin
 
     def filter_by_receipt_date(invoices)
       if params[:q][:receipt_date_gteq].present?
-        invoices = invoices.where(account_activity:
-                                    { created_at: Time.parse(params[:q][:receipt_date_gteq])..Float::INFINITY })
+        date_from = Time.zone.parse(params[:q][:receipt_date_gteq])
+        invoices = invoices.where(account_activity: { created_at: date_from..Float::INFINITY })
       end
 
-      return invoices unless params[:q][:receipt_date_lteq].present?
+      return invoices if params[:q][:receipt_date_lteq].blank?
 
-      invoices.where(account_activity: { created_at: -Float::INFINITY..Time.parse(params[:q][:receipt_date_lteq]) })
+      date_until = Time.zone.parse(params[:q][:receipt_date_lteq])
+      invoices.where(account_activity: { created_at: -Float::INFINITY..date_until })
     end
   end
 end
