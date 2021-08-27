@@ -50,6 +50,8 @@ module Api
                                         accreditation_expire_date])
           data[:registrar_name] = registrar.name
           data[:registrar_reg_no] = registrar.reg_no
+          data[:registrar_email] = registrar.email
+          data[:code] = registrar.code
           data
         end
 

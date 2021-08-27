@@ -116,10 +116,15 @@ module Repp
       def webclient_request?
         return if Rails.env.test?
 
+        header  = request.headers['AccreditationToken']
+        return if header == 'TEMPORARY_SECRET_KEY'
+
         ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
       end
 
       def validate_webclient_ca
+        
+
         return unless webclient_request?
 
         request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']

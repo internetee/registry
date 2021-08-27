@@ -106,7 +106,7 @@ module Actions
     end
 
     def assign_domain_period
-      domain.period = params[:period]
+      domain.period = params[:period].to_i
       domain.period_unit = params[:period_unit]
     end
 
