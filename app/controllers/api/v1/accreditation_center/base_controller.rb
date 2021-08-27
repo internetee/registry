@@ -17,7 +17,7 @@ module Api
 
         private
 
-				def check_ip_whitelist
+        def check_ip_whitelist
           allowed_ips = ENV['accr_center_api_auth_allowed_ips'].to_s.split(',').map(&:strip)
           return if allowed_ips.include?(request.ip) || Rails.env.development?
 

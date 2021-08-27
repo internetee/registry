@@ -1,4 +1,4 @@
-require 'serializers/repp/domain'
+require 'serializers/repp/contact'
 
 module Api
   module V1
@@ -9,7 +9,8 @@ module Api
 
           if @contact
             render json: { contact: Serializers::Repp::Contact.new(@contact,
-                                                                     show_address: false).to_json  }, status: :found
+                                                                   show_address: false).to_json },
+                   status: :found
           else
             render json: { errors: 'Contact not found' }, status: :not_found
           end

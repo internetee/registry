@@ -9,7 +9,8 @@ module Api
 
           if @domain
             render json: { domain: Serializers::Repp::Domain.new(@domain,
-                                                                     sponsored: true).to_json  }, status: :found
+                                                                 sponsored: true).to_json },
+                   status: :found
           else
             render json: { errors: 'Domain not found' }, status: :not_found
           end
