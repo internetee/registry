@@ -32,6 +32,7 @@ module Admin
     end
 
     def index
+      params[:q] ||= {}
       invoices = filter_by_status
       invoices = filter_by_receipt_date(invoices)
 
