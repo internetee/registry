@@ -84,21 +84,17 @@ module Admin
         Invoice.includes(:account_activity, :buyer).where.not(account_activity: { id: nil })
       when 'Unpaid'
         Invoice.includes(:account_activity, :buyer).where(account_activity: { id: nil })
-      when 'Cancelled' then Invoice.includes(:account_activity, :buyer).where.not(cancelled_at: nil)
-      else Invoice.includes(:account_activity, :buyer)
+      when 'Cancelled'
+        Invoice.includes(:account_activity, :buyer).where.not(cancelled_at: nil)
+      else
+        Invoice.includes(:account_activity, :buyer)
       end
     end
 
     def filter_by_receipt_date(invoices)
-      if params[:q][:receipt_date_gteq].present?
-        date_from = Time.zone.parse(params[:q][:receipt_date_gteq])
-        invoices = invoices.where(account_activity: { created_at: date_from..Float::INFINITY })
-      end
-
-      return invoices if params[:q][:receipt_date_lteq].blank?
-
-      date_until = Time.zone.parse(params[:q][:receipt_date_lteq])
-      invoices.where(account_activity: { created_at: -Float::INFINITY..date_until })
+      date_from = Time.zone.parse(params[:q][:receipt_date_gteq]) || -Float::INFINITY
+      date_until = Time.zone.parse(params[:q][:receipt_date_lteq]) || Float::INFINITY
+      invoices.where(account_activity: { created_at: date_from..date_until })
     end
   end
 end
