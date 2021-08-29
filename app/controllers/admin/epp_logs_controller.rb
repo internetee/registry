@@ -11,7 +11,6 @@ module Admin
       @epp_logs = @epp_logs.where("extract(epoch from created_at) >= extract(epoch from ?::timestamp)", Time.parse(params[:q][:created_at_gteq])) if params[:q][:created_at_gteq].present?
       @epp_logs = @epp_logs.where("extract(epoch from created_at) <= extract(epoch from ?::timestamp)", Time.parse(params[:q][:created_at_lteq])) if params[:q][:created_at_lteq].present?
       @epp_logs = @epp_logs.page(params[:page])
-      @count = @q.result.count
       @epp_logs = @epp_logs.per(params[:results_per_page]) if paginate?
 
       render_by_format('admin/epp_logs/index', 'epp_logs')
