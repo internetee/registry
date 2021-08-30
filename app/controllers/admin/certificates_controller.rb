@@ -61,12 +61,12 @@ module Admin
     end
 
     def download_csr
-      filename = "#{@api_user.username}_#{Date.today.strftime("%y%m%d")}_portal.csr.pem"
+      filename = "#{@api_user.username}_#{Time.zone.today.strftime('%y%m%d')}_portal.csr.pem"
       send_data @certificate.csr, filename: filename
     end
 
     def download_crt
-      filename = "#{@api_user.username}_#{Date.today.strftime("%y%m%d")}_portal.crt.pem"
+      filename = "#{@api_user.username}_#{Time.zone.today.strftime('%y%m%d')}_portal.crt.pem"
       send_data @certificate.crt, filename: filename
     end
 
