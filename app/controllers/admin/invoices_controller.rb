@@ -92,16 +92,12 @@ module Admin
     end
 
     def filter_by_receipt_date(invoices)
-      date_from = if params[:q][:receipt_date_gteq].present?
-                    Time.zone.parse(params[:q][:receipt_date_gteq])
-                  else
-                    -Float::INFINITY
-                  end
-      date_until = if params[:q][:receipt_date_lteq].present?
-                     Time.zone.parse(params[:q][:receipt_date_lteq])
-                   else
-                     Float::INFINITY
-                   end
+      date_from_param = params[:q][:receipt_date_gteq] if params[:q][:receipt_date_gteq].present?
+      date_from = date_from_param ? Time.zone.parse(date_from_param) : -Float::INFINITY
+
+      date_until_param = params[:q][:receipt_date_lteq] if params[:q][:receipt_date_lteq].present?
+      date_until = date_until_param ? Time.zone.parse(date_from_param) : Float::INFINITY
+
       invoices.where(account_activity: { created_at: date_from..date_until })
     end
   end
