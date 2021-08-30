@@ -22,24 +22,26 @@ class AdminAreaCertificatesIntegrationTest < JavaScriptApplicationSystemTestCase
 
     page.driver.browser.switch_to.alert.accept
 
-    assert_text 'Record deleted'        
+    assert_text 'Record deleted'
   end
 
   def test_download_csr
+    filename = "test_bestnames_#{Date.today.strftime("%y%m%d")}_portal.csr.pem"
     get download_csr_admin_api_user_certificate_path(api_user_id: @apiuser.id, id: @certificate.id)
 
     assert_response :ok
     assert_equal 'application/octet-stream', response.headers['Content-Type']
-    assert_equal "attachment; filename=\"test_bestnames.csr.pem\"; filename*=UTF-8''test_bestnames.csr.pem", response.headers['Content-Disposition']
+    assert_equal "attachment; filename=\"#{filename}\"; filename*=UTF-8''#{filename}", response.headers['Content-Disposition']
     assert_not_empty response.body
   end
 
   def test_download_crt
+    filename = "test_bestnames_#{Date.today.strftime("%y%m%d")}_portal.crt.pem"
     get download_crt_admin_api_user_certificate_path(api_user_id: @apiuser.id, id: @certificate.id)
 
     assert_response :ok
     assert_equal 'application/octet-stream', response.headers['Content-Type']
-    assert_equal "attachment; filename=\"test_bestnames.crt.pem\"; filename*=UTF-8''test_bestnames.crt.pem", response.headers['Content-Disposition']
+    assert_equal "attachment; filename=\"#{filename}\"; filename*=UTF-8''#{filename}", response.headers['Content-Disposition']
     assert_not_empty response.body
   end
 
