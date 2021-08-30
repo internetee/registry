@@ -70,3 +70,7 @@ en:
 
         preferences:
           header: Preferences
+
+      search_form:
+        download_btn: Download CSV
+        reset_btn: Reset

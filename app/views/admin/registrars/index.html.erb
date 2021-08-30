@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<%= render 'application/pagination' %>
+<%= render 'search_form', search: @search %>
 
 <div class="row">
     <div class="col-md-12">
@@ -44,9 +44,11 @@
                         <td>
                             <%= x.reg_no %>
                         </td>
-                        <td>
-                            <%= link_to "#{x.balance}", edit_admin_account_path(x.cash_account) %>
-                        </td>
+                        <% if x.cash_account.present? %>
+                            <td>
+                                <%= link_to "#{x.balance}", edit_admin_account_path(x.cash_account) %>
+                            </td>
+                        <% end %>
                         <td>
                             <%= "#{x.test_registrar}" %>
                         </td>
@@ -69,7 +71,7 @@
     </div>
     <div class="col-md-6 text-right">
         <div class="pagination">
-            <%= t(:result_count, count: @q.result.count) %>
+            <%= t(:result_count, count: @registrars.total_count) %>
         </div>
     </div>
 </div>
