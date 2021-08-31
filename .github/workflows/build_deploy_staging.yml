@@ -120,7 +120,6 @@ jobs:
           TEST: 'rest'
         timeout-minutes: 5
         run: |
-          export CLOUD_TOKEN='(cat token)'
           export TEST2="$TEST"
           sudo openvpn --config config.ovpn --askpass client.pwd --auth-nocache --daemon&
           sleep 15
