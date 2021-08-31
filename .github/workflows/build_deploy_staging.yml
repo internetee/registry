@@ -86,6 +86,7 @@ jobs:
           K_CONFIG: ${{ secrets.KUBE_CONFIG }}
           SSH_KEY: ${{ secrets.EISBOT_SSH_KEY }}
           EPPROXY_CONF: ${{ secrets.EPPROXY_CONF }}
+          ClOUD_TOKEN: ${{ secrets.CLOUD_TOKEN }}
         run: |
           echo $VPN_PWD | base64 -di > client.pwd
           chmod 0600 client.pwd
@@ -100,6 +101,7 @@ jobs:
           echo $K_CONFIG | base64 -di > kubeconfig
           chmod 0600 kubeconfig
           echo $EPPROXY_CONF | base64 -di > sys.config
+          echo $CLOUD_TOKEN > token
           echo "proxy config before alignement"
           less sys.config
           echo "****************"
@@ -118,7 +120,7 @@ jobs:
           TEST: 'rest'
         timeout-minutes: 5
         run: |
-          export CLOUD_TOKEN="$CLOUD_TOKEN"
+          export CLOUD_TOKEN='(cat token)'
           export TEST2="$TEST"
           sudo openvpn --config config.ovpn --askpass client.pwd --auth-nocache --daemon&
           sleep 15
