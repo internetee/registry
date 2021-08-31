@@ -49,7 +49,7 @@
     = paginate @epp_logs
     .pull-right
       .pagination
-        = t(:result_count, count: @count) if @count > 0
+        = t(:result_count, count: @epp_logs.total_count) if @epp_logs.total_count.positive?
     .row
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
@@ -76,4 +76,4 @@
     = paginate @epp_logs
     .pull-right
       .pagination
-        = t(:result_count, count: @count)
+        = t(:result_count, count: @epp_logs.total_count) if @epp_logs.total_count.positive?
