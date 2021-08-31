@@ -21,8 +21,7 @@ module Admin
     end
 
     def cancel_paid
-      invoice_id = params[:invoice_id]
-      invoice = Invoice.find(invoice_id)
+      invoice = Invoice.find(params[:invoice_id])
 
       if account_activity_with_negative_sum(invoice)
         flash[:notice] = t(:payment_was_cancelled)
@@ -33,10 +32,16 @@ module Admin
     end
 
     def index
-      @q = Invoice.includes(:account_activity).search(params[:q])
+      params[:q] ||= {}
+      invoices = filter_by_status
+      invoices = filter_by_receipt_date(invoices)
+
+      @q = invoices.search(params[:q])
       @q.sorts = 'number desc' if @q.sorts.empty?
       @invoices = @q.result.page(params[:page])
       @invoices = @invoices.per(params[:results_per_page]) if paginate?
+
+      render_by_format('admin/invoices/index', 'invoices')
     end
 
     def show; end
@@ -71,6 +76,29 @@ module Admin
     def mark_cancelled_payment_order(invoice)
       payment_order = invoice.payment_orders.last
       payment_order.update(notes: 'Cancelled')
+    end
+
+    def filter_by_status
+      case params[:status]
+      when 'Paid'
+        Invoice.includes(:account_activity, :buyer).where.not(account_activity: { id: nil })
+      when 'Unpaid'
+        Invoice.includes(:account_activity, :buyer).where(account_activity: { id: nil })
+      when 'Cancelled'
+        Invoice.includes(:account_activity, :buyer).where.not(cancelled_at: nil)
+      else
+        Invoice.includes(:account_activity, :buyer)
+      end
+    end
+
+    def filter_by_receipt_date(invoices)
+      date_from_param = params[:q][:receipt_date_gteq] if params[:q][:receipt_date_gteq].present?
+      date_from = date_from_param ? Time.zone.parse(date_from_param) : -Float::INFINITY
+
+      date_until_param = params[:q][:receipt_date_lteq] if params[:q][:receipt_date_lteq].present?
+      date_until = date_until_param ? Time.zone.parse(date_from_param) : Float::INFINITY
+
+      invoices.where(account_activity: { created_at: date_from..date_until })
     end
   end
 end
