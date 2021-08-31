@@ -1,5 +1,12 @@
 31.08.2021
+* Fix for multiplied renew issue [#2135](https://github.com/internetee/registry/issues/2135)
+* Admin: filtering and search options for the invoices view [#2124](https://github.com/internetee/registry/issues/2124)
+* Admin: certificate filenames are now unique [#2125](https://github.com/internetee/registry/issues/2125)
+* Admin: filter to select show active and inactive registrars [#2127](https://github.com/internetee/registry/issues/2127)
 * Admin: fixed epp log loading issue with high number of log records [#2133](https://github.com/internetee/registry/issues/2133)
+* Bump paper-trail to 12.1.0 [#2138](https://github.com/internetee/registry/pull/2138)
+* Bump bootsnap to 1.8.1 [#2139](https://github.com/internetee/registry/pull/2139)
+* Bump nokogiri to 1.12.4 [#2140](https://github.com/internetee/registry/pull/2140)
 
 25.08.2021
 * Admin: added option to update registrar credit balance [#714](https://github.com/internetee/registry/issues/714)
