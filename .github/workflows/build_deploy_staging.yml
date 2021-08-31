@@ -116,7 +116,7 @@ jobs:
 
       - name: Deploy from remote server
         env:
-          ClOUD_TOKEN: '${{ secrets.CLOUD_TOKEN }}'
+          ClOUD_TOKEN: ${{ secrets.CLOUD_TOKEN }}
           TEST: 'rest'
         timeout-minutes: 5
         run: |
