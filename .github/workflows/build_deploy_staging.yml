@@ -42,18 +42,18 @@ jobs:
           cp config/database.yml.sample config/database.yml
           ls -l config/
 
-      # - name: Build image
-      #   env:
-      #     KEY_BASE: ${{ secrets.KEY_BASE}}
-      #   run: |
-      #     docker build -t $TAG --build-arg RAILS_ENV=staging --build-arg SECRET_KEY_BASE="$KEY_BASE" -f Dockerfile.generic .
+      - name: Build image
+        env:
+          KEY_BASE: ${{ secrets.KEY_BASE}}
+        run: |
+          docker build -t $TAG --build-arg RAILS_ENV=staging --build-arg SECRET_KEY_BASE="$KEY_BASE" -f Dockerfile.generic .
 
-      # - name: Push Docker image to gh container registry
-      #   env:
-      #     PASSWORD: ${{ secrets.GHCR }}
-      #   run: |
-      #     echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
-      #     docker push $TAG
+      - name: Push Docker image to gh container registry
+        env:
+          PASSWORD: ${{ secrets.GHCR }}
+        run: |
+          echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
+          docker push $TAG
 
       - name: Get pull request reference number
         run: |
@@ -86,7 +86,6 @@ jobs:
           K_CONFIG: ${{ secrets.KUBE_CONFIG }}
           SSH_KEY: ${{ secrets.EISBOT_SSH_KEY }}
           EPPROXY_CONF: ${{ secrets.EPPROXY_CONF }}
-          ClOUD_TOKEN: ${{ secrets.CLOUD_TOKEN }}
         run: |
           echo $VPN_PWD | base64 -di > client.pwd
           chmod 0600 client.pwd
@@ -101,7 +100,6 @@ jobs:
           echo $K_CONFIG | base64 -di > kubeconfig
           chmod 0600 kubeconfig
           echo $EPPROXY_CONF | base64 -di > sys.config
-          echo $ClOUD_TOKEN > token
           echo "proxy config before alignement"
           less sys.config
           echo "****************"
@@ -115,9 +113,6 @@ jobs:
         run: sudo apt-get install openvpn
 
       - name: Deploy from remote server
-        env:
-          ClOUD_TOKEN: ${{ secrets.CLOUD_TOKEN }}
-          TEST: 'rest'
         timeout-minutes: 5
         run: |
           export TEST2="$TEST"
