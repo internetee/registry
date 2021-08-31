@@ -1,3 +1,6 @@
+31.08.2021
+* Admin: fixed epp log loading issue with high number of log records [#2133](https://github.com/internetee/registry/issues/2133)
+
 25.08.2021
 * Admin: added option to update registrar credit balance [#714](https://github.com/internetee/registry/issues/714)
 * Bump webdriver to 4.6.1 [#2128](https://github.com/internetee/registry/pull/2128)
