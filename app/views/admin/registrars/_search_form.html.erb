@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-md-12">
+        <%= search_form_for @q, url: [:admin, :registrars], html: { style: 'margin-bottom: 0;' } do |f| %>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <%= label_tag t(:status) %>
+                        <%= select_tag :status, options_for_select(%w(Active Inactive), params[:status]),
+                                       { multiple: false, include_blank: true, selected: params[:status], class: 'form-control selectize'} %>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <%= label_tag t(:results_per_page) %>
+                        <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page) %>
+                    </div>
+                </div>
+                <div class="col-md-3 text-right" style="padding-top: 25px;float: right;padding-right: 15px;">
+                    <button class="btn btn-default search">
+                        &nbsp;
+                        <span class="glyphicon glyphicon-search"></span>
+                        &nbsp;
+                    </button>
+                    <%= link_to(t('.reset_btn'), admin_registrars_path, class: 'btn btn-default') %>
+                </div>
+            </div>
+        <% end %>
+    </div>
+</div>

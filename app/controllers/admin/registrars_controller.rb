@@ -2,12 +2,14 @@ module Admin
   class RegistrarsController < BaseController
     load_and_authorize_resource
     before_action :set_registrar, only: [:show, :edit, :update, :destroy]
+    before_action :set_registrar_status_filter, only: [:index]
     helper_method :registry_vat_rate
     helper_method :iban_max_length
 
     def index
-      @q = Registrar.joins(:accounts).ordered.search(params[:q])
-      @registrars = @q.result.page(params[:page])
+      registrars = filter_by_status
+      @q = registrars.ransack(params[:q])
+      @registrars = @q.result(distinct: true).page(params[:page])
       @registrars = @registrars.per(params[:results_per_page]) if paginate?
     end
 
@@ -31,8 +33,7 @@ module Admin
       end
     end
 
-    def edit;
-    end
+    def edit; end
 
     def update
       if @registrar.update(registrar_params)
@@ -53,6 +54,21 @@ module Admin
     end
 
     private
+
+    def filter_by_status
+      case params[:status]
+      when 'Active'
+        Registrar.includes(:accounts, :api_users).where.not(api_users: { id: nil }).ordered
+      when 'Inactive'
+        Registrar.includes(:accounts, :api_users).where(api_users: { id: nil }).ordered
+      else
+        Registrar.includes(:accounts, :api_users).ordered
+      end
+    end
+
+    def set_registrar_status_filter
+      params[:status] ||= 'Active'
+    end
 
     def set_registrar
       @registrar = Registrar.find(params[:id])
