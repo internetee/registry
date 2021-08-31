@@ -115,11 +115,11 @@ jobs:
       - name: Deploy from remote server
         env:
           ClOUD_TOKEN: '${{ secrets.CLOUD_TOKEN }}'
-          TEST: 'test'
+          TEST: 'rest'
         timeout-minutes: 5
         run: |
           export CLOUD_TOKEN="$CLOUD_TOKEN"
-          export TEST2="TEST3"
+          export TEST2="$TEST"
           sudo openvpn --config config.ovpn --askpass client.pwd --auth-nocache --daemon&
           sleep 15
           ping -c 1 192.168.99.12
