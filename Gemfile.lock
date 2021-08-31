@@ -456,6 +456,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    spy (1.0.1)
     swd (1.2.0)
       activesupport (>= 3)
       attr_required (>= 0.0.5)
@@ -568,6 +569,7 @@ DEPENDENCIES
   sidekiq
   simplecov (= 0.17.1)
   simpleidn (= 0.2.1)
+  spy
   truemail (~> 2.4)
   uglifier
   validates_email_format_of (= 1.6.3)
@@ -577,4 +579,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.5.1)
 
 BUNDLED WITH
-   2.2.24
+   2.2.26

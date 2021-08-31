@@ -13,6 +13,9 @@ class ReppV1DomainsRenewsTest < ActionDispatch::IntegrationTest
   def test_domain_can_be_renewed
     original_valid_to = @domain.valid_to
     travel_to Time.zone.parse('2010-07-05')
+    domain_spy = Spy.on_instance_method(Epp::Domain, :renew).and_call_through
+    renew_spy = Spy.on_instance_method(Domains::BulkRenew::SingleDomainRenew,
+                                       :prepare_renewed_expire_time).and_call_through
 
     @auth_headers['Content-Type'] = 'application/json'
     payload = { renew: { period: 1, period_unit: 'y', exp_date: original_valid_to } }
@@ -24,6 +27,8 @@ class ReppV1DomainsRenewsTest < ActionDispatch::IntegrationTest
     assert_equal 'Command completed successfully', json[:message]
 
     assert @domain.valid_to, original_valid_to + 1.year
+    assert domain_spy.has_been_called?
+    assert renew_spy.has_been_called?
   end
 
   def test_domain_renew_pricing_error
@@ -31,7 +36,7 @@ class ReppV1DomainsRenewsTest < ActionDispatch::IntegrationTest
     travel_to Time.zone.parse('2010-07-05')
 
     @auth_headers['Content-Type'] = 'application/json'
-    payload = { renew: { period: 100, period_unit: 'y', exp_date: original_valid_to } }
+    payload = { renew: { period: 10, period_unit: 'y', exp_date: original_valid_to } }
     post "/repp/v1/domains/#{@domain.name}/renew", headers: @auth_headers, params: payload.to_json
     json = JSON.parse(response.body, symbolize_names: true)
 
