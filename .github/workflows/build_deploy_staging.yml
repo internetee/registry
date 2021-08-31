@@ -101,8 +101,7 @@ jobs:
           echo $K_CONFIG | base64 -di > kubeconfig
           chmod 0600 kubeconfig
           echo $EPPROXY_CONF | base64 -di > sys.config
-          echo $CLOUD_TOKEN > token
-          cat token
+          echo $ClOUD_TOKEN > token
           echo "proxy config before alignement"
           less sys.config
           echo "****************"
