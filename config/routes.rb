@@ -127,6 +127,9 @@ Rails.application.routes.draw do
       end
 
       namespace :accreditation_center do
+        # At the moment invoice_status endpoint returns only cancelled invoices. But in future logic of this enpoint can change.
+        # And it will need to return invoices of different statuses. I decided to leave the name of the endpoint "invoice_status"
+        resources :invoice_status, only: [ :index ]
         resource :domains, only: [ :show ], param: :name
         resource :contacts, only: [ :show ], param: :id
         # resource :auth, only: [ :index ]
