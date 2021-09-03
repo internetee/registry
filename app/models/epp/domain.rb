@@ -173,7 +173,7 @@ class Epp::Domain < Domain
 
   ### RENEW ###
 
-  def renew(renewed_expire_time:, period:, unit:)
+  def renew(renewed_expire_time, period, unit)
     @is_renewal = true
 
     add_renew_epp_errors unless renewable?

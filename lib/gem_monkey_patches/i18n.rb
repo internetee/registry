@@ -6,7 +6,7 @@ module I18n
 
     def localize(object, options = {})
       options.merge!({ default: '-' })
-      object.present? ? original_localize(object, options) : ''
+      object.present? ? original_localize(object, **options) : ''
     end
   end
 end

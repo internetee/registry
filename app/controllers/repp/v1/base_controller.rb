@@ -74,7 +74,7 @@ module Repp
         render_epp_error
       end
 
-      def render_epp_error(status = :bad_request, data = {})
+      def render_epp_error(status = :bad_request, **data)
         @epp_errors ||= ActiveModel::Errors.new(self)
         @epp_errors.add(:epp_errors, msg: 'Command failed', code: '2304') if data != {}
 

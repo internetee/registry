@@ -11,9 +11,7 @@ module Domains
         renewed_expire_time = prepare_renewed_expire_time
         in_transaction_with_retries do
           check_balance
-          success = domain.renew(renewed_expire_time: renewed_expire_time,
-                                 period: period,
-                                 unit: unit)
+          success = domain.renew(renewed_expire_time, period, unit)
           if success
             check_balance
             reduce_balance

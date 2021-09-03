@@ -7,6 +7,6 @@ class DomainNameserverValidator < ActiveModel::EachValidator
 
     return if values.size.between?(min, max)
     association = options[:association] || attribute
-    record.errors.add(association, :out_of_range, { min: min, max: max })
+    record.errors.add(association, :out_of_range, **{ min: min, max: max })
   end
 end

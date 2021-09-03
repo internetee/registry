@@ -43,7 +43,7 @@ module Repp
           return
         end
 
-        render_success(create_update_success_body)
+        render_success(**create_update_success_body)
       end
 
       api :PUT, '/repp/v1/contacts/:contact_code'
