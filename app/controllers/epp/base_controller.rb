@@ -104,8 +104,8 @@ module Epp
       render_epp_response '/epp/error'
     end
 
-    def render_epp_response(template)
-      @response = render_to_string(template, formats: [:xml])
+    def render_epp_response(*args)
+      @response = render_to_string(*args, formats: [:xml])
       render xml: @response
       write_to_epp_log
     end
