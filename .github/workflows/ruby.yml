@@ -1,7 +1,6 @@
 name: Github Testing
 on: [push]
 
-
 jobs:
   test:
     services:
@@ -17,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-18.04]
-        ruby: [ 2.7  ]
+        ruby: [ 2.7, 3.0 ]
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
     steps:
@@ -85,6 +84,10 @@ jobs:
         path: coverage/codeclimate.${{ matrix.ruby }}.json
 
   upload_coverage:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: [ 2.7, 3.0 ]
     runs-on: ubuntu-18.04
 
     env:
@@ -102,7 +105,7 @@ jobs:
 
       - uses: actions/download-artifact@v2.0.10
         with:
-          name: coverage-2.7
+          name: coverage-${{ matrix.ruby }}
           path: coverage
 
       - name: Aggregate & upload results to Code Climate
