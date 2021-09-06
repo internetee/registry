@@ -27,7 +27,7 @@ class Registrar
       end
 
       normalize_search_parameters do
-        @q = contacts.search(search_params)
+        @q = contacts.ransack(search_params)
       end
 
       contacts = @q.result

@@ -5,7 +5,7 @@ module Admin
       before_action :load_zone, only: %i[edit update destroy]
 
       def index
-        @q = ::DNS::Zone.search(params[:q])
+        @q = ::DNS::Zone.ransack(params[:q])
         @count = @q.result.count
         @zones = @q.result.page(params[:page]).per(params[:results_per_page])
       end

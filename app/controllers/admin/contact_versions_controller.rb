@@ -7,7 +7,7 @@ module Admin
     def index
       params[:q] ||= {}
 
-      @q = Version::ContactVersion.search(params[:q])
+      @q = Version::ContactVersion.ransack(params[:q])
       @versions = @q.result.page(params[:page])
       search_params = params[:q].deep_dup
 
@@ -24,7 +24,7 @@ module Admin
       end
 
       versions = Version::ContactVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
-      @q = versions.search(params[:q])
+      @q = versions.ransack(params[:q])
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 

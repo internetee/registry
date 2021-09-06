@@ -26,14 +26,14 @@ class Registrar
       end
 
       normalize_search_parameters do
-        @q = domains.search(search_params.except(:contacts_ident_eq))
+        @q = domains.ransack(search_params.except(:contacts_ident_eq))
         @domains = @q.result.page(params[:page])
 
         # if we do not get any results, add wildcards to the name field and search again
         if @domains.count == 0 && search_params[:name_matches] !~ /^%.+%$/
           new_search_params = search_params.to_h.except(:contacts_ident_eq)
           new_search_params[:name_matches] = "%#{new_search_params[:name_matches]}%"
-          @q = domains.search(new_search_params)
+          @q = domains.ransack(new_search_params)
           @domains = @q.result.page(params[:page])
         end
       end

@@ -4,7 +4,7 @@ module Admin
     before_action :set_default_dates, only: [:index]
 
     def index
-      @q = ApiLog::ReppLog.search(params[:q])
+      @q = ApiLog::ReppLog.ransack(params[:q])
       @q.sorts = 'id desc' if @q.sorts.empty?
 
       @repp_logs = @q.result

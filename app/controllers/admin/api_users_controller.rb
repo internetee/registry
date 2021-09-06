@@ -3,7 +3,7 @@ module Admin
     load_and_authorize_resource
 
     def index
-      @q = ApiUser.includes(:registrar).search(params[:q])
+      @q = ApiUser.includes(:registrar).ransack(params[:q])
       @api_users = @q.result.page(params[:page])
       @api_users = @api_users.per(params[:results_per_page]) if paginate?
     end

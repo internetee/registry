@@ -5,14 +5,14 @@ module Admin
     before_action :set_bank_statement, only: %i[show bind_invoices]
 
     def index
-      @q = BankStatement.search(params[:q])
+      @q = BankStatement.ransack(params[:q])
       @q.sorts = 'id desc' if @q.sorts.empty?
       @bank_statements = @q.result.page(params[:page])
       @bank_statements = @bank_statements.per(params[:results_per_page]) if paginate?
     end
 
     def show
-      @q = @bank_statement.bank_transactions.includes(:account_activity).search(params[:q])
+      @q = @bank_statement.bank_transactions.includes(:account_activity).ransack(params[:q])
       @q.sorts = 'account_activity_id desc' if @q.sorts.empty?
       @bank_transactions = @q.result.page(params[:page])
     end

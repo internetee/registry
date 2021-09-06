@@ -25,7 +25,7 @@ module Admin
           prices = ::Billing::Price.send(@search.status)
         end
 
-        @q = prices.search(params[:q])
+        @q = prices.ransack(params[:q])
         @q.sorts = ['zone_id asc', 'duration asc', 'operation_category asc',
                     'valid_from desc', 'valid_to asc'] if @q.sorts.empty?
         @prices = @q.result.page(params[:page])
