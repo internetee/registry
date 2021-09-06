@@ -79,7 +79,7 @@ gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'domain_name'
 gem 'haml', '~> 5.2'
 gem 'rexml'
-gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
+gem 'wkhtmltopdf-binary', '~> 0.12.6.0'
 
 gem 'directo', github: 'internetee/directo', branch: 'master'
 
