@@ -162,7 +162,50 @@ module Epp
       @prefix = 'update > update >'
       requires 'name'
 
+      dnskey_update_enabled
+      dnkey_update_prohibited
       status_editing_disabled
+    end
+
+    def parsed_response_for_dnskey(value)
+      doc = Nokogiri::Slop params[:parsed_frame].css(value).to_html
+
+      return true if doc.document.children.empty?
+      
+      store = []
+      doc.document.add.children.each_with_index do |x, i|
+         store << doc.document.add.children[i].name  
+      end
+
+      return true if store.size == 1 and store[0] == "keyData"
+
+      store.empty?
+    end
+
+    def dnskey_update_enabled
+      find_domain
+      
+      if @domain.dnskey_update_enabled? && !params[:parsed_frame].css('update').empty?
+
+        return if parsed_response_for_dnskey('add')
+        return if parsed_response_for_dnskey('rem')
+
+        return epp_errors.add(:epp_errors,
+          code: '2304',
+          msg: "#{I18n.t(:object_status_prohibits_operation)}
+                         :serverDnskeyUpdateEnabled")
+      end
+    end
+
+    def dnkey_update_prohibited
+      find_domain
+
+      if @domain.extension_update_prohibited? && !params[:parsed_frame].css('keyData').empty?
+        return epp_errors.add(:epp_errors,
+                              code: '2304',
+                              msg: "#{I18n.t(:object_status_prohibits_operation)}
+                                             :serverExtensionUpdateProhibited")
+      end
     end
 
     def validate_delete

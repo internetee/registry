@@ -220,6 +220,14 @@ class Domain < ApplicationRecord
     nameservers.select { |x| !x.hostname.end_with?(name) }
   end
 
+  def extension_update_prohibited?
+    statuses.include? DomainStatus::SERVER_EXTENSION_UPDATE_PROHIBITED
+  end
+
+  def dnskey_update_enabled?
+    statuses.include? DomainStatus::SERVER_DNSKEY_UPDATE_ENABLED
+  end
+
   def admin_change_prohibited?
     statuses.include? DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED
   end

@@ -48,6 +48,180 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_epp_response :parameter_value_syntax_error
   end
 
+  def test_update_domain_data_out_of_extension_block_with_serverDnskeyUpdateEnabled
+    @domain = domains(:shop)
+    @domain.statuses << DomainStatus::SERVER_DNSKEY_UPDATE_ENABLED
+    @domain.save
+    @dnskey = dnskeys(:one)
+    @dnskey.update(domain: @domain)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+              <domain:name>shop.test</domain:name>
+              <domain:rem>
+              <domain:ns>
+                <domain:hostAttr>
+                  <domain:hostName>#{nameservers(:shop_ns1).hostname}</domain:hostName>
+                </domain:hostAttr>
+                <domain:hostAttr>
+                  <domain:hostName>#{nameservers(:shop_ns2).hostname}</domain:hostName>
+                </domain:hostAttr>
+              </domain:ns>
+              <secDNS:keyData>
+                <secDNS:flags>#{@dnskey.flags}</secDNS:flags>
+                <secDNS:protocol>#{@dnskey.protocol}</secDNS:protocol>
+                <secDNS:alg>#{@dnskey.alg}</secDNS:alg>
+                <secDNS:pubKey>#{@dnskey.public_key}</secDNS:pubKey>
+              </secDNS:keyData>
+            </domain:rem>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+                          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    @domain.reload
+
+    assert_epp_response :completed_successfully
+  end
+
+  def test_update_domain_dns_with_serverDnskeyUpdateEnabled
+    @domain = domains(:shop)
+    @domain.statuses << DomainStatus::SERVER_DNSKEY_UPDATE_ENABLED
+    @domain.save
+    @dnskey = dnskeys(:one)
+    @dnskey.update(domain: @domain)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+              <domain:name>shop.test</domain:name>
+                <domain:chg>
+                  <domain:authInfo>
+                    <domain:pw>f0ff7d17b0</domain:pw>
+                  </domain:authInfo>
+                </domain:chg>
+            </domain:update>
+          </update>
+          <extension>
+          <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+            <secDNS:rem>
+              <secDNS:keyData>
+                <secDNS:flags>#{@dnskey.flags}</secDNS:flags>
+                <secDNS:protocol>#{@dnskey.protocol}</secDNS:protocol>
+                <secDNS:alg>#{@dnskey.alg}</secDNS:alg>
+                <secDNS:pubKey>#{@dnskey.public_key}</secDNS:pubKey>
+              </secDNS:keyData>
+            </secDNS:rem>
+          </secDNS:update>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+                          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    @domain.reload
+
+    assert_epp_response :completed_successfully
+  end
+
+  def test_update_domain_data_out_of_extension_block_with_extension_update_prohibited
+    @domain = domains(:shop)
+    @domain.statuses << DomainStatus::SERVER_EXTENSION_UPDATE_PROHIBITED
+    @domain.save
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+              <domain:name>shop.test</domain:name>
+              <domain:rem>
+              <domain:ns>
+                <domain:hostAttr>
+                  <domain:hostName>#{nameservers(:shop_ns1).hostname}</domain:hostName>
+                </domain:hostAttr>
+                <domain:hostAttr>
+                  <domain:hostName>#{nameservers(:shop_ns2).hostname}</domain:hostName>
+                </domain:hostAttr>
+              </domain:ns>
+            </domain:rem>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+                          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    @domain.reload
+
+    assert_epp_response :completed_successfully
+  end
+
+  def test_update_domain_dns_with_extension_update_prohibited
+    @domain = domains(:shop)
+    @domain.statuses << DomainStatus::SERVER_EXTENSION_UPDATE_PROHIBITED
+    @domain.save
+    @dnskey = dnskeys(:one)
+    @dnskey.update(domain: @domain)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+              <domain:name>shop.test</domain:name>
+                <domain:chg>
+                  <domain:authInfo>
+                    <domain:pw>f0ff7d17b0</domain:pw>
+                  </domain:authInfo>
+                </domain:chg>
+            </domain:update>
+          </update>
+          <extension>
+          <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+            <secDNS:rem>
+              <secDNS:keyData>
+                <secDNS:flags>#{@dnskey.flags}</secDNS:flags>
+                <secDNS:protocol>#{@dnskey.protocol}</secDNS:protocol>
+                <secDNS:alg>#{@dnskey.alg}</secDNS:alg>
+                <secDNS:pubKey>#{@dnskey.public_key}</secDNS:pubKey>
+              </secDNS:keyData>
+            </secDNS:rem>
+          </secDNS:update>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+                          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    @domain.reload
+
+    assert_epp_response :object_status_prohibits_operation
+  end
+
   def test_update_domain
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
