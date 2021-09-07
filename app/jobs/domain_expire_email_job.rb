@@ -12,9 +12,9 @@ class DomainExpireEmailJob < ApplicationJob
     }
 
     if domain.force_delete_scheduled?
-      DomainExpireMailer.expired_soft(attrs).deliver_now
+      DomainExpireMailer.expired_soft(**attrs).deliver_now
     else
-      DomainExpireMailer.expired(attrs).deliver_now
+      DomainExpireMailer.expired(**attrs).deliver_now
     end
   end
 end

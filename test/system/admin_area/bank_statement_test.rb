@@ -10,7 +10,7 @@ class AdminAreaBankStatementTest < ApplicationSystemTestCase
 
   def test_update_bank_statement
     visit admin_bank_statement_path(id: @invoice.id)
-    
+
     click_link_or_button 'Add'
 
     fill_in 'Description', with: 'Invoice with id 123'
@@ -55,7 +55,7 @@ class AdminAreaBankStatementTest < ApplicationSystemTestCase
 
   def test_can_bind_statement_transactions
     registrar = registrars(:bestnames)
-    registrar.issue_prepayment_invoice(amount: 500)
+    registrar.issue_prepayment_invoice(500)
     invoice = registrar.invoices.last
 
     create_bank_statement

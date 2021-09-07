@@ -1,4 +1,4 @@
-FROM internetee/ruby:2.7-buster
+FROM internetee/ruby:3.0-buster
 
 RUN mkdir -p /opt/webapps/app/tmp/pids
 WORKDIR /opt/webapps/app
