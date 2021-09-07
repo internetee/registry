@@ -8,7 +8,7 @@ class DomainExpireEmailJob < ApplicationJob
     attrs = {
       domain: domain,
       registrar: domain.registrar,
-      email: email
+      email: email,
     }
 
     if domain.force_delete_scheduled?
