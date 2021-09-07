@@ -32,7 +32,7 @@ plugins:
         enabled: false
   rubocop:
     enabled: true
-    channel: rubocop-1-12-1
+    channel: rubocop-1-18-3
     checks:
       Rubocop/Style/ClassAndModuleChildren:
         enabled: false
