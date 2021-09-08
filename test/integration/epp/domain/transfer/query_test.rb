@@ -9,10 +9,10 @@ class EppDomainTransferQueryTest < EppTestCase
     assert_correct_against_schema xml_doc
 
     assert_epp_response :completed_successfully
-    assert_equal 'shop.test', xml_doc.xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}").text
-    assert_equal 'serverApproved', xml_doc.xpath('//domain:trStatus', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}").text
-    assert_equal 'goodnames', xml_doc.xpath('//domain:reID', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}").text
-    assert_equal 'bestnames', xml_doc.xpath('//domain:acID', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}").text
+    assert_equal 'shop.test', xml_doc.xpath('//domain:name', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}").text
+    assert_equal 'serverApproved', xml_doc.xpath('//domain:trStatus', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}").text
+    assert_equal 'goodnames', xml_doc.xpath('//domain:reID', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}").text
+    assert_equal 'bestnames', xml_doc.xpath('//domain:acID', 'domain' => "#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}").text
   end
 
   def test_wrong_transfer_code
@@ -21,7 +21,7 @@ class EppDomainTransferQueryTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <transfer op="query">
-            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw>wrong</domain:pw>
@@ -57,7 +57,7 @@ class EppDomainTransferQueryTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <transfer op="query">
-            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:transfer xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw>65078d5</domain:pw>

@@ -21,7 +21,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>invalid.test</domain:name>
             </domain:delete>
           </delete>
@@ -50,7 +50,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -80,7 +80,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -116,7 +116,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -153,7 +153,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -189,7 +189,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <domain:delete verified="yes" xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:delete verified="yes" xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -224,7 +224,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>
@@ -248,7 +248,7 @@ class EppDomainDeleteBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <delete>
-            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:delete xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:delete>
           </delete>

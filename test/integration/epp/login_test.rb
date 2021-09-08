@@ -25,7 +25,7 @@ class EppLoginTest < EppTestCase
               <lang>en</lang>
             </options>
             <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}</objURI>
               <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
@@ -60,7 +60,7 @@ class EppLoginTest < EppTestCase
               <lang>en</lang>
             </options>
             <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}</objURI>
               <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
@@ -94,7 +94,7 @@ class EppLoginTest < EppTestCase
               <lang>en</lang>
             </options>
             <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}</objURI>
               <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
@@ -129,7 +129,7 @@ class EppLoginTest < EppTestCase
               <lang>en</lang>
             </options>
             <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}</objURI>
               <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
@@ -164,7 +164,7 @@ class EppLoginTest < EppTestCase
               <lang>en</lang>
             </options>
             <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}</objURI>
+              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}</objURI>
               <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>

@@ -23,7 +23,7 @@ class EppDomainUpdateBaseTest < EppTestCase
             <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
               <command>
                 <update>
-                  <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+                  <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
                     <domain:name>shop.test</domain:name>
                   </domain:update>
                 </update>
@@ -60,7 +60,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
               <domain:rem>
               <domain:ns>
@@ -105,7 +105,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
                 <domain:chg>
                   <domain:authInfo>
@@ -149,7 +149,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
               <domain:rem>
               <domain:ns>
@@ -188,7 +188,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
                 <domain:chg>
                   <domain:authInfo>
@@ -228,7 +228,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
                 <domain:chg>
                   <domain:authInfo>
@@ -258,7 +258,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:update>
           </update>
@@ -279,7 +279,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:update>
           </update>
@@ -302,7 +302,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
             </domain:update>
           </update>
@@ -329,7 +329,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{new_registrant.code}</domain:registrant>
@@ -375,7 +375,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="no">#{new_registrant.code}</domain:registrant>
@@ -412,7 +412,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="no">#{new_registrant.code}</domain:registrant>
@@ -457,7 +457,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="no">#{new_registrant.code}</domain:registrant>
@@ -495,7 +495,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="no">#{new_registrant.code}</domain:registrant>
@@ -531,7 +531,7 @@ class EppDomainUpdateBaseTest < EppTestCase
           <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
             <command>
               <update>
-                <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+                <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
                   <domain:name>#{@domain.name}</domain:name>
                     <domain:chg>
                       <domain:registrant>#{new_registrant.code}</domain:registrant>
@@ -567,7 +567,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{@domain.registrant.code}</domain:registrant>
@@ -608,7 +608,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{new_registrant.code}</domain:registrant>
@@ -653,7 +653,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
@@ -694,7 +694,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant>#{new_registrant.code}</domain:registrant>
@@ -733,7 +733,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
@@ -781,7 +781,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
@@ -818,7 +818,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
                 <domain:chg>
                   <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
@@ -857,7 +857,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{@domain.name}</domain:name>
               <domain:rem>
                 <domain:ns>
@@ -892,7 +892,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
                 <domain:add>
                   <domain:status s="clientHold" lang="en">Test</domain:status>
@@ -923,7 +923,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
                 <domain:rem>
                   <domain:status s="clientHold" lang="en">Test</domain:status>
@@ -951,7 +951,7 @@ class EppDomainUpdateBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
             <domain:name>#{@domain.name}</domain:name>
               <domain:rem>
                 <domain:status s="clientHold"/>
