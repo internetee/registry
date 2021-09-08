@@ -225,7 +225,7 @@ class Domain < ApplicationRecord
   end
 
   def dnskey_update_enabled?
-    statuses.include? DomainStatus::SERVER_DNSKEY_UPDATE_ENABLED
+    statuses.include? DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED
   end
 
   def admin_change_prohibited?

@@ -50,7 +50,7 @@ class EppDomainUpdateBaseTest < EppTestCase
 
   def test_update_domain_data_out_of_extension_block_with_serverDnskeyUpdateEnabled
     @domain = domains(:shop)
-    @domain.statuses << DomainStatus::SERVER_DNSKEY_UPDATE_ENABLED
+    @domain.statuses << DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED
     @domain.save
     @dnskey = dnskeys(:one)
     @dnskey.update(domain: @domain)
@@ -95,7 +95,7 @@ class EppDomainUpdateBaseTest < EppTestCase
 
   def test_update_domain_dns_with_serverDnskeyUpdateEnabled
     @domain = domains(:shop)
-    @domain.statuses << DomainStatus::SERVER_DNSKEY_UPDATE_ENABLED
+    @domain.statuses << DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED
     @domain.save
     @dnskey = dnskeys(:one)
     @dnskey.update(domain: @domain)
