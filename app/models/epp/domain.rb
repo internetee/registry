@@ -144,8 +144,8 @@ class Epp::Domain < Domain
       return
     end
 
-    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
-      frame.css("legalDocument").first.content = doc.path if doc&.persisted?
+    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call) && doc&.persisted?
+      frame.css("legalDocument").first.content = doc.path
     end
 
     if Setting.request_confirmation_on_domain_deletion_enabled &&
@@ -325,11 +325,13 @@ class Epp::Domain < Domain
       return false
     end
 
-    begin
-      errors.add(:base, :domain_status_prohibits_operation)
-      return false
-    end if (statuses &
+    if (statuses &
       [DomainStatus::CLIENT_DELETE_PROHIBITED, DomainStatus::SERVER_DELETE_PROHIBITED]).any?
+      begin
+        errors.add(:base, :domain_status_prohibits_operation)
+        return false
+      end
+    end
 
     true
   end

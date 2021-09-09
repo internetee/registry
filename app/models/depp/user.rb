@@ -11,7 +11,7 @@ module Depp
     validate :validate_existance_in_server
 
     def initialize(args = {})
-      args.each { |k, v| send("#{k.to_s}=", v) }
+      args.each { |k, v| send("#{k}=", v) }
     end
 
     def server

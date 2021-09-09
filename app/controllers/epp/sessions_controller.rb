@@ -14,16 +14,13 @@ module Epp
       webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
       if webclient_request && !Rails.env.test? && !Rails.env.development?
         client_md5 = Certificate.parse_md_from_string(request.env['HTTP_SSL_CLIENT_CERT'])
-        if ENV['cert_path'].blank?
-          raise 'webclient cert (cert_path) missing, registrar (r)epp disabled'
-        end
+        raise 'webclient cert (cert_path) missing, registrar (r)epp disabled' if ENV['cert_path'].blank?
 
         server_md5 = Certificate.parse_md_from_string(File.read(ENV['cert_path']))
         if client_md5 != server_md5
           msg = 'Authentication error; server closing connection (certificate is not valid)'
           epp_errors.add(:epp_errors,
-                         msg: msg,
-                         code: '2501')
+                         msg: msg, code: '2501')
 
           success = false
         end
@@ -33,10 +30,10 @@ module Epp
          !@api_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
         msg = 'Authentication error; server closing connection (certificate is not valid)'
         epp_errors.add(:epp_errors,
-                       msg: msg,code: '2501')
+                       msg: msg, code: '2501')
 
         success = false
-        end
+      end
 
       if success && !@api_user
         msg = 'Authentication error; server closing connection (API user not found)'
@@ -109,9 +106,8 @@ module Epp
     def ip_white?
       webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
       return true if webclient_request
-      if @api_user && !@api_user.registrar.api_ip_white?(request.ip)
-        return false
-      end
+      return false if @api_user && !@api_user.registrar.api_ip_white?(request.ip)
+
       true
     end
 

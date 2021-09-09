@@ -37,9 +37,7 @@ class CsyncJob < ApplicationJob
   def unqualification_reason(nss, key, result_types)
     return 'no CDNSKEY / nameservers reported different CDNSKEYs' unless key
 
-    if result_types.include? 'untrustworthy'
-      return 'current DNSSEC config invalid (required for rollover/delete)'
-    end
+    return 'current DNSSEC config invalid (required for rollover/delete)' if result_types.include? 'untrustworthy'
 
     "Nameserver(s) not reachable / invalid data (#{result_types.join(', ')})" unless nss
   end

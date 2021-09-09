@@ -312,7 +312,12 @@ module Epp
                               request: trimmed_request,
                               request_command: request_command,
                               request_successful: epp_errors.empty?,
-                              request_object: resource ? "#{params[:epp_object_type]}: #{resource.class} - #{resource.id} - #{resource.name}" : params[:epp_object_type],
+                              request_object: if resource
+                                                "#{params[:epp_object_type]}: #{resource.class} - "\
+                                                "#{resource.id} - #{resource.name}"
+                                              else
+                                                params[:epp_object_type]
+                                              end,
                               response: @response,
                               api_user_name: @api_user.try(:username) || current_user.try(:username) || 'api-public',
                               api_user_registrar: @api_user.try(:registrar).try(:to_s) ||

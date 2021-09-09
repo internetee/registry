@@ -121,10 +121,8 @@ class Domain < ApplicationRecord
   validate :status_is_consistant
   def status_is_consistant
     has_error = (hold_status? && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
-    unless has_error
-      if (statuses & DELETE_STATUSES).any?
-        has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
-      end
+    if !has_error && (statuses & DELETE_STATUSES).any?
+      has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
     end
     errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
   end
@@ -345,10 +343,10 @@ class Domain < ApplicationRecord
   # find by internationalized domain name
   # internet domain name => ascii or puny, but db::domains.name is unicode
   def self.find_by_idn(name)
-    domain = self.find_by_name name
+    domain = find_by_name name
     if domain.blank? && name.include?('-')
       unicode = SimpleIDN.to_unicode name # we have no index on domains.name_puny
-      domain = self.find_by_name unicode
+      domain = find_by_name unicode
     end
     domain
   end
@@ -381,9 +379,7 @@ class Domain < ApplicationRecord
     return true unless Setting.days_to_renew_domain_before_expire != 0
 
     # if you can renew domain at days_to_renew before domain expiration
-    if (expire_time.to_date - Time.zone.today) + 1 > Setting.days_to_renew_domain_before_expire
-      return false
-    end
+    return false if (expire_time.to_date - Time.zone.today) + 1 > Setting.days_to_renew_domain_before_expire
 
     true
   end
@@ -592,14 +588,14 @@ class Domain < ApplicationRecord
     statuses.each do |s|
       unless update.include? s
         case s
-          when DomainStatus::PENDING_DELETE
-            self.delete_date = nil
-          when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
-            self.outzone_at = Time.zone.now if force_delete_scheduled?
-          when DomainStatus::EXPIRED # removal causes server hold to set
-            self.outzone_at = self.expire_time + 15.day
-          when DomainStatus::SERVER_HOLD # removal causes server hold to set
-            self.outzone_at = nil
+        when DomainStatus::PENDING_DELETE
+          self.delete_date = nil
+        when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
+          self.outzone_at = Time.zone.now if force_delete_scheduled?
+        when DomainStatus::EXPIRED # removal causes server hold to set
+          self.outzone_at = expire_time + 15.day
+        when DomainStatus::SERVER_HOLD # removal causes server hold to set
+          self.outzone_at = nil
         end
       end
     end

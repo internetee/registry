@@ -35,9 +35,7 @@ class Registrar
       notices = ["#{t('.replaced')}. #{t('.affected_domains')}: " \
       "#{res[:data][:affected_domains].join(', ')}"]
 
-      if res[:data][:skipped_domains]
-        notices << "#{t('.skipped_domains')}: #{res[:data][:skipped_domains].join(', ')}"
-      end
+      notices << "#{t('.skipped_domains')}: #{res[:data][:skipped_domains].join(', ')}" if res[:data][:skipped_domains]
 
       notices.join(', ')
     end

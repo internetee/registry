@@ -3,8 +3,8 @@ module Xsd
     SCHEMA_PATH = 'lib/schemas/'.freeze
     BASE_URL = 'https://epp.tld.ee/schema/'.freeze
 
-    REGEX_PREFIX_WITH_DASH = /(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/.freeze
-    REGEX_PREFIX_WITHOUT_DASH = /(?<prefix>\w+)-(?<version>\w.\w).xsd/.freeze
+    REGEX_PREFIX_WITH_DASH = /(?<prefix>\w+-\w+)-(?<version>\w.\w).xsd/
+    REGEX_PREFIX_WITHOUT_DASH = /(?<prefix>\w+)-(?<version>\w.\w).xsd/
 
     PREFIXES = %w[
       domain-ee

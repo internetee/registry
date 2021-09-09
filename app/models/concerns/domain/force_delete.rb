@@ -16,10 +16,8 @@ module Domain::ForceDelete
             where("(force_delete_data->>'contact_notification_sent_date') is null")
           }
 
-    HOLD_STATUSES = [
-      DomainStatus::SERVER_HOLD,
-      DomainStatus::CLIENT_HOLD,
-    ].freeze
+    HOLD_STATUSES = [DomainStatus::SERVER_HOLD,
+                     DomainStatus::CLIENT_HOLD].freeze
   end
 
   class_methods do

@@ -76,15 +76,15 @@ class Dnskey < ApplicationRecord
   def validate_flags
     return if flags.blank?
     return if FLAGS.include?(flags.to_s)
+
     errors.add(:flags, :invalid, values: "Valid flags are: #{FLAGS.join(', ')}")
   end
 
   def generate_digest
     return unless flags == 257 || flags == 256 # require ZoneFlag, but optional SecureEntryPoint
+
     self.ds_alg = alg
-    if self.ds_digest_type.blank? || !DS_DIGEST_TYPE.include?(ds_digest_type)
-      self.ds_digest_type = Setting.ds_digest_type
-    end
+    self.ds_digest_type = Setting.ds_digest_type if ds_digest_type.blank? || !DS_DIGEST_TYPE.include?(ds_digest_type)
 
     flags_hex = self.class.int_to_hex(flags)
     protocol_hex = self.class.int_to_hex(protocol)
@@ -93,7 +93,7 @@ class Dnskey < ApplicationRecord
     hex = [domain.name_in_wire_format, flags_hex, protocol_hex, alg_hex, public_key_hex].join
     bin = self.class.hex_to_bin(hex)
 
-    case self.ds_digest_type
+    case ds_digest_type
     when 1
       self.ds_digest = Digest::SHA1.hexdigest(bin).upcase
     when 2
@@ -113,11 +113,11 @@ class Dnskey < ApplicationRecord
 
     c = 0
     wire_format.each_byte.with_index do |b, i|
-      if i.even?
-        c += b << 8
-      else
-        c += b
-      end
+      c += if i.even?
+             b << 8
+           else
+             b
+           end
     end
 
     self.ds_key_tag = ((c & 0xFFFF) + (c >> 16)) & 0xFFFF
@@ -150,21 +150,21 @@ class Dnskey < ApplicationRecord
   end
 
   class << self
-    def int_to_hex(s)
-      s = s.to_s(16)
-      s.prepend('0') if s.length.odd?
+    def int_to_hex(num)
+      num = num.to_s(16)
+      num.prepend('0') if num.length.odd?
     end
 
-    def hex_to_bin(s)
-      s.scan(/../).map(&:hex).pack('c*')
+    def hex_to_bin(num)
+      num.scan(/../).map(&:hex).pack('c*')
     end
 
-    def bin_to_hex(s)
-      s.each_byte.map { |b| format('%02X', b) }.join
+    def bin_to_hex(num)
+      num.each_byte.map { |b| format('%02X', b) }.join
     end
 
     def pub_key_base64?(pub)
-      return unless pub&.is_a?(String)
+      return unless pub.is_a?(String)
 
       Base64.strict_encode64(Base64.strict_decode64(pub)) == pub
     rescue ArgumentError

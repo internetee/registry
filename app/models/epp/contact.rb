@@ -98,8 +98,8 @@ class Epp::Contact < Contact
     return unless legal_document_data
 
     legal_documents.create(
-        document_type: legal_document_data[:type],
-        body: legal_document_data[:body]
+      document_type: legal_document_data[:type],
+      body: legal_document_data[:body]
     )
   end
 
@@ -108,9 +108,9 @@ class Epp::Contact < Contact
     return unless legal_document_data
 
     doc = LegalDocument.create(
-        documentable_type: Contact,
-        document_type:     legal_document_data[:type],
-        body:              legal_document_data[:body]
+      documentable_type: Contact,
+      document_type: legal_document_data[:type],
+      body: legal_document_data[:body]
     )
     self.legal_documents = [doc]
 

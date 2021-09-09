@@ -3,6 +3,7 @@ module Admin
     load_and_authorize_resource class: ApiLog::EppLog
     before_action :set_default_dates, only: [:index]
 
+    # rubocop:disable Metrics/MethodLength
     def index
       @q = ApiLog::EppLog.ransack(params[:q])
       @q.sorts = 'id desc' if @q.sorts.empty?
@@ -20,6 +21,7 @@ module Admin
 
       render_by_format('admin/epp_logs/index', 'epp_logs')
     end
+    # rubocop:enable Metrics/MethodLength
 
     def show
       @epp_log = ApiLog::EppLog.find(params[:id])

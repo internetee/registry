@@ -67,9 +67,7 @@ class Certificate < ApplicationRecord
 
     @cached_status = SIGNED
 
-    if parsed_crt.not_before > Time.zone.now.utc && parsed_crt.not_after < Time.zone.now.utc
-      @cached_status = EXPIRED
-    end
+    @cached_status = EXPIRED if parsed_crt.not_before > Time.zone.now.utc && parsed_crt.not_after < Time.zone.now.utc
 
     crl = OpenSSL::X509::CRL.new(File.open("#{ENV['crl_dir']}/crl.pem").read)
     return @cached_status unless crl.revoked.map(&:serial).include?(parsed_crt.serial)
@@ -104,7 +102,7 @@ class Certificate < ApplicationRecord
       end
       logger.error(err)
       puts "Certificate sign issue: #{err.inspect}" if Rails.env.test?
-      return false
+      false
     end
   end
 

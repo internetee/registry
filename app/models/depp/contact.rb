@@ -241,7 +241,7 @@ module Depp
         ident = ident_xml[:_anonymus].try(:first)
       when :update
         # detect if any ident has changed, nb! ident and self.ident is not always same
-        unless ident == self.ident && ident == self.ident_type && ident_country_code == self.ident_country_code
+        unless ident == self.ident && ident == ident_type && ident_country_code == ident_country_code
           ident = ident_xml[:_anonymus].try(:first)
         end
       end

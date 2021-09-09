@@ -16,7 +16,7 @@ class Invoice < ApplicationRecord
   scope :all_columns,                    -> { select("invoices.*") }
   scope :sort_due_date_column,           -> { all_columns.select("CASE WHEN invoices.cancelled_at is not null THEN
                                                                 (invoices.cancelled_at + interval '100 year') ELSE
-                                                                 invoices.due_date END AS sort_due_date")}
+                                                                 invoices.due_date END AS sort_due_date") }
   scope :sort_by_sort_due_date_asc,      -> { sort_due_date_column.order("sort_due_date ASC") }
   scope :sort_by_sort_due_date_desc,     -> { sort_due_date_column.order("sort_due_date DESC") }
   scope :sort_receipt_date_column,       -> { all_columns.includes(:account_activity).references(:account_activity).select(%Q{
@@ -91,8 +91,8 @@ class Invoice < ApplicationRecord
     read_attribute(:total)
   end
 
-  def each
-    items.each { |item| yield item }
+  def each(&block)
+    items.each(&block)
   end
 
   def as_pdf

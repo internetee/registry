@@ -16,9 +16,7 @@ module Contact::Archivable
   end
 
   def archive(verified: false, notify: true, extra_log: false)
-    unless verified
-      raise 'Contact cannot be archived' unless archivable?(post: true)
-    end
+    raise 'Contact cannot be archived' if !verified && !archivable?(post: true)
 
     notify_registrar_about_archivation if notify
     write_to_registrar_log if extra_log
@@ -35,9 +33,7 @@ module Contact::Archivable
   end
 
   def inactive?
-    if Version::DomainVersion.contact_unlinked_more_than?(contact_id: id, period: inactivity_period)
-      return true
-    end
+    return true if Version::DomainVersion.contact_unlinked_more_than?(contact_id: id, period: inactivity_period)
 
     Version::DomainVersion.was_contact_linked?(id) ? false : created_at <= inactivity_period.ago
   end

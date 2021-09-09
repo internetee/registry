@@ -44,9 +44,7 @@ class DirectoInvoiceForwardJob < ApplicationJob
   end
 
   def assign_monthly_numbers
-    if directo_counter_exceedable?(@client.invoices.count)
-      raise 'Directo Counter is going to be out of period!'
-    end
+    raise 'Directo Counter is going to be out of period!' if directo_counter_exceedable?(@client.invoices.count)
 
     min_directo    = Setting.directo_monthly_number_min.presence.try(:to_i)
     directo_number = [Setting.directo_monthly_number_last.presence.try(:to_i),

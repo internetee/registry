@@ -13,7 +13,6 @@ module Actions
       else
         do_live_request(@request, @uri)
       end
-
     rescue StandardError, OpenURI::HTTPError => e
       Rails.logger.debug e.message
     end

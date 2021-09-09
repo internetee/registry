@@ -37,11 +37,11 @@ module Domains
                          price: domain_pricelist)
       end
 
-      def in_transaction_with_retries
+      def in_transaction_with_retries(&block)
         if Rails.env.test?
           yield
         else
-          transaction_wrapper { yield }
+          transaction_wrapper(&block)
         end
       rescue ActiveRecord::StatementInvalid => e
         log_error e

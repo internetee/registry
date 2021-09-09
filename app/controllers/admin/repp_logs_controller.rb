@@ -3,6 +3,7 @@ module Admin
     load_and_authorize_resource class: ApiLog::ReppLog
     before_action :set_default_dates, only: [:index]
 
+    # rubocop:disable Metrics/MethodLength
     def index
       @q = ApiLog::ReppLog.search(params[:q])
       @q.sorts = 'id desc' if @q.sorts.empty?
@@ -22,6 +23,7 @@ module Admin
 
       render_by_format('admin/repp_logs/index', 'repp_logs')
     end
+    # rubocop:enable Metrics/MethodLength
 
     def show
       @repp_log = ApiLog::ReppLog.find(params[:id])

@@ -15,9 +15,7 @@ module Api
             current_registrant: serialized_registrant(@domain.registrant),
           }
 
-          unless delete_action?
-            res[:new_registrant] = serialized_registrant(@domain.pending_registrant)
-          end
+          res[:new_registrant] = serialized_registrant(@domain.pending_registrant) unless delete_action?
 
           render json: res, status: :ok
         end
