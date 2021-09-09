@@ -173,8 +173,15 @@ module Epp
       return true if doc.document.children.empty?
       
       store = []
-      doc.document.add.children.each_with_index do |x, i|
-         store << doc.document.add.children[i].name  
+
+      if value == 'add'
+        doc.document.add.children.each_with_index do |x, i|
+          store << doc.document.add.children[i].name  
+        end
+      else
+        doc.document.rem.children.each_with_index do |x, i|
+          store << doc.document.rem.children[i].name  
+        end
       end
 
       return true if store.size == 1 and store[0] == "keyData"
@@ -184,7 +191,7 @@ module Epp
 
     def dnskey_update_enabled
       find_domain
-      
+
       if @domain.dnskey_update_enabled? && !params[:parsed_frame].css('update').empty?
 
         return if parsed_response_for_dnskey('add')
