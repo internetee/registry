@@ -70,11 +70,11 @@ jobs:
           bash
           cd "$REPO"/"$PR_REF"
           export KUBECONFIG=./kubeconfig
-          helm delete registry-st-"$PR_REF" -n registry-staging
+          helm delete reg-admin-"$PR_REF" -n reg-admin-staging
           rm kubeconfig
           echo "server obs.tld.ee
           zone pilv.tld.ee
-          update delete registry-"$PR_REF".pilv.tld.ee.
+          update delete reg-admin-"$PR_REF".pilv.tld.ee.
           send
           " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key
           if [ "$?" -eq "0" ]; then
@@ -83,6 +83,7 @@ jobs:
               echo "CNAME update failed"
           fi
           EOSSH
+
       - name: Notify developers
         timeout-minutes: 1
         env:
@@ -90,8 +91,11 @@ jobs:
         run: |
           curl -i -X POST --data-urlencode 'payload={
             "text": "##### Pull request was succesful, it has been merged :bowtie:\n
-            | Project    | Branch                 | :net:                                      |
-            |:-----------|:----------------------:|:------------------------------------------:|
-            | **'$REPO'**|'${{ github.head_ref }}'| ~~https://registry-'$PR_REF'.pilv.tld.ee~~ |
+            | Registry   | '${{ github.head_ref }}'                    |
+            |:-----------|:-------------------------------------------:|
+            | **Admin**  | ~~https://reg-admin-'$PR_REF'.pilv.tld.ee~~ |
+            | **API**    | ~~https://reg-api-'$PR_REF'.pilv.tld.ee~~   |
+            | **REPP**   | ~~https://reg-repp-'$PR_REF'.pilv.tld.ee~~  |
+            | **EPP**    | ~~https://reg-epp-'$PR_REF'.pilv.tld.ee~~   |
             "
             }' $NOTIFICATION_URL
