@@ -4,7 +4,7 @@ module Repp
       class AccreditationResultsController < ActionController::API
         before_action :authenticate_shared_key
 
-        TEMPORARY_SECRET_KEY = 'temporary-secret-key'.freeze
+        TEMPORARY_SECRET_KEY = ENV['accreditation_secret'].freeze
 
         api :POST, 'repp/v1/registrar/accreditation/push_results'
         desc 'added datetime results'

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ReppV1AccreditationResultsTest < ActionDispatch::IntegrationTest
-  TEMPORARY_SECRET_KEY = 'temporary-secret-key'.freeze
+  TEMPORARY_SECRET_KEY = ENV['accreditation_secret'].freeze
 
   def setup
     @user = users(:api_bestnames)
