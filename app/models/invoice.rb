@@ -13,6 +13,7 @@ class Invoice < ApplicationRecord
 
   accepts_nested_attributes_for :items
   # rubocop:disable Layout/LineLength
+  # rubocop:disable Style/MultilineBlockLayout
   scope :all_columns,                    -> { select("invoices.*") }
   scope :sort_due_date_column,           -> { all_columns.select("CASE WHEN invoices.cancelled_at is not null THEN
                                                                 (invoices.cancelled_at + interval '100 year') ELSE
@@ -28,6 +29,7 @@ class Invoice < ApplicationRecord
 
   scope :overdue, -> { unpaid.non_cancelled.where('due_date < ?', Time.zone.today) }
   # rubocop:enable Layout/LineLength
+  # rubocop:enable Style/MultilineBlockLayout
   validates :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :items, presence: true
 
@@ -38,7 +40,7 @@ class Invoice < ApplicationRecord
   attribute :vat_rate, ::Type::VatRate.new
 
   def set_invoice_number
-    last_no = Invoice.order(number: :desc).limit(1).pluck(:number).first
+    last_no = Invoice.order(number: :desc).limit(1).pick(:number)
 
     if last_no && last_no >= Setting.invoice_number_min.to_i
       self.number = last_no + 1

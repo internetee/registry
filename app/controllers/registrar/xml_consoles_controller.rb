@@ -22,7 +22,7 @@ class Registrar
 
     def load_xml
       cl_trid = "#{depp_current_user.tag}-#{Time.zone.now.to_i}"
-      xml_dir_path = Rails.root.join('app', 'views', 'registrar', 'xml_consoles', 'epp_requests').to_s
+      xml_dir_path = Rails.root.join('app/views/registrar/xml_consoles/epp_requests').to_s
       xml = File.read("#{xml_dir_path}/#{params[:obj]}/#{params[:epp_action]}.xml")
       xml = prepare_payload(xml, cl_trid)
 

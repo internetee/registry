@@ -31,6 +31,6 @@ class MigrateStatusesToDomainHistoryJob < ApplicationJob
   end
 
   def logger
-    @logger ||= Logger.new(Rails.root.join('log', 'migrate_statuses_to_domain_history.log'))
+    @logger ||= Logger.new(Rails.root.join('log/migrate_statuses_to_domain_history.log'))
   end
 end

@@ -7,7 +7,7 @@ module Domains
       end
 
       def logger
-        @logger ||= Logger.new(Rails.root.join('log', 'domain_expire_period.log'))
+        @logger ||= Logger.new(Rails.root.join('log/domain_expire_period.log'))
       end
     end
   end
