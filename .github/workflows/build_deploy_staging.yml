@@ -131,8 +131,8 @@ jobs:
         run: |
           curl -i -X POST --data-urlencode 'payload={
             "text": "##### Build and deploy from pull request has been succesful :tada:\n
-            | Project    | Branch                 | :net:                                  |
-            |:-----------|:----------------------:|:--------------------------------------:|
-            | **'$REPO'**|'${{ github.head_ref }}'| https://registry-'$PR_REF'.pilv.tld.ee |
+            | Registry    | Branch                 | :net:                                   |
+            |:------------|:----------------------:|:---------------------------------------:|
+            | **Admin**   |'${{ github.head_ref }}'| https://reg-admin-'$PR_REF'.pilv.tld.ee |
             "
             }' $NOTIFICATION_URL
