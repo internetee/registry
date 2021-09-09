@@ -2,7 +2,7 @@ name: remove-staging-after-pull-request
 
 on:
   pull_request:
-    types: [closed]
+    types: [closed, converted_to_draft, locked]
     paths-ignore:
       - 'CHANGELOG.md'
       - 'README.md'
@@ -10,7 +10,7 @@ on:
 
 jobs:
   delete:
-    if: github.event.pull_request.draft == false
+
     runs-on: ubuntu-20.04
 
     steps:
