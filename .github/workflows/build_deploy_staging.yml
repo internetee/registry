@@ -110,7 +110,7 @@ jobs:
           export KUBECONFIG=./kubeconfig
           helm repo add eisrepo https://internetee.github.io/helm-charts/
           helm repo update
-          helm upgrade --install registry-st-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry -n registry-staging
+          helm upgrade --install reg-admin-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-admin -n reg-admin-staging
           rm kubeconfig
           echo "server obs.tld.ee
           zone pilv.tld.ee
