@@ -216,7 +216,8 @@ class Epp::Domain < Domain
       return transfers.last if transfers.any?
     when 'request'
       return pending_transfer if pending_transfer
-      return query_transfer(frame, current_user)
+
+      query_transfer(frame, current_user)
     when 'approve'
       return approve_transfer(frame, current_user) if pending_transfer
     when 'reject'

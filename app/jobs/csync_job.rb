@@ -45,7 +45,7 @@ class CsyncJob < ApplicationJob
   def process_scanner_results
     scanner_results
 
-    @results.keys.each do |domain|
+    @results.each_key do |domain|
       begin
         next unless qualified_for_monitoring?(domain, @results[domain])
 
@@ -132,7 +132,7 @@ class CsyncJob < ApplicationJob
   end
 
   def create_input_lines(out_file, state)
-    @input_store[state].keys.each do |nameserver|
+    @input_store[state].each_key do |nameserver|
       domains = @input_store[state][nameserver].join(' ')
       next unless domains.length.positive?
 

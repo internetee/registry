@@ -11,7 +11,7 @@ class Contact < ApplicationRecord
   include Contact::Archivable
   include EmailVerifable
 
-  belongs_to :original, class_name: name
+  belongs_to :original, class_name: 'Contact'
   belongs_to :registrar, required: true
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts

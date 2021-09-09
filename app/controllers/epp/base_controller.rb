@@ -1,5 +1,5 @@
 module Epp
-  class BaseController < ActionController::Base
+  class BaseController < ApplicationController
     class AuthorizationError < StandardError; end
     skip_before_action :verify_authenticity_token
     check_authorization

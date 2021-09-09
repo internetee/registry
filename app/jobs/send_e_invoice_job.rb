@@ -1,7 +1,7 @@
 class SendEInvoiceJob < ApplicationJob
   discard_on HTTPClient::TimeoutError
 
-  def perform(invoice_id, payable = true)
+  def perform(invoice_id, payable: true)
     logger.info "Started to process e-invoice for invoice_id #{invoice_id}"
     invoice = Invoice.find_by(id: invoice_id)
     return unless need_to_process_invoice?(invoice: invoice, payable: payable)

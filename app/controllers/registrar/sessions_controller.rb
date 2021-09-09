@@ -35,15 +35,13 @@ class Registrar
         @depp_user.errors.add(:base, :invalid_cert)
       end
 
-      if @depp_user.errors.none?
-        if @api_user.active?
-          sign_in_and_redirect(:registrar_user, @api_user)
-        else
-          @depp_user.errors.add(:base, :not_active)
-          show_error and return
-        end
+      show_error and return unless @depp_user.errors.none?
+
+      if @api_user.active?
+        sign_in_and_redirect(:registrar_user, @api_user)
       else
-        show_error and return
+        @depp_user.errors.add(:base, :not_active)
+        show_error
       end
     end
 

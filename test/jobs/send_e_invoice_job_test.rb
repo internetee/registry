@@ -15,7 +15,7 @@ class SendEInvoiceJobTest < ActiveJob::TestCase
 
     assert_nothing_raised do
       perform_enqueued_jobs do
-        SendEInvoiceJob.perform_now(@invoice.id, true)
+        SendEInvoiceJob.perform_now(@invoice.id, payable: true)
       end
     end
     @invoice.reload

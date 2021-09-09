@@ -82,8 +82,8 @@ module Xsd
     end
 
     def schemas_by_name
-      prefixes.each_with_object({}) do |prefix, hash|
-        hash[prefix] = xsd_schemas.select { |filename| prefix_check(prefix, filename) }.uniq.sort
+      prefixes.index_with do |prefix|
+        xsd_schemas.select { |filename| prefix_check(prefix, filename) }.uniq.sort
       end
     end
 

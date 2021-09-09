@@ -343,10 +343,10 @@ class Domain < ApplicationRecord
   # find by internationalized domain name
   # internet domain name => ascii or puny, but db::domains.name is unicode
   def self.find_by_idn(name)
-    domain = find_by_name name
+    domain = find_by(name: name)
     if domain.blank? && name.include?('-')
       unicode = SimpleIDN.to_unicode name # we have no index on domains.name_puny
-      domain = find_by_name unicode
+      domain = find_by(name: unicode)
     end
     domain
   end
