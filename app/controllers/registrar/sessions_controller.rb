@@ -30,11 +30,9 @@ class Registrar
         show_error and return
       end
 
-      if @depp_user.pki
-        unless @api_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'],
-                                 request.env['HTTP_SSL_CLIENT_S_DN_CN'], api: false)
-          @depp_user.errors.add(:base, :invalid_cert)
-        end
+      if @depp_user.pki && !@api_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'],
+                                              request.env['HTTP_SSL_CLIENT_S_DN_CN'], api: false)
+        @depp_user.errors.add(:base, :invalid_cert)
       end
 
       if @depp_user.errors.none?

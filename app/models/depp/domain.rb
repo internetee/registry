@@ -109,11 +109,9 @@ module Depp
       period = params[:period].to_i.to_s
       period_unit = params[:period][-1].to_s
 
-      current_user.request(epp_xml.renew(
-                             name: { value: params[:domain_name] },
-                             curExpDate: { value: params[:cur_exp_date] },
-                             period: { value: period, attrs: { unit: period_unit } }
-                           ))
+      current_user.request(epp_xml.renew(name: { value: params[:domain_name] },
+                                         curExpDate: { value: params[:cur_exp_date] },
+                                         period: { value: period, attrs: { unit: period_unit } }))
     end
 
     def transfer(params)

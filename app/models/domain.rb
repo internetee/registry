@@ -13,9 +13,14 @@ class Domain < ApplicationRecord
   include Domain::Disputable
   include Domain::BulkUpdatable
 
-  attr_accessor :roles
-
-  attr_accessor :legal_document_id
+  attr_accessor :roles,
+                :legal_document_id,
+                :is_admin,
+                :registrant_typeahead,
+                :update_me,
+                :epp_pending_update,
+                :epp_pending_delete,
+                :reserved_pw
 
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
@@ -27,16 +32,18 @@ class Domain < ApplicationRecord
                  :admin_store_statuses_history
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
-  # TODO: most inputs should be trimmed before validatation, probably some global logic?
+  # TODO: most inputs should be trimmed before validation, probably some global logic?
 
   belongs_to :registrar, required: true
   belongs_to :registrant, required: true
   # TODO: should we user validates_associated :registrant here?
 
   has_many :admin_domain_contacts
-  accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: true, reject_if: :admin_change_prohibited?
+  accepts_nested_attributes_for :admin_domain_contacts,
+                                allow_destroy: true, reject_if: :admin_change_prohibited?
   has_many :tech_domain_contacts
-  accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true, reject_if: :tech_change_prohibited?
+  accepts_nested_attributes_for :tech_domain_contacts,
+                                allow_destroy: true, reject_if: :tech_change_prohibited?
 
   def registrant_change_prohibited?
     statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
@@ -122,8 +129,6 @@ class Domain < ApplicationRecord
     errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
   end
 
-  attr_accessor :is_admin
-
   # Removed to comply new ForceDelete procedure
   # at https://github.com/internetee/registry/issues/1428#issuecomment-570561967
   #
@@ -204,11 +209,9 @@ class Domain < ApplicationRecord
 
   def statuses_uniqueness
     return if statuses.uniq == statuses
+
     errors.add(:statuses, :taken)
   end
-
-  attr_accessor :registrant_typeahead, :update_me,
-    :epp_pending_update, :epp_pending_delete, :reserved_pw
 
   self.ignored_columns = %w[legacy_id legacy_registrar_id legacy_registrant_id]
 
@@ -423,9 +426,11 @@ class Domain < ApplicationRecord
 
   def pending_update!
     return true if pending_update?
+
     self.epp_pending_update = true # for epp
 
     return true unless registrant_verification_asked?
+
     pending_json_cache = pending_json
     token = registrant_verification_token
     asked_at = registrant_verification_asked_at
@@ -582,7 +587,6 @@ class Domain < ApplicationRecord
   # special handling for admin changing status
   def admin_status_update(update)
     update_unless_locked_by_registrant(update)
-
     update_not_by_locked_statuses(update)
     # check for deleted status
     statuses.each do |s|

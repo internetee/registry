@@ -89,13 +89,11 @@ module Repp
 
         return contacts.pluck(:code) unless details
 
-        contacts = contacts.map do |contact|
+        contacts.map do |contact|
           serializer = ::Serializers::Repp::Contact.new(contact,
                                                         show_address: Contact.address_processing?)
           serializer.to_json
         end
-
-        contacts
       end
 
       def opt_addr?

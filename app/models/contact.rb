@@ -43,9 +43,9 @@ class Contact < ApplicationRecord
   validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
 
   validates :code,
-    uniqueness: { message: :epp_id_taken },
-    format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
-    length: { maximum: 100, message: :too_long_contact_code }
+            uniqueness: { message: :epp_id_taken },
+            format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
+            length: { maximum: 100, message: :too_long_contact_code }
   validates_associated :identifier
 
   validate :validate_html
@@ -164,7 +164,9 @@ class Contact < ApplicationRecord
       scope  = all
 
       # all contacts has state ok, so no need to filter by it
-      scope = scope.where("NOT contacts.statuses && ?::varchar[]", "{#{(STATUSES - [OK, LINKED]).join(',')}}") if states.delete(OK)
+      if states.delete(OK)
+        scope = scope.where("NOT contacts.statuses && ?::varchar[]", "{#{(STATUSES - [OK, LINKED]).join(',')}}")
+      end
       scope = scope.linked if states.delete(LINKED)
       scope = scope.where("contacts.statuses @> ?::varchar[]", "{#{states.join(',')}}") if states.any?
       scope
@@ -384,7 +386,6 @@ class Contact < ApplicationRecord
   def strip_email
     self.email = email.to_s.strip
   end
-
 
   # what we can do load firstly by registrant
   # if total is smaller than needed, the load more

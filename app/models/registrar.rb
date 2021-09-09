@@ -28,7 +28,7 @@ class Registrar < ApplicationRecord
   validates :vat_rate, absence: true, if: :vat_liable_locally?
   validates :vat_rate, absence: true, if: -> { vat_liable_in_foreign_country? && vat_no? }
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
-            allow_nil: true
+                       allow_nil: true
 
   attribute :vat_rate, ::Type::VatRate.new
   after_initialize :set_defaults

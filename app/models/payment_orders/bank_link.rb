@@ -104,9 +104,8 @@ module PaymentOrders
 
     def sign(data)
       private_key = OpenSSL::PKey::RSA.new(File.read(seller_certificate))
-      signed_data = private_key.sign(OpenSSL::Digest::SHA1.new, data)
-      signed_data = Base64.encode64(signed_data).gsub(/\n|\r/, '')
-      signed_data
+      signed_data = private_key.sign(OpenSSL::Digest.new('SHA1'), data)
+      Base64.encode64(signed_data).gsub(/\n|\r/, '')
     end
 
     def calc_mac(fields)
@@ -122,7 +121,7 @@ module PaymentOrders
 
     def verify_mac(data, mac)
       bank_public_key = OpenSSL::X509::Certificate.new(File.read(bank_certificate)).public_key
-      bank_public_key.verify(OpenSSL::Digest::SHA1.new, Base64.decode64(mac), data)
+      bank_public_key.verify(OpenSSL::Digest.new('SHA1'), Base64.decode64(mac), data)
     end
 
     def prepend_size(value)

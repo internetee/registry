@@ -1,6 +1,5 @@
 class OverdueInvoiceCanceller
-  attr_reader :invoices
-  attr_reader :delay
+  attr_reader :invoices, :delay
 
   def initialize(invoices: Invoice.overdue, delay: self.class.delay)
     @invoices = invoices

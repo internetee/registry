@@ -303,7 +303,10 @@ module Epp
       if request_command == 'login' && frame.present?
         frame.gsub!(/pw>.+<\//, 'pw>[FILTERED]</')
       end
-      trimmed_request = frame.gsub(/<eis:legalDocument([^>]+)>([^<])+<\/eis:legalDocument>/, "<eis:legalDocument>[FILTERED]</eis:legalDocument>") if frame.present?
+      if frame.present?
+        trimmed_request = frame.gsub(/<eis:legalDocument([^>]+)>([^<])+<\/eis:legalDocument>/,
+                                     "<eis:legalDocument>[FILTERED]</eis:legalDocument>")
+      end
 
       ApiLog::EppLog.create({
                               request: trimmed_request,
@@ -312,7 +315,8 @@ module Epp
                               request_object: resource ? "#{params[:epp_object_type]}: #{resource.class} - #{resource.id} - #{resource.name}" : params[:epp_object_type],
                               response: @response,
                               api_user_name: @api_user.try(:username) || current_user.try(:username) || 'api-public',
-                              api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_user.try(:registrar).try(:to_s),
+                              api_user_registrar: @api_user.try(:registrar).try(:to_s) ||
+                                current_user.try(:registrar).try(:to_s),
                               ip: request.ip,
                               uuid: request.uuid
                             })

@@ -24,7 +24,8 @@ class Dnskey < ApplicationRecord
     end
   }
 
-  ALGORITHMS = Depp::Dnskey::ALGORITHMS.map {|pair| pair[1].to_s}.freeze # IANA numbers, single authority list
+  # IANA numbers, single authority list
+  ALGORITHMS = Depp::Dnskey::ALGORITHMS.map {|pair| pair[1].to_s}.freeze
   PROTOCOLS = %w(3)
   FLAGS = %w(0 256 257) # 256 = ZSK, 257 = KSK
   DS_DIGEST_TYPE = [1,2]
@@ -81,7 +82,9 @@ class Dnskey < ApplicationRecord
   def generate_digest
     return unless flags == 257 || flags == 256 # require ZoneFlag, but optional SecureEntryPoint
     self.ds_alg = alg
-    self.ds_digest_type = Setting.ds_digest_type if self.ds_digest_type.blank? || !DS_DIGEST_TYPE.include?(ds_digest_type)
+    if self.ds_digest_type.blank? || !DS_DIGEST_TYPE.include?(ds_digest_type)
+      self.ds_digest_type = Setting.ds_digest_type
+    end
 
     flags_hex = self.class.int_to_hex(flags)
     protocol_hex = self.class.int_to_hex(protocol)
@@ -90,9 +93,10 @@ class Dnskey < ApplicationRecord
     hex = [domain.name_in_wire_format, flags_hex, protocol_hex, alg_hex, public_key_hex].join
     bin = self.class.hex_to_bin(hex)
 
-    if self.ds_digest_type == 1
+    case self.ds_digest_type
+    when 1
       self.ds_digest = Digest::SHA1.hexdigest(bin).upcase
-    elsif self.ds_digest_type == 2
+    when 2
       self.ds_digest = Digest::SHA256.hexdigest(bin).upcase
     end
   end

@@ -26,7 +26,7 @@ namespace :contacts do
   end
 
   def log(msg)
-    @log ||= Logger.new(STDOUT)
+    @log ||= Logger.new($stdout)
     @log.info(msg)
   end
 end

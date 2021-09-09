@@ -45,8 +45,7 @@ module Api
 
         def create_token(user)
           token_creator = AuthTokenCreator.create_with_defaults(user)
-          hash = token_creator.token_in_hash
-          hash
+          token_creator.token_in_hash
         end
 
         def check_ip_whitelist

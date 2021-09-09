@@ -23,7 +23,7 @@ class PaymentOrder < ApplicationRecord
     supported = []
 
     PAYMENT_METHODS.each do |method|
-      class_name = ('PaymentOrders::' + method.camelize).constantize
+      class_name = "PaymentOrders::#{method.camelize}".constantize
       raise(NoMethodError, class_name) unless class_name < PaymentOrder
 
       supported << class_name
@@ -33,7 +33,7 @@ class PaymentOrder < ApplicationRecord
   end
 
   def self.new_with_type(type:, invoice:)
-    channel = ('PaymentOrders::' + type.camelize).constantize
+    channel = "PaymentOrders::#{type.camelize}".constantize
 
     PaymentOrder.new(type: channel, invoice: invoice)
   end
@@ -55,7 +55,7 @@ class PaymentOrder < ApplicationRecord
 
   def self.supported_method?(name, shortname: false)
     some_class = if shortname
-                   ('PaymentOrders::' + name.camelize).constantize
+                   "PaymentOrders::#{name.camelize}".constantize
                  else
                    name.constantize
                  end

@@ -22,7 +22,7 @@ class Registrar
 
     def load_xml
       cl_trid = "#{depp_current_user.tag}-#{Time.zone.now.to_i}"
-      xml_dir_path = Rails.root + 'app/views/registrar/xml_consoles/epp_requests'
+      xml_dir_path = "#{Rails.root}/app/views/registrar/xml_consoles/epp_requests"
       xml = File.read("#{xml_dir_path}/#{params[:obj]}/#{params[:epp_action]}.xml")
       xml = prepare_payload(xml, cl_trid)
 
@@ -54,7 +54,7 @@ class Registrar
     end
 
     def insert_prefix_and_version(xml, pref, version)
-      xml.gsub!('"' + pref.to_s + '"',
+      xml.gsub!("\"#{pref.to_s}\"",
                 "\"#{Xsd::Schema.filename(for_prefix: pref.to_s, for_version: version)}\"")
       xml
     end

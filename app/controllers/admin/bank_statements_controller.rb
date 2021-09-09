@@ -61,9 +61,9 @@ module Admin
     end
 
     def bank_statement_params
-      params.require(:bank_statement).permit(:bank_code, :iban, bank_transactions_attributes: [
-        :description, :sum, :currency, :reference_no, :paid_at
-      ])
+      params.require(:bank_statement).permit(:bank_code, :iban, bank_transactions_attributes: %i[
+                                               description sum currency reference_no paid_at
+                                             ])
     end
   end
 end

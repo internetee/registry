@@ -16,9 +16,7 @@ class Registrar
     end
 
     def destroy
-      @data = depp_current_user.request(@ex.poll(poll: {
-        value: '', attrs: { op: 'ack', msgID: params[:id] }
-      }))
+      @data = depp_current_user.request(@ex.poll(poll: { value: '', attrs: { op: 'ack', msgID: params[:id] } }))
 
       @results = @data.css('result')
 

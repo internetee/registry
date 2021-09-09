@@ -81,8 +81,8 @@ class DomainPresenter
     view.content_tag(:a, view.t('admin.domains.force_delete_toggle_btn.schedule'),
                      class: 'dropdown-item',
                      data: {
-                         toggle: 'modal',
-                         target: '.domain-edit-force-delete-dialog',
+                       toggle: 'modal',
+                       target: '.domain-edit-force-delete-dialog',
                      })
   end
 
@@ -91,7 +91,7 @@ class DomainPresenter
                  view.admin_domain_force_delete_path(domain),
                  method: :delete,
                  data: {
-                     confirm: view.t('admin.domains.force_delete_toggle_btn.cancel_confirm'),
+                   confirm: view.t('admin.domains.force_delete_toggle_btn.cancel_confirm'),
                  },
                  class: 'dropdown-item'
   end
@@ -103,6 +103,5 @@ class DomainPresenter
                      class: 'dropdown-item'
   end
 
-  attr_reader :domain
-  attr_reader :view
+  attr_reader :domain, :view
 end

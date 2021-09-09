@@ -1,8 +1,6 @@
 module Actions
   class DomainDelete
-    attr_reader :domain
-    attr_reader :params
-    attr_reader :user
+    attr_reader :domain, :params, :user
 
     def initialize(domain, params, user)
       @domain = domain

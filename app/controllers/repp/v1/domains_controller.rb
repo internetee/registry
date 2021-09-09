@@ -223,7 +223,7 @@ module Repp
         params.require(:domain).permit(:name, :registrant, :period, :period_unit, :registrar,
                                        :transfer_code, :reserved_pw,
                                        dnskeys_attributes: [%i[flags alg protocol public_key]],
-                                       nameservers_attributes: [[:hostname, ipv4: [], ipv6: []]],
+                                       nameservers_attributes: [[:hostname, { ipv4: [], ipv6: [] }]],
                                        admin_contacts: [], tech_contacts: [])
       end
     end

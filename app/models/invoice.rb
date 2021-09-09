@@ -12,22 +12,22 @@ class Invoice < ApplicationRecord
   has_many :payment_orders
 
   accepts_nested_attributes_for :items
-
-  scope :all_columns,                    ->{select("invoices.*")}
-  scope :sort_due_date_column,           ->{all_columns.select("CASE WHEN invoices.cancelled_at is not null THEN
+  # rubocop:disable Layout/LineLength
+  scope :all_columns,                    -> { select("invoices.*") }
+  scope :sort_due_date_column,           -> { all_columns.select("CASE WHEN invoices.cancelled_at is not null THEN
                                                                 (invoices.cancelled_at + interval '100 year') ELSE
                                                                  invoices.due_date END AS sort_due_date")}
-  scope :sort_by_sort_due_date_asc,      ->{sort_due_date_column.order("sort_due_date ASC")}
-  scope :sort_by_sort_due_date_desc,     ->{sort_due_date_column.order("sort_due_date DESC")}
-  scope :sort_receipt_date_column,       ->{all_columns.includes(:account_activity).references(:account_activity).select(%Q{
+  scope :sort_by_sort_due_date_asc,      -> { sort_due_date_column.order("sort_due_date ASC") }
+  scope :sort_by_sort_due_date_desc,     -> { sort_due_date_column.order("sort_due_date DESC") }
+  scope :sort_receipt_date_column,       -> { all_columns.includes(:account_activity).references(:account_activity).select(%Q{
                                             CASE WHEN account_activities.created_at is not null THEN account_activities.created_at
                                             WHEN invoices.cancelled_at is not null THEN invoices.cancelled_at + interval '100 year'
                                             ELSE NULL END AS sort_receipt_date })}
-  scope :sort_by_sort_receipt_date_asc,  ->{sort_receipt_date_column.order("sort_receipt_date ASC")}
-  scope :sort_by_sort_receipt_date_desc, ->{sort_receipt_date_column.order("sort_receipt_date DESC")}
+  scope :sort_by_sort_receipt_date_asc,  -> { sort_receipt_date_column.order("sort_receipt_date ASC") }
+  scope :sort_by_sort_receipt_date_desc, -> { sort_receipt_date_column.order("sort_receipt_date DESC") }
 
   scope :overdue, -> { unpaid.non_cancelled.where('due_date < ?', Time.zone.today) }
-
+  # rubocop:enable Layout/LineLength
   validates :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :items, presence: true
 

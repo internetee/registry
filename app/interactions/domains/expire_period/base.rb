@@ -3,7 +3,7 @@ module Domains
     class Base < ActiveInteraction::Base
       def to_stdout(message)
         time = Time.zone.now.utc
-        STDOUT << "#{time} - #{message}\n" unless Rails.env.test?
+        $stdout << "#{time} - #{message}\n" unless Rails.env.test?
       end
 
       def logger

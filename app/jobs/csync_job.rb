@@ -5,7 +5,7 @@ class CsyncJob < ApplicationJob
     @store = {}
     @input_store = { secure: {}, insecure: {} }
     @results = {}
-    @logger = Rails.env.test? ? Rails.logger : Logger.new(STDOUT)
+    @logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
     generate ? generate_scanner_input : process_scanner_results
 
     @logger.info 'CsyncJob: Finished.'
@@ -121,7 +121,7 @@ class CsyncJob < ApplicationJob
     end
 
     out_file.close
-    @logger.info 'CsyncJob Generate: Finished writing output to ' + ENV['cdns_scanner_input_file']
+    @logger.info "CsyncJob Generate: Finished writing output to #{ENV['cdns_scanner_input_file']}"
   end
 
   def check_directory

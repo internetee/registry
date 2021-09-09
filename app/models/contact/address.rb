@@ -1,10 +1,6 @@
 class Contact
   class Address
-    attr_reader :street
-    attr_reader :zip
-    attr_reader :city
-    attr_reader :state
-    attr_reader :country_code
+    attr_reader :street, :zip, :city, :state, :country_code
 
     def initialize(street, zip, city, state, country_code)
       @street = street

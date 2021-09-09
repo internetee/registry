@@ -5,8 +5,7 @@ require 'deserializers/xml/dnssec'
 module Deserializers
   module Xml
     class DomainCreate
-      attr_reader :frame
-      attr_reader :registrar
+      attr_reader :frame, :registrar
 
       def initialize(frame, registrar)
         @frame = frame

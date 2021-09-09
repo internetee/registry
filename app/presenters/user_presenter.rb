@@ -14,6 +14,5 @@ class UserPresenter
     user.roles.first
   end
 
-  attr_reader :user
-  attr_reader :view
+  attr_reader :user, :view
 end

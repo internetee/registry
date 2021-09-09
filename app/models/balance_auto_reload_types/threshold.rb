@@ -2,8 +2,7 @@ module BalanceAutoReloadTypes
   class Threshold
     include ActiveModel::Model
 
-    attr_accessor :amount
-    attr_accessor :threshold
+    attr_accessor :amount, :threshold
 
     validates :amount, numericality: { greater_than_or_equal_to: :min_amount }
     validates :threshold, numericality: { greater_than_or_equal_to: 0 }

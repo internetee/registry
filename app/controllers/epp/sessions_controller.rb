@@ -29,23 +29,19 @@ module Epp
         end
       end
 
-      if !Rails.env.development? && (!webclient_request && @api_user)
-        unless @api_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'],
-                                 request.env['HTTP_SSL_CLIENT_S_DN_CN'])
-          msg = 'Authentication error; server closing connection (certificate is not valid)'
-          epp_errors.add(:epp_errors,
-                         msg: msg,
-                         code: '2501')
+      if !Rails.env.development? && (!webclient_request && @api_user) &&
+         !@api_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
+        msg = 'Authentication error; server closing connection (certificate is not valid)'
+        epp_errors.add(:epp_errors,
+                       msg: msg,code: '2501')
 
-          success = false
+        success = false
         end
-      end
 
       if success && !@api_user
         msg = 'Authentication error; server closing connection (API user not found)'
         epp_errors.add(:epp_errors,
-                       msg: msg,
-                       code: '2501')
+                       msg: msg, code: '2501')
 
         success = false
       end
@@ -53,8 +49,7 @@ module Epp
       if success && !@api_user.try(:active)
         msg = 'Authentication error; server closing connection (API user is not active)'
         epp_errors.add(:epp_errors,
-                       msg: msg,
-                       code: '2501')
+                       msg: msg, code: '2501')
 
         success = false
       end
@@ -62,8 +57,7 @@ module Epp
       if success && @api_user.cannot?(:create, :epp_login)
         msg = 'Authentication error; server closing connection (API user does not have epp role)'
         epp_errors.add(:epp_errors,
-                       msg: msg,
-                       code: '2501')
+                       msg: msg, code: '2501')
 
         success = false
       end
@@ -71,8 +65,7 @@ module Epp
       if success && !ip_white?
         msg = 'Authentication error; server closing connection (IP is not whitelisted)'
         epp_errors.add(:epp_errors,
-                       msg: msg,
-                       code: '2501')
+                       msg: msg, code: '2501')
 
         success = false
       end
@@ -80,8 +73,7 @@ module Epp
       if success && EppSession.limit_reached?(@api_user.registrar)
         msg = 'Session limit exceeded; server closing connection (connection limit reached)'
         epp_errors.add(:epp_errors,
-                       msg: msg,
-                       code: '2502')
+                       msg: msg, code: '2502')
 
         success = false
       end
@@ -99,8 +91,7 @@ module Epp
 
         if already_authenticated
           epp_errors.add(:epp_errors,
-                         msg: 'Command use error; Already authenticated',
-                         code: 2002)
+                         msg: 'Command use error; Already authenticated', code: 2002)
           handle_errors
           return
         end
@@ -118,8 +109,8 @@ module Epp
     def ip_white?
       webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
       return true if webclient_request
-      if @api_user
-        return false unless @api_user.registrar.api_ip_white?(request.ip)
+      if @api_user && !@api_user.registrar.api_ip_white?(request.ip)
+        return false
       end
       true
     end
@@ -127,8 +118,7 @@ module Epp
     def logout
       unless signed_in?
         epp_errors.add(:epp_errors,
-                       code: 2201,
-                       msg: 'Authorization error')
+                       code: 2201, msg: 'Authorization error')
         handle_errors
         return
       end

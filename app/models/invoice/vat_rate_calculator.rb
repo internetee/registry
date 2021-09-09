@@ -1,7 +1,6 @@
 class Invoice
   class VatRateCalculator
-    attr_reader :registry
-    attr_reader :registrar
+    attr_reader :registry, :registrar
 
     def initialize(registry: Registry.current, registrar:)
       @registry = registry

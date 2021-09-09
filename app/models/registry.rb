@@ -1,8 +1,7 @@
 class Registry
   include ActiveModel::Model
 
-  attr_accessor :vat_rate
-  attr_accessor :vat_country
+  attr_accessor :vat_rate, :vat_country
 
   def self.current
     vat_rate = Setting.registry_vat_prc.to_d * 100

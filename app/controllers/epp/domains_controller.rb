@@ -155,8 +155,8 @@ module Epp
     end
 
     def validate_update
-      if element_count('update > chg > registrant') > 0
-        requires 'extension > extdata > legalDocument' if current_user.legaldoc_mandatory?
+      if element_count('update > chg > registrant').positive? && current_user.legaldoc_mandatory?
+        requires 'extension > extdata > legalDocument'
       end
 
       @prefix = 'update > update >'

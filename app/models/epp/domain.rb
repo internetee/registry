@@ -15,7 +15,8 @@ class Epp::Domain < Domain
     return true if is_transfer || is_renewal
     return unless update_prohibited?
 
-    stat = (statuses & (DomainStatus::UPDATE_PROHIBIT_STATES + DomainStatus::DELETE_PROHIBIT_STATES)).first
+    stat = (statuses &
+      (DomainStatus::UPDATE_PROHIBIT_STATES + DomainStatus::DELETE_PROHIBIT_STATES)).first
     add_epp_error('2304', 'status', stat, I18n.t(:object_status_prohibits_operation))
     throw(:abort)
   end
@@ -307,10 +308,12 @@ class Epp::Domain < Domain
     begin
       return if cur_exp_date.to_date == valid_to.to_date
     rescue
-      add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
+      add_epp_error('2306', 'curExpDate', cur_exp_date,
+                    I18n.t('errors.messages.epp_exp_dates_do_not_match'))
       return
     end
-    add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
+    add_epp_error('2306', 'curExpDate', cur_exp_date,
+                  I18n.t('errors.messages.epp_exp_dates_do_not_match'))
   end
 
   ### ABILITIES ###
@@ -325,7 +328,8 @@ class Epp::Domain < Domain
     begin
       errors.add(:base, :domain_status_prohibits_operation)
       return false
-    end if (statuses & [DomainStatus::CLIENT_DELETE_PROHIBITED, DomainStatus::SERVER_DELETE_PROHIBITED]).any?
+    end if (statuses &
+      [DomainStatus::CLIENT_DELETE_PROHIBITED, DomainStatus::SERVER_DELETE_PROHIBITED]).any?
 
     true
   end
