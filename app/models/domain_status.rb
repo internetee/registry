@@ -166,8 +166,8 @@ class DomainStatus < ApplicationRecord
         ['UpdateProhibited', SERVER_UPDATE_PROHIBITED],
         ['DeleteProhibited', SERVER_DELETE_PROHIBITED],
         ['ReleaseProhibited', SERVER_RELEASE_PROHIBITED],
-        ['serverExtensionUpdateProhibited', SERVER_EXTENSION_UPDATE_PROHIBITED],
-        ['serverObjUpdateProhibited', SERVER_OBJ_UPDATE_PROHIBITED],
+        ['ExtensionUpdateProhibited', SERVER_EXTENSION_UPDATE_PROHIBITED],
+        ['ObjUpdateProhibited', SERVER_OBJ_UPDATE_PROHIBITED],
       ]
     end
 

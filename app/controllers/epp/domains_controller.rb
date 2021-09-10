@@ -196,8 +196,6 @@ module Epp
     def dnskey_update_enabled
       find_domain
 
-      # binding.pry
-
       if @domain.dnskey_update_enabled? && !params[:parsed_frame].css('update').empty?
         flag = true
 
@@ -211,12 +209,10 @@ module Epp
           return if parsed_response_for_dnskey('rem')
         end
 
-        # binding.pry
-
         return epp_errors.add(:epp_errors,
           code: '2304',
           msg: "#{I18n.t(:object_status_prohibits_operation)}
-                         :serverDnskeyUpdateEnabled")
+                         :serverObjUpdateEnabled")
       end
     end
 
