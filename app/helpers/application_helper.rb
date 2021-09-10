@@ -110,7 +110,7 @@ module ApplicationHelper
   end
 
   def verified_email_span(verification)
-    content_tag(:span, verification.email, class: verified_email_class(verification))
+    tag.span(verification.email, class: verified_email_class(verification))
   end
 
   def verified_email_class(verification)

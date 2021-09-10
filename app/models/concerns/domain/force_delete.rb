@@ -5,6 +5,9 @@ module Domain::ForceDelete
                            DomainStatus::SERVER_RENEW_PROHIBITED,
                            DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
 
+  HOLD_STATUSES = [DomainStatus::SERVER_HOLD,
+                   DomainStatus::CLIENT_HOLD].freeze
+
   included do
     store_accessor :force_delete_data,
                    :force_delete_type,
@@ -15,9 +18,6 @@ module Domain::ForceDelete
           lambda {
             where("(force_delete_data->>'contact_notification_sent_date') is null")
           }
-
-    HOLD_STATUSES = [DomainStatus::SERVER_HOLD,
-                     DomainStatus::CLIENT_HOLD].freeze
   end
 
   class_methods do
