@@ -49,6 +49,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_update_domain_data_out_of_extension_block_with_serverObjUpdateProhibited
+    ENV['obj_and_extensions_prohibited'] = 'true'
     @domain = domains(:shop)
     @domain.statuses << DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED
     @domain.save
@@ -94,6 +95,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_update_domain_data_out_of_extension_block_with_extension_update_prohibited
+    ENV['obj_and_extensions_prohibited'] = 'true'
     @domain = domains(:shop)
     @domain.statuses << DomainStatus::SERVER_EXTENSION_UPDATE_PROHIBITED
     @domain.save
@@ -131,6 +133,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   end
 
   def test_update_domain_dns_with_extension_update_prohibited
+    ENV['obj_and_extensions_prohibited'] = 'true'
     @domain = domains(:shop)
     @domain.statuses << DomainStatus::SERVER_EXTENSION_UPDATE_PROHIBITED
     @domain.save

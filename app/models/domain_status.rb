@@ -155,7 +155,7 @@ class DomainStatus < ApplicationRecord
 
 
     def admin_statuses_map
-      [
+      admin_statuses = [
         ['Hold', SERVER_HOLD],
         ['ManualInzone', SERVER_MANUAL_INZONE],
         ['RenewProhibited', SERVER_RENEW_PROHIBITED],
@@ -166,9 +166,14 @@ class DomainStatus < ApplicationRecord
         ['UpdateProhibited', SERVER_UPDATE_PROHIBITED],
         ['DeleteProhibited', SERVER_DELETE_PROHIBITED],
         ['ReleaseProhibited', SERVER_RELEASE_PROHIBITED],
-        ['ExtensionUpdateProhibited', SERVER_EXTENSION_UPDATE_PROHIBITED],
-        ['ObjUpdateProhibited', SERVER_OBJ_UPDATE_PROHIBITED],
       ]
+
+      if Feature.obj_and_extensions_statuses_enabled?
+        admin_statuses << ['ExtensionUpdateProhibited', SERVER_EXTENSION_UPDATE_PROHIBITED]
+        admin_statuses << ['ObjUpdateProhibited', SERVER_OBJ_UPDATE_PROHIBITED]
+      end
+
+      admin_statuses
     end
 
     def admin_not_deletable_statuses
