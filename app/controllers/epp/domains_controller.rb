@@ -178,6 +178,10 @@ module Epp
         doc.document.add.children.each_with_index do |x, i|
           store << doc.document.add.children[i].name  
         end
+      elsif value == 'chg'
+        doc.document.chg.children.each_with_index do |x, i|
+          store << doc.document.chg.children[i].name  
+        end
       else
         doc.document.rem.children.each_with_index do |x, i|
           store << doc.document.rem.children[i].name  
@@ -192,10 +196,22 @@ module Epp
     def dnskey_update_enabled
       find_domain
 
-      if @domain.dnskey_update_enabled? && !params[:parsed_frame].css('update').empty?
+      # binding.pry
 
-        return if parsed_response_for_dnskey('add')
-        return if parsed_response_for_dnskey('rem')
+      if @domain.dnskey_update_enabled? && !params[:parsed_frame].css('update').empty?
+        flag = true
+
+        flag = false unless parsed_response_for_dnskey('chg')
+
+        if flag
+          flag = false unless parsed_response_for_dnskey('add')
+        end
+
+        if flag
+          return if parsed_response_for_dnskey('rem')
+        end
+
+        # binding.pry
 
         return epp_errors.add(:epp_errors,
           code: '2304',
