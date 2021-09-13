@@ -1,9 +1,7 @@
 class AuthTokenCreator
   DEFAULT_VALIDITY = 2.hours
 
-  attr_reader :user
-  attr_reader :key
-  attr_reader :expires_at
+  attr_reader :user, :key, :expires_at
 
   def self.create_with_defaults(user)
     new(user, Rails.application.config.secret_key_base, Time.now + DEFAULT_VALIDITY)
@@ -24,7 +22,7 @@ class AuthTokenCreator
   end
 
   def encrypted_token
-    encryptor = OpenSSL::Cipher::AES.new(256, :CBC)
+    encryptor = OpenSSL::Cipher.new('aes-256-cbc')
     encryptor.encrypt
 
     # OpenSSL used to automatically shrink oversized keys, it does not do that any longer.

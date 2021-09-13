@@ -21,9 +21,7 @@ class Registrar
                   current_domain_scope
                 end
 
-      if params[:contacts_ident_eq]
-        domains = domains.where(contacts: { ident: params[:contacts_ident_eq] })
-      end
+      domains = domains.where(contacts: { ident: params[:contacts_ident_eq] }) if params[:contacts_ident_eq]
 
       normalize_search_parameters do
         @q = domains.search(search_params.except(:contacts_ident_eq))

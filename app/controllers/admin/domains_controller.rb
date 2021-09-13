@@ -5,20 +5,19 @@ module Admin
 
     def index
       params[:q] ||= {}
-      if params[:statuses_contains]
-        domains = Domain.includes(:registrar, :registrant).where(
-          "domains.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
-        )
-      else
-        domains = Domain.includes(:registrar, :registrant)
-      end
+      domains = if params[:statuses_contains]
+                  Domain.includes(:registrar, :registrant).where(
+                    "domains.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+                  )
+                else
+                  Domain.includes(:registrar, :registrant)
+                end
 
       normalize_search_parameters do
         @q = domains.search(params[:q])
         @domains = @q.result.page(params[:page])
-        if @domains.count == 1 && params[:q][:name_matches].present?
-          redirect_to [:admin, @domains.first] and return
-        elsif @domains.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
+        (redirect_to [:admin, @domains.first] and return if @domains.count == 1 && params[:q][:name_matches].present?)
+        if @domains.count.zero? && params[:q][:name_matches] !~ /^%.+%$/
           # if we do not get any results, add wildcards to the name field and search again
           n_cache = params[:q][:name_matches]
           params[:q][:name_matches] = "%#{params[:q][:name_matches]}%"
@@ -51,7 +50,7 @@ module Admin
         redirect_to [:admin, @domain]
       else
         build_associations
-        flash.now[:alert] = I18n.t('failed_to_update_domain') + ' ' + @domain.errors.full_messages.join(", ")
+        flash.now[:alert] = "#{I18n.t('failed_to_update_domain')} #{@domain.errors.full_messages.join(', ')}"
         render 'edit'
       end
     end

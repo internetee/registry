@@ -44,6 +44,7 @@ class ApiUser < User
   after_initialize :set_defaults
   def set_defaults
     return unless new_record?
+
     self.active = true unless saved_change_to_active?
   end
 
@@ -76,7 +77,7 @@ class ApiUser < User
   end
 
   def linked_with?(another_api_user)
-    another_api_user.identity_code == self.identity_code
+    another_api_user.identity_code == identity_code
   end
 
   private

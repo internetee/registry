@@ -34,10 +34,10 @@ module Depp
           org_name: params[:org_name],
 
           # address
-          street:       params[:street],
-          city:         params[:city],
-          zip:          params[:zip],
-          state:        params[:state],
+          street: params[:street],
+          city: params[:city],
+          zip: params[:zip],
+          state: params[:state],
           country_code: params[:country_code]
         )
       end
@@ -61,10 +61,10 @@ module Depp
           org_name: res.css('postalInfo org').text,
 
           # address
-          street:       res.css('postalInfo addr street').text,
-          city:         res.css('postalInfo addr city').text,
-          zip:          res.css('postalInfo addr pc').text,
-          state:        res.css('postalInfo addr sp').text,
+          street: res.css('postalInfo addr street').text,
+          city: res.css('postalInfo addr city').text,
+          zip: res.css('postalInfo addr pc').text,
+          state: res.css('postalInfo addr sp').text,
           country_code: res.css('postalInfo addr cc').text,
 
           # authInfo
@@ -116,10 +116,11 @@ module Depp
         xml.with_indifferent_access
       end
 
-      def extract_disclosure_hash(cpd) # cpd = contact_params[:disclose]
+      # cpd = contact_params[:disclose]
+      def extract_disclosure_hash(cpd)
         return {} unless cpd
-        cpd = cpd.delete_if { |k, v| v if v != '1' && k == 'flag' }
-        cpd
+
+        cpd.delete_if { |k, v| v if v != '1' && k == 'flag' }
       end
 
       def extract_info_disclosure(data)
@@ -147,7 +148,7 @@ module Depp
         id: { value: code },
         postalInfo: {
           name: { value: name },
-          org:  { value: org_name },
+          org: { value: org_name },
         },
         voice: { value: phone },
         email: { value: email }
@@ -195,7 +196,7 @@ module Depp
         chg: {
           postalInfo: {
             name: { value: name },
-            org:  { value: org_name },
+            org: { value: org_name },
           },
           voice: { value: phone },
           email: { value: email },
@@ -240,7 +241,7 @@ module Depp
         ident = ident_xml[:_anonymus].try(:first)
       when :update
         # detect if any ident has changed, nb! ident and self.ident is not always same
-        if !(ident == self.ident && ident == self.ident_type && ident_country_code == self.ident_country_code)
+        unless ident == self.ident && ident == ident_type && ident_country_code == self.ident_country_code
           ident = ident_xml[:_anonymus].try(:first)
         end
       end

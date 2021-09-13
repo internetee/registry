@@ -9,10 +9,10 @@ xml.epp_head do
       xml.msg @notification.text
     end
 
-    if @notification.attached_obj_type == 'DomainTransfer'
+    if @notification.attached_obj_type == 'DomainTransfer' && @object
       xml.resData do
         xml << render('epp/domains/partials/transfer', builder: xml, dt: @object)
-      end if @object
+      end
     end
 
     if @notification.action&.contact || @notification.registry_lock?

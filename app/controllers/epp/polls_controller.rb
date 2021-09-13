@@ -51,6 +51,7 @@ module Epp
       end
 
       handle_errors(@notification) and return unless @notification.mark_as_read
+
       render_epp_response 'epp/poll/poll_ack'
     end
 

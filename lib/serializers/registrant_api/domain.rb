@@ -81,12 +81,11 @@ module Serializers
       end
 
       def contacts(type)
-        contact_pool = begin
-                         if type == :tech
-                           domain.tech_contacts
-                         elsif type == :admin
-                           domain.admin_contacts
-                         end
+        contact_pool = case type
+                       when :tech
+                         domain.tech_contacts
+                       when :admin
+                         domain.admin_contacts
                        end
 
         array_of_contacts = []

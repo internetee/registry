@@ -43,7 +43,6 @@ module Admin
       end
     end
 
-
     def blocked_domain_params
       params.require(:blocked_domain).permit(:name)
     end

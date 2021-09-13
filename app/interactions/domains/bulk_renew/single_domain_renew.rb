@@ -37,11 +37,11 @@ module Domains
                          price: domain_pricelist)
       end
 
-      def in_transaction_with_retries
+      def in_transaction_with_retries(&block)
         if Rails.env.test?
           yield
         else
-          transaction_wrapper { yield }
+          transaction_wrapper(&block)
         end
       rescue ActiveRecord::StatementInvalid => e
         log_error e
@@ -70,8 +70,9 @@ module Domains
         max_reg_time = 11.years.from_now
 
         if renewed_expire_time >= max_reg_time
-          domain.add_epp_error('2105', nil, nil, I18n.t('epp.domains.object_is_not_eligible_for_renewal',
-                                                        max_date: max_reg_time.to_date.to_s(:db)))
+          domain.add_epp_error('2105', nil, nil,
+                               I18n.t('epp.domains.object_is_not_eligible_for_renewal',
+                                      max_date: max_reg_time.to_date.to_s(:db)))
         end
         renewed_expire_time
       end

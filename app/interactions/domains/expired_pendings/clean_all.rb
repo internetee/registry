@@ -9,6 +9,7 @@ module Domains
         count = 0
         expired_pending_domains.each do |domain|
           log_error(domain) && next unless need_to_be_cleared?(domain)
+
           count += 1
           Domains::ExpiredPendings::ProcessClean.run(domain: domain)
         end

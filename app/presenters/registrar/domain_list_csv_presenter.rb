@@ -42,6 +42,5 @@ class Registrar::DomainListCsvPresenter
     CSV::Row.new([], row)
   end
 
-  attr_reader :domains
-  attr_reader :view
+  attr_reader :domains, :view
 end

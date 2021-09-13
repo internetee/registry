@@ -8,7 +8,7 @@ class User < ApplicationRecord
   self.ignored_columns = %w[legacy_id]
 
   def id_role_username
-    "#{self.id}-#{self.class}: #{self.username}"
+    "#{id}-#{self.class}: #{username}"
   end
 
   def self.from_omniauth(omniauth_hash)

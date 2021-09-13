@@ -28,7 +28,7 @@ class WhoisRecord < ApplicationRecord
     end
 
     status_map = {
-        'ok' => 'ok (paid and in zone)'
+      'ok' => 'ok (paid and in zone)'
     }
 
     registrant = domain.registrant
@@ -75,7 +75,7 @@ class WhoisRecord < ApplicationRecord
     h[:nameservers]         = domain.nameservers.hostnames.uniq.select(&:present?)
     h[:nameservers_changed] = domain.nameservers.pluck(:updated_at).max.try(:to_s, :iso8601)
 
-    h[:dnssec_keys]    = domain.dnskeys.map{|key| "#{key.flags} #{key.protocol} #{key.alg} #{key.public_key}" }
+    h[:dnssec_keys]    = domain.dnskeys.map { |key| "#{key.flags} #{key.protocol} #{key.alg} #{key.public_key}" }
     h[:dnssec_changed] = domain.dnskeys.pluck(:updated_at).max.try(:to_s, :iso8601) rescue nil
 
 

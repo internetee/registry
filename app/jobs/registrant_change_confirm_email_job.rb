@@ -13,7 +13,8 @@ class RegistrantChangeConfirmEmailJob < ApplicationJob
   private
 
   def log(domain)
-    message = "Send RegistrantChangeMailer#confirm email for domain #{domain.name} (##{domain.id}) to #{domain.registrant.email}"
+    message = 'Send RegistrantChangeMailer#confirm email for domain '\
+              "#{domain.name} (##{domain.id}) to #{domain.registrant.email}"
     logger.info(message)
   end
 

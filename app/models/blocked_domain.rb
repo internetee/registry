@@ -8,7 +8,7 @@ class BlockedDomain < ApplicationRecord
 
 
   class << self
-    def by_domain name
+    def by_domain(name)
       where(name: name)
     end
   end
@@ -29,7 +29,7 @@ class BlockedDomain < ApplicationRecord
 
   def generate_json
     h = HashWithIndifferentAccess.new
-    h[:name]       = self.name
+    h[:name]       = name
     h[:status]     = ['Blocked']
     h
   end

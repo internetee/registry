@@ -25,13 +25,12 @@ module Admin
       @account_activities = @q.result.page(params[:page]).per(params[:results_per_page])
       @count = @q.result.count
 
-      if params[:page] && params[:page].to_i > 1
-        @sum = @q.result.limit(@account_activities.offset_value).sum(:sum) +
-               @b.result.where("account_activities.id NOT IN (#{@q.result.select(:id).to_sql})")
-                 .sum(:sum)
-      else
-        @sum = @b.result.where("account_activities.id NOT IN (#{@q.result.select(:id).to_sql})").sum(:sum)
-      end
+      @sum = if params[:page] && params[:page].to_i > 1
+               @q.result.limit(@account_activities.offset_value).sum(:sum) +
+                 @b.result.where("account_activities.id NOT IN (#{@q.result.select(:id).to_sql})").sum(:sum)
+             else
+               @b.result.where("account_activities.id NOT IN (#{@q.result.select(:id).to_sql})").sum(:sum)
+             end
 
       respond_to do |format|
         format.html

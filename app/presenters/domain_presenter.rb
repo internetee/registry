@@ -10,12 +10,12 @@ class DomainPresenter
     html = domain.name
 
     if domain.discarded?
-      label = view.content_tag(:span, 'deleteCandidate', class: 'label label-warning')
+      label = view.tag.span('deleteCandidate', class: 'label label-warning')
       html += " #{label}"
     end
 
     if domain.locked_by_registrant?
-      label = view.content_tag(:span, 'registryLock', class: 'label label-danger')
+      label = view.tag.span('registryLock', class: 'label label-danger')
       html += " #{label}"
     end
 
@@ -78,12 +78,12 @@ class DomainPresenter
   private
 
   def schedule_force_delete_btn
-    view.content_tag(:a, view.t('admin.domains.force_delete_toggle_btn.schedule'),
-                     class: 'dropdown-item',
-                     data: {
-                         toggle: 'modal',
-                         target: '.domain-edit-force-delete-dialog',
-                     })
+    view.tag.a(view.t('admin.domains.force_delete_toggle_btn.schedule'),
+               class: 'dropdown-item',
+               data: {
+                 toggle: 'modal',
+                 target: '.domain-edit-force-delete-dialog',
+               })
   end
 
   def cancel_force_delete_btn
@@ -91,18 +91,17 @@ class DomainPresenter
                  view.admin_domain_force_delete_path(domain),
                  method: :delete,
                  data: {
-                     confirm: view.t('admin.domains.force_delete_toggle_btn.cancel_confirm'),
+                   confirm: view.t('admin.domains.force_delete_toggle_btn.cancel_confirm'),
                  },
                  class: 'dropdown-item'
   end
 
   def inactive_schedule_force_delete_btn
-    view.content_tag :button, view.t('admin.domains.force_delete_toggle_btn.schedule'),
-                     title: view.t('admin.domains.force_delete_toggle_btn.unable_to_schedule'),
-                     disabled: true,
-                     class: 'dropdown-item'
+    view.tag.button(view.t('admin.domains.force_delete_toggle_btn.schedule'),
+                    title: view.t('admin.domains.force_delete_toggle_btn.unable_to_schedule'),
+                    disabled: true,
+                    class: 'dropdown-item')
   end
 
-  attr_reader :domain
-  attr_reader :view
+  attr_reader :domain, :view
 end
