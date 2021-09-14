@@ -58,7 +58,7 @@ class RegistrarXmlConsolesIntegrationTest < ApplicationIntegrationTest
         <command>
           <update>
             <domain:update
-             xmlns:domain="https://epp.tld.ee/schema/domain-ee-1.1.xsd">
+             xmlns:domain="https://epp.tld.ee/schema/domain-ee-1.2.xsd">
               <domain:name>example.ee</domain:name>
               <domain:add>
                 <domain:ns>

@@ -122,7 +122,7 @@ class CsyncRecord < ApplicationRecord
   end
 
   def self.log
-    Rails.env.test? ? logger : Logger.new(STDOUT)
+    Rails.env.test? ? logger : Logger.new($stdout)
   end
 
   def validate_csync_action

@@ -46,9 +46,7 @@ module Deserializers
         @ds_data = []
 
         # schema validation prevents both in the same parent node
-        if frame.css('dsData').present?
-          frame.css('dsData').each { |k| @ds_data << key_from_params(k, dsa: true) }
-        end
+        frame.css('dsData').each { |k| @ds_data << key_from_params(k, dsa: true) } if frame.css('dsData').present?
 
         if frame.css('all')&.text == 'true'
           keys_from_domain_name(domain_name)

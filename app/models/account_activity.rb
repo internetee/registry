@@ -39,4 +39,3 @@ class AccountActivity < ApplicationRecord
     end
   end
 end
-

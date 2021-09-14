@@ -37,7 +37,7 @@ class ReservedDomain < ApplicationRecord
   end
 
   def fill_empty_passwords
-    regenerate_password if self.password.blank?
+    regenerate_password if password.blank?
   end
 
   def regenerate_password

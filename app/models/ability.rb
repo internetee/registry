@@ -58,7 +58,7 @@ class Ability
     can(:delete,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
 
     # Epp::Contact
-    can(:info, Epp::Contact)           { |c, pw| c.registrar_id == @user.registrar_id || pw.blank? ? true : c.auth_info == pw }
+    can(:info, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || pw.blank? ? true : c.auth_info == pw }
     can(:view_full_info, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
     can(:check,  Epp::Contact)
     can(:create, Epp::Contact)

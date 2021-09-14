@@ -6,7 +6,7 @@ module ApplicationHelper
 
   def env_style
     return '' if unstable_env.nil?
-    "background-image: url(#{image_path(unstable_env.to_s + '.png')});"
+    "background-image: url(#{image_path("#{unstable_env}.png")});"
   end
 
   def ident_for(contact)
@@ -110,7 +110,7 @@ module ApplicationHelper
   end
 
   def verified_email_span(verification)
-    content_tag(:span, verification.email, class: verified_email_class(verification))
+    tag.span(verification.email, class: verified_email_class(verification))
   end
 
   def verified_email_class(verification)

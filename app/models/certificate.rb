@@ -67,9 +67,7 @@ class Certificate < ApplicationRecord
 
     @cached_status = SIGNED
 
-    if parsed_crt.not_before > Time.zone.now.utc && parsed_crt.not_after < Time.zone.now.utc
-      @cached_status = EXPIRED
-    end
+    @cached_status = EXPIRED if parsed_crt.not_before > Time.zone.now.utc && parsed_crt.not_after < Time.zone.now.utc
 
     crl = OpenSSL::X509::CRL.new(File.open("#{ENV['crl_dir']}/crl.pem").read)
     return @cached_status unless crl.revoked.map(&:serial).include?(parsed_crt.serial)
@@ -83,10 +81,11 @@ class Certificate < ApplicationRecord
     csr_file.rewind
 
     crt_file = Tempfile.new('client_crt')
-    _out, err, _st = Open3.capture3("openssl ca -config #{ENV['openssl_config_path']} -keyfile #{ENV['ca_key_path']} \
-    -cert #{ENV['ca_cert_path']} \
-    -extensions usr_cert -notext -md sha256 \
-    -in #{csr_file.path} -out #{crt_file.path} -key '#{ENV['ca_key_password']}' -batch")
+    _out, err, _st = Open3.capture3('openssl', 'ca', '-config', ENV['openssl_config_path'],
+                                    '-keyfile', ENV['ca_key_path'], '-cert', ENV['ca_cert_path'],
+                                    '-extensions', 'usr_cert', '-notext', '-md sha256',
+                                    '-in', csr_file.path, '-out', crt_file.path, '-key', ENV['ca_key_password'],
+                                    '-batch')
 
     if err.match?(/Data Base Updated/)
       crt_file.rewind
@@ -103,7 +102,7 @@ class Certificate < ApplicationRecord
       end
       logger.error(err)
       puts "Certificate sign issue: #{err.inspect}" if Rails.env.test?
-      return false
+      false
     end
   end
 
@@ -112,7 +111,8 @@ class Certificate < ApplicationRecord
     crt_file.write(crt)
     crt_file.rewind
 
-    _out, err, _st = Open3.capture3("openssl ca -config #{ENV['openssl_config_path']} -keyfile #{ENV['ca_key_path']} \
+    _out, err, _st = Open3.capture3("openssl ca -config #{ENV['openssl_config_path']} \
+      -keyfile #{ENV['ca_key_path']} \
       -cert #{ENV['ca_cert_path']} \
       -revoke #{crt_file.path} -key '#{ENV['ca_key_password']}' -batch")
 
@@ -134,7 +134,7 @@ class Certificate < ApplicationRecord
   class << self
     def tostdout(message)
       time = Time.zone.now.utc
-      STDOUT << "#{time} - #{message}\n" unless Rails.env.test?
+      $stdout << "#{time} - #{message}\n" unless Rails.env.test?
     end
 
     def update_crl

@@ -11,7 +11,7 @@ class Contact < ApplicationRecord
   include Contact::Archivable
   include EmailVerifable
 
-  belongs_to :original, class_name: self.name
+  belongs_to :original, class_name: 'Contact'
   belongs_to :registrar, required: true
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
@@ -20,6 +20,7 @@ class Contact < ApplicationRecord
   has_many :actions, dependent: :destroy
 
   attr_accessor :legal_document_id
+
   alias_attribute :kind, :ident_type
   alias_attribute :copy_from_id, :original_id # Old attribute name; for PaperTrail
 
@@ -29,7 +30,7 @@ class Contact < ApplicationRecord
   }
 
   NAME_REGEXP = /([\u00A1-\u00B3\u00B5-\u00BF\u0021-\u0026\u0028-\u002C\u003A-\u0040]|
-    [\u005B-\u005F\u007B-\u007E\u2040-\u206F\u20A0-\u20BF\u2100-\u218F])/x.freeze
+    [\u005B-\u005F\u007B-\u007E\u2040-\u206F\u20A0-\u20BF\u2100-\u218F])/x
 
   validates :name, :email, presence: true
   validates :name, format: { without: NAME_REGEXP, message: :invalid }, if: -> { priv? }
@@ -43,9 +44,9 @@ class Contact < ApplicationRecord
   validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
 
   validates :code,
-    uniqueness: { message: :epp_id_taken },
-    format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
-    length: { maximum: 100, message: :too_long_contact_code }
+            uniqueness: { message: :epp_id_taken },
+            format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
+            length: { maximum: 100, message: :too_long_contact_code }
   validates_associated :identifier
 
   validate :validate_html
@@ -164,7 +165,9 @@ class Contact < ApplicationRecord
       scope  = all
 
       # all contacts has state ok, so no need to filter by it
-      scope = scope.where("NOT contacts.statuses && ?::varchar[]", "{#{(STATUSES - [OK, LINKED]).join(',')}}") if states.delete(OK)
+      if states.delete(OK)
+        scope = scope.where("NOT contacts.statuses && ?::varchar[]", "{#{(STATUSES - [OK, LINKED]).join(',')}}")
+      end
       scope = scope.linked if states.delete(LINKED)
       scope = scope.where("contacts.statuses @> ?::varchar[]", "{#{states.join(',')}}") if states.any?
       scope
@@ -384,7 +387,6 @@ class Contact < ApplicationRecord
   def strip_email
     self.email = email.to_s.strip
   end
-
 
   # what we can do load firstly by registrant
   # if total is smaller than needed, the load more

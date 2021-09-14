@@ -15,9 +15,7 @@ module Api
             current_registrant: serialized_registrant(@domain.registrant),
           }
 
-          unless delete_action?
-            res[:new_registrant] = serialized_registrant(@domain.pending_registrant)
-          end
+          res[:new_registrant] = serialized_registrant(@domain.pending_registrant) unless delete_action?
 
           render json: res, status: :ok
         end
@@ -103,9 +101,10 @@ module Api
         end
 
         def verify_action
-          action = if params[:template] == 'change'
+          action = case params[:template]
+                   when 'change'
                      @domain.registrant_update_confirmable?(verify_params[:token])
-                   elsif params[:template] == 'delete'
+                   when 'delete'
                      @domain.registrant_delete_confirmable?(verify_params[:token])
                    end
 

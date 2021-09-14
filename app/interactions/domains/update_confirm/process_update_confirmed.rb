@@ -38,7 +38,7 @@ module Domains
       private
 
       def user_id
-        @user_id ||= domain.pending_json.dig('current_user_id')
+        @user_id ||= domain.pending_json['current_user_id']
       end
     end
   end

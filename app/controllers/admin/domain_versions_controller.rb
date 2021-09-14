@@ -21,27 +21,33 @@ module Admin
         search_params.delete(:registrar)
       end
 
-      whereS = "1=1"
+      where_s = "1=1"
 
       search_params.each do |key, value|
         next if value.empty?
-        case key
-          when 'event'
-            whereS += " AND event = '#{value}'"
-          when 'name'
-            whereS += " AND (object->>'name' ~* '#{value}' OR object_changes->>'name' ~* '#{value}')"
-          else
-            whereS += create_where_string(key, value)
-        end
+
+        where_s += case key
+                   when 'event'
+                     " AND event = '#{value}'"
+                   when 'name'
+                     " AND (object->>'name' ~* '#{value}' OR object_changes->>'name' ~* '#{value}')"
+                   else
+                     create_where_string(key, value)
+                   end
       end
 
-      whereS += "  AND object->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrants.present?
-      whereS += "  AND 1=0" if registrants == []
-      whereS += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrars.present?
-      whereS += "  AND 1=0" if registrars == []
+      if registrants.present?
+        where_s += "  AND object->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id}'" }.join ','})"
+      end
+      where_s += "  AND 1=0" if registrants == []
+      if registrars.present?
+        where_s += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id}'" }.join ','})"
+      end
+      where_s += "  AND 1=0" if registrars == []
 
       versions = Version::DomainVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
       @q = versions.ransack(params[:q])
+
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 

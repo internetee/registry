@@ -1,10 +1,6 @@
 module Actions
   class ContactDelete
-    attr_reader :contact
-    attr_reader :new_attributes
-    attr_reader :legal_document
-    attr_reader :ident
-    attr_reader :user
+    attr_reader :contact, :new_attributes, :legal_document, :ident, :user
 
     def initialize(contact, legal_document = nil)
       @legal_document = legal_document

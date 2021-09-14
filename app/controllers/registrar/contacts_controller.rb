@@ -13,7 +13,8 @@ class Registrar
 
       search_params = params[:q].deep_dup
 
-      if search_params[:domain_contacts_type_in].is_a?(Array) && search_params[:domain_contacts_type_in].delete('registrant')
+      if search_params[:domain_contacts_type_in].is_a?(Array) &&
+         search_params[:domain_contacts_type_in].delete('registrant')
         search_params[:registrant_domains_id_not_null] = 1
       end
 

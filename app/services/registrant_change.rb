@@ -15,6 +15,5 @@ class RegistrantChange
     RegistrantChangeMailer.accepted(domain: domain, old_registrant: old_registrant).deliver_now
   end
 
-  attr_reader :domain
-  attr_reader :old_registrant
+  attr_reader :domain, :old_registrant
 end

@@ -38,18 +38,18 @@ class Nameserver < ApplicationRecord
 
   def epp_code_map
     {
-        '2302' => [
-            [:hostname, :taken, { value: { obj: 'hostAttr', val: {'hostName': hostname} } }]
-        ],
-        '2005' => [
-            [:hostname, :invalid, { value: { obj: 'hostAttr', val: hostname } }],
-            [:hostname, :puny_to_long, { value: { obj: 'hostAttr', val: hostname } }],
-            [:ipv4, :invalid, { value: { obj: 'hostAddr', val: ipv4 } }],
-            [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }]
-        ],
-        '2003' => [
-          %i[base ip_required],
-        ]
+      '2302' => [
+        [:hostname, :taken, { value: { obj: 'hostAttr', val: { 'hostName': hostname } } }]
+      ],
+      '2005' => [
+        [:hostname, :invalid, { value: { obj: 'hostAttr', val: hostname } }],
+        [:hostname, :puny_to_long, { value: { obj: 'hostAttr', val: hostname } }],
+        [:ipv4, :invalid, { value: { obj: 'hostAddr', val: ipv4 } }],
+        [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }]
+      ],
+      '2003' => [
+        %i[base ip_required],
+      ]
     }
   end
 
@@ -63,11 +63,10 @@ class Nameserver < ApplicationRecord
   end
 
   class << self
-    def from_hash_params params
+    def from_hash_params(params)
       params = params.with_indifferent_access
       rel = all
-      rel = rel.where(hostname: params[:hostname])
-      rel
+      rel.where(hostname: params[:hostname])
     end
 
     def hostnames

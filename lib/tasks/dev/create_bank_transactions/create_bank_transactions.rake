@@ -26,7 +26,7 @@ namespace :dev do
     http.ca_file = ENV['lhv_ca_file']
 
     http.start do
-      response = http.post(api_base_uri.path + '/payment', request_body, request_headers)
+      response = http.post("#{api_base_uri.path}/payment", request_body, request_headers)
 
       if response.is_a?(Net::HTTPSuccess)
         puts 'Success'

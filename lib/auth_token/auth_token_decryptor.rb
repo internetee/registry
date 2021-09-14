@@ -1,8 +1,5 @@
 class AuthTokenDecryptor
-  attr_reader :decrypted_data
-  attr_reader :token
-  attr_reader :key
-  attr_reader :user
+  attr_reader :decrypted_data, :token, :key, :user
 
   def self.create_with_defaults(token)
     new(token, Rails.application.config.secret_key_base)
@@ -14,7 +11,7 @@ class AuthTokenDecryptor
   end
 
   def decrypt_token
-    decipher = OpenSSL::Cipher::AES.new(256, :CBC)
+    decipher = OpenSSL::Cipher.new('aes-256-cbc')
     decipher.decrypt
 
     # OpenSSL used to automatically shrink oversized keys, it does not do that any longer.

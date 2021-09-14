@@ -43,9 +43,7 @@ module Actions
     end
 
     def assign_new_registrant
-      unless params[:registrant][:code]
-        domain.add_epp_error('2306', nil, nil, %i[registrant cannot_be_missing])
-      end
+      domain.add_epp_error('2306', nil, nil, %i[registrant cannot_be_missing]) unless params[:registrant][:code]
 
       regt = Registrant.find_by(code: params[:registrant][:code])
       unless regt

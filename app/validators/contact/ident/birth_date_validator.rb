@@ -1,7 +1,4 @@
 class Contact::Ident::BirthDateValidator < ActiveModel::Validator
-  VALID_BIRTH_DATE_FROM = Time.zone.today - 150.years
-  VALID_BIRTH_DATE_TO = Time.zone.tomorrow
-
   def validate(record)
     record.errors.add(:code, :invalid_birth_date) if birth_date_wrong?(record)
   end
@@ -11,16 +8,21 @@ class Contact::Ident::BirthDateValidator < ActiveModel::Validator
   def birth_date_wrong?(record)
     return unless record.birthday?
 
-    begin
-      Date.parse(record.code)
-    rescue ArgumentError
-      return true
-    end
+    return true if birth_date_format_wrong?(record.code)
 
     contact_ident_date = Date.parse(record.code)
-    valid_time_range = VALID_BIRTH_DATE_FROM...VALID_BIRTH_DATE_TO
+    date_from = Time.zone.today - 150.years
+    date_to = Time.zone.tomorrow
+    valid_time_range = date_from...date_to
     return if valid_time_range.cover?(contact_ident_date)
 
+    true
+  end
+
+  def birth_date_format_wrong?(date)
+    Date.parse(date)
+    false
+  rescue ArgumentError
     true
   end
 end

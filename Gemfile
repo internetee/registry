@@ -5,8 +5,8 @@ gem 'active_interaction', '~> 4.0'
 gem 'apipie-rails', '~> 0.5.19'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.13.0' # for dates and times
-gem 'mime-types-data'
 gem 'mimemagic', '0.4.3'
+gem 'mime-types-data'
 gem 'puma'
 gem 'rails', '~> 6.1.4'
 gem 'rest-client'
@@ -29,22 +29,22 @@ gem 'nokogiri', '~> 1.12.4'
 
 # style
 gem 'bootstrap-sass', '~> 3.4'
+gem 'cancancan'
 gem 'coderay',          '1.1.3'   # xml console visualize
 gem 'coffee-rails', '>= 5.0'
+gem 'devise', '~> 4.8'
 gem 'jquery-rails'
-gem 'selectize-rails', '0.12.6' # include selectize.js for select
 gem 'kaminari'
 gem 'sass-rails'
 gem 'select2-rails',    '4.0.13' # for autocomplete
-gem 'cancancan'
-gem 'devise', '~> 4.8'
+gem 'selectize-rails', '0.12.6' # include selectize.js for select
 
 # registry specfic
 gem 'data_migrate', '~> 7.0'
 gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
-gem 'simpleidn', '0.2.1' # For punycode
 gem 'money-rails'
+gem 'simpleidn', '0.2.1' # For punycode
 gem 'whenever', '1.0.0', require: false
 
 # country listing
@@ -62,22 +62,22 @@ gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-tara', github: 'internetee/omniauth-tara'
 
 
+gem 'airbrake'
+gem 'daemons-rails', '1.2.1'
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
+gem 'jquery-ui-rails', '6.0.1'
+gem 'pdfkit'
 gem 'que'
-gem 'daemons-rails', '1.2.1'
 gem 'que-web'
 gem 'sidekiq'
-gem 'pdfkit'
-gem 'jquery-ui-rails', '6.0.1'
-gem 'airbrake'
 
 gem 'company_register', github: 'internetee/company_register',
                         branch: 'master'
-gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
-gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'domain_name'
+gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'haml', '~> 5.2'
+gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'rexml'
 gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
 

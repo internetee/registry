@@ -6,14 +6,13 @@ module Actions
     end
 
     def call
-      response = if Rails.env.test?
-                   do_test_request(@request, @uri)
-                 elsif Rails.env.development?
-                   do_dev_request(@request, @uri)
-                 else
-                   do_live_request(@request, @uri)
-                 end
-      response
+      if Rails.env.test?
+        do_test_request(@request, @uri)
+      elsif Rails.env.development?
+        do_dev_request(@request, @uri)
+      else
+        do_live_request(@request, @uri)
+      end
     rescue StandardError, OpenURI::HTTPError => e
       Rails.logger.debug e.message
     end

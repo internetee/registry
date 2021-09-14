@@ -63,7 +63,12 @@ module Admin
 
     def admin_user_params
       params.require(:admin_user).permit(:username,
-                                         :password, :password_confirmation, :identity_code, :email, :country_code, { roles: [] })
+                                         :password,
+                                         :password_confirmation,
+                                         :identity_code,
+                                         :email,
+                                         :country_code,
+                                         { roles: [] })
     end
   end
 end

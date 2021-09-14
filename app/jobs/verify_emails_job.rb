@@ -26,7 +26,7 @@ class VerifyEmailsJob < ApplicationJob
   end
 
   def logger
-    @logger ||= Logger.new(Rails.root.join('log', 'email_verification.log'))
+    @logger ||= Logger.new(Rails.root.join('log/email_verification.log'))
   end
 
   def log_success(verification)

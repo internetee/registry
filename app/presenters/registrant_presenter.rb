@@ -37,6 +37,5 @@ class RegistrantPresenter
 
   private
 
-  attr_reader :registrant
-  attr_reader :view
+  attr_reader :registrant, :view
 end

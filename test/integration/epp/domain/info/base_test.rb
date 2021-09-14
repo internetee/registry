@@ -13,7 +13,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:info>
           </info>
@@ -30,22 +30,22 @@ class EppDomainInfoBaseTest < EppTestCase
     assert assert_schema_is_bigger(response_xml, 'domain-ee', 1.1)
     assert_equal 'shop.test',
                  response_xml.at_xpath('//domain:name',
-                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1').to_s).text
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2').to_s).text
     assert_equal 'ok',
                  response_xml.at_xpath('//domain:status',
-                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1').to_s)['s']
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2').to_s)['s']
     assert_equal 'john-001',
                  response_xml.at_xpath('//domain:registrant',
-                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1').to_s).text
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2').to_s).text
     assert_equal '2010-07-05T00:00:00+03:00',
                  response_xml.at_xpath('//domain:crDate',
-                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1').to_s).text
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2').to_s).text
     assert_equal '2010-07-06T00:00:00+03:00',
                  response_xml.at_xpath('//domain:upDate',
-                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1').to_s).text
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2').to_s).text
     assert_equal '2010-07-07T00:00:00+03:00',
                  response_xml.at_xpath('//domain:exDate',
-                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1').to_s).text
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2').to_s).text
   end
 
   def test_return_wrong_schema_with_invalid_version
@@ -74,7 +74,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:info>
           </info>
@@ -164,7 +164,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:info>
           </info>
@@ -192,7 +192,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:info>
           </info>
@@ -216,7 +216,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
             </domain:info>
           </info>
@@ -230,7 +230,7 @@ class EppDomainInfoBaseTest < EppTestCase
     response_xml = Nokogiri::XML(response.body)
     assert_equal '65078d5',
                  response_xml.at_xpath('//domain:authInfo/domain:pw',
-                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1').to_s).text
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2').to_s).text
     assert_correct_against_schema response_xml
   end
 
@@ -244,7 +244,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw>65078d5</domain:pw>
@@ -261,7 +261,7 @@ class EppDomainInfoBaseTest < EppTestCase
     response_xml = Nokogiri::XML(response.body)
     assert_equal '65078d5',
                  response_xml.at_xpath('//domain:authInfo/domain:pw',
-                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1').to_s).text
+                                       'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2').to_s).text
     assert_correct_against_schema response_xml
   end
 
@@ -271,7 +271,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>shop.test</domain:name>
               <domain:authInfo>
                 <domain:pw></domain:pw>
@@ -288,6 +288,6 @@ class EppDomainInfoBaseTest < EppTestCase
     response_xml = Nokogiri::XML(response.body)
     assert_correct_against_schema response_xml
     assert_nil response_xml.at_xpath('//domain:authInfo/domain:pw',
-                                     'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.1').to_s)
+                                     'domain' => Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2').to_s)
   end
 end

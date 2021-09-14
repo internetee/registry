@@ -1,7 +1,6 @@
 class Invoice
   class EInvoiceGenerator
-    attr_reader :invoice
-    attr_reader :payable
+    attr_reader :invoice, :payable
 
     def initialize(invoice, payable)
       @invoice = invoice

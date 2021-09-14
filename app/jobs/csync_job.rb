@@ -5,7 +5,7 @@ class CsyncJob < ApplicationJob
     @store = {}
     @input_store = { secure: {}, insecure: {} }
     @results = {}
-    @logger = Rails.env.test? ? Rails.logger : Logger.new(STDOUT)
+    @logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
     generate ? generate_scanner_input : process_scanner_results
 
     @logger.info 'CsyncJob: Finished.'
@@ -37,9 +37,7 @@ class CsyncJob < ApplicationJob
   def unqualification_reason(nss, key, result_types)
     return 'no CDNSKEY / nameservers reported different CDNSKEYs' unless key
 
-    if result_types.include? 'untrustworthy'
-      return 'current DNSSEC config invalid (required for rollover/delete)'
-    end
+    return 'current DNSSEC config invalid (required for rollover/delete)' if result_types.include? 'untrustworthy'
 
     "Nameserver(s) not reachable / invalid data (#{result_types.join(', ')})" unless nss
   end
@@ -47,7 +45,7 @@ class CsyncJob < ApplicationJob
   def process_scanner_results
     scanner_results
 
-    @results.keys.each do |domain|
+    @results.each_key do |domain|
       begin
         next unless qualified_for_monitoring?(domain, @results[domain])
 
@@ -121,7 +119,7 @@ class CsyncJob < ApplicationJob
     end
 
     out_file.close
-    @logger.info 'CsyncJob Generate: Finished writing output to ' + ENV['cdns_scanner_input_file']
+    @logger.info "CsyncJob Generate: Finished writing output to #{ENV['cdns_scanner_input_file']}"
   end
 
   def check_directory
@@ -134,7 +132,7 @@ class CsyncJob < ApplicationJob
   end
 
   def create_input_lines(out_file, state)
-    @input_store[state].keys.each do |nameserver|
+    @input_store[state].each_key do |nameserver|
       domains = @input_store[state][nameserver].join(' ')
       next unless domains.length.positive?
 
