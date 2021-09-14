@@ -45,7 +45,7 @@ module Admin
       end
       where_s += "  AND 1=0" if registrars == []
 
-      versions = Version::DomainVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
+      versions = Version::DomainVersion.includes(:item).where(where_s).order(created_at: :desc, id: :desc)
       @q = versions.ransack(params[:q])
 
       @versions = @q.result.page(params[:page])

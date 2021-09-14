@@ -24,7 +24,7 @@ module Admin
                    end
       end
 
-      versions = Version::ContactVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
+      versions = Version::ContactVersion.includes(:item).where(where_s).order(created_at: :desc, id: :desc)
       @q = versions.ransack(params[:q])
 
       @versions = @q.result.page(params[:page])
