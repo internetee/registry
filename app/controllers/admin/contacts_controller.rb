@@ -20,7 +20,7 @@ module Admin
       contacts = filter_by_flags(contacts)
 
       normalize_search_parameters do
-        @q = contacts.search(search_params)
+        @q = contacts.ransack(search_params)
         @contacts = @q.result.distinct.page(params[:page])
       end
 

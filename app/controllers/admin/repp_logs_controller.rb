@@ -5,7 +5,7 @@ module Admin
 
     # rubocop:disable Metrics/MethodLength
     def index
-      @q = ApiLog::ReppLog.search(params[:q])
+      @q = ApiLog::ReppLog.ransack(params[:q])
       @q.sorts = 'id desc' if @q.sorts.empty?
 
       @repp_logs = @q.result

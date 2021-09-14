@@ -7,7 +7,7 @@ class Registrar
       invoices = current_registrar_user.registrar.invoices.includes(:items, :account_activity)
 
       normalize_search_parameters do
-        @q = invoices.search(params[:q])
+        @q = invoices.ransack(params[:q])
         @q.sorts = 'id desc' if @q.sorts.empty?
         @invoices = @q.result.page(params[:page])
       end

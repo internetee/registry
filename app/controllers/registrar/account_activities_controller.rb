@@ -14,7 +14,7 @@ class Registrar
         logger.warn('Invalid date')
       end
 
-      @q = account.activities.includes(:invoice).search(params[:q])
+      @q = account.activities.includes(:invoice).ransack(params[:q])
       @q.sorts = 'id desc' if @q.sorts.empty?
 
       respond_to do |format|

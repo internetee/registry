@@ -5,7 +5,7 @@ module Admin
     def index
       params[:q] ||= {}
       domains = BlockedDomain.all.order(:name)
-      @q = domains.search(params[:q])
+      @q = domains.ransack(params[:q])
       @domains = @q.result.page(params[:page])
       @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 

@@ -18,8 +18,8 @@ module Admin
         balance_params.delete('created_at_gteq')
       end
 
-      @q = AccountActivity.includes(:invoice, account: :registrar).search(params[:q])
-      @b = AccountActivity.search(balance_params)
+      @q = AccountActivity.includes(:invoice, account: :registrar).ransack(params[:q])
+      @b = AccountActivity.ransack(balance_params)
       @q.sorts = 'id desc' if @q.sorts.empty?
 
       @account_activities = @q.result.page(params[:page]).per(params[:results_per_page])

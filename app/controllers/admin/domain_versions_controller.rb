@@ -7,7 +7,7 @@ module Admin
     def index
       params[:q] ||= {}
 
-      @q = Version::DomainVersion.includes(:item).search(params[:q])
+      @q = Version::DomainVersion.includes(:item).ransack(params[:q])
       @versions = @q.result.page(params[:page])
       search_params = params[:q].deep_dup
 
@@ -46,7 +46,8 @@ module Admin
       where_s += "  AND 1=0" if registrars == []
 
       versions = Version::DomainVersion.includes(:item).where(where_s).order(created_at: :desc, id: :desc)
-      @q = versions.search(params[:q])
+      @q = versions.ransack(params[:q])
+
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 

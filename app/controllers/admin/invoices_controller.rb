@@ -36,7 +36,7 @@ module Admin
       invoices = filter_by_status
       invoices = filter_by_receipt_date(invoices)
 
-      @q = invoices.search(params[:q])
+      @q = invoices.ransack(params[:q])
       @q.sorts = 'number desc' if @q.sorts.empty?
       @invoices = @q.result.page(params[:page])
       @invoices = @invoices.per(params[:results_per_page]) if paginate?
