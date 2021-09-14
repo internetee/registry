@@ -6,9 +6,7 @@ class PhoneValidator < ActiveModel::EachValidator
     country_code = phone_parts.first
     subscriber_no = phone_parts.second
 
-    if zeros_only?(country_code) || zeros_only?(subscriber_no)
-      record.errors.add(attribute, :invalid)
-    end
+    record.errors.add(attribute, :invalid) if zeros_only?(country_code) || zeros_only?(subscriber_no)
   end
 
   private

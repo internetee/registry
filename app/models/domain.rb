@@ -13,9 +13,14 @@ class Domain < ApplicationRecord
   include Domain::Disputable
   include Domain::BulkUpdatable
 
-  attr_accessor :roles
-
-  attr_accessor :legal_document_id
+  attr_accessor :roles,
+                :legal_document_id,
+                :is_admin,
+                :registrant_typeahead,
+                :update_me,
+                :epp_pending_update,
+                :epp_pending_delete,
+                :reserved_pw
 
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
@@ -27,16 +32,18 @@ class Domain < ApplicationRecord
                  :admin_store_statuses_history
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
-  # TODO: most inputs should be trimmed before validatation, probably some global logic?
+  # TODO: most inputs should be trimmed before validation, probably some global logic?
 
   belongs_to :registrar, required: true
   belongs_to :registrant, required: true
   # TODO: should we user validates_associated :registrant here?
 
   has_many :admin_domain_contacts
-  accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: true, reject_if: :admin_change_prohibited?
+  accepts_nested_attributes_for :admin_domain_contacts,
+                                allow_destroy: true, reject_if: :admin_change_prohibited?
   has_many :tech_domain_contacts
-  accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true, reject_if: :tech_change_prohibited?
+  accepts_nested_attributes_for :tech_domain_contacts,
+                                allow_destroy: true, reject_if: :tech_change_prohibited?
 
   def registrant_change_prohibited?
     statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
@@ -114,15 +121,11 @@ class Domain < ApplicationRecord
   validate :status_is_consistant
   def status_is_consistant
     has_error = (hold_status? && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
-    unless has_error
-      if (statuses & DELETE_STATUSES).any?
-        has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
-      end
+    if !has_error && (statuses & DELETE_STATUSES).any?
+      has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
     end
     errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
   end
-
-  attr_accessor :is_admin
 
   # Removed to comply new ForceDelete procedure
   # at https://github.com/internetee/registry/issues/1428#issuecomment-570561967
@@ -204,11 +207,9 @@ class Domain < ApplicationRecord
 
   def statuses_uniqueness
     return if statuses.uniq == statuses
+
     errors.add(:statuses, :taken)
   end
-
-  attr_accessor :registrant_typeahead, :update_me,
-    :epp_pending_update, :epp_pending_delete, :reserved_pw
 
   self.ignored_columns = %w[legacy_id legacy_registrar_id legacy_registrant_id]
 
@@ -350,10 +351,10 @@ class Domain < ApplicationRecord
   # find by internationalized domain name
   # internet domain name => ascii or puny, but db::domains.name is unicode
   def self.find_by_idn(name)
-    domain = self.find_by_name name
+    domain = find_by(name: name)
     if domain.blank? && name.include?('-')
       unicode = SimpleIDN.to_unicode name # we have no index on domains.name_puny
-      domain = self.find_by_name unicode
+      domain = find_by(name: unicode)
     end
     domain
   end
@@ -386,9 +387,7 @@ class Domain < ApplicationRecord
     return true unless Setting.days_to_renew_domain_before_expire != 0
 
     # if you can renew domain at days_to_renew before domain expiration
-    if (expire_time.to_date - Time.zone.today) + 1 > Setting.days_to_renew_domain_before_expire
-      return false
-    end
+    return false if (expire_time.to_date - Time.zone.today) + 1 > Setting.days_to_renew_domain_before_expire
 
     true
   end
@@ -431,9 +430,11 @@ class Domain < ApplicationRecord
 
   def pending_update!
     return true if pending_update?
+
     self.epp_pending_update = true # for epp
 
     return true unless registrant_verification_asked?
+
     pending_json_cache = pending_json
     token = registrant_verification_token
     asked_at = registrant_verification_asked_at
@@ -590,20 +591,19 @@ class Domain < ApplicationRecord
   # special handling for admin changing status
   def admin_status_update(update)
     update_unless_locked_by_registrant(update)
-
     update_not_by_locked_statuses(update)
     # check for deleted status
     statuses.each do |s|
       unless update.include? s
         case s
-          when DomainStatus::PENDING_DELETE
-            self.delete_date = nil
-          when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
-            self.outzone_at = Time.zone.now if force_delete_scheduled?
-          when DomainStatus::EXPIRED # removal causes server hold to set
-            self.outzone_at = self.expire_time + 15.day
-          when DomainStatus::SERVER_HOLD # removal causes server hold to set
-            self.outzone_at = nil
+        when DomainStatus::PENDING_DELETE
+          self.delete_date = nil
+        when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
+          self.outzone_at = Time.zone.now if force_delete_scheduled?
+        when DomainStatus::EXPIRED # removal causes server hold to set
+          self.outzone_at = expire_time + 15.day
+        when DomainStatus::SERVER_HOLD # removal causes server hold to set
+          self.outzone_at = nil
         end
       end
     end

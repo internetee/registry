@@ -43,7 +43,7 @@ module Repp
           return
         end
 
-        render_success(create_update_success_body)
+        render_success(**create_update_success_body)
       end
 
       api :PUT, '/repp/v1/contacts/:contact_code'
@@ -58,7 +58,7 @@ module Repp
           return
         end
 
-        render_success(create_update_success_body)
+        render_success(**create_update_success_body)
       end
 
       api :DELETE, '/repp/v1/contacts/:contact_code'
@@ -89,13 +89,11 @@ module Repp
 
         return contacts.pluck(:code) unless details
 
-        contacts = contacts.map do |contact|
+        contacts.map do |contact|
           serializer = ::Serializers::Repp::Contact.new(contact,
                                                         show_address: Contact.address_processing?)
           serializer.to_json
         end
-
-        contacts
       end
 
       def opt_addr?

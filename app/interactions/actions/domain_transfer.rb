@@ -1,10 +1,6 @@
 module Actions
   class DomainTransfer
-    attr_reader :domain
-    attr_reader :transfer_code
-    attr_reader :legal_document
-    attr_reader :ident
-    attr_reader :user
+    attr_reader :domain, :transfer_code, :legal_document, :ident, :user
 
     def initialize(domain, transfer_code, user)
       @domain = domain

@@ -37,7 +37,7 @@ module Domains
       def added_additional_email_into_notes(domain)
         return if domain.status_notes[DomainStatus::FORCE_DELETE].include? email
 
-        domain.status_notes[DomainStatus::FORCE_DELETE].concat(' ' + email)
+        domain.status_notes[DomainStatus::FORCE_DELETE].concat(" #{email}")
         domain.save(validate: false)
       end
 

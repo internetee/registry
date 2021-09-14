@@ -89,7 +89,7 @@ class Registrar
     end
 
     def domain_ids_for_bulk_renew
-      params.dig('domain_ids')&.reject { |id| id.blank? }
+      params['domain_ids']&.reject { |id| id.blank? }
     end
 
     def renew_task(domains)

@@ -103,24 +103,24 @@ class DomainStatus < ApplicationRecord
   ].freeze
 
   UPDATE_PROHIBIT_STATES = [
-      DomainStatus::PENDING_DELETE_CONFIRMATION,
-      DomainStatus::CLIENT_UPDATE_PROHIBITED,
-      DomainStatus::SERVER_UPDATE_PROHIBITED,
-      DomainStatus::PENDING_CREATE,
-      DomainStatus::PENDING_UPDATE,
-      DomainStatus::PENDING_DELETE,
-      DomainStatus::PENDING_RENEW,
-      DomainStatus::PENDING_TRANSFER
-  ]
+    DomainStatus::PENDING_DELETE_CONFIRMATION,
+    DomainStatus::CLIENT_UPDATE_PROHIBITED,
+    DomainStatus::SERVER_UPDATE_PROHIBITED,
+    DomainStatus::PENDING_CREATE,
+    DomainStatus::PENDING_UPDATE,
+    DomainStatus::PENDING_DELETE,
+    DomainStatus::PENDING_RENEW,
+    DomainStatus::PENDING_TRANSFER
+  ].freeze
 
   DELETE_PROHIBIT_STATES = [
-      DomainStatus::CLIENT_DELETE_PROHIBITED,
-      DomainStatus::SERVER_DELETE_PROHIBITED,
-      DomainStatus::PENDING_CREATE,
-      DomainStatus::PENDING_RENEW,
-      DomainStatus::PENDING_TRANSFER,
-      DomainStatus::PENDING_UPDATE,
-      DomainStatus::PENDING_DELETE
+    DomainStatus::CLIENT_DELETE_PROHIBITED,
+    DomainStatus::SERVER_DELETE_PROHIBITED,
+    DomainStatus::PENDING_CREATE,
+    DomainStatus::PENDING_RENEW,
+    DomainStatus::PENDING_TRANSFER,
+    DomainStatus::PENDING_UPDATE,
+    DomainStatus::PENDING_DELETE
   ].freeze
 
   def epp_code_map
@@ -152,7 +152,6 @@ class DomainStatus < ApplicationRecord
     def admin_statuses
       admin_statuses_map.map(&:second)
     end
-
 
     def admin_statuses_map
       admin_statuses = [

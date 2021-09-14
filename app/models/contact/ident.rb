@@ -1,9 +1,7 @@
 class Contact::Ident
   include ActiveModel::Model
 
-  attr_accessor :code
-  attr_accessor :type
-  attr_accessor :country_code
+  attr_accessor :code, :type, :country_code
 
   validates :code, presence: true
   validates :code, national_id: true, if: :national_id?

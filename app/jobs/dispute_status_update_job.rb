@@ -1,5 +1,5 @@
 class DisputeStatusUpdateJob < ApplicationJob
-  def perform(logger: Logger.new(STDOUT))
+  def perform(logger: Logger.new($stdout))
     @logger = logger
 
     @backlog = { 'activated': 0, 'closed': 0, 'activate_fail': [], 'close_fail': [] }

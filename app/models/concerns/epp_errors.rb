@@ -121,7 +121,7 @@ module EppErrors
     err = { code: code, msg: t }
     val = check_for_status(code, obj, val)
     err[:value] = { val: val, obj: obj } if val.present?
-    self.errors.add(:epp_errors, err)
+    errors.add(:epp_errors, **err)
   end
 
   def check_for_status(code, obj, val)

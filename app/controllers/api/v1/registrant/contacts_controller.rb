@@ -77,9 +77,7 @@ module Api
             render json: { errors: [{ address: [error_msg] }] }, status: :bad_request and return
           end
 
-          if ENV['fax_enabled'] == 'true'
-            contact.fax = params[:fax] if params[:fax].present?
-          end
+          contact.fax = params[:fax] if ENV['fax_enabled'] == 'true' && params[:fax].present?
 
           logger.debug "ENV['fax_enabled'] is set to #{ENV['fax_enabled']}"
           if ENV['fax_enabled'] != 'true' && params[:fax]

@@ -11,7 +11,7 @@ module Depp
     validate :validate_existance_in_server
 
     def initialize(args = {})
-      args.each { |k, v| send(k.to_s + '=', v) }
+      args.each { |k, v| send("#{k}=", v) }
     end
 
     def server
@@ -20,13 +20,13 @@ module Depp
       port = ENV['epp_port'] || '700'
 
       @server_cache ||= Epp::Server.new({
-        server: ENV['epp_hostname'],
-        tag: tag,
-        password: password,
-        port: port,
-        cert: OpenSSL::X509::Certificate.new(client_cert),
-        key: OpenSSL::PKey::RSA.new(client_key)
-      })
+                                          server: ENV['epp_hostname'],
+                                          tag: tag,
+                                          password: password,
+                                          port: port,
+                                          cert: OpenSSL::X509::Certificate.new(client_cert),
+                                          key: OpenSSL::PKey::RSA.new(client_key)
+                                        })
     end
 
     def request(xml)

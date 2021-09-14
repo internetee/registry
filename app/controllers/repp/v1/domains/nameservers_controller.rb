@@ -53,7 +53,7 @@ module Repp
         end
 
         def nameserver_params
-          params.permit(:domain_id, nameservers: [[:hostname, :action, ipv4: [], ipv6: []]])
+          params.permit(:domain_id, nameservers: [[:hostname, :action, { ipv4: [], ipv6: [] }]])
         end
       end
     end

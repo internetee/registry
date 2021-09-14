@@ -15,8 +15,8 @@ class Epp::Domain < Domain
     return true if is_transfer || is_renewal
     return unless update_prohibited?
 
-    stat = (statuses & (DomainStatus::UPDATE_PROHIBIT_STATES + DomainStatus::DELETE_PROHIBIT_STATES)).first
-
+    stat = (statuses &
+      (DomainStatus::UPDATE_PROHIBIT_STATES + DomainStatus::DELETE_PROHIBIT_STATES)).first
     add_epp_error('2304', 'status', stat, I18n.t(:object_status_prohibits_operation))
     throw(:abort)
   end
@@ -144,8 +144,8 @@ class Epp::Domain < Domain
       return
     end
 
-    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
-      frame.css("legalDocument").first.content = doc.path if doc&.persisted?
+    if doc = attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call) && doc&.persisted?
+      frame.css("legalDocument").first.content = doc.path
     end
 
     if Setting.request_confirmation_on_domain_deletion_enabled &&
@@ -174,7 +174,7 @@ class Epp::Domain < Domain
 
   ### RENEW ###
 
-  def renew(renewed_expire_time:, period:, unit:)
+  def renew(renewed_expire_time, period, unit)
     @is_renewal = true
 
     add_renew_epp_errors unless renewable?
@@ -216,7 +216,8 @@ class Epp::Domain < Domain
       return transfers.last if transfers.any?
     when 'request'
       return pending_transfer if pending_transfer
-      return query_transfer(frame, current_user)
+
+      query_transfer(frame, current_user)
     when 'approve'
       return approve_transfer(frame, current_user) if pending_transfer
     when 'reject'
@@ -308,10 +309,12 @@ class Epp::Domain < Domain
     begin
       return if cur_exp_date.to_date == valid_to.to_date
     rescue
-      add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
+      add_epp_error('2306', 'curExpDate', cur_exp_date,
+                    I18n.t('errors.messages.epp_exp_dates_do_not_match'))
       return
     end
-    add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
+    add_epp_error('2306', 'curExpDate', cur_exp_date,
+                  I18n.t('errors.messages.epp_exp_dates_do_not_match'))
   end
 
   ### ABILITIES ###
@@ -323,10 +326,10 @@ class Epp::Domain < Domain
       return false
     end
 
-    begin
+    if (statuses & [DomainStatus::CLIENT_DELETE_PROHIBITED, DomainStatus::SERVER_DELETE_PROHIBITED]).any?
       errors.add(:base, :domain_status_prohibits_operation)
       return false
-    end if (statuses & [DomainStatus::CLIENT_DELETE_PROHIBITED, DomainStatus::SERVER_DELETE_PROHIBITED]).any?
+    end
 
     true
   end

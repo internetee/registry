@@ -31,6 +31,6 @@ class MigrateBeforeForceDeleteStatusesJob < ApplicationJob
   end
 
   def logger
-    @logger ||= Logger.new(Rails.root.join('log', 'migrate_before_force_delete_statuses.log'))
+    @logger ||= Logger.new(Rails.root.join('log/migrate_before_force_delete_statuses.log'))
   end
 end

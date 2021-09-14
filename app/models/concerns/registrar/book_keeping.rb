@@ -68,13 +68,10 @@ module Registrar::BookKeeping
 
   def finalize_invoice_line(line, price:, activity:, duration:)
     yearly = price.duration.in_years.to_i >= 1
-
     line['price'] = yearly ? (price.price.amount / price.duration.in_years.to_i) : price.price.amount
     line['description'] = description_in_language(price: price, yearly: yearly)
 
-    if duration.present?
-      add_product_timeframe(line: line, activity: activity, duration: duration) if duration > 1
-    end
+    add_product_timeframe(line: line, activity: activity, duration: duration) if duration.present? && (duration > 1)
 
     line
   end
