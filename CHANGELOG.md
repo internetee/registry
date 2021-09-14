@@ -1,5 +1,6 @@
 14.09.2021
 * New epp statuses to better control registry lock and enable dnssec on locked domains (currently disabled on production) [#2143](https://github.com/internetee/registry/issues/2143)
+* Replaced deprecated search method with ransac gem [#2151](https://github.com/internetee/registry/pull/2151)
 
 13.09.2021
 * Upgrade Ruby to 3.0.2 [#2152](https://github.com/internetee/registry/pull/2152)
