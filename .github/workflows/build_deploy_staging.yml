@@ -33,27 +33,27 @@ jobs:
           echo "TAG=ghcr.io/internetee/registry:RC-$SHORT_SHA" >> $GITHUB_ENV
           echo "SHORT_TAG=RC-$SHORT_SHA" >> $GITHUB_ENV
 
-      # - name: Set config files for build
-      #   env:
-      #     ST_APP: ${{ secrets.ST_APPLICATION_YML}}
-      #   run: |
-      #     mkdir log
-      #     echo $ST_APP | base64 -di > config/application.yml
-      #     cp config/database.yml.sample config/database.yml
-      #     ls -l config/
+      - name: Set config files for build
+        env:
+          ST_APP: ${{ secrets.ST_APPLICATION_YML}}
+        run: |
+          mkdir log
+          echo $ST_APP | base64 -di > config/application.yml
+          cp config/database.yml.sample config/database.yml
+          ls -l config/
 
-      # - name: Build image
-      #   env:
-      #     KEY_BASE: ${{ secrets.KEY_BASE}}
-      #   run: |
-      #     docker build -t $TAG --build-arg RAILS_ENV=staging --build-arg SECRET_KEY_BASE="$KEY_BASE" -f Dockerfile.generic .
+      - name: Build image
+        env:
+          KEY_BASE: ${{ secrets.KEY_BASE}}
+        run: |
+          docker build -t $TAG --build-arg RAILS_ENV=staging --build-arg SECRET_KEY_BASE="$KEY_BASE" -f Dockerfile.generic .
 
-      # - name: Push Docker image to gh container registry
-      #   env:
-      #     PASSWORD: ${{ secrets.GHCR }}
-      #   run: |
-      #     echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
-      #     docker push $TAG
+      - name: Push Docker image to gh container registry
+        env:
+          PASSWORD: ${{ secrets.GHCR }}
+        run: |
+          echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
+          docker push $TAG
 
       - name: Get pull request reference number
         run: |
@@ -103,18 +103,18 @@ jobs:
           touch ~/.ssh/known_hosts
           ssh-add ~/.ssh/key
           ssh-keyscan 192.168.99.12 > ~/.ssh/known_hosts
-          #rsync -av "$REPO" runner@192.168.99.12:/home/runner/
+          rsync -av "$REPO" runner@192.168.99.12:/home/runner/
           ssh -T runner@192.168.99.12 << EOSSH
           bash
-          #cd "$REPO"/"$PR_REF"
-          #export KUBECONFIG=./kubeconfig
+          cd "$REPO"/"$PR_REF"
+          export KUBECONFIG=./kubeconfig
           helm repo add eisrepo https://internetee.github.io/helm-charts/
           helm repo update
-          #helm upgrade --install reg-admin-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-admin -n reg-admin-staging
+          helm upgrade --install reg-admin-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-admin -n reg-admin-staging
           rm kubeconfig
           echo "server obs.tld.ee
           zone pilv.tld.ee
-          update add epp-2155.pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
+          update add reg-admin-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
           send
           " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key
           if [ "$?" -eq "0" ]; then
@@ -124,15 +124,15 @@ jobs:
           fi
           EOSSH
 
-      # - name: Notify developers
-      #   timeout-minutes: 1
-      #   env:
-      #     NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL}}
-      #   run: |
-      #     curl -i -X POST --data-urlencode 'payload={
-      #       "text": "##### Build and deploy from pull request has been succesful :tada:\n
-      #       | Registry    | Branch                 | :net:                                   |
-      #       |:------------|:----------------------:|:---------------------------------------:|
-      #       | **Admin**   |'${{ github.head_ref }}'| https://reg-admin-'$PR_REF'.pilv.tld.ee |
-      #       "
-      #       }' $NOTIFICATION_URL
+      - name: Notify developers
+        timeout-minutes: 1
+        env:
+          NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL}}
+        run: |
+          curl -i -X POST --data-urlencode 'payload={
+            "text": "##### Build and deploy from pull request has been succesful :tada:\n
+            | Registry    | Branch                 | :net:                                   |
+            |:------------|:----------------------:|:---------------------------------------:|
+            | **Admin**   |'${{ github.head_ref }}'| https://reg-admin-'$PR_REF'.pilv.tld.ee |
+            "
+            }' $NOTIFICATION_URL
