@@ -162,7 +162,69 @@ module Epp
       @prefix = 'update > update >'
       requires 'name'
 
+      dnskey_update_enabled if Feature.obj_and_extensions_statuses_enabled?
+      dnkey_update_prohibited if Feature.obj_and_extensions_statuses_enabled?
       status_editing_disabled
+    end
+
+    def parsed_response_for_dnskey(value)
+      doc = Nokogiri::Slop params[:parsed_frame].css(value).to_html
+
+      return true if doc.document.children.empty?
+      
+      store = []
+
+      if value == 'add'
+        doc.document.add.children.each_with_index do |x, i|
+          store << doc.document.add.children[i].name  
+        end
+      elsif value == 'chg'
+        doc.document.chg.children.each_with_index do |x, i|
+          store << doc.document.chg.children[i].name  
+        end
+      else
+        doc.document.rem.children.each_with_index do |x, i|
+          store << doc.document.rem.children[i].name  
+        end
+      end
+
+      return true if store.size == 1 and store[0] == "keyData"
+
+      store.empty?
+    end
+
+    def dnskey_update_enabled
+      find_domain
+
+      if @domain.dnskey_update_enabled? && !params[:parsed_frame].css('update').empty?
+        flag = true
+
+        flag = false unless parsed_response_for_dnskey('chg')
+
+        if flag
+          flag = false unless parsed_response_for_dnskey('add')
+        end
+
+        if flag
+          return if parsed_response_for_dnskey('rem')
+        end
+
+        return epp_errors.add(:epp_errors,
+          code: '2304',
+          msg: "#{I18n.t(:object_status_prohibits_operation)}
+                         :serverObjUpdateEnabled")
+      end
+    end
+
+    def dnkey_update_prohibited
+      find_domain
+
+      if @domain.extension_update_prohibited? && !params[:parsed_frame].css('keyData').empty?
+        return epp_errors.add(:epp_errors,
+                              code: '2304',
+                              msg: "#{I18n.t(:object_status_prohibits_operation)}
+                                             :serverExtensionUpdateProhibited")
+      end
     end
 
     def validate_delete

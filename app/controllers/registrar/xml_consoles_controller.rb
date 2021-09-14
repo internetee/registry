@@ -49,7 +49,7 @@ class Registrar
       when 'contact-ee'
         insert_prefix_and_version(xml, pref, '1.1')
       else
-        insert_prefix_and_version(xml, pref, '1.1')
+        insert_prefix_and_version(xml, pref, '1.2')
       end
     end
 

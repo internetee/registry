@@ -22,7 +22,7 @@ class RegistrarAreaXmlConsolesTest < ApplicationSystemTestCase
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
         <command>
           <check>
-            <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-ee-1.1.xsd">
+            <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-ee-1.2.xsd">
               <domain:name>auction.test</domain:name>
             </domain:check>
           </check>

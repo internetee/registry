@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<schema targetNamespace="https://epp.tld.ee/schema/domain-ee-1.1.xsd"
-     xmlns:domain="https://epp.tld.ee/schema/domain-ee-1.1.xsd"
+<schema targetNamespace="https://epp.tld.ee/schema/domain-ee-1.2.xsd"
+     xmlns:domain="https://epp.tld.ee/schema/domain-ee-1.2.xsd"
      xmlns:host="urn:ietf:params:xml:ns:host-1.0"
      xmlns:epp="https://epp.tld.ee/schema/epp-ee-1.0.xsd"
      xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
@@ -416,6 +416,8 @@ than English.
     <enumeration value="deleteCandidate"/>
     <enumeration value="disputed"/>
     <enumeration value="serverReleaseProhibited"/>
+    <enumeration value="serverExtensionUpdateProhibited"/>
+    <enumeration value="serverObjUpdateProhibited"/>
   </restriction>
 </simpleType>
 
