@@ -22,7 +22,13 @@
             = select_tag '[q][event]', options_for_select([['Update', 'update'], ['Destroy', 'destroy'], ['Create', 'create']], params[:q][:event]), { include_blank:true, multiple: false, placeholder: t(:choose), class: 'form-control js-combobox' }
         .row
         .col-md-3
+          .form-group
+            = f.label t(:created_at_from)
+            = f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control js-datepicker', placeholder: t(:created_at_from)
         .col-md-3
+          .form-group
+            = f.label t(:created_at_until)
+            = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control js-datepicker', placeholder: t(:created_at_until)
         .col-md-3
           .form-group
             = label_tag t(:results_per_page)
