@@ -1,5 +1,5 @@
 module Admin
-  class RegistrarsController < BaseController
+  class RegistrarsController < BaseController  # rubocop:disable Metrics/ClassLength
     load_and_authorize_resource
     before_action :set_registrar, only: [:show, :edit, :update, :destroy]
     before_action :set_registrar_status_filter, only: [:index]
