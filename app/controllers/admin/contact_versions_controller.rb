@@ -7,11 +7,9 @@ module Admin
     def index
       params[:q] ||= {}
 
-      @q = Version::ContactVersion.ransack(params[:q])
-      @versions = @q.result.page(params[:page])
-      search_params = params[:q].deep_dup
+      search_params = params[:q].deep_dup.except(:created_at_gteq, :created_at_lteq)
 
-      where_s = "1=1"
+      where_s = '1=1'
 
       search_params.each do |key, value|
         next if value.empty?
