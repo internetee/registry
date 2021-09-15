@@ -43,6 +43,7 @@ class Registrar < ApplicationRecord
   after_commit :update_whois_records
   def update_whois_records
     return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present?
+
     RegenerateRegistrarWhoisesJob.perform_later id
   end
 
@@ -175,6 +176,36 @@ class Registrar < ApplicationRecord
     end
   end
 
+  def add_nameservers(new_attributes, domains: [])
+    transaction do
+      domain_scope = domains.dup
+      domain_list = []
+      failed_list = []
+
+      return if domains.empty?
+
+      domain_scope.each do |domain_name|
+        domain = self.domains.find_by('name = ? OR name_puny = ?', domain_name, domain_name)
+
+        if !domain.present? || domain_not_updatable?(hostname: new_attributes[:hostname], domain: domain)
+          failed_list << domain_name
+          next
+        end
+
+        new_nameserver = Nameserver.new
+        new_nameserver.domain = domain
+        new_nameserver.attributes = new_attributes
+        new_nameserver.save!
+
+        domain_scope.delete_if { |i| i == domain.name || i == domain.name_puny }
+        domain_list << domain_name
+      end
+
+      self.domains.where(name: domain_list).find_each(&:update_whois_record) if domain_list.any?
+      [domain_list.uniq.sort, (domain_scope + failed_list).uniq.sort]
+    end
+  end
+
   def vat_country=(country)
     self.address_country_code = country.alpha2
   end
@@ -198,6 +229,7 @@ class Registrar < ApplicationRecord
 
   def billing_email
     return contact_email if self[:billing_email].blank?
+
     self[:billing_email]
   end
 
