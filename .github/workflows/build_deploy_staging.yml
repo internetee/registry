@@ -111,6 +111,7 @@ jobs:
           helm repo add eisrepo https://internetee.github.io/helm-charts/
           helm repo update
           helm upgrade --install reg-admin-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-admin -n reg-admin-staging
+          helm upgrade --install repp-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-epp -n epp
           rm kubeconfig
           echo "server obs.tld.ee
           zone pilv.tld.ee
@@ -118,9 +119,20 @@ jobs:
           send
           " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key
           if [ "$?" -eq "0" ]; then
-              echo "CNAME update success"
+              echo "admin CNAME update success"
           else
-              echo "CNAME update failed"
+              echo "admin CNAME update failed"
+          fi
+          EOSSH
+          echo "server obs.tld.ee
+          zone pilv.tld.ee
+          update add repp-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
+          send
+          " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key
+          if [ "$?" -eq "0" ]; then
+              echo "repp CNAME update success"
+          else
+              echo "repp CNAME update failed"
           fi
           EOSSH
 
@@ -134,5 +146,6 @@ jobs:
             | Registry    | Branch                 | :net:                                   |
             |:------------|:----------------------:|:---------------------------------------:|
             | **Admin**   |'${{ github.head_ref }}'| https://reg-admin-'$PR_REF'.pilv.tld.ee |
+            | **repp**    |'${{ github.head_ref }}'| https://repp-'$PR_REF'.pilv.tld.ee      |
             "
             }' $NOTIFICATION_URL
