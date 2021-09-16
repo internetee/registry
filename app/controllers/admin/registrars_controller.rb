@@ -1,10 +1,12 @@
 module Admin
-  class RegistrarsController < BaseController
+  class RegistrarsController < BaseController  # rubocop:disable Metrics/ClassLength
     load_and_authorize_resource
     before_action :set_registrar, only: [:show, :edit, :update, :destroy]
     before_action :set_registrar_status_filter, only: [:index]
     helper_method :registry_vat_rate
     helper_method :iban_max_length
+
+    SQL_SUM_STR = 'sum(case active when TRUE then 1 else 0 end)'.freeze
 
     def index
       registrars = filter_by_status
@@ -58,12 +60,26 @@ module Admin
     def filter_by_status
       case params[:status]
       when 'Active'
-        Registrar.includes(:accounts, :api_users).where.not(api_users: { id: nil }).ordered
+        active_registrars
       when 'Inactive'
-        Registrar.includes(:accounts, :api_users).where(api_users: { id: nil }).ordered
+        inactive_registrars
       else
         Registrar.includes(:accounts, :api_users).ordered
       end
+    end
+
+    def active_registrars
+      Registrar.includes(:accounts, :api_users).where(
+        id: ApiUser.having("#{SQL_SUM_STR} > 0").group(:registrar_id).pluck(:registrar_id)
+      ).ordered
+    end
+
+    def inactive_registrars
+      Registrar.includes(:accounts, :api_users).where(api_users: { id: nil }).or(
+        Registrar.includes(:accounts, :api_users).where(
+          id: ApiUser.having("#{SQL_SUM_STR} = 0").group(:registrar_id).pluck(:registrar_id)
+        )
+      ).ordered
     end
 
     def set_registrar_status_filter
