@@ -1,5 +1,6 @@
 16.09.2021
 * Admin: improved active/inactive registrar fileter [#2156](https://github.com/internetee/registry/issues/2156)
+* Admin: date filter for domain and contact history views [#2157](https://github.com/internetee/registry/issues/2157)
 
 14.09.2021
 * New epp statuses to better control registry lock and enable dnssec on locked domains (currently disabled on production) [#2143](https://github.com/internetee/registry/issues/2143)
