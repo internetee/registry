@@ -187,7 +187,7 @@ class Registrar < ApplicationRecord
       domain_scope.each do |domain_name|
         domain = self.domains.find_by('name = ? OR name_puny = ?', domain_name, domain_name)
 
-        if !domain.present? || domain_not_updatable?(hostname: new_attributes[:hostname], domain: domain)
+        if domain.blank? || domain_not_updatable?(hostname: new_attributes[:hostname], domain: domain)
           failed_list << domain_name
           next
         end

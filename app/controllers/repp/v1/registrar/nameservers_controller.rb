@@ -18,7 +18,7 @@ module Repp
           end
         end
 
-        def update
+        def update  # rubocop:disable Metrics/MethodLength
           affected, errored = if hostname.present?
                                 current_user.registrar.replace_nameservers(hostname,
                                                                            hostname_params[:data][:attributes],
