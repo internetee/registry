@@ -106,6 +106,7 @@ jobs:
           rsync -av "$REPO" runner@192.168.99.12:/home/runner/
           ssh -T runner@192.168.99.12 << EOSSH
           bash
+          hostname
           cd "$REPO"/"$PR_REF"
           export KUBECONFIG=./kubeconfig
           helm repo add eisrepo https://internetee.github.io/helm-charts/
