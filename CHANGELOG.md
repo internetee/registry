@@ -10,6 +10,8 @@
 * Upgrade Ruby to 3.0.2 [#2152](https://github.com/internetee/registry/pull/2152)
 
 06.09.2021
+* Updgrade Ruby to 2.7.4 [#2148](https://github.com/internetee/registry/pull/2148)
+* Replace dependabot with renovate [#2144](https://github.com/internetee/registry/pull/2144)
 
 31.08.2021
 * Fix for multiplied renew issue [#2135](https://github.com/internetee/registry/issues/2135)
