@@ -106,7 +106,6 @@ jobs:
           rsync -av "$REPO" runner@192.168.99.12:/home/runner/
           ssh -T runner@192.168.99.12 << EOSSH
           bash
-          hostname
           cd "$REPO"/"$PR_REF"
           export KUBECONFIG=./kubeconfig
           helm repo add eisrepo https://internetee.github.io/helm-charts/
@@ -114,31 +113,17 @@ jobs:
           helm upgrade --install reg-admin-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-admin -n reg-admin-staging
           helm upgrade --install repp-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-epp -n epp
           rm kubeconfig
-          echo "Setting up URL for admin"
+          echo "Setting up URLs"
           echo "server obs.tld.ee
           zone pilv.tld.ee
           update add reg-admin-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
+          update add repp-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
           send
           " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key
           if [ "$?" -eq "0" ]; then
               echo "admin CNAME update success"
           else
               echo "admin CNAME update failed"
-          fi
-          EOSSH
-          echo "Setting up URL for repp"
-          ls -l ~/
-          pwd
-          hostname
-          echo "server obs.tld.ee
-          zone pilv.tld.ee
-          update add repp-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
-          send
-          " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key
-          if [ "$?" -eq "0" ]; then
-              echo "repp CNAME update success"
-          else
-              echo "repp CNAME update failed"
           fi
           EOSSH
 
