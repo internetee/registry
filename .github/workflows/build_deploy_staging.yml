@@ -113,6 +113,7 @@ jobs:
           helm upgrade --install reg-admin-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-admin -n reg-admin-staging
           helm upgrade --install repp-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-epp -n epp
           rm kubeconfig
+          echo "Setting up URL for admin"
           echo "server obs.tld.ee
           zone pilv.tld.ee
           update add reg-admin-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
@@ -124,6 +125,7 @@ jobs:
               echo "admin CNAME update failed"
           fi
           EOSSH
+          echo "Setting up URL for repp"
           echo "server obs.tld.ee
           zone pilv.tld.ee
           update add repp-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
