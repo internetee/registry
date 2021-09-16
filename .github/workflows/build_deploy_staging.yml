@@ -128,6 +128,7 @@ jobs:
           echo "Setting up URL for repp"
           ls -l ~/
           pwd
+          hostname
           echo "server obs.tld.ee
           zone pilv.tld.ee
           update add repp-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
