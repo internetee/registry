@@ -7,21 +7,19 @@ module Admin
     def index
       params[:q] ||= {}
 
-      @q = Version::DomainVersion.includes(:item).ransack(params[:q])
-      @versions = @q.result.page(params[:page])
-      search_params = params[:q].deep_dup
+      search_params = params[:q].deep_dup.except(:created_at_gteq, :created_at_lteq)
 
       if search_params[:registrant].present?
-        registrants = Contact.where("name ilike ?", "%#{search_params[:registrant].strip}%")
+        registrants = Contact.where('name ilike ?', "%#{search_params[:registrant].strip}%")
         search_params.delete(:registrant)
       end
 
       if search_params[:registrar].present?
-        registrars = Registrar.where("name ilike ?", "%#{search_params[:registrar].strip}%")
+        registrars = Registrar.where('name ilike ?', "%#{search_params[:registrar].strip}%")
         search_params.delete(:registrar)
       end
 
-      where_s = "1=1"
+      where_s = '1=1'
 
       search_params.each do |key, value|
         next if value.empty?
@@ -39,11 +37,11 @@ module Admin
       if registrants.present?
         where_s += "  AND object->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id}'" }.join ','})"
       end
-      where_s += "  AND 1=0" if registrants == []
+      where_s += '  AND 1=0' if registrants == []
       if registrars.present?
         where_s += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id}'" }.join ','})"
       end
-      where_s += "  AND 1=0" if registrars == []
+      where_s += '  AND 1=0' if registrars == []
 
       versions = Version::DomainVersion.includes(:item).where(where_s).order(created_at: :desc, id: :desc)
       @q = versions.ransack(params[:q])

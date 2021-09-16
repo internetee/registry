@@ -67,7 +67,7 @@ class DomainVersionsTest < ApplicationSystemTestCase
     find('.btn.btn-primary').click
 
     assert_equal current_url,
-      'http://www.example.com/admin/domain_versions?q[name]=&q[registrant]=John&q[registrar]=&q[event]=&results_per_page='
+      'http://www.example.com/admin/domain_versions?q[name]=&q[registrant]=John&q[registrar]=&q[event]=&q[created_at_gteq]=&q[created_at_lteq]=&results_per_page='
   end
 
   def test_search_registrar_param
@@ -76,7 +76,7 @@ class DomainVersionsTest < ApplicationSystemTestCase
     find('.btn.btn-primary').click
 
     assert_equal current_url,
-      'http://www.example.com/admin/domain_versions?q[name]=&q[registrant]=&q[registrar]=Best+Names&q[event]=&results_per_page='
+      'http://www.example.com/admin/domain_versions?q[name]=&q[registrant]=&q[registrar]=Best+Names&q[event]=&q[created_at_gteq]=&q[created_at_lteq]=&results_per_page='
   end
 
   def test_search_name_param
@@ -85,7 +85,7 @@ class DomainVersionsTest < ApplicationSystemTestCase
     find('.btn.btn-primary').click
 
     assert_equal current_url,
-      'http://www.example.com/admin/domain_versions?q[name]=shop.test&q[registrant]=&q[registrar]=&q[event]=&results_per_page='
+      'http://www.example.com/admin/domain_versions?q[name]=shop.test&q[registrant]=&q[registrar]=&q[event]=&q[created_at_gteq]=&q[created_at_lteq]=&results_per_page='
   end
 
   def test_download_domain_history
