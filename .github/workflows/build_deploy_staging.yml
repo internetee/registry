@@ -121,9 +121,9 @@ jobs:
           send
           " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key
           if [ "$?" -eq "0" ]; then
-              echo "admin CNAME update success"
+              echo "CNAME updates were successful"
           else
-              echo "admin CNAME update failed"
+              echo "CNAME updates failed"
           fi
           EOSSH
 
