@@ -1,9 +1,15 @@
 module Domain::RegistryLockable
   extend ActiveSupport::Concern
 
-  LOCK_STATUSES = [DomainStatus::SERVER_UPDATE_PROHIBITED,
-                   DomainStatus::SERVER_DELETE_PROHIBITED,
-                   DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
+  LOCK_STATUSES = if Feature.obj_and_extensions_statuses_enabled?
+                    [DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED,
+                     DomainStatus::SERVER_DELETE_PROHIBITED,
+                     DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
+                  else
+                    [DomainStatus::SERVER_UPDATE_PROHIBITED,
+                     DomainStatus::SERVER_DELETE_PROHIBITED,
+                     DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
+                  end
 
   def apply_registry_lock
     return unless registry_lockable?
