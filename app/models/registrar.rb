@@ -160,10 +160,7 @@ class Registrar < ApplicationRecord
           next
         end
 
-        new_nameserver = Nameserver.new
-        new_nameserver.domain = origin.domain
-        new_nameserver.attributes = new_attributes
-        new_nameserver.save!
+        create_nameserver(origin.domain, new_attributes)
 
         domain_scope.delete_if { |i| i == idn || i == puny }
         domain_list << idn
@@ -184,26 +181,34 @@ class Registrar < ApplicationRecord
 
       return if domains.empty?
 
-      domain_scope.each do |domain_name|
-        domain = self.domains.find_by('name = ? OR name_puny = ?', domain_name, domain_name)
-
-        if domain.blank? || domain_not_updatable?(hostname: new_attributes[:hostname], domain: domain)
-          failed_list << domain_name
-          next
-        end
-
-        new_nameserver = Nameserver.new
-        new_nameserver.domain = domain
-        new_nameserver.attributes = new_attributes
-        new_nameserver.save!
-
-        domain_scope.delete_if { |i| i == domain.name || i == domain.name_puny }
-        domain_list << domain_name
-      end
+      domain_list_processing(domain_scope, new_attributes, domain_list, failed_list)
 
       self.domains.where(name: domain_list).find_each(&:update_whois_record) if domain_list.any?
       [domain_list.uniq.sort, (domain_scope + failed_list).uniq.sort]
     end
+  end
+
+  def domain_list_processing(domains, new_attributes, domain_list, failed_list)
+    domains.each do |domain_name|
+      domain = self.domains.find_by('name = ? OR name_puny = ?', domain_name, domain_name)
+
+      if domain.blank? || domain_not_updatable?(hostname: new_attributes[:hostname], domain: domain)
+        failed_list << domain_name
+        next
+      end
+
+      create_nameserver(domain, new_attributes)
+
+      domains.delete_if { |i| i == domain.name || i == domain.name_puny }
+      domain_list << domain_name
+    end
+  end
+
+  def create_nameserver(domain, attributes)
+    new_nameserver = Nameserver.new
+    new_nameserver.domain = domain
+    new_nameserver.attributes = attributes
+    new_nameserver.save!
   end
 
   def vat_country=(country)
