@@ -8,7 +8,7 @@ namespace :locked_domains do
   desc 'Add serverObjUpdateProhibited for locked domains'
   task add_new_status: :environment do
     time = Benchmark.realtime do
-      ReplaceUpdToObjUpdProhibitedJob.perform_later('add')
+      ReplaceUpdToObjUpdProhibitedJob.perform_later(action: :add)
     end
     puts "Time is #{time.round(2)} for add serverObjUpdateProhibited status for locked domains"
   end
@@ -16,7 +16,7 @@ namespace :locked_domains do
   desc 'Remove serverUpdateProhibited from locked domains'
   task remove_old_status: :environment do
     time = Benchmark.realtime do
-      ReplaceUpdToObjUpdProhibitedJob.perform_later('remove')
+      ReplaceUpdToObjUpdProhibitedJob.perform_later(action: :remove)
     end
     puts "Time is #{time.round(2)} for remove serverUpdateProhibited for locked domains"
   end
@@ -27,7 +27,7 @@ namespace :locked_domains do
   desc 'Rollback remove old serverUpdateProhibited for locked domains'
   task rollback_remove_old_status: :environment do
     time = Benchmark.realtime do
-      ReplaceUpdToObjUpdProhibitedJob.perform_later('add', true)
+      ReplaceUpdToObjUpdProhibitedJob.perform_later(action: :add, rollback: true)
     end
     puts "Time is #{time.round(2)} for add serverObjUpdateProhibited status for locked domains"
   end
@@ -35,7 +35,7 @@ namespace :locked_domains do
   desc 'Rollback add new serverObjUpdateProhibited for locked domains'
   task rollback_add_new_status: :environment do
     time = Benchmark.realtime do
-      ReplaceUpdToObjUpdProhibitedJob.perform_later('remove', true)
+      ReplaceUpdToObjUpdProhibitedJob.perform_later(action: :remove, rollback: true)
     end
     puts "Time is #{time.round(2)} for add serverObjUpdateProhibited status for locked domains"
   end
