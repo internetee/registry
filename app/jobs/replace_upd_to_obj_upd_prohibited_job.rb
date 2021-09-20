@@ -16,17 +16,37 @@ class ReplaceUpdToObjUpdProhibitedJob < ApplicationJob
       domain_batches.each do |domain|
         if domain.locked_by_registrant?
           if rollback
-            domain.statuses = domain.statuses + ["serverUpdateProhibited"] if mode == 'add' and !domain.statuses.include? "serverUpdateProhibited"
-            domain.statuses = domain.statuses - ["serverObjUpdateProhibited"] if mode == 'remove' and domain.statuses.include? "serverObjUpdateProhibited"
+            domain = rollback_actions(mode, domain)
           else
-            domain.statuses = domain.statuses + ["serverObjUpdateProhibited"] if mode == 'add' and !domain.statuses.include? "serverObjUpdateProhibited"
-            domain.statuses = domain.statuses - ["serverUpdateProhibited"] if mode == 'remove'  and domain.statuses.include? "serverUpdateProhibited"
+            domain = add_actions(mode, domain)
           end
+
           domain.save!
         end
       end
+
       logger.info "Successfully proccesed #{count} domains of #{Domain.count}"
     end
+  end
+
+  def rollback_actions(mode, domain)
+    if mode == 'add' and !domain.statuses.include? 'serverUpdateProhibited'
+      domain.statuses = domain.statuses + ['serverUpdateProhibited']
+    elsif mode == 'remove' and domain.statuses.include? 'serverObjUpdateProhibited'
+      domain.statuses = domain.statuses - ['serverObjUpdateProhibited']
+    end
+
+    domain
+  end
+
+  def add_actions(mode, domain)
+    if mode == 'add' and !domain.statuses.include? 'serverObjUpdateProhibited'
+      domain.statuses = domain.statuses + ['serverObjUpdateProhibited']
+    elsif mode == 'remove' and domain.statuses.include? 'serverUpdateProhibited'
+      domain.statuses = domain.statuses - ['serverUpdateProhibited']
+    end
+
+    domain
   end
 
   def logger
