@@ -8,6 +8,8 @@ module Api
         before_action :authorized_to_manage_locks?
 
         def create
+          p "============"
+
           if @domain.apply_registry_lock
             render json: serialized_domain(@domain)
           else

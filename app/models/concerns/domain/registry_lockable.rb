@@ -12,7 +12,6 @@ module Domain::RegistryLockable
                   end
 
   def apply_registry_lock
-    # binding.pry
     return unless registry_lockable?
     return if locked_by_registrant?
 
