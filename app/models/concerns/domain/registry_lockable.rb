@@ -11,12 +11,16 @@ module Domain::RegistryLockable
                      DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
                   end
 
-  def apply_registry_lock
+  EXTENSIONS_STATUS = [DomainStatus::SERVER_EXTENSION_UPDATE_PROHIBITED].freeze
+  
+
+  def apply_registry_lock(extensionsProhibited:)
     return unless registry_lockable?
     return if locked_by_registrant?
 
     transaction do
       self.statuses |= LOCK_STATUSES
+      self.statuses |= EXTENSIONS_STATUS if Feature.obj_and_extensions_statuses_enabled? and extensionsProhibited
       self.locked_by_registrant_at = Time.zone.now
       alert_registrar_lock_changes!(lock: true)
 
@@ -44,6 +48,9 @@ module Domain::RegistryLockable
       LOCK_STATUSES.each do |domain_status|
         statuses.delete([domain_status])
       end
+      
+      statuses.delete([EXTENSIONS_STATUS]) if statuses.include? EXTENSIONS_STATUS
+
       self.locked_by_registrant_at = nil
       self.statuses = admin_store_statuses_history || []
       alert_registrar_lock_changes!(lock: false)

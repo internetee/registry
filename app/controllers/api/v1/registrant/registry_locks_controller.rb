@@ -8,9 +8,9 @@ module Api
         before_action :authorized_to_manage_locks?
 
         def create
-          p "============"
+          extensionsProhibited = params[:extensionsProhibited]
 
-          if @domain.apply_registry_lock
+          if @domain.apply_registry_lock(extensionsProhibited: extensionsProhibited.to_s.downcase == "true")
             render json: serialized_domain(@domain)
           else
             render json: { errors: [{ base: ['Domain cannot be locked'] }] },
