@@ -140,6 +140,6 @@ jobs:
             |:------------|:----------------------:|:---------------------------------------:|
             | **Admin**   |'${{ github.head_ref }}'| https://reg-admin-'$PR_REF'.pilv.tld.ee |
             | **repp**    |'${{ github.head_ref }}'| https://repp-'$PR_REF'.pilv.tld.ee      |
-            | **API**     |'${{ github.head_ref }}'| https://reg-api-"$PR_REF".pilv.tld.ee   |
+            | **API**     |'${{ github.head_ref }}'| https://reg-api-'$PR_REF'.pilv.tld.ee   |
             "
             }' $NOTIFICATION_URL
