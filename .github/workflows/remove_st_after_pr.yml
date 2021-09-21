@@ -72,11 +72,13 @@ jobs:
           export KUBECONFIG=./kubeconfig
           helm delete reg-admin-"$PR_REF" -n reg-admin-staging
           helm delete repp-"$PR_REF" -n epp
+          helm delete reg-api-"$PR_REF" -n reg-api
           rm kubeconfig
           echo "server obs.tld.ee
           zone pilv.tld.ee
           update delete reg-admin-"$PR_REF".pilv.tld.ee.
           update delete repp-"$PR_REF".pilv.tld.ee.
+          update delete reg-api-"$PR_REF".pilv.tld.ee.
           send
           " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key
           if [ "$?" -eq "0" ]; then
