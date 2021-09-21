@@ -1,3 +1,6 @@
+21.09.2021
+* Registry lock: new serverObjUpdateProhibited status replaces serverUpdateProhibited [#2162](https://github.com/internetee/registry/pull/2162)
+
 16.09.2021
 * Admin: improved active/inactive registrar fileter [#2156](https://github.com/internetee/registry/issues/2156)
 * Admin: date filter for domain and contact history views [#2157](https://github.com/internetee/registry/issues/2157)
