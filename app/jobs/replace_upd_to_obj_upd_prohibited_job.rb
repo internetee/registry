@@ -1,20 +1,21 @@
 class ReplaceUpdToObjUpdProhibitedJob < ApplicationJob
-  def perform(action:, rollback: false)
+  def perform(rollback: false)
     logger.info 'Ran ReplaceUpdToObjUpdProhibitedJob!'
 
-    start_adding_new_status_for_locked_domains(action: action, rollback: rollback)
+    start_replace_status_for_locked_domains(rollback: rollback)
   end
 
-  private
 
-  def start_adding_new_status_for_locked_domains(action:, rollback:)
+  def start_replace_status_for_locked_domains(rollback:)
     count = 0
     Domain.all.find_in_batches do |domain_batches|
       count += domain_batches.count
       logger.info "Proccesing #{count} domains of #{Domain.count}"
 
       domain_batches.each do |domain|
-        make_actions_with_statuses(domain: domain, action: action, rollback: rollback)
+        if domain.locked_by_registrant? 
+          process_domain_status_replacment(domain: domain, rollback: rollback)
+        end
       end
 
       logger.info "Successfully proccesed #{count} domains of #{Domain.count}"
@@ -23,31 +24,13 @@ class ReplaceUpdToObjUpdProhibitedJob < ApplicationJob
 
   private
 
-  def make_actions_with_statuses(domain:, action:, rollback:)
-    if domain.locked_by_registrant? && rollback
-      rollback_actions(action: action, domain: domain)
-    elsif domain.locked_by_registrant? && !rollback
-      add_actions(action: action, domain: domain)
-    end
-  end
-
-  def rollback_actions(action:, domain:)
-    if action == :add && !domain.statuses.include?('serverUpdateProhibited')
-      domain.statuses = domain.statuses + ['serverUpdateProhibited']
-      domain.save!
-    elsif action == :remove && domain.statuses.include?('serverObjUpdateProhibited')
-      domain.statuses = domain.statuses - ['serverObjUpdateProhibited']
-      domain.save!
-    end
-  end
-
-  def add_actions(action:, domain:)
-    if action == :add && !domain.statuses.include?('serverObjUpdateProhibited')
-      domain.statuses = domain.statuses + ['serverObjUpdateProhibited']
-      domain.save!
-    elsif action == :remove && domain.statuses.include?('serverUpdateProhibited')
-      domain.statuses = domain.statuses - ['serverUpdateProhibited']
-      domain.save!
+  def process_domain_status_replacment(domain:, rollback:)
+    domain.statuses = domain.statuses - ["serverUpdateProhibited"] + ["serverObjUpdateProhibited"] unless rollback
+    domain.statuses = domain.statuses - ["serverObjUpdateProhibited"] + ["serverUpdateProhibited"] if rollback
+    if domain.save
+      logger.info "#{domain.name} has next statuses #{domain.statuses}"
+    else
+      logger.warn "#{domain.name} - something goes wrong!"
     end
   end
 

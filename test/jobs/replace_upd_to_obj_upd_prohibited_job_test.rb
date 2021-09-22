@@ -13,7 +13,7 @@ class ReplaceUpdToObjUpdProhibitedJobTest < ActiveSupport::TestCase
     assert @domain.locked_by_registrant?
 
     perform_enqueued_jobs do
-      ReplaceUpdToObjUpdProhibitedJob.perform_later(action: :add)
+      ReplaceUpdToObjUpdProhibitedJob.perform_later
     end
 
     @domain.reload
@@ -25,14 +25,14 @@ class ReplaceUpdToObjUpdProhibitedJobTest < ActiveSupport::TestCase
     assert @domain.locked_by_registrant?
     assert @domain.statuses.include? "serverUpdateProhibited"
 
-    @domain.statuses += ["serverObjUpdateProhibited"]
-    @domain.save
-    @domain.reload
+    # @domain.statuses += ["serverObjUpdateProhibited"]
+    # @domain.save
+    # @domain.reload
 
-    assert @domain.statuses.include? "serverObjUpdateProhibited"
+    # assert @domain.statuses.include? "serverObjUpdateProhibited"
 
     perform_enqueued_jobs do
-      ReplaceUpdToObjUpdProhibitedJob.perform_later(action: :remove)
+      ReplaceUpdToObjUpdProhibitedJob.perform_later
     end
 
     @domain.reload
@@ -49,7 +49,7 @@ class ReplaceUpdToObjUpdProhibitedJobTest < ActiveSupport::TestCase
     assert_not @domain.locked_by_registrant?
 
     perform_enqueued_jobs do
-      ReplaceUpdToObjUpdProhibitedJob.perform_later(action: :add)
+      ReplaceUpdToObjUpdProhibitedJob.perform_later
     end
 
     assert_not @domain.statuses.include? "serverObjUpdateProhibited"
@@ -64,7 +64,7 @@ class ReplaceUpdToObjUpdProhibitedJobTest < ActiveSupport::TestCase
     assert_not @domain.locked_by_registrant?
 
     perform_enqueued_jobs do
-      ReplaceUpdToObjUpdProhibitedJob.perform_later(action: :remove)
+      ReplaceUpdToObjUpdProhibitedJob.perform_later
     end
 
     assert @domain.statuses.include? "serverUpdateProhibited"
