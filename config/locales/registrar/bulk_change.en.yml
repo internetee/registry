@@ -32,6 +32,7 @@ en:
           ident data ie for updating contact information.
 
       nameserver_form:
+        old_hostname: Old hostname (optional)
         ip_hint: One IP per line
         replace_btn: Replace nameserver
         help_btn: Toggle help

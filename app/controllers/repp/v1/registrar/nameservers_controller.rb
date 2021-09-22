@@ -67,7 +67,7 @@ module Repp
         end
 
         def verify_nameserver_existance
-          return true if hostname.nil?
+          return true if hostname.blank?
 
           current_user.registrar.nameservers.find_by!(hostname: hostname)
         end
