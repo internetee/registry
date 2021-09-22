@@ -11,7 +11,7 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
     refute(@domain.locked_by_registrant?)
     @domain.update(statuses: [DomainStatus::SERVER_TRANSFER_PROHIBITED])
 
-    @domain.apply_registry_lock # Raise validation error
+    @domain.apply_registry_lock(extensionsProhibited: false) # Raise validation error
 
     check_statuses_lockable_domain
     assert(@domain.locked_by_registrant?)
