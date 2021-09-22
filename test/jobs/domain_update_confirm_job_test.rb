@@ -22,14 +22,14 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
 
   def test_registrant_locked_domain
     refute @domain.locked_by_registrant?
-    @domain.apply_registry_lock(extensionsProhibited: false)
+    @domain.apply_registry_lock(extensions_prohibited: false)
     assert @domain.locked_by_registrant?
     assert_equal(@domain.registrar.notifications.last.text, "Domain #{@domain.name} has been locked by registrant")
   end
 
   def test_registrant_unlocked_domain
     refute @domain.locked_by_registrant?
-    @domain.apply_registry_lock(extensionsProhibited: false)
+    @domain.apply_registry_lock(extensions_prohibited: false)
     assert @domain.locked_by_registrant?
     @domain.remove_registry_lock
     refute @domain.locked_by_registrant?

@@ -47,7 +47,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
   end
 
   def test_cannot_lock_an_already_locked_domain
-    @domain.apply_registry_lock(extensionsProhibited: false)
+    @domain.apply_registry_lock(extensions_prohibited: false)
     assert(@domain.locked_by_registrant?)
 
     post '/api/v1/registrant/domains/2df2c1a1-8f6a-490a-81be-8bdf29866880/registry_lock',
@@ -59,7 +59,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
   end
 
   def test_can_unlock_a_locked_domain
-    @domain.apply_registry_lock(extensionsProhibited: false)
+    @domain.apply_registry_lock(extensions_prohibited: false)
 
     delete '/api/v1/registrant/domains/2df2c1a1-8f6a-490a-81be-8bdf29866880/registry_lock',
            headers: @auth_headers
