@@ -3,7 +3,7 @@ require 'test_helper'
 class FeatureTest < ActiveSupport::TestCase
   setup do
     @domain = domains(:shop)
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
   end
 
   def test_if_obj_and_extensions_prohibited_enabled

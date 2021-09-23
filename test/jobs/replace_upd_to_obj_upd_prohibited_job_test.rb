@@ -9,7 +9,7 @@ class ReplaceUpdToObjUpdProhibitedJobTest < ActiveSupport::TestCase
   end
 
   def test_start_adding_new_status_for_locked_domains
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
     assert @domain.locked_by_registrant?
 
     perform_enqueued_jobs do
@@ -21,7 +21,7 @@ class ReplaceUpdToObjUpdProhibitedJobTest < ActiveSupport::TestCase
   end
 
   def test_start_adding_new_status_for_locked_domains
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
     assert @domain.locked_by_registrant?
     assert @domain.statuses.include? "serverUpdateProhibited"
 
