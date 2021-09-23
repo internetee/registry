@@ -2,7 +2,7 @@ module Domain::BulkUpdatable
   extend ActiveSupport::Concern
 
   def bulk_update_prohibited?
-    discarded? || statuses_blocks_update?
+    statuses_blocks_update?
   end
 
   def statuses_blocks_update?
