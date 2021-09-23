@@ -23,7 +23,7 @@ class RegistrantUser < User
     company_register.representation_rights(citizen_personal_code: ident,
                                            citizen_country_code: country.alpha3)
   end
-
+  
   def contacts(representable: true)
     Contact.registrant_user_contacts(self, representable: representable)
   end

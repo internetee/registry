@@ -1,7 +1,7 @@
 module Domain::RegistryLockable
   extend ActiveSupport::Concern
 
-  LOCK_STATUSES = if Feature.obj_and_extensions_statuses_enabled?
+  LOCK_STATUSES = if Feature.enable_lock_domain_with_new_statuses?
                     [DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED,
                      DomainStatus::SERVER_DELETE_PROHIBITED,
                      DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
