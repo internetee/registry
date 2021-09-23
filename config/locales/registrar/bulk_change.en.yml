@@ -34,7 +34,7 @@ en:
       nameserver_form:
         old_hostname: Old hostname (optional)
         ip_hint: One IP per line
-        replace_btn: Replace nameserver
+        replace_btn: Replace/Add nameserver
         help_btn: Toggle help
         help: >-
           Replace nameserver specified in the "old hostname" with the one in "new hostname" with
