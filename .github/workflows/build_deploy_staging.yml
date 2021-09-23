@@ -110,17 +110,22 @@ jobs:
           export KUBECONFIG=./kubeconfig
           helm repo add eisrepo https://internetee.github.io/helm-charts/
           helm repo update
-          helm upgrade --install registry-st-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry -n registry-staging
+          helm upgrade --install reg-admin-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-admin -n reg-admin-staging
+          helm upgrade --install repp-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-epp -n epp
+          helm upgrade --install reg-api-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-api -n reg-api
           rm kubeconfig
+          echo "Setting up URLs"
           echo "server obs.tld.ee
           zone pilv.tld.ee
-          update add registry-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
+          update add reg-admin-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
+          update add repp-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
+          update add reg-api-"$PR_REF".pilv.tld.ee. 3600 CNAME riigi.pilv.tld.ee.
           send
           " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key
           if [ "$?" -eq "0" ]; then
-              echo "CNAME update success"
+              echo "CNAME updates were successful"
           else
-              echo "CNAME update failed"
+              echo "CNAME updates failed"
           fi
           EOSSH
 
@@ -130,9 +135,13 @@ jobs:
           NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL}}
         run: |
           curl -i -X POST --data-urlencode 'payload={
-            "text": "##### Build and deploy from pull request has been succesful :tada:\n
-            | Project    | Branch                 | :net:                                  |
-            |:-----------|:----------------------:|:--------------------------------------:|
-            | **'$REPO'**|'${{ github.head_ref }}'| https://registry-'$PR_REF'.pilv.tld.ee |
+            "text": "\n##### A pull request from ['${{ github.head_ref }}'](https://github.com/internetee/registry/pull/'$PR_REF') to master has been deployed :tada:\n
+            |Service      | :net:                                   |
+            |:------------|:---------------------------------------:|
+            | **Admin**   | https://reg-admin-'$PR_REF'.pilv.tld.ee |
+            | **repp**    | https://repp-'$PR_REF'.pilv.tld.ee      |
+            | **API**     | https://reg-api-'$PR_REF'.pilv.tld.ee   |
+
+            Please note that the API is only accessible from Riigipilv.
             "
             }' $NOTIFICATION_URL
