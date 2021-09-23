@@ -98,7 +98,7 @@ module Admin
       date_until_param = params[:q][:receipt_date_lteq] if params[:q][:receipt_date_lteq].present?
       date_until = date_until_param ? Time.zone.parse(date_from_param) : Float::INFINITY
 
-      invoices.where(account_activity: { created_at: date_from..date_until })
+      invoices.where(account_activities: { created_at: date_from..date_until })
     end
   end
 end

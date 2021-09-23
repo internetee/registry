@@ -560,7 +560,7 @@ DEPENDENCIES
   que
   que-web
   rails (~> 6.1.4)
-  ransack (~> 2.3)
+  ransack (~> 2.4.2)
   rest-client
   rexml
   sass-rails
@@ -579,4 +579,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.5.1)
 
 BUNDLED WITH
-   2.2.26
+   2.2.27
