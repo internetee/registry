@@ -12,11 +12,11 @@ module Domain::RegistryLockable
                   end
 
   def apply_registry_lock
-    # binding.pry
     return unless registry_lockable?
     return if locked_by_registrant?
 
     transaction do
+      self.admin_store_statuses_history = self.statuses
       self.statuses |= LOCK_STATUSES
       self.locked_by_registrant_at = Time.zone.now
       alert_registrar_lock_changes!(lock: true)
@@ -29,7 +29,7 @@ module Domain::RegistryLockable
     (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION,
                  DomainStatus::PENDING_CREATE, DomainStatus::PENDING_UPDATE,
                  DomainStatus::PENDING_DELETE, DomainStatus::PENDING_RENEW,
-                 DomainStatus::PENDING_TRANSFER, DomainStatus::FORCE_DELETE]).empty?
+                 DomainStatus::PENDING_TRANSFER]).empty?
   end
 
   def locked_by_registrant?

@@ -17,13 +17,12 @@ class RegistrantUser < User
     Country.new(alpha2_code)
   end
 
-  def companies(company_register = nil)
+  def companies(company_register = CompanyRegister::Client.new)
     return [] if ident.include?('-')
 
-    [OpenStruct.new(registration_number: '43344412', company_name: 'TestFirma'),
-    OpenStruct.new(registration_number: '12345678', company_name: 'SuperFirma OU')]
+    company_register.representation_rights(citizen_personal_code: ident,
+                                           citizen_country_code: country.alpha3)
   end
-  
 
   def contacts(representable: true)
     Contact.registrant_user_contacts(self, representable: representable)
