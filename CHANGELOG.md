@@ -1,5 +1,6 @@
 23.09.2021
 * Fixed registrant portal link in expiration email templates [#2168](https://github.com/internetee/registry/pull/2168)
+* extensionProhibited option for registry lock [#2164](https://github.com/internetee/registry/pull/2164)
 
 21.09.2021
 * Registry lock: new serverObjUpdateProhibited status replaces serverUpdateProhibited [#2162](https://github.com/internetee/registry/pull/2162)
