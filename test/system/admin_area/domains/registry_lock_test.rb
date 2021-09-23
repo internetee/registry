@@ -17,7 +17,7 @@ class AdminAreaRegistryLockTest < JavaScriptApplicationSystemTestCase
   end
 
   def test_can_remove_registry_lock_from_a_domain
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
 
     visit edit_admin_domain_path(@domain)
     click_link_or_button('Actions')
@@ -34,7 +34,7 @@ class AdminAreaRegistryLockTest < JavaScriptApplicationSystemTestCase
   end
 
   def test_cannot_remove_registry_lock_from_not_locked_domain
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
     visit edit_admin_domain_path(@domain)
     @domain.remove_registry_lock
 

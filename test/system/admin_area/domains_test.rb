@@ -20,7 +20,7 @@ class AdminDomainsTestTest < ApplicationSystemTestCase
     refute_text 'Registry lock time 2010-07-05 00:30'
 
     lockable_domain = domains(:airport)
-    lockable_domain.apply_registry_lock
+    lockable_domain.apply_registry_lock(extensions_prohibited: false)
 
     visit admin_domain_path(lockable_domain)
     assert_text 'Registry lock time 2010-07-05 00:30'
