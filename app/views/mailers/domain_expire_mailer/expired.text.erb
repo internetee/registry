@@ -9,7 +9,7 @@ Domeeninimi <%= @domain.name %> on aegunud ja ei ole alates <%= @domain.on_hold_
 Domeeni <%= @domain.name %> registripidaja:
 <%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
 
-Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist https://registrant.internet.ee/registrant/.
+Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist https://registrant.internet.ee/.
 
 <%= render 'mailers/shared/signatures/signature.et.text' %>
 
@@ -26,7 +26,7 @@ If you do not renew the <%= @domain.name %> domain registration, it is deleted a
 Registrar of the <%= @domain.name %>:
 <%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
 
-You can find an overview of all your domains at the registrant's portal https://registrant.internet.ee/registrant/.
+You can find an overview of all your domains at the registrant's portal https://registrant.internet.ee/.
 
 <%= render 'mailers/shared/signatures/signature.en.text' %>
 
@@ -43,6 +43,6 @@ You can find an overview of all your domains at the registrant's portal https://
 Pегистратор домена <%= @domain.name %>:
 <%= render 'mailers/shared/registrar/registrar.ru.text', registrar: @registrar %>
 
-Обзор всех связанных с вами доменов можете получить на портале регистратора https://registrant.internet.ee/registrant/
+Обзор всех связанных с вами доменов можете получить на портале регистратора https://registrant.internet.ee/.
 
 <%= render 'mailers/shared/signatures/signature.ru.text' %>
