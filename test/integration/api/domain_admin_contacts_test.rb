@@ -61,8 +61,8 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
   end
 
   def test_return_skipped_domains_in_alphabetical_order
-    domains(:shop).update!(statuses: [DomainStatus::DELETE_CANDIDATE])
-    domains(:airport).update!(statuses: [DomainStatus::DELETE_CANDIDATE])
+    domains(:shop).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
+    domains(:airport).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
 
     patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: @admin_current.code,
                                                  new_contact_id: @admin_new.code },
