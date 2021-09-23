@@ -116,7 +116,7 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
     assert_text 'CSV scoped domain list seems empty. Make sure that domains are added and "Domain" header is present.'
   end
 
-  def test_replaces_current_registrar_nameservers
+  def test_adding_current_registrar_nameservers
     request_body = { data: { type: 'nameserver',
                              id: '',
                              domains: [],
