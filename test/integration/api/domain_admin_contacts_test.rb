@@ -38,7 +38,7 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
   end
 
   def test_skip_discarded_domains
-    domains(:airport).update!(statuses: [DomainStatus::DELETE_CANDIDATE])
+    domains(:airport).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
 
     patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: @admin_current.code,
                                                  new_contact_id: @admin_new.code },
