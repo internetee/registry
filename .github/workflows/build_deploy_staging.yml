@@ -135,11 +135,13 @@ jobs:
           NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL}}
         run: |
           curl -i -X POST --data-urlencode 'payload={
-            "text": "##### Build and deploy from pull request has been succesful :tada:\n
-            | Registry    | Branch                 | :net:                                   |
-            |:------------|:----------------------:|:---------------------------------------:|
-            | **Admin**   |'${{ github.head_ref }}'| https://reg-admin-'$PR_REF'.pilv.tld.ee |
-            | **repp**    |'${{ github.head_ref }}'| https://repp-'$PR_REF'.pilv.tld.ee      |
-            | **API**     |'${{ github.head_ref }}'| https://reg-api-'$PR_REF'.pilv.tld.ee   |
+            "text": "\n##### A pull request from ['${{ github.head_ref }}'](https://github.com/internetee/registry/pull/'$PR_REF') to master has been deployed :tada:\n
+            |Service      | :net:                                   |
+            |:------------|:---------------------------------------:|
+            | **Admin**   | https://reg-admin-'$PR_REF'.pilv.tld.ee |
+            | **repp**    | https://repp-'$PR_REF'.pilv.tld.ee      |
+            | **API**     | https://reg-api-'$PR_REF'.pilv.tld.ee   |
+
+            Please note that the API is only accessible from Riigipilv.
             "
             }' $NOTIFICATION_URL

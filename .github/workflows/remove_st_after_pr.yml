@@ -94,12 +94,11 @@ jobs:
           NOTIFICATION_URL: ${{ secrets.NOTIFICATION_URL}}
         run: |
           curl -i -X POST --data-urlencode 'payload={
-            "text": "##### Pull request was succesful, it has been merged :bowtie:\n
+            "text": "##### [Pull request](https://github.com/internetee/registry/pull/'$PR_REF') was succesful, it has been merged :bowtie:\n
             | Registry   | '${{ github.head_ref }}'                    |
             |:-----------|:-------------------------------------------:|
             | **Admin**  | ~~https://reg-admin-'$PR_REF'.pilv.tld.ee~~ |
             | **API**    | ~~https://reg-api-'$PR_REF'.pilv.tld.ee~~   |
             | **REPP**   | ~~https://repp-'$PR_REF'.pilv.tld.ee~~      |
-            | **EPP**    | ~~https://reg-epp-'$PR_REF'.pilv.tld.ee~~   |
             "
             }' $NOTIFICATION_URL
