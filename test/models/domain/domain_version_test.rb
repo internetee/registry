@@ -31,7 +31,7 @@ class DomainVersionTest < ActiveSupport::TestCase
     PaperTrail.request.whodunnit = @user.id_role_username
 
     assert_difference '@domain.versions.count', 1 do
-      @domain.apply_registry_lock
+      @domain.apply_registry_lock(extensions_prohibited: false)
     end
 
     assert_equal(@domain.updator, @user)

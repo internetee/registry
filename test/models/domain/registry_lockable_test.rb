@@ -11,14 +11,14 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
     refute(@domain.locked_by_registrant?)
     @domain.update(statuses: [DomainStatus::SERVER_TRANSFER_PROHIBITED])
 
-    @domain.apply_registry_lock # Raise validation error
+    @domain.apply_registry_lock(extensions_prohibited: false) # Raise validation error
 
     check_statuses_lockable_domain
     assert(@domain.locked_by_registrant?)
   end
 
   def test_remove_lockalable_statuses_after_admin_intervention
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
     assert @domain.locked_by_registrant?
     assert_equal @domain.statuses.sort, Domain::RegistryLockable::LOCK_STATUSES.sort
 
@@ -26,7 +26,7 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
     @domain.update(statuses: deleted_status)
     assert_not @domain.locked_by_registrant?
 
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
     assert @domain.locked_by_registrant?
     @domain.remove_registry_lock
 
@@ -41,7 +41,7 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
     @domain.save
     assert @domain.admin_store_statuses_history.include? DomainStatus::SERVER_UPDATE_PROHIBITED
 
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
     assert @domain.locked_by_registrant?
     assert_equal @domain.statuses.sort, Domain::RegistryLockable::LOCK_STATUSES.sort
 
@@ -52,7 +52,7 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
   end
 
   def test_add_additinal_status_for_locked_domain
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
     assert @domain.locked_by_registrant?
     assert_equal @domain.statuses.sort, Domain::RegistryLockable::LOCK_STATUSES.sort
 
@@ -69,7 +69,7 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
 
   def test_lockable_domain_if_remove_some_prohibited_status
     refute(@domain.locked_by_registrant?)
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
     check_statuses_lockable_domain
     assert(@domain.locked_by_registrant?)
 
@@ -85,7 +85,7 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
 
   def test_registry_lock_on_lockable_domain
     refute(@domain.locked_by_registrant?)
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
 
     assert_equal(
       [DomainStatus::SERVER_UPDATE_PROHIBITED,
@@ -99,21 +99,21 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
   end
 
   def test_registry_lock_cannot_be_applied_twice
-    @domain.apply_registry_lock
-    refute(@domain.apply_registry_lock)
+    @domain.apply_registry_lock(extensions_prohibited: false)
+    refute(@domain.apply_registry_lock(extensions_prohibited: false))
     assert(@domain.locked_by_registrant?)
     assert(@domain.locked_by_registrant_at)
   end
 
   def test_registry_lock_cannot_be_applied_on_pending_statuses
     @domain.statuses << DomainStatus::PENDING_RENEW
-    refute(@domain.apply_registry_lock)
+    refute(@domain.apply_registry_lock(extensions_prohibited: false))
     refute(@domain.locked_by_registrant?)
     refute(@domain.locked_by_registrant_at)
   end
 
   def test_remove_registry_lock_on_locked_domain
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
 
     assert_equal(
       [DomainStatus::SERVER_UPDATE_PROHIBITED,

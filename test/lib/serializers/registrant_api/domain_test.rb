@@ -16,7 +16,7 @@ class SerializersRegistrantApiDomainTest < ActiveSupport::TestCase
     assert_not(@json[:locked_by_registrant_at])
 
     travel_to Time.zone.parse('2010-07-05 10:30')
-    @domain.apply_registry_lock
+    @domain.apply_registry_lock(extensions_prohibited: false)
     serializer_for_locked_domain = Serializers::RegistrantApi::Domain.new(@domain.reload)
     new_json = serializer_for_locked_domain.to_json
 
