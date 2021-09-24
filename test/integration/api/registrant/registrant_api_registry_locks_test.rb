@@ -18,7 +18,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
 
     assert(response_json[:statuses].include?(DomainStatus::SERVER_DELETE_PROHIBITED))
     assert(response_json[:statuses].include?(DomainStatus::SERVER_TRANSFER_PROHIBITED))
-    assert(response_json[:statuses].include?(DomainStatus::SERVER_UPDATE_PROHIBITED))
+    assert(response_json[:statuses].include?(DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED))
 
     @domain.reload
     assert(@domain.locked_by_registrant?)
@@ -115,7 +115,7 @@ class RegistrantApiRegistryLocksTest < ApplicationIntegrationTest
 
     assert(response_json[:statuses].include?(DomainStatus::SERVER_DELETE_PROHIBITED))
     assert(response_json[:statuses].include?(DomainStatus::SERVER_TRANSFER_PROHIBITED))
-    assert(response_json[:statuses].include?(DomainStatus::SERVER_UPDATE_PROHIBITED))
+    assert(response_json[:statuses].include?(DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED))
   end
 
   def test_locking_domains_returns_serialized_domain_object

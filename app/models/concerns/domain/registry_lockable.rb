@@ -23,6 +23,7 @@ module Domain::RegistryLockable
   end
 
   def apply_statuses_locked_statuses(extensions_prohibited:)
+    self.admin_store_statuses_history = self.statuses
     self.statuses |= LOCK_STATUSES
     self.statuses |= EXTENSIONS_STATUS if Feature.obj_and_extensions_statuses_enabled? && extensions_prohibited
     self.locked_by_registrant_at = Time.zone.now
@@ -53,6 +54,8 @@ module Domain::RegistryLockable
   end
 
   def remove_statuses_from_locked_domain
+    # binding.pry
+    # self.admin_store_statuses_history = self.statuses
     LOCK_STATUSES.each do |domain_status|
       statuses.delete([domain_status])
     end

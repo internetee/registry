@@ -59,8 +59,8 @@ contact_org_enabled: 'false'
 # System default for legal document types is: pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx
 # legal_document_types: "pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
 
-# obj_and_extensions_prohibited: 'true'
-# enable_lock_domain_with_new_statuses: 'true'
+obj_and_extensions_prohibited: 'true'
+enable_lock_domain_with_new_statuses: 'true'
 
 #
 # REGISTRAR configuration (DEPP)
