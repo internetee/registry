@@ -33,7 +33,11 @@ module Whois
     end
 
     def find_record(klass, name)
-      klass == DNS::Zone ? klass.find_by(origin: name) : klass.find_by(name: name)
+      if klass == Dispute.active
+        klass.find_by(domain_name: name)
+      else
+        klass == DNS::Zone ? klass.find_by(origin: name) : klass.find_by(name: name)
+      end
     end
   end
 end
