@@ -175,33 +175,26 @@ class Registrar < ApplicationRecord
 
   def add_nameservers(new_attributes, domains: [])
     transaction do
-      domain_scope = domains.dup
-      domain_list = []
-      failed_list = []
-
       return if domains.empty?
 
-      domain_list_processing(domain_scope, new_attributes, domain_list, failed_list)
+      approved_list = domain_list_processing(domains: domains, new_attributes: new_attributes)
 
-      self.domains.where(name: domain_list).find_each(&:update_whois_record) if domain_list.any?
-      [domain_list.uniq.sort, (domain_scope + failed_list).uniq.sort]
+      self.domains.where(name: approved_list).find_each(&:update_whois_record) if approved_list.any?
+      [approved_list.uniq.sort, (domains - approved_list).uniq.sort]
     end
   end
 
-  def domain_list_processing(domains, new_attributes, domain_list, failed_list)
+  def domain_list_processing(domains:, new_attributes:)
+    approved_list = []
     domains.each do |domain_name|
       domain = self.domains.find_by('name = ? OR name_puny = ?', domain_name, domain_name)
 
-      if domain.blank? || domain_not_updatable?(hostname: new_attributes[:hostname], domain: domain)
-        failed_list << domain_name
-        next
-      end
+      next if domain.blank? || domain_not_updatable?(hostname: new_attributes[:hostname], domain: domain)
 
       create_nameserver(domain, new_attributes)
-
-      domains.delete_if { |i| i == domain.name || i == domain.name_puny }
-      domain_list << domain_name
+      approved_list << domain_name
     end
+    approved_list
   end
 
   def create_nameserver(domain, attributes)
