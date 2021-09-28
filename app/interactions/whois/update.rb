@@ -8,12 +8,12 @@ module Whois
     def execute
       ::PaperTrail.request.whodunnit = "job - #{self.class.name} - #{type}"
 
-      klass = determine_class
+      collection = determine_collection
 
       Array(names).each do |name|
-        record = find_record(klass, name)
+        record = find_record(collection, name)
         if record
-          Whois::UpdateRecord.run(record: { klass: klass.to_s, id: record.id, type: type })
+          Whois::UpdateRecord.run(record: { klass: collection.to_s, id: record.id, type: type })
         else
           Whois::DeleteRecord.run(name: name, type: type)
         end
@@ -22,7 +22,7 @@ module Whois
 
     private
 
-    def determine_class
+    def determine_collection
       case type
       when 'reserved' then ReservedDomain
       when 'blocked'  then BlockedDomain
@@ -32,8 +32,12 @@ module Whois
       end
     end
 
-    def find_record(klass, name)
-      klass == DNS::Zone ? klass.find_by(origin: name) : klass.find_by(name: name)
+    def find_record(collection, name)
+      if collection == Dispute.active
+        collection.find_by(domain_name: name)
+      else
+        collection == DNS::Zone ? collection.find_by(origin: name) : collection.find_by(name: name)
+      end
     end
   end
 end

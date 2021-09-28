@@ -814,4 +814,42 @@ class EppDomainCreateBaseTest < EppTestCase
     assert_correct_against_schema response_xml
     assert_epp_response :billing_failure
   end
+
+  def test_registers_disputed_domain_with_password
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    disputed_domain = disputes(:active)
+    password = disputed_domain.password
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{disputed_domain.domain_name}</domain:name>
+              <domain:registrant>#{contacts(:john).code}</domain:registrant>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+              <eis:reserved>
+                <eis:pw>#{password}</eis:pw>
+              </eis:reserved>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    response_xml = Nokogiri::XML(response.body)
+
+    assert_correct_against_schema response_xml
+    assert_epp_response :completed_successfully
+  end
 end

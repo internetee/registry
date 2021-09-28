@@ -21,12 +21,16 @@ module Domain::Disputable
     @in_disputed_list ||= Dispute.active.find_by(domain_name: name).present?
   end
 
+  def in_auction_list?
+    @in_auction_list ||= Auction.find_by(domain: name, status: Auction.statuses[:started]).present?
+  end
+
   def disputed?
     Dispute.active.where(domain_name: name).any?
   end
 
   def validate_disputed
-    return if persisted? || !in_disputed_list?
+    return if persisted? || !in_disputed_list? || in_auction_list?
 
     if reserved_pw.blank?
       errors.add(:base, :required_parameter_missing_disputed)
