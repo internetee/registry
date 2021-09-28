@@ -1,3 +1,6 @@
+28.09.2021
+* Fixed disputed domain registration [#2169](https://github.com/internetee/registry/issues/2169)
+
 23.09.2021
 * Fixed registrant portal link in expiration email templates [#2168](https://github.com/internetee/registry/pull/2168)
 * extensionProhibited option for registry lock [#2164](https://github.com/internetee/registry/pull/2164)
