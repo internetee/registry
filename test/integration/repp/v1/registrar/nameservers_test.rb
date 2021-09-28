@@ -57,6 +57,34 @@ class ReppV1RegistrarNameserversTest < ActionDispatch::IntegrationTest
     assert json[:data][:affected_domains].include? 'shop.test'
   end
 
+  def test_add_nameserver_values_to_array_of_domains
+    nameserver = nameservers(:shop_ns1)
+    airport_domain = domains(:airport)
+    airport_domain.update(statuses: [DomainStatus::FORCE_DELETE,
+                                     DomainStatus::SERVER_RENEW_PROHIBITED,
+                                     DomainStatus::SERVER_TRANSFER_PROHIBITED])
+    payload = {
+      "data": {
+        "type": 'nameserver',
+        "domains": ['shop.test', 'airport.test'],
+        "attributes": {
+          "hostname": "#{nameserver.hostname}.arraytest",
+          "ipv4": ['2.2.2.2']
+        }
+      }
+    }
+
+    put '/repp/v1/registrar/nameservers', headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+    assert_equal({ hostname: "#{nameserver.hostname}.arraytest", ipv4: ['2.2.2.2'] }, json[:data][:attributes])
+    assert json[:data][:affected_domains].include? 'shop.test'
+    assert json[:data][:affected_domains].include? 'airport.test'
+  end
+
   def test_fails_to_update_if_prohibited
     domain = domains(:shop)
     domain.update(statuses: [DomainStatus::CLIENT_UPDATE_PROHIBITED])
