@@ -1,3 +1,6 @@
+29.09.2021
+* Added bulk add option for bulk nameserver change [#2158](https://github.com/internetee/registry/issues/2158)
+
 28.09.2021
 * Fixed disputed domain registration [#2169](https://github.com/internetee/registry/issues/2169)
 
