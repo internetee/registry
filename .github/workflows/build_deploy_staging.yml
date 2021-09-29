@@ -31,6 +31,7 @@ jobs:
         run: |
           SHORT_SHA=$(echo $GITHUB_SHA | cut -c 1-7) #pr-s test commit of merged state
           echo "TAG=ghcr.io/internetee/registry:RC-$SHORT_SHA" >> $GITHUB_ENV
+          echo "PROXY_TAG=ghcr.io/internetee/registry:RC-PROXY-$SHORT_SHA" >> $GITHUB_ENV
           echo "SHORT_TAG=RC-$SHORT_SHA" >> $GITHUB_ENV
 
       - name: Set config files for build
@@ -47,6 +48,16 @@ jobs:
           KEY_BASE: ${{ secrets.KEY_BASE}}
         run: |
           docker build -t $TAG --build-arg RAILS_ENV=staging --build-arg SECRET_KEY_BASE="$KEY_BASE" -f Dockerfile.generic .
+
+      - name: Clone epp_proxy project
+        run: |
+          git clone https://github.com/internetee/epp_proxy.git
+
+      - name: Build proxy image
+        run: |
+          cd epp_proxy
+          git checkout v0.1.0
+          docker build -t $PROXY_TAG -f Dockerfile.release .
 
       - name: Push Docker image to gh container registry
         env:
