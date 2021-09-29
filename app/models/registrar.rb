@@ -43,6 +43,7 @@ class Registrar < ApplicationRecord
   after_commit :update_whois_records
   def update_whois_records
     return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present?
+
     RegenerateRegistrarWhoisesJob.perform_later id
   end
 
@@ -159,10 +160,7 @@ class Registrar < ApplicationRecord
           next
         end
 
-        new_nameserver = Nameserver.new
-        new_nameserver.domain = origin.domain
-        new_nameserver.attributes = new_attributes
-        new_nameserver.save!
+        create_nameserver(origin.domain, new_attributes)
 
         domain_scope.delete_if { |i| i == idn || i == puny }
         domain_list << idn
@@ -173,6 +171,37 @@ class Registrar < ApplicationRecord
       self.domains.where(name: domain_list).find_each(&:update_whois_record) if domain_list.any?
       [domain_list.uniq.sort, (domain_scope + failed_list).uniq.sort]
     end
+  end
+
+  def add_nameservers(new_attributes, domains: [])
+    transaction do
+      return if domains.empty?
+
+      approved_list = domain_list_processing(domains: domains, new_attributes: new_attributes)
+
+      self.domains.where(name: approved_list).find_each(&:update_whois_record) if approved_list.any?
+      [approved_list.uniq.sort, (domains - approved_list).uniq.sort]
+    end
+  end
+
+  def domain_list_processing(domains:, new_attributes:)
+    approved_list = []
+    domains.each do |domain_name|
+      domain = self.domains.find_by('name = ? OR name_puny = ?', domain_name, domain_name)
+
+      next if domain.blank? || domain_not_updatable?(hostname: new_attributes[:hostname], domain: domain)
+
+      create_nameserver(domain, new_attributes)
+      approved_list << domain_name
+    end
+    approved_list
+  end
+
+  def create_nameserver(domain, attributes)
+    new_nameserver = Nameserver.new
+    new_nameserver.domain = domain
+    new_nameserver.attributes = attributes
+    new_nameserver.save!
   end
 
   def vat_country=(country)
@@ -198,6 +227,7 @@ class Registrar < ApplicationRecord
 
   def billing_email
     return contact_email if self[:billing_email].blank?
+
     self[:billing_email]
   end
 

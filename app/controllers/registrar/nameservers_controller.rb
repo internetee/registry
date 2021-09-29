@@ -32,7 +32,8 @@ class Registrar
     end
 
     def compose_notice_message(res)
-      notices = ["#{t('.replaced')}. #{t('.affected_domains')}: " \
+      action_text = params[:old_hostname].blank? ? t('.added') : t('.replaced')
+      notices = ["#{action_text}. #{t('.affected_domains')}: " \
       "#{res[:data][:affected_domains].join(', ')}"]
 
       notices << "#{t('.skipped_domains')}: #{res[:data][:skipped_domains].join(', ')}" if res[:data][:skipped_domains]
@@ -42,7 +43,7 @@ class Registrar
 
     def csv_list_empty_guard
       notice = 'CSV scoped domain list seems empty. Make sure that domains are added and ' \
-      '"domain_name" header is present.'
+      '"Domain" header is present.'
       redirect_to(registrar_domains_url, flash: { notice: notice })
     end
 
@@ -52,9 +53,9 @@ class Registrar
       domains = []
       csv = CSV.read(params[:puny_file].path, headers: true)
 
-      return [] if csv['domain_name'].blank?
+      return [] if csv['Domain'].blank?
 
-      csv.map { |b| domains << b['domain_name'] }
+      csv.map { |b| domains << b['Domain'] }
 
       domains.compact
     rescue CSV::MalformedCSVError

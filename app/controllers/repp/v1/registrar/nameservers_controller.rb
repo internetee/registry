@@ -8,7 +8,7 @@ module Repp
         desc 'bulk nameserver change'
         param :data, Hash, required: true, desc: 'Object holding nameserver changes' do
           param :type, String, required: true, desc: 'Always set as "nameserver"'
-          param :id, String, required: true, desc: 'Hostname of replacable nameserver'
+          param :id, String, required: false, desc: 'Hostname of replacable nameserver'
           param :domains, Array, required: false, desc: 'Array of domain names qualified for ' \
                                                        'nameserver replacement'
           param :attributes, Hash, required: true, desc: 'Object holding new nameserver values' do
@@ -17,11 +17,16 @@ module Repp
             param :ipv6, Array, of: String, required: false, desc: 'Array of fixed IPv6 addresses'
           end
         end
-        def update
-          affected, errored = current_user.registrar
-                                          .replace_nameservers(hostname,
-                                                               hostname_params[:data][:attributes],
-                                                               domains: domains_from_params)
+
+        def update  # rubocop:disable Metrics/MethodLength
+          affected, errored = if hostname.present?
+                                current_user.registrar.replace_nameservers(hostname,
+                                                                           hostname_params[:data][:attributes],
+                                                                           domains: domains_from_params)
+                              else
+                                current_user.registrar.add_nameservers(hostname_params[:data][:attributes],
+                                                                       domains: domains_from_params)
+                              end
 
           render_success(data: data_format_for_success(affected, errored))
         rescue ActiveRecord::RecordInvalid => e
@@ -47,7 +52,7 @@ module Repp
         end
 
         def hostname_params
-          params.require(:data).require(%i[type id])
+          params.require(:data).require(%i[type])
           params.require(:data).require(:attributes).require([:hostname])
 
           params.permit(data: [
@@ -58,10 +63,12 @@ module Repp
         end
 
         def hostname
-          hostname_params[:data][:id]
+          hostname_params[:data][:id] || nil
         end
 
         def verify_nameserver_existance
+          return true if hostname.blank?
+
           current_user.registrar.nameservers.find_by!(hostname: hostname)
         end
       end

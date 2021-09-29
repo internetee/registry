@@ -12,7 +12,7 @@ class APIDomainContactsTest < ApplicationIntegrationTest
   end
 
   def test_skip_discarded_domains
-    domains(:airport).update!(statuses: [DomainStatus::DELETE_CANDIDATE])
+    domains(:airport).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
 
     patch '/repp/v1/domains/contacts', params: { current_contact_id: 'william-001',
                                                  new_contact_id: 'john-001' },
@@ -33,8 +33,8 @@ class APIDomainContactsTest < ApplicationIntegrationTest
   end
 
   def test_return_skipped_domains_in_alphabetical_order
-    domains(:shop).update!(statuses: [DomainStatus::DELETE_CANDIDATE])
-    domains(:airport).update!(statuses: [DomainStatus::DELETE_CANDIDATE])
+    domains(:shop).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
+    domains(:airport).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
 
     patch '/repp/v1/domains/contacts', params: { current_contact_id: 'william-001',
                                                  new_contact_id: 'john-001' },
