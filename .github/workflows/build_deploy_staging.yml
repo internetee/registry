@@ -7,7 +7,6 @@ on:
       - 'CHANGELOG.md'
       - 'README.md'
       - 'yarn.lock'
-      - 'package.json'
     branches: [master]
     types:
       - opened
@@ -56,8 +55,8 @@ jobs:
       - name: Build proxy image
         run: |
           cd epp_proxy
-          git checkout v0.1.0
           docker build -t $PROXY_TAG -f Dockerfile.release .
+          docker ps
 
       - name: Push Docker image to gh container registry
         env:
