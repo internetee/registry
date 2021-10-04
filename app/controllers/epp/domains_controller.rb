@@ -169,26 +169,26 @@ module Epp
 
     def parsed_response_for_dnskey(value)
       doc = Nokogiri::Slop params[:parsed_frame].css(value).to_html
-
       return true if doc.document.children.empty?
-      
+
       store = []
 
-      if value == 'add'
-        doc.document.add.children.each_with_index do |x, i|
-          store << doc.document.add.children[i].name  
+      case value
+      when 'add'
+        doc.document.add.children.each_with_index do |_x, i|
+          store << doc.document.add.children[i].name
         end
-      elsif value == 'chg'
-        doc.document.chg.children.each_with_index do |x, i|
-          store << doc.document.chg.children[i].name  
+      when 'chg'
+        doc.document.chg.children.each_with_index do |_x, i|
+          store << doc.document.chg.children[i].name
         end
       else
-        doc.document.rem.children.each_with_index do |x, i|
-          store << doc.document.rem.children[i].name  
+        doc.document.rem.children.each_with_index do |_x, i|
+          store << doc.document.rem.children[i].name
         end
       end
 
-      return true if store.size == 1 and store[0] == "keyData"
+      return true if store.size.positive? && store.include?('keyData')
 
       store.empty?
     end
@@ -209,10 +209,9 @@ module Epp
           return if parsed_response_for_dnskey('rem')
         end
 
-        return epp_errors.add(:epp_errors,
-          code: '2304',
-          msg: "#{I18n.t(:object_status_prohibits_operation)}
-                         :serverObjUpdateEnabled")
+        epp_errors.add(:epp_errors,
+                       code: '2304',
+                       msg: "#{I18n.t(:object_status_prohibits_operation)} :serverObjUpdateProhibited")
       end
     end
 
