@@ -33,6 +33,12 @@ jobs:
           echo "PROXY_TAG=ghcr.io/internetee/registry:RC-PROXY-$SHORT_SHA" >> $GITHUB_ENV
           echo "SHORT_TAG=RC-$SHORT_SHA" >> $GITHUB_ENV
 
+      - name: Get pull request reference number
+        run: |
+          echo "$GITHUB_REF"
+          echo "PR_REF=$(cat /home/runner/work/_temp/_github_workflow/event.json | jq -r '.number')" >> $GITHUB_ENV
+          echo $(cat /home/runner/work/_temp/_github_workflow/event.json | jq -r '.number')
+          
       - name: Set config files for build
         env:
           ST_APP: ${{ secrets.ST_APPLICATION_YML}}
@@ -42,7 +48,7 @@ jobs:
           cp config/database.yml.sample config/database.yml
           ls -l config/
 
-      - name: Build image
+      - name: Build registry image
         env:
           KEY_BASE: ${{ secrets.KEY_BASE}}
         run: |
@@ -52,6 +58,14 @@ jobs:
         run: |
           git clone https://github.com/internetee/epp_proxy.git
 
+      - name: Create epp proxy conf
+        run: |
+          cd epp_proxy/config
+          sed -i -e 's/{tls_port, 700},/{tls_port, '${PR_REF:(-3)}'},/' sys.config
+          sed -i -e 's/{epp_session_url, "https://registry.test/epp/session/"},/{epp_session_url, "http://st-2116-epp.epp.svc.cluster.local/epp/session/"},/' sys.config
+          sed -i -e 's/{epp_command_url, "https://registry.test/epp/command/"},/{epp_command_url, "http://st-2116-epp.epp.svc.cluster.local/epp/command/"},/' sys.config
+          sed -i -e 's/{epp_error_url, "https://registry.test/epp/error/"},/{epp_error_url, "http://st-2116-epp.epp.svc.cluster.local/epp/error/"},/' sys.config
+     
       - name: Build proxy image
         run: |
           cd epp_proxy
@@ -65,12 +79,6 @@ jobs:
           echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
           docker push $TAG
 
-      - name: Get pull request reference number
-        run: |
-          echo "$GITHUB_REF"
-          echo "PR_REF=$(cat /home/runner/work/_temp/_github_workflow/event.json | jq -r '.number')" >> $GITHUB_ENV
-          echo $(cat /home/runner/work/_temp/_github_workflow/event.json | jq -r '.number')
-
       - name: Get repo name
         run: |
           OIFS=$IFS
@@ -79,14 +87,6 @@ jobs:
           IFS=OIFS
           echo "REPO=${parts[1]}" >> $GITHUB_ENV
 
-      # - name: Create epp proxy conf
-      #   env:
-      #     EPPROXY_CONF: ${{ secrets.EPPROXY_CONF }}
-      #   run: |
-      #     echo $EPPROXY_CONF | base64 -di > sys.config
-      #     sed -i -e 's/{epp_session_url, "https://registry.test/epp/session/"},/{epp_session_url, "https://registry-'$PR_REF'.pilv.tld.ee/epp/session/"},/' sys.config
-      #     sed -i -e 's/{epp_session_url, "https://registry.test/epp/command/"},/{epp_session_url, "https://registry-'$PR_REF'.pilv.tld.ee/epp/command/"},/' sys.config
-      #     sed -i -e 's/{epp_session_url, "https://registry.test/epp/error/"},/{epp_session_url, "https://registry-'$PR_REF'.pilv.tld.ee/epp/error/"},/' sys.config
 
       - name: Set deploy config
         env:
@@ -109,21 +109,23 @@ jobs:
           echo "$SHORT_SHA" > TAG
           echo $K_CONFIG | base64 -di > kubeconfig
           chmod 0600 kubeconfig
-          echo $EPPROXY_CONF | base64 -di > sys.config
-          echo "proxy config before alignement"
-          less sys.config
-          echo "****************"
-          sed -i -e 's/{epp_session_url, "http:\/\/localhost\/epp\/session\/"},/{epp_session_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/session\/"},/' sys.config
-          sed -i -e 's/{epp_command_url, "http:\/\/localhost\/epp\/command\/"},/{epp_command_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/command\/"},/' sys.config
-          sed -i -e 's/{epp_error_url, "http:\/\/localhost\/epp\/error\/"},/{epp_error_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/error\/"},/' sys.config
-          echo "proxy config after alignement"
-          less sys.config
+          # echo $EPPROXY_CONF | base64 -di > sys.config
+          # echo "proxy config before alignement"
+          # less sys.config
+          # echo "****************"
+          # sed -i -e 's/{epp_session_url, "http:\/\/localhost\/epp\/session\/"},/{epp_session_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/session\/"},/' sys.config
+          # sed -i -e 's/{epp_command_url, "http:\/\/localhost\/epp\/command\/"},/{epp_command_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/command\/"},/' sys.config
+          # sed -i -e 's/{epp_error_url, "http:\/\/localhost\/epp\/error\/"},/{epp_error_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/error\/"},/' sys.config
+          # echo "proxy config after alignement"
+          # less sys.config
 
       - name: Install Open VPN
         run: sudo apt-get install openvpn
 
       - name: Deploy from remote server
         timeout-minutes: 5
+        env:
+          TOKEN: ${{ secrets.CLOUD_TOKEN }}
         run: |
           export TEST2="$TEST"
           sudo openvpn --config config.ovpn --askpass client.pwd --auth-nocache --daemon&
@@ -143,6 +145,7 @@ jobs:
           helm upgrade --install reg-admin-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-admin -n reg-admin-staging
           helm upgrade --install repp-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-epp -n epp
           helm upgrade --install reg-api-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-api -n reg-api
+          TOKEN=${{ secrets.CLOUD_TOKEN }} python3 ../../portOpener.py "$PR_REF" add
           rm kubeconfig
           echo "Setting up URLs"
           echo "server obs.tld.ee
