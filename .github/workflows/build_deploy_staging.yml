@@ -78,6 +78,7 @@ jobs:
           PASSWORD: ${{ secrets.GHCR }}
         run: |
           echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
+          docker push $TAG
           docker push $PROXY_TAG
 
       - name: Get repo name
