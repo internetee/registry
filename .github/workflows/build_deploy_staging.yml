@@ -58,9 +58,10 @@ jobs:
         run: |
           git clone https://github.com/internetee/epp_proxy.git
 
-      - name: Create epp proxy conf
+      - name: Configurate proxy build
         run: |
           cd epp_proxy/config
+          sed -i -e 's/{LABEL org.opencontainers.image.source=https://github.com/internetee/epp_proxy},/{LABEL org.opencontainers.image.source=https://github.com/internetee/registry},/' Dockerfile.release
           sed -i -e 's/{tls_port, 700},/{tls_port, '${PR_REF:(-3)}'},/' sys.config
           sed -i -e 's/{epp_session_url, "https://registry.test/epp/session/"},/{epp_session_url, "http://st-2116-epp.epp.svc.cluster.local/epp/session/"},/' sys.config
           sed -i -e 's/{epp_command_url, "https://registry.test/epp/command/"},/{epp_command_url, "http://st-2116-epp.epp.svc.cluster.local/epp/command/"},/' sys.config
