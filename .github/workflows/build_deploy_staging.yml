@@ -30,7 +30,7 @@ jobs:
         run: |
           SHORT_SHA=$(echo $GITHUB_SHA | cut -c 1-7) #pr-s test commit of merged state
           echo "TAG=ghcr.io/internetee/registry:RC-$SHORT_SHA" >> $GITHUB_ENV
-          echo "PROXY_TAG=ghcr.io/internetee/registry:RC-PROXY-$SHORT_SHA" >> $GITHUB_ENV
+          echo "PROXY_TAG=ghcr.io/internetee/registry:PROXY-RC-$SHORT_SHA" >> $GITHUB_ENV
           echo "SHORT_TAG=RC-$SHORT_SHA" >> $GITHUB_ENV
 
       - name: Get pull request reference number
