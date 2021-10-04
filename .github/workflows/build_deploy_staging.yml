@@ -73,6 +73,7 @@ jobs:
           cd epp_proxy
           docker build -t $PROXY_TAG -f Dockerfile.release .
           docker ps
+          docker inspect $PROXY_TAG
 
       - name: Push Docker image to gh container registry
         env:
