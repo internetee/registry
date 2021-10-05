@@ -40,7 +40,7 @@ jobs:
           echo $(cat /home/runner/work/_temp/_github_workflow/event.json | jq -r '.number')
 
       - name: Set EPP port
-        run: echo "EPP_PORT='${PR_REF:(-3)}'" >> $GITHUB_ENV
+        run: echo "EPP_PORT=${PR_REF:(-3)}" >> $GITHUB_ENV
           
       - name: Set config files for build
         env:
