@@ -71,6 +71,9 @@ jobs:
           sed -i -e 's/{epp_session_url, "https:\/\/registry.test\/epp\/session\/"},/{epp_session_url, "http:\/\/st-'$PR_REF'-epp.epp.svc.cluster.local\/epp\/session\/"},/' sys.config
           sed -i -e 's/{epp_command_url, "https:\/\/registry.test\/epp\/command\/"},/{epp_command_url, "http:\/\/st-'$PR_REF'-epp.epp.svc.cluster.local\/epp\/command\/"},/' sys.config
           sed -i -e 's/{epp_error_url, "https:\/\/registry.test\/epp\/error\/"},/{epp_error_url, "http:\/\/st-'$PR_REF'-epp.epp.svc.cluster.local\/epp\/error\/"},/' sys.config
+          sed -i -e 's/{crlfile_path, "\/opt\/shared\/ca\/certs\/key.pem"}]},/{crlfile_path, "Skip"}]},/' sys.config
+          sed -i -e 's/{lager_console_backend, [{level, debug}]},/{lager_console_backend, [{level, debug}]}/' sys.config
+          sed -i -e 's/{lager_syslog_backend, ["epp_proxy", local0, debug]}/%% {lager_syslog_backend, ["epp_proxy", local0, debug]}/' sys.config
      
       - name: Build proxy image
         run: |
@@ -133,7 +136,6 @@ jobs:
         env:
           TOKEN: ${{ secrets.CLOUD_TOKEN }}
         run: |
-          export TEST2="$TEST"
           sudo openvpn --config config.ovpn --askpass client.pwd --auth-nocache --daemon&
           sleep 15
           ping -c 1 192.168.99.12
