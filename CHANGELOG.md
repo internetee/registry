@@ -1,3 +1,6 @@
+06.10.2021
+* Fixed invoice sorting in admin [#2165](https://github.com/internetee/registry/issues/2165)
+
 29.09.2021
 * Added bulk add option for bulk nameserver change [#2158](https://github.com/internetee/registry/issues/2158)
 
