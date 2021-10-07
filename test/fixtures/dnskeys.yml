@@ -18,13 +18,3 @@ with_whitespace:
   ds_alg: 13
   ds_digest_type: 2
   ds_digest: 39456058862EA09DD96992ED2BDAFAEDE8C7E949589E3DA903A46F4F9CD373EA
-two:
-  domain:
-  flags: 257
-  protocol: 3
-  alg: 8
-  public_key: AwEAAdas/oY6xQV2MYd+o5pcUHK0f/mtETRNyBhh/TSABqRM9JikXlSrwLFT9sAfOsTiRNbPnvEiCKdEdoN0f0Oel0WNXadLlVINmxtCue93bSX7zxrVvjhbkHffOVdpBL0CIDQoX1HPZmoBXXPdZtWLpDQ7nVfUtdC/McTFSRawUYaoCWOEAgC8YY+kh6C8TUZzHMl+JiVE6YFkTIFf+z4MxA920UxUnGpdcfRbcB0CYjCxe+PuiA+aZHFheEe5S5tlW7tO96hxK/k2l93N//T2mEM53TKomk62HoWvNVdPrs7jdZbGzeY2eBPDWMAIIpgOv9ApORi+kHSQm2POCwf/KYs=
-  ds_key_tag: 23527
-  ds_alg: 8
-  ds_digest_type: 2
-  ds_digest: 5937141E8D3D91E15D94263A723C4E804513C71CB642AB86B41BDB65EF2FA4F4
