@@ -814,7 +814,7 @@ class EppDomainUpdateBaseTest < EppTestCase
   def test_makes_update_if_was_forcedelete
     contact = @domain.contacts.first
     contact.update_attribute(:email, '`@outlook.test')
-    contact.email_verification.verify
+    contact.verify_email
     assert contact.email_verification_failed?
     @domain.reload
     assert @domain.force_delete_scheduled?

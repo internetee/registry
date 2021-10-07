@@ -8,7 +8,6 @@ namespace :verify_email do
   desc 'Starts verifying email jobs with optional check level and spam protection'
   task check_all: :environment do
     SPAM_PROTECT_TIMEOUT = 30.seconds
-
     options = {
       domain_name: nil,
       check_level: 'regex',
