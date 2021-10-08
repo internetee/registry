@@ -3,6 +3,7 @@ require 'application_system_test_case'
 class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
   setup do
     sign_in users(:api_goodnames)
+    Capybara.default_max_wait_time = 5
   end
 
   def test_replaces_current_registrar_nameservers
