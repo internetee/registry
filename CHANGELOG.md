@@ -1,3 +1,6 @@
+08.10.2021
+* E-mail validator logging and option to use unlimited mx lvl validations [#2059](https://github.com/internetee/registry/issues/2059)
+
 06.10.2021
 * Fixed invoice sorting in admin [#2165](https://github.com/internetee/registry/issues/2165)
 
