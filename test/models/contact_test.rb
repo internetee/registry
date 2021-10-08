@@ -87,24 +87,6 @@ class ContactTest < ActiveJob::TestCase
     assert contact.valid?
   end
 
-  def test_email_verification_smtp_error
-    Truemail.configure.default_validation_type = :smtp
-
-    contact = valid_contact
-    contact.email = 'somecrude1337joke@internet.ee'
-    assert contact.invalid?
-    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_smtp_check_error'), contact.errors.messages[:email].first
- end
-
-  def test_email_verification_mx_error
-    Truemail.configure.default_validation_type = :mx
-
-    contact = valid_contact
-    contact.email = 'somecrude31337joke@somestrange31337domain.ee'
-    assert contact.invalid?
-    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_mx_check_error'), contact.errors.messages[:email].first
-  end
-
   def test_email_verification_regex_error
     Truemail.configure.default_validation_type = :regex
 
@@ -356,16 +338,6 @@ class ContactTest < ActiveJob::TestCase
     end
 
     assert_equal domain.whois_record.try(:json).try(:[], 'registrant'), @contact.name
-  end
-
-  def test_creates_email_verification_in_unicode
-    unicode_email = 'suur@äri.ee'
-    punycode_email = Contact.unicode_to_punycode(unicode_email)
-
-    @contact.email = punycode_email
-    @contact.save
-
-    assert_equal @contact.email_verification.email, unicode_email
   end
 
   private

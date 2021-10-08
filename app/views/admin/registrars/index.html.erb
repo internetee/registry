@@ -53,9 +53,9 @@
                             <%= "#{x.test_registrar}" %>
                         </td>
                         <td>
-                            <%= verified_email_span(x.email_verification) %>
+                            <%= content_tag(:span, x.email) %>
                             <% if x[:billing_email].present? %>
-                                <%= verified_email_span(x.billing_email_verification) %>
+                                <%= content_tag(:span, x[:billing_email]) %>
                             <% end %>
                         </td>
                     </tr>

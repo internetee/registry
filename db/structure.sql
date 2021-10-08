@@ -66,6 +66,16 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
+-- Name: validation_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.validation_type AS ENUM (
+    'email_validation',
+    'manual_force_delete'
+);
+
+
+--
 -- Name: generate_zonefile(character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -2596,6 +2606,41 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: validation_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.validation_events (
+    id bigint NOT NULL,
+    event_data jsonb,
+    success boolean,
+    validation_eventable_type character varying,
+    validation_eventable_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    event_type public.validation_type
+);
+
+
+--
+-- Name: validation_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.validation_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: validation_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.validation_events_id_seq OWNED BY public.validation_events.id;
+
+
+--
 -- Name: versions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3168,6 +3213,13 @@ ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.set
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: validation_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.validation_events ALTER COLUMN id SET DEFAULT nextval('public.validation_events_id_seq'::regclass);
 
 
 --
@@ -3815,6 +3867,14 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: validation_events validation_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.validation_events
+    ADD CONSTRAINT validation_events_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: versions versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3984,13 +4044,6 @@ CREATE INDEX index_domain_transfers_on_domain_id ON public.domain_transfers USIN
 --
 
 CREATE INDEX index_domains_on_delete_date ON public.domains USING btree (delete_date);
-
-
---
--- Name: index_domains_on_json_statuses_history; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_domains_on_json_statuses_history ON public.domains USING gin (json_statuses_history);
 
 
 --
@@ -4432,6 +4485,20 @@ CREATE INDEX index_users_on_identity_code ON public.users USING btree (identity_
 --
 
 CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_id);
+
+
+--
+-- Name: index_validation_events_on_event_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_validation_events_on_event_type ON public.validation_events USING btree (event_type);
+
+
+--
+-- Name: index_validation_events_on_validation_eventable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_validation_events_on_validation_eventable ON public.validation_events USING btree (validation_eventable_type, validation_eventable_id);
 
 
 --
@@ -5161,6 +5228,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200921084356'),
 ('20210215101019'),
 ('20210616112332'),
+('20210629074044'),
+('20210628090353'),
 ('20210708131814');
 
 

@@ -16,6 +16,7 @@ class Contact < ApplicationRecord
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
   has_many :legal_documents, as: :documentable
+  has_many :validation_events, as: :validation_eventable
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
   has_many :actions, dependent: :destroy
 

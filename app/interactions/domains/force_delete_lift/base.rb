@@ -6,8 +6,6 @@ module Domains
              description: 'Domain to check if ForceDelete needs to be listed'
 
       def execute
-        prepare_email_verifications(domain)
-
         lift_force_delete(domain) if force_delete_condition(domain)
       end
 
@@ -29,13 +27,8 @@ module Domains
       end
 
       def contact_emails_valid?(domain)
-        domain.contacts.all? { |contact| contact.email_verification.verified? } &&
-          domain.registrant.email_verification.verified?
-      end
-
-      def prepare_email_verifications(domain)
-        domain.registrant.email_verification.verify
-        domain.contacts.each { |contact| contact.email_verification.verify }
+        domain.contacts.all(&:need_to_lift_force_delete?) &&
+          domain.registrant.need_to_lift_force_delete?
       end
 
       def bounces_absent?(domain)

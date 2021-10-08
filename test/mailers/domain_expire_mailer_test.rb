@@ -40,7 +40,7 @@ class DomainExpireMailerTest < ActionMailer::TestCase
 
     contact = domain.admin_contacts.first
     contact.update_attribute(:email, email)
-    contact.email_verification.verify
+    contact.verify_email
 
     assert contact.email_verification_failed?
 

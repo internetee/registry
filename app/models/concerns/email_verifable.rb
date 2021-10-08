@@ -1,91 +1,59 @@
 module EmailVerifable
   extend ActiveSupport::Concern
 
-  def email_verification
-    EmailAddressVerification.find_or_create_by(email: unicode_email, domain: domain(email))
-  end
-
-  def billing_email_verification
-    return unless attribute_names.include?('billing_email')
-
-    EmailAddressVerification.find_or_create_by(email: unicode_billing_email,
-                                               domain: domain(billing_email))
+  included do
+    scope :recently_not_validated, -> { where.not(id: ValidationEvent.validated_ids_by(name)) }
   end
 
   def email_verification_failed?
-    email_verification&.failed?
+    need_to_start_force_delete?
   end
 
-  class_methods do
-    def domain(email)
-      Mail::Address.new(email).domain&.downcase || 'not_found'
-    rescue Mail::Field::IncompleteParseError
-      'not_found'
-    end
-
-    def local(email)
-      Mail::Address.new(email).local&.downcase || email
-    rescue Mail::Field::IncompleteParseError
-      email
-    end
-
-    def punycode_to_unicode(email)
-      return email if domain(email) == 'not_found'
-
-      local = local(email)
-      domain = SimpleIDN.to_unicode(domain(email))
-      "#{local}@#{domain}"&.downcase
-    end
-
-    def unicode_to_punycode(email)
-      return email if domain(email) == 'not_found'
-
-      local = local(email)
-      domain = SimpleIDN.to_ascii(domain(email))
-      "#{local}@#{domain}"&.downcase
+  def need_to_start_force_delete?
+    ValidationEvent::INVALID_EVENTS_COUNT_BY_LEVEL.any? do |level, count|
+      validation_events.recent.order(id: :desc).limit(count).all? do |event|
+        event.check_level == level.to_s && event.failed?
+      end
     end
   end
 
-  def unicode_billing_email
-    self.class.punycode_to_unicode(billing_email)
-  end
-
-  def unicode_email
-    self.class.punycode_to_unicode(email)
-  end
-
-  def domain(email)
-    SimpleIDN.to_unicode(self.class.domain(email))
-  end
-
-  def punycode_to_unicode(email)
-    self.class.punycode_to_unicode(email)
+  def need_to_lift_force_delete?
+    validation_events.recent.failed.empty? ||
+      ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL.any? do |level, count|
+        validation_events.recent.order(id: :desc).limit(count).all? do |event|
+          event.check_level == level.to_s && event.successful?
+        end
+      end
   end
 
   def correct_email_format
     return if email.blank?
 
-    result = email_verification.verify
-    process_result(result: result, field: :email)
+    result = verify(email: email)
+    process_error(:email) unless result
   end
 
   def correct_billing_email_format
     return if email.blank?
 
-    result = billing_email_verification.verify
-    process_result(result: result, field: :billing_email)
+    result = verify(email: billing_email)
+    process_error(:billing_email) unless result
+  end
+
+  def verify_email(check_level: 'regex')
+    verify(email: email, check_level: check_level)
+  end
+
+  def verify(email:, check_level: 'regex')
+    action = Actions::EmailCheck.new(email: email,
+                                     validation_eventable: self,
+                                     check_level: check_level)
+    action.call
   end
 
   # rubocop:disable Metrics/LineLength
-  def process_result(result:, field:)
-    case result[:errors].keys.first
-    when :smtp
-      errors.add(field, I18n.t('activerecord.errors.models.contact.attributes.email.email_smtp_check_error'))
-    when :mx
-      errors.add(field, I18n.t('activerecord.errors.models.contact.attributes.email.email_mx_check_error'))
-    when :regex
-      errors.add(field, I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'))
-    end
+  def process_error(field)
+    errors.add(field, I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'))
   end
   # rubocop:enable Metrics/LineLength
 end

@@ -4,9 +4,6 @@ class VerifyEmailsJobTest < ActiveJob::TestCase
   def setup
     @contact = contacts(:john)
     @invalid_contact = contacts(:invalid_email)
-    @contact_verification = @contact.email_verification
-    @invalid_contact_verification = @invalid_contact.email_verification
-
     @default_whitelist = Truemail.configure.whitelisted_domains
     @default_blacklist = Truemail.configure.blacklisted_domains
     Truemail.configure.whitelisted_domains = whitelisted_domains
@@ -33,33 +30,21 @@ class VerifyEmailsJobTest < ActiveJob::TestCase
   end
 
   def test_job_checks_if_email_valid
-    perform_enqueued_jobs do
-      VerifyEmailsJob.perform_now(@contact_verification.id)
+    assert_difference 'ValidationEvent.successful.count', 1 do
+      perform_enqueued_jobs do
+        VerifyEmailsJob.perform_now(contact_id: @contact.id, check_level: 'regex')
+      end
     end
-    @contact_verification.reload
-
-    assert @contact_verification.success
-  end
-
-  def test_job_checks_does_not_run_if_recent
-    old_verified_at = Time.zone.now - 10.days
-    @contact_verification.update(success: true, verified_at: old_verified_at)
-    assert @contact_verification.recently_verified?
-
-    perform_enqueued_jobs do
-      VerifyEmailsJob.perform_now(@contact_verification.id)
-    end
-    @contact_verification.reload
-
-    assert_in_delta @contact_verification.verified_at.to_i, old_verified_at.to_i, 1
+    assert ValidationEvent.validated_ids_by(Contact).include? @contact.id
   end
 
   def test_job_checks_if_email_invalid
     perform_enqueued_jobs do
-      VerifyEmailsJob.perform_now(@invalid_contact_verification.id)
+      VerifyEmailsJob.perform_now(contact_id: @invalid_contact.id, check_level: 'regex')
     end
-    @contact_verification.reload
+    @invalid_contact.reload
 
-    refute @contact_verification.success
+    refute @invalid_contact.validation_events.last.success
+    refute ValidationEvent.validated_ids_by(Contact).include? @invalid_contact.id
   end
 end

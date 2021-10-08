@@ -61,8 +61,12 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
   end
 
   def test_uses_legal_template_if_invalid_email
-    verification = @domain.contacts.first.email_verification
-    verification.update(verified_at: Time.zone.now - 1.day, success: false)
+    contact = @domain.contacts.first
+    contact.update(email: '`@domain.com`')
+    action = Actions::EmailCheck.new(email: contact.email, validation_eventable: contact)
+    action.call
+
+    @domain.reload
 
     assert_equal @domain.notification_template, 'invalid_email'
 
