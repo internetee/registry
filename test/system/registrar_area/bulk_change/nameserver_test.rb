@@ -3,7 +3,7 @@ require 'application_system_test_case'
 class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
   setup do
     sign_in users(:api_goodnames)
-    Capybara.default_max_wait_time = 5
+    Capybara.default_max_wait_time = 10
   end
 
   def test_replaces_current_registrar_nameservers
@@ -28,7 +28,7 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
     click_link 'Bulk change'
     click_link 'Nameserver'
 
-    fill_in 'Old hostname', with: 'ns1.bestnames.test'
+    fill_in 'Old hostname (optional)', with: 'ns1.bestnames.test'
     fill_in 'New hostname', with: 'new-ns.bestnames.test'
     fill_in 'ipv4', with: "192.0.2.55\n192.0.2.56"
     fill_in 'ipv6', with: "2001:db8::55\n2001:db8::56"
