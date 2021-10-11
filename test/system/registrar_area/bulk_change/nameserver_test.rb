@@ -49,14 +49,14 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
     click_link 'Bulk change'
     click_link 'Nameserver'
 
-    fill_in 'Old hostname', with: 'old hostname'
+    fill_in 'Old hostname (optional)', with: 'old hostname'
     fill_in 'New hostname', with: 'new hostname'
     fill_in 'ipv4', with: 'ipv4'
     fill_in 'ipv6', with: 'ipv6'
     click_on 'Replace/Add nameserver'
 
     assert_text 'epic fail'
-    assert_field 'Old hostname', with: 'old hostname'
+    assert_field 'Old hostname (optional)', with: 'old hostname'
     assert_field 'New hostname', with: 'new hostname'
     assert_field 'ipv4', with: 'ipv4'
     assert_field 'ipv6', with: 'ipv6'
@@ -82,7 +82,7 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
     click_link 'Bulk change'
     click_link 'Nameserver'
 
-    fill_in 'Old hostname', with: 'ns1.bestnames.test'
+    fill_in 'Old hostname (optional)', with: 'ns1.bestnames.test'
     fill_in 'New hostname', with: 'new-ns.bestnames.test'
     fill_in 'ipv4', with: "192.0.2.55\n192.0.2.56"
     fill_in 'ipv6', with: "2001:db8::55\n2001:db8::56"
@@ -103,7 +103,7 @@ class RegistrarAreaNameserverBulkChangeTest < ApplicationSystemTestCase
     click_link 'Bulk change'
     click_link 'Nameserver'
 
-    fill_in 'Old hostname', with: nameserver.hostname
+    fill_in 'Old hostname (optional)', with: nameserver.hostname
     fill_in 'New hostname', with: 'new-ns.bestnames.test'
     fill_in 'ipv4', with: "192.0.2.55\n192.0.2.56"
     fill_in 'ipv6', with: "2001:db8::55\n2001:db8::56"
