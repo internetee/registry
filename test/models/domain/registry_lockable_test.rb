@@ -42,8 +42,13 @@ class DomainRegistryLockableTest < ActiveSupport::TestCase
     assert @domain.locked_by_registrant?
     @domain.remove_registry_lock
 
+<<<<<<< HEAD
     assert @domain.statuses.include? DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED
     assert @domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
+=======
+    assert_not @domain.statuses.include? DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED
+    assert_not @domain.statuses.include? DomainStatus::SERVER_TRANSFER_PROHIBITED
+>>>>>>> CHanged tests and remove feature for new statuses from application.yml
     assert_not @domain.statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
   end
 
