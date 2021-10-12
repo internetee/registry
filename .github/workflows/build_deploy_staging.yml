@@ -119,15 +119,6 @@ jobs:
           echo "$SHORT_SHA" > TAG
           echo $K_CONFIG | base64 -di > kubeconfig
           chmod 0600 kubeconfig
-          # echo $EPPROXY_CONF | base64 -di > sys.config
-          # echo "proxy config before alignement"
-          # less sys.config
-          # echo "****************"
-          # sed -i -e 's/{epp_session_url, "http:\/\/localhost\/epp\/session\/"},/{epp_session_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/session\/"},/' sys.config
-          # sed -i -e 's/{epp_command_url, "http:\/\/localhost\/epp\/command\/"},/{epp_command_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/command\/"},/' sys.config
-          # sed -i -e 's/{epp_error_url, "http:\/\/localhost\/epp\/error\/"},/{epp_error_url, "https:\/\/registry-'$PR_REF'.pilv.tld.ee\/epp\/error\/"},/' sys.config
-          # echo "proxy config after alignement"
-          # less sys.config
 
       - name: Install Open VPN
         run: sudo apt-get install openvpn
