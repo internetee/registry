@@ -71,7 +71,7 @@ jobs:
           cd "$REPO"/"$PR_REF"
           export KUBECONFIG=./kubeconfig
           helm delete reg-admin-"$PR_REF" -n reg-admin-staging
-          helm delete epp-"$PR_REF" -n epp
+          helm delete repp-"$PR_REF" -n epp
           helm delete reg-api-"$PR_REF" -n reg-api
           rm kubeconfig
           echo "server obs.tld.ee
@@ -87,7 +87,7 @@ jobs:
               echo "CNAME updates failed"
           fi
           EOSSH
-          
+
       - name: Notify developers
         timeout-minutes: 1
         env:

@@ -7,6 +7,7 @@ on:
       - 'CHANGELOG.md'
       - 'README.md'
       - 'yarn.lock'
+      - 'package.json'
     branches: [master]
     types:
       - opened
@@ -30,18 +31,8 @@ jobs:
         run: |
           SHORT_SHA=$(echo $GITHUB_SHA | cut -c 1-7) #pr-s test commit of merged state
           echo "TAG=ghcr.io/internetee/registry:RC-$SHORT_SHA" >> $GITHUB_ENV
-          echo "PROXY_TAG=ghcr.io/internetee/registry:PROXY-RC-$SHORT_SHA" >> $GITHUB_ENV
           echo "SHORT_TAG=RC-$SHORT_SHA" >> $GITHUB_ENV
 
-      - name: Get pull request reference number
-        run: |
-          echo "$GITHUB_REF"
-          echo "PR_REF=$(cat /home/runner/work/_temp/_github_workflow/event.json | jq -r '.number')" >> $GITHUB_ENV
-          echo $(cat /home/runner/work/_temp/_github_workflow/event.json | jq -r '.number')
-
-      - name: Set EPP port
-        run: echo "EPP_PORT=${PR_REF:(-3)}" >> $GITHUB_ENV
-          
       - name: Set config files for build
         env:
           ST_APP: ${{ secrets.ST_APPLICATION_YML}}
@@ -51,35 +42,11 @@ jobs:
           cp config/database.yml.sample config/database.yml
           ls -l config/
 
-      - name: Build registry image
+      - name: Build image
         env:
           KEY_BASE: ${{ secrets.KEY_BASE}}
         run: |
           docker build -t $TAG --build-arg RAILS_ENV=staging --build-arg SECRET_KEY_BASE="$KEY_BASE" -f Dockerfile.generic .
-
-      - name: Clone epp_proxy project
-        run: |
-          git clone https://github.com/internetee/epp_proxy.git
-
-      - name: Configurate proxy build
-        run: |
-          cd epp_proxy/
-          sed -i -e 's/LABEL org.opencontainers.image.source=https:\/\/github.com\/internetee\/epp_proxy/LABEL org.opencontainers.image.source=https:\/\/github.com\/internetee\/registry/' Dockerfile.release
-          echo "EXPOSE 700" >> Dockerfile.release
-          cd config/
-          sed -i -e 's/{insecure, false},/%% {insecure, false},/' sys.config
-          sed -i -e 's/{epp_session_url, "https:\/\/registry.test\/epp\/session\/"},/{epp_session_url, "http:\/\/st-'$PR_REF'-epp.epp.svc.cluster.local\/epp\/session\/"},/' sys.config
-          sed -i -e 's/{epp_command_url, "https:\/\/registry.test\/epp\/command\/"},/{epp_command_url, "http:\/\/st-'$PR_REF'-epp.epp.svc.cluster.local\/epp\/command\/"},/' sys.config
-          sed -i -e 's/{epp_error_url, "https:\/\/registry.test\/epp\/error\/"},/{epp_error_url, "http:\/\/st-'$PR_REF'-epp.epp.svc.cluster.local\/epp\/error\/"},/' sys.config
-          sed -i -e 's/{cacertfile_path, "\/opt\/shared\/ca\/certs\/ca.crt.pem"},/{cacertfile_path, "\/opt\/shared\/ca\/certs\/ca.crt"},/' sys.config
-          sed -i -e 's/{certfile_path, "\/opt\/shared\/ca\/certs\/cert.pem"},/{certfile_path, "\/opt\/shared\/ca\/certs\/tls.crt"},/' sys.config
-          sed -i -e 's/{keyfile_path, "\/opt\/shared\/ca\/certs\/key.pem"},/{keyfile_path, "\/opt\/shared\/ca\/certs\/tls.key"}]},/' sys.config
-          sed -i -e 's/{crlfile_path, "\/opt\/shared\/ca\/certs\/key.pem"}]},//' sys.config
-     
-      - name: Build proxy image
-        run: |
-          cd epp_proxy
-          docker build -t $PROXY_TAG -f Dockerfile.release .
 
       - name: Push Docker image to gh container registry
         env:
@@ -87,7 +54,12 @@ jobs:
         run: |
           echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
           docker push $TAG
-          docker push $PROXY_TAG
+
+      - name: Get pull request reference number
+        run: |
+          echo "$GITHUB_REF"
+          echo "PR_REF=$(cat /home/runner/work/_temp/_github_workflow/event.json | jq -r '.number')" >> $GITHUB_ENV
+          echo $(cat /home/runner/work/_temp/_github_workflow/event.json | jq -r '.number')
 
       - name: Get repo name
         run: |
@@ -97,7 +69,6 @@ jobs:
           IFS=OIFS
           echo "REPO=${parts[1]}" >> $GITHUB_ENV
 
-
       - name: Set deploy config
         env:
           OVPN: ${{ secrets.OVPN }}
@@ -105,7 +76,6 @@ jobs:
           P12: ${{ secrets.P12 }}
           K_CONFIG: ${{ secrets.KUBE_CONFIG }}
           SSH_KEY: ${{ secrets.EISBOT_SSH_KEY }}
-          EPPROXY_CONF: ${{ secrets.EPPROXY_CONF }}
         run: |
           echo $VPN_PWD | base64 -di > client.pwd
           chmod 0600 client.pwd
@@ -125,8 +95,6 @@ jobs:
 
       - name: Deploy from remote server
         timeout-minutes: 5
-        env:
-          TOKEN: ${{ secrets.CLOUD_TOKEN }}
         run: |
           sudo openvpn --config config.ovpn --askpass client.pwd --auth-nocache --daemon&
           sleep 15
@@ -143,9 +111,8 @@ jobs:
           helm repo add eisrepo https://internetee.github.io/helm-charts/
           helm repo update
           helm upgrade --install reg-admin-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-admin -n reg-admin-staging
-          helm upgrade --install epp-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-epp -n epp
+          helm upgrade --install repp-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-epp -n epp
           helm upgrade --install reg-api-"$PR_REF" --set image.tag="$SHORT_TAG",reference="$PR_REF" eisrepo/registry-api -n reg-api
-          TOKEN=${{ secrets.CLOUD_TOKEN }} python3 ../../portOpener.py "$PR_REF" add
           rm kubeconfig
           echo "Setting up URLs"
           echo "server obs.tld.ee
@@ -174,7 +141,6 @@ jobs:
             | **Admin**   | https://reg-admin-'$PR_REF'.pilv.tld.ee |
             | **repp**    | https://repp-'$PR_REF'.pilv.tld.ee      |
             | **API**     | https://reg-api-'$PR_REF'.pilv.tld.ee   |
-            | **EPP**     | riigi.pilv.tld.ee on port '$EPP_PORT'   |
 
             Please note that the API is only accessible from Riigipilv.
             "
