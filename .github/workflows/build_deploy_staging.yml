@@ -75,7 +75,8 @@ jobs:
           sed -i -e 's/{cacertfile_path, "\/opt\/shared\/ca\/certs\/ca.crt.pem"},/{cacertfile_path, "\/opt\/shared\/ca\/certs\/ca.crt"},/' sys.config
           sed -i -e 's/{certfile_path, "\/opt\/shared\/ca\/certs\/cert.pem"},/{certfile_path, "\/opt\/shared\/ca\/certs\/tls.crt"},/' sys.config
           sed -i -e 's/{keyfile_path, "\/opt\/shared\/ca\/certs\/key.pem"},/{keyfile_path, "\/opt\/shared\/ca\/certs\/tls.key"},/' sys.config
-          sed -i -e 's/{crlfile_path, "\/opt\/shared\/ca\/certs\/key.pem"}]},/{crlfile_path, "Skip"}]},/' sys.config
+          #sed -i -e 's/{crlfile_path, "\/opt\/shared\/ca\/certs\/key.pem"}]},/{crlfile_path, "Skip"}]},/' sys.config
+          sed -i -e 's/{crlfile_path, "\/opt\/shared\/ca\/certs\/key.pem"}]},/%%/' sys.config
           sed -i -e 's/{lager_console_backend, [{level, debug}]},/{lager_console_backend, [{level, debug}]}/' sys.config
           sed '33d' sys.config
      
