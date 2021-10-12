@@ -97,7 +97,6 @@ jobs:
           IFS=OIFS
           echo "REPO=${parts[1]}" >> $GITHUB_ENV
 
-
       - name: Set deploy config
         env:
           OVPN: ${{ secrets.OVPN }}
