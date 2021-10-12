@@ -174,6 +174,7 @@ jobs:
             | **Admin**   | https://reg-admin-'$PR_REF'.pilv.tld.ee |
             | **repp**    | https://repp-'$PR_REF'.pilv.tld.ee      |
             | **API**     | https://reg-api-'$PR_REF'.pilv.tld.ee   |
+            | **EPP**     | riigi.pilv.tld.ee on port '$EPP_PORT'   |
 
             Please note that the API is only accessible from Riigipilv.
             "
