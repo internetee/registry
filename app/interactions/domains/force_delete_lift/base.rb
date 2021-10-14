@@ -28,7 +28,8 @@ module Domains
 
       def contact_emails_valid?(domain)
         flag = nil
-        domain.contacts do |c|
+
+        domain.contacts.each do |c|
           flag = c.need_to_lift_force_delete?
           return flag unless flag
         end
