@@ -1,5 +1,6 @@
 14.10.2021
 * fixed whois record update for disputed domains [#2173](https://github.com/internetee/registry/issues/2173) 
+* fixed cert igning bug in admin [#2177](https://github.com/internetee/registry/issues/2177)
 
 08.10.2021
 * E-mail validator logging and option to use unlimited mx lvl validations [#2059](https://github.com/internetee/registry/issues/2059)
