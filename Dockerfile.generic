@@ -9,6 +9,9 @@ ENV SECRET_KEY_BASE "$SECRET_KEY_BASE"
 
 RUN npm install -g yarn@"$YARN_VER"
 
+RUN apt-get -y update && apt-get -y install rsyslog
+COPY ./syslog/logentries.conf /etc/rsyslog.d/logentries.conf
+
 RUN mkdir -p /opt/webapps/app/tmp/pids
 WORKDIR /opt/webapps/app
 COPY Gemfile Gemfile.lock ./
