@@ -19,5 +19,8 @@ RUN gem install bundler && bundle config set without 'development test' && bundl
 COPY . .
 
 RUN bundle exec rails assets:precompile
-
 EXPOSE 3000
+
+RUN sed -i '/imklog/s/^/#/' /etc/rsyslog.conf
+
+ENTRYPOINT [ "rsyslogd", "-n" ]
