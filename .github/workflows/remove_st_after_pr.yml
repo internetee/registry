@@ -73,6 +73,7 @@ jobs:
           helm delete reg-admin-"$PR_REF" -n reg-admin-staging
           helm delete epp-"$PR_REF" -n epp
           helm delete reg-api-"$PR_REF" -n reg-api
+          TOKEN=${{ secrets.CLOUD_TOKEN }} python3 ../../portOpener.py "$PR_REF" remove
           rm kubeconfig
           echo "server obs.tld.ee
           zone pilv.tld.ee
@@ -80,7 +81,7 @@ jobs:
           update delete repp-"$PR_REF".pilv.tld.ee.
           update delete reg-api-"$PR_REF".pilv.tld.ee.
           send
-          " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key
+          " | nsupdate -k ~/Kgh-runner.infra.tld.ee.+165+27011.key  
           if [ "$?" -eq "0" ]; then
               echo "CNAME updates were successful"
           else
