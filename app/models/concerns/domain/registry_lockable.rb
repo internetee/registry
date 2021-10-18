@@ -54,8 +54,6 @@ module Domain::RegistryLockable
   end
 
   def remove_statuses_from_locked_domain
-    # binding.pry
-    # self.admin_store_statuses_history = self.statuses
     LOCK_STATUSES.each do |domain_status|
       statuses.delete([domain_status])
     end
