@@ -1,3 +1,6 @@
+21.10.2021
+* Fixed registry lock applying to domains with forceDelete status set [#2167](https://github.com/internetee/registry/pull/2167)
+
 14.10.2021
 * fixed whois record update for disputed domains [#2173](https://github.com/internetee/registry/issues/2173) 
 * fixed cert igning bug in admin [#2177](https://github.com/internetee/registry/issues/2177)
