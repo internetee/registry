@@ -23,6 +23,7 @@ module Domain::RegistryLockable
   end
 
   def apply_statuses_locked_statuses(extensions_prohibited:)
+    self.admin_store_statuses_history = self.statuses
     self.statuses |= LOCK_STATUSES
     self.statuses |= EXTENSIONS_STATUS if Feature.obj_and_extensions_statuses_enabled? && extensions_prohibited
     self.locked_by_registrant_at = Time.zone.now
@@ -35,7 +36,7 @@ module Domain::RegistryLockable
     (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION,
                  DomainStatus::PENDING_CREATE, DomainStatus::PENDING_UPDATE,
                  DomainStatus::PENDING_DELETE, DomainStatus::PENDING_RENEW,
-                 DomainStatus::PENDING_TRANSFER, DomainStatus::FORCE_DELETE]).empty?
+                 DomainStatus::PENDING_TRANSFER]).empty?
   end
 
   def locked_by_registrant?

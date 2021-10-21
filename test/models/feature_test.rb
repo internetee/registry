@@ -38,7 +38,7 @@ class FeatureTest < ActiveSupport::TestCase
 
     assert_not Feature.enable_lock_domain_with_new_statuses?
 
-    assert_equal @domain.statuses, ["serverUpdateProhibited", "serverDeleteProhibited", "serverTransferProhibited"]
+    assert_equal @domain.statuses, ["serverObjUpdateProhibited", "serverDeleteProhibited", "serverTransferProhibited"]
     assert @domain.locked_by_registrant?
   end
 
@@ -47,7 +47,7 @@ class FeatureTest < ActiveSupport::TestCase
 
     assert_not Feature.enable_lock_domain_with_new_statuses?
 
-    assert_equal @domain.statuses, ["serverUpdateProhibited", "serverDeleteProhibited", "serverTransferProhibited"]
+    assert_equal @domain.statuses, ["serverObjUpdateProhibited", "serverDeleteProhibited", "serverTransferProhibited"]
     assert @domain.locked_by_registrant?
   end
 end
