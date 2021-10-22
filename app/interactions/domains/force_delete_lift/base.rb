@@ -27,8 +27,14 @@ module Domains
       end
 
       def contact_emails_valid?(domain)
-        domain.contacts.all(&:need_to_lift_force_delete?) &&
-          domain.registrant.need_to_lift_force_delete?
+        flag = nil
+
+        domain.contacts.each do |c|
+          flag = c.need_to_lift_force_delete?
+          return flag unless flag
+        end
+
+        flag && domain.registrant.need_to_lift_force_delete?
       end
 
       def bounces_absent?(domain)

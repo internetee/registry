@@ -20,7 +20,9 @@ class ValidationEventTest < ActiveSupport::TestCase
 
     contact = @domain.admin_contacts.first
     contact.update_attribute(:email, email)
-    contact.verify_email
+    (ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD).times do
+      contact.verify_email
+    end
     contact.reload
 
     refute contact.validation_events.last.success?
@@ -40,6 +42,24 @@ class ValidationEventTest < ActiveSupport::TestCase
 
     assert contact.need_to_lift_force_delete?
     assert contact.validation_events.last.success?
+  end
+
+  def test_fd_didnt_set_if_mx_interation_less_then_value
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    assert_not @domain.force_delete_scheduled?
+    travel_to Time.zone.parse('2010-07-05')
+
+    email = 'email@somestrangedomain12345.ee'
+    contact = @domain.admin_contacts.first
+    contact.update_attribute(:email, email)
+    (ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD - 1).times do
+      contact.verify_email(check_level: 'mx')
+    end
+    contact.reload
+
+    refute contact.validation_events.limit(ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD)
+                  .any?(&:success?)
+    assert_not contact.need_to_start_force_delete?
   end
 
   def test_if_fd_need_to_be_set_if_invalid_mx

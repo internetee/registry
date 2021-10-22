@@ -50,7 +50,7 @@ def prepare_contacts(options)
   if options[:domain_name].present?
     contacts_by_domain(options[:domain_name])
   else
-    Contact.recently_not_validated
+    Contact.all
   end
 end
 
@@ -58,7 +58,7 @@ def contacts_by_domain(domain_name)
   domain = ::Domain.find_by(name: domain_name)
   return unless domain
 
-  domain.contacts.recently_not_validated
+  domain.contacts
 end
 
 def opts_hash
