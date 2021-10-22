@@ -102,8 +102,7 @@ class ForceDeleteTest < ActionMailer::TestCase
 
   def test_scheduling_force_delete_allows_domain_deletion
     statuses_to_be_removed = [
-      DomainStatus::CLIENT_DELETE_PROHIBITED,
-      DomainStatus::SERVER_DELETE_PROHIBITED
+      DomainStatus::CLIENT_DELETE_PROHIBITED
     ]
 
     @domain.statuses = statuses_to_be_removed + %w[other-status]
