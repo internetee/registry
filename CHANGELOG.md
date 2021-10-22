@@ -1,3 +1,6 @@
+22.10.2021
+* Removal of unused code [#2188](https://github.com/internetee/registry/pull/2188)
+
 21.10.2021
 * Fixed registry lock applying to domains with forceDelete status set [#2167](https://github.com/internetee/registry/pull/2167)
 
