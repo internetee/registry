@@ -11,7 +11,7 @@ module Domains
 
         # Allow deletion
         statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
-        statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
+        # statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
         domain.save(validate: false)
       end
     end
