@@ -1,4 +1,5 @@
 22.10.2021
+* Disputed domains not in registry now appear in whois as disputed [#2191](https://github.com/internetee/registry/issues/2191)
 * Removal of unused code [#2188](https://github.com/internetee/registry/pull/2188)
 
 21.10.2021
