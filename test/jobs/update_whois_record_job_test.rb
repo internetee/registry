@@ -16,7 +16,7 @@ class SendEInvoiceJobTest < ActiveJob::TestCase
     domain_names = ReservedDomain.find_in_batches.first.map(&:name)
     assert_domains_processed_by_task(domain_names, 'reserved')
   end
-  
+
   private
 
   def assert_domains_processed_by_task(domain_names, type)

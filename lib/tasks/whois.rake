@@ -37,8 +37,7 @@ namespace :whois do
       end
 
       print "\n-----> Update disputed domains whois_records"
-      Dispute.active.find_in_batches.each do |group|
-
+      Dispute.find_in_batches.each do |group|
         UpdateWhoisRecordJob.perform_later group.map(&:domain_name), 'disputed'
       end
     end

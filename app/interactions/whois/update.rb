@@ -27,13 +27,13 @@ module Whois
       when 'reserved' then ReservedDomain
       when 'blocked'  then BlockedDomain
       when 'domain'   then Domain
-      when 'disputed' then Dispute.active
+      when 'disputed' then Dispute
       else                 DNS::Zone
       end
     end
 
     def find_record(collection, name)
-      if collection == Dispute.active
+      if collection == Dispute
         collection.find_by(domain_name: name)
       else
         collection == DNS::Zone ? collection.find_by(origin: name) : collection.find_by(name: name)
