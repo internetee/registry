@@ -70,6 +70,78 @@ class EppDomainRenewBaseTest < EppTestCase
     assert domain.statuses.include? DomainStatus::SERVER_UPDATE_PROHIBITED
   end
 
+  def test_domain_renew_if_hold_status_has_notes
+    travel_to Time.zone.parse('2010-07-05')
+    domain = domains(:shop)
+    original_valid_to = domain.valid_to
+    default_renewal_period = 1.year
+    domain.statuses << DomainStatus::SERVER_HOLD
+    domain.status_notes["serverHold"] = "test"
+    domain.save
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <renew>
+            <domain:renew xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{domain.name}</domain:name>
+              <domain:curExpDate>#{domain.expire_time.to_date}</domain:curExpDate>
+              <domain:period unit="y">1</domain:period>
+            </domain:renew>
+          </renew>
+        </command>
+      </epp>
+    XML
+
+    post epp_renew_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
+    domain.reload
+
+    assert_epp_response :completed_successfully
+    assert_equal original_valid_to + default_renewal_period, domain.valid_to
+    assert domain.statuses.include? DomainStatus::SERVER_HOLD
+  end
+
+  def test_domain_renew_if_hold_status_do_not_has_notes
+    travel_to Time.zone.parse('2010-07-05')
+    domain = domains(:shop)
+    original_valid_to = domain.valid_to
+    default_renewal_period = 1.year
+    domain.statuses << DomainStatus::SERVER_HOLD
+    domain.status_notes["serverHold"] = ""
+    domain.save
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <renew>
+            <domain:renew xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{domain.name}</domain:name>
+              <domain:curExpDate>#{domain.expire_time.to_date}</domain:curExpDate>
+              <domain:period unit="y">1</domain:period>
+            </domain:renew>
+          </renew>
+        </command>
+      </epp>
+    XML
+
+    post epp_renew_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+
+    domain.reload
+
+    assert_epp_response :completed_successfully
+    assert_equal original_valid_to + default_renewal_period, domain.valid_to
+    assert_not domain.statuses.include? DomainStatus::SERVER_HOLD
+  end
+
   def test_domain_cannot_be_renewed_when_invalid
     domain = domains(:invalid)
 

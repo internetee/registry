@@ -187,7 +187,7 @@ class Epp::Domain < Domain
     self.period = period
     self.period_unit = unit
 
-    statuses.delete(DomainStatus::SERVER_HOLD)
+    statuses.delete(DomainStatus::SERVER_HOLD) if self.status_notes["serverHold"].blank?
     statuses.delete(DomainStatus::EXPIRED)
     cancel_pending_delete
 
