@@ -1,3 +1,6 @@
+25.10.2021
+* Setting and removing ForceDelete does not affect registry lock [#2195](https://github.com/internetee/registry/issues/2195)
+
 22.10.2021
 * Disputed domains not in registry now appear in whois as disputed [#2191](https://github.com/internetee/registry/issues/2191)
 * 5 failure threshold for email validation on MX level [#2185](https://github.com/internetee/registry/issues/2185)
