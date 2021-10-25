@@ -102,12 +102,46 @@ module Api
                                     ident_type: 'priv', ident_country_code: country)
           return contact if contact
 
-          company_register = CompanyRegister::Client.new
-          res = company_register.representation_rights(citizen_personal_code: company_codes,
-                                                 citizen_country_code: current_registrant_user.country.alpha3)
-          p "++++++++++++++++"
-          p res
+          # company_register = CompanyRegister::Client.new
+          # res = company_register.representation_rights(citizen_personal_code: company_codes,
+          #                                        citizen_country_code: current_registrant_user.country.alpha3)
+          # p "++++++++++++++++"
+          # p res
+          # p "+++++++++++++++++"
+          # res.each do |r|
+          # unless contact.name == r.company_ame
+          # contact.update(name: r.company_name)
+          # end
+          #
           p "+++++++++++++++++"
+          p "+++++++++++++++++"
+          p current_registrant_user.companies
+          p "+++++++++++++++++"
+          p "+++++++++++++++++"
+          p "+++++++++++++++++"
+          p company_codes
+          p "+++++++++++++++++"
+          p "+++++++++++++++++"
+          p "+++++++++++++++++"
+
+
+          current_registrant_user.companies.each do |i|
+            c = Contact.find_by(uuid: uuid, ident_type: 'org', ident: company_codes,
+                            ident_country_code: country)
+
+            p "+++++++++++++++++"
+            p "+++++++++++++++++"
+            p c.org_name
+            p "+++++++++++++++++"
+            p "+++++++++++++++++"
+            p i.company_name
+            p "+++++++++++++++++"
+            p "+++++++++++++++++"
+
+            unless c.org_name == i.company_name
+              c.update(org_name: company_name)
+            end
+          end
 
           Contact.find_by(uuid: uuid, ident_type: 'org', ident: company_codes,
                           ident_country_code: country)
