@@ -20,8 +20,7 @@ class RegistrantUser < User
   def companies(company_register = CompanyRegister::Client.new)
     return [] if ident.include?('-')
 
-    p "++++++++++++++++++++++++++++++++++++++++"
-    p company_register.representation_rights(citizen_personal_code: ident,
+    company_register.representation_rights(citizen_personal_code: ident,
                                            citizen_country_code: country.alpha3)
   end
 
