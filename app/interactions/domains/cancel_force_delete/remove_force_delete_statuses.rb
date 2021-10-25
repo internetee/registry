@@ -10,6 +10,7 @@ module Domains
                                                          DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED,
                                                          DomainStatus::SERVER_DELETE_PROHIBITED
                                                        ] if domain.locked_by_registrant?
+
         domain.admin_store_statuses_history -= domain_statuses unless domain.admin_store_statuses_history.nil?
         rejected_statuses = domain.statuses.reject { |a| domain_statuses.include? a }
         domain.statuses = rejected_statuses

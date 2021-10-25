@@ -53,14 +53,23 @@ module Domain::RegistryLockable
     end
   end
 
+  def restore_statuses_if_domain_had_fd
+    self.statuses = self.statuses | Domain::FORCE_DELETE_STATUSES
+
+    save!
+  end
+
   def remove_statuses_from_locked_domain
+    fd_flag = force_delete_scheduled?
     LOCK_STATUSES.each do |domain_status|
       statuses.delete([domain_status])
     end
 
+    self.force_delete_domain_statuses_history -= LOCK_STATUSES if force_delete_domain_statuses_history.present?
     statuses.delete([EXTENSIONS_STATUS]) if statuses.include? EXTENSIONS_STATUS
     self.locked_by_registrant_at = nil
     self.statuses = admin_store_statuses_history || []
+    self.statuses = self.statuses | Domain::FORCE_DELETE_STATUSES if fd_flag
     alert_registrar_lock_changes!(lock: false)
 
     save!
