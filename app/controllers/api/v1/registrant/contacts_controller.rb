@@ -102,8 +102,16 @@ module Api
                                     ident_type: 'priv', ident_country_code: country)
           return contact if contact
 
+          company_register = CompanyRegister::Client.new
+          res = company_register.representation_rights(citizen_personal_code: company_codes,
+                                                 citizen_country_code: current_registrant_user.country.alpha3)
+          p "++++++++++++++++"
+          p res
+          p "+++++++++++++++++"
+
           Contact.find_by(uuid: uuid, ident_type: 'org', ident: company_codes,
                           ident_country_code: country)
+
         rescue CompanyRegister::NotAvailableError
           nil
         end
