@@ -126,21 +126,22 @@ module Api
 
 
           current_registrant_user.companies.each do |i|
-            c = Contact.find_by(uuid: uuid, ident_type: 'org', ident: company_codes,
-                            ident_country_code: country)
+            # c = Contact.find_by(uuid: uuid, ident_type: 'org', ident: company_codes,
+            #                 ident_country_code: country)
 
             p "+++++++++++++++++"
             p "+++++++++++++++++"
-            p c.org_name
+            # p c.org_name
             p "+++++++++++++++++"
             p "+++++++++++++++++"
+            p i.companies
             p i.company_name
             p "+++++++++++++++++"
             p "+++++++++++++++++"
 
-            unless c.org_name == i.company_name
-              c.update(org_name: company_name)
-            end
+            # unless c.org_name == i.company_name
+            #   c.update(org_name: company_name)
+            # end
           end
 
           Contact.find_by(uuid: uuid, ident_type: 'org', ident: company_codes,
