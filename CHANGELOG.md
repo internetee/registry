@@ -1,5 +1,6 @@
 25.10.2021
 * Setting and removing ForceDelete does not affect registry lock [#2195](https://github.com/internetee/registry/issues/2195)
+* Renew does not cancel admin set serverHold [#2186](https://github.com/internetee/registry/issues/2186)
 
 22.10.2021
 * Disputed domains not in registry now appear in whois as disputed [#2191](https://github.com/internetee/registry/issues/2191)
