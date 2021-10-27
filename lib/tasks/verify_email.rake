@@ -46,11 +46,19 @@ def logger
   @logger ||= ActiveSupport::TaggedLogging.new(Syslog::Logger.new('registry'))
 end
 
+# Here I set the time after which the validation is considered obsolete
+# I take all contact records that have successfully passed the verification and fall within the deadline
+# I am looking for contacts that have not been verified or their verification is out of date
+
 def prepare_contacts(options)
   if options[:domain_name].present?
     contacts_by_domain(options[:domain_name])
   else
-    Contact.all
+    time = Time.zone.now - ValidationEvent::VALIDATION_PERIOD
+    validation_events_ids = ValidationEvent.where('created_at > ?', time).pluck(:validation_eventable_id)
+
+    Contact.where.not(id: validation_events_ids)
+    # contacts.reject(&:need_to_start_force_delete?) # temporarily commented out code
   end
 end
 
