@@ -66,6 +66,7 @@ gem 'airbrake'
 gem 'daemons-rails', '1.2.1'
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
+gem 'esteid_ldap', github: 'internetee/esteid_ldap', branch: :master
 gem 'jquery-ui-rails', '6.0.1'
 gem 'pdfkit'
 gem 'que'

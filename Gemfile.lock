@@ -45,6 +45,17 @@ GIT
       libxml-ruby
 
 GIT
+  remote: https://github.com/internetee/esteid_ldap.git
+  revision: 03fdf71933ec1c134b2c80631e10f70edf3b6611
+  branch: master
+  specs:
+    esteid_ldap (2.0.0)
+      activesupport (~> 6.1)
+      bundler (~> 2.0)
+      net-ldap (~> 0.17.0)
+      rake (~> 13.0)
+
+GIT
   remote: https://github.com/internetee/lhv.git
   revision: 1fb07818369425510a0172ad53bc86e85b6f83cc
   branch: master
@@ -308,6 +319,7 @@ GEM
     multi_json (1.15.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
+    net-ldap (0.17.0)
     netrc (0.11.0)
     nio4r (2.5.8)
     nokogiri (1.12.5)
@@ -536,6 +548,7 @@ DEPENDENCIES
   e_invoice!
   epp!
   epp-xml (= 1.2.0)!
+  esteid_ldap!
   figaro (~> 1.2)
   haml (~> 5.2)
   isikukood
@@ -579,4 +592,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.5.1)
 
 BUNDLED WITH
-   2.2.27
+   2.2.29
