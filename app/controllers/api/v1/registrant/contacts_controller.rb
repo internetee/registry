@@ -102,24 +102,8 @@ module Api
                                     ident_type: 'priv', ident_country_code: country)
           return contact if contact
 
-          update_contacts_before_receive
           Contact.find_by(uuid: uuid, ident_type: 'org', ident: company_codes,
                           ident_country_code: country)
-
-        rescue CompanyRegister::NotAvailableError
-          nil
-        end
-
-        def update_contacts_before_receive
-          company_register = CompanyRegister::Client.new
-          companies = company_register.representation_rights(citizen_personal_code: current_registrant_user.ident,
-                                                 citizen_country_code: current_registrant_user.country.alpha3)
-
-          companies.each do |c|
-            contact = Contact.find_by(ident: c.registration_number)
-            break if contact.blank?
-            contact.update(name: c.company_name) unless c.company_name == contact.name
-          end
 
         rescue CompanyRegister::NotAvailableError
           nil

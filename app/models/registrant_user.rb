@@ -20,8 +20,34 @@ class RegistrantUser < User
   def companies(company_register = CompanyRegister::Client.new)
     return [] if ident.include?('-')
 
-    company_register.representation_rights(citizen_personal_code: ident,
+    companies = company_register.representation_rights(citizen_personal_code: ident,
                                            citizen_country_code: country.alpha3)
+    update_contacts_before_receive(companies)
+    companies
+  end
+
+  def update_contacts_before_receive(companies)
+    return if companies.blank?
+
+    companies.each do |c|
+      contact = Contact.find_by(ident: c.registration_number, ident_country_code: "EE")
+      break if contact.blank?
+
+      unless c.company_name == contact.name
+        old_contact_name = contact.name
+        contact.update(name: c.company_name)
+        notify_registrar_data_updated(company_name: c.company_name, old_contact_name: old_contact_name, contact: contact)
+      end
+    end
+
+  rescue CompanyRegister::NotAvailableError
+    nil
+  end
+
+  def notify_registrar_data_updated(company_name:, old_contact_name:, contact:)
+    contact.registrar.notifications.create!(
+      text: "#{old_contact_name} was changed to #{company_name}"
+    )
   end
 
   def contacts(representable: true)
