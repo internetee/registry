@@ -104,7 +104,6 @@ module Api
 
           Contact.find_by(uuid: uuid, ident_type: 'org', ident: company_codes,
                           ident_country_code: country)
-
         rescue CompanyRegister::NotAvailableError
           nil
         end

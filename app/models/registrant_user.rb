@@ -21,27 +21,52 @@ class RegistrantUser < User
     return [] if ident.include?('-')
 
     companies = company_register.representation_rights(citizen_personal_code: ident,
-                                           citizen_country_code: country.alpha3)
-    update_contacts_before_receive(companies)
+                                                       citizen_country_code: country.alpha3)
+
+    p "++++++++++++++++++++"
+    log("+++++++++++++")
+    log(companies)
+    log("+++++++++++++")
+    p companies
+    p "+++++++++++++++++++++"
+    companies = update_contacts_before_receive(companies)
     companies
+  end
+
+  def log(msg)
+    @log ||= Logger.new($stdout)
+    @log.info(msg)
   end
 
   def update_contacts_before_receive(companies)
     return if companies.blank?
 
     companies.each do |c|
-      contact = Contact.find_by(ident: c.registration_number, ident_country_code: "EE")
-      break if contact.blank?
+      # contact = Contact.find_by(ident: c.registration_number, ident_country_code: 'EE')
+      contacts = Contact.where(ident: c.registration_number, ident_country_code: 'EE')
 
-      unless c.company_name == contact.name
-        old_contact_name = contact.name
-        contact.update(name: c.company_name)
-        notify_registrar_data_updated(company_name: c.company_name, old_contact_name: old_contact_name, contact: contact)
+      break if contacts.blank?
+
+      contacts.each do |co|
+        next if c.company_name == co.name
+
+        update_company_name(contact: co, company: c)
       end
     end
 
+    return companies
   rescue CompanyRegister::NotAvailableError
     nil
+  end
+
+  def update_company_name(contact:, company:)
+    old_contact_name = contact.name
+    contact.name = company.company_name
+    contact.save(validate: false)
+
+    notify_registrar_data_updated(company_name: company.company_name,
+                                  old_contact_name: old_contact_name,
+                                  contact: contact)
   end
 
   def notify_registrar_data_updated(company_name:, old_contact_name:, contact:)

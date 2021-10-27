@@ -44,10 +44,10 @@ class RegistrantUserTest < ActiveSupport::TestCase
     company_register = Minitest::Mock.new
     company_register.expect(:representation_rights, [company], [{ citizen_personal_code: '1234',
                                                                   citizen_country_code: 'USA' }])
-    assert_equal [company], @user.companies(company_register)
-    company_register.verify
-
+    @user.companies(company_register)
     org.reload
+
+    assert_equal org.name, company.company_name
   end
 
   def test_queries_company_register_for_associated_companies
