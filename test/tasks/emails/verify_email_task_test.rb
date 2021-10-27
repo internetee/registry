@@ -31,6 +31,51 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
     [domain(@invalid_contact.email)].reject(&:blank?)
   end
 
+  def test_should_not_affect_to_successfully_verified_emails
+    assert_equal ValidationEvent.count, 0
+    run_task
+    assert_equal ValidationEvent.count, Contact.count
+
+    run_task
+    assert_equal ValidationEvent.count, Contact.count
+  end
+
+  def test_should_verify_contact_which_was_not_verified
+    bestnames = registrars(:bestnames)
+    assert_equal ValidationEvent.count, 0
+    run_task
+    assert_equal ValidationEvent.count, Contact.count
+
+    assert_equal Contact.count, 9
+    c = Contact.create(name: 'Jeembo',
+                       email: 'heey@jeembo.com',
+                       phone: '+555.555',
+                       ident: '1234',
+                       ident_type: 'priv',
+                       ident_country_code: 'US',
+                       registrar: bestnames,
+                       code: 'jeembo-01')
+
+    assert_equal Contact.count, 10
+    run_task
+    assert_equal ValidationEvent.count, Contact.count
+  end
+
+  def test_should_verify_contact_which_has_expired_date_of_verification
+    expired_date = Time.now - ValidationEvent::VALIDATION_PERIOD - 1.day
+
+    assert_equal ValidationEvent.count, 0
+    run_task
+    assert_equal ValidationEvent.count, Contact.count
+
+    contact = contacts(:john)
+    v = ValidationEvent.find_by(validation_eventable_id: contact.id)
+    v.update!(created_at: expired_date)
+
+    run_task
+    assert_equal ValidationEvent.count, Contact.count + 1
+  end
+
   def test_tasks_verifies_emails
     capture_io { run_task }
 
