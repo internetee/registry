@@ -10,7 +10,7 @@ class ReppV1AccreditationInfoTest < ActionDispatch::IntegrationTest
   end
 
   def test_valid_login
-    get '/repp/v1/registrar/accreditation_info', headers: @auth_headers
+    get '/repp/v1/registrar/accreditation/get_info', headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
@@ -24,7 +24,7 @@ class ReppV1AccreditationInfoTest < ActionDispatch::IntegrationTest
 
     auth_headers = { 'Authorization' => token }
 
-    get '/repp/v1/registrar/accreditation_info', headers: auth_headers
+    get '/repp/v1/registrar/accreditation/get_info', headers: auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :unauthorized
