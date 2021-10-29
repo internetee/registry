@@ -22,6 +22,8 @@ class Nameserver < ApplicationRecord
 
   belongs_to :domain, required: true
 
+  has_many :validation_events, as: :validation_eventable
+
   validates :hostname, presence: true
   validates :hostname, format: { with: HOSTNAME_REGEXP }, allow_blank: true
   validate :validate_ipv4_format

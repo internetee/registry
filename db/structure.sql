@@ -71,7 +71,8 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 CREATE TYPE public.validation_type AS ENUM (
     'email_validation',
-    'manual_force_delete'
+    'manual_force_delete',
+    'nameserver_validation'
 );
 
 
@@ -2582,7 +2583,10 @@ CREATE TABLE public.users (
     remember_created_at timestamp without time zone,
     failed_attempts integer DEFAULT 0 NOT NULL,
     locked_at timestamp without time zone,
-    legacy_id integer
+    legacy_id integer,
+    accreditation_date timestamp without time zone,
+    accreditation_expire_date timestamp without time zone,
+    uuid uuid DEFAULT public.gen_random_uuid()
 );
 
 
@@ -2616,8 +2620,7 @@ CREATE TABLE public.validation_events (
     validation_eventable_type character varying,
     validation_eventable_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    event_type public.validation_type
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -4047,6 +4050,13 @@ CREATE INDEX index_domains_on_delete_date ON public.domains USING btree (delete_
 
 
 --
+-- Name: index_domains_on_json_statuses_history; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domains_on_json_statuses_history ON public.domains USING gin (json_statuses_history);
+
+
+--
 -- Name: index_domains_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4485,13 +4495,6 @@ CREATE INDEX index_users_on_identity_code ON public.users USING btree (identity_
 --
 
 CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_id);
-
-
---
--- Name: index_validation_events_on_event_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_validation_events_on_event_type ON public.validation_events USING btree (event_type);
 
 
 --
@@ -5229,7 +5232,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210215101019'),
 ('20210616112332'),
 ('20210629074044'),
-('20210628090353'),
-('20210708131814');
+('20210708131814'),
+('20210729131100'),
+('20210729134625'),
+('20211028122103'),
+('20211028125245'),
+('20211029082225');
 
 
