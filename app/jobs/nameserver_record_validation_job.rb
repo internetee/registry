@@ -19,7 +19,32 @@ class NameserverRecordValidationJob < ApplicationJob
   def validate(nameserver)
     # validate_glue_records(nameserver) && validate_domain_name(nameserver)
     # validate_glue_records(nameserver)
-    validate_hostname(nameserver)
+
+    if validate_hostname(nameserver)
+      return {
+        result: {
+          result: true
+        },
+        event_data:
+          {
+          errors: nil,
+          check_level: 'ns',
+          email: nil
+        }
+      }
+    else
+      return {
+        result: {
+          result: false
+        },
+        event_data:
+          {
+            errors: 'NS not respond',
+            check_level: 'ns',
+            email: nil
+          }
+      }
+    end
   end
 
   def validate_hostname(nameserver)
@@ -45,15 +70,17 @@ class NameserverRecordValidationJob < ApplicationJob
   end
 
 
-  def check_validation_info(result: , nameserver: )
-    add_to_validation_table(result: result, nameserver: nameserver)
+  def check_validation_info(result: , nameserver:)
+    event_data = result[:event_data]
+    result = result[:result]
+    add_to_validation_table(result: result, nameserver: nameserver, event_data: event_data)
 
     result
   end
 
-  def add_to_validation_table(result:, nameserver:)
+  def add_to_validation_table(result:, nameserver:, event_data:)
     nameserver.validation_events.create(
-      event_data: 'data',
+      event_data: event_data,
       success: result,
       validation_eventable_type: 'Nameserver',
       validation_eventable_id: nameserver.id,

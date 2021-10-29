@@ -22,7 +22,11 @@ class ValidationEvent < ApplicationRecord
     smtp: 1,
   }.freeze
 
-  # store_accessor :event_data, :errors, :check_level, :email
+  SKIP_VALIDATORS_FOR_CHECK_FD = [
+    'nameserver_validation'
+  ]
+
+  store_accessor :event_data, :errors, :check_level, :email
 
   belongs_to :validation_eventable, polymorphic: true
 
@@ -34,7 +38,7 @@ class ValidationEvent < ApplicationRecord
   scope :smtp, -> { where('event_data @> ?', { 'check_level': 'smtp' }.to_json) }
   scope :by_object, ->(object) { where(validation_eventable: object) }
 
-  # after_create :check_for_force_delete
+  after_create :check_for_force_delete
 
   def self.validated_ids_by(klass)
     recent.successful.where('validation_eventable_type = ?', klass)
@@ -58,6 +62,8 @@ class ValidationEvent < ApplicationRecord
   end
 
   def check_for_force_delete
+    return if SKIP_VALIDATORS_FOR_CHECK_FD.include? event_type.instance_variable_get("@event_type")
+
     if object.need_to_start_force_delete?
       start_force_delete
     elsif object.need_to_lift_force_delete?
