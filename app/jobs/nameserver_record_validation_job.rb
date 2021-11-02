@@ -10,6 +10,7 @@ class NameserverRecordValidationJob < ApplicationJob
       end
     else
       result = validate(nameserver)
+
       check_validation_info(result: result, nameserver: nameserver)
     end
   end
@@ -17,51 +18,36 @@ class NameserverRecordValidationJob < ApplicationJob
   private
 
   def validate(nameserver)
-    # validate_glue_records(nameserver) && validate_domain_name(nameserver)
-    # validate_glue_records(nameserver)
+    return compile_event_data(result: false, reason: "Nameserver doesn't respond") unless validate_hostname_respond(nameserver)
+    return compile_event_data(result: false, reason: "No domain related to Nameserver") unless validate_domain(nameserver)
 
-    if validate_hostname(nameserver)
-      return {
-        result: {
-          result: true
-        },
-        event_data:
-          {
-          errors: nil,
-          check_level: 'ns',
-          email: nil
-        }
-      }
-    else
-      return {
-        result: {
-          result: false
-        },
-        event_data:
-          {
-            errors: 'NS not respond',
-            check_level: 'ns',
-            email: nil
-          }
-      }
-    end
+    compile_event_data(result: true, reason: nil)
   end
 
-  def validate_hostname(nameserver)
+  def compile_event_data(result:, reason:)
+    {
+       "result" => {
+         "result" => "#{result}"
+        },
+       "event_data" =>
+          {
+            "errors" => "",
+            "check_level" => 'ns',
+            "email" => "",
+            "reason" => "#{reason}"
+          }
+      }
+  end
+
+  def validate_domain(nameserver)
+    nameserver.domain
+  end
+
+  def validate_hostname_respond(nameserver)
     return true if Resolv.getaddress nameserver.hostname
   rescue Resolv::ResolvError
     false
   end
-
-  # if the hostname has the same domain name as the domain to which it belongs, then you need to add the IP addresses
-  # def validate_glue_records(nameserver)
-  #   # binding.pry
-  #   if glue_record_required?(nameserver)
-  #     return false if nameserver.ipv6.empty? && nameserver.ipv4.empty?
-  #   else
-  #     true
-  #   end
-  # end
 
   def glue_record_required?(nameserver)
     return false unless nameserver.hostname? && nameserver.domain
@@ -71,11 +57,10 @@ class NameserverRecordValidationJob < ApplicationJob
 
 
   def check_validation_info(result: , nameserver:)
-    event_data = result[:event_data]
-    result = result[:result]
-    add_to_validation_table(result: result, nameserver: nameserver, event_data: event_data)
+    event_data = result["event_data"]
+    result = result["result"]["result"]
 
-    result
+    add_to_validation_table(result: result, nameserver: nameserver, event_data: event_data)
   end
 
   def add_to_validation_table(result:, nameserver:, event_data:)
