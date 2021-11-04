@@ -14,9 +14,54 @@ module Actions
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
       assign_requested_statuses
+      validate_dnskey unless Rails.env.test?
       ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
 
       commit
+    end
+
+    def validate_dnskey
+      domain = Domain.find_by(name: @params[:domain])
+      dns = prepare_resolver
+      update_params_info = parse_data_from_update_request(@params[:dns_keys][0])
+
+      domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation)) if domain.nameservers.empty?
+
+      domain.nameservers.each do |n|
+        zone_info = parse_data_from_zonefile(dns_resolver: dns, hostname: n.hostname)
+
+        domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation)) unless zone_info == update_params_info
+      end
+
+      true
+    end
+
+    def parse_data_from_update_request(data)
+      {
+        flags: data[:flags],
+        algorithm: data[:alg],
+        protocol: data[:protocol],
+      }
+    end
+
+    def parse_data_from_zonefile(dns_resolver:, hostname:)
+      alg = dns_resolver.query(hostname, 'DS').answer[0].rdata[1]
+      result = dns_resolver.query(hostname, 'DNSKEY').answer[0]
+
+      {
+        flags: result.flags.to_s,
+        algorithm: alg.to_s,
+        protocol: result.protocol.to_s,
+      }
+    end
+
+    def prepare_resolver
+      dns = Dnsruby::Resolver.new(nameserver: ['8.8.8.8', '8.8.4.4'])
+      dns.do_validation = true
+      dns.do_caching = true
+      dns.dnssec = true
+
+      dns
     end
 
     def assign_relational_modifications
