@@ -57,8 +57,13 @@ def prepare_contacts(options)
     time = Time.zone.now - ValidationEvent::VALIDATION_PERIOD
     validation_events_ids = ValidationEvent.where('created_at > ?', time).pluck(:validation_eventable_id)
 
+    # Contact.where.not(id: validation_events_ids) + Contact.where(id: failed_contacts)
     Contact.where.not(id: validation_events_ids)
   end
+end
+
+def failed_contacts
+  ValidationEvent.failed.pluck(:id)
 end
 
 def contacts_by_domain(domain_name)

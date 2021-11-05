@@ -24,7 +24,8 @@ class VerifyEmailsJob < ApplicationJob
     contact = Contact.find(contact_id)
     contact_ids = Contact.where(email: contact.email).where('created_at > ?', time).pluck(:id)
 
-    r = ValidationEvent.where(validation_eventable_id: contact_ids)
+    r = ValidationEvent.where(validation_eventable_id: contact_ids).order(created_at: :desc)
+    # return false if r[0].success == false
 
     r.present?
   end

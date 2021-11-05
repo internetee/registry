@@ -31,20 +31,29 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
     [domain(@invalid_contact.email)].reject(&:blank?)
   end
 
+  def test_should_be_verified_duplicate_emails
+    william = Contact.where(email: "william@inbox.test").count
+
+    assert_equal william, 2
+    assert_equal Contact.all.count, 9
+    run_task
+    assert_equal ValidationEvent.count, Contact.count - 1
+  end
+
   def test_should_not_affect_to_successfully_verified_emails
     assert_equal ValidationEvent.count, 0
     run_task
-    assert_equal ValidationEvent.count, Contact.count
+    assert_equal ValidationEvent.count, Contact.count - 1 # Contact has duplicate email and it is skip
 
     run_task
-    assert_equal ValidationEvent.count, Contact.count
+    assert_equal ValidationEvent.count, Contact.count - 1
   end
 
   def test_should_verify_contact_which_was_not_verified
     bestnames = registrars(:bestnames)
     assert_equal ValidationEvent.count, 0
     run_task
-    assert_equal ValidationEvent.count, Contact.count
+    assert_equal ValidationEvent.count, Contact.count - 1 # Contact has duplicate email and it is skip
 
     assert_equal Contact.count, 9
     c = Contact.create(name: 'Jeembo',
@@ -58,22 +67,40 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
 
     assert_equal Contact.count, 10
     run_task
-    assert_equal ValidationEvent.count, Contact.count
+    assert_equal ValidationEvent.count, Contact.count - 1
   end
+
+  # def test_should_verify_again_contact_which_has_faield_verification
+  #   expired_date = Time.now - ValidationEvent::VALIDATION_PERIOD - 1.day
+  #
+  #   assert_equal ValidationEvent.count, 0
+  #   run_task
+  #   assert_equal Contact.count, 9
+  #   assert_equal ValidationEvent.count, 8 # Contact has duplicate email and it is skip
+  #
+  #   contact = contacts(:john)
+  #   v = ValidationEvent.find_by(validation_eventable_id: contact.id)
+  #   v.update!(success: false)
+  #
+  #   run_task
+  #   binding.pry
+  #   assert_equal ValidationEvent.all.count, 9
+  # end
 
   def test_should_verify_contact_which_has_expired_date_of_verification
     expired_date = Time.now - ValidationEvent::VALIDATION_PERIOD - 1.day
 
     assert_equal ValidationEvent.count, 0
     run_task
-    assert_equal ValidationEvent.count, Contact.count
+    assert_equal Contact.count, 9
+    assert_equal ValidationEvent.count, 8 # Contact has duplicate email and it is skip
 
     contact = contacts(:john)
     v = ValidationEvent.find_by(validation_eventable_id: contact.id)
     v.update!(created_at: expired_date)
 
     run_task
-    assert_equal ValidationEvent.count, Contact.count + 1
+    assert_equal ValidationEvent.all.count, 9
   end
 
   def test_tasks_verifies_emails
