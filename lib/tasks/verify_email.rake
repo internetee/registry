@@ -58,7 +58,6 @@ def prepare_contacts(options)
     validation_events_ids = ValidationEvent.where('created_at > ?', time).pluck(:validation_eventable_id)
 
     Contact.where.not(id: validation_events_ids)
-    # contacts.reject(&:need_to_start_force_delete?) # temporarily commented out code
   end
 end
 
