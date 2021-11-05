@@ -14,7 +14,7 @@ module Actions
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
       assign_requested_statuses
-      validate_dnskey unless Rails.env.test?
+      validate_dnskey unless Rails.env.test? || Rails.env.development?
       ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
 
       commit
@@ -27,10 +27,10 @@ module Actions
 
       domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation)) if domain.nameservers.empty?
 
-      domain.nameservers.each do |n|
-        zone_info = parse_data_from_zonefile(dns_resolver: dns, hostname: n.hostname)
+      zone_info = parse_data_from_zonefile(dns_resolver: dns, hostname: domain.name)
 
-        domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation)) unless zone_info == update_params_info
+      unless zone_info == update_params_info || zone_info.nil?
+        domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation))
       end
 
       true
@@ -46,12 +46,14 @@ module Actions
 
     def parse_data_from_zonefile(dns_resolver:, hostname:)
       alg = dns_resolver.query(hostname, 'DS').answer[0].rdata[1]
-      result = dns_resolver.query(hostname, 'DNSKEY').answer[0]
+      result = dns_resolver.query(hostname, 'DNSKEY').answer
+
+      return nil if answer.empty?
 
       {
-        flags: result.flags.to_s,
+        flags: result[0].flags.to_s,
         algorithm: alg.to_s,
-        protocol: result.protocol.to_s,
+        protocol: result[0].protocol.to_s,
       }
     end
 
