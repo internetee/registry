@@ -54,7 +54,9 @@ jobs:
       - name: Build registry image
         env:
           KEY_BASE: ${{ secrets.KEY_BASE}}
+          PASSWORD: ${{ secrets.GHCR }}
         run: |
+          echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
           docker build -t $TAG --build-arg RAILS_ENV=staging --build-arg SECRET_KEY_BASE="$KEY_BASE" -f Dockerfile.generic .
 
       - name: Clone epp_proxy project
@@ -82,10 +84,7 @@ jobs:
           docker build -t $PROXY_TAG -f Dockerfile.release .
 
       - name: Push Docker image to gh container registry
-        env:
-          PASSWORD: ${{ secrets.GHCR }}
         run: |
-          echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
           docker push $TAG
           docker push $PROXY_TAG
 
