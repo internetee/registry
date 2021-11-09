@@ -26,6 +26,18 @@ jobs:
 
       - uses: actions/checkout@v2
 
+      - name: Diff gemfile on master
+        run: |
+          mapfile -t new_gems < <(git diff master Gemfile)
+          mapfile -t new_gems < <(git diff master Gemfile.lock)
+          if [ -z "$new_gems"]; then
+            echo "No gems updated"
+            echo "BUILD_GEMS_IMAGE=0" >> $GITHUB_ENV
+          else
+            echo "BUILD_GEMS_IMAGE=1" >> $GITHUB_ENV
+          fi
+        if: github.ref != 'refs/head/master'
+
       - name: Set image tag
         run: |
           SHORT_SHA=$(echo $GITHUB_SHA | cut -c 1-7) #pr-s test commit of merged state
