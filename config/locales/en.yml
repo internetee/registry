@@ -371,6 +371,7 @@ en:
   sim_error: 'SIM application error'
   internal_error: 'Internal error'
   client_side_status_editing_error: 'Parameter value policy error. Client-side object status management not supported'
+  parameter_value_syntax_error: 'Parameter value syntax error: '
 
   # DEPP
   activemodel:
