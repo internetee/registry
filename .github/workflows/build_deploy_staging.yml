@@ -28,8 +28,8 @@ jobs:
 
       - name: Diff gemfile on master
         run: |
-          mapfile -t new_gems < <(git diff master:Gemfile Gemfile)
-          mapfile -t new_gems < <(git diff master:Gemfile.lock Gemfile.lock)
+          mapfile -t new_gems < <(git diff refs/heads/master:Gemfile Gemfile)
+          mapfile -t new_gems < <(git diff refs/heads/master:Gemfile.lock Gemfile.lock)
           if [ -z "$new_gems"]; then
             echo "No gems updated"
             echo "BUILD_GEMS_IMAGE=0" >> $GITHUB_ENV
