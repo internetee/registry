@@ -28,7 +28,7 @@ jobs:
 
       - name: Diff gemfile on master
         run: |
-          mapfile -t new_gems < <(git diff refs/heads/master:Gemfile Gemfile)
+          mapfile -t new_gems < <(git diff 39b9c9425116101b0308f6c09b94924939f6ae33:Gemfile Gemfile)
           mapfile -t new_gems < <(git diff refs/heads/master:Gemfile.lock Gemfile.lock)
           if [ -z "$new_gems"]; then
             echo "No gems updated"
