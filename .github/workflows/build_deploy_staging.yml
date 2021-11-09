@@ -26,19 +26,25 @@ jobs:
 
       - uses: actions/checkout@v2
 
+      - name: Get specific changed files
+        id: gem-updates-check
+        uses: tj-actions/changed-files@aae164d51be780a235cdeea89752bbacbbfee3c3
+        with:
+          files: |
+            Gemfile
+            Gemfile.lock
+
+      - name: No changes check
+        if: steps.gem-updates-check != 'true'
+        run: echo "no changes"
+
+      - name: New gems found
+        if: steps.gem-updates-check == 'true'
+        run: echo "Gems have been changed"
+
       - name: Diff gemfile on master
         run: |
-          mapfile -t new_gems < <(git diff 39b9c9425116101b0308f6c09b94924939f6ae33:Gemfile Gemfile)
-          mapfile -t new_gems < <(git diff refs/heads/master:Gemfile.lock Gemfile.lock)
-          if [ -z "$new_gems"]; then
-            echo "No gems updated"
-            echo "BUILD_GEMS_IMAGE=0" >> $GITHUB_ENV
-          else
-            echo "BUILD_GEMS_IMAGE=1" >> $GITHUB_ENV
-          fi
-          ls -l .git
-          ls -l .git/refs
-          ls -l .git/refs/heads
+          echo 
         if: github.ref != 'refs/head/master'
 
       - name: Set image tag
