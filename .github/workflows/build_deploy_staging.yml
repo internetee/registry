@@ -34,13 +34,25 @@ jobs:
             Gemfile
             Gemfile.lock
 
-      - name: No changes check
+      - name: No changes in gems
         if: steps.gem-updates-check != 'true'
         run: echo "no changes"
 
-      - name: New gems found
-        if: steps.gem-updates-check == 'true'
-        run: echo "Gems have been changed"
+      - name: New gems found on master branch
+        if: |
+          github.event.pull_request == false &&
+          github.ref == 'refs/head/master'
+        run: echo "Gems have been changed in master branch"
+
+
+      - name: New gems found on feature branch
+        if: |
+          steps.gem-updates-check == 'true' &&
+          github.ref != 'refs/head/master'
+        run: |
+          echo "Gems have been changed in feature branch"
+          echo "Use dockerfile with gems installment for deploy image"
+
 
       - name: Diff gemfile on master
         run: |
