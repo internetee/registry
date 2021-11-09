@@ -36,6 +36,7 @@ jobs:
           else
             echo "BUILD_GEMS_IMAGE=1" >> $GITHUB_ENV
           fi
+          git branch
         if: github.ref != 'refs/head/master'
 
       - name: Set image tag
