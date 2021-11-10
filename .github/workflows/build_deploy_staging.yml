@@ -42,9 +42,9 @@ jobs:
 
       - name: Test step
         run: |
-         echo steps.gem-updates-check
+         echo ${steps.gem-updates-check}
          echo "changes found"
-         echo $github.ref
+         echo echo ${GITHUB_REF##*/}
 
       - name: New gems found on master branch
         if: |
