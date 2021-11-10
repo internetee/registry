@@ -35,8 +35,10 @@ jobs:
             Gemfile.lock
 
       - name: No changes in gems
-        if: steps.gem-updates-check != 'true'
-        run: echo "no changes"
+        if: steps.gem-updates-check == 'false'
+        run: |
+         echo "no changes"
+         echo $github.ref
 
       - name: New gems found on master branch
         if: |
