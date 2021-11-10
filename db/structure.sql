@@ -2582,7 +2582,10 @@ CREATE TABLE public.users (
     remember_created_at timestamp without time zone,
     failed_attempts integer DEFAULT 0 NOT NULL,
     locked_at timestamp without time zone,
-    legacy_id integer
+    legacy_id integer,
+    accreditation_date timestamp without time zone,
+    accreditation_expire_date timestamp without time zone,
+    uuid uuid DEFAULT public.gen_random_uuid()
 );
 
 
@@ -5230,6 +5233,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210616112332'),
 ('20210629074044'),
 ('20210628090353'),
-('20210708131814');
-
-
+('20210708131814'),
+('20210729131100'),
+('20210729134625');

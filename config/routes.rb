@@ -2,6 +2,8 @@ require_dependency 'epp_constraint'
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  get 'practice/index'
+  get 'practice/contact'
   # https://github.com/internetee/epp_proxy#translation-of-epp-calls
   namespace :epp do
     constraints(EppConstraint.new(:session)) do
@@ -72,6 +74,12 @@ Rails.application.routes.draw do
             get '/all_notifications', to: 'notifications#all_notifications'
           end
         end
+        resource :accreditation, only: [:index] do
+          collection do
+            get '/get_info', to: 'accreditation_info#index'
+            post '/push_results', to: 'accreditation_results#create'
+          end
+        end
         resources :nameservers do
           collection do
             put '/', to: 'nameservers#update'
@@ -116,6 +124,16 @@ Rails.application.routes.draw do
         end
         resources :contacts, only: %i[index show update], param: :uuid
         resources :companies, only: %i[index]
+      end
+
+      namespace :accreditation_center do
+        # At the moment invoice_status endpoint returns only cancelled invoices. But in future logic of this enpoint can change.
+        # And it will need to return invoices of different statuses. I decided to leave the name of the endpoint "invoice_status"
+        resources :invoice_status, only: [ :index ]
+        resource :domains, only: [ :show ], param: :name
+        resource :contacts, only: [ :show ], param: :id
+        # resource :auth, only: [ :index ]
+        get 'auth', to: 'auth#index'
       end
 
       resources :auctions, only: %i[index show update], param: :uuid
