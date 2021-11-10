@@ -41,17 +41,16 @@ jobs:
           echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
 
       - name: No changes in gems
+        # feature branch has no changes in gems
         if: steps.gem-updates-check.outputs.any_changed == 'false'
         run: |
-         echo "no changes"
-         # Build deployable image with gems-latest as base image.
+         echo "DOCKERFILE=Dockerfile.preinstalled_gems" >> $GITHUB_ENV
 
       - name: Gems are changed
+        # feature branch has new/updated gems
         if: steps.gem-updates-check.outputs.any_changed == 'true'
         run: |
-         echo ${{ steps.gem-updates-check.outputs.any_changed }}
-         echo "changes found"
-         echo echo ${GITHUB_REF##*/}
+         echo "DOCKERFILE=Dockerfile.generic" >> $GITHUB_ENV
 
       - name: New gems found on master branch
         if: |
@@ -98,7 +97,7 @@ jobs:
         env:
           KEY_BASE: ${{ secrets.KEY_BASE}}
         run: |
-          docker build -t $TAG --build-arg RAILS_ENV=staging --build-arg SECRET_KEY_BASE="$KEY_BASE" -f Dockerfile.generic .
+          docker build -t $TAG --build-arg RAILS_ENV=staging --build-arg SECRET_KEY_BASE="$KEY_BASE" -f $DOCKERFILE .
 
       - name: Clone epp_proxy project
         run: |
