@@ -40,9 +40,9 @@ jobs:
          echo "no changes"
          echo $github.ref
 
-      - name: Changes in gems
-        if: steps.gem-updates-check == 'true'
+      - name: Test step
         run: |
+         echo steps.gem-updates-check
          echo "changes found"
          echo $github.ref
 
