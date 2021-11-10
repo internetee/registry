@@ -40,6 +40,12 @@ jobs:
          echo "no changes"
          echo $github.ref
 
+      - name: Changes in gems
+        if: steps.gem-updates-check == 'true'
+        run: |
+         echo "changes found"
+         echo $github.ref
+
       - name: New gems found on master branch
         if: |
           github.event.pull_request == false &&
