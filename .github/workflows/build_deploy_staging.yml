@@ -42,7 +42,7 @@ jobs:
 
       - name: Test step
         run: |
-         echo ${steps.gem-updates-check}
+         echo ${{ steps.gem-updates-check }}
          echo "changes found"
          echo echo ${GITHUB_REF##*/}
 
