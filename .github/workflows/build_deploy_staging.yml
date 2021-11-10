@@ -58,9 +58,8 @@ jobs:
           github.ref == 'refs/head/master' &&
           steps.gem-updates-check.outputs.any_changed == 'true'
         run: |
-          echo "Gems have been changed in master branch"
-          # Build new gems image and push to registry.
-
+          docker build --no-cache -t ghcr.io/internetee/registry:gems-latest -f Dockerfile.gems .
+          docker push ghcr.io/internetee/registry:gems-latest
 
       - name: New gems found on feature branch
         if: |
