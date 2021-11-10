@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class RegistrantUserTest < ActiveSupport::TestCase
+  Company = Struct.new(:registration_number, :company_name)
+
   def setup
     super
 
@@ -30,14 +32,34 @@ class RegistrantUserTest < ActiveSupport::TestCase
     assert_equal Country.new('US'), user.country
   end
 
+  def test_should_update_org_contact_if_data_from_business_registry_dismatch
+    assert_equal 'US-1234', @user.registrant_ident
+    org = contacts(:acme_ltd)
+    org.ident_country_code = 'EE'
+    org.save(validate: false)
+    org.reload
+
+    company = Company.new(org.ident, "ace")
+
+    company_register = Minitest::Mock.new
+    company_register.expect(:representation_rights, [company], [{ citizen_personal_code: '1234',
+                                                                  citizen_country_code: 'USA' }])
+    @user.companies(company_register)
+    org.reload
+
+    assert_equal org.name, company.company_name
+  end
+
   def test_queries_company_register_for_associated_companies
     assert_equal 'US-1234', @user.registrant_ident
 
+    company = Company.new("acme", "ace")
+
     company_register = Minitest::Mock.new
-    company_register.expect(:representation_rights, %w[acme ace], [{ citizen_personal_code: '1234',
+    company_register.expect(:representation_rights, [company], [{ citizen_personal_code: '1234',
                                                                      citizen_country_code: 'USA' }])
 
-    assert_equal %w[acme ace], @user.companies(company_register)
+    assert_equal [company], @user.companies(company_register)
     company_register.verify
   end
 
