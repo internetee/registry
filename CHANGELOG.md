@@ -1,6 +1,6 @@
 10.11.2021
-* Org contact name is now updated according to info received form business registry: [#2199](https://github.com/internetee/registry/pull/2199]
-* New API endpoint for accreditation center login: [#2105](https://github.com/internetee/registry/pull/2105]
+* Org contact name is now updated according to info received form business registry: [#2199](https://github.com/internetee/registry/pull/2199)
+* New API endpoint for accreditation center login: [#2105](https://github.com/internetee/registry/pull/2105)
 
 25.10.2021
 * Setting and removing ForceDelete does not affect registry lock [#2195](https://github.com/internetee/registry/issues/2195)
