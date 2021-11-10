@@ -1,4 +1,3 @@
-ARG 
 FROM ghcr.io/internetee/registry:gems-latest
 LABEL org.opencontainers.image.source=https://github.com/internetee/registry
 ARG YARN_VER='1.22.10'
