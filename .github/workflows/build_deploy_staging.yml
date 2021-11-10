@@ -41,8 +41,9 @@ jobs:
          echo $github.ref
 
       - name: Test step
+        if: steps.gem-updates-check.outputs.any_changed == 'true'
         run: |
-         echo ${{ steps.gem-updates-check }}
+         echo ${{ steps.gem-updates-check.outputs.any_changed }}
          echo "changes found"
          echo echo ${GITHUB_REF##*/}
 
