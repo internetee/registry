@@ -26,7 +26,7 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Get specific changed files
+      - name: Check if there are gem updates
         id: gem-updates-check
         uses: tj-actions/changed-files@aae164d51be780a235cdeea89752bbacbbfee3c3
         with:
@@ -34,13 +34,19 @@ jobs:
             Gemfile
             Gemfile.lock
 
+      - name: Login to container registry
+        env:
+          PASSWORD: ${{ secrets.GHCR }}
+        run: |
+          echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
+
       - name: No changes in gems
         if: steps.gem-updates-check.outputs.any_changed == 'false'
         run: |
          echo "no changes"
-         echo $github.ref
+         # Build deployable image with gems-latest as base image.
 
-      - name: Test step
+      - name: Gems are changed
         if: steps.gem-updates-check.outputs.any_changed == 'true'
         run: |
          echo ${{ steps.gem-updates-check.outputs.any_changed }}
@@ -51,7 +57,9 @@ jobs:
         if: |
           github.ref == 'refs/head/master' &&
           steps.gem-updates-check.outputs.any_changed == 'true'
-        run: echo "Gems have been changed in master branch"
+        run: |
+          echo "Gems have been changed in master branch"
+          # Build new gems image and push to registry.
 
 
       - name: New gems found on feature branch
@@ -61,12 +69,6 @@ jobs:
         run: |
           echo "Gems have been changed in feature branch"
           echo "Use dockerfile with gems installment for deploy image"
-
-
-      - name: Diff gemfile on master
-        run: |
-          echo 
-        if: github.ref != 'refs/head/master'
 
       - name: Set image tag
         run: |
@@ -96,9 +98,7 @@ jobs:
       - name: Build registry image
         env:
           KEY_BASE: ${{ secrets.KEY_BASE}}
-          PASSWORD: ${{ secrets.GHCR }}
         run: |
-          echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
           docker build -t $TAG --build-arg RAILS_ENV=staging --build-arg SECRET_KEY_BASE="$KEY_BASE" -f Dockerfile.generic .
 
       - name: Clone epp_proxy project
