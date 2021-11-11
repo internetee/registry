@@ -12,7 +12,7 @@ class ValidationEvent < ApplicationRecord
 
   INVALID_EVENTS_COUNT_BY_LEVEL = {
     regex: 1,
-    mx: 5,
+    mx: 2,
     smtp: 1,
   }.freeze
 

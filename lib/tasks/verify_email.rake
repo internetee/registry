@@ -21,7 +21,7 @@ namespace :verify_email do
     contacts = prepare_contacts(options)
     logger.info 'No contacts to check email selected' and next if contacts.blank?
 
-    contacts.find_each do |contact|
+    contacts.each do |contact|
       VerifyEmailsJob.set(wait_until: spam_protect_timeout(options)).perform_later(
         contact_id: contact.id,
         check_level: check_level(options)
@@ -58,12 +58,19 @@ def prepare_contacts(options)
     validation_events_ids = ValidationEvent.where('created_at > ?', time).pluck(:validation_eventable_id)
 
     # Contact.where.not(id: validation_events_ids) + Contact.where(id: failed_contacts)
-    Contact.where.not(id: validation_events_ids)
+    Contact.where.not(id: validation_events_ids) | failed_contacts
   end
 end
 
 def failed_contacts
-  ValidationEvent.failed.pluck(:id)
+  failed_contacts = []
+  failed_validations_ids = ValidationEvent.failed.pluck(:validation_eventable_id)
+  contacts = Contact.where(id: failed_validations_ids)
+  contacts.each do |contact|
+    failed_contacts << contact unless contact.validation_events.last.success
+  end
+
+  failed_contacts
 end
 
 def contacts_by_domain(domain_name)

@@ -70,22 +70,19 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
     assert_equal ValidationEvent.count, Contact.count - 1
   end
 
-  # def test_should_verify_again_contact_which_has_faield_verification
-  #   expired_date = Time.now - ValidationEvent::VALIDATION_PERIOD - 1.day
-  #
-  #   assert_equal ValidationEvent.count, 0
-  #   run_task
-  #   assert_equal Contact.count, 9
-  #   assert_equal ValidationEvent.count, 8 # Contact has duplicate email and it is skip
-  #
-  #   contact = contacts(:john)
-  #   v = ValidationEvent.find_by(validation_eventable_id: contact.id)
-  #   v.update!(success: false)
-  #
-  #   run_task
-  #   binding.pry
-  #   assert_equal ValidationEvent.all.count, 9
-  # end
+  def test_should_verify_again_contact_which_has_faield_verification
+    assert_equal ValidationEvent.count, 0
+    run_task
+    assert_equal Contact.count, 9
+    assert_equal ValidationEvent.count, 8 # Contact has duplicate email and it is skip
+
+    contact = contacts(:john)
+    v = ValidationEvent.find_by(validation_eventable_id: contact.id)
+    v.update!(success: false)
+
+    run_task
+    assert_equal ValidationEvent.all.count, 9
+  end
 
   def test_should_verify_contact_which_has_expired_date_of_verification
     expired_date = Time.now - ValidationEvent::VALIDATION_PERIOD - 1.day
@@ -101,6 +98,26 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
 
     run_task
     assert_equal ValidationEvent.all.count, 9
+  end
+
+  def test_should_set_fd_for_domains_which_related_to_failed_emails
+    assert_equal ValidationEvent.count, 0
+    run_task
+    assert_equal Contact.count, 9
+    assert_equal ValidationEvent.count, 8 # Contact has duplicate email and it is skip
+
+    contact = contacts(:john)
+    v = ValidationEvent.find_by(validation_eventable_id: contact.id)
+    v.update!(success: false)
+
+    4.times do
+      contact.validation_events << v.dup
+    end
+
+    run_task
+    assert_equal ValidationEvent.all.count, 13
+
+    assert contact.domains.last.force_delete_scheduled?
   end
 
   def test_tasks_verifies_emails
