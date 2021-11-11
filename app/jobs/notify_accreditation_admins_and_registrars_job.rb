@@ -25,12 +25,12 @@ class NotifyAccreditationAdminsAndRegistrarsJob < ApplicationJob
   private
 
   def prepare_data_month_before
-    ApiUser.where("accreditation_expire_date > ? AND accreditation_expire_date < ?",
+    ApiUser.where('accreditation_expire_date > ? AND accreditation_expire_date < ?',
                   Time.zone.now.beginning_of_day + MONTH_BEFORE,
                   Time.zone.now.end_of_day + MONTH_BEFORE).includes(:registrar)
   end
 
   def prepare_data_expired_data
-    ApiUser.where("accreditation_expire_date < ?", Time.zone.now.beginning_of_day).includes(:registrar)
+    ApiUser.where('accreditation_expire_date < ?', Time.zone.now.beginning_of_day).includes(:registrar)
   end
 end
