@@ -1,0 +1,19 @@
+FROM ghcr.io/internetee/registry:gems-latest
+LABEL org.opencontainers.image.source=https://github.com/internetee/registry
+ARG YARN_VER='1.22.10'
+ARG RAILS_ENV
+ARG SECRET_KEY_BASE
+
+ENV RAILS_ENV "$RAILS_ENV"
+ENV SECRET_KEY_BASE "$SECRET_KEY_BASE"
+
+RUN npm install -g yarn@"$YARN_VER"
+
+RUN mkdir -p /opt/webapps/app/tmp/pids
+WORKDIR /opt/webapps/app
+
+COPY . .
+
+RUN bundle exec rails assets:precompile
+
+EXPOSE 3000
