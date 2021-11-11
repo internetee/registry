@@ -1,0 +1,32 @@
+name: build baseimage with gems
+
+on:
+
+  push:
+    branches:
+      - master
+    paths:
+      - "Gemfile"
+      - "Gemfile.lock"
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Login to container registry
+        env:
+          PASSWORD: ${{ secrets.GHCR }}
+        run: |
+          echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
+
+      - name: Build new image with gems
+        run: |
+          docker build --no-cache -t ghcr.io/internetee/registry:gems-latest -f Dockerfile.gems .
+          docker push ghcr.io/internetee/registry:gems-latest
+

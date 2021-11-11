@@ -52,22 +52,6 @@ jobs:
         run: |
          echo "DOCKERFILE=Dockerfile.generic" >> $GITHUB_ENV
 
-      - name: New gems found on master branch
-        if: |
-          github.ref == 'refs/head/master' &&
-          steps.gem-updates-check.outputs.any_changed == 'true'
-        run: |
-          docker build --no-cache -t ghcr.io/internetee/registry:gems-latest -f Dockerfile.gems .
-          docker push ghcr.io/internetee/registry:gems-latest
-
-      - name: New gems found on feature branch
-        if: |
-          steps.gem-updates-check == 'true' &&
-          github.ref != 'refs/head/master'
-        run: |
-          echo "Gems have been changed in feature branch"
-          echo "Use dockerfile with gems installment for deploy image"
-
       - name: Set image tag
         run: |
           SHORT_SHA=$(echo $GITHUB_SHA | cut -c 1-7) #pr-s test commit of merged state
