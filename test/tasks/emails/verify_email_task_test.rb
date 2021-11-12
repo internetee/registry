@@ -120,6 +120,36 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
     assert contact.domains.last.force_delete_scheduled?
   end
 
+  def test_change_failed_email_to_another_faield_email_shouldnt_to_remove_fd
+    assert_equal ValidationEvent.count, 0
+    run_task
+    assert_equal Contact.count, 9
+    assert_equal ValidationEvent.count, 8 # Contact has duplicate email and it is skip
+
+    contact = contacts(:john)
+    v = ValidationEvent.find_by(validation_eventable_id: contact.id)
+    v.update!(success: false)
+
+    4.times do
+      contact.validation_events << v.dup
+    end
+
+    run_task
+    assert_equal ValidationEvent.all.count, 13
+
+    assert contact.domains.last.force_delete_scheduled?
+
+    contact.email = "another@inbox.txt"
+    contact.save
+    contact.reload
+    v = ValidationEvent.find_by(validation_eventable_id: contact.id)
+    v.update!(success: false)
+
+    run_task
+
+    assert contact.domains.last.force_delete_scheduled?
+  end
+
   def test_tasks_verifies_emails
     capture_io { run_task }
 

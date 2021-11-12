@@ -67,9 +67,14 @@ def failed_contacts
   failed_validations_ids = ValidationEvent.failed.pluck(:validation_eventable_id)
   contacts = Contact.where(id: failed_validations_ids)
   contacts.each do |contact|
-    failed_contacts << contact unless contact.validation_events.last.success
+    failed_contacts << contact unless contact.validation_events.order(created_at: :asc).last.success
   end
 
+  # failed_contacts.each do |f|
+  #   p "+++++++++"
+  #   p f
+  #   p "+++++++++"
+  # end
   failed_contacts
 end
 
