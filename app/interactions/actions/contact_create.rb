@@ -12,7 +12,24 @@ module Actions
       maybe_remove_address
       maybe_attach_legal_doc
       validate_ident
+      maybe_change_email
       commit
+    end
+
+    def maybe_change_email
+      return if Rails.env.test?
+
+      [:regex, :mx].each do |m|
+        r = Actions::SimpleMailValidator.run(email: contact.email, level: m)
+
+        unless r.success
+          contact.add_epp_error('2005', nil, r.errors, I18n.t(:parameter_value_syntax_error))
+          @error = true
+          return
+        end
+      end
+
+      true
     end
 
     def maybe_remove_address
