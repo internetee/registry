@@ -10,7 +10,7 @@ module EmailVerifable
   end
 
   def validate_email_data(level:, count:)
-    validation_events.recent.order(id: :desc).limit(count).all? do |event|
+    validation_events.order(created_at: :desc).limit(count).all? do |event|
       event.check_level == level.to_s && event.failed?
     end
   end
@@ -18,7 +18,7 @@ module EmailVerifable
   def need_to_start_force_delete?
     flag = false
     ValidationEvent::INVALID_EVENTS_COUNT_BY_LEVEL.each do |level, count|
-      if validation_events.recent.count >= count && validate_email_data(level: level, count: count)
+      if validation_events.count >= count && validate_email_data(level: level, count: count)
         flag = true
       end
     end
@@ -27,9 +27,9 @@ module EmailVerifable
   end
 
   def need_to_lift_force_delete?
-    validation_events.recent.failed.empty? ||
+    validation_events.failed.empty? ||
       ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL.any? do |level, count|
-        validation_events.recent.order(id: :desc).limit(count).all? do |event|
+        validation_events.order(created_at: :desc).limit(count).all? do |event|
           event.check_level == level.to_s && event.successful?
         end
       end

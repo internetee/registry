@@ -67,15 +67,21 @@ def failed_contacts
   failed_validations_ids = ValidationEvent.failed.pluck(:validation_eventable_id)
   contacts = Contact.where(id: failed_validations_ids)
   contacts.each do |contact|
-    failed_contacts << contact unless contact.validation_events.order(created_at: :asc).last.success
+
+    if contact.validation_events.mx.order(created_at: :asc).present?
+      failed_contacts << contact unless contact.validation_events.mx.order(created_at: :asc).last.success
+    end
+
+    if contact.validation_events.regex.order(created_at: :asc).present?
+      failed_contacts << contact unless contact.validation_events.regex.order(created_at: :asc).last.success
+    end
+
+    if contact.validation_events.smtp.order(created_at: :asc).present?
+      failed_contacts << contact unless contact.validation_events.mx.order(created_at: :asc).last.success
+    end
   end
 
-  # failed_contacts.each do |f|
-  #   p "+++++++++"
-  #   p f
-  #   p "+++++++++"
-  # end
-  failed_contacts
+  failed_contacts.uniq
 end
 
 def contacts_by_domain(domain_name)
