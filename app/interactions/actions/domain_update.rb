@@ -21,7 +21,7 @@ module Actions
     end
 
     def validate_dnskey
-      domain = Domain.find_by(name: @params[:domain])
+      # domain = Domain.find_by(name: @params[:domain])
       dns = prepare_resolver
       update_params_info = parse_data_from_update_request(@params[:dns_keys][0])
 
@@ -45,16 +45,20 @@ module Actions
     end
 
     def parse_data_from_zonefile(dns_resolver:, hostname:)
-      alg = dns_resolver.query(hostname, 'DS').answer[0].rdata[1]
-      result = dns_resolver.query(hostname, 'DNSKEY').answer
+      begin
+        alg = dns_resolver.query(hostname, 'DS').answer[0].rdata[1]
+        result = dns_resolver.query(hostname, 'DNSKEY').answer
 
-      return nil if answer.empty?
+        return nil if answer.empty?
 
-      {
-        flags: result[0].flags.to_s,
-        algorithm: alg.to_s,
-        protocol: result[0].protocol.to_s,
-      }
+        {
+          flags: result[0].flags.to_s,
+          algorithm: alg.to_s,
+          protocol: result[0].protocol.to_s,
+        }
+      rescue Dnsruby::NXDomain
+      domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation))
+      end
     end
 
     def prepare_resolver
