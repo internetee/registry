@@ -100,6 +100,48 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
     assert_equal ValidationEvent.all.count, 9
   end
 
+  def test_should_set_fd_for_failed_email_after_several_times
+    contact = contacts(:john)
+    trumail_results = OpenStruct.new(success: false,
+                                     email: contact.email,
+                                     domain: "inbox.tests",
+                                     errors: {:mx=>"target host(s) not found"},
+                                     )
+    Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
+
+
+    assert_not contact.domains.last.force_delete_scheduled?
+
+    2.times do
+      run_task
+    end
+
+    assert contact.domains.last.force_delete_scheduled?
+  end
+
+  def test_fd_should_not_removed_if_change_email_to_another_invalid_one
+    contact = contacts(:john)
+
+    contact.domains.last.schedule_force_delete(type: :soft)
+    assert contact.domains.last.force_delete_scheduled?
+
+    contact.update(email: "test@box.test")
+    contact.reload
+
+    trumail_results = OpenStruct.new(success: false,
+                                     email: contact.email,
+                                     domain: "box.tests",
+                                     errors: {:mx=>"target host(s) not found"},
+                                     )
+    Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
+
+    1.times do
+      run_task
+    end
+
+    assert contact.domains.last.force_delete_scheduled?
+  end
+
   def run_task
     perform_enqueued_jobs do
       Rake::Task['verify_email:check_all'].execute
