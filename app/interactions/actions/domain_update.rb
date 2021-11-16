@@ -58,7 +58,8 @@ module Actions
     end
 
     def prepare_resolver
-      dns = Dnsruby::Resolver.new(nameserver: ['8.8.8.8', '8.8.4.4'])
+      dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
+      dns = Dnsruby::Resolver.new(nameserver: dns_servers || ['8.8.8.8, 8.8.4.4'])
       dns.do_validation = true
       dns.do_caching = true
       dns.dnssec = true
