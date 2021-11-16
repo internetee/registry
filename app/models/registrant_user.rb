@@ -28,7 +28,7 @@ class RegistrantUser < User
   end
 
   def update_contacts_before_receive(companies)
-    return if companies.blank?
+    return [] if companies.blank?
 
     companies.each do |company|
       contacts = Contact.where(ident: company.registration_number, ident_country_code: 'EE')
