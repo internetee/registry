@@ -14,7 +14,7 @@ module Actions
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
       assign_requested_statuses
-      validate_dnskey unless Rails.env.test? || Rails.env.development?
+      validate_dnskey unless Rails.env.test?
       ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
 
       commit
@@ -59,7 +59,7 @@ module Actions
 
     def prepare_resolver
       dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
-      dns = Dnsruby::Resolver.new(nameserver: dns_servers || ['8.8.8.8, 8.8.4.4'])
+      dns = Dnsruby::Resolver.new({nameserver: ['192.168.99.97']})
       dns.do_validation = true
       dns.do_caching = true
       dns.dnssec = true
