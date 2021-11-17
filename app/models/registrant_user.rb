@@ -25,6 +25,8 @@ class RegistrantUser < User
 
     companies = update_contacts_before_receive(companies)
     companies
+  rescue CompanyRegister::NotAvailableError
+    return []
   end
 
   def update_contacts_before_receive(companies)
@@ -42,9 +44,7 @@ class RegistrantUser < User
       end
     end
 
-    return companies
-  rescue CompanyRegister::NotAvailableError
-    nil
+    companies
   end
 
   def update_company_name(contact:, company:)
