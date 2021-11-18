@@ -3,11 +3,8 @@ class Invoice < ApplicationRecord
   include Invoice::Cancellable
   include Invoice::Payable
   include Invoice::BookKeeping
-<<<<<<< HEAD
-=======
   include Invoice::Linkpayable
   extend ToCsv
->>>>>>> Replace banklinks to everypay, add linkpay to email and pdf
 
   belongs_to :buyer, class_name: 'Registrar'
   has_one  :account_activity

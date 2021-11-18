@@ -262,7 +262,6 @@
             %h4
               You can pay your invoice using this secure
               = link_to('payment link', @invoice.linkpay_url)
-
       - if @invoice.qr_enabled?
         .clear
         %img.qr-center{src: "#{Rails.root}/public/#{@invoice.number}.png"}
