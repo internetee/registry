@@ -12,7 +12,7 @@ class Invoice
 
     def as_pdf
       generator = PDFKit.new(invoice_html)
-      generate_qr unless paid
+      generate_qr unless @invoice.paid?
       generator.to_pdf
     end
 
@@ -23,7 +23,7 @@ class Invoice
     end
 
     def generate_qr
-      return unless qr_enabled?
+      return unless @invoice.qr_enabled?
 
       qrcode = RQRCode::QRCode.new(@invoice.linkpay_url)
 
