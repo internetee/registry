@@ -3,3 +3,4 @@
 <%= t(:sincerely) %>,<br>
 <%= Setting.registry_invoice_contact %><br>
 <%= @invoice.seller_phone %>
+<%= 'You can pay your invoice using this secure ' %><%= t('payment_link', linkpay_url: @linkpay_url) if @linkpay_url %>

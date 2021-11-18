@@ -117,6 +117,12 @@
         height: 102px;
       }
 
+      .qr-center {
+        text-align: center;
+        width: 240px;
+        height: 240px;
+      }
+
       #header-content {
         position: absolute;
         bottom: 0;
@@ -194,19 +200,19 @@
 
             %dt= t(:reg_no)
             %dd= @invoice.buyer_reg_no
-          
+
           - if @invoice.buyer_address.present?
             %dt= Invoice.human_attribute_name :address
             %dd= @invoice.buyer_address
-          
+
           - if @invoice.buyer_country.present?
             %dt= t(:country)
             %dd= @invoice.buyer_country
-          
+
           - if @invoice.buyer_phone.present?
             %dt= t(:phone)
             %dd= @invoice.buyer_phone
-          
+
           - if @invoice.buyer_url.present?
             %dt= t(:url)
             %dd= @invoice.buyer_url
@@ -248,6 +254,17 @@
                   %th.no-border{colspan: 3}
                   %th= t(:total)
                   %td= number_to_currency @invoice.total
+
+      %hr
+      .row
+        .col-md-6.left
+          %h4
+            You can pay your invoice using this secure
+            = link_to('payment link', @invoice.linkpay_url)
+
+      - if @invoice.qr_enabled?
+        .clear
+        %img.qr-center{src: "#{Rails.root}/public/#{@invoice.number}.png"}
 
       #footer
         %hr

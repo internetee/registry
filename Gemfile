@@ -70,7 +70,8 @@ gem 'jquery-ui-rails', '6.0.1'
 gem 'pdfkit'
 gem 'que'
 gem 'que-web'
-gem 'sidekiq', '>= 6.4.1'
+gem 'rqrcode', '~> 2.0'
+gem 'sidekiq'
 
 gem 'company_register', github: 'internetee/company_register',
                         branch: 'master'
