@@ -258,9 +258,9 @@
       %hr
       .row
         .col-md-6.left
-          %h4
-            You can pay your invoice using this secure
-            - unless @invoice.paid?
+          - unless @invoice.paid?
+            %h4
+              You can pay your invoice using this secure
               = link_to('payment link', @invoice.linkpay_url)
 
       - if @invoice.qr_enabled?
