@@ -3,11 +3,11 @@
 module Invoice::Linkpayable
   extend ActiveSupport::Concern
 
-  KEY = ENV['linkpay_key']
-  LINKPAY_PREFIX = ENV['linkpay_prefix']
-  LINKPAY_CHECK_PREFIX = ENV['linkpay_check_prefix']
-  LINKPAY_TOKEN = ENV['linkpay_token']
-  LINKPAY_QR = ENV['linkpay_qr']
+  KEY = ENV['payments_every_pay_api_key']
+  LINKPAY_PREFIX = ENV['payments_every_pay_linkpay_prefix']
+  LINKPAY_CHECK_PREFIX = ENV['payments_every_pay_linkpay_check_prefix']
+  LINKPAY_TOKEN = ENV['payments_every_pay_linkpay_token']
+  LINKPAY_QR = ENV['payments_every_pay_linkpay_qr']
 
   def linkpay_url
     return if paid?
