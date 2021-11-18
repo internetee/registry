@@ -1,5 +1,5 @@
 %h4= t('registrar.invoices.pay_invoice')
 %hr
 
-= link_to @invoice.linkpay_url do
- = image_tag("every_pay.png")
+= link_to @invoice.linkpay_url, :id => "every_pay_link" do
+ = image_tag("every_pay.png", :class => "every_pay")

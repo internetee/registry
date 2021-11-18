@@ -26,7 +26,6 @@ class NewInvoicePaymentTest < ApplicationSystemTestCase
 
   def test_create_new_Every_Pay_payment
     create_invoice_and_visit_its_page
-
     assert_link('Pay')
   end
 end
