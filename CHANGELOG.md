@@ -1,4 +1,5 @@
 19.11.2021
+* Fix for registrant portal not returning privatly owned domains [#2214](https://github.com/internetee/registry/issues/2214)
 * optimized email validation background process [#2201](https://github.com/internetee/registry/pull/2201)
 
 10.11.2021
