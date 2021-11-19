@@ -1,3 +1,6 @@
+19.11.2021
+* optimized email validation background process [#2201](https://github.com/internetee/registry/pull/2201)
+
 10.11.2021
 * Org contact name is now updated according to info received form business registry: [#2199](https://github.com/internetee/registry/pull/2199)
 * New API endpoint for accreditation center login: [#2105](https://github.com/internetee/registry/pull/2105)
