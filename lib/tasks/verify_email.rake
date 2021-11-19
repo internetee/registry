@@ -21,7 +21,7 @@ namespace :verify_email do
     contacts = prepare_contacts(options)
     logger.info 'No contacts to check email selected' and next if contacts.blank?
 
-    contacts.find_each do |contact|
+    contacts.each do |contact|
       VerifyEmailsJob.set(wait_until: spam_protect_timeout(options)).perform_later(
         contact_id: contact.id,
         check_level: check_level(options)
@@ -46,12 +46,42 @@ def logger
   @logger ||= ActiveSupport::TaggedLogging.new(Syslog::Logger.new('registry'))
 end
 
+# Here I set the time after which the validation is considered obsolete
+# I take all contact records that have successfully passed the verification and fall within the deadline
+# I am looking for contacts that have not been verified or their verification is out of date
+
 def prepare_contacts(options)
   if options[:domain_name].present?
     contacts_by_domain(options[:domain_name])
   else
-    Contact.all
+    time = Time.zone.now - ValidationEvent::VALIDATION_PERIOD
+    validation_events_ids = ValidationEvent.where('created_at > ?', time).pluck(:validation_eventable_id)
+
+    # Contact.where.not(id: validation_events_ids) + Contact.where(id: failed_contacts)
+    Contact.where.not(id: validation_events_ids) | failed_contacts
   end
+end
+
+def failed_contacts
+  failed_contacts = []
+  failed_validations_ids = ValidationEvent.failed.pluck(:validation_eventable_id)
+  contacts = Contact.where(id: failed_validations_ids)
+  contacts.each do |contact|
+
+    if contact.validation_events.mx.order(created_at: :asc).present?
+      failed_contacts << contact unless contact.validation_events.mx.order(created_at: :asc).last.success
+    end
+
+    if contact.validation_events.regex.order(created_at: :asc).present?
+      failed_contacts << contact unless contact.validation_events.regex.order(created_at: :asc).last.success
+    end
+
+    if contact.validation_events.smtp.order(created_at: :asc).present?
+      failed_contacts << contact unless contact.validation_events.mx.order(created_at: :asc).last.success
+    end
+  end
+
+  failed_contacts.uniq
 end
 
 def contacts_by_domain(domain_name)

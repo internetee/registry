@@ -440,38 +440,6 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert @domain.status_notes[DomainStatus::FORCE_DELETE].include? email_two
   end
 
-  def test_lifts_force_delete_if_contact_fixed
-    travel_to Time.zone.parse('2010-07-05')
-    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
-    assert_not @domain.force_delete_scheduled?
-    email = '`@internet.ee'
-
-    Truemail.configure.default_validation_type = :regex
-
-    contact = @domain.admin_contacts.first
-    contact.update_attribute(:email, email)
-    contact.verify_email
-
-    assert contact.email_verification_failed?
-
-    @domain.reload
-
-    assert @domain.force_delete_scheduled?
-    contact.update_attribute(:email, 'aaa@bbb.com')
-    contact.reload
-    contact.verify_email
-
-    assert contact.need_to_lift_force_delete?
-    refute contact.need_to_start_force_delete?
-
-    assert_not contact.email_verification_failed?
-    CheckForceDeleteLift.perform_now
-
-    @domain.reload
-    assert_not @domain.force_delete_scheduled?
-    assert_nil @domain.status_notes[DomainStatus::FORCE_DELETE]
-  end
-
   def test_lifts_force_delete_after_bounce_changes
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?

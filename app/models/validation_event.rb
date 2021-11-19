@@ -6,13 +6,13 @@
 # For email_validation event kind also check_level (regex/mx/smtp) is stored in the event_data
 class ValidationEvent < ApplicationRecord
   enum event_type: ValidationEvent::EventType::TYPES, _suffix: true
-  VALIDATION_PERIOD = 1.month.freeze
+  VALIDATION_PERIOD = 1.year.freeze
   VALID_CHECK_LEVELS = %w[regex mx smtp].freeze
   VALID_EVENTS_COUNT_THRESHOLD = 5
 
   INVALID_EVENTS_COUNT_BY_LEVEL = {
     regex: 1,
-    mx: 5,
+    mx: 3,
     smtp: 1,
   }.freeze
 
@@ -26,7 +26,7 @@ class ValidationEvent < ApplicationRecord
 
   belongs_to :validation_eventable, polymorphic: true
 
-  scope :recent, -> { where('created_at > ?', Time.zone.now - VALIDATION_PERIOD) }
+  scope :recent, -> { where('created_at < ?', Time.zone.now - VALIDATION_PERIOD) }
   scope :successful, -> { where(success: true) }
   scope :failed, -> { where(success: false) }
   scope :regex, -> { where('event_data @> ?', { 'check_level': 'regex' }.to_json) }
@@ -69,5 +69,15 @@ class ValidationEvent < ApplicationRecord
     Domains::ForceDeleteEmail::Base.run(email: email)
   end
 
-  def lift_force_delete; end
+  def lift_force_delete
+    domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
+    registrant_ids = Registrant.where(email: email).pluck(:id)
+
+    domains = domain_contacts.map(&:domain).flatten +
+      Domain.where(registrant_id: registrant_ids)
+
+    domains.each do |domain|
+      Domains::ForceDeleteLift::Base.run(domain: domain)
+    end
+  end
 end

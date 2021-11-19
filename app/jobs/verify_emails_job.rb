@@ -3,9 +3,11 @@ class VerifyEmailsJob < ApplicationJob
 
   def perform(contact_id:, check_level: 'regex')
     contact = Contact.find_by(id: contact_id)
+
+    return if check_contact_for_duplicate_mail(contact_id)
+
     contact_not_found(contact_id) unless contact
     validate_check_level(check_level)
-
     action = Actions::EmailCheck.new(email: contact.email,
                                      validation_eventable: contact,
                                      check_level: check_level)
@@ -16,6 +18,16 @@ class VerifyEmailsJob < ApplicationJob
   end
 
   private
+
+  def check_contact_for_duplicate_mail(contact_id)
+    time = Time.zone.now - ValidationEvent::VALIDATION_PERIOD
+    contact = Contact.find(contact_id)
+    contact_ids = Contact.where(email: contact.email).where('created_at > ?', time).pluck(:id)
+
+    r = ValidationEvent.where(validation_eventable_id: contact_ids).order(created_at: :desc)
+
+    r.present?
+  end
 
   def contact_not_found(contact_id)
     raise StandardError, "Contact with contact_id #{contact_id} not found"
