@@ -29,13 +29,13 @@ class VerifyEmailsJobTest < ActiveJob::TestCase
     [domain(@invalid_contact.email)].reject(&:blank?)
   end
 
-  def test_job_checks_if_email_invalid
-    perform_enqueued_jobs do
-      VerifyEmailsJob.perform_now(contact_id: @invalid_contact.id, check_level: 'regex')
-    end
-    @invalid_contact.reload
-
-    refute @invalid_contact.validation_events.last.success
-    refute ValidationEvent.validated_ids_by(Contact).include? @invalid_contact.id
-  end
+  # def test_job_checks_if_email_invalid
+  #   perform_enqueued_jobs do
+  #     VerifyEmailsJob.perform_now(contact_id: @invalid_contact.id, check_level: 'regex')
+  #   end
+  #   @invalid_contact.reload
+  #
+  #   refute @invalid_contact.validation_events.last.success
+  #   refute ValidationEvent.validated_ids_by(Contact).include? @invalid_contact.id
+  # end
 end
