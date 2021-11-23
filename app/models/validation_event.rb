@@ -6,7 +6,7 @@
 # For email_validation event kind also check_level (regex/mx/smtp) is stored in the event_data
 class ValidationEvent < ApplicationRecord
   enum event_type: ValidationEvent::EventType::TYPES, _suffix: true
-  VALIDATION_PERIOD = 2.years.freeze
+  VALIDATION_PERIOD = 1.year.freeze
   VALID_CHECK_LEVELS = %w[regex mx smtp].freeze
   VALID_EVENTS_COUNT_THRESHOLD = 5
 
