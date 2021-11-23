@@ -101,7 +101,7 @@ def failed_contacts(options)
 end
 
 def check_mx_contact_validation(contact)
-  data = contact.validation_events.order(created_at: :asc).last(3)
+  data = contact.validation_events.order(created_at: :asc).last(ValidationEvent::MX_CHECK)
   flag = data.all? { |d| d.failed? }
 
   flag
