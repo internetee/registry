@@ -67,44 +67,63 @@ end
 
 def failed_contacts(options)
   failed_contacts = []
-  failed_validations_ids = ValidationEvent.failed.pluck(:validation_eventable_id)
+  failed_validations_ids = ValidationEvent.failed.distinct.pluck(:validation_eventable_id)
   contacts = Contact.where(id: failed_validations_ids).includes(:validation_events)
   contacts.find_each(batch_size: 10000) do |contact|
 
-    case options[:check_level]
-    when 'mx'
-      failed_contacts << unsuccess_mx(contact)
-    when 'regex'
-      failed_contacts << unsuccess_regex(contact)
-    when 'smtp'
-      failed_contacts << unsuccess_smtp(contact)
-    else
-      failed_contacts << unsuccess_mx(contact)
-      failed_contacts << unsuccess_regex(contact)
-      failed_contacts << unsuccess_smtp(contact)
+    data = contact.validation_events.order(created_at: :asc).last
+
+    if data.failed?
+      next if data.event_data['check_level'] == 'regex'
+
+      next if data.event_data['check_level'] == 'smtp'
+
+      next if check_mx_contact_validation(contact)
+
+      failed_contacts << contact.id
     end
+
+    # case options[:check_level]
+    # when 'mx'
+    #   failed_contacts << unsuccess_mx(contact)
+    # when 'regex'
+    #   failed_contacts << unsuccess_regex(contact)
+    # when 'smtp'
+    #   failed_contacts << unsuccess_smtp(contact)
+    # else
+    #   failed_contacts << unsuccess_mx(contact)
+    #   failed_contacts << unsuccess_regex(contact)
+    #   failed_contacts << unsuccess_smtp(contact)
+    # end
   end
 
   failed_contacts.uniq
 end
 
-def unsuccess_mx(contact)
-  if contact.validation_events.mx.order(created_at: :asc).present?
-    contact.id unless contact.validation_events.mx.order(created_at: :asc).last.success
-  end
+def check_mx_contact_validation(contact)
+  data = contact.validation_events.order(created_at: :asc).last(3)
+  flag = data.all? { |d| d.failed? }
+
+  flag
 end
 
-def unsuccess_regex(contact)
-  if contact.validation_events.regex.order(created_at: :asc).present?
-    contact.id unless contact.validation_events.regex.order(created_at: :asc).last.success
-  end
-end
-
-def unsuccess_smtp(contact)
-  if contact.validation_events.smtp.order(created_at: :asc).present?
-    contact.id unless contact.validation_events.smtp.order(created_at: :asc).last.success
-  end
-end
+# def unsuccess_mx(contact)
+#   if contact.validation_events.mx.order(created_at: :asc).present?
+#     contact.id unless contact.validation_events.mx.order(created_at: :asc).last.success
+#   end
+# end
+#
+# def unsuccess_regex(contact)
+#   if contact.validation_events.regex.order(created_at: :asc).present?
+#     contact.id unless contact.validation_events.regex.order(created_at: :asc).last.success
+#   end
+# end
+#
+# def unsuccess_smtp(contact)
+#   if contact.validation_events.smtp.order(created_at: :asc).present?
+#     contact.id unless contact.validation_events.smtp.order(created_at: :asc).last.success
+#   end
+# end
 
 def contacts_by_domain(domain_name)
   domain = ::Domain.find_by(name: domain_name)
