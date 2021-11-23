@@ -14,61 +14,10 @@ module Actions
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
       assign_requested_statuses
-      validate_dnskey unless Rails.env.test?
+      validate_dnssec unless Rails.env.test?
       ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
 
       commit
-    end
-
-    def validate_dnskey
-      # domain = Domain.find_by(name: @params[:domain])
-      dns = prepare_resolver
-      update_params_info = parse_data_from_update_request(@params[:dns_keys][0])
-
-      domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation)) if domain.nameservers.empty?
-
-      zone_info = parse_data_from_zonefile(dns_resolver: dns, hostname: domain.name)
-
-      unless zone_info == update_params_info || zone_info.nil?
-        domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation))
-      end
-
-      true
-    end
-
-    def parse_data_from_update_request(data)
-      {
-        flags: data[:flags],
-        algorithm: data[:alg],
-        protocol: data[:protocol],
-      }
-    end
-
-    def parse_data_from_zonefile(dns_resolver:, hostname:)
-      begin
-        alg = dns_resolver.query(hostname, 'DS').answer[0].rdata[1]
-        result = dns_resolver.query(hostname, 'DNSKEY').answer
-
-        return nil if answer.empty?
-
-        {
-          flags: result[0].flags.to_s,
-          algorithm: alg.to_s,
-          protocol: result[0].protocol.to_s,
-        }
-      rescue Dnsruby::NXDomain
-      domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation))
-      end
-    end
-
-    def prepare_resolver
-      dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
-      dns = Dnsruby::Resolver.new({nameserver: ['192.168.99.97']})
-      dns.do_validation = true
-      dns.do_caching = true
-      dns.dnssec = true
-
-      dns
     end
 
     def assign_relational_modifications
@@ -164,6 +113,114 @@ module Actions
         domain.add_epp_error(2005, nil, nil, %i[dnskeys invalid])
       end
     end
+
+    # ============================
+    # str.unpack("H*").first
+    # irb(main):111:0> res.answer[0].public_key.to_jwk
+    # => {"kty"=>:EC, "crv"=>:"P-256", "x"=>"Qib532jY06DaPgJQP9k4B8hjYGMKxgICf_QxsIxLp_A", "y"=>"A67HVgWBrj1mEkIT7OJxXAY263DFf5t7gu7a1hNUzw4", "kid"=>"rzgBwFog0-1Eopl1J9kBm0YU8lEsws_jJnh-Se8UcAg"}
+    # вот этат x и есть public key
+    # irb(main):122:0> res.answer[0].public_key.export
+    # => "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEQib532jY06DaPgJQP9k4B8hjYGMK\nxgICf/QxsIxLp/ADrsdWBYGuPWYSQhPs4nFcBjbrcMV/m3uC7trWE1TPDg==\n-----END PUBLIC KEY-----\n"
+
+    def prepare_resolver
+      dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
+      dns = Dnsruby::Resolver.new({nameserver: ['192.168.99.97']})
+      dns.do_validation = true
+      dns.do_caching = true
+      dns.dnssec = true
+
+      dns
+    end
+
+    def validate_dnssec
+      dns = prepare_resolver
+      ds_record = dns.query(@params[:domain], 'DS').answer[0].rdata
+      ds_digest = dns.query(@params[:domain], 'DS').answer[0].digest
+
+      p "++++++++++++++"
+      p ds_digest.upcase!
+      # @params[:dns_keys][0]
+      p generate_ds_digest(@params[:dns_keys][0])
+      p "++++++++++++++"
+    end
+
+    def generate_ds_digest(data)
+      flags_hex = int_to_hex(data[:flags].to_i)
+      protocol_hex = int_to_hex(data[:protocol].to_i)
+      alg_hex = int_to_hex(data[:alg].to_i)
+      public_key_hex = bin_to_hex(Base64.decode64(data[:public_key]))
+
+      domain = Domain.find_by(name: @params[:domain])
+
+      hex = [domain.name_in_wire_format, flags_hex, protocol_hex, alg_hex, public_key_hex].join
+      bin = hex_to_bin(hex)
+
+      ds_digest_type = Setting.ds_digest_type if ds_digest_type.blank? || !DS_DIGEST_TYPE.include?(ds_digest_type)
+
+      case ds_digest_type
+      when 1
+        ds_digest = Digest::SHA1.hexdigest(bin).upcase
+      when 2
+        ds_digest = Digest::SHA256.hexdigest(bin).upcase
+      end
+
+      ds_digest
+    end
+
+    def int_to_hex(num)
+      num = num.to_s(16)
+      num.prepend('0') if num.length.odd?
+    end
+
+    def hex_to_bin(num)
+      num.scan(/../).map(&:hex).pack('c*')
+    end
+
+    def bin_to_hex(num)
+      num.each_byte.map { |b| format('%02X', b) }.join
+    end
+
+    #
+    #     def validate_dnskey
+    #       # domain = Domain.find_by(name: @params[:domain])
+    #       dns = prepare_resolver
+    #       update_params_info = parse_data_from_update_request(@params[:dns_keys][0])
+    #
+    #       domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation)) if domain.nameservers.empty?
+    #
+    #       zone_info = parse_data_from_zonefile(dns_resolver: dns, hostname: domain.name)
+    #
+    #       unless zone_info == update_params_info || zone_info.nil?
+    #         domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation))
+    #       end
+    #
+    #       true
+    #     end
+    #
+    #     def parse_data_from_update_request(data)
+    #       {
+    #         flags: data[:flags],
+    #         algorithm: data[:alg],
+    #         protocol: data[:protocol],
+    #       }
+    #     end
+    #
+    #     def parse_data_from_zonefile(dns_resolver:, hostname:)
+    #       begin
+    #         alg = dns_resolver.query(hostname, 'DS').answer[0].rdata[1]
+    #         result = dns_resolver.query(hostname, 'DNSKEY').answer
+    #
+    #         return nil if answer.empty?
+    #
+    #         {
+    #           flags: result[0].flags.to_s,
+    #           algorithm: alg.to_s,
+    #           protocol: result[0].protocol.to_s,
+    #         }
+    #       rescue Dnsruby::NXDomain
+    #       domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation))
+    #       end
+    #     end
 
     def assign_removable_dnskey(key)
       dnkey = domain.dnskeys.find_by(key.except(:action))
