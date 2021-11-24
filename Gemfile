@@ -98,3 +98,7 @@ group :test do
 end
 
 gem 'aws-sdk-sesv2', '~> 1.19'
+
+# profiles
+gem 'pghero'
+gem 'pg_query', '>= 0.9.0'

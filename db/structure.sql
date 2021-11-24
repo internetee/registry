@@ -71,7 +71,8 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 CREATE TYPE public.validation_type AS ENUM (
     'email_validation',
-    'manual_force_delete'
+    'manual_force_delete',
+    'nameserver_validation'
 );
 
 
@@ -2261,6 +2262,41 @@ ALTER SEQUENCE public.payment_orders_id_seq OWNED BY public.payment_orders.id;
 
 
 --
+-- Name: pghero_query_stats; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pghero_query_stats (
+    id bigint NOT NULL,
+    database text,
+    "user" text,
+    query text,
+    query_hash bigint,
+    total_time double precision,
+    calls bigint,
+    captured_at timestamp without time zone
+);
+
+
+--
+-- Name: pghero_query_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pghero_query_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pghero_query_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_stats.id;
+
+
+--
 -- Name: prices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2619,8 +2655,7 @@ CREATE TABLE public.validation_events (
     validation_eventable_type character varying,
     validation_eventable_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    event_type public.validation_type
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -3163,6 +3198,13 @@ ALTER TABLE ONLY public.payment_orders ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: pghero_query_stats id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_query_stats_id_seq'::regclass);
+
+
+--
 -- Name: prices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3686,6 +3728,14 @@ ALTER TABLE ONLY public.payment_orders
 
 
 --
+-- Name: pghero_query_stats pghero_query_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pghero_query_stats
+    ADD CONSTRAINT pghero_query_stats_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: prices prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4047,6 +4097,13 @@ CREATE INDEX index_domain_transfers_on_domain_id ON public.domain_transfers USIN
 --
 
 CREATE INDEX index_domains_on_delete_date ON public.domains USING btree (delete_date);
+
+
+--
+-- Name: index_domains_on_json_statuses_history; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domains_on_json_statuses_history ON public.domains USING gin (json_statuses_history);
 
 
 --
@@ -4442,6 +4499,13 @@ CREATE INDEX index_payment_orders_on_invoice_id ON public.payment_orders USING b
 
 
 --
+-- Name: index_pghero_query_stats_on_database_and_captured_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pghero_query_stats_on_database_and_captured_at ON public.pghero_query_stats USING btree (database, captured_at);
+
+
+--
 -- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4488,13 +4552,6 @@ CREATE INDEX index_users_on_identity_code ON public.users USING btree (identity_
 --
 
 CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_id);
-
-
---
--- Name: index_validation_events_on_event_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_validation_events_on_event_type ON public.validation_events USING btree (event_type);
 
 
 --
@@ -5232,7 +5289,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210215101019'),
 ('20210616112332'),
 ('20210629074044'),
-('20210628090353'),
 ('20210708131814'),
 ('20210729131100'),
-('20210729134625');
+('20210729134625'),
+('20211028122103'),
+('20211028125245'),
+('20211029082225'),
+('20211124071418');
+
+
