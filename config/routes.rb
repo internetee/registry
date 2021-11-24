@@ -5,6 +5,12 @@ Rails.application.routes.draw do
   get 'practice/index'
   get 'practice/contact'
   # https://github.com/internetee/epp_proxy#translation-of-epp-calls
+  #
+  # profiles
+  if Rails.env.development? || Rails.env.staging?
+    mount PgHero::Engine, at: "pghero"
+  end
+
   namespace :epp do
     constraints(EppConstraint.new(:session)) do
       get 'session/hello', to: 'sessions#hello', as: 'hello'

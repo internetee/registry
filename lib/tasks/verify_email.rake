@@ -1,6 +1,7 @@
 require 'optparse'
 require 'rake_option_parser_boilerplate'
 require 'syslog/logger'
+require 'active_record'
 
 namespace :verify_email do
   # bundle exec rake verify_email:check_all -- --domain_name=shop.test --check_level=mx --spam_protect=true
@@ -18,14 +19,16 @@ namespace :verify_email do
                                                        banner: banner,
                                                        hash: opts_hash)
 
-    contacts = prepare_contacts(options)
-    logger.info 'No contacts to check email selected' and next if contacts.blank?
+    batch_contacts = prepare_contacts(options)
+    logger.info 'No contacts to check email selected' and next if batch_contacts.blank?
 
-    contacts.each do |contact|
-      VerifyEmailsJob.set(wait_until: spam_protect_timeout(options)).perform_later(
-        contact_id: contact.id,
-        check_level: check_level(options)
-      )
+    batch_contacts.find_in_batches(batch_size: 10_000) do |contacts|
+      contacts.each do |contact|
+        VerifyEmailsJob.set(wait_until: spam_protect_timeout(options)).perform_later(
+          contact: contact,
+          check_level: check_level(options)
+        )
+      end
     end
   end
 end
@@ -55,33 +58,38 @@ def prepare_contacts(options)
     contacts_by_domain(options[:domain_name])
   else
     time = Time.zone.now - ValidationEvent::VALIDATION_PERIOD
-    validation_events_ids = ValidationEvent.where('created_at > ?', time).pluck(:validation_eventable_id)
+    validation_events_ids = ValidationEvent.where('created_at > ?', time).distinct.pluck(:validation_eventable_id)
 
-    # Contact.where.not(id: validation_events_ids) + Contact.where(id: failed_contacts)
-    Contact.where.not(id: validation_events_ids) | failed_contacts
+    contacts_ids = Contact.where.not(id: validation_events_ids).pluck(:id)
+    Contact.where(id: contacts_ids + failed_contacts)
   end
 end
 
 def failed_contacts
   failed_contacts = []
-  failed_validations_ids = ValidationEvent.failed.pluck(:validation_eventable_id)
-  contacts = Contact.where(id: failed_validations_ids)
-  contacts.each do |contact|
+  failed_validations_ids = ValidationEvent.failed.distinct.pluck(:validation_eventable_id)
+  contacts = Contact.where(id: failed_validations_ids).includes(:validation_events)
+  contacts.find_each(batch_size: 10_000) do |contact|
 
-    if contact.validation_events.mx.order(created_at: :asc).present?
-      failed_contacts << contact unless contact.validation_events.mx.order(created_at: :asc).last.success
-    end
+    data = contact.validation_events.order(created_at: :asc).last
 
-    if contact.validation_events.regex.order(created_at: :asc).present?
-      failed_contacts << contact unless contact.validation_events.regex.order(created_at: :asc).last.success
-    end
+    if data.failed?
+      next if data.event_data['check_level'] == 'regex'
 
-    if contact.validation_events.smtp.order(created_at: :asc).present?
-      failed_contacts << contact unless contact.validation_events.mx.order(created_at: :asc).last.success
+      next if data.event_data['check_level'] == 'smtp'
+
+      next if check_mx_contact_validation(contact)
+
+      failed_contacts << contact.id
     end
   end
 
   failed_contacts.uniq
+end
+
+def check_mx_contact_validation(contact)
+  data = contact.validation_events.mx.order(created_at: :asc).last(ValidationEvent::MX_CHECK)
+  data.all? { |d| d.failed? }
 end
 
 def contacts_by_domain(domain_name)

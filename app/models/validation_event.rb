@@ -9,10 +9,11 @@ class ValidationEvent < ApplicationRecord
   VALIDATION_PERIOD = 1.year.freeze
   VALID_CHECK_LEVELS = %w[regex mx smtp].freeze
   VALID_EVENTS_COUNT_THRESHOLD = 5
+  MX_CHECK = 3
 
   INVALID_EVENTS_COUNT_BY_LEVEL = {
     regex: 1,
-    mx: 3,
+    mx: MX_CHECK,
     smtp: 1,
   }.freeze
 
