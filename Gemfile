@@ -102,3 +102,5 @@ gem 'aws-sdk-sesv2', '~> 1.19'
 # profiles
 gem 'pghero'
 gem 'pg_query', '>= 0.9.0'
+gem 'newrelic_rpm'
+gem 'newrelic-infinite_tracing'
