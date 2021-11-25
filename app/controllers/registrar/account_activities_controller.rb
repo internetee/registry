@@ -11,6 +11,7 @@ class Registrar
         end_time = params[:q][:created_at_lteq].try(:to_date)
         params[:q][:created_at_lteq] = end_time.try(:end_of_day)
       rescue
+        logger.warn('test message')
         logger.warn('Invalid date')
       end
 
