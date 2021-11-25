@@ -124,10 +124,16 @@ module Actions
       dns
     end
 
+    # {:domain=>"dnssec.ee", :registrar_id=>2, :dns_keys=>[{:flags=>"256", :protocol=>"3", :alg=>"13", :public_key=>"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE6JSqRM8bzEhp7jJbpor44JjEXPfsLBEEFviJ1fnRl85XrT9QiLtmkWk8/YcQggenUxWPvbkmFGbP17wsrbrKyg==", :action=>"rem"}]}
+
     def validate_dnssec
+      return if @params[:action] == 'rem'
+
       dns = prepare_resolver
       subzone_records = get_dnskey_records_from_subzone(resolver: dns, hostname: @params[:domain])
       form_extension_records = extensional_dnskeys_data
+
+      return true if form_extension_records.empty?
 
       validate_data(subzone_records: subzone_records, form_extension_records: form_extension_records)
     end
@@ -143,6 +149,7 @@ module Actions
 
       flag = false
       form_extension_records.each do |form_data|
+
         flag = make_magic(subzone_records: subzone_records, form_data: form_data)
 
         break if flag
@@ -189,6 +196,8 @@ module Actions
       result_container = []
 
       dnskeys_data.each do |ds|
+        next if ds[:action] == 'rem'
+
         result_container << {
                   basic: {
                     flags: ds[:flags].to_s,
