@@ -193,6 +193,8 @@ module Actions
     def extensional_dnskeys_data
       dnskeys_data = @params[:dns_keys]
 
+      return [] if dnskeys_data.nil?
+
       result_container = []
 
       dnskeys_data.each do |ds|
