@@ -42,6 +42,8 @@ directo_invoice_url: 'https://domain/ddddd.asp'
 cdns_scanner_input_file: '/opt/cdns/input.txt'
 cdns_scanner_output_file: '/opt/cdns/output.txt'
 dnssec_resolver_ips: 8.8.8.8, 8.8.4.4
+
+newrelic_secret: 'some-secret'
 #
 # EPP
 #
@@ -203,14 +205,14 @@ test:
   cdns_scanner_output_file: 'test/fixtures/files/cdns_output.txt'
   dnssec_resolver_ips: 8.8.8.8, 8.8.4.4
   legal_documents_dir: 'test/fixtures/files'
-  
+
   openssl_config_path: 'test/fixtures/files/test_ca/openssl.cnf'
   crl_dir: 'test/fixtures/files/test_ca/crl'
   crl_path: 'test/fixtures/files/test_ca/crl/crl.pem'
   ca_cert_path: 'test/fixtures/files/test_ca/certs/ca.crt.pem'
   ca_key_path: 'test/fixtures/files/test_ca/private/ca.key.pem'
   ca_key_password: 'password'
-  
+
   cert_path: 'test/fixtures/files/webclient/webclient.crt.pem'
   key_path: 'test/fixtures/files/webclient/webclient.key.pem'
   epp_hostname: 'epp_proxy'
