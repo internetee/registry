@@ -52,6 +52,20 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 
 --
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
+--
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -2297,6 +2311,39 @@ ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_sta
 
 
 --
+-- Name: pghero_space_stats; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pghero_space_stats (
+    id bigint NOT NULL,
+    database text,
+    schema text,
+    relation text,
+    size bigint,
+    captured_at timestamp without time zone
+);
+
+
+--
+-- Name: pghero_space_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pghero_space_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pghero_space_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pghero_space_stats_id_seq OWNED BY public.pghero_space_stats.id;
+
+
+--
 -- Name: prices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3205,6 +3252,13 @@ ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: pghero_space_stats id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pghero_space_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_space_stats_id_seq'::regclass);
+
+
+--
 -- Name: prices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3736,6 +3790,14 @@ ALTER TABLE ONLY public.pghero_query_stats
 
 
 --
+-- Name: pghero_space_stats pghero_space_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pghero_space_stats
+    ADD CONSTRAINT pghero_space_stats_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: prices prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4027,6 +4089,13 @@ CREATE INDEX index_contact_requests_on_whois_record_id ON public.contact_request
 --
 
 CREATE INDEX index_contacts_on_code ON public.contacts USING btree (code);
+
+
+--
+-- Name: index_contacts_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contacts_on_email ON public.contacts USING btree (email);
 
 
 --
@@ -4506,6 +4575,13 @@ CREATE INDEX index_pghero_query_stats_on_database_and_captured_at ON public.pghe
 
 
 --
+-- Name: index_pghero_space_stats_on_database_and_captured_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pghero_space_stats_on_database_and_captured_at ON public.pghero_space_stats USING btree (database, captured_at);
+
+
+--
 -- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4559,6 +4635,13 @@ CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_
 --
 
 CREATE INDEX index_validation_events_on_validation_eventable ON public.validation_events USING btree (validation_eventable_type, validation_eventable_id);
+
+
+--
+-- Name: index_validation_events_on_validation_eventable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_validation_events_on_validation_eventable_id ON public.validation_events USING btree (validation_eventable_id);
 
 
 --
@@ -5295,6 +5378,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211028122103'),
 ('20211028125245'),
 ('20211029082225'),
-('20211124071418');
+('20211124071418'),
+('20211124084308'),
+('20211125181033'),
+('20211125184334');
 
 
