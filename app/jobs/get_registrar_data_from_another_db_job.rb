@@ -1,35 +1,14 @@
-class AnotherDb < ActiveRecord::Base
-  ActiveRecord::Base.establish_connection(
-    {
-      :adapter => 'postgresql',
-      :database => 'registry_test',
-      :host => ENV.fetch("APP_DBHOST") { "localhost" },
-      :username => ENV.fetch("APP_DBUSER") { "postgres" },
-      :password => 'postgres'
-    }
-  )
-end
-
 class GetRegistrarDataFromAnotherDbJob < ApplicationJob
   def perform()
-    establish_connect_to_different_db
+    apiusers_from_test = Actions::GetAccrResultsFromAnotherDb.get_list_of_accredated_users
 
-    Registrar.all.each do |r|
-      p "++++++++"
-      p r
-      p "++++++++"
+    apiusers_from_test.each do |r|
+      u = User.find_by(name: r.name, ident: r.ident)
+      u.accreditation_date = DateTime.zone.now
+      u.save
     end
 
   end
 
-  def establish_connect_to_different_db
-    ActiveRecord::Base.establish_connection(
-      {
-        :adapter => 'postgresql',
-        :database => 'registry_test',
-        :host => ENV.fetch("APP_DBHOST") { "localhost" },
-        :username => ENV.fetch("APP_DBUSER") { "postgres" },
-        :password => 'postgres'
-      })
-  end
+
 end

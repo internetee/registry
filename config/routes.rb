@@ -341,6 +341,10 @@ Rails.application.routes.draw do
     resources :registrars do
       resources :api_users, except: %i[index]
       resources :white_ips
+
+      collection do
+        post 'set_test_date', to: 'registrars#set_test_date', as: 'set_test_date'
+      end
     end
 
     resources :contacts do

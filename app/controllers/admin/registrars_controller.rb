@@ -56,6 +56,17 @@ module Admin
     end
 
     def set_test_date
+      registrar = Registrar.find(params[:registrar_id])
+      apiusers_from_test = Actions::GetAccrResultsFromAnotherDb.get_current_registrars_users(registrar_name: registrar.name)
+
+      p "++++++++++++++"
+      p apiusers_from_test
+      p "++++++++++++++"
+      # apiusers_from_test.each do |r|
+      #   u = User.find_by(name: r.name, ident: r.ident)
+      #   u.accreditation_date = DateTime.zone.now
+      #   u.save
+      # end
 
     end
 

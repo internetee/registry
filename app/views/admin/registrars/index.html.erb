@@ -63,7 +63,9 @@
                         </td>
                         <td>
 
-                            <button class="btn btn-success" style="margin: 5px;">Click me</button>
+                        <%= button_to 'Test tests',
+                                      { controller: 'registrars', action: 'set_test_date', registrar_id: x.id},
+                                      { method: :post, class: 'btn btn-primary'} %>
                         </td>
                     </tr>
                 <% end %>
