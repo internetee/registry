@@ -1,3 +1,6 @@
+26.11.2021
+* Removed pghero from produdction deployment pipeline [#2225](https://github.com/internetee/registry/pull/2225)
+
 25.11.2021
 * Added newrelic gem for monitoring in dev [#2222](https://github.com/internetee/registry/pull/2222)
 
