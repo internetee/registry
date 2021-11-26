@@ -1,6 +1,6 @@
 class CreatePgheroQueryStats < ActiveRecord::Migration[6.1]
     def change
-      if Rails.env.development?
+      unless Rails.env.production?
         create_table :pghero_query_stats do |t|
           t.text :database
           t.text :user
