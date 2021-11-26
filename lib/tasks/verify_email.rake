@@ -27,7 +27,7 @@ namespace :verify_email do
         VerifyEmailsJob.set(wait_until: spam_protect_timeout(options)).perform_later(
           contact: contact,
           check_level: check_level(options)
-        )
+        ) if filter_check_level(contact)
       end
     end
   end
@@ -65,31 +65,48 @@ def prepare_contacts(options)
   end
 end
 
+def filter_check_level(contact)
+  if contact.validation_events.empty?
+    return true
+  end
+
+  data = contact.validation_events.order(created_at: :asc).last
+
+  return true if data.successful? && data.created_at < (Time.zone.now - ValidationEvent::VALIDATION_PERIOD)
+
+  if data.failed?
+    return false if data.event_data['check_level'] == 'regex'
+
+    return false if data.event_data['check_level'] == 'smtp'
+
+    # возвращает нет, мх валидные теперь
+    return false if check_mx_contact_validation(contact)
+
+    return true
+  end
+
+  false
+end
+
 def failed_contacts
   failed_contacts = []
   failed_validations_ids = ValidationEvent.failed.distinct.pluck(:validation_eventable_id)
   contacts = Contact.where(id: failed_validations_ids).includes(:validation_events)
   contacts.find_each(batch_size: 10_000) do |contact|
-
-    data = contact.validation_events.order(created_at: :asc).last
-
-    if data.failed?
-      next if data.event_data['check_level'] == 'regex'
-
-      next if data.event_data['check_level'] == 'smtp'
-
-      next if check_mx_contact_validation(contact)
-
-      failed_contacts << contact.id
-    end
+    failed_contacts << contact.id if filter_check_level(contact)
   end
 
   failed_contacts.uniq
 end
 
 def check_mx_contact_validation(contact)
+  flag = false
   data = contact.validation_events.mx.order(created_at: :asc).last(ValidationEvent::MX_CHECK)
-  data.all? { |d| d.failed? }
+  if data.count >= ValidationEvent::MX_CHECK
+    flag = data.all? { |d| d.failed? }
+  end
+
+  flag
 end
 
 def contacts_by_domain(domain_name)

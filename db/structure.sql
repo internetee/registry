@@ -4631,6 +4631,13 @@ CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_
 
 
 --
+-- Name: index_validation_events_on_event_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_validation_events_on_event_data ON public.validation_events USING gin (event_data);
+
+
+--
 -- Name: index_validation_events_on_validation_eventable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5381,6 +5388,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211124071418'),
 ('20211124084308'),
 ('20211125181033'),
-('20211125184334');
+('20211125184334'),
+('20211126085139');
 
 
