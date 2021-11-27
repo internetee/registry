@@ -79,7 +79,6 @@ def filter_check_level(contact)
 
     return false if data.event_data['check_level'] == 'smtp'
 
-    # возвращает нет, мх валидные теперь
     return false if check_mx_contact_validation(contact)
 
     return true
