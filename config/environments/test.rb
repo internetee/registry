@@ -41,4 +41,6 @@ Rails.application.configure do
 
   # If set to :null_store, Setting.x returns nil after first spec runs (database is emptied)
   config.cache_store = :memory_store
+
+  config.log_level = :fatal
 end

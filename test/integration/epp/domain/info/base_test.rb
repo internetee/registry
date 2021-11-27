@@ -193,7 +193,7 @@ class EppDomainInfoBaseTest < EppTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee')}">
         <command>
           <info>
-            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee')}">
+            <domain:info xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
               <domain:name>#{domain.name}</domain:name>
             </domain:info>
           </info>

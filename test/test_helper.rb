@@ -18,7 +18,6 @@ require 'capybara/minitest'
 require 'webmock/minitest'
 require 'support/assertions/epp_assertions'
 require 'sidekiq/testing'
-require 'spy/integration'
 
 Sidekiq::Testing.fake!
 
