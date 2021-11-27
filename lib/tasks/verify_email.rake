@@ -49,10 +49,6 @@ def logger
   @logger ||= ActiveSupport::TaggedLogging.new(Syslog::Logger.new('registry'))
 end
 
-# Here I set the time after which the validation is considered obsolete
-# I take all contact records that have successfully passed the verification and fall within the deadline
-# I am looking for contacts that have not been verified or their verification is out of date
-
 def prepare_contacts(options)
   if options[:domain_name].present?
     contacts_by_domain(options[:domain_name])
@@ -66,9 +62,7 @@ def prepare_contacts(options)
 end
 
 def filter_check_level(contact)
-  if contact.validation_events.empty?
-    return true
-  end
+  return true unless contact.validation_events.exists?
 
   data = contact.validation_events.order(created_at: :asc).last
 
@@ -99,13 +93,11 @@ def failed_contacts
 end
 
 def check_mx_contact_validation(contact)
-  flag = false
   data = contact.validation_events.mx.order(created_at: :asc).last(ValidationEvent::MX_CHECK)
-  if data.count >= ValidationEvent::MX_CHECK
-    flag = data.all? { |d| d.failed? }
-  end
 
-  flag
+  return false if data.size < ValidationEvent::MX_CHECK
+
+  data.all? { |d| d.failed? }
 end
 
 def contacts_by_domain(domain_name)
