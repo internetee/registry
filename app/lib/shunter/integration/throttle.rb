@@ -14,7 +14,7 @@ module Shunter
         around_action :throttle, only: actions
 
         def throttle
-          unless throttled_user.present? && Shunter.feature_enabled?
+          if throttled_user.blank? || !Shunter.feature_enabled?
             yield if block_given?
             return
           end
