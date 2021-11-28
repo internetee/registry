@@ -11,7 +11,7 @@ xml.epp_head do
         xml.tag!('domain:name', @domain.name)
         xml.tag!('domain:roid', @domain.roid)
         @domain.statuses.each do |s|
-          xml.tag!('domain:status', 's' => s)
+          xml.tag!('domain:status', 's' => s, 'n' => @domain.status_notes[s])
         end
 
         xml.tag!('domain:registrant', @domain.registrant.code)
