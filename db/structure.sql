@@ -129,7 +129,7 @@ CREATE FUNCTION public.generate_zonefile(i_origin character varying) RETURNS tex
           format('%-17s', ''), format('%-12s', zf.expire), '; expire, seconds', chr(10),
           format('%-17s', ''), format('%-12s', zf.minimum_ttl), '; minimum TTL, seconds', chr(10),
           format('%-17s', ''), ')'
-        ) FROM zones zf WHERE i_origin = zf.origin INTO tmp_var;
+       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 ) FROM zones zf WHERE i_origin = zf.origin INTO tmp_var;
 
         ret = concat(tmp_var, chr(10), chr(10));
 
@@ -2311,7 +2311,6 @@ ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_sta
 
 
 --
-<<<<<<< HEAD
 -- Name: pghero_space_stats; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2345,8 +2344,6 @@ ALTER SEQUENCE public.pghero_space_stats_id_seq OWNED BY public.pghero_space_sta
 
 
 --
-=======
->>>>>>> added structure
 -- Name: prices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3255,7 +3252,6 @@ ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
-<<<<<<< HEAD
 -- Name: pghero_space_stats id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3263,8 +3259,6 @@ ALTER TABLE ONLY public.pghero_space_stats ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
-=======
->>>>>>> added structure
 -- Name: prices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3796,7 +3790,6 @@ ALTER TABLE ONLY public.pghero_query_stats
 
 
 --
-<<<<<<< HEAD
 -- Name: pghero_space_stats pghero_space_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3805,8 +3798,6 @@ ALTER TABLE ONLY public.pghero_space_stats
 
 
 --
-=======
->>>>>>> added structure
 -- Name: prices prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4584,7 +4575,6 @@ CREATE INDEX index_pghero_query_stats_on_database_and_captured_at ON public.pghe
 
 
 --
-<<<<<<< HEAD
 -- Name: index_pghero_space_stats_on_database_and_captured_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4592,8 +4582,6 @@ CREATE INDEX index_pghero_space_stats_on_database_and_captured_at ON public.pghe
 
 
 --
-=======
->>>>>>> added structure
 -- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4643,7 +4631,6 @@ CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_
 
 
 --
-<<<<<<< HEAD
 -- Name: index_validation_events_on_event_data; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4651,8 +4638,6 @@ CREATE INDEX index_validation_events_on_event_data ON public.validation_events U
 
 
 --
-=======
->>>>>>> added structure
 -- Name: index_validation_events_on_validation_eventable; Type: INDEX; Schema: public; Owner: -
 --
 
