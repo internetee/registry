@@ -1,15 +1,9 @@
 module Domain::RegistryLockable
   extend ActiveSupport::Concern
 
-  LOCK_STATUSES = if Feature.enable_lock_domain_with_new_statuses?
-                    [DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED,
-                     DomainStatus::SERVER_DELETE_PROHIBITED,
-                     DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
-                  else
-                    [DomainStatus::SERVER_UPDATE_PROHIBITED,
-                     DomainStatus::SERVER_DELETE_PROHIBITED,
-                     DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
-                  end
+  LOCK_STATUSES = [DomainStatus::SERVER_OBJ_UPDATE_PROHIBITED,
+                   DomainStatus::SERVER_DELETE_PROHIBITED,
+                   DomainStatus::SERVER_TRANSFER_PROHIBITED].freeze
 
   EXTENSIONS_STATUS = [DomainStatus::SERVER_EXTENSION_UPDATE_PROHIBITED].freeze
 
@@ -25,7 +19,7 @@ module Domain::RegistryLockable
   def apply_statuses_locked_statuses(extensions_prohibited:)
     self.admin_store_statuses_history = self.statuses
     self.statuses |= LOCK_STATUSES
-    self.statuses |= EXTENSIONS_STATUS if Feature.obj_and_extensions_statuses_enabled? && extensions_prohibited
+    self.statuses |= EXTENSIONS_STATUS if extensions_prohibited
     self.locked_by_registrant_at = Time.zone.now
     alert_registrar_lock_changes!(lock: true)
 
