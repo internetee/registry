@@ -59,16 +59,21 @@ module Admin
       registrar = Registrar.find(params[:registrar_id])
       apiusers_from_test = Actions::GetAccrResultsFromAnotherDb.get_current_registrars_users(registrar_name: registrar.name)
 
-      p "++++++++++++++"
-      p apiusers_from_test
-      p "++++++++++++++"
-      # apiusers_from_test.each do |r|
-      #   u = User.find_by(name: r.name, ident: r.ident)
-      #   u.accreditation_date = DateTime.zone.now
-      #   u.save
-      # end
-      # 
+      apiusers_from_test.each do |api|
+        a = ApiUser.find_by(username: api.username, identity_code: api.identity_code)
+        Actions::RecordDateOfTest.record_result_to_api_user(a, api.accreditation_date) unless a.nil?
+      end
+    end
 
+    def remove_test_date
+      registrar = Registrar.find(params[:registrar_id])
+      registrar.api_users do |api|
+        p "+=============="
+        p api
+        api.accreditation_date = nil
+        api.accreditation_expire_date = nil
+        api.save
+      end
     end
 
     private

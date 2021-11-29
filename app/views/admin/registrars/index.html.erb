@@ -63,9 +63,15 @@
                         </td>
                         <td>
 
-                        <%= button_to 'Test tests',
+                            <% unless x.accredited? %>
+                                <%= button_to 'Test tests',
                                       { controller: 'registrars', action: 'set_test_date', registrar_id: x.id},
                                       { method: :post, class: 'btn btn-primary'} %>
+                            <% else %>
+                                <%= button_to 'Remove tests',
+                                              { controller: 'registrars', action: 'remove_test_date', registrar_id: x.id},
+                                              { method: :post, class: 'btn btn-danger'} %>
+                            <% end %>
                         </td>
                     </tr>
                 <% end %>

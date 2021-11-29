@@ -144,6 +144,15 @@ class Registrar < ApplicationRecord
     white_ips.api.include_ip?(ip)
   end
 
+  def accredited?
+    self.api_users.any? do |a|
+      return true unless a.accreditation_date.nil?
+      return a.accreditation_expire_date < Time.zone.now unless a.accreditation_expire_date.nil?
+
+      false
+    end
+  end
+
   # Audit log is needed, therefore no raw SQL
   def replace_nameservers(hostname, new_attributes, domains: [])
     transaction do
