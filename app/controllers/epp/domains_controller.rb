@@ -162,8 +162,8 @@ module Epp
       @prefix = 'update > update >'
       requires 'name'
 
-      dnskey_update_enabled if Feature.obj_and_extensions_statuses_enabled?
-      dnkey_update_prohibited if Feature.obj_and_extensions_statuses_enabled?
+      dnskey_update_enabled
+      dnkey_update_prohibited
       status_editing_disabled
     end
 
