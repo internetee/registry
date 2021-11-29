@@ -2311,6 +2311,7 @@ ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_sta
 
 
 --
+<<<<<<< HEAD
 -- Name: pghero_space_stats; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2344,6 +2345,8 @@ ALTER SEQUENCE public.pghero_space_stats_id_seq OWNED BY public.pghero_space_sta
 
 
 --
+=======
+>>>>>>> added structure
 -- Name: prices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3252,6 +3255,7 @@ ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+<<<<<<< HEAD
 -- Name: pghero_space_stats id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3259,6 +3263,8 @@ ALTER TABLE ONLY public.pghero_space_stats ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+=======
+>>>>>>> added structure
 -- Name: prices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3790,6 +3796,7 @@ ALTER TABLE ONLY public.pghero_query_stats
 
 
 --
+<<<<<<< HEAD
 -- Name: pghero_space_stats pghero_space_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3798,6 +3805,8 @@ ALTER TABLE ONLY public.pghero_space_stats
 
 
 --
+=======
+>>>>>>> added structure
 -- Name: prices prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4575,6 +4584,7 @@ CREATE INDEX index_pghero_query_stats_on_database_and_captured_at ON public.pghe
 
 
 --
+<<<<<<< HEAD
 -- Name: index_pghero_space_stats_on_database_and_captured_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4582,6 +4592,8 @@ CREATE INDEX index_pghero_space_stats_on_database_and_captured_at ON public.pghe
 
 
 --
+=======
+>>>>>>> added structure
 -- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4631,6 +4643,7 @@ CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_
 
 
 --
+<<<<<<< HEAD
 -- Name: index_validation_events_on_event_data; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4638,6 +4651,8 @@ CREATE INDEX index_validation_events_on_event_data ON public.validation_events U
 
 
 --
+=======
+>>>>>>> added structure
 -- Name: index_validation_events_on_validation_eventable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5385,8 +5400,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211028122103'),
 ('20211028125245'),
 ('20211029082225'),
-('20211124071418'),
-('20211124084308'),
-('20211125181033'),
-('20211125184334'),
-('20211126085139');
+('20211124071418');
+
