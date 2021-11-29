@@ -27,7 +27,7 @@ namespace :verify_email do
         VerifyEmailsJob.set(wait_until: spam_protect_timeout(options)).perform_later(
           contact: contact,
           check_level: check_level(options)
-        )
+        ) if filter_check_level(contact)
       end
     end
   end
@@ -49,10 +49,6 @@ def logger
   @logger ||= ActiveSupport::TaggedLogging.new(Syslog::Logger.new('registry'))
 end
 
-# Here I set the time after which the validation is considered obsolete
-# I take all contact records that have successfully passed the verification and fall within the deadline
-# I am looking for contacts that have not been verified or their verification is out of date
-
 def prepare_contacts(options)
   if options[:domain_name].present?
     contacts_by_domain(options[:domain_name])
@@ -65,23 +61,32 @@ def prepare_contacts(options)
   end
 end
 
+def filter_check_level(contact)
+  return true unless contact.validation_events.exists?
+
+  data = contact.validation_events.order(created_at: :asc).last
+
+  return true if data.successful? && data.created_at < (Time.zone.now - ValidationEvent::VALIDATION_PERIOD)
+
+  if data.failed?
+    return false if data.event_data['check_level'] == 'regex'
+
+    return false if data.event_data['check_level'] == 'smtp'
+
+    return false if check_mx_contact_validation(contact)
+
+    return true
+  end
+
+  false
+end
+
 def failed_contacts
   failed_contacts = []
   failed_validations_ids = ValidationEvent.failed.distinct.pluck(:validation_eventable_id)
   contacts = Contact.where(id: failed_validations_ids).includes(:validation_events)
   contacts.find_each(batch_size: 10_000) do |contact|
-
-    data = contact.validation_events.order(created_at: :asc).last
-
-    if data.failed?
-      next if data.event_data['check_level'] == 'regex'
-
-      next if data.event_data['check_level'] == 'smtp'
-
-      next if check_mx_contact_validation(contact)
-
-      failed_contacts << contact.id
-    end
+    failed_contacts << contact.id if filter_check_level(contact)
   end
 
   failed_contacts.uniq
@@ -89,6 +94,9 @@ end
 
 def check_mx_contact_validation(contact)
   data = contact.validation_events.mx.order(created_at: :asc).last(ValidationEvent::MX_CHECK)
+
+  return false if data.size < ValidationEvent::MX_CHECK
+
   data.all? { |d| d.failed? }
 end
 
