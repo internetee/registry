@@ -1,5 +1,6 @@
 29.11.2021
 * Performance optimation for email validation task [#2226](https://github.com/internetee/registry/pull/2226)
+* Removed obj and extension update prohibited toggle feature [#2229](https://github.com/internetee/registry/pull/2229)
 
 26.11.2021
 * Removed pghero from produdction deployment pipeline [#2225](https://github.com/internetee/registry/pull/2225)
