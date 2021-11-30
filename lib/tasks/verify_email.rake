@@ -11,7 +11,7 @@ namespace :verify_email do
     SPAM_PROTECT_TIMEOUT = 30.seconds
     options = {
       domain_name: nil,
-      check_level: 'mx',
+      check_level: 'regex',
       spam_protect: false,
     }
     banner = 'Usage: rake verify_email:check_all -- [options]'

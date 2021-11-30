@@ -1,7 +1,7 @@
 class VerifyEmailsJob < ApplicationJob
   discard_on StandardError
 
-  def perform(contact:, check_level: 'mx')
+  def perform(contact:, check_level: 'regex')
     contact_not_found(contact.id) unless contact
     validate_check_level(check_level)
     action = Actions::EmailCheck.new(email: contact.email,
