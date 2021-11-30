@@ -181,7 +181,9 @@ tara_rant_identifier: 'identifier'
 tara_rant_secret: 'secret'
 tara_rant_redirect_uri: 'redirect_uri'
 
-default_email_validation_type: 'regex'
+default_email_validation_type: 'mx'
+default_connection_timeout: '1'
+default_response_timeout: '1'
 
 
 epp_sessions_per_registrar: '4'

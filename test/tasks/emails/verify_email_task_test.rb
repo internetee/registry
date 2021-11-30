@@ -112,7 +112,7 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
 
     assert_not contact.domains.last.force_delete_scheduled?
 
-    2.times do
+    3.times do
       run_task
     end
 

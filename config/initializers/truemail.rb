@@ -15,15 +15,16 @@ Truemail.configure do |config|
   # config.smtp_error_body_pattern = /regex_pattern/
 
   # Optional parameter. Connection timeout is equal to 2 ms by default.
-  # config.connection_timeout = 1
+  config.connection_timeout = ENV['default_connection_timeout'].to_i
 
   # Optional parameter. A SMTP server response timeout is equal to 2 ms by default.
-  # config.response_timeout = 1
+  config.response_timeout = ENV['default_response_timeout'].to_i
 
   # Optional parameter. Total of connection attempts. It is equal to 2 by default.
   # This parameter uses in mx lookup timeout error and smtp request (for cases when
   # there is one mx server).
-  config.connection_attempts = 3
+  config.connection_attempts = 5
+  config.not_rfc_mx_lookup_flow = true
 
   # Optional parameter. You can predefine default validation type for
   # Truemail.validate('email@email.com') call without with-parameter
@@ -34,8 +35,11 @@ Truemail.configure do |config|
   elsif Rails.env.production?
     config.default_validation_type = :mx
   else
-    config.default_validation_type = :regex
+    config.default_validation_type = :mx
   end
+
+  # config.dns = %w[195.43.87.126 195.43.87.158]
+  config.dns = ENV['dnssec_resolver_ips'].to_s.strip.split(', ').freeze
 
   # Optional parameter. You can predefine which type of validation will be used for domains.
   # Also you can skip validation by domain. Available validation types: :regex, :mx, :smtp

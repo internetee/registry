@@ -5,7 +5,7 @@ module Actions
     def initialize(email:, validation_eventable:, check_level: nil)
       @email = email
       @validation_eventable = validation_eventable
-      @check_level = check_level || :regex
+      @check_level = check_level || :mx
     end
 
     def call
