@@ -153,6 +153,10 @@ class Registrar < ApplicationRecord
     end
   end
 
+  def accreditation_expired?
+    self.api_users.all? { |api| api.accreditation_expired? }
+  end
+
   # Audit log is needed, therefore no raw SQL
   def replace_nameservers(hostname, new_attributes, domains: [])
     transaction do
