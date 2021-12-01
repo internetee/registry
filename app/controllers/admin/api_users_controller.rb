@@ -49,9 +49,11 @@ module Admin
 
     def set_test_date_to_api_user
       user_api = User.find(params[:user_api_id])
-      apiusers_from_test = Actions::GetAccrResultsFromAnotherDb.get_userapi(user_api: user_api)
+      apiusers_from_test = Actions::GetAccrResultsFromAnotherDb.userapi_from_another_db(user_api: user_api)
 
-      Actions::RecordDateOfTest.record_result_to_api_user(user_api, apiusers_from_test.accreditation_date) unless apiusers_from_test.nil?
+      Actions::RecordDateOfTest.record_result_to_api_user(
+        user_api,
+        apiusers_from_test.accreditation_date) unless apiusers_from_test.nil?
 
       # redirect_to admin_registrar_api_user_path(user_api.registrar)
       redirect_to admin_registrar_path(user_api.registrar)

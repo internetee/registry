@@ -57,7 +57,8 @@ module Admin
 
     def set_test_date
       registrar = Registrar.find(params[:registrar_id])
-      apiusers_from_test = Actions::GetAccrResultsFromAnotherDb.get_current_registrars_users(registrar_name: registrar.name)
+      apiusers_from_test = Actions::GetAccrResultsFromAnotherDb
+                             .current_registrars_users(registrar_name: registrar.name)
 
       apiusers_from_test.each do |api|
         a = ApiUser.find_by(username: api.username, identity_code: api.identity_code)

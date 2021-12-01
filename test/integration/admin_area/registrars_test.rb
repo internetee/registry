@@ -26,7 +26,7 @@ class AdminAreaRegistrarsIntegrationTest < ActionDispatch::IntegrationTest
 
     assert_nil @registrar.api_users.first.accreditation_date
 
-    Spy.on_instance_method(Actions::GetAccrResultsFromAnotherDb, :get_current_registrars_users).and_return([api_user])
+    Spy.on_instance_method(Actions::GetAccrResultsFromAnotherDb, :current_registrars_users).and_return([api_user])
 
     post set_test_date_admin_registrars_path, params: { registrar_id: @registrar.id }
     @registrar.reload

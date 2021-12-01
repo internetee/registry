@@ -19,7 +19,7 @@ class AdminAreaRegistrarsIntegrationTest < ActionDispatch::IntegrationTest
     assert_nil @api_user.accreditation_date
     assert_equal api_user.accreditation_date, date
 
-    Spy.on_instance_method(Actions::GetAccrResultsFromAnotherDb, :get_userapi).and_return(api_user)
+    Spy.on_instance_method(Actions::GetAccrResultsFromAnotherDb, :userapi_from_another_db).and_return(api_user)
 
     post set_test_date_to_api_user_admin_registrars_path, params: { user_api_id: @api_user.id }
     @api_user.reload

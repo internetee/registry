@@ -145,16 +145,13 @@ class Registrar < ApplicationRecord
   end
 
   def accredited?
-    self.api_users.any? do |a|
+    api_users.any? do |a|
       return true unless a.accreditation_date.nil?
-      return a.accreditation_expire_date < Time.zone.now unless a.accreditation_expire_date.nil?
-
-      false
     end
   end
 
   def accreditation_expired?
-    self.api_users.all? { |api| api.accreditation_expired? }
+    api_users.all? { |api| api.accreditation_expired? }
   end
 
   # Audit log is needed, therefore no raw SQL

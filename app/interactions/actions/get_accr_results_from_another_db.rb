@@ -2,66 +2,60 @@ module Actions
   module GetAccrResultsFromAnotherDb
     extend self
 
-    def get_list_of_accredated_users
-      begin
-        establish_connect_to_different_db ENV['demo_registry_db_name'].to_sym
+    def list_of_accredated_users
+      establish_connect_to_different_db ENV['demo_registry_db_name'].to_sym
 
-        accr_users = []
-        User.where.not(accreditation_date: nil).each do |u|
-          accr_users << u
-        end
-
-        return_to_current_db
-
-        return accr_users
-      rescue Exception
-        return_to_current_db
+      accr_users = []
+      User.where.not(accreditation_date: nil).each do |u|
+        accr_users << u
       end
+
+      return_to_current_db
+
+      accr_users
+    rescue Exception
+      return_to_current_db
     end
 
-    def get_current_registrars_users(registrar_name:)
-      begin
-        establish_connect_to_different_db ENV['demo_registry_db_name'].to_sym
-        # create_mock_user(registrar_name)
+    def current_registrars_users(registrar_name:)
+      establish_connect_to_different_db ENV['demo_registry_db_name'].to_sym
+      # create_mock_user(registrar_name)
 
-        accr_users = []
+      accr_users = []
 
-        r = Registrar.find_by(name: registrar_name)
+      r = Registrar.find_by(name: registrar_name)
 
-        if r.nil?
-          return_to_current_db
-          return accr_users
-        end
-
-        r.api_users.where.not(accreditation_date: nil).each do |u|
-          accr_users << u
-        end
-
+      if r.nil?
         return_to_current_db
-
         return accr_users
-      rescue Exception
-        return_to_current_db
       end
+
+      r.api_users.where.not(accreditation_date: nil).each do |u|
+        accr_users << u
+      end
+
+      return_to_current_db
+
+      accr_users
+    rescue Exception
+      return_to_current_db
     end
 
-    def get_userapi(user_api:)
-      begin
-        establish_connect_to_different_db ENV['demo_registry_db_name'].to_sym
+    def userapi_from_another_db(user_api:)
+      establish_connect_to_different_db ENV['demo_registry_db_name'].to_sym
 
-        u = User.find_by(username: user_api.name, identity_code: user_api.identity_code)
+      user = User.find_by(username: user_api.name, identity_code: user_api.identity_code)
 
-        if u.nil?
-          return_to_current_db
-          return nil
-        end
-
+      if user.nil?
         return_to_current_db
-
-        return u
-      rescue Exception
-        return_to_current_db
+        return
       end
+
+      return_to_current_db
+
+      user
+    rescue Exception
+      return_to_current_db
     end
 
     private
@@ -100,8 +94,9 @@ module Actions
       a.plain_text_password = '1222password'
 
       if a.save
+        p 'success'
       else
-        a.errors
+        p a.errors
       end
     end
 
