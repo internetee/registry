@@ -47,6 +47,25 @@ module Admin
       redirect_to admin_registrar_path(@api_user.registrar), notice: t('.deleted')
     end
 
+    def set_test_date_to_api_user
+      user_api = User.find(params[:user_api_id])
+      apiusers_from_test = Actions::GetAccrResultsFromAnotherDb.get_userapi(user_api: user_api)
+
+      Actions::RecordDateOfTest.record_result_to_api_user(user_api, apiusers_from_test.accreditation_date) unless apiusers_from_test.nil?
+
+      # redirect_to admin_registrar_api_user_path(user_api.registrar)
+      redirect_to admin_registrar_path(user_api.registrar)
+    end
+
+    def remove_test_date_to_api_user
+      user_api = User.find(params[:user_api_id])
+      user_api.accreditation_date = nil
+      user_api.accreditation_expire_date = nil
+      user_api.save
+
+      redirect_to admin_registrar_path(user_api.registrar)
+    end
+
     private
 
     def api_user_params

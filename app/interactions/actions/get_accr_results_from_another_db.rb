@@ -4,7 +4,7 @@ module Actions
 
     def get_list_of_accredated_users
       begin
-        establish_connect_to_different_db :test
+        establish_connect_to_different_db ENV['demo_registry_db_name'].to_sym
 
         accr_users = []
         User.where.not(accreditation_date: nil).each do |u|
@@ -14,21 +14,24 @@ module Actions
         return_to_current_db
 
         return accr_users
-      rescue
+      rescue Exception
         return_to_current_db
       end
     end
 
     def get_current_registrars_users(registrar_name:)
       begin
-        establish_connect_to_different_db :test
+        establish_connect_to_different_db ENV['demo_registry_db_name'].to_sym
         # create_mock_user(registrar_name)
 
         accr_users = []
 
         r = Registrar.find_by(name: registrar_name)
 
-        return accr_users if r.nil?
+        if r.nil?
+          return_to_current_db
+          return accr_users
+        end
 
         r.api_users.where.not(accreditation_date: nil).each do |u|
           accr_users << u
@@ -37,7 +40,26 @@ module Actions
         return_to_current_db
 
         return accr_users
-      rescue
+      rescue Exception
+        return_to_current_db
+      end
+    end
+
+    def get_userapi(user_api:)
+      begin
+        establish_connect_to_different_db ENV['demo_registry_db_name'].to_sym
+
+        u = User.find_by(username: user_api.name, identity_code: user_api.identity_code)
+
+        if u.nil?
+          return_to_current_db
+          return nil
+        end
+
+        return_to_current_db
+
+        return u
+      rescue Exception
         return_to_current_db
       end
     end
@@ -68,7 +90,7 @@ module Actions
 
     def create_mock_api(reg_id)
       a = ApiUser.new
-      a.username = 'test_api'
+      a.username = 'oleghasjanov'
       a.email = 'test_api@eesti.ee'
       a.identity_code = '38903110313'
       a.roles = ['super']

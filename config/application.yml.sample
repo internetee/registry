@@ -183,6 +183,7 @@ tara_rant_redirect_uri: 'redirect_uri'
 
 default_email_validation_type: 'regex'
 
+demo_registry_db_name: 'test'
 
 epp_sessions_per_registrar: '4'
 

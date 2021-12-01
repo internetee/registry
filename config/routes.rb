@@ -345,6 +345,8 @@ Rails.application.routes.draw do
       collection do
         post 'set_test_date', to: 'registrars#set_test_date', as: 'set_test_date'
         post 'remove_test_date', to: 'registrars#remove_test_date', as: 'remove_test_date'
+        post 'set_test_date_to_api_user', to: 'api_users#set_test_date_to_api_user', as: 'set_test_date_to_api_user'
+        post 'remove_test_date_to_api_user', to: 'api_users#remove_test_date_to_api_user', as: 'remove_test_date_to_api_user'
       end
     end
 

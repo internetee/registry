@@ -63,17 +63,19 @@ module Admin
         a = ApiUser.find_by(username: api.username, identity_code: api.identity_code)
         Actions::RecordDateOfTest.record_result_to_api_user(a, api.accreditation_date) unless a.nil?
       end
+
+      redirect_to admin_registrars_url
     end
 
     def remove_test_date
       registrar = Registrar.find(params[:registrar_id])
-      registrar.api_users do |api|
-        p "+=============="
-        p api
+      registrar.api_users.each do |api|
         api.accreditation_date = nil
         api.accreditation_expire_date = nil
         api.save
       end
+
+      redirect_to admin_registrars_url
     end
 
     private
