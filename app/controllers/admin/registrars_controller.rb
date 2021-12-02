@@ -65,7 +65,7 @@ module Admin
         Actions::RecordDateOfTest.record_result_to_api_user(a, api.accreditation_date) unless a.nil?
       end
 
-      redirect_to admin_registrars_url
+      redirect_to request.referrer
     end
 
     def remove_test_date
@@ -76,7 +76,7 @@ module Admin
         api.save
       end
 
-      redirect_to admin_registrars_url
+      redirect_to request.referrer
     end
 
     private

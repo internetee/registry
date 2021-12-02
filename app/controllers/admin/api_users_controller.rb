@@ -56,7 +56,7 @@ module Admin
         apiusers_from_test.accreditation_date) unless apiusers_from_test.nil?
 
       # redirect_to admin_registrar_api_user_path(user_api.registrar)
-      redirect_to admin_registrar_path(user_api.registrar)
+      redirect_to request.referrer
     end
 
     def remove_test_date_to_api_user
@@ -65,7 +65,7 @@ module Admin
       user_api.accreditation_expire_date = nil
       user_api.save
 
-      redirect_to admin_registrar_path(user_api.registrar)
+      redirect_to request.referrer
     end
 
     private

@@ -3,6 +3,8 @@ en:
     api_users:
       index:
         header: API users
+        set_test_btn: Set Test
+        remove_test_btn: Remove Test
 
       new:
         header: New API user
