@@ -41,6 +41,8 @@ module Admin
     end
 
     def update
+      rollback_history = @domain.json_statuses_history['admin_store_statuses_history']
+      rollback_params = ActionController::Parameters.new(statuses: @domain.statuses).permit(:statuses)
       dp = ignore_empty_statuses
       @domain.is_admin = true
       @domain.admin_status_update dp[:statuses]
@@ -49,6 +51,8 @@ module Admin
         flash[:notice] = I18n.t('domain_updated')
         redirect_to [:admin, @domain]
       else
+        @domain.reload
+        @domain.admin_status_update rollback_history
         build_associations
         flash.now[:alert] = "#{I18n.t('failed_to_update_domain')} #{@domain.errors.full_messages.join(', ')}"
         render 'edit'
