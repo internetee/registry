@@ -32,7 +32,7 @@ module Epp
     def respond_with_session_limit_exceeded_error(exception)
       epp_errors.add(:epp_errors,
                      code: '2502',
-                     message: 'Session limit exceeded, try again later')
+                     msg: Shunter.default_error_message)
       handle_errors
       log_exception(exception)
     end

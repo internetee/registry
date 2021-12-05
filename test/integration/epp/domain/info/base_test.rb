@@ -236,6 +236,7 @@ class EppDomainInfoBaseTest < EppTestCase
     response_xml = Nokogiri::XML(response.body)
     assert_epp_response :session_limit_exceeded_server_closing_connection
     assert_correct_against_schema response_xml
+    assert response.body.include?(Shunter.default_error_message)
     ENV["shunter_default_threshold"] = '10000'
     ENV["shunter_enabled"] = 'false'
   end

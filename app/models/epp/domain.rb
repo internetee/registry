@@ -105,6 +105,9 @@ class Epp::Domain < Domain
            max: Setting.ns_max_count
          }
         ],
+        '2502' => [ # Rate limit exceeded
+          %i[base session_limit_exceeded],
+        ],
       ]
     }
   end

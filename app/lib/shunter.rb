@@ -9,6 +9,10 @@ module Shunter
 
   BASE_CONNECTION = ENV['shunter_redis_connection'] || { host: 'redis', port: 6379 }
 
+  def default_error_message
+    "Session limit exceeded. Current limit is #{default_threshold} in #{default_timespan} seconds"
+  end
+
   def default_timespan
     ENV['shunter_default_timespan'] || ONE_MINUTE
   end
