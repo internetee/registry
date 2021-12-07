@@ -5,10 +5,12 @@ class NameserverRecordValidationJob < ApplicationJob
   def perform(nameserver = nil)
     if nameserver.nil?
       Nameserver.all.map do |nameserver|
-        validate(nameserver)
+        result = validate(nameserver)
+        inform_to_registrar(nameserver) unless result
       end
     else
-      rvalidate(nameserver)
+      result = validate(nameserver)
+      inform_to_registrar(nameserver) unless result
     end
   end
 
@@ -16,10 +18,7 @@ class NameserverRecordValidationJob < ApplicationJob
 
   def validate(nameserver)
       return true if Resolv.getaddress nameserver.hostname
-
-      inform_to_registrar(nameserver)
   rescue Resolv::ResolvError
-      inform_to_registrar(nameserver)
       false
   end
 
