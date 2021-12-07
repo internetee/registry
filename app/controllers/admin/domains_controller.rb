@@ -42,7 +42,6 @@ module Admin
 
     def update
       rollback_history = @domain.json_statuses_history['admin_store_statuses_history']
-      rollback_params = ActionController::Parameters.new(statuses: @domain.statuses).permit(:statuses)
       dp = ignore_empty_statuses
       @domain.is_admin = true
       @domain.admin_status_update dp[:statuses]
