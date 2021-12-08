@@ -592,6 +592,8 @@ class Domain < ApplicationRecord
   def admin_status_update(update)
     update_unless_locked_by_registrant(update)
     update_not_by_locked_statuses(update)
+    return unless update
+
     # check for deleted status
     statuses.each do |s|
       unless update.include? s
