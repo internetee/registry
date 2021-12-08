@@ -21,7 +21,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     assert_text 'Force delete procedure has been scheduled'
   end
 
-  def test_schedules_domain_force_delete_two
+  def test_force_delete_prohibit_adding_deleteprohibited_status
     refute @domain.force_delete_scheduled?
 
     visit edit_admin_domain_url(@domain)
