@@ -56,6 +56,16 @@ class ApiUser < User
     username
   end
 
+  def accredited?
+    !accreditation_date.nil?
+  end
+
+  def accreditation_expired?
+    return false if accreditation_expire_date.nil?
+
+    accreditation_expire_date < Time.zone.now
+  end
+
   def unread_notifications
     registrar.notifications.unread
   end

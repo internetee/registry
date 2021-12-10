@@ -4,6 +4,8 @@ en:
       index:
         header: Registrars
         new_btn: New registrar
+        set_test_btn: Set Test
+        remove_test_btn: Remove Test
 
       new:
         header: New registrar
@@ -28,6 +30,8 @@ en:
         api_users:
           header: API Users
           new_btn: New API user
+          set_test_btn: Set Test
+          remove_test_btn: Remove Test
 
         white_ips:
           header: Whitelisted IPs

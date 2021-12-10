@@ -1,3 +1,5 @@
+require 'net/http'
+
 module Admin
   class RegistrarsController < BaseController  # rubocop:disable Metrics/ClassLength
     load_and_authorize_resource
@@ -55,7 +57,55 @@ module Admin
       end
     end
 
+    def set_test_date
+      registrar = Registrar.find(params[:registrar_id])
+
+      uri = URI.parse(ENV['registry_demo_registrar_results_url'] + "?registrar_name=#{registrar.name}")
+
+      response = base_get_request(uri: uri, port: ENV['registry_demo_registrar_port'])
+
+      if response.code == "200"
+        return record_result_for_each_api_user(response: response)
+      else
+        return redirect_to request.referrer, notice: 'Registrar no found'
+      end
+
+      redirect_to request.referrer, notice: 'Something goes wrong'
+    end
+
+    def remove_test_date
+      registrar = Registrar.find(params[:registrar_id])
+      registrar.api_users.each do |api|
+        api.accreditation_date = nil
+        api.accreditation_expire_date = nil
+        api.save
+      end
+
+      redirect_to request.referrer
+    end
+
     private
+
+    def record_result_for_each_api_user(response:)
+      result = JSON.parse(response.body)
+      registrar_users = result['registrar_users']
+
+      return redirect_to request.referrer, notice: 'Registrar found, but not accreditated yet' if registrar_users.empty?
+
+      registrar_users.each do |api|
+        a = ApiUser.find_by(username: api.username, identity_code: api.identity_code)
+        Actions::RecordDateOfTest.record_result_to_api_user(a, api.accreditation_date) unless a.nil?
+      end
+
+      redirect_to request.referrer, notice: 'Registrar found'
+    end
+
+    def base_get_request(uri:, port:)
+      http = Net::HTTP.new(uri.host, port)
+      req = Net::HTTP::Get.new(uri.request_uri)
+
+      http.request(req)
+    end
 
     def filter_by_status
       case params[:status]

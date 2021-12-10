@@ -635,6 +635,8 @@ en:
   registrant_ident: 'Registrant ident'
   contact_ident: 'Contact ident'
   results_per_page: 'Results per page'
+  set_test_btn: Set Test
+  remove_test_btn: Remove Test
   nameserver_hostname: 'Nameserver hostname'
   result_count:
     zero: 'No results'

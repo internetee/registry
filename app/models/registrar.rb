@@ -190,6 +190,16 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
     white_ips.api.include_ip?(ip)
   end
 
+  def accredited?
+    api_users.any? do |a|
+      return true unless a.accreditation_date.nil?
+    end
+  end
+
+  def accreditation_expired?
+    api_users.all? { |api| api.accreditation_expired? }
+  end
+
   # Audit log is needed, therefore no raw SQL
   def replace_nameservers(hostname, new_attributes, domains: [])
     transaction do
