@@ -93,8 +93,8 @@ module Admin
       return redirect_to request.referrer, notice: 'Registrar found, but not accreditated yet' if registrar_users.empty?
 
       registrar_users.each do |api|
-        a = ApiUser.find_by(username: api.username, identity_code: api.identity_code)
-        Actions::RecordDateOfTest.record_result_to_api_user(a, api.accreditation_date) unless a.nil?
+        a = ApiUser.find_by(username: api['username'], identity_code: api['identity_code'])
+        Actions::RecordDateOfTest.record_result_to_api_user(api_user: a, date: api['accreditation_date']) unless a.nil?
       end
 
       redirect_to request.referrer, notice: 'Registrar found'
