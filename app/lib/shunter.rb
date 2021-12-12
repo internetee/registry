@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Shunter
   module_function
 
@@ -7,7 +9,10 @@ module Shunter
   ONE_MINUTE = 60
   ONE_HUNDRED_REQUESTS = 100
 
-  BASE_CONNECTION = ENV['shunter_redis_connection'] || { host: 'redis', port: 6379 }
+  BASE_CONNECTION = {
+    host: ENV['shunter_redis_host'] || 'redis',
+    port: (ENV['shunter_redis_port'] || '6379').to_i,
+  }.freeze
 
   def default_error_message
     "Session limit exceeded. Current limit is #{default_threshold} in #{default_timespan} seconds"
