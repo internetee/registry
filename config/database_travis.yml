@@ -10,6 +10,10 @@ test:
   <<: *default
   database: registry_test
 
+demo:
+  <<: *default
+  database: registry_demo
+
 whois_test:
   <<: *default
   database: registry_whois_test
