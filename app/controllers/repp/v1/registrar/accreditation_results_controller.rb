@@ -1,7 +1,7 @@
 module Repp
   module V1
     module Registrar
-      if Rails.env.development? || Rails.env.staging?
+      if Rails.env.development? || Rails.env.staging? || Rails.env.test?
         class AccreditationResultsController < ActionController::API
           before_action :authenticate_shared_key
 

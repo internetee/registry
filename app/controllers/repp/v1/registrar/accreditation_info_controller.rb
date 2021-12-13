@@ -1,7 +1,7 @@
 module Repp
   module V1
     module Registrar
-      if Rails.env.development? || Rails.env.staging?
+      if Rails.env.development? || Rails.env.staging? || Rails.env.test?
         class AccreditationInfoController < BaseController
           api :GET, 'repp/v1/registrar/accreditation/get_info'
           desc 'check login user and return data'
