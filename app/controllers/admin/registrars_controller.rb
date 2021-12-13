@@ -60,7 +60,7 @@ module Admin
     def set_test_date
       registrar = Registrar.find(params[:registrar_id])
 
-      uri = URI.parse((ENV['registry_demo_registrar_results_url'] || 'testapi.test') + "?registrar_name=#{registrar.name}")
+      uri = URI.parse((ENV['registry_demo_registrar_results_url'] || 'http://testapi.test') + "?registrar_name=#{registrar.name}")
 
       response = base_get_request(uri: uri, port: ENV['registry_demo_registrar_port'])
 

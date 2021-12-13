@@ -50,7 +50,7 @@ module Admin
     def set_test_date_to_api_user
       user_api = User.find(params[:user_api_id])
 
-      uri = URI.parse((ENV['registry_demo_registrar_api_user_url'] || 'testapi.test') + "?username=#{user_api.username}&identity_code=#{user_api.identity_code}")
+      uri = URI.parse((ENV['registry_demo_registrar_api_user_url'] || 'http://testapi.test') + "?username=#{user_api.username}&identity_code=#{user_api.identity_code}")
 
       response = base_get_request(uri: uri, port: ENV['registry_demo_registrar_port'])
 
@@ -74,7 +74,7 @@ module Admin
       user_api.accreditation_date = nil
       user_api.accreditation_expire_date = nil
       user_api.save
-      
+
       redirect_to request.referrer
     end
 
