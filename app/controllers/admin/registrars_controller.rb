@@ -60,17 +60,17 @@ module Admin
     def set_test_date
       registrar = Registrar.find(params[:registrar_id])
 
-      uri = URI.parse((ENV['registry_demo_registrar_results_url'] || 'http://testapi.test') + "?registrar_name=#{registrar.name}")
+      uri = URI.parse((ENV['registry_demo_registrar_results_url']) + "?registrar_name=#{registrar.name}")
 
       response = base_get_request(uri: uri, port: ENV['registry_demo_registrar_port'])
 
       if response.code == "200"
         return record_result_for_each_api_user(response: response)
       else
-        return redirect_to request.referrer, notice: 'Registrar no found'
+        return redirect_to request.referer, notice: 'Registrar no found'
       end
 
-      redirect_to request.referrer, notice: 'Something goes wrong'
+      redirect_to request.referer, notice: 'Something goes wrong'
     end
 
     def remove_test_date
@@ -81,7 +81,7 @@ module Admin
         api.save
       end
 
-      redirect_to request.referrer
+      redirect_to request.referer
     end
 
     private
@@ -90,14 +90,14 @@ module Admin
       result = JSON.parse(response.body)
       registrar_users = result['registrar_users']
 
-      return redirect_to request.referrer, notice: 'Registrar found, but not accreditated yet' if registrar_users.empty?
+      return redirect_to request.referer, notice: 'Registrar found, but not accreditated yet' if registrar_users.empty?
 
       registrar_users.each do |api|
         a = ApiUser.find_by(username: api['username'], identity_code: api['identity_code'])
         Actions::RecordDateOfTest.record_result_to_api_user(api_user: a, date: api['accreditation_date']) unless a.nil?
       end
 
-      redirect_to request.referrer, notice: 'Registrar found'
+      redirect_to request.referer, notice: 'Registrar found'
     end
 
     def base_get_request(uri:, port:)

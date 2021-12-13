@@ -26,35 +26,35 @@ module Repp
             user = ApiUser.find_by(username: username)
 
             raise ActiveRecord::RecordNotFound if user.nil?
+            
+            user.accreditation_date = DateTime.current
+            user.accreditation_expire_date = user.accreditation_date + EXPIRE_DEADLINE
 
-          user.accreditation_date = DateTime.current
-          user.accreditation_expire_date = user.accreditation_date + EXPIRE_DEADLINE
-
-          if user.save
-            notify_registrar(user)
-            notify_admins
-            render_success(data: { user: user,
-                                   result: result,
-                                   message: 'Accreditation info successfully added' })
-          else
-            render_failed
+            if user.save
+              notify_registrar(user)
+              notify_admins
+              render_success(data: { user: user,
+                                    result: result,
+                                    message: 'Accreditation info successfully added' })
+            else
+              render_failed
+            end
           end
-        end
 
-        def notify_registrar(user)
-          AccreditationCenterMailer.test_was_successfully_passed_registrar(user.registrar.email).deliver_now
-        end
-
-        def notify_admins
-          admin_users_emails = User.all.reject { |u| u.roles.nil? }
-                                   .select { |u| u.roles.include? 'admin' }.pluck(:email)
-
-          return if admin_users_emails.empty?
-
-          admin_users_emails.each do |email|
-            AccreditationCenterMailer.test_was_successfully_passed_admin(email).deliver_now
+          def notify_registrar(user)
+            AccreditationCenterMailer.test_was_successfully_passed_registrar(user.registrar.email).deliver_now
           end
-        end
+
+          def notify_admins
+            admin_users_emails = User.all.reject { |u| u.roles.nil? }
+                                    .select { |u| u.roles.include? 'admin' }.pluck(:email)
+
+            return if admin_users_emails.empty?
+
+            admin_users_emails.each do |email|
+              AccreditationCenterMailer.test_was_successfully_passed_admin(email).deliver_now
+            end
+          end
 
           def authenticate_shared_key
             api_key = "Basic #{TEMPORARY_SECRET_KEY}"
