@@ -36,7 +36,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     last_input = page.all(:id, 'domain_statuses_').last
     last_input.find(:xpath, 'option[10]').select_option
     click_link_or_button 'Save'
-    assert_text 'Failed to update domain'
+    assert_text 'Domain updated!'
 
     click_link_or_button 'Cancel force delete'
     @domain.reload
