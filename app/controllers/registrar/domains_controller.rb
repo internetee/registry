@@ -91,14 +91,12 @@ class Registrar
     def create
       authorize! :create, Depp::Domain
       @domain_params = domain_params.to_h
-      if contacts_check = check_contacts
-        @data = @domain.create(@domain_params)
-      end
+      @data = @domain.create(@domain_params) if emails_valid?
 
       if @data && response_ok?
         redirect_to info_registrar_domains_url(domain_name: @domain_params[:name])
       else
-        flash[:alert] = t('.email_error_message') unless contacts_check
+        flash[:alert] = t('.email_error_message') unless @emails_check_result
         render 'new'
       end
     end
@@ -113,7 +111,7 @@ class Registrar
     def update
       authorize! :update, Depp::Domain
       @domain_params = params[:domain]
-      if contacts_check = check_contacts
+      if emails_valid?
         @data = @domain.update(@domain_params)
         @dispute = Dispute.active.find_by(domain_name: @domain_params[:name])
       end
@@ -121,7 +119,7 @@ class Registrar
       if @data && response_ok?
         redirect_to info_registrar_domains_url(domain_name: @domain_params[:name])
       else
-        flash[:alert] = t('.email_error_message') unless contacts_check
+        flash[:alert] = t('.email_error_message') unless @emails_check_result
         params[:domain_name] = @domain_params[:name]
         render 'new'
       end
@@ -179,9 +177,9 @@ class Registrar
 
     private
 
-    def check_contacts
+    def emails_valid?
       params_as_hash = @domain_params[:contacts_attributes].to_h
-      params_as_hash.all? { |_k, val| Contact.find_by(code: val[:code]).verify_email }
+      @emails_check_result = params_as_hash.all? { |_k, val| Contact.find_by(code: val[:code]).verify_email }
     end
 
     def init_domain
