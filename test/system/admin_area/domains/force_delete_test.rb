@@ -38,6 +38,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     click_link_or_button 'Save'
     assert_text 'Domain updated!'
 
+    visit edit_admin_domain_url(@domain)
     click_link_or_button 'Cancel force delete'
     @domain.reload
 
