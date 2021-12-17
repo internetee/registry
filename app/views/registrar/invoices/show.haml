@@ -16,5 +16,7 @@
   .col-md-12= render 'registrar/invoices/partials/items'
 
 - if @invoice.payable?
-  .row.semifooter
-    .col-md-6-offset-6.text-right= render 'registrar/invoices/partials/banklinks', locals: { payment_channels: PaymentOrder::CUSTOMER_PAYMENT_METHODS }
+  .col-md-6-offset-6.text-right
+    = link_to @invoice.linkpay_url, :id => "every_pay_link", style: "font-size: 22px", target: :_blank do
+      = 'Pay'
+    %hr

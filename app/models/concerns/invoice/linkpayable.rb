@@ -25,7 +25,7 @@ module Invoice::Linkpayable
 
   def linkpay_params(price)
     { 'transaction_amount' => price.to_s,
-      'order_reference' => reference_no,
+      'order_reference' => number,
       'customer_name' => buyer_name.parameterize(separator: '_', preserve_case: true),
       'customer_email' => buyer.email,
       'custom_field_1' => description.parameterize(separator: '_', preserve_case: true),

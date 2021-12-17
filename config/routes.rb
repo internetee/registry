@@ -220,8 +220,8 @@ Rails.application.routes.draw do
     get  'pay/return/:payment_order' => 'payments#back', as: 'return_payment_with'
     post 'pay/return/:payment_order' => 'payments#back'
     put  'pay/return/:payment_order' => 'payments#back'
-    post 'pay/callback/:payment_order' => 'payments#callback', as: 'response_payment_with'
-    get  'pay/go/:bank' => 'payments#pay', as: 'payment_with'
+    get 'pay/callback' => 'payments#callback', as: 'response_payment_with'
+    get 'pay/go/:bank' => 'payments#pay', as: 'payment_with'
 
     namespace :settings do
       resource :balance_auto_reload, controller: :balance_auto_reload, only: %i[edit update destroy]
