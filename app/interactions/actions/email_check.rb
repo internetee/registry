@@ -5,12 +5,13 @@ module Actions
     def initialize(email:, validation_eventable:, check_level: nil)
       @email = email
       @validation_eventable = validation_eventable
-      @check_level = check_level || :regex
+      @check_level = check_level || :mx
     end
 
     def call
       result = check_email(email)
       save_result(result)
+      filtering_old_failed_records(result)
       result.success ? log_success : log_failure(result)
       result.success
     end
@@ -23,6 +24,29 @@ module Actions
 
     def calculate_check_level
       Rails.env.test? && check_level == 'smtp' ? :mx : check_level.to_sym
+    end
+
+    def filtering_old_failed_records(result)
+      if @check_level == "mx" && !result.success && validation_eventable.validation_events.count > 3
+        validation_eventable.validation_events.order!(created_at: :asc)
+        while validation_eventable.validation_events.count > 3
+          validation_eventable.validation_events.first.destroy
+        end
+      end
+
+      if @check_level == "mx" && result.success && validation_eventable.validation_events.count > 1
+        validation_eventable.validation_events.order!(created_at: :asc)
+        while validation_eventable.validation_events.count > 1
+          validation_eventable.validation_events.first.destroy
+        end
+      end
+
+      if @check_level == "smtp" && validation_eventable.validation_events.count > 1
+        validation_eventable.validation_events.order!(created_at: :asc)
+        while validation_eventable.validation_events.count > 1
+          validation_eventable.validation_events.first.destroy
+        end
+      end
     end
 
     def save_result(result)
