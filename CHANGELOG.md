@@ -1,3 +1,6 @@
+17.12.2021
+* invalid emails with mx and smtp failures are now rechecked on every run until linked to any domain [#2231](https://github.com/internetee/registry/pull/2231)
+
 14.12.2021
 * Added Truemail validation to contact create and contact update [#2184](https://github.com/internetee/registry/issues/2184)
 
