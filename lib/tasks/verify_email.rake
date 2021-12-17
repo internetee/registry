@@ -71,9 +71,9 @@ def filter_check_level(contact)
   if data.failed?
     return false if data.event_data['check_level'] == 'regex'
 
-    return false if data.event_data['check_level'] == 'smtp'
-
-    return false if check_mx_contact_validation(contact)
+    # return false if data.event_data['check_level'] == 'smtp'
+    #
+    # return false if check_mx_contact_validation(contact)
 
     return true
   end
@@ -92,13 +92,13 @@ def failed_contacts
   failed_contacts.uniq
 end
 
-def check_mx_contact_validation(contact)
-  data = contact.validation_events.mx.order(created_at: :asc).last(ValidationEvent::MX_CHECK)
-
-  return false if data.size < ValidationEvent::MX_CHECK
-
-  data.all? { |d| d.failed? }
-end
+# def check_mx_contact_validation(contact)
+#   data = contact.validation_events.mx.order(created_at: :asc).last(ValidationEvent::MX_CHECK)
+#
+#   return false if data.size < ValidationEvent::MX_CHECK
+#
+#   data.all? { |d| d.failed? }
+# end
 
 def contacts_by_domain(domain_name)
   domain = ::Domain.find_by(name: domain_name)

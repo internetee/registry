@@ -16,6 +16,7 @@ module Actions
       maybe_update_ident if ident.present?
       maybe_attach_legal_doc
       maybe_change_email
+      maybe_filtering_old_failed_records
       commit
     end
 
@@ -33,6 +34,15 @@ module Actions
       end
 
       true
+    end
+
+    def maybe_filtering_old_failed_records
+      if contact.validation_events.count > 1
+        contact.validation_events.order!(created_at: :asc)
+        while contact.validation_events.count >= 1
+          contact.validation_events.first.destroy
+        end
+      end
     end
 
     def maybe_remove_address
