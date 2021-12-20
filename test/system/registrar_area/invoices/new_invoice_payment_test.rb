@@ -27,10 +27,6 @@ class NewInvoicePaymentTest < ApplicationSystemTestCase
   def test_create_new_Every_Pay_payment
     create_invoice_and_visit_its_page
 
-    invoice_id = current_url.split('/').last.to_i
-    linkpay_url = Invoice.find_by(id: invoice_id).linkpay_url
-
-    page.find_link('every_pay_link')[:href]
-    assert_equal(linkpay_url, page.find_link('every_pay_link')[:href])
+    assert_link('Pay')
   end
 end

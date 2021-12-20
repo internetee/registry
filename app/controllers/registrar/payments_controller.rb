@@ -17,9 +17,7 @@ class Registrar
       @payment_order.reload
 
       respond_to do |format|
-        if @payment_order
-          format.html { redirect_to invoice.linkpay_url_builder }
-        end
+        format.html { redirect_to invoice.linkpay_url_builder } if @payment_order
       end
     end
 
@@ -35,7 +33,9 @@ class Registrar
     end
 
     def callback
-      @payment_order = Invoice.find_by(number: params[:order_reference]).payment_orders.last
+      @invoice = Invoice.find_by(number: params[:order_reference])
+      order = @invoice.payment_orders.where(type: 'PaymentOrders::EveryPay').last
+      @payment_order = order || PaymentOrder.new_with_type(type: 'every_pay', invoice: @invoice)
       @payment_order.update!(response: params.to_unsafe_h)
       @payment_order.reload
 
