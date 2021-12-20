@@ -1,3 +1,6 @@
+20.12.2021
+* delete prohibited can be set to domains in force delete [#2218](https://github.com/internetee/registry/issues/2218)
+
 17.12.2021
 * invalid emails with mx and smtp failures are now rechecked on every run until linked to any domain [#2231](https://github.com/internetee/registry/pull/2231)
 
