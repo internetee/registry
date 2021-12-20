@@ -121,8 +121,8 @@ class Domain < ApplicationRecord
   validate :status_is_consistant
   def status_is_consistant
     has_error = (hold_status? && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
-    if !has_error && (statuses & DELETE_STATUSES).any?
-      has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED unless locked_by_registrant?
+    if !has_error && statuses.include?(DomainStatus::PENDING_DELETE)
+      has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
     end
     errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
   end
@@ -592,6 +592,8 @@ class Domain < ApplicationRecord
   def admin_status_update(update)
     update_unless_locked_by_registrant(update)
     update_not_by_locked_statuses(update)
+    return unless update
+
     # check for deleted status
     statuses.each do |s|
       unless update.include? s

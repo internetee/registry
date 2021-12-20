@@ -3,6 +3,7 @@ module Admin
     before_action :set_domain, only: %i[show edit update keep]
     authorize_resource
 
+    # rubocop:disable Metrics/MethodLength
     def index
       params[:q] ||= {}
       domains = if params[:statuses_contains]
@@ -30,6 +31,7 @@ module Admin
 
       render_by_format('admin/domains/index', 'domains')
     end
+    # rubocop:enable Metrics/MethodLength
 
     def show
       # Validation is needed to warn users
@@ -40,7 +42,9 @@ module Admin
       build_associations
     end
 
+    # rubocop:disable Metrics/MethodLength
     def update
+      rollback_history = @domain.json_statuses_history&.[]('admin_store_statuses_history')
       dp = ignore_empty_statuses
       @domain.is_admin = true
       @domain.admin_status_update dp[:statuses]
@@ -49,11 +53,14 @@ module Admin
         flash[:notice] = I18n.t('domain_updated')
         redirect_to [:admin, @domain]
       else
+        @domain.reload
+        @domain.admin_status_update rollback_history
         build_associations
         flash.now[:alert] = "#{I18n.t('failed_to_update_domain')} #{@domain.errors.full_messages.join(', ')}"
         render 'edit'
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def versions
       @domain = Domain.where(id: params[:domain_id]).includes({ versions: :item }).first

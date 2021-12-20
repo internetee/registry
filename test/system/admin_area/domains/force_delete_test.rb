@@ -21,6 +21,32 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     assert_text 'Force delete procedure has been scheduled'
   end
 
+  def test_force_delete_prohibit_adding_deleteprohibited_status
+    refute @domain.force_delete_scheduled?
+
+    visit edit_admin_domain_url(@domain)
+    click_link_or_button 'Force delete domain'
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+    assert_current_path edit_admin_domain_path(@domain)
+    assert_text 'Force delete procedure has been scheduled'
+
+    click_link_or_button 'Add new status'
+    last_input = page.all(:id, 'domain_statuses_').last
+    last_input.find(:xpath, 'option[10]').select_option
+    click_link_or_button 'Save'
+    assert_text 'Domain updated!'
+
+    visit edit_admin_domain_url(@domain)
+    click_link_or_button 'Cancel force delete'
+    @domain.reload
+
+    refute @domain.force_delete_scheduled?
+    assert_current_path edit_admin_domain_path(@domain)
+    assert_text 'Force delete procedure has been cancelled'
+  end
+
   def test_notifies_registrar
     assert_difference '@domain.registrar.notifications.size' do
       visit edit_admin_domain_url(@domain)
