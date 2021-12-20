@@ -16,11 +16,11 @@ class Registrar
       @payment_order.save
       @payment_order.reload
 
-      @payment_order.return_url = registrar_return_payment_with_url(@payment_order)
-      @payment_order.response_url = registrar_response_payment_with_url(@payment_order)
-
-      @payment_order.save
-      @payment_order.reload
+      respond_to do |format|
+        if @payment_order
+          format.html { redirect_to invoice.linkpay_url_builder }
+        end
+      end
     end
 
     def back
@@ -29,29 +29,17 @@ class Registrar
 
       if @payment_order.payment_received?
         @payment_order.complete_transaction
-
-        if @payment_order.invoice.paid?
-          flash[:notice] = t('.payment_successful')
-        else
-          flash[:alert] = t('.successful_payment_backend_error')
-        end
-      else
-        @payment_order.create_failure_report
-        flash[:alert] = t('.payment_not_received')
       end
-      redirect_to registrar_invoice_path(@payment_order.invoice)
+
+      render status: 200, json: { status: 'ok' }
     end
 
     def callback
-      @payment_order = PaymentOrder.find_by!(id: params[:payment_order])
+      @payment_order = Invoice.find_by(number: params[:order_reference]).payment_orders.last
       @payment_order.update!(response: params.to_unsafe_h)
+      @payment_order.reload
 
-      if @payment_order.payment_received?
-        @payment_order.complete_transaction
-      else
-        @payment_order.create_failure_report
-      end
-
+      CheckLinkpayStatusJob.set(wait: 1.minute).perform_later(@payment_order.id)
       render status: 200, json: { status: 'ok' }
     end
 

@@ -2,6 +2,7 @@ class PaymentOrder < ApplicationRecord
   include Versions
   include ActionView::Helpers::NumberHelper
 
+  TRUSTED_DATA = 'trusted_data'.freeze
   PAYMENT_INTERMEDIARIES = ENV['payments_intermediaries'].to_s.strip.split(', ').freeze
   PAYMENT_BANKLINK_BANKS = ENV['payments_banks'].to_s.strip.split(', ').freeze
   INTERNAL_PAYMENT_METHODS = %w[admin_payment system_payment].freeze
@@ -99,4 +100,5 @@ class PaymentOrder < ApplicationRecord
   def form_url
     ENV["payments_#{self.class.config_namespace_name}_url"]
   end
+
 end

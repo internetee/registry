@@ -17,6 +17,6 @@
 
 - if @invoice.payable?
   .col-md-6-offset-6.text-right
-    = link_to @invoice.linkpay_url, :id => "every_pay_link", style: "font-size: 22px", target: :_blank do
+    = link_to registrar_payment_with_path('every_pay', invoice_id: @invoice.id), :id => "every_pay_link", style: "font-size: 22px", target: :_blank do
       = 'Pay'
     %hr

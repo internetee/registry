@@ -1,9 +1,11 @@
 module PaymentOrders
   class EveryPay < PaymentOrder
+    include HttpRequester
     USER       = ENV['payments_every_pay_api_user']
     KEY        = ENV['payments_every_pay_api_key']
     ACCOUNT_ID = ENV['payments_every_pay_seller_account']
     SUCCESSFUL_PAYMENT = %w[settled authorized].freeze
+    LINKPAY_CHECK_PREFIX = ENV['payments_every_pay_linkpay_check_prefix'].freeze
 
     CONFIG_NAMESPACE = 'every_pay'.freeze
 
@@ -35,11 +37,11 @@ module PaymentOrders
     end
 
     def payment_received?
-      valid_response_from_intermediary? && settled_payment?
+      settled_payment?
     end
 
     def composed_transaction
-      base_transaction(sum: response['amount'],
+      base_transaction(sum: response['standing_amount'],
                        paid_at: Date.strptime(response['timestamp'], '%s'),
                        buyer_name: response['cc_holder_name'])
     end
@@ -48,6 +50,18 @@ module PaymentOrders
       notes = "User failed to make valid payment. Payment state: #{response['payment_state']}"
       status = 'cancelled'
       update!(notes: notes, status: status)
+    end
+
+    def check_linkpay_status
+      return if paid?
+
+      url = "#{LINKPAY_CHECK_PREFIX}#{response['payment_reference']}?api_username=#{USER}"
+      body = basic_auth_get(url: url, username: USER, password: KEY)
+      return unless body
+
+      self.response = body.merge(type: TRUSTED_DATA, timestamp: Time.zone.now)
+      save
+      complete_transaction if body['payment_state'] == 'settled'
     end
 
     private
