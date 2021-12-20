@@ -26,7 +26,11 @@ class EveryPayTest < ActiveSupport::TestCase
       "cc_year": '2018',
       "cc_holder_name": 'John Doe',
       "hmac_fields": 'account_id,amount,api_username,cc_holder_name,cc_last_four_digits,cc_month,cc_type,cc_year,hmac_fields,nonce,order_reference,payment_reference,payment_state,timestamp,transaction_result',
+<<<<<<< HEAD
       "hmac": '21090ca386d6f377c56f82330cb2ee3c541e5557',
+=======
+      "hmac": '2de2207b872a15963f83e0159333606780bb5a21',
+>>>>>>> Fix errors
       "invoice_id": '2'
     }.as_json
 

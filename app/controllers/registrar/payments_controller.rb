@@ -33,7 +33,9 @@ class Registrar
     end
 
     def callback
-      @payment_order = Invoice.find_by(number: params[:order_reference]).payment_orders.last
+      @invoice = Invoice.find_by(number: params[:order_reference])
+      order = @invoice.payment_orders.where(type: 'PaymentOrders::EveryPay').last
+      @payment_order = order || PaymentOrder.new_with_type(type: 'every_pay', invoice: @invoice)
       @payment_order.update!(response: params.to_unsafe_h)
       @payment_order.reload
 
