@@ -17,7 +17,7 @@ class EveryPayTest < ActiveSupport::TestCase
       "transaction_result": 'completed',
       "payment_reference": 'fd5d27b59a1eb597393cd5ff77386d6cab81ae05067e18d530b10f3802e30b56',
       "payment_state": 'settled',
-      "standing_amount": '12.00',
+      "amount": '12.00',
       "order_reference": 'e468a2d59a731ccc546f2165c3b1a6',
       "account_id": 'EUR3D1',
       "cc_type": 'master_card',
@@ -53,13 +53,6 @@ class EveryPayTest < ActiveSupport::TestCase
     expected_fields.each do |k, v|
       assert_equal(v, form_fields[k])
     end
-  end
-
-  def test_valid_response_from_intermediary?
-    assert(@successful_payment.valid_response_from_intermediary?)
-
-    @failed_payment.response = { 'what': 'definitely not valid everypay response' }
-    refute(@failed_payment.valid_response_from_intermediary?)
   end
 
   def test_valid_and_successful_payment_is_determined
