@@ -20,6 +20,9 @@ class PaymentOrder < ApplicationRecord
 
   attr_accessor :return_url, :response_url
 
+  scope :every_pay, -> { where('type = ?', 'PaymentOrders::EveryPay') }
+  scope :for_payment_reference, ->(ref) { where("response->>'payment_reference'=?", ref) }
+
   def self.supported_methods
     supported = []
 

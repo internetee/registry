@@ -10,40 +10,38 @@ class Registrar
 
     def pay
       invoice = Invoice.find(params[:invoice_id])
-      channel = params[:bank]
-
-      @payment_order = PaymentOrder.new_with_type(type: channel, invoice: invoice)
-      @payment_order.save
-      @payment_order.reload
 
       respond_to do |format|
-        format.html { redirect_to invoice.linkpay_url_builder } if @payment_order
+        format.html { redirect_to invoice.linkpay_url_builder } if invoice
       end
-    end
-
-    def back
-      @payment_order = PaymentOrder.find_by!(id: params[:payment_order])
-      @payment_order.update!(response: params.to_unsafe_h)
-
-      if @payment_order.payment_received?
-        @payment_order.complete_transaction
-      end
-
-      render status: 200, json: { status: 'ok' }
     end
 
     def callback
-      @invoice = Invoice.find_by(number: params[:order_reference])
-      order = @invoice.payment_orders.where(type: 'PaymentOrders::EveryPay').last
-      @payment_order = order || PaymentOrder.new_with_type(type: 'every_pay', invoice: @invoice)
-      @payment_order.update!(response: params.to_unsafe_h)
-      @payment_order.reload
+      invoice = Invoice.find_by(number: linkpay_params[:order_reference])
+      payment_order = find_payment_order(invoice: invoice, ref: linkpay_params[:order_reference])
 
-      CheckLinkpayStatusJob.set(wait: 1.minute).perform_later(@payment_order.id)
+      payment_order.response = {
+        order_reference: linkpay_params[:order_reference],
+        payment_reference: linkpay_params[:payment_reference],
+      }
+      payment_order.save
+
+      CheckLinkpayStatusJob.set(wait: 1.minute).perform_later(payment_order.id)
       render status: 200, json: { status: 'ok' }
     end
 
     private
+
+    def linkpay_params
+      params.permit(:order_reference, :payment_reference)
+    end
+
+    def find_payment_order(invoice:, ref:)
+      order = invoice.payment_orders.every_pay.for_payment_reference(ref).first
+      return order if order
+
+      PaymentOrder.new_with_type(type: 'every_pay', invoice: invoice)
+    end
 
     def check_supported_payment_method
       return if PaymentOrder.supported_method?(params[:bank], shortname: true)
