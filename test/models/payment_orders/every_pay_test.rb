@@ -17,7 +17,7 @@ class EveryPayTest < ActiveSupport::TestCase
       "transaction_result": 'completed',
       "payment_reference": 'fd5d27b59a1eb597393cd5ff77386d6cab81ae05067e18d530b10f3802e30b56',
       "payment_state": 'settled',
-      "amount": '12.00',
+      "standing_amount": '12.00',
       "order_reference": 'e468a2d59a731ccc546f2165c3b1a6',
       "account_id": 'EUR3D1',
       "cc_type": 'master_card',
@@ -26,7 +26,7 @@ class EveryPayTest < ActiveSupport::TestCase
       "cc_year": '2018',
       "cc_holder_name": 'John Doe',
       "hmac_fields": 'account_id,amount,api_username,cc_holder_name,cc_last_four_digits,cc_month,cc_type,cc_year,hmac_fields,nonce,order_reference,payment_reference,payment_state,timestamp,transaction_result',
-      "hmac": '2de2207b872a15963f83e0159333606780bb5a21',
+      "hmac": '21090ca386d6f377c56f82330cb2ee3c541e5557',
       "invoice_id": '2'
     }.as_json
 
@@ -42,7 +42,7 @@ class EveryPayTest < ActiveSupport::TestCase
 
   def test_form_fields
     expected_fields = {
-      api_username: 'api_user',
+      api_username: 'ca8d6336dd750ddb',
       account_id: 'EUR3D1',
       timestamp: '1522542600',
       amount: '12.00',
@@ -76,10 +76,9 @@ class EveryPayTest < ActiveSupport::TestCase
     @successful_payment.complete_transaction
 
     transaction = BankTransaction.find_by(
-      sum: @successful_payment.response['amount'],
+      sum: @successful_payment.response['standing_amount'],
       buyer_name: @successful_payment.response['cc_holder_name']
     )
-
     assert transaction.present?
   end
 end

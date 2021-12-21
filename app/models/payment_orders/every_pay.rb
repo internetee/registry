@@ -95,9 +95,9 @@ module PaymentOrders
     end
 
     def valid_amount?
-      return false unless response.key? 'amount'
+      return false unless response.key? 'standing_amount'
 
-      invoice.total == BigDecimal(response['amount'])
+      invoice.total == BigDecimal(response['standing_amount'])
     end
 
     def valid_account?
