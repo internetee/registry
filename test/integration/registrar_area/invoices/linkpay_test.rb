@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PaymentOrdersTest < ActionDispatch::IntegrationTest
+class LinkpayTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
   include Devise::Test::IntegrationHelpers
 
