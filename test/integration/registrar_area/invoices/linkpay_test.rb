@@ -5,27 +5,33 @@ class LinkpayTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup
-    @invoice = invoices(:one)
+    @invoice = invoices(:unpaid)
     @payment_order = payment_orders(:everypay_issued)
   end
 
   def test_response_from_linkpay_callback_endpoint
+    payment_reference = SecureRandom.uuid.to_s
     params = {
       order_reference: @invoice.number.to_s,
-      payment_reference: SecureRandom.uuid.to_s,
+      payment_reference: payment_reference,
     }
-    assert_changes('@invoice.payment_orders.last.updated_at') do
+    assert_changes("@invoice.payment_orders.count") do
       get '/registrar/pay/callback', params: params
       response_json = JSON.parse(response.body)
 
       assert_equal({ 'status' => 'ok' }, response_json)
       assert_equal(200, response.status)
       @invoice.reload
-      keys = ['order_reference', 'payment_reference']
-      keys.each do |k|
-        assert_equal(@invoice.payment_orders.last.response.with_indifferent_access[k],
-                     params.with_indifferent_access[k])
-      end
+
+      assert_equal(@invoice
+                     .payment_orders
+                     .every_pay
+                     .for_payment_reference(payment_reference)
+                     .first
+                     .response
+                     .symbolize_keys,
+                   params)
+
     end
   end
 
