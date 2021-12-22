@@ -103,5 +103,4 @@ class PaymentOrder < ApplicationRecord
   def form_url
     ENV["payments_#{self.class.config_namespace_name}_url"]
   end
-
 end

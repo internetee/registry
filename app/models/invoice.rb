@@ -4,7 +4,6 @@ class Invoice < ApplicationRecord
   include Invoice::Payable
   include Invoice::BookKeeping
   include Invoice::Linkpayable
-  extend ToCsv
 
   belongs_to :buyer, class_name: 'Registrar'
   has_one  :account_activity

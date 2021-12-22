@@ -5,7 +5,7 @@ module PaymentOrders
     KEY        = ENV['payments_every_pay_api_key']
     ACCOUNT_ID = ENV['payments_every_pay_seller_account']
     SUCCESSFUL_PAYMENT = %w[settled authorized].freeze
-    LINKPAY_CHECK_PREFIX = ENV['payments_every_pay_linkpay_check_prefix'].freeze
+    LINKPAY_CHECK_PREFIX = ENV['payments_every_pay_linkpay_check_prefix']
 
     CONFIG_NAMESPACE = 'every_pay'.freeze
 
