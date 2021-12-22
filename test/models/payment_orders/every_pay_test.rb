@@ -42,7 +42,7 @@ class EveryPayTest < ActiveSupport::TestCase
 
   def test_form_fields
     expected_fields = {
-      api_username: 'ca8d6336dd750ddb',
+      api_username: 'api_user',
       account_id: 'EUR3D1',
       timestamp: '1522542600',
       amount: '12.00',
