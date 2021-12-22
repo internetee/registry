@@ -1,8 +1,13 @@
 module PaymentOrders
   class EveryPay < PaymentOrder
+    include HttpRequester
+
     USER       = ENV['payments_every_pay_api_user']
     KEY        = ENV['payments_every_pay_api_key']
     ACCOUNT_ID = ENV['payments_every_pay_seller_account']
+    LINKPAY_CHECK_PREFIX = ENV['payments_every_pay_linkpay_check_prefix']
+
+    TRUSTED_DATA = 'trusted_data'.freeze
     SUCCESSFUL_PAYMENT = %w[settled authorized].freeze
 
     CONFIG_NAMESPACE = 'every_pay'.freeze
@@ -27,7 +32,7 @@ module PaymentOrders
     def valid_response_from_intermediary?
       return false unless response
 
-      valid_hmac? && valid_amount? && valid_account?
+      valid_amount? && valid_account?
     end
 
     def settled_payment?
@@ -39,7 +44,7 @@ module PaymentOrders
     end
 
     def composed_transaction
-      base_transaction(sum: response['amount'],
+      base_transaction(sum: response['standing_amount'],
                        paid_at: Date.strptime(response['timestamp'], '%s'),
                        buyer_name: response['cc_holder_name'])
     end
@@ -48,6 +53,18 @@ module PaymentOrders
       notes = "User failed to make valid payment. Payment state: #{response['payment_state']}"
       status = 'cancelled'
       update!(notes: notes, status: status)
+    end
+
+    def check_linkpay_status
+      return if paid?
+
+      url = "#{LINKPAY_CHECK_PREFIX}#{response['payment_reference']}?api_username=#{USER}"
+      body = basic_auth_get(url: url, username: USER, password: KEY)
+      return unless body
+
+      self.response = body.merge(type: TRUSTED_DATA, timestamp: Time.zone.now)
+      save
+      complete_transaction if body['payment_state'] == 'settled'
     end
 
     private
@@ -66,28 +83,14 @@ module PaymentOrders
       }.with_indifferent_access
     end
 
-    def valid_hmac?
-      hmac_fields = response['hmac_fields'].split(',')
-      hmac_hash = {}
-      hmac_fields.map do |field|
-        hmac_hash[field] = response[field]
-      end
-
-      hmac_string = hmac_hash.map { |key, _v| "#{key}=#{hmac_hash[key]}" }.join('&')
-      expected_hmac = OpenSSL::HMAC.hexdigest('sha1', KEY, hmac_string)
-      expected_hmac == response['hmac']
-    rescue NoMethodError
-      false
-    end
-
     def valid_amount?
-      return false unless response.key? 'amount'
+      return false unless response.key? 'standing_amount'
 
-      invoice.total == BigDecimal(response['amount'])
+      invoice.total == response['standing_amount'].to_d
     end
 
     def valid_account?
-      response['account_id'] == ACCOUNT_ID
+      response['account_name'] == ACCOUNT_ID
     end
   end
 end

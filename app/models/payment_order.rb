@@ -3,11 +3,9 @@ class PaymentOrder < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
   PAYMENT_INTERMEDIARIES = ENV['payments_intermediaries'].to_s.strip.split(', ').freeze
-  PAYMENT_BANKLINK_BANKS = ENV['payments_banks'].to_s.strip.split(', ').freeze
   INTERNAL_PAYMENT_METHODS = %w[admin_payment system_payment].freeze
-  PAYMENT_METHODS = [PAYMENT_INTERMEDIARIES, PAYMENT_BANKLINK_BANKS,
-                     INTERNAL_PAYMENT_METHODS].flatten.freeze
-  CUSTOMER_PAYMENT_METHODS = [PAYMENT_INTERMEDIARIES, PAYMENT_BANKLINK_BANKS].flatten.freeze
+  PAYMENT_METHODS = [PAYMENT_INTERMEDIARIES, INTERNAL_PAYMENT_METHODS].flatten.freeze
+  CUSTOMER_PAYMENT_METHODS = [PAYMENT_INTERMEDIARIES].flatten.freeze
 
   belongs_to :invoice, optional: false
 
@@ -18,6 +16,9 @@ class PaymentOrder < ApplicationRecord
                  failed: 'failed' }
 
   attr_accessor :return_url, :response_url
+
+  scope :every_pay, -> { where('type = ?', 'PaymentOrders::EveryPay') }
+  scope :for_payment_reference, ->(ref) { where("response->>'payment_reference'=?", ref) }
 
   def self.supported_methods
     supported = []

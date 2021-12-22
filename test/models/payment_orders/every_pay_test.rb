@@ -17,9 +17,9 @@ class EveryPayTest < ActiveSupport::TestCase
       "transaction_result": 'completed',
       "payment_reference": 'fd5d27b59a1eb597393cd5ff77386d6cab81ae05067e18d530b10f3802e30b56',
       "payment_state": 'settled',
-      "amount": '12.00',
+      "standing_amount": '12.00',
       "order_reference": 'e468a2d59a731ccc546f2165c3b1a6',
-      "account_id": 'EUR3D1',
+      "account_name": 'EUR3D1',
       "cc_type": 'master_card',
       "cc_last_four_digits": '0487',
       "cc_month": '10',
@@ -42,7 +42,7 @@ class EveryPayTest < ActiveSupport::TestCase
 
   def test_form_fields
     expected_fields = {
-      api_username: 'api_user',
+      api_username: 'ca8d6336dd750ddb',
       account_id: 'EUR3D1',
       timestamp: '1522542600',
       amount: '12.00',
@@ -76,7 +76,7 @@ class EveryPayTest < ActiveSupport::TestCase
     @successful_payment.complete_transaction
 
     transaction = BankTransaction.find_by(
-      sum: @successful_payment.response['amount'],
+      sum: @successful_payment.response['standing_amount'],
       buyer_name: @successful_payment.response['cc_holder_name']
     )
 

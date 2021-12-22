@@ -144,6 +144,10 @@ payments_every_pay_url: 'https://igw-demo.every-pay.com/transactions/'
 payments_every_pay_seller_account: 'EUR3D1'
 payments_every_pay_api_user: 'api_user'
 payments_every_pay_api_key: 'api_key'
+payments_every_pay_linkpay_prefix: 'linkpay_prefix'
+payments_every_pay_linkpay_check_prefix: 'linkpay_check_prefix'
+payments_every_pay_linkpay_token: 'linkpay_token'
+payments_every_pay_linkpay_qr: true
 
 e_invoice_provider_name: 'omniva'
 e_invoice_provider_password:

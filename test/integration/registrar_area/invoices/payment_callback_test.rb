@@ -12,17 +12,13 @@ class PaymentCallbackTest < ApplicationIntegrationTest
     @invoice.update!(account_activity: nil, total: 12)
   end
 
-  def test_every_pay_callback_returns_status_200
-    request_params = every_pay_request_params
-    post "/registrar/pay/callback/#{@payment_order.id}", params: request_params
-
-    assert_response :ok
-  end
-
   def test_invoice_is_marked_as_paid
-    request_params = every_pay_request_params
-    post "/registrar/pay/callback/#{@payment_order.id}", params: request_params
+    response = linkpay_response.merge(type: 'trusted_data', timestamp: Time.zone.now)
+    @payment_order.response = response
+    @payment_order.save
+    @payment_order.reload
 
+    @payment_order.complete_transaction if @payment_order.response['payment_state'] == 'settled'
     assert @payment_order.invoice.paid?
   end
 
@@ -42,24 +38,49 @@ class PaymentCallbackTest < ApplicationIntegrationTest
 
   def every_pay_request_params
     {
-      nonce:               "392f2d7748bc8cb0d14f263ebb7b8932",
-      timestamp:           "1524136727",
-      api_username:        "ca8d6336dd750ddb",
-      transaction_result:  "completed",
-      payment_reference:   "fd5d27b59a1eb597393cd5ff77386d6cab81ae05067e18d530b10f3802e30b56",
-      payment_state:       "settled",
-      amount:              "12.00",
-      order_reference:     "e468a2d59a731ccc546f2165c3b1a6",
-      account_id:          "EUR3D1",
-      cc_type:             "master_card",
-      cc_last_four_digits: "0487",
-      cc_month:            "10",
-      cc_year:             "2018",
-      cc_holder_name:      "John Doe",
-      hmac_fields:         "account_id,amount,api_username,cc_holder_name,cc_last_four_digits,cc_month,cc_type,cc_year,hmac_fields,nonce,order_reference,payment_reference,payment_state,timestamp,transaction_result",
-      hmac:                "efac1c732835668cd86023a7abc140506c692f0d",
-      invoice_id:          "12900000",
-      payment_method:      "every_pay"
+      payment_reference: 'fd5d27b59a1eb597393cd5ff77386d6cab81ae05067e18d530b10f3802e30b56',
+      order_reference: @invoice.number.to_s
+    }
+  end
+
+  def linkpay_response
+    {
+      "account_name": 'EUR3D1',
+      "order_reference": @invoice.number.to_s,
+      "email": 'info@bestnames.test',
+      "customer_ip": '95.27.54.85',
+      "customer_url": nil,
+      "payment_created_at": '2021-12-19T19:41:04.409Z',
+      "initial_amount": 12,
+      "standing_amount": 12,
+      "payment_reference": 'fd5d27b59a1eb597393cd5ff77386d6cab81ae05067e18d530b10f3802e30b56',
+      "payment_link": 'https://igw-demo.every-pay.com/lp/nk44hg/fnm4t4',
+      "api_username": 'api_user',
+      "warnings": {
+        "shopper_email": [
+          'Buyer e-mail (info@bestnames.test) is not traceable (missing MX DNS records)'
+        ]
+      },
+      "stan": 675_867,
+      "fraud_score": 500,
+      "payment_state": 'settled',
+      "payment_method": 'card',
+      "cc_details": {
+        "bin": '516883',
+        "last_four_digits": '3438',
+        "month": '10',
+        "year": '2024',
+        "holder_name": 'Every Pay',
+        "type": 'master_card',
+        "issuer_country": 'EE',
+        "issuer": 'AS LHV Pank',
+        "cobrand": nil,
+        "funding_source": 'Debit',
+        "product": 'MDS  -Debit MasterCard',
+        "state_3ds": '3ds',
+        "authorisation_code": '705590'
+      },
+      "transaction_time": '2021-12-19T19:41:04.462Z'
     }
   end
 end
