@@ -189,7 +189,6 @@ default_email_validation_type: 'mx'
 default_connection_timeout: '1'
 default_response_timeout: '1'
 
-
 epp_sessions_per_registrar: '4'
 
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
