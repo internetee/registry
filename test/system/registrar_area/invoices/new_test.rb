@@ -26,7 +26,7 @@ class NewInvoiceTest < ApplicationSystemTestCase
     assert_text 'Please pay the following invoice'
     assert_text 'Invoice no. 131050'
     assert_text 'Subtotal 200,00 €'
-    assert_text 'Pay invoice'
+    assert_text 'Pay'
   end
 
   def test_create_new_invoice_with_comma_in_number
@@ -42,7 +42,7 @@ class NewInvoiceTest < ApplicationSystemTestCase
     assert_text 'Please pay the following invoice'
     assert_text 'Invoice no. 131050'
     assert_text 'Subtotal 200,00 €'
-    assert_text 'Pay invoice'
+    assert_text 'Pay'
   end
 
   def test_create_new_invoice_fails_when_amount_is_0
