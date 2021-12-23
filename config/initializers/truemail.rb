@@ -15,7 +15,7 @@ Truemail.configure do |config|
   # config.smtp_error_body_pattern = /regex_pattern/
 
   # Optional parameter. Connection timeout is equal to 2 ms by default.
-  config.connection_timeout = ENV['default_connection_timeout'].to_i | 1
+  config.connection_timeout = ENV['default_connection_timeout'].present? ? ENV['default_connection_timeout'].to_i : 1
 
   # Optional parameter. A SMTP server response timeout is equal to 2 ms by default.
   config.response_timeout = ENV['default_response_timeout'].to_i | 1
