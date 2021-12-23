@@ -73,5 +73,5 @@ module HttpRequester
       JSON.parse(response.body)
     end
   end
-    # :nocov:
+  # :nocov:
 end

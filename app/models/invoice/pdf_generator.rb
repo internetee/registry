@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+#
 require 'rqrcode'
 
 class Invoice
   class PdfGenerator
     attr_reader :invoice
+
     def initialize(invoice)
       @invoice = invoice
     end
