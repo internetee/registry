@@ -12,6 +12,8 @@ module Domains
                   Domain.where(registrant_id: registrant_ids)
 
         domains.each do |domain|
+          next if domain.expired?
+
           before_execute_force_delete(domain)
         end
       end
