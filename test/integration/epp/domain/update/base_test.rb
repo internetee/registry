@@ -717,49 +717,51 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_no_emails
   end
 
-  def test_makes_update_if_was_forcedelete
-    contact = @domain.contacts.first
-    contact.update_attribute(:email, '`@outlook.test')
-    contact.verify_email
-    assert contact.email_verification_failed?
-    @domain.reload
-    assert @domain.force_delete_scheduled?
-
-    @domain.update_attribute(:statuses_before_force_delete, nil)
-
-    Setting.request_confirmation_on_registrant_change_enabled = true
-    new_registrant = contacts(:william).becomes(Registrant)
-    assert_not_equal new_registrant, @domain.registrant
-
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
-        <command>
-          <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
-              <domain:name>#{@domain.name}</domain:name>
-                <domain:chg>
-                  <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
-                </domain:chg>
-            </domain:update>
-          </update>
-          <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
-              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
-            </eis:extdata>
-          </extension>
-        </command>
-      </epp>
-    XML
-
-    post epp_update_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
-    @domain.reload
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_correct_against_schema response_xml
-    assert_epp_response :completed_successfully
-  end
+  # COMMENT OU REASON: FOR EXPIRED DOMAIN SHOULD NOT SET FD
+  # def test_makes_update_if_was_forcedelete
+  #   contact = @domain.contacts.first
+  #   contact.update_attribute(:email, '`@outlook.test')
+  #   contact.verify_email
+  #   assert contact.email_verification_failed?
+  #   @domain.reload
+  #
+  #   assert @domain.force_delete_scheduled?
+  #
+  #   @domain.update_attribute(:statuses_before_force_delete, nil)
+  #
+  #   Setting.request_confirmation_on_registrant_change_enabled = true
+  #   new_registrant = contacts(:william).becomes(Registrant)
+  #   assert_not_equal new_registrant, @domain.registrant
+  #
+  #   request_xml = <<-XML
+  #     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+  #     <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+  #       <command>
+  #         <update>
+  #           <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+  #             <domain:name>#{@domain.name}</domain:name>
+  #               <domain:chg>
+  #                 <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
+  #               </domain:chg>
+  #           </domain:update>
+  #         </update>
+  #         <extension>
+  #           <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+  #             <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+  #           </eis:extdata>
+  #         </extension>
+  #       </command>
+  #     </epp>
+  #   XML
+  #
+  #   post epp_update_path, params: { frame: request_xml },
+  #        headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+  #   @domain.reload
+  #
+  #   response_xml = Nokogiri::XML(response.body)
+  #   assert_correct_against_schema response_xml
+  #   assert_epp_response :completed_successfully
+  # end
 
   def test_clears_force_delete_when_registrar_changed
     Setting.request_confirmation_on_registrant_change_enabled = true
