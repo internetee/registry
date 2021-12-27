@@ -151,7 +151,6 @@ GEM
       nokogiri
     apipie-rails (0.5.19)
       rails (>= 4.1)
-    ast (2.4.2)
     attr_required (1.0.1)
     autoprefixer-rails (10.2.4.0)
       execjs
@@ -351,9 +350,6 @@ GEM
     paper_trail (12.1.0)
       activerecord (>= 5.2)
       request_store (~> 1.1)
-    parallel (1.21.0)
-    parser (3.0.3.2)
-      ast (~> 2.4.1)
     pdfkit (0.8.5)
     pg (1.2.3)
     pg_query (2.1.2)
@@ -409,7 +405,6 @@ GEM
       method_source
       rake (>= 0.13)
       thor (~> 1.0)
-    rainbow (3.0.0)
     rake (13.0.6)
     ransack (2.4.2)
       activerecord (>= 5.2.4)
@@ -429,18 +424,6 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.2.5)
-    rubocop (1.24.0)
-      parallel (~> 1.10)
-      parser (>= 3.0.0.0)
-      rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.8, < 3.0)
-      rexml
-      rubocop-ast (>= 1.15.0, < 2.0)
-      ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.15.0)
-      parser (>= 3.0.1.1)
-    ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.4)
     rubyzip (2.3.2)
     sass-rails (6.0.0)
@@ -508,7 +491,6 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
-    unicode-display_width (2.1.0)
     validate_email (0.1.6)
       activemodel (>= 3.0)
       mail (>= 2.2.5)
@@ -586,7 +568,7 @@ DEPENDENCIES
   money-rails
   newrelic-infinite_tracing
   newrelic_rpm
-  nokogiri (~> 1.12, >= 1.12.5)
+  nokogiri (~> 1.12.5)
   omniauth
   omniauth-rails_csrf_protection
   omniauth-tara!
@@ -603,7 +585,6 @@ DEPENDENCIES
   ransack (~> 2.4.2)
   rest-client
   rexml
-  rubocop
   sass-rails
   select2-rails (= 4.0.13)
   selectize-rails (= 0.12.6)

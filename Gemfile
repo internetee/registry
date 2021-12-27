@@ -85,7 +85,6 @@ gem 'directo', github: 'internetee/directo', branch: 'master'
 
 group :development, :test do
   gem 'pry', '0.14.1'
-  gem 'rubocop'
 end
 
 group :test do
