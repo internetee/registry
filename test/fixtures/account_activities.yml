@@ -3,3 +3,31 @@ one:
   invoice: one
   bank_transaction: one
   created_at: <%= Time.zone.parse('2010-07-05 10:00') %>
+
+renew_cash:
+  account: cash
+  activity_type: "renew"
+  description: "Description of activity renew_cash"
+  sum: "123.00"
+  created_at: <%= Time.zone.parse('2021-08-05 10:00') %>
+
+renew_two:
+  account: two
+  activity_type: "renew"
+  description: "Description of activity renew_two"
+  sum: "123.00"
+  created_at: <%= Time.zone.parse('2021-12-05 10:00') %>
+
+create_two:
+  account: two
+  activity_type: "create"
+  description: "Description of activity create_two"
+  sum: "123.00"
+  created_at: <%= Time.zone.parse('2021-09-05 10:00') %>
+
+renew_two_previous:
+  account: two
+  activity_type: "renew"
+  description: "Description of activity renew_two_previous"
+  sum: "123.00"
+  created_at: <%= Time.zone.parse('2021-10-05 10:00') %>

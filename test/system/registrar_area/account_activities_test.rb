@@ -25,4 +25,20 @@ class RegistrarAccountActivitiesTest < ApplicationSystemTestCase
                  response.headers['Content-Disposition']
     assert_not_empty response.body
   end
+
+  def test_search_account_activity_with_invalid_date
+    account_activities(:one).update(description: "Description of activity one", 
+                                    sum: "123.00",
+                                    activity_type: "create",
+                                    created_at: Time.zone.parse('2021-07-05 10:00'))
+    
+    visit registrar_account_activities_path
+
+    find('#q_activity_type_in').click
+    find(:option, "Renew").select_option
+    fill_in('q_created_at_lteq', with: '2021-12--')
+    find(:xpath, ".//button[./span[contains(@class, 'glyphicon-search')]]").click
+    
+    assert_text 'Description of activity renew_cash'
+  end
 end

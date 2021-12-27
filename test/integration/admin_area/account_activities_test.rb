@@ -36,4 +36,28 @@ class AdminAreaAccountActivitiesIntegrationTest < ApplicationSystemTestCase
                   response.headers['Content-Disposition']
     assert_not_empty response.body
   end
+
+  def test_search_account_activity
+    account_activities(:one).update(description: "Description of activity one", 
+                                    sum: "123.00",
+                                    activity_type: "create",
+                                    created_at: Time.zone.parse('2021-07-05 10:00'))
+  
+    get admin_account_activities_path, params: { q: { account_registrar_id_in: [registrars(:bestnames).id, registrars(:goodnames).id], 
+                                                      activity_type_in: ['renew'], 
+                                                      created_at_gteq: '2021-09-25',
+                                                      created_at_lteq: '2021-11-' },
+                                                  results_per_page: 1,
+                                                  page: 2 }
+    
+    assert_response :success
+
+    parsed_data = Nokogiri::HTML.parse(response.body)
+    tr = parsed_data.xpath('//*/table/tbody/tr')
+
+    assert_equal tr.count, 1
+    assert_includes tr.xpath("//td").text, account_activities(:renew_two).description
+    assert_equal tr.xpath("//td").first.at('a').text, registrars(:goodnames).code
+  end
 end
+
