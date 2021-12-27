@@ -224,3 +224,13 @@ airbrake_host: "https://your-errbit-host.ee"
 # airbrake_env: "staging"
 airbrake_project_id: "1"
 airbrake_project_key: "api_key"
+
+registry_api_url: 'http://registry:3000/api/v1/contact_requests/'
+registry_api_key: 'testkey'
+
+registry_demo_registrar_port: '3000'
+registry_demo_registrar_results_url: 'http://registry.test/api/v1/accreditation_center/results'
+registry_demo_registrar_api_user_url: 'http://registry.test/api/v1/accreditation_center/show_api_user'
+registry_demo_accredited_users_url: 'http://registry.test/api/v1/accreditation_center/list_accreditated_api_users'
+a_and_aaaa_validation_timeout: '1'
+
