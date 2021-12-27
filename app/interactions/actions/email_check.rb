@@ -54,7 +54,12 @@ module Actions
         email_domain = Mail::Address.new(@email).domain
 
         result_validation = check_for_records_value(domain: email_domain, value: 'A')
+        logger.info "Validated A record for #{email_domain}. Validation result - #{result_validation}"
+        p "Validated A record for #{email_domain}. Validation result - #{result_validation}"
+
         result_validation = check_for_records_value(domain: email_domain, value: 'AAAA') if result_validation.empty?
+        logger.info "Validated AAAA record for #{email_domain}. Validation result - #{result_validation}" if result_validation.empty?
+        p "Validated AAAA record for #{email_domain}. Validation result - #{result_validation}" if result_validation.empty?
 
         result_validation.present? ? result.success = true : result.success = false
 
