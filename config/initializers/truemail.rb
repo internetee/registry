@@ -9,7 +9,7 @@ Truemail.configure do |config|
   # config.verifier_domain = 'internet.ee'
 
   # Optional parameter. You can override default regex pattern
-  config.email_pattern = /(?=\A.{6,255}\z)(\A([\p{L}0-9]+[\W\w]*)@((?i-mx:[\p{L}0-9]+([\-.]{1}[\p{L}0-9, -]+)*\.\p{L}{2,63}))\z)/
+  config.email_pattern = /(?=\A.{6,255}\z)(\A([\p{L}0-9]+[\W\w]*)@(xn--)?((?i-mx:[\p{L}0-9]+([\-.]{1}[\p{L}0-9]+)*\.\p{L}{2,63}))\z)/
 
   # Optional parameter. You can override default regex pattern
   # config.smtp_error_body_pattern = /regex_pattern/
