@@ -51,18 +51,17 @@ module Actions
 
     def save_result(result)
       if !result.success && @check_level == "mx"
-        email_domain = Mail::Address.new(@email).domain
+        result_validation = Actions::AAndAaaaEmailValidation.call(email: @email, value: 'A')
+        output_a_and_aaaa_validation_results(email: @email,
+                                             result: result_validation,
+                                             type: 'A') unless Rails.env.test?
 
-        result_validation = check_for_records_value(domain: email_domain, value: 'A')
-        logger.info "Validated A record for #{email_domain}. Validation result - #{result_validation}"
-        p "Validated A record for #{email_domain}. Validation result - #{result_validation}"
-
-        result_validation = check_for_records_value(domain: email_domain, value: 'AAAA') if result_validation.empty?
-        logger.info "Validated AAAA record for #{email_domain}. Validation result - #{result_validation}" if result_validation.empty?
-        p "Validated AAAA record for #{email_domain}. Validation result - #{result_validation}" if result_validation.empty?
+        result_validation = Actions::AAndAaaaEmailValidation.call(email: @email, value: 'AAAA') if result_validation.empty?
+        output_a_and_aaaa_validation_results(email: @email,
+                                             result: result_validation,
+                                             type: 'AAAA') unless Rails.env.test?
 
         result_validation.present? ? result.success = true : result.success = false
-
         validation_eventable.validation_events.create(validation_event_attrs(result))
       else
         validation_eventable.validation_events.create(validation_event_attrs(result))
@@ -70,6 +69,10 @@ module Actions
     rescue ActiveRecord::RecordNotSaved
       logger.info "Cannot save validation result for #{log_object_id}"
       true
+    end
+
+    def output_a_and_aaaa_validation_results(email:, result:, type: )
+      logger.info "Validated #{type} record for #{email}. Validation result - #{result}"
     end
 
     def check_for_records_value(domain:, value:)
