@@ -1,3 +1,7 @@
+27.12.2021
+* Improved mx level checks for email validation [#2244](https://github.com/internetee/registry/issues/2244)
+* fixed support for idn domains in email validation [#2250](https://github.com/internetee/registry/issues/2250)
+
 20.12.2021
 * delete prohibited can be set to domains in force delete [#2218](https://github.com/internetee/registry/issues/2218)
 
