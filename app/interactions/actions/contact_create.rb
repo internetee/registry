@@ -22,11 +22,11 @@ module Actions
       [:regex, :mx].each do |m|
         result = Actions::SimpleMailValidator.run(email: contact.email, level: m)
 
-        unless result
-          contact.add_epp_error('2005', nil, "email didn't pass validation", I18n.t(:parameter_value_syntax_error))
-          @error = true
-          return
-        end
+        next if result
+
+        contact.add_epp_error('2005', nil, "email didn't pass validation", I18n.t(:parameter_value_syntax_error))
+        @error = true
+        return
       end
 
       true

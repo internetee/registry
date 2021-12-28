@@ -54,12 +54,12 @@ module Actions
         result_validation = Actions::AAndAaaaEmailValidation.call(email: @email, value: 'A')
         output_a_and_aaaa_validation_results(email: @email,
                                              result: result_validation,
-                                             type: 'A') unless Rails.env.test?
+                                             type: 'A')
 
         result_validation = Actions::AAndAaaaEmailValidation.call(email: @email, value: 'AAAA') if result_validation.empty?
         output_a_and_aaaa_validation_results(email: @email,
                                              result: result_validation,
-                                             type: 'AAAA') unless Rails.env.test?
+                                             type: 'AAAA')
 
         result_validation.present? ? result.success = true : result.success = false
         validation_eventable.validation_events.create(validation_event_attrs(result))
@@ -71,7 +71,9 @@ module Actions
       true
     end
 
-    def output_a_and_aaaa_validation_results(email:, result:, type: )
+    def output_a_and_aaaa_validation_results(email:, result:, type:)
+      return if Rails.env.test?
+
       logger.info "Validated #{type} record for #{email}. Validation result - #{result}"
     end
 
