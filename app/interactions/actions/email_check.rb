@@ -50,10 +50,47 @@ module Actions
     end
 
     def save_result(result)
-      validation_eventable.validation_events.create(validation_event_attrs(result))
+      if !result.success && @check_level == "mx"
+        email_domain = Mail::Address.new(@email).domain
+
+        result_validation = check_for_records_value(domain: email_domain, value: 'A')
+        logger.info "Validated A record for #{email_domain}. Validation result - #{result_validation}"
+        p "Validated A record for #{email_domain}. Validation result - #{result_validation}"
+
+        result_validation = check_for_records_value(domain: email_domain, value: 'AAAA') if result_validation.empty?
+        logger.info "Validated AAAA record for #{email_domain}. Validation result - #{result_validation}" if result_validation.empty?
+        p "Validated AAAA record for #{email_domain}. Validation result - #{result_validation}" if result_validation.empty?
+
+        result_validation.present? ? result.success = true : result.success = false
+
+        validation_eventable.validation_events.create(validation_event_attrs(result))
+      else
+        validation_eventable.validation_events.create(validation_event_attrs(result))
+      end
     rescue ActiveRecord::RecordNotSaved
       logger.info "Cannot save validation result for #{log_object_id}"
       true
+    end
+
+    def check_for_records_value(domain:, value:)
+      result = nil
+      dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
+
+      Resolv::DNS.open({ nameserver: dns_servers }) do |dns|
+        dns.timeouts = ENV['a_and_aaaa_validation_timeout'].to_i || 1
+        ress = nil
+
+        case value
+        when 'A'
+          ress = dns.getresources domain, Resolv::DNS::Resource::IN::A
+        when 'AAAA'
+          ress = dns.getresources domain, Resolv::DNS::Resource::IN::AAAA
+        end
+
+        result = ress.map { |r| r.address }
+      end
+
+      result
     end
 
     def validation_event_attrs(result)
