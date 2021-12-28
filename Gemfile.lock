@@ -258,7 +258,7 @@ GEM
     httpi (2.4.5)
       rack
       socksify
-    i18n (1.8.10)
+    i18n (1.8.11)
       concurrent-ruby (~> 1.0)
     i18n_data (0.13.0)
     isikukood (0.1.2)
@@ -304,7 +304,7 @@ GEM
       rake
     mini_mime (1.1.1)
     mini_portile2 (2.6.1)
-    minitest (5.14.4)
+    minitest (5.15.0)
     monetize (1.9.4)
       money (~> 6.12)
     money (6.13.8)
@@ -406,7 +406,7 @@ GEM
       rake (>= 0.13)
       thor (~> 1.0)
     rake (13.0.6)
-    ransack (2.4.2)
+    ransack (2.5.0)
       activerecord (>= 5.2.4)
       activesupport (>= 5.2.4)
       i18n
@@ -524,7 +524,7 @@ GEM
     wkhtmltopdf-binary (0.12.5.4)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.4.2)
+    zeitwerk (2.5.2)
 
 PLATFORMS
   ruby
@@ -582,7 +582,7 @@ DEPENDENCIES
   que
   que-web
   rails (~> 6.1.4)
-  ransack (~> 2.4.2)
+  ransack (~> 2.5.0)
   rest-client
   rexml
   sass-rails
