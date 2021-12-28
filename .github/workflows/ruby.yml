@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-18.04]
-        ruby: [ 2.7, 3.0  ]
+        ruby: [ '2.7', '3.0.3'  ]
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
     steps:
@@ -88,7 +88,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [ 2.7, 3.0 ]
+        ruby: [ '2.7', '3.0.3' ]
     runs-on: ubuntu-18.04
 
     env:
