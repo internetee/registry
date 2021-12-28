@@ -217,6 +217,9 @@ test:
   epp_hostname: 'epp_proxy'
   epp_port: '700'
   epp_sessions_per_registrar: '4'
+  payments_every_pay_seller_account: 'EUR3D1'
+  payments_every_pay_api_user: 'api_user'
+  payments_every_pay_api_key: 'api_key'
 
 # Airbrake // Errbit:
 airbrake_host: "https://your-errbit-host.ee"
