@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DoRequestTest < ActiveSupport::TestCase
+class EmailCheckTest < ActiveSupport::TestCase
 
   setup do
     WebMock.disable_net_connect!
