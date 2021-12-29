@@ -14,12 +14,31 @@ module Actions
 
       assign_registrant
       assign_nameservers
+      check_for_valid_nameserver
       assign_domain_contacts
       domain.attach_default_contacts
       assign_expiry_time
       maybe_attach_legal_doc
 
       commit
+    end
+
+    def check_for_valid_nameserver
+      nameservers_data = params[:nameservers_attributes]
+
+      nameservers_data.each do |nameserver|
+        result = parse_nameserver_hash(nameserver)
+
+        next unless result
+      end
+    end
+
+    def parse_nameserver_hash(nameserver)
+      result = Domains::NameserverValidator.run(hostname: nameserver[:hostname])
+
+      return true if result[:result]
+
+      domain.add_epp_error('2303', nil, result[:reason], 'Problem with nameserver: ')
     end
 
     def check_contact_duplications

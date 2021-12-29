@@ -14,6 +14,7 @@ module Actions
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
       assign_requested_statuses
+      check_for_valid_nameserver
       ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
 
       commit
@@ -26,6 +27,26 @@ module Actions
 
       assign_admin_contact_changes
       assign_tech_contact_changes
+    end
+
+    def check_for_valid_nameserver
+      nameservers_data = params[:nameservers]
+
+      nameservers_data.each do |nameserver|
+        result = parse_nameserver_hash(nameserver)
+
+        next unless result
+      end
+    end
+
+    def parse_nameserver_hash(nameserver)
+      return false unless nameserver[:action] == "add"
+
+      result = Domains::NameserverValidator.run(hostname: nameserver[:hostname])
+
+      return true if result[:result]
+
+      domain.add_epp_error('2303', nil, result[:reason], 'Problem with nameserver: ')
     end
 
     def check_for_same_contacts(contacts, contact_type)

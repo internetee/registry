@@ -3,37 +3,66 @@
 require 'resolv'
 
 class NameserverRecordValidationJob < ApplicationJob
+  include Dnsruby
+
   def perform(nameserver = nil)
     if nameserver.nil?
       Nameserver.all.map do |nameserver|
-        result = validate(nameserver)
-        inform_to_registrar(nameserver) unless result
+        result = Domains::NameserverValidator.run(hostname: nameserver.hostname)
+
+        if result[:result]
+          true
+        else
+          parse_result(result, nameserver)
+          false
+        end
       end
     else
-      result = validate(nameserver)
-      inform_to_registrar(nameserver) unless result
+      result = Domains::NameserverValidator.run(hostname: nameserver.hostname)
+      return parse_result(result, nameserver) unless result[:result]
+
+      true
     end
   end
 
   private
 
-  def validate(nameserver)
-      return true if Resolv.getaddress nameserver.hostname
-  rescue Resolv::ResolvError
-      false
+  def parse_result(result, nameserver)
+    text = ""
+    case result[:reason]
+    when 'authority'
+      text = "Authority information about nameserver hostname **#{nameserver.hostname}** doesn't present"
+    when 'serial'
+      text = "Serial number for nameserver hostname **#{nameserver.hostname}** doesn't present"
+    when 'not found'
+      text = "Seems nameserver hostname **#{nameserver.hostname}** doesn't exist"
+    when 'exception'
+      text = "Something goes wrong, exception name: **#{result[:error_info]}**"
+    end
+
+    logger.info text
+    failed_log(text: text, nameserver: nameserver)
+
+    false
   end
 
-  # def glue_record_required?(nameserver)
-  #   return false unless nameserver.hostname? && nameserver.domain
-  #
-  #   DomainName(nameserver.hostname).domain == nameserver.domain.name
-  # end
+  def failed_log(text:, nameserver:)
+    inform_to_tech_contact(text)
+    inform_to_registrar(text: text, nameserver: nameserver)
 
-  def inform_to_tech_contact
-    return
+    false
   end
 
-  def inform_to_registrar(nameserver)
-    nameserver.domain.registrar.notifications.create!(text: "Nameserver doesn't response")
+  def inform_to_tech_contact(text)
+    "NEED TO DO!"
+    text
+  end
+
+  def inform_to_registrar(text:, nameserver:)
+    nameserver.domain.registrar.notifications.create!(text: text)
+  end
+
+  def logger
+    @logger ||= Rails.logger
   end
 end
