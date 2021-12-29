@@ -29,3 +29,7 @@ whois_test:
 api_log_test:
   <<: *default
   database: registry_api_log_test
+
+demo:
+  <<: *default
+  database: registry_demo

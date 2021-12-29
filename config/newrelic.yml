@@ -46,6 +46,9 @@ staging:
   app_name: Registry (Staging)
   monitor_mode: false
 
+demo:
+  <<: *default_settings
+  monitor_mode: false
 
 production:
   <<: *default_settings

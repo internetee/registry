@@ -35,3 +35,10 @@ production:
   host: localhost               # registry production mirror location
   username: registrant_read_only
   password: registrant_read_only_pwd
+
+demo:
+  <<: *default
+  database: registry_demo # registry production mirror database name
+  host: localhost               # registry production mirror location
+  username: registrant_read_only
+  password: registrant_read_only_pwd

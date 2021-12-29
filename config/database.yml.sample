@@ -19,6 +19,10 @@ staging:
   <<: *default
   database: registry_staging
 
+demo:
+  <<: *default
+  database: registry_demo
+
 whois_staging:
   <<: *default
   database: registry_whois_staging
