@@ -1,5 +1,6 @@
 29.12.2021
 * User test env is renamed to demo to remove naming conflict with autotest env [#2238](https://github.com/internetee/registry/pull/2238)
+* imporved mx level email validation for contact create and update [#2246](https://github.com/internetee/registry/issues/2246)
 * improved tests for account_activities [#2255](https://github.com/internetee/registry/pull/2255)
 
 27.12.2021
