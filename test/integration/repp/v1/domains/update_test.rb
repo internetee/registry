@@ -8,6 +8,7 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+    Spy.on_instance_method(Actions::DomainUpdate, :check_for_valid_nameserver).and_return(true)
   end
 
   def test_updates_transfer_code_for_domain

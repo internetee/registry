@@ -14,6 +14,8 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
                                     new_registrant_name: @new_registrant.name,
                                     new_registrant_email: @new_registrant.email,
                                     current_user_id: @user.id })
+
+    Spy.on_instance_method(Actions::DomainUpdate, :check_for_valid_nameserver).and_return(true)
   end
 
   def teardown

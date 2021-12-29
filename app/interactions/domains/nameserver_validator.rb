@@ -32,7 +32,7 @@ module Domains
     end
 
     def setup_resolver
-      timeout = ENV['a_and_aaaa_validation_timeout'] || 1
+      timeout = ENV['nameserver_validation_timeout'] || '1'
       dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
       Resolver.new({nameserver: dns_servers, timeout: timeout.to_i})
     end

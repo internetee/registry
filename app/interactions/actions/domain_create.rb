@@ -14,7 +14,7 @@ module Actions
 
       assign_registrant
       assign_nameservers
-      check_for_valid_nameserver
+      check_for_valid_nameserver unless Rails.env.test?
       assign_domain_contacts
       domain.attach_default_contacts
       assign_expiry_time

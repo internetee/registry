@@ -82,8 +82,8 @@ module Actions
       dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
 
       Resolv::DNS.open({ nameserver: dns_servers }) do |dns|
-        dns.timeouts = ENV['a_and_aaaa_validation_timeout'] || 1
-        dns.timeouts = dns.timeouts.to_i
+        timeouts = ENV['a_and_aaaa_validation_timeout'] || '1'
+        dns.timeouts = timeouts.to_i
         ress = nil
 
         case value

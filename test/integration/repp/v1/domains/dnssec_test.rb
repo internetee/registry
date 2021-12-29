@@ -8,6 +8,7 @@ class ReppV1DomainsDnssecTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+    Spy.on_instance_method(Actions::DomainUpdate, :check_for_valid_nameserver).and_return(true)
   end
 
   def test_shows_dnssec_keys_associated_with_domain
