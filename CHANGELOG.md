@@ -1,3 +1,6 @@
+29.12.2021
+* User test env is renamed to demo to remove naming conflict with autotest env [#2238](https://github.com/internetee/registry/pull/2238)
+
 27.12.2021
 * Improved mx level checks for email validation [#2244](https://github.com/internetee/registry/issues/2244)
 * fixed support for idn domains in email validation [#2250](https://github.com/internetee/registry/issues/2250)
