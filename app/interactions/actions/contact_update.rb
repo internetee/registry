@@ -24,13 +24,12 @@ module Actions
       return if Rails.env.test?
 
       [:regex, :mx].each do |m|
-        r = Actions::SimpleMailValidator.run(email: @new_attributes[:email], level: m)
+        result = Actions::SimpleMailValidator.run(email: @new_attributes[:email], level: m)
+        next if result
 
-        unless r.success
-          contact.add_epp_error('2005', nil, r.errors, I18n.t(:parameter_value_syntax_error))
-          @error = true
-          return
-        end
+        contact.add_epp_error('2005', nil, "email didn't pass validation", I18n.t(:parameter_value_syntax_error))
+        @error = true
+        return
       end
 
       true

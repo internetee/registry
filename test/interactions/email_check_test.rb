@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DoRequestTest < ActiveSupport::TestCase
+class EmailCheckTest < ActiveSupport::TestCase
 
   setup do
     WebMock.disable_net_connect!
@@ -16,7 +16,7 @@ class DoRequestTest < ActiveSupport::TestCase
                                      )
 
     Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
-    Spy.on_instance_method(Actions::EmailCheck, :check_for_records_value).and_return([true])
+    Spy.on_instance_method(Actions::AAndAaaaEmailValidation, :call).and_return([true])
 
     action = Actions::EmailCheck.new(email: @contact.email,
                                      validation_eventable: @contact,
@@ -35,7 +35,7 @@ class DoRequestTest < ActiveSupport::TestCase
                                      )
 
     Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
-    Spy.on_instance_method(Actions::EmailCheck, :check_for_records_value).and_return([])
+    Spy.on_instance_method(Actions::AAndAaaaEmailValidation, :call).and_return([])
 
     action = Actions::EmailCheck.new(email: @contact.email,
                                      validation_eventable: @contact,
@@ -54,7 +54,7 @@ class DoRequestTest < ActiveSupport::TestCase
                                      )
 
     Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
-    Spy.on_instance_method(Actions::EmailCheck, :check_for_records_value).and_return([])
+    Spy.on_instance_method(Actions::AAndAaaaEmailValidation, :call).and_return([])
 
     action = Actions::EmailCheck.new(email: @contact.email,
                                      validation_eventable: @contact,
@@ -82,7 +82,7 @@ class DoRequestTest < ActiveSupport::TestCase
                                      )
 
     Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
-    Spy.on_instance_method(Actions::EmailCheck, :check_for_records_value).and_return([true])
+    Spy.on_instance_method(Actions::AAndAaaaEmailValidation, :call).and_return([true])
 
     action = Actions::EmailCheck.new(email: @contact.email,
                                      validation_eventable: @contact,
