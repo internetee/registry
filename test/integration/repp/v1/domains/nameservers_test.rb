@@ -9,7 +9,7 @@ class ReppV1DomainsNameserversTest < ActionDispatch::IntegrationTest
 
     @auth_headers = { 'Authorization' => token }
 
-    Spy.on_instance_method(Domains::NameserverValidator, :run).and_return({result: true, reason: ''})
+    Spy.on_instance_method(Actions::DomainUpdate, :check_for_valid_nameserver).and_return(true)
   end
 
   def test_can_add_new_nameserver
