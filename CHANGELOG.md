@@ -2,6 +2,8 @@
 * User test env is renamed to demo to remove naming conflict with autotest env [#2238](https://github.com/internetee/registry/pull/2238)
 * imporved mx level email validation for contact create and update [#2246](https://github.com/internetee/registry/issues/2246)
 * improved tests for account_activities [#2255](https://github.com/internetee/registry/pull/2255)
+* Bump Ruby to 3.1.0 [#2249](https://github.com/internetee/registry/pull/2249)
+* Bump Ransack to 2.5.0 [#2248](https://github.com/internetee/registry/pull/2248)
 
 27.12.2021
 * Improved mx level checks for email validation [#2244](https://github.com/internetee/registry/issues/2244)
