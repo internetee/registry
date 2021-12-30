@@ -5,10 +5,10 @@ require 'resolv'
 class NameserverRecordValidationJob < ApplicationJob
   include Dnsruby
 
-  def perform(nameserver = nil)
-    if nameserver.nil?
+  def perform(domain_name: nil, nameserver_address: nil)
+    if nameserver_address.nil?
       Nameserver.all.map do |nameserver|
-        result = Domains::NameserverValidator.run(hostname: nameserver.hostname)
+        result = Domains::NameserverValidator.run(hostname: nameserver.domain.name, nameserver_address: nameserver.hostname)
 
         if result[:result]
           true
@@ -18,8 +18,8 @@ class NameserverRecordValidationJob < ApplicationJob
         end
       end
     else
-      result = Domains::NameserverValidator.run(hostname: nameserver.hostname)
-      return parse_result(result, nameserver) unless result[:result]
+      result = Domains::NameserverValidator.run(hostname: domain_name, nameserver_address: nameserver_address)
+      return parse_result(result, nameserver_address) unless result[:result]
 
       true
     end
@@ -30,12 +30,12 @@ class NameserverRecordValidationJob < ApplicationJob
   def parse_result(result, nameserver)
     text = ""
     case result[:reason]
-    when 'authority'
-      text = "Authority information about nameserver hostname **#{nameserver.hostname}** doesn't present"
+    when 'answer'
+      text = "No any answer come from **#{nameserver}**"
     when 'serial'
-      text = "Serial number for nameserver hostname **#{nameserver.hostname}** doesn't present"
+      text = "Serial number for nameserver hostname **#{nameserver}** doesn't present"
     when 'not found'
-      text = "Seems nameserver hostname **#{nameserver.hostname}** doesn't exist"
+      text = "Seems nameserver hostname **#{nameserver}** doesn't exist"
     when 'exception'
       text = "Something goes wrong, exception name: **#{result[:error_info]}**"
     end
@@ -59,7 +59,8 @@ class NameserverRecordValidationJob < ApplicationJob
   end
 
   def inform_to_registrar(text:, nameserver:)
-    nameserver.domain.registrar.notifications.create!(text: text)
+    # nameserver.domain.registrar.notifications.create!(text: text)
+    "NEED TO DO!"
   end
 
   def logger
