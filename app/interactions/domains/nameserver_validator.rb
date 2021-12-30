@@ -4,8 +4,8 @@ module Domains
 
     extend self
 
-    def run(hostname:, nameserver_address:)
-      validate(hostname: hostname, nameserver_address: nameserver_address)
+    def run(domain_name:, nameserver_address:)
+      validate(hostname: domain_name, nameserver_address: nameserver_address)
     end
 
     private

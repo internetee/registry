@@ -8,7 +8,7 @@ class NameserverRecordValidationJob < ApplicationJob
   def perform(domain_name: nil, nameserver_address: nil)
     if nameserver_address.nil?
       Nameserver.all.map do |nameserver|
-        result = Domains::NameserverValidator.run(hostname: nameserver.domain.name, nameserver_address: nameserver.hostname)
+        result = Domains::NameserverValidator.run(domain_name: nameserver.domain.name, nameserver_address: nameserver.hostname)
 
         if result[:result]
           true
@@ -18,7 +18,7 @@ class NameserverRecordValidationJob < ApplicationJob
         end
       end
     else
-      result = Domains::NameserverValidator.run(hostname: domain_name, nameserver_address: nameserver_address)
+      result = Domains::NameserverValidator.run(domain_name: domain_name, nameserver_address: nameserver_address)
       return parse_result(result, nameserver_address) unless result[:result]
 
       true

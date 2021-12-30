@@ -34,11 +34,18 @@ module Actions
     end
 
     def parse_nameserver_hash(nameserver)
-      result = Domains::NameserverValidator.run(hostname: nameserver[:hostname])
+      name = params[:name].strip.downcase
+      result = Domains::NameserverValidator.run(domain_name: name, nameserver_address: nameserver[:hostname])
 
       return true if result[:result]
 
-      domain.add_epp_error('2303', nil, result[:reason], 'Problem with nameserver: ')
+      if result[:reason] == 'exception'
+        reason = result[:error_info]
+      else
+        reason = result[:reason]
+      end
+
+      domain.add_epp_error('2303', nil, reason, 'Problem with nameserver: ')
     end
 
     def check_contact_duplications
