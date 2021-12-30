@@ -8,7 +8,7 @@ class ReppV1DomainsCreateTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
-    Spy.on_instance_method(Domains::NameserverValidator, :run).and_return({result: true, reason: ''})
+    Spy.on_instance_method(Actions::DomainCreate, :check_for_valid_nameserver).and_return(true)
   end
 
   def test_creates_new_domain_successfully
