@@ -12,6 +12,7 @@ class EppDomainUpdateRemDnsTest < EppTestCase
     @original_registrant_change_verification =
     Setting.request_confirmation_on_registrant_change_enabled
     ActionMailer::Base.deliveries.clear
+    Spy.on_instance_method(ValidateDnssec, :validate_dnssec).and_return(true)
   end
 
   teardown do
