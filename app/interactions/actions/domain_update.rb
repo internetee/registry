@@ -116,15 +116,13 @@ module Actions
 
     def prepare_resolver
       dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
-      dns = Dnsruby::Resolver.new({nameserver: ['192.168.99.97']})
+      dns = Dnsruby::Resolver.new({ nameserver: dns_servers })
       dns.do_validation = true
       dns.do_caching = true
       dns.dnssec = true
 
       dns
     end
-
-    # {:domain=>"dnssec.ee", :registrar_id=>2, :dns_keys=>[{:flags=>"256", :protocol=>"3", :alg=>"13", :public_key=>"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE6JSqRM8bzEhp7jJbpor44JjEXPfsLBEEFviJ1fnRl85XrT9QiLtmkWk8/YcQggenUxWPvbkmFGbP17wsrbrKyg==", :action=>"rem"}]}
 
     def validate_dnssec
       return if @params[:action] == 'rem'
@@ -146,10 +144,8 @@ module Actions
     end
 
     def validate_data(subzone_records:, form_extension_records:)
-
       flag = false
       form_extension_records.each do |form_data|
-
         flag = make_magic(subzone_records: subzone_records, form_data: form_data)
 
         break if flag
@@ -161,7 +157,6 @@ module Actions
     end
 
     def get_dnskey_records_from_subzone(resolver:, hostname:)
-      begin
       ds_records_answers = resolver.query(hostname, 'DNSKEY').answer
 
       result_container = []
@@ -173,17 +168,15 @@ module Actions
           basic: {
             flags: ds.flags.to_s,
             algorithm: ds.algorithm.code.to_s,
-            protocol: ds.protocol.to_s
+            protocol: ds.protocol.to_s,
           },
-          public_key: ds.public_key.export.gsub!(/\s+/, '')
+          public_key: ds.public_key.export.gsub!(/\s+/, ''),
         }
       end
 
-      return result_container
-
-      rescue Dnsruby::NXDomain
-              domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation))
-      end
+      result_container
+    rescue Dnsruby::NXDomain
+      domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation))
     end
 
     def validation_dns_key_error
@@ -201,12 +194,12 @@ module Actions
         next if ds[:action] == 'rem'
 
         result_container << {
-                  basic: {
-                    flags: ds[:flags].to_s,
-                    algorithm: ds[:alg].to_s,
-                    protocol: ds[:protocol].to_s,
-                  },
-                  public_key: ds[:public_key]
+          basic: {
+            flags: ds[:flags].to_s,
+            algorithm: ds[:alg].to_s,
+            protocol: ds[:protocol].to_s,
+          },
+          public_key: ds[:public_key],
         }
       end
 
