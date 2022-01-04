@@ -146,8 +146,8 @@ module Depp
     end
 
     def save
-      return false unless valid? 
-      
+      return false unless valid?
+
       hash = {
         id: { value: code },
         postalInfo: {
@@ -175,8 +175,8 @@ module Depp
       handle_errors(data)
     end
 
-    # rubocop:disable Metrics/MethodLength  
-    def update_attributes(params) 
+    # rubocop:disable Metrics/MethodLength
+    def update_attributes(params)
       return false unless valid?
 
       self.ident_country_code = params[:ident_country_code]
