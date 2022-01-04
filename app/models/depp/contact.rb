@@ -16,6 +16,8 @@ module Depp
       ['Birthday', 'birthday']
     ]
 
+    validates :phone, e164: true, phone: true
+
     class << self
       attr_reader :epp_xml, :user
 
@@ -144,6 +146,8 @@ module Depp
     end
 
     def save
+      return false if !valid? 
+
       hash = {
         id: { value: code },
         postalInfo: {
@@ -166,13 +170,14 @@ module Depp
 
       hash[:id] = nil if code.blank?
       create_xml = Depp::Contact.epp_xml.create(hash, extension_xml(:create))
-
       data = Depp::Contact.user.request(create_xml)
       self.id = data.css('id').text
       handle_errors(data)
     end
 
     def update_attributes(params)
+      return false if !valid? 
+
       self.ident_country_code = params[:ident_country_code]
       self.ident_type   = params[:ident_type]
       self.ident        = params[:ident]

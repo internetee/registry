@@ -5,7 +5,7 @@ class E164Validator < ActiveModel::EachValidator
     length_validator.validate(record)
 
     format_validator = ActiveModel::Validations::
-            FormatValidator.new(with: /\+[0-9]{1,3}\.[0-9]{1,14}?/,
+            FormatValidator.new(with: /\A\+[0-9]{1,3}\.[0-9]{1,14}\z/,
                                 attributes: attribute)
     format_validator.validate(record)
   end
