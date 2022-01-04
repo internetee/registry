@@ -146,8 +146,8 @@ module Depp
     end
 
     def save
-      return false if !valid? 
-
+      return false unless valid? 
+      
       hash = {
         id: { value: code },
         postalInfo: {
@@ -175,8 +175,9 @@ module Depp
       handle_errors(data)
     end
 
-    def update_attributes(params)
-      return false if !valid? 
+    # rubocop:disable Metrics/MethodLength  
+    def update_attributes(params) 
+      return false unless valid?
 
       self.ident_country_code = params[:ident_country_code]
       self.ident_type   = params[:ident_type]
@@ -225,6 +226,7 @@ module Depp
       data = Depp::Contact.user.request(update_xml)
       handle_errors(data)
     end
+    # rubocop:enable Metrics/MethodLength
 
     def delete
       delete_xml = Contact.epp_xml.delete(
