@@ -28,8 +28,21 @@ class ValidateDnssecJob < ApplicationJob
     domain.nameservers.each do |n|
       validate(hostname: n.hostname, domain: domain)
 
+      notify_contacts(domain)
       logger.info "----------------------------"
     end
+  end
+
+  def notify_contacts(domain)
+    flag = domain.dnskeys.any? { |k| k.validation_datetime.present? }
+
+    return if flag
+
+    text = "DNSKEYS for #{domain.name} are invalid!"
+    logger.info text
+    ContactNotification.notify_registrar(domain: domain, text: text)
+    ContactNotification.notify_tech_contact(domain: domain)
+
   end
 
   def validate(hostname:, domain:,  type: 'DNSKEY', klass: 'IN')
@@ -51,16 +64,21 @@ class ValidateDnssecJob < ApplicationJob
 
   def compare_dnssec_data(response_container:, domain:)
     domain.dnskeys.each do |key|
-      next unless key.flags.to_s == '257'
+      next unless key.flags.to_s == '257' || key.validation_datetime.nil?
 
       flag = make_magic(response_container: response_container, dnskey: key)
       text = "#{key.flags} - #{key.protocol} - #{key.alg} - #{key.public_key}"
       if flag
+        key.validation_datetime = Time.zone.now
+        key.save
+
         logger.info text + " ------->> succesfully!"
       else
         logger.info text + " ------->> not found in zone!"
       end
     end
+
+
   end
 
   def make_magic(response_container:, dnskey:)
