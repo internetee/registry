@@ -7,7 +7,7 @@ module ContactNotification
 
   def notify_tech_contact(domain:)
     text = "DNSKEYS for #{domain.name} are invalid!"
-    domain.tech_domain_contacts.each do |tech|
+    domain.tech_contacts.each do |tech|
       contact = Contact.find(tech.id)
 
       ContactInformMailer.notify(contact: contact, subject: text)
