@@ -26,43 +26,86 @@ class ValidateDnssecJob < ApplicationJob
 
   def iterate_nameservers(domain)
     domain.nameservers.each do |n|
-      text = "Hostname nameserver #{n.hostname}"
-      flag = validate(name: n.hostname)
-      if flag.nil?
-        logger.info "#{text} - #{log_templates['false']}"
-      else
-        logger.info "#{text} - #{log_templates['true']}"
-      end
+      validate(hostname: n.hostname, domain: domain)
 
       logger.info "----------------------------"
     end
   end
 
-  def validate(name:, resolver: prepare_validator, type: 'DNSKEY', klass: 'IN')
-    # make_query(name: hostname)
-    resolver.query(name, type, klass)
+  def validate(hostname:, domain:,  type: 'DNSKEY', klass: 'IN')
+    resolver = prepare_validator(hostname)
+    answer = resolver.query(domain.name, type, klass)
+
+    return logger.info "no any data for #{domain.name} | hostname - #{hostname}" if answer.nil?
+
+    logger.info "-----------"
+    logger.info "data for domain name - #{domain.name} | hostname - #{hostname}"
+    logger.info "-----------"
+
+    response_container = parse_response(answer)
+    compare_dnssec_data(response_container: response_container, domain: domain)
   rescue Exception => e
-    logger.error e.message
+    logger.error "#{e.message} - domain name: #{domain.name} - hostname: #{hostname}"
     nil
   end
 
-  def prepare_validator
-    dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
+  def compare_dnssec_data(response_container:, domain:)
+    domain.dnskeys.each do |key|
+      next unless key.flags.to_s == '257'
+
+      flag = make_magic(response_container: response_container, dnskey: key)
+      text = "#{key.flags} - #{key.protocol} - #{key.alg} - #{key.public_key}"
+      if flag
+        logger.info text + " ------->> succesfully!"
+      else
+        logger.info text + " ------->> not found in zone!"
+      end
+    end
+  end
+
+  def make_magic(response_container:, dnskey:)
+    response_container.any? do |r|
+      r[:flags].to_s == dnskey.flags.to_s &&
+        r[:protocol].to_s == dnskey.protocol.to_s &&
+        r[:alg].to_s == dnskey.alg.to_s &&
+        r[:public_key] == dnskey.public_key
+    end
+  end
+
+  def parse_response(answer)
+    response_container = []
+    answer.each_answer do |a|
+      a_string = a.to_s
+      a_string = a_string.gsub /\t/, ' '
+      a_string = a_string.split(' ')
+
+      next unless a_string[4] == '257'
+
+      protocol = a.protocol
+      alg = a.algorithm.code
+
+      response_container << {
+        flags: a_string[4],
+        protocol: protocol,
+        alg: alg,
+        public_key: a_string[8]
+      }
+    end
+
+    response_container
+  end
+
+  def prepare_validator(nameserver)
     inner_resolver = Dnsruby::Resolver.new
     inner_resolver.do_validation = true
     inner_resolver.dnssec = true
-    inner_resolver.nameserver = dns_servers
+    inner_resolver.nameserver = nameserver
+    inner_resolver.packet_timeout = ENV['a_and_aaaa_validation_timeout'].to_i
+    inner_resolver.query_timeout = ENV['a_and_aaaa_validation_timeout'].to_i
     resolver = Dnsruby::Recursor.new(inner_resolver)
     resolver.dnssec = true
 
     resolver
-  end
-
-  def make_query(name:, resolver: prepare_validator, type: 'DNSKEY', klass: 'IN')
-    logger.info "DNS query to #{name}; type: #{type}"
-    resolver.query(name, type, klass)
-  rescue Dnsruby::NXDomain
-    false
   end
 
   def log_templates
@@ -75,63 +118,4 @@ class ValidateDnssecJob < ApplicationJob
   def logger
     @logger ||= Rails.logger
   end
-
-
-  #
-  #
-  # def iterate_domain_data(domain:)
-  #   zone_datas = get_data_from_zone(domain: domain)
-  #   flag = domain.dnskeys.all? { |key| validate(zone_datas: zone_datas, domain_dnskey: key) }
-  #
-  #   flag
-  # end
-  #
-  # def get_data_from_zone(domain:)
-  #   resolver = prepare_resolver
-  #   ds_records_answers = resolver.query(domain.name, 'DNSKEY').answer
-  #
-  #   result_container = []
-  #
-  #   ds_records_answers.each do |ds|
-  #     next unless ds.type == Dnsruby::Types.DNSKEY
-  #
-  #     result_container << {
-  #       flags: ds.flags.to_s,
-  #       algorithm: ds.algorithm.code.to_s,
-  #       protocol: ds.protocol.to_s,
-  #       public_key: ds.public_key.export.gsub!(/\s+/, ''),
-  #     }
-  #   end
-  #
-  #   result_container
-  # rescue Dnsruby::NXDomain
-  #   domain.add_epp_error('2308', nil, nil, I18n.t(:dns_policy_violation))
-  # end
-  #
-  # def validate(zone_datas:, domain_dnskey:)
-  #   flag = zone_datas.any? do |zone_data|
-  #     zone_data[:flags] == domain_dnskey.flags.to_s &&
-  #       zone_data[:algorithm] == domain_dnskey.alg.to_s &&
-  #       zone_data[:protocol] == domain_dnskey.protocol.to_s &&
-  #       zone_data[:public_key].include?(domain_dnskey[:public_key].to_s)
-  #   end
-  #
-  #   text = "#{domain_dnskey.flags} - #{domain_dnskey.alg} -
-  #           #{domain_dnskey.protocol} - #{domain_dnskey.public_key} "
-  #   logger.info text + log_templates[flag.to_s]
-  #
-  #   flag
-  # end
-  #
-  # def prepare_resolver
-  #   dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
-  #   dns = Dnsruby::Resolver.new({ nameserver: dns_servers })
-  #   dns.do_validation = true
-  #   dns.do_caching = true
-  #   dns.dnssec = true
-  #
-  #   dns
-  # end
-
-
 end
