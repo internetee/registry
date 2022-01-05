@@ -64,7 +64,8 @@ class ValidateDnssecJob < ApplicationJob
 
   def compare_dnssec_data(response_container:, domain:)
     domain.dnskeys.each do |key|
-      next unless key.flags.to_s == '257' || key.validation_datetime.nil?
+      next unless key.flags.to_s == '257'
+      next if key.validation_datetime.present?
 
       flag = make_magic(response_container: response_container, dnskey: key)
       text = "#{key.flags} - #{key.protocol} - #{key.alg} - #{key.public_key}"
@@ -77,8 +78,6 @@ class ValidateDnssecJob < ApplicationJob
         logger.info text + " ------->> not found in zone!"
       end
     end
-
-
   end
 
   def make_magic(response_container:, dnskey:)
