@@ -11,9 +11,15 @@ class ValidateDnssecJob < ApplicationJob
 
       iterate_nameservers(domain)
     else
-      domain_list = Domain.all.reject { |d| d.nameservers.empty? }
+      domain_list = Domain.all.reject { |d| d.dnskeys.empty? }
 
       domain_list.each do |d|
+        if d.nameservers.empty?
+          logger.info "#{d.name} has no nameserver"
+
+          next
+        end
+
         iterate_nameservers(d)
       end
     end
