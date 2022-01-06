@@ -6,7 +6,6 @@ class ValidationEventTest < ActiveSupport::TestCase
     @domain = domains(:shop)
     Setting.redemption_grace_period = 30
     ActionMailer::Base.deliveries.clear
-    Spy.on_instance_method(Domains::NameserverValidator, :run).and_return({result: true, reason: ''})
   end
 
   teardown do
