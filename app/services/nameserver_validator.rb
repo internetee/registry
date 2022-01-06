@@ -28,6 +28,14 @@ module NameserverValidator
     logger.info "Serial number - #{result.answer[0].serial.to_s} of #{hostname} - domain name: #{domain_name}"
 
     { result: true, reason: '' }
+  rescue Dnsruby::Refused => e
+    logger.error e.message
+    logger.error "failed #{hostname} validation of #{domain_name} domain name. Domain not found"
+    return { result: false, reason: 'domain', error_info: e }
+  rescue Dnsruby::NXDomain => e
+    logger.error e.message
+    logger.error "failed #{hostname} validation of #{domain_name} domain name. Domain not found"
+    return { result: false, reason: 'domain', error_info: e }
   rescue StandardError => e
     logger.error e.message
     logger.error "failed #{hostname} validation of #{domain_name} domain name"

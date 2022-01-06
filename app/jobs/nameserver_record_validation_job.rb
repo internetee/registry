@@ -74,16 +74,20 @@ class NameserverRecordValidationJob < ApplicationJob
   end
 
   def parse_result(result, nameserver)
+    domain = Domain.find(nameserver.domain_id)
+
     text = ""
     case result[:reason]
     when 'answer'
-      text = "No any answer comes from **#{nameserver}**. Nameserver not exist"
+      text = "No any answer comes from **#{nameserver.hostname}**. Nameserver not exist"
     when 'serial'
-      text = "Serial number for nameserver hostname **#{nameserver}** doesn't present. SOA validation failed."
+      text = "Serial number for nameserver hostname **#{nameserver.hostname}** doesn't present. SOA validation failed."
     when 'not found'
-      text = "Seems nameserver hostname **#{nameserver}** doesn't exist"
+      text = "Seems nameserver hostname **#{nameserver.hostname}** doesn't exist"
     when 'exception'
       text = "Something goes wrong, exception reason: **#{result[:error_info]}**"
+    when 'domain'
+      text = "#{domain} not found in zone"
     end
 
     logger.info text
