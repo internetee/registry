@@ -32,6 +32,10 @@ class ValidateDnssecJob < ApplicationJob
 
   def iterate_nameservers(domain)
     domain.nameservers.each do |n|
+      result_nameserver_validation = SoaNameserverQuery.validate(domain_name: domain.name, hostname: n.hostname)
+
+      return unless result_nameserver_validation
+
       validate(hostname: n.hostname, domain: domain)
 
       notify_contacts(domain)

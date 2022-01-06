@@ -7,26 +7,30 @@ class ValidateDnssecJobTest < ActiveJob::TestCase
     @dnskey = dnskeys(:one)
   end
 
-  # def test_job_should_return_successfully_validated_dnskeys
-  #   @domain.dnskeys << @dnskey
-  #   @domain.save
-  #   @domain.reload
-  #
-  #   mock_zone_data = [
-  #     {
-  #       flags: @dnskey.flags,
-  #       protocol: @dnskey.protocol,
-  #       alg: @dnskey.alg,
-  #       public_key: @dnskey.public_key
-  #     }]
-  #
-  #   Spy.on_instance_method(ValidateDnssecJob, :parse_response).and_return(mock_zone_data)
-  #
-  #   ValidateDnssecJob.perform_now(domain_name: @domain.name)
-  #
-  #   @domain.reload
-  #   p @domain.dnskeys
-  # end
+  def test_job_should_return_successfully_validated_dnskeys
+    # @domain.dnskeys << @dnskey
+    # @domain.save
+    # @domain.reload
+    #
+    # mock_zone_data = [
+    #   {
+    #     flags: @dnskey.flags,
+    #     protocol: @dnskey.protocol,
+    #     alg: @dnskey.alg,
+    #     public_key: @dnskey.public_key
+    #   }]
+    #
+    # resolver = Spy.mock(Dnsruby::Recursor)
+    # Spy.on(resolver, :query).and_return true
+    # Spy.on_instance_method(ValidateDnssecJob, :parse_response).and_return(mock_zone_data)
+    # # Spy.on_instance_method(ValidateDnssecJob, :prepare_validator).and_return(true)
+    #
+    #
+    # ValidateDnssecJob.perform_now(domain_name: @domain.name)
+    #
+    # @domain.reload
+    # p @domain.dnskeys
+  end
 
   # def test_job_discarded_after_error
   #   assert_no_enqueued_jobs
