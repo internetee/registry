@@ -5,10 +5,32 @@ require 'resolv'
 class NameserverRecordValidationJob < ApplicationJob
   include Dnsruby
 
-  def perform(domain_name: nil, nameserver_address: nil)
-    if nameserver_address.nil?
-      Nameserver.all.map do |nameserver|
-        result = Domains::NameserverValidator.run(domain_name: nameserver.domain.name, nameserver_address: nameserver.hostname)
+  def perform(domain_name: nil)
+    if domain_name.nil?
+      domains = Domain.all.select { |domain| domain.nameservers.exists? }.
+                           select { |domain| domain.created_at < Time.zone.now - 8.hours }
+
+      domains.each do |domain|
+        domain.nameservers.each do |nameserver|
+          result = NameserverValidator.run(domain_name: domain.name, hostname: nameserver.hostname)
+
+          if result[:result]
+            true
+          else
+            parse_result(result, nameserver)
+            false
+          end
+        end
+      end
+    else
+      domain = Domain.find_by(name: domain_name)
+
+      return logger.info 'Domain not found' if domain.nil?
+      return logger.info 'It should take 8 hours after the domain was created' if domain.created_at > Time.zone.now - 8.hours
+      return logger.info 'Domain not has nameservers' if domain.nameservers.empty?
+
+      domain.nameservers.each do |nameserver|
+        result = NameserverValidator.run(domain_name: domain.name, hostname: nameserver.hostname)
 
         if result[:result]
           true
@@ -17,11 +39,6 @@ class NameserverRecordValidationJob < ApplicationJob
           false
         end
       end
-    else
-      result = Domains::NameserverValidator.run(domain_name: domain_name, nameserver_address: nameserver_address)
-      return parse_result(result, nameserver_address) unless result[:result]
-
-      true
     end
   end
 
@@ -33,7 +50,7 @@ class NameserverRecordValidationJob < ApplicationJob
     when 'answer'
       text = "No any answer come from **#{nameserver}**"
     when 'serial'
-      text = "Serial number for nameserver hostname **#{nameserver}** doesn't present"
+      text = "Serial number for nameserver hostname **#{nameserver}** doesn't present. Seems nameservers out the zone"
     when 'not found'
       text = "Seems nameserver hostname **#{nameserver}** doesn't exist"
     when 'exception'

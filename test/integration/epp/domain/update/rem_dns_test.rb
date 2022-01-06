@@ -10,10 +10,8 @@ class EppDomainUpdateRemDnsTest < EppTestCase
     @dnskey = dnskeys(:one)
     @dnskey.update(domain: @domain)
     @original_registrant_change_verification =
-      Setting.request_confirmation_on_registrant_change_enabled
+    Setting.request_confirmation_on_registrant_change_enabled
     ActionMailer::Base.deliveries.clear
-
-    Spy.on_instance_method(Actions::DomainUpdate, :check_for_valid_nameserver).and_return(true)
   end
 
   teardown do
