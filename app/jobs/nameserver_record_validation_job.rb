@@ -7,14 +7,18 @@ class NameserverRecordValidationJob < ApplicationJob
 
   def perform(domain_name: nil)
     if domain_name.nil?
-      domains = Domain.all.select { |domain| domain.nameservers.exists? }.
-                           select { |domain| domain.created_at < Time.zone.now - 8.hours }
+      domains = Domain.all.select { |domain| domain.created_at < Time.zone.now - NameserverValidator::VALIDATION_DOMAIN_PERIOD }
+                      .select { |domain| domain.nameservers.exists? }
 
       domains.each do |domain|
         domain.nameservers.each do |nameserver|
+          next if nameserver.nameserver_failed_validation? || nameserver.validated?
+
           result = NameserverValidator.run(domain_name: domain.name, hostname: nameserver.hostname)
 
           if result[:result]
+            add_nameserver_to_succesfully(nameserver)
+
             true
           else
             parse_result(result, nameserver)
@@ -26,10 +30,16 @@ class NameserverRecordValidationJob < ApplicationJob
       domain = Domain.find_by(name: domain_name)
 
       return logger.info 'Domain not found' if domain.nil?
-      return logger.info 'It should take 8 hours after the domain was created' if domain.created_at > Time.zone.now - 8.hours
+
+      if domain.created_at > Time.zone.now - NameserverValidator::VALIDATION_DOMAIN_PERIOD
+        return logger.info "It should take #{NameserverValidator::VALIDATION_DOMAIN_PERIOD} hours after the domain was created"
+      end
+
       return logger.info 'Domain not has nameservers' if domain.nameservers.empty?
 
       domain.nameservers.each do |nameserver|
+        next if nameserver.nameserver_failed_validation?
+
         result = NameserverValidator.run(domain_name: domain.name, hostname: nameserver.hostname)
 
         if result[:result]
@@ -43,6 +53,14 @@ class NameserverRecordValidationJob < ApplicationJob
   end
 
   private
+
+  def add_nameserver_to_succesfully(nameserver)
+    nameserver.validation_counter = nil
+    nameserver.failed_validation_reason = nil
+    nameserver.validation_datetime = Time.zone.now
+
+    nameserver.save
+  end
 
   def parse_result(result, nameserver)
     text = ""

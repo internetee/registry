@@ -3,6 +3,10 @@ module NameserverValidator
 
   extend self
 
+  VALIDATION_NAMESERVER_PERIOD = 1.year.freeze
+  VALIDATION_DOMAIN_PERIOD = 8.hours.freeze
+  VALID_NAMESERVER_COUNT_THRESHOLD = 3
+
   def run(domain_name:, hostname:)
     validate(domain_name: domain_name, hostname: hostname)
   end
