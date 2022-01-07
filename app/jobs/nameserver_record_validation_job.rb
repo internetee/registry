@@ -43,6 +43,8 @@ class NameserverRecordValidationJob < ApplicationJob
         result = NameserverValidator.run(domain_name: domain.name, hostname: nameserver.hostname)
 
         if result[:result]
+          add_nameserver_to_succesfully(nameserver)
+
           true
         else
           parse_result(result, nameserver)
