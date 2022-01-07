@@ -14,7 +14,7 @@ class NameserverRecordValidationJob < ApplicationJob
         domain.nameservers.each do |nameserver|
           next if nameserver.nameserver_failed_validation? || nameserver.validated?
 
-          result = NameserverValidator.run(domain_name: domain.name, hostname: nameserver.hostname)
+          result = NameserverValidator.run(domain_name: domain.name, nameserver: nameserver)
 
           if result[:result]
             add_nameserver_to_succesfully(nameserver)
@@ -40,7 +40,7 @@ class NameserverRecordValidationJob < ApplicationJob
       domain.nameservers.each do |nameserver|
         next if nameserver.nameserver_failed_validation?
 
-        result = NameserverValidator.run(domain_name: domain.name, hostname: nameserver.hostname)
+        result = NameserverValidator.run(domain_name: domain.name, nameserver: nameserver)
 
         if result[:result]
           add_nameserver_to_succesfully(nameserver)
@@ -87,9 +87,9 @@ class NameserverRecordValidationJob < ApplicationJob
     when 'not found'
       text = "Seems nameserver hostname **#{nameserver.hostname}** doesn't exist"
     when 'exception'
-      text = "Something goes wrong, exception reason: **#{result[:error_info]}**"
+      text = "Something went wrong, exception reason: **#{result[:error_info]}**"
     when 'domain'
-      text = "#{domain} not found in zone"
+      text = "#{domain} zone is not in nameserver**#{nameserver.hostname}**"
     end
 
     logger.info text
