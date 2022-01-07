@@ -90,6 +90,8 @@ class NameserverRecordValidationJob < ApplicationJob
       text = "Something went wrong, exception reason: **#{result[:error_info]}**"
     when 'domain'
       text = "#{domain} zone is not in nameserver**#{nameserver.hostname}**"
+    when 'glup record'
+      text = "Hostname #{nameserver.hostname} didn't resovle by glue record to #{domain}"
     end
 
     logger.info text

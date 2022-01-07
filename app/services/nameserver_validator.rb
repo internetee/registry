@@ -14,11 +14,13 @@ module NameserverValidator
       if result_response[:error_info].to_s.include? "Nameserver invalid!"
         if nameserver.ipv4.present?
           result_response = validate(domain_name: domain_name, hostname: nameserver.ipv4)
-        elsif nameserver.ipv6.present?
-          result_response = validate(domain_name: domain_name, hostname: nameserver.ipv6)
+        # elsif nameserver.ipv6.present?
+        #   result_response = validate(domain_name: domain_name, hostname: nameserver.ipv6)
         end
 
-        result_response
+        return { result: false, reason: 'glup record' } if result.answer.empty? if result_response[:result]
+
+        return result_response
       end
     end
 
@@ -58,7 +60,8 @@ module NameserverValidator
 
   def setup_resolver(hostname)
     resolver = Dnsruby::Resolver.new
-    resolver.query_timeout = ENV['nameserver_validation_timeout'].to_i || 5
+    timeouts = ENV['nameserver_validation_timeout'] || 4
+    resolver.query_timeout = timeouts.to_i
     resolver.retry_times = 3
     resolver.recurse = 0  # Send out non-recursive queries
     # disable caching otherwise SOA is cached from first nameserver queried
