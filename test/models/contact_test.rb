@@ -1,6 +1,9 @@
 require 'test_helper'
+require 'helpers/phone_format_helper_test'
 
 class ContactTest < ActiveJob::TestCase
+  include PhoneFormatHelperTest
+
   setup do
     @contact = contacts(:john)
     @old_validation_type = Truemail.configure.default_validation_type
@@ -102,39 +105,9 @@ class ContactTest < ActiveJob::TestCase
     assert contact.invalid?
   end
 
-  # https://en.wikipedia.org/wiki/E.164
   def test_validates_phone_format
     contact = valid_contact
-
-    contact.phone = '+.1'
-    assert contact.invalid?
-
-    contact.phone = '+123.'
-    assert contact.invalid?
-
-    contact.phone = '+1.123456789123456'
-    assert contact.invalid?
-
-    contact.phone = '+134.1234567891234'
-    assert contact.invalid?
-
-    contact.phone = '+000.1'
-    assert contact.invalid?
-
-    contact.phone = '+123.0'
-    assert contact.invalid?
-
-    contact.phone = '+1.2'
-    assert contact.valid?
-
-    contact.phone = '+123.4'
-    assert contact.valid?
-
-    contact.phone = '+1.12345678912345'
-    assert contact.valid?
-
-    contact.phone = '+134.123456789123'
-    assert contact.valid?
+    assert_phone_format(contact)
   end
 
   def test_valid_without_address_when_address_processing_id_disabled
