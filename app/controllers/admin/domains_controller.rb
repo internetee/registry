@@ -68,7 +68,9 @@ module Admin
       @domain = Domain.where(id: params[:domain_id]).includes({ versions: :item }).first
       @versions = @domain.versions
       @last_version = @versions.last
-      @old_versions = Kaminari.paginate_array(@versions.not_creates.reverse).page(params[:page]).per(DEFAULT_VERSIONS_PER_PAGE)
+      @old_versions = Kaminari.paginate_array(@versions.not_creates.reverse)
+                              .page(params[:page])
+                              .per(DEFAULT_VERSIONS_PER_PAGE)
     end
 
     def keep
