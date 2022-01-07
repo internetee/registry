@@ -25,16 +25,24 @@
                 domain: @pending_domain, pending_user: @pending_user, statuses_link: true
 
           -# current version
-          - if @domain.versions.present?
-            %tr.small
-              = render 'admin/domains/partials/version',
-                domain: @domain, version: @domain.versions.last
+          - if @versions.present?
+            - if params[:page].blank? || (params[:page].present? && params[:page].to_i < 2)
+              %tr.small
+                = render 'admin/domains/partials/version',
+                  domain: @domain, version: @last_version
 
           -# all other older versions
-          - @domain.versions.not_creates.reverse.each do |version|
+          - @old_versions.each do |version|
             %tr.small
               = render 'admin/domains/partials/version',
                 domain: version.reify, version: version.previous
+
+.row 
+  .col-md-6 
+    = paginate @old_versions
+  .col-md-6.text-right 
+    .pagination 
+      = t(:result_count, count: @old_versions.total_count + 1)
 
 :javascript
   window.addEventListener('load', function() {

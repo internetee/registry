@@ -63,8 +63,11 @@ module Admin
     # rubocop:enable Metrics/MethodLength
 
     def versions
+      per_page = 10
       @domain = Domain.where(id: params[:domain_id]).includes({ versions: :item }).first
       @versions = @domain.versions
+      @last_version = @versions.last
+      @old_versions = Kaminari.paginate_array(@versions.not_creates.reverse).page(params[:page]).per(per_page)
     end
 
     def keep
