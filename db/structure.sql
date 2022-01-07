@@ -824,7 +824,8 @@ CREATE TABLE public.dnskeys (
     creator_str character varying,
     updator_str character varying,
     legacy_domain_id integer,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    validation_datetime timestamp without time zone
 );
 
 
@@ -2177,7 +2178,10 @@ CREATE TABLE public.nameservers (
     creator_str character varying,
     updator_str character varying,
     legacy_domain_id integer,
-    hostname_puny character varying
+    hostname_puny character varying,
+    validation_datetime timestamp without time zone,
+    validation_counter integer,
+    failed_validation_reason character varying
 );
 
 
@@ -5389,6 +5393,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211124084308'),
 ('20211125181033'),
 ('20211125184334'),
-('20211126085139');
+('20211126085139'),
+('20211231113934'),
+('20220106123143');
 
 

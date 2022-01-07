@@ -8,7 +8,7 @@ class EppDomainUpdateBaseTest < EppTestCase
     @domain = domains(:shop)
     @contact = contacts(:john)
     @original_registrant_change_verification =
-      Setting.request_confirmation_on_registrant_change_enabled
+    Setting.request_confirmation_on_registrant_change_enabled
     ActionMailer::Base.deliveries.clear
   end
 

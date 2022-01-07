@@ -34,6 +34,8 @@ class Nameserver < ApplicationRecord
 
   delegate :name, to: :domain, prefix: true
 
+  scope :non_validated, -> { where(validation_datetime: nil) }
+
   self.ignored_columns = %w[legacy_domain_id]
 
   def epp_code_map
@@ -51,6 +53,18 @@ class Nameserver < ApplicationRecord
         %i[base ip_required],
       ]
     }
+  end
+
+  def nameserver_failed_validation?
+    return false if validation_counter.nil?
+
+    validation_counter >= NameserverValidator::VALID_NAMESERVER_COUNT_THRESHOLD
+  end
+
+  def validated?
+    return false if validation_datetime.nil?
+
+    validation_datetime + NameserverValidator::VALIDATION_NAMESERVER_PERIOD > Time.zone.now
   end
 
   def to_s
