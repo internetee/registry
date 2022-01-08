@@ -116,8 +116,8 @@ module Repp
       def webclient_request?
         return if Rails.env.test?
 
-        header  = request.headers['AccreditationToken']
-        return if header == ENV['accreditation_secret']
+        # header  = request.headers['AccreditationToken']
+        # return if header == ENV['accreditation_secret']
 
         ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
       end
