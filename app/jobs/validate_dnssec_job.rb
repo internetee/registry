@@ -32,9 +32,7 @@ class ValidateDnssecJob < ApplicationJob
 
   def iterate_nameservers(domain)
     domain.nameservers.each do |n|
-      result_nameserver_validation = SoaNameserverQuery.validate(domain_name: domain.name, hostname: n.hostname)
-
-      return unless result_nameserver_validation
+      next unless n.validated?
 
       validate(hostname: n.hostname, domain: domain)
 
@@ -124,11 +122,12 @@ class ValidateDnssecJob < ApplicationJob
 
   def prepare_validator(nameserver)
     inner_resolver = Dnsruby::Resolver.new
+    timeouts = ENV['nameserver_validation_timeout'] || 4
     inner_resolver.do_validation = true
     inner_resolver.dnssec = true
     inner_resolver.nameserver = nameserver
-    inner_resolver.packet_timeout = ENV['a_and_aaaa_validation_timeout'].to_i
-    inner_resolver.query_timeout = ENV['a_and_aaaa_validation_timeout'].to_i
+    inner_resolver.packet_timeout = timeouts.to_i
+    inner_resolver.query_timeout = timeouts.to_i
     resolver = Dnsruby::Recursor.new(inner_resolver)
     resolver.dnssec = true
 
