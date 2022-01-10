@@ -10,9 +10,8 @@ ENV SECRET_KEY_BASE "$SECRET_KEY_BASE"
 RUN npm install -g yarn@"$YARN_VER"
 
 RUN mkdir -p /opt/webapps/app/tmp/pids
-RUN mkdir -p /opt/ca \
-  mkdir -p /opt/ca/newcerts \
-  echo 12 > /opt/ca/serial \
+RUN mkdir -p /opt/ca/newcerts 
+RUN echo 12 > /opt/ca/serial \
   echo '3A0e' > /opt/ca/crlnumber \
   echo '' > /opt/ca/index.txt
 WORKDIR /opt/webapps/app
