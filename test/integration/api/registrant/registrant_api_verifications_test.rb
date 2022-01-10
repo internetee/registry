@@ -15,7 +15,6 @@ class RegistrantApiVerificationsTest < ApplicationIntegrationTest
     @domain.update!(statuses: [DomainStatus::PENDING_UPDATE],
       registrant_verification_asked_at: Time.zone.now - 1.day,
       registrant_verification_token: @token)
-    Spy.on_instance_method(ValidateDnssec, :validate_dnssec).and_return(true)
   end
 
   def test_fetches_registrant_change_request

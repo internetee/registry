@@ -14,7 +14,6 @@ module Actions
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
       assign_requested_statuses
-      # ValidateDnssec.validate_dnssec(params: params, domain: domain)
       ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
 
       commit
