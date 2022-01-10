@@ -49,8 +49,7 @@ class ValidateDnssecJob < ApplicationJob
     text = "DNSKEYS for #{domain.name} are invalid!"
     logger.info text
     ContactNotification.notify_registrar(domain: domain, text: text)
-    ContactNotification.notify_tech_contact(domain: domain)
-
+    ContactNotification.notify_tech_contact(domain: domain, text: text)
   end
 
   def validate(hostname:, domain:,  type: 'DNSKEY', klass: 'IN')

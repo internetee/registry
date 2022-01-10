@@ -1,9 +1,10 @@
 class ContactInformMailer < ApplicationMailer
   helper_method :address_processing
 
-  def notify(contact:, subject:)
-    @contact = email
+  def notify(contact:, domain:, subject:)
+    @contact = contact
     @subject = subject
+    @domain = domain
 
     mail(to: contact.email, subject: subject)
   end

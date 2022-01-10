@@ -95,27 +95,27 @@ class NameserverRecordValidationJob < ApplicationJob
     end
 
     logger.info text
-    failed_log(text: text, nameserver: nameserver)
+    failed_log(text: text, nameserver: nameserver, domain: domain)
     add_nameserver_to_failed(nameserver: nameserver, reason: text)
 
     false
   end
 
-  def failed_log(text:, nameserver:)
-    inform_to_tech_contact(text)
+  def failed_log(text:, nameserver:, domain:)
+    inform_to_tech_contact(domain: domain, text: text)
     inform_to_registrar(text: text, nameserver: nameserver)
 
     false
   end
 
-  def inform_to_tech_contact(text)
-    "NEED TO DO!"
-    text
+  def inform_to_tech_contact(domain:, text:)
+    ContactNotification.notify_tech_contact(domain: domain, text: text)
   end
 
   def inform_to_registrar(text:, nameserver:)
-    # nameserver.domain.registrar.notifications.create!(text: text)
-    "NEED TO DO!"
+    # text = "DNSKEYS for #{domain.name} are invalid!"
+    logger.info text
+    ContactNotification.notify_registrar(domain: nameserver.domain, text: text)
   end
 
   def logger
