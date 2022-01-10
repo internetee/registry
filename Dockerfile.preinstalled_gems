@@ -10,6 +10,7 @@ ENV SECRET_KEY_BASE "$SECRET_KEY_BASE"
 RUN npm install -g yarn@"$YARN_VER"
 
 RUN mkdir -p /opt/webapps/app/tmp/pids
+RUN mkdir /opt/ca/newcerts
 WORKDIR /opt/webapps/app
 
 COPY . .
