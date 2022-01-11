@@ -89,6 +89,8 @@ class Certificate < ApplicationRecord
                                     '-in', csr_file.path, '-out', crt_file.path, '-key', ENV['ca_key_password'],
                                     '-batch')
     logger.error("ERROR :" + err)
+    logger.error("_OUT: " + _out)
+    logger.error("_ST: " + _st)
 
     if err.match?(/Data Base Updated/)
       crt_file.rewind
