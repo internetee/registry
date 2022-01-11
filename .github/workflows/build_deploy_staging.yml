@@ -201,3 +201,4 @@ jobs:
             Please note that the API is only accessible from Riigipilv.
             "
             }' $NOTIFICATION_URL
+
