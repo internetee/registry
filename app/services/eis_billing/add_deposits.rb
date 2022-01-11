@@ -22,18 +22,17 @@ module EisBilling
                                            :created_at,
                                            :updated_at,
                                            :e_invoice_sent_at,
-                                           :issue_date,
-                                           :due_date])
+                                           :items_attributes])
 
       parsed_data = JSON.parse(invoice)
       parsed_data["role"] = "registrar"
-      parsed_data["invoice_number"] = "2232"
       parsed_data["description"] = "some" if parsed_data["description"] == ''
 
       parsed_data = replace_key(json_obj: parsed_data, old_key: "total", new_key: "transaction_amount")
       parsed_data = replace_key(json_obj: parsed_data, old_key: "reference_no", new_key: "reference_number")
 
-      p parsed_data
+      invoice_items_json = @invoice.items.to_json(except: [:created_at, :updated_at])
+      parsed_data["items"] = JSON.parse(invoice_items_json)
       parsed_data
     end
 
