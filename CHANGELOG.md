@@ -1,4 +1,7 @@
-07.01.2021
+10.01.2022
+* Fixed bulk action in registrar portal [#2251](https://github.com/internetee/registry/issues/2251)
+
+07.01.2022
 * Implemented nameserver validation [#2202](https://github.com/internetee/registry/issues/2202)
 
 29.12.2021
