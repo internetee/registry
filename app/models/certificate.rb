@@ -81,6 +81,7 @@ class Certificate < ApplicationRecord
     csr_file.rewind
 
     crt_file = Tempfile.new('client_crt')
+    logger.error('csr_file path:' + csr_file.path)
     _out, err, _st = Open3.capture3('openssl', 'ca', '-config', ENV['openssl_config_path'],
                                     '-keyfile', ENV['ca_key_path'], '-cert', ENV['ca_cert_path'],
                                     '-extensions', 'usr_cert', '-notext', '-md', 'sha256',
