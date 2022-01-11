@@ -9,15 +9,13 @@ ENV SECRET_KEY_BASE "$SECRET_KEY_BASE"
 
 RUN npm install -g yarn@"$YARN_VER"
 
-RUN mkdir -p -v -m776 /opt/webapps/app/tmp/pids
-RUN mkdir -p -m776 -v /opt/ca/newcerts
-RUN ls -la /opt/ 
-RUN touch /opt/ca/serial
-RUN echo 12 > /opt/ca/serial 
+RUN mkdir -p -m776 /opt/webapps/app/tmp/pids
+RUN mkdir -p -m776 /opt/ca/newcerts
+RUN echo -n 12 > /opt/ca/serial 
 RUN chmod 776 /opt/ca/serial
 RUN echo '3A0e' > /opt/ca/crlnumber
 RUN chmod 776 /opt/ca/crlnumber
-RUN echo '' > /opt/ca/index.txt
+RUN touch /opt/ca/index.txt
 RUN chmod 776 /opt/ca/index.txt
 WORKDIR /opt/webapps/app
 
