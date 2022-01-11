@@ -50,7 +50,7 @@ module Domains
       end
 
       def transaction_wrapper
-        ActiveRecord::Base.transaction(isolation: :serializable) do
+        ActiveRecord::Base.transaction(isolation: :repeatable_read) do
           yield if block_given?
         end
       end
