@@ -49,9 +49,7 @@ module Admin
       rollback_history = @domain.json_statuses_history&.[]('admin_store_statuses_history')
       dp = ignore_empty_statuses
       @domain.is_admin = true
-      PaperTrail.request(enabled: false) do
-        @domain.admin_status_update dp[:statuses]
-      end
+      @domain.admin_status_update dp[:statuses]
 
       if @domain.update(dp)
         flash[:notice] = I18n.t('domain_updated')

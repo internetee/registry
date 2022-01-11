@@ -590,8 +590,10 @@ class Domain < ApplicationRecord
 
   # special handling for admin changing status
   def admin_status_update(update)
-    update_unless_locked_by_registrant(update)
-    update_not_by_locked_statuses(update)
+    PaperTrail.request(enabled: false) do
+      update_unless_locked_by_registrant(update)
+      update_not_by_locked_statuses(update)
+    end
     return unless update
 
     # check for deleted status
