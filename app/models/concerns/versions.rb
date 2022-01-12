@@ -64,19 +64,19 @@ module Versions
 
   module ClassMethods
     def all_versions_for(ids, time)
-      ver_klass    = paper_trail.version_class
-      from_history = ver_klass.where(item_id: ids.to_a).
-          order(:item_id).
-          preceding(time + 1, true).
-          select("distinct on (item_id) #{ver_klass.table_name}.*").
-          map do |ver|
-            valid_columns = ver.item_type.constantize&.column_names
-            o = new(ver.object&.slice(*valid_columns))
-            o.version_loader = ver
-            changes = ver.object_changes.to_h&.slice(*valid_columns)
-            changes.each { |k, v| o.public_send("#{k}=", v[-1]) }
-            o
-          end
+      ver_klass = paper_trail.version_class
+      from_history = ver_klass.where(item_id: ids.to_a)
+                              .order(:item_id)
+                              .preceding(time + 1, true)
+                              .select("distinct on (item_id) #{ver_klass.table_name}.*")
+                              .map do |ver|
+                                valid_columns = ver.item_type.constantize&.column_names
+                                o = new(ver.object&.slice(*valid_columns))
+                                o.version_loader = ver
+                                changes = ver.object_changes.to_h&.slice(*valid_columns)
+                                changes.each { |k, v| o.public_send("#{k}=", v[-1]) }
+                                o
+                              end
       not_in_history = where(id: (ids.to_a - from_history.map(&:id)))
 
       from_history + not_in_history

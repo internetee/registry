@@ -622,7 +622,10 @@ en:
   contact_ident: 'Contact ident'
   results_per_page: 'Results per page'
   nameserver_hostname: 'Nameserver hostname'
-  result_count: '%{count} results'
+  result_count: 
+    zero: 'No results'
+    other: '%{count} results'
+    one: '1 result'
   failed_to_generate_invoice_invoice_number_limit_reached: 'Failed to generate invoice - invoice number limit reached'
   is_too_small_minimum_deposit_is: 'is too small. Minimum deposit is %{amount} %{currency}'
   poll_pending_update_confirmed_by_registrant: 'Registrant confirmed domain update'

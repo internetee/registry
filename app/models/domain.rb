@@ -469,6 +469,7 @@ class Domain < ApplicationRecord
     return false unless pending_update?
     return false unless registrant_verification_asked?
     return false unless registrant_verification_token == token
+
     true
   end
 
@@ -476,6 +477,7 @@ class Domain < ApplicationRecord
     return false unless pending_delete?
     return false unless registrant_verification_asked?
     return false unless registrant_verification_token == token
+
     true
   end
 
@@ -492,10 +494,12 @@ class Domain < ApplicationRecord
 
   def pending_delete!
     return true if pending_delete?
+
     self.epp_pending_delete = true # for epp
 
     # TODO: if this were to ever return true, that would be wrong. EPP would report sucess pending
     return true unless registrant_verification_asked?
+
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
@@ -560,6 +564,7 @@ class Domain < ApplicationRecord
   def pending_registrant
     return '' if pending_json.blank?
     return '' if pending_json['new_registrant_id'].blank?
+
     Registrant.find_by(id: pending_json['new_registrant_id'])
   end
 
@@ -590,9 +595,12 @@ class Domain < ApplicationRecord
 
   # special handling for admin changing status
   def admin_status_update(update)
-    update_unless_locked_by_registrant(update)
-    update_not_by_locked_statuses(update)
     return unless update
+
+    PaperTrail.request(enabled: false) do
+      update_unless_locked_by_registrant(update)
+      update_not_by_locked_statuses(update)
+    end
 
     # check for deleted status
     statuses.each do |s|
@@ -658,7 +666,7 @@ class Domain < ApplicationRecord
   end
 
   def manage_automatic_statuses
-    if !self.class.nameserver_required?
+    unless self.class.nameserver_required?
       deactivate if nameservers.reject(&:marked_for_destruction?).empty?
       activate if nameservers.reject(&:marked_for_destruction?).size >= Setting.ns_min_count
     end
@@ -679,11 +687,11 @@ class Domain < ApplicationRecord
   def children_log
     log = HashWithIndifferentAccess.new
     log[:admin_contacts] = admin_contact_ids
-    log[:tech_contacts]  = tech_contact_ids
-    log[:nameservers]    = nameserver_ids
-    log[:dnskeys]        = dnskey_ids
-    log[:legal_documents]= [legal_document_id]
-    log[:registrant]     = [registrant_id]
+    log[:tech_contacts] = tech_contact_ids
+    log[:nameservers] = nameserver_ids
+    log[:dnskeys] = dnskey_ids
+    log[:legal_documents] = [legal_document_id]
+    log[:registrant] = [registrant_id]
     log
   end
 
