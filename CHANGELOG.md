@@ -1,3 +1,6 @@
+12.01.2022
+* Fixed double history entries on admin atatus changes [#2263](https://github.com/internetee/registry/pull/2263)
+
 10.01.2022
 * Fixed bulk action in registrar portal [#2251](https://github.com/internetee/registry/issues/2251)
 
