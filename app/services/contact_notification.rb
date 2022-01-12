@@ -5,12 +5,20 @@ module ContactNotification
     domain.registrar.notifications.create(text: text)
   end
 
-  def notify_tech_contact(domain:, text:)
-    # text = "DNSKEYS for #{domain.name} are invalid!"
-    domain.tech_contacts.each do |tech|
-      contact = Contact.find(tech.id)
+  def notify_tech_contact(domain:, reason: nil)
+    case reason
+    when 'dnssec'
+      domain.tech_contacts.each do |tech|
+        contact = Contact.find(tech.id)
 
-      ContactInformMailer.notify(contact: contact, domain: domain, subject: text).deliver_now
+        ContactInformMailer.notify_dnssec(contact: contact, domain: domain).deliver_now
+      end
+    when 'nameserver'
+      domain.tech_contacts.each do |tech|
+        contact = Contact.find(tech.id)
+
+        ContactInformMailer.notify_nameserver(contact: contact, domain: domain).deliver_now
+      end
     end
   end
 end

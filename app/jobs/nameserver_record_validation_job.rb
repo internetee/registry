@@ -108,12 +108,12 @@ class NameserverRecordValidationJob < ApplicationJob
     false
   end
 
-  def inform_to_tech_contact(domain:, text:)
-    ContactNotification.notify_tech_contact(domain: domain, text: text)
+  def inform_to_tech_contact(domain:, text: nil)
+    ContactNotification.notify_tech_contact(domain: domain, reason: 'nameserver')
   end
 
-  def inform_to_registrar(text:, nameserver:)
-    # text = "DNSKEYS for #{domain.name} are invalid!"
+  def inform_to_registrar(nameserver:, text: nil)
+    text =  "Host record #{nameserver.hostname} of a domain #{nameserver.domain} is invalid. Please fix or contact the registrant."
     logger.info text
     ContactNotification.notify_registrar(domain: nameserver.domain, text: text)
   end

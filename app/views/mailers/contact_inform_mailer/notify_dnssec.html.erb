@@ -1,0 +1,40 @@
+<h2>Lugupeetud domeeni <%= @domain.name %> tehniline kontakt,</h2>
+
+<p>
+Eesti Interneti Sihtasutusele (EIS) juhib tähelepanu, et domeeni <%= @domain.name %> DNSKEY kirjed on puudulikud ning domeeniga seotud teenuse ei pruugi korrektselt toimida.
+</p>
+<p>
+Andmete parandamiseks vaadake palun üle domeeni nimeserverite seaditused või pöörduge palun oma registripidaja <%= @domain.registrar.name %> või nimeserveri teenuse pakkuja poole.</p>
+
+<p>
+Lisaküsimuste korral võtke palun ühendust oma registripidajaga:
+</p>
+<b><%= @domain.registrar.name %></b><br />
+<b>Email:</b> <%= @domain.registrar.email %><br />
+<b>Telefon:</b><%= @domain.registrar.phone %><br />
+<b>Veebileht:</b><%= @domain.registrar.website %><br />
+
+Lugupidamisega<br />
+<b>Eesti Interneti Sihtasutus</b><br />
+<br/>
+---
+<br/>
+
+<h2>Dear technical contact of <%= @domain.name %> domain,</h2>
+
+<p>
+Estonian Internet Foundation points out that the DNSKEY record(s) for the domain <%= @domain.name %> are invalid and the service related to the domain may not work correctly.
+</p>
+<p>
+Please check the DNSKEY records of the domain or contact your registrar <%= @domain.registrar.name%> or your name server service provider to correct this information.
+</p>
+<p>
+Should you have additional questions, please contact your registrar:
+</p>
+<b><%= @domain.registrar.name %></b><br />
+<b>Email:</b> <%= @domain.registrar.email %><br />
+<b>Phone:</b> <%= @domain.registrar.phone %> <br />
+<b>Website:</b> <%= @domain.registrar.website %><br />
+
+Best Regards, <br />
+<b>Estonian Internet Foundation</b>
