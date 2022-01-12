@@ -66,10 +66,6 @@ if @cron_group == 'registry'
     rake 'verify_email:all_domains'
   end
 
-  every 5.minutes do
-    runner 'NameserverRecordValidationJob.perform_now'
-  end
-
   # Should be at least once every 4 days, since according to LHV specs:
   # "Unread messages older than 5 days are automatically scheduled for deletion"
   # https://partners.lhv.ee/en/connect/#messaging
