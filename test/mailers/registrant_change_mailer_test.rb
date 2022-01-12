@@ -13,7 +13,7 @@ class RegistrantChangeMailerTest < ActionMailer::TestCase
                                                         registrar: @domain.registrar,
                                                         current_registrant: @domain.registrant,
                                                         new_registrant: @domain.registrant)
-              .deliver_now
+                                  .deliver_now
 
     assert_emails 1
     assert_equal ['john@inbox.test'], email.to
