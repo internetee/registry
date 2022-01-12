@@ -133,13 +133,6 @@ class ValidateDnssecJob < ApplicationJob
     resolver
   end
 
-  def log_templates
-    {
-      "true" => "validated successfully",
-      "false" => "validated fail"
-    }
-  end
-
   def logger
     @logger ||= Rails.logger
   end

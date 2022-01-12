@@ -55,7 +55,7 @@ class Nameserver < ApplicationRecord
     }
   end
 
-  def nameserver_failed_validation?
+  def failed_validation?
     return false if validation_counter.nil?
 
     validation_counter >= NameserverValidator::VALID_NAMESERVER_COUNT_THRESHOLD

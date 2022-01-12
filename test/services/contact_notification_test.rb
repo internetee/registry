@@ -4,6 +4,7 @@ class ContactNotificationTest < ActionMailer::TestCase
 
   setup do
     @domain = domains(:shop)
+    @nameserver = nameservers(:shop_ns1)
     @text = 'text'
   end
 
@@ -14,7 +15,7 @@ class ContactNotificationTest < ActionMailer::TestCase
   end
 
   def test_notify_tech_contacts_that_nameserver_is_broken
-    ContactNotification.notify_tech_contact(domain: @domain, reason: 'nameserver')
+    ContactNotification.notify_tech_contact(domain: @domain, reason: 'nameserver', nameserver: @nameserver)
     assert_equal @domain.tech_contacts.count, 2
     assert_emails 2
   end

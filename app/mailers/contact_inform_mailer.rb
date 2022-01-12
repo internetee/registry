@@ -10,9 +10,10 @@ class ContactInformMailer < ApplicationMailer
     mail(to: contact.email, subject: subject)
   end
 
-  def notify_nameserver(contact:, domain:)
+  def notify_nameserver(contact:, domain:, nameserver:)
     @contact = contact
     @domain = domain
+    @nameserver = nameserver
 
     subject = "Domeeni #{@domain.name} nimeserveri kirjed ei ole korrektsed / The host records of the domain #{@domain.name} are invalid"
     mail(to: contact.email, subject: subject)

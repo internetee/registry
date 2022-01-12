@@ -5,7 +5,7 @@ module ContactNotification
     domain.registrar.notifications.create(text: text)
   end
 
-  def notify_tech_contact(domain:, reason: nil)
+  def notify_tech_contact(domain:, nameserver: nil, reason: nil)
     case reason
     when 'dnssec'
       domain.tech_contacts.each do |tech|
@@ -17,7 +17,7 @@ module ContactNotification
       domain.tech_contacts.each do |tech|
         contact = Contact.find(tech.id)
 
-        ContactInformMailer.notify_nameserver(contact: contact, domain: domain).deliver_now
+        ContactInformMailer.notify_nameserver(contact: contact, domain: domain, nameserver: nameserver).deliver_now
       end
     end
   end

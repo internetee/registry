@@ -6,6 +6,8 @@ Eesti Interneti Sihtasutusele (EIS) juhib tähelepanu, et domeeni <%= @domain.na
 Andmete parandamiseks vaadake palun üle domeeni nimeserverite seaditused või pöörduge palun oma registripidaja <%= @domain.registrar.name%> või nimeserveri teenuse pakkuja poole.
 </p>
 
+<b>Viga nimesereriga</b> <%= @nameserver %> - <%= @nameserver.failed_validation_reason %>
+
 <p>
 Lisaküsimuste korral võtke palun ühendust oma registripidajaga:
 </p>
@@ -29,6 +31,8 @@ Lugupidamisega<br />
 <p>
 Please check the name server settings of the domain or contact your registrar <%= @domain.registrar.name%> or your name server service provider to correct this information.
 </p>
+
+<b>Problem with nameserver</b> <%= @nameserver %> - <%= @nameserver.failed_validation_reason %>"
 
 <p>
 Should you have additional questions, please contact your registrar:
