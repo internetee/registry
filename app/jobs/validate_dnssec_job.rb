@@ -63,6 +63,7 @@ class ValidateDnssecJob < ApplicationJob
     logger.info "-----------"
 
     response_container = parse_response(answer)
+
     compare_dnssec_data(response_container: response_container, domain: domain)
   rescue Exception => e
     logger.error "#{e.message} - domain name: #{domain.name} - hostname: #{hostname}"
@@ -76,6 +77,7 @@ class ValidateDnssecJob < ApplicationJob
 
       flag = make_magic(response_container: response_container, dnskey: key)
       text = "#{key.flags} - #{key.protocol} - #{key.alg} - #{key.public_key}"
+
       if flag
         key.validation_datetime = Time.zone.now
         key.save
@@ -98,7 +100,9 @@ class ValidateDnssecJob < ApplicationJob
 
   def parse_response(answer)
     response_container = []
+
     answer.each_answer do |a|
+
       a_string = a.to_s
       a_string = a_string.gsub /\t/, ' '
       a_string = a_string.split(' ')
