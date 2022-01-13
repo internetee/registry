@@ -5,7 +5,8 @@ module Depp
     attr_accessor :id, :name, :email, :phone, :org_name,
                   :ident, :ident_type, :ident_country_code,
                   :street, :city, :zip, :state, :country_code,
-                  :password, :legal_document, :statuses, :code
+                  :password, :legal_document, :statuses, :code,
+                  :email_history
 
     DISABLED = 'Disabled'
     DISCLOSURE_TYPES = [DISABLED, '1', '0']

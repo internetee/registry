@@ -62,12 +62,30 @@ class ValidationEvent < ApplicationRecord
     if object.need_to_start_force_delete?
       start_force_delete
     elsif object.need_to_lift_force_delete?
+      refresh_status_notes
       lift_force_delete
     end
   end
 
   def start_force_delete
     Domains::ForceDeleteEmail::Base.run(email: email)
+  end
+
+  def refresh_status_notes
+    old_email = object.email_history
+    domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
+    registrant_ids = Registrant.where(email: email).pluck(:id)
+
+    domains = domain_contacts.map(&:domain).flatten +
+              Domain.where(registrant_id: registrant_ids)
+
+    domains.uniq.each do |domain|
+      next unless domain.status_notes[DomainStatus::FORCE_DELETE]
+
+      domain.status_notes[DomainStatus::FORCE_DELETE].slice!(old_email)
+      domain.status_notes[DomainStatus::FORCE_DELETE].lstrip!
+      domain.save(validate: false)
+    end
   end
 
   def lift_force_delete
