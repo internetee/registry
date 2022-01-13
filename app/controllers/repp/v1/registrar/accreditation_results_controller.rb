@@ -5,6 +5,7 @@ module Repp
         before_action :authenticate_shared_key
 
         TEMPORARY_SECRET_KEY = ENV['accreditation_secret'].freeze
+        EXPIRE_DEADLINE = 15.minutes.freeze
 
         api :POST, 'repp/v1/registrar/accreditation/push_results'
         desc 'added datetime results'
@@ -26,12 +27,32 @@ module Repp
           raise ActiveRecord::RecordNotFound if user.nil?
 
           user.accreditation_date = DateTime.current
+          user.accreditation_expire_date = user.accreditation_date + EXPIRE_DEADLINE
 
-          return unless user.save
+          if user.save
+            notify_registrar(user)
+            notify_admins
+            render_success(data: { user: user,
+                                   result: result,
+                                   message: 'Accreditation info successfully added' })
+          else
+            render_failed
+          end
+        end
 
-          render_success(data: { user: user,
-                                 result: result,
-                                 message: 'Accreditation info successfully added' })
+        def notify_registrar(user)
+          AccreditationCenterMailer.test_was_successfully_passed_registrar(user.registrar.email).deliver_now
+        end
+
+        def notify_admins
+          admin_users_emails = User.all.reject { |u| u.roles.nil? }
+                                   .select { |u| u.roles.include? 'admin' }.pluck(:email)
+
+          return if admin_users_emails.empty?
+
+          admin_users_emails.each do |email|
+            AccreditationCenterMailer.test_was_successfully_passed_admin(email).deliver_now
+          end
         end
 
         def authenticate_shared_key

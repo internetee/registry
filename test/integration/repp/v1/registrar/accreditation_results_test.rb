@@ -18,6 +18,7 @@ class ReppV1AccreditationResultsTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
+    assert_emails 2
     assert_equal json[:data][:user][:username], @user.username
     assert_equal json[:data][:result], "true"
     assert_equal json[:data][:message], "Accreditation info successfully added"
@@ -31,6 +32,7 @@ class ReppV1AccreditationResultsTest < ActionDispatch::IntegrationTest
 
     assert_response :unauthorized
 
+    assert_emails 0
     assert_equal json[:code], 2202
     assert_equal json[:message], 'Invalid authorization information'
   end
@@ -43,6 +45,7 @@ class ReppV1AccreditationResultsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
+    assert_emails 0
     assert_equal json[:code], 2303
     assert_equal json[:message], "Object 'chungachanga' does not exist"
   end
