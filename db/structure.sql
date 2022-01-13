@@ -2417,7 +2417,8 @@ CREATE TABLE public.registrars (
     iban character varying,
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
     legaldoc_optout boolean DEFAULT false NOT NULL,
-    legaldoc_optout_comment text
+    legaldoc_optout_comment text,
+    email_history character varying
 );
 
 
@@ -5273,6 +5274,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211125184334'),
 ('20211126085139'),
 ('20220106123143'),
-('20220113201642');
+('20220113201642'),
+('20220113220809');
 
 
