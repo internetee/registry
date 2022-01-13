@@ -14,7 +14,7 @@ class Registrar
         flash[:notice] = t(:please_pay_the_following_invoice)
 
         add_invoice_instance = EisBilling::AddDeposits.new(@invoice)
-        add_invoice_instance.some_meth
+        add_invoice_instance.send_invoice
 
         redirect_to [:registrar, @invoice]
       else
