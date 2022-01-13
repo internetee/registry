@@ -52,20 +52,6 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 
 --
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
---
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -215,8 +201,6 @@ CREATE FUNCTION public.generate_zonefile(i_origin character varying) RETURNS tex
 
 
 SET default_tablespace = '';
-
-SET default_with_oids = false;
 
 --
 -- Name: account_activities; Type: TABLE; Schema: public; Owner: -
@@ -667,7 +651,8 @@ CREATE TABLE public.contacts (
     upid integer,
     up_date timestamp without time zone,
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL
+    disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    email_history character varying
 );
 
 
@@ -824,8 +809,7 @@ CREATE TABLE public.dnskeys (
     creator_str character varying,
     updator_str character varying,
     legacy_domain_id integer,
-    updated_at timestamp without time zone,
-    validation_datetime timestamp without time zone
+    updated_at timestamp without time zone
 );
 
 
@@ -952,7 +936,6 @@ CREATE TABLE public.domains (
     pending_json jsonb,
     force_delete_date date,
     statuses character varying[],
-    status_notes public.hstore,
     statuses_before_force_delete character varying[] DEFAULT '{}'::character varying[],
     upid integer,
     up_date timestamp without time zone,
@@ -960,7 +943,8 @@ CREATE TABLE public.domains (
     locked_by_registrant_at timestamp without time zone,
     force_delete_start timestamp without time zone,
     force_delete_data public.hstore,
-    json_statuses_history jsonb
+    json_statuses_history jsonb,
+    status_notes public.hstore
 );
 
 
@@ -2280,74 +2264,6 @@ ALTER SEQUENCE public.payment_orders_id_seq OWNED BY public.payment_orders.id;
 
 
 --
--- Name: pghero_query_stats; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pghero_query_stats (
-    id bigint NOT NULL,
-    database text,
-    "user" text,
-    query text,
-    query_hash bigint,
-    total_time double precision,
-    calls bigint,
-    captured_at timestamp without time zone
-);
-
-
---
--- Name: pghero_query_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pghero_query_stats_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pghero_query_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_stats.id;
-
-
---
--- Name: pghero_space_stats; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pghero_space_stats (
-    id bigint NOT NULL,
-    database text,
-    schema text,
-    relation text,
-    size bigint,
-    captured_at timestamp without time zone
-);
-
-
---
--- Name: pghero_space_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pghero_space_stats_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pghero_space_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pghero_space_stats_id_seq OWNED BY public.pghero_space_stats.id;
-
-
---
 -- Name: prices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2706,7 +2622,8 @@ CREATE TABLE public.validation_events (
     validation_eventable_type character varying,
     validation_eventable_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    event_type public.validation_type
 );
 
 
@@ -3249,20 +3166,6 @@ ALTER TABLE ONLY public.payment_orders ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
--- Name: pghero_query_stats id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_query_stats_id_seq'::regclass);
-
-
---
--- Name: pghero_space_stats id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_space_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_space_stats_id_seq'::regclass);
-
-
---
 -- Name: prices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3783,22 +3686,6 @@ ALTER TABLE ONLY public.notifications
 
 ALTER TABLE ONLY public.payment_orders
     ADD CONSTRAINT payment_orders_pkey PRIMARY KEY (id);
-
-
---
--- Name: pghero_query_stats pghero_query_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_query_stats
-    ADD CONSTRAINT pghero_query_stats_pkey PRIMARY KEY (id);
-
-
---
--- Name: pghero_space_stats pghero_space_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_space_stats
-    ADD CONSTRAINT pghero_space_stats_pkey PRIMARY KEY (id);
 
 
 --
@@ -4572,20 +4459,6 @@ CREATE INDEX index_payment_orders_on_invoice_id ON public.payment_orders USING b
 
 
 --
--- Name: index_pghero_query_stats_on_database_and_captured_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pghero_query_stats_on_database_and_captured_at ON public.pghero_query_stats USING btree (database, captured_at);
-
-
---
--- Name: index_pghero_space_stats_on_database_and_captured_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pghero_space_stats_on_database_and_captured_at ON public.pghero_space_stats USING btree (database, captured_at);
-
-
---
 -- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4639,6 +4512,13 @@ CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_
 --
 
 CREATE INDEX index_validation_events_on_event_data ON public.validation_events USING gin (event_data);
+
+
+--
+-- Name: index_validation_events_on_event_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_validation_events_on_event_type ON public.validation_events USING btree (event_type);
 
 
 --
@@ -5386,15 +5266,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210708131814'),
 ('20210729131100'),
 ('20210729134625'),
-('20211028122103'),
-('20211028125245'),
-('20211029082225'),
+('20210827185249'),
+('20211029073644'),
 ('20211124071418'),
-('20211124084308'),
 ('20211125181033'),
 ('20211125184334'),
 ('20211126085139'),
-('20211231113934'),
-('20220106123143');
+('20220106123143'),
+('20220113201642');
 
 
