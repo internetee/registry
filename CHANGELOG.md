@@ -1,3 +1,6 @@
+13.01.2022
+* Added accreditation expiry notifications [#2212](https://github.com/internetee/registry/pull/2212)
+
 12.01.2022
 * Fixed double history entries on admin atatus changes [#2263](https://github.com/internetee/registry/pull/2263)
 
