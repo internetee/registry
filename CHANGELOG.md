@@ -1,3 +1,6 @@
+14.01.2022
+* Fixed issue with missing error message on invalid phone number update [#2239](https://github.com/internetee/registry/issues/2239)
+
 13.01.2022
 * Added accreditation expiry notifications [#2212](https://github.com/internetee/registry/pull/2212)
 
