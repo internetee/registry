@@ -447,9 +447,7 @@ class ForceDeleteTest < ActionMailer::TestCase
       email_history: email_1
     )
 
-
-      contact_first.verify_email
-
+    contact_first.verify_email
 
     domain.reload
     assert domain.force_delete_scheduled?
