@@ -11,6 +11,10 @@ Rails.application.routes.draw do
     mount PgHero::Engine, at: "pghero"
   end
 
+  namespace :eis_billing do
+    put '/payment_status', to: 'payment_status#update', as: 'payment_status'
+  end
+
   namespace :epp do
     constraints(EppConstraint.new(:session)) do
       get 'session/hello', to: 'sessions#hello', as: 'hello'
