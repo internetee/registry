@@ -56,7 +56,8 @@
       .col-md-3.control-label
         = f.label :email, t(:email) + '*'
       .col-md-7
-        = f.email_field :email, class: 'form-control', required: true
+        = f.email_field :email, class: 'form-control', required: true,
+          pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
 
     .form-group
       .col-md-3.control-label

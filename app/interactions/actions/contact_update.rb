@@ -15,7 +15,7 @@ module Actions
       maybe_update_statuses
       maybe_update_ident if ident.present?
       maybe_attach_legal_doc
-      maybe_change_email
+      maybe_change_email if new_attributes[:email].present?
       maybe_filtering_old_failed_records
       commit
     end

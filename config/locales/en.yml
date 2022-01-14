@@ -377,6 +377,11 @@ en:
   activemodel:
     errors:
       models:
+        'depp/contact':
+          attributes:
+            phone:
+              invalid: "Phone number must be in +XXX.YYYYYYY format"
+              too_long: "Phone number is too long"
         'depp/user':
           attributes:
             base:
