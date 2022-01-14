@@ -74,6 +74,7 @@ class Epp::Contact < Contact
         [:name, :invalid],
         [:phone, :invalid],
         [:email, :invalid],
+        [:disclosed_attributes, :invalid],
         [:country_code, :invalid],
         [:code, :invalid],
         [:code, :too_long_contact_code],

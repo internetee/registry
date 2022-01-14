@@ -15,8 +15,8 @@ module Contact::Disclosable
   def validate_disclosed_attributes
     return if disclosed_attributes.empty?
 
-    has_undisclosable_attributes = (disclosed_attributes - self.class.disclosable_attributes)
-                                   .any?
+    has_undisclosable_attributes = (disclosed_attributes.to_a -
+                                    self.class.disclosable_attributes.to_a).any?
     errors.add(:disclosed_attributes, :invalid) if has_undisclosable_attributes
   end
 end
