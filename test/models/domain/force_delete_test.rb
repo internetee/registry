@@ -443,7 +443,7 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     domain.reload
     contact_first.update(
-      email: 'correct_email@internet2.ee',
+      email: 'aaa@bbb.com',
       email_history: email_1
     )
 
