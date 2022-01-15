@@ -417,12 +417,16 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_not domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
     email_1 = '`@internet.ee'
-    asserted_text = "Invalid email: #{email_1}"
+    email_2 = '`@internet2.ee'
+    asserted_text = "Invalid email: #{email_2}"
 
     Truemail.configure.default_validation_type = :regex
 
     contact_first = domain.admin_contacts.first
-    contact_first.update_attribute(:email, email_1)
+    old_email = contact_first.email
+    contact_first.update(
+      email: email_1,
+      email_history: old_email)
 
     ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD.times do
       contact_first.verify_email
@@ -431,7 +435,6 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert contact_first.email_verification_failed?
 
     domain.reload
-    email_2 = '`@internet2.ee'
     contact_second = domain.admin_contacts.last
     contact_second.update_attribute(:email, email_2)
 
@@ -447,9 +450,8 @@ class ForceDeleteTest < ActionMailer::TestCase
       email_history: email_1
     )
 
-    ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD.times do
-      contact_first.verify_email
-    end
+    contact_first.verify_email
+    assert contact_first.need_to_lift_force_delete?
 
     domain.reload
     assert domain.force_delete_scheduled?
