@@ -426,7 +426,8 @@ class ForceDeleteTest < ActionMailer::TestCase
     old_email = contact_first.email
     contact_first.update(
       email: email_1,
-      email_history: old_email)
+      email_history: old_email
+    )
 
     ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD.times do
       contact_first.verify_email
@@ -446,7 +447,7 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     domain.reload
     contact_first.update(
-      email: 'aaa@bbb.com',
+      email: old_email,
       email_history: email_1
     )
 

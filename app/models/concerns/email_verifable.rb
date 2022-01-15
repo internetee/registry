@@ -22,7 +22,7 @@ module EmailVerifable
         flag = true
       end
     end
-    puts "test output: #{self.email} - #{flag}"
+
     flag
   end
 
