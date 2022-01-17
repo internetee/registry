@@ -73,13 +73,8 @@ class ValidationEvent < ApplicationRecord
 
   def refresh_status_notes
     old_email = object.email_history
-    domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
-    registrant_ids = Registrant.where(email: email).pluck(:id)
 
-    domains = domain_contacts.map(&:domain).flatten +
-              Domain.where(registrant_id: registrant_ids)
-
-    domains.uniq.each do |domain|
+    domain_list.uniq.each do |domain|
       next unless domain.status_notes[DomainStatus::FORCE_DELETE]
 
       domain.status_notes[DomainStatus::FORCE_DELETE].slice!(old_email)
@@ -88,6 +83,13 @@ class ValidationEvent < ApplicationRecord
 
       notify_registrar(domain) unless domain.status_notes[DomainStatus::FORCE_DELETE].empty?
     end
+  end
+
+  def domain_list
+    domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
+    registrant_ids = Registrant.where(email: email).pluck(:id)
+
+    domain_contacts.map(&:domain).flatten + Domain.where(registrant_id: registrant_ids)
   end
 
   def notify_registrar(domain)
