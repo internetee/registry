@@ -453,10 +453,8 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     contact_first = domain.admin_contacts.first
     old_email = contact_first.email
-    contact_first.update(
-      email: email_1,
-      email_history: old_email
-    )
+    contact_first.update_attribute(:email_history, old_email)
+    contact_first.update_attribute(:email, email_1)
 
     ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD.times do
       contact_first.verify_email
@@ -475,16 +473,15 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert contact_second.email_verification_failed?
 
     domain.reload
-    contact_first.update(
-      email: 'correct_email@internet.ee',
-      email_history: email_1
-    )
+    contact_first.update_attribute(:email_history, email_1)
+    contact_first.update_attribute(:email, 'correct_email@internet.ee')
+
 
     contact_first.verify_email
-    contact_first.validation_events.reload
-    assert contact_first.need_to_lift_force_delete?
 
-    domain.reload
+    assert contact_first.need_to_lift_force_delete?
+    puts contact_first.validation_events.map { |item| puts item.event_data }
+
     assert domain.force_delete_scheduled?
     assert_equal 'invalid_email', domain.template_name
     assert_equal Date.parse('2010-09-19'), domain.force_delete_date.to_date
