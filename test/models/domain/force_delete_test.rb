@@ -477,7 +477,8 @@ class ForceDeleteTest < ActionMailer::TestCase
     contact_first.update_attribute(:email, 'correct_email@internet.ee')
 
     contact_first.verify_email
-    puts contact_first.validation_events.map { |item| puts item.event_data }
+    domain.reload
+
     assert contact_first.need_to_lift_force_delete?
 
     assert domain.force_delete_scheduled?
