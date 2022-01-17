@@ -466,6 +466,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     contact_second = domain.admin_contacts.last
     contact_second.update_attribute(:email, email_2)
 
+    travel_to Time.zone.parse('2010-07-05 0:00:03')
     ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD.times do
       contact_second.verify_email
     end
@@ -476,6 +477,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     contact_first.update_attribute(:email_history, email_1)
     contact_first.update_attribute(:email, 'correct_email@internet.ee')
 
+    travel_to Time.zone.parse('2010-07-05 0:00:06')
     contact_first.verify_email
     domain.reload
 

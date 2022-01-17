@@ -85,7 +85,17 @@ class ValidationEvent < ApplicationRecord
       domain.status_notes[DomainStatus::FORCE_DELETE].slice!(old_email)
       domain.status_notes[DomainStatus::FORCE_DELETE].lstrip!
       domain.save(validate: false)
+
+      notify_registrar(domain) unless domain.status_notes[DomainStatus::FORCE_DELETE].empty?
     end
+  end
+
+  def notify_registrar(domain)
+    domain.registrar.notifications.create!(text: I18n.t('force_delete_auto_email',
+                                                        domain_name: domain.name,
+                                                        outzone_date: domain.outzone_date,
+                                                        purge_date: domain.purge_date,
+                                                        email: domain.status_notes[DomainStatus::FORCE_DELETE]))
   end
 
   def lift_force_delete
