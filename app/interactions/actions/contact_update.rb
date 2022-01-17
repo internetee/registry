@@ -111,7 +111,8 @@ module Actions
       contact.attributes = new_attributes
 
       email_changed = contact.will_save_change_to_email?
-      contact.email_history = contact.email_was
+      old_email = contact.email_was
+      contact.email_history = old_email
       updated = contact.save
 
       if updated && email_changed && contact.registrant?
