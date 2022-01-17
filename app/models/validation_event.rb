@@ -35,7 +35,7 @@ class ValidationEvent < ApplicationRecord
   scope :smtp, -> { where('event_data @> ?', { 'check_level': 'smtp' }.to_json) }
   scope :by_object, ->(object) { where(validation_eventable: object) }
 
-  after_create :check_for_force_delete
+  after_create_commit :check_for_force_delete
 
   def self.validated_ids_by(klass)
     recent.successful.where('validation_eventable_type = ?', klass)

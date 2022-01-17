@@ -476,13 +476,13 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     domain.reload
     contact_first.update(
-      email: old_email,
+      email: 'correct_email@internet.ee',
       email_history: email_1
     )
 
     contact_first.verify_email
     contact_first.validation_events.reload
-    contact_first.need_to_lift_force_delete?
+    assert contact_first.need_to_lift_force_delete?
 
     domain.reload
     assert domain.force_delete_scheduled?
