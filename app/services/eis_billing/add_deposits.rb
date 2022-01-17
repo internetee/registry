@@ -20,14 +20,14 @@ module EisBilling
                                            :items_attributes])
 
       parsed_data = JSON.parse(invoice)
-      parsed_data["role"] = "registrar"
-      parsed_data["description"] = "some" if parsed_data["description"] == ''
+      parsed_data['role'] = 'registrar'
+      parsed_data['description'] = 'some' if parsed_data['description'] == ''
 
-      parsed_data = replace_key(json_obj: parsed_data, old_key: "total", new_key: "transaction_amount")
-      parsed_data = replace_key(json_obj: parsed_data, old_key: "reference_no", new_key: "reference_number")
+      parsed_data = replace_key(json_obj: parsed_data, old_key: 'total', new_key: 'transaction_amount')
+      parsed_data = replace_key(json_obj: parsed_data, old_key: 'reference_no', new_key: 'reference_number')
 
-      invoice_items_json = @invoice.items.to_json(except: [:created_at, :updated_at])
-      parsed_data["items"] = JSON.parse(invoice_items_json)
+      invoice_items_json = @invoice.items.to_json(except: [ :created_at, :updated_at ])
+      parsed_data['items'] = JSON.parse(invoice_items_json)
       parsed_data
     end
 
@@ -42,9 +42,9 @@ module EisBilling
       uri = URI(invoice_generator_url)
       http = Net::HTTP.new(uri.host, uri.port)
       headers = {
-        'Authorization'=>'Bearer foobar',
-        'Content-Type' =>'application/json',
-        'Accept'=> TOKEN
+        'Authorization' => 'Bearer foobar',
+        'Content-Type' => 'application/json',
+        'Accept' => TOKEN
       }
 
       res = http.post(invoice_generator_url, json_obj.to_json, headers)
