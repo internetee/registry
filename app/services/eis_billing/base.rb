@@ -6,7 +6,7 @@ module EisBilling
     # => "HFW8ADSIrjyD9cbH4H5Rk3MY/ZfhV85IlnGl7YI2CQ==--OvlWMMiTLLotgdfT--/ffejEDaIGFfz7FzzNSlYA=="
     # irb(main):048:0> decrypted_back = crypt.decrypt_and_verify(encrypted_data)
     # => "PLEASE CREATE INVOICE"
-    TOKEN = "Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==".freeze
+    TOKEN = 'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw=='.freeze
     BASE_URL = ENV['eis_billing_system_base_url']
 
     protected

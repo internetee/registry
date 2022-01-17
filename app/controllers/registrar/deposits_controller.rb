@@ -12,10 +12,7 @@ class Registrar
 
       if @invoice
         flash[:notice] = t(:please_pay_the_following_invoice)
-
-        add_invoice_instance = EisBilling::AddDeposits.new(@invoice)
-        add_invoice_instance.send_invoice
-
+        send_invoice_data_to_billing_system
         redirect_to [:registrar, @invoice]
       else
         flash[:alert] = @deposit.errors.full_messages.join(', ')
@@ -24,6 +21,11 @@ class Registrar
     end
 
     private
+
+    def send_invoice_data_to_billing_system
+      add_invoice_instance = EisBilling::AddDeposits.new(@invoice)
+      add_invoice_instance.send_invoice
+    end
 
     def deposit_params
       params.require(:deposit).permit(:amount, :description)

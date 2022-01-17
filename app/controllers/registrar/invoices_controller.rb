@@ -18,7 +18,7 @@ class Registrar
       link_handler = EisBilling::GetInvoiceLink.new(invoice.number)
       response = link_handler.send_request
 
-      @everypay_link = JSON.parse(response.body)["payment_link"]
+      @everypay_link = JSON.parse(response.body)['payment_link']
     end
 
     def cancel
