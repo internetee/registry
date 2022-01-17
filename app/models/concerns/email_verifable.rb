@@ -27,7 +27,6 @@ module EmailVerifable
   end
 
   def need_to_lift_force_delete?
-    puts validation_events.order(created_at: :desc).map{ |i| puts i.inspect } if self.email == 'correct_email@internet.ee'
     validation_events.failed.empty? ||
       ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL.any? do |level, count|
         validation_events.order(created_at: :desc).limit(count).all? do |event|
