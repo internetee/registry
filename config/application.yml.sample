@@ -235,3 +235,4 @@ registry_demo_accredited_users_url: 'http://registry.test/api/v1/accreditation_c
 a_and_aaaa_validation_timeout: '1'
 nameserver_validation_timeout: '1'
 
+eis_billing_system_base_url: 'http://eis_billing_system:3000'

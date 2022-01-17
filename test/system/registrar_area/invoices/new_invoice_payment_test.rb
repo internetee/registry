@@ -3,6 +3,9 @@ require 'application_system_test_case'
 class NewInvoicePaymentTest < ApplicationSystemTestCase
   def setup
     super
+    eis_response = OpenStruct.new(body: "{\"payment_link\":\"http://link.test\"}")
+    Spy.on_instance_method(EisBilling::AddDeposits, :send_invoice).and_return(eis_response)
+    Spy.on_instance_method(EisBilling::GetInvoiceLink, :send_request).and_return(eis_response)
 
     @original_vat_prc = Setting.registry_vat_prc
     Setting.registry_vat_prc = 0.2

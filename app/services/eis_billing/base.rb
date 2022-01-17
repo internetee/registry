@@ -7,7 +7,7 @@ module EisBilling
     # irb(main):048:0> decrypted_back = crypt.decrypt_and_verify(encrypted_data)
     # => "PLEASE CREATE INVOICE"
     TOKEN = "Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==".freeze
-    BASE_URL = "http://eis_billing_system:3000".freeze
+    BASE_URL = ENV['eis_billing_system_base_url']
 
     protected
 
