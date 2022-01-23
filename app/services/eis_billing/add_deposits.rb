@@ -21,6 +21,7 @@ module EisBilling
 
       parsed_data = JSON.parse(invoice)
       parsed_data['role'] = 'registrar'
+      parsed_data['source'] = 'registry'
       parsed_data['description'] = 'some' if parsed_data['description'] == ''
 
       parsed_data = replace_key(json_obj: parsed_data, old_key: 'total', new_key: 'transaction_amount')
