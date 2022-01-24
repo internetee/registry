@@ -88,5 +88,17 @@ module Admin
 
       params_copy
     end
+
+    def render_by_format(page, filename)
+      respond_to do |format|
+        format.html { render page }
+        format.csv do
+          raw_csv = csv_generate
+          send_data raw_csv,
+                    filename: "#{filename}_#{Time.zone.now.to_formatted_s(:number)}.csv",
+                    type: "#{Mime[:csv]}; charset=utf-8"
+        end
+      end
+    end
   end
 end
