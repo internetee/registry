@@ -13,8 +13,7 @@ class Registrar
       end
     end
 
-    def show
-    end
+    def show; end
 
     def cancel
       @invoice.cancel
