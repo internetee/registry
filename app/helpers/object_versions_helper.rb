@@ -13,15 +13,15 @@ module ObjectVersionsHelper
     version.object.to_h.select { |key, _value| field_names.include?(key) }
   end
 
-  def csv_generate
+  def csv_generate(model, header)
     CSV.generate do |csv|
-      csv << CSV_HEADER
+      csv << header
       @versions.each do |version|
-        attributes = only_present_fields(version, Domain)
-        domain = Domain.new(attributes)
-        attach_existing_fields(version, domain) unless version.event == 'destroy'
+        attributes = only_present_fields(version, model)
+        history_object = model.new(attributes)
+        attach_existing_fields(version, history_object) unless version.event == 'destroy'
 
-        csv << create_row(domain, version)
+        csv << create_row(history_object, version)
       end
     end
   end
@@ -46,10 +46,28 @@ module ObjectVersionsHelper
     end
   end
 
-  def create_row(domain, version)
-    name = domain.name
-    registrant = registrant_name(domain, version)
-    registrar = domain.registrar
+  def create_row(history_object, version)
+    if history_object.is_a?(Domain)
+      domain_history_row(history_object, version)
+    else
+      contact_history_row(history_object, version)
+    end
+  end
+
+  def contact_history_row(history_object, version)
+    name = history_object.name
+    code = history_object.code
+    ident = ident_for(history_object)
+    registrar = history_object.registrar
+    event = version.event
+    created_at = version.created_at.to_formatted_s(:db)
+    [name, code, ident, registrar, event, created_at]
+  end
+
+  def domain_history_row(history_object, version)
+    name = history_object.name
+    registrant = registrant_name(history_object, version)
+    registrar = history_object.registrar
     event = version.event
     created_at = version.created_at.to_formatted_s(:db)
     [name, registrant, registrar, event, created_at]

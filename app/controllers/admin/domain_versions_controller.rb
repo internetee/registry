@@ -4,6 +4,9 @@ module Admin
 
     load_and_authorize_resource class: Version::DomainVersion
 
+    MODEL = Domain
+    CSV_HEADER = ['Name', 'Registrant', 'Registrar', 'Action', 'Created at'].freeze
+
     def index
       params[:q] ||= {}
 
@@ -93,7 +96,7 @@ module Admin
       respond_to do |format|
         format.html { render page }
         format.csv do
-          raw_csv = csv_generate
+          raw_csv = csv_generate(MODEL, CSV_HEADER)
           send_data raw_csv,
                     filename: "#{filename}_#{Time.zone.now.to_formatted_s(:number)}.csv",
                     type: "#{Mime[:csv]}; charset=utf-8"
