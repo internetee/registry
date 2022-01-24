@@ -34,8 +34,7 @@ module EisBilling
         'Accept' => TOKEN
       }
 
-      res = http.post(invoice_generator_url, json_obj.to_json, headers)
-      res
+      http.post(invoice_generator_url, json_obj.to_json, headers)
     end
 
     def invoice_generator_url
