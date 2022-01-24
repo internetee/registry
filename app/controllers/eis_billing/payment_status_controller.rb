@@ -18,7 +18,7 @@ module EisBilling
       bank = create_bank_transfer(invoice: invoice, sum: sum, paid_at: paid_at)
       create_payment_order(invoice: invoice, everypay_response: everypay_response, payment_status: payment_status)
 
-      registrar = Registrar.find_by(reference_no: params[:reference_number])
+      registrar = invoice.buyer
       bank.create_activity(registrar, invoice)
 
       render status: 200, json: { status: 'ok' }
@@ -58,7 +58,7 @@ module EisBilling
       bank.save
 
       logger.info '++++ BANK TRANSACTION ERRORS ? ++++'
-      looger.info bank.errors
+      logger.info bank.errors
 
       bank
     end
