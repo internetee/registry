@@ -27,7 +27,7 @@ module Admin
       end
 
       versions = Version::ContactVersion.includes(:item).where(where_s).order(created_at: :desc, id: :desc)
-      @q = versions.ransack(params[:q])
+      @q = versions.ransack(fix_date_params)
 
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
@@ -62,6 +62,15 @@ module Admin
     end
 
     private
+
+    def fix_date_params
+      params_copy = params[:q].deep_dup
+      if params_copy['created_at_lteq'].present?
+        params_copy['created_at_lteq'] = Date.parse(params_copy['created_at_lteq']) + 1.day
+      end
+
+      params_copy
+    end
 
     def render_by_format(page, filename)
       respond_to do |format|
