@@ -13,10 +13,10 @@ module ObjectVersionsHelper
     version.object.to_h.select { |key, _value| field_names.include?(key) }
   end
 
-  def csv_generate(model, header)
+  def csv_generate(model, header, versions)
     CSV.generate do |csv|
       csv << header
-      @versions.each do |version|
+      versions.each do |version|
         attributes = only_present_fields(version, model)
         history_object = model.new(attributes)
         attach_existing_fields(version, history_object) unless version.event == 'destroy'
@@ -33,17 +33,18 @@ module ObjectVersionsHelper
   end
 
   def registrant_name(domain, version)
-    if domain.registrant
-      domain.registrant.name
-    else
-      contact = Contact.all_versions_for([domain.registrant_id], version.created_at).first
-      if contact.nil? && ver = Version::ContactVersion.where(item_id: domain.registrant_id).last
-        merged_obj = ver.object_changes.to_h.each_with_object({}) {|(k,v), o| o[k] = v.last }
-        result = ver.object.to_h.merge(merged_obj)&.slice(*Contact&.column_names)
-        contact = Contact.new(result)
-      end
-      contact.try(:name) || 'Deleted'
+    return domain.registrant.name if domain.registrant
+
+    ver = Version::ContactVersion.where(item_id: domain.registrant_id).last
+    contact = Contact.all_versions_for([domain.registrant_id], version.created_at).first
+
+    if contact.nil? && ver
+      merged_obj = ver.object_changes.to_h.transform_values(&:last)
+      result = ver.object.to_h.merge(merged_obj)&.slice(*Contact&.column_names)
+      contact = Contact.new(result)
     end
+
+    contact.try(:name) || 'Deleted'
   end
 
   def create_row(history_object, version)
