@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   namespace :eis_billing do
     put '/payment_status', to: 'payment_status#update', as: 'payment_status'
+    post '/lhv_connect_transactions', to: 'lhv_connect_transactions#create', as: 'lhv_connect_transactions'
   end
 
   namespace :epp do
