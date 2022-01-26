@@ -14,6 +14,18 @@ class AdminRegistrarsSystemTest < ApplicationSystemTestCase
   end
 
   def test_creates_new_registrar
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/reference_number_generator").
+    with(
+      body: "{\"initiator\":\"registry\"}",
+      headers: {
+      'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+      'Authorization'=>'Bearer foobar',
+      'Content-Type'=>'application/json',
+      'User-Agent'=>'Ruby'
+      }).
+    to_return(status: 200, body: "{\"reference_number\":\"12332\"}", headers: {})
+
     assert_nil Registrar.find_by(name: 'Acme Ltd')
 
     visit admin_registrars_path

@@ -1,10 +1,16 @@
 module EisBilling
-  class GetInvoiceNumber < EisBilling::Base
-    def self.send_invoice
+  class GetReferenceNumber < EisBilling::Base
+    def self.send_request
       base_request
     end
 
     private
+
+    def self.obj_data
+      {
+        initiator: 'registry'
+      }
+    end
 
     def self.base_request
       uri = URI(invoice_generator_url)
@@ -15,11 +21,11 @@ module EisBilling
         'Accept' => TOKEN
       }
 
-      http.post(invoice_generator_url, nil, headers)
+      http.post(invoice_generator_url, obj_data.to_json, headers)
     end
 
     def self.invoice_generator_url
-      "#{BASE_URL}/api/v1/invoice_generator/invoice_number_generator"
+      "#{BASE_URL}/api/v1/invoice_generator/reference_number_generator"
     end
   end
 end
