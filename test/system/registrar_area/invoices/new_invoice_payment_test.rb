@@ -27,6 +27,17 @@ class NewInvoicePaymentTest < ApplicationSystemTestCase
   end
 
   def test_create_new_SEB_payment
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     create_invoice_and_visit_its_page
     click_link_or_button 'seb'
     form = page.find('form')
@@ -36,6 +47,17 @@ class NewInvoicePaymentTest < ApplicationSystemTestCase
   end
 
   def test_create_new_Every_Pay_payment
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     create_invoice_and_visit_its_page
     click_link_or_button 'every_pay'
     expected_hmac_fields = 'account_id,amount,api_username,callback_url,' +
