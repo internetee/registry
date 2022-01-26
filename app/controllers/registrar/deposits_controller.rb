@@ -25,6 +25,7 @@ class Registrar
     def send_invoice_data_to_billing_system
       add_invoice_instance = EisBilling::AddDeposits.new(@invoice)
       result = add_invoice_instance.send_invoice
+
       link = JSON.parse(result.body)['everypay_link']
 
       @invoice.update(payment_link: link)

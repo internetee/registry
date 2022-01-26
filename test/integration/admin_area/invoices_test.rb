@@ -24,6 +24,17 @@ class AdminAreaInvoicesIntegrationTest < ApplicationIntegrationTest
   end
 
   def test_create_new_invoice
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     visit new_admin_invoice_path
 
     assert_text 'Create new invoice'
