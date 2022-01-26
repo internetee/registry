@@ -77,6 +77,17 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_if_invoice_is_overdue_than_48_hours
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     assert_not @invoice.paid?
 
     @account_activity.update(activity_type: "add_credit", bank_transaction: nil, created_at: Time.zone.today - 3.days, creator_str: 'AdminUser')
@@ -144,6 +155,17 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_credits_registrar_account_without_invoice_beforehand
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     registrar = registrars(:bestnames)
 
     assert_changes -> { registrar.accounts.first.balance } do
@@ -163,6 +185,17 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_topup_creates_invoice_and_send_it_as_paid
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     registrar = registrars(:bestnames)
     @invoice.payment_orders.destroy_all
     @invoice.destroy

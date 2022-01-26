@@ -42,19 +42,28 @@ class Invoice < ApplicationRecord
   attribute :vat_rate, ::Type::VatRate.new
 
   def set_invoice_number
-    last_no = Invoice.order(number: :desc).limit(1).pick(:number)
+    # last_no = Invoice.order(number: :desc).limit(1).pick(:number)
 
-    if last_no && last_no >= Setting.invoice_number_min.to_i
-      self.number = last_no + 1
-    else
-      self.number = Setting.invoice_number_min.to_i
+    # if last_no && last_no >= Setting.invoice_number_min.to_i
+    #   self.number = last_no + 1
+    # else
+    #   self.number = Setting.invoice_number_min.to_i
+    # end
+
+    # return if number <= Setting.invoice_number_max.to_i
+
+    # errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
+    # logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
+    # throw(:abort)
+    result = EisBilling::GetInvoiceNumber.send_invoice
+
+    if JSON.parse(result.body)['error'] == 'out of range'
+      errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
+      logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
+      throw(:abort)
     end
 
-    return if number <= Setting.invoice_number_max.to_i
-
-    errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
-    logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
-    throw(:abort)
+    self.number = JSON.parse(result.body)['invoice_number'].to_i
   end
 
   def to_s

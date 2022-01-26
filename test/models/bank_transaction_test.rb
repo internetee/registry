@@ -16,6 +16,17 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_binds_if_this_sum_invoice_already_present
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
     another_invoice = @invoice.dup
     another_invoice.save(validate: false)
@@ -40,6 +51,17 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_binds_if_this_sum_cancelled_invoice_already_present
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
     another_invoice = @invoice.dup
     another_invoice.save(validate: false)
@@ -61,6 +83,17 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_marks_the_first_one_as_paid_if_same_sum
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
     another_invoice = @invoice.dup
     another_invoice.save(validate: false)

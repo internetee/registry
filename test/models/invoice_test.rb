@@ -79,6 +79,10 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   def test_buyer_vat_no_is_taken_from_registrar_by_default
+    invoice_n = Invoice.order(number: :desc).last.number
+    response = OpenStruct.new(body: "{\"invoice_number\":\"#{invoice_n + 3}\"}")
+    Spy.on(EisBilling::GetInvoiceNumber, :send_invoice).and_return(response)
+
     registrar = registrars(:bestnames)
     registrar.vat_no = 'US1234'
     invoice = @invoice.dup
@@ -118,12 +122,48 @@ class InvoiceTest < ActiveSupport::TestCase
     transaction.reference_no = registrar.reference_no
     transaction.sum = 250
 
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+
     invoice = Invoice.create_from_transaction!(transaction)
     assert_equal 250, invoice.total
+
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 4}\"}", headers: {})
 
     transaction.sum = 146.88
     invoice = Invoice.create_from_transaction!(transaction)
     assert_equal 146.88, invoice.total
+
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      with(
+        headers: {
+              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer foobar',
+              'Content-Type'=>'application/json',
+              'User-Agent'=>'Ruby'
+            }).
+    to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 5}\"}", headers: {})
 
     transaction.sum = 0.99
     invoice = Invoice.create_from_transaction!(transaction)
@@ -135,6 +175,10 @@ class InvoiceTest < ActiveSupport::TestCase
     transaction = bank_transactions(:one).dup
     transaction.reference_no = registrar.reference_no
     transaction.sum = 250
+
+    invoice_n = Invoice.order(number: :desc).last.number
+    response = OpenStruct.new(body: "{\"invoice_number\":\"#{invoice_n + 3}\"}")
+    Spy.on(EisBilling::GetInvoiceNumber, :send_invoice).and_return(response)
 
     assert_emails 1 do
       Invoice.create_from_transaction!(transaction)
