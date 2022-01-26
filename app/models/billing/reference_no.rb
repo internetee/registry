@@ -4,8 +4,10 @@ module Billing
     MULTI_REGEXP = /(\d{2,20})/
 
     def self.generate
-      base = Base.generate
-      "#{base}#{base.check_digit}"
+      # base = Base.generate
+      # "#{base}#{base.check_digit}"
+      result = EisBilling::GetReferenceNumber.send_request
+      JSON.parse(result.body)['reference_number']
     end
 
     def self.valid?(ref)
