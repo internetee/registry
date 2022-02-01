@@ -21,6 +21,7 @@ class DirectoInvoiceForwardJob < ApplicationJob
         Rails.logger.info "[DIRECTO] Invoice #{invoice.number} has been skipped"
         next
       end
+
       @client.invoices.add_with_schema(invoice: invoice.as_directo_json, schema: 'prepayment')
     end
 
@@ -69,6 +70,7 @@ class DirectoInvoiceForwardJob < ApplicationJob
 
   def sync_with_directo
     assign_monthly_numbers if @month
+
     Rails.logger.info("[Directo] - attempting to send following XML:\n #{@client.invoices.as_xml}")
     return if @dry
 

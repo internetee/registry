@@ -8,7 +8,7 @@ module EisBilling
       sum = params[:standing_amount]
       everypay_response = params
 
-      payment_status =  define_payment_status(params[:payment_state])
+      payment_status = define_payment_status(params[:payment_state])
 
       invoice = Invoice.find_by(number: invoice_number)
 
