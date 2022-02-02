@@ -9,7 +9,7 @@ module EisBilling
         invoice_data: object_data,
         monthly: monthly,
         dry: dry,
-        initiator: 'registry'
+        initiator: INITIATOR
       }
 
       uri = URI(invoice_generator_url)
