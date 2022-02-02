@@ -5,6 +5,8 @@ class ValidateDnssecJob < ApplicationJob
     unless domain_name.nil?
       domain = Domain.find_by(name: domain_name)
 
+      return logger.info "This domain not contain any dnskeys" if domain.dnskeys.empty?
+
       return logger.info "No domain found" if domain.nil?
 
       return logger.info "No related nameservers for this domain" if domain.nameservers.empty?
