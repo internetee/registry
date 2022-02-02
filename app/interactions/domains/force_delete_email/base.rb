@@ -11,6 +11,8 @@ module Domains
         domains = domain_contacts.map(&:domain).flatten +
                   Domain.where(registrant_id: registrant_ids)
 
+        return if expired_or_hold_domains_exists?(domains)
+
         domains.each do |domain|
           next if domain.expired?
 
@@ -19,6 +21,12 @@ module Domains
       end
 
       private
+
+      def expired_or_hold_domains_exists?(domains)
+        domains.any? do |domain|
+          domain.statuses.include?(DomainStatus::SERVER_HOLD) && email.include?(domain.name)
+        end
+      end
 
       def before_execute_force_delete(domain)
         if domain.force_delete_scheduled? && !domain.status_notes[DomainStatus::FORCE_DELETE].nil?
