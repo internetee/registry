@@ -20,6 +20,18 @@ class ReloadBalanceTaskTest < ActiveSupport::TestCase
   end
 
   def test_issues_invoice_when_auto_reload_is_enabled_and_threshold_reached
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      with(
+        body: "{\"transaction_amount\":\"120.0\",\"order_reference\":4,\"customer_name\":\"Best Names\",\"customer_email\":\"info@bestnames.test\",\"custom_field_1\":null,\"custom_field_2\":\"registry\",\"invoice_number\":4}",
+        headers: {
+        'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Authorization'=>'Bearer foobar',
+        'Content-Type'=>'application/json',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: "", headers: {})
+
     invoice_n = Invoice.order(number: :desc).last.number
     stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
       with(
@@ -61,6 +73,18 @@ class ReloadBalanceTaskTest < ActiveSupport::TestCase
   end
 
   def test_marks_registrar_as_pending_balance_reload
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      with(
+        body: "{\"transaction_amount\":\"120.0\",\"order_reference\":4,\"customer_name\":\"Best Names\",\"customer_email\":\"info@bestnames.test\",\"custom_field_1\":null,\"custom_field_2\":\"registry\",\"invoice_number\":4}",
+        headers: {
+        'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Authorization'=>'Bearer foobar',
+        'Content-Type'=>'application/json',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: "", headers: {})
+
     invoice_n = Invoice.order(number: :desc).last.number
     stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
       with(
@@ -81,6 +105,18 @@ class ReloadBalanceTaskTest < ActiveSupport::TestCase
   end
 
   def test_output
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      with(
+        body: "{\"transaction_amount\":\"120.0\",\"order_reference\":4,\"customer_name\":\"Best Names\",\"customer_email\":\"info@bestnames.test\",\"custom_field_1\":null,\"custom_field_2\":\"registry\",\"invoice_number\":4}",
+        headers: {
+        'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Authorization'=>'Bearer foobar',
+        'Content-Type'=>'application/json',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: "", headers: {})
+
     invoice_n = Invoice.order(number: :desc).last.number
     stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
       with(

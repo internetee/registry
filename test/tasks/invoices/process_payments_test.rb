@@ -88,6 +88,19 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
               'User-Agent'=>'Ruby'
             }).
       to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      with(
+        body: "{\"transaction_amount\":\"0.1\",\"order_reference\":5,\"customer_name\":\"Best Names\",\"customer_email\":\"info@bestnames.test\",\"custom_field_1\":\"Direct top-up via bank transfer\",\"custom_field_2\":\"registry\",\"invoice_number\":5}",
+        headers: {
+        'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Authorization'=>'Bearer foobar',
+        'Content-Type'=>'application/json',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: "", headers: {})
+
     assert_not @invoice.paid?
 
     @account_activity.update(activity_type: "add_credit", bank_transaction: nil, created_at: Time.zone.today - 3.days, creator_str: 'AdminUser')
@@ -166,6 +179,19 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
               'User-Agent'=>'Ruby'
             }).
       to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      with(
+        body: "{\"transaction_amount\":\"0.1\",\"order_reference\":5,\"customer_name\":\"Best Names\",\"customer_email\":\"info@bestnames.test\",\"custom_field_1\":\"Direct top-up via bank transfer\",\"custom_field_2\":\"registry\",\"invoice_number\":5}",
+        headers: {
+        'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Authorization'=>'Bearer foobar',
+        'Content-Type'=>'application/json',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: "", headers: {})
+
     registrar = registrars(:bestnames)
 
     assert_changes -> { registrar.accounts.first.balance } do
@@ -196,6 +222,19 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
               'User-Agent'=>'Ruby'
             }).
       to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      with(
+        body: "{\"transaction_amount\":\"0.1\",\"order_reference\":5,\"customer_name\":\"Best Names\",\"customer_email\":\"info@bestnames.test\",\"custom_field_1\":\"Direct top-up via bank transfer\",\"custom_field_2\":\"registry\",\"invoice_number\":5}",
+        headers: {
+        'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
+        'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Authorization'=>'Bearer foobar',
+        'Content-Type'=>'application/json',
+        'User-Agent'=>'Ruby'
+        }).
+      to_return(status: 200, body: "", headers: {})
+
     registrar = registrars(:bestnames)
     @invoice.payment_orders.destroy_all
     @invoice.destroy
