@@ -1,6 +1,7 @@
 class DisputeStatusUpdateJob < ApplicationJob
-  def perform(logger: Logger.new($stdout))
+  def perform(logger: Logger.new($stdout), include_closed: false)
     @logger = logger
+    @include_closed = include_closed
 
     @backlog = { 'activated': 0, 'closed': 0, 'activate_fail': [], 'close_fail': [] }
                .with_indifferent_access
@@ -15,7 +16,11 @@ class DisputeStatusUpdateJob < ApplicationJob
   end
 
   def close_disputes
-    disputes = Dispute.where(closed: nil).where('expires_at < ?', Time.zone.today).all
+    disputes = if @include_closed
+                 Dispute.where('expires_at < ?', Time.zone.today).all
+               else
+                 Dispute.where(closed: nil).where('expires_at < ?', Time.zone.today).all
+               end
     @logger.info "DisputeStatusUpdateJob - Found #{disputes.count} closable disputes"
     disputes.each do |dispute|
       process_dispute(dispute, closing: true)
