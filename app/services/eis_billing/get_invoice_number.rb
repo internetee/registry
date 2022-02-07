@@ -1,7 +1,14 @@
 module EisBilling
   class GetInvoiceNumber < EisBilling::Base
     def self.send_invoice
-      base_request
+      result = base_request
+
+      Rails.logger.info "---------->"
+      Rails.logger.info result.body
+      Rails.logger.info invoice_generator_url
+      Rails.logger.info "---------->"
+
+      result
     end
 
     private
@@ -14,6 +21,9 @@ module EisBilling
         'Content-Type' => 'application/json',
         'Accept' => TOKEN
       }
+
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
       http.post(invoice_generator_url, nil, headers)
     end

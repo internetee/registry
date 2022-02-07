@@ -7,7 +7,12 @@ module EisBilling
     # irb(main):048:0> decrypted_back = crypt.decrypt_and_verify(encrypted_data)
     # => 
     TOKEN = 'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw=='.freeze
-    BASE_URL = ENV['eis_billing_system_base_url']
+    BASE_URL = ""
+    if Rails.env.staging?
+      BASE_URL = ENV['eis_billing_system_base_url_staging']
+    else
+      BASE_URL = ENV['eis_billing_system_base_url_dev']
+    end
     INITIATOR = 'registry'
   end
 end
