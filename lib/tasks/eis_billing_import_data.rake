@@ -1,5 +1,10 @@
 TOKEN = ENV['eis_token']
-BASE_URL = ENV['eis_billing_system_base_url']
+BASE_URL = ""
+if Rails.env.staging?
+  BASE_URL = ENV['eis_billing_system_base_url_staging']
+else
+  BASE_URL = ENV['eis_billing_system_base_url_dev']
+end
 
 namespace :eis_billing do
   desc 'One time task to export invoice data to billing system'
