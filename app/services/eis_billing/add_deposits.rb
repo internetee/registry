@@ -34,6 +34,9 @@ module EisBilling
         'Accept' => TOKEN
       }
 
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
       http.post(invoice_generator_url, json_obj.to_json, headers)
     end
 
