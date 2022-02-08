@@ -109,13 +109,13 @@ class Registrar < ApplicationRecord
 
     SendEInvoiceJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
 
-    add_invoice_instance = EisBilling::AddDeposits.new(invoice)
-    result = add_invoice_instance.send_invoice
+    # add_invoice_instance = EisBilling::AddDeposits.new(invoice)
+    # result = add_invoice_instance.send_invoice
 
-    Rails.logger.info "Invoice created from transaction ------->"
-    Rails.logger.info invoice
-    Rails.logger.info result.body
-    Rails.logger.info "-----------------------------------------"
+    # Rails.logger.info "Invoice created from transaction ------->"
+    # Rails.logger.info invoice
+    # Rails.logger.info result.body
+    # Rails.logger.info "-----------------------------------------"
 
     invoice
   end

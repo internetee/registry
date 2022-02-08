@@ -7,7 +7,7 @@ module EisBilling
     end
 
     def send_invoice
-      base_request(json_obj: parse_invoice)
+      send_request(json_obj: parse_invoice)
     end
 
     private
@@ -25,19 +25,9 @@ module EisBilling
       data
     end
 
-    def base_request(json_obj:)
-      uri = URI(invoice_generator_url)
-      http = Net::HTTP.new(uri.host, uri.port)
-      headers = {
-        'Authorization' => 'Bearer foobar',
-        'Content-Type' => 'application/json',
-        'Accept' => TOKEN
-      }
-
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-      http.post(invoice_generator_url, json_obj.to_json, headers)
+    def send_request(json_obj:)
+      http = EisBilling::Base.base_request(url: invoice_generator_url)
+      http.post(invoice_generator_url, json_obj.to_json, HEADERS)
     end
 
     def invoice_generator_url
