@@ -26,6 +26,10 @@ class Registrar
       add_invoice_instance = EisBilling::AddDeposits.new(@invoice)
       result = add_invoice_instance.send_invoice
 
+      Rails.logger.info "Deposits controller ------->"
+      Rails.logger.info result.body
+      Rails.logger.info "-----------------------------------------"
+
       link = JSON.parse(result.body)['everypay_link']
 
       @invoice.update(payment_link: link)

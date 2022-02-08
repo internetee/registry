@@ -52,9 +52,10 @@ def base_request(url:, json_obj:)
     'Accept' => TOKEN
   }
 
-
-  http.use_ssl = true
-  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  unless Rails.env.development?
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  end
 
   http.post(url, json_obj.to_json, headers)
 end
