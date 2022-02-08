@@ -1,10 +1,6 @@
 module EisBilling
   class GetInvoiceNumber < EisBilling::Base
     def self.send_invoice
-      p "+++++++++++"
-      Rails.logger.info invoice_number_generator_url
-      p "+++++++++++"
-
       send_request
     end
 
