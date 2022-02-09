@@ -8,7 +8,7 @@ module EisBilling
 
     def self.send_request
       http = EisBilling::Base.base_request(url: invoice_number_generator_url)
-      http.post(invoice_number_generator_url, nil, HEADERS)
+      http.post(invoice_number_generator_url, nil, EisBilling::Base.headers)
     end
 
     def self.invoice_number_generator_url

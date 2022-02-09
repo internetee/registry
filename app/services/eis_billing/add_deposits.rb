@@ -27,7 +27,7 @@ module EisBilling
 
     def send_request(json_obj:)
       http = EisBilling::Base.base_request(url: invoice_generator_url)
-      http.post(invoice_generator_url, json_obj.to_json, HEADERS)
+      http.post(invoice_generator_url, json_obj.to_json, EisBilling::Base.headers)
     end
 
     def invoice_generator_url

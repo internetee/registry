@@ -104,3 +104,6 @@ gem 'pghero'
 gem 'pg_query', '>= 0.9.0'
 gem 'newrelic_rpm'
 gem 'newrelic-infinite_tracing'
+
+# token
+gem 'jwt'

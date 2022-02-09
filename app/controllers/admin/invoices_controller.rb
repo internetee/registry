@@ -101,14 +101,5 @@ module Admin
 
       invoices.where(account_activities: { created_at: date_from..date_until })
     end
-
-    # def send_invoice_data_to_billing_system
-    #   add_invoice_instance = EisBilling::AddDeposits.new(@invoice)
-    #   result = add_invoice_instance.send_invoice
-
-    #   link = JSON.parse(result.body)['everypay_link']
-
-    #   @invoice.update(payment_link: link)
-    # end
   end
 end
