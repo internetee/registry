@@ -12,7 +12,7 @@ class NameserverRecordValidationJob < ApplicationJob
 
       domains.each do |domain|
         domain.nameservers.each do |nameserver|
-          next if nameserver.nameserver_failed_validation? || nameserver.validated?
+          next if nameserver.failed_validation? || nameserver.validated?
 
           result = NameserverValidator.run(domain_name: domain.name, nameserver: nameserver)
 
@@ -38,7 +38,7 @@ class NameserverRecordValidationJob < ApplicationJob
       return logger.info 'Domain not has nameservers' if domain.nameservers.empty?
 
       domain.nameservers.each do |nameserver|
-        next if nameserver.nameserver_failed_validation?
+        next if nameserver.failed_validation?
 
         result = NameserverValidator.run(domain_name: domain.name, nameserver: nameserver)
 
@@ -73,6 +73,8 @@ class NameserverRecordValidationJob < ApplicationJob
 
     nameserver.failed_validation_reason = reason
     nameserver.save
+
+    failed_log(text: reason, nameserver: nameserver, domain: nameserver.domain) if nameserver.failed_validation?
   end
 
   def parse_result(result, nameserver)
@@ -95,27 +97,26 @@ class NameserverRecordValidationJob < ApplicationJob
     end
 
     logger.info text
-    failed_log(text: text, nameserver: nameserver)
     add_nameserver_to_failed(nameserver: nameserver, reason: text)
-
     false
   end
 
-  def failed_log(text:, nameserver:)
-    inform_to_tech_contact(text)
+  def failed_log(text:, nameserver:, domain:)
+    inform_to_tech_contact(domain: domain, nameserver: nameserver, text: text)
     inform_to_registrar(text: text, nameserver: nameserver)
 
     false
   end
 
-  def inform_to_tech_contact(text)
-    "NEED TO DO!"
-    text
+  def inform_to_tech_contact(domain:, nameserver:, text: nil)
+    # ContactNotification.notify_tech_contact(domain: domain, nameserver: nameserver, reason: 'nameserver')
   end
 
-  def inform_to_registrar(text:, nameserver:)
-    # nameserver.domain.registrar.notifications.create!(text: text)
-    "NEED TO DO!"
+  def inform_to_registrar(nameserver:, text: nil)
+    text =  "Host record #{nameserver.hostname} of a domain #{nameserver.domain} is invalid.
+              Please fix or contact the registrant. Problem with nameserver #{nameserver} - #{nameserver.failed_validation_reason}"
+    logger.info text
+    # ContactNotification.notify_registrar(domain: nameserver.domain, text: text)
   end
 
   def logger

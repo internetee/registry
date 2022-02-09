@@ -1,0 +1,29 @@
+Lugupeetud domeeni <%= @domain.name %> tehniline kontakt
+
+Eesti Interneti Sihtasutusele (EIS) juhib tähelepanu, et domeeni <%= @domain.name %> nimeserverite seaded on puudulikud ning domeeniga seotud teenuse ei pruugi korrektselt toimida.
+Andmete parandamiseks vaadake palun üle domeeni nimeserverite seaditused või pöörduge palun oma registripidaja <%= @domain.registrar.name%> või nimeserveri teenuse pakkuja poole.
+
+Lisaküsimuste korral võtke palun ühendust oma registripidajaga:
+<%= @domain.registrar.name%>
+Email: <%= @domain.registrar.email %>
+Telefon: <%= @domain.registrar.phone %>
+Veebileht: <%= @domain.registrar.website %>
+
+Lugupidamisega
+Eesti Interneti Sihtasutus
+
+---
+
+Dear technical contact of <%= @domain.name %> domain,
+
+Estonian Internet Foundation points out that the settings for the name servers of the domain <%= @domain.name %> are incomplete and the service related to the domain may not work correctly.
+Please check the name server settings of the domain or contact your registrar <%= @domain.registrar.name%> or your name server service provider to correct this information.
+
+Should you have additional questions, please contact your registrar:
+<%= @domain.registrar.name%>
+Email: <%= @domain.registrar.email %>
+Phone: <%= @domain.registrar.phone %>
+Website: <%= @domain.registrar.website %>
+
+Best Regards,
+Estonian Internet Foundation

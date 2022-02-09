@@ -15,7 +15,6 @@ class RegistrantApiVerificationsTest < ApplicationIntegrationTest
     @domain.update!(statuses: [DomainStatus::PENDING_UPDATE],
       registrant_verification_asked_at: Time.zone.now - 1.day,
       registrant_verification_token: @token)
-
   end
 
   def test_fetches_registrant_change_request

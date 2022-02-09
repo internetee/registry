@@ -93,6 +93,6 @@ class NameserverRecordValidationJobTest < ActiveSupport::TestCase
     assert @nameserver.validation_counter, 1
     assert @nameserver.failed_validation_reason.include? "Serial number for nameserver hostname **#{@nameserver.hostname}** doesn't present. SOA validation failed."
 
-    assert @nameserver.nameserver_failed_validation?
+    assert @nameserver.failed_validation?
   end
 end

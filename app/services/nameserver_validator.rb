@@ -18,7 +18,7 @@ module NameserverValidator
         #   result_response = validate(domain_name: domain_name, hostname: nameserver.ipv6)
         end
 
-        return { result: false, reason: 'glup record' } if result.answer.empty? if result_response[:result]
+        return { result: false, reason: 'glup record' } unless result_response[:result]
 
         return result_response
       end
