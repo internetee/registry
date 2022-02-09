@@ -11,10 +11,10 @@ class RegistrarAreaContactTest < ApplicationSystemTestCase
     visit registrar_contacts_path
     click_on 'New'
 
-    fill_in 'Ident', with: @contact.ident
-    fill_in 'Name', with: @contact.name
-    fill_in 'E-mail', with: @contact.email
-    fill_in 'Phone', with: '372'
+    fill_in 'depp_contact_ident', with: @contact.ident
+    fill_in 'depp_contact_name', with: @contact.name
+    fill_in 'depp_contact_email', with: @contact.email
+    fill_in 'depp_contact_phone', with: '372'
     click_on 'Create'
 
     assert_text 'Phone number must be in +XXX.YYYYYYY format'
@@ -37,7 +37,7 @@ class RegistrarAreaContactTest < ApplicationSystemTestCase
 
     assert_text "Edit: #{depp_contact.name}"
 
-    fill_in 'Phone', with: '372'
+    fill_in 'depp_contact_phone', with: '372'
     click_on 'Save'
 
     assert_text 'Phone number must be in +XXX.YYYYYYY format'
