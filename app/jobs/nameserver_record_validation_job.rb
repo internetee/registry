@@ -109,14 +109,14 @@ class NameserverRecordValidationJob < ApplicationJob
   end
 
   def inform_to_tech_contact(domain:, nameserver:, text: nil)
-    ContactNotification.notify_tech_contact(domain: domain, nameserver: nameserver, reason: 'nameserver')
+    # ContactNotification.notify_tech_contact(domain: domain, nameserver: nameserver, reason: 'nameserver')
   end
 
   def inform_to_registrar(nameserver:, text: nil)
     text =  "Host record #{nameserver.hostname} of a domain #{nameserver.domain} is invalid.
               Please fix or contact the registrant. Problem with nameserver #{nameserver} - #{nameserver.failed_validation_reason}"
     logger.info text
-    ContactNotification.notify_registrar(domain: nameserver.domain, text: text)
+    # ContactNotification.notify_registrar(domain: nameserver.domain, text: text)
   end
 
   def logger

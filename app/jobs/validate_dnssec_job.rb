@@ -50,8 +50,8 @@ class ValidateDnssecJob < ApplicationJob
 
     text = "DNSKEY record of a domain #{domain.name} is invalid. Please fix or contact the registrant."
     logger.info text
-    ContactNotification.notify_registrar(domain: domain, text: text)
-    ContactNotification.notify_tech_contact(domain: domain, reason: 'dnssec')
+    # ContactNotification.notify_registrar(domain: domain, text: text)
+    # ContactNotification.notify_tech_contact(domain: domain, reason: 'dnssec')
   end
 
   def validate(hostname:, domain:,  type: 'DNSKEY', klass: 'IN')
