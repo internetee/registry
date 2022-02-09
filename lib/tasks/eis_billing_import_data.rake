@@ -46,11 +46,6 @@ end
 def base_request(url:, json_obj:)
   uri = URI(url)
   http = Net::HTTP.new(uri.host, uri.port)
-  headers = {
-    'Authorization' => 'Bearer foobar',
-    'Content-Type' => 'application/json',
-    'Accept' => TOKEN
-  }
 
   unless Rails.env.development?
     http.use_ssl = true
@@ -59,3 +54,19 @@ def base_request(url:, json_obj:)
 
   http.post(url, json_obj.to_json, headers)
 end
+
+def generate_token
+  JWT.encode(payload, ENV['secret_word'])
+end
+
+def payload
+  { data: ENV['secret_access_word'] }
+end
+
+def headers 
+  {
+  'Authorization' => "Bearer #{generate_token}",
+  'Content-Type' => 'application/json',
+  }
+end
+

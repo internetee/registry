@@ -275,6 +275,7 @@ GEM
       activesupport (>= 4.2)
       aes_key_wrap
       bindata
+    jwt (2.3.0)
     kaminari (1.2.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.1)
@@ -560,6 +561,7 @@ DEPENDENCIES
   iso8601 (= 0.13.0)
   jquery-rails
   jquery-ui-rails (= 6.0.1)
+  jwt
   kaminari
   lhv!
   mime-types-data
