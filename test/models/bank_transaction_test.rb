@@ -16,105 +16,87 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_binds_if_this_sum_invoice_already_present
-    invoice_n = Invoice.order(number: :desc).last.number
-    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
-      with(
-        headers: {
-              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer foobar',
-              'Content-Type'=>'application/json',
-              'User-Agent'=>'Ruby'
-            }).
-      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
-    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
-    another_invoice = @invoice.dup
-    another_invoice.save(validate: false)
-    another_invoice.update(reference_no: '7654321', number: '2221')
+    if Feature.billing_system_integrated?
+      invoice_n = Invoice.order(number: :desc).last.number
+      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+      create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+      another_invoice = @invoice.dup
+      another_invoice.save(validate: false)
+      another_invoice.update(reference_no: '7654321', number: '2221')
 
-    another_item = @invoice.items.first.dup
-    another_item.invoice = another_invoice
-    another_item.save
-    another_invoice.reload
+      another_item = @invoice.items.first.dup
+      another_item.invoice = another_invoice
+      another_item.save
+      another_invoice.reload
 
-    first_transaction = BankTransaction.new(sum: 10,
-                                            description: 'Order nr 1 from registrar 1234567 second number 2345678')
+      first_transaction = BankTransaction.new(sum: 10,
+                                              description: 'Order nr 1 from registrar 1234567 second number 2345678')
 
-    first_transaction.create_activity(another_invoice.buyer, another_invoice)
+      first_transaction.create_activity(another_invoice.buyer, another_invoice)
 
-    transaction = BankTransaction.new(sum: 10,
-                                      description: 'Order nr 1 from registrar 1234567 second number 2345678')
+      transaction = BankTransaction.new(sum: 10,
+                                        description: 'Order nr 1 from registrar 1234567 second number 2345678')
 
-    assert_difference 'AccountActivity.count' do
-      transaction.autobind_invoice
+      assert_difference 'AccountActivity.count' do
+        transaction.autobind_invoice
+      end
     end
   end
 
   def test_binds_if_this_sum_cancelled_invoice_already_present
-    invoice_n = Invoice.order(number: :desc).last.number
-    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
-      with(
-        headers: {
-              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer foobar',
-              'Content-Type'=>'application/json',
-              'User-Agent'=>'Ruby'
-            }).
-      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
-    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
-    another_invoice = @invoice.dup
-    another_invoice.save(validate: false)
+    if Feature.billing_system_integrated?
+      invoice_n = Invoice.order(number: :desc).last.number
+      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+      create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+      another_invoice = @invoice.dup
+      another_invoice.save(validate: false)
 
 
-    another_item = @invoice.items.first.dup
-    another_item.invoice = another_invoice
+      another_item = @invoice.items.first.dup
+      another_item.invoice = another_invoice
 
-    another_item.save
-    another_invoice.reload
-    another_invoice.update(reference_no: '1234567', number: '2221', cancelled_at: Time.zone.now)
+      another_item.save
+      another_invoice.reload
+      another_invoice.update(reference_no: '1234567', number: '2221', cancelled_at: Time.zone.now)
 
-    transaction = BankTransaction.new(sum: 10,
-                                      description: 'Order nr 1 from registrar 1234567 second number 2345678')
+      transaction = BankTransaction.new(sum: 10,
+                                        description: 'Order nr 1 from registrar 1234567 second number 2345678')
 
-    assert_difference 'AccountActivity.count' do
-      transaction.autobind_invoice
+      assert_difference 'AccountActivity.count' do
+        transaction.autobind_invoice
+      end
     end
   end
 
   def test_marks_the_first_one_as_paid_if_same_sum
-    invoice_n = Invoice.order(number: :desc).last.number
-    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
-      with(
-        headers: {
-              'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer foobar',
-              'Content-Type'=>'application/json',
-              'User-Agent'=>'Ruby'
-            }).
-      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
-    create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
-    another_invoice = @invoice.dup
-    another_invoice.save(validate: false)
-    another_invoice.update(reference_no: '7654321', number: '2221')
+    if Feature.billing_system_integrated?
+      invoice_n = Invoice.order(number: :desc).last.number
+      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+      create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
+      another_invoice = @invoice.dup
+      another_invoice.save(validate: false)
+      another_invoice.update(reference_no: '7654321', number: '2221')
 
-    another_item = @invoice.items.first.dup
-    another_item.invoice = another_invoice
-    another_item.save
-    another_invoice.reload
+      another_item = @invoice.items.first.dup
+      another_item.invoice = another_invoice
+      another_item.save
+      another_invoice.reload
 
-    transaction = BankTransaction.new(sum: 10,
-                                      description: 'Order nr 1 from registrar 1234567 second number 2345678')
+      transaction = BankTransaction.new(sum: 10,
+                                        description: 'Order nr 1 from registrar 1234567 second number 2345678')
 
-    assert_difference 'AccountActivity.count' do
-      transaction.autobind_invoice
+      assert_difference 'AccountActivity.count' do
+        transaction.autobind_invoice
+      end
+
+      @invoice.reload
+      another_invoice.reload
+      assert(@invoice.paid?)
+      assert_not(another_invoice.paid?)
     end
-
-    @invoice.reload
-    another_invoice.reload
-    assert(@invoice.paid?)
-    assert_not(another_invoice.paid?)
   end
 
   def test_matches_against_invoice_nubmber_and_reference_number_in_description

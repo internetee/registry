@@ -14,37 +14,30 @@ class AdminRegistrarsSystemTest < ApplicationSystemTestCase
   end
 
   def test_creates_new_registrar
-    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/reference_number_generator").
-    with(
-      body: "{\"initiator\":\"registry\"}",
-      headers: {
-      'Accept'=>'Bearer WA9UvDmzR9UcE5rLqpWravPQtdS8eDMAIynzGdSOTw==--9ZShwwij3qmLeuMJ--NE96w2PnfpfyIuuNzDJTGw==',
-      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-      'Authorization'=>'Bearer foobar',
-      'Content-Type'=>'application/json',
-      'User-Agent'=>'Ruby'
-      }).
-    to_return(status: 200, body: "{\"reference_number\":\"12332\"}", headers: {})
+    if Feature.billing_system_integrated?
+      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/reference_number_generator").
+        to_return(status: 200, body: "{\"reference_number\":\"12332\"}", headers: {})
 
-    assert_nil Registrar.find_by(name: 'Acme Ltd')
+      assert_nil Registrar.find_by(name: 'Acme Ltd')
 
-    visit admin_registrars_path
-    click_on 'New registrar'
+      visit admin_registrars_path
+      click_on 'New registrar'
 
-    fill_in 'Name', with: 'Acme Ltd'
-    fill_in 'Reg no', with: '1234'
-    fill_in 'Contact e-mail', with: 'any@acme.test'
-    fill_in 'Street', with: 'any'
-    fill_in 'City', with: 'any'
-    fill_in 'State / Province', with: 'any'
-    fill_in 'Zip', with: 'any'
-    select 'United States', from: 'Country'
-    fill_in 'Accounting customer code', with: 'test'
-    fill_in 'Code', with: 'test'
-    click_on 'Create registrar'
+      fill_in 'Name', with: 'Acme Ltd'
+      fill_in 'Reg no', with: '1234'
+      fill_in 'Contact e-mail', with: 'any@acme.test'
+      fill_in 'Street', with: 'any'
+      fill_in 'City', with: 'any'
+      fill_in 'State / Province', with: 'any'
+      fill_in 'Zip', with: 'any'
+      select 'United States', from: 'Country'
+      fill_in 'Accounting customer code', with: 'test'
+      fill_in 'Code', with: 'test'
+      click_on 'Create registrar'
 
-    assert_text 'Registrar has been successfully created'
-    assert_text 'Acme Ltd'
+      assert_text 'Registrar has been successfully created'
+      assert_text 'Acme Ltd'
+    end
   end
 
   def test_updates_registrar

@@ -7,6 +7,7 @@ class SendEInvoiceTwoJob < ApplicationJob
     return unless need_to_process_invoice?(invoice: invoice, payable: payable)
 
     send_invoice_to_eis_billing(invoice: invoice, payable: payable)
+    invoice.update(e_invoice_sent_at: Time.zone.now)
   rescue StandardError => e
     log_error(invoice: invoice, error: e)
     raise e

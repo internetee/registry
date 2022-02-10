@@ -16,7 +16,7 @@ module EisBilling
       uri = URI(url)
       http = Net::HTTP.new(uri.host, uri.port)
 
-      unless Rails.env.development?
+      unless Rails.env.development? || Rails.env.test?
         http.use_ssl = true
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end

@@ -237,4 +237,6 @@ nameserver_validation_timeout: '1'
 
 eis_billing_system_base_url_dev: 'http://eis_billing_system:3000'
 eis_billing_system_base_url_staging: 'https://st-billing.infra.tld.ee'
+secret_access_word: 'please-Give-Me-accesS'
+secret_word: 'this-secret-should-be-change'
 billing_system_integrated: 'true'
