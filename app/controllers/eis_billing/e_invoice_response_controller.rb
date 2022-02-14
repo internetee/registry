@@ -1,4 +1,4 @@
-class EisBilling::EInvoiceResponseController < ApplicationController
+class EisBilling::EInvoiceResponseController < EisBilling::BaseController
   def update
     invoice_number = params[:invoice_number]
     date = params[:date]
