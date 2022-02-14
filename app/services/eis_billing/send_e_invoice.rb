@@ -12,8 +12,8 @@ module EisBilling
         invoice_subtotal: invoice.subtotal,
         buyer_billing_email: invoice.buyer.billing_email,
         buyer_e_invoice_iban: invoice.buyer.e_invoice_iban,
-        seller_country: invoice.seller_country,
-        buyer_country: invoice.buyer_country,
+        seller_country_code: invoice.seller_country_code,
+        buyer_country_code: invoice.buyer_country_code,
         payable: payable,
         initiator: INITIATOR
       }
