@@ -25,17 +25,17 @@ module EisBilling
     end
 
     def self.generate_token
-      JWT.encode(payload, ENV['secret_word'])
+      JWT.encode(payload, SECRET_WORD )
     end
 
     def self.payload
-      { data: ENV['secret_access_word'] }
+      { data: SECRET_ACCESS_WORD }
     end
 
     def self.headers
       {
-      'Authorization' => "Bearer #{generate_token}",
-      'Content-Type' => 'application/json',
+        'Authorization' => "Bearer #{generate_token}",
+        'Content-Type' => 'application/json'
       }
     end
   end
