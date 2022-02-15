@@ -15,7 +15,7 @@ module EisBilling
         seller_country_code: invoice.seller_country_code,
         buyer_country_code: invoice.buyer_country_code,
         payable: payable,
-        initiator: INITIATOR
+        initiator: EisBilling::Base::INITIATOR
       }
 
       invoice.items.each do |invoice_item|

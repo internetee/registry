@@ -2,7 +2,7 @@ module EisBilling
   class LhvConnectTransactionsController < EisBilling::BaseController
     def create
       params["_json"].each do |incoming_transaction|
-        process_transactions(incoming_transaction["table"])
+        process_transactions(incoming_transaction)
       end
 
       render status: 200, json: { message: 'RECEIVED', status: :ok, params: params }
