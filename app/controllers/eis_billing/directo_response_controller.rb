@@ -12,11 +12,12 @@ class EisBilling::DirectoResponseController < EisBilling::BaseController
 
   def process_directo_response(xml, req)
     Rails.logger.info "[Directo] - Responded with body: #{xml}"
-    Nokogiri::XML(xml).css('Result').each do |res|
+    Nokogiri::XML(req).css('Result').each do |res|
       if @month
         mark_invoice_as_sent(res: res, req: req)
       else
         inv = Invoice.find_by(number: res.attributes['docid'].value.to_i)
+
         mark_invoice_as_sent(invoice: inv, res: res, req: req)
       end
     end
