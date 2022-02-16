@@ -411,7 +411,7 @@ GEM
       activesupport (>= 5.2.4)
       i18n
     rbtree3 (0.6.0)
-    redis (4.4.0)
+    redis (4.6.0)
     regexp_parser (2.1.1)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -449,7 +449,7 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
-    sidekiq (6.2.2)
+    sidekiq (6.4.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
