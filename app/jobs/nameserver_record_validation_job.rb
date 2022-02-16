@@ -64,11 +64,13 @@ class NameserverRecordValidationJob < ApplicationJob
     nameserver.save
   end
 
-  def add_nameserver_to_failed(nameserver:, reason:)
-    if nameserver.validation_counter.nil?
-      nameserver.validation_counter = 1
-    else
-      nameserver.validation_counter = nameserver.validation_counter + 1
+  def add_nameserver_to_failed(nameserver:, reason:, result_reason:)
+    unless result_reason == 'cname'
+      if nameserver.validation_counter.nil?
+        nameserver.validation_counter = 1
+      else
+        nameserver.validation_counter = nameserver.validation_counter + 1
+      end
     end
 
     nameserver.failed_validation_reason = reason
@@ -85,7 +87,9 @@ class NameserverRecordValidationJob < ApplicationJob
     when 'answer'
       text = "No any answer comes from **#{nameserver.hostname}**. Nameserver not exist"
     when 'serial'
-      text = "Serial number for nameserver hostname **#{nameserver.hostname}** doesn't present. SOA validation failed."
+      text = "Serial number for nameserver hostname **#{nameserver.hostname}** of #{nameserver.domain.name} doesn't present in zone. SOA validation failed."
+    when 'cname'
+      text = "SOA request return CNAME: hostname - **#{nameserver.hostname}** of #{nameserver.domain.name}"
     when 'not found'
       text = "Seems nameserver hostname **#{nameserver.hostname}** doesn't exist"
     when 'exception'
@@ -97,7 +101,7 @@ class NameserverRecordValidationJob < ApplicationJob
     end
 
     logger.info text
-    add_nameserver_to_failed(nameserver: nameserver, reason: text)
+    add_nameserver_to_failed(nameserver: nameserver, reason: text, result_reason: result[:reason])
     false
   end
 
