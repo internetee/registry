@@ -12,11 +12,16 @@ module Actions
       result = check_email(email)
       save_result(result)
       filtering_old_failed_records(result)
+      remove_old_records!
       result.success ? log_success : log_failure(result)
       result.success
     end
 
     private
+
+    def remove_old_records!
+      validation_eventable.validation_events.old_records.destroy_all
+    end
 
     def check_email(parsed_email)
       Truemail.validate(parsed_email, with: calculate_check_level).result
