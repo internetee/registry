@@ -1,10 +1,9 @@
 module Admin
   class CertificatesController < BaseController
     load_and_authorize_resource
-    before_action :set_certificate, :set_api_user, only: [:sign, :show, :download_csr, :download_crt, :revoke, :destroy]
+    before_action :set_certificate, :set_api_user, only: %i[sign show download_csr download_crt revoke destroy]
 
-    def show;
-    end
+    def show; end
 
     def new
       @api_user = ApiUser.find(params[:api_user_id])
@@ -28,9 +27,7 @@ module Admin
     end
 
     def destroy
-      if @certificate.interface == Certificate::REGISTRAR
-        @certificate.revoke!
-      end
+      @certificate.revoke! if @certificate.interface == Certificate::REGISTRAR
 
       if @certificate.destroy
         flash[:notice] = I18n.t('record_deleted')
@@ -61,12 +58,12 @@ module Admin
     end
 
     def download_csr
-      filename = "#{@api_user.username}_#{Time.zone.today.strftime('%y%m%d')}_portal.csr.pem"
+      filename = "#{@api_user.username}_#{Time.zone.today.strftime('%y%m%d')}_#{@certificate.postfix}.csr.pem"
       send_data @certificate.csr, filename: filename
     end
 
     def download_crt
-      filename = "#{@api_user.username}_#{Time.zone.today.strftime('%y%m%d')}_portal.crt.pem"
+      filename = "#{@api_user.username}_#{Time.zone.today.strftime('%y%m%d')}_#{@certificate.postfix}.crt.pem"
       send_data @certificate.crt, filename: filename
     end
 

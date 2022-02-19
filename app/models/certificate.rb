@@ -131,6 +131,10 @@ class Certificate < ApplicationRecord
     self
   end
 
+  def postfix
+    interface == API ? 'api' : 'portal'
+  end
+
   class << self
     def tostdout(message)
       time = Time.zone.now.utc
