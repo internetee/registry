@@ -6,7 +6,7 @@
 # For email_validation event kind also check_level (regex/mx/smtp) is stored in the event_data
 class ValidationEvent < ApplicationRecord
   enum event_type: ValidationEvent::EventType::TYPES, _suffix: true
-  VALIDATION_PERIOD = 4.month.freeze
+  VALIDATION_PERIOD = 4.month
   VALID_CHECK_LEVELS = %w[regex mx smtp].freeze
   VALID_EVENTS_COUNT_THRESHOLD = 5
   MX_CHECK = 3
@@ -38,8 +38,10 @@ class ValidationEvent < ApplicationRecord
   after_create :check_for_force_delete
 
   def self.validated_ids_by(klass)
-    old_records.successful.where('validation_eventable_type = ?', klass)
-          .pluck(:validation_eventable_id)
+    old_records
+      .successful
+      .where('validation_eventable_type = ?', klass)
+      .pluck(:validation_eventable_id)
   end
 
   def failed?
