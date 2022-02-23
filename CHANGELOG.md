@@ -1,6 +1,7 @@
 23.02.2022
 * FD notes are updated when basis for FD changes [#2216](https://github.com/internetee/registry/issues/2216)
 * Admin: date filter end date in domain hostory is now inclusive [#2274](https://github.com/internetee/registry/issues/2274)
+* Job for finding and removing disputed statuses from the domains that should not have it [#2281](https://github.com/internetee/registry/issues/2281)
 
 09.02.2022
 * DNSSEC key validation [#1897](https://github.com/internetee/registry/issues/1897)
