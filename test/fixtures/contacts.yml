@@ -1,6 +1,7 @@
 john:
   name: John
   email: john@inbox.test
+  email_history: john@inbox.test
   phone: '+555.555'
   ident: 1234
   ident_type: priv
@@ -18,6 +19,7 @@ john:
 william: &william
   name: William
   email: william@inbox.test
+  email_history: william@inbox.test
   phone: '+555.555'
   fax: '+666.6'
   ident: 12345

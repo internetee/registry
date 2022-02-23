@@ -84,6 +84,7 @@ module Actions
       return false if @error
 
       contact.generate_code
+      contact.email_history = contact.email
       contact.save
     end
   end

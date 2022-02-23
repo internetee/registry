@@ -411,6 +411,62 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert notification.text.include? asserted_text
   end
 
+  def test_add_invalid_email_to_domain_status_notes
+    domain = domains(:airport)
+    domain.update(valid_to: Time.zone.parse('2012-08-05'),
+                  statuses: %w[serverForceDelete serverRenewProhibited serverTransferProhibited],
+                  force_delete_data: { 'template_name': 'invalid_email', 'force_delete_type': 'soft' },
+                  status_notes: { "serverForceDelete": '`@internet2.ee' })
+
+    travel_to Time.zone.parse('2010-07-05')
+    email = '`@internet.ee'
+    invalid_emails = '`@internet2.ee `@internet.ee'
+    asserted_text = "Invalid email: #{invalid_emails}"
+
+    Truemail.configure.default_validation_type = :regex
+
+    contact_first = domain.admin_contacts.first
+    contact_first.update_attribute(:email_history, 'john@inbox.test')
+    contact_first.update_attribute(:email, email)
+
+    ValidationEvent::VALID_EVENTS_COUNT_THRESHOLD.times do
+      contact_first.verify_email
+    end
+
+    domain.reload
+
+    assert_equal domain.status_notes[DomainStatus::FORCE_DELETE], invalid_emails
+    notification = domain.registrar.notifications.last
+    assert notification.text.include? asserted_text
+  end
+
+  def test_remove_invalid_email_from_domain_status_notes
+    domain = domains(:airport)
+    domain.update(valid_to: Time.zone.parse('2012-08-05'),
+                  statuses: %w[serverForceDelete serverRenewProhibited serverTransferProhibited],
+                  force_delete_data: { 'template_name': 'invalid_email', 'force_delete_type': 'soft' },
+                  status_notes: { "serverForceDelete": '`@internet2.ee `@internet.ee' })
+
+    travel_to Time.zone.parse('2010-07-05')
+    email = '`@internet2.ee'
+    invalid_email = '`@internet.ee'
+    asserted_text = "Invalid email: #{invalid_email}"
+
+    Truemail.configure.default_validation_type = :regex
+
+    contact_first = domain.admin_contacts.first
+    contact_first.update_attribute(:email_history, email)
+    contact_first.update_attribute(:email, 'john@inbox.test')
+
+    travel_to Time.zone.parse('2010-07-05 0:00:03')
+    contact_first.verify_email
+    domain.reload
+
+    assert_equal domain.status_notes[DomainStatus::FORCE_DELETE], invalid_email
+    notification = domain.registrar.notifications.last
+    assert notification.text.include? asserted_text
+  end
+
   def test_domain_should_have_several_bounced_emails
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?
@@ -458,7 +514,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     notification = @domain.registrar.notifications.last
     assert notification.text.include? asserted_text
 
-    @domain.registrant.update(email: 'aaa@bbb.com')
+    @domain.registrant.update(email: 'aaa@bbb.com', email_history: email)
     @domain.registrant.verify_email
     assert @domain.registrant.need_to_lift_force_delete?
     CheckForceDeleteLift.perform_now
