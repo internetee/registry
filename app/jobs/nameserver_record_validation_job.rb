@@ -64,12 +64,11 @@ class NameserverRecordValidationJob < ApplicationJob
     nameserver.save
   end
 
-  def add_nameserver_to_failed(nameserver:, reason:)
-    if nameserver.validation_counter.nil?
-      nameserver.validation_counter = 1
-    else
-      nameserver.validation_counter = nameserver.validation_counter + 1
-    end
+  def add_nameserver_to_failed(nameserver:, reason:, result_reason:)
+    return cname_case_handle(nameserver: nameserver, reason: reason) if result_reason == 'cname'
+
+    nameserver.validation_counter = 1 if nameserver.validation_counter.nil?
+    nameserver.validation_counter = nameserver.validation_counter + 1
 
     nameserver.failed_validation_reason = reason
     nameserver.save
@@ -77,15 +76,25 @@ class NameserverRecordValidationJob < ApplicationJob
     failed_log(text: reason, nameserver: nameserver, domain: nameserver.domain) if nameserver.failed_validation?
   end
 
+  def cname_case_handle(nameserver:, reason:)
+    nameserver.validation_datetime = Time.zone.now
+    nameserver.failed_validation_reason = reason
+    nameserver.save
+
+    failed_log(text: reason, nameserver: nameserver, domain: nameserver.domain)
+  end
+
   def parse_result(result, nameserver)
     domain = Domain.find(nameserver.domain_id)
 
-    text = ""
+    text = ''
     case result[:reason]
     when 'answer'
-      text = "No any answer comes from **#{nameserver.hostname}**. Nameserver not exist"
+      text = "DNS Server **#{nameserver.hostname}** not responding"
     when 'serial'
-      text = "Serial number for nameserver hostname **#{nameserver.hostname}** doesn't present. SOA validation failed."
+      text = "Serial number for nameserver hostname **#{nameserver.hostname}** of #{nameserver.domain.name} doesn't present in zone. SOA validation failed."
+    when 'cname'
+      text = "Warning: SOA record expected but CNAME found instead. This setup can lead to unexpected errors when using the domain: hostname - **#{nameserver.hostname}** of #{nameserver.domain.name}"
     when 'not found'
       text = "Seems nameserver hostname **#{nameserver.hostname}** doesn't exist"
     when 'exception'
@@ -97,7 +106,7 @@ class NameserverRecordValidationJob < ApplicationJob
     end
 
     logger.info text
-    add_nameserver_to_failed(nameserver: nameserver, reason: text)
+    add_nameserver_to_failed(nameserver: nameserver, reason: text, result_reason: result[:reason])
     false
   end
 

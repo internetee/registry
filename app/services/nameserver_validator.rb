@@ -35,8 +35,14 @@ module NameserverValidator
 
     return { result: false, reason: 'answer' } if result.answer.empty?
 
+    decision = result.answer.any? do |a|
+      a.type == 'CNAME'
+    end
+
+    return { result: false, reason: 'cname' } if decision
+
     decision = result.answer.all? do |a|
-      a.serial.present?
+      a.instance_variable_defined? '@serial'
     end
 
     return { result: false, reason: 'serial' } unless decision
