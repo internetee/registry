@@ -3,7 +3,7 @@ require 'auth_token/auth_token_decryptor'
 module Api
   module V1
     module AccreditationCenter
-      if Rails.env.development? || Rails.env.staging? || Rails.env.test?
+      if Feature.allow_accr_endspoints?
         class BaseController < ActionController::API
           rescue_from ActiveRecord::RecordNotFound, with: :show_not_found_error
           rescue_from ActiveRecord::RecordInvalid, with: :show_invalid_record_error
