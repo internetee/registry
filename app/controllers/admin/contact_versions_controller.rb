@@ -1,12 +1,8 @@
 module Admin
   class ContactVersionsController < BaseController
     include ApplicationHelper
-    include ObjectVersionsHelper
 
     load_and_authorize_resource class: Version::ContactVersion
-
-    MODEL = Contact
-    CSV_HEADER = ['Name', 'ID', 'Ident', 'Registrar', 'Action', 'Created at'].freeze
 
     def index
       params[:q] ||= {}
@@ -70,18 +66,6 @@ module Admin
       end
 
       params_copy
-    end
-
-    def render_by_format(page, filename)
-      respond_to do |format|
-        format.html { render page }
-        format.csv do
-          raw_csv = csv_generate(MODEL, CSV_HEADER, @q.result)
-          send_data raw_csv,
-                    filename: "#{filename}_#{Time.zone.now.to_formatted_s(:number)}.csv",
-                    type: "#{Mime[:csv]}; charset=utf-8"
-        end
-      end
     end
   end
 end

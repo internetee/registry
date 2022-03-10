@@ -9,30 +9,6 @@ module ApplicationHelper
     "background-image: url(#{image_path("#{unstable_env}.png")});"
   end
 
-  def ident_for(contact)
-    if contact.is_a? Hash
-      ident_country_code = contact[:ident_country_code]
-      ident_type = contact[:ident_type]
-      ident = contact[:ident]
-    else
-      ident_country_code = contact.ident_country_code
-      ident_type = contact.ident_type
-      ident = contact.ident
-    end
-
-    case ident_type
-    when 'birthday'
-      "#{ident} [#{ident_country_code} #{ident_type}]"
-      else
-        if ident.present?
-          "#{ident} [#{ident_country_code} #{ident_type}]"
-        else
-          "[#{ident_country_code} #{ident_type}]"
-        end
-
-    end
-  end
-
   def current_commit_link
     hash = `git rev-parse --short HEAD`
     current_repo = `git remote get-url origin`.gsub('com:', 'com/')

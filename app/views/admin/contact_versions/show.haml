@@ -1,6 +1,5 @@
-- attributes = only_present_fields(@version, Contact)
-- contact = Contact.new(attributes)
-- attach_existing_fields(@version, contact)
+- contact = ObjectVersionsParser.new(@version).parse
+
 = render 'shared/title', name: contact.name
 
 .row
@@ -23,7 +22,7 @@
 
           %dt= t(:ident)
           %dd{class: changing_css_class(@version,"ident_country_code", "ident_type", "ident")}
-            = ident_for(contact)
+            = contact.ident_human_description
 
           - if contact.email.present?
             %dt= t(:email)

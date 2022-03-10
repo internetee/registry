@@ -44,7 +44,7 @@
                             <%= contact.code %>
                         </td>
                         <td>
-                            <%= ident_for(contact) %>
+                            <%= contact.ident_human_description %>
                         </td>
                         <td>
                             <%= l(contact.created_at, format: :short) %>

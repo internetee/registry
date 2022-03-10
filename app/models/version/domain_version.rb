@@ -7,6 +7,18 @@ class Version::DomainVersion < PaperTrail::Version
 
   scope :deleted, -> { where(event: 'destroy') }
 
+  def as_csv_row
+    domain = ObjectVersionsParser.new(self).parse
+
+    [
+      domain.name,
+      registrant_name(domain),
+      domain.registrar,
+      event,
+      created_at.to_formatted_s(:db)
+    ]
+  end
+
   def self.was_contact_linked?(contact_id)
     sql = <<-SQL
       SELECT
@@ -42,5 +54,26 @@ class Version::DomainVersion < PaperTrail::Version
     SQL
 
     count_by_sql(sql).nonzero?
+  end
+
+  def self.csv_header
+    ['Name', 'Registrant', 'Registrar', 'Action', 'Created at'].freeze
+  end
+
+  private
+
+  def registrant_name(domain)
+    return domain.registrant.name if domain.registrant
+
+    ver = Version::ContactVersion.where(item_id: domain.registrant_id).last
+    contact = Contact.all_versions_for([domain.registrant_id], created_at).first
+
+    if contact.nil? && ver
+      merged_obj = ver.object_changes.to_h.transform_values(&:last)
+      result = ver.object.to_h.merge(merged_obj)&.slice(*Contact&.column_names)
+      contact = Contact.new(result)
+    end
+
+    contact.try(:name) || 'Deleted'
   end
 end

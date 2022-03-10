@@ -569,4 +569,11 @@ class Contact < ApplicationRecord
   def deletable?
     !linked?
   end
+
+  def ident_human_description
+    description = "[#{ident_country_code} #{ident_type}]"
+    description.prepend("#{ident} ") if ident.present?
+
+    description
+  end
 end

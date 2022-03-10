@@ -1,11 +1,6 @@
 module Admin
   class DomainVersionsController < BaseController
-    include ObjectVersionsHelper
-
     load_and_authorize_resource class: Version::DomainVersion
-
-    MODEL = Domain
-    CSV_HEADER = ['Name', 'Registrant', 'Registrar', 'Action', 'Created at'].freeze
 
     def index
       params[:q] ||= {}
@@ -85,23 +80,10 @@ module Admin
 
     def fix_date_params
       params_copy = params[:q].deep_dup
-      if params_copy['created_at_lteq'].present?
-        params_copy['created_at_lteq'] = Date.parse(params_copy['created_at_lteq']) + 1.day
-      end
+      created_at = params_copy['created_at_lteq']
+      params_copy['created_at_lteq'] = Date.parse(created_at) + 1.day if created_at.present?
 
       params_copy
-    end
-
-    def render_by_format(page, filename)
-      respond_to do |format|
-        format.html { render page }
-        format.csv do
-          raw_csv = csv_generate(MODEL, CSV_HEADER, @q.result)
-          send_data raw_csv,
-                    filename: "#{filename}_#{Time.zone.now.to_formatted_s(:number)}.csv",
-                    type: "#{Mime[:csv]}; charset=utf-8"
-        end
-      end
     end
   end
 end

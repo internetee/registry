@@ -62,9 +62,7 @@
         %tbody
           - @versions.each do |version|
             - if version
-              - attributes = only_present_fields(version, Domain)
-              - domain = Domain.new(attributes)
-              - attach_existing_fields(version, domain) unless version.event == 'destroy'
+              - domain = ObjectVersionsParser.new(version).parse
 
               %tr
                 %td= link_to(domain.name, admin_domain_version_path(version.id))
