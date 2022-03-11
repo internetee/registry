@@ -753,6 +753,35 @@ class Domain < ApplicationRecord
     contacts.select(&:email_verification_failed?)&.map(&:email)&.uniq
   end
 
+  def as_csv_row
+    [
+      name,
+      registrant_name,
+      valid_to.to_formatted_s(:db),
+      registrar,
+      created_at.to_formatted_s(:db),
+      statuses,
+      contacts.pluck(:code),
+      force_delete_date,
+      force_delete_data
+    ]
+  end
+
+  def registrant_name
+    return registrant.name if registrant
+
+    ver = Version::ContactVersion.where(item_id: registrant_id).last
+    contact = Contact.all_versions_for([registrant_id], created_at).first
+
+    contact = ObjectVersionsParser.new(ver).parse if contact.nil? && ver
+
+    contact.try(:name) || 'Deleted'
+  end
+
+  def self.csv_header
+    ['Domain', 'Registrant', 'Valid to', 'Registrar', 'Created at', 'Statuses', 'Contacts code', 'Force delete date', 'Force delete data'].freeze
+  end
+
   def self.pdf(html)
     kit = PDFKit.new(html)
     kit.to_pdf
