@@ -41,10 +41,8 @@ class RegistrantUserTest < ActiveSupport::TestCase
 
     company = Company.new(org.ident, "ace")
 
-    company_register = Minitest::Mock.new
-    company_register.expect(:representation_rights, [company], [{ citizen_personal_code: '1234',
-                                                                  citizen_country_code: 'USA' }])
-    @user.companies(company_register)
+    Spy.on(@user, :companies).and_return([company])
+    @user.update_company_contacts
     org.reload
 
     assert_equal org.name, company.company_name
