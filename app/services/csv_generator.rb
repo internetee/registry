@@ -12,6 +12,6 @@ class CsvGenerator
   private
 
   def self.custom_csv(class_name)
-    [Version::DomainVersion, Version::ContactVersion, Domain, Contact, Invoice].include?(class_name)
+    [Version::DomainVersion, Version::ContactVersion, Domain, Contact, Invoice, Account].include?(class_name)
   end
 end
