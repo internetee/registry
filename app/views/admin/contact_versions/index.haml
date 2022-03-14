@@ -69,7 +69,7 @@
               %tr
                 %td= link_to(contact.name, admin_contact_version_path(version.id))
                 %td= contact.code
-                %td= contact.ident_human_description
+                %td= ident_for(contact)
                 %td
                   - if contact.registrar
                     = link_to(contact.registrar, admin_registrar_path(contact.registrar))

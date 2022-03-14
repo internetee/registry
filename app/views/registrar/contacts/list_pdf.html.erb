@@ -20,7 +20,7 @@
                             <tr>
                                 <td><%= contact %></td>
                                 <td><%= contact.code %></td>
-                                <td><%= contact.ident_human_description %></td>
+                                <td><%= ident_for(contact) %></td>
                                 <td><%= l(contact.created_at, format: :short) %></td>
                                 <td><%= contact.registrar %></td>
                             </tr>

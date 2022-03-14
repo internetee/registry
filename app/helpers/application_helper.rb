@@ -9,6 +9,14 @@ module ApplicationHelper
     "background-image: url(#{image_path("#{unstable_env}.png")});"
   end
 
+  def ident_for(contact)
+    ident = contact.ident
+    description = "[#{contact.ident_country_code} #{contact.ident_type}]"
+    description.prepend("#{ident} ") if ident.present?
+
+    description
+  end
+
   def current_commit_link
     hash = `git rev-parse --short HEAD`
     current_repo = `git remote get-url origin`.gsub('com:', 'com/')

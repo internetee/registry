@@ -22,7 +22,7 @@
 
           %dt= t(:ident)
           %dd{class: changing_css_class(@version,"ident_country_code", "ident_type", "ident")}
-            = contact.ident_human_description
+            = ident_for(contact)
 
           - if contact.email.present?
             %dt= t(:email)
