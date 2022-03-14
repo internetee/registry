@@ -131,7 +131,7 @@ class Invoice < ApplicationRecord
   end
 
   def self.csv_header
-    ['Number', 'Buyer', 'Due Date', 'Receipt Date', 'Issue Date', 'Total', 'Currency', 'Seller Name'].freeze
+    ['Number', 'Buyer', 'Due Date', 'Receipt Date', 'Issue Date', 'Total', 'Currency', 'Seller Name']
   end
 
   def self.create_from_transaction!(transaction)

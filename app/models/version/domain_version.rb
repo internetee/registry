@@ -57,6 +57,6 @@ class Version::DomainVersion < PaperTrail::Version
   end
 
   def self.csv_header
-    ['Name', 'Registrant', 'Registrar', 'Action', 'Created at'].freeze
+    ['Name', 'Registrant', 'Registrar', 'Action', 'Created at']
   end
 end

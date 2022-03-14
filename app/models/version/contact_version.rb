@@ -19,6 +19,6 @@ class Version::ContactVersion < PaperTrail::Version
   end
 
   def self.csv_header
-    ['Name', 'ID', 'Ident', 'Registrar', 'Action', 'Created at'].freeze
+    ['Name', 'ID', 'Ident', 'Registrar', 'Action', 'Created at']
   end
 end

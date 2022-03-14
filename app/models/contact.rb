@@ -590,6 +590,6 @@ class Contact < ApplicationRecord
   end
 
   def self.csv_header
-    ['Name', 'ID', 'Ident', 'E-mail', 'Created at', 'Registrar', 'Phone'].freeze
+    ['Name', 'ID', 'Ident', 'E-mail', 'Created at', 'Registrar', 'Phone']
   end
 end

@@ -18,6 +18,6 @@ class Account < ApplicationRecord
   end
 
   def self.csv_header
-    ['Id', 'Balance', 'Currency', 'Registrar'].freeze
+    ['Id', 'Balance', 'Currency', 'Registrar']
   end
 end
