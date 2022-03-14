@@ -12,4 +12,12 @@ class Account < ApplicationRecord
   def activities
     account_activities
   end
+
+  def as_csv_row
+    [id, balance, currency, registrar]
+  end
+
+  def self.csv_header
+    ['Id', 'Balance', 'Currency', 'Registrar'].freeze
+  end
 end

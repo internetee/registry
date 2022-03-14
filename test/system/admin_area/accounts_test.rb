@@ -29,4 +29,16 @@ class AdminAccountsSystemTest < ApplicationSystemTestCase
     assert_text 'Account has been successfully updated'
     assert_text '234'
   end
+
+  def test_download_accounts_list_as_csv
+    travel_to Time.zone.parse('2010-07-05 10:30')
+
+    get admin_accounts_path(format: :csv)
+
+    assert_response :ok
+    assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
+    assert_equal %(attachment; filename="accounts_#{Time.zone.now.to_formatted_s(:number)}.csv"; filename*=UTF-8''accounts_#{Time.zone.now.to_formatted_s(:number)}.csv),
+                 response.headers['Content-Disposition']
+    assert_equal file_fixture('accounts.csv').read, response.body
+  end
 end
