@@ -1,0 +1,10 @@
+Name,ID,Ident,E-mail,Created at,Registrar,Phone
+John,john-001,1234 [US priv],john@inbox.test,2010-07-05 07:30:00,Best Names,+555.555
+William,william-001,12345 [US priv],william@inbox.test,2010-07-05 07:30:00,Best Names,+555.555
+Jane,jane-001,123456 [US priv],jane@mail.test,2010-07-05 07:30:00,Best Names,+555.555
+Acme Ltd,acme-ltd-001,1234567 [US org],acme@outlook.test,2010-07-05 07:30:00,Best Names,+555.555
+Jack,jack-001,12345678 [US org],jack@inbox.test,2010-07-05 07:30:00,Good Names,+555.555
+William,william-002,12345 [US priv],william@inbox.test,2010-07-05 07:30:00,Good Names,+555.555
+Registrar Ltd,registrarltd-001,1234567890 [US org],registrar@inbox.test,2010-07-05 07:30:00,Good Names,+555.555
+any,invalid,[ ],invalid@invalid.test,2010-07-05 07:30:00,Best Names,
+any,invalid_email,[ ],invalid@invalid.,2010-07-05 07:30:00,Best Names,

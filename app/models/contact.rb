@@ -576,4 +576,20 @@ class Contact < ApplicationRecord
 
     description
   end
+
+  def as_csv_row
+    [
+      name,
+      code,
+      ident_human_description,
+      email,
+      created_at.to_formatted_s(:db),
+      registrar,
+      phone,
+    ]
+  end
+
+  def self.csv_header
+    ['Name', 'ID', 'Ident', 'E-mail', 'Created at', 'Registrar', 'Phone'].freeze
+  end
 end
