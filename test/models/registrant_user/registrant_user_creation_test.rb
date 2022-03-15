@@ -45,4 +45,25 @@ class RegistrantUserCreationTest < ActiveSupport::TestCase
     contact.reload
     assert_equal user.username, contact.name
   end
+
+  def test_update_contact_to_company_name
+    contact = contacts(:john)
+    registrant_user = RegistrantUser.first
+    company = CompanyRegister::Client.new.representation_rights(
+      citizen_personal_code: registrant_user.ident,
+      citizen_country_code: registrant_user.country.alpha3
+    ).first
+
+    contact.ident = company.registration_number
+    contact.ident_country_code = 'EE'
+    contact.save(validate: false)
+
+    registrant_user.companies
+    poll_message = contact.registrar.notifications.last.text
+
+    assert_equal(
+      'Contact update: john-001 name updated from John to ACME Ltd by the registry',
+      poll_message
+    )
+  end
 end
