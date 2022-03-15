@@ -202,6 +202,8 @@ CREATE FUNCTION public.generate_zonefile(i_origin character varying) RETURNS tex
 
 SET default_tablespace = '';
 
+SET default_with_oids = false;
+
 --
 -- Name: account_activities; Type: TABLE; Schema: public; Owner: -
 --
@@ -809,7 +811,8 @@ CREATE TABLE public.dnskeys (
     creator_str character varying,
     updator_str character varying,
     legacy_domain_id integer,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    validation_datetime timestamp without time zone
 );
 
 
@@ -5273,9 +5276,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211125181033'),
 ('20211125184334'),
 ('20211126085139'),
+('20211231113934'),
 ('20220106123143'),
 ('20220113201642'),
 ('20220113220809');
-
 
 
