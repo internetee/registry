@@ -62,7 +62,7 @@ class RegistrantUserCreationTest < ActiveSupport::TestCase
     poll_message = contact.registrar.notifications.last.text
 
     assert_equal(
-      'Contact update: john-001 name updated from John to ACME Ltd by the registry',
+      "Contact update: #{contact.code} name updated from #{contact.name} to #{company.company_name} by the registry",
       poll_message
     )
   end
