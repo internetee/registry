@@ -60,7 +60,7 @@ class RegistrantUser < User
 
   def notify_registrar_data_updated(company_name:, old_contact_name:, contact:)
     contact.registrar.notifications.create!(
-      text: "Contact update: #{contact.id} name updated from #{old_contact_name} to #{company_name} by the registry"
+      text: "Contact update: #{contact.code} name updated from #{old_contact_name} to #{company_name} by the registry"
     )
   end
 
