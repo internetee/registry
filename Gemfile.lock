@@ -303,7 +303,7 @@ GEM
       nokogiri (~> 1)
       rake
     mini_mime (1.1.1)
-    mini_portile2 (2.7.1)
+    mini_portile2 (2.8.0)
     minitest (5.15.0)
     monetize (1.9.4)
       money (~> 6.12)
@@ -324,10 +324,10 @@ GEM
       newrelic_rpm (= 8.1.0)
     newrelic_rpm (8.1.0)
     nio4r (2.5.8)
-    nokogiri (1.13.0)
-      mini_portile2 (~> 2.7.0)
+    nokogiri (1.13.2)
+      mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    nokogiri (1.13.0-x86_64-linux)
+    nokogiri (1.13.2-x86_64-linux)
       racc (~> 1.4)
     nori (2.6.0)
     omniauth (1.9.1)
@@ -568,7 +568,7 @@ DEPENDENCIES
   money-rails
   newrelic-infinite_tracing
   newrelic_rpm
-  nokogiri (~> 1.13.0)
+  nokogiri (~> 1.13.2)
   omniauth
   omniauth-rails_csrf_protection
   omniauth-tara!
