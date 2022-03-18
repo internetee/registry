@@ -47,9 +47,6 @@ module Actions
 
       contact_code = params[:registrant][:code]
       contact = Contact.find_by_code(contact_code)
-      p ">>>>>>>>>"
-      p contact.email
-      p ">>>>>>>>>>>>"
       validate_email(contact.email)
 
       regt = Registrant.find_by(code: params[:registrant][:code])
@@ -128,7 +125,7 @@ module Actions
     end
 
     def validate_email(email)
-      return if Rails.env.test?
+      return true if Rails.env.test?
 
       [:regex, :mx].each do |m|
         result = Actions::SimpleMailValidator.run(email: email, level: m)

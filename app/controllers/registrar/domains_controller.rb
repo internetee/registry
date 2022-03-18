@@ -92,7 +92,6 @@ class Registrar
     def create
       authorize! :create, Depp::Domain
       @domain_params = domain_params.to_h
-      # @data = @domain.create(@domain_params) if emails_valid?
       @data = @domain.create(@domain_params)
 
       if @data && response_ok?
@@ -113,10 +112,8 @@ class Registrar
     def update
       authorize! :update, Depp::Domain
       @domain_params = params[:domain]
-      # if emails_valid?
       @data = @domain.update(@domain_params)
       @dispute = Dispute.active.find_by(domain_name: @domain_params[:name])
-      # end
 
       if @data && response_ok?
         redirect_to info_registrar_domains_url(domain_name: @domain_params[:name])
@@ -179,11 +176,6 @@ class Registrar
     end
 
     private
-
-    # def emails_valid?
-    #   params_as_hash = @domain_params[:contacts_attributes].to_h
-    #   @emails_check_result = params_as_hash.all? { |_k, val| Contact.find_by(code: val[:code]).verify_email }
-    # end
 
     def init_domain
       @domain = Depp::Domain.new(current_user: depp_current_user)
