@@ -110,11 +110,12 @@ class RegistrantUser < User
   def last_name
     username.split.second
   end
-
+  # rubocop:disable Metrics/MethodLength
   def update_related_contacts
     grouped_contacts = Contact.where(ident: ident, ident_country_code: country.alpha2)
-                      .where('UPPER(name) != UPPER(?)', username)
-                      .includes(:registrar).group_by { |c| c.registrar }
+                              .where('UPPER(name) != UPPER(?)', username)
+                              .includes(:registrar)
+                              .group_by(&:registrar)
     grouped_contacts.each do |registrar, contacts|
       bulk_action, action = actions.create!(operation: :bulk_update) if contacts.size > 1
       contacts.each do |c|
@@ -125,7 +126,7 @@ class RegistrantUser < User
       registrar.notify(bulk_action || action)
     end
   end
-
+  # rubocop:enable Metrics/MethodLength  
   class << self
     def find_or_create_by_api_data(user_data = {})
       return false unless user_data[:ident]

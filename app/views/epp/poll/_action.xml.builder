@@ -5,8 +5,6 @@ builder.extension do
     builder.tag!('changePoll:date', action.created_at.utc.xmlschema)
     builder.tag!('changePoll:svTRID', action.id)
     builder.tag!('changePoll:who', action.user)
-    if action.bulk_action?
-      builder.tag!('changePoll:reason', 'Auto-update according to official data')
-    end
+    builder.tag!('changePoll:reason', 'Auto-update according to official data') if action.bulk_action?
   end
 end

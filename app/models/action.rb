@@ -3,7 +3,10 @@ class Action < ApplicationRecord
 
   belongs_to :user
   belongs_to :contact, optional: true
-  has_many :subactions, class_name: 'Action', foreign_key: 'bulk_action_id', dependent: :destroy
+  has_many :subactions, class_name: 'Action',
+                        foreign_key: 'bulk_action_id',
+                        inverse_of: :action,
+                        dependent: :destroy
   belongs_to :bulk_action, class_name: 'Action', optional: true
 
   validates :operation, inclusion: { in: proc { |action| action.class.valid_operations } }
@@ -36,3 +39,4 @@ class Action < ApplicationRecord
     end
   end
 end
+
