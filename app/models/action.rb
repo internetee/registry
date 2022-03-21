@@ -5,7 +5,7 @@ class Action < ApplicationRecord
   belongs_to :contact, optional: true
   has_many :subactions, class_name: 'Action',
                         foreign_key: 'bulk_action_id',
-                        inverse_of: :action,
+                        inverse_of: :bulk_action,
                         dependent: :destroy
   belongs_to :bulk_action, class_name: 'Action', optional: true
 

@@ -110,6 +110,7 @@ class RegistrantUser < User
   def last_name
     username.split.second
   end
+
   # rubocop:disable Metrics/MethodLength
   def update_related_contacts
     grouped_contacts = Contact.where(ident: ident, ident_country_code: country.alpha2)
@@ -126,7 +127,8 @@ class RegistrantUser < User
       registrar.notify(bulk_action || action)
     end
   end
-  # rubocop:enable Metrics/MethodLength  
+  # rubocop:enable Metrics/MethodLength
+
   class << self
     def find_or_create_by_api_data(user_data = {})
       return false unless user_data[:ident]
