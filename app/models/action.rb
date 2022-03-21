@@ -39,4 +39,3 @@ class Action < ApplicationRecord
     end
   end
 end
-
