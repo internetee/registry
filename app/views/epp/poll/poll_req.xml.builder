@@ -9,13 +9,24 @@ xml.epp_head do
       xml.msg @notification.text
     end
 
-    if @notification.attached_obj_type == 'DomainTransfer' && @object
-      xml.resData do
-        xml << render('epp/domains/partials/transfer', builder: xml, dt: @object)
+    if @object
+      case @notification.attached_obj_type
+      when 'DomainTransfer'
+        xml.resData do
+          xml << render('epp/domains/partials/transfer', builder: xml, dt: @object)
+        end
+      when 'BulkAction'
+        xml.resData do
+          xml << render(
+            'epp/contacts/partials/check',
+            builder: xml,
+            results: @object.to_non_available_contact_codes
+          )
+        end
       end
     end
 
-    if @notification.action&.contact || @notification.registry_lock?
+    if @notification.action || @notification.registry_lock?
       if @notification.registry_lock?
         state = @notification.text.include?('unlocked') ? 'unlock' : 'lock'
         xml.extension do

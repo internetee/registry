@@ -2,18 +2,37 @@ class Action < ApplicationRecord
   has_paper_trail versions: { class_name: 'Version::ActionVersion' }
 
   belongs_to :user
-  belongs_to :contact
+  belongs_to :contact, optional: true
+  has_many :subactions, class_name: 'Action', foreign_key: 'bulk_action_id', dependent: :destroy
+  belongs_to :bulk_action, class_name: 'Action', optional: true
 
   validates :operation, inclusion: { in: proc { |action| action.class.valid_operations } }
 
   class << self
     def valid_operations
-      %w[update]
+      %w[update bulk_update]
     end
   end
 
   def notification_key
-    raise 'Action object is missing' unless contact
+    raise 'Action object is missing' unless bulk_action? || contact
+
     "contact_#{operation}".to_sym
+  end
+
+  def bulk_action?
+    !!subactions.exists?
+  end
+
+  def to_non_available_contact_codes
+    return [] unless bulk_action?
+
+    subactions.map do |a|
+      {
+        code: a.contact&.code,
+        avail: 0,
+        reason: 'in use',
+      }
+    end
   end
 end

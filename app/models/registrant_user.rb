@@ -112,13 +112,17 @@ class RegistrantUser < User
   end
 
   def update_related_contacts
-    contacts = Contact.where(ident: ident, ident_country_code: country.alpha2)
+    grouped_contacts = Contact.where(ident: ident, ident_country_code: country.alpha2)
                       .where('UPPER(name) != UPPER(?)', username)
-
-    contacts.each do |contact|
-      contact.update(name: username)
-      action = actions.create!(contact: contact, operation: :update)
-      contact.registrar.notify(action)
+                      .includes(:registrar).group_by { |c| c.registrar }
+    grouped_contacts.each do |registrar, contacts|
+      bulk_action, action = actions.create!(operation: :bulk_update) if contacts.size > 1
+      contacts.each do |c|
+        if c.update(name: username)
+          action = actions.create!(contact: c, operation: :update, bulk_action_id: bulk_action&.id)
+        end
+      end
+      registrar.notify(bulk_action || action)
     end
   end
 

@@ -304,7 +304,8 @@ CREATE TABLE public.actions (
     user_id integer,
     operation character varying NOT NULL,
     created_at timestamp without time zone,
-    contact_id integer
+    contact_id integer,
+    bulk_action_id integer
 );
 
 
@@ -5400,10 +5401,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211126085139'),
 ('20211231113934'),
 ('20220106123143'),
+<<<<<<< HEAD
 ('20220113201642'),
 ('20220113220809'),
 ('20220124105717'),
 ('20220216113112'),
 ('20220228093211');
+=======
+('20220316140727');
+>>>>>>> f98598620 (Moved notifications about automatic contact name update to bulk change poll message)
 
 
