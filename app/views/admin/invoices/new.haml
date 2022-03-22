@@ -12,7 +12,7 @@
         .col-md-4.control-label
           = f.label :registrar_id, class: 'required'
         .col-md-8
-          = select_tag '[deposit][registrar_id]', options_for_select(Registrar.all.map { |r| [r.name, r.id] }), { prompt: t(:choose), required: true, class: 'form-control js-combobox' }
+          = select_tag 'deposit[registrar_id]', options_for_select(Registrar.all.map { |r| [r.name, r.id] }), { prompt: t(:choose), required: true, class: 'form-control js-combobox' }
 
       .form-group
         .col-md-4.control-label
