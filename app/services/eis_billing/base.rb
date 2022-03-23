@@ -1,16 +1,7 @@
 module EisBilling
   class Base
-    BASE_URL = ''
-    if Rails.env.staging?
-      BASE_URL = ENV['eis_billing_system_base_url_staging']
-    else
-      BASE_URL = ENV['eis_billing_system_base_url_dev']
-    end
-
-    INITIATOR = 'registry'
-
-    SECRET_WORD = ENV['secret_word']
-    SECRET_ACCESS_WORD = ENV['secret_access_word']
+    BASE_URL = ENV['eis_billing_system_base_url']
+    INITIATOR = 'registry'.freeze
 
     def self.base_request(url:)
       uri = URI(url)
@@ -25,11 +16,11 @@ module EisBilling
     end
 
     def self.generate_token
-      JWT.encode(payload, SECRET_WORD )
+      JWT.encode(payload, billing_secret)
     end
 
     def self.payload
-      { data: SECRET_ACCESS_WORD }
+      { initiator: INITIATOR }
     end
 
     def self.headers
@@ -37,6 +28,10 @@ module EisBilling
         'Authorization' => "Bearer #{generate_token}",
         'Content-Type' => 'application/json'
       }
+    end
+
+    def self.billing_secret
+      Rails.application.credentials.config[:billing_secret]
     end
   end
 end
