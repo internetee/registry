@@ -34,3 +34,7 @@
 
   %dt= Invoice.human_attribute_name :reference_no
   %dd= @invoice.reference_no
+
+  - invoice_presenter = Registrar::InvoiceStatusPresenter.new(invoice: @invoice)
+  %dt Billing system
+  %dd= invoice_presenter.display

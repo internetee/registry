@@ -41,6 +41,11 @@ class Invoice < ApplicationRecord
 
   attribute :vat_rate, ::Type::VatRate.new
 
+  def get_status_from_billing
+    response = EisBilling::GetInvoiceStatus.send_invoice(invoice_number: number)
+    JSON.parse(response.body, symbolize_names: true)[:status]
+  end
+
   def set_invoice_number
     if Feature.billing_system_integrated?
       result = EisBilling::GetInvoiceNumber.send_invoice

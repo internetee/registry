@@ -1,10 +1,5 @@
-TOKEN = ENV['eis_token']
-BASE_URL = ""
-if Rails.env.staging?
-  BASE_URL = ENV['eis_billing_system_base_url_staging']
-else
-  BASE_URL = ENV['eis_billing_system_base_url_dev']
-end
+BASE_URL = ENV['eis_billing_system_base_url']
+INITIATOR = 'registry'.freeze
 
 namespace :eis_billing do
   desc 'One time task to export invoice data to billing system'
@@ -56,17 +51,20 @@ def base_request(url:, json_obj:)
 end
 
 def generate_token
-  JWT.encode(payload, ENV['secret_word'])
+  JWT.encode(payload, billing_secret)
 end
 
 def payload
-  { data: ENV['secret_access_word'] }
+  { initiator: INITIATOR }
 end
 
-def headers 
+def headers
   {
   'Authorization' => "Bearer #{generate_token}",
   'Content-Type' => 'application/json',
   }
 end
 
+def self.billing_secret
+  Rails.application.credentials.config[:billing_secret]
+end
