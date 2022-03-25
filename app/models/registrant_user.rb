@@ -20,16 +20,27 @@ class RegistrantUser < User
   def companies(company_register = CompanyRegister::Client.new)
     return [] if ident.include?('-')
 
-    companies = company_register.representation_rights(citizen_personal_code: ident,
-                                                       citizen_country_code: country.alpha3)
-
-    companies = update_contacts_before_receive(companies)
-    companies
+    company_register.representation_rights(citizen_personal_code: ident,
+                                           citizen_country_code: country.alpha3)
   rescue CompanyRegister::NotAvailableError
-    return []
+    []
   end
 
-  def update_contacts_before_receive(companies)
+  def do_need_update_contact?
+    return { result: false, counter: 0 } if companies.blank?
+
+    counter = 0
+    companies.each do |company|
+      counter += Contact.where(ident: company.registration_number, ident_country_code: 'EE')&.
+                  reject { |contact| contact.name == company.company_name }.size
+    end
+
+    return { result: true, counter: counter } if counter.positive?
+
+    { result: false, counter: 0 }
+  end
+
+  def update_company_contacts
     return [] if companies.blank?
 
     companies.each do |company|
