@@ -1,5 +1,5 @@
 25.03.2022
-* Bulk change of business contacts' names requires now user confirmation (#2309)[https://github.com/internetee/registry/pull/2309]
+* Bulk change of business contacts' names requires now user confirmation [#2309](https://github.com/internetee/registry/pull/2309)
 
 23.02.2022
 * FD notes are updated when basis for FD changes [#2216](https://github.com/internetee/registry/issues/2216)
