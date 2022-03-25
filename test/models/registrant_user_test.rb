@@ -61,6 +61,39 @@ class RegistrantUserTest < ActiveSupport::TestCase
     company_register.verify
   end
 
+  def test_should_return_zero_count_of_companies
+    assert_equal 'US-1234', @user.registrant_ident
+    org = contacts(:acme_ltd)
+    org.ident_country_code = 'EE'
+    org.save(validate: false)
+    org.reload
+
+    company_one = Company.new(org.ident, 'Acme Ltd')
+
+    Spy.on(@user, :companies).and_return([company_one])
+    response = @user.do_need_update_contact?
+    org.reload
+
+    assert_equal response[:counter], 0
+  end
+
+  def test_should_return_count_of_contact_which_should_be_updated
+    assert_equal 'US-1234', @user.registrant_ident
+    org = contacts(:acme_ltd)
+    org.ident_country_code = 'EE'
+    org.save(validate: false)
+    org.reload
+
+    company_one = Company.new(org.ident, 'ace')
+    company_two = Company.new(org.ident, 'acer')
+
+    Spy.on(@user, :companies).and_return([company_one, company_two])
+    response = @user.do_need_update_contact?
+    org.reload
+
+    assert_equal response[:counter], 2
+  end
+
   def test_returns_contacts
     Contact.stub(:registrant_user_contacts, %w(john jane)) do
       assert_equal %w(john jane), @user.contacts

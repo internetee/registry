@@ -31,15 +31,8 @@ class RegistrantUser < User
 
     counter = 0
     companies.each do |company|
-      contacts = Contact.where(ident: company.registration_number, ident_country_code: 'EE')
-
-      next if contacts.blank?
-
-      contacts.each do |contact|
-        next if company.company_name == contact.name
-
-        counter += 1
-      end
+      counter += Contact.where(ident: company.registration_number, ident_country_code: 'EE')&.
+                  reject { |contact| contact.name == company.company_name }.size
     end
 
     return { result: true, counter: counter } if counter.positive?
