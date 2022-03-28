@@ -6,12 +6,6 @@ class Registrar
       params[:q] ||= {}
       invoices = current_registrar_user.registrar.invoices.includes(:items, :account_activity)
 
-      invoices.each do |invoice|
-        next if invoice.paid? || invoice.cancelled?
-
-        EisBilling::SetInvoiceStatus.ping_status(invoice)
-      end
-
       normalize_search_parameters do
         @q = invoices.ransack(params[:q])
         @q.sorts = 'id desc' if @q.sorts.empty?
@@ -19,9 +13,7 @@ class Registrar
       end
     end
 
-    def show
-      EisBilling::SetInvoiceStatus.ping_status(@invoice)
-    end
+    def show; end
 
     def cancel
       @invoice.cancel
