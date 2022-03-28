@@ -6,6 +6,8 @@ module EisBilling
     before_action :persistent
     before_action :authorized
 
+    INITIATOR = 'billing'.freeze
+
     def encode_token(payload)
       JWT.encode(payload, ENV['secret_word'])
     end
@@ -19,7 +21,7 @@ module EisBilling
       if auth_header
         token = auth_header.split(' ')[1]
         begin
-          JWT.decode(token, ENV['secret_word'], true, algorithm: 'HS256')
+          JWT.decode(token, billing_secret_key, true, algorithm: 'HS256')
         rescue JWT::DecodeError
           nil
         end
@@ -27,9 +29,9 @@ module EisBilling
     end
 
     def accessable_service
-      if decoded_token
-        decoded_token[0]['data'] == ENV['secret_access_word']
-      end
+      return decoded_token[0]['initiator'] == INITIATOR if decoded_token
+
+      false
     end
 
     def logged_in?
@@ -40,12 +42,12 @@ module EisBilling
       render json: { message: 'Access denied' }, status: :unauthorized unless logged_in?
     end
 
-    def logger
-      Rails.logger
+    def billing_secret_key
+      Rails.application.credentials.config[:billing_secret]
     end
 
     def logger
-      @logger ||= Rails.logger
+      Rails.logger
     end
 
     def persistent
