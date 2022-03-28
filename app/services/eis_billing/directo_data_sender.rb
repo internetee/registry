@@ -1,14 +1,13 @@
 module EisBilling
-  class SendDataToDirecto < EisBilling::Base
-    def self.send_request(object_data:, monthly:, dry:)
-      send_info(object_data: object_data, monthly: monthly, dry: dry)
+  class DirectoDataSender < EisBilling::Base
+    def self.send_data(object_data:, invoice_number:)
+      send_info(object_data: object_data, invoice_number: invoice_number)
     end
 
-    def self.send_info(object_data:, monthly:, dry:)
+    def self.send_info(object_data:, invoice_number:)
       prepared_data = {
+        invoice_number: invoice_number,
         invoice_data: object_data,
-        monthly: monthly,
-        dry: dry,
         initiator: INITIATOR
       }
 

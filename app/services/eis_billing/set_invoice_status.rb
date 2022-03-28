@@ -1,10 +1,21 @@
 module EisBilling
   class SetInvoiceStatus
     TYPE = 'PaymentOrders::EveryPay'.freeze
+    SUCCESS_CODE = '200'.freeze
 
     def self.ping_status(invoice)
       response = invoice.get_response_from_billing
+
+      return if response.nil?
+
       change_status_to_pay(response: response, invoice: invoice) if response[:status] == 'paid'
+      send_directo_data(invoice: invoice) if response[:status] == 'paid' && !invoice.in_directo
+    end
+
+    def self.send_directo_data(invoice:)
+      response = EisBilling::DirectoDataSender.send_data(object_data: invoice.as_directo_json,
+                                                         invoice_number: invoice.number)
+      invoice.update(in_directo: true) if response.code == SUCCESS_CODE
     end
 
     def self.change_status_to_pay(response:, invoice:)

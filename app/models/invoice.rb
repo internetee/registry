@@ -43,6 +43,9 @@ class Invoice < ApplicationRecord
 
   def get_response_from_billing
     response = EisBilling::GetInvoiceStatus.send_invoice(invoice_number: number)
+
+    return if response.body.nil?
+
     JSON.parse(response.body, symbolize_names: true)
   end
 
