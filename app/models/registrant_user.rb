@@ -40,6 +40,7 @@ class RegistrantUser < User
     { result: false, counter: 0 }
   end
 
+  # rubocop:disable Metrics/MethodLength
   def update_contacts
     user = self
     contacts = []
@@ -47,7 +48,7 @@ class RegistrantUser < User
       c.write_attribute(:name, user.username)
     end)
     companies.each do |company|
-      contacts.concat(Contact.with_different_company_name(company).each do |c| 
+      contacts.concat(Contact.with_different_company_name(company).each do |c|
         c.write_attribute(:name, company.company_name)
       end)
     end
@@ -55,9 +56,9 @@ class RegistrantUser < User
     return [] if contacts.blank?
 
     group_and_bulk_update(contacts)
-
     contacts
   end
+  # rubocop:enable Metrics/MethodLength
 
   def contacts(representable: true)
     Contact.registrant_user_contacts(self, representable: representable)
@@ -138,8 +139,7 @@ class RegistrantUser < User
   private
 
   def group_and_bulk_update(contacts)
-    grouped_contacts = contacts.group_by(&:registrar_id)
-    grouped_contacts.each do |registrar_id, reg_contacts|
+    contacts.group_by(&:registrar_id).each do |registrar_id, reg_contacts|
       bulk_action, action = actions.create!(operation: :bulk_update) if reg_contacts.size > 1
       reg_contacts.each do |c|
         if c.save(validate: false)
