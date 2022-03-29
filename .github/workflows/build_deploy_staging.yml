@@ -67,7 +67,7 @@ jobs:
 
       - name: Set EPP port
         run: echo "EPP_PORT=${PR_REF:(-3)}" >> $GITHUB_ENV
-          
+
       - name: Set config files for build
         env:
           ST_APP: ${{ secrets.ST_APPLICATION_YML}}
@@ -101,7 +101,7 @@ jobs:
           sed -i -e 's/{certfile_path, "\/opt\/shared\/ca\/certs\/cert.pem"},/{certfile_path, "\/opt\/shared\/ca\/certs\/tls.crt"},/' sys.config
           sed -i -e 's/{keyfile_path, "\/opt\/shared\/ca\/certs\/key.pem"},/{keyfile_path, "\/opt\/shared\/ca\/certs\/tls.key"}]},/' sys.config
           sed -i -e 's/{crlfile_path, "\/opt\/shared\/ca\/certs\/key.pem"}]},//' sys.config
-     
+
       - name: Build proxy image
         run: |
           cd epp_proxy
@@ -143,7 +143,9 @@ jobs:
           chmod 0600 kubeconfig
 
       - name: Install Open VPN
-        run: sudo apt-get install openvpn
+        run: |
+          sudo apt-get update
+          sudo apt-get install openvpn
 
       - name: Deploy from remote server
         timeout-minutes: 5
