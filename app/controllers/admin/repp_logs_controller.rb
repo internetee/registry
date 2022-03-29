@@ -1,7 +1,7 @@
 module Admin
   class ReppLogsController < BaseController
     load_and_authorize_resource class: ApiLog::ReppLog
-    before_action :set_default_dates, only: [:index], if: -> { params[:q].to_i == current_user.id }
+    before_action :set_default_dates, only: [:index]
 
     # rubocop:disable Metrics/MethodLength
     def index
