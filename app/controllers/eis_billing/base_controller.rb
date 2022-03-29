@@ -43,7 +43,7 @@ module EisBilling
     end
 
     def billing_secret_key
-      Rails.application.credentials.config[:billing_secret]
+      ENV['billing_secret']
     end
 
     def logger

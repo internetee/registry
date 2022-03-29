@@ -236,9 +236,10 @@ a_and_aaaa_validation_timeout: '1'
 nameserver_validation_timeout: '1'
 
 eis_billing_system_base_url: 'http://eis_billing_system:3000'
+billing_secret: acd50ed44524d24c826d724fda922b790ca4130b02d62bcc8f85f1b863195ba8d155c4346037364eb59135d1e9dcba6cd8a4046ee4aef3c3a0878fcdf8e85efd
+billing_system_integrated: 'true'
 
 secret_access_word: 'please-Give-Me-accesS'
 secret_word: 'this-secret-should-be-change'
-billing_system_integrated: 'true'
 allow_accr_endspoints: 'true'
 
