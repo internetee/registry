@@ -32,7 +32,7 @@ class Action < ApplicationRecord
 
     subactions.map do |a|
       {
-        code: a.contact&.code,
+        code: a.contact.code,
         avail: 0,
         reason: 'in use',
       }

@@ -34,15 +34,15 @@ module Api
           end
         end
 
-        def do_need_update_contact
-          result = current_registrant_user.do_need_update_contact?
+        def do_need_update_contacts
+          result = current_registrant_user.do_need_update_contacts?
           render json: { update_contacts: result[:result], counter: result[:counter] }
         end
 
-        def update_company_contacts
-          companies = current_registrant_user.update_company_contacts
+        def update_contacts
+          contacts = current_registrant_user.update_contacts
 
-          render json: { message: 'get it', companies: companies }
+          render json: { message: 'get it', contacts: contacts }
         end
 
         def update

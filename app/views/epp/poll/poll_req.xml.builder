@@ -29,18 +29,15 @@ xml.epp_head do
     if @notification.action || @notification.registry_lock?
       if @notification.registry_lock?
         state = @notification.text.include?('unlocked') ? 'unlock' : 'lock'
-        xml.extension do
-          xml.tag!('changePoll:changeData',
-                   'xmlns:changePoll': Xsd::Schema.filename(for_prefix: 'changePoll')) do
-            xml.tag!('changePoll:operation', state)
-          end
-        end
+        render(partial: 'epp/poll/extension',
+               locals: { builder: xml,
+                         obj: state,
+                         type: 'state' })
       else
-        render(partial: 'epp/poll/action',
-               locals: {
-                 builder: xml,
-                 action: @notification.action,
-               })
+        render(partial: 'epp/poll/extension',
+               locals: { builder: xml,
+                         obj: @notification.action,
+                         type: 'action' })
       end
     end
 
