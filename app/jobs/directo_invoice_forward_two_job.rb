@@ -41,10 +41,10 @@ class DirectoInvoiceForwardTwoJob < ApplicationJob
   def collect_monthly_data
     registrars_data = []
 
-    Registrar.where.not(test_registrar: true).find_each do |registrar| 
-      registrars_data << { 
+    Registrar.where.not(test_registrar: true).find_each do |registrar|
+      registrars_data << {
         registrar: registrar,
-        registrar_summery: registrar.monthly_summary(month: @month)
+        registrar_summery: registrar.monthly_summary(month: @month),
       }
     end
 

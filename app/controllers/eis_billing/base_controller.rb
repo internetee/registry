@@ -18,13 +18,13 @@ module EisBilling
     end
 
     def decoded_token
-      if auth_header
-        token = auth_header.split(' ')[1]
-        begin
-          JWT.decode(token, billing_secret_key, true, algorithm: 'HS256')
-        rescue JWT::DecodeError
-          nil
-        end
+      return unless auth_header
+
+      token = auth_header.split(' ')[1]
+      begin
+        JWT.decode(token, billing_secret_key, true, algorithm: 'HS256')
+      rescue JWT::DecodeError
+        nil
       end
     end
 

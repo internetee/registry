@@ -1,4 +1,4 @@
-BASE_URL = ENV['eis_billing_system_base_url']
+BASE_URL = ENV['eis_billing_system_base_url'] || 'https://st-billing.infra.tld.ee'
 INITIATOR = 'registry'.freeze
 
 namespace :eis_billing do
@@ -9,7 +9,7 @@ namespace :eis_billing do
       parsed_data << {
         invoice_number: invoice.number,
         initiator: 'registry',
-        transaction_amount: invoice.total
+        transaction_amount: invoice.total,
       }
     end
 
@@ -22,7 +22,7 @@ namespace :eis_billing do
     Registrar.all.each do |registrar|
       parsed_data << {
         reference_number: registrar.reference_no,
-        initiator: 'registry'
+        initiator: 'registry',
       }
     end
 

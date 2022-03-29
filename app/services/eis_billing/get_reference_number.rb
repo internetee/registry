@@ -8,7 +8,7 @@ module EisBilling
 
     def self.obj_data
       {
-        initiator: INITIATOR
+        initiator: INITIATOR,
       }
     end
 

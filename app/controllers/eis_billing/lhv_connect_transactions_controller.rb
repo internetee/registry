@@ -1,11 +1,11 @@
 module EisBilling
   class LhvConnectTransactionsController < EisBilling::BaseController
     def create
-      params["_json"].each do |incoming_transaction|
+      params['_json'].each do |incoming_transaction|
         process_transactions(incoming_transaction)
       end
 
-      render status: 200, json: { message: 'RECEIVED', status: :ok, params: params }
+      render status: :ok, json: { message: 'RECEIVED', params: params }
     end
 
     private
@@ -15,16 +15,16 @@ module EisBilling
       logger.info incoming_transaction
 
       bank_statement = BankStatement.new(bank_code: Setting.registry_bank_code,
-                                          iban: Setting.registry_iban)
+                                         iban: Setting.registry_iban)
 
       ActiveRecord::Base.transaction do
         bank_statement.save!
 
-        transaction_attributes = { sum: incoming_transaction["amount"],
-                                    currency: incoming_transaction["currency"],
-                                    paid_at: incoming_transaction["date"],
-                                    reference_no: incoming_transaction["payment_reference_number"],
-                                    description: incoming_transaction["payment_description"] }
+        transaction_attributes = { sum: incoming_transaction['amount'],
+                                   currency: incoming_transaction['currency'],
+                                   paid_at: incoming_transaction['date'],
+                                   reference_no: incoming_transaction['payment_reference_number'],
+                                   description: incoming_transaction['payment_description'] }
         transaction = bank_statement.bank_transactions.create!(transaction_attributes)
 
         next if transaction.registrar.blank?

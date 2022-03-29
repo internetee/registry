@@ -9,7 +9,7 @@ module EisBilling
         invoice_data: object_data,
         monthly: monthly,
         dry: dry,
-        initiator: INITIATOR
+        initiator: INITIATOR,
       }
 
       http = EisBilling::Base.base_request(url: directo_url)

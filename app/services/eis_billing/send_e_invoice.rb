@@ -15,7 +15,7 @@ module EisBilling
         seller_country_code: invoice.seller_country_code,
         buyer_country_code: invoice.buyer_country_code,
         payable: payable,
-        initiator: EisBilling::Base::INITIATOR
+        initiator: EisBilling::Base::INITIATOR,
       }
 
       invoice.items.each do |invoice_item|
@@ -27,7 +27,7 @@ module EisBilling
           subtotal: invoice_item.subtotal,
           vat_rate: invoice_item.vat_rate,
           vat_amount: invoice_item.vat_amount,
-          total: invoice_item.total
+          total: invoice_item.total,
         }
       end
 

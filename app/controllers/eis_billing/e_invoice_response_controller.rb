@@ -3,7 +3,7 @@ class EisBilling::EInvoiceResponseController < EisBilling::BaseController
     invoice_number = params[:invoice_number]
 
     set_e_invoice_sent_at(invoice_number)
-    render status: 200, json: { messege: 'Response received', status: :ok }
+    render status: :ok, json: { messege: 'Response received' }
   end
 
   private
