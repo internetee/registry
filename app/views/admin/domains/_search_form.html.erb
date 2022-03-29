@@ -9,19 +9,19 @@
   <div class="col-md-2">
     <div class="form-group">
       <%= f.label :registrant_ident, for: nil %>
-      <%= f.search_field :registrant_ident_eq, class: 'form-control', placeholder: t(:registrant_ident) %>
+      <%= f.search_field :registrant_ident_matches, value: params[:q][:registrant_ident_matches], class: 'form-control', placeholder: t(:registrant_ident) %>
     </div>
   </div>
   <div class="col-md-3">
     <div class="form-group">
       <%= f.label :contact_ident, for: nil %>
-      <%= f.search_field :contacts_ident_eq, class: 'form-control', placeholder: t(:contact_ident) %>
+      <%= f.search_field :contacts_ident_matches, value: params[:q][:contacts_ident_matches], class: 'form-control', placeholder: t(:contact_ident) %>
     </div>
   </div>
   <div class="col-md-4">
     <div class="form-group">
       <%= f.label :nameserver_hostname, for: nil %>
-      <%= f.search_field :nameservers_hostname_eq, class: 'form-control', placeholder: t(:nameserver_hostname) %>
+      <%= f.search_field :nameservers_hostname_matches, value: params[:q][:nameservers_hostname_matches], class: 'form-control', placeholder: t(:nameserver_hostname) %>
     </div>
   </div>
 </div>
