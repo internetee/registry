@@ -19,21 +19,27 @@ module EisBilling
 
       ActiveRecord::Base.transaction do
         bank_statement.save!
-
-        transaction_attributes = { sum: incoming_transaction['amount'],
-                                   currency: incoming_transaction['currency'],
-                                   paid_at: incoming_transaction['date'],
-                                   reference_no: incoming_transaction['payment_reference_number'],
-                                   description: incoming_transaction['payment_description'] }
-        transaction = bank_statement.bank_transactions.create!(transaction_attributes)
+        transaction = create_transaction(incoming_transaction: incoming_transaction, bank_statement: bank_statement)
 
         next if transaction.registrar.blank?
 
-        unless transaction.non_canceled?
-          Invoice.create_from_transaction!(transaction) unless transaction.autobindable?
-          transaction.autobind_invoice
-        end
+        create_invoice_if_missing(transaction) unless transaction.non_canceled?
       end
+    end
+
+    def create_invoice_if_missing(transaction)
+      Invoice.create_from_transaction!(transaction) unless transaction.autobindable?
+      transaction.autobind_invoice
+    end
+
+    def create_transaction(incoming_transaction:, bank_statement:)
+      transaction_attributes = { sum: incoming_transaction['amount'],
+                                 currency: incoming_transaction['currency'],
+                                 paid_at: incoming_transaction['date'],
+                                 reference_no: incoming_transaction['payment_reference_number'],
+                                 description: incoming_transaction['payment_description'] }
+
+      bank_statement.bank_transactions.create!(transaction_attributes)
     end
   end
 end

@@ -18,8 +18,8 @@ module EisBilling
       data[:order_reference] = invoice.number
       data[:customer_name] = invoice.buyer_name
       data[:customer_email] = invoice.buyer_email
-      data[:custom_field_1] = invoice.description
-      data[:custom_field_2] = INITIATOR
+      data[:custom_field1] = invoice.description
+      data[:custom_field2] = INITIATOR
       data[:invoice_number] = invoice.number
 
       data

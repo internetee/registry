@@ -5,7 +5,7 @@ class EisBilling::DirectoResponseController < EisBilling::BaseController
     @month = params.fetch(:month, false)
 
     process_directo_response(xml_data, response)
-    render status: 200, json: { messege: 'Should return new directo number', status: :ok }
+    render status: :ok, json: { messege: 'Should return new directo number' }
   end
 
   private

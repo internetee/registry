@@ -3,17 +3,10 @@ module EisBilling
     TYPE = 'PaymentOrders::EveryPay'.freeze
 
     def update
-      invoice_number = params[:order_reference]
-      paid_at = params[:transaction_time]
-      sum = params[:standing_amount]
-      everypay_response = params
-
       payment_status = define_payment_status(params[:payment_state])
-
-      invoice = Invoice.find_by(number: invoice_number)
-
-      bank = create_bank_transfer(invoice: invoice, sum: sum, paid_at: paid_at)
-      create_payment_order(invoice: invoice, everypay_response: everypay_response, payment_status: payment_status)
+      invoice = Invoice.find_by(number: params[:order_reference])
+      bank = create_bank_transfer(invoice: invoice, sum: params[:standing_amount], paid_at: params[:transaction_time])
+      create_payment_order(invoice: invoice, everypay_response: params, payment_status: payment_status)
 
       registrar = invoice.buyer
       bank.create_activity(registrar, invoice)
@@ -37,9 +30,6 @@ module EisBilling
       payment.status = payment_status
       payment.save
 
-      logger.info '++++ PAYMENT ORDER ERRORS ? ++++'
-      logger.info payment.errors
-
       payment
     end
 
@@ -53,9 +43,6 @@ module EisBilling
       bank.paid_at = paid_at
       bank.buyer_name = invoice.buyer_name
       bank.save
-
-      logger.info '++++ BANK TRANSACTION ERRORS ? ++++'
-      logger.info bank.errors
 
       bank
     end
