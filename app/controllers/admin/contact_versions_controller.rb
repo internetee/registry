@@ -7,23 +7,9 @@ module Admin
     def index
       params[:q] ||= {}
 
-      search_params = params[:q].deep_dup.except(:created_at_gteq, :created_at_lteq)
-
-      where_s = '1=1'
-
-      search_params.each do |key, value|
-        next if value.empty?
-
-        where_s += case key
-                   when 'event'
-                     " AND event = '#{value}'"
-                   else
-                     create_where_string(key, value)
-                   end
-      end
-
-      versions = Version::ContactVersion.includes(:item).where(where_s).order(created_at: :desc, id: :desc)
-      @q = versions.ransack(params[:q])
+      search_params = PartialSearchFormatter.format(params[:q])
+      versions = Version::ContactVersion.includes(:item).order(created_at: :desc, id: :desc)
+      @q = versions.ransack(polymorphic_association(search_params))
 
       @versions = @q.result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
@@ -53,8 +39,14 @@ module Admin
       render json: Version::ContactVersion.search_by_query(params[:q])
     end
 
-    def create_where_string(key, value)
-      " AND object->>'#{key}' ~* '#{value}'"
+    private
+
+    def polymorphic_association(search_params)
+      record_type = {}
+      fields = %w[name code ident]
+      fields.each { |field| record_type[:"item_of_Contact_type_#{field}_matches"] = search_params[:"#{field}_matches"] }
+
+      record_type
     end
   end
 end
