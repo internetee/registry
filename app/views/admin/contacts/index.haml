@@ -11,11 +11,11 @@
         .col-md-3
           .form-group
             = f.label t(:id)
-            = f.search_field :code_matches, class: 'form-control', placeholder: t(:id)
+            = f.search_field :code_matches, value: params[:q][:code_matches], class: 'form-control', placeholder: t(:id)
         .col-md-3
           .form-group
             = f.label t(:ident)
-            = f.search_field :ident_matches, class: 'form-control', placeholder: t(:ident)
+            = f.search_field :ident_matches, value: params[:q][:ident_matches], class: 'form-control', placeholder: t(:ident)
         .col-md-3
           .form-group
             = label_tag t(:ident_type)
@@ -24,7 +24,7 @@
         .col-md-3
           .form-group
             = f.label t(:email)
-            = f.search_field :email_matches, class: 'form-control', placeholder: t(:email)
+            = f.search_field :email_matches, value: params[:q][:email_matches], class: 'form-control', placeholder: t(:email)
         .col-md-3
           .form-group
             = label_tag t(:country)
