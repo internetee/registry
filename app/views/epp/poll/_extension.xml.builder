@@ -8,9 +8,10 @@ builder.extension do
       builder.tag!('changePoll:date', obj.created_at.utc.xmlschema)
       builder.tag!('changePoll:svTRID', obj.id)
       builder.tag!('changePoll:who', obj.user)
-      if obj.bulk_action?
-        builder.tag!('changePoll:reason', 'Auto-update according to official data')
-      end
+      builder.tag!(
+        'changePoll:reason',
+        'Auto-update according to official data'
+      ) if obj.bulk_action?
     when 'state'
       builder.tag!('changePoll:operation', obj)
     end

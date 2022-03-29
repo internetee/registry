@@ -30,7 +30,7 @@ class RegistrantUser < User
     counter = 0
 
     counter += Contact.with_different_registrant_name(self).size
-    
+
     companies.each do |company|
       counter += Contact.with_different_company_name(company).size
     end
@@ -43,32 +43,20 @@ class RegistrantUser < User
   def update_contacts
     user = self
     contacts = []
-    contacts.concat Contact.with_different_registrant_name(user)
-                           .each{ |c| c.write_attribute(:name, user.username) }
+    contacts.concat(Contact.with_different_registrant_name(user).each do |c|
+      c.write_attribute(:name, user.username)
+    end)
     companies.each do |company|
-      contacts.concat Contact.with_different_company_name(company)
-                             .each{ |c| c.write_attribute(:name, company.company_name) }
+      contacts.concat(Contact.with_different_company_name(company).each do |c| 
+        c.write_attribute(:name, company.company_name)
+      end)
     end
-    
+
     return [] if contacts.blank?
 
-    grouped_contacts = contacts.group_by(&:registrar_id)
-    grouped_contacts.each do |registrar_id, contacts|
-      bulk_action, action = actions.create!(operation: :bulk_update) if contacts.size > 1
-      contacts.each do |c|
-        if c.save(validate: false)
-          action = actions.create!(contact: c, operation: :update, bulk_action_id: bulk_action&.id)
-        end
-      end
-      notify_registrar_contacts_updated(action: bulk_action || action, 
-                                        registrar_id: registrar_id)
-    end
-    contacts
-  end
+    group_and_bulk_update(contacts)
 
-  def notify_registrar_contacts_updated(action:, registrar_id:)
-    registrar = Registrar.find(registrar_id)
-    registrar.notify(action) if registrar
+    contacts
   end
 
   def contacts(representable: true)
@@ -145,5 +133,26 @@ class RegistrantUser < User
       user.save
       user
     end
+  end
+
+  private
+
+  def group_and_bulk_update(contacts)
+    grouped_contacts = contacts.group_by(&:registrar_id)
+    grouped_contacts.each do |registrar_id, reg_contacts|
+      bulk_action, action = actions.create!(operation: :bulk_update) if reg_contacts.size > 1
+      reg_contacts.each do |c|
+        if c.save(validate: false)
+          action = actions.create!(contact: c, operation: :update, bulk_action_id: bulk_action&.id)
+        end
+      end
+      notify_registrar_contacts_updated(action: bulk_action || action,
+                                        registrar_id: registrar_id)
+    end
+  end
+
+  def notify_registrar_contacts_updated(action:, registrar_id:)
+    registrar = Registrar.find(registrar_id)
+    registrar&.notify(action)
   end
 end
