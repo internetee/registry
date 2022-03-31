@@ -449,7 +449,7 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
-    sidekiq (6.4.0)
+    sidekiq (6.4.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
@@ -588,7 +588,7 @@ DEPENDENCIES
   sass-rails
   select2-rails (= 4.0.13)
   selectize-rails (= 0.12.6)
-  sidekiq
+  sidekiq (>= 6.4.1)
   simplecov (= 0.17.1)
   simpleidn (= 0.2.1)
   spy
@@ -601,4 +601,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.5.1)
 
 BUNDLED WITH
-   2.2.31
+   2.3.9
