@@ -1,3 +1,6 @@
+31.03.2022
+* Sidekiq update to 6.4.1 [#2322](https://github.com/internetee/registry/pull/2322)
+
 25.03.2022
 * Bulk change of business contacts' names requires now user confirmation [#2309](https://github.com/internetee/registry/pull/2309)
 
