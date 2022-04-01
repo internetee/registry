@@ -1,11 +1,22 @@
 class Version::DomainVersion < PaperTrail::Version
-  extend ToCsv
   include VersionSession
 
   self.table_name    = :log_domains
   self.sequence_name = :log_domains_id_seq
 
   scope :deleted, -> { where(event: 'destroy') }
+
+  def as_csv_row
+    domain = ObjectVersionsParser.new(self).parse
+
+    [
+      domain.name,
+      domain.registrant_name,
+      domain.registrar,
+      event,
+      created_at.to_formatted_s(:db)
+    ]
+  end
 
   def self.was_contact_linked?(contact_id)
     sql = <<-SQL
@@ -42,5 +53,9 @@ class Version::DomainVersion < PaperTrail::Version
     SQL
 
     count_by_sql(sql).nonzero?
+  end
+
+  def self.csv_header
+    ['Name', 'Registrant', 'Registrar', 'Action', 'Created at']
   end
 end

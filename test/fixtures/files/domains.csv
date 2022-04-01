@@ -1,0 +1,7 @@
+Domain,Registrant,Valid to,Registrar,Created at,Statuses,Contacts code,Force delete date,Force delete data
+shop.test,John,2010-07-04 21:00:00,Best Names,2010-07-05 07:30:00,"[""ok""]","[""william-001"", ""jane-001"", ""acme-ltd-001""]",2010-07-08,
+airport.test,John,2010-07-05 00:00:00,Best Names,2010-07-05 07:30:00,"[""ok""]","[""john-001"", ""william-001"", ""william-001""]",,
+library.test,Acme Ltd,2010-07-05 00:00:00,Best Names,2010-07-05 07:30:00,"[""inactive""]","[""john-001"", ""acme-ltd-001""]",,
+metro.test,Jack,2010-07-05 00:00:00,Good Names,2010-07-05 07:30:00,[],"[""jack-001"", ""jack-001""]",,
+hospital.test,John,2010-07-05 00:00:00,Good Names,2010-07-05 07:30:00,"[""inactive""]","[""john-001"", ""john-001""]",,
+invalid.test,any,2010-07-04 21:00:00,Best Names,2010-07-05 07:30:00,"[""inactive""]","[""invalid"", ""invalid""]",,
