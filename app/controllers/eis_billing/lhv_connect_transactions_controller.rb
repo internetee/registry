@@ -16,7 +16,10 @@ module EisBilling
 
       bank_statement = BankStatement.new(bank_code: Setting.registry_bank_code,
                                          iban: Setting.registry_iban)
+      bank_statement_transaction(bank_statement: bank_statement, incoming_transaction: incoming_transaction)
+    end
 
+    def bank_statement_transaction(bank_statement:, incoming_transaction:)
       ActiveRecord::Base.transaction do
         bank_statement.save!
         transaction = create_transaction(incoming_transaction: incoming_transaction, bank_statement: bank_statement)

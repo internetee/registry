@@ -4,8 +4,6 @@ module EisBilling
       send_request
     end
 
-    private
-
     def self.send_request
       http = EisBilling::Base.base_request(url: invoice_number_generator_url)
       http.post(invoice_number_generator_url, nil, EisBilling::Base.headers)

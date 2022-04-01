@@ -1,10 +1,8 @@
 module EisBilling
   class GetReferenceNumber < EisBilling::Base
     def self.send_request
-      send_request
+      send_it
     end
-
-    private
 
     def self.obj_data
       {
@@ -12,7 +10,7 @@ module EisBilling
       }
     end
 
-    def self.send_request
+    def self.send_it
       http = EisBilling::Base.base_request(url: reference_number_generator_url)
       http.post(reference_number_generator_url, obj_data.to_json, EisBilling::Base.headers)
     end

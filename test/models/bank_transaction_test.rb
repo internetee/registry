@@ -18,7 +18,7 @@ class BankTransactionTest < ActiveSupport::TestCase
   def test_binds_if_this_sum_invoice_already_present
     if Feature.billing_system_integrated?
       invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
         to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
       create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
       another_invoice = @invoice.dup
@@ -47,7 +47,7 @@ class BankTransactionTest < ActiveSupport::TestCase
   def test_binds_if_this_sum_cancelled_invoice_already_present
     if Feature.billing_system_integrated?
       invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
         to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
       create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
       another_invoice = @invoice.dup
@@ -73,7 +73,7 @@ class BankTransactionTest < ActiveSupport::TestCase
   def test_marks_the_first_one_as_paid_if_same_sum
     if Feature.billing_system_integrated?
       invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
         to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
       create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
       another_invoice = @invoice.dup

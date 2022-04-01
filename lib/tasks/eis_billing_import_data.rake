@@ -60,8 +60,8 @@ end
 
 def headers
   {
-  'Authorization' => "Bearer #{generate_token}",
-  'Content-Type' => 'application/json',
+    'Authorization' => "Bearer #{generate_token}",
+    'Content-Type' => 'application/json',
   }
 end
 

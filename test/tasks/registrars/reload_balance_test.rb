@@ -22,17 +22,17 @@ class ReloadBalanceTaskTest < ActiveSupport::TestCase
 
   def test_issues_invoice_when_auto_reload_is_enabled_and_threshold_reached
     if Feature.billing_system_integrated?
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
         to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
 
       invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
         to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
 
-      stub_request(:put, "http://registry:3000/eis_billing/e_invoice_response").
+      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
       to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
 
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
       to_return(status: 200, body: "", headers: {})
 
       reload_amount = 100
@@ -67,17 +67,17 @@ class ReloadBalanceTaskTest < ActiveSupport::TestCase
 
   def test_marks_registrar_as_pending_balance_reload
     if Feature.billing_system_integrated?
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
         to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
 
       invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
         to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
         
-      stub_request(:put, "http://registry:3000/eis_billing/e_invoice_response").
+      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
         to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
   
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
         to_return(status: 200, body: "", headers: {})
 
       registrar = registrar_with_auto_reload_enabled_and_threshold_reached
@@ -91,17 +91,17 @@ class ReloadBalanceTaskTest < ActiveSupport::TestCase
 
   def test_output
     if Feature.billing_system_integrated?
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
         to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
 
       invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
         to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
 
-      stub_request(:put, "http://registry:3000/eis_billing/e_invoice_response").
+      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
         to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
 
-      stub_request(:post, "http://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
         to_return(status: 200, body: "", headers: {})
 
       reload_amount = 100
