@@ -125,7 +125,7 @@ class Invoice < ApplicationRecord
       issue_date,
       total,
       currency,
-      seller_name
+      seller_name,
     ]
   end
 

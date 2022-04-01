@@ -748,7 +748,7 @@ class Domain < ApplicationRecord
       statuses,
       contacts.pluck(:code),
       force_delete_date,
-      force_delete_data
+      force_delete_data,
     ]
   end
 
@@ -764,7 +764,10 @@ class Domain < ApplicationRecord
   end
 
   def self.csv_header
-    ['Domain', 'Registrant', 'Valid to', 'Registrar', 'Created at', 'Statuses', 'Contacts code', 'Force delete date', 'Force delete data']
+    [
+      'Domain', 'Registrant', 'Valid to', 'Registrar', 'Created at',
+      'Statuses', 'Contacts code', 'Force delete date', 'Force delete data',
+    ]
   end
 
   def self.pdf(html)
