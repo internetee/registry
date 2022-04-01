@@ -1,5 +1,3 @@
 module ApiLog
-  class ReppLog < Db
-    extend ToCsv
-  end
+  class ReppLog < Db; end
 end

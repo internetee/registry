@@ -3,7 +3,6 @@ class Invoice < ApplicationRecord
   include Invoice::Cancellable
   include Invoice::Payable
   include Invoice::BookKeeping
-  extend ToCsv
 
   belongs_to :buyer, class_name: 'Registrar'
   has_one  :account_activity
@@ -126,7 +125,7 @@ class Invoice < ApplicationRecord
       issue_date,
       total,
       currency,
-      seller_name
+      seller_name,
     ]
   end
 
