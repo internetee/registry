@@ -766,7 +766,7 @@ class Domain < ApplicationRecord
   def self.csv_header
     [
       'Domain', 'Registrant', 'Valid to', 'Registrar', 'Created at',
-      'Statuses', 'Contacts code', 'Force delete date', 'Force delete data',
+      'Statuses', 'Contacts code', 'Force delete date', 'Force delete data'
     ]
   end
 
