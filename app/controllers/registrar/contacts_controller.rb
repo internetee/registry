@@ -40,7 +40,7 @@ class Registrar
           @contacts = @contacts.per(contacts_per_page) if contacts_per_page.positive?
         end
         format.csv do
-          raw_csv = contacts.to_csv
+          raw_csv = CsvGenerator.generate_csv(contacts)
           send_data raw_csv, filename: 'contacts.csv', type: "#{Mime[:csv]}; charset=utf-8"
         end
         format.pdf do

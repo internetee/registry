@@ -1,5 +1,4 @@
 class Account < ApplicationRecord
-  extend ToCsv
   include Versions
 
   belongs_to :registrar, required: true

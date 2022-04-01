@@ -1,15 +1,34 @@
 class CsvGenerator
-  def self.generate_csv(objects)
-    class_name = objects.first.class
-    return objects.to_csv unless custom_csv?(class_name)
+  class << self
+    def generate_csv(objects)
+      @class_name = objects.first.class
+      return default_generation(objects) unless custom_csv?
 
-    CSV.generate do |csv|
-      csv << class_name.csv_header
-      objects.each { |object| csv << object.as_csv_row }
+      CSV.generate do |csv|
+        csv << @class_name.csv_header
+        objects.each { |object| csv << object.as_csv_row }
+      end
     end
-  end
 
-  def self.custom_csv?(class_name)
-    [Version::DomainVersion, Version::ContactVersion, Domain, Contact, Invoice, Account, AccountActivity].include?(class_name)
+    private
+
+    def default_generation(objects)
+      CSV.generate do |csv|
+        csv << @class_name.column_names
+        objects.each { |object| csv << object.attributes.values_at(*@class_name.column_names) }
+      end
+    end
+
+    def custom_csv?
+      [
+        Version::DomainVersion,
+        Version::ContactVersion,
+        Domain,
+        Contact,
+        Invoice,
+        Account,
+        AccountActivity
+      ].include?(@class_name)
+    end
   end
 end

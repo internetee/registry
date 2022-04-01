@@ -35,7 +35,7 @@ module Admin
       respond_to do |format|
         format.html
         format.csv do
-          send_data @q.result.to_csv, filename: "account_activities_#{Time.zone.now.to_formatted_s(:number)}.csv"
+          send_data CsvGenerator.generate_csv(@q.result), filename: "account_activities_#{Time.zone.now.to_formatted_s(:number)}.csv"
         end
       end
 
