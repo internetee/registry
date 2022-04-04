@@ -206,7 +206,7 @@ GEM
     daemons-rails (1.2.1)
       daemons
       multi_json (~> 1.0)
-    data_migrate (7.0.2)
+    data_migrate (8.0.0)
       activerecord (>= 5.0)
       railties (>= 5.0)
     database_cleaner (2.0.1)
@@ -545,7 +545,7 @@ DEPENDENCIES
   company_register!
   countries
   daemons-rails (= 1.2.1)
-  data_migrate (~> 7.0)
+  data_migrate (~> 8.0)
   database_cleaner
   devise (~> 4.8)
   digidoc_client!

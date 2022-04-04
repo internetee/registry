@@ -40,7 +40,7 @@ gem 'select2-rails',    '4.0.13' # for autocomplete
 gem 'selectize-rails', '0.12.6' # include selectize.js for select
 
 # registry specfic
-gem 'data_migrate', '~> 7.0'
+gem 'data_migrate', '~> 8.0'
 gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
 gem 'money-rails'
