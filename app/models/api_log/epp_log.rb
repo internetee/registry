@@ -1,5 +1,3 @@
 module ApiLog
-  class EppLog < Db
-    extend ToCsv
-  end
+  class EppLog < Db; end
 end

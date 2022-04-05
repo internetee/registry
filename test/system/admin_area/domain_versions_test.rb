@@ -98,7 +98,7 @@ class DomainVersionsTest < ApplicationSystemTestCase
     assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
     assert_equal %(attachment; filename="domain_history_#{Time.zone.now.to_formatted_s(:number)}.csv"; filename*=UTF-8''domain_history_#{Time.zone.now.to_formatted_s(:number)}.csv),
                  response.headers['Content-Disposition']
-    assert_not_empty response.body
+    assert_equal file_fixture('domain_versions.csv').read, response.body
   end
 
   def test_search_event_param

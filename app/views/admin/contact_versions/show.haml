@@ -1,6 +1,5 @@
-- attributes = only_present_fields(@version, Contact)
-- contact = Contact.new(attributes)
-- attach_existing_fields(@version, contact)
+- contact = ObjectVersionsParser.new(@version).parse
+
 = render 'shared/title', name: contact.name
 
 .row

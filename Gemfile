@@ -17,7 +17,7 @@ gem 'figaro', '~> 1.2'
 
 # model related
 gem 'paper_trail', '~> 12.1'
-gem 'pg',                        '1.3.3'
+gem 'pg',                        '1.3.5'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 2.6.0'
 gem 'truemail', '~> 2.4' # validates email by regexp, mail server existence and address existence
@@ -40,7 +40,7 @@ gem 'select2-rails',    '4.0.13' # for autocomplete
 gem 'selectize-rails', '0.12.6' # include selectize.js for select
 
 # registry specfic
-gem 'data_migrate', '~> 7.0'
+gem 'data_migrate', '~> 8.0'
 gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
 gem 'money-rails'
@@ -70,7 +70,7 @@ gem 'jquery-ui-rails', '6.0.1'
 gem 'pdfkit'
 gem 'que'
 gem 'que-web'
-gem 'sidekiq'
+gem 'sidekiq', '>= 6.4.1'
 
 gem 'company_register', github: 'internetee/company_register',
                         branch: 'master'

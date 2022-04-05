@@ -64,9 +64,7 @@
         %tbody
           - @versions.each do |version|
             - if version
-              - attributes = only_present_fields(version, Contact)
-              - contact = Contact.new(attributes)
-              - attach_existing_fields(version, contact)
+              - contact = ObjectVersionsParser.new(version).parse
 
               %tr
                 %td= link_to(contact.name, admin_contact_version_path(version.id))

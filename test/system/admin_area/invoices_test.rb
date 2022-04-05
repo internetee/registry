@@ -40,4 +40,14 @@ class AdminAreaInvoicesTest < ApplicationSystemTestCase
     assert_current_path admin_invoice_path(@invoice)
     assert_text 'Invoice has been sent'
   end
+
+  def test_download_invoices_list_as_csv
+    travel_to Time.zone.parse('2010-07-05 10:30')
+
+    visit admin_invoices_url
+    click_link('CSV')
+
+    assert_equal "attachment; filename=\"invoices_#{Time.zone.now.to_formatted_s(:number)}.csv\"; filename*=UTF-8''invoices_#{Time.zone.now.to_formatted_s(:number)}.csv", response_headers['Content-Disposition']
+    assert_equal file_fixture('invoices.csv').read, page.body
+  end
 end

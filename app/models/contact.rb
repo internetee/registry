@@ -188,15 +188,6 @@ class Contact < ApplicationRecord
       ]
     end
 
-    def to_csv
-      CSV.generate do |csv|
-        csv << column_names
-        all.each do |contact|
-        csv << contact.attributes.values_at(*column_names)
-        end
-      end
-    end
-
     def pdf(html)
       kit = PDFKit.new(html)
       kit.to_pdf
@@ -568,5 +559,28 @@ class Contact < ApplicationRecord
 
   def deletable?
     !linked?
+  end
+
+  def ident_human_description
+    description = "[#{ident_country_code} #{ident_type}]"
+    description.prepend("#{ident} ") if ident.present?
+
+    description
+  end
+
+  def as_csv_row
+    [
+      name,
+      code,
+      ident_human_description,
+      email,
+      created_at.to_formatted_s(:db),
+      registrar,
+      phone,
+    ]
+  end
+
+  def self.csv_header
+    ['Name', 'ID', 'Ident', 'E-mail', 'Created at', 'Registrar', 'Phone']
   end
 end

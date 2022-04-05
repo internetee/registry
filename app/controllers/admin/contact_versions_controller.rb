@@ -1,13 +1,13 @@
 module Admin
   class ContactVersionsController < BaseController
-    include ObjectVersionsHelper
+    include ApplicationHelper
 
     load_and_authorize_resource class: Version::ContactVersion
 
     def index
       params[:q] ||= {}
 
-      search_params = PartialSearchFormatter.format(params[:q])
+      search_params = PartialSearchFormatter.format(fix_date_params)
       versions = Version::ContactVersion.includes(:item).order(created_at: :desc, id: :desc)
       @q = versions.ransack(polymorphic_association(search_params))
 
@@ -47,6 +47,15 @@ module Admin
       fields.each { |field| record_type[:"item_of_Contact_type_#{field}_matches"] = search_params[:"#{field}_matches"] }
 
       record_type
+    end
+
+    def fix_date_params
+      params_copy = params[:q].deep_dup
+      if params_copy['created_at_lteq'].present?
+        params_copy['created_at_lteq'] = Date.parse(params_copy['created_at_lteq']) + 1.day
+      end
+
+      params_copy
     end
   end
 end
