@@ -34,6 +34,17 @@ module Api
           end
         end
 
+        def do_need_update_contact
+          result = current_registrant_user.do_need_update_contact?
+          render json: { update_contacts: result[:result], counter: result[:counter] }
+        end
+
+        def update_company_contacts
+          companies = current_registrant_user.update_company_contacts
+
+          render json: { message: 'get it', companies: companies }
+        end
+
         def update
           logger.debug 'Received update request'
           logger.debug params

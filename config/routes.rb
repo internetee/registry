@@ -128,7 +128,10 @@ Rails.application.routes.draw do
         resources :domains, only: %i[index show], param: :uuid do
           resource :registry_lock, only: %i[create destroy]
         end
-        resources :contacts, only: %i[index show update], param: :uuid
+        resources :contacts, only: %i[index show update], param: :uuid do
+          get 'do_need_update_contact', to: 'contacts#do_need_update_contact', as: :do_need_update_contact
+          post 'update_company_contacts', to: 'contacts#update_company_contacts', as: :update_company_contacts
+        end
         resources :companies, only: %i[index]
       end
 
