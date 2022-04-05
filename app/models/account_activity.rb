@@ -11,6 +11,7 @@ class AccountActivity < ApplicationRecord
   UPDATE_CREDIT = 'update_credit'.freeze
 
   after_create :update_balance
+
   def update_balance
     account.balance += sum
     account.save
@@ -19,23 +20,17 @@ class AccountActivity < ApplicationRecord
     save
   end
 
+  def as_csv_row
+    [account.registrar.try(:code), description, I18n.t(activity_type), I18n.l(created_at), sum]
+  end
+
   class << self
     def types_for_select
       [CREATE, RENEW, ADD_CREDIT, UPDATE_CREDIT].map { |x| [I18n.t(x), x] }
     end
 
-    def to_csv
-      attributes = %w(description activity_type created_at sum)
-
-      CSV.generate(headers: true) do |csv|
-        csv << %w(registrar description activity_type receipt_date sum)
-
-        all.each do |x|
-          attrs  = [x.account.registrar.try(:code)]
-          attrs += attributes.map { |attr| x.send(attr) }
-          csv << attrs
-        end
-      end
+    def csv_header
+      ['Registrar', 'Description', 'Activity Type', 'Receipt Date', 'Sum']
     end
   end
 end

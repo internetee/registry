@@ -10,27 +10,11 @@ module ApplicationHelper
   end
 
   def ident_for(contact)
-    if contact.is_a? Hash
-      ident_country_code = contact[:ident_country_code]
-      ident_type = contact[:ident_type]
-      ident = contact[:ident]
-    else
-      ident_country_code = contact.ident_country_code
-      ident_type = contact.ident_type
-      ident = contact.ident
-    end
+    ident = contact.ident
+    description = "[#{contact.ident_country_code} #{contact.ident_type}]"
+    description.prepend("#{ident} ") if ident.present?
 
-    case ident_type
-    when 'birthday'
-      "#{ident} [#{ident_country_code} #{ident_type}]"
-      else
-        if ident.present?
-          "#{ident} [#{ident_country_code} #{ident_type}]"
-        else
-          "[#{ident_country_code} #{ident_type}]"
-        end
-
-    end
+    description
   end
 
   def current_commit_link
