@@ -1,4 +1,5 @@
 05.04.2022
+* Automatic contact name update poll messages are now grouped together into one change poll message [#2307](https://github.com/internetee/registry/issues/2307)
 * Status notes are now added to status elements of epp xml [#2211](https://github.com/internetee/registry/issues/2211)
 * Admin: Wildcard search improvements [#499](https://github.com/internetee/registry/issues/499)
 * Admin: CSV download fix for history view [#2275](https://github.com/internetee/registry/issues/2275)
