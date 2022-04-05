@@ -57,16 +57,5 @@ module Admin
 
       params_copy
     end
-
-    private
-
-    def fix_date_params
-      params_copy = params[:q].deep_dup
-      if params_copy['created_at_lteq'].present?
-        params_copy['created_at_lteq'] = Date.parse(params_copy['created_at_lteq']) + 1.day
-      end
-
-      params_copy
-    end
   end
 end
