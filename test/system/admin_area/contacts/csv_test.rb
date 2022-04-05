@@ -1,14 +1,17 @@
 require 'application_system_test_case'
 
 class ContactsCsvTest < ApplicationSystemTestCase
-  setup { sign_in users(:admin) }
+  setup do
+    sign_in users(:admin)
+    Domain.destroy_all
+    Contact.all.each { |contact| contact.destroy unless contact.name == 'Acme Ltd' }
+  end
 
   def test_download_contacts_list_as_csv
     travel_to Time.zone.parse('2010-07-05 10:30')
-    Contact.all.each do |contact|
-      contact.created_at = Time.zone.now
-      contact.save(:validate => false)
-    end
+    contact = Contact.first
+    contact.created_at = Time.zone.now
+    contact.save(validate: false)
 
     visit admin_contacts_url
     click_link('CSV')

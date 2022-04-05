@@ -1,14 +1,16 @@
 require 'application_system_test_case'
 
 class DomainsCsvTest < ApplicationSystemTestCase
-  setup { sign_in users(:admin) }
+  setup do
+    sign_in users(:admin)
+    Domain.all.each { |domain| domain.destroy unless domain.name == 'metro.test' }
+  end
 
   def test_download_domains_list_as_csv
     travel_to Time.zone.parse('2010-07-05 10:30')
-    Domain.all.each do |domain|
-      domain.created_at = Time.zone.now
-      domain.save(:validate => false)
-    end
+    domain = Domain.first
+    domain.created_at = Time.zone.now
+    domain.save(validate: false)
 
     visit admin_domains_url
     click_link('CSV')
