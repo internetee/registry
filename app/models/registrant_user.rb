@@ -26,13 +26,13 @@ class RegistrantUser < User
     []
   end
 
-  def do_need_update_contact?
-    return { result: false, counter: 0 } if companies.blank?
-
+  def do_need_update_contacts?
     counter = 0
+
+    counter += Contact.with_different_registrant_name(self).size
+
     companies.each do |company|
-      counter += Contact.where(ident: company.registration_number, ident_country_code: 'EE')&.
-                  reject { |contact| contact.name == company.company_name }.size
+      counter += Contact.with_different_company_name(company).size
     end
 
     return { result: true, counter: counter } if counter.positive?
@@ -40,40 +40,25 @@ class RegistrantUser < User
     { result: false, counter: 0 }
   end
 
-  def update_company_contacts
-    return [] if companies.blank?
-
+  # rubocop:disable Metrics/MethodLength
+  def update_contacts
+    user = self
+    contacts = []
+    contacts.concat(Contact.with_different_registrant_name(user).each do |c|
+      c.write_attribute(:name, user.username)
+    end)
     companies.each do |company|
-      contacts = Contact.where(ident: company.registration_number, ident_country_code: 'EE')
-
-      next if contacts.blank?
-
-      contacts.each do |contact|
-        next if company.company_name == contact.name
-
-        update_company_name(contact: contact, company: company)
-      end
+      contacts.concat(Contact.with_different_company_name(company).each do |c|
+        c.write_attribute(:name, company.company_name)
+      end)
     end
 
-    companies
+    return [] if contacts.blank?
+
+    group_and_bulk_update(contacts)
+    contacts
   end
-
-  def update_company_name(contact:, company:)
-    old_contact_name = contact.name
-    contact.name = company.company_name
-
-    contact.save(validate: false)
-
-    notify_registrar_data_updated(company_name: company.company_name,
-                                  old_contact_name: old_contact_name,
-                                  contact: contact)
-  end
-
-  def notify_registrar_data_updated(company_name:, old_contact_name:, contact:)
-    contact.registrar.notifications.create!(
-      text: "Contact update: #{contact.id} name updated from #{old_contact_name} to #{company_name} by the registry"
-    )
-  end
+  # rubocop:enable Metrics/MethodLength
 
   def contacts(representable: true)
     Contact.registrant_user_contacts(self, representable: representable)
@@ -109,17 +94,6 @@ class RegistrantUser < User
 
   def last_name
     username.split.second
-  end
-
-  def update_related_contacts
-    contacts = Contact.where(ident: ident, ident_country_code: country.alpha2)
-                      .where('UPPER(name) != UPPER(?)', username)
-
-    contacts.each do |contact|
-      contact.update(name: username)
-      action = actions.create!(contact: contact, operation: :update)
-      contact.registrar.notify(action)
-    end
   end
 
   class << self
@@ -158,9 +132,27 @@ class RegistrantUser < User
       user = find_or_create_by(registrant_ident: "#{user_data[:country_code]}-#{user_data[:ident]}")
       user.username = "#{user_data[:first_name]} #{user_data[:last_name]}"
       user.save
-
-      user.update_related_contacts
       user
     end
+  end
+
+  private
+
+  def group_and_bulk_update(contacts)
+    contacts.group_by(&:registrar_id).each do |registrar_id, reg_contacts|
+      bulk_action, action = actions.create!(operation: :bulk_update) if reg_contacts.size > 1
+      reg_contacts.each do |c|
+        if c.save(validate: false)
+          action = actions.create!(contact: c, operation: :update, bulk_action_id: bulk_action&.id)
+        end
+      end
+      notify_registrar_contacts_updated(action: bulk_action || action,
+                                        registrar_id: registrar_id)
+    end
+  end
+
+  def notify_registrar_contacts_updated(action:, registrar_id:)
+    registrar = Registrar.find(registrar_id)
+    registrar&.notify(action)
   end
 end

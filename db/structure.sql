@@ -304,7 +304,8 @@ CREATE TABLE public.actions (
     user_id integer,
     operation character varying NOT NULL,
     created_at timestamp without time zone,
-    contact_id integer
+    contact_id integer,
+    bulk_action_id integer
 );
 
 
@@ -826,8 +827,7 @@ CREATE TABLE public.dnskeys (
     updator_str character varying,
     legacy_domain_id integer,
     updated_at timestamp without time zone,
-    validation_datetime timestamp without time zone,
-    failed_validation_reason character varying
+    validation_datetime timestamp without time zone
 );
 
 
@@ -1195,7 +1195,6 @@ CREATE TABLE public.invoices (
     buyer_vat_no character varying,
     issue_date date NOT NULL,
     e_invoice_sent_at timestamp without time zone,
-    payment_link character varying,
     CONSTRAINT invoices_due_date_is_not_before_issue_date CHECK ((due_date >= issue_date))
 );
 
@@ -5402,8 +5401,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220106123143'),
 ('20220113201642'),
 ('20220113220809'),
-('20220124105717'),
-('20220216113112'),
-('20220228093211');
+('20220316140727');
 
 

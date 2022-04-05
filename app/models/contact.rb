@@ -30,6 +30,19 @@ class Contact < ApplicationRecord
       .where('success = false and verified_at IS NOT NULL')
   }
 
+  scope :with_different_company_name, (lambda do |company|
+    where("ident = ? AND ident_country_code = 'EE' AND name != ?",
+          company.registration_number,
+          company.company_name)
+  end)
+
+  scope :with_different_registrant_name, (lambda do |user|
+    where('ident = ? AND ident_country_code = ? AND UPPER(name) != UPPER(?)',
+          user.ident,
+          user.country.alpha2,
+          user.username)
+  end)
+
   NAME_REGEXP = /([\u00A1-\u00B3\u00B5-\u00BF\u0021-\u0026\u0028-\u002C\u003A-\u0040]|
     [\u005B-\u005F\u007B-\u007E\u2040-\u206F\u20A0-\u20BF\u2100-\u218F])/x
 

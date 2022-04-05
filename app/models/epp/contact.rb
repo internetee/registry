@@ -47,7 +47,7 @@ class Epp::Contact < Contact
       codes = codes.map { |c| c.include?(':') ? c : "#{reg}:#{c}" }
 
       res = []
-      codes.map { |c| c.include?(':') ? c : "#{reg}:#{c}" }.map { |c| c.strip.upcase }.each do |x|
+      codes.map { |c| c.strip.upcase }.each do |x|
         c = find_by_epp_code(x)
         res << (c ? { code: c.code, avail: 0, reason: 'in use' } : { code: x, avail: 1 })
       end

@@ -7,42 +7,26 @@ class RegistrantUserCreationTest < ActiveSupport::TestCase
       first_name: 'JOHN',
       last_name: 'SMITH'
     }
-
-    RegistrantUser.find_or_create_by_api_data(user_data)
+    assert_difference 'RegistrantUser.count' do
+      RegistrantUser.find_or_create_by_api_data(user_data)
+    end
 
     user = User.find_by(registrant_ident: 'EE-37710100070')
     assert_equal('JOHN SMITH', user.username)
   end
 
-  def test_find_or_create_by_api_data_creates_a_user_with_original_name
+  def test_find_or_create_by_api_data_updates_a_user_with_existing_ident
     user_data = {
-      ident: '37710100070',
+      ident: '1234',
+      country_code: 'US',
       first_name: 'John',
-      last_name: 'Smith'
+      last_name: 'Smith',
     }
+    assert_no_difference 'RegistrantUser.count' do
+      RegistrantUser.find_or_create_by_api_data(user_data)
+    end
 
-    RegistrantUser.find_or_create_by_api_data(user_data)
-
-    user = User.find_by(registrant_ident: 'EE-37710100070')
+    user = User.find_by(registrant_ident: 'US-1234')
     assert_equal('John Smith', user.username)
-  end
-
-  def test_updates_related_contacts_name_if_differs_from_e_identity
-    contact = contacts(:john)
-    contact.update(ident: '39708290276', ident_country_code: 'EE')
-
-    user_data = {
-      ident: '39708290276',
-      first_name: 'John',
-      last_name: 'Doe'
-    }
-
-    RegistrantUser.find_or_create_by_api_data(user_data)
-
-    user = User.find_by(registrant_ident: 'EE-39708290276')
-    assert_equal('John Doe', user.username)
-
-    contact.reload
-    assert_equal user.username, contact.name
   end
 end

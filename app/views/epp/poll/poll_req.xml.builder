@@ -9,27 +9,35 @@ xml.epp_head do
       xml.msg @notification.text
     end
 
-    if @notification.attached_obj_type == 'DomainTransfer' && @object
-      xml.resData do
-        xml << render('epp/domains/partials/transfer', builder: xml, dt: @object)
+    if @object
+      case @notification.attached_obj_type
+      when 'DomainTransfer'
+        xml.resData do
+          xml << render('epp/domains/partials/transfer', builder: xml, dt: @object)
+        end
+      when 'BulkAction'
+        xml.resData do
+          xml << render(
+            'epp/contacts/partials/check',
+            builder: xml,
+            results: @object.to_non_available_contact_codes
+          )
+        end
       end
     end
 
-    if @notification.action&.contact || @notification.registry_lock?
+    if @notification.action || @notification.registry_lock?
       if @notification.registry_lock?
         state = @notification.text.include?('unlocked') ? 'unlock' : 'lock'
-        xml.extension do
-          xml.tag!('changePoll:changeData',
-                   'xmlns:changePoll': Xsd::Schema.filename(for_prefix: 'changePoll')) do
-            xml.tag!('changePoll:operation', state)
-          end
-        end
+        render(partial: 'epp/poll/extension',
+               locals: { builder: xml,
+                         obj: state,
+                         type: 'state' })
       else
-        render(partial: 'epp/poll/action',
-               locals: {
-                 builder: xml,
-                 action: @notification.action,
-               })
+        render(partial: 'epp/poll/extension',
+               locals: { builder: xml,
+                         obj: @notification.action,
+                         type: 'action' })
       end
     end
 
