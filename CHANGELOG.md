@@ -1,4 +1,5 @@
 05.04.2022
+* Wildcard search improvements in admin [#499](https://github.com/internetee/registry/issues/499)
 * CSV download fix for admin history view [#2275](https://github.com/internetee/registry/issues/2275)
 * CSV output fix for diman, contact, invoices and account views in admin [2303](https://github.com/internetee/registry/issues/2303)
 * Refactored CSV generation in admin [#2321](https://github.com/internetee/registry/issues/2321)
