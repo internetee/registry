@@ -1,3 +1,16 @@
+05.04.2022
+* CSV download fix for admin history view [#2275](https://github.com/internetee/registry/issues/2275)
+* CSV output fix for diman, contact, invoices and account views in admin [2303](https://github.com/internetee/registry/issues/2303)
+* Refactored CSV generation in admin [#2321](https://github.com/internetee/registry/issues/2321)
+
+04.04.2022
+* Upload-artifact update to 3.0.0 [#2301](https://github.com/internetee/registry/pull/2301)
+* data_migrate update to 8.0 [#2302](https://github.com/internetee/registry/pull/2302)
+
+01.04.2022
+* Pg update to 1.3.5 [#2328](https://github.com/internetee/registry/pull/2328)
+* Puma update to 5.6.4 [#2327](https://github.com/internetee/registry/pull/2327)
+
 31.03.2022
 * Sidekiq update to 6.4.1 [#2322](https://github.com/internetee/registry/pull/2322)
 
