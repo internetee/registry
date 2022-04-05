@@ -4,6 +4,7 @@
 * Admin: CSV output fix for diman, contact, invoices and account views [2303](https://github.com/internetee/registry/issues/2303)
 * Admin: registrar dropdown is searchable in invoice creation view [#2313](https://github.com/internetee/registry/issues/2313)
 * Admin: Refactored CSV generation [#2321](https://github.com/internetee/registry/issues/2321)
+* Removed legacy migration jobs [#2090](https://github.com/internetee/registry/issues/2090)
 
 04.04.2022
 * Upload-artifact update to 3.0.0 [#2301](https://github.com/internetee/registry/pull/2301)
