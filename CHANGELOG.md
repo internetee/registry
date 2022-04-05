@@ -1,8 +1,9 @@
 05.04.2022
-* Wildcard search improvements in admin [#499](https://github.com/internetee/registry/issues/499)
-* CSV download fix for admin history view [#2275](https://github.com/internetee/registry/issues/2275)
-* CSV output fix for diman, contact, invoices and account views in admin [2303](https://github.com/internetee/registry/issues/2303)
-* Refactored CSV generation in admin [#2321](https://github.com/internetee/registry/issues/2321)
+* Admin: Wildcard search improvements [#499](https://github.com/internetee/registry/issues/499)
+* Admin: CSV download fix for history view [#2275](https://github.com/internetee/registry/issues/2275)
+* Admin: CSV output fix for diman, contact, invoices and account views [2303](https://github.com/internetee/registry/issues/2303)
+* Admin: registrar dropdown is searchable in invoice creation view [#2313](https://github.com/internetee/registry/issues/2313)
+* Admin: Refactored CSV generation [#2321](https://github.com/internetee/registry/issues/2321)
 
 04.04.2022
 * Upload-artifact update to 3.0.0 [#2301](https://github.com/internetee/registry/pull/2301)
