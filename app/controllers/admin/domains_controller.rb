@@ -17,18 +17,10 @@ module Admin
                 end
 
       normalize_search_parameters do
-        @q = domains.ransack(params[:q])
+        @q = domains.ransack(PartialSearchFormatter.format(params[:q]))
         @domains = @q.result.page(params[:page])
-        (redirect_to [:admin, @domains.first] and return if @domains.count == 1 && params[:q][:name_matches].present?)
-        if @domains.count.zero? && params[:q][:name_matches] !~ /^%.+%$/
-          # if we do not get any results, add wildcards to the name field and search again
-          n_cache = params[:q][:name_matches]
-          params[:q][:name_matches] = "%#{params[:q][:name_matches]}%"
-          @q = domains.ransack(params[:q])
-          @domains = @q.result.page(params[:page])
-          params[:q][:name_matches] = n_cache # we don't want to show wildcards in search form
-        end
       end
+
       @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 
       render_by_format('admin/domains/index', 'domains')
@@ -95,7 +87,7 @@ module Admin
     def build_associations
       @server_statuses = @domain.statuses.select { |x| DomainStatus::SERVER_STATUSES.include?(x) }
       @server_statuses = [nil] if @server_statuses.empty?
-      @other_statuses = @domain.statuses.select { |x| !DomainStatus::SERVER_STATUSES.include?(x) }
+      @other_statuses = @domain.statuses.reject { |x| DomainStatus::SERVER_STATUSES.include?(x) }
     end
 
     def ignore_empty_statuses

@@ -22,12 +22,12 @@
         .col-md-3
           .form-group
             = f.label :api_user
-            = f.search_field :api_user_name_cont, class: 'form-control', placeholder: t(:api_user), autocomplete: 'off'
+            = f.search_field :api_user_name_matches, value: params[:q][:api_user_name_matches], class: 'form-control', placeholder: t(:api_user), autocomplete: 'off'
       .row
         .col-md-3
           .form-group
             = f.label :registrar
-            = f.select :api_user_registrar_cont, Registrar.all.map { |x| [x, x.name] }, { include_blank: true }, class: 'form-control', placeholder: t(:choose)
+            = f.select :api_user_registrar_matches, Registrar.all.map { |x| [x, x.name] }, { include_blank: true }, class: 'form-control', placeholder: t(:choose)
         .col-md-3
           .form-group
             = f.label t(:created_after)
