@@ -1,4 +1,5 @@
 05.04.2022
+* Status notes are now added to status elements of epp xml [#2211](https://github.com/internetee/registry/issues/2211)
 * Admin: Wildcard search improvements [#499](https://github.com/internetee/registry/issues/499)
 * Admin: CSV download fix for history view [#2275](https://github.com/internetee/registry/issues/2275)
 * Admin: CSV output fix for diman, contact, invoices and account views [2303](https://github.com/internetee/registry/issues/2303)
