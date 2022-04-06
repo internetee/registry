@@ -1,3 +1,6 @@
+06.04.2022
+* Contact email validation on domain update [#2213](https://github.com/internetee/registry/issues/2213)
+
 05.04.2022
 * Automatic contact name update poll messages are now grouped together into one change poll message [#2307](https://github.com/internetee/registry/issues/2307)
 * Status notes are now added to status elements of epp xml [#2211](https://github.com/internetee/registry/issues/2211)
