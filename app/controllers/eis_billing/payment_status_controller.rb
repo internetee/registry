@@ -11,7 +11,11 @@ module EisBilling
       registrar = invoice.buyer
       bank.create_activity(registrar, invoice)
 
-      render status: :ok
+      respond_to do |format|
+        format.json do
+          render status: :ok, content_type: 'application/json', layout: false, json: { message: 'ok' }
+        end
+      end
     end
 
     private

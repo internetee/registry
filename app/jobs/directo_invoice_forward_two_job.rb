@@ -21,6 +21,7 @@ class DirectoInvoiceForwardTwoJob < ApplicationJob
         Rails.logger.info "[DIRECTO] Invoice #{invoice.number} has been skipped"
         next
       end
+
       collected_data << invoice.as_directo_json
     end
 
