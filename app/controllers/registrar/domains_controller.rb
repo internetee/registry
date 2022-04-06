@@ -88,14 +88,16 @@ class Registrar
       @domain_params[:period] = Depp::Domain.default_period
     end
 
+    # rubocop:disable Metrics/CognitiveComplexity
     def create
       authorize! :create, Depp::Domain
       @domain_params = domain_params.to_h
       @data = @domain.create(@domain_params)
 
-      if response_ok?
+      if @data && response_ok?
         redirect_to info_registrar_domains_url(domain_name: @domain_params[:name])
       else
+        flash[:alert] = t('.email_error_message') unless @emails_check_result
         render 'new'
       end
     end
@@ -113,13 +115,15 @@ class Registrar
       @data = @domain.update(@domain_params)
       @dispute = Dispute.active.find_by(domain_name: @domain_params[:name])
 
-      if response_ok?
+      if @data && response_ok?
         redirect_to info_registrar_domains_url(domain_name: @domain_params[:name])
       else
+        flash[:alert] = t('.email_error_message') unless @emails_check_result
         params[:domain_name] = @domain_params[:name]
         render 'new'
       end
     end
+    # rubocop:enable Metrics/CognitiveComplexity
 
     def delete
       authorize! :delete, Depp::Domain
