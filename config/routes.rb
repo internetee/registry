@@ -266,6 +266,11 @@ Rails.application.routes.draw do
 
     resources :accounts
     resources :account_activities
+    resources :auctions, only: [ :index ] do
+      collection do
+        patch :update
+      end
+    end
 
     resources :bank_statements do
       resources :bank_transactions
@@ -334,6 +339,10 @@ Rails.application.routes.draw do
     resources :reserved_domains do
       member do
         get 'delete'
+      end
+
+      collection do
+        post 'release_to_auction', to: 'reserved_domains#release_to_auction', as: 'release_to_auction'
       end
     end
     resources :disputes do

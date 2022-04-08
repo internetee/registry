@@ -12,7 +12,12 @@ class Auction < ApplicationRecord
   PENDING_STATUSES = [statuses[:started],
                       statuses[:awaiting_payment],
                       statuses[:payment_received]].freeze
+
   private_constant :PENDING_STATUSES
+
+  scope :with_status, -> (status) {
+    where(status: status) if status.present?
+  }
 
   def self.pending(domain_name)
     find_by(domain: domain_name.to_s, status: PENDING_STATUSES)

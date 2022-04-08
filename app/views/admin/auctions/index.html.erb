@@ -1,0 +1,101 @@
+<div class="page-header">
+    <h1>Auctions</h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <%= search_form_for [:admin, @q], html: { style: 'margin-bottom: 0;', class: 'js-form', autocomplete: 'off' } do |f| %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <%= f.label :domain %>
+            <%= f.search_field :domain_matches, value: params[:q][:domain_matches], class: 'form-control', placeholder: t(:name) %>
+          </div>
+          <div class="form-group">
+            <%= f.label :status %>
+            <%= select_tag :statuses_contains, options_for_select(Auction.statuses.map { |x| [x[0], x[1]] }, params[:q][:status]), { include_blank:true, class: 'form-control' } %>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <%= f.label t(:created_at_from) %>
+            <%= f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control js-datepicker', placeholder: t(:created_at_from) %>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <%= f.label t(:created_at_until) %>
+            <%= f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control js-datepicker', placeholder: t(:created_at_until) %>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <%= label_tag t(:results_per_page) %>
+            <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page) %>
+          </div>
+        </div>
+        <div class="col-md-4" style="padding-top: 25px;">
+          <button class="btn btn-primary">
+            &nbsp;
+            <span class="glyphicon glyphicon-search"></span>
+            &nbsp;
+          </button>
+          <%= link_to(t('.reset_btn'), admin_auctions_path, class: 'btn btn-default') %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<hr/>
+
+    <div class="row">
+        <div class="col-md-12">
+        <div class="col-md-12 text-right" style='margin: 0 0 10px 0;'>
+            <%= link_to 'Download auction list', admin_auctions_path(format: :csv, params: params.permit!),
+                        "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => t('.download_csv_btn'),
+                        class: 'btn btn-primary' %>
+        </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-2">
+                                <%= sort_link(@q, 'domain') %>
+                            </th>
+                            <th class="col-xs-2">
+                                <%= sort_link(@q, 'status') %>
+                            </th>
+                            <th class="col-xs-2">
+                                <%= sort_link(@q, 'created_at') %>
+                            </th>
+                            <th class="col-xs-2">
+                                <%= sort_link(@q, 'registration_code') %>
+                            </th>
+                            <th class="col-xs-2">
+                                <%= sort_link(@q, 'registration_deadline') %>
+                            </th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% @auctions.each do |auction|  %>
+                        <tr>
+                            <td><%= AuctionHelper.colorize_auction(auction) %></td>
+                            <td><%= auction.status %></td>
+                            <td><%= auction.created_at %></td>
+                            <td><%= auction.registration_code %></td>
+                            <td><%= auction.registration_deadline %></td>
+                        </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

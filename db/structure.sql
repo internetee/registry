@@ -813,7 +813,8 @@ CREATE TABLE public.dnskeys (
     updator_str character varying,
     legacy_domain_id integer,
     updated_at timestamp without time zone,
-    validation_datetime timestamp without time zone
+    validation_datetime timestamp without time zone,
+    failed_validation_reason character varying
 );
 
 
@@ -1089,6 +1090,7 @@ CREATE TABLE public.invoices (
     buyer_vat_no character varying,
     issue_date date NOT NULL,
     e_invoice_sent_at timestamp without time zone,
+    payment_link character varying,
     CONSTRAINT invoices_due_date_is_not_before_issue_date CHECK ((due_date >= issue_date))
 );
 
@@ -5084,6 +5086,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220406085500'),
 ('20220413073315'),
 ('20220413084536'),
-('20220413084748');
-
-
+('20220413084748'),
+('20220124105717'),
+('20220216113112'),
+('20220228093211');
