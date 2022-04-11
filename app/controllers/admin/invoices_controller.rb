@@ -49,6 +49,8 @@ module Admin
 
     def cancel
       @invoice.cancel
+      EisBilling::SendInvoiceStatus.send_info(invoice_number: @invoice.number, status: 'cancelled')
+
       redirect_to [:admin, @invoice], notice: t('.cancelled')
     end
 

@@ -3,13 +3,27 @@ INITIATOR = 'registry'.freeze
 
 namespace :eis_billing do
   desc 'One time task to export invoice data to billing system'
-  task import_invoices: :environment do
+  task export_invoices: :environment do
     parsed_data = []
+    status = 'unpaid'
+
     Invoice.all.each do |invoice|
+      if invoice.cancelled?
+        status = 'cancelled'
+      else
+        status = invoice.paid? ? 'paid' : 'unpaid'
+      end
+
+      transaction_time = invoice.receipt_date if invoice.paid?
+
       parsed_data << {
         invoice_number: invoice.number,
         initiator: 'registry',
         transaction_amount: invoice.total,
+        status: status,
+        in_directo: invoice.in_directo,
+        e_invoice_sent_at: invoice.e_invoice_sent_at,
+        transaction_time: transaction_time
       }
     end
 
@@ -17,7 +31,7 @@ namespace :eis_billing do
   end
 
   desc 'One time task to export reference number of registrars to billing system'
-  task import_references: :environment do
+  task export_references: :environment do
     parsed_data = []
     Registrar.all.each do |registrar|
       parsed_data << {
