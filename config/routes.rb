@@ -266,11 +266,13 @@ Rails.application.routes.draw do
 
     resources :accounts
     resources :account_activities
-    resources :auctions, only: [ :index ] do
+    resources :auctions, only: [ :index, :create ] do
       collection do
-        patch :update
+        post 'upload_spreadsheet', to: 'auctions#upload_spreadsheet', as: :upload_spreadsheet
       end
     end
+    # post 'admi/upload_spreadsheet', to: 'customers#upload_spreadsheet', as: :customers_upload_spreadsheet
+
 
     resources :bank_statements do
       resources :bank_transactions

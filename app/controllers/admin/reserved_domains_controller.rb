@@ -62,7 +62,7 @@ module Admin
         domain.destroy!
       end
 
-      redirect_to admin_reserved_domains_path
+      redirect_to admin_auctions_path
     end
 
     private

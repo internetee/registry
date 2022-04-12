@@ -34,28 +34,62 @@
             <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page) %>
           </div>
         </div>
-        <div class="col-md-4" style="padding-top: 25px;">
-          <button class="btn btn-primary">
+        <div class="col-md-4" style="padding-top: 25px; display: flex; flex-direction: row;">
+          <button class="btn btn-primary" style="margin-right: 10px;">
             &nbsp;
             <span class="glyphicon glyphicon-search"></span>
             &nbsp;
           </button>
-          <%= link_to(t('.reset_btn'), admin_auctions_path, class: 'btn btn-default') %>
+          <div style="margin-right: 10px;">
+            <%= link_to(t('.reset_btn'), admin_auctions_path, class: 'btn btn-default') %>
+          </div>
+          <div style="margin-right: 10px;">
+            <%= link_to 'Download auction list', admin_auctions_path(format: :csv, params: params.permit!),
+                        "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => t('.download_csv_btn'),
+                        class: 'btn btn-primary' %>
+          </div>
+          <div >
+            <%= link_to "#", class: "btn btn-warning edit",
+              data: {
+                toggle: "modal",
+                url: admin_reserved_domains_path,
+                target: "#user-form-edit"} do %>
+            <i class="glyphicon glyphicon-menu-right glyphicon-white"></i>
+            Get reserved domains
+          <% end %>
+
+          <%= render 'modal' %>
+
+          </div>
         </div>
       </div>
     <% end %>
   </div>
 </div>
 
+<hr />
+
+    <%= search_form_for [:admin, @q], method: :post, html: { style: 'margin-bottom: 0;', class: 'js-form', autocomplete: 'off' } do |f| %>
+        <%= label_tag :new_auction %>
+
+        <div style="display: flex; flex-direction: row; align-items: center;">
+          <%= text_field_tag :domain, params[:domain], class: 'form-control', placeholder: 'domain name' %>
+          <%= f.submit 'Create', class: 'btn btn-primary', style: 'margin-left: .4rem;' %>
+        </div>
+    <% end %>
+
 <hr/>
 
     <div class="row">
-        <div class="col-md-12">
-        <div class="col-md-12 text-right" style='margin: 0 0 10px 0;'>
-            <%= link_to 'Download auction list', admin_auctions_path(format: :csv, params: params.permit!),
-                        "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => t('.download_csv_btn'),
-                        class: 'btn btn-primary' %>
-        </div>
+        <div class="col-md-12" style='margin: 0 0 10px 0; '>
+          <%= search_form_for @q, url: upload_spreadsheet_admin_auctions_path, method: :post, html: { style: 'margin-bottom: 0; display: flex; flex-direction: row; align-items: center;', class: 'js-form', autocomplete: 'off' } do |f| %>
+            <%= f.file_field :file,
+                              accept: ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel",
+                              direct_upload: true,
+                              style: 'width: 200px;' %>
+            <%= f.submit 'Upload csv', class: 'btn btn-primary' %>
+          <% end %>
+
         </div>
     </div>
 
@@ -99,3 +133,9 @@
             </div>
         </div>
     </div>
+
+<script>
+  $('#user-form-edit').on("show.bs.modal", function(e) {
+      $(this).find('.modal-body').load(e.relatedTarget.dataset.url);
+  });
+</script>
