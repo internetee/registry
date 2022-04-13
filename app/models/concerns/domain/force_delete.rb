@@ -32,7 +32,7 @@ module Domain::ForceDelete
 
   def notification_template(explicit: nil)
     reason = explicit&.downcase
-    return reason if %w[invalid_phone].include?(reason)
+    return reason if %w[invalid_email invalid_phone].include?(reason)
 
     registrant.org? ? 'legal_person' : 'private_person'
   end
