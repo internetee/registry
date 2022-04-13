@@ -13,6 +13,8 @@ class RegistrarAreaInvoicesTest < ApplicationSystemTestCase
   end
 
   def test_cancels_an_invoice
+    Spy.on(EisBilling::SendInvoiceStatus, :send_info).and_return(true)
+
     @invoice.account_activity = nil
     assert @invoice.cancellable?
 
