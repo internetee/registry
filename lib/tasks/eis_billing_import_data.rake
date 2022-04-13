@@ -80,5 +80,5 @@ def headers
 end
 
 def self.billing_secret
-  Rails.application.credentials.config[:billing_secret]
+  ENV['billing_secret']
 end
