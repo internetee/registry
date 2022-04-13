@@ -124,7 +124,7 @@
                     <tbody>
                         <% @auctions.each do |auction|  %>
                         <tr>
-                            <td><%= AuctionHelper.colorize_auction(auction) %></td>
+                            <td><%= colorize_auction(auction) %></td>
                             <td><%= auction.status %></td>
                             <td><%= auction.created_at %></td>
                             <td><%= auction.registration_code %></td>

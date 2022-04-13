@@ -337,7 +337,8 @@ CREATE TABLE public.auctions (
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp without time zone NOT NULL,
     registration_code character varying,
-    registration_deadline timestamp without time zone
+    registration_deadline timestamp without time zone,
+    platform integer
 );
 
 

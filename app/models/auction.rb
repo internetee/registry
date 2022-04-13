@@ -9,7 +9,7 @@ class Auction < ApplicationRecord
     domain_not_registered: 'domain_not_registered',
   }
 
-  enum type: %i[blind english]
+  enum platform: %i[blind english]
 
   PENDING_STATUSES = [statuses[:started],
                       statuses[:awaiting_payment],
@@ -17,7 +17,7 @@ class Auction < ApplicationRecord
 
   private_constant :PENDING_STATUSES
 
-  scope :with_status, -> (status) {
+  scope :with_status, ->(status) {
     where(status: status) if status.present?
   }
 

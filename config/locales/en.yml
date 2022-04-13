@@ -189,6 +189,7 @@ en:
   log_out: 'Log out (%{user})'
   system: 'System'
   domains: 'Domains'
+  auctions: 'Auctions'
   registrars: 'Registrars'
   valid_to: 'Valid to'
   name: 'Name'

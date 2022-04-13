@@ -35,7 +35,7 @@ module DNS
     def sell_at_auction
       auction = Auction.new
       auction.domain = name
-      auction.platform = :blind
+      auction.platform = 'blind'
       auction.start
       ToStdout.msg "Created the auction: #{auction.inspect}"
       update_whois_from_auction(auction)
