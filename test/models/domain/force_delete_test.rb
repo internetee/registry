@@ -398,8 +398,6 @@ class ForceDeleteTest < ActionMailer::TestCase
       contact.verify_email
     end
 
-    assert contact.email_verification_failed?
-
     @domain.reload
 
     assert @domain.force_delete_scheduled?
