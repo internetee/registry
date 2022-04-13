@@ -814,17 +814,8 @@ CREATE TABLE public.dnskeys (
     updator_str character varying,
     legacy_domain_id integer,
     updated_at timestamp without time zone,
-<<<<<<< HEAD
     validation_datetime timestamp without time zone,
     failed_validation_reason character varying
-=======
-<<<<<<< HEAD
-    validation_datetime timestamp without time zone
-=======
-    validation_datetime timestamp without time zone,
-    failed_validation_reason character varying
->>>>>>> dnssec ans ns validation message
->>>>>>> dnssec ans ns validation message
 );
 
 
@@ -5101,3 +5092,4 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220216113112'),
 ('20220228093211'),
 ('20220412130856');
+
