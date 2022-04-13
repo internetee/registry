@@ -114,6 +114,9 @@
                             <th class="col-xs-2">
                                 <%= sort_link(@q, 'registration_deadline') %>
                             </th>
+                            <th class="col-xs-2">
+                                <%= sort_link(@q, 'type') %>
+                            </th>
 
                         </tr>
                     </thead>
@@ -126,6 +129,7 @@
                             <td><%= auction.created_at %></td>
                             <td><%= auction.registration_code %></td>
                             <td><%= auction.registration_deadline %></td>
+                            <td><%= auction.platform %></td>
                         </tr>
                         <% end %>
                     </tbody>

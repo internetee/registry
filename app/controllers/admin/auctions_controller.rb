@@ -24,7 +24,7 @@ module Admin
     end
 
     def create
-      auction = Auction.new(domain: params[:domain], status: Auction.statuses[:started])
+      auction = Auction.new(domain: params[:domain], status: Auction.statuses[:started], platform: :english)
 
       if auction.save
         remove_from_reserved(auction)
@@ -41,7 +41,7 @@ module Admin
 
       table.each do |row|
         record = row.to_h
-        auction = Auction.new(domain: record['name'], status: Auction.statuses[:started])
+        auction = Auction.new(domain: record['name'], status: Auction.statuses[:started], platform: :english)
         remove_from_reserved(auction) if auction.save!
       end
 

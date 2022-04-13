@@ -9,6 +9,8 @@ class Auction < ApplicationRecord
     domain_not_registered: 'domain_not_registered',
   }
 
+  enum type: %i[blind english]
+
   PENDING_STATUSES = [statuses[:started],
                       statuses[:awaiting_payment],
                       statuses[:payment_received]].freeze

@@ -58,7 +58,7 @@ module Admin
       reserved_domains = ReservedDomain.where(id: reserved_domains_ids)
 
       reserved_domains.each do |domain|
-        Auction.create!(domain: domain.name, status: Auction.statuses[:started])
+        Auction.create!(domain: domain.name, status: Auction.statuses[:started], platform: :english)
         domain.destroy!
       end
 
