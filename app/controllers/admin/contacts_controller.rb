@@ -32,7 +32,6 @@ module Admin
         contacts = contacts.where("ident_country_code is null or ident_country_code=''")
       end
 
-      contacts = contacts.email_verification_failed if params[:email_verification_failed].eql?('1')
       contacts
     end
 

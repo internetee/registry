@@ -137,9 +137,8 @@ class BouncedMailAddressTest < ActiveSupport::TestCase
     bounced_mail = BouncedMailAddress.last
     registrant = domains(:shop).registrant
     registrant.verify_email(check_level: 'smtp')
-    
+
     assert_equal registrant.email, bounced_mail.email
-    assert registrant.email_verification_failed?
   end
 
   def sns_bounce_payload
