@@ -1,3 +1,6 @@
+14.04.2022
+* Removed legacy email verification code [#2349](https://github.com/internetee/registry/issues/2349)
+
 06.04.2022
 * Contact email validation on domain update [#2213](https://github.com/internetee/registry/issues/2213)
 
