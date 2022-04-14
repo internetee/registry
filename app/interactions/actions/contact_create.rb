@@ -24,7 +24,9 @@ module Actions
 
         next if result
 
-        contact.add_epp_error('2005', nil, "email didn't pass validation", I18n.t(:parameter_value_syntax_error))
+        err_text = "email '#{contact.email}' didn't pass validation"
+        contact.add_epp_error('2005', nil, nil,
+                              "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
         @error = true
         return
       end
