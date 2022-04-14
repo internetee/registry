@@ -141,8 +141,7 @@ module Actions
         next if result
 
         err_text = "email #{email} didn't pass validation"
-        domain.add_epp_error('2005', nil, nil,
-                             "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
+        domain.add_epp_error('2005', nil, nil, "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
         @error = true
         return
       end
