@@ -1,4 +1,5 @@
 18.04.2022
+* Fixed error 2005 epp syntax issue [#2338](https://github.com/internetee/registry/issues/2338)
 * Fixed poll issue with email validations [#2343](https://github.com/internetee/registry/issues/2343)
 * Removed registrant portal code from registry project [#2350](https://github.com/internetee/registry/issues/2350) 
 
