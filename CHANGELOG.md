@@ -1,3 +1,6 @@
+18.04.2022
+* Fixed poll issue with email validations [#2343](https://github.com/internetee/registry/issues/2343)
+
 14.04.2022
 * Removed legacy email verification code [#2349](https://github.com/internetee/registry/issues/2349)
 
