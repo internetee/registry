@@ -136,11 +136,12 @@ module Actions
     def validate_email(email)
       return true if Rails.env.test?
 
-      [:regex, :mx].each do |m|
+      %i[regex mx].each do |m|
         result = Actions::SimpleMailValidator.run(email: email, level: m)
         next if result
 
-        domain.add_epp_error('2005', nil, "#{email} didn't pass validation", I18n.t(:parameter_value_syntax_error))
+        err_text = "email #{email} didn't pass validation"
+        domain.add_epp_error('2005', nil, nil, "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
         @error = true
         return
       end
