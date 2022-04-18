@@ -22,6 +22,12 @@ class DirectoInvoiceForwardJob < ApplicationJob
         next
       end
 
+      p ">>>>>>>>>>>>>>> invoice"
+      p invoice
+      p ">>>>>>>>>>>>>>>>>> invoice as directo"
+      p invoice.as_directo_json
+      p ">>>>>>>>>>>>>>>>>>>>>.."
+
       @client.invoices.add_with_schema(invoice: invoice.as_directo_json, schema: 'prepayment')
     end
 
