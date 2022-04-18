@@ -432,7 +432,7 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     assert_equal domain.status_notes[DomainStatus::FORCE_DELETE], invalid_emails
     notification = domain.registrar.notifications.last
-    assert notification.text.include? asserted_text
+    assert_not notification.text.include? asserted_text
   end
 
   def test_remove_invalid_email_from_domain_status_notes

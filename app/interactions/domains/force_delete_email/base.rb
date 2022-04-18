@@ -31,18 +31,21 @@ module Domains
       def before_execute_force_delete(domain)
         if domain.force_delete_scheduled? && !domain.status_notes[DomainStatus::FORCE_DELETE].nil?
           added_additional_email_into_notes(domain)
-          notify_registrar(domain)
         else
           process_force_delete(domain)
         end
       end
 
       def notify_registrar(domain)
-        domain.registrar.notifications.create!(text: I18n.t('force_delete_auto_email',
-                                                            domain_name: domain.name,
-                                                            outzone_date: domain.outzone_date,
-                                                            purge_date: domain.purge_date,
-                                                            email: domain.status_notes[DomainStatus::FORCE_DELETE]))
+        template = I18n.t('force_delete_auto_email',
+                          domain_name: domain.name,
+                          outzone_date: domain.outzone_date,
+                          purge_date: domain.purge_date,
+                          email: domain.status_notes[DomainStatus::FORCE_DELETE])
+
+        return if domain.registrar.notifications.last.text.include? template
+
+        domain.registrar.notifications.create!(text: template)
       end
 
       def process_force_delete(domain)
@@ -55,6 +58,8 @@ module Domains
 
       def added_additional_email_into_notes(domain)
         return if domain.status_notes[DomainStatus::FORCE_DELETE].include? email
+
+        # notify_registrar(domain)
 
         domain.status_notes[DomainStatus::FORCE_DELETE].concat(" #{email}")
         domain.save(validate: false)
