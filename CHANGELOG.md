@@ -1,3 +1,6 @@
+19.04.2022
+* Rolled back ruby version to 3.0.3 [#2358](https://github.com/internetee/registry/pull/2358) 
+
 18.04.2022
 * Fixed error 2005 epp syntax issue [#2338](https://github.com/internetee/registry/issues/2338)
 * Fixed poll issue with email validations [#2343](https://github.com/internetee/registry/issues/2343)
