@@ -7,7 +7,6 @@ class Contact < ApplicationRecord
   include UserEvents
   include Contact::Transferable
   include Contact::Identical
-  include Contact::Disclosable
   include Contact::Archivable
   include EmailVerifable
 
