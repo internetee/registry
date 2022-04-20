@@ -1,4 +1,5 @@
 20.04.2022
+* Contacts with disclosed attributes can now be updated [#2340](https://github.com/internetee/registry/issues/2340)
 * Legacy code fix [#2360](https://github.com/internetee/registry/pull/2360)
 
 19.04.2022
