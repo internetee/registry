@@ -1,3 +1,6 @@
+20.04.2022
+* Legacy code fix [#2360](https://github.com/internetee/registry/pull/2360)
+
 19.04.2022
 * Rolled back ruby version to 3.0.3 [#2358](https://github.com/internetee/registry/pull/2358) 
 
