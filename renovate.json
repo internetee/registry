@@ -21,7 +21,7 @@
     "enabled": false
   },
   "ruby": {
-    "stabilityDays": 30
+    "stabilityDays": 60
   },
   "ignorePaths": [
     "Dockerfile", "Dockerfile.*", ".github/workflows/build_deploy_staging.yml",
