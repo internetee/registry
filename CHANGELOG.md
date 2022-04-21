@@ -1,3 +1,6 @@
+21.04.2022
+* Delay renovate Ruby version updates for 60 days [#2361](https://github.com/internetee/registry/issues/2361)
+
 20.04.2022
 * Contacts with disclosed attributes can now be updated [#2340](https://github.com/internetee/registry/issues/2340)
 * Legacy code fix [#2360](https://github.com/internetee/registry/pull/2360)
