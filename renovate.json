@@ -9,16 +9,19 @@
       "automergeType": "pr"
     },
     {
-      "depTypeList": ["ruby", "bundler", "Gemfile", "Gemfile.lock"],
+      "matchDepTypes": ["ruby", "bundler", "Gemfile", "Gemfile.lock"],
       "addLabels": ["bundler"]
     },
     {
-      "depTypeList": [".ruby-version"],
+      "matchDepTypes": [".ruby-version"],
       "addLabels": ["ruby-version"]
     }
   ],
   "docker": {
     "enabled": false
+  },
+  "ruby": {
+    "stabilityDays": 60
   },
   "ignorePaths": [
     "Dockerfile", "Dockerfile.*", ".github/workflows/build_deploy_staging.yml",
