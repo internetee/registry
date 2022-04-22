@@ -41,11 +41,11 @@
             &nbsp;
           </button>
           <div style="margin-right: 10px;">
-            <%= link_to(t('.reset_btn'), admin_auctions_path, class: 'btn btn-default') %>
+            <%= link_to('Clear', admin_auctions_path, class: 'btn btn-default') %>
           </div>
           <div style="margin-right: 10px;">
             <%= link_to 'Download auction list', admin_auctions_path(format: :csv, params: params.permit!),
-                        "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => t('.download_csv_btn'),
+                        "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => 'Download CSV',
                         class: 'btn btn-primary' %>
           </div>
           <div >
@@ -114,10 +114,12 @@
                             <th class="col-xs-2">
                                 <%= sort_link(@q, 'registration_deadline') %>
                             </th>
-                            <th class="col-xs-2">
+                            <th class="col-xs-1">
                                 <%= sort_link(@q, 'type') %>
                             </th>
-
+                            <th class="col-xs-3">
+                              Action
+                            </th>
                         </tr>
                     </thead>
 
@@ -130,6 +132,11 @@
                             <td><%= auction.registration_code %></td>
                             <td><%= auction.registration_deadline %></td>
                             <td><%= auction.platform %></td>
+                            <td>
+                              <%= button_tag type: 'button', data: { confirm: "Are you sure?" }, class: 'btn btn-primary' do %>
+                                <% link_to 'Send to auction', send_to_auction_admin_auction_path(auction), method: :post, style: "color: white;" %>
+                              <% end %>
+                            </td>
                         </tr>
                         <% end %>
                     </tbody>
@@ -137,6 +144,17 @@
             </div>
         </div>
     </div>
+
+  <div class="row">
+  <div class="col-md-6">
+    <%= paginate @auctions %>
+  </div>
+  <div class="col-md-6 text-right">
+    <div class="pagination">
+      <%= t(:result_count, count: @auctions.total_count) %>
+    </div>
+  </div>
+</div>
 
 <script>
   $('#user-form-edit').on("show.bs.modal", function(e) {

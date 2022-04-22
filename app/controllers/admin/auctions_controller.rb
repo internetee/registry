@@ -24,7 +24,7 @@ module Admin
     end
 
     def create
-      auction = Auction.new(domain: params[:domain], status: Auction.statuses[:started], platform: 'english')
+      auction = Auction.new(domain: params[:domain], status: Auction.statuses[:started], platform: 'manually')
 
       if auction.save
         remove_from_reserved(auction)
@@ -40,16 +40,39 @@ module Admin
       filename = params[:q][:file]
       table = CSV.parse(File.read(filename), headers: true)
 
-      table.each do |row|
-        record = row.to_h
-        auction = Auction.new(domain: record['name'], status: Auction.statuses[:started], platform: 'english')
-        remove_from_reserved(auction) if auction.save!
+      if validate_table(table)
+        table.each do |row|
+          record = row.to_h
+          auction = Auction.new(domain: record['name'], status: Auction.statuses[:started], platform: 'manually')
+          remove_from_reserved(auction) if auction.save!
+        end
+        flash[:notice] = "Domains added"
+        redirect_to admin_auctions_path
+      else
+        flash[:alert] = "Invalid CSV format."
+        redirect_to admin_auctions_path
       end
+    end
 
-      redirect_to admin_auctions_path
+    def send_to_auction
+      auction = Auction.find(params[:id])
+
+      p ">>>>>.."
+      p auction
+      p ">>>>>>"
     end
 
     private
+
+    def validate_table(table)
+      first_row = table.headers
+      first_row[0] == 'id' &&
+        first_row[1] == 'created_at' &&
+        first_row[2] == 'updated_at' &&
+        first_row[3] == 'creator_str' &&
+        first_row[4] == 'updator_str' &&
+        first_row[5] == 'name'
+    end
 
     def remove_from_reserved(auction)
       domain = ReservedDomain.find_by(name: auction.domain)
