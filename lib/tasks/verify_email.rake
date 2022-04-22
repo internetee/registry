@@ -3,6 +3,7 @@ require 'rake_option_parser_boilerplate'
 require 'syslog/logger'
 require 'active_record'
 
+# rubocop:disable Metrics/BlockLength
 namespace :verify_email do
   # bundle exec rake verify_email:check_all -- --domain_name=shop.test --check_level=mx
   #  --spam_protect=true --batch_size=1000 --limit=100
@@ -36,6 +37,7 @@ namespace :verify_email do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
 
 def check_level(options)
   options[:check_level]
