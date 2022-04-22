@@ -13,6 +13,7 @@ namespace :verify_email do
       domain_name: nil,
       check_level: 'mx',
       spam_protect: false,
+      batch_size: 10_000,
     }
     banner = 'Usage: rake verify_email:check_all -- [options]'
     options = RakeOptionParserBoilerplate.process_args(options: options,
@@ -22,7 +23,7 @@ namespace :verify_email do
     batch_contacts = prepare_contacts(options)
     logger.info 'No contacts to check email selected' and next if batch_contacts.blank?
 
-    batch_contacts.find_in_batches(batch_size: 10_000) do |contacts|
+    batch_contacts.find_in_batches(batch_size: batch_size(options)) do |contacts|
       contacts.each do |contact|
         VerifyEmailsJob.set(wait_until: spam_protect_timeout(options)).perform_later(
           contact: contact,
@@ -35,6 +36,10 @@ end
 
 def check_level(options)
   options[:check_level]
+end
+
+def batch_size(options)
+  options[:batch_size]
 end
 
 def spam_protect(options)
@@ -112,5 +117,6 @@ def opts_hash
     domain_name: ['-d [DOMAIN_NAME]', '--domain_name [DOMAIN_NAME]', String],
     check_level: ['-c [CHECK_LEVEL]', '--check_level [CHECK_LEVEL]', String],
     spam_protect: ['-s [SPAM_PROTECT]', '--spam_protect [SPAM_PROTECT]', FalseClass],
+    batch_size: ['-b [BATCH_SIZE]', '--batch_size [BATCH_SIZE]', Integer],
   }
 end
