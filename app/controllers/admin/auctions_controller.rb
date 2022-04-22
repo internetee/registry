@@ -6,6 +6,9 @@ module Admin
       params[:q] ||= {}
 
       @auctions = Auction.with_status(params[:statuses_contains])
+                         .with_start_created_at_date(params[:created_at_start])
+                         .with_end_created_at_date(params[:created_at_end])
+
       @auction = Auction.new
 
       normalize_search_parameters do

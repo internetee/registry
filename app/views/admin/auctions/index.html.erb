@@ -4,12 +4,12 @@
 
 <div class="row">
   <div class="col-md-12">
-    <%= search_form_for [:admin, @q], html: { style: 'margin-bottom: 0;', class: 'js-form', autocomplete: 'off' } do |f| %>
+    <%= form_with url: admin_auctions_path, method: :get, html: { style: 'margin-bottom: 0;', class: 'js-form', autocomplete: 'off' } do |f| %>
       <div class="row">
         <div class="col-md-3">
           <div class="form-group">
             <%= f.label :domain %>
-            <%= f.search_field :domain_matches, value: params[:q][:domain_matches], class: 'form-control', placeholder: t(:name) %>
+            <%= f.search_field :domain_matches, value: params[:domain_matches], class: 'form-control', placeholder: t(:name) %>
           </div>
           <div class="form-group">
             <%= f.label :status %>
@@ -19,19 +19,19 @@
         <div class="col-md-3">
           <div class="form-group">
             <%= f.label t(:created_at_from) %>
-            <%= f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control js-datepicker', placeholder: t(:created_at_from) %>
+            <%= f.search_field :created_at_start, value: params[:created_at_start], class: 'form-control js-datepicker', placeholder: t(:created_at_from) %>
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
             <%= f.label t(:created_at_until) %>
-            <%= f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control js-datepicker', placeholder: t(:created_at_until) %>
+            <%= f.search_field :created_at_end, value: params[:created_at_end], class: 'form-control js-datepicker', placeholder: t(:created_at_until) %>
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
             <%= label_tag t(:results_per_page) %>
-            <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page) %>
+            <%= text_field_tag :results_per_page_auction, params[:results_per_page_auction], class: 'form-control', placeholder: t(:results_per_page) %>
           </div>
         </div>
         <div class="col-md-4" style="padding-top: 25px; display: flex; flex-direction: row;">
