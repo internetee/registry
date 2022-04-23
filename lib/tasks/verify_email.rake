@@ -6,7 +6,7 @@ require 'active_record'
 # rubocop:disable Metrics/BlockLength
 namespace :verify_email do
   # bundle exec rake verify_email:check_all -- --domain_name=shop.test --check_level=mx
-  #  --spam_protect=true --batch_size=1000 --limit=100
+  #  --spam_protect=true --batch_size=1000
   # bundle exec rake verify_email:check_all -- -dshop.test -cmx -strue -b1000 -l100
   desc 'Starts verifying email jobs with optional check level and spam protection'
   task check_all: :environment do
@@ -15,8 +15,7 @@ namespace :verify_email do
       domain_name: nil,
       check_level: 'mx',
       spam_protect: false,
-      batch_size: 10_000,
-      limit: 0,
+      batch_size: 1_000,
     }
     banner = 'Usage: rake verify_email:check_all -- [options]'
     options = RakeOptionParserBoilerplate.process_args(options: options,
@@ -24,16 +23,12 @@ namespace :verify_email do
                                                        hash: opts_hash)
 
     batch_contacts = prepare_contacts(options)
-    batch_contacts.limit!(limit(options)) if limit(options).positive?
     logger.info 'No contacts to check email selected' and next if batch_contacts.blank?
 
     batch_contacts.find_in_batches(batch_size: batch_size(options)) do |contacts|
-      contacts.each do |contact|
-        VerifyEmailsJob.set(wait_until: spam_protect_timeout(options)).perform_later(
-          contact: contact,
-          check_level: check_level(options)
-        ) if filter_check_level(contact)
-      end
+      VerifyEmailsJob.set(wait_until: spam_protect_timeout(options)).perform_later(
+        contacts: contacts,
+        check_level: check_level(options))
     end
   end
 end
@@ -49,10 +44,6 @@ end
 
 def spam_protect(options)
   options[:spam_protect]
-end
-
-def limit(options)
-  options[:limit]
 end
 
 def spam_protect_timeout(options)
@@ -127,6 +118,5 @@ def opts_hash
     check_level: ['-c [CHECK_LEVEL]', '--check_level [CHECK_LEVEL]', String],
     spam_protect: ['-s [SPAM_PROTECT]', '--spam_protect [SPAM_PROTECT]', FalseClass],
     batch_size: ['-b [BATCH_SIZE]', '--batch_size [BATCH_SIZE]', Integer],
-    limit: ['-l [LIMIT]', '--limit [LIMIT]', Integer],
   }
 end
