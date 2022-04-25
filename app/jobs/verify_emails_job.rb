@@ -1,8 +1,13 @@
 class VerifyEmailsJob < ApplicationJob
   discard_on StandardError
 
-  def perform(contact:, check_level: 'mx')
-    contact_not_found(contact.id) unless contact
+  def perform(email:, check_level: 'mx')
+    # contact_not_found(contact.id) unless contact
+
+    contact = Contact.find_by_email(email)
+
+    return unless filter_check_level(contact)
+
     validate_check_level(check_level)
     action = Actions::EmailCheck.new(email: contact.email,
                                      validation_eventable: contact,
@@ -31,5 +36,25 @@ class VerifyEmailsJob < ApplicationJob
 
   def valid_check_levels
     ValidationEvent::VALID_CHECK_LEVELS
+  end
+
+  def get_validation_results(contact)
+    ValidationEvent.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+  end
+
+  def filter_check_level(contact)
+    return true unless contact.validation_events.exists?
+  
+    data = contact.validation_events.order(created_at: :asc).last
+  
+    return true if data.successful? && data.created_at < (Time.zone.now - ValidationEvent::VALIDATION_PERIOD)
+  
+    if data.failed?
+      return false if data.event_data['check_level'] == 'regex'
+  
+      return true
+    end
+  
+    false
   end
 end
