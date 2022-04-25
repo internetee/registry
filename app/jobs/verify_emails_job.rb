@@ -2,9 +2,9 @@ class VerifyEmailsJob < ApplicationJob
   discard_on StandardError
 
   def perform(email:, check_level: 'mx')
-    # contact_not_found(contact.id) unless contact
+    contact = Contact.find_by(email: email)
 
-    contact = Contact.find_by_email(email)
+    return Rails.logger.info "No found #{email} contact" if contact.nil?
 
     return unless filter_check_level(contact)
 
