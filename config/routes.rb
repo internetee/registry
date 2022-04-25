@@ -267,9 +267,6 @@ Rails.application.routes.draw do
     resources :accounts
     resources :account_activities
     resources :auctions, only: [ :index, :create ] do
-      member do
-        post 'send_to_auction', to: 'auctions#send_to_auction', as: :send_to_auction
-      end
       collection do
         post 'upload_spreadsheet', to: 'auctions#upload_spreadsheet', as: :upload_spreadsheet
       end

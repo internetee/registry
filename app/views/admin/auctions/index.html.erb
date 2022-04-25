@@ -117,9 +117,6 @@
                             <th class="col-xs-1">
                                 <%= sort_link(@q, 'type') %>
                             </th>
-                            <th class="col-xs-3">
-                              Action
-                            </th>
                         </tr>
                     </thead>
 
@@ -131,12 +128,7 @@
                             <td><%= auction.created_at %></td>
                             <td><%= auction.registration_code %></td>
                             <td><%= auction.registration_deadline %></td>
-                            <td><%= auction.platform %></td>
-                            <td>
-                              <%= button_tag type: 'button', data: { confirm: "Are you sure?" }, class: 'btn btn-primary' do %>
-                                <% link_to 'Send to auction', send_to_auction_admin_auction_path(auction), method: :post, style: "color: white;" %>
-                              <% end %>
-                            </td>
+                            <td><%= auction.platform.nil? ? 'automatically' : auction.platform %></td>
                         </tr>
                         <% end %>
                     </tbody>

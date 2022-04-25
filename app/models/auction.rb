@@ -29,6 +29,10 @@ class Auction < ApplicationRecord
     where("created_at <= ?", end_created_at) if end_created_at.present?
   }
 
+  scope :with_domain_name, -> (domain_name) {
+    where('domain ilike ?', "%#{domain_name.strip}%") if domain_name.present?
+  }
+
   def self.pending(domain_name)
     find_by(domain: domain_name.to_s, status: PENDING_STATUSES)
   end

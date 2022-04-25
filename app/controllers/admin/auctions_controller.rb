@@ -5,7 +5,8 @@ module Admin
     def index
       params[:q] ||= {}
 
-      @auctions = Auction.with_status(params[:statuses_contains])
+      @auctions = Auction.with_domain_name(params[:domain_matches])
+                         .with_status(params[:statuses_contains])
                          .with_start_created_at_date(params[:created_at_start])
                          .with_end_created_at_date(params[:created_at_end])
 
@@ -16,7 +17,7 @@ module Admin
         @auctions = @q.result.page(params[:page])
       end
 
-      @auctions = @auctions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
+      @auctions = @auctions.per(params[:results_per_page_auction]) if params[:results_per_page_auction].to_i.positive?
 
       domains = ReservedDomain.all.order(:name)
       q = domains.ransack(PartialSearchFormatter.format(params[:q]))
@@ -55,14 +56,6 @@ module Admin
         flash[:alert] = "Invalid CSV format."
         redirect_to admin_auctions_path
       end
-    end
-
-    def send_to_auction
-      auction = Auction.find(params[:id])
-
-      p ">>>>>.."
-      p auction
-      p ">>>>>>"
     end
 
     private
