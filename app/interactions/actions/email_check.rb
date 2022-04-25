@@ -62,9 +62,13 @@ module Actions
                                              type: 'AAAA')
 
         result_validation.present? ? result.success = true : result.success = false
-        validation_eventable.validation_events.create(validation_event_attrs(result))
+        ActiveRecord::Base.connection_pool.with_connection do
+          validation_eventable.validation_events.create(validation_event_attrs(result))
+        end
       else
-        validation_eventable.validation_events.create(validation_event_attrs(result))
+        ActiveRecord::Base.connection_pool.with_connection do
+          validation_eventable.validation_events.create(validation_event_attrs(result))
+        end
       end
     rescue ActiveRecord::RecordNotSaved
       logger.info "Cannot save validation result for #{log_object_id}"
