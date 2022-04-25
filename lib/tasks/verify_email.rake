@@ -46,14 +46,12 @@ end
 
 def prepare_contacts(options)
   if options[:domain_name].present?
-    Rails.logger.info 'NEED TO TODO'
     contacts_by_domain(options[:domain_name])
   else
     time = Time.zone.now - ValidationEvent::VALIDATION_PERIOD
     validation_events_ids = ValidationEvent.where('created_at > ?', time).distinct.pluck(:validation_eventable_id)
 
     contacts_emails = Contact.where.not(id: validation_events_ids).pluck(:email)
-    # Contact.where(id: contacts_ids + failed_contacts).pluck(:email).uniq
     (contacts_emails + failed_email_contacts).uniq
   end
 end

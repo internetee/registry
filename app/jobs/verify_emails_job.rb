@@ -44,17 +44,16 @@ class VerifyEmailsJob < ApplicationJob
 
   def filter_check_level(contact)
     return true unless contact.validation_events.exists?
-  
+
     data = contact.validation_events.order(created_at: :asc).last
-  
     return true if data.successful? && data.created_at < (Time.zone.now - ValidationEvent::VALIDATION_PERIOD)
-  
+
     if data.failed?
       return false if data.event_data['check_level'] == 'regex'
-  
+
       return true
     end
-  
+
     false
   end
 end
