@@ -43,8 +43,9 @@ module Admin
       end
 
       if auction.save
-        remove_from_reserved(auction)
-        flash[:notice] = "Auction #{params[:domain]} created"
+        reserved_domain = auction.domain if remove_from_reserved(auction)
+        flash[:notice] = "Auction #{params[:domain]} created. 
+                          #{reserved_domain.present? ? 'These domain will be removed from reserved list: ' + reserved_domain : ' '}"
       else
         flash[:alert] = 'Something goes wrong'
       end
@@ -62,6 +63,7 @@ module Admin
       table = CSV.parse(File.read(filename), headers: true)
 
       failed_names = []
+      reserved_domains = []
 
       if validate_table(table)
         table.each do |row|
@@ -81,11 +83,17 @@ module Admin
           end
 
           auction = Auction.new(domain: record['name'], status: Auction.statuses[:started], platform: 'manual')
-          remove_from_reserved(auction) if auction.save!
+          flag = remove_from_reserved(auction) if auction.save!
+          reserved_domains << auction.domain if flag
         end
 
-        flash[:notice] = 'Domains added!'
-        flash[:notice] = "Domains added! But these domains were ignored: #{failed_names.join(' ')}" if failed_names.present?
+        message_template = "Domains added!
+                            #{reserved_domains.present? ? 
+                              'These domains will be removed from reserved list: ' + reserved_domains.join(' ') + '! ' 
+                              : '! '}
+                            #{failed_names.present? ? 'These domains were ignored: ' + failed_names.join(' ') : '!'}"
+
+        flash[:notice] = message_template
       else
         flash[:alert] = "Invalid CSV format. Should be column with 'name' where is the list of name of domains!"
       end
