@@ -15,8 +15,8 @@ class ApiV1AuctionListTest < ActionDispatch::IntegrationTest
     assert_response :ok
     assert_equal ([{ 'id' => '1b3ee442-e8fe-4922-9492-8fcb9dccc69c',
                      'domain' => 'auction.test',
-                     'status' => Auction.statuses[:started] }]), ActiveSupport::JSON
-                   .decode(response.body)
+                     'status' => Auction.statuses[:started],
+                     'platform' => nil }]), ActiveSupport::JSON.decode(response.body)
   end
 
   def test_does_not_return_finished_auctions
