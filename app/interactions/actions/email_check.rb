@@ -62,8 +62,7 @@ module Actions
         output_a_and_aaaa_validation_results(email: @email,
                                              result: result_validation,
                                              type: 'AAAA')
-
-        result_validation.present? ? result.success = true : result.success = false
+        result.success = result_validation.present?
       end
 
       contacts.find_in_batches(batch_size: 500) do |contact_batches|
