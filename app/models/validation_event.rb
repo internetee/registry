@@ -35,7 +35,7 @@ class ValidationEvent < ApplicationRecord
   scope :smtp, -> { where('event_data @> ?', { 'check_level': 'smtp' }.to_json) }
   scope :by_object, ->(object) { where(validation_eventable: object) }
 
-  # after_create :check_for_force_delete
+  after_create :check_for_force_delete
 
   def self.validated_ids_by(klass)
     recent.successful.where('validation_eventable_type = ?', klass)
@@ -59,12 +59,7 @@ class ValidationEvent < ApplicationRecord
   end
 
   def check_for_force_delete
-    if object.need_to_start_force_delete?
-      start_force_delete
-    elsif object.need_to_lift_force_delete?
-      refresh_status_notes
-      lift_force_delete
-    end
+    ValidationEventCheckForceDeleteJob.perform_later(id, object.id)
   end
 
   def start_force_delete
@@ -99,14 +94,12 @@ class ValidationEvent < ApplicationRecord
   end
 
   def lift_force_delete
-    # domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
-    # registrant_ids = Registrant.where(email: email).pluck(:id)
-    #
-    # domains = domain_contacts.map(&:domain).flatten +
-    #   Domain.where(registrant_id: registrant_ids)
-    #
-    # domains.each do |domain|
-    #   Domains::ForceDeleteLift::Base.run(domain: domain)
-    # end
+    domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
+    registrant_domains = Domain.where(registrant_id: Registrant.where(email: email).pluck(:id))
+    domains = domain_contacts.map(&:domain).flatten + registrant_domains
+
+    domains.each do |domain|
+      Domains::ForceDeleteLift::Base.run(domain: domain)
+    end
   end
 end
