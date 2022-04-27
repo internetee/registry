@@ -50,6 +50,8 @@ module Actions
     end
 
     def save_result(result)
+      contacts = Contact.where(email: email)
+
       if !result.success && @check_level == "mx"
         result_validation = Actions::AAndAaaaEmailValidation.call(email: @email, value: 'A')
         output_a_and_aaaa_validation_results(email: @email,
@@ -60,11 +62,13 @@ module Actions
         output_a_and_aaaa_validation_results(email: @email,
                                              result: result_validation,
                                              type: 'AAAA')
+        result.success = result_validation.present?
+      end
 
-        result_validation.present? ? result.success = true : result.success = false
-        validation_eventable.validation_events.create(validation_event_attrs(result))
-      else
-        validation_eventable.validation_events.create(validation_event_attrs(result))
+      contacts.find_in_batches(batch_size: 500) do |contact_batches|
+        contact_batches.each do |contact|
+          contact.validation_events.create(validation_event_attrs(result))
+        end
       end
     rescue ActiveRecord::RecordNotSaved
       logger.info "Cannot save validation result for #{log_object_id}"
