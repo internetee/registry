@@ -1,3 +1,6 @@
+27.04.2022
+* Refactored email validation - reducing dns requests [#2364](https://github.com/internetee/registry/issues/2364)
+
 21.04.2022
 * Delay renovate Ruby version updates for 60 days [#2361](https://github.com/internetee/registry/issues/2361)
 
