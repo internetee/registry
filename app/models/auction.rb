@@ -9,7 +9,7 @@ class Auction < ApplicationRecord
     domain_not_registered: 'domain_not_registered',
   }
 
-  enum platform: %i[automatically manually]
+  enum platform: %i[auto manual]
 
   PENDING_STATUSES = [statuses[:started],
                       statuses[:awaiting_payment],
@@ -21,15 +21,15 @@ class Auction < ApplicationRecord
     where(status: status) if status.present?
   }
 
-  scope :with_start_created_at_date, -> (start_created_at) {
-    where("created_at >= ?", start_created_at) if start_created_at.present?
+  scope :with_start_created_at_date, ->(start_created_at) {
+    where('created_at >= ?', start_created_at) if start_created_at.present?
   }
 
-  scope :with_end_created_at_date, -> (end_created_at) {
-    where("created_at <= ?", end_created_at) if end_created_at.present?
+  scope :with_end_created_at_date, ->(end_created_at) {
+    where('created_at <= ?', end_created_at) if end_created_at.present?
   }
 
-  scope :with_domain_name, -> (domain_name) {
+  scope :with_domain_name, ->(domain_name) {
     where('domain ilike ?', "%#{domain_name.strip}%") if domain_name.present?
   }
 

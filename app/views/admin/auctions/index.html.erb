@@ -108,7 +108,7 @@
                             <th class="col-xs-2">
                                 <%= sort_link(@q, 'created_at') %>
                             </th>
-                            <th class="col-xs-2">
+                            <th class="col-xs-2" style="width: 100px !important; word-break: break-all;">
                                 <%= sort_link(@q, 'registration_code') %>
                             </th>
                             <th class="col-xs-2">
@@ -126,9 +126,9 @@
                             <td><%= colorize_auction(auction) %></td>
                             <td><%= auction.status %></td>
                             <td><%= auction.created_at %></td>
-                            <td><%= auction.registration_code %></td>
+                            <td style="width: 100px !important; word-break: break-all;"><%= auction.registration_code %></td>
                             <td><%= auction.registration_deadline %></td>
-                            <td><%= auction.platform.nil? ? 'automatically' : auction.platform %></td>
+                            <td><%= auction.platform.nil? ? 'auto' : auction.platform %></td>
                         </tr>
                         <% end %>
                     </tbody>

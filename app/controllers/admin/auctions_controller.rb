@@ -9,6 +9,7 @@ module Admin
                          .with_status(params[:statuses_contains])
                          .with_start_created_at_date(params[:created_at_start])
                          .with_end_created_at_date(params[:created_at_end])
+                         .order(created_at: :desc)
 
       @auction = Auction.new
 
@@ -28,7 +29,18 @@ module Admin
     end
 
     def create
-      auction = Auction.new(domain: params[:domain], status: Auction.statuses[:started], platform: 'manually')
+      auction = Auction.new(domain: params[:domain], status: Auction.statuses[:started], platform: 'manual')
+
+      if domain_exists_in_blocked_disputed_and_registered?(params[:domain])
+        flash[:alert] = "Adding #{params[:domain]} failed - domain registered or regsitration is blocked"
+        redirect_to admin_auctions_path and return
+      end
+
+      result = check_availability(params[:domain])[0]
+      if result[:avail].zero?
+        flash[:alert] = "Cannot generate domain. Reason: #{result[:reason]}"
+        redirect_to admin_auctions_path and return
+      end
 
       if auction.save
         remove_from_reserved(auction)
@@ -41,33 +53,62 @@ module Admin
     end
 
     def upload_spreadsheet
+      if params[:q].nil?
+        flash[:alert] = 'No file upload! Look at the left of upload button!'
+        redirect_to admin_auctions_path and return
+      end
+
       filename = params[:q][:file]
       table = CSV.parse(File.read(filename), headers: true)
+
+      failed_names = []
 
       if validate_table(table)
         table.each do |row|
           record = row.to_h
-          auction = Auction.new(domain: record['name'], status: Auction.statuses[:started], platform: 'manually')
+
+          if domain_exists_in_blocked_disputed_and_registered?(record['name'])
+            failed_names << record['name']
+
+            next
+          end
+
+          result = check_availability(record['name'])[0]
+          if result[:avail].zero?
+            failed_names << record['name']
+
+            next
+          end
+
+          auction = Auction.new(domain: record['name'], status: Auction.statuses[:started], platform: 'manual')
           remove_from_reserved(auction) if auction.save!
         end
-        flash[:notice] = "Domains added"
-        redirect_to admin_auctions_path
+
+        flash[:notice] = 'Domains added!'
+        flash[:notice] = "Domains added! But these domains were ignored: #{failed_names.join(' ')}" if failed_names.present?
       else
-        flash[:alert] = "Invalid CSV format."
-        redirect_to admin_auctions_path
+        flash[:alert] = "Invalid CSV format. Should be column with 'name' where is the list of name of domains!"
       end
+
+      redirect_to admin_auctions_path
     end
 
     private
 
+    def check_availability(domain_name)
+      Epp::Domain.check_availability(domain_name)
+    end
+
+    def domain_exists_in_blocked_disputed_and_registered?(domain_name)
+      Domain.exists?(name: domain_name) ||
+        BlockedDomain.exists?(name: domain_name) ||
+        Dispute.exists?(domain_name: domain_name) ||
+        Auction.exists?(domain: domain_name)
+    end
+
     def validate_table(table)
       first_row = table.headers
-      first_row[0] == 'id' &&
-        first_row[1] == 'created_at' &&
-        first_row[2] == 'updated_at' &&
-        first_row[3] == 'creator_str' &&
-        first_row[4] == 'updator_str' &&
-        first_row[5] == 'name'
+      first_row.include? 'name'
     end
 
     def remove_from_reserved(auction)

@@ -50,7 +50,10 @@
 <hr/>
 
 <%= form_for :reserved_elements, url: release_to_auction_admin_reserved_domains_path, html: { class: 'form-horizontal', autocomplete: 'off' } do |f| %>
-  <%= f.submit 'Send to the auction list', class: 'btn btn-primary', style: 'margin: 10px 0 20px 0;' %>
+  <div style="display: flex; flex-direction: row; align-items: center">
+    <%= f.submit 'Send to the auction list', class: 'btn btn-primary', style: 'margin: 10px 0 20px 0;' %>
+    <span style="margin-left: 10px; font-weight: bold">Domains will be removed from reserved list!</span>
+  </div>
 
   <div class="row">
     <div class="col-md-12">
