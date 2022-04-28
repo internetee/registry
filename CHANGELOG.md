@@ -1,4 +1,5 @@
 28.04.2022
+* Fixed ns and dnssec validation error messages [#2296](https://github.com/internetee/registry/issues/2296)
 * Added auction list view to admin for improved ahandling of upcoming enlgish auction feature [#2341](https://github.com/internetee/registry/pull/2341)
 
 27.04.2022
