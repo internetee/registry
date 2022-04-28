@@ -266,6 +266,13 @@ Rails.application.routes.draw do
 
     resources :accounts
     resources :account_activities
+    resources :auctions, only: [ :index, :create ] do
+      collection do
+        post 'upload_spreadsheet', to: 'auctions#upload_spreadsheet', as: :upload_spreadsheet
+      end
+    end
+    # post 'admi/upload_spreadsheet', to: 'customers#upload_spreadsheet', as: :customers_upload_spreadsheet
+
 
     resources :bank_statements do
       resources :bank_transactions
@@ -334,6 +341,10 @@ Rails.application.routes.draw do
     resources :reserved_domains do
       member do
         get 'delete'
+      end
+
+      collection do
+        post 'release_to_auction', to: 'reserved_domains#release_to_auction', as: 'release_to_auction'
       end
     end
     resources :disputes do

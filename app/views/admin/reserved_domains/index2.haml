@@ -30,6 +30,7 @@
             &nbsp;
           = link_to(t('.csv_btn'), admin_reserved_domains_path(format: :csv, params: params.permit!), class: 'btn btn-default')
           = link_to(t('.reset_btn'), admin_reserved_domains_path, class: 'btn btn-default')
+          = link_to 'Send to auction',release_to_auction_admin_reserved_domains_path, method: :post, class: 'btn btn-default', style: 'margin-top: 5px;'
 %hr
 .row
   .col-md-12
@@ -37,6 +38,7 @@
       %table.table.table-hover.table-bordered.table-condensed
         %thead
           %tr
+            %th{class: 'col-xs-1'}
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'name')
             %th{class: 'col-xs-2'}
@@ -50,6 +52,8 @@
         %tbody
           - @domains.each do |x|
             %tr
+              %td{class: 'text-center'}
+                = check_box_tag "reserved_domains[domain_ids][]", x.id, false
               %td= x.name
               %td= x.password
               %td= l(x.created_at, format: :short)

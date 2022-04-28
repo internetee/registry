@@ -95,6 +95,7 @@ class Ability
     can :manage, User
     can :manage, ApiUser
     can :manage, AdminUser
+    can :manage, Auction
     can :manage, Certificate
     can :manage, LegalDocument
     can :manage, BankStatement
