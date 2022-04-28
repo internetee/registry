@@ -7,7 +7,6 @@ class ValidationEventCheckForceDeleteJob < ApplicationJob
       event.start_force_delete
     elsif contact.need_to_lift_force_delete?
       event.refresh_status_notes
-      event.lift_force_delete
     end
   end
 end

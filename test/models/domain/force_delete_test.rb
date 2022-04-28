@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class ForceDeleteTest < ActionMailer::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @domain = domains(:shop)
     Setting.redemption_grace_period = 30
@@ -396,6 +398,7 @@ class ForceDeleteTest < ActionMailer::TestCase
       contact.verify_email
     end
 
+    perform_enqueued_jobs
     @domain.reload
 
     assert @domain.force_delete_scheduled?
@@ -428,6 +431,7 @@ class ForceDeleteTest < ActionMailer::TestCase
       contact_first.verify_email
     end
 
+    perform_enqueued_jobs
     domain.reload
 
     assert_equal domain.status_notes[DomainStatus::FORCE_DELETE], invalid_emails
@@ -455,6 +459,8 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     travel_to Time.zone.parse('2010-07-05 0:00:03')
     contact_first.verify_email
+
+    perform_enqueued_jobs
     domain.reload
 
     assert_equal domain.status_notes[DomainStatus::FORCE_DELETE], invalid_email
@@ -472,12 +478,14 @@ class ForceDeleteTest < ActionMailer::TestCase
     contact_one = @domain.admin_contacts.first
     contact_one.update_attribute(:email, email_one)
     contact_one.verify_email
+    perform_enqueued_jobs
 
     assert contact_one.need_to_start_force_delete?
 
     contact_two = @domain.admin_contacts.first
     contact_two.update_attribute(:email, email_two)
     contact_two.verify_email
+    perform_enqueued_jobs
 
     assert contact_two.need_to_start_force_delete?
 

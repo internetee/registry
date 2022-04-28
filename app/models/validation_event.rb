@@ -92,14 +92,4 @@ class ValidationEvent < ApplicationRecord
                                                         purge_date: domain.purge_date,
                                                         email: domain.status_notes[DomainStatus::FORCE_DELETE]))
   end
-
-  def lift_force_delete
-    domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
-    registrant_domains = Domain.where(registrant_id: Registrant.where(email: email).pluck(:id))
-    domains = domain_contacts.map(&:domain).flatten + registrant_domains
-
-    domains.each do |domain|
-      Domains::ForceDeleteLift::Base.run(domain: domain)
-    end
-  end
 end
