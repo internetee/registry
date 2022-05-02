@@ -12,14 +12,9 @@ module EmailVerifable
   end
 
   def need_to_start_force_delete?
-    flag = false
     ValidationEvent::INVALID_EVENTS_COUNT_BY_LEVEL.each do |level, count|
-      if validation_events.count >= count && validate_email_data(level: level, count: count)
-        flag = true
-      end
+      validation_events.count >= count && validate_email_data(level: level, count: count)
     end
-
-    flag
   end
 
   def need_to_lift_force_delete?

@@ -35,8 +35,6 @@ class ValidationEvent < ApplicationRecord
   scope :smtp, -> { where('event_data @> ?', { 'check_level': 'smtp' }.to_json) }
   scope :by_object, ->(object) { where(validation_eventable: object) }
 
-  after_create :check_for_force_delete
-
   def self.validated_ids_by(klass)
     recent.successful.where('validation_eventable_type = ?', klass)
           .pluck(:validation_eventable_id)
@@ -56,40 +54,5 @@ class ValidationEvent < ApplicationRecord
 
   def object
     validation_eventable
-  end
-
-  def check_for_force_delete
-    ValidationEventCheckForceDeleteJob.perform_later(id, object.id)
-  end
-
-  def start_force_delete
-    Domains::ForceDeleteEmail::Base.run(email: email)
-  end
-
-  def refresh_status_notes
-    domain_list.each do |domain|
-      next unless domain.status_notes[DomainStatus::FORCE_DELETE]
-
-      domain.status_notes[DomainStatus::FORCE_DELETE].slice!(object.email_history)
-      domain.status_notes[DomainStatus::FORCE_DELETE].lstrip!
-      domain.save(validate: false)
-
-      notify_registrar(domain) unless domain.status_notes[DomainStatus::FORCE_DELETE].empty?
-    end
-  end
-
-  def domain_list
-    domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
-    registrant_ids = Registrant.where(email: email).pluck(:id)
-
-    (domain_contacts.map(&:domain).flatten + Domain.where(registrant_id: registrant_ids)).uniq
-  end
-
-  def notify_registrar(domain)
-    domain.registrar.notifications.create!(text: I18n.t('force_delete_auto_email',
-                                                        domain_name: domain.name,
-                                                        outzone_date: domain.outzone_date,
-                                                        purge_date: domain.purge_date,
-                                                        email: domain.status_notes[DomainStatus::FORCE_DELETE]))
   end
 end
