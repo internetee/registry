@@ -398,7 +398,7 @@ class ForceDeleteTest < ActionMailer::TestCase
       contact.verify_email
     end
 
-    perform_enqueued_jobs
+    perform_check_force_delete_job(contact.id)
     @domain.reload
 
     assert @domain.force_delete_scheduled?
@@ -431,7 +431,7 @@ class ForceDeleteTest < ActionMailer::TestCase
       contact_first.verify_email
     end
 
-    perform_enqueued_jobs
+    perform_check_force_delete_job(contact_first.id)
     domain.reload
 
     assert_equal domain.status_notes[DomainStatus::FORCE_DELETE], invalid_emails
@@ -460,7 +460,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     travel_to Time.zone.parse('2010-07-05 0:00:03')
     contact_first.verify_email
 
-    perform_enqueued_jobs
+    perform_check_force_delete_job(contact_first.id)
     domain.reload
 
     assert_equal domain.status_notes[DomainStatus::FORCE_DELETE], invalid_email
@@ -478,14 +478,14 @@ class ForceDeleteTest < ActionMailer::TestCase
     contact_one = @domain.admin_contacts.first
     contact_one.update_attribute(:email, email_one)
     contact_one.verify_email
-    perform_enqueued_jobs
+    perform_check_force_delete_job(contact_one.id)
 
     assert contact_one.need_to_start_force_delete?
 
     contact_two = @domain.admin_contacts.first
     contact_two.update_attribute(:email, email_two)
     contact_two.verify_email
-    perform_enqueued_jobs
+    perform_check_force_delete_job(contact_two.id)
 
     assert contact_two.need_to_start_force_delete?
 
@@ -534,5 +534,13 @@ class ForceDeleteTest < ActionMailer::TestCase
     @bounced_mail.status = '5.1.1'
     @bounced_mail.diagnostic = 'smtp; 550 5.1.1 user unknown'
     @bounced_mail.save!
+  end
+
+  private
+
+  def perform_check_force_delete_job(contact_id)
+    perform_enqueued_jobs do
+      ValidationEventCheckForceDeleteJob.perform_now(contact_id)
+    end
   end
 end
