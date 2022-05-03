@@ -540,7 +540,7 @@ class ForceDeleteTest < ActionMailer::TestCase
 
   def perform_check_force_delete_job(contact_id)
     perform_enqueued_jobs do
-      ValidationEventCheckForceDeleteJob.perform_now([contact_id])
+      CheckForceDeleteJob.perform_now([contact_id])
     end
   end
 end

@@ -27,7 +27,7 @@ class CheckForceDeleteTaskTest < ActiveSupport::TestCase
     run_task
 
     assert_enqueued_jobs 1
-    assert_enqueued_with(job: CheckForceDeleteJob, args: [@contact.id])
+    assert_enqueued_with(job: CheckForceDeleteJob, args: [[@contact.id]])
   end
 
   def test_enque_force_delete_when_invalid_record_by_regex
@@ -35,7 +35,7 @@ class CheckForceDeleteTaskTest < ActiveSupport::TestCase
     run_task
 
     assert_enqueued_jobs 1
-    assert_enqueued_with(job: CheckForceDeleteJob, args: [@invalid_contact.id])
+    assert_enqueued_with(job: CheckForceDeleteJob, args: [[@invalid_contact.id]])
   end
 
   private
