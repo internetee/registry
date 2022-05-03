@@ -1,22 +1,25 @@
-class ValidationEventCheckForceDeleteJob < ApplicationJob
-  def perform(contact_id)
-    @contact = Contact.find(contact_id)
-    email = @contact.email
+class CheckForceDeleteJob < ApplicationJob
+  def perform(contact_ids)
+    contacts = Contact.find(contact_ids)
 
-    if @contact.need_to_start_force_delete?
-      Domains::ForceDeleteEmail::Base.run(email: email)
-    elsif @contact.need_to_lift_force_delete?
-      domain_list(email).each { |domain| refresh_status_notes(domain) }
+    contacts.each do |contact|
+      email = contact.email
+
+      if contact.need_to_start_force_delete?
+        Domains::ForceDeleteEmail::Base.run(email: email)
+      elsif contact.need_to_lift_force_delete?
+        domain_list(email).each { |domain| refresh_status_notes(contact, domain) }
+      end
     end
   end
 
   private
 
-  def refresh_status_notes(domain)
+  def refresh_status_notes(contact, domain)
     force_delete_emails = domain.status_notes[DomainStatus::FORCE_DELETE]
     return unless force_delete_emails
 
-    force_delete_emails.slice!(@contact.email_history)
+    force_delete_emails.slice!(contact.email_history)
     force_delete_emails.lstrip!
     domain.save(validate: false)
 
