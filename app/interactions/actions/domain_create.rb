@@ -120,7 +120,7 @@ module Actions
       contact = Contact.find_by(code: contact_code)
       arr = admin ? @admin_contacts : @tech_contacts
       if contact
-        arr << { contact_id: contact.id, contact_code_cache: contact.code }
+        arr << { contact_id: contact.id }
       else
         domain.add_epp_error('2303', 'contact', contact_code, %i[domain_contacts not_found])
       end

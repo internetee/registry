@@ -9980,7 +9980,7 @@ RESPONSE:
       </value>
     </result>
     <result code="2302">
-      <msg lang="en">Contact already exists on this domain [contact_code_cache]</msg>
+      <msg lang="en">Contact already exists on this domain [contact_code]</msg>
       <value xmlns:obj="urn:ietf:params:xml:ns:obj">
         <obj:contact>FIXED:MAK21</obj:contact>
       </value>
@@ -10505,7 +10505,7 @@ RESPONSE:
       </value>
     </result>
     <result code="2302">
-      <msg lang="en">Contact already exists on this domain [contact_code_cache]</msg>
+      <msg lang="en">Contact already exists on this domain [contact_code]</msg>
       <value xmlns:obj="urn:ietf:params:xml:ns:obj">
         <obj:contact>FIXED:SH6021836789</obj:contact>
       </value>
@@ -14058,4 +14058,3 @@ RESPONSE:
   </response>
 </epp>
 ```
-
