@@ -10,6 +10,7 @@ class DomainContact < ApplicationRecord
 
   after_destroy :update_contact
   attr_accessor :value_typeahead
+  attr_writer :contact_code
 
   self.ignored_columns = %w[legacy_domain_id legacy_contact_id]
 
