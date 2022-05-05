@@ -9980,12 +9980,6 @@ RESPONSE:
       </value>
     </result>
     <result code="2302">
-      <msg lang="en">Contact already exists on this domain [contact_code]</msg>
-      <value xmlns:obj="urn:ietf:params:xml:ns:obj">
-        <obj:contact>FIXED:MAK21</obj:contact>
-      </value>
-    </result>
-    <result code="2302">
       <msg lang="en">Public key already exists [public_key]</msg>
       <value xmlns:obj="urn:ietf:params:xml:ns:obj">
         <obj:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</obj:pubKey>
@@ -10502,12 +10496,6 @@ RESPONSE:
       <msg lang="en">Nameserver already exists on this domain [hostname]</msg>
       <value xmlns:obj="urn:ietf:params:xml:ns:obj">
         <obj:hostAttr>ns.kozey114.ee</obj:hostAttr>
-      </value>
-    </result>
-    <result code="2302">
-      <msg lang="en">Contact already exists on this domain [contact_code]</msg>
-      <value xmlns:obj="urn:ietf:params:xml:ns:obj">
-        <obj:contact>FIXED:SH6021836789</obj:contact>
       </value>
     </result>
     <trID>
