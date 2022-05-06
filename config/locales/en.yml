@@ -96,8 +96,6 @@ en:
             contact:
               blank: 'Contact was not found'
               taken: 'Contact already exists on this domain'
-            contact_code_cache:
-              taken: 'Contact already exists on this domain'
 
         domain_status:
           attributes:
@@ -628,7 +626,7 @@ en:
   contact_ident: 'Contact ident'
   results_per_page: 'Results per page'
   nameserver_hostname: 'Nameserver hostname'
-  result_count: 
+  result_count:
     zero: 'No results'
     other: '%{count} results'
     one: '1 result'

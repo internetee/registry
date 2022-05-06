@@ -23,7 +23,7 @@ module Serializers
       # rubocop:enable Metrics/AbcSize
 
       def contacts
-        domain.domain_contacts.map { |c| { code: c.contact_code_cache, type: c.type } }
+        domain.domain_contacts.map { |c| { code: c.contact.code, type: c.type } }
       end
 
       def nameservers

@@ -52,6 +52,20 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 
 --
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
+--
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -848,7 +862,6 @@ CREATE TABLE public.domain_contacts (
     domain_id integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    contact_code_cache character varying,
     creator_str character varying,
     updator_str character varying,
     type character varying,
@@ -1091,7 +1104,6 @@ CREATE TABLE public.invoices (
     buyer_vat_no character varying,
     issue_date date NOT NULL,
     e_invoice_sent_at timestamp without time zone,
-    payment_link character varying,
     CONSTRAINT invoices_due_date_is_not_before_issue_date CHECK ((due_date >= issue_date))
 );
 
@@ -5083,13 +5095,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220106123143'),
 ('20220113201642'),
 ('20220113220809'),
+('20220228093211'),
 ('20220316140727'),
 ('20220406085500'),
+('20220412130856'),
 ('20220413073315'),
 ('20220413084536'),
 ('20220413084748'),
-('20220124105717'),
-('20220216113112'),
-('20220228093211'),
-('20220412130856');
+('20220504090512');
+
 

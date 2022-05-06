@@ -161,14 +161,6 @@ class Domain < ApplicationRecord
     attribute: 'hostname'
   }
 
-  validates :tech_domain_contacts, uniqueness_multi: {
-    attribute: 'contact_code_cache'
-  }
-
-  validates :admin_domain_contacts, uniqueness_multi: {
-    attribute: 'contact_code_cache'
-  }
-
   validates :dnskeys, uniqueness_multi: {
     attribute: 'public_key'
   }
