@@ -1,3 +1,6 @@
+06.05.2022
+* refactored out the contact_code_cache from domain_contacts model [#2370](https://github.com/internetee/registry/issues/2370)
+
 28.04.2022
 * Fixed ns and dnssec validation error messages [#2296](https://github.com/internetee/registry/issues/2296)
 * Added status notes to REPP domain info output [#2331](https://github.com/internetee/registry/issues/2331)
