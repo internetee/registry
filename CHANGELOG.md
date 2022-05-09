@@ -1,3 +1,6 @@
+09.05.2022
+* test for auction view [#2373](https://github.com/internetee/registry/pull/2373)
+
 06.05.2022
 * refactored out the contact_code_cache from domain_contacts model [#2370](https://github.com/internetee/registry/issues/2370)
 
