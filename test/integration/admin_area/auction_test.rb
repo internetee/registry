@@ -163,4 +163,11 @@ class AdminAreaAuctionIntegrationTest < ApplicationSystemTestCase
     visit admin_reserved_domains_path
     assert_no_text domain.name
   end
+
+  def test_should_open_reserved_page_in_modal_window
+    visit admin_auctions_path
+
+    find(:id, "reserved-modal", match: :first).click
+    assert_text 'Reserved domains'
+  end
 end
