@@ -7,7 +7,7 @@ class AdminAreaAccountActivitiesIntegrationTest < ApplicationSystemTestCase
     sign_in users(:admin)
     @original_default_language = Setting.default_language
   end
-  
+
   def test_show_account_activities_page
     account_activities(:one).update(sum: "123.00")
     visit admin_account_activities_path
@@ -19,7 +19,7 @@ class AdminAreaAccountActivitiesIntegrationTest < ApplicationSystemTestCase
     visit admin_root_path
     click_link_or_button 'Settings', match: :first
     find(:xpath, "//ul/li/a[text()='Account activities']").click
-    
+
     assert has_current_path?(admin_account_activities_path(created_after: 'today'))
   end
 
