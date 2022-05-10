@@ -38,6 +38,25 @@ class CheckForceDeleteTaskTest < ActiveSupport::TestCase
     assert_enqueued_with(job: CheckForceDeleteJob, args: [[@invalid_contact.id]])
   end
 
+  def test_not_enque_force_delete
+    trumail_results = OpenStruct.new(success: false,
+                                     email: @contact.email,
+                                     domain: 'box.tests',
+                                     errors: { mx: 'target host(s) not found' })
+
+    Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
+    Spy.on_instance_method(Actions::AAndAaaaEmailValidation, :call).and_return([])
+
+    action = Actions::EmailCheck.new(email: @contact.email,
+                                     validation_eventable: @contact,
+                                     check_level: 'mx')
+    2.times do
+      action.call
+    end
+
+    assert_enqueued_jobs 0
+  end
+
   private
 
   def run_task
