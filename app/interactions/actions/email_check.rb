@@ -26,33 +26,27 @@ module Actions
       Rails.env.test? && check_level == 'smtp' ? :mx : check_level.to_sym
     end
 
+    def destroy_old_validations(validation_events, minimum_size)
+      return unless validation_events.count > minimum_size
+
+      validation_events.order!(created_at: :asc)
+      validation_events.first.destroy while validation_events.count > minimum_size
+    end
+
     def filtering_old_failed_records(result)
-      if @check_level == "mx" && !result.success && validation_eventable.validation_events.count > 3
-        validation_eventable.validation_events.order!(created_at: :asc)
-        while validation_eventable.validation_events.count > 3
-          validation_eventable.validation_events.first.destroy
-        end
-      end
+      events = validation_eventable.validation_events
 
-      if @check_level == "mx" && result.success && validation_eventable.validation_events.count > 1
-        validation_eventable.validation_events.order!(created_at: :asc)
-        while validation_eventable.validation_events.count > 1
-          validation_eventable.validation_events.first.destroy
-        end
-      end
+      destroy_old_validations(events, 3) if @check_level == 'mx' && !result.success
 
-      if @check_level == "smtp" && validation_eventable.validation_events.count > 1
-        validation_eventable.validation_events.order!(created_at: :asc)
-        while validation_eventable.validation_events.count > 1
-          validation_eventable.validation_events.first.destroy
-        end
-      end
+      destroy_old_validations(events, 1) if @check_level == 'mx' && result.success
+
+      destroy_old_validations(events, 1) if @check_level == 'smtp'
     end
 
     def save_result(result)
       contacts = Contact.where(email: email)
 
-      if !result.success && @check_level == "mx"
+      if !result.success && @check_level == 'mx'
         result_validation = Actions::AAndAaaaEmailValidation.call(email: @email, value: 'A')
         output_a_and_aaaa_validation_results(email: @email,
                                              result: result_validation,
@@ -96,8 +90,7 @@ module Actions
         when 'AAAA'
           ress = dns.getresources domain, Resolv::DNS::Resource::IN::AAAA
         end
-
-        result = ress.map { |r| r.address }
+        result = ress.map(&:address)
       end
 
       result
