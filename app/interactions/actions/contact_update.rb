@@ -115,8 +115,9 @@ module Actions
       contact.email_history = old_email
       updated = contact.save
 
-      if updated && email_changed && contact.registrant?
-        ContactMailer.email_changed(contact: contact, old_email: old_email).deliver_now
+      if updated && email_changed
+        contact.validation_events.where('event_data @> ?', { 'email': old_email }.to_json).destroy_all
+        ContactMailer.email_changed(contact: contact, old_email: old_email).deliver_now if contact.registrant?
       end
 
       updated
