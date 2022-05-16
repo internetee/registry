@@ -26,8 +26,8 @@ module Actions
       Rails.env.test? && check_level == 'smtp' ? :mx : check_level.to_sym
     end
 
-    def destroy_old_validations(validation_events, minimum_size)
-      return unless validation_events.count > minimum_size
+    def destroy_old_validations(validation_events, minimum_size, check_level)
+      return unless validation_events.count > minimum_size && @check_level == check_level
 
       validation_events.order!(created_at: :asc)
       validation_events.first.destroy while validation_events.count > minimum_size
@@ -36,11 +36,11 @@ module Actions
     def filtering_old_failed_records(result)
       events = validation_eventable.validation_events
 
-      destroy_old_validations(events, ValidationEvent::MX_CHECK) if @check_level == 'mx' && !result.success
+      destroy_old_validations(events, ValidationEvent::MX_CHECK, 'mx') unless result.success
 
-      destroy_old_validations(events, ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL[:mx]) if @check_level == 'mx' && result.success
+      destroy_old_validations(events, ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL[:mx], 'mx') if result.success
 
-      destroy_old_validations(events, ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL[:smtp]) if @check_level == 'smtp'
+      destroy_old_validations(events, ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL[:smtp], 'smtp')
     end
 
     def save_result(result)
