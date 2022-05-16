@@ -36,11 +36,11 @@ module Actions
     def filtering_old_failed_records(result)
       events = validation_eventable.validation_events
 
-      destroy_old_validations(events, 3) if @check_level == 'mx' && !result.success
+      destroy_old_validations(events, ValidationEvent::MX_CHECK) if @check_level == 'mx' && !result.success
 
-      destroy_old_validations(events, 1) if @check_level == 'mx' && result.success
+      destroy_old_validations(events, ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL[:mx]) if @check_level == 'mx' && result.success
 
-      destroy_old_validations(events, 1) if @check_level == 'smtp'
+      destroy_old_validations(events, ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL[:smtp]) if @check_level == 'smtp'
     end
 
     def save_result(result)
