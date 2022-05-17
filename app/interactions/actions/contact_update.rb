@@ -37,12 +37,11 @@ module Actions
     end
 
     def maybe_filtering_old_failed_records
-      if contact.validation_events.count > 1
-        contact.validation_events.order!(created_at: :asc)
-        while contact.validation_events.count >= 1
-          contact.validation_events.first.destroy
-        end
-      end
+      validation_events = contact.validation_events
+      return unless validation_events.count > 1
+
+      validation_events.order!(created_at: :asc)
+      validation_events.first.destroy while validation_events.count >= 1
     end
 
     def maybe_remove_address
@@ -116,8 +115,9 @@ module Actions
       contact.email_history = old_email
       updated = contact.save
 
-      if updated && email_changed && contact.registrant?
-        ContactMailer.email_changed(contact: contact, old_email: old_email).deliver_now
+      if updated && email_changed
+        contact.validation_events.where('event_data @> ?', { 'email': old_email }.to_json).destroy_all
+        ContactMailer.email_changed(contact: contact, old_email: old_email).deliver_now if contact.registrant?
       end
 
       updated
