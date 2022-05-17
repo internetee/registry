@@ -862,7 +862,6 @@ CREATE TABLE public.domain_contacts (
     domain_id integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    contact_code_cache character varying,
     creator_str character varying,
     updator_str character varying,
     type character varying,
