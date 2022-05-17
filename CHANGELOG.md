@@ -1,6 +1,7 @@
 17.05.2022
 * removed unnecessary contact validation on contact create [#2376](https://github.com/internetee/registry/pull/2376)
 * Refactored email validation job [#2369](https://github.com/internetee/registry/pull/2369)
+* Job for deprecated validation events removal [#2374](https://github.com/internetee/registry/issues/2374)
 
 09.05.2022
 * test for auction view [#2373](https://github.com/internetee/registry/pull/2373)
