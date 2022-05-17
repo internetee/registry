@@ -1,3 +1,6 @@
+17.05.2022
+* removed unnecessary contact validation on contact create [#2376](https://github.com/internetee/registry/pull/2376)
+
 09.05.2022
 * test for auction view [#2373](https://github.com/internetee/registry/pull/2373)
 
