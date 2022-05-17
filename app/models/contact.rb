@@ -49,7 +49,7 @@ class Contact < ApplicationRecord
 
   validates :phone, presence: true, e164: true, phone: true
 
-  validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
+  # validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
 
   validates :code,
             uniqueness: { message: :epp_id_taken },

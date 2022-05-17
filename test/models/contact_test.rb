@@ -90,14 +90,14 @@ class ContactTest < ActiveJob::TestCase
     assert contact.valid?
   end
 
-  def test_email_verification_regex_error
-    Truemail.configure.default_validation_type = :regex
+  # def test_email_verification_regex_error
+  #   Truemail.configure.default_validation_type = :regex
 
-    contact = valid_contact
-    contact.email = '`@internet.ee'
-    assert contact.invalid?
-    assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'), contact.errors.messages[:email].first
-  end
+  #   contact = valid_contact
+  #   contact.email = '`@internet.ee'
+  #   assert contact.invalid?
+  #   assert_equal I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'), contact.errors.messages[:email].first
+  # end
 
   def test_invalid_without_phone
     contact = valid_contact
