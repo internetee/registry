@@ -1,6 +1,8 @@
 en:
   registrar:
     domains:
+      email_error_message: 'Check contacts emails'
+
       index:
         header: Domains
         new_btn: New domain

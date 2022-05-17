@@ -34,8 +34,8 @@ class Registrar < ApplicationRecord
   attribute :vat_rate, ::Type::VatRate.new
   after_initialize :set_defaults
 
-  validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
-  validate :correct_billing_email_format
+  # validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
+  # validate :correct_billing_email_format
 
   alias_attribute :contact_email, :email
 
@@ -218,8 +218,15 @@ class Registrar < ApplicationRecord
   end
 
   def notify(action)
-    text = I18n.t("notifications.texts.#{action.notification_key}", contact: action.contact.code)
-    notifications.create!(text: text)
+    text = I18n.t("notifications.texts.#{action.notification_key}", contact: action.contact&.code,
+                                                                    count: action.subactions&.count)
+    if action.bulk_action?
+      notifications.create!(text: text, action_id: action.id,
+                            attached_obj_type: 'BulkAction',
+                            attached_obj_id: action.id)
+    else
+      notifications.create!(text: text)
+    end
   end
 
   def e_invoice_iban

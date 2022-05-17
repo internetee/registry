@@ -1,0 +1,1 @@
+class BulkAction < Action; end

@@ -12,7 +12,7 @@ class Ability
       @user.roles&.each { |role| send(role) }
     when 'ApiUser'
       @user.roles&.each { |role| send(role) }
-      when 'RegistrantUser'
+    when 'RegistrantUser'
       static_registrant
     end
 
@@ -95,6 +95,7 @@ class Ability
     can :manage, User
     can :manage, ApiUser
     can :manage, AdminUser
+    can :manage, Auction
     can :manage, Certificate
     can :manage, LegalDocument
     can :manage, BankStatement

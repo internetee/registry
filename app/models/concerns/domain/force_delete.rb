@@ -34,13 +34,7 @@ module Domain::ForceDelete
     reason = explicit&.downcase
     return reason if %w[invalid_email invalid_phone].include?(reason)
 
-    if contact_emails_verification_failed.present?
-      'invalid_email'
-    elsif registrant.org?
-      'legal_person'
-    else
-      'private_person'
-    end
+    registrant.org? ? 'legal_person' : 'private_person'
   end
 
   def force_delete_scheduled?

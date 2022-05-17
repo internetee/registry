@@ -5,7 +5,7 @@ module Admin
 
     # rubocop:disable Metrics/MethodLength
     def index
-      @q = ApiLog::EppLog.ransack(params[:q])
+      @q = ApiLog::EppLog.ransack(PartialSearchFormatter.format(params[:q]))
       @q.sorts = 'id desc' if @q.sorts.empty?
 
       @epp_logs = @q.result
@@ -29,16 +29,19 @@ module Admin
 
     def set_default_dates
       params[:q] ||= {}
+      return unless default_dates?
 
-      if params[:q][:created_at_gteq].nil? && params[:q][:created_at_lteq].nil? && params[:created_after].present?
-        default_date = params[:created_after]
+      default_date = params[:created_after]
+      default_date = 'today' unless %w[today tomorrow yesterday].include?(default_date)
 
-        if !['today', 'tomorrow', 'yesterday'].include?(default_date)
-          default_date = 'today'
-        end
+      params[:q][:created_at_gteq] = Date.send(default_date).strftime("%Y-%m-%d")
+    end
 
-        params[:q][:created_at_gteq] = Date.send(default_date).strftime("%Y-%m-%d")
-      end
+    private
+
+    def default_dates?
+      params[:q] ||= {}
+      params[:q][:created_at_gteq].nil? && params[:q][:created_at_lteq].nil? && params[:created_after].present?
     end
   end
 end

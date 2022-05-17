@@ -2,7 +2,7 @@ class Notification < ApplicationRecord
   include Versions # version/notification_version.rb
 
   belongs_to :registrar
-  belongs_to :action
+  belongs_to :action, optional: true
 
   scope :unread, -> { where(read: false) }
 

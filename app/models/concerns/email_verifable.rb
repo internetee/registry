@@ -5,10 +5,6 @@ module EmailVerifable
     scope :recently_not_validated, -> { where.not(id: ValidationEvent.validated_ids_by(name)) }
   end
 
-  def email_verification_failed?
-    need_to_start_force_delete?
-  end
-
   def validate_email_data(level:, count:)
     validation_events.order(created_at: :desc).limit(count).all? do |event|
       event.check_level == level.to_s && event.failed?
@@ -18,9 +14,7 @@ module EmailVerifable
   def need_to_start_force_delete?
     flag = false
     ValidationEvent::INVALID_EVENTS_COUNT_BY_LEVEL.each do |level, count|
-      if validation_events.count >= count && validate_email_data(level: level, count: count)
-        flag = true
-      end
+      flag = true if validation_events.count >= count && validate_email_data(level: level, count: count)
     end
 
     flag

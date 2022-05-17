@@ -23,11 +23,12 @@ module Actions
     def maybe_change_email
       return if Rails.env.test?
 
-      [:regex, :mx].each do |m|
+      %i[regex mx].each do |m|
         result = Actions::SimpleMailValidator.run(email: @new_attributes[:email], level: m)
         next if result
 
-        contact.add_epp_error('2005', nil, "email didn't pass validation", I18n.t(:parameter_value_syntax_error))
+        err_text = "email '#{new_attributes[:email]}' didn't pass validation"
+        contact.add_epp_error('2005', nil, nil, "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
         @error = true
         return
       end
@@ -36,12 +37,11 @@ module Actions
     end
 
     def maybe_filtering_old_failed_records
-      if contact.validation_events.count > 1
-        contact.validation_events.order!(created_at: :asc)
-        while contact.validation_events.count >= 1
-          contact.validation_events.first.destroy
-        end
-      end
+      validation_events = contact.validation_events
+      return unless validation_events.count > 1
+
+      validation_events.order!(created_at: :asc)
+      validation_events.first.destroy while validation_events.count >= 1
     end
 
     def maybe_remove_address
@@ -112,10 +112,12 @@ module Actions
 
       email_changed = contact.will_save_change_to_email?
       old_email = contact.email_was
+      contact.email_history = old_email
       updated = contact.save
 
-      if updated && email_changed && contact.registrant?
-        ContactMailer.email_changed(contact: contact, old_email: old_email).deliver_now
+      if updated && email_changed
+        contact.validation_events.where('event_data @> ?', { 'email': old_email }.to_json).destroy_all
+        ContactMailer.email_changed(contact: contact, old_email: old_email).deliver_now if contact.registrant?
       end
 
       updated

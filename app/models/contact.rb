@@ -7,7 +7,6 @@ class Contact < ApplicationRecord
   include UserEvents
   include Contact::Transferable
   include Contact::Identical
-  include Contact::Disclosable
   include Contact::Archivable
   include EmailVerifable
 
@@ -16,7 +15,7 @@ class Contact < ApplicationRecord
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
   has_many :legal_documents, as: :documentable
-  has_many :validation_events, as: :validation_eventable
+  has_many :validation_events, as: :validation_eventable, dependent: :destroy
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
   has_many :actions, dependent: :destroy
 
@@ -25,10 +24,18 @@ class Contact < ApplicationRecord
   alias_attribute :kind, :ident_type
   alias_attribute :copy_from_id, :original_id # Old attribute name; for PaperTrail
 
-  scope :email_verification_failed, lambda {
-    joins('LEFT JOIN email_address_verifications emv ON contacts.email = emv.email')
-      .where('success = false and verified_at IS NOT NULL')
-  }
+  scope :with_different_company_name, (lambda do |company|
+    where("ident = ? AND ident_country_code = 'EE' AND name != ?",
+          company.registration_number,
+          company.company_name)
+  end)
+
+  scope :with_different_registrant_name, (lambda do |user|
+    where('ident = ? AND ident_country_code = ? AND UPPER(name) != UPPER(?)',
+          user.ident,
+          user.country.alpha2,
+          user.username)
+  end)
 
   NAME_REGEXP = /([\u00A1-\u00B3\u00B5-\u00BF\u0021-\u0026\u0028-\u002C\u003A-\u0040]|
     [\u005B-\u005F\u007B-\u007E\u2040-\u206F\u20A0-\u20BF\u2100-\u218F])/x
@@ -42,7 +49,7 @@ class Contact < ApplicationRecord
 
   validates :phone, presence: true, e164: true, phone: true
 
-  validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
+  # validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
 
   validates :code,
             uniqueness: { message: :epp_id_taken },
@@ -186,15 +193,6 @@ class Contact < ApplicationRecord
         ['UpdateProhibited', SERVER_UPDATE_PROHIBITED],
         ['DeleteProhibited', SERVER_DELETE_PROHIBITED]
       ]
-    end
-
-    def to_csv
-      CSV.generate do |csv|
-        csv << column_names
-        all.each do |contact|
-        csv << contact.attributes.values_at(*column_names)
-        end
-      end
     end
 
     def pdf(html)
@@ -568,5 +566,28 @@ class Contact < ApplicationRecord
 
   def deletable?
     !linked?
+  end
+
+  def ident_human_description
+    description = "[#{ident_country_code} #{ident_type}]"
+    description.prepend("#{ident} ") if ident.present?
+
+    description
+  end
+
+  def as_csv_row
+    [
+      name,
+      code,
+      ident_human_description,
+      email,
+      created_at.to_formatted_s(:db),
+      registrar,
+      phone,
+    ]
+  end
+
+  def self.csv_header
+    ['Name', 'ID', 'Ident', 'E-mail', 'Created at', 'Registrar', 'Phone']
   end
 end

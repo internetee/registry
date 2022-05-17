@@ -80,6 +80,35 @@ class EppContactUpdateBaseTest < EppTestCase
     assert_emails 1
   end
 
+  def test_destroy_old_validation_when_email_is_changed
+    @contact.verify_email
+    old_validation_event = @contact.validation_events.first
+    @contact.update_columns(code: @contact.code.upcase)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
+              <contact:id>john-001</contact:id>
+              <contact:chg>
+                <contact:email>john-new@inbox.test</contact:email>
+              </contact:chg>
+            </contact:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert_raises(ActiveRecord::RecordNotFound) do
+      ValidationEvent.find(old_validation_event.id)
+    end
+  end
+
   def test_skips_notifying_contact_when_email_is_not_changed
     assert_equal 'john-001', @contact.code
     assert_equal 'john@inbox.test', @contact.email

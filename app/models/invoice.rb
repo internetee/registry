@@ -3,7 +3,6 @@ class Invoice < ApplicationRecord
   include Invoice::Cancellable
   include Invoice::Payable
   include Invoice::BookKeeping
-  extend ToCsv
 
   belongs_to :buyer, class_name: 'Registrar'
   has_one  :account_activity
@@ -117,6 +116,23 @@ class Invoice < ApplicationRecord
     e_invoice_sent_at.present?
   end
 
+  def as_csv_row
+    [
+      number,
+      buyer,
+      cancelled? ? I18n.t(:cancelled) : due_date,
+      receipt_date_status,
+      issue_date,
+      total,
+      currency,
+      seller_name,
+    ]
+  end
+
+  def self.csv_header
+    ['Number', 'Buyer', 'Due Date', 'Receipt Date', 'Issue Date', 'Total', 'Currency', 'Seller Name']
+  end
+
   def self.create_from_transaction!(transaction)
     registrar_user = Registrar.find_by(reference_no: transaction.parsed_ref_number)
     return unless registrar_user
@@ -127,6 +143,16 @@ class Invoice < ApplicationRecord
   end
 
   private
+
+  def receipt_date_status
+    if paid?
+      receipt_date
+    elsif cancelled?
+      I18n.t(:cancelled)
+    else
+      I18n.t(:unpaid)
+    end
+  end
 
   def apply_default_buyer_vat_no
     self.buyer_vat_no = buyer.vat_no

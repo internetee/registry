@@ -304,7 +304,8 @@ CREATE TABLE public.actions (
     user_id integer,
     operation character varying NOT NULL,
     created_at timestamp without time zone,
-    contact_id integer
+    contact_id integer,
+    bulk_action_id integer
 );
 
 
@@ -350,7 +351,8 @@ CREATE TABLE public.auctions (
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp without time zone NOT NULL,
     registration_code character varying,
-    registration_deadline timestamp without time zone
+    registration_deadline timestamp without time zone,
+    platform integer
 );
 
 
@@ -667,7 +669,8 @@ CREATE TABLE public.contacts (
     upid integer,
     up_date timestamp without time zone,
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL
+    disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    email_history character varying
 );
 
 
@@ -825,7 +828,8 @@ CREATE TABLE public.dnskeys (
     updator_str character varying,
     legacy_domain_id integer,
     updated_at timestamp without time zone,
-    validation_datetime timestamp without time zone
+    validation_datetime timestamp without time zone,
+    failed_validation_reason character varying
 );
 
 
@@ -858,7 +862,6 @@ CREATE TABLE public.domain_contacts (
     domain_id integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    contact_code_cache character varying,
     creator_str character varying,
     updator_str character varying,
     type character varying,
@@ -1193,6 +1196,7 @@ CREATE TABLE public.invoices (
     buyer_vat_no character varying,
     issue_date date NOT NULL,
     e_invoice_sent_at timestamp without time zone,
+    payment_link character varying,
     CONSTRAINT invoices_due_date_is_not_before_issue_date CHECK ((due_date >= issue_date))
 );
 
@@ -2501,7 +2505,8 @@ CREATE TABLE public.registrars (
     iban character varying,
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
     legaldoc_optout boolean DEFAULT false NOT NULL,
-    legaldoc_optout_comment text
+    legaldoc_optout_comment text,
+    email_history character varying
 );
 
 
@@ -5395,7 +5400,17 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211125184334'),
 ('20211126085139'),
 ('20211231113934'),
-('20220106123143');
-
+('20220106123143'),
+('20220113201642'),
+('20220113220809'),
+('20220124105717'),
+('20220216113112'),
+('20220228093211'),
+('20220316140727'),
+('20220412130856'),
+('20220413073315'),
+('20220413084536'),
+('20220413084748'),
+('20220504090512');
 
 

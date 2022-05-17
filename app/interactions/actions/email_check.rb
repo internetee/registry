@@ -31,31 +31,27 @@ module Actions
       Rails.env.test? && check_level == 'smtp' ? :mx : check_level.to_sym
     end
 
+    def destroy_old_validations(validation_events, minimum_size, check_level)
+      return unless validation_events.count > minimum_size && @check_level == check_level
+
+      validation_events.order!(created_at: :asc)
+      validation_events.first.destroy while validation_events.count > minimum_size
+    end
+
     def filtering_old_failed_records(result)
-      if @check_level == "mx" && !result.success && validation_eventable.validation_events.count > 3
-        validation_eventable.validation_events.order!(created_at: :asc)
-        while validation_eventable.validation_events.count > 3
-          validation_eventable.validation_events.first.destroy
-        end
-      end
+      events = validation_eventable.validation_events
 
-      if @check_level == "mx" && result.success && validation_eventable.validation_events.count > 1
-        validation_eventable.validation_events.order!(created_at: :asc)
-        while validation_eventable.validation_events.count > 1
-          validation_eventable.validation_events.first.destroy
-        end
-      end
+      destroy_old_validations(events, ValidationEvent::MX_CHECK, 'mx') unless result.success
 
-      if @check_level == "smtp" && validation_eventable.validation_events.count > 1
-        validation_eventable.validation_events.order!(created_at: :asc)
-        while validation_eventable.validation_events.count > 1
-          validation_eventable.validation_events.first.destroy
-        end
-      end
+      destroy_old_validations(events, ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL[:mx], 'mx') if result.success
+
+      destroy_old_validations(events, ValidationEvent::REDEEM_EVENTS_COUNT_BY_LEVEL[:smtp], 'smtp')
     end
 
     def save_result(result)
-      if !result.success && @check_level == "mx"
+      contacts = Contact.where(email: email)
+
+      if !result.success && @check_level == 'mx'
         result_validation = Actions::AAndAaaaEmailValidation.call(email: @email, value: 'A')
         output_a_and_aaaa_validation_results(email: @email,
                                              result: result_validation,
@@ -65,11 +61,13 @@ module Actions
         output_a_and_aaaa_validation_results(email: @email,
                                              result: result_validation,
                                              type: 'AAAA')
+        result.success = result_validation.present?
+      end
 
-        result_validation.present? ? result.success = true : result.success = false
-        validation_eventable.validation_events.create(validation_event_attrs(result))
-      else
-        validation_eventable.validation_events.create(validation_event_attrs(result))
+      contacts.find_in_batches(batch_size: 500) do |contact_batches|
+        contact_batches.each do |contact|
+          contact.validation_events.create(validation_event_attrs(result))
+        end
       end
     rescue ActiveRecord::RecordNotSaved
       logger.info "Cannot save validation result for #{log_object_id}"
@@ -97,8 +95,7 @@ module Actions
         when 'AAAA'
           ress = dns.getresources domain, Resolv::DNS::Resource::IN::AAAA
         end
-
-        result = ress.map { |r| r.address }
+        result = ress.map(&:address)
       end
 
       result

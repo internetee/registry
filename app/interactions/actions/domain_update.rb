@@ -45,6 +45,10 @@ module Actions
     def assign_new_registrant
       domain.add_epp_error('2306', nil, nil, %i[registrant cannot_be_missing]) unless params[:registrant][:code]
 
+      contact_code = params[:registrant][:code]
+      contact = Contact.find_by(code: contact_code)
+      validate_email(contact.email)
+
       regt = Registrant.find_by(code: params[:registrant][:code])
       unless regt
         domain.add_epp_error('2303', 'registrant', params[:registrant], %i[registrant not_found])
@@ -120,8 +124,34 @@ module Actions
       @dnskeys << { id: dnkey.id, _destroy: 1 } if dnkey
     end
 
+    def start_validate_email(props)
+      contact = Contact.find_by(code: props[0][:contact_code])
+
+      return if contact.nil?
+
+      validate_email(contact.email)
+    end
+
+    def validate_email(email)
+      return true if Rails.env.test?
+
+      %i[regex mx].each do |m|
+        result = Actions::SimpleMailValidator.run(email: email, level: m)
+        next if result
+
+        err_text = "email #{email} didn't pass validation"
+        domain.add_epp_error('2005', nil, nil, "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
+        @error = true
+        return
+      end
+
+      true
+    end
+
     def assign_admin_contact_changes
       props = gather_domain_contacts(params[:contacts].select { |c| c[:type] == 'admin' })
+
+      start_validate_email(props) if props.present?
 
       if props.any? && domain.admin_change_prohibited?
         domain.add_epp_error('2304', 'admin', DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED,
@@ -135,6 +165,8 @@ module Actions
     def assign_tech_contact_changes
       props = gather_domain_contacts(params[:contacts].select { |c| c[:type] == 'tech' },
                                      admin: false)
+
+      start_validate_email(props) if props.present?
 
       if props.any? && domain.tech_change_prohibited?
         domain.add_epp_error('2304', 'tech', DomainStatus::SERVER_TECH_CHANGE_PROHIBITED,
@@ -173,7 +205,7 @@ module Actions
         domain.add_epp_error('2306', 'contact', code,
                              %i[domain_contacts admin_contact_can_be_only_private_person])
       else
-        add ? { contact_id: obj.id, contact_code_cache: obj.code } : { id: obj.id, _destroy: 1 }
+        add ? { contact_id: obj.id, contact_code: obj.code } : { id: obj.id, _destroy: 1 }
       end
     end
 

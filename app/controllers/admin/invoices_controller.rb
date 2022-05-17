@@ -7,8 +7,8 @@ module Admin
     end
 
     def create
-      r = Registrar.find_by(id: deposit_params[:registrar_id])
-      @deposit = Deposit.new(deposit_params.merge(registrar: r))
+      registrar = Registrar.find(deposit_params[:registrar_id])
+      @deposit = Deposit.new(deposit_params.merge(registrar: registrar))
       @invoice = @deposit.issue_prepayment_invoice
 
       if @invoice&.persisted?

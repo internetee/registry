@@ -11,6 +11,8 @@ module Domains
         domains = domain_contacts.map(&:domain).flatten +
                   Domain.where(registrant_id: registrant_ids)
 
+        return if expired_or_hold_domains_exists?(domains)
+
         domains.each do |domain|
           next if domain.expired?
 
@@ -20,12 +22,30 @@ module Domains
 
       private
 
+      def expired_or_hold_domains_exists?(domains)
+        domains.any? do |domain|
+          domain.statuses.include?(DomainStatus::SERVER_HOLD) && email.include?(domain.name)
+        end
+      end
+
       def before_execute_force_delete(domain)
         if domain.force_delete_scheduled? && !domain.status_notes[DomainStatus::FORCE_DELETE].nil?
           added_additional_email_into_notes(domain)
         else
           process_force_delete(domain)
         end
+      end
+
+      def notify_registrar(domain)
+        template = I18n.t('force_delete_auto_email',
+                          domain_name: domain.name,
+                          outzone_date: domain.outzone_date,
+                          purge_date: domain.purge_date,
+                          email: domain.status_notes[DomainStatus::FORCE_DELETE])
+
+        return if domain.registrar.notifications.last.text.include? template
+
+        domain.registrar.notifications.create!(text: template)
       end
 
       def process_force_delete(domain)
@@ -38,6 +58,8 @@ module Domains
 
       def added_additional_email_into_notes(domain)
         return if domain.status_notes[DomainStatus::FORCE_DELETE].include? email
+
+        # notify_registrar(domain)
 
         domain.status_notes[DomainStatus::FORCE_DELETE].concat(" #{email}")
         domain.save(validate: false)

@@ -1,3 +1,72 @@
+17.05.2022
+* removed unnecessary contact validation on contact create [#2376](https://github.com/internetee/registry/pull/2376)
+* Refactored email validation job [#2369](https://github.com/internetee/registry/pull/2369)
+* Job for deprecated validation events removal [#2374](https://github.com/internetee/registry/issues/2374)
+
+09.05.2022
+* test for auction view [#2373](https://github.com/internetee/registry/pull/2373)
+
+06.05.2022
+* refactored out the contact_code_cache from domain_contacts model [#2370](https://github.com/internetee/registry/issues/2370)
+
+28.04.2022
+* Fixed ns and dnssec validation error messages [#2296](https://github.com/internetee/registry/issues/2296)
+* Added status notes to REPP domain info output [#2331](https://github.com/internetee/registry/issues/2331)
+* Added auction list view to admin for improved ahandling of upcoming enlgish auction feature [#2341](https://github.com/internetee/registry/pull/2341)
+
+27.04.2022
+* Refactored email validation - reducing dns requests [#2364](https://github.com/internetee/registry/issues/2364)
+
+21.04.2022
+* Delay renovate Ruby version updates for 60 days [#2361](https://github.com/internetee/registry/issues/2361)
+
+20.04.2022
+* Contacts with disclosed attributes can now be updated [#2340](https://github.com/internetee/registry/issues/2340)
+* Legacy code fix [#2360](https://github.com/internetee/registry/pull/2360)
+
+19.04.2022
+* Rolled back ruby version to 3.0.3 [#2358](https://github.com/internetee/registry/pull/2358) 
+
+18.04.2022
+* Fixed error 2005 epp syntax issue [#2338](https://github.com/internetee/registry/issues/2338)
+* Fixed poll issue with email validations [#2343](https://github.com/internetee/registry/issues/2343)
+* Removed registrant portal code from registry project [#2350](https://github.com/internetee/registry/issues/2350) 
+
+14.04.2022
+* Removed legacy email verification code [#2349](https://github.com/internetee/registry/issues/2349)
+
+06.04.2022
+* Contact email validation on domain update [#2213](https://github.com/internetee/registry/issues/2213)
+
+05.04.2022
+* Automatic contact name update poll messages are now grouped together into one change poll message [#2307](https://github.com/internetee/registry/issues/2307)
+* Status notes are now added to status elements of epp xml [#2211](https://github.com/internetee/registry/issues/2211)
+* Admin: Wildcard search improvements [#499](https://github.com/internetee/registry/issues/499)
+* Admin: CSV download fix for history view [#2275](https://github.com/internetee/registry/issues/2275)
+* Admin: CSV output fix for diman, contact, invoices and account views [2303](https://github.com/internetee/registry/issues/2303)
+* Admin: registrar dropdown is searchable in invoice creation view [#2313](https://github.com/internetee/registry/issues/2313)
+* Admin: Refactored CSV generation [#2321](https://github.com/internetee/registry/issues/2321)
+* Removed legacy migration jobs [#2090](https://github.com/internetee/registry/issues/2090)
+
+04.04.2022
+* Upload-artifact update to 3.0.0 [#2301](https://github.com/internetee/registry/pull/2301)
+* data_migrate update to 8.0 [#2302](https://github.com/internetee/registry/pull/2302)
+
+01.04.2022
+* Pg update to 1.3.5 [#2328](https://github.com/internetee/registry/pull/2328)
+* Puma update to 5.6.4 [#2327](https://github.com/internetee/registry/pull/2327)
+
+31.03.2022
+* Sidekiq update to 6.4.1 [#2322](https://github.com/internetee/registry/pull/2322)
+
+25.03.2022
+* Bulk change of business contacts' names requires now user confirmation [#2309](https://github.com/internetee/registry/pull/2309)
+
+23.02.2022
+* FD notes are updated when basis for FD changes [#2216](https://github.com/internetee/registry/issues/2216)
+* Admin: date filter end date in domain hostory is now inclusive [#2274](https://github.com/internetee/registry/issues/2274)
+* Job for finding and removing disputed statuses from the domains that should not have it [#2281](https://github.com/internetee/registry/issues/2281)
+
 09.02.2022
 * DNSSEC key validation [#1897](https://github.com/internetee/registry/issues/1897)
 

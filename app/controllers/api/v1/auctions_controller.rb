@@ -44,7 +44,7 @@ module Api
       private
 
       def serializable_hash(auction)
-        { id: auction.uuid, domain: auction.domain, status: auction.status }
+        { id: auction.uuid, domain: auction.domain, status: auction.status, platform: auction.platform }
       end
 
       def serializable_hash_for_update_action(auction)

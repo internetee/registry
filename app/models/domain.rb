@@ -161,14 +161,6 @@ class Domain < ApplicationRecord
     attribute: 'hostname'
   }
 
-  validates :tech_domain_contacts, uniqueness_multi: {
-    attribute: 'contact_code_cache'
-  }
-
-  validates :admin_domain_contacts, uniqueness_multi: {
-    attribute: 'contact_code_cache'
-  }
-
   validates :dnskeys, uniqueness_multi: {
     attribute: 'public_key'
   }
@@ -287,21 +279,6 @@ class Domain < ApplicationRecord
         "(#{registrant_user_company_registrant(companies).to_sql} UNION "\
         "#{registrant_user_domains_company(companies).to_sql}) AS domains"
       )
-    end
-
-    def to_csv
-      CSV.generate do |csv|
-        headers = column_names.dup
-        swap_elements(headers, [[0, 1], [1, 5]])
-        headers[0] = 'Domain'
-        headers[1] = headers[1].humanize
-        csv << headers
-        all.find_each do |item|
-          row = item.attributes.values_at(*column_names)
-          swap_elements(row, [[0, 1], [1, 5]])
-          csv << row
-        end
-      end
     end
 
     private
@@ -749,8 +726,36 @@ class Domain < ApplicationRecord
     DNS::DomainName.new(name)
   end
 
-  def contact_emails_verification_failed
-    contacts.select(&:email_verification_failed?)&.map(&:email)&.uniq
+  def as_csv_row
+    [
+      name,
+      registrant_name,
+      valid_to.to_formatted_s(:db),
+      registrar,
+      created_at.to_formatted_s(:db),
+      statuses,
+      contacts.pluck(:code),
+      force_delete_date,
+      force_delete_data,
+    ]
+  end
+
+  def registrant_name
+    return registrant.name if registrant
+
+    ver = Version::ContactVersion.where(item_id: registrant_id).last
+    contact = Contact.all_versions_for([registrant_id], created_at).first
+
+    contact = ObjectVersionsParser.new(ver).parse if contact.nil? && ver
+
+    contact.try(:name) || 'Deleted'
+  end
+
+  def self.csv_header
+    [
+      'Domain', 'Registrant', 'Valid to', 'Registrar', 'Created at',
+      'Statuses', 'Contacts code', 'Force delete date', 'Force delete data'
+    ]
   end
 
   def self.pdf(html)

@@ -3,3 +3,23 @@ contact_update:
   contact: john
   created_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
   user: registrant
+
+contacts_update_bulk_action:
+  operation: bulk_update
+  user: registrant
+
+contact_update_subaction_one:
+  operation: update 
+  contact: william
+  created_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+  user: registrant
+  bulk_action: contacts_update_bulk_action
+
+contact_update_subaction_two:
+  operation: update 
+  contact: jane
+  created_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+  user: registrant
+  bulk_action: contacts_update_bulk_action
+
+

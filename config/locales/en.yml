@@ -96,8 +96,6 @@ en:
             contact:
               blank: 'Contact was not found'
               taken: 'Contact already exists on this domain'
-            contact_code_cache:
-              taken: 'Contact already exists on this domain'
 
         domain_status:
           attributes:
@@ -189,6 +187,7 @@ en:
   log_out: 'Log out (%{user})'
   system: 'System'
   domains: 'Domains'
+  auctions: 'Auctions'
   registrars: 'Registrars'
   valid_to: 'Valid to'
   name: 'Name'
@@ -371,7 +370,7 @@ en:
   sim_error: 'SIM application error'
   internal_error: 'Internal error'
   client_side_status_editing_error: 'Parameter value policy error. Client-side object status management not supported'
-  parameter_value_syntax_error: 'Parameter value syntax error: '
+  parameter_value_syntax_error: 'Parameter value syntax error:'
 
   # DEPP
   activemodel:
@@ -627,7 +626,7 @@ en:
   contact_ident: 'Contact ident'
   results_per_page: 'Results per page'
   nameserver_hostname: 'Nameserver hostname'
-  result_count: 
+  result_count:
     zero: 'No results'
     other: '%{count} results'
     one: '1 result'

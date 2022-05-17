@@ -9,10 +9,8 @@ module Admin
       params[:q] ||= {}
       search_params = params[:q].deep_dup
 
-      if search_params[:domain_contacts_type_in].is_a?(Array) &&
-         search_params[:domain_contacts_type_in].delete('registrant')
-        search_params[:registrant_domains_id_not_null] = 1
-      end
+      search_params[:registrant_domains_id_not_null] = 1 if search_params[:domain_contacts_type_in].is_a?(Array) &&
+                                                            search_params[:domain_contacts_type_in].delete('registrant')
 
       contacts = Contact.includes(:registrar).joins(:registrar)
                         .select('contacts.*, registrars.name as registrars_name')
@@ -20,7 +18,7 @@ module Admin
       contacts = filter_by_flags(contacts)
 
       normalize_search_parameters do
-        @q = contacts.ransack(search_params)
+        @q = contacts.ransack(PartialSearchFormatter.format(search_params))
         @contacts = @q.result.distinct.page(params[:page])
       end
 
@@ -33,7 +31,7 @@ module Admin
       if params[:only_no_country_code].eql?('1')
         contacts = contacts.where("ident_country_code is null or ident_country_code=''")
       end
-      contacts = contacts.email_verification_failed if params[:email_verification_failed].eql?('1')
+
       contacts
     end
 
@@ -41,8 +39,7 @@ module Admin
       render json: Contact.search_by_query(params[:q])
     end
 
-    def edit
-    end
+    def edit; end
 
     def update
       cp = ignore_empty_statuses

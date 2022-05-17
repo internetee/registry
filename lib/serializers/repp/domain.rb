@@ -15,7 +15,7 @@ module Serializers
           updated_at: obj.updated_at, expire_time: obj.expire_time, outzone_at: obj.outzone_at,
           delete_date: obj.delete_date, force_delete_date: obj.force_delete_date,
           contacts: contacts, nameservers: nameservers, dnssec_keys: dnssec_keys,
-          statuses: obj.statuses, registrar: registrar
+          statuses: obj.status_notes, registrar: registrar
         }
         json[:transfer_code] = obj.auth_info if @sponsored
         json
@@ -23,7 +23,7 @@ module Serializers
       # rubocop:enable Metrics/AbcSize
 
       def contacts
-        domain.domain_contacts.map { |c| { code: c.contact_code_cache, type: c.type } }
+        domain.domain_contacts.map { |c| { code: c.contact.code, type: c.type } }
       end
 
       def nameservers
