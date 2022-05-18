@@ -3,6 +3,7 @@ class Invoice < ApplicationRecord
   include Invoice::Cancellable
   include Invoice::Payable
   include Invoice::BookKeeping
+  include Invoice::Linkpayable
 
   belongs_to :buyer, class_name: 'Registrar'
   has_one  :account_activity

@@ -9,7 +9,7 @@ class InvoiceMailerTest < ActionMailer::TestCase
     assert_equal 1, @invoice.number
 
     email = InvoiceMailer.invoice_email(invoice: @invoice, recipient: 'billing@bestnames.test')
-              .deliver_now
+                         .deliver_now
 
     assert_emails 1
     assert_equal ['billing@bestnames.test'], email.to
