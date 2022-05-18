@@ -20,11 +20,11 @@ namespace :verify_email do
                                                        hash: opts_hash)
     email_contacts = prepare_contacts(options)
     email_contacts.each do |email|
-      VerifyEmailsJob.set(wait_until: spam_protect_timeout(options)).perform_later(
-        email: email,
-        check_level: check_level(options)
-      )
+      VerifyEmailsJob.set(wait_until: spam_protect_timeout(options))
+                     .perform_later(email: email, check_level: check_level(options))
     end
+
+    ValidationEvent.old_records.destroy_all
   end
 end
 
@@ -38,10 +38,6 @@ end
 
 def spam_protect_timeout(options)
   spam_protect(options) ? 0.seconds : SPAM_PROTECT_TIMEOUT
-end
-
-def logger
-  @logger ||= ActiveSupport::TaggedLogging.new(Syslog::Logger.new('registry'))
 end
 
 def prepare_contacts(options)

@@ -95,27 +95,4 @@ class EmailCheckTest < ActiveSupport::TestCase
     assert_equal @contact.validation_events.count, 1
     assert @contact.validation_events.last.success
   end
-
-  def test_should_remove_old_validation_records
-    trumail_results = OpenStruct.new(success: false,
-                                     email: @contact.email,
-                                     domain: "box.tests",
-                                     errors: {:mx=>"target host(s) not found"},
-                                     )
-
-    Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
-    Spy.on_instance_method(Actions::AAndAaaaEmailValidation, :call).and_return([true])
-
-    action = Actions::EmailCheck.new(email: @contact.email,
-                                     validation_eventable: @contact,
-                                     check_level: 'regex')
-
-
-    action.call
-    assert_equal @contact.validation_events.count, 1
-
-    travel_to(Time.zone.now + ::ValidationEvent::VALIDATION_PERIOD + 1.minute)
-    action.call
-    assert_equal @contact.validation_events.count, 1
-  end
 end

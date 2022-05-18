@@ -12,16 +12,11 @@ module Actions
       result = check_email(email)
       save_result(result)
       filtering_old_failed_records(result)
-      remove_old_records!
       result.success ? log_success : log_failure(result)
       result.success
     end
 
     private
-
-    def remove_old_records!
-      validation_eventable.validation_events.old_records.destroy_all
-    end
 
     def check_email(parsed_email)
       Truemail.validate(parsed_email, with: calculate_check_level).result
@@ -53,14 +48,10 @@ module Actions
 
       if !result.success && @check_level == 'mx'
         result_validation = Actions::AAndAaaaEmailValidation.call(email: @email, value: 'A')
-        output_a_and_aaaa_validation_results(email: @email,
-                                             result: result_validation,
-                                             type: 'A')
+        output_a_and_aaaa_validation_results(email: @email, result: result_validation, type: 'A')
 
         result_validation = Actions::AAndAaaaEmailValidation.call(email: @email, value: 'AAAA') if result_validation.empty?
-        output_a_and_aaaa_validation_results(email: @email,
-                                             result: result_validation,
-                                             type: 'AAAA')
+        output_a_and_aaaa_validation_results(email: @email, result: result_validation, type: 'AAAA')
         result.success = result_validation.present?
       end
 
