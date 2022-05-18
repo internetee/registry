@@ -4,7 +4,7 @@ require 'syslog/logger'
 require 'active_record'
 
 namespace :verify_email do
-  # bundle exec rake verify_email:check_all -- --domain_name=shop.test --check_level=mx --spam_protect=true
+  # bundle exec rake verify_email:check_all -- --check_level=mx --spam_protect=true
   # bundle exec rake verify_email:check_all -- -dshop.test -cmx -strue
   desc 'Starts verifying email jobs with optional check level and spam protection'
   task check_all: :environment do
