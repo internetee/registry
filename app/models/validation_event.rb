@@ -27,7 +27,7 @@ class ValidationEvent < ApplicationRecord
 
   belongs_to :validation_eventable, polymorphic: true
 
-  scope :recent, -> { where('created_at < ?', Time.zone.now - VALIDATION_PERIOD) }
+  scope :old_records, -> { where('created_at < ?', Time.zone.now - VALIDATION_PERIOD) }
   scope :successful, -> { where(success: true) }
   scope :failed, -> { where(success: false) }
   scope :regex, -> { where('event_data @> ?', { 'check_level': 'regex' }.to_json) }
@@ -36,8 +36,10 @@ class ValidationEvent < ApplicationRecord
   scope :by_object, ->(object) { where(validation_eventable: object) }
 
   def self.validated_ids_by(klass)
-    recent.successful.where('validation_eventable_type = ?', klass)
-          .pluck(:validation_eventable_id)
+    old_records
+      .successful
+      .where('validation_eventable_type = ?', klass)
+      .pluck(:validation_eventable_id)
   end
 
   def failed?

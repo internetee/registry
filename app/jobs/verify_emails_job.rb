@@ -20,10 +20,6 @@ class VerifyEmailsJob < ApplicationJob
 
   private
 
-  def contact_not_found(contact_id)
-    raise StandardError, "Contact with contact_id #{contact_id} not found"
-  end
-
   def validate_check_level(check_level)
     return if valid_check_levels.include? check_level
 
@@ -36,10 +32,6 @@ class VerifyEmailsJob < ApplicationJob
 
   def valid_check_levels
     ValidationEvent::VALID_CHECK_LEVELS
-  end
-
-  def get_validation_results(contact)
-    ValidationEvent.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
   end
 
   def filter_check_level(contact)

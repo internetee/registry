@@ -116,11 +116,30 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
                                      )
     Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
 
-    1.times do
-      run_task
-    end
+    run_task
 
     assert contact.domains.last.force_delete_scheduled?
+  end
+
+  def test_should_remove_old_validation_records
+    trumail_results = OpenStruct.new(success: false,
+                                     email: @contact.email,
+                                     domain: 'box.tests',
+                                     errors: { mx: 'target host(s) not found' })
+
+    Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
+    Spy.on_instance_method(Actions::AAndAaaaEmailValidation, :call).and_return([true])
+
+    Actions::EmailCheck.new(email: @contact.email,
+                            validation_eventable: @contact,
+                            check_level: 'regex').call
+
+    travel_to(Time.zone.now + ::ValidationEvent::VALIDATION_PERIOD + 1.minute)
+    assert_equal ValidationEvent.old_records.count, 1
+
+    run_task
+
+    assert_predicate ValidationEvent.old_records.count, :zero?
   end
 
   def run_task
