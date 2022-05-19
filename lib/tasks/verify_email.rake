@@ -18,13 +18,12 @@ namespace :verify_email do
     options = RakeOptionParserBoilerplate.process_args(options: options,
                                                        banner: banner,
                                                        hash: opts_hash)
+    ValidationEvent.old_records.destroy_all
     email_contacts = prepare_contacts(options)
     email_contacts.each do |email|
       VerifyEmailsJob.set(wait_until: spam_protect_timeout(options))
                      .perform_later(email: email, check_level: check_level(options))
     end
-
-    ValidationEvent.old_records.destroy_all
   end
 end
 
