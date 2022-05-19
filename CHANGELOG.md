@@ -1,3 +1,6 @@
+19.05.2022
+* Process to remove expired validation event records [#2236](https://github.com/internetee/registry/issues/2236)
+
 17.05.2022
 * removed unnecessary contact validation on contact create [#2376](https://github.com/internetee/registry/pull/2376)
 * Refactored email validation job [#2369](https://github.com/internetee/registry/pull/2369)
