@@ -6,7 +6,6 @@ module Domains
         domain.statuses += domain.admin_store_statuses_history || []
         domain.statuses.uniq!
 
-        domain.statuses_before_force_delete = nil
         domain.force_delete_domain_statuses_history = nil
         domain.admin_store_statuses_history = nil
         domain.save(validate: false)

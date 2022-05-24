@@ -103,10 +103,7 @@ Content-Type: application/json
     "dnssec_changed_at": "2015-09-09T09:11:14.860Z",
     "status_notes":{
 
-    },
-    "statuses_backup":[
-
-    ]
+    }
   }
 ]
 ```
@@ -219,10 +216,7 @@ Content-Type: application/json
     "dnssec_changed_at": "2015-09-09T09:11:14.860Z",
     "status_notes":{
 
-    },
-    "statuses_backup":[
-
-    ]
+    }
   }
 ]
 ```
@@ -326,10 +320,7 @@ Content-Type: application/json
   "dnssec_changed_at": "2015-09-09T09:11:14.860Z",
   "status_notes":{
 
-  },
-  "statuses_backup":[
-
-  ]
+  }
 }
 ```
 

@@ -718,7 +718,6 @@ class Domain < ApplicationRecord
     hash = super
     hash['auth_info'] = hash.delete('transfer_code') # API v1 requirement
     hash['valid_from'] = hash['created_at'] # API v1 requirement
-    hash.delete('statuses_before_force_delete')
     hash
   end
 
