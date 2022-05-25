@@ -37,6 +37,7 @@ namespace :eis_billing do
       parsed_data << {
         reference_number: registrar.reference_no,
         initiator: 'registry',
+        registrar_name: registrar.name
       }
     end
 
