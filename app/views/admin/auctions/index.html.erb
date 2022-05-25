@@ -49,7 +49,7 @@
                         class: 'btn btn-primary' %>
           </div>
           <div >
-            <%= link_to "#", class: "btn btn-warning edit",
+            <%= link_to "#", class: "btn btn-warning edit", id: 'reserved-modal',
               data: {
                 toggle: "modal",
                 url: admin_reserved_domains_path,
@@ -74,7 +74,7 @@
 
         <div style="display: flex; flex-direction: row; align-items: center;">
           <%= text_field_tag :domain, params[:domain], class: 'form-control', placeholder: 'domain name' %>
-          <%= f.submit 'Create', class: 'btn btn-primary', style: 'margin-left: .4rem;' %>
+          <%= f.submit 'Create', class: 'btn btn-primary', style: 'margin-left: .4rem;', id: 'new-auction-btn' %>
         </div>
     <% end %>
 

@@ -52,16 +52,12 @@ module Actions
     def save_result(result)
       contacts = Contact.where(email: email)
 
-      if !result.success && @check_level == "mx"
+      if !result.success && @check_level == 'mx'
         result_validation = Actions::AAndAaaaEmailValidation.call(email: @email, value: 'A')
-        output_a_and_aaaa_validation_results(email: @email,
-                                             result: result_validation,
-                                             type: 'A')
+        output_a_and_aaaa_validation_results(email: @email, result: result_validation, type: 'A')
 
         result_validation = Actions::AAndAaaaEmailValidation.call(email: @email, value: 'AAAA') if result_validation.empty?
-        output_a_and_aaaa_validation_results(email: @email,
-                                             result: result_validation,
-                                             type: 'AAAA')
+        output_a_and_aaaa_validation_results(email: @email, result: result_validation, type: 'AAAA')
         result.success = result_validation.present?
       end
 
@@ -96,8 +92,7 @@ module Actions
         when 'AAAA'
           ress = dns.getresources domain, Resolv::DNS::Resource::IN::AAAA
         end
-
-        result = ress.map { |r| r.address }
+        result = ress.map(&:address)
       end
 
       result

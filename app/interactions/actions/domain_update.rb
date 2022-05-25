@@ -125,8 +125,7 @@ module Actions
     end
 
     def start_validate_email(props)
-      contact_code = props[0][:contact_code_cache]
-      contact = Contact.find_by(code: contact_code)
+      contact = Contact.find_by(code: props[0][:contact_code])
 
       return if contact.nil?
 
@@ -206,7 +205,7 @@ module Actions
         domain.add_epp_error('2306', 'contact', code,
                              %i[domain_contacts admin_contact_can_be_only_private_person])
       else
-        add ? { contact_id: obj.id, contact_code_cache: obj.code } : { id: obj.id, _destroy: 1 }
+        add ? { contact_id: obj.id, contact_code: obj.code } : { id: obj.id, _destroy: 1 }
       end
     end
 

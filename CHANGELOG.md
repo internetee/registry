@@ -1,3 +1,21 @@
+25.05.2022
+* Fixed looping validation issue [#2377](https://github.com/internetee/registry/pull/2377)
+* ForceDelete query fix [#2380](https://github.com/internetee/registry/pull/2380)
+
+19.05.2022
+* Process to remove expired validation event records [#2236](https://github.com/internetee/registry/issues/2236)
+
+17.05.2022
+* removed unnecessary contact validation on contact create [#2376](https://github.com/internetee/registry/pull/2376)
+* Refactored email validation job [#2369](https://github.com/internetee/registry/pull/2369)
+* Job for deprecated validation events removal [#2374](https://github.com/internetee/registry/issues/2374)
+
+09.05.2022
+* test for auction view [#2373](https://github.com/internetee/registry/pull/2373)
+
+06.05.2022
+* refactored out the contact_code_cache from domain_contacts model [#2370](https://github.com/internetee/registry/issues/2370)
+
 28.04.2022
 * Fixed ns and dnssec validation error messages [#2296](https://github.com/internetee/registry/issues/2296)
 * Added status notes to REPP domain info output [#2331](https://github.com/internetee/registry/issues/2331)

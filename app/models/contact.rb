@@ -15,7 +15,7 @@ class Contact < ApplicationRecord
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
   has_many :legal_documents, as: :documentable
-  has_many :validation_events, as: :validation_eventable
+  has_many :validation_events, as: :validation_eventable, dependent: :destroy
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
   has_many :actions, dependent: :destroy
 
@@ -49,7 +49,7 @@ class Contact < ApplicationRecord
 
   validates :phone, presence: true, e164: true, phone: true
 
-  validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
+  # validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
 
   validates :code,
             uniqueness: { message: :epp_id_taken },

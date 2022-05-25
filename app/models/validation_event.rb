@@ -27,7 +27,7 @@ class ValidationEvent < ApplicationRecord
 
   belongs_to :validation_eventable, polymorphic: true
 
-  scope :recent, -> { where('created_at < ?', Time.zone.now - VALIDATION_PERIOD) }
+  scope :old_records, -> { where('created_at < ?', Time.zone.now - VALIDATION_PERIOD) }
   scope :successful, -> { where(success: true) }
   scope :failed, -> { where(success: false) }
   scope :regex, -> { where('event_data @> ?', { 'check_level': 'regex' }.to_json) }
@@ -35,11 +35,11 @@ class ValidationEvent < ApplicationRecord
   scope :smtp, -> { where('event_data @> ?', { 'check_level': 'smtp' }.to_json) }
   scope :by_object, ->(object) { where(validation_eventable: object) }
 
-  # after_create :check_for_force_delete
-
   def self.validated_ids_by(klass)
-    recent.successful.where('validation_eventable_type = ?', klass)
-          .pluck(:validation_eventable_id)
+    old_records
+      .successful
+      .where('validation_eventable_type = ?', klass)
+      .pluck(:validation_eventable_id)
   end
 
   def failed?
@@ -56,57 +56,5 @@ class ValidationEvent < ApplicationRecord
 
   def object
     validation_eventable
-  end
-
-  def check_for_force_delete
-    if object.need_to_start_force_delete?
-      start_force_delete
-    elsif object.need_to_lift_force_delete?
-      refresh_status_notes
-      lift_force_delete
-    end
-  end
-
-  def start_force_delete
-    Domains::ForceDeleteEmail::Base.run(email: email)
-  end
-
-  def refresh_status_notes
-    domain_list.each do |domain|
-      next unless domain.status_notes[DomainStatus::FORCE_DELETE]
-
-      domain.status_notes[DomainStatus::FORCE_DELETE].slice!(object.email_history)
-      domain.status_notes[DomainStatus::FORCE_DELETE].lstrip!
-      domain.save(validate: false)
-
-      notify_registrar(domain) unless domain.status_notes[DomainStatus::FORCE_DELETE].empty?
-    end
-  end
-
-  def domain_list
-    domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
-    registrant_ids = Registrant.where(email: email).pluck(:id)
-
-    (domain_contacts.map(&:domain).flatten + Domain.where(registrant_id: registrant_ids)).uniq
-  end
-
-  def notify_registrar(domain)
-    domain.registrar.notifications.create!(text: I18n.t('force_delete_auto_email',
-                                                        domain_name: domain.name,
-                                                        outzone_date: domain.outzone_date,
-                                                        purge_date: domain.purge_date,
-                                                        email: domain.status_notes[DomainStatus::FORCE_DELETE]))
-  end
-
-  def lift_force_delete
-    # domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
-    # registrant_ids = Registrant.where(email: email).pluck(:id)
-    #
-    # domains = domain_contacts.map(&:domain).flatten +
-    #   Domain.where(registrant_id: registrant_ids)
-    #
-    # domains.each do |domain|
-    #   Domains::ForceDeleteLift::Base.run(domain: domain)
-    # end
   end
 end

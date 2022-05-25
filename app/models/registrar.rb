@@ -34,8 +34,8 @@ class Registrar < ApplicationRecord
   attribute :vat_rate, ::Type::VatRate.new
   after_initialize :set_defaults
 
-  validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
-  validate :correct_billing_email_format
+  # validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
+  # validate :correct_billing_email_format
 
   alias_attribute :contact_email, :email
 
