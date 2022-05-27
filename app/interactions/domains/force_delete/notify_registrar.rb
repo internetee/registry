@@ -23,7 +23,7 @@ module Domains
                           purge_date: domain.purge_date,
                           email: email)
 
-        return if domain.registrar.notifications.last.text.include? template
+        return if domain.registrar&.notifications&.last&.text.include? template
 
         domain.registrar.notifications.create!(text: template)
       end
