@@ -6,6 +6,7 @@ class RegistrarTest < ActiveJob::TestCase
     @original_default_language = Setting.default_language
     @original_days_to_keep_invoices_active = Setting.days_to_keep_invoices_active
     @old_validation_type = Truemail.configure.default_validation_type
+    Spy.on_instance_method(EisBilling::BaseController, :authorized).and_return(true)
   end
 
   teardown do
@@ -144,23 +145,55 @@ class RegistrarTest < ActiveJob::TestCase
   end
 
   def test_issues_new_invoice
-    travel_to Time.zone.parse('2010-07-05')
-    Setting.days_to_keep_invoices_active = 10
+    if Feature.billing_system_integrated?
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+        to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
 
-    invoice = @registrar.issue_prepayment_invoice(100)
+      invoice_n = Invoice.order(number: :desc).last.number
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
 
-    assert_equal Date.parse('2010-07-05'), invoice.issue_date
-    assert_equal Date.parse('2010-07-15'), invoice.due_date
+      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+        to_return(status: 200, body: "", headers: {})
+
+      travel_to Time.zone.parse('2010-07-05')
+      Setting.days_to_keep_invoices_active = 10
+
+      invoice = @registrar.issue_prepayment_invoice(100)
+
+      assert_equal Date.parse('2010-07-05'), invoice.issue_date
+      assert_equal Date.parse('2010-07-15'), invoice.due_date
+    end
   end
 
   def test_issues_e_invoice_along_with_invoice
+    if Feature.billing_system_integrated?
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+        to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
+
+      invoice_n = Invoice.order(number: :desc).last.number
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+
+      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+        to_return(status: 200, body: "", headers: {})
+    end
+
     EInvoice::Providers::TestProvider.deliveries.clear
 
     perform_enqueued_jobs do
       @registrar.issue_prepayment_invoice(100)
     end
 
-    assert_equal 1, EInvoice::Providers::TestProvider.deliveries.count
+    unless Feature.billing_system_integrated?
+      assert_equal 1, EInvoice::Providers::TestProvider.deliveries.count
+    end
   end
 
   def test_invalid_without_address_street

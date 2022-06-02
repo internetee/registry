@@ -13,6 +13,7 @@ module Admin
 
       if @invoice&.persisted?
         flash[:notice] = t(:record_created)
+        # send_invoice_data_to_billing_system
         redirect_to [:admin, @invoice]
       else
         flash.now[:alert] = t(:failed_to_create_record)
@@ -48,6 +49,8 @@ module Admin
 
     def cancel
       @invoice.cancel
+      EisBilling::SendInvoiceStatus.send_info(invoice_number: @invoice.number, status: 'cancelled')
+
       redirect_to [:admin, @invoice], notice: t('.cancelled')
     end
 
