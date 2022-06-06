@@ -27,10 +27,11 @@
                 = form_tag confirm_transfer_registrar_poll_path, class: 'js-transfer-form' do
                   = hidden_field_tag 'domain[name]', @data.css('name').text
 
-              - @data.css('trnData').children.each do |x|
-                - next if x.blank?
-                %dt= t(x.name)
-                %dd= x.text
+                - @data.css('trnData').children.each do |x|
+                  - next if x.blank?
+                  %dt= t(x.name)
+                  %dd= x.text
+
 - else
   .row
     .col-sm-12

@@ -34,8 +34,10 @@ class Ability
     if @user.registrar.api_ip_white?(@ip)
       can :manage, Depp::Contact
       can :manage, :xml_console
-      can :manage,   Depp::Domain
+      can :manage, Depp::Domain
     end
+
+    can :manage, Account
 
     # Poll
     can :manage, :poll
@@ -65,12 +67,13 @@ class Ability
     can(:update, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
     can(:delete, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
     can(:renew,  Epp::Contact)
-    can(:transfer,  Epp::Contact)
+    can(:transfer, Epp::Contact)
     can(:view_password, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
   end
 
   def billing # Registrar/api_user dynamic role
     can(:manage, Invoice) { |i| i.buyer_id == @user.registrar_id }
+    can :manage, Account
     can :manage, :deposit
     can :read, AccountActivity
     can :manage, :balance_auto_reload

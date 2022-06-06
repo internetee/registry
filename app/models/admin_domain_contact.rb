@@ -6,7 +6,7 @@ class AdminDomainContact < DomainContact
     skipped_domains = []
     admin_contacts = where(contact: current_contact)
 
-    admin_contacts.each do |admin_contact|
+    admin_contacts.includes(:domain).each do |admin_contact|
       if admin_contact.domain.bulk_update_prohibited?
         skipped_domains << admin_contact.domain.name
         next

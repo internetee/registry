@@ -15,7 +15,7 @@ class ReppV1DomainsListTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_equal @user.registrar.domains.count, json[:data][:total_number_of_records]
+    assert_equal @user.registrar.domains.count, json[:data][:count]
     assert_equal @user.registrar.domains.count, json[:data][:domains].length
 
     assert json[:data][:domains][0].is_a? String
@@ -27,7 +27,7 @@ class ReppV1DomainsListTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_equal @user.registrar.domains.count, json[:data][:total_number_of_records]
+    assert_equal @user.registrar.domains.count, json[:data][:count]
     assert_equal @user.registrar.domains.count, json[:data][:domains].length
 
     assert json[:data][:domains][0].is_a? Hash

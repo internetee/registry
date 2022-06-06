@@ -31,8 +31,8 @@ module Depp
 
     def request(xml)
       Nokogiri::XML(server.request(xml)).remove_namespaces!
-      rescue EppErrorResponse => e
-        Nokogiri::XML(e.response_xml.to_s).remove_namespaces!
+    rescue EppErrorResponse => e
+      Nokogiri::XML(e.response_xml.to_s).remove_namespaces!
     end
 
     private

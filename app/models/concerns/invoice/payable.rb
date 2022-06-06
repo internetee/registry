@@ -15,6 +15,8 @@ module Invoice::Payable
   end
 
   def receipt_date
+    return unless paid?
+
     account_activity.created_at.to_date
   end
 

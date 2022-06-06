@@ -4,10 +4,10 @@ class DomainTransfer < ApplicationRecord
   belongs_to :old_registrar, class_name: 'Registrar'
   belongs_to :new_registrar, class_name: 'Registrar'
 
-  PENDING = 'pending'
-  CLIENT_APPROVED = 'clientApproved'
-  CLIENT_REJECTED = 'clientRejected'
-  SERVER_APPROVED = 'serverApproved'
+  PENDING = 'pending'.freeze
+  CLIENT_APPROVED = 'clientApproved'.freeze
+  CLIENT_REJECTED = 'clientRejected'.freeze
+  SERVER_APPROVED = 'serverApproved'.freeze
 
   before_create :set_wait_until
 

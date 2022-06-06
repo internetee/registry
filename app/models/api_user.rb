@@ -30,11 +30,11 @@ class ApiUser < User
 
   alias_attribute :login, :username
 
-  SUPER = 'super'
-  EPP = 'epp'
-  BILLING = 'billing'
+  SUPER = 'super'.freeze
+  EPP = 'epp'.freeze
+  BILLING = 'billing'.freeze
 
-  ROLES = %w(super epp billing) # should not match to admin roles
+  ROLES = %w[super epp billing].freeze # should not match to admin roles
 
   def ability
     @ability ||= Ability.new(self)
@@ -72,8 +72,8 @@ class ApiUser < User
 
   def linked_users
     self.class.where(identity_code: identity_code)
-      .where("identity_code IS NOT NULL AND identity_code != ''")
-      .where.not(id: id)
+        .where("identity_code IS NOT NULL AND identity_code != ''")
+        .where.not(id: id)
   end
 
   def linked_with?(another_api_user)

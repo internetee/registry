@@ -1,6 +1,7 @@
 module BalanceAutoReloadTypes
   class Threshold
     include ActiveModel::Model
+    include ActiveModel::Validations
 
     attr_accessor :amount, :threshold
 
@@ -11,8 +12,9 @@ module BalanceAutoReloadTypes
       Setting.minimum_deposit
     end
 
-    def as_json(options)
+    def as_json(options = nil)
       { name: name }.merge(super)
+                    .except('errors', 'validation_context')
     end
 
     private

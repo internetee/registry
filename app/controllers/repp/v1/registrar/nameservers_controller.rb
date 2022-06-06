@@ -19,13 +19,16 @@ module Repp
         end
 
         def update  # rubocop:disable Metrics/MethodLength
+          authorize! :manage, :repp
           affected, errored = if hostname.present?
-                                current_user.registrar.replace_nameservers(hostname,
-                                                                           hostname_params[:data][:attributes],
-                                                                           domains: domains_from_params)
+                                current_user.registrar
+                                            .replace_nameservers(hostname,
+                                                                 hostname_params[:attributes],
+                                                                 domains: domains_from_params)
                               else
-                                current_user.registrar.add_nameservers(hostname_params[:data][:attributes],
-                                                                       domains: domains_from_params)
+                                current_user.registrar
+                                            .add_nameservers(hostname_params[:attributes],
+                                                             domains: domains_from_params)
                               end
 
           render_success(data: data_format_for_success(affected, errored))
@@ -36,34 +39,32 @@ module Repp
         private
 
         def domains_from_params
-          return [] unless params[:data][:domains]
+          return [] unless hostname_params[:domains]
 
-          params[:data][:domains].map(&:downcase)
+          hostname_params[:domains].map(&:downcase)
         end
 
         def data_format_for_success(affected_domains, errored_domains)
           {
             type: 'nameserver',
-            id: params[:data][:attributes][:hostname],
-            attributes: params[:data][:attributes],
+            id: hostname_params[:attributes][:hostname],
+            attributes: hostname_params[:attributes],
             affected_domains: affected_domains,
             skipped_domains: errored_domains,
           }
         end
 
         def hostname_params
-          params.require(:data).require(%i[type])
-          params.require(:data).require(:attributes).require([:hostname])
-
-          params.permit(data: [
-                          :type, :id,
-                          { domains: [],
-                            attributes: [:hostname, { ipv4: [], ipv6: [] }] }
-                        ])
+          params.require(:data).permit(:type, :id, nameserver: [], domains: [],
+                                                   attributes: [:hostname, { ipv4: [], ipv6: [] }])
+                .tap do |data|
+                  data.require(:type)
+                  data.require(:attributes).require([:hostname])
+                end
         end
 
         def hostname
-          hostname_params[:data][:id] || nil
+          hostname_params[:id] || nil
         end
 
         def verify_nameserver_existance

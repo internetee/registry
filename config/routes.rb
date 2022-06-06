@@ -71,12 +71,27 @@ Rails.application.routes.draw do
       resources :contacts do
         collection do
           get 'check/:id', to: 'contacts#check'
+          get 'search(/:id)', to: 'contacts#search'
         end
       end
 
-      resources :accounts do
+      resource :account, controller: :account, only: %i[index update] do
         collection do
+          get '/', to: 'account#index'
           get 'balance'
+          get 'details'
+          post 'update_auto_reload_balance'
+          get 'disable_auto_reload_balance'
+        end
+      end
+      resources :invoices, only: %i[index show] do
+        collection do
+          get ':id/download', to: 'invoices#download'
+          get ':id/cancel', to: 'invoices#cancel'
+          post 'add_credit'
+        end
+        member do
+          post 'send_to_recipient', to: 'invoices#send_to_recipient'
         end
       end
       resources :auctions, only: %i[index]
@@ -96,6 +111,13 @@ Rails.application.routes.draw do
         resources :nameservers do
           collection do
             put '/', to: 'nameservers#update'
+          end
+        end
+        resources :summary, only: %i[index]
+        resources :auth, only: %i[index] do
+          collection do
+            post '/tara_callback', to: 'auth#tara_callback'
+            put '/switch_user', to: 'auth#switch_user'
           end
         end
       end
@@ -146,9 +168,9 @@ Rails.application.routes.draw do
       namespace :accreditation_center do
         # At the moment invoice_status endpoint returns only cancelled invoices. But in future logic of this enpoint can change.
         # And it will need to return invoices of different statuses. I decided to leave the name of the endpoint "invoice_status"
-        resources :invoice_status, only: [ :index ]
-        resource :domains, only: [ :show ], param: :name
-        resource :contacts, only: [ :show ], param: :id
+        resources :invoice_status, only: [:index]
+        resource :domains, only: [:show], param: :name
+        resource :contacts, only: [:show], param: :id
         # resource :auth, only: [ :index ]
         get 'auth', to: 'auth#index'
       end
@@ -159,7 +181,7 @@ Rails.application.routes.draw do
     end
 
     match '*all', controller: 'cors', action: 'cors_preflight_check', via: [:options],
-      as: 'cors_preflight_check'
+                  as: 'cors_preflight_check'
   end
 
   # REGISTRAR ROUTES

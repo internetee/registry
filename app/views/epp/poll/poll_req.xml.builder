@@ -15,7 +15,7 @@ xml.epp_head do
         xml.resData do
           xml << render('epp/domains/partials/transfer', builder: xml, dt: @object)
         end
-      when 'BulkAction'
+      when 'ContactUpdateAction'
         xml.resData do
           xml << render(
             'epp/contacts/partials/check',

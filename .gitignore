@@ -5,6 +5,7 @@
 /coverage/
 /.bundle
 /vendor/bundle
+/vendor/gems
 /config/database.yml
 /config/application.yml
 /config/environments/development.rb

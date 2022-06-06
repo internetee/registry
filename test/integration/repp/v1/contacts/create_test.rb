@@ -11,16 +11,16 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
 
   def test_creates_new_contact
     request_body =  {
-      "contact": {
-        "name": "Donald Trump",
-        "phone": "+372.51111112",
-        "email": "donald@trumptower.com",
-        "ident": {
-          "ident_type": "priv",
-          "ident_country_code": "EE",
-          "ident": "39708290069"
-        }
-      }
+      contact: {
+        name: 'Donald Trump',
+        phone: '+372.51111112',
+        email: 'donald@trumptower.com',
+        ident: {
+          ident_type: 'priv',
+          ident_country_code: 'EE',
+          ident: '39708290069',
+        },
+      },
     }
 
     post '/repp/v1/contacts', headers: @auth_headers, params: request_body
@@ -30,7 +30,7 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
-    contact = Contact.find_by(code: json[:data][:contact][:id])
+    contact = Contact.find_by(code: json[:data][:contact][:code])
     assert contact.present?
 
     assert_equal(request_body[:contact][:name], contact.name)
@@ -42,21 +42,21 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
   end
 
   def test_removes_postal_info_when_contact_created
-    request_body =  {
-      "contact": {
-        "name": "Donald Trump",
-        "phone": "+372.51111111",
-        "email": "donald@trump.com",
-        "ident": {
-          "ident_type": "priv",
-          "ident_country_code": "EE",
-          "ident": "39708290069"
+    request_body = {
+      contact: {
+        name: 'Donald Trump',
+        phone: '+372.51111111',
+        email: 'donald@trump.com',
+        ident: {
+          ident_type: 'priv',
+          ident_country_code: 'EE',
+          ident: '39708290069',
         },
-        "addr": {
-          "city": "Tallinn",
-          "street": "Wismari 13",
-          "zip": "12345",
-          "country_code": "EE"
+        addr: {
+          city: 'Tallinn',
+          street: 'Wismari 13',
+          zip: '12345',
+          country_code: 'EE',
         }
       }
     }
@@ -68,7 +68,7 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
     assert_equal 1100, json[:code]
     assert_equal 'Command completed successfully; Postal address data discarded', json[:message]
 
-    contact = Contact.find_by(code: json[:data][:contact][:id])
+    contact = Contact.find_by(code: json[:data][:contact][:code])
     assert contact.present?
 
     assert_nil contact.city
@@ -126,21 +126,21 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
   end
 
   def test_attaches_legaldoc_if_present
-    request_body =  {
-      "contact": {
-        "name": "Donald Trump",
-        "phone": "+372.51111112",
-        "email": "donald@trumptower.com",
-        "ident": {
-          "ident_type": "priv",
-          "ident_country_code": "EE",
-          "ident": "39708290069"
+    request_body = {
+      contact: {
+        name: 'Donald Trump',
+        phone: '+372.51111112',
+        email: 'donald@trumptower.com',
+        ident: {
+          ident_type: 'priv',
+          ident_country_code: 'EE',
+          ident: '39708290069',
+        },
+        legal_document: {
+          type: 'pdf',
+          body: ('test' * 2000).to_s,
         },
       },
-      "legal_document": {
-        "type": "pdf",
-        "body": "#{'test' * 2000}"
-      }
     }
 
     post '/repp/v1/contacts', headers: @auth_headers, params: request_body
@@ -150,7 +150,7 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
-    contact = Contact.find_by(code: json[:data][:contact][:id])
+    contact = Contact.find_by(code: json[:data][:contact][:code])
     assert contact.legal_documents.any?
   end
 end

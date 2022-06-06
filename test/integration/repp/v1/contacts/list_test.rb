@@ -12,13 +12,13 @@ class ReppV1ContactsListTest < ActionDispatch::IntegrationTest
   def test_returns_registrar_contacts
     get repp_v1_contacts_path, headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
-
+ 
     assert_response :ok
 
-    assert_equal @user.registrar.contacts.count, json[:total_number_of_records]
-    assert_equal @user.registrar.contacts.count, json[:contacts].length
+    assert_equal @user.registrar.contacts.count, json[:data][:count]
+    assert_equal @user.registrar.contacts.count, json[:data][:contacts].length
 
-    assert json[:contacts][0].is_a? String
+    assert json[:data][:contacts][0].is_a? String
   end
 
 
@@ -28,10 +28,10 @@ class ReppV1ContactsListTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_equal @user.registrar.contacts.count, json[:total_number_of_records]
-    assert_equal @user.registrar.contacts.count, json[:contacts].length
+    assert_equal @user.registrar.contacts.count, json[:data][:count]
+    assert_equal @user.registrar.contacts.count, json[:data][:contacts].length
 
-    assert json[:contacts][0].is_a? Hash
+    assert json[:data][:contacts][0].is_a? Hash
   end
 
   def test_respects_limit
@@ -40,7 +40,7 @@ class ReppV1ContactsListTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_equal 2, json[:contacts].length
+    assert_equal 2, json[:data][:contacts].length
   end
 
   def test_respects_offset
@@ -50,6 +50,6 @@ class ReppV1ContactsListTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_equal (@user.registrar.contacts.count - offset), json[:contacts].length
+    assert_equal (@user.registrar.contacts.count - offset), json[:data][:contacts].length
   end
 end

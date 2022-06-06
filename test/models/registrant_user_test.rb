@@ -60,6 +60,8 @@ class RegistrantUserTest < ActiveSupport::TestCase
     end
 
     bulk_action = @user.actions.where(operation: :bulk_update).last
+    single_action = @user.actions.find_by(operation: :update,
+                                   contact_id: contacts(:identical_to_william).id)
 
     assert_equal 4, bulk_action.subactions.size
 
@@ -67,14 +69,14 @@ class RegistrantUserTest < ActiveSupport::TestCase
       notification = r.notifications.unread.order('created_at DESC').take
       if r == registrars(:bestnames)
         assert_equal '4 contacts have been updated by registrant', notification.text
-        assert_equal 'BulkAction', notification.attached_obj_type
+        assert_equal 'ContactUpdateAction', notification.attached_obj_type
         assert_equal bulk_action.id, notification.attached_obj_id
         assert_equal bulk_action.id, notification.action_id
       else
         assert_equal 'Contact william-002 has been updated by registrant', notification.text
-        refute notification.action_id
-        refute notification.attached_obj_id
-        refute notification.attached_obj_type
+        assert_equal 'ContactUpdateAction', notification.attached_obj_type
+        assert_equal single_action.id, notification.attached_obj_id
+        assert_equal single_action.id, notification.action_id
       end
     end
   end

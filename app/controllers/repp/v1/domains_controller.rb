@@ -3,6 +3,7 @@ module Repp
   module V1
     class DomainsController < BaseController # rubocop:disable Metrics/ClassLength
       before_action :set_authorized_domain, only: %i[transfer_info destroy]
+      before_action :find_password, only: %i[update destroy]
       before_action :validate_registrar_authorization, only: %i[transfer_info destroy]
       before_action :forward_registrar_id, only: %i[create update destroy]
       before_action :set_domain, only: %i[update]
@@ -10,20 +11,31 @@ module Repp
       api :GET, '/repp/v1/domains'
       desc 'Get all existing domains'
       def index
+        authorize! :info, Epp::Domain
         records = current_user.registrar.domains
-        domains = records.limit(limit).offset(offset)
+        q = records.ransack(search_params)
+        q.sorts = ['valid_to asc', 'created_at desc'] if q.sorts.empty?
+        # use distinct: false here due to ransack bug:
+        # https://github.com/activerecord-hackery/ransack/issues/429
+        domains = q.result(distinct: false)
 
-        render_success(data: { domains: serialized_domains(domains),
-                               total_number_of_records: records.count })
+        limited_domains = domains.limit(limit).offset(offset).includes(:registrar, :registrant)
+
+        render_success(data: { new_domain: records.any? ? serialized_domains([records.last]) : [],
+                               domains: serialized_domains(limited_domains.to_a.uniq),
+                               count: domains.count,
+                               statuses: DomainStatus::STATUSES })
       end
 
       api :GET, '/repp/v1/domains/:domain_name'
       desc 'Get a specific domain'
       def show
-        @domain = Epp::Domain.find_by!(name: params[:id])
+        @domain = Epp::Domain.find_by_name(params[:id])
+        authorize! :info, @domain
+
         sponsor = @domain.registrar == current_user.registrar
-        render_success(data: { domain: Serializers::Repp::Domain.new(@domain,
-                                                                     sponsored: sponsor).to_json })
+        serializer = Serializers::Repp::Domain.new(@domain, sponsored: sponsor)
+        render_success(data: { domain: serializer.to_json })
       end
 
       api :POST, '/repp/v1/domains'
@@ -33,7 +45,7 @@ module Repp
         param :registrant, String, required: true, desc: 'Registrant contact code'
         param :reserved_pw, String, required: false, desc: 'Reserved password for domain'
         param :transfer_code, String, required: false, desc: 'Desired transfer code for domain'
-        # param :period, String, required: true, desc: 'Registration period in months or years'
+        param :period, Integer, required: true, desc: 'Registration period in months or years'
         param :period_unit, String, required: true, desc: 'Period type (month m) or (year y)'
         param :nameservers_attributes, Array, required: false, desc: 'Domain nameservers' do
           param :hostname, String, required: true, desc: 'Nameserver hostname'
@@ -56,15 +68,18 @@ module Repp
         end
       end
       def create
-        authorize!(:create, Epp::Domain)
+        authorize! :create, Epp::Domain
         @domain = Epp::Domain.new
-        action = Actions::DomainCreate.new(@domain, domain_create_params)
+
+        action = Actions::DomainCreate.new(@domain, domain_params)
 
         # rubocop:disable Style/AndOr
         handle_errors(@domain) and return unless action.call
         # rubocop:enable Style/AndOr
 
-        render_success(data: { domain: { name: @domain.name, transfer_code: @domain.transfer_code } })
+        render_success(data: { domain: { name: @domain.name,
+                                         transfer_code: @domain.transfer_code,
+                                         id: @domain.reload.uuid } })
       end
 
       api :PUT, '/repp/v1/domains/:domain_name'
@@ -73,20 +88,20 @@ module Repp
       param :domain, Hash, required: true, desc: 'Changes of domain object' do
         param :registrant, Hash, required: false, desc: 'New registrant object' do
           param :code, String, required: true, desc: 'New registrant contact code'
-          param :verified, [true, false], required: false,
-                                          desc: 'Registrant change is already verified'
+          param :verified, [true, false, 'true', 'false'], required: false,
+                                                           desc: 'Registrant change is already verified'
         end
         param :transfer_code, String, required: false, desc: 'New authorization code'
       end
       def update
-        action = Actions::DomainUpdate.new(@domain, params[:domain], false)
-
+        authorize!(:update, @domain, @password)
+        action = Actions::DomainUpdate.new(@domain, update_params, false)
         unless action.call
           handle_errors(@domain)
           return
         end
 
-        render_success(data: { domain: { name: @domain.name } })
+        render_success(data: { domain: { name: @domain.name, id: @domain.uuid } })
       end
 
       api :GET, '/repp/v1/domains/:domain_name/transfer_info'
@@ -108,23 +123,28 @@ module Repp
       api :POST, '/repp/v1/domains/transfer'
       desc 'Transfer multiple domains'
       def transfer
+        authorize! :transfer, Epp::Domain
         @errors ||= []
         @successful = []
-
         transfer_params[:domain_transfers].each do |transfer|
           initiate_transfer(transfer)
         end
+
         render_success(data: { success: @successful, failed: @errors })
       end
 
       api :DELETE, '/repp/v1/domains/:domain_name'
       desc 'Delete specific domain'
-      param :delete, Hash, required: true, desc: 'Object holding verified key' do
-        param :verified, [true, false], required: true,
-                                        desc: 'Whether to ask registrant verification or not'
+      param :id, String, desc: 'Domain name in IDN / Puny format'
+      param :domain, Hash, required: true, desc: 'Changes of domain object' do
+        param :delete, Hash, required: true, desc: 'Object holding verified key' do
+          param :verified, [true, false, 'true', 'false'], required: true,
+                                                           desc: 'Whether to ask registrant verification or not'
+        end
       end
       def destroy
-        action = Actions::DomainDelete.new(@domain, params, current_user.registrar)
+        authorize!(:delete, @domain, @password)
+        action = Actions::DomainDelete.new(@domain, domain_params, current_user.registrar)
 
         # rubocop:disable Style/AndOr
         handle_errors(@domain) and return unless action.call
@@ -138,7 +158,8 @@ module Repp
       def serialized_domains(domains)
         return domains.pluck(:name) unless index_params[:details] == 'true'
 
-        domains.map { |d| Serializers::Repp::Domain.new(d).to_json }
+        simple = index_params[:simple] == 'true' || false
+        domains.map { |d| Serializers::Repp::Domain.new(d, simplify: simple).to_json }
       end
 
       def initiate_transfer(transfer)
@@ -155,18 +176,13 @@ module Repp
       end
 
       def transfer_params
-        params.require(:data).require(:domain_transfers).each do |t|
-          t.require(:domain_name)
-          t.permit(:domain_name)
-          t.require(:transfer_code)
-          t.permit(:transfer_code)
-        end
-        params.require(:data).permit(domain_transfers: %i[domain_name transfer_code])
+        params.require(:data).require(:domain_transfers)
+        params.require(:data).permit(domain_transfers: [%i[domain_name transfer_code]])
       end
 
       def transfer_info_params
         params.require(:id)
-        params.permit(:id)
+        params.permit(:id, :legal_document, delete: [:verified])
       end
 
       def forward_registrar_id
@@ -177,12 +193,17 @@ module Repp
 
       def set_domain
         registrar = current_user.registrar
+
         @domain = Epp::Domain.find_by(registrar: registrar, name: params[:id])
         @domain ||= Epp::Domain.find_by!(registrar: registrar, name_puny: params[:id])
 
         return @domain if @domain
 
         raise ActiveRecord::RecordNotFound
+      end
+
+      def find_password
+        @password = domain_params[:transfer_code]
       end
 
       def set_authorized_domain
@@ -201,7 +222,7 @@ module Repp
       end
 
       def domain_from_url_hash
-        entry = transfer_info_params[:id]
+        entry = params[:id]
         return Epp::Domain.find(entry) if entry.match?(/\A[0-9]+\z/)
 
         Epp::Domain.find_by!('name = ? OR name_puny = ?', entry, entry)
@@ -216,15 +237,48 @@ module Repp
       end
 
       def index_params
-        params.permit(:limit, :offset, :details)
+        params.permit(:limit, :offset, :details, :simple, :q,
+                      q: %i[s name_matches registrant_id_eq contacts_ident_eq
+                            nameservers_hostname_eq valid_to_gteq valid_to_lteq
+                            statuses_contains_array] + [s: []])
       end
 
-      def domain_create_params
-        params.require(:domain).permit(:name, :registrant, :period, :period_unit, :registrar,
-                                       :transfer_code, :reserved_pw,
-                                       dnskeys_attributes: [%i[flags alg protocol public_key]],
-                                       nameservers_attributes: [[:hostname, { ipv4: [], ipv6: [] }]],
-                                       admin_contacts: [], tech_contacts: [])
+      def search_params
+        index_params.fetch(:q, {})
+      end
+
+      def update_params
+        dup_params = domain_params.to_h.dup
+        return dup_params unless dup_params[:contacts]
+
+        new_contact_params = dup_params[:contacts].map do |c|
+          c.to_h.symbolize_keys
+        end
+
+        old_contact_params = @domain.domain_contacts.map do |c|
+          { code: c.contact_code_cache, type: c.name.downcase }
+        end
+        dup_params[:contacts] = (new_contact_params - old_contact_params).map { |c| c.merge(action: 'add') }
+        dup_params[:contacts].concat((old_contact_params - new_contact_params)
+                             .map { |c| c.merge(action: 'rem') })
+
+        dup_params
+      end
+
+      def domain_params
+        params.require(:domain)
+              .permit(:name, :period, :period_unit, :registrar,
+                      :transfer_code, :reserved_pw, :legal_document,
+                      :registrant, legal_document: %i[body type],
+                                   registrant: [%i[code verified]],
+                                   dns_keys: [%i[id flags alg protocol public_key action]],
+                                   nameservers: [[:id, :hostname,
+                                                  :action, { ipv4: [], ipv6: [] }]],
+                                   contacts: [%i[code type action]],
+                                   nameservers_attributes: [[:hostname, { ipv4: [], ipv6: [] }]],
+                                   admin_contacts: [], tech_contacts: [],
+                                   dnskeys_attributes: [%i[flags alg protocol public_key]],
+                                   delete: [:verified])
       end
     end
   end

@@ -5,7 +5,7 @@ class TechDomainContact < DomainContact
     skipped_domains = []
     tech_contacts = where(contact: current_contact)
 
-    tech_contacts.each do |tech_contact|
+    tech_contacts.includes(:domain).each do |tech_contact|
       if irreplaceable?(tech_contact)
         skipped_domains << tech_contact.domain.name
         next

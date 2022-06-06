@@ -14,6 +14,7 @@ module Actions
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
       assign_requested_statuses
+
       ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
 
       commit
@@ -240,7 +241,7 @@ module Actions
 
     def verify_registrant_change?
       return validate_dispute_case if params[:reserved_pw]
-      return false if !@changes_registrant || params[:registrant][:verified] == true
+      return false if !@changes_registrant || true?(params[:registrant][:verified])
       return true unless domain.disputed?
 
       domain.add_epp_error('2304', nil, nil, 'Required parameter missing; reservedpw element ' \
@@ -281,6 +282,10 @@ module Actions
       return true if domain.errors[:epp_errors].any? || domain.invalid?
 
       false
+    end
+
+    def true?(obj)
+      obj.to_s.downcase == 'true'
     end
   end
 end

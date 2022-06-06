@@ -5,12 +5,22 @@ module Invoice::Cancellable
     scope :non_cancelled, -> { where(cancelled_at: nil) }
   end
 
+  def can_be_cancelled?
+    unless cancellable?
+      errors.add(:base, :invoice_status_prohibits_operation)
+      return false
+    end
+
+    true
+  end
+
   def cancellable?
     unpaid? && not_cancelled?
   end
 
   def cancel
     raise 'Invoice cannot be cancelled' unless cancellable?
+
     update!(cancelled_at: Time.zone.now)
   end
 

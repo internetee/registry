@@ -80,41 +80,41 @@ class Contact < ApplicationRecord
 
   self.ignored_columns = %w[legacy_id legacy_history_id]
 
-  ORG = 'org'
-  PRIV = 'priv'
+  ORG = 'org'.freeze
+  PRIV = 'priv'.freeze
 
   # For foreign private persons who has no national identification number
   BIRTHDAY = 'birthday'.freeze
 
   # From old registry software ("Fred"). No new contact can be created with this status
-  PASSPORT = 'passport'
+  PASSPORT = 'passport'.freeze
 
   #
   # STATUSES
   #
   # Requests to delete the object MUST be rejected.
-  CLIENT_DELETE_PROHIBITED = 'clientDeleteProhibited'
-  SERVER_DELETE_PROHIBITED = 'serverDeleteProhibited'
+  CLIENT_DELETE_PROHIBITED = 'clientDeleteProhibited'.freeze
+  SERVER_DELETE_PROHIBITED = 'serverDeleteProhibited'.freeze
 
   # Requests to transfer the object MUST be rejected.
-  CLIENT_TRANSFER_PROHIBITED = 'clientTransferProhibited'
-  SERVER_TRANSFER_PROHIBITED = 'serverTransferProhibited'
+  CLIENT_TRANSFER_PROHIBITED = 'clientTransferProhibited'.freeze
+  SERVER_TRANSFER_PROHIBITED = 'serverTransferProhibited'.freeze
 
   # The contact object has at least one active association with
   # another object, such as a domain object. Servers SHOULD provide
   # services to determine existing object associations.
   # "linked" status MAY be combined with any status.
-  LINKED = 'linked'
+  LINKED = 'linked'.freeze
 
   # This is the normal status value for an object that has no pending
   # operations or prohibitions. This value is set and removed by the
   # server as other status values are added or removed.
   # "ok" status MAY only be combined with "linked" status.
-  OK = 'ok'
+  OK = 'ok'.freeze
 
   # Requests to update the object (other than to remove this status) MUST be rejected.
-  CLIENT_UPDATE_PROHIBITED = 'clientUpdateProhibited'
-  SERVER_UPDATE_PROHIBITED = 'serverUpdateProhibited'
+  CLIENT_UPDATE_PROHIBITED = 'clientUpdateProhibited'.freeze
+  SERVER_UPDATE_PROHIBITED = 'serverUpdateProhibited'.freeze
 
   # A transform command has been processed for the object, but the
   # action has not been completed by the server. Server operators can
@@ -129,16 +129,16 @@ class Contact < ApplicationRecord
   # the status of the object has changed.
   # The pendingCreate, pendingDelete, pendingTransfer, and pendingUpdate
   # status values MUST NOT be combined with each other.
-  PENDING_CREATE = 'pendingCreate'
+  PENDING_CREATE = 'pendingCreate'.freeze
   # "pendingTransfer" status MUST NOT be combined with either
   # "clientTransferProhibited" or "serverTransferProhibited" status.
-  PENDING_TRANSFER = 'pendingTransfer'
+  PENDING_TRANSFER = 'pendingTransfer'.freeze
   # "pendingUpdate" status MUST NOT be combined with either
   # "clientUpdateProhibited" or "serverUpdateProhibited" status.
-  PENDING_UPDATE = 'pendingUpdate'
+  PENDING_UPDATE = 'pendingUpdate'.freeze
   # "pendingDelete" MUST NOT be combined with either
   # "clientDeleteProhibited" or "serverDeleteProhibited" status.
-  PENDING_DELETE = 'pendingDelete'
+  PENDING_DELETE = 'pendingDelete'.freeze
 
   STATUSES = [
     CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED,
@@ -146,18 +146,18 @@ class Contact < ApplicationRecord
     SERVER_TRANSFER_PROHIBITED, CLIENT_UPDATE_PROHIBITED, SERVER_UPDATE_PROHIBITED,
     OK, PENDING_CREATE, PENDING_DELETE, PENDING_TRANSFER,
     PENDING_UPDATE, LINKED
-  ]
+  ].freeze
 
   CLIENT_STATUSES = [
     CLIENT_DELETE_PROHIBITED, CLIENT_TRANSFER_PROHIBITED,
     CLIENT_UPDATE_PROHIBITED
-  ]
+  ].freeze
 
   SERVER_STATUSES = [
     SERVER_UPDATE_PROHIBITED,
     SERVER_DELETE_PROHIBITED,
-    SERVER_TRANSFER_PROHIBITED
-  ]
+    SERVER_TRANSFER_PROHIBITED,
+  ].freeze
   #
   # END OF STATUSES
   #
@@ -355,7 +355,7 @@ class Contact < ApplicationRecord
       @desc[dom.name][:roles] << :registrant
     end
 
-    domain_contacts.each do |dc|
+    domain_contacts.includes(:domain).each do |dc|
       @desc[dc.domain.name] ||= { id: dc.domain.uuid, roles: [] }
       @desc[dc.domain.name][:roles] << dc.name.downcase.to_sym
       @desc[dc.domain.name] = @desc[dc.domain.name].compact
@@ -383,6 +383,10 @@ class Contact < ApplicationRecord
     "#{code} #{name}"
   end
 
+  def name_disclosed_by_registrar(reg_id)
+    registrar_id == reg_id ? name : 'N/A'
+  end
+
   def strip_email
     self.email = email.to_s.strip
   end
@@ -405,7 +409,7 @@ class Contact < ApplicationRecord
 
     # using small rails hack to generate outer join
     domains = if sorts.first == 'registrar_name'.freeze
-                domains.includes(:registrar).where.not(registrars: { id: nil })
+                domains.where.not(registrars: { id: nil })
                        .order("registrars.name #{order} NULLS LAST")
               else
                 domains.order("#{sort} #{order} NULLS LAST")
@@ -422,7 +426,6 @@ class Contact < ApplicationRecord
     end
 
     domains.each { |d| d.roles = domain_c[d.id].uniq }
-
     domains
   end
 
@@ -438,17 +441,27 @@ class Contact < ApplicationRecord
     end
   end
 
-  def qualified_domain_ids(domain_filter)
-    registrant_ids = registrant_domains.pluck(:id)
-    return registrant_ids if domain_filter == 'Registrant'
+  def qualified_domain_ids(filters)
+    rant_domains = registrant_domains.map { |d| { id: d.id, type: ['Registrant'] } }
+    contact_domains = domain_contacts.map { |dc| { id: dc.domain_id, type: [dc.type] } }
+    grouped_domains = group_by_id_and_type(rant_domains + contact_domains)
+    return grouped_domains.keys if filters.nil? || filters == ''
 
-    if %w[AdminDomainContact TechDomainContact].include? domain_filter
-      DomainContact.select('domain_id').where(contact_id: id, type: domain_filter)
-    else
-      (DomainContact.select('domain_id').where(contact_id: id).pluck(:domain_id) +
-       registrant_ids).uniq
-    end
+    # use domain_filters.sort == v.sort if should be exact match
+    grouped_domains.reject { |_, v| ([].push(filters).flatten & v).empty? }.keys
   end
+
+  # def qualified_domain_ids(domain_filter)
+  #   registrant_ids = registrant_domains.pluck(:id)
+  #   return registrant_ids if domain_filter == 'Registrant'
+
+  #   if %w[AdminDomainContact TechDomainContact].include? domain_filter
+  #     DomainContact.where(contact_id: id, type: domain_filter).pluck(:domain_id)
+  #   else
+  #     (DomainContact.where(contact_id: id).pluck(:domain_id) +
+  #      registrant_ids).uniq
+  #   end
+  # end
 
   def update_prohibited?
     (statuses & [
@@ -459,7 +472,7 @@ class Contact < ApplicationRecord
       PENDING_CREATE,
       PENDING_TRANSFER,
       PENDING_UPDATE,
-      PENDING_DELETE
+      PENDING_DELETE,
     ]).present?
   end
 
@@ -589,5 +602,15 @@ class Contact < ApplicationRecord
 
   def self.csv_header
     ['Name', 'ID', 'Ident', 'E-mail', 'Created at', 'Registrar', 'Phone']
+  end
+
+  private
+
+  def group_by_id_and_type(domains_hash_array)
+    domains_hash_array.group_by { |d| d[:id] }
+                      .transform_values do |v|
+                        v.each.with_object(:type)
+                         .map(&:[]).flatten
+                      end
   end
 end

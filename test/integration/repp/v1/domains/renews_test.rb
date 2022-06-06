@@ -18,7 +18,7 @@ class ReppV1DomainsRenewsTest < ActionDispatch::IntegrationTest
                                        :prepare_renewed_expire_time).and_call_through
 
     @auth_headers['Content-Type'] = 'application/json'
-    payload = { renew: { period: 1, period_unit: 'y', exp_date: original_valid_to } }
+    payload = { renews: { period: 1, period_unit: 'y', exp_date: original_valid_to } }
     post "/repp/v1/domains/#{@domain.name}/renew", headers: @auth_headers, params: payload.to_json
     json = JSON.parse(response.body, symbolize_names: true)
 
@@ -36,7 +36,7 @@ class ReppV1DomainsRenewsTest < ActionDispatch::IntegrationTest
     travel_to Time.zone.parse('2010-07-05')
 
     @auth_headers['Content-Type'] = 'application/json'
-    payload = { renew: { period: 10, period_unit: 'y', exp_date: original_valid_to } }
+    payload = { renews: { period: 10, period_unit: 'y', exp_date: original_valid_to } }
     post "/repp/v1/domains/#{@domain.name}/renew", headers: @auth_headers, params: payload.to_json
     json = JSON.parse(response.body, symbolize_names: true)
 
@@ -60,7 +60,7 @@ class ReppV1DomainsRenewsTest < ActionDispatch::IntegrationTest
     one_year.reload
 
     @auth_headers['Content-Type'] = 'application/json'
-    payload = { renew: { period: 1, period_unit: 'y', exp_date: original_valid_to } }
+    payload = { renews: { period: 1, period_unit: 'y', exp_date: original_valid_to } }
     post "/repp/v1/domains/#{@domain.name}/renew", headers: @auth_headers, params: payload.to_json
     json = JSON.parse(response.body, symbolize_names: true)
 
