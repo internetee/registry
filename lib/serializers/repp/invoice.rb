@@ -8,6 +8,8 @@ module Serializers
         @simplify = simplify
       end
 
+      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def to_json(obj = invoice)
         return simple_object if @simplify
 
@@ -29,16 +31,11 @@ module Serializers
 
       def seller
         {
-          name: invoice.seller_name,
-          reg_no: invoice.seller_reg_no,
-          iban: invoice.seller_iban,
-          bank: invoice.seller_bank,
-          swift: invoice.seller_swift,
-          vat_no: invoice.seller_vat_no,
-          address: invoice.seller_address,
-          country: invoice.seller_country.name,
-          phone: invoice.seller_phone,
-          url: invoice.seller_url,
+          name: invoice.seller_name, reg_no: invoice.seller_reg_no,
+          iban: invoice.seller_iban, bank: invoice.seller_bank,
+          swift: invoice.seller_swift, vat_no: invoice.seller_vat_no,
+          address: invoice.seller_address, country: invoice.seller_country.name,
+          phone: invoice.seller_phone, url: invoice.seller_url,
           email: invoice.seller_email,
           contact_name: invoice.seller_contact_name,
         }
@@ -80,6 +77,8 @@ module Serializers
           recipient: invoice.buyer.billing_email,
         }
       end
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
     end
   end
 end

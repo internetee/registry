@@ -9,6 +9,7 @@ module Serializers
         @simplify = simplify
       end
 
+      # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
       def to_json(obj = domain)
         return simple_object if @simplify
@@ -26,6 +27,7 @@ module Serializers
         json[:transfer_code] = obj.auth_info if @sponsored
         json
       end
+      # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/AbcSize
 
       def contacts

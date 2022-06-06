@@ -9,7 +9,7 @@ module Repp
       desc 'Get all existing contacts'
       def index
         authorize! :check, Epp::Contact
-        records = current_user.registrar.contacts.order(created_at: :desc)
+        records = current_user.registrar.contacts
 
         q = records.ransack(search_params)
         q.sorts = 'created_at desc' if q.sorts.empty?
@@ -19,8 +19,7 @@ module Repp
                                    .includes(:domain_contacts, :registrant_domains, :registrar)
 
         render_success(data: { contacts: serialized_contacts(limited_contacts),
-                               count: contacts.count,
-                               statuses: Contact::STATUSES,
+                               count: contacts.count, statuses: Contact::STATUSES,
                                ident_types: Contact::Ident.types })
       end
 
@@ -156,7 +155,7 @@ module Repp
       end
 
       def serialized_contacts(contacts)
-        return contacts.map {|c| c.code } unless index_params[:details] == 'true'
+        return contacts.map(&code) unless index_params[:details] == 'true'
 
         address_processing = Contact.address_processing?
         contacts.map do |c|

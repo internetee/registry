@@ -30,7 +30,7 @@ module Repp
       api :GET, '/repp/v1/domains/:domain_name'
       desc 'Get a specific domain'
       def show
-        @domain = Epp::Domain.find_by_name(params[:id])
+        @domain = Epp::Domain.find_by(name: params[:id])
         authorize! :info, @domain
 
         sponsor = @domain.registrar == current_user.registrar
@@ -251,34 +251,33 @@ module Repp
         dup_params = domain_params.to_h.dup
         return dup_params unless dup_params[:contacts]
 
-        new_contact_params = dup_params[:contacts].map do |c|
-          c.to_h.symbolize_keys
-        end
+        modify_contact_params(dup_params)
+      end
 
-        old_contact_params = @domain.domain_contacts.map do |c|
-          { code: c.contact_code_cache, type: c.name.downcase }
+      def modify_contact_params(params)
+        new_contact_params = params[:contacts].map { |c| c.to_h.symbolize_keys }
+        old_contact_params = @domain.domain_contacts.includes(:contact).map do |c|
+          { code: c.contact.code, type: c.name.downcase }
         end
-        dup_params[:contacts] = (new_contact_params - old_contact_params).map { |c| c.merge(action: 'add') }
-        dup_params[:contacts].concat((old_contact_params - new_contact_params)
-                             .map { |c| c.merge(action: 'rem') })
-
-        dup_params
+        params[:contacts] = (new_contact_params - old_contact_params).map do |c|
+          c.merge(action: 'add')
+        end
+        params[:contacts].concat((old_contact_params - new_contact_params)
+                         .map { |c| c.merge(action: 'rem') })
+        params
       end
 
       def domain_params
-        params.require(:domain)
-              .permit(:name, :period, :period_unit, :registrar,
-                      :transfer_code, :reserved_pw, :legal_document,
-                      :registrant, legal_document: %i[body type],
-                                   registrant: [%i[code verified]],
-                                   dns_keys: [%i[id flags alg protocol public_key action]],
-                                   nameservers: [[:id, :hostname,
-                                                  :action, { ipv4: [], ipv6: [] }]],
-                                   contacts: [%i[code type action]],
-                                   nameservers_attributes: [[:hostname, { ipv4: [], ipv6: [] }]],
-                                   admin_contacts: [], tech_contacts: [],
-                                   dnskeys_attributes: [%i[flags alg protocol public_key]],
-                                   delete: [:verified])
+        params.require(:domain).permit(:name, :period, :period_unit, :registrar, :transfer_code,
+                                       :reserved_pw, :legal_document, :registrant,
+                                       legal_document: %i[body type], registrant: [%i[code verified]],
+                                       dns_keys: [%i[id flags alg protocol public_key action]],
+                                       nameservers: [[:id, :hostname, :action, { ipv4: [], ipv6: [] }]],
+                                       contacts: [%i[code type action]],
+                                       nameservers_attributes: [[:hostname, { ipv4: [], ipv6: [] }]],
+                                       admin_contacts: [], tech_contacts: [],
+                                       dnskeys_attributes: [%i[flags alg protocol public_key]],
+                                       delete: [:verified])
       end
     end
   end

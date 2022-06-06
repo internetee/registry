@@ -51,14 +51,11 @@ module Repp
 
         def select_renewable_domains
           @epp_errors ||= ActiveModel::Errors.new(self)
-
-          if bulk_renew_params[:domains].instance_of?(Array)
-            @domains = bulk_renew_domains
-            @epp_errors.add(:epp_errors, msg: 'Domains cannot be empty', code: '2005') if @domains.empty?
-          else
-            @epp_errors.add(:epp_errors, msg: 'Domains attribute must be an array', code: '2005')
+          @domains = bulk_renew_domains
+          if @domains.empty?
+            @epp_errors.add(:epp_errors, msg: 'Domains cannot be empty',
+                                         code: '2005')
           end
-
           return handle_errors if @epp_errors.any?
         end
 
@@ -77,14 +74,18 @@ module Repp
         def bulk_renew_domains
           @epp_errors ||= ActiveModel::Errors.new(self)
           domains = []
-          bulk_renew_params[:domains].each do |idn|
-            domain = Epp::Domain.find_by(name: idn)
-            domains << domain if domain
-            next if domain
+          if bulk_renew_params[:domains].instance_of?(Array)
+            bulk_renew_params[:domains].each do |idn|
+              domain = Epp::Domain.find_by(name: idn)
+              domains << domain if domain
+              next if domain
 
-            @epp_errors.add(:epp_errors,
-                            msg: "Object does not exist: #{idn}",
-                            code: '2304')
+              @epp_errors.add(:epp_errors,
+                              msg: "Object does not exist: #{idn}",
+                              code: '2304')
+            end
+          else
+            @epp_errors.add(:epp_errors, msg: 'Domains attribute must be an array', code: '2005')
           end
 
           domains

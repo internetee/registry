@@ -1,6 +1,6 @@
 module Repp
   module V1
-    class AccountController < BaseController
+    class AccountController < BaseController # rubocop:disable Metrics/ClassLength
       load_and_authorize_resource
 
       api :get, '/repp/v1/account'

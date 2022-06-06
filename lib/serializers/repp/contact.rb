@@ -10,13 +10,15 @@ module Serializers
         @simplify = options[:simplify] || false
       end
 
+      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def to_json(obj = contact)
         return simple_object if @simplify
 
-        json = { id: obj.uuid, code: obj.code, name: obj.name, ident: ident,
-                 email: obj.email, phone: obj.phone, created_at: obj.created_at,
-                 auth_info: obj.auth_info, statuses: statuses,
-                 disclosed_attributes: obj.disclosed_attributes, registrar: registrar }
+        json = { id: obj.uuid, code: obj.code, name: obj.name, ident: ident, phone: obj.phone,
+                 created_at: obj.created_at, auth_info: obj.auth_info, email: obj.email,
+                 statuses: statuses, disclosed_attributes: obj.disclosed_attributes,
+                 registrar: registrar }
         json[:address] = address if @show_address
         if @domain_params
           json[:domains] = domains
@@ -24,6 +26,8 @@ module Serializers
         end
         json
       end
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       def registrar
         contact.registrar.as_json(only: %i[name website])
