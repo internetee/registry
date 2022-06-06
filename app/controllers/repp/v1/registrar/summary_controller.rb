@@ -12,7 +12,6 @@ module Repp
             user_notifications = user.unread_notifications
             notification = user_notifications.order('created_at DESC').take
           end
-
           render_success(data: serialize_data(registrar: registrar,
                                               notification: notification,
                                               notifications_count: user_notifications&.count,
@@ -45,23 +44,18 @@ module Repp
 
         # rubocop:disable Style/RescueStandardError
         def notification_object(notification)
-          return unless notification
+          return unless notification&.attached_obj_type || notification&.attached_obj_id
 
-          return unless notification.attached_obj_type || notification.attached_obj_id
-
-          begin
-            object_by_type(notification.attached_obj_type)
-              .find(notification.attached_obj_id)
-          rescue => e
-            # the data model might be inconsistent; or ...
-            # this could happen if the registrar does not dequeue messages,
-            # and then the domain was deleted
-            # SELECT messages.id, domains.name, messages.body FROM messages LEFT OUTER
-            # JOIN domains ON attached_obj_id::INTEGER = domains.id
-            # WHERE attached_obj_type = 'Epp::Domain' AND name IS NULL;
-            message = 'orphan message, domain deleted, registrar should dequeue: '
-            Rails.logger.error message + e.to_s
-          end
+          object_by_type(notification.attached_obj_type).find(notification.attached_obj_id)
+        rescue => e
+          # the data model might be inconsistent; or ...
+          # this could happen if the registrar does not dequeue messages,
+          # and then the domain was deleted
+          # SELECT messages.id, domains.name, messages.body FROM messages LEFT OUTER
+          # JOIN domains ON attached_obj_id::INTEGER = domains.id
+          # WHERE attached_obj_type = 'Epp::Domain' AND name IS NULL;
+          message = 'orphan message, domain deleted, registrar should dequeue: '
+          Rails.logger.error message + e.to_s
         end
         # rubocop:enable Style/RescueStandardError
 

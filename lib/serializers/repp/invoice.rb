@@ -37,7 +37,7 @@ module Serializers
           address: invoice.seller_address, country: invoice.seller_country.name,
           phone: invoice.seller_phone, url: invoice.seller_url,
           email: invoice.seller_email,
-          contact_name: invoice.seller_contact_name,
+          contact_name: invoice.seller_contact_name
         }
       end
 
