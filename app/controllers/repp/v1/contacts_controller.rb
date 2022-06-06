@@ -155,7 +155,7 @@ module Repp
       end
 
       def serialized_contacts(contacts)
-        return contacts.map(&code) unless index_params[:details] == 'true'
+        return contacts.map(&:code) unless index_params[:details] == 'true'
 
         address_processing = Contact.address_processing?
         contacts.map do |c|
