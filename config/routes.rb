@@ -87,11 +87,11 @@ Rails.application.routes.draw do
       resources :invoices, only: %i[index show] do
         collection do
           get ':id/download', to: 'invoices#download'
-          get ':id/cancel', to: 'invoices#cancel'
           post 'add_credit'
         end
         member do
           post 'send_to_recipient', to: 'invoices#send_to_recipient'
+          put 'cancel', to: 'invoices#cancel'
         end
       end
       resources :auctions, only: %i[index]

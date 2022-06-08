@@ -22,7 +22,7 @@ module Repp
           render_success(data: { token: token, username: user.username })
         end
 
-        api :put, '/repp/v1/registrar/auth/switch_user/:new_user_id'
+        api :put, '/repp/v1/registrar/auth/switch_user'
         desc 'Switch session to another api user'
         def switch_user
           new_user = ApiUser.find(auth_params[:new_user_id])

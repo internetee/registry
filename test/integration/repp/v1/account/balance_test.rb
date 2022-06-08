@@ -10,6 +10,8 @@ class ReppV1BalanceTest < ActionDispatch::IntegrationTest
     @auth_headers = { 'Authorization' => token }
   end
 
+  
+
   def test_can_query_balance
     get '/repp/v1/account/balance', headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)

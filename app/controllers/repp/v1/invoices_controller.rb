@@ -47,7 +47,7 @@ module Repp
                                                   .merge!(recipient: recipient) })
       end
 
-      api :post, '/repp/v1/invoices/:id/cancel'
+      api :put, '/repp/v1/invoices/:id/cancel'
       desc 'Cancel a specific invoice'
       def cancel
         action = Actions::InvoiceCancel.new(@invoice)
@@ -72,7 +72,7 @@ module Repp
           serializer = Serializers::Repp::Invoice.new(invoice, simplify: true)
           render_success(data: { invoice: serializer.to_json })
         else
-          handle_errors(deposit)
+          handle_non_epp_errors(deposit)
         end
       end
 
@@ -108,7 +108,7 @@ module Repp
       end
 
       def serialized_invoices(invoices)
-        return invoices.pluck(:number) unless index_params[:details] == 'true'
+        return invoices.map(&:number) unless index_params[:details] == 'true'
 
         simple = index_params[:simple] == 'true' || false
         invoices.map { |i| Serializers::Repp::Invoice.new(i, simplify: simple).to_json }
