@@ -71,8 +71,8 @@ module Repp
           data[:registrar_name] = registrar.name
           data[:registrar_reg_no] = registrar.reg_no
           data[:last_login_date] = last_login_date
-          data[:domains] = registrar.domains.count if can? :view, Depp::Domain
-          data[:contacts] = registrar.contacts.count if can? :view, Depp::Contact
+          data[:domains] = registrar.domains.count if can? :info, Depp::Domain
+          data[:contacts] = registrar.contacts.count if can? :check, Depp::Contact
           data[:phone] = registrar.phone
           data[:email] = registrar.email
           data[:billing_email] = registrar.billing_email

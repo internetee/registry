@@ -98,7 +98,7 @@ class Registrar < ApplicationRecord
           unit: 'piece',
           quantity: 1,
           price: amount,
-        }
+        },
       ]
     )
 
