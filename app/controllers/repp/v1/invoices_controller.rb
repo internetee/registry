@@ -86,6 +86,7 @@ module Repp
                             account_activity_created_at_lteq
                             account_activity_id_not_null
                             account_activity_id_null
+                            cancelled_at_null
                             cancelled_at_not_null
                             number_gteq number_lteq
                             total_gteq total_lteq s] + [s: []])
