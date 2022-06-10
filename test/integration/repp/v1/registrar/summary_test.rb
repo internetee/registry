@@ -36,8 +36,6 @@ class ReppV1RegistrarSummaryTest < ActionDispatch::IntegrationTest
 
     assert_equal json[:data][:username], @user.username
     assert_equal json[:data][:registrar_name], 'Best Names'
-    assert_nil json[:data][:domains]
-    assert_nil json[:data][:contacts]
     assert_nil json[:data][:notification]
     assert_nil json[:data][:notifications_count]
   end
