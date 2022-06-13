@@ -61,6 +61,8 @@ class ApiUser < User
   end
 
   def pki_ok?(crt, com, api: true)
+    p crt
+    p com
     return false if crt.blank? || com.blank?
 
     origin = api ? certificates.api : certificates.registrar

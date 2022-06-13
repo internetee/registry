@@ -103,14 +103,15 @@ module Repp
 
       def authenticate_user
         username, password = Base64.urlsafe_decode64(basic_token).split(':')
-        @current_user ||= ApiUser.find_by(username: username, plain_text_password: password,
-                                          active: true)
+        @current_user ||= ApiUser.find_by(username: username, plain_text_password: password)
+        user_active = @current_user.active?
 
-        return if @current_user
+        return if @current_user && user_active
 
         raise(ArgumentError)
       rescue NoMethodError, ArgumentError
-        @response = { code: 2202, message: 'Invalid authorization information' }
+        @response = { code: 2202, message: 'Invalid authorization information',
+                      data: { username: username, password: password, active: user_active } }
         render(json: @response, status: :unauthorized)
       end
 
