@@ -4,16 +4,12 @@ module Repp
       class AuthController < BaseController
         skip_before_action :authenticate_user, only: :tara_callback
         skip_before_action :check_ip_restriction, only: :tara_callback
+        skip_before_action :validate_client_certs, only: :tara_callback
 
         api :GET, 'repp/v1/registrar/auth'
         desc 'check user auth info and return data'
         def index
           registrar = current_user.registrar
-          unless client_certs_ok
-            handle_non_epp_errors(current_user, 'Invalid certificate')
-            return
-          end
-
           render_success(data: auth_values_to_data(registrar: registrar))
         end
 
@@ -47,11 +43,6 @@ module Repp
 
         def auth_params
           params.require(:auth).permit(:uid, :new_user_id)
-        end
-
-        def client_certs_ok
-          current_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'],
-                               request.env['HTTP_SSL_CLIENT_S_DN_CN'], api: false)
         end
       end
     end
