@@ -8,11 +8,9 @@ module Repp
       desc 'Get all invoices'
       def index
         records = current_user.registrar.invoices
-
         q = records.ransack(search_params)
         q.sorts = 'created_at desc' if q.sorts.empty?
         invoices = q.result(distinct: true)
-
         limited_invoices = invoices.limit(limit).offset(offset)
                                    .includes(:items, :account_activity, :buyer)
 
