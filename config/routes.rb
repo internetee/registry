@@ -75,9 +75,9 @@ Rails.application.routes.draw do
         end
       end
 
-      resource :account, controller: :account, only: %i[index update] do
+      resource :accounts, only: %i[index update] do
         collection do
-          get '/', to: 'account#index'
+          get '/', to: 'accounts#index'
           get 'balance'
           get 'details'
           post 'update_auto_reload_balance'

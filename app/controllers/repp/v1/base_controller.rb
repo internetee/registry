@@ -6,8 +6,8 @@ module Repp
       around_action :log_request
       before_action :authenticate_user
       before_action :validate_webclient_ca
-      before_action :check_ip_restriction
       before_action :validate_client_certs
+      before_action :check_ip_restriction
       before_action :set_paper_trail_whodunnit
 
       private
@@ -126,7 +126,7 @@ module Repp
       end
 
       def webclient_request?
-        return if Rails.env.test?
+        return false if Rails.env.test? || Rails.env.development?
 
         ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
       end
@@ -147,8 +147,9 @@ module Repp
 
       def validate_client_certs
         return if Rails.env.development? || Rails.env.test?
+        return if webclient_request?
         return if @current_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'],
-                                        request.env['HTTP_SSL_CLIENT_S_DN_CN'], api: false)
+                                        request.env['HTTP_SSL_CLIENT_S_DN_CN'])
 
         @response = { code: 2202, message: 'Invalid certificate' }
         render(json: @response, status: :unauthorized)

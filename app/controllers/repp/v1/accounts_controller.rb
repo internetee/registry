@@ -1,9 +1,9 @@
 module Repp
   module V1
-    class AccountController < BaseController # rubocop:disable Metrics/ClassLength
+    class AccountsController < BaseController # rubocop:disable Metrics/ClassLength
       load_and_authorize_resource
 
-      api :get, '/repp/v1/account'
+      api :get, '/repp/v1/accounts'
       desc 'Get all activities'
       def index
         records = current_user.registrar.cash_account.activities
@@ -20,7 +20,7 @@ module Repp
                                types_for_select: AccountActivity.types_for_select })
       end
 
-      api :get, '/repp/v1/account/details'
+      api :get, '/repp/v1/accounts/details'
       desc 'Get current registrar account details'
       def details
         registrar = current_user.registrar
@@ -34,7 +34,7 @@ module Repp
         render_success(data: resp)
       end
 
-      api :put, '/repp/v1/account'
+      api :put, '/repp/v1/accounts'
       desc 'Update current registrar account details'
       def update
         registrar = current_user.registrar
@@ -47,7 +47,7 @@ module Repp
                        message: I18n.t('registrar.account.update.saved'))
       end
 
-      api :post, '/repp/v1/account/update_auto_reload_balance'
+      api :post, '/repp/v1/accounts/update_auto_reload_balance'
       desc 'Enable current registrar balance auto reload'
       def update_auto_reload_balance
         type = BalanceAutoReloadTypes::Threshold.new(type_params)
@@ -62,7 +62,7 @@ module Repp
                        message: I18n.t('registrar.settings.balance_auto_reload.update.saved'))
       end
 
-      api :get, '/repp/v1/account/disable_auto_reload_balance'
+      api :get, '/repp/v1/accounts/disable_auto_reload_balance'
       desc 'Disable current registrar balance auto reload'
       def disable_auto_reload_balance
         registrar = current_user.registrar
@@ -73,7 +73,7 @@ module Repp
                        message: I18n.t('registrar.settings.balance_auto_reload.destroy.disabled'))
       end
 
-      api :get, '/repp/v1/account/balance'
+      api :get, '/repp/v1/accounts/balance'
       desc "Get account's balance"
       def balance
         resp = { balance: current_user.registrar.cash_account.balance,
