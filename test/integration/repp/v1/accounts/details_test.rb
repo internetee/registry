@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ReppV1AccountDetailsTest < ActionDispatch::IntegrationTest
+class ReppV1AccountsDetailsTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:api_bestnames)
     token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
@@ -10,7 +10,7 @@ class ReppV1AccountDetailsTest < ActionDispatch::IntegrationTest
   end
 
   def test_returns_account_details
-    get '/repp/v1/account/details', headers: @auth_headers
+    get '/repp/v1/accounts/details', headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok

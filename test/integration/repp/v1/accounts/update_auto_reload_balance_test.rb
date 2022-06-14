@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ReppV1AccountUpdateAutoReloadBalanceTest < ActionDispatch::IntegrationTest
+class ReppV1AccountsUpdateAutoReloadBalanceTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:api_bestnames)
     token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
@@ -21,7 +21,7 @@ class ReppV1AccountUpdateAutoReloadBalanceTest < ActionDispatch::IntegrationTest
 
     assert_nil @user.registrar.settings['balance_auto_reload']
 
-    post '/repp/v1/account/update_auto_reload_balance', headers: @auth_headers,
+    post '/repp/v1/accounts/update_auto_reload_balance', headers: @auth_headers,
                                                         params: request_body
     json = JSON.parse(response.body, symbolize_names: true)
     assert_response :ok
@@ -44,7 +44,7 @@ class ReppV1AccountUpdateAutoReloadBalanceTest < ActionDispatch::IntegrationTest
     }
     Setting.minimum_deposit = min_deposit
 
-    post '/repp/v1/account/update_auto_reload_balance', headers: @auth_headers,
+    post '/repp/v1/accounts/update_auto_reload_balance', headers: @auth_headers,
                                                         params: request_body
     json = JSON.parse(response.body, symbolize_names: true)
 
@@ -55,7 +55,7 @@ class ReppV1AccountUpdateAutoReloadBalanceTest < ActionDispatch::IntegrationTest
   end
 
   def test_disables_auto_reload_balance
-    get '/repp/v1/account/disable_auto_reload_balance', headers: @auth_headers
+    get '/repp/v1/accounts/disable_auto_reload_balance', headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok

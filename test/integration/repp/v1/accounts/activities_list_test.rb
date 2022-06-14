@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ReppV1AccountActivitiesListTest < ActionDispatch::IntegrationTest
+class ReppV1AccountsActivitiesListTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:api_bestnames)
     token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
@@ -10,7 +10,7 @@ class ReppV1AccountActivitiesListTest < ActionDispatch::IntegrationTest
   end
 
   def test_returns_account_activities
-    get repp_v1_account_path, headers: @auth_headers
+    get repp_v1_accounts_path, headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
@@ -22,7 +22,7 @@ class ReppV1AccountActivitiesListTest < ActionDispatch::IntegrationTest
   end
 
   def test_respects_limit
-    get repp_v1_account_path(limit: 1), headers: @auth_headers
+    get repp_v1_accounts_path(limit: 1), headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
@@ -32,7 +32,7 @@ class ReppV1AccountActivitiesListTest < ActionDispatch::IntegrationTest
 
   def test_respects_offset
     offset = 1
-    get repp_v1_account_path(offset: offset), headers: @auth_headers
+    get repp_v1_accounts_path(offset: offset), headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
@@ -44,7 +44,7 @@ class ReppV1AccountActivitiesListTest < ActionDispatch::IntegrationTest
     search_params = {
       description_matches: '%renew%',
     }
-    get repp_v1_account_path(q: search_params), headers: @auth_headers
+    get repp_v1_accounts_path(q: search_params), headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
@@ -58,7 +58,7 @@ class ReppV1AccountActivitiesListTest < ActionDispatch::IntegrationTest
     sort_params = {
       s: 'activity_type asc',
     }
-    get repp_v1_account_path(q: sort_params), headers: @auth_headers
+    get repp_v1_accounts_path(q: sort_params), headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok

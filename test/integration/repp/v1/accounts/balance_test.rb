@@ -13,7 +13,7 @@ class ReppV1BalanceTest < ActionDispatch::IntegrationTest
   
 
   def test_can_query_balance
-    get '/repp/v1/account/balance', headers: @auth_headers
+    get '/repp/v1/accounts/balance', headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
@@ -30,7 +30,7 @@ class ReppV1BalanceTest < ActionDispatch::IntegrationTest
     started_from = "2010-07-05"
     end_to = DateTime.current.to_date.to_s(:db)
 
-    get "/repp/v1/account/balance?detailed=true", headers: @auth_headers
+    get "/repp/v1/accounts/balance?detailed=true", headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
