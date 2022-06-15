@@ -27,7 +27,10 @@ namespace :eis_billing do
       }
     end
 
-    base_request(url: import_invoice_data_url, json_obj: parsed_data)
+    response = base_request(url: import_invoice_data_url, json_obj: parsed_data)
+    puts "**********"
+    puts JSON.parse(response.body)['message']
+    puts "----------"
   end
 
   desc 'One time task to export reference number of registrars to billing system'
@@ -41,7 +44,10 @@ namespace :eis_billing do
       }
     end
 
-    base_request(url: import_reference_data_url, json_obj: parsed_data)
+    response = base_request(url: import_reference_data_url, json_obj: parsed_data)
+    puts "**********"
+    puts JSON.parse(response.body)['message']
+    puts "----------"
   end
 end
 

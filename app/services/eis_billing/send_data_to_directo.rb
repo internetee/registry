@@ -13,11 +13,20 @@ module EisBilling
       }
 
       http = EisBilling::Base.base_request(url: directo_url)
-      http.post(directo_url, prepared_data.to_json, EisBilling::Base.headers)
+      response = http.post(directo_url, prepared_data.to_json, EisBilling::Base.headers)
+      logger(response) unless Rails.env.test?
+
+      response
     end
 
     def self.directo_url
       "#{BASE_URL}/api/v1/directo/directo"
+    end
+
+    def self.logger(response)
+      Rails.logger.info "--------* EIS Billing *--------"
+      Rails.logger.info JSON.parse(response.body)['message']
+      Rails.logger.info "-------------------------------"
     end
   end
 end
