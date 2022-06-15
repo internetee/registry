@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ReppV1RegistrarSwitchUserTest < ActionDispatch::IntegrationTest
+class ReppV1AccountsSwitchUserTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:api_bestnames)
     token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
@@ -13,12 +13,12 @@ class ReppV1RegistrarSwitchUserTest < ActionDispatch::IntegrationTest
     new_user = users(:api_goodnames)
     new_user.update(identity_code: '1234')
     request_body = {
-      auth: {
+      account: {
         new_user_id: new_user.id,
       },
     }
 
-    put '/repp/v1/registrar/auth/switch_user', headers: @auth_headers, params: request_body
+    put '/repp/v1/accounts/switch_user', headers: @auth_headers, params: request_body
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
@@ -38,12 +38,12 @@ class ReppV1RegistrarSwitchUserTest < ActionDispatch::IntegrationTest
     new_user = users(:api_goodnames)
     new_user.update(identity_code: '4444')
     request_body = {
-      auth: {
+      account: {
         new_user_id: new_user.id,
       },
     }
 
-    put '/repp/v1/registrar/auth/switch_user', headers: @auth_headers, params: request_body
+    put '/repp/v1/accounts/switch_user', headers: @auth_headers, params: request_body
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :bad_request

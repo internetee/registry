@@ -83,6 +83,9 @@ Rails.application.routes.draw do
           post 'update_auto_reload_balance'
           get 'disable_auto_reload_balance'
         end
+        member do
+          put 'switch_user'
+        end
       end
       resources :invoices, only: %i[index show] do
         collection do
@@ -117,7 +120,6 @@ Rails.application.routes.draw do
         resources :auth, only: %i[index] do
           collection do
             post '/tara_callback', to: 'auth#tara_callback'
-            put '/switch_user', to: 'auth#switch_user'
           end
         end
       end
