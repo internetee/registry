@@ -39,7 +39,7 @@ class Registrar < ApplicationRecord
 
   alias_attribute :contact_email, :email
 
-  WHOIS_TRIGGERS = %w(name email phone street city state zip)
+  WHOIS_TRIGGERS = %w[name email phone street city state zip].freeze
 
   after_commit :update_whois_records
   def update_whois_records

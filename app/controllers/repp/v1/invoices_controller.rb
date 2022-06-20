@@ -37,8 +37,17 @@ module Repp
 
       api :post, '/repp/v1/invoices/:id/send_to_recipient'
       desc 'Send invoice pdf to recipient'
+      param :invoice, Hash, required: true, desc: 'Invoice data for sending to recipient' do
+        param :id, String, required: true, desc: 'Invoice id'
+        param :recipient, String, required: true, desc: 'Invoice receipient email'
+      end
       def send_to_recipient
         recipient = invoice_params[:recipient]
+        unless recipient.present?
+          handle_non_epp_errors(@invoice, 'Invoice recipient cannot be empty')
+          return
+        end
+
         InvoiceMailer.invoice_email(invoice: @invoice, recipient: recipient)
                      .deliver_now
         serializer = Serializers::Repp::Invoice.new(@invoice, simplify: true)
