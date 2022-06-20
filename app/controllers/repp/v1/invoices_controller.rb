@@ -1,9 +1,10 @@
 require 'serializers/repp/invoice'
 module Repp
   module V1
-    class InvoicesController < BaseController
+    class InvoicesController < BaseController # rubocop:disable Metrics/ClassLength
       load_and_authorize_resource
 
+      # rubocop:disable Metrics/MethodLength
       api :get, '/repp/v1/invoices'
       desc 'Get all invoices'
       def index
@@ -18,6 +19,7 @@ module Repp
         render_success(data: { invoices: serialized_invoices(limited_invoices),
                                count: invoices.count })
       end
+      # rubocop:enable Metrics/MethodLength
 
       api :get, '/repp/v1/invoices/:id'
       desc 'Get a specific invoice'
@@ -43,7 +45,7 @@ module Repp
       end
       def send_to_recipient
         recipient = invoice_params[:recipient]
-        unless recipient.present?
+        if recipient.blank?
           handle_non_epp_errors(@invoice, 'Invoice recipient cannot be empty')
           return
         end
