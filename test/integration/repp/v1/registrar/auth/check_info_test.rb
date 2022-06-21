@@ -20,7 +20,6 @@ class ReppV1RegistrarAuthCheckInfoTest < ActionDispatch::IntegrationTest
     assert_equal json[:data][:username], @user.username
     assert json[:data][:roles].include? 'super'
     assert_equal json[:data][:registrar_name], 'Best Names'
-    assert_equal json[:data][:balance][:amount].to_f, @user.registrar.cash_account.balance
     assert json[:data][:abilities].is_a? Hash
   end
 
