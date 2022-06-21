@@ -17,7 +17,8 @@ module Repp
         desc 'check tara callback omniauth user info and return token'
         def tara_callback
           user = ApiUser.from_omniauth(auth_params)
-          handle_non_epp_errors(user, I18n.t(:no_such_user)) and return unless user && user&.active
+          response = { code: 401, message: I18n.t(:no_such_user), data: {} }
+          render(json: response, status: :unauthorized) and return unless user && user&.active
 
           token = Base64.urlsafe_encode64("#{user.username}:#{user.plain_text_password}")
           render_success(data: { token: token, username: user.username })
