@@ -30,7 +30,6 @@ class ReppV1AccountsSwitchUserTest < ActionDispatch::IntegrationTest
     assert_equal json[:data][:registrar][:username], new_user.username
     assert json[:data][:registrar][:roles].include? 'super'
     assert_equal json[:data][:registrar][:registrar_name], 'Good Names'
-    assert_equal json[:data][:registrar][:balance][:amount].to_f, new_user.registrar.cash_account.balance
     assert json[:data][:registrar][:abilities].is_a? Hash
   end
 

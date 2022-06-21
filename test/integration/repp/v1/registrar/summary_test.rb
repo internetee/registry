@@ -21,6 +21,7 @@ class ReppV1RegistrarSummaryTest < ActionDispatch::IntegrationTest
     assert_equal json[:data][:registrar_name], 'Best Names'
     assert_equal json[:data][:domains], @user.registrar.domains.count
     assert_equal json[:data][:contacts], @user.registrar.contacts.count
+    assert_equal json[:data][:balance][:amount].to_f, @user.registrar.cash_account.balance
     assert json[:data][:notification].is_a? Hash
     assert_equal json[:data][:notifications_count], @user.unread_notifications.count
   end
