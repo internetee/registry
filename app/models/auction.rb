@@ -85,6 +85,7 @@ class Auction < ApplicationRecord
 
   def restart
     new_auction = self.class.new(domain: domain)
+    new_auction.platform = self.platform
     new_auction.start
   end
 
