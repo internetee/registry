@@ -70,6 +70,8 @@ module Repp
           data = current_user.as_json(only: %i[id username])
           data[:registrar_name] = registrar.name
           data[:registrar_reg_no] = registrar.reg_no
+          data[:balance] = { amount: registrar.cash_account&.balance,
+                             currency: registrar.cash_account&.currency }
           data[:last_login_date] = last_login_date
           data[:domains] = registrar.domains.count
           data[:contacts] = registrar.contacts.count

@@ -163,8 +163,6 @@ module Repp
         data = current_user.as_json(only: %i[id username roles])
         data[:registrar_name] = registrar.name
         data[:legaldoc_mandatory] = registrar.legaldoc_mandatory?
-        data[:balance] = { amount: registrar.cash_account&.balance,
-                           currency: registrar.cash_account&.currency }
         data[:abilities] = Ability.new(current_user).permissions
         data
       end
