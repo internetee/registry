@@ -40,7 +40,7 @@ class ReppV1RegistrarAuthTaraCallbackTest < ActionDispatch::IntegrationTest
     post '/repp/v1/registrar/auth/tara_callback', headers: @auth_headers, params: request_body
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :bad_request
+    assert_response :unauthorized
     assert_equal 'No such user', json[:message]
   end
 end
