@@ -6,11 +6,12 @@
 
 <div class="page-header">
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-7">
             <h1><%= domain.name_with_status %></h1>
         </div>
 
-        <div class="col-sm-4 text-right">
+        <div class="col-sm-5 text-right">
+            <%= link_to t('.download'), download_admin_domain_path(@domain), class: 'btn btn-primary' %>
             <%= link_to t('.edit_btn'), edit_admin_domain_path(@domain), class: 'btn btn-primary' %>
             <%= link_to t('.history_btn'), admin_domain_domain_versions_path(@domain),
                         class: 'btn btn-primary' %>

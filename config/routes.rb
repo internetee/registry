@@ -310,6 +310,7 @@ Rails.application.routes.draw do
       resource :registry_lock, controller: 'domains/registry_lock', only: :destroy
 
       member do
+        get :download
         patch :keep
       end
     end
