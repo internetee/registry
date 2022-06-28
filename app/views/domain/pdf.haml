@@ -11,22 +11,8 @@
 
       }
 
-      .col-md-6 {
-        width: 49%;
-        display: inline-block;
-      }
-
       .col-xs-4 {
         width: 33%;
-      }
-
-      .col-xs-2 {
-        width: 16%;
-      }
-
-      .col-md-3 {
-        width: 24%;
-        display: inline-block;
       }
 
       .left {
@@ -39,10 +25,6 @@
 
       .right {
         float: right;
-      }
-
-      .text-right {
-        text-align: right;
       }
 
       dt {
@@ -88,10 +70,6 @@
         padding: 6px;
       }
 
-      .no-border {
-        border: 0px;
-      }
-
       hr {
         height: 1px;
         border: 0;
@@ -104,7 +82,7 @@
       }
 
       .pull-down {
-        margin-top: 50px;
+        margin-top: 30px;
       }
 
       #header {
@@ -122,12 +100,6 @@
         bottom: 0;
       }
 
-      #footer {
-        position: absolute;
-        bottom: 0px;
-        width: 99%;
-      }
-
       h1 {
         margin-bottom: 5px;
       }
@@ -137,179 +109,166 @@
       #header.row
         .col-sm-6.left
           #header-content
-            %h1
-              = @domain.name
+            %h1= @domain.name
         .col-sm-6.right
           %img{src: "#{Rails.root}/public/eis-logo-black-et.png"}
       .clear
       %hr
       .row
-        .col-md-6
-          .panel.panel-default
-            .panel-heading
-              %h3.panel-title
-                = t(:general)
-            .panel-body
-              %dl.dl-horizontal
-                %dt= t(:name)
-                %dd= @domain.name
-                %dt= Domain.human_attribute_name :registered_at
-                %dd= l(@domain.registered_at)
-                %dt= t(:registrar_name)
-                %dd= @domain.registrar
-                %dt= Domain.human_attribute_name :transfer_code
-                %dd= @domain.transfer_code
-                %dt= t(:valid_to)
-                %dd= l(@domain.valid_to)
-                %dt= t('.outzone_time')
-                %dd= l(@domain.outzone_at)
-                %dt= Domain.human_attribute_name :delete_date
-                %dd= l @domain.delete_date
-                %dt= Domain.human_attribute_name :force_delete_date
-                %dd= l @domain.force_delete_date
-                %dt= t('.locked_by_registrant_at')
-                %dd= l(@domain.locked_by_registrant_at)
-        .col-md-6
-          .panel.panel-default
-            .panel-heading
-              %h3.panel-title= t('activerecord.models.registrant')
-            .panel-body
-              %dl.dl-horizontal
-                %dt.left_25= t(:name)
-                %dd.left_25= @domain.registrant
+        .col-sm-6.left
+          %h3= t(:general)
+          %hr
+          %dl.dl-horizontal
+            %dt= t(:name)
+            %dd= @domain.name
+            %dt= Domain.human_attribute_name :registered_at
+            %dd= l(@domain.registered_at)
+            %dt= t(:registrar_name)
+            %dd= @domain.registrar
+            %dt= Domain.human_attribute_name :transfer_code
+            %dd= @domain.transfer_code
+            %dt= t(:valid_to)
+            %dd= l(@domain.valid_to)
+            %dt= t('.outzone_time')
+            %dd= l(@domain.outzone_at)
+            %dt= Domain.human_attribute_name :delete_date
+            %dd= l @domain.delete_date
+            %dt= Domain.human_attribute_name :force_delete_date
+            %dd= l @domain.force_delete_date
+            %dt= t('.locked_by_registrant_at')
+            %dd= l(@domain.locked_by_registrant_at)
+        .col-sm-6.right
+          %h3= t('activerecord.models.registrant')
+          %hr
+          %dl.dl-horizontal
+            %dt.left_25= t(:name)
+            %dd.left_25= @domain.registrant
 
-                %dt.left_25= t(:id)
-                %dd.left_25= @domain.registrant.code
+            %dt.left_25= t(:id)
+            %dd.left_25= @domain.registrant.code
 
-                %dt.left_25= t(:identity_code)
-                %dd.left_25= @domain.registrant.ident
+            %dt.left_25= t(:identity_code)
+            %dd.left_25= @domain.registrant.ident
 
-                %dt.left_25= t(:email)
-                %dd.left_25= @domain.registrant.email
+            %dt.left_25= t(:email)
+            %dd.left_25= @domain.registrant.email
 
-                %dt.left_25= t(:phone)
-                %dd.left_25= @domain.registrant.phone
-      .row
+            %dt.left_25= t(:phone)
+            %dd.left_25= @domain.registrant.phone
+      .clear
+      .row.pull-down
         .col-md-12
           - tech_contacts_invalid = @domain.errors.include?(:tech_contacts)
-          - panel_class = tech_contacts_invalid ? 'panel-danger' : 'panel-default'
-          .panel{class: panel_class}
-            .panel-heading.clearfix
-              = t(:tech_contacts)
-            .table-responsive
-              %table.table.table-hover.table-bordered.table-condensed
-                %thead
+          %h3= t(:tech_contacts)
+          %hr
+          .table-responsive
+            %table.table.table-hover.table-condensed
+              %thead
+                %tr
+                  %th{class: 'col-xs-4'}= t(:name)
+                  %th{class: 'col-xs-4'}= t(:id)
+                  %th{class: 'col-xs-4'}= t(:email)
+              %tbody
+                - @domain.tech_contacts.each do |tc|
                   %tr
-                    %th{class: 'col-xs-4'}= t(:name)
-                    %th{class: 'col-xs-4'}= t(:id)
-                    %th{class: 'col-xs-4'}= t(:email)
-                %tbody
-                  - @domain.tech_contacts.each do |tc|
+                    %td= tc
+                    %td= tc.code
+                    %td= tc.email
+              - if tech_contacts_invalid
+                %tfoot
+                  - @domain.errors.messages[:tech_contacts].each do |x|
                     %tr
-                      %td= tc
-                      %td= tc.code
-                      %td= tc.email
-                - if tech_contacts_invalid
-                  %tfoot
-                    - @domain.errors.messages[:tech_contacts].each do |x|
-                      %tr
-                        %td{colspan: 4}= x
+                      %td{colspan: 4}= x
       .row
         .col-md-12
           - admin_contacts_invalid = @domain.errors.include?(:admin_contacts)
-          - panel_class = admin_contacts_invalid ? 'panel-danger' : 'panel-default'
-          .panel{class: panel_class}
-            .panel-heading.clearfix
-              = t(:admin_contacts)
-            .table-responsive
-              %table.table.table-hover.table-bordered.table-condensed
-                %thead
+          %h3= t(:admin_contacts)
+          %hr
+          .table-responsive
+            %table.table.table-hover.table-condensed
+              %thead
+                %tr
+                  %th{class: 'col-xs-4'}= t(:name)
+                  %th{class: 'col-xs-4'}= t(:id)
+                  %th{class: 'col-xs-4'}= t(:email)
+              %tbody
+                - @domain.admin_contacts.each do |ac|
                   %tr
-                    %th{class: 'col-xs-4'}= t(:name)
-                    %th{class: 'col-xs-4'}= t(:id)
-                    %th{class: 'col-xs-4'}= t(:email)
-                %tbody
-                  - @domain.admin_contacts.each do |ac|
+                    %td= ac
+                    %td= ac.code
+                    %td= ac.email
+              - if admin_contacts_invalid
+                %tfoot
+                  - @domain.errors.messages[:admin_contacts].each do |x|
                     %tr
-                      %td= ac
-                      %td= ac.code
-                      %td= ac.email
-                - if admin_contacts_invalid
-                  %tfoot
-                    - @domain.errors.messages[:admin_contacts].each do |x|
-                      %tr
-                        %td{colspan: 4}= x
-      .row
+                      %td{colspan: 4}= x
+      .clear
+      .row.pull-down
         .col-md-12
-          #domain_statuses.panel.panel-default
-            .panel-heading.clearfix
-              = t(:statuses)
-            .table-responsive
-              %table.table.table-hover.table-bordered.table-condensed
-                %thead
+          %h3= t(:statuses)
+          %hr
+          .table-responsive
+            %table.table.table-hover.table-condensed
+              %thead
+                %tr
+                  %th{class: 'col-xs-6'}= t(:status)
+                  %th{class: 'col-xs-6'}= t(:notes)
+              %tbody
+                - @domain.statuses.each do |status|
                   %tr
-                    %th{class: 'col-xs-6'}= t(:status)
-                    %th{class: 'col-xs-6'}= t(:notes)
-                %tbody
-                  - @domain.statuses.each do |status|
-                    %tr
-                      %td
-                        - if @domain.pending_json.present? && [DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE].include?(status)
-                          = link_to status, admin_domain_domain_versions_path(@domain.id)
-                        - else
-                          = status
-                      %td= @domain.status_notes[status]
-      .row
+                    %td= status
+                    %td= @domain.status_notes[status]
+      .clear
+      .row.pull-down
         .col-md-12
-          .panel.panel-default
-            .panel-heading.clearfix
-              = t(:nameservers)
-            .table-responsive
-              %table.table.table-hover.table-bordered.table-condensed
-                %thead
+          %h3= t(:nameservers)
+          %hr
+          .table-responsive
+            %table.table.table-hover.table-condensed
+              %thead
+                %tr
+                  %th{class: 'col-xs-4'}= t(:hostname)
+                  %th{class: 'col-xs-4'}= t(:ipv4)
+                  %th{class: 'col-xs-4'}= t(:ipv6)
+              %tbody
+                - @domain.nameservers.each do |x|
                   %tr
-                    %th{class: 'col-xs-4'}= t(:hostname)
-                    %th{class: 'col-xs-4'}= t(:ipv4)
-                    %th{class: 'col-xs-4'}= t(:ipv6)
-                %tbody
-                  - @domain.nameservers.each do |x|
-                    %tr
-                      %td= x
-                      %td= x.ipv4
-                      %td= x.ipv6
-      .row
+                    %td= x
+                    %td= x.ipv4
+                    %td= x.ipv6
+      .clear
+      .row.pull-down
         .col-md-12
-          .panel.panel-default
-            .panel-heading.clearfix
-              = t(:dnskeys)
-            .table-responsive
-              %table.table.table-hover.table-bordered.table-condensed
-                %thead
+          %h3= t(:dnskeys)
+          %hr
+          .table-responsive
+            %table.table.table-hover.table-condensed
+              %thead
+                %tr
+                  %th{class: 'col-xs-1'}= t(:flag)
+                  %th{class: 'col-xs-1'}= t(:protocol)
+                  %th{class: 'col-xs-1'}= t(:algorithm)
+                  %th{class: 'col-xs-9'}= t(:public_key)
+              %tbody
+                - @domain.dnskeys.each do |x|
                   %tr
-                    %th{class: 'col-xs-1'}= t(:flag)
-                    %th{class: 'col-xs-1'}= t(:protocol)
-                    %th{class: 'col-xs-1'}= t(:algorithm)
-                    %th{class: 'col-xs-9'}= t(:public_key)
-                %tbody
-                  - @domain.dnskeys.each do |x|
-                    %tr
-                      %td= x.flags
-                      %td= x.protocol
-                      %td= x.alg
-                      %td= x.public_key
-      .row
+                    %td= x.flags
+                    %td= x.protocol
+                    %td= x.alg
+                    %td= x.public_key
+      .clear
+      .row.pull-down
         .col-md-12
-          .panel.panel-default
-            .panel-heading.clearfix
-              = t(:legal_documents)
-            .table-responsive
-              %table.table.table-hover.table-bordered.table-condensed
-                %thead
+          %h3= t(:legal_documents)
+          %hr
+          .table-responsive
+            %table.table.table-hover.table-condensed
+              %thead
+                %tr
+                  %th{class: 'col-xs-8'}= t(:created_at)
+                  %th{class: 'col-xs-4'}= t(:type)
+              %tbody
+                - @domain.legal_documents.each do |x|
                   %tr
-                    %th{class: 'col-xs-8'}= t(:created_at)
-                    %th{class: 'col-xs-4'}= t(:type)
-                %tbody
-                  - @domain.legal_documents.each do |x|
-                    %tr
-                      %td= link_to(x.created_at, [:admin, x])
-                      %td= x.document_type
+                    %td= x.created_at
+                    %td= x.document_type
