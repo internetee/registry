@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DomainTest < ApplicationIntegrationTest
+class DomainShowTest < ApplicationIntegrationTest
   setup do
     @domain = domains(:shop)
     sign_in users(:admin)

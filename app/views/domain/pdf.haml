@@ -133,7 +133,7 @@
             %dd= @domain.name
             %dt Registreeritud
             %dd= @domain.registered_at.to_date.strftime("%d/%m/%Y")
-            %dt Registreering aegub
+            %dt Aegub
             %dd= @domain.valid_to.to_date.strftime("%d/%m/%Y")
             %dt Registripidaja
             %dd= "#{@domain.registrar} #{@domain.registrar.website}"
@@ -157,7 +157,7 @@
       .clear
       .row.pull-down
         .col-md-12
-          %h3 Administraatori kontaktid
+          %h3 Halduskontaktid
           %hr
           .table-responsive
             %table.table.table-hover.table-condensed
