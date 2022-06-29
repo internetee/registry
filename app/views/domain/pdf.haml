@@ -1,4 +1,4 @@
-%html{lang: I18n.locale.to_s}
+%html{lang: 'et'}
   %head
     %meta{charset: "utf-8"}
     :css
@@ -104,130 +104,108 @@
         margin-bottom: 5px;
       }
 
+      #footer {
+        position: absolute;
+        bottom: 0px;
+        width: 99%;
+      }
+
+      .blue {
+        color: #0098da;
+      }
+
   %body
     .container
       #header.row
         .col-sm-6.left
           #header-content
-            %h1= @domain.name
+            %h1= "#{@domain.name} (#{Time.zone.now.to_date.strftime("%d/%m/%Y")})"
         .col-sm-6.right
           %img{src: "#{Rails.root}/public/eis-logo-black-et.png"}
       .clear
       %hr
       .row
-        .col-sm-6.left
-          %h3= t(:general)
+        .col-sm-8.left
+          %h3 Üldine
           %hr
           %dl.dl-horizontal
-            %dt= t(:name)
+            %dt Nimi
             %dd= @domain.name
-            %dt= Domain.human_attribute_name :registered_at
-            %dd= l(@domain.registered_at)
-            %dt= t(:registrar_name)
-            %dd= @domain.registrar
-            %dt= Domain.human_attribute_name :transfer_code
-            %dd= @domain.transfer_code
-            %dt= t(:valid_to)
-            %dd= l(@domain.valid_to)
-            %dt= t('.outzone_time')
-            %dd= l(@domain.outzone_at)
-            %dt= Domain.human_attribute_name :delete_date
-            %dd= l @domain.delete_date
-            %dt= Domain.human_attribute_name :force_delete_date
-            %dd= l @domain.force_delete_date
-            %dt= t('.locked_by_registrant_at')
-            %dd= l(@domain.locked_by_registrant_at)
-        .col-sm-6.right
-          %h3= t('activerecord.models.registrant')
+            %dt Registreeritud
+            %dd= @domain.registered_at.to_date.strftime("%d/%m/%Y")
+            %dt Registreering aegub
+            %dd= @domain.valid_to.to_date.strftime("%d/%m/%Y")
+            %dt Registripidaja
+            %dd= "#{@domain.registrar} #{@domain.registrar.website}"
+
+        .col-sm-4.right
+          %h3 Registreerija
           %hr
           %dl.dl-horizontal
-            %dt.left_25= t(:name)
+            %dt.left_25 Nimi
             %dd.left_25= @domain.registrant
 
-            %dt.left_25= t(:id)
-            %dd.left_25= @domain.registrant.code
+            %dt.left_25 Isikukood
+            %dd.left_25= @domain.registrant.ident_human_description
 
-            %dt.left_25= t(:identity_code)
-            %dd.left_25= @domain.registrant.ident
-
-            %dt.left_25= t(:email)
+            %dt.left_25 E-mail
             %dd.left_25= @domain.registrant.email
 
-            %dt.left_25= t(:phone)
+            %dt.left_25 Telefon
             %dd.left_25= @domain.registrant.phone
+
       .clear
       .row.pull-down
         .col-md-12
-          - tech_contacts_invalid = @domain.errors.include?(:tech_contacts)
-          %h3= t(:tech_contacts)
+          %h3 Administraatori kontaktid
           %hr
           .table-responsive
             %table.table.table-hover.table-condensed
               %thead
                 %tr
-                  %th{class: 'col-xs-4'}= t(:name)
-                  %th{class: 'col-xs-4'}= t(:id)
-                  %th{class: 'col-xs-4'}= t(:email)
-              %tbody
-                - @domain.tech_contacts.each do |tc|
-                  %tr
-                    %td= tc
-                    %td= tc.code
-                    %td= tc.email
-              - if tech_contacts_invalid
-                %tfoot
-                  - @domain.errors.messages[:tech_contacts].each do |x|
-                    %tr
-                      %td{colspan: 4}= x
-      .row
-        .col-md-12
-          - admin_contacts_invalid = @domain.errors.include?(:admin_contacts)
-          %h3= t(:admin_contacts)
-          %hr
-          .table-responsive
-            %table.table.table-hover.table-condensed
-              %thead
-                %tr
-                  %th{class: 'col-xs-4'}= t(:name)
-                  %th{class: 'col-xs-4'}= t(:id)
-                  %th{class: 'col-xs-4'}= t(:email)
+                  %th{class: 'col-xs-3'} Nimi
+                  %th{class: 'col-xs-3'} Isikukood
+                  %th{class: 'col-xs-3'} E-mail
+                  %th{class: 'col-xs-3'} Telefon
               %tbody
                 - @domain.admin_contacts.each do |ac|
                   %tr
-                    %td= ac
-                    %td= ac.code
+                    %td= ac.name
+                    %td= ac.ident_human_description
                     %td= ac.email
-              - if admin_contacts_invalid
-                %tfoot
-                  - @domain.errors.messages[:admin_contacts].each do |x|
-                    %tr
-                      %td{colspan: 4}= x
+                    %td= ac.phone
+
       .clear
       .row.pull-down
         .col-md-12
-          %h3= t(:statuses)
+          %h3 Tehnilised kontaktid
           %hr
           .table-responsive
             %table.table.table-hover.table-condensed
               %thead
                 %tr
-                  %th{class: 'col-xs-6'}= t(:status)
-                  %th{class: 'col-xs-6'}= t(:notes)
+                  %th{class: 'col-xs-3'} Nimi
+                  %th{class: 'col-xs-3'} Isikukood
+                  %th{class: 'col-xs-3'} E-mail
+                  %th{class: 'col-xs-3'} Telefon
               %tbody
-                - @domain.statuses.each do |status|
+                - @domain.tech_contacts.each do |tc|
                   %tr
-                    %td= status
-                    %td= @domain.status_notes[status]
+                    %td= tc.name
+                    %td= tc.ident_human_description
+                    %td= tc.email
+                    %td= tc.phone
+
       .clear
       .row.pull-down
         .col-md-12
-          %h3= t(:nameservers)
+          %h3 Nimeserverid
           %hr
           .table-responsive
             %table.table.table-hover.table-condensed
               %thead
                 %tr
-                  %th{class: 'col-xs-4'}= t(:hostname)
+                  %th{class: 'col-xs-4'} Hostinimi
                   %th{class: 'col-xs-4'}= t(:ipv4)
                   %th{class: 'col-xs-4'}= t(:ipv6)
               %tbody
@@ -245,10 +223,10 @@
             %table.table.table-hover.table-condensed
               %thead
                 %tr
-                  %th{class: 'col-xs-1'}= t(:flag)
-                  %th{class: 'col-xs-1'}= t(:protocol)
-                  %th{class: 'col-xs-1'}= t(:algorithm)
-                  %th{class: 'col-xs-9'}= t(:public_key)
+                  %th{class: 'col-xs-1'} Lipp
+                  %th{class: 'col-xs-1'} Protokolli
+                  %th{class: 'col-xs-1'} Algoritm
+                  %th{class: 'col-xs-9'} Avalik võti
               %tbody
                 - @domain.dnskeys.each do |x|
                   %tr
@@ -256,19 +234,8 @@
                     %td= x.protocol
                     %td= x.alg
                     %td= x.public_key
-      .clear
-      .row.pull-down
-        .col-md-12
-          %h3= t(:legal_documents)
-          %hr
-          .table-responsive
-            %table.table.table-hover.table-condensed
-              %thead
-                %tr
-                  %th{class: 'col-xs-8'}= t(:created_at)
-                  %th{class: 'col-xs-4'}= t(:type)
-              %tbody
-                - @domain.legal_documents.each do |x|
-                  %tr
-                    %td= x.created_at
-                    %td= x.document_type
+      #footer
+        %hr
+          %p{class: 'blue'} Eesti Interneti SA
+          %p Paldiski mnt 80, 10617 Tallinn, Estonia T +372 727 1000 E info@internet.ee www.internet.ee
+          %p Reg. nr 90010019 KMKR EE101286464
