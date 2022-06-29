@@ -17,7 +17,7 @@ namespace :registrars do
         next if reload_pending || !threshold_reached
 
         Registrar.transaction do
-          registrar.issue_prepayment_invoice(reload_amount)
+          registrar.issue_prepayment_invoice(reload_amount, 'reload balance')
           registrar.settings['balance_auto_reload']['pending'] = true
           registrar.save!
         end

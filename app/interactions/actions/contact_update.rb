@@ -37,11 +37,12 @@ module Actions
     end
 
     def maybe_filtering_old_failed_records
-      validation_events = contact.validation_events
-      return unless validation_events.count > 1
-
-      validation_events.order!(created_at: :asc)
-      validation_events.first.destroy while validation_events.count >= 1
+      if contact.validation_events.count > 1
+        contact.validation_events.order!(created_at: :asc)
+        while contact.validation_events.count >= 1
+          contact.validation_events.first.destroy
+        end
+      end
     end
 
     def maybe_remove_address

@@ -54,6 +54,7 @@ class CheckForceDeleteTaskTest < ActiveSupport::TestCase
       action.call
     end
 
+    run_task
     assert_enqueued_jobs 0
   end
 

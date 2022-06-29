@@ -40,8 +40,38 @@ class Invoice < ApplicationRecord
 
   attribute :vat_rate, ::Type::VatRate.new
 
-  def set_invoice_number
-    last_no = Invoice.order(number: :desc).limit(1).pick(:number)
+  def validate_invoice_number(result)
+    response = JSON.parse(result.body)
+
+    billing_restrictions_issue if response['code'] == '403'
+    billing_out_of_range_issue if response['error'] == 'out of range'
+  end
+
+  def billing_restrictions_issue
+    errors.add(:base, I18n.t('cannot get access'))
+    logger.error('PROBLEM WITH TOKEN')
+    throw(:abort)
+  end
+
+  def billing_out_of_range_issue
+    errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
+    logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
+    throw(:abort)
+  end
+
+  def invoice_number_from_billing
+    result = EisBilling::GetInvoiceNumber.send_invoice
+    validate_invoice_number(result)
+
+    self.number = JSON.parse(result.body)['invoice_number'].to_i
+  end
+
+  def generate_invoice_number_legacy
+    last_no = Invoice.all
+                     .where(number: Setting.invoice_number_min.to_i...Setting.invoice_number_max.to_i)
+                     .order(number: :desc)
+                     .limit(1)
+                     .pick(:number)
 
     if last_no && last_no >= Setting.invoice_number_min.to_i
       self.number = last_no + 1
@@ -51,9 +81,15 @@ class Invoice < ApplicationRecord
 
     return if number <= Setting.invoice_number_max.to_i
 
-    errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
-    logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
-    throw(:abort)
+    billing_out_of_range_issue
+  end
+
+  def set_invoice_number
+    if Feature.billing_system_integrated?
+      invoice_number_from_billing
+    else
+      generate_invoice_number_legacy
+    end
   end
 
   def to_s

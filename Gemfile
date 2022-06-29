@@ -17,7 +17,7 @@ gem 'figaro', '~> 1.2'
 
 # model related
 gem 'paper_trail', '~> 12.1'
-gem 'pg',                        '1.3.5'
+gem 'pg',                        '1.4.0'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 2.6.0'
 gem 'truemail', '~> 2.4' # validates email by regexp, mail server existence and address existence
@@ -104,3 +104,6 @@ gem 'pghero'
 gem 'pg_query', '>= 0.9.0'
 gem 'newrelic_rpm'
 gem 'newrelic-infinite_tracing'
+
+# token
+gem 'jwt'

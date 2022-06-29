@@ -1,3 +1,10 @@
+02.06.2022
+* Integration with the billing service [#2266](https://github.com/internetee/registry/pull/2266)
+
+25.05.2022
+* Fixed looping validation issue [#2377](https://github.com/internetee/registry/pull/2377)
+* ForceDelete query fix [#2380](https://github.com/internetee/registry/pull/2380)
+
 19.05.2022
 * Process to remove expired validation event records [#2236](https://github.com/internetee/registry/issues/2236)
 

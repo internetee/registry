@@ -11,6 +11,13 @@ Rails.application.routes.draw do
     mount PgHero::Engine, at: "pghero"
   end
 
+  namespace :eis_billing do
+    put '/payment_status', to: 'payment_status#update', as: 'payment_status', :format => false, :defaults => { :format => 'json' }
+    put '/directo_response', to: 'directo_response#update', as: 'directo_response'
+    put '/e_invoice_response', to: 'e_invoice_response#update', as: 'e_invoice_response'
+    post '/lhv_connect_transactions', to: 'lhv_connect_transactions#create', as: 'lhv_connect_transactions'
+  end
+
   namespace :epp do
     constraints(EppConstraint.new(:session)) do
       get 'session/hello', to: 'sessions#hello', as: 'hello'
