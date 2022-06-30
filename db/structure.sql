@@ -1103,6 +1103,7 @@ CREATE TABLE public.invoices (
     buyer_vat_no character varying,
     issue_date date NOT NULL,
     e_invoice_sent_at timestamp without time zone,
+    payment_link character varying,
     CONSTRAINT invoices_due_date_is_not_before_issue_date CHECK ((due_date >= issue_date))
 );
 
@@ -5094,6 +5095,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220106123143'),
 ('20220113201642'),
 ('20220113220809'),
+('20220124105717'),
 ('20220228093211'),
 ('20220316140727'),
 ('20220406085500'),
@@ -5103,3 +5105,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220413084748'),
 ('20220504090512'),
 ('20220524130709');
+
+
