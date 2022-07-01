@@ -35,10 +35,9 @@ jobs:
             Gemfile.lock
 
       - name: Login to container registry
-        env:
-          PASSWORD: ${{ secrets.GHCR }}
         run: |
-          echo $PASSWORD | docker login ghcr.io -u eisbot --password-stdin
+          echo ${{ secrets.GHCR }} >> ~/password.txt
+          cat ~/password.txt | docker login ghcr.io -u eisbot --password-stdin
 
       - name: No changes in gems
         # feature branch has no changes in gems
