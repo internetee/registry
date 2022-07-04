@@ -263,7 +263,7 @@ GEM
     i18n_data (0.13.0)
     isikukood (0.1.2)
     iso8601 (0.13.0)
-    jmespath (1.4.0)
+    jmespath (1.6.1)
     jquery-rails (4.4.0)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
