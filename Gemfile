@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # core
-gem 'active_interaction', '~> 4.0'
+gem 'active_interaction', '~> 5.0'
 gem 'apipie-rails', '~> 0.5.19'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.13.0' # for dates and times
