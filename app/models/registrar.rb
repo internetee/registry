@@ -107,7 +107,20 @@ class Registrar < ApplicationRecord
                    .deliver_later(wait: 1.minute)
     end
 
-    SendEInvoiceJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
+    if Feature.billing_system_integrated?
+      add_invoice_instance = EisBilling::AddDeposits.new(invoice)
+      result = add_invoice_instance.send_invoice
+
+      link = JSON.parse(result.body)['everypay_link']
+
+      invoice.update(payment_link: link)
+    end
+
+    if Feature.billing_system_integrated?
+      SendEInvoiceTwoJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
+    else
+      SendEInvoiceJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
+    end
 
     invoice
   end

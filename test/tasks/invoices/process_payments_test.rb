@@ -77,15 +77,33 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_if_invoice_is_overdue_than_48_hours
-    assert_not @invoice.paid?
+    if Feature.billing_system_integrated?
+      invoice_n = Invoice.order(number: :desc).last.number
 
-    @account_activity.update(activity_type: "add_credit", bank_transaction: nil, created_at: Time.zone.today - 3.days, creator_str: 'AdminUser')
-    @invoice.update(account_activity: @account_activity, total: @payment_amount)
-    assert @invoice.paid?
+      Spy.on_instance_method(SendEInvoiceTwoJob, :perform_now).and_return(true)
 
-    assert_difference 'AccountActivity.count' do
-      assert_difference 'Invoice.count' do
-        capture_io { run_task }
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+        to_return(status: 200, body: "", headers: {})
+
+      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+        to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
+
+      assert_not @invoice.paid?
+
+      @account_activity.update(activity_type: "add_credit", bank_transaction: nil, created_at: Time.zone.today - 3.days, creator_str: 'AdminUser')
+      @invoice.update(account_activity: @account_activity, total: @payment_amount)
+      assert @invoice.paid?
+
+      assert_difference 'AccountActivity.count' do
+        assert_difference 'Invoice.count' do
+          capture_io { run_task }
+        end
       end
     end
   end
@@ -143,15 +161,32 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
     assert payment_order.failed?
   end
 
-  def test_credits_registrar_account_without_invoice_beforehand
-    registrar = registrars(:bestnames)
+  def test_credits_registrar_athout_invoice_beforehand
+    if Feature.billing_system_integrated?
+      invoice_n = Invoice.order(number: :desc).last.number
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}")
 
-    assert_changes -> { registrar.accounts.first.balance } do
-      run_task
-    end
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+        to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
 
-    assert_changes -> { registrar.invoices.count } do
-      run_task
+      Spy.on_instance_method(SendEInvoiceTwoJob, :perform_now).and_return(true)
+
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+        to_return(status: 200, body: "", headers: {})
+
+      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+
+      registrar = registrars(:bestnames)
+
+      assert_changes -> { registrar.accounts.first.balance } do
+        run_task
+      end
+
+      assert_changes -> { registrar.invoices.count } do
+        run_task
+      end
     end
   end
 
@@ -163,25 +198,40 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_topup_creates_invoice_and_send_it_as_paid
-    registrar = registrars(:bestnames)
-    @invoice.payment_orders.destroy_all
-    @invoice.destroy
+    if Feature.billing_system_integrated?
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+        to_return(status: 200, body: "", headers: {})
 
-    perform_enqueued_jobs do
-      run_task
+      invoice_n = Invoice.order(number: :desc).last.number
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+
+      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+        to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
+
+      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
+        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+
+      registrar = registrars(:bestnames)
+      @invoice.payment_orders.destroy_all
+      @invoice.destroy
+
+      perform_enqueued_jobs do
+        run_task
+      end
+
+      invoice = Invoice.last
+      assert invoice.paid?
+      assert_not invoice.e_invoice_sent_at.blank?
+
+      pdf_source = Invoice::PdfGenerator.new(invoice)
+      pdf_source.send(:invoice_html).include?('Receipt date')
+
+      email= ActionMailer::Base.deliveries.last
+      assert email.subject.include?('already paid')
+
+      assert_equal 0.1, registrar.invoices.last.total
     end
-
-    invoice = Invoice.last
-    assert invoice.paid?
-    assert_not invoice.e_invoice_sent_at.blank?
-
-    pdf_source = Invoice::PdfGenerator.new(invoice)
-    pdf_source.send(:invoice_html).include?('Receipt date')
-
-    email= ActionMailer::Base.deliveries.last
-    assert email.subject.include?('already paid')
-
-    assert_equal 0.1, registrar.invoices.last.total
   end
 
   def test_output
