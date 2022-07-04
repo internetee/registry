@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # core
 gem 'active_interaction', '~> 4.0'
-gem 'apipie-rails', '~> 0.5.19'
+gem 'apipie-rails', '~> 0.6.0'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.13.0' # for dates and times
 gem 'mimemagic', '0.4.3'
