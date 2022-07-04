@@ -369,7 +369,7 @@ GEM
       que (~> 0.8)
       sinatra
     racc (1.6.0)
-    rack (2.2.3)
+    rack (2.2.4)
     rack-oauth2 (1.16.0)
       activesupport
       attr_required
