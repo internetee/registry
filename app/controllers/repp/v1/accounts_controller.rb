@@ -143,7 +143,7 @@ module Repp
         arr = []
         users.each do |u|
           arr << { id: u.id, username: u.username,
-                   role: u.roles.first }
+                   role: u.roles.first, registrar_name: u.registrar.name }
         end
 
         arr

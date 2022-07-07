@@ -74,6 +74,7 @@ class ApiUser < User
     self.class.where(identity_code: identity_code)
         .where("identity_code IS NOT NULL AND identity_code != ''")
         .where.not(id: id)
+        .includes(:registrar)
   end
 
   def linked_with?(another_api_user)
