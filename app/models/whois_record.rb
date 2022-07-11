@@ -51,6 +51,7 @@ class WhoisRecord < ApplicationRecord
     end
 
     h[:email] = registrant.email
+    h[:phone] = registrant.phone
     h[:registrant_changed]          = registrant.updated_at.try(:to_s, :iso8601)
     h[:registrant_disclosed_attributes] = registrant.disclosed_attributes
 

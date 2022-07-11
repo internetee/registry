@@ -3,7 +3,6 @@ module Api
     class ContactRequestsController < BaseController
       before_action :authenticate_shared_key
 
-      # POST api/v1/contact_requests/
       def create
         return head(:bad_request) if contact_request_params[:email].blank?
 
@@ -18,6 +17,8 @@ module Api
 
         process_id(params[:id])
       end
+
+      private
 
       def process_id(id)
         record = ContactRequest.find_by(id: id)

@@ -47,7 +47,7 @@ module Zone::WhoisQueryable
   def registrant_vars
     { registrant: Setting.registry_juridical_name, registrant_reg_no: Setting.registry_reg_no,
       registrant_ident_country_code: Setting.registry_country_code, registrant_kind: 'org',
-      registrant_disclosed_attributes: %w[name email] }
+      registrant_disclosed_attributes: %w[name email phone] }
   end
 
   def contact_vars

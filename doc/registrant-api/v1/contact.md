@@ -113,7 +113,7 @@ Update contact.
 | address[city]         | false    | String |                | New city name                                             |
 | address[state]        | false    | String |                | New state name                                            |
 | address[country_code] | false    | String |                | New country code in 2 letter format (ISO 3166-1 alpha-2)  |
-| disclosed_attributes  | false    | Array  |                | Possible values: "name", "email"
+| disclosed_attributes  | false    | Array  |                | Possible values: "name", "email", "phone"
 
 
 #### Request
