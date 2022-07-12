@@ -101,7 +101,7 @@ module Repp
           return
         end
 
-        render_success(data: { domain: { name: @domain.name, id: @domain.uuid } })
+        render_success(data: { domain: { name: @domain.name } })
       end
 
       api :GET, '/repp/v1/domains/:domain_name/transfer_info'

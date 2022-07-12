@@ -63,7 +63,7 @@ module Repp
       desc 'Check contact code availability'
       def check
         contact = Epp::Contact.find_by(code: params[:id])
-        data = { contact: { id: params[:id], available: contact.nil? } }
+        data = { contact: { code: params[:id], available: contact.nil? } }
 
         render_success(data: data)
       end

@@ -48,7 +48,7 @@ module Actions
 
       contact_code = params[:registrant][:code]
       contact = Contact.find_by(code: contact_code)
-      validate_email(contact.email)
+      validate_email(contact.email) if contact
 
       regt = Registrant.find_by(code: params[:registrant][:code])
       unless regt

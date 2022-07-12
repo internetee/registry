@@ -22,7 +22,7 @@ module Repp
             return
           end
 
-          render_success(data: { domain: { name: @domain.name, id: @domain.uuid } })
+          render_success(data: { domain: { name: @domain.name } })
         end
 
         def bulk_renew

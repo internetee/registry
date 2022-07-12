@@ -188,9 +188,9 @@ class Registrar < ApplicationRecord
   end
 
   def add_nameservers(new_attributes, domains: [])
-    transaction do
-      return if domains.empty?
+    return [] if domains.empty?
 
+    transaction do
       approved_list = domain_list_processing(domains: domains, new_attributes: new_attributes)
 
       self.domains.where(name: approved_list).find_each(&:update_whois_record) if approved_list.any?

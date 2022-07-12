@@ -30,7 +30,6 @@ module Repp
                                             .add_nameservers(hostname_params[:attributes],
                                                              domains: domains_from_params)
                               end
-
           render_success(data: data_format_for_success(affected, errored))
         rescue ActiveRecord::RecordInvalid => e
           handle_errors(e.record)
@@ -49,14 +48,15 @@ module Repp
             type: 'nameserver',
             id: hostname_params[:attributes][:hostname],
             attributes: hostname_params[:attributes],
-            affected_domains: affected_domains,
-            skipped_domains: errored_domains,
+            affected_domains: affected_domains || [],
+            skipped_domains: errored_domains || [],
           }
         end
 
         def hostname_params
-          params.require(:data).permit(:type, :id, nameserver: [], domains: [],
-                                                   attributes: [:hostname, { ipv4: [], ipv6: [] }])
+          params.require(:data).permit(:type, :id,
+                                       :domains, nameserver: [], domains: [],
+                                                 attributes: [:hostname, { ipv4: [], ipv6: [] }])
                 .tap do |data|
                   data.require(:type)
                   data.require(:attributes).require([:hostname])

@@ -15,7 +15,7 @@ module Serializers
         return simple_object if @simplify
 
         json = {
-          id: obj.uuid, name: obj.name, registrant: registrant,
+          name: obj.name, registrant: registrant,
           created_at: obj.created_at, updated_at: obj.updated_at,
           expire_time: obj.expire_time,
           outzone_at: obj.outzone_at, delete_date: obj.delete_date,
@@ -53,7 +53,6 @@ module Serializers
       def registrant
         rant = domain.registrant
         {
-          id: rant.uuid,
           name: rant.name,
           code: rant.code,
         }
@@ -71,7 +70,6 @@ module Serializers
 
       def simple_object
         json = {
-          id: domain.uuid,
           name: domain.name,
           expire_time: domain.expire_time,
           registrant: registrant,
