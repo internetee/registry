@@ -11,7 +11,7 @@ module Repp
         authorize! :check, Epp::Contact
         records = current_user.registrar.contacts
 
-        q = records.ransack(search_params)
+        q = records.ransack(PartialSearchFormatter.format(search_params))
         q.sorts = 'created_at desc' if q.sorts.empty?
         contacts = q.result(distinct: true)
 
@@ -123,7 +123,7 @@ module Repp
       end
 
       def search_params
-        index_params.fetch(:q, {})
+        index_params.fetch(:q, {}) || {}
       end
 
       def domain_filter_params

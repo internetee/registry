@@ -8,7 +8,7 @@ module Repp
       def index
         records = current_user.registrar.cash_account.activities
 
-        q = records.ransack(search_params)
+        q = records.ransack(PartialSearchFormatter.format(search_params))
         q.sorts = 'created_at desc' if q.sorts.empty?
         activities = q.result(distinct: true)
 
@@ -128,7 +128,7 @@ module Repp
       end
 
       def search_params
-        index_params.fetch(:q, {})
+        index_params.fetch(:q, {}) || {}
       end
 
       def limit
