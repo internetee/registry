@@ -215,6 +215,20 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
                  JSON.parse(response.body, symbolize_names: true)
   end
 
+  def test_legal_persons_disclosed_attributes_change_when_phone
+    @contact = contacts(:acme_ltd)
+    @contact.update!(disclosed_attributes: %w[])
+
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { disclosed_attributes: %w[phone] },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    @contact.reload
+
+    assert_response :ok
+    assert_equal %w[phone], @contact.disclosed_attributes
+  end
+
   def test_return_contact_details
     patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'new name' },
           as: :json,

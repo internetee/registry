@@ -62,7 +62,7 @@ module Api
           disclosed_attributes = reparsed_request_json[:disclosed_attributes]
 
           if disclosed_attributes
-            if disclosed_attributes.present? && contact.org?
+            if disclosed_attributes.present? && contact.org? && !disclosed_attributes.include?('phone')
               error_msg = "Legal person's data is visible by default and cannot be concealed." \
                           ' Please remove this parameter.'
               render json: { errors: [{ disclosed_attributes: [error_msg] }] }, status: :bad_request
