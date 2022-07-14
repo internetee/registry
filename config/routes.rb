@@ -153,7 +153,11 @@ Rails.application.routes.draw do
         get 'auth', to: 'auth#index'
       end
 
-      resources :auctions, only: %i[index show update], param: :uuid
+      resources :auctions, only: %i[index show update], param: :uuid do
+        collection do
+          get 'avilability_check', to: 'auctions#avilability_check', as: 'auction_avilability_check'
+        end
+      end
       resources :contact_requests, only: %i[create update], param: :id
       resources :bounces, only: %i[create]
     end
