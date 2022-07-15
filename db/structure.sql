@@ -670,7 +670,8 @@ CREATE TABLE public.contacts (
     up_date timestamp without time zone,
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
-    email_history character varying
+    email_history character varying,
+    publishable boolean DEFAULT false
 );
 
 
@@ -5417,6 +5418,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220524130709'),
 ('20220701113409'),
 ('20220818075833'),
-('20221011061840');
-
-
+('20221011061840'),
+('20220715145808');

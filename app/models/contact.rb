@@ -64,6 +64,7 @@ class Contact < ApplicationRecord
 
   validate :validate_html
   validate :validate_country_code, if: -> { self.class.address_processing? }
+  validates_inclusion_of :publishable, in: [false], unless: -> { registrant? }
 
   after_initialize do
     self.status_notes = {} if status_notes.nil?

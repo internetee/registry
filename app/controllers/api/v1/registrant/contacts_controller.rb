@@ -72,6 +72,8 @@ module Api
             contact.disclosed_attributes = disclosed_attributes
           end
 
+          contact.publishable = reparsed_request_json[:publishable] if reparsed_request_json[:publishable]
+
           logger.debug "Setting.address_processing is set to #{Setting.address_processing}"
 
           if Setting.address_processing && params[:address]

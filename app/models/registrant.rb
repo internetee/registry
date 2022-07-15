@@ -3,4 +3,8 @@ class Registrant < Contact
   def epp_code_map
     {}
   end
+
+  def publishable?
+    publishable
+  end
 end
