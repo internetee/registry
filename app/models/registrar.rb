@@ -39,7 +39,7 @@ class Registrar < ApplicationRecord
 
   alias_attribute :contact_email, :email
 
-  WHOIS_TRIGGERS = %w(name email phone street city state zip)
+  WHOIS_TRIGGERS = %w[name email phone street city state zip].freeze
 
   after_commit :update_whois_records
   def update_whois_records
@@ -97,8 +97,8 @@ class Registrar < ApplicationRecord
           description: 'prepayment',
           unit: 'piece',
           quantity: 1,
-          price: amount
-        }
+          price: amount,
+        },
       ]
     )
 
@@ -188,9 +188,9 @@ class Registrar < ApplicationRecord
   end
 
   def add_nameservers(new_attributes, domains: [])
-    transaction do
-      return if domains.empty?
+    return [] if domains.empty?
 
+    transaction do
       approved_list = domain_list_processing(domains: domains, new_attributes: new_attributes)
 
       self.domains.where(name: approved_list).find_each(&:update_whois_record) if approved_list.any?
@@ -233,13 +233,9 @@ class Registrar < ApplicationRecord
   def notify(action)
     text = I18n.t("notifications.texts.#{action.notification_key}", contact: action.contact&.code,
                                                                     count: action.subactions&.count)
-    if action.bulk_action?
-      notifications.create!(text: text, action_id: action.id,
-                            attached_obj_type: 'BulkAction',
-                            attached_obj_id: action.id)
-    else
-      notifications.create!(text: text)
-    end
+    notifications.create!(text: text, action_id: action.id,
+                          attached_obj_type: 'ContactUpdateAction',
+                          attached_obj_id: action.id)
   end
 
   def e_invoice_iban

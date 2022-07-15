@@ -15,62 +15,67 @@ host = ENV['tara_host']
 identifier = ENV['tara_identifier']
 secret = ENV['tara_secret']
 redirect_uri = ENV['tara_redirect_uri']
+authorization_endpoint = ENV['tara_authorization_endpoint']
+token_endpoint = ENV['tara_token_endpoint']
+jwks_uri = ENV['tara_jwks_uri']
+scope = ENV['tara_scope']
 
 registrant_identifier = ENV['tara_rant_identifier']
 registrant_secret = ENV['tara_rant_secret']
 registrant_redirect_uri = ENV['tara_rant_redirect_uri']
 
 Rails.application.config.middleware.use OmniAuth::Builder do
-  provider "tara", {
-      callback_path: '/registrar/open_id/callback',
-      name: 'tara',
-      scope: ['openid'],
-      state: Proc.new{ SecureRandom.hex(10) },
-      client_signing_alg: :RS256,
-      client_jwk_signing_key: signing_keys,
-      send_scope_to_token_endpoint: false,
-      send_nonce: true,
-      issuer: issuer,
+  provider 'tara', {
+    callback_path: '/registrar/open_id/callback',
+    name: 'tara',
+    scope: scope,
+    # state: Proc.new{ SecureRandom.hex(10) },
+    client_signing_alg: :RS256,
+    client_jwk_signing_key: signing_keys,
+    send_scope_to_token_endpoint: false,
+    send_nonce: true,
+    issuer: issuer,
+    discovery: true,
 
-      client_options: {
-          scheme: 'https',
-          host: host,
+    client_options: {
+      scheme: 'https',
+      host: host,
 
-          authorization_endpoint: '/oidc/authorize',
-          token_endpoint: '/oidc/token',
-          userinfo_endpoint: nil, # Not implemented
-          jwks_uri: '/oidc/jwks',
+      authorization_endpoint: authorization_endpoint,
+      token_endpoint: token_endpoint,
+      userinfo_endpoint: nil, # Not implemented
+      jwks_uri: jwks_uri,
 
-          # Registry
-          identifier: identifier,
-          secret: secret,
-          redirect_uri: redirect_uri,
-      },
+      # Registry
+      identifier: identifier,
+      secret: secret,
+      redirect_uri: redirect_uri,
+    },
   }
 
-  provider "tara", {
-      callback_path: '/registrant/open_id/callback',
-      name: 'rant_tara',
-      scope: ['openid'],
-      client_signing_alg: :RS256,
-      client_jwk_signing_key: signing_keys,
-      send_scope_to_token_endpoint: false,
-      send_nonce: true,
-      issuer: issuer,
+  provider 'tara', {
+    callback_path: '/registrant/open_id/callback',
+    name: 'rant_tara',
+    scope: ['openid'],
+    client_signing_alg: :RS256,
+    client_jwk_signing_key: signing_keys,
+    send_scope_to_token_endpoint: false,
+    send_nonce: true,
+    issuer: issuer,
 
-      client_options: {
-          scheme: 'https',
-          host: host,
+    client_options: {
+      scheme: 'https',
+      host: host,
 
-          authorization_endpoint: '/oidc/authorize',
-          token_endpoint: '/oidc/token',
-          userinfo_endpoint: nil, # Not implemented
-          jwks_uri: '/oidc/jwks',
+      authorization_endpoint: '/oidc/authorize',
+      token_endpoint: '/oidc/token',
+      userinfo_endpoint: nil, # Not implemented
+      jwks_uri: '/oidc/jwks',
 
-          # Registry
-          identifier: registrant_identifier,
-          secret: registrant_secret,
-          redirect_uri: registrant_redirect_uri,
-      },
+      # Registry
+      identifier: registrant_identifier,
+      secret: registrant_secret,
+      redirect_uri: registrant_redirect_uri,
+    },
   }
 end

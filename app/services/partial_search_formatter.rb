@@ -5,7 +5,7 @@ class PartialSearchFormatter
     search_params.each do |key, value|
       next unless key.include?('matches') && value.present?
 
-      value << '%'
+      search_params[key] = "%#{value}%"
     end
 
     search_params

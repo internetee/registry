@@ -32,7 +32,7 @@ module Actions
 
     def verify?
       return false unless Setting.request_confirmation_on_domain_deletion_enabled
-      return false if params[:delete][:verified] == true
+      return false if true?(params[:delete][:verified])
 
       true
     end
@@ -50,6 +50,10 @@ module Actions
         domain.set_pending_delete!
       end
       true
+    end
+
+    def true?(obj)
+      obj.to_s.downcase == 'true'
     end
   end
 end

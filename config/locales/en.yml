@@ -101,6 +101,11 @@ en:
           attributes:
             value:
               taken: 'Status already exists on this domain'
+        
+        invoice:
+          attributes:
+            base:
+              invoice_status_prohibits_operation: 'Invoice status prohibits operation'
 
         user:
           attributes:

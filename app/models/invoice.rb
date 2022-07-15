@@ -180,6 +180,13 @@ class Invoice < ApplicationRecord
 
   private
 
+  ransacker :number_str do
+    Arel.sql(
+      "regexp_replace(
+        to_char(\"#{table_name}\".\"number\", '999999999999'), ' ', '', 'g')"
+    )
+  end
+
   def receipt_date_status
     if paid?
       receipt_date

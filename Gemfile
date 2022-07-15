@@ -57,10 +57,9 @@ gem 'digidoc_client',
     ref: '1645e83a5a548addce383f75703b0275c5310c32'
 
 # TARA
-gem 'omniauth'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-tara', github: 'internetee/omniauth-tara'
-
+# gem 'omniauth-tara', path: 'vendor/gems/omniauth-tara'
 
 gem 'airbrake'
 gem 'daemons-rails', '1.2.1'
@@ -80,6 +79,7 @@ gem 'haml', '~> 5.2'
 gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'rexml'
 gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
+
 
 gem 'directo', github: 'internetee/directo', branch: 'master'
 

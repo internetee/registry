@@ -33,6 +33,7 @@ class Deposit
 
   def issue_prepayment_invoice
     return unless valid?
+
     registrar.issue_prepayment_invoice(amount, description)
   end
 end
