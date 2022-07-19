@@ -229,6 +229,21 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_equal %w[phone], @contact.disclosed_attributes
   end
 
+  def test_publishable_change_when_present
+    @contact = contacts(:acme_ltd)
+    @contact.update!(publishable: false)
+
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { disclosed_attributes: %w[], publishable: true },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    @contact.reload
+
+    assert_response :ok
+    assert @contact.publishable
+  end
+
+
   def test_return_contact_details
     patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'new name' },
           as: :json,
