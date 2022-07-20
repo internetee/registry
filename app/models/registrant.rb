@@ -5,6 +5,6 @@ class Registrant < Contact
   end
 
   def publishable?
-    publishable
+    registrant_publishable
   end
 end

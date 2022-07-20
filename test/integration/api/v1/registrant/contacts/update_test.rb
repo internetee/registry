@@ -229,9 +229,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_equal %w[phone], @contact.disclosed_attributes
   end
 
-  def test_publishable_change_when_present
+  def test_registrant_publishable_change_when_present
     @contact = contacts(:acme_ltd)
-    @contact.update!(publishable: false)
+    @contact.update!(registrant_publishable: false)
 
     patch api_v1_registrant_contact_path(@contact.uuid),
           params: { disclosed_attributes: %w[], publishable: true },
@@ -240,7 +240,7 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @contact.reload
 
     assert_response :ok
-    assert @contact.publishable
+    assert @contact.registrant_publishable
   end
 
 

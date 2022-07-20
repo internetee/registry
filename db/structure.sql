@@ -671,7 +671,7 @@ CREATE TABLE public.contacts (
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     email_history character varying,
-    publishable boolean DEFAULT false
+    registrant_publishable boolean DEFAULT false
 );
 
 
