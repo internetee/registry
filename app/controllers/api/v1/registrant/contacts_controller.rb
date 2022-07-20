@@ -72,7 +72,8 @@ module Api
             contact.disclosed_attributes = disclosed_attributes
           end
 
-          contact.registrant_publishable = reparsed_request_json[:registrant_publishable]
+          publishable = reparsed_request_json[:registrant_publishable]
+          contact.registrant_publishable = publishable if publishable.in? [true, false]
 
           logger.debug "Setting.address_processing is set to #{Setting.address_processing}"
 

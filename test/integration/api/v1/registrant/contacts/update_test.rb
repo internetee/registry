@@ -229,12 +229,12 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_equal %w[phone], @contact.disclosed_attributes
   end
 
-  def test_registrant_publishable_change_when_present
+  def test_registrant_publishable_change_when_true
     @contact = contacts(:acme_ltd)
     @contact.update!(registrant_publishable: false)
 
     patch api_v1_registrant_contact_path(@contact.uuid),
-          params: { disclosed_attributes: %w[], publishable: true },
+          params: { disclosed_attributes: %w[], registrant_publishable: true },
           as: :json,
           headers: { 'HTTP_AUTHORIZATION' => auth_token }
     @contact.reload
@@ -243,6 +243,19 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert @contact.registrant_publishable
   end
 
+  def test_registrant_publishable_change_when_false
+    @contact = contacts(:acme_ltd)
+    @contact.update!(registrant_publishable: true)
+
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { disclosed_attributes: %w[], registrant_publishable: false },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    @contact.reload
+
+    assert_response :ok
+    assert_not @contact.registrant_publishable
+  end
 
   def test_return_contact_details
     patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'new name' },
@@ -268,7 +281,8 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
                     },
                     auth_info: @contact.auth_info,
                     statuses: @contact.statuses,
-                    disclosed_attributes: @contact.disclosed_attributes }),
+                    disclosed_attributes: @contact.disclosed_attributes,
+                    registrant_publishable: @contact.registrant_publishable }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
