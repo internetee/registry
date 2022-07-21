@@ -96,10 +96,7 @@ Content-Type: application/json
   ],
   "status_notes":{
 
-  },
-  "statuses_backup":[
-
-  ]
+  }
 }
 ```
 
@@ -235,10 +232,7 @@ Content-Type: application/json
   ],
   "status_notes":{
 
-  },
-  "statuses_backup":[
-
-  ]
+  }
 }
 ```
 
