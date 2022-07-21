@@ -1,4 +1,22 @@
+21.07.2022
+* Removed deprecated statuses_before_force_delete field [#2363](https://github.com/internetee/registry/issues/2363)
+
+15.07.2022
+* REPP api update for new registrar portal [#2387](https://github.com/internetee/registry/pull/2387)
+
+4.07.2022
+* Update apipie-rails to 0.8.0 [#2383](https://github.com/internetee/registry/pull/2383)
+* Bump jmespath to 1.6.1 [#2388](https://github.com/internetee/registry/pull/2388)
+
+1.07.2022
+* Update pg to 1.4.1 [#2394](https://github.com/internetee/registry/pull/2394)
+* Update rack to 2.2.4 [#2398](https://github.com/internetee/registry/pull/2398)
+
+21.06.2022
+* Update pg to 1.4.0 [#2392](https://github.com/internetee/registry/pull/2392)
+
 02.06.2022
+* fix for force delete check query [#2380](https://github.com/internetee/registry/pull/2380)
 * Integration with the billing service [#2266](https://github.com/internetee/registry/pull/2266)
 
 25.05.2022
