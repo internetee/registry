@@ -31,7 +31,7 @@ module Admin
     def create
       auction = Auction.new(domain: params[:domain], status: Auction.statuses[:started], platform: 'manual')
 
-      if domain_exists_in_blocked_disputed_and_registered?(params[:domain])
+      if Auction.domain_exists_in_blocked_disputed_and_registered?(params[:domain])
         flash[:alert] = "Adding #{params[:domain]} failed - domain registered or regsitration is blocked"
         redirect_to admin_auctions_path and return
       end
@@ -69,7 +69,7 @@ module Admin
         table.each do |row|
           record = row.to_h
 
-          if domain_exists_in_blocked_disputed_and_registered?(record['name'])
+          if Auction.domain_exists_in_blocked_disputed_and_registered?(record['name'])
             failed_names << record['name']
 
             next
@@ -105,24 +105,6 @@ module Admin
 
     def check_availability(domain_name)
       Epp::Domain.check_availability(domain_name)
-    end
-
-    def domain_exists_in_blocked_disputed_and_registered?(domain_name)
-      Domain.exists?(name: domain_name) ||
-        BlockedDomain.exists?(name: domain_name) ||
-        Dispute.exists?(domain_name: domain_name) ||
-        exception_for_registred_or_unbided_existed_auctions(domain_name)
-    end
-
-    def exception_for_registred_or_unbided_existed_auctions(domain_name)
-      return false unless Auction.exists?(domain: domain_name)
-
-      auctions = Auction.where(domain: domain_name).order(:created_at)
-      last_record = auctions.last
-
-      return false if last_record.domain_registered? || last_record.no_bids?
-
-      true
     end
 
     def validate_table(table)
