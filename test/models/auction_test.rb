@@ -142,4 +142,30 @@ class AuctionTest < ActiveSupport::TestCase
     assert_equal 'auction.test', new_auction.domain
     assert new_auction.started?
   end
+
+  def test_auction_restart_should_assign_the_previous_manual_platform
+    assert_equal 'auction.test', @auction.domain
+    @auction.update(platform: :manual)
+    @auction.reload
+
+    assert_difference 'Auction.count' do
+      @auction.restart
+    end
+
+    auctions = Auction.where(domain: @auction.domain)
+    assert_equal auctions.first.platform, auctions.last.platform
+  end
+
+  def test_auction_restart_should_assign_the_previous_auto_platform
+    assert_equal 'auction.test', @auction.domain
+    @auction.update(platform: :auto)
+    @auction.reload
+
+    assert_difference 'Auction.count' do
+      @auction.restart
+    end
+
+    auctions = Auction.where(domain: @auction.domain)
+    assert_equal auctions.first.platform, auctions.last.platform
+  end
 end
