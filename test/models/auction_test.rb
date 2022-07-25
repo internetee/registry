@@ -131,6 +131,49 @@ class AuctionTest < ActiveSupport::TestCase
     assert_not @auction.domain_registrable?('')
   end
 
+  def test_restart_new_auction_should_with_previous_manual_platform
+    @auction.update(platform: 'manual')
+    @auction.reload
+
+    assert_equal @auction.platform, 'manual'
+
+    assert_difference 'Auction.count' do
+      @auction.restart
+    end
+
+    new_auction = Auction.last
+    assert_equal new_auction.platform, 'manual'
+  end
+
+  def test_restart_new_auction_should_with_previous_auto_platform
+    @auction.update(platform: 'auto')
+    @auction.reload
+
+    assert_equal @auction.platform, 'auto'
+
+    assert_difference 'Auction.count' do
+      @auction.restart
+    end
+
+    new_auction = Auction.last
+    assert_equal new_auction.platform, 'auto'
+  end
+
+  def test_restart_new_auction_should_with_auto_if_platform_is_nil
+    @auction.update(platform: nil)
+    @auction.reload
+
+    assert_nil @auction.platform
+
+    assert_difference 'Auction.count' do
+      @auction.restart
+    end
+
+    new_auction = Auction.last
+    assert_equal new_auction.platform, 'auto'
+  end
+
+
   def test_restarts_an_auction
     assert_equal 'auction.test', @auction.domain
 
