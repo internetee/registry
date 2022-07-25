@@ -84,8 +84,9 @@ class Auction < ApplicationRecord
   end
 
   def restart
-    new_auction = self.class.new(domain: domain)
-    new_auction.platform = self.platform
+    new_platform = platform.nil? ? :auto : platform
+
+    new_auction = self.class.new(domain: domain, platform: new_platform)
     new_auction.start
   end
 
