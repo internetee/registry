@@ -48,62 +48,31 @@ module Api
         def update
           logger.debug 'Received update request'
           logger.debug params
-          contact = current_user_contacts.find_by!(uuid: params[:uuid])
-          contact.name = params[:name] if params[:name].present?
-          contact.email = params[:email] if params[:email].present?
-          contact.phone = params[:phone] if params[:phone].present?
+          contact = find_contact_and_update_credentials(params[:uuid], params[:name], params[:email], params[:phone])
 
-          # Needed to support passing empty array, which otherwise gets parsed to nil
-          # https://github.com/rails/rails/pull/13157
-          reparsed_request_json = ActiveSupport::JSON.decode(request.body.string)
-                                                     .with_indifferent_access
-          logger.debug 'Reparsed request is following'
-          logger.debug reparsed_request_json.to_s
-          disclosed_attributes = reparsed_request_json[:disclosed_attributes]
+          reparsed_request = reparsed_request(request.body.string)
 
-          if disclosed_attributes
-            if disclosed_attributes.present? && contact.org? && !disclosed_attributes.include?('phone')
-              error_msg = "Legal person's data is visible by default and cannot be concealed." \
-                          ' Please remove this parameter.'
-              render json: { errors: [{ disclosed_attributes: [error_msg] }] }, status: :bad_request
-              return
-            end
+          disclosed_attributes = reparsed_request[:disclosed_attributes]
 
-            contact.disclosed_attributes = disclosed_attributes
-          end
+          render_disclosed_attributes_error and return if disclosed_attributes.present? && contact.org? &&
+                                                          !disclosed_attributes.include?('phone')
 
-          publishable = reparsed_request_json[:registrant_publishable]
+          contact.disclosed_attributes = disclosed_attributes if disclosed_attributes
+
+          publishable = reparsed_request[:registrant_publishable]
           contact.registrant_publishable = publishable if publishable.in? [true, false]
 
           logger.debug "Setting.address_processing is set to #{Setting.address_processing}"
 
-          if Setting.address_processing && params[:address]
-            address = Contact::Address.new(params[:address][:street],
-                                           params[:address][:zip],
-                                           params[:address][:city],
-                                           params[:address][:state],
-                                           params[:address][:country_code])
-            contact.address = address
-          end
-
-          if !Setting.address_processing && params[:address]
-            error_msg = 'Address processing is disabled and therefore cannot be updated'
-            render json: { errors: [{ address: [error_msg] }] }, status: :bad_request and return
-          end
+          contact.address = parse_address(params[:address]) if Setting.address_processing && params[:address]
+          render_address_error and return if !Setting.address_processing && params[:address]
 
           contact.fax = params[:fax] if ENV['fax_enabled'] == 'true' && params[:fax].present?
 
           logger.debug "ENV['fax_enabled'] is set to #{ENV['fax_enabled']}"
-          if ENV['fax_enabled'] != 'true' && params[:fax]
-            error_msg = 'Fax processing is disabled and therefore cannot be updated'
-            render json: { errors: [{ address: [error_msg] }] }, status: :bad_request and return
-          end
+          render_fax_error and return if ENV['fax_enabled'] != 'true' && params[:fax]
 
-          contact.transaction do
-            contact.save!
-            action = current_registrant_user.actions.create!(contact: contact, operation: :update)
-            contact.registrar.notify(action)
-          end
+          contact = update_and_notify!(contact)
 
           render json: serialize_contact(contact, false)
         end
@@ -138,6 +107,59 @@ module Api
 
         def logger
           Rails.logger
+        end
+
+        def render_disclosed_attributes_error
+          error_msg = "Legal person's data is visible by default and cannot be concealed." \
+                      ' Please remove this parameter.'
+          render json: { errors: [{ disclosed_attributes: [error_msg] }] }, status: :bad_request
+        end
+
+        def parse_address(address)
+          Contact::Address.new(
+            address[:street],
+            address[:zip],
+            address[:city],
+            address[:state],
+            address[:country_code]
+          )
+        end
+
+        def render_address_error
+          error_msg = 'Address processing is disabled and therefore cannot be updated'
+          render json: { errors: [{ address: [error_msg] }] }, status: :bad_request
+        end
+
+        def render_fax_error
+          error_msg = 'Fax processing is disabled and therefore cannot be updated'
+          render json: { errors: [{ address: [error_msg] }] }, status: :bad_request
+        end
+
+        def update_and_notify!(contact)
+          contact.transaction do
+            contact.save!
+            action = current_registrant_user.actions.create!(contact: contact, operation: :update)
+            contact.registrar.notify(action)
+          end
+
+          contact
+        end
+
+        def reparsed_request(request_body)
+          reparsed_request = ActiveSupport::JSON.decode(request_body).with_indifferent_access
+          logger.debug 'Reparsed request is following'
+          logger.debug reparsed_request.to_s
+
+          reparsed_request
+        end
+
+        def find_contact_and_update_credentials(uuid, name, email, phone)
+          contact = current_user_contacts.find_by!(uuid: uuid)
+          contact.name = name if name.present?
+          contact.email = email if email.present?
+          contact.phone = phone if phone.present?
+
+          contact
         end
       end
     end
