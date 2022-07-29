@@ -36,14 +36,12 @@ class Registrar
         end
       end
 
-      @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
-
       respond_to do |format|
         format.html
         format.csv do
           domain_presenters = []
 
-          @domains.find_each do |domain|
+          @q.result.find_each do |domain|
             domain_presenters << ::DomainPresenter.new(domain: domain, view: view_context)
           end
 
