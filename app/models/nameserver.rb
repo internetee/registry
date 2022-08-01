@@ -31,6 +31,7 @@ class Nameserver < ApplicationRecord
   before_validation :normalize_attributes
   before_validation :check_puny_symbols
   before_validation :check_label_length
+  before_validation :check_presence_of_dnssec_keys 
 
   delegate :name, to: :domain, prefix: true
 
@@ -53,6 +54,36 @@ class Nameserver < ApplicationRecord
         %i[base ip_required],
       ]
     }
+  end
+
+  def check_presence_of_dnssec_keys
+    r = NameserverValidator.run(domain_name: domain, nameserver: self)
+    return if r[:result]
+
+    text = parse_result(r, self)
+    add_epp_error(2302, self, self.hostname, text)
+  end
+
+  def parse_result(result, nameserver)
+    text = ''
+    case result[:reason]
+    when 'answer'
+      text = "DNS Server **#{nameserver.hostname}** not responding"
+    when 'serial'
+      text = "Serial number for nameserver hostname **#{nameserver.hostname}** of #{nameserver.domain.name} doesn't present in zone. SOA validation failed."
+    when 'cname'
+      text = "Warning: SOA record expected but CNAME found instead. This setup can lead to unexpected errors when using the domain: hostname - **#{nameserver.hostname}** of #{nameserver.domain.name}"
+    when 'not found'
+      text = "Seems nameserver hostname **#{nameserver.hostname}** doesn't exist"
+    when 'exception'
+      text = "Something went wrong, exception reason: **#{result[:error_info]}**"
+    when 'domain'
+      text = "#{domain.name} zone is not in nameserver**#{nameserver.hostname}**"
+    when 'glup record'
+      text = "Hostname #{nameserver.hostname} didn't resovle by glue record to #{domain.name}"
+    end
+
+    text
   end
 
   def failed_validation?
