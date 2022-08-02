@@ -1,5 +1,8 @@
 module Epp
   class PollsController < BaseController
+    THROTTLED_ACTIONS = %i[poll].freeze
+    include Shunter::Integration::Throttle
+
     def poll
       authorize! :manage, :poll
       req_poll if params[:parsed_frame].css('poll').first['op'] == 'req'

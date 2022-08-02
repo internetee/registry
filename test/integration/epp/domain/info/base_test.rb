@@ -234,6 +234,7 @@ class EppDomainInfoBaseTest < EppTestCase
          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
 
     response_xml = Nokogiri::XML(response.body)
+    # binding.pry
     assert_epp_response :session_limit_exceeded_server_closing_connection
     assert_correct_against_schema response_xml
     assert response.body.include?(Shunter.default_error_message)

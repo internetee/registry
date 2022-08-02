@@ -5,7 +5,7 @@ module Epp
     before_action :find_contact, only: [:info, :update, :delete]
     before_action :find_password, only: [:info, :update, :delete]
 
-    THROTTLED_ACTIONS = %i[info renew update transfer delete].freeze
+    THROTTLED_ACTIONS = %i[info check create renew update transfer delete].freeze
     include Shunter::Integration::Throttle
 
     def info
