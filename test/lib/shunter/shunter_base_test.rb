@@ -4,7 +4,7 @@ require "test_helper"
 require "action_controller"
 require "pry"
 
-class BaseTest < Minitest::Test
+class ShunterBaseTest < Minitest::Test
   ENV["shunter_enabled"] = 'true'
 
   def test_throttling_works_on_inclusion
