@@ -5,6 +5,9 @@ module Repp
         before_action :set_domain, only: %i[update destroy]
         before_action :verify_status
 
+        THROTTLED_ACTIONS = %i[update destroy].freeze
+        include Shunter::Integration::Throttle
+
         api :DELETE, '/repp/v1/domains/:domain_name/statuses/:status'
         param :domain_name, String, desc: 'Domain name'
         desc 'Remove status from specific domain'

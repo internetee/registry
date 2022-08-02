@@ -8,6 +8,9 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_renews_domains
@@ -127,6 +130,30 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
     assert_response :bad_request
     assert_equal 2005, json[:code]
     assert_equal 'Invalid renew period', json[:message]
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    payload = {
+      "domains": [
+        'shop.test',
+        'airport.test',
+        'library.test'
+      ],
+      "renew_period": "1y"
+    }
+
+    post "/repp/v1/domains/renew/bulk", headers: @auth_headers, params: payload
+    post "/repp/v1/domains/renew/bulk", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 
   private

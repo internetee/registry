@@ -24,6 +24,8 @@ class ReppV1InvoicesAddCreditTest < ActionDispatch::IntegrationTest
       message: 'success'
     }
     stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").to_return(status: 200, body: msg2.to_json, headers: {})
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   teardown do
@@ -100,5 +102,40 @@ class ReppV1InvoicesAddCreditTest < ActionDispatch::IntegrationTest
 
     assert_response :bad_request
     assert_equal "Amount is too small. Minimum deposit is #{Setting.minimum_deposit} EUR", json[:message]
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    request_body = {
+      invoice: {
+        amount: 100,
+        description: 'Add credit',
+      },
+    }
+    Setting.registry_vat_prc = 0.1
+    ENV['billing_system_integrated'] = 'true'
+
+    if Feature.billing_system_integrated?
+      invoice_n = Invoice.order(number: :desc).last.number
+      stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
+        .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+      stub_request(:post, 'https://eis_billing_system:3000/api/v1/e_invoice/e_invoice')
+        .to_return(status: 200, body: '', headers: {})
+    end
+
+    post '/repp/v1/invoices/add_credit', headers: @auth_headers,
+                                         params: request_body
+    post '/repp/v1/invoices/add_credit', headers: @auth_headers,
+                                         params: request_body
+
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 end

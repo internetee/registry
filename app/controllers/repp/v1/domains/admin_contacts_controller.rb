@@ -2,6 +2,9 @@ module Repp
   module V1
     module Domains
       class AdminContactsController < BaseContactsController
+        THROTTLED_ACTIONS = %i[update].freeze
+        include Shunter::Integration::Throttle
+
         def update
           super
 

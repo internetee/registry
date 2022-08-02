@@ -7,6 +7,9 @@ class ReppV1RegistrarNotificationsTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_all_unreaded_poll_messages
@@ -20,6 +23,22 @@ class ReppV1RegistrarNotificationsTest < ActionDispatch::IntegrationTest
     assert_equal json[:data].last[:text], notification.last.text
   end
 
+  def test_all_notifications_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    notification = @user.registrar.notifications.where(read: false).order(created_at: :desc).all
+    get "/repp/v1/registrar/notifications/all_notifications", headers: @auth_headers
+    get "/repp/v1/registrar/notifications/all_notifications", headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
+  end
+
   def test_gets_latest_unread_poll_message
     notification = @user.registrar.notifications.where(read: false).order(created_at: :desc).first
     get "/repp/v1/registrar/notifications", headers: @auth_headers
@@ -29,6 +48,22 @@ class ReppV1RegistrarNotificationsTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
     assert_equal notification.text, json[:data][:text]
+  end
+
+  def test_index_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    notification = @user.registrar.notifications.where(read: false).order(created_at: :desc).first
+    get "/repp/v1/registrar/notifications", headers: @auth_headers
+    get "/repp/v1/registrar/notifications", headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 
   def test_can_read_specific_notification_by_id
@@ -41,6 +76,23 @@ class ReppV1RegistrarNotificationsTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
     assert_equal notification.text, json[:data][:text]
+  end
+
+  def test_show_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    notification = @user.registrar.notifications.order(created_at: :desc).second
+
+    get "/repp/v1/registrar/notifications/#{notification.id}", headers: @auth_headers
+    get "/repp/v1/registrar/notifications/#{notification.id}", headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 
   def test_can_mark_notification_as_read

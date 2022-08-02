@@ -4,6 +4,9 @@ module Repp
       class NotificationsController < BaseController
         before_action :set_notification, only: %i[update show]
 
+        THROTTLED_ACTIONS = %i[all_notifications index show update].freeze
+        include Shunter::Integration::Throttle
+
         api :GET, '/repp/v1/registrar/notifications'
         desc 'Get the latest unread poll message'
         def index

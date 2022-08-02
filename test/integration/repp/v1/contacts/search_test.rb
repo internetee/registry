@@ -7,6 +7,9 @@ class ReppV1ContactsSearchTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_searches_all_contacts_by_id
@@ -39,5 +42,19 @@ class ReppV1ContactsSearchTest < ActionDispatch::IntegrationTest
     assert_response :ok
     assert json[:data].is_a? Array
     assert_equal json[:data].length, 0
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    get '/repp/v1/contacts/search', headers: @auth_headers, params: { query: '000' }
+    get '/repp/v1/contacts/search', headers: @auth_headers, params: { query: 'j' }
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 end

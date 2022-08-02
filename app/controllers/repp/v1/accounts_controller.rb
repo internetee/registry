@@ -3,6 +3,9 @@ module Repp
     class AccountsController < BaseController # rubocop:disable Metrics/ClassLength
       load_and_authorize_resource
 
+      THROTTLED_ACTIONS = %i[index balance details update_auto_reload_balance disable_auto_reload_balance switch_user update].freeze
+      include Shunter::Integration::Throttle
+
       api :get, '/repp/v1/accounts'
       desc 'Get all activities'
       def index

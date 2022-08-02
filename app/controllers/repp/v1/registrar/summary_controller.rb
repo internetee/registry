@@ -2,6 +2,9 @@ module Repp
   module V1
     module Registrar
       class SummaryController < BaseController
+        THROTTLED_ACTIONS = %i[index].freeze
+        include Shunter::Integration::Throttle
+
         api :GET, 'repp/v1/registrar/summary'
         desc 'check user summary info and return data'
 

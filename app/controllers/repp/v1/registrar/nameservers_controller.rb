@@ -4,6 +4,9 @@ module Repp
       class NameserversController < BaseController
         before_action :verify_nameserver_existance, only: %i[update]
 
+        THROTTLED_ACTIONS = %i[put].freeze
+        include Shunter::Integration::Throttle
+
         api :PUT, 'repp/v1/registrar/nameservers'
         desc 'bulk nameserver change'
         param :data, Hash, required: true, desc: 'Object holding nameserver changes' do

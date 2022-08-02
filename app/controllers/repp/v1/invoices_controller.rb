@@ -4,6 +4,9 @@ module Repp
     class InvoicesController < BaseController # rubocop:disable Metrics/ClassLength
       load_and_authorize_resource
 
+      THROTTLED_ACTIONS = %i[download add_credit send_to_recipient cancel index show].freeze
+      include Shunter::Integration::Throttle
+
       # rubocop:disable Metrics/MethodLength
       api :get, '/repp/v1/invoices'
       desc 'Get all invoices'

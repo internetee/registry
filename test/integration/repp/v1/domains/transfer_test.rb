@@ -8,6 +8,9 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     @domain = domains(:hospital)
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_transfers_scoped_domain
@@ -151,5 +154,21 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     @domain.reload
 
     assert_not @domain.registrar == @user.registrar
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    payload = { transfer: { transfer_code: @domain.transfer_code } }
+    post "/repp/v1/domains/#{@domain.name}/transfer", headers: @auth_headers, params: payload
+    post "/repp/v1/domains/#{@domain.name}/transfer", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 end

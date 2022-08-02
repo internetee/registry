@@ -8,6 +8,9 @@ class ReppV1DomainsDnssecTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_shows_dnssec_keys_associated_with_domain
@@ -119,5 +122,20 @@ class ReppV1DomainsDnssecTest < ActionDispatch::IntegrationTest
     assert_equal 'Command completed successfully', json[:message]
 
     assert @domain.dnskeys.empty?
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    get "/repp/v1/domains/#{@domain.name}/dnssec", headers: @auth_headers
+    get "/repp/v1/domains/#{@domain.name}/dnssec", headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 end

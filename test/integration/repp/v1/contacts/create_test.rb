@@ -7,6 +7,9 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_creates_new_contact
@@ -152,5 +155,33 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
 
     contact = Contact.find_by(code: json[:data][:contact][:code])
     assert contact.legal_documents.any?
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    request_body =  {
+      contact: {
+        name: 'Donald Trump',
+        phone: '+372.51111112',
+        email: 'donald@trumptower.com',
+        ident: {
+          ident_type: 'priv',
+          ident_country_code: 'EE',
+          ident: '39708290069',
+        },
+      },
+    }
+
+    post '/repp/v1/contacts', headers: @auth_headers, params: request_body
+    post '/repp/v1/contacts', headers: @auth_headers, params: request_body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 end

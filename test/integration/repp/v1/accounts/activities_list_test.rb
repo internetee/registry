@@ -7,6 +7,9 @@ class ReppV1AccountsActivitiesListTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_returns_account_activities
@@ -66,5 +69,20 @@ class ReppV1AccountsActivitiesListTest < ActionDispatch::IntegrationTest
     assert_equal @user.registrar.cash_account.activities.count, json[:data][:count]
     assert_equal @user.registrar.cash_account.activities.count, json[:data][:activities].length
     assert_equal json[:data][:activities][0][:description], activity.description
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    get repp_v1_accounts_path, headers: @auth_headers
+    get repp_v1_accounts_path, headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 end
