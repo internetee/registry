@@ -62,7 +62,7 @@ module Epp
     private
 
     def throttled_user
-      authorize!(:throttled_user, @domain) unless current_user
+      authorize!(:throttled_user, @domain) unless current_user || instance_of?(Epp::SessionsController)
       current_user
     end
 

@@ -3,11 +3,6 @@ require 'test_helper'
 class EppLoginTest < EppTestCase
   setup do
     @original_sessions_per_registrar_setting = EppSession.sessions_per_registrar
-
-    ENV["shunter_default_threshold"] = '10000'
-    ENV["shunter_enabled"] = 'false'
-    adapter = ENV["shunter_default_adapter"].constantize.new
-    adapter&.clear!
   end
 
   teardown do
@@ -184,83 +179,6 @@ class EppLoginTest < EppTestCase
            headers: { 'HTTP_COOKIE' => 'session=new-session-id' }
     end
     assert_epp_response :session_limit_exceeded_server_closing_connection
-  end
-
-  def test_returns_valid_response_if_not_throttled
-    ENV["shunter_enabled"] = 'true'
-    user = users(:api_bestnames)
-    new_session_id = 'new-session-id'
-
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
-        <command>
-          <login>
-            <clID>#{user.username}</clID>
-            <pw>#{user.plain_text_password}</pw>
-            <options>
-              <version>1.0</version>
-              <lang>en</lang>
-            </options>
-            <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}</objURI>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
-              <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-              <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
-            </svcs>
-          </login>
-        </command>
-      </epp>
-    XML
-
-    post '/epp/session/login', params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => "session=#{new_session_id}" }
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_epp_response :completed_successfully
-    assert_correct_against_schema response_xml
-  end
-
-  def test_returns_error_response_if_throttled
-    ENV["shunter_default_threshold"] = '1'
-    ENV["shunter_enabled"] = 'true'
-    user = users(:api_bestnames)
-    new_session_id = 'new-session-id'
-
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
-        <command>
-          <login>
-            <clID>#{user.username}</clID>
-            <pw>#{user.plain_text_password}</pw>
-            <options>
-              <version>1.0</version>
-              <lang>en</lang>
-            </options>
-            <svcs>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}</objURI>
-              <objURI>#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}</objURI>
-              <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-              <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
-            </svcs>
-          </login>
-        </command>
-      </epp>
-    XML
-
-    post '/epp/session/login', params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => "session=#{new_session_id}" }
-
-    post '/epp/session/login', params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => "session=#{new_session_id}" }
-
-    response_xml = Nokogiri::XML(response.body)
-    assert_epp_response :session_limit_exceeded_server_closing_connection
-    assert_correct_against_schema response_xml
-    assert response.body.include?(Shunter.default_error_message)
-    ENV["shunter_default_threshold"] = '10000'
-    ENV["shunter_enabled"] = 'false'
   end
 
   private

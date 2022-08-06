@@ -49,11 +49,11 @@ class ReppV1ContactsSearchTest < ActionDispatch::IntegrationTest
     ENV["shunter_enabled"] = 'true'
 
     get '/repp/v1/contacts/search', headers: @auth_headers, params: { query: '000' }
-    get '/repp/v1/contacts/search', headers: @auth_headers, params: { query: 'j' }
-    json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:code], 2502
-    assert response.body.include?(Shunter.default_error_message)
+    assert_raise Shunter::ThrottleError do
+      get '/repp/v1/contacts/search', headers: @auth_headers, params: { query: '000' }
+    end
+
     ENV["shunter_default_threshold"] = '10000'
     ENV["shunter_enabled"] = 'false'
   end
