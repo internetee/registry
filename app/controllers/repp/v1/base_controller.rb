@@ -173,7 +173,7 @@ module Repp
       end
 
       def throttled_user
-        authorize!(:throttled_user, @domain) unless current_user
+        authorize!(:throttled_user, @domain) unless current_user || action_name == 'tara_callback'
         current_user
       end
     end
