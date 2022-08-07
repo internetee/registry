@@ -259,7 +259,7 @@ GEM
     httpi (2.4.5)
       rack
       socksify
-    i18n (1.10.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     i18n_data (0.13.0)
     isikukood (0.1.2)
@@ -499,7 +499,7 @@ GEM
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
-    validates_email_format_of (1.6.3)
+    validates_email_format_of (1.7.1)
       i18n
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -596,7 +596,7 @@ DEPENDENCIES
   spy
   truemail (~> 2.4)
   uglifier
-  validates_email_format_of (= 1.6.3)
+  validates_email_format_of (= 1.7.1)
   webdrivers
   webmock
   whenever (= 1.0.0)
