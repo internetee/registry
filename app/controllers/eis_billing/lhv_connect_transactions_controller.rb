@@ -34,7 +34,11 @@ module EisBilling
 
     def create_invoice_if_missing(transaction)
       Invoice.create_from_transaction!(transaction) unless transaction.autobindable?
-      transaction.autobind_invoice
+      invoice = transaction.autobind_invoice
+      return unless invoice.paid?
+
+      EisBilling::SendInvoiceStatus.send_info(invoice_number: invoice.number,
+                                              status: 'paid')
     end
 
     def transaction_attributes(incoming_transaction)

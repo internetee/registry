@@ -30,11 +30,6 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
         [message]
       end
     end
-
-    if Feature.billing_system_integrated?
-      stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_status')
-        .to_return(status: 200, body: '', headers: {})
-    end
   end
 
   def test_not_raises_error_if_bad_reference
