@@ -1,8 +1,16 @@
 module EisBilling
   class LhvConnectTransactionsController < EisBilling::BaseController
     def create
+      if params['_json'].nil? || params['_json'].empty?
+        render json: { message: 'MISSING PARAMS' }, status: :unprocessable_entity
+        return
+      end
+
+      bank_statement = BankStatement.create(bank_code: Setting.registry_bank_code,
+                                            iban: Setting.registry_iban)
+
       params['_json'].each do |incoming_transaction|
-        process_transactions(incoming_transaction)
+        process_transactions(incoming_transaction, bank_statement)
       end
 
       render status: :ok, json: { message: 'RECEIVED', params: params }
@@ -10,19 +18,13 @@ module EisBilling
 
     private
 
-    def process_transactions(incoming_transaction)
+    def process_transactions(incoming_transaction, bank_statement)
       logger.info 'Got incoming transactions'
       logger.info incoming_transaction
 
-      bank_statement = BankStatement.new(bank_code: Setting.registry_bank_code,
-                                         iban: Setting.registry_iban)
-      bank_statement_transaction(bank_statement: bank_statement, incoming_transaction: incoming_transaction)
-    end
-
-    def bank_statement_transaction(bank_statement:, incoming_transaction:)
       ActiveRecord::Base.transaction do
-        bank_statement.save!
-        transaction = create_transaction(incoming_transaction: incoming_transaction, bank_statement: bank_statement)
+        transaction = bank_statement.bank_transactions
+                                    .create!(transaction_attributes(incoming_transaction))
 
         next if transaction.registrar.blank?
 
@@ -32,17 +34,21 @@ module EisBilling
 
     def create_invoice_if_missing(transaction)
       Invoice.create_from_transaction!(transaction) unless transaction.autobindable?
-      transaction.autobind_invoice
+      invoice = transaction.autobind_invoice
+      return unless invoice.paid?
+
+      EisBilling::SendInvoiceStatus.send_info(invoice_number: invoice.number,
+                                              status: 'paid')
     end
 
-    def create_transaction(incoming_transaction:, bank_statement:)
-      transaction_attributes = { sum: incoming_transaction['amount'],
-                                 currency: incoming_transaction['currency'],
-                                 paid_at: incoming_transaction['date'],
-                                 reference_no: incoming_transaction['payment_reference_number'],
-                                 description: incoming_transaction['payment_description'] }
-
-      bank_statement.bank_transactions.create!(transaction_attributes)
+    def transaction_attributes(incoming_transaction)
+      {
+        sum: incoming_transaction['amount'],
+        currency: incoming_transaction['currency'],
+        paid_at: incoming_transaction['date'],
+        reference_no: incoming_transaction['payment_reference_number'],
+        description: incoming_transaction['payment_description'],
+      }
     end
   end
 end

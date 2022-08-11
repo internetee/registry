@@ -33,10 +33,10 @@ class BankTransaction < ApplicationRecord
     return unless autobindable?
 
     channel = manual ? 'admin_payment' : 'system_payment'
-    create_internal_payment_record(channel: channel, invoice: invoice, registrar: registrar)
+    create_internal_payment_record(invoice: invoice, registrar: registrar, channel: channel)
   end
 
-  def create_internal_payment_record(channel: nil, invoice:, registrar:)
+  def create_internal_payment_record(invoice:, registrar:, channel: nil)
     if channel.nil?
       create_activity(invoice.buyer, invoice)
       return
@@ -50,6 +50,7 @@ class BankTransaction < ApplicationRecord
     else
       payment_order.update(notes: 'Failed to create activity', status: 'failed')
     end
+    invoice
   end
 
   def bind_invoice(invoice_no, manual: false)
@@ -62,8 +63,8 @@ class BankTransaction < ApplicationRecord
     validate_invoice_data(invoice)
     return if errors.any?
 
-    create_internal_payment_record(channel: (manual ? 'admin_payment' : nil), invoice: invoice,
-                                   registrar: invoice.buyer)
+    create_internal_payment_record(invoice: invoice, registrar: invoice.buyer,
+                                   channel: (manual ? 'admin_payment' : nil))
   end
 
   def validate_invoice_data(invoice)
