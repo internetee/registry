@@ -65,15 +65,17 @@ class ValidationEvent < ApplicationRecord
   def check_force_delete_lift
     return unless object.need_to_lift_force_delete?
 
-    domain_list.each do |domain|
-      next unless domain.status_notes[DomainStatus::FORCE_DELETE]
+    domain_list.each { |domain| refresh_status_notes(domain) }
+  end
 
-      domain.status_notes[DomainStatus::FORCE_DELETE].slice!(object.email_history)
-      domain.status_notes[DomainStatus::FORCE_DELETE].lstrip!
-      domain.save(validate: false)
+  def refresh_status_notes(domain)
+    return unless domain.status_notes[DomainStatus::FORCE_DELETE]
 
-      notify_registrar(domain) unless domain.status_notes[DomainStatus::FORCE_DELETE].empty?
-    end
+    domain.status_notes[DomainStatus::FORCE_DELETE].slice!(object.email_history)
+    domain.status_notes[DomainStatus::FORCE_DELETE].lstrip!
+    domain.save(validate: false)
+
+    notify_registrar(domain) unless domain.status_notes[DomainStatus::FORCE_DELETE].empty?
   end
 
   def domain_list
