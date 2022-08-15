@@ -499,7 +499,7 @@ GEM
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
-    validates_email_format_of (1.7.1)
+    validates_email_format_of (1.7.2)
       i18n
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -596,7 +596,7 @@ DEPENDENCIES
   spy
   truemail (~> 2.4)
   uglifier
-  validates_email_format_of (= 1.7.1)
+  validates_email_format_of (= 1.7.2)
   webdrivers
   webmock
   whenever (= 1.0.0)
