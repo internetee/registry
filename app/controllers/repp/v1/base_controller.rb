@@ -163,6 +163,7 @@ module Repp
         data = current_user.as_json(only: %i[id username roles])
         data[:registrar_name] = registrar.name
         data[:legaldoc_mandatory] = registrar.legaldoc_mandatory?
+        data[:address_processing] = Contact.address_processing?
         data[:abilities] = Ability.new(current_user).permissions
         data
       end
