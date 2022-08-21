@@ -17,7 +17,7 @@ class SendEInvoiceJob < ApplicationJob
   def need_to_process_invoice?(invoice:, payable:)
     logger.info "Checking if need to process e-invoice #{invoice}, payable: #{payable}"
     return false if invoice.blank?
-    return false if invoice.do_not_send_e_invoice? && payable
+    return false if invoice.do_not_send_e_invoice? && (invoice.monthly_invoice ? true : payable)
 
     true
   end

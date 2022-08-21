@@ -55,6 +55,11 @@ module Registrar::BookKeeping
                    .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW])
   end
 
+  def monthly_invoice(month:)
+    invoices.where(monthly_invoice: true, issue_date: month.end_of_month.to_date,
+                   cancelled_at: nil).first
+  end
+
   def new_monthly_invoice_line(activity:, duration: nil)
     price = load_price(activity)
     line = {
@@ -68,7 +73,7 @@ module Registrar::BookKeeping
 
   def finalize_invoice_line(line, price:, activity:, duration:)
     yearly = price.duration.in_years.to_i >= 1
-    line['price'] = yearly ? (price.price.amount / price.duration.in_years.to_i) : price.price.amount
+    line['price'] = yearly ? (price.price.amount / price.duration.in_years.to_i).to_f : price.price.amount.to_f
     line['description'] = description_in_language(price: price, yearly: yearly)
 
     add_product_timeframe(line: line, activity: activity, duration: duration) if duration.present? && (duration > 1)

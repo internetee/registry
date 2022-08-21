@@ -4,11 +4,12 @@
       = @invoice
   .col-sm-8
     %h1.text-right.text-center-xs
-      - if @invoice.unpaid?
-        = link_to(t(:payment_received), new_admin_bank_statement_path(invoice_id: @invoice.id), class: 'btn btn-default')
+      - unless @invoice.monthly_invoice
+        - if @invoice.unpaid?
+          = link_to(t(:payment_received), new_admin_bank_statement_path(invoice_id: @invoice.id), class: 'btn btn-default')
 
-      - if @invoice.paid? and !@invoice.cancelled?
-        = link_to(t(:cancel_payment), cancel_paid_admin_invoices_path(invoice_id: @invoice.id), method: 'post', data: { confirm: t(:are_you_sure) }, class: 'btn btn-warning')
+        - if @invoice.paid? && !@invoice.cancelled?
+          = link_to(t(:cancel_payment), cancel_paid_admin_invoices_path(invoice_id: @invoice.id), method: 'post', data: { confirm: t(:are_you_sure) }, class: 'btn btn-warning')
 
       = link_to(t('.download_btn'), download_admin_invoice_path(@invoice), class: 'btn btn-default')
       = link_to(t('.deliver_btn'), new_admin_invoice_delivery_path(@invoice), class: 'btn btn-default')

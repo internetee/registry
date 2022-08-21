@@ -46,10 +46,17 @@ class Invoice
           i.price = invoice_item.price
           i.quantity = invoice_item.quantity
           i.unit = invoice_item.unit
-          i.subtotal = invoice_item.subtotal
-          i.vat_rate = invoice_item.vat_rate
-          i.vat_amount = invoice_item.vat_amount
-          i.total = invoice_item.total
+          if invoice.monthly_invoice
+            i.subtotal = 0
+            i.vat_rate = 0
+            i.vat_amount = 0
+            i.total = 0
+          else
+            i.subtotal = invoice_item.subtotal
+            i.vat_rate = invoice_item.vat_rate
+            i.vat_amount = invoice_item.vat_amount
+            i.total = invoice_item.total
+          end
         end
         e_invoice_invoice_items << e_invoice_invoice_item
       end
@@ -66,9 +73,15 @@ class Invoice
         i.beneficiary_name = invoice.seller_name
         i.beneficiary_account_number = invoice.seller_iban
         i.payer_name = invoice.buyer_name
-        i.subtotal = invoice.subtotal
-        i.vat_amount = invoice.vat_amount
-        i.total = invoice.total
+        if invoice.monthly_invoice
+          i.subtotal = 0
+          i.vat_amount = 0
+          i.total = 0
+        else
+          i.subtotal = invoice.subtotal
+          i.vat_amount = invoice.vat_amount
+          i.total = invoice.total
+        end
         i.currency = invoice.currency
         i.delivery_channel = %i[internet_bank portal]
         i.payable = payable
