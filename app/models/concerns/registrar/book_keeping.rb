@@ -4,6 +4,15 @@ module Registrar::BookKeeping
   DOMAIN_TO_PRODUCT = { 'ee': '01EE', 'com.ee': '02COM', 'pri.ee': '03PRI',
                         'fie.ee': '04FIE', 'med.ee': '05MED' }.freeze
 
+  included do
+    scope :with_cash_accounts, (lambda do
+      joins(:accounts)
+      .where('accounts.account_type = ? AND test_registrar != ?',
+             Account::CASH,
+             true)
+    end)
+  end
+
   def monthly_summary(month:)
     activities = monthly_activites(month)
     return unless activities.any?
