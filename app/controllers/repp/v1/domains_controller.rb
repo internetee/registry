@@ -12,14 +12,14 @@ module Repp
       desc 'Get all existing domains'
       def index
         authorize! :info, Epp::Domain
-        records = current_user.registrar.domains
+        records = current_user.registrar.domains.includes(:registrar, :registrant)
         q = records.ransack(PartialSearchFormatter.format(search_params))
         q.sorts = ['valid_to asc', 'created_at desc'] if q.sorts.empty?
         # use distinct: false here due to ransack bug:
         # https://github.com/activerecord-hackery/ransack/issues/429
         domains = q.result(distinct: false)
 
-        limited_domains = domains.limit(limit).offset(offset).includes(:registrar, :registrant)
+        limited_domains = domains.limit(limit).offset(offset)
 
         render_success(data: { new_domain: records.any? ? serialized_domains([records.last]) : [],
                                domains: serialized_domains(limited_domains.to_a.uniq),
@@ -238,7 +238,7 @@ module Repp
 
       def index_params
         params.permit(:limit, :offset, :details, :simple, :q,
-                      q: %i[s name_matches registrant_id_eq contacts_ident_eq
+                      q: %i[s name_matches registrant_code_eq contacts_ident_eq
                             nameservers_hostname_eq valid_to_gteq valid_to_lteq
                             statuses_contains_array] + [s: []])
       end
