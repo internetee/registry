@@ -6,10 +6,9 @@ module Registrar::BookKeeping
 
   included do
     scope :with_cash_accounts, (lambda do
-      joins(:accounts)
-      .where('accounts.account_type = ? AND test_registrar != ?',
-             Account::CASH,
-             true)
+      joins(:accounts).where('accounts.account_type = ? AND test_registrar != ?',
+                             Account::CASH,
+                             true)
     end)
   end
 
