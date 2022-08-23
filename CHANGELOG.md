@@ -1,3 +1,6 @@
+23.08.2022
+* REPP update to fix search by registrant in Registrar portal [#2425](https://github.com/internetee/registry/pull/2425)
+
 21.07.2022
 * Removed deprecated statuses_before_force_delete field [#2363](https://github.com/internetee/registry/issues/2363)
 
