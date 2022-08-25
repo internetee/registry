@@ -1,3 +1,6 @@
+25.08.2022
+* Contact creation fix to not require postal addresses in Registrar portal [#2421](https://github.com/internetee/registry/pull/2421)
+
 23.08.2022
 * REPP update to fix search by registrant in Registrar portal [#2425](https://github.com/internetee/registry/pull/2425)
 
