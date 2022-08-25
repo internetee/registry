@@ -99,6 +99,11 @@ Rails.application.routes.draw do
       end
       resources :auctions, only: %i[index]
       resources :retained_domains, only: %i[index]
+      resources :stats do
+        collection do
+          get '/market_share', to: 'stats#market_share'
+        end
+      end
       namespace :registrar do
         resources :notifications, only: [:index, :show, :update] do
           collection do
