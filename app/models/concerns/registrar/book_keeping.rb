@@ -74,7 +74,7 @@ module Registrar::BookKeeping
       'product_id': DOMAIN_TO_PRODUCT[price.zone_name.to_sym],
       'quantity': 1,
       'unit': language == 'en' ? 'pc' : 'tk',
-    }
+    }.with_indifferent_access
 
     finalize_invoice_line(line, price: price, duration: duration, activity: activity)
   end
@@ -98,9 +98,10 @@ module Registrar::BookKeeping
   def description_in_language(price:, yearly:)
     timeframe_string = yearly ? 'yearly' : 'monthly'
     locale_string = "registrar.invoice_#{timeframe_string}_product_description"
+    length = yearly ? price.duration.in_years.to_i : price.duration.in_months.to_i
 
     I18n.with_locale(language == 'en' ? 'en' : 'et') do
-      I18n.t(locale_string, tld: ".#{price.zone_name}", length: price.duration.in_years.to_i)
+      I18n.t(locale_string, tld: ".#{price.zone_name}", length: length)
     end
   end
 

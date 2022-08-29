@@ -110,7 +110,7 @@ class SendMonthlyInvoicesJobTest < ActiveSupport::TestCase
 
   def test_monthly_summary_is_delivered_in_estonian
     activity = account_activities(:one)
-    price = billing_prices(:create_one_year)
+    price = billing_prices(:create_one_month)
     activity.update!(activity_type: 'create', price: price)
     @user.update(language: 'et')
 
@@ -124,7 +124,7 @@ class SendMonthlyInvoicesJobTest < ActiveSupport::TestCase
     stub_request(:post, ENV['directo_invoice_url']).with do |request|
       body = CGI.unescape(request.body)
 
-      (body.include? '.test registreerimine: 1 aasta(t)') &&
+      (body.include? '.test registreerimine: 3 kuu(d)') &&
         (body.include? 'Domeenide ettemaks') &&
         (body.include? '309902')
     end.to_return(status: 200, body: response)

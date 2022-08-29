@@ -41,22 +41,10 @@ class Invoice
 
       e_invoice_invoice_items = []
       invoice.each do |invoice_item|
-        e_invoice_invoice_item = EInvoice::InvoiceItem.new.tap do |i|
-          i.description = invoice_item.description
-          i.price = invoice_item.price
-          i.quantity = invoice_item.quantity
-          i.unit = invoice_item.unit
-          if invoice.monthly_invoice
-            i.subtotal = 0
-            i.vat_rate = 0
-            i.vat_amount = 0
-            i.total = 0
-          else
-            i.subtotal = invoice_item.subtotal
-            i.vat_rate = invoice_item.vat_rate
-            i.vat_amount = invoice_item.vat_amount
-            i.total = invoice_item.total
-          end
+        if invoice.monthly_invoice
+          e_invoice_invoice_item = generate_monthly_invoice_item(invoice, invoice_item)
+        else
+          e_invoice_invoice_item = generate_normal_invoice_item(invoice_item)
         end
         e_invoice_invoice_items << e_invoice_invoice_item
       end
@@ -73,21 +61,47 @@ class Invoice
         i.beneficiary_name = invoice.seller_name
         i.beneficiary_account_number = invoice.seller_iban
         i.payer_name = invoice.buyer_name
-        if invoice.monthly_invoice
-          i.subtotal = 0
-          i.vat_amount = 0
-          i.total = 0
-        else
-          i.subtotal = invoice.subtotal
-          i.vat_amount = invoice.vat_amount
-          i.total = invoice.total
-        end
+        i.subtotal = invoice.subtotal
+        i.vat_amount = invoice.vat_amount
+        i.total = invoice.total
         i.currency = invoice.currency
         i.delivery_channel = %i[internet_bank portal]
         i.payable = payable
+        i.monthly_invoice = invoice.monthly_invoice
       end
 
       EInvoice::EInvoice.new(date: Time.zone.today, invoice: e_invoice_invoice)
+    end
+
+    private
+
+    def generate_normal_invoice_item(item)
+      EInvoice::InvoiceItem.new.tap do |i|
+        i.description = item.description
+        i.unit = item.unit
+        i.price = item.price
+        i.quantity = item.quantity
+        i.subtotal = item.subtotal
+        i.vat_rate = item.vat_rate
+        i.vat_amount = item.vat_amount
+        i.total = item.total
+      end
+    end
+
+    def generate_monthly_invoice_item(invoice, item)
+      EInvoice::InvoiceItem.new.tap do |i|
+        i.description = item.description
+        i.description = "[#{item.product_id}] #{item.description}" if item.product_id
+        i.unit = item.unit
+        i.price = item.price
+        i.quantity = item.quantity
+        if item.price && item.quantity
+          i.subtotal = (item.price * item.quantity).round(3)
+          i.vat_rate = invoice.vat_rate
+          i.vat_amount = i.subtotal * (i.vat_rate / 100)
+          i.total = i.subtotal + i.vat_amount
+        end
+      end
     end
   end
 end
