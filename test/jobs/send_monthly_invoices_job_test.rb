@@ -94,6 +94,8 @@ class SendMonthlyInvoicesJobTest < ActiveSupport::TestCase
       end
     end
 
+    perform_enqueued_jobs
+
     invoice = Invoice.last
     assert_equal 309_902, invoice.number
     assert invoice.in_directo
@@ -135,6 +137,8 @@ class SendMonthlyInvoicesJobTest < ActiveSupport::TestCase
       end
     end
 
+    perform_enqueued_jobs
+
     invoice = Invoice.last
     assert_equal 309_902, invoice.number
     assert invoice.in_directo
@@ -171,6 +175,8 @@ class SendMonthlyInvoicesJobTest < ActiveSupport::TestCase
       SendMonthlyInvoicesJob.perform_now
     end
 
+    perform_enqueued_jobs
+
     invoice = Invoice.last
     assert_equal 309_902, invoice.number
     assert invoice.in_directo
@@ -197,6 +203,8 @@ class SendMonthlyInvoicesJobTest < ActiveSupport::TestCase
     assert_difference 'Setting.directo_monthly_number_last' do
       SendMonthlyInvoicesJob.perform_now
     end
+
+    perform_enqueued_jobs
 
     invoice = Invoice.last
     assert_equal 309_902, invoice.number
@@ -243,6 +251,8 @@ class SendMonthlyInvoicesJobTest < ActiveSupport::TestCase
         SendMonthlyInvoicesJob.perform_now
       end
     end
+
+    perform_enqueued_jobs
 
     assert_requested first_registrar_stub
     assert_requested second_registrar_stub
