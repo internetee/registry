@@ -91,13 +91,13 @@ class Invoice
     def generate_monthly_invoice_item(invoice, item)
       EInvoice::InvoiceItem.new.tap do |i|
         i.description = item.description
-        i.description = "[#{item.product_id}] #{item.description}" if item.product_id
+        i.product_id = item.product_id
         i.unit = item.unit
         i.price = item.price
         i.quantity = item.quantity
+        i.vat_rate = invoice.vat_rate
         if item.price && item.quantity
           i.subtotal = (item.price * item.quantity).round(3)
-          i.vat_rate = invoice.vat_rate
           i.vat_amount = i.subtotal * (i.vat_rate / 100)
           i.total = i.subtotal + i.vat_amount
         end
