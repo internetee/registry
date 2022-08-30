@@ -41,17 +41,16 @@ class Invoice
 
       e_invoice_invoice_items = []
       invoice.each do |invoice_item|
-        if invoice.monthly_invoice
-          e_invoice_invoice_item = generate_monthly_invoice_item(invoice, invoice_item)
-        else
-          e_invoice_invoice_item = generate_normal_invoice_item(invoice_item)
-        end
+        e_invoice_invoice_item = generate_invoice_item(invoice, invoice_item)
         e_invoice_invoice_items << e_invoice_invoice_item
       end
+
+      e_invoice_name_item = e_invoice_invoice_items.shift if invoice.monthly_invoice
 
       e_invoice_invoice = EInvoice::Invoice.new.tap do |i|
         i.seller = seller
         i.buyer = buyer
+        i.name = e_invoice_name_item&.description
         i.items = e_invoice_invoice_items
         i.number = invoice.number
         i.date = invoice.issue_date
@@ -75,31 +74,23 @@ class Invoice
 
     private
 
-    def generate_normal_invoice_item(item)
+    def generate_invoice_item(invoice, item)
       EInvoice::InvoiceItem.new.tap do |i|
         i.description = item.description
         i.unit = item.unit
         i.price = item.price
         i.quantity = item.quantity
-        i.subtotal = item.subtotal
-        i.vat_rate = item.vat_rate
-        i.vat_amount = item.vat_amount
-        i.total = item.total
-      end
-    end
-
-    def generate_monthly_invoice_item(invoice, item)
-      EInvoice::InvoiceItem.new.tap do |i|
-        i.description = item.description
-        i.product_id = item.product_id
-        i.unit = item.unit
-        i.price = item.price
-        i.quantity = item.quantity
-        i.vat_rate = invoice.vat_rate
-        if item.price && item.quantity
+        if invoice.monthly_invoice && item.price && item.quantity
+          i.product_id = item.product_id
+          i.vat_rate = invoice.vat_rate
           i.subtotal = (item.price * item.quantity).round(3)
           i.vat_amount = i.subtotal * (i.vat_rate / 100)
           i.total = i.subtotal + i.vat_amount
+        else
+          i.subtotal = item.subtotal
+          i.vat_rate = item.vat_rate
+          i.vat_amount = item.vat_amount
+          i.total = item.total
         end
       end
     end

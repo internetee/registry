@@ -18,10 +18,10 @@ GIT
 
 GIT
   remote: https://github.com/internetee/e_invoice.git
-  revision: 590dcd3b769ea57edd4c4626547b37120a02b127
+  revision: 9f850465697a2448a31ebddb83c1be5a5a9be3d2
   branch: master
   specs:
-    e_invoice (0.1.2)
+    e_invoice (0.1.3)
       builder (~> 3.2)
       nokogiri
       savon
