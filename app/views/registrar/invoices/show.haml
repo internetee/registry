@@ -13,7 +13,10 @@
   .col-md-6= render 'registrar/invoices/partials/seller'
   .col-md-6= render 'registrar/invoices/partials/buyer'
 .row
-  .col-md-12= render 'registrar/invoices/partials/items'
+  - if @invoice.monthly_invoice
+    .col-md-12= render 'registrar/invoices/partials/monthly_invoice_items'
+  - else
+    .col-md-12= render 'registrar/invoices/partials/items'
 
 - if @invoice.payable?
   .row.semifooter

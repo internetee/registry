@@ -18,10 +18,10 @@ GIT
 
 GIT
   remote: https://github.com/internetee/e_invoice.git
-  revision: 312cac173935f434e449d1714f3497bfee9f8995
+  revision: 9f850465697a2448a31ebddb83c1be5a5a9be3d2
   branch: master
   specs:
-    e_invoice (0.1.0)
+    e_invoice (0.1.3)
       builder (~> 3.2)
       nokogiri
       savon
@@ -603,4 +603,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.5.1)
 
 BUNDLED WITH
-   2.3.16
+   2.3.21

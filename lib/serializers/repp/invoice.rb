@@ -23,7 +23,8 @@ module Serializers
           created_at: obj.created_at, updated_at: obj.updated_at,
           due_date: obj.due_date, currency: obj.currency,
           seller: seller, buyer: buyer, items: items,
-          recipient: obj.buyer.billing_email
+          recipient: obj.buyer.billing_email,
+          monthly_invoice: obj.monthly_invoice
         }
       end
 
@@ -54,11 +55,15 @@ module Serializers
       end
 
       def items
-        invoice.items.map do |item|
-          { description: item.description, unit: item.unit,
-            quantity: item.quantity, price: item.price,
-            sum_without_vat: item.item_sum_without_vat,
-            vat_amount: item.vat_amount, total: item.total }
+        if invoice.monthly_invoice
+          invoice.metadata['items']
+        else
+          invoice.items.map do |item|
+            { description: item.description, unit: item.unit,
+              quantity: item.quantity, price: item.price,
+              sum_without_vat: item.item_sum_without_vat,
+              vat_amount: item.vat_amount, total: item.total }
+          end
         end
       end
 
@@ -75,6 +80,7 @@ module Serializers
           due_date: invoice.due_date,
           total: invoice.total,
           recipient: invoice.buyer.billing_email,
+          monthly_invoice: invoice.monthly_invoice,
         }
       end
       # rubocop:enable Metrics/MethodLength

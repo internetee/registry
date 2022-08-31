@@ -8,9 +8,9 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
   end
 
   def teardown
-    Setting.directo_monthly_number_min = 309901
-    Setting.directo_monthly_number_max = 309999
-    Setting.directo_monthly_number_last = 309901
+    Setting.directo_monthly_number_min = 309_901
+    Setting.directo_monthly_number_max = 309_999
+    Setting.directo_monthly_number_last = 309_901
   end
 
   def test_directo_json_sends_customer_as_hash
@@ -49,7 +49,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     price = billing_prices(:create_one_year)
     activity.update!(activity_type: 'create', price: price)
 
-    Setting.directo_monthly_number_max = 30991
+    Setting.directo_monthly_number_max = 30_991
 
     assert_raises 'RuntimeError' do
       DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
