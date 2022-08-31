@@ -1,4 +1,4 @@
-class Registrar < ApplicationRecord
+class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include Versions # version/registrar_version.rb
   include Registrar::BookKeeping
   include EmailVerifable

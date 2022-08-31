@@ -1,4 +1,4 @@
-class SendMonthlyInvoicesJob < ApplicationJob
+class SendMonthlyInvoicesJob < ApplicationJob # rubocop:disable Metrics/ClassLength
   queue_as :default
 
   def perform(dry: false)
@@ -112,6 +112,7 @@ class SendMonthlyInvoicesJob < ApplicationJob
 
   private
 
+  # rubocop:disable Metrics/MethodLength
   def normalize(summary, lines: [])
     sum = summary.dup
     line_map = Hash.new 0
@@ -127,6 +128,7 @@ class SendMonthlyInvoicesJob < ApplicationJob
     sum['invoice_lines'] = summarize_lines(lines)
     sum
   end
+  # rubocop:enable Metrics/MethodLength
 
   def summarize_lines(invoice_lines, lines: [])
     line_map = Hash.new 0

@@ -1,4 +1,4 @@
-module Registrar::BookKeeping
+module Registrar::BookKeeping # rubocop:disable Metrics/ModuleLength
   extend ActiveSupport::Concern
 
   DOMAIN_TO_PRODUCT = { 'ee': '01EE', 'com.ee': '02COM', 'pri.ee': '03PRI',
