@@ -17,14 +17,11 @@ module Registrar::BookKeeping
     return unless activities.any?
 
     invoice = {
-      'number': 1,
-      'customer': compose_directo_customer,
+      'number': 1, 'customer': compose_directo_customer,
       'language': language == 'en' ? 'ENG' : '', 'currency': activities.first.currency,
       'date': month.end_of_month.strftime('%Y-%m-%d')
     }.as_json
-
     invoice['invoice_lines'] = prepare_invoice_lines(month: month, activities: activities)
-
     invoice
   end
 
@@ -92,7 +89,7 @@ module Registrar::BookKeeping
   def add_product_timeframe(line:, activity:, duration:)
     create_time = activity.created_at
     line['start_date'] = (create_time + (duration - 1).year).end_of_month.strftime('%Y-%m-%d')
-    line['end_date'] = (create_time + (duration - 1).year + 1).end_of_month.strftime('%Y-%m-%d')
+    line['end_date'] = (create_time + duration.year).end_of_month.strftime('%Y-%m-%d')
   end
 
   def description_in_language(price:, yearly:)

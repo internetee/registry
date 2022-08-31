@@ -39,6 +39,7 @@ class SendMonthlyInvoicesJob < ApplicationJob
       sync_with_directo
     end
   end
+
   # rubocop:enable Metrics/MethodLength
 
   def send_email_to_registrar(invoice:, registrar:)
@@ -52,7 +53,7 @@ class SendMonthlyInvoicesJob < ApplicationJob
   end
 
   def create_invoice(summary, registrar)
-    invoice = registrar.init_monthly_invoice(summary)
+    invoice = registrar.init_monthly_invoice(normalize(summary))
     invoice.number = assign_monthly_number
     return unless invoice.save!
 
@@ -107,5 +108,38 @@ class SendMonthlyInvoicesJob < ApplicationJob
     return unless num.to_i > Setting.directo_monthly_number_last.to_i
 
     Setting.directo_monthly_number_last = num.to_i
+  end
+
+  private
+
+  def normalize(summary, lines: [])
+    sum = summary.dup
+    line_map = Hash.new 0
+    sum['invoice_lines'].each { |l| line_map[l] += 1 }
+
+    line_map.each_key do |count|
+      count['quantity'] = line_map[count] unless count['unit'].nil?
+      regex = /Domeenide ettemaks|Domains prepayment/
+      count['quantity'] = -1 if count['description'].match?(regex)
+      lines << count
+    end
+
+    sum['invoice_lines'] = summarize_lines(lines)
+    sum
+  end
+
+  def summarize_lines(invoice_lines, lines: [])
+    line_map = Hash.new 0
+    invoice_lines.each do |l|
+      hash = l.with_indifferent_access.except(:start_date, :end_date)
+      line_map[hash] += 1
+    end
+
+    line_map.each_key do |count|
+      count['price'] = (line_map[count] * count['price'].to_f).round(3) unless count['price'].nil?
+      lines << count
+    end
+
+    lines
   end
 end
