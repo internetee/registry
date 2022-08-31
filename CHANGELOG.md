@@ -1,3 +1,6 @@
+31.08.2022
+* new fully automated process for registrar monthly invoices [#2424](https://github.com/internetee/registry/pull/2424)
+
 25.08.2022
 * Contact creation fix to not require postal addresses in Registrar portal [#2421](https://github.com/internetee/registry/pull/2421)
 
