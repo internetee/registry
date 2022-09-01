@@ -1,3 +1,6 @@
+01.09.2022
+* Monthly invoice payment status fix [#2428](https://github.com/internetee/registry/issues/2428)
+
 31.08.2022
 * new fully automated process for registrar monthly invoices [#2424](https://github.com/internetee/registry/pull/2424)
 
