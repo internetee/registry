@@ -48,7 +48,7 @@ class BankTransaction < ApplicationRecord
     if create_activity(registrar, invoice)
       payment_order.paid!
       EisBilling::SendInvoiceStatus.send_info(invoice_number: invoice.number,
-                                                              status: 'paid')
+                                              status: 'paid')
     else
       payment_order.update(notes: 'Failed to create activity', status: 'failed')
     end

@@ -16,6 +16,12 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
     @account_activity = account_activities(:one)
     @account = accounts(:cash)
 
+    response_message = {
+      message: 'got it'
+    }
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_status')
+    .to_return(status: 200, body: response_message.to_json, headers: {})
+
     Setting.registry_iban = beneficiary_iban
 
     Lhv::ConnectApi.class_eval do

@@ -21,6 +21,7 @@ module EisBilling
       data[:custom_field1] = invoice.description
       data[:custom_field2] = INITIATOR
       data[:invoice_number] = invoice.number
+      data[:reference_number] = invoice.reference_no
 
       data
     end
