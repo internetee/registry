@@ -86,9 +86,13 @@ module Admin
       when 'Paid'
         Invoice.includes(:account_activity, :buyer).where.not(account_activity: { id: nil })
       when 'Unpaid'
-        Invoice.includes(:account_activity, :buyer).where(account_activity: { id: nil })
+        Invoice.includes(:account_activity, :buyer).where(account_activity: { id: nil },
+                                                          cancelled_at: nil,
+                                                          monthly_invoice: false)
       when 'Cancelled'
         Invoice.includes(:account_activity, :buyer).where.not(cancelled_at: nil)
+      when 'Monthly'
+        Invoice.where(monthly_invoice: true, cancelled_at: nil)
       else
         Invoice.includes(:account_activity, :buyer)
       end

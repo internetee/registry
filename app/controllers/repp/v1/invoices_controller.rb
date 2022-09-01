@@ -97,6 +97,7 @@ module Repp
                             account_activity_id_not_null
                             account_activity_id_null cancelled_at_null
                             cancelled_at_not_null number_gteq number_lteq
+                            monthly_invoice_true monthly_invoice_false
                             total_gteq total_lteq s] + [s: []])
       end
 
