@@ -81,6 +81,7 @@ module Admin
       payment_order.update(notes: 'Cancelled')
     end
 
+    # rubocop:disable Metrics/MethodLength
     def filter_by_status
       case params[:status]
       when 'Paid'
@@ -97,6 +98,7 @@ module Admin
         Invoice.includes(:account_activity, :buyer)
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def filter_by_receipt_date(invoices)
       date_from_param = params[:q][:receipt_date_gteq] if params[:q][:receipt_date_gteq].present?
