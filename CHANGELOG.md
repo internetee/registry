@@ -1,3 +1,6 @@
+02.09.2022
+* Update invoice status on payment order payments [#2427](https://github.com/internetee/registry/pull/2427)
+
 01.09.2022
 * Monthly invoice payment status fix [#2428](https://github.com/internetee/registry/issues/2428)
 
