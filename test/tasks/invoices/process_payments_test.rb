@@ -169,7 +169,7 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator')
       .to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
 
-    Spy.on_instance_method(SendEInvoiceTwoJob, :perform_now).and_return(true)
+    Spy.on_instance_method(SendEInvoiceJob, :perform_now).and_return(true)
 
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/e_invoice/e_invoice')
       .to_return(status: 200, body: '', headers: {})

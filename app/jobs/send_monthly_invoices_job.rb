@@ -49,7 +49,7 @@ class SendMonthlyInvoicesJob < ApplicationJob # rubocop:disable Metrics/ClassLen
   end
 
   def send_e_invoice(invoice_id)
-    SendEInvoiceJob.set(wait: 1.minute).perform_later(invoice_id, payable: false)
+    SendEInvoiceLegacyJob.set(wait: 1.minute).perform_later(invoice_id, payable: false)
   end
 
   def create_invoice(summary, registrar)
