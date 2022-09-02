@@ -10,6 +10,10 @@ class SendMonthlyInvoicesJobTest < ActiveSupport::TestCase
     ActionMailer::Base.deliveries.clear
     EInvoice.provider = EInvoice::Providers::TestProvider.new
     EInvoice::Providers::TestProvider.deliveries.clear
+
+    response = { message: 'sucess' }
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice")
+      .to_return(status: 200, body: response.to_json, headers: {})
   end
 
   def teardown
