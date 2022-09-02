@@ -78,11 +78,9 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_if_invoice_is_overdue_than_48_hours
-    return unless Feature.billing_system_integrated?
-
     invoice_n = Invoice.order(number: :desc).last.number
 
-    Spy.on_instance_method(SendEInvoiceTwoJob, :perform_now).and_return(true)
+    Spy.on_instance_method(SendEInvoiceJob, :perform_now).and_return(true)
 
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/e_invoice/e_invoice')
       .to_return(status: 200, body: '', headers: {})
@@ -164,8 +162,6 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_credits_registrar_athout_invoice_beforehand
-    return unless Feature.billing_system_integrated?
-
     invoice_n = Invoice.order(number: :desc).last.number
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
       .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}")
@@ -202,8 +198,6 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_topup_creates_invoice_and_send_it_as_paid
-    return unless Feature.billing_system_integrated?
-
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/e_invoice/e_invoice')
       .to_return(status: 200, body: '', headers: {})
 

@@ -17,59 +17,55 @@ class NewInvoiceTest < ApplicationSystemTestCase
   end
 
   def test_create_new_invoice_with_positive_amount
-    if Feature.billing_system_integrated?
-      invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
 
-      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+    stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
 
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
-        to_return(status: 200, body: "", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+      to_return(status: 200, body: "", headers: {})
 
-      visit registrar_invoices_path
-      click_link_or_button 'Add deposit'
-      fill_in 'Amount', with: '200.00'
-      fill_in 'Description', with: 'My first invoice'
+    visit registrar_invoices_path
+    click_link_or_button 'Add deposit'
+    fill_in 'Amount', with: '200.00'
+    fill_in 'Description', with: 'My first invoice'
 
-      assert_difference 'Invoice.count', 1 do
-        click_link_or_button 'Add'
-      end
-
-      assert_text 'Please pay the following invoice'
-      assert_text "Invoice no. #{invoice_n + 3}"
-      assert_text 'Subtotal 200,00 €'
-      assert_text 'Pay invoice'
+    assert_difference 'Invoice.count', 1 do
+      click_link_or_button 'Add'
     end
+
+    assert_text 'Please pay the following invoice'
+    assert_text "Invoice no. #{invoice_n + 3}"
+    assert_text 'Subtotal 200,00 €'
+    assert_text 'Pay invoice'
   end
 
   def test_create_new_invoice_with_comma_in_number
-    if Feature.billing_system_integrated?
-      invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
 
-      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+    stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
 
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
-        to_return(status: 200, body: "", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+      to_return(status: 200, body: "", headers: {})
 
-      visit registrar_invoices_path
-      click_link_or_button 'Add deposit'
-      fill_in 'Amount', with: '200,00'
-      fill_in 'Description', with: 'My first invoice'
+    visit registrar_invoices_path
+    click_link_or_button 'Add deposit'
+    fill_in 'Amount', with: '200,00'
+    fill_in 'Description', with: 'My first invoice'
 
-      assert_difference 'Invoice.count', 1 do
-        click_link_or_button 'Add'
-      end
-
-      assert_text 'Please pay the following invoice'
-      assert_text "Invoice no. #{invoice_n + 3}"
-      assert_text 'Subtotal 200,00 €'
-      assert_text 'Pay invoice'
+    assert_difference 'Invoice.count', 1 do
+      click_link_or_button 'Add'
     end
+
+    assert_text 'Please pay the following invoice'
+    assert_text "Invoice no. #{invoice_n + 3}"
+    assert_text 'Subtotal 200,00 €'
+    assert_text 'Pay invoice'
   end
 
   def test_create_new_invoice_fails_when_amount_is_0
