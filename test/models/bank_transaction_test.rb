@@ -4,6 +4,12 @@ class BankTransactionTest < ActiveSupport::TestCase
   setup do
     @registrar = registrars(:bestnames)
     @invoice = invoices(:one)
+
+    response_message = {
+      message: 'got it'
+    }
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_status')
+    .to_return(status: 200, body: response_message.to_json, headers: {})
   end
 
   def test_matches_against_invoice_nubmber_and_reference_number
