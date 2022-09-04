@@ -4,11 +4,12 @@
       = @invoice
   .col-sm-8
     %h1.text-right.text-center-xs
-      - if @invoice.unpaid?
-        = link_to(t(:payment_received), new_admin_bank_statement_path(invoice_id: @invoice.id), class: 'btn btn-default')
+      - unless @invoice.monthly_invoice
+        - if @invoice.unpaid?
+          = link_to(t(:payment_received), new_admin_bank_statement_path(invoice_id: @invoice.id), class: 'btn btn-default')
 
-      - if @invoice.paid? and !@invoice.cancelled?
-        = link_to(t(:cancel_payment), cancel_paid_admin_invoices_path(invoice_id: @invoice.id), method: 'post', data: { confirm: t(:are_you_sure) }, class: 'btn btn-warning')
+        - if @invoice.paid? && !@invoice.cancelled?
+          = link_to(t(:cancel_payment), cancel_paid_admin_invoices_path(invoice_id: @invoice.id), method: 'post', data: { confirm: t(:are_you_sure) }, class: 'btn btn-warning')
 
       = link_to(t('.download_btn'), download_admin_invoice_path(@invoice), class: 'btn btn-default')
       = link_to(t('.deliver_btn'), new_admin_invoice_delivery_path(@invoice), class: 'btn btn-default')
@@ -121,39 +122,10 @@
       %dt= t(:email)
       %dd= @invoice.buyer_email
 .row
-  .col-md-12
-    %h4= t(:items)
-    %hr
-    .table-responsive
-      %table.table.table-hover.table-condensed
-        %thead
-          %tr
-            %th{class: 'col-xs-4'}= t(:description)
-            %th{class: 'col-xs-2'}= t(:unit)
-            %th{class: 'col-xs-2'}= InvoiceItem.human_attribute_name :quantity
-            %th{class: 'col-xs-2'}= t(:price)
-            %th{class: 'col-xs-2'}= t(:total)
-        %tbody
-          - @invoice.each do |invoice_item|
-            %tr
-              %td= invoice_item.description
-              %td= invoice_item.unit
-              %td= invoice_item.quantity
-              %td= currency(invoice_item.price)
-              %td= currency(invoice_item.item_sum_without_vat)
-        %tfoot
-          %tr
-            %th{colspan: 3}
-            %th= Invoice.human_attribute_name :subtotal
-            %td= number_to_currency @invoice.subtotal
-          %tr
-            %th.no-border{colspan: 3}
-            %th= "VAT #{number_to_percentage(@invoice.vat_rate, precision: 1)}"
-            %td= number_to_currency @invoice.vat_amount
-          %tr
-            %th.no-border{colspan: 3}
-            %th= t(:total)
-            %td= number_to_currency @invoice.total
+  - if @invoice.monthly_invoice
+    .col-md-12= render 'registrar/invoices/partials/monthly_invoice_items'
+  - else
+    .col-md-12= render 'registrar/invoices/partials/items'
 .row
   .col-md-12
     %h4= "Payment Orders"

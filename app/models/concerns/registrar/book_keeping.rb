@@ -1,22 +1,27 @@
-module Registrar::BookKeeping
+module Registrar::BookKeeping # rubocop:disable Metrics/ModuleLength
   extend ActiveSupport::Concern
 
   DOMAIN_TO_PRODUCT = { 'ee': '01EE', 'com.ee': '02COM', 'pri.ee': '03PRI',
                         'fie.ee': '04FIE', 'med.ee': '05MED' }.freeze
+
+  included do
+    scope :with_cash_accounts, (lambda do
+      joins(:accounts).where('accounts.account_type = ? AND test_registrar != ?',
+                             Account::CASH,
+                             true)
+    end)
+  end
 
   def monthly_summary(month:)
     activities = monthly_activites(month)
     return unless activities.any?
 
     invoice = {
-      'number': 1,
-      'customer': compose_directo_customer,
+      'number': 1, 'customer': compose_directo_customer,
       'language': language == 'en' ? 'ENG' : '', 'currency': activities.first.currency,
       'date': month.end_of_month.strftime('%Y-%m-%d')
     }.as_json
-
     invoice['invoice_lines'] = prepare_invoice_lines(month: month, activities: activities)
-
     invoice
   end
 
@@ -55,20 +60,25 @@ module Registrar::BookKeeping
                    .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW])
   end
 
+  def monthly_invoice(month:)
+    invoices.where(monthly_invoice: true, issue_date: month.end_of_month.to_date,
+                   cancelled_at: nil).first
+  end
+
   def new_monthly_invoice_line(activity:, duration: nil)
     price = load_price(activity)
     line = {
       'product_id': DOMAIN_TO_PRODUCT[price.zone_name.to_sym],
       'quantity': 1,
       'unit': language == 'en' ? 'pc' : 'tk',
-    }
+    }.with_indifferent_access
 
     finalize_invoice_line(line, price: price, duration: duration, activity: activity)
   end
 
   def finalize_invoice_line(line, price:, activity:, duration:)
     yearly = price.duration.in_years.to_i >= 1
-    line['price'] = yearly ? (price.price.amount / price.duration.in_years.to_i) : price.price.amount
+    line['price'] = yearly ? (price.price.amount / price.duration.in_years.to_i).to_f : price.price.amount.to_f
     line['description'] = description_in_language(price: price, yearly: yearly)
 
     add_product_timeframe(line: line, activity: activity, duration: duration) if duration.present? && (duration > 1)
@@ -79,15 +89,16 @@ module Registrar::BookKeeping
   def add_product_timeframe(line:, activity:, duration:)
     create_time = activity.created_at
     line['start_date'] = (create_time + (duration - 1).year).end_of_month.strftime('%Y-%m-%d')
-    line['end_date'] = (create_time + (duration - 1).year + 1).end_of_month.strftime('%Y-%m-%d')
+    line['end_date'] = (create_time + duration.year).end_of_month.strftime('%Y-%m-%d')
   end
 
   def description_in_language(price:, yearly:)
     timeframe_string = yearly ? 'yearly' : 'monthly'
     locale_string = "registrar.invoice_#{timeframe_string}_product_description"
+    length = yearly ? price.duration.in_years.to_i : price.duration.in_months.to_i
 
     I18n.with_locale(language == 'en' ? 'en' : 'et') do
-      I18n.t(locale_string, tld: ".#{price.zone_name}", length: price.duration.in_years.to_i)
+      I18n.t(locale_string, tld: ".#{price.zone_name}", length: length)
     end
   end
 

@@ -7,6 +7,9 @@ class AdminAreaBankStatementTest < ApplicationSystemTestCase
 
     @invoice = invoices(:one)
     Spy.on_instance_method(EisBilling::BaseController, :authorized).and_return(true)
+    response_message = { message: 'got it' }
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_status')
+    .to_return(status: 200, body: response_message.to_json, headers: {})
   end
 
   def test_update_bank_statement

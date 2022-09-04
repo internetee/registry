@@ -81,18 +81,24 @@ module Admin
       payment_order.update(notes: 'Cancelled')
     end
 
+    # rubocop:disable Metrics/MethodLength
     def filter_by_status
       case params[:status]
       when 'Paid'
         Invoice.includes(:account_activity, :buyer).where.not(account_activity: { id: nil })
       when 'Unpaid'
-        Invoice.includes(:account_activity, :buyer).where(account_activity: { id: nil })
+        Invoice.includes(:account_activity, :buyer).where(account_activity: { id: nil },
+                                                          cancelled_at: nil,
+                                                          monthly_invoice: false)
       when 'Cancelled'
         Invoice.includes(:account_activity, :buyer).where.not(cancelled_at: nil)
+      when 'Monthly'
+        Invoice.where(monthly_invoice: true, cancelled_at: nil)
       else
         Invoice.includes(:account_activity, :buyer)
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def filter_by_receipt_date(invoices)
       date_from_param = params[:q][:receipt_date_gteq] if params[:q][:receipt_date_gteq].present?

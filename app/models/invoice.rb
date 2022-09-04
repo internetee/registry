@@ -32,11 +32,14 @@ class Invoice < ApplicationRecord
   # rubocop:enable Layout/LineLength
   # rubocop:enable Style/MultilineBlockLayout
   validates :due_date, :currency, :seller_name,
-            :seller_iban, :buyer_name, :items, presence: true
+            :seller_iban, :buyer_name, presence: true
+  validates :items, presence: true, unless: -> { monthly_invoice }
 
   before_create :set_invoice_number
   before_create :calculate_total, unless: :total?
   before_create :apply_default_buyer_vat_no, unless: :buyer_vat_no?
+  skip_callback :create, :before, :set_invoice_number, if: -> { monthly_invoice }
+  skip_callback :create, :before, :calculate_total, if: -> { monthly_invoice }
 
   attribute :vat_rate, ::Type::VatRate.new
 
@@ -118,7 +121,7 @@ class Invoice < ApplicationRecord
   end
 
   def subtotal
-    items.map(&:item_sum_without_vat).reduce(:+)
+    items.map(&:item_sum_without_vat).reduce(:+) || 0
   end
 
   def vat_amount
@@ -131,7 +134,11 @@ class Invoice < ApplicationRecord
   end
 
   def each(&block)
-    items.each(&block)
+    if monthly_invoice
+      metadata['items'].map { |el| OpenStruct.new(el) }.each(&block)
+    else
+      items.each(&block)
+    end
   end
 
   def as_pdf
