@@ -186,6 +186,11 @@ Rails.application.routes.draw do
                   as: 'cors_preflight_check'
   end
 
+  # REGISTRAR ROUTES
+  namespace :registrar do
+    devise_for :users, path: '', class_name: 'ApiUser', skip: %i[sessions]
+  end
+
   namespace :registrant do
     devise_for :users, path: '', class_name: 'RegistrantUser'
   end
