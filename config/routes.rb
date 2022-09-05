@@ -101,7 +101,8 @@ Rails.application.routes.draw do
       resources :retained_domains, only: %i[index]
       resources :stats do
         collection do
-          get '/market_share', to: 'stats#market_share'
+          get '/market_share_distribution', to: 'stats#market_share_distribution'
+          get '/market_share_growth_rate', to: 'stats#market_share_growth_rate'
         end
       end
       namespace :registrar do

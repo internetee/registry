@@ -8,8 +8,11 @@ en:
       date_long: "%d. %B %Y"
       filename: "%Y-%m-%d_%H.%M"
   date:
+    month_names:
+      [~, January, February, March, April, May, June, July, August, September, October, November, December]
     formats:
       default: "%Y-%m-%d"
+      month_year: "%B, %Y"
 
   activerecord:
     errors:
