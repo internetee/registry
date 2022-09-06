@@ -41,6 +41,12 @@ module Api
         render json: serializable_hash_for_update_action(auction)
       end
 
+      def avilability_check
+        domain_name = params[:domain_name]
+        results = Epp::Domain.check_availability(domain_name)
+        render json: { body: results }
+      end
+
       private
 
       def serializable_hash(auction)
