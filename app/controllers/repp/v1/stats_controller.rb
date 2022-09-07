@@ -29,15 +29,20 @@ module Repp
         registrars = ::Registrar.where(test_registrar: false).joins(:domains)
                                 .where(from_condition)
 
-        domains_by_registrar = registrars.where(to_condition).group(:name).count
-        prev_domains_by_registrar = registrars.where(compare_to_condition).group(:name).count
+        domains_by_rar = registrars.where(to_condition).group(:name).count
+        prev_domains_by_rar = registrars.where(compare_to_condition).group(:name).count
 
-        set_zero_values!(domains_by_registrar, prev_domains_by_registrar)
+        set_zero_values!(domains_by_rar, prev_domains_by_rar)
+
+        market_share_by_rar = calculate_market_share(domains_by_rar)
+        prev_market_share_by_rar = calculate_market_share(prev_domains_by_rar)
 
         result = { prev_data: { name: search_params[:compare_to_date],
-                                domains: serialize(prev_domains_by_registrar) },
+                                domains: serialize(prev_domains_by_rar),
+                                market_share: serialize(prev_market_share_by_rar) },
                    data: { name: search_params[:end_date],
-                           domains: serialize(domains_by_registrar) } }
+                           domains: serialize(domains_by_rar),
+                           market_share: serialize(market_share_by_rar) } }
         render_success(data: result)
       end
 
@@ -80,6 +85,11 @@ module Repp
           cur_dup[k] = prev[k] || 0
         end
         prev.clear.merge!(cur_dup)
+      end
+
+      def calculate_market_share(domains_by_rar)
+        sum = domains_by_rar.values.sum
+        domains_by_rar.transform_values { |v| (v.to_f / sum * 100.0).round(1) }
       end
     end
   end
