@@ -28,9 +28,8 @@ module Repp
       end
       def market_share_growth_rate
         registrars = ::Registrar.where(test_registrar: false).joins(:domains)
-                                .where(from_condition)
 
-        domains_by_rar = registrars.where(to_condition).group(:name).count
+        domains_by_rar = registrars.where(from_condition).where(to_condition).group(:name).count
         prev_domains_by_rar = registrars.where(compare_to_condition).group(:name).count
 
         set_zero_values!(domains_by_rar, prev_domains_by_rar)
