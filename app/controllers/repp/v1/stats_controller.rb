@@ -19,6 +19,7 @@ module Repp
         render_success(data: result)
       end
 
+      # rubocop:disable Metrics/MethodLength
       api :get, '/repp/v1/stats/market_share_growth_rate'
       desc 'Get market share and growth rate of registrars'
       param :q, Hash, required: true, desc: 'Period parameters for data' do
@@ -45,6 +46,7 @@ module Repp
                            market_share: serialize(market_share_by_rar) } }
         render_success(data: result)
       end
+      # rubocop:enable Metrics/MethodLength
 
       private
 
