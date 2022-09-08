@@ -1,3 +1,6 @@
+08.09.2022
+* Fixed template error for multi-year registered domains in force delete process [#2435](https://github.com/internetee/registry/issues/2435)
+
 02.09.2022
 * Update invoice status on payment order payments [#2427](https://github.com/internetee/registry/pull/2427)
 
