@@ -24,6 +24,11 @@ class Contact < ApplicationRecord
   alias_attribute :kind, :ident_type
   alias_attribute :copy_from_id, :original_id # Old attribute name; for PaperTrail
 
+  scope :email_verification_failed, lambda {
+    joins('LEFT JOIN email_address_verifications emv ON contacts.email = emv.email')
+      .where('success = false and verified_at IS NOT NULL')
+  }
+
   scope :with_different_company_name, (lambda do |company|
     where("ident = ? AND ident_country_code = 'EE' AND name != ?",
           company.registration_number,

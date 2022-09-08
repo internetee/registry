@@ -4,6 +4,8 @@ task check_force_delete: :environment do
 
   invalid_contact_ids = validations.select do |validation|
     contact = validation.validation_eventable
+    next if contact.nil?
+
     contact.need_to_start_force_delete? || contact.need_to_lift_force_delete?
   end.pluck(:validation_eventable_id)
 
