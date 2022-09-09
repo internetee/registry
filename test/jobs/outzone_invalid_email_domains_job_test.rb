@@ -20,10 +20,6 @@ class OutzoneInvalidEmailDomainsJobTest < ActiveJob::TestCase
 
     assert @domain.force_delete_scheduled?
     assert @domain.valid_to < Time.zone.now + 1.year
-    assert_equal @domain.force_delete_start, @domain.valid_to
-    assert_equal @domain.force_delete_date, (@domain.force_delete_start +
-                                                    Setting.expire_warning_period.days +
-                                                    Setting.redemption_grace_period.days).to_date
     assert_equal @domain.outzone_at, @domain.force_delete_start + Setting.expire_warning_period.day
   end
 

@@ -20,25 +20,6 @@ class BaseTest < ActiveSupport::TestCase
     assert_not @domain.force_delete_scheduled?
   end
 
-  def test_less_than_year_until_valid_to_date
-    refute @domain_airport.force_delete_scheduled?
-    @domain_airport.update!(valid_to: Time.zone.now + 11.months)
-    @domain_airport.reload
-    prepare_contact
-
-    contact = @domain_airport.admin_contacts.first
-
-    Domains::ForceDeleteEmail::Base.run(email: contact.email)
-    @domain_airport.reload
-
-    assert @domain_airport.force_delete_scheduled?
-    assert @domain_airport.valid_to < Time.zone.now + 1.year
-    assert_equal @domain_airport.force_delete_start, @domain_airport.valid_to
-    assert_equal @domain_airport.force_delete_date, (@domain_airport.force_delete_start +
-                                                    Setting.expire_warning_period.days +
-                                                    Setting.redemption_grace_period.days).to_date
-  end
-
   def test_more_that_year_until_valid_to_date
     refute @domain_airport.force_delete_scheduled?
     @domain_airport.update!(valid_to: Time.zone.now + 3.years + 1.month + 1.day)

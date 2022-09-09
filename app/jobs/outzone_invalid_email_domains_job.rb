@@ -3,7 +3,6 @@ class OutzoneInvalidEmailDomainsJob < ApplicationJob
 
   def perform
     domains = Domain.where("force_delete_data->'template_name' = ?", 'invalid_email')
-                    .where("force_delete_data->'force_delete_type' = ?", 'soft')
                     .where(outzone_at: nil)
                     .where('Date(force_delete_start) <= ?', Time.zone.now)
 
