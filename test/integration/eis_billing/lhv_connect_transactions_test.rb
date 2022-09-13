@@ -8,8 +8,6 @@ class LhvConnectTransactionsIntegrationTest < ApplicationIntegrationTest
   end
 
   def test_should_saved_transaction_data
-    return unless Feature.billing_system_integrated?
-
     test_transaction_1 = OpenStruct.new(amount: 0.1,
                                         currency: 'EUR',
                                         date: Time.zone.today,

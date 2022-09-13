@@ -145,54 +145,46 @@ class RegistrarTest < ActiveJob::TestCase
   end
 
   def test_issues_new_invoice
-    if Feature.billing_system_integrated?
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
-        to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
 
-      invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
 
-      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+    stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
 
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
-        to_return(status: 200, body: "", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+      to_return(status: 200, body: "", headers: {})
 
-      travel_to Time.zone.parse('2010-07-05')
-      Setting.days_to_keep_invoices_active = 10
+    travel_to Time.zone.parse('2010-07-05')
+    Setting.days_to_keep_invoices_active = 10
 
-      invoice = @registrar.issue_prepayment_invoice(100)
+    invoice = @registrar.issue_prepayment_invoice(100)
 
-      assert_equal Date.parse('2010-07-05'), invoice.issue_date
-      assert_equal Date.parse('2010-07-15'), invoice.due_date
-    end
+    assert_equal Date.parse('2010-07-05'), invoice.issue_date
+    assert_equal Date.parse('2010-07-15'), invoice.due_date
   end
 
   def test_issues_e_invoice_along_with_invoice
-    if Feature.billing_system_integrated?
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
-        to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
 
-      invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
 
-      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+    stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
 
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
-        to_return(status: 200, body: "", headers: {})
-    end
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+      to_return(status: 200, body: "", headers: {})
 
     EInvoice::Providers::TestProvider.deliveries.clear
 
     perform_enqueued_jobs do
       @registrar.issue_prepayment_invoice(100)
-    end
-
-    unless Feature.billing_system_integrated?
-      assert_equal 1, EInvoice::Providers::TestProvider.deliveries.count
     end
   end
 
