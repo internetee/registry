@@ -1,5 +1,7 @@
 module EisBilling
   class LhvConnectTransactionsController < EisBilling::BaseController
+    LABEL = 'billing.internet.ee/EE'.freeze
+
     def create
       if params['_json'].nil? || params['_json'].empty?
         render json: { message: 'MISSING PARAMS' }, status: :unprocessable_entity
@@ -23,6 +25,8 @@ module EisBilling
       logger.info incoming_transaction
 
       ActiveRecord::Base.transaction do
+        next if transaction_attributes(incoming_transaction)[:description].include? LABEL
+
         transaction = bank_statement.bank_transactions
                                     .create!(transaction_attributes(incoming_transaction))
 
