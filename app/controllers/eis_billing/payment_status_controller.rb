@@ -5,6 +5,9 @@ module EisBilling
     def update
       payment_status = define_payment_status(params[:payment_state])
       invoice = Invoice.find_by(number: params[:order_reference])
+
+      return if invoice.paid?
+
       bank = create_bank_transfer(invoice: invoice, sum: params[:standing_amount], paid_at: params[:transaction_time])
       create_payment_order(invoice: invoice, everypay_response: params, payment_status: payment_status)
 

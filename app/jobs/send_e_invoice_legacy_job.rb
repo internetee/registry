@@ -1,4 +1,4 @@
-class SendEInvoiceTwoJob < ApplicationJob
+class SendEInvoiceLegacyJob < ApplicationJob
   discard_on HTTPClient::TimeoutError
 
   def perform(invoice_id, payable: true)
@@ -6,8 +6,7 @@ class SendEInvoiceTwoJob < ApplicationJob
     invoice = Invoice.find_by(id: invoice_id)
     return unless need_to_process_invoice?(invoice: invoice, payable: payable)
 
-    send_invoice_to_eis_billing(invoice: invoice, payable: payable)
-    invoice.update(e_invoice_sent_at: Time.zone.now)
+    process(invoice: invoice, payable: payable)
   rescue StandardError => e
     log_error(invoice: invoice, error: e)
     raise e
@@ -17,15 +16,23 @@ class SendEInvoiceTwoJob < ApplicationJob
 
   def need_to_process_invoice?(invoice:, payable:)
     logger.info "Checking if need to process e-invoice #{invoice}, payable: #{payable}"
+    unprocessable = invoice.do_not_send_e_invoice? && (invoice.monthly_invoice ? true : payable)
     return false if invoice.blank?
-    return false if invoice.do_not_send_e_invoice? && payable
+    return false if unprocessable
 
     true
   end
 
-  def send_invoice_to_eis_billing(invoice:, payable:)
-    result = EisBilling::SendEInvoice.send_request(invoice: invoice, payable: payable)
-    logger.info result.body
+  def process(invoice:, payable:)
+    invoice.to_e_invoice(payable: payable).deliver unless Rails.env.development?
+    invoice.update(e_invoice_sent_at: Time.zone.now)
+    log_success(invoice)
+  end
+
+  def log_success(invoice)
+    id = invoice.try(:id) || invoice
+    message = "E-Invoice for an invoice with ID # #{id} was sent successfully"
+    logger.info message
   end
 
   def log_error(invoice:, error:)

@@ -4,6 +4,12 @@ class BankTransactionTest < ActiveSupport::TestCase
   setup do
     @registrar = registrars(:bestnames)
     @invoice = invoices(:one)
+
+    response_message = {
+      message: 'got it'
+    }
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_status')
+    .to_return(status: 200, body: response_message.to_json, headers: {})
   end
 
   def test_matches_against_invoice_nubmber_and_reference_number
@@ -16,8 +22,6 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_binds_if_this_sum_invoice_already_present
-    return unless Feature.billing_system_integrated?
-
     invoice_n = Invoice.order(number: :desc).last.number
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
       .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
@@ -45,8 +49,6 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_binds_if_this_sum_cancelled_invoice_already_present
-    return unless Feature.billing_system_integrated?
-
     invoice_n = Invoice.order(number: :desc).last.number
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
       .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
@@ -70,8 +72,6 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_marks_the_first_one_as_paid_if_same_sum
-    return unless Feature.billing_system_integrated?
-
     invoice_n = Invoice.order(number: :desc).last.number
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
       .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})

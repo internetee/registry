@@ -1,10 +1,14 @@
 require 'test_helper'
 
-class SendEInvoiceJobTest < ActiveJob::TestCase
+class SendEInvoiceLegacyJobTest < ActiveJob::TestCase
 
   def teardown
     EInvoice.provider = EInvoice::Providers::TestProvider.new
     EInvoice::Providers::TestProvider.deliveries.clear
+
+    msg = { message: 'success' }
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice")
+      .to_return(status: 200, body: msg.to_json, headers: {})
   end
 
   def test_if_invoice_is_sent
@@ -15,7 +19,7 @@ class SendEInvoiceJobTest < ActiveJob::TestCase
 
     assert_nothing_raised do
       perform_enqueued_jobs do
-        SendEInvoiceJob.perform_now(@invoice.id, payable: true)
+        SendEInvoiceLegacyJob.perform_now(@invoice.id, payable: true)
       end
     end
     @invoice.reload

@@ -7,6 +7,9 @@ class AdminAreaBankStatementTest < ApplicationSystemTestCase
 
     @invoice = invoices(:one)
     Spy.on_instance_method(EisBilling::BaseController, :authorized).and_return(true)
+    response_message = { message: 'got it' }
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_status')
+    .to_return(status: 200, body: response_message.to_json, headers: {})
   end
 
   def test_update_bank_statement
@@ -55,39 +58,37 @@ class AdminAreaBankStatementTest < ApplicationSystemTestCase
   end
 
   def test_can_bind_statement_transactions
-    if Feature.billing_system_integrated?
-      invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator")
-        .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
-      registrar = registrars(:bestnames)
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator")
+      .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+    registrar = registrars(:bestnames)
 
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
-        .to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
+      .to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
 
-      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response")
-        .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+    stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response")
+      .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
 
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice")
-        .to_return(status: 200, body: "", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice")
+      .to_return(status: 200, body: "", headers: {})
 
-      registrar.issue_prepayment_invoice(500)
-      invoice = registrar.invoices.last
+    registrar.issue_prepayment_invoice(500)
+    invoice = registrar.invoices.last
 
-      create_bank_statement
-      click_link_or_button 'Add'
-      assert_text 'Create bank transaction'
+    create_bank_statement
+    click_link_or_button 'Add'
+    assert_text 'Create bank transaction'
 
-      fill_in 'Description', with: "Invoice with id #{invoice.number}"
-      fill_in 'Reference number', with: invoice.reference_no
-      fill_in 'Sum', with: invoice.total
-      fill_in 'Paid at', with: Time.zone.today.to_s
-      click_link_or_button 'Save'
+    fill_in 'Description', with: "Invoice with id #{invoice.number}"
+    fill_in 'Reference number', with: invoice.reference_no
+    fill_in 'Sum', with: invoice.total
+    fill_in 'Paid at', with: Time.zone.today.to_s
+    click_link_or_button 'Save'
 
-      click_link_or_button 'Back to bank statement'
-      click_link_or_button 'Bind invoices'
+    click_link_or_button 'Back to bank statement'
+    click_link_or_button 'Bind invoices'
 
-      assert_text 'Invoices were fully binded'
-    end
+    assert_text 'Invoices were fully binded'
   end
 
   def create_bank_statement

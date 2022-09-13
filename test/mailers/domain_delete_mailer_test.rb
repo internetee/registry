@@ -73,4 +73,21 @@ class DomainDeleteMailerTest < ActionMailer::TestCase
                  ' / Domain shop.test is in deletion process' \
                  ' / Домен shop.test в процессе удаления', email.subject
   end
+
+  def test_forced_invalid_email
+    @domain.update(template_name: 'invalid_email')
+    @domain.reload
+
+    email = DomainDeleteMailer.forced(domain: @domain,
+                                      registrar: @domain.registrar,
+                                      registrant: @domain.registrant,
+                                      template_name: @domain.template_name).deliver_now
+
+    assert_emails 1
+    assert_equal ['legal@registry.test'], email.from
+    assert @domain.force_delete_contact_emails.sort == email.to.sort
+    assert_equal 'Domeen shop.test on kustutusmenetluses' \
+                 ' / Domain shop.test is in deletion process' \
+                 ' / Домен shop.test в процессе удаления', email.subject
+  end
 end

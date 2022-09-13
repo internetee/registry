@@ -725,6 +725,10 @@ class Domain < ApplicationRecord
     DNS::DomainName.new(name)
   end
 
+  def contact_emails_verification_failed
+    contacts.select(&:email_verification_failed?)&.map(&:email)&.uniq
+  end
+
   def as_csv_row
     [
       name,

@@ -12,6 +12,18 @@ class ReppV1InvoicesAddCreditTest < ActionDispatch::IntegrationTest
     eis_response = OpenStruct.new(body: '{"everypay_link":"https://link.test"}')
     Spy.on_instance_method(EisBilling::AddDeposits, :send_invoice).and_return(eis_response)
     Spy.on_instance_method(EisBilling::BaseController, :authorized).and_return(true)
+
+    invoice = Invoice.last
+    msg = {
+      invoice_number: invoice.number + 3
+    }
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator")
+      .to_return(status: 200, body: msg.to_json, headers: {})
+
+    msg2 = {
+      message: 'success'
+    }
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").to_return(status: 200, body: msg2.to_json, headers: {})
   end
 
   teardown do
@@ -28,13 +40,11 @@ class ReppV1InvoicesAddCreditTest < ActionDispatch::IntegrationTest
     Setting.registry_vat_prc = 0.1
     ENV['billing_system_integrated'] = 'true'
 
-    if Feature.billing_system_integrated?
-      invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
-        .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
-      stub_request(:post, 'https://eis_billing_system:3000/api/v1/e_invoice/e_invoice')
-        .to_return(status: 200, body: '', headers: {})
-    end
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
+      .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/e_invoice/e_invoice')
+      .to_return(status: 200, body: '', headers: {})
 
     post '/repp/v1/invoices/add_credit', headers: @auth_headers,
                                          params: request_body

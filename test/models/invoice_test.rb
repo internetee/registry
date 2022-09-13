@@ -118,69 +118,65 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   def test_creates_invoice_with_bank_transaction_total
-    if Feature.billing_system_integrated?
-      registrar = registrars(:bestnames)
-      transaction = bank_transactions(:one).dup
-      transaction.reference_no = registrar.reference_no
-      transaction.sum = 250
+    registrar = registrars(:bestnames)
+    transaction = bank_transactions(:one).dup
+    transaction.reference_no = registrar.reference_no
+    transaction.sum = 250
 
-      invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator")
-        .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator")
+      .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
 
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
-        .to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
+      .to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
 
-      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+    stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
 
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
-        to_return(status: 200, body: "", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+      to_return(status: 200, body: "", headers: {})
 
-      invoice = Invoice.create_from_transaction!(transaction)
-      assert_equal 250, invoice.total
+    invoice = Invoice.create_from_transaction!(transaction)
+    assert_equal 250, invoice.total
 
-      invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 4}\"}", headers: {})
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 4}\"}", headers: {})
 
-      transaction.sum = 146.88
-      invoice = Invoice.create_from_transaction!(transaction)
-      assert_equal 146.88, invoice.total
+    transaction.sum = 146.88
+    invoice = Invoice.create_from_transaction!(transaction)
+    assert_equal 146.88, invoice.total
 
-      invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 5}\"}", headers: {})
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 5}\"}", headers: {})
 
-      transaction.sum = 0.99
-      invoice = Invoice.create_from_transaction!(transaction)
-      assert_equal 0.99, invoice.total
-    end
+    transaction.sum = 0.99
+    invoice = Invoice.create_from_transaction!(transaction)
+    assert_equal 0.99, invoice.total
   end
 
   def test_emails_invoice_after_creating_topup_invoice
-    if Feature.billing_system_integrated?
-      invoice_n = Invoice.order(number: :desc).last.number
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
-        to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
 
-      stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
-        to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
+    stub_request(:put, "https://registry:3000/eis_billing/e_invoice_response").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
 
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
-        to_return(status: 200, body: "", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+      to_return(status: 200, body: "", headers: {})
 
-      registrar = registrars(:bestnames)
-      transaction = bank_transactions(:one).dup
-      transaction.reference_no = registrar.reference_no
-      transaction.sum = 250
+    registrar = registrars(:bestnames)
+    transaction = bank_transactions(:one).dup
+    transaction.reference_no = registrar.reference_no
+    transaction.sum = 250
 
-      response = OpenStruct.new(body: "{\"invoice_number\":\"#{invoice_n + 3}\"}")
-      Spy.on(EisBilling::GetInvoiceNumber, :send_invoice).and_return(response)
+    response = OpenStruct.new(body: "{\"invoice_number\":\"#{invoice_n + 3}\"}")
+    Spy.on(EisBilling::GetInvoiceNumber, :send_invoice).and_return(response)
 
-      assert_emails 1 do
-        Invoice.create_from_transaction!(transaction)
-      end
+    assert_emails 1 do
+      Invoice.create_from_transaction!(transaction)
     end
   end
 end
