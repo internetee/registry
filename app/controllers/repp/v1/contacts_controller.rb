@@ -193,7 +193,7 @@ module Repp
       def contact_create_params(required: true)
         create_params = %i[name email phone]
         contact_params.require(create_params) if required
-        contact_params.slice(*create_params)
+        contact_params.slice(:id, *create_params)
       end
 
       def contact_ident_params(required: true)
@@ -211,7 +211,7 @@ module Repp
       end
 
       def contact_params
-        params.require(:contact).permit(:name, :email, :phone, :legal_document,
+        params.require(:contact).permit(:id, :name, :email, :phone, :legal_document,
                                         legal_document: %i[body type],
                                         ident: [%i[ident ident_type ident_country_code]],
                                         addr: [%i[country_code city street zip state]])

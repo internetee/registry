@@ -1,3 +1,21 @@
+08.09.2022
+* Fixed template error for multi-year registered domains in force delete process [#2435](https://github.com/internetee/registry/issues/2435)
+
+02.09.2022
+* Update invoice status on payment order payments [#2427](https://github.com/internetee/registry/pull/2427)
+
+01.09.2022
+* Monthly invoice payment status fix [#2428](https://github.com/internetee/registry/issues/2428)
+
+31.08.2022
+* new fully automated process for registrar monthly invoices [#2424](https://github.com/internetee/registry/pull/2424)
+
+25.08.2022
+* Contact creation fix to not require postal addresses in Registrar portal [#2421](https://github.com/internetee/registry/pull/2421)
+
+23.08.2022
+* REPP update to fix search by registrant in Registrar portal [#2425](https://github.com/internetee/registry/pull/2425)
+
 21.07.2022
 * Removed deprecated statuses_before_force_delete field [#2363](https://github.com/internetee/registry/issues/2363)
 

@@ -1,6 +1,6 @@
 require "test_helper"
 
-class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
+class DirectoInvoiceForwardLegacyJobTest < ActiveSupport::TestCase
   setup do
     @invoice = invoices(:one)
     @user = registrars(:bestnames)
@@ -8,9 +8,9 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
   end
 
   def teardown
-    Setting.directo_monthly_number_min = 309901
-    Setting.directo_monthly_number_max = 309999
-    Setting.directo_monthly_number_last = 309901
+    Setting.directo_monthly_number_min = 309_901
+    Setting.directo_monthly_number_max = 309_999
+    Setting.directo_monthly_number_last = 309_901
   end
 
   def test_directo_json_sends_customer_as_hash
@@ -38,7 +38,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     end.to_return(status: 200, body: response)
 
     assert_nothing_raised do
-      DirectoInvoiceForwardJob.perform_now(monthly: false, dry: false)
+      DirectoInvoiceForwardLegacyJob.perform_now(monthly: false, dry: false)
     end
 
     assert_not_empty @invoice.directo_records.first.request
@@ -49,10 +49,10 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     price = billing_prices(:create_one_year)
     activity.update!(activity_type: 'create', price: price)
 
-    Setting.directo_monthly_number_max = 30991
+    Setting.directo_monthly_number_max = 30_991
 
     assert_raises 'RuntimeError' do
-      DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
+      DirectoInvoiceForwardLegacyJob.perform_now(monthly: true, dry: false)
     end
   end
 
@@ -78,7 +78,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     end.to_return(status: 200, body: response)
 
     assert_difference 'Setting.directo_monthly_number_last' do
-      DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
+      DirectoInvoiceForwardLegacyJob.perform_now(monthly: true, dry: false)
     end
   end
 
@@ -103,7 +103,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     end.to_return(status: 200, body: response)
 
     assert_difference 'Setting.directo_monthly_number_last' do
-      DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
+      DirectoInvoiceForwardLegacyJob.perform_now(monthly: true, dry: false)
     end
   end
 
@@ -126,7 +126,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     end.to_return(status: 200, body: response)
 
     assert_difference 'Setting.directo_monthly_number_last' do
-      DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
+      DirectoInvoiceForwardLegacyJob.perform_now(monthly: true, dry: false)
     end
   end
 
@@ -148,7 +148,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
     end.to_return(status: 200, body: response)
 
     assert_difference 'Setting.directo_monthly_number_last' do
-      DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
+      DirectoInvoiceForwardLegacyJob.perform_now(monthly: true, dry: false)
     end
   end
 
@@ -186,7 +186,7 @@ class DirectoInvoiceForwardJobTest < ActiveSupport::TestCase
       (body.include? 'StartDate') && (body.include? 'EndDate') && (body.include? 'goodnames')
     end.to_return(status: 200, body: response)
 
-    DirectoInvoiceForwardJob.perform_now(monthly: true, dry: false)
+    DirectoInvoiceForwardLegacyJob.perform_now(monthly: true, dry: false)
 
     assert_requested first_registrar_stub
     assert_requested second_registrar_stub

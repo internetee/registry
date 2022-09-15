@@ -12,7 +12,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <%= f.label t(:status) %>
-                        <%= select_tag :status, options_for_select(%w(Paid Unpaid Cancelled),params[:status]),
+                        <%= select_tag :status, options_for_select(%w(Paid Unpaid Cancelled Monthly),params[:status]),
                                        { multiple: false, include_blank: true, selected: params[:status], class: 'form-control selectize'} %>
                     </div>
                 </div>

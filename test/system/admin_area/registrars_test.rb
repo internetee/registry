@@ -14,30 +14,28 @@ class AdminRegistrarsSystemTest < ApplicationSystemTestCase
   end
 
   def test_creates_new_registrar
-    if Feature.billing_system_integrated?
-      stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/reference_number_generator").
-        to_return(status: 200, body: "{\"reference_number\":\"12332\"}", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/reference_number_generator").
+      to_return(status: 200, body: "{\"reference_number\":\"12332\"}", headers: {})
 
-      assert_nil Registrar.find_by(name: 'Acme Ltd')
+    assert_nil Registrar.find_by(name: 'Acme Ltd')
 
-      visit admin_registrars_path
-      click_on 'New registrar'
+    visit admin_registrars_path
+    click_on 'New registrar'
 
-      fill_in 'Name', with: 'Acme Ltd'
-      fill_in 'Reg no', with: '1234'
-      fill_in 'Contact e-mail', with: 'any@acme.test'
-      fill_in 'Street', with: 'any'
-      fill_in 'City', with: 'any'
-      fill_in 'State / Province', with: 'any'
-      fill_in 'Zip', with: 'any'
-      select 'United States', from: 'Country'
-      fill_in 'Accounting customer code', with: 'test'
-      fill_in 'Code', with: 'test'
-      click_on 'Create registrar'
+    fill_in 'Name', with: 'Acme Ltd'
+    fill_in 'Reg no', with: '1234'
+    fill_in 'Contact e-mail', with: 'any@acme.test'
+    fill_in 'Street', with: 'any'
+    fill_in 'City', with: 'any'
+    fill_in 'State / Province', with: 'any'
+    fill_in 'Zip', with: 'any'
+    select 'United States', from: 'Country'
+    fill_in 'Accounting customer code', with: 'test'
+    fill_in 'Code', with: 'test'
+    click_on 'Create registrar'
 
-      assert_text 'Registrar has been successfully created'
-      assert_text 'Acme Ltd'
-    end
+    assert_text 'Registrar has been successfully created'
+    assert_text 'Acme Ltd'
   end
 
   def test_updates_registrar
