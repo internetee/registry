@@ -518,30 +518,6 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_not @domain.force_delete_scheduled?
   end
 
-  def test_lifts_force_delete_after_changing_to_valid_email
-    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
-    assert_not @domain.force_delete_scheduled?
-    travel_to Time.zone.parse('2010-07-05')
-    @domain.registrant.update_attribute(:email, '`@internet.ee')
-    3.times { @domain.registrant.verify_email }
-    perform_check_force_delete_job(@domain.registrant.id)
-    @domain.reload
-
-    assert @domain.force_delete_scheduled?
-
-    @domain.registrant.update(email: 'aaa@bbb.ee')
-    @domain.registrant.verify_email
-    perform_enqueued_jobs
-    @domain.reload
-
-    assert @domain.registrant.need_to_lift_force_delete?
-
-    perform_enqueued_jobs { ForceDeleteLiftJob.perform_now }
-    @domain.reload
-
-    assert_not @domain.force_delete_scheduled?
-  end
-
   def prepare_bounced_email_address(email)
     @bounced_mail = BouncedMailAddress.new
     @bounced_mail.email = email
