@@ -1,4 +1,4 @@
-class CheckForceDeleteLift < ApplicationJob
+class ForceDeleteLiftJob < ApplicationJob
   queue_as :default
 
   def perform

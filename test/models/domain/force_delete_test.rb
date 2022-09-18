@@ -453,6 +453,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     travel_to Time.zone.parse('2010-07-05 0:00:03')
     contact_first.verify_email
 
+    perform_enqueued_jobs
     perform_check_force_delete_job(contact_first.id)
     domain.reload
 
@@ -511,7 +512,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.registrant.update(email: 'aaa@bbb.com', email_history: email)
     @domain.registrant.verify_email
     assert @domain.registrant.need_to_lift_force_delete?
-    CheckForceDeleteLift.perform_now
+    ForceDeleteLiftJob.perform_now
 
     @domain.reload
     assert_not @domain.force_delete_scheduled?
@@ -530,11 +531,12 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     @domain.registrant.update(email: 'aaa@bbb.ee')
     @domain.registrant.verify_email
+    perform_enqueued_jobs
     @domain.reload
 
     assert @domain.registrant.need_to_lift_force_delete?
 
-    perform_enqueued_jobs { CheckForceDeleteLift.perform_now }
+    perform_enqueued_jobs { ForceDeleteLiftJob.perform_now }
     @domain.reload
 
     assert_not @domain.force_delete_scheduled?
