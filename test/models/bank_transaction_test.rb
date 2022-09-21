@@ -37,8 +37,7 @@ class BankTransactionTest < ActiveSupport::TestCase
 
     first_transaction = BankTransaction.new(sum: 10,
                                             description: 'Order nr 1 from registrar 1234567 second number 2345678')
-
-    first_transaction.create_activity(another_invoice.buyer, another_invoice)
+    first_transaction.bind_invoice(another_invoice.number)
 
     transaction = BankTransaction.new(sum: 10,
                                       description: 'Order nr 1 from registrar 1234567 second number 2345678')
