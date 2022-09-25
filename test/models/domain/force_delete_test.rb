@@ -453,12 +453,11 @@ class ForceDeleteTest < ActionMailer::TestCase
     travel_to Time.zone.parse('2010-07-05 0:00:03')
     contact_first.verify_email
 
-    perform_enqueued_jobs
-    perform_check_force_delete_job(contact_first.id)
+    perform_enqueued_jobs { CheckForceDeleteLift.perform_now }
     domain.reload
 
-    assert_equal domain.status_notes[DomainStatus::FORCE_DELETE], invalid_email
-    notification = domain.registrar.notifications.last
+    assert_nil domain.status_notes[DomainStatus::FORCE_DELETE]
+    notification = domain.registrar.notifications.last(2).first
     assert notification.text.include? asserted_text
   end
 
