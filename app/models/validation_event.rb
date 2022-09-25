@@ -35,8 +35,6 @@ class ValidationEvent < ApplicationRecord
   scope :smtp, -> { where('event_data @> ?', { 'check_level': 'smtp' }.to_json) }
   scope :by_object, ->(object) { where(validation_eventable: object) }
 
-  after_create :check_force_delete_lift
-
   def self.validated_ids_by(klass)
     old_records
       .successful
@@ -58,11 +56,5 @@ class ValidationEvent < ApplicationRecord
 
   def object
     validation_eventable
-  end
-
-  private
-
-  def check_force_delete_lift
-    CheckForceDeleteLiftJob.perform_later(id, object.id) if object.need_to_lift_force_delete?
   end
 end
