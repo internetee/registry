@@ -101,6 +101,11 @@ en:
           attributes:
             value:
               taken: 'Status already exists on this domain'
+        
+        invoice:
+          attributes:
+            base:
+              invoice_status_prohibits_operation: 'Invoice status prohibits operation'
 
         user:
           attributes:
@@ -479,6 +484,8 @@ en:
   invoice:
     title: 'Invoice'
     already_paid: " (already paid)"
+    monthly_invoice: " (monthly invoice)"
+    monthly_invoice_description: 'Monthly invoice'
   bank_statements: 'Bank statements'
   back_to_bank_statements: 'Back to bank statements'
   back_to_bank_statement: 'Back to bank statement'

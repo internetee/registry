@@ -14,7 +14,8 @@ class Invoice
     private
 
     def invoice_html
-      ApplicationController.render(template: 'invoice/pdf', assigns: { invoice: invoice })
+      template = invoice.monthly_invoice ? 'invoice/monthly_pdf' : 'invoice/pdf'
+      ApplicationController.render(template: template, assigns: { invoice: invoice })
     end
   end
 end

@@ -16,8 +16,8 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
 
     payload = {
       domain: {
-        auth_code: new_auth_code
-      }
+        auth_code: new_auth_code,
+      },
     }
 
     put "/repp/v1/domains/#{@domain.name}", headers: @auth_headers, params: payload.to_json
@@ -40,9 +40,9 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
     payload = {
       domain: {
         registrant: {
-          code: new_registrant.code
-        }
-      }
+          code: new_registrant.code,
+        },
+      },
     }
 
     put "/repp/v1/domains/#{@domain.name}", headers: @auth_headers, params: payload.to_json
@@ -67,13 +67,14 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
       domain: {
         registrant: {
           code: new_registrant.code,
-          verified: true
-        }
-      }
+          verified: true,
+        },
+      },
     }
 
     put "/repp/v1/domains/#{@domain.name}", headers: @auth_headers, params: payload.to_json
     @domain.reload
+
     json = JSON.parse(response.body, symbolize_names: true)
     assert_response :ok
     assert_equal 1000, json[:code]

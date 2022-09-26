@@ -15,12 +15,11 @@ class ReppV1ContactsListTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_equal @user.registrar.contacts.count, json[:total_number_of_records]
-    assert_equal @user.registrar.contacts.count, json[:contacts].length
+    assert_equal @user.registrar.contacts.count, json[:data][:count]
+    assert_equal @user.registrar.contacts.count, json[:data][:contacts].length
 
-    assert json[:contacts][0].is_a? String
+    assert json[:data][:contacts][0].is_a? String
   end
-
 
   def test_returns_detailed_registrar_contacts
     get repp_v1_contacts_path(details: true), headers: @auth_headers
@@ -28,10 +27,10 @@ class ReppV1ContactsListTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_equal @user.registrar.contacts.count, json[:total_number_of_records]
-    assert_equal @user.registrar.contacts.count, json[:contacts].length
+    assert_equal @user.registrar.contacts.count, json[:data][:count]
+    assert_equal @user.registrar.contacts.count, json[:data][:contacts].length
 
-    assert json[:contacts][0].is_a? Hash
+    assert json[:data][:contacts][0].is_a? Hash
   end
 
   def test_respects_limit
@@ -40,7 +39,7 @@ class ReppV1ContactsListTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_equal 2, json[:contacts].length
+    assert_equal 2, json[:data][:contacts].length
   end
 
   def test_respects_offset
@@ -50,6 +49,34 @@ class ReppV1ContactsListTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_equal (@user.registrar.contacts.count - offset), json[:contacts].length
+    assert_equal (@user.registrar.contacts.count - offset), json[:data][:contacts].length
+  end
+
+  def test_returns_detailed_registrar_contacts_by_search_query
+    search_params = {
+      ident_type_eq: 'priv',
+    }
+    get repp_v1_contacts_path(details: true, q: search_params), headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+
+    assert_equal json[:data][:contacts].length, 3
+    assert json[:data][:contacts][0].is_a? Hash
+  end
+
+  def test_returns_detailed_registrar_contacts_by_sort_query
+    contact = contacts(:william)
+    sort_params = {
+      s: 'name desc',
+    }
+    get repp_v1_contacts_path(details: true, q: sort_params), headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+
+    assert_equal @user.registrar.contacts.count, json[:data][:count]
+    assert_equal @user.registrar.contacts.count, json[:data][:contacts].length
+    assert_equal json[:data][:contacts][0][:code], contact.code
   end
 end

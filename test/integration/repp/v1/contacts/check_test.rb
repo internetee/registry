@@ -14,7 +14,7 @@ class ReppV1ContactsCheckTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
-    assert_equal 'nonexistant:code', json[:data][:contact][:id]
+    assert_equal 'nonexistant:code', json[:data][:contact][:code]
     assert_equal true, json[:data][:contact][:available]
   end
 
@@ -24,7 +24,7 @@ class ReppV1ContactsCheckTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
-    assert_equal contact.code, json[:data][:contact][:id]
+    assert_equal contact.code, json[:data][:contact][:code]
     assert_equal false, json[:data][:contact][:available]
   end
 end

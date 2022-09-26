@@ -2,7 +2,7 @@ module Repp
   module V1
     module Registrar
       class NotificationsController < BaseController
-        before_action :set_notification, only: [:update]
+        before_action :set_notification, only: %i[update show]
 
         api :GET, '/repp/v1/registrar/notifications'
         desc 'Get the latest unread poll message'
@@ -39,7 +39,6 @@ module Repp
         api :GET, '/repp/v1/registrar/notifications/:notification_id'
         desc 'Get a specific poll message'
         def show
-          @notification = current_user.registrar.notifications.find(params[:id])
           data = @notification.as_json(only: %i[id text attached_obj_id attached_obj_type read])
 
           render_success(data: data)
@@ -51,6 +50,7 @@ module Repp
           param :read, [true, 'true'], required: true, desc: 'Set as true to mark as read'
         end
         def update
+          authorize! :manage, :poll
           # rubocop:disable Style/AndOr
           handle_errors(@notification) and return unless @notification.mark_as_read
           # rubocop:enable Style/AndOr

@@ -19,6 +19,8 @@
     %dd= l @invoice.receipt_date
   - elsif @invoice.cancelled?
     %dd.text-grey= t(:cancelled)
+  - elsif @invoice.monthly_invoice
+    %dd= l @invoice.issue_date
   - else
     %dd{class: 'text-danger'}= t(:unpaid)
 

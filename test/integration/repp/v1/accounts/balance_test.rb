@@ -10,6 +10,8 @@ class ReppV1BalanceTest < ActionDispatch::IntegrationTest
     @auth_headers = { 'Authorization' => token }
   end
 
+  
+
   def test_can_query_balance
     get '/repp/v1/accounts/balance', headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
@@ -44,8 +46,8 @@ class ReppV1BalanceTest < ActionDispatch::IntegrationTest
     assert_equal @registrar.registrar.cash_account.account_activities.last.new_balance.to_s, entry[:balance]
 
     json[:data][:transactions].map do |trans|
-        assert trans[:created_at].to_date.to_s(:db) >= started_from
-        assert trans[:created_at].to_date.to_s(:db) >= end_to
+      assert trans[:created_at].to_date.to_s(:db) >= started_from
+      assert trans[:created_at].to_date.to_s(:db) >= end_to
     end
   end
 end

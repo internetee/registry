@@ -52,6 +52,10 @@ class DomainPresenter
     end
   end
 
+  def contact_emails_verification_failed
+    domain.contact_emails_verification_failed.join(', ')
+  end
+
   def remove_registry_lock_btn
     return unless domain.locked_by_registrant?
 

@@ -6,7 +6,8 @@ class SendEInvoiceJob < ApplicationJob
     invoice = Invoice.find_by(id: invoice_id)
     return unless need_to_process_invoice?(invoice: invoice, payable: payable)
 
-    process(invoice: invoice, payable: payable)
+    send_invoice_to_eis_billing(invoice: invoice, payable: payable)
+    invoice.update(e_invoice_sent_at: Time.zone.now)
   rescue StandardError => e
     log_error(invoice: invoice, error: e)
     raise e
@@ -22,16 +23,9 @@ class SendEInvoiceJob < ApplicationJob
     true
   end
 
-  def process(invoice:, payable:)
-    invoice.to_e_invoice(payable: payable).deliver unless Rails.env.development?
-    invoice.update(e_invoice_sent_at: Time.zone.now)
-    log_success(invoice)
-  end
-
-  def log_success(invoice)
-    id = invoice.try(:id) || invoice
-    message = "E-Invoice for an invoice with ID # #{id} was sent successfully"
-    logger.info message
+  def send_invoice_to_eis_billing(invoice:, payable:)
+    result = EisBilling::SendEInvoice.send_request(invoice: invoice, payable: payable)
+    logger.info result.body
   end
 
   def log_error(invoice:, error:)

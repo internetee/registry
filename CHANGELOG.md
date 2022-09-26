@@ -1,4 +1,40 @@
+08.09.2022
+* Fixed template error for multi-year registered domains in force delete process [#2435](https://github.com/internetee/registry/issues/2435)
+
+02.09.2022
+* Update invoice status on payment order payments [#2427](https://github.com/internetee/registry/pull/2427)
+
+01.09.2022
+* Monthly invoice payment status fix [#2428](https://github.com/internetee/registry/issues/2428)
+
+31.08.2022
+* new fully automated process for registrar monthly invoices [#2424](https://github.com/internetee/registry/pull/2424)
+
+25.08.2022
+* Contact creation fix to not require postal addresses in Registrar portal [#2421](https://github.com/internetee/registry/pull/2421)
+
+23.08.2022
+* REPP update to fix search by registrant in Registrar portal [#2425](https://github.com/internetee/registry/pull/2425)
+
+21.07.2022
+* Removed deprecated statuses_before_force_delete field [#2363](https://github.com/internetee/registry/issues/2363)
+
+15.07.2022
+* REPP api update for new registrar portal [#2387](https://github.com/internetee/registry/pull/2387)
+
+4.07.2022
+* Update apipie-rails to 0.8.0 [#2383](https://github.com/internetee/registry/pull/2383)
+* Bump jmespath to 1.6.1 [#2388](https://github.com/internetee/registry/pull/2388)
+
+1.07.2022
+* Update pg to 1.4.1 [#2394](https://github.com/internetee/registry/pull/2394)
+* Update rack to 2.2.4 [#2398](https://github.com/internetee/registry/pull/2398)
+
+21.06.2022
+* Update pg to 1.4.0 [#2392](https://github.com/internetee/registry/pull/2392)
+
 02.06.2022
+* fix for force delete check query [#2380](https://github.com/internetee/registry/pull/2380)
 * Integration with the billing service [#2266](https://github.com/internetee/registry/pull/2266)
 
 25.05.2022

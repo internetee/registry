@@ -956,7 +956,6 @@ CREATE TABLE public.domains (
     force_delete_date date,
     statuses character varying[],
     status_notes public.hstore,
-    statuses_before_force_delete character varying[] DEFAULT '{}'::character varying[],
     upid integer,
     up_date timestamp without time zone,
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
@@ -1197,6 +1196,8 @@ CREATE TABLE public.invoices (
     issue_date date NOT NULL,
     e_invoice_sent_at timestamp without time zone,
     payment_link character varying,
+    monthly_invoice boolean DEFAULT false,
+    metadata jsonb,
     CONSTRAINT invoices_due_date_is_not_before_issue_date CHECK ((due_date >= issue_date))
 );
 
@@ -5407,10 +5408,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220216113112'),
 ('20220228093211'),
 ('20220316140727'),
+('20220406085500'),
 ('20220412130856'),
 ('20220413073315'),
 ('20220413084536'),
 ('20220413084748'),
 ('20220504090512'),
-('20220406085500'),
-('20220701113409');
+('20220524130709'),
+('20220701113409'),
+('20220818075833');

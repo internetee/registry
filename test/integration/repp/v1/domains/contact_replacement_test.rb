@@ -15,7 +15,7 @@ class ReppV1DomainsContactReplacementTest < ActionDispatch::IntegrationTest
 
     payload = {
       "current_contact_id": replaceable_contact.code,
-      "new_contact_id": replacing_contact.code
+      "new_contact_id": replacing_contact.code,
     }
 
     patch '/repp/v1/domains/contacts', headers: @auth_headers, params: payload
@@ -37,7 +37,7 @@ class ReppV1DomainsContactReplacementTest < ActionDispatch::IntegrationTest
 
     payload = {
       "current_contact_id": replaceable_contact.code,
-      "new_contact_id": replacing_contact.code
+      "new_contact_id": replacing_contact.code,
     }
 
     patch '/repp/v1/domains/contacts', headers: @auth_headers, params: payload
@@ -51,7 +51,7 @@ class ReppV1DomainsContactReplacementTest < ActionDispatch::IntegrationTest
   def test_contact_codes_must_be_valid
     payload = {
       "current_contact_id": 'dfgsdfg',
-      "new_contact_id": 'vvv'
+      "new_contact_id": 'vvv',
     }
 
     patch '/repp/v1/domains/contacts', headers: @auth_headers, params: payload
@@ -61,5 +61,4 @@ class ReppV1DomainsContactReplacementTest < ActionDispatch::IntegrationTest
     assert_equal 2303, json[:code]
     assert_equal 'Object does not exist', json[:message]
   end
-
 end

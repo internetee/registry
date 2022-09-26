@@ -718,12 +718,15 @@ class Domain < ApplicationRecord
     hash = super
     hash['auth_info'] = hash.delete('transfer_code') # API v1 requirement
     hash['valid_from'] = hash['created_at'] # API v1 requirement
-    hash.delete('statuses_before_force_delete')
     hash
   end
 
   def domain_name
     DNS::DomainName.new(name)
+  end
+
+  def contact_emails_verification_failed
+    contacts.select(&:email_verification_failed?)&.map(&:email)&.uniq
   end
 
   def as_csv_row

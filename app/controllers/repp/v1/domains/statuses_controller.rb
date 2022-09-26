@@ -7,7 +7,6 @@ module Repp
 
         api :DELETE, '/repp/v1/domains/:domain_name/statuses/:status'
         param :domain_name, String, desc: 'Domain name'
-        param :status, String, desc: 'Status to be removed'
         desc 'Remove status from specific domain'
         def destroy
           return editing_failed unless domain_with_status?(params[:id])
@@ -22,7 +21,6 @@ module Repp
 
         api :PUT, '/repp/v1/domains/:domain_name/statuses/:status'
         param :domain_name, String, desc: 'Domain name'
-        param :status, String, desc: 'Status to be added'
         desc 'Add status to specific domain'
         def update
           return editing_failed if domain_with_status?(params[:id])

@@ -4,6 +4,7 @@ class InvoiceMailer < ApplicationMailer
 
     subject = default_i18n_subject(invoice_number: invoice.number)
     subject << I18n.t('invoice.already_paid') if paid
+    subject << I18n.t('invoice.monthly_invoice') if invoice.monthly_invoice
     attachments["invoice-#{invoice.number}.pdf"] = invoice.as_pdf
     mail(to: recipient, subject: subject)
   end

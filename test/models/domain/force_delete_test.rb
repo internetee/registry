@@ -128,13 +128,6 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_empty @domain.statuses & statuses_to_be_removed, 'Pending actions should be stopped'
   end
 
-  def test_scheduling_force_delete_preserves_current_statuses
-    @domain.statuses = %w[test1 test2]
-    @domain.schedule_force_delete(type: :fast_track)
-    @domain.reload
-    assert_equal %w[test1 test2], @domain.statuses_before_force_delete
-  end
-
   def test_scheduling_force_delete_bypasses_validation
     @domain = domains(:invalid)
     @domain.schedule_force_delete(type: :fast_track)

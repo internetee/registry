@@ -1,0 +1,38 @@
+%h4= t(:items)
+%hr
+.table-responsive
+  %table.table.table-hover.table-condensed
+    %thead
+      %tr
+        %th{class: 'col-xs-1'}= t(:code)
+        %th{class: 'col-xs-1'}= InvoiceItem.human_attribute_name :quantity
+        %th{class: 'col-xs-1'}= t(:unit)
+        %th{class: 'col-xs-5'}= t(:description)
+        %th{class: 'col-xs-2'}= t(:price)
+        %th{class: 'col-xs-2'}= t(:total)
+    %tbody
+      - @invoice.each do |invoice_item|
+        %tr
+          %td= invoice_item.product_id
+          %td= invoice_item.quantity
+          %td= invoice_item.unit
+          %td= invoice_item.description
+          - if invoice_item.price && invoice_item.quantity
+            %td= currency(invoice_item.price)
+            %td= "#{currency((invoice_item.price * invoice_item.quantity).round(3))} #{@invoice.currency}"
+          - else 
+            %td= ''
+            %td= ''
+    %tfoot
+      %tr
+        %th{colspan: 4}
+        %th= Invoice.human_attribute_name :subtotal
+        %td= number_to_currency(0)
+      %tr
+        %th.no-border{colspan: 4}
+        %th= "VAT #{number_to_percentage(@invoice.vat_rate, precision: 1)}"
+        %td= number_to_currency(0)
+      %tr
+        %th.no-border{colspan: 4}
+        %th= t(:total)
+        %td= number_to_currency(0)

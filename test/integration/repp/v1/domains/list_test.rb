@@ -15,7 +15,7 @@ class ReppV1DomainsListTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_equal @user.registrar.domains.count, json[:data][:total_number_of_records]
+    assert_equal @user.registrar.domains.count, json[:data][:count]
     assert_equal @user.registrar.domains.count, json[:data][:domains].length
 
     assert json[:data][:domains][0].is_a? String
@@ -27,7 +27,7 @@ class ReppV1DomainsListTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
 
-    assert_equal @user.registrar.domains.count, json[:data][:total_number_of_records]
+    assert_equal @user.registrar.domains.count, json[:data][:count]
     assert_equal @user.registrar.domains.count, json[:data][:domains].length
 
     assert json[:data][:domains][0].is_a? Hash
@@ -63,5 +63,33 @@ class ReppV1DomainsListTest < ActionDispatch::IntegrationTest
 
     serialized_domain = Serializers::Repp::Domain.new(domain).to_json
     assert_equal serialized_domain.as_json, json[:data][:domain].as_json
+  end
+
+  def test_returns_detailed_registrar_domains_by_search_query
+    search_params = {
+      name_matches: '%library%',
+    }
+    get repp_v1_domains_path(details: true, q: search_params), headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+
+    assert_equal json[:data][:domains].length, 1
+    assert json[:data][:domains][0].is_a? Hash
+  end
+
+  def test_returns_detailed_registrar_domains_by_sort_query
+    domain = domains(:shop)
+    sort_params = {
+      s: 'name desc',
+    }
+    get repp_v1_domains_path(details: true, q: sort_params), headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+
+    assert_equal @user.registrar.domains.count, json[:data][:count]
+    assert_equal @user.registrar.domains.count, json[:data][:domains].length
+    assert_equal json[:data][:domains][0][:name], domain.name
   end
 end
