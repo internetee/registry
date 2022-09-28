@@ -36,7 +36,8 @@ class Domain < ApplicationRecord
                 :update_me,
                 :epp_pending_update,
                 :epp_pending_delete,
-                :reserved_pw
+                :reserved_pw,
+                :skip_papertrail
 
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
@@ -63,6 +64,14 @@ class Domain < ApplicationRecord
 
   def registrant_change_prohibited?
     statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
+  end
+
+  before_save do
+    PaperTrail.enabled = false if self.skip_papertrail
+  end
+
+  after_save do
+    PaperTrail.enabled = true
   end
 
   # NB! contacts, admin_contacts, tech_contacts are empty for a new record
@@ -210,6 +219,11 @@ class Domain < ApplicationRecord
     Dnsruby::Dnssec.clear_trust_anchors
     Dnsruby::Dnssec.clear_trusted_keys
     Dnsruby::Dnssec.add_trust_anchor(Dnsruby::RR.create(ENV['trusted_dnskey']))
+  end
+
+  def put_data_to_papertrail
+    self.skip_papertrail = false
+    self.save
   end
 
   def statuses_uniqueness
