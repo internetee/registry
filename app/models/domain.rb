@@ -67,7 +67,7 @@ class Domain < ApplicationRecord
   end
 
   before_save do
-    PaperTrail.enabled = false if self.skip_papertrail
+    PaperTrail.enabled = false if skip_papertrail
   end
 
   after_save do
@@ -223,7 +223,7 @@ class Domain < ApplicationRecord
 
   def put_data_to_papertrail
     self.skip_papertrail = false
-    self.save
+    save
   end
 
   def statuses_uniqueness
