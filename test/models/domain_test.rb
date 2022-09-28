@@ -475,6 +475,19 @@ class DomainTest < ActiveSupport::TestCase
     assert_not @domain.renewable?
   end
 
+  def test_should_not_create_versions_for_domain
+    assert_difference '@domain.versions.count' do
+      @domain.save
+    end
+
+    @domain.skip_papertrail = true
+    @domain.reload
+
+    assert_no_difference '@domain.versions.count' do
+      @domain.save
+    end
+  end
+
   private
 
   def valid_domain
