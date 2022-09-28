@@ -488,6 +488,18 @@ class DomainTest < ActiveSupport::TestCase
     end
   end
 
+  def test_should_create_new_papertrail_version_for_domain
+    @domain.skip_papertrail = true
+    @domain.reload
+    assert_no_difference '@domain.versions.count' do
+      @domain.update(updated_at: @domain.updated_at - 1.minute)
+    end
+
+    assert_difference '@domain.versions.count' do
+      @domain.put_data_to_papertrail
+    end
+  end
+
   private
 
   def valid_domain
