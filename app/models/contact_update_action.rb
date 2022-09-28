@@ -1,0 +1,1 @@
+class ContactUpdateAction < Action; end

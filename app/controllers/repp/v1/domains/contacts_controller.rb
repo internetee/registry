@@ -14,8 +14,8 @@ module Repp
         api :GET, '/repp/v1/domains/:domain_name/contacts'
         desc "View domain's admin and tech contacts"
         def index
-          admin_contacts = @domain.admin_domain_contacts.pluck(:contact_code_cache)
-          tech_contacts = @domain.tech_domain_contacts.pluck(:contact_code_cache)
+          admin_contacts = @domain.admin_domain_contacts.map(&:contact).pluck(:code)
+          tech_contacts = @domain.tech_domain_contacts.map(&:contact).pluck(:code)
 
           data = { admin_contacts: admin_contacts, tech_contacts: tech_contacts }
           render_success(data: data)
@@ -38,7 +38,6 @@ module Repp
         def cta(action = 'add')
           params[:contacts].each { |c| c[:action] = action }
           action = Actions::DomainUpdate.new(@domain, contact_create_params, false)
-
           # rubocop:disable Style/AndOr
           handle_errors(@domain) and return unless action.call
           # rubocop:enable Style/AndOr

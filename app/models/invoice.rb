@@ -32,28 +32,41 @@ class Invoice < ApplicationRecord
   # rubocop:enable Layout/LineLength
   # rubocop:enable Style/MultilineBlockLayout
   validates :due_date, :currency, :seller_name,
-            :seller_iban, :buyer_name, :items, presence: true
+            :seller_iban, :buyer_name, presence: true
+  validates :items, presence: true, unless: -> { monthly_invoice }
 
   before_create :set_invoice_number
   before_create :calculate_total, unless: :total?
   before_create :apply_default_buyer_vat_no, unless: :buyer_vat_no?
+  skip_callback :create, :before, :set_invoice_number, if: -> { monthly_invoice }
+  skip_callback :create, :before, :calculate_total, if: -> { monthly_invoice }
 
   attribute :vat_rate, ::Type::VatRate.new
 
-  def set_invoice_number
-    last_no = Invoice.order(number: :desc).limit(1).pick(:number)
+  def validate_invoice_number(result)
+    response = JSON.parse(result.body)
 
-    if last_no && last_no >= Setting.invoice_number_min.to_i
-      self.number = last_no + 1
-    else
-      self.number = Setting.invoice_number_min.to_i
-    end
+    billing_restrictions_issue if response['code'] == '403'
+    billing_out_of_range_issue if response['error'] == 'out of range'
+  end
 
-    return if number <= Setting.invoice_number_max.to_i
+  def billing_restrictions_issue
+    errors.add(:base, I18n.t('cannot get access'))
+    logger.error('PROBLEM WITH TOKEN')
+    throw(:abort)
+  end
 
+  def billing_out_of_range_issue
     errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
     logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
     throw(:abort)
+  end
+
+  def set_invoice_number
+    result = EisBilling::GetInvoiceNumber.send_invoice
+    validate_invoice_number(result)
+
+    self.number = JSON.parse(result.body)['invoice_number'].to_i
   end
 
   def to_s
@@ -82,7 +95,7 @@ class Invoice < ApplicationRecord
   end
 
   def subtotal
-    items.map(&:item_sum_without_vat).reduce(:+)
+    items.map(&:item_sum_without_vat).reduce(:+) || 0
   end
 
   def vat_amount
@@ -95,7 +108,11 @@ class Invoice < ApplicationRecord
   end
 
   def each(&block)
-    items.each(&block)
+    if monthly_invoice
+      metadata['items'].map { |el| OpenStruct.new(el) }.each(&block)
+    else
+      items.each(&block)
+    end
   end
 
   def as_pdf
@@ -143,6 +160,13 @@ class Invoice < ApplicationRecord
   end
 
   private
+
+  ransacker :number_str do
+    Arel.sql(
+      "regexp_replace(
+        to_char(\"#{table_name}\".\"number\", '999999999999'), ' ', '', 'g')"
+    )
+  end
 
   def receipt_date_status
     if paid?

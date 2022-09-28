@@ -36,7 +36,7 @@ class ValidateDnssecJob < ApplicationJob
     domain.nameservers.each do |n|
       next unless n.validated?
 
-      validate(hostname: n.hostname, domain: domain)
+      validate(nameserver: n, domain: domain)
 
       notify_contacts(domain)
       logger.info "----------------------------"
@@ -54,25 +54,26 @@ class ValidateDnssecJob < ApplicationJob
     # ContactNotification.notify_tech_contact(domain: domain, reason: 'dnssec')
   end
 
-  def validate(hostname:, domain:,  type: 'DNSKEY', klass: 'IN')
-    resolver = prepare_validator(hostname)
+  def validate(nameserver:, domain:,  type: 'DNSKEY', klass: 'IN')
+    resolver = prepare_validator(nameserver.hostname)
     answer = resolver.query(domain.name, type, klass)
 
-    return logger.info "no any data for #{domain.name} | hostname - #{hostname}" if answer.nil?
+    return logger.info "no any data for #{domain.name} | hostname - #{nameserver.hostname}" if answer.nil?
 
     logger.info "-----------"
-    logger.info "data for domain name - #{domain.name} | hostname - #{hostname}"
+    logger.info "data for domain name - #{domain.name} | hostname - #{nameserver.hostname}"
     logger.info "-----------"
 
     response_container = parse_response(answer)
 
-    compare_dnssec_data(response_container: response_container, domain: domain)
+    compare_dnssec_data(response_container: response_container, domain: domain, nameserver: nameserver)
   rescue Exception => e
-    logger.error "#{e.message} - domain name: #{domain.name} - hostname: #{hostname}"
+    logger.error "#{e.message} - domain name: #{domain.name} - hostname: #{nameserver.hostname}"
+    nameserver.update(failed_validation_reason: "#{e.message} - domain name: #{domain.name} - hostname: #{nameserver.hostname}")
     nil
   end
 
-  def compare_dnssec_data(response_container:, domain:)
+  def compare_dnssec_data(response_container:, domain:, nameserver:)
     domain.dnskeys.each do |key|
       next unless key.flags.to_s == '257'
       next if key.validation_datetime.present?
@@ -82,11 +83,15 @@ class ValidateDnssecJob < ApplicationJob
 
       if flag
         key.validation_datetime = Time.zone.now
+        key.failed_validation_reason = nil
         key.save
+        nameserver.failed_validation_reason = nil
+        nameserver.save
 
         logger.info text + " ------->> succesfully!"
       else
-        logger.info text + " ------->> not found in zone!"
+        key.update!(failed_validation_reason: text + " not found in zone! Domain name - #{domain.name}. Hostname - #{nameserver.hostname}")
+        logger.info text + " ------->> not found in zone! Domain name - #{domain.name}. Hostname - #{nameserver.hostname}"
       end
     end
   end
@@ -133,10 +138,11 @@ class ValidateDnssecJob < ApplicationJob
     inner_resolver.nameserver = nameserver
     inner_resolver.packet_timeout = timeouts.to_i
     inner_resolver.query_timeout = timeouts.to_i
-    resolver = Dnsruby::Recursor.new(inner_resolver)
-    resolver.dnssec = true
+    # resolver = Dnsruby::Recursor.new(inner_resolver)
+    # resolver.dnssec = true
 
-    resolver
+    # resolver
+    inner_resolver
   end
 
   def logger

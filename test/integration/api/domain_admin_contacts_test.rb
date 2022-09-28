@@ -18,19 +18,21 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
                       ident_country_code: 'LV')
 
     patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: @admin_current.code,
-                                                 new_contact_id: @admin_new.code },
-          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
+                                                       new_contact_id: @admin_new.code },
+                                             headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_response :bad_request
-    assert_equal ({ code: 2304, message: 'Admin contacts must be identical', data: {} }),
+    assert_equal ({ code: 2304,
+                    message: 'New and current admin contacts ident data must be identical',
+                    data: {} }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
   def test_replace_all_admin_contacts_of_the_current_registrar
     assert @admin_new.identical_to?(@admin_current)
     patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: @admin_current.code,
-                                                 new_contact_id: @admin_new.code },
-          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
+                                                       new_contact_id: @admin_new.code },
+                                             headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_nil domains(:shop).admin_contacts.find_by(code: @admin_current.code)
     assert domains(:shop).admin_contacts.find_by(code: @admin_new.code)
@@ -41,8 +43,8 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
     domains(:airport).update!(statuses: [DomainStatus::SERVER_UPDATE_PROHIBITED])
 
     patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: @admin_current.code,
-                                                 new_contact_id: @admin_new.code },
-          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
+                                                       new_contact_id: @admin_new.code },
+                                             headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert domains(:airport).admin_contacts.find_by(code: @admin_current.code)
   end
@@ -51,12 +53,13 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
     domain = domains(:airport)
     domain.admin_contacts = [@admin_current]
     patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: @admin_current.code,
-                                                 new_contact_id: @admin_new.code },
-          headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
+                                                       new_contact_id: @admin_new.code },
+                                             headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_response :ok
-    assert_equal ({ code: 1000, message: 'Command completed successfully', data: { affected_domains: %w[airport.test shop.test],
-                    skipped_domains: [] }}),
+    assert_equal ({ code: 1000, message: 'Command completed successfully',
+                    data: { affected_domains: %w[airport.test shop.test],
+                            skipped_domains: [] } }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 

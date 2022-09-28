@@ -52,6 +52,8 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
   end
 
   def test_can_remove_admin_contacts
+    Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
+
     contact = contacts(:john)
     payload = { contacts: [ { code: contact.code, type: 'admin' } ] }
     post "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload
@@ -68,6 +70,8 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
   end
 
   def test_can_remove_tech_contacts
+    Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
+    
     contact = contacts(:john)
     payload = { contacts: [ { code: contact.code, type: 'tech' } ] }
     post "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload
@@ -77,6 +81,9 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     delete "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload
     json = JSON.parse(response.body, symbolize_names: true)
 
+    @domain.reload
+    contact.reload
+
     assert_response :ok
     assert_equal 1000, json[:code]
 
@@ -84,6 +91,8 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
   end
 
   def test_can_not_remove_one_and_only_contact
+    Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
+
     contact = @domain.admin_contacts.last
 
     payload = { contacts: [ { code: contact.code, type: 'admin' } ] }
@@ -96,5 +105,4 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
 
     assert @domain.admin_contacts.any?
   end
-
 end

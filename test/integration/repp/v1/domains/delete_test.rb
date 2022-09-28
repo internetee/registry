@@ -15,9 +15,11 @@ class ReppV1DomainsDeleteTest < ActionDispatch::IntegrationTest
     @auth_headers['Content-Type'] = 'application/json'
 
     payload = {
-      delete: {
-        verified: false
-      }
+      domain: {
+        delete: {
+          verified: false,
+        },
+      },
     }
 
     delete "/repp/v1/domains/#{@domain.name}", headers: @auth_headers, params: payload.to_json
@@ -36,9 +38,11 @@ class ReppV1DomainsDeleteTest < ActionDispatch::IntegrationTest
     @auth_headers['Content-Type'] = 'application/json'
 
     payload = {
-      delete: {
-        verified: true
-      }
+      domain: {
+        delete: {
+          verified: true,
+        },
+      },
     }
 
     delete "/repp/v1/domains/#{@domain.name}", headers: @auth_headers, params: payload.to_json

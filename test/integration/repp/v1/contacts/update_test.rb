@@ -24,14 +24,14 @@ class ReppV1ContactsUpdateTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
-    contact = Contact.find_by(code: json[:data][:contact][:id])
+    contact = Contact.find_by(code: json[:data][:contact][:code])
     assert contact.present?
 
     assert_equal(request_body[:contact][:email], contact.email)
   end
 
   def test_removes_postal_info_when_updated
-    request_body =  {
+    request_body = {
       "contact": {
         "addr": {
           "city": "Tallinn",
@@ -49,7 +49,7 @@ class ReppV1ContactsUpdateTest < ActionDispatch::IntegrationTest
     assert_equal 1100, json[:code]
     assert_equal 'Command completed successfully; Postal address data discarded', json[:message]
 
-    contact = Contact.find_by(code: json[:data][:contact][:id])
+    contact = Contact.find_by(code: json[:data][:contact][:code])
     assert contact.present?
 
     assert_nil contact.city
@@ -81,14 +81,14 @@ class ReppV1ContactsUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_attaches_legaldoc_if_present
-    request_body =  {
-      "contact": {
-        "email": "donaldtrump@yandex.ru"
+    request_body = {
+      contact: {
+        email: 'donaldtrump@yandex.ru',
+        legal_document: {
+          type: 'pdf',
+          body: ('test' * 2000).to_s,
+        },
       },
-      "legal_document": {
-        "type": "pdf",
-        "body": "#{'test' * 2000}"
-      }
     }
 
     put "/repp/v1/contacts/#{@contact.code}", headers: @auth_headers, params: request_body
@@ -103,9 +103,11 @@ class ReppV1ContactsUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_returns_error_if_ident_wrong_format
-    request_body =  {
-      "contact": {
-        "ident": "123"
+    request_body = {
+      contact: {
+        ident: {
+          ident: '123',
+        }
       }
     }
 

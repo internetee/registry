@@ -234,7 +234,7 @@
                     %td= invoice_item.unit
                     %td= invoice_item.quantity
                     %td= currency(invoice_item.price)
-                    %td= "#{currency(invoice_item.item_sum_without_vat)} #{@invoice.currency}"
+                    %td= "#{currency(invoice_item.item_sum_without_vat)} #{@invoice.currency}"  
               %tfoot
                 %tr
                   %th{colspan: 3}

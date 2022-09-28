@@ -168,7 +168,7 @@ module Epp
 
         epp_errors.add(:epp_errors,
                        code: '2003',
-                       message: I18n.t('errors.messages.required_parameter_missing',
+                       msg: I18n.t('errors.messages.required_parameter_missing',
                                        key: "#{full_selector} [#{attr}]"))
       end
 

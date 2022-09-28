@@ -5,12 +5,13 @@
 /coverage/
 /.bundle
 /vendor/bundle
+/vendor/gems
 /config/database.yml
 /config/application.yml
 /config/environments/development.rb
 /config/deploy.rb
 /config/master.key
 /.idea
-
+/config/master.key
 # Do not commit one. Instead, download the latest from https://github.com/internetee/style-guide.
 .rubocop.yml

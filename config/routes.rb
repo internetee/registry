@@ -11,6 +11,13 @@ Rails.application.routes.draw do
     mount PgHero::Engine, at: "pghero"
   end
 
+  namespace :eis_billing do
+    put '/payment_status', to: 'payment_status#update', as: 'payment_status', :format => false, :defaults => { :format => 'json' }
+    put '/directo_response', to: 'directo_response#update', as: 'directo_response'
+    put '/e_invoice_response', to: 'e_invoice_response#update', as: 'e_invoice_response'
+    post '/lhv_connect_transactions', to: 'lhv_connect_transactions#create', as: 'lhv_connect_transactions'
+  end
+
   namespace :epp do
     constraints(EppConstraint.new(:session)) do
       get 'session/hello', to: 'sessions#hello', as: 'hello'
@@ -64,16 +71,40 @@ Rails.application.routes.draw do
       resources :contacts do
         collection do
           get 'check/:id', to: 'contacts#check'
+          get 'search(/:id)', to: 'contacts#search'
         end
       end
 
-      resources :accounts do
+      resource :accounts, only: %i[index update] do
         collection do
+          get '/', to: 'accounts#index'
           get 'balance'
+          get 'details'
+          post 'update_auto_reload_balance'
+          get 'disable_auto_reload_balance'
+        end
+        member do
+          put 'switch_user'
+        end
+      end
+      resources :invoices, only: %i[index show] do
+        collection do
+          get ':id/download', to: 'invoices#download'
+          post 'add_credit'
+        end
+        member do
+          post 'send_to_recipient', to: 'invoices#send_to_recipient'
+          put 'cancel', to: 'invoices#cancel'
         end
       end
       resources :auctions, only: %i[index]
       resources :retained_domains, only: %i[index]
+      resources :stats do
+        collection do
+          get '/market_share_distribution', to: 'stats#market_share_distribution'
+          get '/market_share_growth_rate', to: 'stats#market_share_growth_rate'
+        end
+      end
       namespace :registrar do
         resources :notifications, only: [:index, :show, :update] do
           collection do
@@ -89,6 +120,12 @@ Rails.application.routes.draw do
         resources :nameservers do
           collection do
             put '/', to: 'nameservers#update'
+          end
+        end
+        resources :summary, only: %i[index]
+        resources :auth, only: %i[index] do
+          collection do
+            post '/tara_callback', to: 'auth#tara_callback'
           end
         end
       end
@@ -139,9 +176,9 @@ Rails.application.routes.draw do
       namespace :accreditation_center do
         # At the moment invoice_status endpoint returns only cancelled invoices. But in future logic of this enpoint can change.
         # And it will need to return invoices of different statuses. I decided to leave the name of the endpoint "invoice_status"
-        resources :invoice_status, only: [ :index ]
-        resource :domains, only: [ :show ], param: :name
-        resource :contacts, only: [ :show ], param: :id
+        resources :invoice_status, only: [:index]
+        resource :domains, only: [:show], param: :name
+        resource :contacts, only: [:show], param: :id
         # resource :auth, only: [ :index ]
         get 'auth', to: 'auth#index'
       end
@@ -152,7 +189,7 @@ Rails.application.routes.draw do
     end
 
     match '*all', controller: 'cors', action: 'cors_preflight_check', via: [:options],
-      as: 'cors_preflight_check'
+                  as: 'cors_preflight_check'
   end
 
   # REGISTRAR ROUTES
@@ -266,6 +303,13 @@ Rails.application.routes.draw do
 
     resources :accounts
     resources :account_activities
+    resources :auctions, only: [ :index, :create ] do
+      collection do
+        post 'upload_spreadsheet', to: 'auctions#upload_spreadsheet', as: :upload_spreadsheet
+      end
+    end
+    # post 'admi/upload_spreadsheet', to: 'customers#upload_spreadsheet', as: :customers_upload_spreadsheet
+
 
     resources :bank_statements do
       resources :bank_transactions
@@ -334,6 +378,10 @@ Rails.application.routes.draw do
     resources :reserved_domains do
       member do
         get 'delete'
+      end
+
+      collection do
+        post 'release_to_auction', to: 'reserved_domains#release_to_auction', as: 'release_to_auction'
       end
     end
     resources :disputes do

@@ -4,6 +4,12 @@ class BankTransactionTest < ActiveSupport::TestCase
   setup do
     @registrar = registrars(:bestnames)
     @invoice = invoices(:one)
+
+    response_message = {
+      message: 'got it'
+    }
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_status')
+    .to_return(status: 200, body: response_message.to_json, headers: {})
   end
 
   def test_matches_against_invoice_nubmber_and_reference_number
@@ -16,6 +22,9 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_binds_if_this_sum_invoice_already_present
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
+      .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
     another_invoice = @invoice.dup
     another_invoice.save(validate: false)
@@ -40,10 +49,12 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_binds_if_this_sum_cancelled_invoice_already_present
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
+      .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
     another_invoice = @invoice.dup
     another_invoice.save(validate: false)
-
 
     another_item = @invoice.items.first.dup
     another_item.invoice = another_invoice
@@ -61,6 +72,9 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_marks_the_first_one_as_paid_if_same_sum
+    invoice_n = Invoice.order(number: :desc).last.number
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
+      .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
     create_payable_invoice(number: '2222', total: 10, reference_no: '1234567')
     another_invoice = @invoice.dup
     another_invoice.save(validate: false)
@@ -177,7 +191,7 @@ class BankTransactionTest < ActiveSupport::TestCase
 
   def test_parsed_ref_no_returns_nil_if_ref_not_found
     statement = BankTransaction.new
-    statement.description = "all invalid 12 123 55 77777 --"
+    statement.description = 'all invalid 12 123 55 77777 --'
     assert_nil statement.parsed_ref_number
   end
 
@@ -193,6 +207,7 @@ class BankTransactionTest < ActiveSupport::TestCase
       transaction.bind_invoice('2222')
     end
   end
+
   private
 
   def create_payable_invoice(attributes)

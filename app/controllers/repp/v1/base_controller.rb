@@ -1,12 +1,13 @@
 module Repp
   module V1
     class BaseController < ActionController::API # rubocop:disable Metrics/ClassLength
+      attr_reader :current_user
+
       around_action :log_request
       before_action :authenticate_user
       before_action :validate_webclient_ca
+      before_action :validate_client_certs
       before_action :check_ip_restriction
-      attr_reader :current_user
-
       before_action :set_paper_trail_whodunnit
 
       private
@@ -22,6 +23,10 @@ module Repp
       rescue Apipie::ParamInvalid => e
         @response = { code: 2005, message: e.message.gsub(/\n/, '. ') }
         render(json: @response, status: :bad_request)
+      rescue CanCan::AccessDenied => e
+        @response = { code: 2201, message: 'Authorization error' }
+        logger.error e.to_s
+        render(json: @response, status: :unauthorized)
       ensure
         create_repp_log
       end
@@ -65,7 +70,6 @@ module Repp
 
       def handle_errors(obj = nil)
         @epp_errors ||= ActiveModel::Errors.new(self)
-
         if obj
           obj.construct_epp_errors
           obj.errors.each { |error| @epp_errors.import error }
@@ -85,6 +89,12 @@ module Repp
         render(json: @response, status: status)
       end
 
+      def handle_non_epp_errors(obj, message = nil)
+        @response = { message: message || obj.errors.full_messages.join(', '),
+                      data: {} }
+        render(json: @response, status: :bad_request)
+      end
+
       def basic_token
         pattern = /^Basic /
         header  = request.headers['Authorization']
@@ -95,12 +105,14 @@ module Repp
       def authenticate_user
         username, password = Base64.urlsafe_decode64(basic_token).split(':')
         @current_user ||= ApiUser.find_by(username: username, plain_text_password: password)
+        user_active = @current_user.active?
 
-        return if @current_user
+        return if @current_user && user_active
 
         raise(ArgumentError)
       rescue NoMethodError, ArgumentError
-        @response = { code: 2202, message: 'Invalid authorization information' }
+        @response = { code: 2202, message: 'Invalid authorization information',
+                      data: { username: username, password: password, active: user_active } }
         render(json: @response, status: :unauthorized)
       end
 
@@ -114,7 +126,7 @@ module Repp
       end
 
       def webclient_request?
-        return if Rails.env.test?
+        return false if Rails.env.test? || Rails.env.development?
 
         ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
       end
@@ -123,6 +135,7 @@ module Repp
         return unless webclient_request?
 
         request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']
+
         webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
         return if request_name == webclient_cn
 
@@ -132,8 +145,27 @@ module Repp
         render(json: @response, status: :unauthorized)
       end
 
+      def validate_client_certs
+        return if Rails.env.development? || Rails.env.test?
+        return if webclient_request?
+        return if @current_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'],
+                                        request.env['HTTP_SSL_CLIENT_S_DN_CN'])
+
+        @response = { code: 2202, message: 'Invalid certificate' }
+        render(json: @response, status: :unauthorized)
+      end
+
       def logger
         Rails.logger
+      end
+
+      def auth_values_to_data(registrar:)
+        data = current_user.as_json(only: %i[id username roles])
+        data[:registrar_name] = registrar.name
+        data[:legaldoc_mandatory] = registrar.legaldoc_mandatory?
+        data[:address_processing] = Contact.address_processing?
+        data[:abilities] = Ability.new(current_user).permissions
+        data
       end
     end
   end

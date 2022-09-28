@@ -6,18 +6,26 @@ module Domains
       end
 
       def notify_without_email
-        domain.registrar.notifications.create!(text: I18n.t('force_delete_set_on_domain',
-                                                            domain_name: domain.name,
-                                                            outzone_date: domain.outzone_date,
-                                                            purge_date: domain.purge_date))
+        template = I18n.t('force_delete_set_on_domain',
+                          domain_name: domain.name,
+                          outzone_date: domain.outzone_date,
+                          purge_date: domain.purge_date)
+
+        return if domain.registrar&.notifications&.last&.text&.include? template
+
+        domain.registrar.notifications.create!(text: template)
       end
 
       def notify_with_email
-        domain.registrar.notifications.create!(text: I18n.t('force_delete_auto_email',
-                                                            domain_name: domain.name,
-                                                            outzone_date: domain.outzone_date,
-                                                            purge_date: domain.purge_date,
-                                                            email: email))
+        template = I18n.t('force_delete_auto_email',
+                          domain_name: domain.name,
+                          outzone_date: domain.outzone_date,
+                          purge_date: domain.purge_date,
+                          email: email)
+
+        return if domain.registrar&.notifications&.last&.text&.include? template
+
+        domain.registrar.notifications.create!(text: template)
       end
     end
   end

@@ -1,59 +1,31 @@
 class DirectoInvoiceForwardJob < ApplicationJob
   def perform(monthly: false, dry: false)
-    @dry = dry
-    (@month = Time.zone.now - 1.month) if monthly
+    data = nil
 
-    @client = new_directo_client
-    monthly ? send_monthly_invoices : send_receipts
+    if monthly
+      @month = Time.zone.now - 1.month
+      data = collect_monthly_data
+    else
+      data = collect_receipts_data
+    end
+
+    EisBilling::SendDataToDirecto.send_request(object_data: data, monthly: monthly, dry: dry)
   end
 
-  def new_directo_client
-    DirectoApi::Client.new(ENV['directo_invoice_url'], Setting.directo_sales_agent,
-                           Setting.directo_receipt_payment_term)
-  end
-
-  def send_receipts
+  def collect_receipts_data
     unsent_invoices = Invoice.where(in_directo: false).non_cancelled
+    collected_data = []
 
-    Rails.logger.info("[DIRECTO] Trying to send #{unsent_invoices.count} prepayment invoices")
     unsent_invoices.each do |invoice|
       unless valid_invoice_conditions?(invoice)
         Rails.logger.info "[DIRECTO] Invoice #{invoice.number} has been skipped"
         next
       end
-      @client.invoices.add_with_schema(invoice: invoice.as_directo_json, schema: 'prepayment')
+
+      collected_data << invoice.as_directo_json
     end
 
-    sync_with_directo
-  end
-
-  def send_monthly_invoices
-    Registrar.where.not(test_registrar: true).find_each do |registrar|
-      next unless registrar.cash_account
-
-      @client = new_directo_client
-      send_invoice_for_registrar(registrar)
-    end
-  end
-
-  def send_invoice_for_registrar(registrar)
-    summary = registrar.monthly_summary(month: @month)
-    @client.invoices.add_with_schema(invoice: summary, schema: 'summary') unless summary.nil?
-
-    sync_with_directo if @client.invoices.count.positive?
-  end
-
-  def assign_monthly_numbers
-    raise 'Directo Counter is going to be out of period!' if directo_counter_exceedable?(@client.invoices.count)
-
-    min_directo    = Setting.directo_monthly_number_min.presence.try(:to_i)
-    directo_number = [Setting.directo_monthly_number_last.presence.try(:to_i),
-                      min_directo].compact.max || 0
-
-    @client.invoices.each do |inv|
-      directo_number += 1
-      inv.number = directo_number
-    end
+    collected_data
   end
 
   def valid_invoice_conditions?(invoice)
@@ -67,28 +39,17 @@ class DirectoInvoiceForwardJob < ApplicationJob
     true
   end
 
-  def sync_with_directo
-    assign_monthly_numbers if @month
-    Rails.logger.info("[Directo] - attempting to send following XML:\n #{@client.invoices.as_xml}")
-    return if @dry
+  def collect_monthly_data
+    registrars_data = []
 
-    res = @client.invoices.deliver(ssl_verify: false)
-    process_directo_response(res.body, @client.invoices.as_xml)
-  rescue SocketError, Errno::ECONNREFUSED, Timeout::Error, Errno::EINVAL, Errno::ECONNRESET,
-         EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError
-    Rails.logger.info('[Directo] Failed to communicate via API')
-  end
-
-  def process_directo_response(xml, req)
-    Rails.logger.info "[Directo] - Responded with body: #{xml}"
-    Nokogiri::XML(xml).css('Result').each do |res|
-      if @month
-        mark_invoice_as_sent(res: res, req: req)
-      else
-        inv = Invoice.find_by(number: res.attributes['docid'].value.to_i)
-        mark_invoice_as_sent(invoice: inv, res: res, req: req)
-      end
+    Registrar.where.not(test_registrar: true).find_each do |registrar|
+      registrars_data << {
+        registrar: registrar,
+        registrar_summery: registrar.monthly_summary(month: @month),
+      }
     end
+
+    registrars_data
   end
 
   def mark_invoice_as_sent(invoice: nil, res:, req:)

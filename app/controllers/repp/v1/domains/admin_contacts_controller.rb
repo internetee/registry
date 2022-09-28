@@ -7,7 +7,7 @@ module Repp
 
           unless @new_contact.identical_to?(@current_contact)
             @epp_errors.add(:epp_errors,
-                            msg: 'Admin contacts must be identical',
+                            msg: 'New and current admin contacts ident data must be identical',
                             code: '2304')
           end
 

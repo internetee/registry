@@ -3,9 +3,14 @@ et:
   password: 'Parool'
 
   date:
-    # Don't forget the nil at the beginning; there's no such thing as a 0th month
-    month_names: [~, Jaanuar, Veebruar, Märts, Aprill, Mai, Juuni, Juuli, August, September, Oktoober, November, Detsember]
+    month_names:
+      [~, Jaanuar, Veebruar, Märts, April, Mai, Juuni, Juuli, August, September, Oktoober, November, Detsember]
+    formats:
+      default: "%Y-%m-%d"
+      month_year: "%B, %Y"
   emails: "Meillaadressid"
   invoice:
     title: 'Arve'
     already_paid: " (juba makstud)"
+    monthly_invoice: " (kuuaruanne)"
+    monthly_invoice_description: 'Kuuaruanne'

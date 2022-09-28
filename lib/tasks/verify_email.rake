@@ -4,7 +4,7 @@ require 'syslog/logger'
 require 'active_record'
 
 namespace :verify_email do
-  # bundle exec rake verify_email:check_all -- --domain_name=shop.test --check_level=mx --spam_protect=true
+  # bundle exec rake verify_email:check_all -- --check_level=mx --spam_protect=true
   # bundle exec rake verify_email:check_all -- -dshop.test -cmx -strue
   desc 'Starts verifying email jobs with optional check level and spam protection'
   task check_all: :environment do
@@ -18,17 +18,11 @@ namespace :verify_email do
     options = RakeOptionParserBoilerplate.process_args(options: options,
                                                        banner: banner,
                                                        hash: opts_hash)
-
-    batch_contacts = prepare_contacts(options)
-    logger.info 'No contacts to check email selected' and next if batch_contacts.blank?
-
-    batch_contacts.find_in_batches(batch_size: 10_000) do |contacts|
-      contacts.each do |contact|
-        VerifyEmailsJob.set(wait_until: spam_protect_timeout(options)).perform_later(
-          contact: contact,
-          check_level: check_level(options)
-        ) if filter_check_level(contact)
-      end
+    ValidationEvent.old_records.destroy_all
+    email_contacts = prepare_contacts(options)
+    email_contacts.each do |email|
+      VerifyEmailsJob.set(wait_until: spam_protect_timeout(options))
+                     .perform_later(email: email, check_level: check_level(options))
     end
   end
 end
@@ -45,10 +39,6 @@ def spam_protect_timeout(options)
   spam_protect(options) ? 0.seconds : SPAM_PROTECT_TIMEOUT
 end
 
-def logger
-  @logger ||= ActiveSupport::TaggedLogging.new(Syslog::Logger.new('registry'))
-end
-
 def prepare_contacts(options)
   if options[:domain_name].present?
     contacts_by_domain(options[:domain_name])
@@ -56,55 +46,27 @@ def prepare_contacts(options)
     time = Time.zone.now - ValidationEvent::VALIDATION_PERIOD
     validation_events_ids = ValidationEvent.where('created_at > ?', time).distinct.pluck(:validation_eventable_id)
 
-    contacts_ids = Contact.where.not(id: validation_events_ids).pluck(:id)
-    Contact.where(id: contacts_ids + failed_contacts)
+    contacts_emails = Contact.where.not(id: validation_events_ids).pluck(:email)
+    (contacts_emails + failed_email_contacts).uniq
   end
 end
 
-def filter_check_level(contact)
-  return true unless contact.validation_events.exists?
-
-  data = contact.validation_events.order(created_at: :asc).last
-
-  return true if data.successful? && data.created_at < (Time.zone.now - ValidationEvent::VALIDATION_PERIOD)
-
-  if data.failed?
-    return false if data.event_data['check_level'] == 'regex'
-
-    # return false if data.event_data['check_level'] == 'smtp'
-    #
-    # return false if check_mx_contact_validation(contact)
-
-    return true
-  end
-
-  false
-end
-
-def failed_contacts
+def failed_email_contacts
   failed_contacts = []
   failed_validations_ids = ValidationEvent.failed.distinct.pluck(:validation_eventable_id)
   contacts = Contact.where(id: failed_validations_ids).includes(:validation_events)
   contacts.find_each(batch_size: 10_000) do |contact|
-    failed_contacts << contact.id if filter_check_level(contact)
+    failed_contacts << contact.email
   end
 
   failed_contacts.uniq
 end
 
-# def check_mx_contact_validation(contact)
-#   data = contact.validation_events.mx.order(created_at: :asc).last(ValidationEvent::MX_CHECK)
-#
-#   return false if data.size < ValidationEvent::MX_CHECK
-#
-#   data.all? { |d| d.failed? }
-# end
-
 def contacts_by_domain(domain_name)
   domain = ::Domain.find_by(name: domain_name)
   return unless domain
 
-  domain.contacts
+  domain.contacts.pluck(:email).uniq
 end
 
 def opts_hash

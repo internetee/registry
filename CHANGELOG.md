@@ -1,3 +1,89 @@
+08.09.2022
+* Fixed template error for multi-year registered domains in force delete process [#2435](https://github.com/internetee/registry/issues/2435)
+
+02.09.2022
+* Update invoice status on payment order payments [#2427](https://github.com/internetee/registry/pull/2427)
+
+01.09.2022
+* Monthly invoice payment status fix [#2428](https://github.com/internetee/registry/issues/2428)
+
+31.08.2022
+* new fully automated process for registrar monthly invoices [#2424](https://github.com/internetee/registry/pull/2424)
+
+25.08.2022
+* Contact creation fix to not require postal addresses in Registrar portal [#2421](https://github.com/internetee/registry/pull/2421)
+
+23.08.2022
+* REPP update to fix search by registrant in Registrar portal [#2425](https://github.com/internetee/registry/pull/2425)
+
+21.07.2022
+* Removed deprecated statuses_before_force_delete field [#2363](https://github.com/internetee/registry/issues/2363)
+
+15.07.2022
+* REPP api update for new registrar portal [#2387](https://github.com/internetee/registry/pull/2387)
+
+4.07.2022
+* Update apipie-rails to 0.8.0 [#2383](https://github.com/internetee/registry/pull/2383)
+* Bump jmespath to 1.6.1 [#2388](https://github.com/internetee/registry/pull/2388)
+
+1.07.2022
+* Update pg to 1.4.1 [#2394](https://github.com/internetee/registry/pull/2394)
+* Update rack to 2.2.4 [#2398](https://github.com/internetee/registry/pull/2398)
+
+21.06.2022
+* Update pg to 1.4.0 [#2392](https://github.com/internetee/registry/pull/2392)
+
+02.06.2022
+* fix for force delete check query [#2380](https://github.com/internetee/registry/pull/2380)
+* Integration with the billing service [#2266](https://github.com/internetee/registry/pull/2266)
+
+25.05.2022
+* Fixed looping validation issue [#2377](https://github.com/internetee/registry/pull/2377)
+* ForceDelete query fix [#2380](https://github.com/internetee/registry/pull/2380)
+
+19.05.2022
+* Process to remove expired validation event records [#2236](https://github.com/internetee/registry/issues/2236)
+
+17.05.2022
+* removed unnecessary contact validation on contact create [#2376](https://github.com/internetee/registry/pull/2376)
+* Refactored email validation job [#2369](https://github.com/internetee/registry/pull/2369)
+* Job for deprecated validation events removal [#2374](https://github.com/internetee/registry/issues/2374)
+
+09.05.2022
+* test for auction view [#2373](https://github.com/internetee/registry/pull/2373)
+
+06.05.2022
+* refactored out the contact_code_cache from domain_contacts model [#2370](https://github.com/internetee/registry/issues/2370)
+
+28.04.2022
+* Fixed ns and dnssec validation error messages [#2296](https://github.com/internetee/registry/issues/2296)
+* Added status notes to REPP domain info output [#2331](https://github.com/internetee/registry/issues/2331)
+* Added auction list view to admin for improved ahandling of upcoming enlgish auction feature [#2341](https://github.com/internetee/registry/pull/2341)
+
+27.04.2022
+* Refactored email validation - reducing dns requests [#2364](https://github.com/internetee/registry/issues/2364)
+
+21.04.2022
+* Delay renovate Ruby version updates for 60 days [#2361](https://github.com/internetee/registry/issues/2361)
+
+20.04.2022
+* Contacts with disclosed attributes can now be updated [#2340](https://github.com/internetee/registry/issues/2340)
+* Legacy code fix [#2360](https://github.com/internetee/registry/pull/2360)
+
+19.04.2022
+* Rolled back ruby version to 3.0.3 [#2358](https://github.com/internetee/registry/pull/2358) 
+
+18.04.2022
+* Fixed error 2005 epp syntax issue [#2338](https://github.com/internetee/registry/issues/2338)
+* Fixed poll issue with email validations [#2343](https://github.com/internetee/registry/issues/2343)
+* Removed registrant portal code from registry project [#2350](https://github.com/internetee/registry/issues/2350) 
+
+14.04.2022
+* Removed legacy email verification code [#2349](https://github.com/internetee/registry/issues/2349)
+
+06.04.2022
+* Contact email validation on domain update [#2213](https://github.com/internetee/registry/issues/2213)
+
 05.04.2022
 * Automatic contact name update poll messages are now grouped together into one change poll message [#2307](https://github.com/internetee/registry/issues/2307)
 * Status notes are now added to status elements of epp xml [#2211](https://github.com/internetee/registry/issues/2211)

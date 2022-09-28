@@ -1,4 +1,4 @@
-class Registrar < ApplicationRecord
+class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include Versions # version/registrar_version.rb
   include Registrar::BookKeeping
   include EmailVerifable
@@ -34,12 +34,12 @@ class Registrar < ApplicationRecord
   attribute :vat_rate, ::Type::VatRate.new
   after_initialize :set_defaults
 
-  validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
-  validate :correct_billing_email_format
+  # validate :correct_email_format, if: proc { |c| c.will_save_change_to_email? }
+  # validate :correct_billing_email_format
 
   alias_attribute :contact_email, :email
 
-  WHOIS_TRIGGERS = %w(name email phone street city state zip)
+  WHOIS_TRIGGERS = %w[name email phone street city state zip].freeze
 
   after_commit :update_whois_records
   def update_whois_records
@@ -56,9 +56,48 @@ class Registrar < ApplicationRecord
     end
   end
 
-  def issue_prepayment_invoice(amount, description = nil, payable: true)
-    vat_rate = ::Invoice::VatRateCalculator.new(registrar: self).calculate
+  # rubocop:disable Metrics/MethodLength
+  def init_monthly_invoice(summary)
+    Invoice.new(
+      issue_date: summary['date'].to_date,
+      due_date: summary['date'].to_date,
+      currency: 'EUR',
+      description: I18n.t('invoice.monthly_invoice_description'),
+      seller_name: Setting.registry_juridical_name,
+      seller_reg_no: Setting.registry_reg_no,
+      seller_iban: Setting.registry_iban,
+      seller_bank: Setting.registry_bank,
+      seller_swift: Setting.registry_swift,
+      seller_vat_no: Setting.registry_vat_no,
+      seller_country_code: Setting.registry_country_code,
+      seller_state: Setting.registry_state,
+      seller_street: Setting.registry_street,
+      seller_city: Setting.registry_city,
+      seller_zip: Setting.registry_zip,
+      seller_phone: Setting.registry_phone,
+      seller_url: Setting.registry_url,
+      seller_email: Setting.registry_email,
+      seller_contact_name: Setting.registry_invoice_contact,
+      buyer: self,
+      buyer_name: name,
+      buyer_reg_no: reg_no,
+      buyer_country_code: address_country_code,
+      buyer_state: address_state,
+      buyer_street: address_street,
+      buyer_city: address_city,
+      buyer_zip: address_zip,
+      buyer_phone: phone,
+      buyer_url: website,
+      buyer_email: email,
+      reference_no: reference_no,
+      vat_rate: calculate_vat_rate,
+      monthly_invoice: true,
+      metadata: { items: summary['invoice_lines'] },
+      total: 0
+    )
+  end
 
+  def issue_prepayment_invoice(amount, description = nil, payable: true)
     invoice = invoices.create!(
       issue_date: Time.zone.today,
       due_date: (Time.zone.now + Setting.days_to_keep_invoices_active.days).to_date,
@@ -91,14 +130,14 @@ class Registrar < ApplicationRecord
       buyer_url: website,
       buyer_email: email,
       reference_no: reference_no,
-      vat_rate: vat_rate,
+      vat_rate: calculate_vat_rate,
       items_attributes: [
         {
           description: 'prepayment',
           unit: 'piece',
           quantity: 1,
-          price: amount
-        }
+          price: amount,
+        },
       ]
     )
 
@@ -107,10 +146,17 @@ class Registrar < ApplicationRecord
                    .deliver_later(wait: 1.minute)
     end
 
+    add_invoice_instance = EisBilling::AddDeposits.new(invoice)
+    result = add_invoice_instance.send_invoice
+
+    link = JSON.parse(result.body)['everypay_link']
+
+    invoice.update(payment_link: link)
     SendEInvoiceJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
 
     invoice
   end
+  # rubocop:enable Metrics/MethodLength
 
   def cash_account
     accounts.find_by(account_type: Account::CASH)
@@ -175,9 +221,9 @@ class Registrar < ApplicationRecord
   end
 
   def add_nameservers(new_attributes, domains: [])
-    transaction do
-      return if domains.empty?
+    return [] if domains.empty?
 
+    transaction do
       approved_list = domain_list_processing(domains: domains, new_attributes: new_attributes)
 
       self.domains.where(name: approved_list).find_each(&:update_whois_record) if approved_list.any?
@@ -220,13 +266,9 @@ class Registrar < ApplicationRecord
   def notify(action)
     text = I18n.t("notifications.texts.#{action.notification_key}", contact: action.contact&.code,
                                                                     count: action.subactions&.count)
-    if action.bulk_action?
-      notifications.create!(text: text, action_id: action.id,
-                            attached_obj_type: 'BulkAction',
-                            attached_obj_id: action.id)
-    else
-      notifications.create!(text: text)
-    end
+    notifications.create!(text: text, action_id: action.id,
+                          attached_obj_type: 'ContactUpdateAction',
+                          attached_obj_id: action.id)
   end
 
   def e_invoice_iban
@@ -255,5 +297,9 @@ class Registrar < ApplicationRecord
 
   def vat_liable_in_foreign_country?
     !vat_liable_locally?
+  end
+
+  def calculate_vat_rate
+    ::Invoice::VatRateCalculator.new(registrar: self).calculate
   end
 end

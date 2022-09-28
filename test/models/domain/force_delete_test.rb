@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class ForceDeleteTest < ActionMailer::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @domain = domains(:shop)
     Setting.redemption_grace_period = 30
@@ -124,13 +126,6 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.schedule_force_delete(type: :fast_track)
     @domain.reload
     assert_empty @domain.statuses & statuses_to_be_removed, 'Pending actions should be stopped'
-  end
-
-  def test_scheduling_force_delete_preserves_current_statuses
-    @domain.statuses = %w[test1 test2]
-    @domain.schedule_force_delete(type: :fast_track)
-    @domain.reload
-    assert_equal %w[test1 test2], @domain.statuses_before_force_delete
   end
 
   def test_scheduling_force_delete_bypasses_validation
@@ -356,7 +351,6 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.reload
 
     assert @domain.force_delete_scheduled?
-    assert_equal 'invalid_email', @domain.template_name
     assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
     notification = @domain.registrar.notifications.last
@@ -375,7 +369,6 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.reload
 
     assert @domain.force_delete_scheduled?
-    assert_equal 'invalid_email', @domain.template_name
     assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
     notification = @domain.registrar.notifications.last
@@ -398,12 +391,10 @@ class ForceDeleteTest < ActionMailer::TestCase
       contact.verify_email
     end
 
-    assert contact.email_verification_failed?
-
+    perform_check_force_delete_job(contact.id)
     @domain.reload
 
     assert @domain.force_delete_scheduled?
-    assert_equal 'invalid_email', @domain.template_name
     assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
     assert_equal @domain.status_notes[DomainStatus::FORCE_DELETE], email
@@ -433,11 +424,12 @@ class ForceDeleteTest < ActionMailer::TestCase
       contact_first.verify_email
     end
 
+    perform_check_force_delete_job(contact_first.id)
     domain.reload
 
     assert_equal domain.status_notes[DomainStatus::FORCE_DELETE], invalid_emails
     notification = domain.registrar.notifications.last
-    assert notification.text.include? asserted_text
+    assert_not notification.text.include? asserted_text
   end
 
   def test_remove_invalid_email_from_domain_status_notes
@@ -460,6 +452,8 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     travel_to Time.zone.parse('2010-07-05 0:00:03')
     contact_first.verify_email
+
+    perform_check_force_delete_job(contact_first.id)
     domain.reload
 
     assert_equal domain.status_notes[DomainStatus::FORCE_DELETE], invalid_email
@@ -477,19 +471,20 @@ class ForceDeleteTest < ActionMailer::TestCase
     contact_one = @domain.admin_contacts.first
     contact_one.update_attribute(:email, email_one)
     contact_one.verify_email
+    perform_check_force_delete_job(contact_one.id)
 
     assert contact_one.need_to_start_force_delete?
 
     contact_two = @domain.admin_contacts.first
     contact_two.update_attribute(:email, email_two)
     contact_two.verify_email
+    perform_check_force_delete_job(contact_two.id)
 
     assert contact_two.need_to_start_force_delete?
 
     @domain.reload
 
     assert @domain.force_delete_scheduled?
-    assert_equal 'invalid_email', @domain.template_name
     assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
     assert @domain.status_notes[DomainStatus::FORCE_DELETE].include? email_one
@@ -508,7 +503,6 @@ class ForceDeleteTest < ActionMailer::TestCase
     @domain.reload
 
     assert @domain.force_delete_scheduled?
-    assert_equal 'invalid_email', @domain.template_name
     assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
     notification = @domain.registrar.notifications.last
@@ -533,5 +527,13 @@ class ForceDeleteTest < ActionMailer::TestCase
     @bounced_mail.status = '5.1.1'
     @bounced_mail.diagnostic = 'smtp; 550 5.1.1 user unknown'
     @bounced_mail.save!
+  end
+
+  private
+
+  def perform_check_force_delete_job(contact_id)
+    perform_enqueued_jobs do
+      CheckForceDeleteJob.perform_now([contact_id])
+    end
   end
 end

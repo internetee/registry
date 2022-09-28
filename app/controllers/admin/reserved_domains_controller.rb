@@ -51,7 +51,25 @@ module Admin
       redirect_to admin_reserved_domains_path
     end
 
+    def release_to_auction
+      redirect_to admin_reserved_domains_path and return if params[:reserved_elements].nil?
+
+      reserved_domains_ids = params[:reserved_elements][:domain_ids]
+      reserved_domains = ReservedDomain.where(id: reserved_domains_ids)
+
+      reserved_domains.each do |domain|
+        Auction.create!(domain: domain.name, status: Auction.statuses[:started], platform: 'manual')
+        domain.destroy!
+      end
+
+      redirect_to admin_auctions_path
+    end
+
     private
+
+    def reserved_checked_elements
+      # params.require(:reserved_elements).permit(:name, :password)
+    end
 
     def reserved_domain_params
       params.require(:reserved_domain).permit(:name, :password)

@@ -56,7 +56,7 @@ class EppPollTest < EppTestCase
     bulk_action = actions(:contacts_update_bulk_action)
     @notification.update!(action: bulk_action,
                           attached_obj_id: bulk_action.id,
-                          attached_obj_type: 'BulkAction')
+                          attached_obj_type: 'ContactUpdateAction')
 
     post epp_poll_path, params: { frame: request_req_xml },
                         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
