@@ -21,6 +21,8 @@ class Contact < ApplicationRecord
 
   after_save :touch_domain
   def touch_domain
+    return if domains.empty?
+
     domains.each do |domain|
       RefreshUpdateAttributeJob.perform_later('Domain', domain.id, updated_at)
     end
