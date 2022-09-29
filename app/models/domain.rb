@@ -743,6 +743,12 @@ class Domain < ApplicationRecord
     ]
   end
 
+  def as_pdf
+    domain_html = ApplicationController.render(template: 'domain/pdf', assigns: { domain: self })
+    generator = PDFKit.new(domain_html)
+    generator.to_pdf
+  end
+
   def registrant_name
     return registrant.name if registrant
 
