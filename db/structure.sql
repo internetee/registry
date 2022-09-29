@@ -2203,7 +2203,7 @@ ALTER SEQUENCE public.nameservers_id_seq OWNED BY public.nameservers.id;
 CREATE TABLE public.notifications (
     id integer NOT NULL,
     registrar_id integer NOT NULL,
-    text character varying NOT NULL,
+    text text NOT NULL,
     attached_obj_type character varying,
     attached_obj_id integer,
     read boolean NOT NULL,
@@ -5239,4 +5239,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220413084748'),
 ('20220504090512'),
 ('20220524130709'),
+('20220701113409'),
 ('20220818075833');
