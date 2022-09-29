@@ -15,7 +15,6 @@ set :deploy_to, '$HOME/registry'
 set :repository, 'https://github.com/domify/registry' # dev repo
 set :branch, 'master'
 set :rails_env, 'alpha'
-set :que_restart, true
 set :cron_group, 'registry'
 
 # alpha branch, only use for heavy debugging
@@ -25,7 +24,6 @@ task :epp do
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
   set :rails_env, 'alpha'
-  set :que_restart, false
 end
 
 # alpha branch, only use for heavy debugging
@@ -35,7 +33,6 @@ task :registrar do
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
   set :rails_env, 'alpha'
-  set :que_restart, false
   set :cron_group, 'registrar'
 end
 
@@ -46,7 +43,6 @@ task :registrant do
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
   set :rails_env, 'alpha'
-  set :que_restart, false
   set :cron_group, 'registrant'
 end
 
@@ -57,7 +53,6 @@ task :st do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'staging'
   set :rails_env, 'staging'
-  set :que_restart, true
 end
 
 # staging
@@ -67,7 +62,6 @@ task :eppst do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'staging'
   set :rails_env, 'staging'
-  set :que_restart, false
   set :cron_group, 'epp'
 end
 
@@ -78,7 +72,6 @@ task :registrarst do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'staging'
   set :rails_env, 'staging'
-  set :que_restart, false
   set :cron_group, 'registrar'
 end
 
@@ -89,7 +82,6 @@ task :registrantst do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'staging'
   set :rails_env, 'staging'
-  set :que_restart, false
   set :cron_group, 'registrant'
 end
 
@@ -100,7 +92,6 @@ task :pr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master'
   set :rails_env, 'production'
-  set :que_restart, true
 end
 
 # production
@@ -110,7 +101,6 @@ task :epppr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master'
   set :rails_env, 'production'
-  set :que_restart, false
   set :cron_group, 'epp'
 end
 
@@ -121,7 +111,6 @@ task :registrarpr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master'
   set :rails_env, 'production'
-  set :que_restart, false
   set :cron_group, 'registrar'
 end
 
@@ -132,7 +121,6 @@ task :registrantpr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master'
   set :rails_env, 'production'
-  set :que_restart, false
   set :cron_group, 'registrant'
 end
 
@@ -193,9 +181,6 @@ task setup: :environment do
   queue! %(mkdir -p "#{deploy_to}/shared/import/legal_documents")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/import/legal_documents")
 
-  queue! %(mkdir -p "#{deploy_to}/shared/log/que")
-  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/log/que")
-
   queue! %(touch "#{deploy_to}/shared/config/database.yml")
   deploy do
     invoke :'git:clone'
@@ -217,8 +202,6 @@ task deploy: :environment do
     invoke :load_commit_hash
 
     # TEMP until all servers are updated
-    queue! %(mkdir -p "#{deploy_to}/shared/log/que")
-    queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/log/que")
 
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
@@ -233,7 +216,7 @@ task deploy: :environment do
   end
 end
 
-# data_migrate=some_data_migration mina deploy env 
+# data_migrate=some_data_migration mina deploy env
 desc 'Run data migrations if any set with ENV[data_migrate]'
 task data_migration: :environment do
         if ENV['data_migrate']
@@ -256,11 +239,6 @@ end
 desc 'Restart Passenger application'
 task restart: :environment do
   queue "mkdir -p #{deploy_to}/current/tmp; touch #{deploy_to}/current/tmp/restart.txt"
-end
-
-desc 'Restart que server'
-task que_restart: :environment do
-  queue "/etc/init.d/que restart"
 end
 
 namespace :cron do
