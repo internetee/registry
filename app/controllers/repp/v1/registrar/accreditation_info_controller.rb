@@ -1,8 +1,8 @@
 module Repp
   module V1
     module Registrar
-      if Feature.allow_accr_endspoints?
-        class AccreditationInfoController < BaseController
+      class AccreditationInfoController < BaseController
+        if Feature.allow_accr_endspoints?
           api :GET, 'repp/v1/registrar/accreditation/get_info'
           desc 'check login user and return data'
 

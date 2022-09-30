@@ -3,8 +3,8 @@ require 'auth_token/auth_token_decryptor'
 module Api
   module V1
     module AccreditationCenter
-      if Feature.allow_accr_endspoints?
-        class BaseController < ActionController::API
+      class BaseController < ActionController::API
+        if Feature.allow_accr_endspoints?
           rescue_from ActiveRecord::RecordNotFound, with: :show_not_found_error
           rescue_from ActiveRecord::RecordInvalid, with: :show_invalid_record_error
           rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
