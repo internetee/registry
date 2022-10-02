@@ -129,6 +129,7 @@
                             <td style="width: 100px !important; word-break: break-all;"><%= auction.registration_code %></td>
                             <td><%= auction.registration_deadline %></td>
                             <td><%= auction.platform.nil? ? 'auto' : auction.platform %></td>
+                            <td><%= link_to(t(:delete), admin_auction_path(auction), method: :delete, data: { confirm: t(:are_you_sure_you_want_to_delete_auction) }, class: 'btn btn-danger') %></td>
                         </tr>
                         <% end %>
                     </tbody>

@@ -170,4 +170,17 @@ class AdminAreaAuctionIntegrationTest < ApplicationSystemTestCase
     find(:id, "reserved-modal", match: :first).click
     assert_text 'Reserved domains'
   end
+
+  def test_delete_auction
+    visit admin_auctions_path
+    domain = reserved_domains(:one)
+
+    fill_in 'domain', with: domain.name
+    find(:id, 'new-auction-btn', match: :first).click
+    click_link_or_button 'Delete'
+
+    assert_raises ActiveRecord::RecordNotFound do
+      domain.reload
+    end
+  end
 end
