@@ -173,11 +173,9 @@ class AdminAreaAuctionIntegrationTest < ApplicationSystemTestCase
 
   def test_delete_auction
     visit admin_auctions_path
-    domain = reserved_domains(:one)
+    domain = Auction.first
 
-    fill_in 'domain', with: domain.name
-    find(:id, 'new-auction-btn', match: :first).click
-    click_link_or_button 'Delete'
+    find(:id, "delete-auction-#{domain.id}", match: :first).click
 
     assert_raises ActiveRecord::RecordNotFound do
       domain.reload
