@@ -19,3 +19,5 @@ en:
         mass_actions: Mass actions
         epp_log: EPP log
         repp_log: REPP log
+        sidekiq: Sidekiq
+        tasks: Tasks
