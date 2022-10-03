@@ -1,12 +1,12 @@
 module Repp
   module V1
     module Registrar
-      if Feature.allow_accr_endspoints?
-        class AccreditationResultsController < ActionController::API
+      class AccreditationResultsController < ActionController::API
+        if Feature.allow_accr_endspoints?
           before_action :authenticate_shared_key
 
-        TEMPORARY_SECRET_KEY = ENV['accreditation_secret'].freeze
-        EXPIRE_DEADLINE = 15.minutes.freeze
+          TEMPORARY_SECRET_KEY = ENV['accreditation_secret'].freeze
+          EXPIRE_DEADLINE = 15.minutes.freeze
 
           api :POST, 'repp/v1/registrar/accreditation/push_results'
           desc 'added datetime results'
@@ -25,8 +25,7 @@ module Repp
           def record_accreditation_result(username, result)
             user = ApiUser.find_by(username: username)
 
-            raise ActiveRecord::RecordNotFound if user.nil?
-            
+            raise ActiveRecord::RecordNotFound if user.nil? 
             user.accreditation_date = DateTime.current
             user.accreditation_expire_date = user.accreditation_date + EXPIRE_DEADLINE
 
