@@ -1,4 +1,5 @@
 <%= t(:you_have_a_new_invoice) %>
+<%= t(:monthly_invoice) if @invoice.monthly_invoice %>
 
 <%= t(:sincerely) %>,
 <%= Setting.registry_invoice_contact %>

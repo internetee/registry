@@ -544,6 +544,7 @@ en:
   bind_manually: 'Bind manually'
   client: 'Client'
   you_have_a_new_invoice: 'You have a new invoice.'
+  monthly_invoice: "Here comes the report with the last month's credit account activities."
   sincerely: 'Sincerely'
   expiry: 'Expiry'
   failed_to_create_crt_csr_already_signed: 'Failed to create certificate: CSR is already signed'
