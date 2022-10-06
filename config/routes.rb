@@ -306,7 +306,7 @@ Rails.application.routes.draw do
 
     resources :accounts
     resources :account_activities
-    resources :auctions, only: [ :index, :create ] do
+    resources :auctions, only: %i[index create destroy] do
       collection do
         post 'upload_spreadsheet', to: 'auctions#upload_spreadsheet', as: :upload_spreadsheet
       end

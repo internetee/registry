@@ -44,10 +44,22 @@ module Admin
 
       if auction.save
         reserved_domain = auction.domain if remove_from_reserved(auction)
-        flash[:notice] = "Auction #{params[:domain]} created. 
+        flash[:notice] = "Auction #{params[:domain]} created.
                           #{reserved_domain.present? ? 'These domain will be removed from reserved list: ' + reserved_domain : ' '}"
       else
         flash[:alert] = 'Something goes wrong'
+      end
+
+      redirect_to admin_auctions_path
+    end
+
+    def destroy
+      auction = Auction.find(params[:id])
+
+      if auction.destroy
+        flash[:notice] = I18n.t('record_deleted')
+      else
+        flash.now[:alert] = I18n.t('failed_to_delete_record')
       end
 
       redirect_to admin_auctions_path

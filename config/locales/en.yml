@@ -440,6 +440,7 @@ en:
   exDate: 'Valid to'
   dequeue: 'Dequeue'
   are_you_sure_you_want_to_delete_domain: 'Are you sure you want to delete domain %{domain}?'
+  are_you_sure_you_want_to_delete_auction: 'Warning: Are you sure you want to delete this record? Be advised that doing so will remove the record only from registry database and will make the domain available for anyone to register. This will not affect auction system if the auction record is already created there. You will need to delete the record in auction system first to remove the domain from auction.'
   upload_key: 'Upload key'
   legal_document: 'Legal document'
   legal_document_max_size: '(max. 8MB)'
