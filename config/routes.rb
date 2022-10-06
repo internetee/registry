@@ -176,10 +176,13 @@ Rails.application.routes.draw do
       namespace :accreditation_center do
         # At the moment invoice_status endpoint returns only cancelled invoices. But in future logic of this enpoint can change.
         # And it will need to return invoices of different statuses. I decided to leave the name of the endpoint "invoice_status"
-        resources :invoice_status, only: [:index]
-        resource :domains, only: [:show], param: :name
-        resource :contacts, only: [:show], param: :id
+        resources :invoice_status, only: [ :index ]
+        resource :domains, only: [ :show ], param: :name
+        resource :contacts, only: [ :show ], param: :id
+        resource :results, only: [ :show ], param: :name
         # resource :auth, only: [ :index ]
+        get 'show_api_user', to: 'results#show_api_user'
+        get 'list_accreditated_api_users', to: 'results#list_accreditated_api_users'
         get 'auth', to: 'auth#index'
       end
 
@@ -303,7 +306,7 @@ Rails.application.routes.draw do
 
     resources :accounts
     resources :account_activities
-    resources :auctions, only: [ :index, :create ] do
+    resources :auctions, only: %i[index create destroy] do
       collection do
         post 'upload_spreadsheet', to: 'auctions#upload_spreadsheet', as: :upload_spreadsheet
       end
@@ -340,6 +343,7 @@ Rails.application.routes.draw do
       resource :registry_lock, controller: 'domains/registry_lock', only: :destroy
 
       member do
+        get :download
         patch :keep
       end
     end
@@ -393,6 +397,13 @@ Rails.application.routes.draw do
     resources :registrars do
       resources :api_users, except: %i[index]
       resources :white_ips
+
+      collection do
+        post 'set_test_date', to: 'registrars#set_test_date', as: 'set_test_date'
+        post 'remove_test_date', to: 'registrars#remove_test_date', as: 'remove_test_date'
+        post 'set_test_date_to_api_user', to: 'api_users#set_test_date_to_api_user', as: 'set_test_date_to_api_user'
+        post 'remove_test_date_to_api_user', to: 'api_users#remove_test_date_to_api_user', as: 'remove_test_date_to_api_user'
+      end
     end
 
     resources :contacts do
@@ -421,7 +432,6 @@ Rails.application.routes.draw do
     resources :bounced_mail_addresses, only: %i[index show destroy]
 
     authenticate :admin_user do
-      mount Que::Web, at: 'que'
       mount Sidekiq::Web, at: 'sidekiq'
     end
   end

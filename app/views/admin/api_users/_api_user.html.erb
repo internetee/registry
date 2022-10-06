@@ -2,4 +2,16 @@
     <td><%= link_to api_user, admin_registrar_api_user_path(api_user.registrar, api_user) %></td>
     <td><%= link_to api_user.registrar, admin_registrar_path(api_user.registrar) %></td>
     <td><%= api_user.active %></td>
+    <td style="text-align: center;">
+
+        <% if !api_user.accredited? || api_user.accreditation_expired? %>
+            <%= button_to t(:set_test_btn),
+                          { controller: 'api_users', action: 'set_test_date_to_api_user', user_api_id: api_user.id },
+                          { method: :post, class: 'btn btn-primary'} %>
+        <% else %>
+            <%= button_to t(:remove_test_btn),
+                          { controller: 'api_users', action: 'remove_test_date_to_api_user', user_api_id: api_user.id },
+                          { method: :post, class: 'btn btn-danger'} %>
+        <% end %>
+    </td>
 </tr>

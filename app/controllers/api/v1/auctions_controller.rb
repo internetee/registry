@@ -31,6 +31,7 @@ module Api
         end
 
         auction.mark_deadline(params[:registration_deadline]) if params[:registration_deadline]
+        auction.platform = params[:platform] == 'english' ? :manual : :auto
 
         if auction.payment_not_received? || auction.domain_not_registered?
           update_whois_from_auction(Auction.pending(auction.domain))

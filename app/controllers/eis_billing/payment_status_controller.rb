@@ -10,9 +10,7 @@ module EisBilling
 
       bank = create_bank_transfer(invoice: invoice, sum: params[:standing_amount], paid_at: params[:transaction_time])
       create_payment_order(invoice: invoice, everypay_response: params, payment_status: payment_status)
-
-      registrar = invoice.buyer
-      bank.create_activity(registrar, invoice)
+      bank.bind_invoice(params[:order_reference])
 
       respond_to do |format|
         format.json do

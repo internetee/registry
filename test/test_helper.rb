@@ -4,7 +4,6 @@ if ENV['COVERAGE']
     add_filter '/app/models/version/'
     add_filter '/lib/action_controller/'
     add_filter '/lib/core_monkey_patches/'
-    add_filter '/lib/daemons/'
     add_filter '/lib/gem_monkey_patches/'
     add_filter '/lib/tasks/'
   end

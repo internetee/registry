@@ -33,6 +33,10 @@
                     <th class="col-xs-4">
                         <%= t(:emails) %>
                     </th>
+                    </th>
+                    <th>
+                        Test status
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -56,6 +60,17 @@
                             <%= content_tag(:span, x.email) %>
                             <% if x[:billing_email].present? %>
                                 <%= content_tag(:span, x[:billing_email]) %>
+                            <% end %>
+                        </td>
+                        <td>
+                            <% if !x.accredited? || x.accreditation_expired? %>
+                                <%= button_to t('.set_test_btn'),
+                                              { controller: 'registrars', action: 'set_test_date', registrar_id: x.id},
+                                              { method: :post, class: 'btn btn-primary'} %>
+                            <% else %>
+                                <%= button_to t('.remove_test_btn'),
+                                              { controller: 'registrars', action: 'remove_test_date', registrar_id: x.id},
+                                              { method: :post, class: 'btn btn-danger'} %>
                             <% end %>
                         </td>
                     </tr>

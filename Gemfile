@@ -62,13 +62,10 @@ gem 'omniauth-tara', github: 'internetee/omniauth-tara'
 # gem 'omniauth-tara', path: 'vendor/gems/omniauth-tara'
 
 gem 'airbrake'
-gem 'daemons-rails', '1.2.1'
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
 gem 'jquery-ui-rails', '6.0.1'
 gem 'pdfkit'
-gem 'que'
-gem 'que-web'
 gem 'sidekiq', '>= 6.4.1'
 
 gem 'company_register', github: 'internetee/company_register',

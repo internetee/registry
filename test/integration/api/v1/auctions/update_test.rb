@@ -28,7 +28,7 @@ class ApiV1AuctionUpdateTest < ActionDispatch::IntegrationTest
     assert_equal ({ 'id' => '1b3ee442-e8fe-4922-9492-8fcb9dccc69c',
                     'domain' => 'auction.test',
                     'status' => Auction.statuses[:awaiting_payment],
-                    'platform' => nil }), ActiveSupport::JSON.decode(response.body)
+                    'platform' => "auto" }), ActiveSupport::JSON.decode(response.body)
   end
 
   def test_marks_as_awaiting_payment

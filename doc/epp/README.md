@@ -14,7 +14,7 @@
 - [RFC5734 - Transport over TCP](http://tools.ietf.org/html/rfc5734)  
 - [RFC5910 - DNSSEC Mapping](http://tools.ietf.org/html/rfc5910)  
 - [RFC3735 - Guidelines for Extending the EPP](http://tools.ietf.org/html/rfc3735)
-- [Change Poll Draft v0.8](https://tools.ietf.org/html/draft-ietf-regext-change-poll-08)
+- [RFC8590 - Change Poll](https://www.rfc-editor.org/rfc/rfc8590)
 
 ## XML schemas
 
@@ -28,12 +28,10 @@
 * [changePoll-1.0.xsd](/lib/schemas/changePoll-1.0.xsd)
 
 ### .ee-specific
-* [all-ee-1.0.xsd](/lib/schemas/all-ee-1.0.xsd)
-* [all-ee-1.1.xsd](/lib/schemas/all-ee-1.1.xsd)
+* [all-ee-1.3.xsd](/lib/schemas/all-ee-1.3.xsd)
 * [eis-1.0.xsd](/lib/schemas/eis-1.0.xsd)
 * [epp-ee-1.0.xsd](/lib/schemas/epp-ee-1.0.xsd)
-* [domain-eis-1.0.xsd](/lib/schemas/domain-eis-1.0.xsd)
-* [contact-eis-1.0.xsd](/lib/schemas/contact-eis-1.0.xsd)
+* [domain-ee-1.2.xsd](/lib/schemas/domain-ee-1.2.xsd)
 * [contact-ee-1.1.xsd](/lib/schemas/contact-ee-1.1.xsd)
 
 More info about The Extensible Provisioning Protocol (EPP):

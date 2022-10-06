@@ -440,6 +440,7 @@ en:
   exDate: 'Valid to'
   dequeue: 'Dequeue'
   are_you_sure_you_want_to_delete_domain: 'Are you sure you want to delete domain %{domain}?'
+  are_you_sure_you_want_to_delete_auction: 'Warning: Are you sure you want to delete this record? Be advised that doing so will remove the record only from registry database and will make the domain available for anyone to register. This will not affect auction system if the auction record is already created there. You will need to delete the record in auction system first to remove the domain from auction.'
   upload_key: 'Upload key'
   legal_document: 'Legal document'
   legal_document_max_size: '(max. 8MB)'
@@ -543,6 +544,7 @@ en:
   bind_manually: 'Bind manually'
   client: 'Client'
   you_have_a_new_invoice: 'You have a new invoice.'
+  monthly_invoice: "Here comes the report with the last month's credit account activities."
   sincerely: 'Sincerely'
   expiry: 'Expiry'
   failed_to_create_crt_csr_already_signed: 'Failed to create certificate: CSR is already signed'
@@ -635,6 +637,8 @@ en:
   registrant_ident: 'Registrant ident'
   contact_ident: 'Contact ident'
   results_per_page: 'Results per page'
+  set_test_btn: Set Test
+  remove_test_btn: Remove Test
   nameserver_hostname: 'Nameserver hostname'
   result_count:
     zero: 'No results'
