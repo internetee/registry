@@ -81,7 +81,7 @@ class Dnskey < ApplicationRecord
   end
 
   def public_key=(value)
-    super(value.strip.delete(' '))
+    super(value&.strip&.delete(' '))
   end
 
   def generate_digest
