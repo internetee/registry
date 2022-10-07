@@ -80,6 +80,10 @@ class Dnskey < ApplicationRecord
     errors.add(:flags, :invalid, values: "Valid flags are: #{FLAGS.join(', ')}")
   end
 
+  def public_key=(value)
+    super(value&.strip&.delete(' '))
+  end
+
   def generate_digest
     return unless flags == 257 || flags == 256 # require ZoneFlag, but optional SecureEntryPoint
 

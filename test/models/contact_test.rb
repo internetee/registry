@@ -313,6 +313,14 @@ class ContactTest < ActiveJob::TestCase
     assert_equal domain.whois_record.try(:json).try(:[], 'registrant'), @contact.name
   end
 
+  def test_remove_email_whitespaces
+    contact = valid_contact
+    contact.email = '  test@test.test   '
+    contact.save
+
+    assert_equal contact.email, 'test@test.test'
+  end
+
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)
