@@ -1,7 +1,7 @@
 desc 'Check Force Delete'
 task check_force_delete: :environment do
   validations = ValidationEvent.failed.where(validation_eventable_type: 'Contact').uniq(&:validation_eventable_id)
-  return unless validations.present?
+  return if validations.blank?
 
   invalid_contact_ids = validations.select do |validation|
     contact = validation.validation_eventable
