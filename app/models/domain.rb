@@ -725,6 +725,10 @@ class Domain < ApplicationRecord
     DNS::DomainName.new(name)
   end
 
+  def contact_emails_verification_failed
+    contacts.select(&:email_verification_failed?)&.map(&:email)&.uniq
+  end
+
   def as_csv_row
     [
       name,
@@ -737,6 +741,12 @@ class Domain < ApplicationRecord
       force_delete_date,
       force_delete_data,
     ]
+  end
+
+  def as_pdf
+    domain_html = ApplicationController.render(template: 'domain/pdf', assigns: { domain: self })
+    generator = PDFKit.new(domain_html)
+    generator.to_pdf
   end
 
   def registrant_name

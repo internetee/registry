@@ -88,7 +88,16 @@ class BankTransaction < ApplicationRecord
     errors.add(:base, I18n.t('invoice_and_transaction_sums_do_not_match')) if invoice.total != sum
   end
 
+  def parsed_ref_number
+    reference_no || ref_number_from_description
+  end
+
+  private
+
   def create_activity(registrar, invoice)
+    validate_invoice_data(invoice)
+    return if errors.any?
+
     activity = AccountActivity.new(account: registrar.cash_account, bank_transaction: self,
                                    invoice: invoice, sum: invoice.subtotal,
                                    currency: currency, description: description,
@@ -101,12 +110,6 @@ class BankTransaction < ApplicationRecord
       false
     end
   end
-
-  def parsed_ref_number
-    reference_no || ref_number_from_description
-  end
-
-  private
 
   def reset_pending_registrar_balance_reload(registrar)
     return unless registrar.settings['balance_auto_reload']

@@ -62,37 +62,11 @@ class Invoice < ApplicationRecord
     throw(:abort)
   end
 
-  def invoice_number_from_billing
+  def set_invoice_number
     result = EisBilling::GetInvoiceNumber.send_invoice
     validate_invoice_number(result)
 
     self.number = JSON.parse(result.body)['invoice_number'].to_i
-  end
-
-  def generate_invoice_number_legacy
-    last_no = Invoice.all
-                     .where(number: Setting.invoice_number_min.to_i...Setting.invoice_number_max.to_i)
-                     .order(number: :desc)
-                     .limit(1)
-                     .pick(:number)
-
-    if last_no && last_no >= Setting.invoice_number_min.to_i
-      self.number = last_no + 1
-    else
-      self.number = Setting.invoice_number_min.to_i
-    end
-
-    return if number <= Setting.invoice_number_max.to_i
-
-    billing_out_of_range_issue
-  end
-
-  def set_invoice_number
-    if Feature.billing_system_integrated?
-      invoice_number_from_billing
-    else
-      generate_invoice_number_legacy
-    end
   end
 
   def to_s

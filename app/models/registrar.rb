@@ -146,20 +146,13 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
                    .deliver_later(wait: 1.minute)
     end
 
-    if Feature.billing_system_integrated?
-      add_invoice_instance = EisBilling::AddDeposits.new(invoice)
-      result = add_invoice_instance.send_invoice
+    add_invoice_instance = EisBilling::AddDeposits.new(invoice)
+    result = add_invoice_instance.send_invoice
 
-      link = JSON.parse(result.body)['everypay_link']
+    link = JSON.parse(result.body)['everypay_link']
 
-      invoice.update(payment_link: link)
-    end
-
-    if Feature.billing_system_integrated?
-      SendEInvoiceTwoJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
-    else
-      SendEInvoiceJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
-    end
+    invoice.update(payment_link: link)
+    SendEInvoiceJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
 
     invoice
   end
@@ -195,6 +188,16 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
     return true unless Setting.api_ip_whitelist_enabled
 
     white_ips.api.include_ip?(ip)
+  end
+
+  def accredited?
+    api_users.any? do |a|
+      return true unless a.accreditation_date.nil?
+    end
+  end
+
+  def accreditation_expired?
+    api_users.all? { |api| api.accreditation_expired? }
   end
 
   # Audit log is needed, therefore no raw SQL

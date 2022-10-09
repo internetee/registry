@@ -55,4 +55,18 @@ class DnskeyTest < ActiveSupport::TestCase
     assert_equal dns.ds_digest_type, 1
     assert_equal dns.ds_digest, '640D173A44D9AF2856FBE282EE64CE11A76DBB84'
   end
+
+  def test_remove_public_key_whitespaces
+    dnskey = "  AwEAAddt 2AkLfYGKgiEZ    B5SmIF8Evr jxNMH6HtxWEA4RJ9Ao6LCWheg8 \n "
+
+    dns = Dnskey.new
+    dns.domain_id = @domain.id
+    dns.flags = 257
+    dns.protocol = 3
+    dns.alg = 8
+    dns.public_key = dnskey
+    dns.save
+
+    assert_equal dns.public_key, @dnskey
+  end
 end

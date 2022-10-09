@@ -39,7 +39,9 @@
           %li= link_to t('.bounced_email_addresses'), admin_bounced_mail_addresses_path
           %li= link_to t('.epp_log'), admin_epp_logs_path(created_after: 'today')
           %li= link_to t('.repp_log'), admin_repp_logs_path(created_after: 'today')
-          %li= link_to t('.que'), '/admin/que'
+          %li.divider
+          %li.dropdown-header= t('.tasks')
+          %li= link_to t('.sidekiq'), admin_sidekiq_web_path
 
   %ul.nav.navbar-nav.navbar-right
     %li= link_to t('.sign_out'), destroy_admin_user_session_path, method: :delete,

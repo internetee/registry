@@ -2,7 +2,7 @@ module Admin
   class DomainsController < BaseController
     DEFAULT_VERSIONS_PER_PAGE = 10
 
-    before_action :set_domain, only: %i[show edit update keep]
+    before_action :set_domain, only: %i[show edit update download keep]
     authorize_resource
 
     # rubocop:disable Metrics/MethodLength
@@ -63,6 +63,11 @@ module Admin
       @old_versions = Kaminari.paginate_array(@versions.not_creates.reverse)
                               .page(params[:page])
                               .per(DEFAULT_VERSIONS_PER_PAGE)
+    end
+
+    def download
+      filename = "#{@domain.name}.pdf"
+      send_data @domain.as_pdf, filename: filename
     end
 
     def keep

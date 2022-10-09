@@ -22,8 +22,6 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_binds_if_this_sum_invoice_already_present
-    return unless Feature.billing_system_integrated?
-
     invoice_n = Invoice.order(number: :desc).last.number
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
       .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
@@ -39,8 +37,7 @@ class BankTransactionTest < ActiveSupport::TestCase
 
     first_transaction = BankTransaction.new(sum: 10,
                                             description: 'Order nr 1 from registrar 1234567 second number 2345678')
-
-    first_transaction.create_activity(another_invoice.buyer, another_invoice)
+    first_transaction.bind_invoice(another_invoice.number)
 
     transaction = BankTransaction.new(sum: 10,
                                       description: 'Order nr 1 from registrar 1234567 second number 2345678')
@@ -51,8 +48,6 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_binds_if_this_sum_cancelled_invoice_already_present
-    return unless Feature.billing_system_integrated?
-
     invoice_n = Invoice.order(number: :desc).last.number
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
       .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
@@ -76,8 +71,6 @@ class BankTransactionTest < ActiveSupport::TestCase
   end
 
   def test_marks_the_first_one_as_paid_if_same_sum
-    return unless Feature.billing_system_integrated?
-
     invoice_n = Invoice.order(number: :desc).last.number
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
       .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})

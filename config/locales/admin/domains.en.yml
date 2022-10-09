@@ -6,6 +6,7 @@ en:
         registrant: Registrant
 
       show:
+        download_btn: Download PDF
         edit_btn: Edit statuses
         history_btn: History
 

@@ -131,6 +131,49 @@ class AuctionTest < ActiveSupport::TestCase
     assert_not @auction.domain_registrable?('')
   end
 
+  def test_restart_new_auction_should_with_previous_manual_platform
+    @auction.update(platform: 'manual')
+    @auction.reload
+
+    assert_equal @auction.platform, 'manual'
+
+    assert_difference 'Auction.count' do
+      @auction.restart
+    end
+
+    new_auction = Auction.last
+    assert_equal new_auction.platform, 'manual'
+  end
+
+  def test_restart_new_auction_should_with_previous_auto_platform
+    @auction.update(platform: 'auto')
+    @auction.reload
+
+    assert_equal @auction.platform, 'auto'
+
+    assert_difference 'Auction.count' do
+      @auction.restart
+    end
+
+    new_auction = Auction.last
+    assert_equal new_auction.platform, 'auto'
+  end
+
+  def test_restart_new_auction_should_with_auto_if_platform_is_nil
+    @auction.update(platform: nil)
+    @auction.reload
+
+    assert_nil @auction.platform
+
+    assert_difference 'Auction.count' do
+      @auction.restart
+    end
+
+    new_auction = Auction.last
+    assert_equal new_auction.platform, 'auto'
+  end
+
+
   def test_restarts_an_auction
     assert_equal 'auction.test', @auction.domain
 
@@ -141,5 +184,31 @@ class AuctionTest < ActiveSupport::TestCase
     new_auction = Auction.last
     assert_equal 'auction.test', new_auction.domain
     assert new_auction.started?
+  end
+
+  def test_auction_restart_should_assign_the_previous_manual_platform
+    assert_equal 'auction.test', @auction.domain
+    @auction.update(platform: :manual)
+    @auction.reload
+
+    assert_difference 'Auction.count' do
+      @auction.restart
+    end
+
+    auctions = Auction.where(domain: @auction.domain)
+    assert_equal auctions.first.platform, auctions.last.platform
+  end
+
+  def test_auction_restart_should_assign_the_previous_auto_platform
+    assert_equal 'auction.test', @auction.domain
+    @auction.update(platform: :auto)
+    @auction.reload
+
+    assert_difference 'Auction.count' do
+      @auction.restart
+    end
+
+    auctions = Auction.where(domain: @auction.domain)
+    assert_equal auctions.first.platform, auctions.last.platform
   end
 end
