@@ -182,6 +182,9 @@ tara_rant_secret: 'secret'
 tara_rant_redirect_uri: 'redirect_uri'
 
 default_email_validation_type: 'mx'
+# You can predefine regex only validation for domains (i.e. 'somedomain.com, otherdomain.com'):
+regex_only_email_validations: ''
+
 default_connection_timeout: '1'
 default_response_timeout: '1'
 
