@@ -33,8 +33,7 @@ class SendMonthlyInvoicesJob < ApplicationJob # rubocop:disable Metrics/ClassLen
 
     result = EisBilling::GetMonthlyInvoiceNumbers.send_request(invoice_without_numbers.size)
     response = JSON.parse(result.body)
-    billing_restrictions_issue if response['code'] == '403'
-    billing_out_of_range_issue if response['error'] == 'out of range'
+    handle_assign_numbers_response_errors(response)
 
     numbers = response['invoice_numbers']
     invoice_without_numbers.each_with_index do |inv, index|
@@ -61,11 +60,9 @@ class SendMonthlyInvoicesJob < ApplicationJob # rubocop:disable Metrics/ClassLen
 
   private
 
-  def billing_out_of_range_issue
-    raise 'INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE'
-  end
-
-  def billing_restrictions_issue
-    raise 'PROBLEM WITH TOKEN'
+  def handle_assign_numbers_response_errors(response)
+    raise 'INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE' if response['code'] == '403'
+    raise 'PROBLEM WITH TOKEN' if response['error'] == 'out of range'
   end
 end
+

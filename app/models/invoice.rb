@@ -131,19 +131,6 @@ class Invoice < ApplicationRecord
     generator.as_pdf
   end
 
-  def to_e_invoice(payable: true)
-    generator = Invoice::EInvoiceGenerator.new(self, payable)
-    generator.generate
-  end
-
-  def do_not_send_e_invoice?
-    e_invoice_sent? || cancelled?
-  end
-
-  def e_invoice_sent?
-    e_invoice_sent_at.present?
-  end
-
   def as_csv_row
     [
       number,

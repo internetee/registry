@@ -25,6 +25,19 @@ module Invoice::BookKeeping
     invoice
   end
 
+  def to_e_invoice(payable: true)
+    generator = Invoice::EInvoiceGenerator.new(self, payable)
+    generator.generate
+  end
+
+  def do_not_send_e_invoice?
+    e_invoice_sent? || cancelled?
+  end
+
+  def e_invoice_sent?
+    e_invoice_sent_at.present?
+  end
+
   private
 
   def compose_monthly_directo_lines(lines: [])
