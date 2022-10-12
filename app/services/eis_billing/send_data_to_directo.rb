@@ -1,6 +1,6 @@
 module EisBilling
   class SendDataToDirecto < EisBilling::Base
-    def self.send_request(object_data:, monthly:, dry:)
+    def self.send_request(object_data:, monthly: false, dry: false)
       send_info(object_data: object_data, monthly: monthly, dry: dry)
     end
 

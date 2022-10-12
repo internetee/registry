@@ -33,13 +33,13 @@ class Invoice < ApplicationRecord
   # rubocop:enable Style/MultilineBlockLayout
   validates :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, presence: true
-  validates :items, presence: true, unless: -> { monthly_invoice }
+  validates :items, presence: true, unless: [:monthly_invoice]
 
-  before_create :set_invoice_number
+  before_create :set_invoice_number, unless: [:monthly_invoice]
   before_create :calculate_total, unless: :total?
   before_create :apply_default_buyer_vat_no, unless: :buyer_vat_no?
-  skip_callback :create, :before, :set_invoice_number, if: -> { monthly_invoice }
-  skip_callback :create, :before, :calculate_total, if: -> { monthly_invoice }
+
+  skip_callback :create, :before, :calculate_total, if: [:monthly_invoice]
 
   attribute :vat_rate, ::Type::VatRate.new
 
@@ -67,6 +67,17 @@ class Invoice < ApplicationRecord
     validate_invoice_number(result)
 
     self.number = JSON.parse(result.body)['invoice_number'].to_i
+  end
+
+  def send_to_registrar!
+    InvoiceMailer.invoice_email(invoice: self,
+                                recipient: buyer_email)
+                 .deliver_now
+    update(sent_at: Time.zone.now)
+  end
+
+  def sent?
+    sent_at.present?
   end
 
   def to_s

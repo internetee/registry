@@ -62,7 +62,7 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
       issue_date: summary['date'].to_date,
       due_date: summary['date'].to_date,
       currency: 'EUR',
-      description: I18n.t('invoice.monthly_invoice_description'),
+      description: summary['description'],
       seller_name: Setting.registry_juridical_name,
       seller_reg_no: Setting.registry_reg_no,
       seller_iban: Setting.registry_iban,
@@ -88,11 +88,11 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
       buyer_zip: address_zip,
       buyer_phone: phone,
       buyer_url: website,
-      buyer_email: email,
+      buyer_email: billing_email,
       reference_no: reference_no,
       vat_rate: calculate_vat_rate,
       monthly_invoice: true,
-      metadata: { items: summary['invoice_lines'] },
+      metadata: { items: remove_line_duplicates(summary['invoice_lines']) },
       total: 0
     )
   end
@@ -128,7 +128,7 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
       buyer_zip: address_zip,
       buyer_phone: phone,
       buyer_url: website,
-      buyer_email: email,
+      buyer_email: billing_email,
       reference_no: reference_no,
       vat_rate: calculate_vat_rate,
       items_attributes: [
@@ -311,5 +311,17 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def calculate_vat_rate
     ::Invoice::VatRateCalculator.new(registrar: self).calculate
+  end
+
+  def remove_line_duplicates(invoice_lines, lines: [])
+    line_map = Hash.new 0
+    invoice_lines.each { |l| line_map[l] += 1 }
+
+    line_map.each_key do |line|
+      line['quantity'] = line_map[line] unless line['unit'].nil? || line['quantity']&.negative?
+      lines << line
+    end
+
+    lines
   end
 end
