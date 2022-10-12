@@ -65,4 +65,3 @@ class SendMonthlyInvoicesJob < ApplicationJob # rubocop:disable Metrics/ClassLen
     raise 'PROBLEM WITH TOKEN' if response['error'] == 'out of range'
   end
 end
-
