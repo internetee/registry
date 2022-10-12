@@ -13,28 +13,39 @@ module Registrar::BookKeeping # rubocop:disable Metrics/ModuleLength
   end
 
   def monthly_summary(month:)
-    activities = monthly_activites(month)
-    return unless activities.any?
+    invoice_lines = prepare_invoice_lines(month: month)
+    return unless invoice_lines
 
     invoice = {
-      'number': 1, 'customer': compose_directo_customer,
-      'language': language == 'en' ? 'ENG' : '', 'currency': activities.first.currency,
-      'date': month.end_of_month.strftime('%Y-%m-%d')
+      'date': month.end_of_month.strftime('%Y-%m-%d'),
+      'description': title_for_summary(month),
     }.as_json
-    invoice['invoice_lines'] = prepare_invoice_lines(month: month, activities: activities)
+    invoice['invoice_lines'] = invoice_lines
     invoice
   end
 
-  def prepare_invoice_lines(month:, activities:)
-    lines = []
+  def prepare_invoice_lines(month:, lines: [])
+    activities = monthly_activities(month)
+    return if activities.empty?
 
-    lines << { 'description': title_for_summary(month) }
     activities.each do |activity|
-      fetch_invoice_lines(activity, lines)
+      lines << new_monthly_invoice_line(activity)
     end
+    lines.sort_by! { |k, _v| k['product_id'] }
+    lines.sort_by! { |k, _v| k['duration_in_years'] }
+    lines.unshift({ 'description': title_for_summary(month) })
     lines << prepayment_for_all(lines)
-
     lines.as_json
+  end
+
+  def find_or_init_monthly_invoice(month:)
+    invoice = invoices.find_by(monthly_invoice: true, issue_date: month.end_of_month.to_date)
+    return invoice if invoice
+
+    summary = monthly_summary(month: month)
+    return unless summary
+
+    init_monthly_invoice(summary)
   end
 
   def title_for_summary(date)
@@ -43,53 +54,23 @@ module Registrar::BookKeeping # rubocop:disable Metrics/ModuleLength
     end
   end
 
-  def fetch_invoice_lines(activity, lines)
-    price = load_price(activity)
-    if price.duration.in_years.to_i >= 1
-      price.duration.in_years.to_i.times do |duration|
-        lines << new_monthly_invoice_line(activity: activity, duration: duration + 1).as_json
-      end
-    else
-      lines << new_monthly_invoice_line(activity: activity).as_json
-    end
-  end
-
-  def monthly_activites(month)
+  def monthly_activities(month)
     AccountActivity.where(account_id: account_ids)
                    .where(created_at: month.beginning_of_month..month.end_of_month)
                    .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW])
   end
 
-  def monthly_invoice(month:)
-    invoices.where(monthly_invoice: true, issue_date: month.end_of_month.to_date,
-                   cancelled_at: nil).first
-  end
-
-  def new_monthly_invoice_line(activity:, duration: nil)
+  def new_monthly_invoice_line(activity)
     price = load_price(activity)
-    line = {
+    duration = price.duration.in_years.to_i
+    {
       'product_id': DOMAIN_TO_PRODUCT[price.zone_name.to_sym],
       'quantity': 1,
       'unit': language == 'en' ? 'pc' : 'tk',
+      'price': price.price.amount.to_f,
+      'duration_in_years': duration,
+      'description': description_in_language(price: price, yearly: duration >= 1),
     }.with_indifferent_access
-
-    finalize_invoice_line(line, price: price, duration: duration, activity: activity)
-  end
-
-  def finalize_invoice_line(line, price:, activity:, duration:)
-    yearly = price.duration.in_years.to_i >= 1
-    line['price'] = yearly ? (price.price.amount / price.duration.in_years.to_i).to_f : price.price.amount.to_f
-    line['description'] = description_in_language(price: price, yearly: yearly)
-
-    add_product_timeframe(line: line, activity: activity, duration: duration) if duration.present? && (duration > 1)
-
-    line
-  end
-
-  def add_product_timeframe(line:, activity:, duration:)
-    create_time = activity.created_at
-    line['start_date'] = (create_time + (duration - 1).year).end_of_month.strftime('%Y-%m-%d')
-    line['end_date'] = (create_time + duration.year).end_of_month.strftime('%Y-%m-%d')
   end
 
   def description_in_language(price:, yearly:)
@@ -113,14 +94,6 @@ module Registrar::BookKeeping # rubocop:disable Metrics/ModuleLength
       'price': total,
       'unit': en ? 'pc' : 'tk',
     }
-  end
-
-  def compose_directo_customer
-    {
-      'code': accounting_customer_code,
-      'destination': address_country_code,
-      'vat_reg_no': vat_no,
-    }.as_json
   end
 
   def load_price(account_activity)

@@ -3,11 +3,10 @@ class SendEInvoiceJob < ApplicationJob
 
   def perform(invoice_id, payable: true)
     logger.info "Started to process e-invoice for invoice_id #{invoice_id}"
-    invoice = Invoice.find_by(id: invoice_id)
+    invoice = Invoice.find(invoice_id)
     return unless need_to_process_invoice?(invoice: invoice, payable: payable)
 
     send_invoice_to_eis_billing(invoice: invoice, payable: payable)
-    invoice.update(e_invoice_sent_at: Time.zone.now)
   rescue StandardError => e
     log_error(invoice: invoice, error: e)
     raise e

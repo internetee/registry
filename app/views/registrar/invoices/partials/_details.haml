@@ -24,8 +24,9 @@
   - else
     %dd{class: 'text-danger'}= t(:unpaid)
 
-  %dt= t(:payment_term)
-  %dd Prepayment
+  - unless @invoice.monthly_invoice
+    %dt= t(:payment_term)
+    %dd Prepayment
 
   %dt= t(:invoice_number)
   %dd= @invoice.number
