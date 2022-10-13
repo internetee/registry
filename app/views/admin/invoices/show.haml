@@ -20,14 +20,14 @@
 = render 'shared/full_errors', object: @invoice
 
 .row
-  .col-md-6= render 'registrar/invoices/partials/details'
+  .col-md-6= render 'admin/invoices/partials/details'
 .row
-  .col-md-6= render 'registrar/invoices/partials/seller'
-  .col-md-6= render 'registrar/invoices/partials/buyer'
+  .col-md-6= render 'admin/invoices/partials/seller'
+  .col-md-6= render 'admin/invoices/partials/buyer'
 .row
-  - if @invoice.monthly_invoice
-    .col-md-12= render 'registrar/invoices/partials/monthly_invoice_items'
+  - if @invoice.monthly_invoice 
+    .col-md-12= render 'admin/invoices/partials/monthly_invoice_items'
   - else
-    .col-md-12= render 'registrar/invoices/partials/items'
+    .col-md-12= render 'admin/invoices/partials/items'
 .row
-  .col-md-12= render 'registrar/invoices/partials/payment_orders'
+  .col-md-12= render 'admin/invoices/partials/payment_orders'

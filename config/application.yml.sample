@@ -61,16 +61,6 @@ contact_org_enabled: 'false'
 # System default for legal document types is: pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx
 # legal_document_types: "pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
 
-#
-# REGISTRAR configuration (DEPP)
-#
-show_ds_data_fields: 'false'
-default_nameservers_count: '2'
-default_admin_contacts_count: '1'
-epp_port: '700'
-cert_path: '/home/registry/registry/shared/ca/certs/webclient.cert.pem'
-key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
-epp_hostname: 'registry.gitlab.eu'
 repp_url: 'http://epp:3000/repp/v1/'
 
 # Estonian Company Register

@@ -25,10 +25,10 @@ class Dnskey < ApplicationRecord
   }
 
   # IANA numbers, single authority list
-  ALGORITHMS = Depp::Dnskey::ALGORITHMS.map {|pair| pair[1].to_s}.freeze
-  PROTOCOLS = %w(3)
-  FLAGS = %w(0 256 257) # 256 = ZSK, 257 = KSK
-  DS_DIGEST_TYPE = [1,2]
+  ALGORITHMS = %w[3 5 6 7 8 10 13 14 15 16].freeze
+  PROTOCOLS = %w[3].freeze
+  FLAGS = %w[0 256 257].freeze # 256 = ZSK, 257 = KSK
+  DS_DIGEST_TYPE = [1, 2].freeze
   RESOLVERS = ENV['dnssec_resolver_ips'].to_s.strip.split(', ').freeze
   self.ignored_columns = %w[legacy_domain_id]
 

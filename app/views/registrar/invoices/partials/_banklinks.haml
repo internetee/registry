@@ -1,8 +1,0 @@
-%h4= t('registrar.invoices.pay_invoice')
-%hr
-
-  - if @invoice.payment_link.present?
-    = link_to @invoice.payment_link, target: :_blank do
-      = image_tag("everypay.png", class: 'everypay', style: "width: 100px; height: 20px;")
-  - else
-    = "No everypay link"

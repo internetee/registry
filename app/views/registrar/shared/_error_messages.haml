@@ -1,5 +1,0 @@
-- if f.object.errors.present?
-  .alert.alert-warning
-    %ul
-      - f.object.errors.messages.each do |message|
-        %li= message.second.first.split('[').first
