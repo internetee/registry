@@ -383,7 +383,6 @@ en:
   username: 'Username'
   register: 'Register'
   domain_info: 'Domain info'
-  xml_console: 'XML Console'
   info: 'Info'
   send_epp_request: 'Send EPP Request'
   updated_at: 'Updated at'
