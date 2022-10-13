@@ -9,7 +9,7 @@ class CsyncJobTest < ActiveSupport::TestCase
     dirname = File.dirname(ENV['cdns_scanner_input_file'])
 
     FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
-    FileUtils.touch(ENV['cdns_scanner_input_file']) unless File.exists?(ENV['cdns_scanner_input_file'])
+    FileUtils.touch(ENV['cdns_scanner_input_file']) unless File.exist?(ENV['cdns_scanner_input_file'])
   end
 
   def test_generates_input_file_for_cdnskey_scanner

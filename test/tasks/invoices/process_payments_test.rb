@@ -204,20 +204,15 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_topup_creates_invoice_and_send_it_as_paid
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/e_invoice/e_invoice')
-      .to_return(status: 200, body: '', headers: {})
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator')
+      .to_return(status: 200, body: { everypay_link: 'http://link.test' }.to_json, headers: {})
 
     invoice_n = Invoice.order(number: :desc).last.number
     stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
-      .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
+      .to_return(status: 200, body: { invoice_number: (invoice_n + 3).to_s }.to_json, headers: {})
 
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator')
-      .to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
-
-    stub_request(:put, 'https://registry:3000/eis_billing/e_invoice_response')
-      .to_return(status: 200,
-                 body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now - 10.minutes}\"}",
-                 headers: {})
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/e_invoice/e_invoice')
+      .to_return(status: 200, body: '', headers: {})
 
     registrar = registrars(:bestnames)
     @invoice.payment_orders.destroy_all
@@ -229,7 +224,6 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
 
     invoice = Invoice.last
     assert invoice.paid?
-    assert_not invoice.e_invoice_sent_at.blank?
 
     pdf_source = Invoice::PdfGenerator.new(invoice)
     pdf_source.send(:invoice_html).include?('Receipt date')

@@ -48,7 +48,11 @@ Truemail.configure do |config|
   # And all of validations for 'otherdomain.com' will be processed with mx validation only.
   # It is equal to empty hash by default.
   # config.validation_type_for = { 'somedomain.com' => :regex, 'otherdomain.com' => :mx }
-
+  if ENV['regex_only_email_validations'].present?
+    config.validation_type_for = ENV['regex_only_email_validations'].split(/,/)
+                                                                    .collect { |d| [d.strip, :regex] }
+                                                                    .to_h
+  end
   # Optional parameter. Validation of email which contains whitelisted domain always will
   # return true. Other validations will not processed even if it was defined in validation_type_for
   # It is equal to empty array by default.
