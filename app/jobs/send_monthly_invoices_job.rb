@@ -1,4 +1,4 @@
-class SendMonthlyInvoicesJob < ApplicationJob # rubocop:disable Metrics/ClassLength
+class SendMonthlyInvoicesJob < ApplicationJob
   queue_as :default
   discard_on StandardError
 
@@ -61,6 +61,7 @@ class SendMonthlyInvoicesJob < ApplicationJob # rubocop:disable Metrics/ClassLen
   private
 
   def handle_assign_numbers_response_errors(response)
+    raise 'ASSIGN NUMBER RESPONSE ERROR: Not Found' if response['error'] == 'Not Found'
     raise 'INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE' if response['code'] == '403'
     raise 'PROBLEM WITH TOKEN' if response['error'] == 'out of range'
   end

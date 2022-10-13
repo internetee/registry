@@ -1,4 +1,4 @@
-module Registrar::BookKeeping # rubocop:disable Metrics/ModuleLength
+module Registrar::BookKeeping
   extend ActiveSupport::Concern
 
   DOMAIN_TO_PRODUCT = { 'ee': '01EE', 'com.ee': '02COM', 'pri.ee': '03PRI',
@@ -39,7 +39,8 @@ module Registrar::BookKeeping # rubocop:disable Metrics/ModuleLength
   end
 
   def find_or_init_monthly_invoice(month:)
-    invoice = invoices.find_by(monthly_invoice: true, issue_date: month.end_of_month.to_date)
+    invoice = invoices.find_by(monthly_invoice: true, issue_date: month.end_of_month.to_date,
+                               cancelled_at: nil)
     return invoice if invoice
 
     summary = monthly_summary(month: month)

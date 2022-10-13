@@ -50,14 +50,14 @@ class SendMonthlyInvoicesJobTest < ActiveSupport::TestCase
   end
 
   def test_monthly_summary_is_delivered_if_invoice_already_exists
-    @monthly_invoice = invoices(:one)
-    @monthly_invoice.update(number: 309_902, monthly_invoice: true,
-                            issue_date: @date.last_month.end_of_month,
-                            due_date: @date.last_month.end_of_month,
-                            metadata: metadata,
-                            in_directo: false,
-                            sent_at: nil,
-                            e_invoice_sent_at: nil)
+    monthly_invoice = invoices(:one)
+    monthly_invoice.update(number: 309_902, monthly_invoice: true,
+                           issue_date: @date.last_month.end_of_month,
+                           due_date: @date.last_month.end_of_month,
+                           metadata: metadata,
+                           in_directo: false,
+                           sent_at: nil,
+                           e_invoice_sent_at: nil)
 
     activity = account_activities(:one)
     price = billing_prices(:create_one_year)
@@ -77,9 +77,49 @@ class SendMonthlyInvoicesJobTest < ActiveSupport::TestCase
         SendMonthlyInvoicesJob.perform_now
       end
     end
-    @monthly_invoice.reload
+    monthly_invoice.reload
 
-    assert_not_nil @monthly_invoice.sent_at
+    assert_not_nil monthly_invoice.sent_at
+    assert_emails 1
+  end
+
+  def test_new_monthly_summary_is_delivered_if_invoice_cancelled
+    monthly_invoice = invoices(:one)
+    monthly_invoice.update(number: 309_902, monthly_invoice: true,
+                           issue_date: @date.last_month.end_of_month,
+                           due_date: @date.last_month.end_of_month,
+                           metadata: metadata,
+                           in_directo: false,
+                           sent_at: nil,
+                           cancelled_at: Time.now,
+                           e_invoice_sent_at: nil)
+
+    activity = account_activities(:one)
+    price = billing_prices(:create_one_year)
+    activity.update!(activity_type: 'create', price: price)
+    @user.update(language: 'et')
+
+    stub_request(:post, @monthly_invoice_numbers_generator_url)
+      .to_return(status: :ok, body: { invoice_numbers: [309_903] }.to_json, headers: {})
+
+    stub_request(:post, @directo_url).with do |request|
+      body = CGI.unescape(request.body)
+
+      (body.include? '.test registreerimine: 1 aasta(t)') &&
+        (body.include? 'Domeenide ettemaks') &&
+        (body.include? '309903')
+    end.to_return(status: 200, body: @response)
+
+    assert_enqueued_jobs 1, only: SendEInvoiceJob do
+      assert_difference('Invoice.count', 1) do
+        SendMonthlyInvoicesJob.perform_now
+      end
+    end
+    monthly_invoice.reload
+    last_invoice = Invoice.last
+    assert_not_nil last_invoice.sent_at
+    assert_equal last_invoice.issue_date, monthly_invoice.issue_date
+    assert_nil monthly_invoice.sent_at
     assert_emails 1
   end
 
