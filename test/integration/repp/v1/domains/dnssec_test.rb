@@ -24,13 +24,11 @@ class ReppV1DomainsDnssecTest < ActionDispatch::IntegrationTest
         { flags: '256',
           alg: '14',
           protocol: '3',
-          public_key: 'dGVzdA=='
-        }
-      ]
+          public_key: 'dGVzdA==' },
+      ],
     }
 
     post "/repp/v1/domains/#{@domain.name}/dnssec", params: payload, headers: @auth_headers
-    json = JSON.parse(response.body, symbolize_names: true)
 
     get "/repp/v1/domains/#{@domain.name}/dnssec", headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
@@ -45,9 +43,8 @@ class ReppV1DomainsDnssecTest < ActionDispatch::IntegrationTest
         { flags: '256',
           alg: '14',
           protocol: '3',
-          public_key: 'dGVzdA=='
-        }
-      ]
+          public_key: 'dGVzdA==' },
+      ],
     }
 
     post "/repp/v1/domains/#{@domain.name}/dnssec", params: payload, headers: @auth_headers
@@ -67,7 +64,7 @@ class ReppV1DomainsDnssecTest < ActionDispatch::IntegrationTest
   end
 
   def test_creates_dnssec_key_with_every_algo
-    algos = Depp::Dnskey::ALGORITHMS.map {|pair| pair[1].to_s}
+    algos = Dnskey::ALGORITHMS
     algos_to_check = %w[15 16]
 
     assert (algos & algos_to_check) == algos_to_check
@@ -79,9 +76,8 @@ class ReppV1DomainsDnssecTest < ActionDispatch::IntegrationTest
           { flags: '256',
             alg: alg,
             protocol: '3',
-            public_key: 'dGVzdA=='
-          }
-        ]
+            public_key: 'dGVzdA==' },
+        ],
       }
 
       post "/repp/v1/domains/#{@domain.name}/dnssec", params: payload, headers: @auth_headers
@@ -105,13 +101,11 @@ class ReppV1DomainsDnssecTest < ActionDispatch::IntegrationTest
         { flags: '256',
           alg: '14',
           protocol: '3',
-          public_key: 'dGVzdA=='
-        }
-      ]
+          public_key: 'dGVzdA==' },
+      ],
     }
 
     post "/repp/v1/domains/#{@domain.name}/dnssec", params: payload, headers: @auth_headers
-    json = JSON.parse(response.body, symbolize_names: true)
 
     assert @domain.dnskeys.any?
 

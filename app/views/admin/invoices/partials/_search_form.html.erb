@@ -69,10 +69,10 @@
                         <span class="glyphicon glyphicon-search"></span>
                         &nbsp;
                     </button>
-                    <%= link_to t('.download_btn'), admin_invoices_path(format: :csv, params: params.permit!),
-                                "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => t('.download_btn'),
+                    <%= link_to t('admin.invoices.search_form.download_btn'), admin_invoices_path(format: :csv, params: params.permit!),
+                                "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => t('admin.invoices.search_form.download_btn'),
                                 class: 'btn btn-default' %>
-                    <%= link_to t('.reset_btn'), admin_invoices_path, class: 'btn btn-default' %>
+                    <%= link_to t('admin.invoices.search_form.reset_btn'), admin_invoices_path, class: 'btn btn-default' %>
                 </div>
             </div>
         <% end %>

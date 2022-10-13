@@ -43,7 +43,7 @@ module Repp
 
         def validate_renew_period
           @epp_errors ||= ActiveModel::Errors.new(self)
-          periods = Depp::Domain::PERIODS.map { |p| p[1] }
+          periods = Domain::PERIODS.map { |p| p[1] }
           return if periods.include? bulk_renew_params[:renew_period]
 
           @epp_errors.add(:epp_errors, msg: 'Invalid renew period', code: '2005')

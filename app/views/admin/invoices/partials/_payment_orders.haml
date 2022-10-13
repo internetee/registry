@@ -1,0 +1,19 @@
+%h4= "Payment Orders"
+%hr
+.table-responsive
+  %table.table.table-hover.table-condensed
+    %thead
+      %tr
+        %th{class: 'col-xs-1'}= "#"
+        %th{class: 'col-xs-1'}= "Channel"
+        %th{class: 'col-xs-2'}= "Status"
+        %th{class: 'col-xs-3'}= "Initiated"
+        %th{class: 'col-xs-4'}= "Notes"
+    %tbody
+      - @invoice.payment_orders.each do |payment_order|
+        %tr
+          %td= payment_order.id
+          %td= payment_order.channel
+          %td= payment_order.status
+          %td= payment_order.created_at
+          %td= payment_order.notes
