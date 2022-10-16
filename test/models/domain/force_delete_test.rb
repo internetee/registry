@@ -457,8 +457,6 @@ class ForceDeleteTest < ActionMailer::TestCase
     domain.reload
 
     assert_nil domain.status_notes[DomainStatus::FORCE_DELETE]
-    notification = domain.registrar.notifications.last(2).first
-    assert notification.text.include? asserted_text
     assert_not domain.force_delete_scheduled?
   end
 
