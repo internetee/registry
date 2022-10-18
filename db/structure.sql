@@ -216,7 +216,7 @@ CREATE FUNCTION public.generate_zonefile(i_origin character varying) RETURNS tex
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: account_activities; Type: TABLE; Schema: public; Owner: -
@@ -956,14 +956,15 @@ CREATE TABLE public.domains (
     pending_json jsonb,
     force_delete_date date,
     statuses character varying[],
-    status_notes public.hstore,
+    statuses_before_force_delete character varying[] DEFAULT '{}'::character varying[],
     upid integer,
     up_date timestamp without time zone,
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     locked_by_registrant_at timestamp without time zone,
     force_delete_start timestamp without time zone,
     force_delete_data public.hstore,
-    json_statuses_history jsonb
+    json_statuses_history jsonb,
+    status_notes public.hstore
 );
 
 
@@ -2287,74 +2288,6 @@ ALTER SEQUENCE public.payment_orders_id_seq OWNED BY public.payment_orders.id;
 
 
 --
--- Name: pghero_query_stats; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pghero_query_stats (
-    id bigint NOT NULL,
-    database text,
-    "user" text,
-    query text,
-    query_hash bigint,
-    total_time double precision,
-    calls bigint,
-    captured_at timestamp without time zone
-);
-
-
---
--- Name: pghero_query_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pghero_query_stats_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pghero_query_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_stats.id;
-
-
---
--- Name: pghero_space_stats; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pghero_space_stats (
-    id bigint NOT NULL,
-    database text,
-    schema text,
-    relation text,
-    size bigint,
-    captured_at timestamp without time zone
-);
-
-
---
--- Name: pghero_space_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pghero_space_stats_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pghero_space_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pghero_space_stats_id_seq OWNED BY public.pghero_space_stats.id;
-
-
---
 -- Name: prices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2390,48 +2323,6 @@ CREATE SEQUENCE public.prices_id_seq
 --
 
 ALTER SEQUENCE public.prices_id_seq OWNED BY public.prices.id;
-
-
---
--- Name: que_jobs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.que_jobs (
-    priority smallint DEFAULT 100 NOT NULL,
-    run_at timestamp with time zone DEFAULT now() NOT NULL,
-    job_id bigint NOT NULL,
-    job_class text NOT NULL,
-    args json DEFAULT '[]'::json NOT NULL,
-    error_count integer DEFAULT 0 NOT NULL,
-    last_error text,
-    queue text DEFAULT ''::text NOT NULL
-);
-
-
---
--- Name: TABLE que_jobs; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.que_jobs IS '3';
-
-
---
--- Name: que_jobs_job_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.que_jobs_job_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: que_jobs_job_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.que_jobs_job_id_seq OWNED BY public.que_jobs.job_id;
 
 
 --
@@ -2714,7 +2605,8 @@ CREATE TABLE public.validation_events (
     validation_eventable_type character varying,
     validation_eventable_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    event_type public.validation_type
 );
 
 
@@ -3257,31 +3149,10 @@ ALTER TABLE ONLY public.payment_orders ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
--- Name: pghero_query_stats id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_query_stats_id_seq'::regclass);
-
-
---
--- Name: pghero_space_stats id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_space_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_space_stats_id_seq'::regclass);
-
-
---
 -- Name: prices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.prices ALTER COLUMN id SET DEFAULT nextval('public.prices_id_seq'::regclass);
-
-
---
--- Name: que_jobs job_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.que_jobs ALTER COLUMN job_id SET DEFAULT nextval('public.que_jobs_job_id_seq'::regclass);
 
 
 --
@@ -3794,35 +3665,11 @@ ALTER TABLE ONLY public.payment_orders
 
 
 --
--- Name: pghero_query_stats pghero_query_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_query_stats
-    ADD CONSTRAINT pghero_query_stats_pkey PRIMARY KEY (id);
-
-
---
--- Name: pghero_space_stats pghero_space_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pghero_space_stats
-    ADD CONSTRAINT pghero_space_stats_pkey PRIMARY KEY (id);
-
-
---
 -- Name: prices prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.prices
     ADD CONSTRAINT prices_pkey PRIMARY KEY (id);
-
-
---
--- Name: que_jobs que_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.que_jobs
-    ADD CONSTRAINT que_jobs_pkey PRIMARY KEY (queue, priority, run_at, job_id);
 
 
 --
@@ -4580,20 +4427,6 @@ CREATE INDEX index_payment_orders_on_invoice_id ON public.payment_orders USING b
 
 
 --
--- Name: index_pghero_query_stats_on_database_and_captured_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pghero_query_stats_on_database_and_captured_at ON public.pghero_query_stats USING btree (database, captured_at);
-
-
---
--- Name: index_pghero_space_stats_on_database_and_captured_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pghero_space_stats_on_database_and_captured_at ON public.pghero_space_stats USING btree (database, captured_at);
-
-
---
 -- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4647,6 +4480,13 @@ CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_
 --
 
 CREATE INDEX index_validation_events_on_event_data ON public.validation_events USING gin (event_data);
+
+
+--
+-- Name: index_validation_events_on_event_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_validation_events_on_event_type ON public.validation_events USING btree (event_type);
 
 
 --
@@ -5394,11 +5234,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210708131814'),
 ('20210729131100'),
 ('20210729134625'),
-('20211028122103'),
-('20211028125245'),
-('20211029082225'),
+('20210827185249'),
+('20211029073644'),
 ('20211124071418'),
-('20211124084308'),
 ('20211125181033'),
 ('20211125184334'),
 ('20211126085139'),
@@ -5407,6 +5245,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220113201642'),
 ('20220113220809'),
 ('20220124105717'),
+('20220216113112'),
 ('20220228093211'),
 ('20220316140727'),
 ('20220406085500'),
@@ -5417,6 +5256,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220504090512'),
 ('20220524130709'),
 ('20220701113409'),
+('20220715145808'),
 ('20220818075833'),
-('20221011061840'),
-('20220715145808');
+('20221011061840');
+
+
