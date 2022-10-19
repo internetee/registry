@@ -47,7 +47,6 @@ module Api
 
         def update
           logger.debug 'Received update request'
-          logger.debug params
           contact = find_contact_and_update_credentials(params[:uuid], params[:name], params[:email], params[:phone])
 
           reparsed_request = reparsed_request(request.body.string)
@@ -62,7 +61,6 @@ module Api
           contact.registrant_publishable = publishable if publishable.in? [true, false]
 
           logger.debug "Setting.address_processing is set to #{Setting.address_processing}"
-
           contact.address = parse_address(params[:address]) if Setting.address_processing && params[:address]
           render_address_error and return if !Setting.address_processing && params[:address]
 
@@ -136,11 +134,15 @@ module Api
 
         def update_and_notify!(contact)
           contact.transaction do
-            contact.save!
-            action = current_registrant_user.actions.create!(contact: contact, operation: :update)
-            contact.registrar.notify(action)
+            if contact.save
+              action = current_registrant_user.actions.create!(contact: contact, operation: :update)
+              contact.registrar.notify(action)
+            else
+              logger.info '&&&&&&&&&&&&&&&&&7'
+              logger.info contact.errors.inspect
+              logger.info '&&&&&&&&&&&&&&&&&7'
+            end
           end
-
           contact
         end
 
@@ -153,7 +155,11 @@ module Api
         end
 
         def find_contact_and_update_credentials(uuid, name, email, phone)
-          contact = current_user_contacts.find_by!(uuid: uuid)
+          contact = current_registrant_user.contacts.find_by!(uuid: uuid)
+          p '-----------'
+          p current_registrant_user
+          p current_registrant_user.contacts
+          p '----------'
           contact.name = name if name.present?
           contact.email = email if email.present?
           contact.phone = phone if phone.present?
