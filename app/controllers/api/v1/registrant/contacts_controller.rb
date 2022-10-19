@@ -58,7 +58,6 @@ module Api
                                                           !disclosed_attributes.include?('phone')
 
           contact.disclosed_attributes = disclosed_attributes if disclosed_attributes
-
           publishable = reparsed_request[:registrant_publishable]
           contact.registrant_publishable = publishable if publishable.in? [true, false]
 
@@ -74,7 +73,7 @@ module Api
 
           contact = update_and_notify!(contact)
 
-          render json: serialize_contact(contact, false)
+          render json: serialize_contact(contact, true)
         end
 
         private
