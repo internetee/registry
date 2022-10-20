@@ -37,6 +37,24 @@ class Auction < ApplicationRecord
     find_by(domain: domain_name.to_s, status: PENDING_STATUSES)
   end
 
+  def self.domain_exists_in_blocked_disputed_and_registered?(domain_name)
+    Domain.exists?(name: domain_name) ||
+      BlockedDomain.exists?(name: domain_name) ||
+      Dispute.exists?(domain_name: domain_name) ||
+      exception_for_registred_or_unbided_existed_auctions(domain_name)
+  end
+
+  def self.exception_for_registred_or_unbided_existed_auctions(domain_name)
+    return false unless Auction.exists?(domain: domain_name)
+
+    auctions = Auction.where(domain: domain_name).order(:created_at)
+    last_record = auctions.last
+
+    return false if last_record.domain_registered? || last_record.no_bids?
+
+    true
+  end
+
   def start
     self.status = self.class.statuses[:started]
     save!
