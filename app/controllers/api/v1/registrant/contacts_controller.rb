@@ -51,6 +51,8 @@ module Api
 
           reparsed_request = reparsed_request(request.body.string)
 
+          p '-----'
+
           disclosed_attributes = reparsed_request[:disclosed_attributes]
 
           render_disclosed_attributes_error and return if disclosed_attributes.present? && contact.org? &&
