@@ -51,8 +51,6 @@ module Api
 
           reparsed_request = reparsed_request(request.body.string)
 
-          p '-----'
-
           disclosed_attributes = reparsed_request[:disclosed_attributes]
 
           render_disclosed_attributes_error and return if disclosed_attributes.present? && contact.org? &&
@@ -158,10 +156,6 @@ module Api
 
         def find_contact_and_update_credentials(uuid, name, email, phone)
           contact = current_registrant_user.contacts.find_by!(uuid: uuid)
-          p '-----------'
-          p current_registrant_user
-          p current_registrant_user.contacts
-          p '----------'
           contact.name = name if name.present?
           contact.email = email if email.present?
           contact.phone = phone if phone.present?
