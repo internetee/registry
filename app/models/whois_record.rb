@@ -113,6 +113,7 @@ class WhoisRecord < ApplicationRecord
     {
       name: contact.name,
       email: contact.email,
+      phone: contact.phone,
       changed: contact.updated_at.try(:to_s, :iso8601),
       disclosed_attributes: contact.disclosed_attributes,
       contact_publishable: contact.registrant_publishable?,
