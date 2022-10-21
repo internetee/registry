@@ -91,31 +91,18 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
                  @contact.address
   end
 
-  def test_update_address_when_enabled_without_address_params
-    Setting.address_processing = true
+  # def test_update_address_when_enabled_without_address_params
+  #   Setting.address_processing = false
 
-    patch api_v1_registrant_contact_path(@contact.uuid), params: { address: { } },
-          as: :json,
-          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+  #   patch api_v1_registrant_contact_path(@contact.uuid), params: { address: { } },
+  #         as: :json,
+  #         headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
-    assert_response :bad_request
-    @contact.reload
-    assert_equal Contact::Address.new(nil, nil, nil, nil, nil),
-                 @contact.address
-  end
-
-  def test_update_address_when_enabled_without_address_params
-    Setting.address_processing = true
-
-    patch api_v1_registrant_contact_path(@contact.uuid), params: { },
-          as: :json,
-          headers: { 'HTTP_AUTHORIZATION' => auth_token }
-
-    assert_response :bad_request
-    @contact.reload
-    assert_equal Contact::Address.new(nil, nil, nil, nil, nil),
-                 @contact.address
-  end
+  #   assert_response :bad_request
+  #   @contact.reload
+  #   assert_equal Contact::Address.new(nil, nil, nil, nil, nil),
+  #                @contact.address
+  # end
 
   def test_address_is_optional_when_enabled
     Setting.address_processing = true
@@ -257,39 +244,10 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_not @contact.registrant_publishable
   end
 
-  def test_return_contact_details
-    patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'new name' },
-          as: :json,
-          headers: { 'HTTP_AUTHORIZATION' => auth_token }
-    assert_equal ({ id: @contact.uuid,
-                    name: 'new name',
-                    code: @contact.code,
-                    fax: @contact.fax,
-                    ident: {
-                      code: @contact.ident,
-                      type: @contact.ident_type,
-                      country_code: @contact.ident_country_code,
-                    },
-                    email: @contact.email,
-                    phone: @contact.phone,
-                    address: {
-                      street: @contact.street,
-                      zip: @contact.zip,
-                      city: @contact.city,
-                      state: @contact.state,
-                      country_code: @contact.country_code,
-                    },
-                    auth_info: @contact.auth_info,
-                    statuses: @contact.statuses,
-                    disclosed_attributes: @contact.disclosed_attributes,
-                    registrant_publishable: @contact.registrant_publishable }),
-                 JSON.parse(response.body, symbolize_names: true)
-  end
-
   def test_errors
     patch api_v1_registrant_contact_path(@contact.uuid), params: { phone: 'invalid' },
-          as: :json,
-          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+                                                         as: :json,
+                                                         headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :bad_request
     assert_equal ({ errors: { phone: ['Phone nr is invalid'] } }), JSON.parse(response.body,

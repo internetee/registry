@@ -47,12 +47,18 @@ module Api
 
         def update
           logger.debug 'Received update request'
+          logger.debug '----------- incoming params'
+          logger.debug params
+          logger.debug '------------------'
           contact = find_contact_and_update_credentials(params[:uuid], params[:name], params[:email], params[:phone])
+
+          logger.debug '----------- contact'
+          logger.debug contact.inspect
+          logger.debug '------------------'
 
           reparsed_request = reparsed_request(request.body.string)
 
           disclosed_attributes = reparsed_request[:disclosed_attributes]
-
           render_disclosed_attributes_error and return if disclosed_attributes.present? && contact.org? &&
                                                           !disclosed_attributes.include?('phone')
 
@@ -69,7 +75,16 @@ module Api
           logger.debug "ENV['fax_enabled'] is set to #{ENV['fax_enabled']}"
           render_fax_error and return if ENV['fax_enabled'] != 'true' && params[:fax]
 
+          logger.debug '----------- contact before update'
+          logger.debug contact.inspect
+          logger.debug '------------------'
+
           contact = update_and_notify!(contact)
+
+
+          logger.debug '----------- contact after update'
+          logger.debug contact.inspect
+          logger.debug '------------------'
 
           render json: serialize_contact(contact, true)
         end
@@ -134,15 +149,11 @@ module Api
 
         def update_and_notify!(contact)
           contact.transaction do
-            if contact.save
-              action = current_registrant_user.actions.create!(contact: contact, operation: :update)
-              contact.registrar.notify(action)
-            else
-              logger.info '&&&&&&&&&&&&&&&&&7'
-              logger.info contact.errors.inspect
-              logger.info '&&&&&&&&&&&&&&&&&7'
-            end
+            contact.save!
+            action = current_registrant_user.actions.create!(contact: contact, operation: :update)
+            contact.registrar.notify(action)
           end
+
           contact
         end
 
@@ -155,7 +166,7 @@ module Api
         end
 
         def find_contact_and_update_credentials(uuid, name, email, phone)
-          contact = current_registrant_user.contacts.find_by!(uuid: uuid)
+          contact = current_user_contacts.find_by!(uuid: uuid)
           contact.name = name if name.present?
           contact.email = email if email.present?
           contact.phone = phone if phone.present?
