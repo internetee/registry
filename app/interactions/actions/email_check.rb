@@ -11,7 +11,6 @@ module Actions
     def call
       result = check_email(email)
       save_result(result)
-      filtering_old_failed_records(result)
       result.success ? log_success : log_failure(result)
       result.success
     end
@@ -26,25 +25,25 @@ module Actions
       Rails.env.test? && check_level == 'smtp' ? :mx : check_level.to_sym
     end
 
-    def filtering_old_failed_records(result)
-      if @check_level == "mx" && !result.success && validation_eventable.validation_events.count > 3
-        validation_eventable.validation_events.order!(created_at: :asc)
-        while validation_eventable.validation_events.count > 3
-          validation_eventable.validation_events.first.destroy
+    def filtering_old_failed_records(result, contact)
+      if @check_level == "mx" && !result.success && contact.validation_events.count > 3
+        contact.validation_events.order!(created_at: :asc)
+        while contact.validation_events.count > 3
+          contact.validation_events.first.destroy
         end
       end
 
-      if @check_level == "mx" && result.success && validation_eventable.validation_events.count > 1
-        validation_eventable.validation_events.order!(created_at: :asc)
-        while validation_eventable.validation_events.count > 1
-          validation_eventable.validation_events.first.destroy
+      if @check_level == "regex" && result.success && contact.validation_events.count > 1
+        contact.validation_events.order!(created_at: :asc)
+        while contact.validation_events.count > 1
+          contact.validation_events.first.destroy
         end
       end
 
-      if @check_level == "smtp" && validation_eventable.validation_events.count > 1
-        validation_eventable.validation_events.order!(created_at: :asc)
-        while validation_eventable.validation_events.count > 1
-          validation_eventable.validation_events.first.destroy
+      if @check_level == "smtp" && contact.validation_events.count > 1
+        contact.validation_events.order!(created_at: :asc)
+        while contact.validation_events.count > 1
+          contact.validation_events.first.destroy
         end
       end
     end
@@ -64,6 +63,7 @@ module Actions
       contacts.find_in_batches(batch_size: 500) do |contact_batches|
         contact_batches.each do |contact|
           contact.validation_events.create(validation_event_attrs(result))
+          filtering_old_failed_records(result, contact)
         end
       end
     rescue ActiveRecord::RecordNotSaved

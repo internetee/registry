@@ -92,7 +92,49 @@ class EmailCheckTest < ActiveSupport::TestCase
       action.call
     end
 
-    assert_equal @contact.validation_events.count, 1
+    assert_equal @contact.validation_events.count, 3
     assert @contact.validation_events.last.success
+  end
+
+  def test_should_remove_old_record_if_validation_pass_the_limit
+    trumail_results = OpenStruct.new(success: false,
+                                     email: @contact.email,
+                                     domain: "box.tests",
+                                     errors: {:mx=>"target host(s) not found"})
+
+    action = Actions::EmailCheck.new(email: @contact.email,
+                                     validation_eventable: @contact,
+                                     check_level: 'mx')
+
+    action.stub :check_email, trumail_results do
+      4.times do
+        action.call
+      end
+    end
+
+    assert_equal @contact.validation_events.count, 3
+  end
+
+  def test_should_remove_old_record_if_multiple_contacts_has_the_same_email
+    contact_two = contacts(:william)
+    contact_two.update(email: @contact.email)
+    contact_two.reload
+    trumail_results = OpenStruct.new(success: false,
+                                     email: @contact.email,
+                                     domain: "box.tests",
+                                     errors: {:mx=>"target host(s) not found"})
+
+    action = Actions::EmailCheck.new(email: @contact.email,
+                                     validation_eventable: @contact,
+                                     check_level: 'mx')
+
+    action.stub :check_email, trumail_results do
+      4.times do 
+        action.call
+      end
+    end
+
+    assert_equal @contact.validation_events.count, 3
+    assert_equal contact_two.validation_events.count, 3
   end
 end
