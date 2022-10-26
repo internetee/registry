@@ -92,7 +92,7 @@ class EmailCheckTest < ActiveSupport::TestCase
       action.call
     end
 
-    assert_equal @contact.validation_events.count, 3
+    assert_equal @contact.validation_events.count, 1
     assert @contact.validation_events.last.success
   end
 

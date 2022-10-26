@@ -26,26 +26,24 @@ module Actions
     end
 
     def filtering_old_failed_records(result, contact)
-      if @check_level == "mx" && !result.success && contact.validation_events.count > 3
-        contact.validation_events.order!(created_at: :asc)
-        while contact.validation_events.count > 3
-          contact.validation_events.first.destroy
-        end
+      ValidationEvent::INVALID_EVENTS_COUNT_BY_LEVEL.each do |level, limit|
+        handle_failed_records(contact: contact, check_level: level, limit: limit, success: result.success)
       end
+    end
 
-      if @check_level == "regex" && result.success && contact.validation_events.count > 1
+    def handle_failed_records(contact:, check_level:, limit:, success:)
+      if @check_level.to_sym == check_level && !success && contact.validation_events.count > limit
         contact.validation_events.order!(created_at: :asc)
-        while contact.validation_events.count > 1
+        while contact.validation_events.count > limit
           contact.validation_events.first.destroy
         end
       end
+    end
 
-      if @check_level == "smtp" && contact.validation_events.count > 1
-        contact.validation_events.order!(created_at: :asc)
-        while contact.validation_events.count > 1
-          contact.validation_events.first.destroy
-        end
-      end
+    def filtering_old_records(contact:, success:)
+      return unless success
+
+      contact.validation_events.destroy_all
     end
 
     def save_result(result)
@@ -62,6 +60,8 @@ module Actions
 
       contacts.find_in_batches(batch_size: 500) do |contact_batches|
         contact_batches.each do |contact|
+          # methods should be in this order!
+          filtering_old_records(contact: contact, success: result.success)
           contact.validation_events.create(validation_event_attrs(result))
           filtering_old_failed_records(result, contact)
         end
