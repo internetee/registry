@@ -6,6 +6,9 @@ module Repp
         skip_before_action :check_ip_restriction, only: :tara_callback
         skip_before_action :validate_client_certs, only: :tara_callback
 
+        THROTTLED_ACTIONS = %i[index tara_callback].freeze
+        include Shunter::Integration::Throttle
+
         api :GET, 'repp/v1/registrar/auth'
         desc 'check user auth info and return data'
         def index

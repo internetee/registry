@@ -3,8 +3,11 @@ module Repp
     module Registrar
       class AccreditationInfoController < BaseController
         if Feature.allow_accr_endspoints?
-          api :GET, 'repp/v1/registrar/accreditation/get_info'
-          desc 'check login user and return data'
+        THROTTLED_ACTIONS = %i[index].freeze
+        include Shunter::Integration::Throttle
+
+        api :GET, 'repp/v1/registrar/accreditation/get_info'
+        desc 'check login user and return data'
 
           def index
             login = current_user

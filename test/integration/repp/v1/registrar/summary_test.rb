@@ -7,6 +7,9 @@ class ReppV1RegistrarSummaryTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_checks_user_summary_info
@@ -39,5 +42,20 @@ class ReppV1RegistrarSummaryTest < ActionDispatch::IntegrationTest
     assert_equal json[:data][:registrar_name], 'Best Names'
     assert_nil json[:data][:notification]
     assert_nil json[:data][:notifications_count]
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    get '/repp/v1/registrar/summary', headers: @auth_headers
+    get '/repp/v1/registrar/summary', headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 end

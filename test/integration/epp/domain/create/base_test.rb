@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class EppDomainCreateBaseTest < EppTestCase
+  setup do
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
+  end
 
   def test_illegal_chars_in_dns_key
     name = "new.#{dns_zones(:one).origin}"
@@ -851,5 +855,86 @@ class EppDomainCreateBaseTest < EppTestCase
 
     assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
+  end
+
+  def test_returns_valid_response_if_not_throttled
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    disputed_domain = disputes(:active)
+    password = disputed_domain.password
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{disputed_domain.domain_name}</domain:name>
+              <domain:registrant>#{contacts(:john).code}</domain:registrant>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+              <eis:reserved>
+                <eis:pw>#{password}</eis:pw>
+              </eis:reserved>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_create_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully
+    assert_correct_against_schema response_xml
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    now = Time.zone.parse('2010-07-05')
+    travel_to now
+    disputed_domain = disputes(:active)
+    password = disputed_domain.password
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{disputed_domain.domain_name}</domain:name>
+              <domain:registrant>#{contacts(:john).code}</domain:registrant>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+              <eis:reserved>
+                <eis:pw>#{password}</eis:pw>
+              </eis:reserved>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_create_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    post epp_create_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :session_limit_exceeded_server_closing_connection
+    assert_correct_against_schema response_xml
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 end

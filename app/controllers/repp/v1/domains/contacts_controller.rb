@@ -4,6 +4,9 @@ module Repp
       class ContactsController < BaseContactsController
         before_action :set_domain, only: %i[index create destroy]
 
+        THROTTLED_ACTIONS = %i[index create destroy update].freeze
+        include Shunter::Integration::Throttle
+
         def_param_group :contacts_apidoc do
           param :contacts, Array, required: true, desc: 'Array of new linked contacts' do
             param :code, String, required: true, desc: 'Contact code'

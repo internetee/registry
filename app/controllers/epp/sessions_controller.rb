@@ -3,6 +3,9 @@ module Epp
     skip_authorization_check only: [:hello, :login, :logout]
     before_action :set_paper_trail_whodunnit
 
+    THROTTLED_ACTIONS = %i[login hello].freeze
+    include Shunter::Integration::Throttle
+
     def hello
       render_epp_response('greeting')
     end

@@ -5,6 +5,9 @@ module Repp
         before_action :set_domain, only: %i[index create destroy]
         before_action :set_nameserver, only: %i[destroy]
 
+        THROTTLED_ACTIONS = %i[index create destroy].freeze
+        include Shunter::Integration::Throttle
+
         api :GET, '/repp/v1/domains/:domain_name/nameservers'
         desc "Get domain's nameservers"
         def index

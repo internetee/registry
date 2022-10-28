@@ -10,6 +10,8 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
     @admin_new.update(ident: @admin_current.ident,
                       ident_type: @admin_current.ident_type,
                       ident_country_code: @admin_current.ident_country_code)
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_replace_all_admin_contacts_when_ident_data_doesnt_match
@@ -146,6 +148,27 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
                     data: { affected_domains: ["airport.test"],
                     skipped_domains: ["shop.test"] }}),
             JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    domain = domains(:airport)
+    domain.admin_contacts = [@admin_current]
+    patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: @admin_current.code,
+                                                       new_contact_id: @admin_new.code },
+                                             headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
+    patch '/repp/v1/domains/admin_contacts', params: { current_contact_id: @admin_current.code,
+                                                       new_contact_id: @admin_new.code },
+                                             headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 
   private

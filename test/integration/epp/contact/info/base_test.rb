@@ -3,6 +3,9 @@ require 'test_helper'
 class EppContactInfoBaseTest < EppTestCase
   setup do
     @contact = contacts(:john)
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_returns_valid_response
@@ -127,6 +130,62 @@ class EppContactInfoBaseTest < EppTestCase
     assert_correct_against_schema response_xml
     assert_nil response_xml.at_xpath('//contact:authInfo', contact: xml_schema)
     assert_equal 'No access', response_xml.at_xpath('//contact:name', contact: xml_schema).text
+  end
+
+  def test_returns_valid_response_if_not_throttled
+    @contact.update_columns(code: @contact.code.upcase)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <info>
+            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
+              <contact:id>john-001</contact:id>
+            </contact:info>
+          </info>
+        </command>
+      </epp>
+    XML
+
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully
+    assert_correct_against_schema response_xml
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+    @contact.update_columns(code: @contact.code.upcase)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <info>
+            <contact:info xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
+              <contact:id>john-001</contact:id>
+            </contact:info>
+          </info>
+        </command>
+      </epp>
+    XML
+
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    post epp_info_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :session_limit_exceeded_server_closing_connection
+    assert_correct_against_schema response_xml
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 
   private

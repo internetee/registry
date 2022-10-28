@@ -6,6 +6,9 @@ class EppContactUpdateBaseTest < EppTestCase
   setup do
     @contact = contacts(:john)
     ActionMailer::Base.deliveries.clear
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_updates_contact
@@ -468,6 +471,76 @@ class EppContactUpdateBaseTest < EppTestCase
     assert_equal 'new name', @contact.name
     assert_equal 'new-email@inbox.test', @contact.email
     assert_equal '+123.4', @contact.phone
+  end
+
+  def test_returns_valid_response_if_not_throttled
+    @contact.update_columns(code: @contact.code.upcase)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
+              <contact:id>john-001</contact:id>
+              <contact:chg>
+                <contact:postalInfo>
+                  <contact:name>new name</contact:name>
+                </contact:postalInfo>
+                <contact:voice>+123.4</contact:voice>
+                <contact:email>new-email@inbox.test</contact:email>
+              </contact:chg>
+            </contact:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully
+    assert_correct_against_schema response_xml
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+    @contact.update_columns(code: @contact.code.upcase)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <contact:update xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
+              <contact:id>john-001</contact:id>
+              <contact:chg>
+                <contact:postalInfo>
+                  <contact:name>new name</contact:name>
+                </contact:postalInfo>
+                <contact:voice>+123.4</contact:voice>
+                <contact:email>new-email@inbox.test</contact:email>
+              </contact:chg>
+            </contact:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :session_limit_exceeded_server_closing_connection
+    assert_correct_against_schema response_xml
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 
   private

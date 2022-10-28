@@ -27,6 +27,10 @@ module Repp
         @response = { code: 2201, message: 'Authorization error' }
         logger.error e.to_s
         render(json: @response, status: :unauthorized)
+      rescue Shunter::ThrottleError => e
+        @response = { code: 2502, message: Shunter.default_error_message }
+        logger.error e.to_s
+        render(json: @response, status: :bad_request)
       ensure
         create_repp_log
       end
@@ -166,6 +170,11 @@ module Repp
         data[:address_processing] = Contact.address_processing?
         data[:abilities] = Ability.new(current_user).permissions
         data
+      end
+
+      def throttled_user
+        authorize!(:throttled_user, @domain) unless current_user || action_name == 'tara_callback'
+        current_user
       end
     end
   end
