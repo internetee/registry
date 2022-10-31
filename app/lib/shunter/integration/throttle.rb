@@ -21,7 +21,9 @@ module Shunter
 
           user_id = throttled_user.id
 
-          shunter = Shunter::Base.new(conn_options: connection_options, user_id: user_id)
+          shunter = Shunter::Base.new(conn_options: connection_options,
+                                      user_id: user_id,
+                                      rate_limit: throttled_user.registrar.rate_limit)
           if shunter.throttle
             logger.info "Request from #{throttled_user.class}/#{throttled_user.id} is coming through throttling"
             yield if block_given?

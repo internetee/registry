@@ -67,10 +67,8 @@ module Admin
       if response.code == "200"
         return record_result_for_each_api_user(response: response)
       else
-        return redirect_to request.referer, notice: 'Registrar no found'
+        return redirect_to request.referer, notice: 'Something went wrong'
       end
-
-      redirect_to request.referer, notice: 'Something goes wrong'
     end
 
     def remove_test_date
@@ -160,7 +158,8 @@ module Admin
                                         :legaldoc_optout,
                                         :legaldoc_optout_comment,
                                         :iban,
-                                        :language)
+                                        :language,
+                                        :rate_limit)
     end
 
     def registry_vat_rate

@@ -2,12 +2,13 @@
 
 module Shunter
   class Base
-    attr_accessor :user_id, :adapter
+    attr_accessor :user_id, :adapter, :rate_limit
 
     def initialize(options = {})
       @user_id = options[:user_id]
       adapter_klass = Shunter.default_adapter.constantize
       @adapter = adapter_klass.new(options[:conn_options])
+      @rate_limit = options[:rate_limit]
     end
 
     def user_key
@@ -49,6 +50,7 @@ module Shunter
     end
 
     def allowed_requests
+      # rate_limit.nil? ? Shunter.default_threshold : rate_limit
       Shunter.default_threshold
     end
 
