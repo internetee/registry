@@ -46,19 +46,11 @@ module Api
         end
 
         def update
-          logger.debug 'Received update request'
-          logger.debug '----------- incoming params'
-          logger.debug params
-          logger.debug '------------------'
           contact = find_contact_and_update_credentials(params[:uuid], params[:name], params[:email], params[:phone])
 
-          logger.debug '----------- contact'
-          logger.debug contact.inspect
-          logger.debug '------------------'
-
           reparsed_request = reparsed_request(request.body.string)
-
           disclosed_attributes = reparsed_request[:disclosed_attributes]
+          disclosed_attributes = disclose_attributes_for_org_registrant(disclosed_attributes)
           render_disclosed_attributes_error and return if disclosed_attributes.present? && contact.org? &&
                                                           !disclosed_attributes.include?('phone')
 
@@ -75,21 +67,21 @@ module Api
           logger.debug "ENV['fax_enabled'] is set to #{ENV['fax_enabled']}"
           render_fax_error and return if ENV['fax_enabled'] != 'true' && params[:fax]
 
-          logger.debug '----------- contact before update'
-          logger.debug contact.inspect
-          logger.debug '------------------'
-
           contact = update_and_notify!(contact)
-
-
-          logger.debug '----------- contact after update'
-          logger.debug contact.inspect
-          logger.debug '------------------'
 
           render json: serialize_contact(contact, true)
         end
 
         private
+
+        def disclose_attributes_for_org_registrant(disclosed_attributes)
+          return unless current_registrant_user.org?
+
+          disclosed_attributes << 'name' unless disclosed_attributes.include? 'name'
+          disclosed_attributes << 'email' unless disclosed_attributes.include? 'email'
+
+          disclosed_attributes
+        end
 
         def representable_contact(uuid)
           country = current_registrant_user.country.alpha2
