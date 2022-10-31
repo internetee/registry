@@ -50,7 +50,6 @@ module Api
 
           reparsed_request = reparsed_request(request.body.string)
           disclosed_attributes = reparsed_request[:disclosed_attributes]
-          disclosed_attributes = disclose_attributes_for_org_registrant(disclosed_attributes)
           render_disclosed_attributes_error and return if disclosed_attributes.present? && contact.org? &&
                                                           !disclosed_attributes.include?('phone')
 
@@ -73,15 +72,6 @@ module Api
         end
 
         private
-
-        def disclose_attributes_for_org_registrant(disclosed_attributes)
-          return unless current_registrant_user.org?
-
-          disclosed_attributes << 'name' unless disclosed_attributes.include? 'name'
-          disclosed_attributes << 'email' unless disclosed_attributes.include? 'email'
-
-          disclosed_attributes
-        end
 
         def representable_contact(uuid)
           country = current_registrant_user.country.alpha2
