@@ -50,8 +50,8 @@ module Shunter
     end
 
     def allowed_requests
-      # rate_limit.nil? ? Shunter.default_threshold : rate_limit
-      Shunter.default_threshold
+      rate_limit.nil? ? Shunter.default_threshold : rate_limit
+      # Shunter.default_threshold
     end
 
     def timespan

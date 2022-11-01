@@ -65,9 +65,9 @@ module Admin
       response = base_get_request(uri: uri, port: ENV['registry_demo_registrar_port'])
 
       if response.code == "200"
-        return record_result_for_each_api_user(response: response)
+        record_result_for_each_api_user(response: response)
       else
-        return redirect_to request.referer, notice: 'Something went wrong'
+        redirect_to request.referer, notice: 'Something went wrong'
       end
     end
 

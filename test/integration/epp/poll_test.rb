@@ -2,7 +2,7 @@ require 'test_helper'
 
 class EppPollTest < EppTestCase
   setup do
-    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter = ENV['shunter_default_adapter'].constantize.new
     adapter&.clear!
     @notification = notifications(:complete)
   end
@@ -172,8 +172,8 @@ class EppPollTest < EppTestCase
   end
 
   def test_returns_error_response_if_throttled
-    ENV["shunter_default_threshold"] = '1'
-    ENV["shunter_enabled"] = 'true'
+    ENV['shunter_default_threshold'] = '1'
+    ENV['shunter_enabled'] = 'true'
 
     post epp_poll_path, params: { frame: request_req_xml },
                         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
@@ -185,8 +185,27 @@ class EppPollTest < EppTestCase
     assert_epp_response :session_limit_exceeded_server_closing_connection
     assert_correct_against_schema response_xml
     assert response.body.include?(Shunter.default_error_message)
-    ENV["shunter_default_threshold"] = '10000'
-    ENV["shunter_enabled"] = 'false'
+    ENV['shunter_default_threshold'] = '10000'
+    ENV['shunter_enabled'] = 'false'
+  end
+
+  def test_returns_error_response_if_throttled_with_configurated_rate_limit
+    ENV['shunter_enabled'] = 'true'
+    user = registrars(:bestnames)
+    user.update(rate_limit: 1)
+    user.reload
+
+    post epp_poll_path, params: { frame: request_req_xml },
+                        headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    post epp_poll_path, params: { frame: request_req_xml },
+                        headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :session_limit_exceeded_server_closing_connection
+    assert_correct_against_schema response_xml
+    assert response.body.include?(Shunter.default_error_message)
+    ENV['shunter_enabled'] = 'false'
   end
 
   private
