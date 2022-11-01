@@ -157,6 +157,11 @@ lhv_keystore_password:
 lhv_ca_file: # Needed only in dev mode
 lhv_dev_mode: 'false'
 
+shunter_default_timespan: "60"
+shunter_default_threshold: "100"
+shunter_redis_host: "localhost"
+shunter_redis_port: "6379"
+
 epp_session_timeout_seconds: '300'
 contact_archivation_log_file_dir:
 
