@@ -10,6 +10,8 @@ class EisBilling::EInvoiceResponseController < EisBilling::BaseController
 
   def mark_e_invoice_sent_at(invoice_number)
     invoice = Invoice.find_by(number: invoice_number)
+    invoice = Invoice.find_by(number: invoice_number['invoice_number']) if invoice.nil?
+
     invoice.update(e_invoice_sent_at: Time.zone.now)
   end
 end
