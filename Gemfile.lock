@@ -341,7 +341,7 @@ GEM
     paper_trail (13.0.0)
       activerecord (>= 5.2)
       request_store (~> 1.1)
-    pdfkit (0.8.7)
+    pdfkit (0.8.7.2)
     pg (1.4.4)
     pg_query (2.1.2)
       google-protobuf (>= 3.17.1)
