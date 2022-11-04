@@ -94,10 +94,6 @@ module Repp
           param :verified, [true, false, 'true', 'false'], required: false,
                                                            desc: 'Registrant change is already verified'
         end
-        param :contacts, Array, required: false, desc: 'Array of linked contacts' do
-          param :code, String, required: true, desc: 'Contact code'
-          param :type, String, required: true, desc: 'Role of contact (admin/tech)'
-        end
         param :transfer_code, String, required: false, desc: 'New authorization code'
       end
       def update
