@@ -8,6 +8,7 @@ module Domains
         compose(PostSetProcess, inputs.to_h)
         compose(NotifyRegistrar, inputs.to_h)
         compose(NotifyByEmail, inputs.to_h)
+        compose(NotifyMultiyearsExpirationDomain, inputs.to_h)
       end
     end
   end

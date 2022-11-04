@@ -64,6 +64,8 @@ class EppResponseResultCodeTest < ActiveSupport::TestCase
   end
 
   def test_returns_default_descriptions
+    ENV["shunter_default_threshold"] = '100'
+
     descriptions = {
       1000 => 'Command completed successfully',
       1001 => 'Command completed successfully; action pending',
@@ -92,8 +94,8 @@ class EppResponseResultCodeTest < ActiveSupport::TestCase
       2400 => 'Command failed',
       2501 => 'Authentication error; server closing connection'
     }
-
-    assert Epp::Response::Result::Code.default_descriptions.contain? descriptions
+    assert_equal descriptions, Epp::Response::Result::Code.default_descriptions
+    ENV["shunter_default_threshold"] = '10000'
   end
 
   def test_equality
