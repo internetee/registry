@@ -29,7 +29,7 @@ module Repp
         render(json: @response, status: :unauthorized)
       rescue Shunter::ThrottleError => e
         @response = { code: 2502, message: Shunter.default_error_message }
-        logger.error e.to_s
+        logger.error e.to_s unless Rails.env.test?
         render(json: @response, status: :bad_request)
       ensure
         create_repp_log

@@ -34,7 +34,7 @@ module Epp
                      code: '2502',
                      msg: Shunter.default_error_message)
       handle_errors
-      log_exception(exception)
+      log_exception(exception) unless Rails.env.test?
     end
 
     def respond_with_command_failed_error(exception)
