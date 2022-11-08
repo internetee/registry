@@ -74,7 +74,7 @@ gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'haml', '~> 6.0'
 gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'rexml'
-gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
+gem 'wkhtmltopdf-binary', '~> 0.12.6.0'
 
 gem 'directo', github: 'internetee/directo', branch: 'master'
 
