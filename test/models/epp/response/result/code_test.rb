@@ -90,7 +90,6 @@ class EppResponseResultCodeTest < ActiveSupport::TestCase
       2502 => Shunter.default_error_message
     }
     assert_equal descriptions, Epp::Response::Result::Code.default_descriptions
-    ENV["shunter_default_threshold"] = '10000'
   end
 
   def test_equality
