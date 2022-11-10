@@ -26,7 +26,7 @@ module Shunter
             logger.info "Request from #{throttled_user.class}/#{throttled_user.id} is coming through throttling"
             yield if block_given?
           else
-            logger.info "Too many requests from #{throttled_user.class}/#{throttled_user.id}."
+            logger.info "Too many requests from #{throttled_user.class}/#{throttled_user.id}." unless Rails.env.test?
             raise Shunter::ThrottleError
           end
         end
