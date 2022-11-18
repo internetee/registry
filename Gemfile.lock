@@ -346,7 +346,7 @@ GEM
       activerecord (>= 5.2)
       request_store (~> 1.1)
     pdfkit (0.8.7.2)
-    pg (1.4.4)
+    pg (1.4.5)
     pg_query (2.1.2)
       google-protobuf (>= 3.17.1)
     pghero (2.8.1)
@@ -554,7 +554,7 @@ DEPENDENCIES
   omniauth-tara!
   paper_trail (~> 13.0)
   pdfkit
-  pg (= 1.4.4)
+  pg (= 1.4.5)
   pg_query (>= 0.9.0)
   pghero
   pry (= 0.14.1)
