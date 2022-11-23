@@ -65,7 +65,6 @@ class Domain < ApplicationRecord
     statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
   end
 
-
   # NB! contacts, admin_contacts, tech_contacts are empty for a new record
   has_many :domain_contacts, dependent: :destroy
   has_many :contacts, through: :domain_contacts, source: :contact

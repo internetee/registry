@@ -61,6 +61,13 @@ contact_org_enabled: 'false'
 # System default for legal document types is: pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx
 # legal_document_types: "pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
 
+#
+# REGISTRAR configuration
+#
+epp_port: '700'
+cert_path: '/opt/ca/certs/webclient.crt.pem'
+key_path: '/opt/ca/private/webclient.key.pem'
+epp_hostname: 'epp_proxy'
 repp_url: 'http://epp:3000/repp/v1/'
 
 # Estonian Company Register
