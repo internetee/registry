@@ -13,8 +13,10 @@ module Repp
 
         def load_xml
           cl_trid = "#{current_user.username}-#{Time.zone.now.to_i}"
+          obj = ActionController::Base.helpers.sanitize(params[:obj])
+          epp_action = ActionController::Base.helpers.sanitize(params[:epp_action])
           xml_dir_path = Rails.root.join('app/views/epp/sample_requests').to_s
-          xml = File.read("#{xml_dir_path}/#{params[:obj]}/#{params[:epp_action]}.xml")
+          xml = File.read("#{xml_dir_path}/#{obj}/#{epp_action}.xml")
           xml = prepare_payload(xml, cl_trid)
 
           render_success(data: { xml: xml })
