@@ -1,3 +1,72 @@
+23.11.2022
+* outzone rake task for invalid email domains by @OlegPhenomenon in https://github.com/internetee/registry/pull/2437
+* Update dependency paper_trail to v13 by @renovate in https://github.com/internetee/registry/pull/2419
+* Bump omniauth from 1.9.1 to 1.9.2 by @dependabot in https://github.com/internetee/registry/pull/2429
+* Update dependency pdfkit to v0.8.7.2 [SECURITY] by @renovate in https://github.com/internetee/registry/pull/2472
+* Bump google-protobuf from 3.19.4 to 3.21.9 by @dependabot in https://github.com/internetee/registry/pull/2477
+* Fix domain contacts repp by @maricavor in https://github.com/internetee/registry/pull/2475
+* Update dependency pg to v1.4.5 by @renovate in https://github.com/internetee/registry/pull/2481
+* Fixed dates for yearly domains in monthly invoices by @maricavor in https://github.com/internetee/registry/pull/2482
+
+02.11.2022
+* outzone rake task for invalid email domains by @OlegPhenomenon in https://github.com/internetee/registry/pull/2437
+
+28.10.2022
+* Add request throttling by @yulgolem in https://github.com/internetee/registry/pull/2028
+
+26.10.2022
+* Update actions/download-artifact action to v3.0.1 by @renovate in https://github.com/internetee/registry/pull/2464
+* Update actions/upload-artifact action to v3.1.1 by @renovate in https://github.com/internetee/registry/pull/2465
+* assign the limit of validation records by @OlegPhenomenon in https://github.com/internetee/registry/pull/2466
+
+20.10.2022
+* added exception for auctions with no-bids and registred-domains statuses by @OlegPhenomenon in https://github.com/internetee/registry/pull/2403
+* assign auction type for nil value rake task by @OlegPhenomenon in https://github.com/internetee/registry/pull/2404
+
+17.10.2022
+* Remove registrar portal by @thiagoyoussef in https://github.com/internetee/registry/pull/2434
+* Update dependency pg to v1.4.4 by @renovate in https://github.com/internetee/registry/pull/2459
+* fix check force delete lift poll messages by @thiagoyoussef in https://github.com/internetee/registry/pull/2461
+
+12.10.2022
+* Created regex only email validation domain list by @maricavor in https://github.com/internetee/registry/pull/2401
+* Fix check force delete lift bug by @thiagoyoussef in https://github.com/internetee/registry/pull/2418
+* Refactored monthly invoice generation job by @maricavor in https://github.com/internetee/registry/pull/2456
+
+07.10.2022
+* Enable trimming for dnskey and email values by @thiagoyoussef in https://github.com/internetee/registry/pull/2453
+
+06.10.2022
+* Update dependency pdfkit to v0.8.7 [SECURITY] by @renovate in https://github.com/internetee/registry/pull/2452
+* Admin: option to delete auction record by @thiagoyoussef in https://github.com/internetee/registry/pull/2449
+* Add monthly invoice email description by @thiagoyoussef in https://github.com/internetee/registry/pull/2442
+
+03.10.2022
+* fixed zeitwerk load file issue by @OlegPhenomenon in https://github.com/internetee/registry/pull/2448
+* added sidekiq link to admin view by @OlegPhenomenon in https://github.com/internetee/registry/pull/2447
+* protected public method account activity create by @OlegPhenomenon in https://github.com/internetee/registry/pull/2443
+
+29.09.2022
+* Update dependency haml to v6 by @renovate in https://github.com/internetee/registry/pull/2444
+* added endpoints to demo registry for accr results by @OlegPhenomenon in https://github.com/internetee/registry/pull/2237
+* Refactor: remove legacy que by @thiagoyoussef in https://github.com/internetee/registry/pull/2337
+* fixed type of auction for next rounds by @OlegPhenomenon in https://github.com/internetee/registry/pull/2393
+* Admin: download pdf with domain data on show by @thiagoyoussef in https://github.com/internetee/registry/pull/2396
+* Increase notification text field length on database by @thiagoyoussef in https://github.com/internetee/registry/pull/2397
+
+20.09.2022
+* Created market share chart data endpoint by @maricavor in https://github.com/internetee/registry/pull/2426
+
+16.09.2022
+* Removed 200 limit of records if nil by @maricavor in https://github.com/internetee/registry/pull/2440
+* fixed legal doc issue output by @OlegPhenomenon in https://github.com/internetee/registry/pull/2410
+* extended csv domain export by @OlegPhenomenon in https://github.com/internetee/registry/pull/2407
+* remove fixed top registrar navbar css class by @OlegPhenomenon in https://github.com/internetee/registry/pull/2406
+
+13.09.2022
+* Ignore statuses update if invoice already paid by @OlegPhenomenon in https://github.com/internetee/registry/pull/2438
+* remove eis-billing feature toggle by @OlegPhenomenon in https://github.com/internetee/registry/pull/2433
+
 08.09.2022
 * Fixed template error for multi-year registered domains in force delete process [#2435](https://github.com/internetee/registry/issues/2435)
 
