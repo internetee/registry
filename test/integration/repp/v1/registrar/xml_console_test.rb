@@ -21,7 +21,9 @@ class ReppV1RegistrarXmlConsoleTest < ActionDispatch::IntegrationTest
   end
 
   def test_check_schema_path
-    post repp_v1_registrar_xml_console_path, params: { xml_console: { payload: payload } }.to_json,
+    @auth_headers['Content-Type'] = 'application/json'
+    params = { xml_console: { payload: payload } }
+    post repp_v1_registrar_xml_console_path, params: params.to_json,
                                              headers: @auth_headers
 
     assert_response :ok
