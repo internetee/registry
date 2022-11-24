@@ -1,3 +1,6 @@
+24.11.2022
+* Overwrite feature to SendMonthlyInvoicesJob https://github.com/internetee/registry/pull/2485
+
 23.11.2022
 * outzone rake task for invalid email domains by @OlegPhenomenon in https://github.com/internetee/registry/pull/2437
 * Update dependency paper_trail to v13 by @renovate in https://github.com/internetee/registry/pull/2419
