@@ -38,7 +38,6 @@ module Registrar::BookKeeping # rubocop:disable Metrics/ModuleLength
     lines.as_json
   end
 
-  # rubocop:disable Metrics/CognitiveComplexity
   def find_or_init_monthly_invoice(month:, overwrite:)
     invoice = invoices.find_by(monthly_invoice: true, issue_date: month.end_of_month.to_date)
     return invoice if invoice && !overwrite
@@ -51,7 +50,6 @@ module Registrar::BookKeeping # rubocop:disable Metrics/ModuleLength
 
     new_invoice
   end
-  # rubocop:enable Metrics/CognitiveComplexity
 
   def overwrite_invoice(original_invoice, new_invoice)
     params_to_scrub = %i[created_at updated_at id number sent_at
