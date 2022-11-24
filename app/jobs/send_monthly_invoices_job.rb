@@ -2,8 +2,9 @@ class SendMonthlyInvoicesJob < ApplicationJob # rubocop:disable Metrics/ClassLen
   queue_as :default
   discard_on StandardError
 
-  def perform(dry: false, months_ago: 1)
+  def perform(dry: false, months_ago: 1, overwrite: false)
     @dry = dry
+    @overwrite = overwrite
     @month = Time.zone.now - months_ago.month
     @directo_data = []
 
@@ -48,7 +49,7 @@ class SendMonthlyInvoicesJob < ApplicationJob # rubocop:disable Metrics/ClassLen
 
   def find_or_init_monthly_invoices(invoices: [])
     Registrar.with_cash_accounts.find_each do |registrar|
-      invoice = registrar.find_or_init_monthly_invoice(month: @month)
+      invoice = registrar.find_or_init_monthly_invoice(month: @month, overwrite: @overwrite)
       invoices << invoice unless invoice.nil?
     end
     invoices
