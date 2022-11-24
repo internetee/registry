@@ -4,7 +4,7 @@ module Repp
       class XmlConsoleController < BaseController
         include EppRequestable
 
-        THROTTLED_ACTIONS = %i[load_xml create].freeze
+        THROTTLED_ACTIONS = %i[load_xml].freeze
         include Shunter::Integration::Throttle
 
         PREFS = %w[
