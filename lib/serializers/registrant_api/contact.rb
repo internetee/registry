@@ -31,6 +31,7 @@ module Serializers
           auth_info: contact.auth_info,
           statuses: contact.statuses,
           disclosed_attributes: contact.disclosed_attributes,
+          registrant_publishable: contact.registrant_publishable,
         }
 
         obj[:links] = contact.related_domains if @links
