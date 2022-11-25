@@ -7,7 +7,7 @@ module EppRequestable
 
   def create
     result = server.request(request_params[:payload])
-    render_success(data: { xml: result })
+    render_success(data: { xml: result.force_encoding('UTF-8') })
   rescue StandardError
     handle_non_epp_errors(nil, I18n.t('errors.messages.epp_conn_error'))
   end
