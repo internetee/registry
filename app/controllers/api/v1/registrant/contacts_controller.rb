@@ -46,22 +46,13 @@ module Api
         end
 
         def update
-          p '------'
-          p params
-          p '-----'
           contact = find_contact_and_update_credentials(params[:uuid], params[:name], params[:email], params[:phone])
-
           reparsed_request = reparsed_request(request.body.string)
           disclosed_attributes = reparsed_request[:disclosed_attributes]
-          p '--------'
-
-          # render_disclosed_attributes_error and return if disclosed_attributes.present? && contact.org? &&
-                                                          # !disclosed_attributes.include?('phone')
 
           contact.disclosed_attributes = disclosed_attributes if disclosed_attributes
           publishable = reparsed_request[:registrant_publishable]
           contact.registrant_publishable = publishable if publishable.in? [true, false]
-
 
           logger.debug "Setting.address_processing is set to #{Setting.address_processing}"
           contact.address = parse_address(params[:address]) if Setting.address_processing && params[:address]
@@ -73,9 +64,6 @@ module Api
           render_fax_error and return if ENV['fax_enabled'] != 'true' && params[:fax]
 
           contact = update_and_notify!(contact)
-          p '--- contact'
-          p contact
-          p '-------'
 
           render json: serialize_contact(contact, true)
         end
