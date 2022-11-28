@@ -1,4 +1,4 @@
-class LegalDocument < ApplicationRecord
+class LegalDocument < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include EppErrors
   MIN_BODY_SIZE = (1.37 * 3.kilobytes).ceil
   MAX_BODY_SIZE = 8.megabytes
