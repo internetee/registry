@@ -55,7 +55,10 @@ module Api
             attributes_not_exist_error(extra_attrs) and return if extra_attrs.present?
           end
 
-          # render_disclosed_attributes_error and return if disclosed_attributes.present? && contact.org?
+          if disclosed_attributes.present? && contact.org?
+            extra_attrs = disclosed_attributes - Contact::OPEN_LEGAL_ATTRIBUTES
+            render_disclosed_attributes_error and return if extra_attrs.present?
+          end
 
           contact.disclosed_attributes = disclosed_attributes if disclosed_attributes
           publishable = reparsed_request[:registrant_publishable]

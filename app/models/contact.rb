@@ -156,6 +156,10 @@ class Contact < ApplicationRecord
     fax
   ].freeze
 
+  OPEN_LEGAL_ATTRIBUTES = %w[
+    phone
+  ].freeze
+
   STATUSES = [
     CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED,
     CLIENT_TRANSFER_PROHIBITED,

@@ -175,31 +175,31 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_empty @contact.disclosed_attributes
   end
 
-  # def test_legal_persons_disclosed_attributes_cannot_be_changed
-  #   @contact = contacts(:acme_ltd)
+  def test_legal_persons_disclosed_attributes_cannot_be_changed
+    @contact = contacts(:acme_ltd)
 
-  #   contacts(:acme_ltd).ident
-  #   assert_equal '1234567', @contact.ident
+    contacts(:acme_ltd).ident
+    assert_equal '1234567', @contact.ident
 
-  #   assert_equal Contact::ORG, @contact.ident_type
-  #   assert_equal 'US', @contact.ident_country_code
-  #   @contact.update!(disclosed_attributes: %w[])
-  #   assert_equal 'US-1234', @user.registrant_ident
+    assert_equal Contact::ORG, @contact.ident_type
+    assert_equal 'US', @contact.ident_country_code
+    @contact.update!(disclosed_attributes: %w[])
+    assert_equal 'US-1234', @user.registrant_ident
 
-  #   assert_no_changes -> { @contact.disclosed_attributes } do
-  #     patch api_v1_registrant_contact_path(@contact.uuid),
-  #           params: { disclosed_attributes: %w[name] },
-  #           as: :json,
-  #           headers: { 'HTTP_AUTHORIZATION' => auth_token }
-  #     @contact.reload
-  #   end
-  #   assert_response :bad_request
+    assert_no_changes -> { @contact.disclosed_attributes } do
+      patch api_v1_registrant_contact_path(@contact.uuid),
+            params: { disclosed_attributes: %w[name] },
+            as: :json,
+            headers: { 'HTTP_AUTHORIZATION' => auth_token }
+      @contact.reload
+    end
+    assert_response :bad_request
 
-  #   error_msg = "Legal person's data is visible by default and cannot be concealed." \
-  #               ' Please remove this parameter.'
-  #   assert_equal ({ errors: [{ disclosed_attributes: [error_msg] }] }),
-  #                JSON.parse(response.body, symbolize_names: true)
-  # end
+    error_msg = "Legal person's data is visible by default and cannot be concealed." \
+                ' Please remove this parameter.'
+    assert_equal ({ errors: [{ disclosed_attributes: [error_msg] }] }),
+                 JSON.parse(response.body, symbolize_names: true)
+  end
 
   def test_legal_persons_disclosed_attributes_change_when_phone
     @contact = contacts(:acme_ltd)
