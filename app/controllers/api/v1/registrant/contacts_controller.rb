@@ -50,6 +50,13 @@ module Api
           reparsed_request = reparsed_request(request.body.string)
           disclosed_attributes = reparsed_request[:disclosed_attributes]
 
+          if disclosed_attributes.present?
+            extra_attrs = disclosed_attributes - Contact::DISCLOSE_ATTRIBUTES
+            attributes_not_exist_error(extra_attrs) and return if extra_attrs.present?
+          end
+
+          # render_disclosed_attributes_error and return if disclosed_attributes.present? && contact.org?
+
           contact.disclosed_attributes = disclosed_attributes if disclosed_attributes
           publishable = reparsed_request[:registrant_publishable]
           contact.registrant_publishable = publishable if publishable.in? [true, false]
@@ -114,6 +121,11 @@ module Api
             address[:state],
             address[:country_code]
           )
+        end
+
+        def attributes_not_exist_error(extra_attrs)
+          error_msg = "Request contains extra attributes: #{extra_attrs.join(', ')}"
+          render json: { errors: [{ disclosed_attributes: [error_msg] }] }, status: :bad_request
         end
 
         def render_address_error

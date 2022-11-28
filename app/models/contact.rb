@@ -147,6 +147,15 @@ class Contact < ApplicationRecord
   # "clientDeleteProhibited" or "serverDeleteProhibited" status.
   PENDING_DELETE = 'pendingDelete'.freeze
 
+  DISCLOSE_ATTRIBUTES = %w[
+    name
+    email
+    phone
+    registrant_publishable
+    address
+    fax
+  ].freeze
+
   STATUSES = [
     CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED,
     CLIENT_TRANSFER_PROHIBITED,
