@@ -14,7 +14,7 @@ class LegalDocument < ApplicationRecord
 
   belongs_to :documentable, polymorphic: true
 
-  validate :val_body_length, if: ->(file) { file.path.blank? }
+  validate :val_body_length, if: ->(file) { file.path.blank? && Rails.env.production? }
 
   before_create :add_creator
   before_save   :save_to_filesystem, if: :body
