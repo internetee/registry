@@ -1,3 +1,6 @@
+29.11.2022
+* Fixed pantom statuse issue in REPP https://github.com/internetee/registry/issues/2470
+
 24.11.2022
 * Overwrite feature to SendMonthlyInvoicesJob https://github.com/internetee/registry/pull/2485
 
