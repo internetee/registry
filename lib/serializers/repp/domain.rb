@@ -58,12 +58,13 @@ module Serializers
         }
       end
 
-      def statuses
-        statuses_with_notes = domain.status_notes
+      def statuses(statuses_with_notes = {})
+        status_notes = domain.status_notes
         domain.statuses.each do |status|
-          statuses_with_notes.merge!({ "#{status}": '' }) unless statuses_with_notes.key?(status)
+          status_note = status_notes[status.to_s].presence || ''
+          statuses_with_notes.merge!({ "#{status}": status_note })
         end
-        statuses_with_notes
+        statuses_with_notes.with_indifferent_access
       end
 
       private
