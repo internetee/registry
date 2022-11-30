@@ -7,15 +7,43 @@ module Repp
         param :end_date, String, required: true, desc: 'Period end date'
       end
       def market_share_distribution
-        registrars = ::Registrar.where(test_registrar: false).joins(:domains)
-                                .where(from_condition).where(to_condition)
-        grouped = registrars.group(:name).count
+        date_to = to_date(search_params[:end_date]).end_of_month
+        date_from = to_date(search_params[:start_date] || '01.1991')
+        log_domains_del = ::Version::DomainVersion.where('event = ? AND created_at > ?' \
+                                                         "AND object ->> 'created_at' <= ?" \
+                                                         "AND object ->> 'created_at' >= ?",
+                                                         'destroy', date_to, date_to, date_from)
+                                                  .group("object ->> 'registrar_id'").count
+
+        log_domains_trans = ::Version::DomainVersion.where('event = ? AND created_at > ?' \
+                                                           "AND object ->> 'created_at' <= ?" \
+                                                           "AND object ->> 'created_at' >= ?" \
+                                                           "AND object_changes ->> 'registrar_id' IS NOT NULL",
+                                                           'update', date_to, date_to, date_from)
+
+        log_domains_trans_grouped = log_domains_trans.group("object ->> 'registrar_id'")
+                                                     .count
+
+        domains = ::Domain.where(from_condition)
+                          .where(to_condition)
+                          .where.not(name: log_domains_trans.map { |ld| ld.object['name'] })
+                          .group(:registrar_id).count.stringify_keys
+
+        grouped = summarize([log_domains_del, log_domains_trans_grouped, domains])
+
+        registrar_names = ::Registrar.where(test_registrar: false)
+                                     .map { |r| { "#{r.id}": r.name }.with_indifferent_access }
+                                     .inject(:merge)
 
         result = grouped.map do |key, value|
-          hash = { name: key.strip, y: value }
-          hash.merge!({ sliced: true, selected: true }) if current_user.registrar.name == key
+          next unless registrar_names.key?(key)
+
+          name = registrar_names[key]
+          hash = { name: registrar_names[key], y: value }
+          hash.merge!({ sliced: true, selected: true }) if current_user.registrar.name == name
           hash
         end
+
         render_success(data: result)
       end
 
@@ -73,6 +101,8 @@ module Repp
       end
 
       def to_date(date_param)
+        return if date_param.blank?
+
         Date.strptime(date_param, '%m.%y')
       end
 
@@ -96,6 +126,10 @@ module Repp
           value = v.to_f / sum * 100.0
           value < 0.1 ? value.round(3) : value.round(1)
         end
+      end
+
+      def summarize(arr)
+        arr.inject { |memo, el| memo.merge(el) { |_, old_v, new_v| old_v + new_v } }
       end
     end
   end
