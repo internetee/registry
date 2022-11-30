@@ -1,5 +1,6 @@
 30.11.2022
 * Validator for incoming disclosed attributes https://github.com/internetee/registry/issues/2486
+* Endpoint for registrar xml console feature https://github.com/internetee/registry/pull/2483
 
 29.11.2022
 * Fixed pantom statuse issue in REPP https://github.com/internetee/registry/issues/2470
