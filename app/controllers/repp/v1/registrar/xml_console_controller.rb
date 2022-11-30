@@ -7,12 +7,14 @@ module Repp
         THROTTLED_ACTIONS = %i[load_xml].freeze
         include Shunter::Integration::Throttle
 
-        PREFS = %w[
-          domain-ee
-          contact-ee
-          eis
-          epp-ee
-        ].freeze
+        PREFS = %w[domain-ee contact-ee eis epp-ee].freeze
+
+        SCHEMA_VERSIONS = {
+          'epp-ee' => '1.0',
+          'eis' => '1.0',
+          'contact-ee' => '1.1',
+          'default' => '1.2',
+        }.freeze
 
         def load_xml
           cl_trid = "#{current_user.username}-#{Time.zone.now.to_i}"
@@ -37,22 +39,15 @@ module Repp
         end
 
         def load_schema_by_prefix(pref, xml)
-          case pref
-          when 'epp-ee'
-            insert_prefix_and_version(xml, pref, '1.0')
-          when 'eis'
-            insert_prefix_and_version(xml, pref, '1.0')
-          when 'contact-ee'
-            insert_prefix_and_version(xml, pref, '1.1')
-          else
-            insert_prefix_and_version(xml, pref, '1.2')
-          end
-        end
-
-        def insert_prefix_and_version(xml, pref, version)
+          version = version_by_prefix(pref)
           xml.gsub!("\"#{pref}\"",
                     "\"#{Xsd::Schema.filename(for_prefix: pref.to_s, for_version: version)}\"")
           xml
+        end
+
+        def version_by_prefix(pref)
+          key = SCHEMA_VERSIONS.key?(pref) ? pref : 'default'
+          SCHEMA_VERSIONS[key]
         end
       end
     end
