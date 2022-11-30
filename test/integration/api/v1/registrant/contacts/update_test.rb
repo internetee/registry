@@ -9,7 +9,6 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @original_address_processing = Setting.address_processing
     @original_fax_enabled_setting = ENV['fax_enabled']
     @user = users(:registrant)
-
   end
 
   teardown do
@@ -91,18 +90,18 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
                  @contact.address
   end
 
-  # def test_update_address_when_enabled_without_address_params
-  #   Setting.address_processing = false
+  def test_update_address_when_enabled_without_address_params
+    Setting.address_processing = false
 
-  #   patch api_v1_registrant_contact_path(@contact.uuid), params: { address: { } },
-  #         as: :json,
-  #         headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    patch api_v1_registrant_contact_path(@contact.uuid), params: { address: { } },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
-  #   assert_response :bad_request
-  #   @contact.reload
-  #   assert_equal Contact::Address.new(nil, nil, nil, nil, nil),
-  #                @contact.address
-  # end
+    assert_response :bad_request
+    @contact.reload
+    assert_equal Contact::Address.new(nil, nil, nil, nil, nil),
+                 @contact.address
+  end
 
   def test_address_is_optional_when_enabled
     Setting.address_processing = true
@@ -176,31 +175,31 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_empty @contact.disclosed_attributes
   end
 
-  # def test_legal_persons_disclosed_attributes_cannot_be_changed
-  #   @contact = contacts(:acme_ltd)
+  def test_legal_persons_disclosed_attributes_cannot_be_changed
+    @contact = contacts(:acme_ltd)
 
-  #   # contacts(:acme_ltd).ident
-  #   assert_equal '1234567', @contact.ident
+    contacts(:acme_ltd).ident
+    assert_equal '1234567', @contact.ident
 
-  #   assert_equal Contact::ORG, @contact.ident_type
-  #   assert_equal 'US', @contact.ident_country_code
-  #   @contact.update!(disclosed_attributes: %w[])
-  #   assert_equal 'US-1234', @user.registrant_ident
+    assert_equal Contact::ORG, @contact.ident_type
+    assert_equal 'US', @contact.ident_country_code
+    @contact.update!(disclosed_attributes: %w[])
+    assert_equal 'US-1234', @user.registrant_ident
 
-  #   assert_no_changes -> { @contact.disclosed_attributes } do
-  #     patch api_v1_registrant_contact_path(@contact.uuid),
-  #           params: { disclosed_attributes: %w[name] },
-  #           as: :json,
-  #           headers: { 'HTTP_AUTHORIZATION' => auth_token }
-  #     @contact.reload
-  #   end
-  #   assert_response :bad_request
+    assert_no_changes -> { @contact.disclosed_attributes } do
+      patch api_v1_registrant_contact_path(@contact.uuid),
+            params: { disclosed_attributes: %w[name] },
+            as: :json,
+            headers: { 'HTTP_AUTHORIZATION' => auth_token }
+      @contact.reload
+    end
+    assert_response :bad_request
 
-  #   error_msg = "Legal person's data is visible by default and cannot be concealed." \
-  #               ' Please remove this parameter.'
-  #   assert_equal ({ errors: [{ disclosed_attributes: [error_msg] }] }),
-  #                JSON.parse(response.body, symbolize_names: true)
-  # end
+    error_msg = "Legal person's data is visible by default and cannot be concealed." \
+                ' Please remove this parameter.'
+    assert_equal ({ errors: [{ disclosed_attributes: [error_msg] }] }),
+                 JSON.parse(response.body, symbolize_names: true)
+  end
 
   def test_legal_persons_disclosed_attributes_change_when_phone
     @contact = contacts(:acme_ltd)
@@ -254,20 +253,20 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
                                                                               symbolize_names: true)
   end
 
-  # def test_org_disclosed_attributes
-  #   patch api_v1_registrant_contact_path(@contact_org.uuid), params: { disclosed_attributes: ["some_attr"] },
-  #         as: :json,
-  #         headers: { 'HTTP_AUTHORIZATION' => auth_token }
+  def test_org_disclosed_attributes
+    patch api_v1_registrant_contact_path(@contact_org.uuid), params: { disclosed_attributes: ["some_attr"] },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
-  #   assert_response :bad_request
+    assert_response :bad_request
 
-  #   err_msg = "Legal person's data is visible by default and cannot be concealed. Please remove this parameter."
+    err_msg = "Request contains extra attributes: some_attr"
 
-  #   response_json = JSON.parse(response.body, symbolize_names: true)
-  #   response_msg = response_json[:errors][0][:disclosed_attributes][0]
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    response_msg = response_json[:errors][0][:disclosed_attributes][0]
 
-  #   assert_equal err_msg, response_msg
-  # end
+    assert_equal err_msg, response_msg
+  end
 
   def test_unmanaged_contact_cannot_be_updated
     assert_equal 'US-1234', @user.registrant_ident
