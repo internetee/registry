@@ -1,3 +1,6 @@
+30.11.2022
+* Validator for incoming disclosed attributes https://github.com/internetee/registry/issues/2486
+
 29.11.2022
 * Fixed pantom statuse issue in REPP https://github.com/internetee/registry/issues/2470
 
