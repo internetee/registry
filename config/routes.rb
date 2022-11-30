@@ -106,7 +106,7 @@ Rails.application.routes.draw do
         end
       end
       namespace :registrar do
-        resources :notifications, only: [:index, :show, :update] do
+        resources :notifications, only: %i[index show update] do
           collection do
             get '/all_notifications', to: 'notifications#all_notifications'
           end
@@ -128,6 +128,11 @@ Rails.application.routes.draw do
             post '/tara_callback', to: 'auth#tara_callback'
           end
         end
+        resource :xml_console, controller: 'xml_console', only: %i[create] do
+          collection do
+            get 'load_xml'
+          end
+        end
       end
       resources :domains, constraints: { id: /.*/ } do
         resources :nameservers, only: %i[index create destroy], constraints: { id: /.*/ }, controller: 'domains/nameservers'
@@ -136,8 +141,8 @@ Rails.application.routes.draw do
         resources :renew, only: %i[create], constraints: { id: /.*/ }, controller: 'domains/renews'
         resources :transfer, only: %i[create], constraints: { id: /.*/ }, controller: 'domains/transfers'
         resources :statuses, only: %i[update destroy], constraints: { id: /.*/ }, controller: 'domains/statuses'
-        match "dnssec", to: "domains/dnssec#destroy", via: "delete", defaults: { id: nil }
-        match "contacts", to: "domains/contacts#destroy", via: "delete", defaults: { id: nil }
+        match 'dnssec', to: 'domains/dnssec#destroy', via: 'delete', defaults: { id: nil }
+        match 'contacts', to: 'domains/contacts#destroy', via: 'delete', defaults: { id: nil }
         collection do
           get ':id/transfer_info', to: 'domains#transfer_info', constraints: { id: /.*/ }
           post 'transfer', to: 'domains#transfer'

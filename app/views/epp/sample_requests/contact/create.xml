@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="epp-ee">
+  <command>
+    <create>
+      <contact:create xmlns:contact="contact-ee">
+        <contact:postalInfo>
+          <contact:name>Sillius Soddus</contact:name>
+          <contact:addr>
+            <contact:street>123 Example Dr.</contact:street>
+            <contact:street>Suite 100</contact:street>
+            <contact:street/>
+            <contact:city>Megaton</contact:city>
+            <contact:sp>F3 </contact:sp>
+            <contact:pc>201-33</contact:pc>
+            <contact:cc>EE</contact:cc>
+          </contact:addr>
+        </contact:postalInfo>
+        <contact:voice>+372.1234567</contact:voice>
+        <contact:email>example@test.example</contact:email>
+      </contact:create>
+    </create>
+    <extension>
+      <eis:extdata xmlns:eis="eis">
+        <eis:ident type="org" cc="EE">123</eis:ident>
+        <eis:legalDocument type="pdf">
+          dGVzdCBmYWlsCg==
+        </eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
