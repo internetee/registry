@@ -58,6 +58,8 @@ module Actions
         result.success = result_validation.present?
       end
 
+      result.configuration = nil
+
       contacts.find_in_batches(batch_size: 500) do |contact_batches|
         contact_batches.each do |contact|
           # methods should be in this order!
