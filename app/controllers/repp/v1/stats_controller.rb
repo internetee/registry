@@ -13,23 +13,31 @@ module Repp
                                                          "AND object ->> 'created_at' <= ?" \
                                                          "AND object ->> 'created_at' >= ?",
                                                          'destroy', date_to, date_to, date_from)
-                                                  .group("object ->> 'registrar_id'").count
+
+        log_domains_del_grouped = log_domains_del.group("object ->> 'registrar_id'").count
+        # p "log_domains_del"
+        # p log_domains_del.map{|d| d.object['name']}
 
         log_domains_trans = ::Version::DomainVersion.where('event = ? AND created_at > ?' \
                                                            "AND object ->> 'created_at' <= ?" \
                                                            "AND object ->> 'created_at' >= ?" \
                                                            "AND object_changes ->> 'registrar_id' IS NOT NULL",
                                                            'update', date_to, date_to, date_from)
-
+        # p "log_domains_trans"
+        # p log_domains_trans.map{|d| d.object['name']}
         log_domains_trans_grouped = log_domains_trans.group("object ->> 'registrar_id'")
                                                      .count
 
+        updated = log_domains_trans.map { |ld| ld.object['name'] } | log_domains_del.map { |ld| ld.object['name'] }
+
         domains = ::Domain.where(from_condition)
                           .where(to_condition)
-                          .where.not(name: log_domains_trans.map { |ld| ld.object['name'] })
-                          .group(:registrar_id).count.stringify_keys
+                          .where.not(name: updated)
+        domains_grouped = domains.group(:registrar_id).count.stringify_keys
+        # p "domains"
+        # p domains.pluck(:name)
 
-        grouped = summarize([log_domains_del, log_domains_trans_grouped, domains])
+        grouped = summarize([log_domains_del_grouped, log_domains_trans_grouped, domains_grouped])
 
         registrar_names = ::Registrar.where(test_registrar: false)
                                      .map { |r| { "#{r.id}": r.name }.with_indifferent_access }
@@ -43,6 +51,7 @@ module Repp
           hash.merge!({ sliced: true, selected: true }) if current_user.registrar.name == name
           hash
         end
+        # p result
 
         render_success(data: result)
       end
