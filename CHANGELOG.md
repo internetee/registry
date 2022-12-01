@@ -1,3 +1,7 @@
+01.12.2022
+* Fixed empty validation result reason in the logs https://github.com/internetee/registry/issues/2490
+* Reduced unnecessary logging from email validation logs https://github.com/internetee/registry/issues/2491
+
 30.11.2022
 * Validator for incoming disclosed attributes https://github.com/internetee/registry/issues/2486
 * Endpoint for registrar xml console feature https://github.com/internetee/registry/pull/2483
