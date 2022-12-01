@@ -4,6 +4,9 @@ module Repp
       class ContactsController < BaseContactsController
         before_action :set_domain, only: %i[index create destroy]
 
+        THROTTLED_ACTIONS = %i[index create destroy update].freeze
+        include Shunter::Integration::Throttle
+
         def_param_group :contacts_apidoc do
           param :contacts, Array, required: true, desc: 'Array of new linked contacts' do
             param :code, String, required: true, desc: 'Contact code'
@@ -38,9 +41,7 @@ module Repp
         def cta(action = 'add')
           params[:contacts].each { |c| c[:action] = action }
           action = Actions::DomainUpdate.new(@domain, contact_create_params, false)
-          # rubocop:disable Style/AndOr
           handle_errors(@domain) and return unless action.call
-          # rubocop:enable Style/AndOr
 
           render_success(data: { domain: { name: @domain.name } })
         end

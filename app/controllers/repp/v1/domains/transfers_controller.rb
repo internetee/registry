@@ -4,6 +4,9 @@ module Repp
       class TransfersController < BaseController
         before_action :set_domain, only: [:create]
 
+        THROTTLED_ACTIONS = %i[create].freeze
+        include Shunter::Integration::Throttle
+
         api :POST, 'repp/v1/domains/:domain_name/transfer'
         desc 'Transfer a specific domain'
         param :transfer, Hash, required: true, desc: 'Renew parameters' do

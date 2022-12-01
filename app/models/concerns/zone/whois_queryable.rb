@@ -32,27 +32,40 @@ module Zone::WhoisQueryable
   # Take note - since this concern only used to zone whois queries, dnssec keys are set to
   # empty array
   def domain_vars
-    { disclaimer: Setting.registry_whois_disclaimer, name: origin,
+    {
+      disclaimer: Setting.registry_whois_disclaimer, name: origin,
       registered: created_at.try(:to_s, :iso8601), status: ['ok (paid and in zone)'],
       changed: updated_at.try(:to_s, :iso8601), email: Setting.registry_email,
       admin_contacts: [contact_vars], tech_contacts: [contact_vars],
-      nameservers: nameserver_vars, dnssec_keys: [], dnssec_changed: nil }
+      nameservers: nameserver_vars, dnssec_keys: [],
+      dnssec_changed: nil
+    }
   end
 
   def registrar_vars
-    { registrar: Setting.registry_juridical_name, registrar_website: Setting.registry_url,
-      registrar_phone: Setting.registry_phone }
+    {
+      registrar: Setting.registry_juridical_name,
+      registrar_website: Setting.registry_url,
+      registrar_phone: Setting.registry_phone,
+    }
   end
 
   def registrant_vars
-    { registrant: Setting.registry_juridical_name, registrant_reg_no: Setting.registry_reg_no,
-      registrant_ident_country_code: Setting.registry_country_code, registrant_kind: 'org',
-      registrant_disclosed_attributes: %w[name email] }
+    {
+      registrant: Setting.registry_juridical_name,
+      registrant_reg_no: Setting.registry_reg_no,
+      registrant_ident_country_code: Setting.registry_country_code,
+      registrant_kind: 'org',
+      registrant_disclosed_attributes: %w[name email phone],
+    }
   end
 
   def contact_vars
-    { name: Setting.registry_invoice_contact, email: Setting.registry_email,
-      disclosed_attributes: %w[name email] }
+    {
+      name: Setting.registry_invoice_contact,
+      email: Setting.registry_email,
+      disclosed_attributes: %w[name email],
+    }
   end
 
   def nameserver_vars

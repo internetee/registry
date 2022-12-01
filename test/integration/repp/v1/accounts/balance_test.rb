@@ -8,9 +8,12 @@ class ReppV1BalanceTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
-  
+
 
   def test_can_query_balance
     get '/repp/v1/accounts/balance', headers: @auth_headers
@@ -48,6 +51,21 @@ class ReppV1BalanceTest < ActionDispatch::IntegrationTest
     json[:data][:transactions].map do |trans|
       assert trans[:created_at].to_date.to_s(:db) >= started_from
       assert trans[:created_at].to_date.to_s(:db) >= end_to
+    end
+
+    def test_returns_error_response_if_throttled
+      ENV["shunter_default_threshold"] = '1'
+      ENV["shunter_enabled"] = 'true'
+
+      get '/repp/v1/accounts/balance', headers: @auth_headers
+      get '/repp/v1/accounts/balance', headers: @auth_headers
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      assert_response :bad_request
+      assert_equal json[:code], 2502
+      assert response.body.include?(Shunter.default_error_message)
+      ENV["shunter_default_threshold"] = '10000'
+      ENV["shunter_enabled"] = 'false'
     end
   end
 end

@@ -13,6 +13,22 @@ class Domain < ApplicationRecord
   include Domain::Disputable
   include Domain::BulkUpdatable
 
+  PERIODS = [
+    ['3 months', '3m'],
+    ['6 months', '6m'],
+    ['9 months', '9m'],
+    ['1 year', '1y'],
+    ['2 years', '2y'],
+    ['3 years', '3y'],
+    ['4 years', '4y'],
+    ['5 years', '5y'],
+    ['6 years', '6y'],
+    ['7 years', '7y'],
+    ['8 years', '8y'],
+    ['9 years', '9y'],
+    ['10 years', '10y'],
+  ].freeze
+
   attr_accessor :roles,
                 :legal_document_id,
                 :is_admin,
@@ -48,7 +64,6 @@ class Domain < ApplicationRecord
   def registrant_change_prohibited?
     statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
   end
-
 
   # NB! contacts, admin_contacts, tech_contacts are empty for a new record
   has_many :domain_contacts, dependent: :destroy

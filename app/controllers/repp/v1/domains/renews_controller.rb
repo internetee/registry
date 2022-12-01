@@ -6,6 +6,9 @@ module Repp
         before_action :select_renewable_domains, only: [:bulk_renew]
         before_action :set_domain, only: [:create]
 
+        THROTTLED_ACTIONS = %i[create bulk_renew].freeze
+        include Shunter::Integration::Throttle
+
         api :POST, 'repp/v1/domains/:domain_name/renew'
         desc 'Renew domain'
         param :renews, Hash, required: true, desc: 'Renew parameters' do
@@ -43,7 +46,7 @@ module Repp
 
         def validate_renew_period
           @epp_errors ||= ActiveModel::Errors.new(self)
-          periods = Depp::Domain::PERIODS.map { |p| p[1] }
+          periods = Domain::PERIODS.map { |p| p[1] }
           return if periods.include? bulk_renew_params[:renew_period]
 
           @epp_errors.add(:epp_errors, msg: 'Invalid renew period', code: '2005')

@@ -59,8 +59,9 @@ module Invoice::BookKeeping
 
       duration.times do |dur|
         single_item_dup = single_item.dup
-        single_item_dup['start_date'] = (issue_date + dur.year).end_of_month.strftime('%Y-%m-%d')
-        single_item_dup['end_date'] = (issue_date + (dur + 1).year).end_of_month.strftime('%Y-%m-%d')
+        date = (issue_date + dur.year).end_of_month.strftime('%Y-%m-%d')
+        single_item_dup['start_date'] = date
+        single_item_dup['end_date'] = date
         single_item_dup['price'] = (item['price'].to_f / duration).round(2)
         lines << single_item_dup
       end

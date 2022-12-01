@@ -62,7 +62,7 @@ module Epp
           2308 => 'Data management policy violation',
           2400 => 'Command failed',
           2501 => 'Authentication error; server closing connection',
-          2502 => 'Session limit exceeded; server closing connection',
+          2502 => Shunter.default_error_message,
         }.freeze
         private_constant :DEFAULT_DESCRIPTIONS
 

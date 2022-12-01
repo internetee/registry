@@ -7,6 +7,9 @@ class ReppV1ContactsShowTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_returns_error_when_not_found
@@ -41,5 +44,22 @@ class ReppV1ContactsShowTest < ActionDispatch::IntegrationTest
     assert_response :not_found
     assert_equal 2303, json[:code]
     assert_equal 'Object does not exist', json[:message]
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    contact = @user.registrar.contacts.first
+
+    get repp_v1_contact_path(id: contact.code), headers: @auth_headers
+    get repp_v1_contact_path(id: contact.code), headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 end

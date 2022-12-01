@@ -30,7 +30,7 @@ module Actions
     end
 
     def check_for_same_contacts(contacts, contact_type)
-      return unless contacts.uniq.count != contacts.count
+      return if contacts.uniq.count == contacts.count
 
       domain.add_epp_error('2306', contact_type, nil, %i[domain_contacts invalid])
     end
@@ -194,20 +194,31 @@ module Actions
     def contact_for_action(action:, method:, code:)
       contact = Epp::Contact.find_by(code: code)
       return contact if action == 'add' || !contact
-      return domain.admin_domain_contacts.find_by(contact_id: contact.id) if method == 'admin'
 
-      domain.tech_domain_contacts.find_by(contact_id: contact.id)
+      existing_contact(id: contact.id, admin: method == 'admin')
     end
 
-    def assign_contact(obj, add: false, admin: true, code:)
+    def existing_contact(id:, admin: true)
+      return domain.admin_domain_contacts.find_by(contact_id: id) if admin
+
+      domain.tech_domain_contacts.find_by(contact_id: id)
+    end
+
+    def assign_contact(obj, code:, add: false, admin: true)
       if obj.blank?
         domain.add_epp_error('2303', 'contact', code, %i[domain_contacts not_found])
       elsif obj.try(:org?) && admin && add
         domain.add_epp_error('2306', 'contact', code,
                              %i[domain_contacts admin_contact_can_be_only_private_person])
       else
-        add ? { contact_id: obj.id, contact_code: obj.code } : { id: obj.id, _destroy: 1 }
+        assigned_contact_hash(obj, add, admin)
       end
+    end
+
+    def assigned_contact_hash(obj, add, admin)
+      return if !existing_contact(id: obj.id, admin: admin).nil? && add
+
+      add ? { contact_id: obj.id, contact_code: obj.code } : { id: obj.id, _destroy: 1 }
     end
 
     def assign_requested_statuses

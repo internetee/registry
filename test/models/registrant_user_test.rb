@@ -87,8 +87,11 @@ class RegistrantUserTest < ActiveSupport::TestCase
     company = Company.new('acme', 'ace')
 
     company_register = Minitest::Mock.new
-    company_register.expect(:representation_rights, [company], [{ citizen_personal_code: '1234',
-                                                                  citizen_country_code: 'USA' }])
+    def company_register.representation_rights(citizen_personal_code: '1234', citizen_country_code: 'USA')
+      [Company.new('acme', 'ace')]
+    end
+    # company_register.expect(:representation_rights, [company], [{ citizen_personal_code: '1234',
+                                                                  # citizen_country_code: 'USA' }])
 
     assert_equal [company], @user.companies(company_register)
     company_register.verify

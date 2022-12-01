@@ -90,6 +90,8 @@ module Repp
 
       def calculate_market_share(domains_by_rar)
         sum = domains_by_rar.values.sum
+        return domains_by_rar if sum.zero?
+
         domains_by_rar.transform_values do |v|
           value = v.to_f / sum * 100.0
           value < 0.1 ? value.round(3) : value.round(1)

@@ -10,6 +10,9 @@ class EppDomainUpdateBaseTest < EppTestCase
     @original_registrant_change_verification =
     Setting.request_confirmation_on_registrant_change_enabled
     ActionMailer::Base.deliveries.clear
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   teardown do
@@ -880,6 +883,88 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     @domain.reload
     assert_epp_response :object_does_not_exist
+  end
+
+  def test_returns_valid_response_if_not_throttled
+    ENV['obj_and_extensions_prohibited'] = 'true'
+    @domain = domains(:shop)
+    @domain.statuses << DomainStatus::SERVER_EXTENSION_UPDATE_PROHIBITED
+    @domain.save
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>shop.test</domain:name>
+              <domain:rem>
+              <domain:ns>
+                <domain:hostAttr>
+                  <domain:hostName>#{nameservers(:shop_ns1).hostname}</domain:hostName>
+                </domain:hostAttr>
+                <domain:hostAttr>
+                  <domain:hostName>#{nameservers(:shop_ns2).hostname}</domain:hostName>
+                </domain:hostAttr>
+              </domain:ns>
+            </domain:rem>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+                          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully
+    assert_correct_against_schema response_xml
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+    ENV['obj_and_extensions_prohibited'] = 'true'
+    @domain = domains(:shop)
+    @domain.statuses << DomainStatus::SERVER_EXTENSION_UPDATE_PROHIBITED
+    @domain.save
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>shop.test</domain:name>
+              <domain:rem>
+              <domain:ns>
+                <domain:hostAttr>
+                  <domain:hostName>#{nameservers(:shop_ns1).hostname}</domain:hostName>
+                </domain:hostAttr>
+                <domain:hostAttr>
+                  <domain:hostName>#{nameservers(:shop_ns2).hostname}</domain:hostName>
+                </domain:hostAttr>
+              </domain:ns>
+            </domain:rem>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+                          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    post epp_update_path, params: { frame: request_xml },
+                          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :session_limit_exceeded_server_closing_connection
+    assert_correct_against_schema response_xml
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 
   private

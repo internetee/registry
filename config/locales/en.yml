@@ -187,6 +187,9 @@ en:
       required_ident_attribute_missing: "Required ident attribute missing: %{key}"
       invalid_iso31661_alpha2: does not conform to ISO 3166-1 alpha-2 standard
       invalid_iso8601_date: has invalid date format YYYY-MM-DD (ISO 8601)
+      invalid_cert: 'Invalid certificate'
+      failed_epp_conn: 'Failed to open connection to EPP server!'
+      epp_conn_error: 'CONNECTION ERROR - Is the EPP server running?'
 
   code: 'Code'
   action: 'Action'
@@ -380,33 +383,9 @@ en:
   client_side_status_editing_error: 'Parameter value policy error. Client-side object status management not supported'
   parameter_value_syntax_error: 'Parameter value syntax error:'
 
-  # DEPP
-  activemodel:
-    errors:
-      models:
-        'depp/contact':
-          attributes:
-            phone:
-              invalid: "Phone number must be in +XXX.YYYYYYY format"
-              too_long: "Phone number is too long"
-        'depp/user':
-          attributes:
-            base:
-              failed_to_open_connection_to_epp_server: 'Failed to open connection to EPP server!'
-              authorization_error: 'Authorization error'
-              invalid_cert: 'Invalid certificate'
-              not_active: 'User is not active'
-              webserver_missing_user_name_directive: 'Webserver configuration error: Apache or nginx is missing user name directive.'
-              webserver_user_name_directive_should_be_required: 'Webserver configuration error: Apache or nginx should require name directive.'
-            tag:
-              blank: "Username can't be blank"
-            password:
-              blank: "Password can't be blank"
-
   username: 'Username'
   register: 'Register'
   domain_info: 'Domain info'
-  xml_console: 'XML Console'
   info: 'Info'
   send_epp_request: 'Send EPP Request'
   updated_at: 'Updated at'

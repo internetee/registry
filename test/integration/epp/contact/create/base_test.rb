@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class EppContactCreateBaseTest < EppTestCase
+  setup do
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
+  end
+
   def test_creates_new_contact_with_required_attributes
     name = 'new'
     email = 'new@registrar.test'
@@ -361,5 +366,83 @@ class EppContactCreateBaseTest < EppTestCase
     assert_equal zip, contact.zip
     assert_equal country_code, contact.country_code
     assert_equal state, contact.state
+  end
+
+  def test_returns_valid_response_if_not_throttled
+    name = 'new'
+    email = 'new@registrar.test'
+    phone = '+1.2'
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <contact:create xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
+              <contact:postalInfo>
+                <contact:name>#{name}</contact:name>
+              </contact:postalInfo>
+              <contact:voice>#{phone}</contact:voice>
+              <contact:email>#{email}</contact:email>
+            </contact:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:ident type="priv" cc="US">any</eis:ident>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_create_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :completed_successfully
+    assert_correct_against_schema response_xml
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+    name = 'new'
+    email = 'new@registrar.test'
+    phone = '+1.2'
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <contact:create xmlns:contact="#{Xsd::Schema.filename(for_prefix: 'contact-ee', for_version: '1.1')}">
+              <contact:postalInfo>
+                <contact:name>#{name}</contact:name>
+              </contact:postalInfo>
+              <contact:voice>#{phone}</contact:voice>
+              <contact:email>#{email}</contact:email>
+            </contact:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:ident type="priv" cc="US">any</eis:ident>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_create_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    post epp_create_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    response_xml = Nokogiri::XML(response.body)
+    assert_epp_response :session_limit_exceeded_server_closing_connection
+    assert_correct_against_schema response_xml
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 end

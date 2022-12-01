@@ -38,15 +38,26 @@ module Registrar::BookKeeping
     lines.as_json
   end
 
-  def find_or_init_monthly_invoice(month:)
+  def find_or_init_monthly_invoice(month:, overwrite:)
     invoice = invoices.find_by(monthly_invoice: true, issue_date: month.end_of_month.to_date,
                                cancelled_at: nil)
-    return invoice if invoice
+    return invoice if invoice && !overwrite
 
     summary = monthly_summary(month: month)
     return unless summary
 
-    init_monthly_invoice(summary)
+    new_invoice = init_monthly_invoice(summary)
+    return overwrite_invoice(invoice, new_invoice) if invoice && overwrite
+
+    new_invoice
+  end
+
+  def overwrite_invoice(original_invoice, new_invoice)
+    params_to_scrub = %i[created_at updated_at id number sent_at
+                         e_invoice_sent_at in_directo cancelled_at payment_link]
+    attrs = new_invoice.attributes.with_indifferent_access.except(*params_to_scrub)
+    original_invoice.update(attrs)
+    original_invoice
   end
 
   def title_for_summary(date)

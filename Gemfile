@@ -16,8 +16,8 @@ gem 'uglifier'
 gem 'figaro', '~> 1.2'
 
 # model related
-gem 'paper_trail', '~> 12.1'
-gem 'pg',                        '1.4.3'
+gem 'paper_trail', '~> 13.0'
+gem 'pg', '1.4.5'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 2.6.0'
 gem 'truemail', '~> 2.4' # validates email by regexp, mail server existence and address existence
@@ -30,13 +30,12 @@ gem 'nokogiri', '~> 1.13.0'
 # style
 gem 'bootstrap-sass', '~> 3.4'
 gem 'cancancan'
-gem 'coderay',          '1.1.3'   # xml console visualize
 gem 'coffee-rails', '>= 5.0'
 gem 'devise', '~> 4.8'
 gem 'jquery-rails'
 gem 'kaminari'
 gem 'sass-rails'
-gem 'select2-rails',    '4.0.13' # for autocomplete
+gem 'select2-rails', '4.0.13' # for autocomplete
 gem 'selectize-rails', '0.12.6' # include selectize.js for select
 
 # registry specfic
@@ -48,7 +47,7 @@ gem 'simpleidn', '0.2.1' # For punycode
 gem 'whenever', '1.0.0', require: false
 
 # country listing
-gem 'countries', :require => 'countries/global'
+gem 'countries', require: 'countries/global'
 
 # id + mid login
 # gem 'digidoc_client', '0.3.0'
@@ -77,7 +76,6 @@ gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'rexml'
 gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
 
-
 gem 'directo', github: 'internetee/directo', branch: 'master'
 
 group :development, :test do
@@ -95,12 +93,12 @@ group :test do
 end
 
 gem 'aws-sdk-sesv2', '~> 1.19'
+gem 'newrelic-infinite_tracing'
+gem 'newrelic_rpm'
 
 # profiles
 gem 'pghero'
 gem 'pg_query', '>= 0.9.0'
-gem 'newrelic_rpm'
-gem 'newrelic-infinite_tracing'
 
 # token
 gem 'jwt'

@@ -8,6 +8,9 @@ module Repp
       before_action :forward_registrar_id, only: %i[create update destroy]
       before_action :set_domain, only: %i[update]
 
+      THROTTLED_ACTIONS = %i[transfer_info transfer index create show update destroy].freeze
+      include Shunter::Integration::Throttle
+
       api :GET, '/repp/v1/domains'
       desc 'Get all existing domains'
       def index

@@ -28,6 +28,51 @@ class AuctionTest < ActiveSupport::TestCase
     assert @auction.started?
   end
 
+  def test_auction_with_no_bids_dont_have_any_restriction
+    @auction.update(status: :no_bids)
+    @auction.reload
+
+    res = Auction.domain_exists_in_blocked_disputed_and_registered?(@auction.domain)
+    refute res
+  end
+
+  def test_auction_with_domain_registered_dont_have_any_restriction
+    @auction.update(status: :domain_registered)
+    @auction.reload
+
+    res = Auction.domain_exists_in_blocked_disputed_and_registered?(@auction.domain)
+    refute res
+  end
+
+  def test_auction_with_started_has_restriction
+    @auction.update(status: :started)
+    @auction.reload
+
+    res = Auction.domain_exists_in_blocked_disputed_and_registered?(@auction.domain)
+    assert res
+  end
+
+  def test_blocked_domain_has_restriction
+    blocked_domain = blocked_domains(:one)
+
+    res = Auction.domain_exists_in_blocked_disputed_and_registered?(blocked_domain.name)
+    assert res
+  end
+
+  def test_dispute_domain_has_restriction
+    dispute_domain = disputes(:active)
+
+    res = Auction.domain_exists_in_blocked_disputed_and_registered?(dispute_domain.domain_name)
+    assert res
+  end
+
+  def test_exist_domain_has_restriction
+    domain = domains(:shop)
+
+    res = Auction.domain_exists_in_blocked_disputed_and_registered?(domain.name)
+    assert res
+  end
+
   def test_pending
     domain_name = DNS::DomainName.new('auction.test')
     assert_equal 'auction.test', @auction.domain

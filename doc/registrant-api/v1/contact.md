@@ -102,18 +102,19 @@ Update contact.
 
 #### Parameters
 
-| Field name            | Required | Type   | Allowed values | Description                                               |
-| ----                  | ---      | ---    | ---            | ---                                                       |
-| name                  | false    | String |                | New name                                                  |
-| email                 | false    | String |                | New email                                                 |
-| phone                 | false    | String |                | New phone number                                          |
-| fax                   | false    | String |                | New fax number                                            |
-| address[street]       | false    | String |                | New street name                                           |
-| address[zip]          | false    | String |                | New zip                                                   |
-| address[city]         | false    | String |                | New city name                                             |
-| address[state]        | false    | String |                | New state name                                            |
-| address[country_code] | false    | String |                | New country code in 2 letter format (ISO 3166-1 alpha-2)  |
-| disclosed_attributes  | false    | Array  |                | Possible values: "name", "email"
+| Field name             | Required | Type    | Allowed values | Description                                               |
+| ----                   | ---      | ---     | ---            | ---                                                       |
+| name                   | false    | String  |                | New name                                                  |
+| email                  | false    | String  |                | New email                                                 |
+| phone                  | false    | String  |                | New phone number                                          |
+| fax                    | false    | String  |                | New fax number                                            |
+| address[street]        | false    | String  |                | New street name                                           |
+| address[zip]           | false    | String  |                | New zip                                                   |
+| address[city]          | false    | String  |                | New city name                                             |
+| address[state]         | false    | String  |                | New state name                                            |
+| address[country_code]  | false    | String  |                | New country code in 2 letter format (ISO 3166-1 alpha-2)  |
+| disclosed_attributes   | false    | Array   |                | Possible values: "name", "email", "phone"                 |
+| registrant_publishable | false    | Boolean |                | Possible values: true, false                 |
 
 
 #### Request

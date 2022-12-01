@@ -8,6 +8,9 @@ class ReppV1DomainsStatusesTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_client_hold_can_be_added
@@ -79,4 +82,18 @@ class ReppV1DomainsStatusesTest < ActionDispatch::IntegrationTest
     assert_equal 2306, json[:code]
   end
 
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    put repp_v1_domain_status_path(domain_id: @domain.name, id: DomainStatus::CLIENT_HOLD), headers: @auth_headers
+    put repp_v1_domain_status_path(domain_id: @domain.name, id: DomainStatus::CLIENT_HOLD), headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
+  end
 end

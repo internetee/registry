@@ -62,15 +62,12 @@ contact_org_enabled: 'false'
 # legal_document_types: "pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
 
 #
-# REGISTRAR configuration (DEPP)
+# REGISTRAR configuration
 #
-show_ds_data_fields: 'false'
-default_nameservers_count: '2'
-default_admin_contacts_count: '1'
 epp_port: '700'
-cert_path: '/home/registry/registry/shared/ca/certs/webclient.cert.pem'
-key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
-epp_hostname: 'registry.gitlab.eu'
+cert_path: '/opt/ca/certs/webclient.crt.pem'
+key_path: '/opt/ca/private/webclient.key.pem'
+epp_hostname: 'epp_proxy'
 repp_url: 'http://epp:3000/repp/v1/'
 
 # Estonian Company Register
@@ -207,6 +204,10 @@ test:
   cdns_scanner_output_file: 'test/fixtures/files/cdns_output.txt'
   dnssec_resolver_ips: 8.8.8.8, 8.8.4.4
   legal_documents_dir: 'test/fixtures/files'
+  shunter_default_adapter: "Shunter::Adapters::Memory"
+  shunter_enabled: "false"
+  shunter_redis_host: "redis"
+  shunter_redis_port: "6379"
 
   openssl_config_path: 'test/fixtures/files/test_ca/openssl.cnf'
   crl_dir: 'test/fixtures/files/test_ca/crl'

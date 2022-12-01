@@ -6,8 +6,8 @@ class CheckForceDeleteLift < ApplicationJob
                     .select { |d| d.registrant.need_to_lift_force_delete? }
 
     handle_refresh_status(domains) if domains.present?
-    domains = Domain.where("force_delete_data->'template_name' = ?", 'invalid_email')
-                    .where("force_delete_data->'force_delete_type' = ?", 'soft')
+    domains = (domains + Domain.where("force_delete_data->'template_name' = ?", 'invalid_email')
+                               .where("force_delete_data->'force_delete_type' = ?", 'soft')).uniq
 
     domains.each do |domain|
       Domains::ForceDeleteLift::Base.run(domain: domain)
@@ -39,15 +39,5 @@ class CheckForceDeleteLift < ApplicationJob
     domain.status_notes[DomainStatus::FORCE_DELETE].slice!(registrant.email_history)
     domain.status_notes[DomainStatus::FORCE_DELETE].lstrip!
     domain.save(validate: false)
-
-    notify_registrar(domain) unless domain.status_notes[DomainStatus::FORCE_DELETE].empty?
-  end
-
-  def notify_registrar(domain)
-    domain.registrar.notifications.create!(text: I18n.t('force_delete_auto_email',
-                                                        domain_name: domain.name,
-                                                        outzone_date: domain.outzone_date,
-                                                        purge_date: domain.purge_date,
-                                                        email: domain.status_notes[DomainStatus::FORCE_DELETE]))
   end
 end

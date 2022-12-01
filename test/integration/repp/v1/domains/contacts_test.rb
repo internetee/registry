@@ -8,6 +8,9 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+
+    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter&.clear!
   end
 
   def test_shows_existing_domain_contacts
@@ -20,6 +23,21 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
 
     assert_equal @domain.admin_contacts.length, json[:data][:admin_contacts].length
     assert_equal @domain.tech_contacts.length, json[:data][:tech_contacts].length
+  end
+
+  def test_returns_error_response_if_throttled
+    ENV["shunter_default_threshold"] = '1'
+    ENV["shunter_enabled"] = 'true'
+
+    get "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers
+    get "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal json[:code], 2502
+    assert response.body.include?(Shunter.default_error_message)
+    ENV["shunter_default_threshold"] = '10000'
+    ENV["shunter_enabled"] = 'false'
   end
 
   def test_can_add_new_admin_contacts
@@ -71,7 +89,7 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
 
   def test_can_remove_tech_contacts
     Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
-    
+
     contact = contacts(:john)
     payload = { contacts: [ { code: contact.code, type: 'tech' } ] }
     post "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload

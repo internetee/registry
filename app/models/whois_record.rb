@@ -51,7 +51,9 @@ class WhoisRecord < ApplicationRecord
     end
 
     h[:email] = registrant.email
-    h[:registrant_changed]          = registrant.updated_at.try(:to_s, :iso8601)
+    h[:phone] = registrant.phone
+    h[:registrant_publishable] = registrant.publishable?
+    h[:registrant_changed] = registrant.updated_at.try(:to_s, :iso8601)
     h[:registrant_disclosed_attributes] = registrant.disclosed_attributes
 
     h[:admin_contacts] = []
@@ -77,7 +79,6 @@ class WhoisRecord < ApplicationRecord
 
     h[:dnssec_keys]    = domain.dnskeys.map { |key| "#{key.flags} #{key.protocol} #{key.alg} #{key.public_key}" }
     h[:dnssec_changed] = domain.dnskeys.pluck(:updated_at).max.try(:to_s, :iso8601) rescue nil
-
 
     h
   end
@@ -112,8 +113,10 @@ class WhoisRecord < ApplicationRecord
     {
       name: contact.name,
       email: contact.email,
+      phone: contact.phone,
       changed: contact.updated_at.try(:to_s, :iso8601),
       disclosed_attributes: contact.disclosed_attributes,
+      contact_publishable: contact.registrant_publishable?,
     }
   end
 end

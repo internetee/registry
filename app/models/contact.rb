@@ -64,6 +64,8 @@ class Contact < ApplicationRecord
 
   validate :validate_html
   validate :validate_country_code, if: -> { self.class.address_processing? }
+  validates :registrant_publishable, inclusion: { in: [true, false] }, if: -> { registrant? }
+  # validates :registrant_publishable, inclusion: { in: [false] }, unless: -> { registrant? }
 
   after_initialize do
     self.status_notes = {} if status_notes.nil?
@@ -144,6 +146,19 @@ class Contact < ApplicationRecord
   # "pendingDelete" MUST NOT be combined with either
   # "clientDeleteProhibited" or "serverDeleteProhibited" status.
   PENDING_DELETE = 'pendingDelete'.freeze
+
+  DISCLOSE_ATTRIBUTES = %w[
+    name
+    email
+    phone
+    registrant_publishable
+    address
+    fax
+  ].freeze
+
+  OPEN_LEGAL_ATTRIBUTES = %w[
+    phone
+  ].freeze
 
   STATUSES = [
     CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED,

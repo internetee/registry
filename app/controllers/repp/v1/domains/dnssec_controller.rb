@@ -4,6 +4,9 @@ module Repp
       class DnssecController < BaseController
         before_action :set_domain, only: %i[index create destroy]
 
+        THROTTLED_ACTIONS = %i[index create destroy].freeze
+        include Shunter::Integration::Throttle
+
         def_param_group :dns_keys_apidoc do
           param :flags, String, required: true, desc: '256 (KSK) or 257 (ZSK)'
           param :protocol, String, required: true, desc: 'Key protocol (3)'

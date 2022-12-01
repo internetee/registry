@@ -23,7 +23,7 @@ class ValidationEvent < ApplicationRecord
     smtp: 1,
   }.freeze
 
-  store_accessor :event_data, :errors, :check_level, :email
+  store_accessor :event_data, :check_level, :email
 
   belongs_to :validation_eventable, polymorphic: true
 

@@ -106,7 +106,7 @@ Rails.application.routes.draw do
         end
       end
       namespace :registrar do
-        resources :notifications, only: [:index, :show, :update] do
+        resources :notifications, only: %i[index show update] do
           collection do
             get '/all_notifications', to: 'notifications#all_notifications'
           end
@@ -128,6 +128,11 @@ Rails.application.routes.draw do
             post '/tara_callback', to: 'auth#tara_callback'
           end
         end
+        resource :xml_console, controller: 'xml_console', only: %i[create] do
+          collection do
+            get 'load_xml'
+          end
+        end
       end
       resources :domains, constraints: { id: /.*/ } do
         resources :nameservers, only: %i[index create destroy], constraints: { id: /.*/ }, controller: 'domains/nameservers'
@@ -136,8 +141,8 @@ Rails.application.routes.draw do
         resources :renew, only: %i[create], constraints: { id: /.*/ }, controller: 'domains/renews'
         resources :transfer, only: %i[create], constraints: { id: /.*/ }, controller: 'domains/transfers'
         resources :statuses, only: %i[update destroy], constraints: { id: /.*/ }, controller: 'domains/statuses'
-        match "dnssec", to: "domains/dnssec#destroy", via: "delete", defaults: { id: nil }
-        match "contacts", to: "domains/contacts#destroy", via: "delete", defaults: { id: nil }
+        match 'dnssec', to: 'domains/dnssec#destroy', via: 'delete', defaults: { id: nil }
+        match 'contacts', to: 'domains/contacts#destroy', via: 'delete', defaults: { id: nil }
         collection do
           get ':id/transfer_info', to: 'domains#transfer_info', constraints: { id: /.*/ }
           post 'transfer', to: 'domains#transfer'
@@ -197,93 +202,7 @@ Rails.application.routes.draw do
 
   # REGISTRAR ROUTES
   namespace :registrar do
-    root 'polls#show'
-
     devise_for :users, path: '', class_name: 'ApiUser', skip: %i[sessions]
-
-    resources :invoices, except: %i[new create edit update destroy] do
-      resource :delivery, controller: 'invoices/delivery', only: %i[new create]
-
-      member do
-        get 'download'
-        patch 'cancel'
-      end
-    end
-
-    resources :deposits
-    resources :account_activities
-
-    put 'current_user/switch/:new_user_id', to: 'current_user#switch', as: :switch_current_user
-    resource :account, controller: :account, only: %i[show edit update]
-
-    resources :domains do
-      collection do
-        post 'update', as: 'update'
-        post 'destroy', as: 'destroy'
-        get 'renew'
-        get 'edit'
-        get 'info'
-        get 'check'
-        get 'delete'
-        get 'search_contacts'
-        get 'remove_hold'
-      end
-    end
-    resources :domain_transfers, only: %i[new create]
-    resource :bulk_change, controller: :bulk_change, only: :new
-    post '/bulk_renew/new', to: 'bulk_change#bulk_renew', as: :bulk_renew
-    resource :tech_contacts, only: :update
-    resource :admin_contacts, only: :update
-    resource :nameservers, only: :update
-    resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
-      member do
-        get 'delete'
-      end
-
-      collection do
-        get 'check'
-      end
-    end
-
-    resource :poll, only: %i[show destroy] do
-      collection do
-        post 'confirm_transfer'
-      end
-    end
-
-    resource :xml_console do
-      collection do
-        get 'load_xml'
-      end
-    end
-
-    get  'pay/return/:payment_order' => 'payments#back', as: 'return_payment_with'
-    post 'pay/return/:payment_order' => 'payments#back'
-    put  'pay/return/:payment_order' => 'payments#back'
-    post 'pay/callback/:payment_order' => 'payments#callback', as: 'response_payment_with'
-    get  'pay/go/:bank' => 'payments#pay', as: 'payment_with'
-
-    namespace :settings do
-      resource :balance_auto_reload, controller: :balance_auto_reload, only: %i[edit update destroy]
-    end
-  end
-
-  scope :registrar do
-    devise_scope :registrar_user do
-      get 'sign_in', to: 'registrar/sessions#new', as: :new_registrar_user_session
-
-      # /registrar/sessions path is hardcoded in Apache config for certificate-based authentication
-      # See https://github.com/internetee/registry/blob/master/README.md#installation
-      # Client certificate is asked only on login form submission, therefore the path must be
-      # different from the one in `new_registrar_user_session` route
-      post 'sessions', to: 'registrar/sessions#create', as: :registrar_user_session
-
-      delete 'sign_out', to: 'registrar/sessions#destroy', as: :destroy_registrar_user_session
-
-      # TARA
-      match '/open_id/callback', via: %i[get post], to: 'sso/tara#registrar_callback'
-      match '/open_id/cancel', via: %i[get post delete], to: 'sso/tara#cancel'
-    end
   end
 
   namespace :registrant do

@@ -9,7 +9,6 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     @original_address_processing = Setting.address_processing
     @original_fax_enabled_setting = ENV['fax_enabled']
     @user = users(:registrant)
-
   end
 
   teardown do
@@ -92,22 +91,9 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_update_address_when_enabled_without_address_params
-    Setting.address_processing = true
+    Setting.address_processing = false
 
     patch api_v1_registrant_contact_path(@contact.uuid), params: { address: { } },
-          as: :json,
-          headers: { 'HTTP_AUTHORIZATION' => auth_token }
-
-    assert_response :bad_request
-    @contact.reload
-    assert_equal Contact::Address.new(nil, nil, nil, nil, nil),
-                 @contact.address
-  end
-
-  def test_update_address_when_enabled_without_address_params
-    Setting.address_processing = true
-
-    patch api_v1_registrant_contact_path(@contact.uuid), params: { },
           as: :json,
           headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
@@ -192,7 +178,7 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   def test_legal_persons_disclosed_attributes_cannot_be_changed
     @contact = contacts(:acme_ltd)
 
-    # contacts(:acme_ltd).ident
+    contacts(:acme_ltd).ident
     assert_equal '1234567', @contact.ident
 
     assert_equal Contact::ORG, @contact.ident_type
@@ -215,38 +201,52 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
                  JSON.parse(response.body, symbolize_names: true)
   end
 
-  def test_return_contact_details
-    patch api_v1_registrant_contact_path(@contact.uuid), params: { name: 'new name' },
+  def test_legal_persons_disclosed_attributes_change_when_phone
+    @contact = contacts(:acme_ltd)
+    @contact.update!(disclosed_attributes: %w[])
+
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { disclosed_attributes: %w[phone] },
           as: :json,
           headers: { 'HTTP_AUTHORIZATION' => auth_token }
-    assert_equal ({ id: @contact.uuid,
-                    name: 'new name',
-                    code: @contact.code,
-                    fax: @contact.fax,
-                    ident: {
-                      code: @contact.ident,
-                      type: @contact.ident_type,
-                      country_code: @contact.ident_country_code,
-                    },
-                    email: @contact.email,
-                    phone: @contact.phone,
-                    address: {
-                      street: @contact.street,
-                      zip: @contact.zip,
-                      city: @contact.city,
-                      state: @contact.state,
-                      country_code: @contact.country_code,
-                    },
-                    auth_info: @contact.auth_info,
-                    statuses: @contact.statuses,
-                    disclosed_attributes: @contact.disclosed_attributes }),
-                 JSON.parse(response.body, symbolize_names: true)
+    @contact.reload
+
+    assert_response :ok
+    assert_equal %w[phone], @contact.disclosed_attributes
+  end
+
+  def test_registrant_publishable_change_when_true
+    @contact = contacts(:acme_ltd)
+    @contact.update!(registrant_publishable: false)
+
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { disclosed_attributes: %w[], registrant_publishable: true },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    @contact.reload
+
+    assert_response :ok
+    assert @contact.registrant_publishable
+  end
+
+  def test_registrant_publishable_change_when_false
+    @contact = contacts(:acme_ltd)
+    @contact.update!(registrant_publishable: true)
+
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { disclosed_attributes: %w[], registrant_publishable: false },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    @contact.reload
+
+    assert_response :ok
+    assert_not @contact.registrant_publishable
   end
 
   def test_errors
     patch api_v1_registrant_contact_path(@contact.uuid), params: { phone: 'invalid' },
-          as: :json,
-          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+                                                         as: :json,
+                                                         headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :bad_request
     assert_equal ({ errors: { phone: ['Phone nr is invalid'] } }), JSON.parse(response.body,
@@ -254,13 +254,13 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
   end
 
   def test_org_disclosed_attributes
-    patch api_v1_registrant_contact_path(@contact_org.uuid), params: { disclosed_attributes: ["some_attr"]  },
+    patch api_v1_registrant_contact_path(@contact_org.uuid), params: { disclosed_attributes: ["some_attr"] },
           as: :json,
           headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :bad_request
 
-    err_msg = "Legal person's data is visible by default and cannot be concealed. Please remove this parameter."
+    err_msg = "Request contains extra attributes: some_attr"
 
     response_json = JSON.parse(response.body, symbolize_names: true)
     response_msg = response_json[:errors][0][:disclosed_attributes][0]

@@ -5,6 +5,9 @@ module Repp
       before_action :find_contact, only: %i[show update destroy]
       skip_around_action :log_request, only: :search
 
+      THROTTLED_ACTIONS = %i[index check search create show update destroy].freeze
+      include Shunter::Integration::Throttle
+
       api :get, '/repp/v1/contacts'
       desc 'Get all existing contacts'
       def index
