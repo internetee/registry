@@ -1,3 +1,6 @@
+02.12.2022
+* registrant force delete notifications in case of multi-year registrations https://github.com/internetee/registry/issues/2467 
+
 01.12.2022
 * Fixed empty validation result reason in the logs https://github.com/internetee/registry/issues/2490
 * Reduced unnecessary logging from email validation logs https://github.com/internetee/registry/issues/2491
