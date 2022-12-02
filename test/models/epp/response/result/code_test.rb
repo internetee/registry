@@ -92,7 +92,6 @@ class EppResponseResultCodeTest < ActiveSupport::TestCase
       2400 => 'Command failed',
       2501 => 'Authentication error; server closing connection'
     }
-
     assert Epp::Response::Result::Code.default_descriptions.contain? descriptions
   end
 

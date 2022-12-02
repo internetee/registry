@@ -516,6 +516,21 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_not @domain.force_delete_scheduled?
   end
 
+  def test_notification_multiyear_expiration_domain
+    @domain.update(valid_to: Time.zone.parse('2014-08-05'))
+    assert_not @domain.force_delete_scheduled?
+    travel_to Time.zone.parse('2010-07-05')
+
+    @domain.schedule_force_delete(type: :soft)
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+    assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
+    assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
+
+    assert_enqueued_jobs 8
+  end
+
   def prepare_bounced_email_address(email)
     @bounced_mail = BouncedMailAddress.new
     @bounced_mail.email = email
