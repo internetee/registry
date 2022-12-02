@@ -528,7 +528,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_equal Date.parse('2010-09-19'), @domain.force_delete_date.to_date
     assert_equal Date.parse('2010-08-05'), @domain.force_delete_start.to_date
 
-    assert_enqueued_jobs 4
+    assert_enqueued_jobs 8
   end
 
   def prepare_bounced_email_address(email)

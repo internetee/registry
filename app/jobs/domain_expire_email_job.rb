@@ -3,7 +3,7 @@ class DomainExpireEmailJob < ApplicationJob
     domain = Domain.find_by(id: domain_id)
 
     return if domain.blank?
-    return if domain.registered?
+    return if domain.registered? && !domain.force_delete_scheduled?
 
     attrs = {
       domain: domain,
