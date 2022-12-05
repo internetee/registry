@@ -9,24 +9,36 @@ module Repp
       def market_share_distribution
         date_to = to_date(search_params[:end_date]).end_of_month
         date_from = to_date(search_params[:start_date] || '01.1991')
-        log_domains_del = ::Version::DomainVersion.where('event = ? AND created_at > ?' \
-                                                         "AND object ->> 'created_at' <= ?" \
-                                                         "AND object ->> 'created_at' >= ?",
-                                                         'destroy', date_to, date_to, date_from)
+        log_domain = ::Version::DomainVersion
+        log_domains_del = log_domain.where('event = ? AND created_at > ?' \
+                                           "AND object ->> 'created_at' <= ?" \
+                                           "AND object ->> 'created_at' >= ?",
+                                           'destroy', date_to, date_to, date_from)
+                                    .select("DISTINCT ON (object ->> 'name') object, created_at")
+                                    .order(Arel.sql("object ->> 'name', created_at desc"))
 
-        log_domains_del_grouped = log_domains_del.group("object ->> 'registrar_id'").count
         # p "log_domains_del"
-        # p log_domains_del.map{|d| d.object['name']}
+        # log_domains_del.each do |d|
+        #   p d.attributes
+        # end
+        # log_domains_del_grouped = log_domains_del.group("object ->> 'registrar_id'").count
+        log_domains_del_grouped = log_domains_del.group_by { |ld| ld.object['registrar_id'].to_s }
+                                                 .transform_values(&:count)
+        # p log_domains_del_grouped
 
-        log_domains_trans = ::Version::DomainVersion.where('event = ? AND created_at > ?' \
-                                                           "AND object ->> 'created_at' <= ?" \
-                                                           "AND object ->> 'created_at' >= ?" \
-                                                           "AND object_changes ->> 'registrar_id' IS NOT NULL",
-                                                           'update', date_to, date_to, date_from)
+
+        log_domains_trans = log_domain.where('event = ? AND created_at > ?' \
+                                              "AND object ->> 'created_at' <= ?" \
+                                              "AND object ->> 'created_at' >= ?" \
+                                              "AND object_changes ->> 'registrar_id' IS NOT NULL",
+                                              'update', date_to, date_to, date_from)
+                                      .select("DISTINCT ON (object ->> 'name') object, created_at")
+                                      .order(Arel.sql("object ->> 'name', created_at desc"))
         # p "log_domains_trans"
-        # p log_domains_trans.map{|d| d.object['name']}
-        log_domains_trans_grouped = log_domains_trans.group("object ->> 'registrar_id'")
-                                                     .count
+        # p log_domains_trans.map{|d| [d.object['name'], d.created_at] }
+        log_domains_trans_grouped = log_domains_trans.group_by { |ld| ld.object['registrar_id'].to_s }
+                                                     .transform_values(&:count)
+        # p log_domains_trans_grouped
 
         updated = log_domains_trans.map { |ld| ld.object['name'] } | log_domains_del.map { |ld| ld.object['name'] }
 
