@@ -16,6 +16,10 @@ class Epp::Contact < Contact
     throw(:abort)
   end
 
+  def transferred_passwords
+    domains.pluck(:transfer_code)
+  end
+
   class << self
     # support legacy search
     def find_by_epp_code(code)
