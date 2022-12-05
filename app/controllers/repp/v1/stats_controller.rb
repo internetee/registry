@@ -8,7 +8,7 @@ module Repp
       end
       def market_share_distribution
         date_to = to_date(search_params[:end_date]).end_of_month
-        date_from = to_date(search_params[:start_date] || '01.1991')
+        date_from = to_date(search_params[:start_date] || '01.91')
         log_domain = ::Version::DomainVersion
         log_domains_del = log_domain.where('event = ? AND created_at > ?' \
                                            "AND object ->> 'created_at' <= ?" \
@@ -53,6 +53,7 @@ module Repp
         registrar_names = ::Registrar.where(test_registrar: false)
                                      .map { |r| { "#{r.id}": r.name }.with_indifferent_access }
                                      .inject(:merge)
+
 
         result = grouped.map do |key, value|
           next unless registrar_names.key?(key)
