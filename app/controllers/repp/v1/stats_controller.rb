@@ -42,12 +42,11 @@ module Repp
 
         updated = log_domains_trans.map { |ld| ld.object['name'] } | log_domains_del.map { |ld| ld.object['name'] }
 
-        domains = ::Domain.where(from_condition)
-                          .where(to_condition)
+        domains = ::Domain.where('created_at <= ? AND created_at >= ?', date_to, date_from)
                           .where.not(name: updated)
         domains_grouped = domains.group(:registrar_id).count.stringify_keys
         # p "domains"
-        # p domains.pluck(:name)
+        # p domains_grouped
 
         grouped = summarize([log_domains_del_grouped, log_domains_trans_grouped, domains_grouped])
 
