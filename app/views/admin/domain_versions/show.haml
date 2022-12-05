@@ -45,6 +45,12 @@
               - domain.statuses.each do |s|
                 = s
 
+          %dt= "Status notes"
+          %dd{class: changing_css_class(@version,"statuses")}
+            - if domain.status_notes.present?
+              - domain.status_notes.each do |s|
+                = s
+
           %dt= t('.registrant')
           %dd{class: changing_css_class(@version,"registrant_id")}
             - registrant.each do |r|
