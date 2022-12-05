@@ -8,14 +8,13 @@ module Repp
       end
       def market_share_distribution
         date_to = to_date(search_params[:end_date]).end_of_month
-        date_from = to_date(search_params[:start_date] || '01.91')
-        log_domain = ::Version::DomainVersion
-        log_domains_del = log_domain.where('event = ? AND created_at > ?' \
-                                           "AND object ->> 'created_at' <= ?" \
-                                           "AND object ->> 'created_at' >= ?",
-                                           'destroy', date_to, date_to, date_from)
-                                    .select("DISTINCT ON (object ->> 'name') object, created_at")
-                                    .order(Arel.sql("object ->> 'name', created_at desc"))
+        date_from = to_date(search_params[:start_date] || '01.05')
+        log_domains_del = ::Version::DomainVersion.where(event: 'destroy')
+                                                  .where('created_at > ?', date_to)
+                                                  .where("object ->> 'created_at' <= ?", date_to)
+                                                  .where("object ->> 'created_at' >= ?", date_from)
+                                                  .select("DISTINCT ON (object ->> 'name') object, created_at")
+                                                  .order(Arel.sql("object ->> 'name', created_at desc"))
 
         # p "log_domains_del"
         # log_domains_del.each do |d|
@@ -26,24 +25,23 @@ module Repp
                                                  .transform_values(&:count)
         # p log_domains_del_grouped
 
-
-        log_domains_trans = log_domain.where('event = ? AND created_at > ?' \
-                                              "AND object ->> 'created_at' <= ?" \
-                                              "AND object ->> 'created_at' >= ?" \
-                                              "AND object_changes ->> 'registrar_id' IS NOT NULL",
-                                              'update', date_to, date_to, date_from)
-                                      .select("DISTINCT ON (object ->> 'name') object, created_at")
-                                      .order(Arel.sql("object ->> 'name', created_at desc"))
+        log_domains_trans = ::Version::DomainVersion.where(event: 'update')
+                                                    .where('created_at > ?', date_to)
+                                                    .where("object ->> 'created_at' <= ?", date_to)
+                                                    .where("object ->> 'created_at' >= ?", date_from)
+                                                    .where("object_changes ->> 'registrar_id' IS NOT NULL")
+                                                    .select("DISTINCT ON (object ->> 'name') object, created_at")
+                                                    .order(Arel.sql("object ->> 'name', created_at desc"))
         # p "log_domains_trans"
         # p log_domains_trans.map{|d| [d.object['name'], d.created_at] }
         log_domains_trans_grouped = log_domains_trans.group_by { |ld| ld.object['registrar_id'].to_s }
                                                      .transform_values(&:count)
         # p log_domains_trans_grouped
 
-        updated = log_domains_trans.map { |ld| ld.object['name'] } | log_domains_del.map { |ld| ld.object['name'] }
+        updated = log_domains_trans.map { |ld| ld.object['name'] } + log_domains_del.map { |ld| ld.object['name'] }
 
         domains = ::Domain.where('created_at <= ? AND created_at >= ?', date_to, date_from)
-                          .where.not(name: updated)
+                          .where.not(name: updated.uniq)
         domains_grouped = domains.group(:registrar_id).count.stringify_keys
         # p "domains"
         # p domains_grouped
