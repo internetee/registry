@@ -59,7 +59,9 @@ class Ability
         pw.blank? ? true : c.auth_info == pw ||
           c.transferred_passwords.include?(pw)
     end
-    can(:view_full_info, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
+    can(:view_full_info, Epp::Contact) do |c, pw|
+      c.registrar_id == @user.registrar_id || c.auth_info == pw || c.transferred_passwords.include?(pw)
+    end
     can(:check,  Epp::Contact)
     can(:create, Epp::Contact)
     can(:update, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
