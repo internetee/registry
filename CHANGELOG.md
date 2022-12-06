@@ -1,3 +1,6 @@
+06.12.2022
+* save status notes to domain history https://github.com/internetee/registry/issues/2484
+
 02.12.2022
 * registrant force delete notifications in case of multi-year registrations https://github.com/internetee/registry/issues/2467 
 
