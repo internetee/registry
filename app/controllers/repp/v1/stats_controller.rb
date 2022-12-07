@@ -111,7 +111,7 @@ module Repp
       def registrar_names
         @registrar_names ||= ::Registrar.where(test_registrar: false)
                                         .map { |r| { "#{r.id}": r.name }.with_indifferent_access }
-                                        .inject(:merge)
+                                        .reduce({}, :merge)
       end
 
       def serialize_distribution_result(result)
@@ -122,7 +122,7 @@ module Repp
           hash = { name: name, y: value }
           hash.merge!({ sliced: true, selected: true }) if current_user.registrar.name == name
           hash
-        end
+        end.compact
       end
 
       def serialize_growth_rate_result(result)
@@ -131,7 +131,7 @@ module Repp
 
           name = registrar_names[key]
           [name, value]
-        end
+        end.compact
       end
     end
   end
