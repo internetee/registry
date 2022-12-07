@@ -1676,7 +1676,7 @@ CREATE TABLE public.log_domains (
     session character varying,
     children jsonb,
     uuid character varying,
-    object_changes jsonb DEFAULT '"{}"'::jsonb
+    object_changes jsonb
 );
 
 
@@ -5465,6 +5465,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221011061840'),
 ('20221206075912'),
 ('20221206090120'),
-('20221206091556');
+('20221206091556'),
+('20221207102831');
 
 
