@@ -73,4 +73,26 @@ class DisputeStatusUpdateJobTest < ActiveJob::TestCase
     whois_record.reload
     assert_not whois_record.json['status'].include? 'disputed'
   end
+
+  def test_close_dispute_with_domains_with_dispute_status
+    travel_to Time.zone.parse('2010-07-05')
+
+    domain = domains(:shop)
+    domain.statuses << DomainStatus::DISPUTED
+    domain.save && domain.reload
+
+    dispute = disputes(:closed)
+    dispute.domain_name = domain.name
+    dispute.save && dispute.reload
+
+    assert domain.statuses.include? DomainStatus::DISPUTED
+
+    perform_enqueued_jobs do
+      DisputeStatusUpdateJob.perform_now
+    end
+
+    domain.reload
+
+    refute domain.statuses.include? DomainStatus::DISPUTED
+  end
 end
