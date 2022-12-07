@@ -482,7 +482,7 @@ GEM
     thor (1.2.1)
     tilt (2.0.11)
     timeout (0.3.0)
-    truemail (2.4.9)
+    truemail (3.0.3)
       simpleidn (~> 0.2.1)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
@@ -490,7 +490,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.7)
+    unf_ext (0.0.8.2)
     validate_email (0.1.6)
       activemodel (>= 3.0)
       mail (>= 2.2.5)
@@ -588,7 +588,7 @@ DEPENDENCIES
   simplecov (= 0.17.1)
   simpleidn (= 0.2.1)
   spy
-  truemail (~> 2.4)
+  truemail (~> 3.0)
   uglifier
   validates_email_format_of (= 1.7.2)
   webdrivers
