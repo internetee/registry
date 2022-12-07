@@ -55,7 +55,7 @@ module Repp
       end
 
       def to_date(date_param)
-        return if date_param.blank?
+        return Date.today if date_param.blank?
 
         Date.strptime(date_param, '%m.%y')
       end
@@ -114,19 +114,19 @@ module Repp
                                         .inject(:merge)
       end
 
-      def serialize_distribution_result(grouped)
-        grouped.map do |key, value|
+      def serialize_distribution_result(result)
+        result.map do |key, value|
           next unless registrar_names.key?(key)
 
           name = registrar_names[key]
-          hash = { name: registrar_names[key], y: value }
+          hash = { name: name, y: value }
           hash.merge!({ sliced: true, selected: true }) if current_user.registrar.name == name
           hash
         end
       end
 
-      def serialize_growth_rate_result(grouped)
-        grouped.map do |key, value|
+      def serialize_growth_rate_result(result)
+        result.map do |key, value|
           next unless registrar_names.key?(key)
 
           name = registrar_names[key]
