@@ -55,7 +55,7 @@ module Repp
       end
 
       def to_date(date_param)
-        return Date.today if date_param.blank?
+        return Time.zone.today if date_param.blank?
 
         Date.strptime(date_param, '%m.%y')
       end
