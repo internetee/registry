@@ -474,6 +474,8 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     spy (1.0.1)
+    strong_migrations (1.4.0)
+      activerecord (>= 5.2)
     swd (1.3.0)
       activesupport (>= 3)
       attr_required (>= 0.0.5)
@@ -588,6 +590,7 @@ DEPENDENCIES
   simplecov (= 0.17.1)
   simpleidn (= 0.2.1)
   spy
+  strong_migrations
   truemail (~> 2.4)
   uglifier
   validates_email_format_of (= 1.7.2)
@@ -597,4 +600,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.5.1)
 
 BUNDLED WITH
-   2.3.25
+   2.3.26

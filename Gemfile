@@ -78,6 +78,8 @@ gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
 
 gem 'directo', github: 'internetee/directo', branch: 'master'
 
+gem 'strong_migrations'
+
 group :development, :test do
   gem 'pry', '0.14.1'
 end
