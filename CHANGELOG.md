@@ -1,3 +1,6 @@
+07.12.2022
+* return contact detaisl with authinfo pw of linked domain https://github.com/internetee/registry/issues/2492
+
 06.12.2022
 * save status notes to domain history https://github.com/internetee/registry/issues/2484
 
