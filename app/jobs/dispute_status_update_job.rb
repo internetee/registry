@@ -8,11 +8,19 @@ class DisputeStatusUpdateJob < ApplicationJob
 
     close_disputes
     activate_disputes
+    clean_disputed
 
     @logger.info "DisputeStatusUpdateJob - All done. Closed #{@backlog['closed']} and " \
     "activated #{@backlog['activated']} disputes."
 
     show_failed_disputes unless @backlog['activate_fail'].empty? && @backlog['close_fail'].empty?
+  end
+
+  def clean_disputed
+    domains = Domain.where("array_to_string(statuses, '||') ILIKE ?", '%disputed%')
+    domains.each do |domain|
+      domain.unmark_as_disputed unless domain.disputed?
+    end
   end
 
   def close_disputes
