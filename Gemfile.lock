@@ -331,10 +331,10 @@ GEM
       newrelic_rpm (= 8.1.0)
     newrelic_rpm (8.1.0)
     nio4r (2.5.8)
-    nokogiri (1.13.9)
+    nokogiri (1.13.10)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    nokogiri (1.13.9-x86_64-linux)
+    nokogiri (1.13.10-x86_64-linux)
       racc (~> 1.4)
     nori (2.6.0)
     omniauth (2.1.0)
@@ -371,7 +371,7 @@ GEM
     public_suffix (5.0.0)
     puma (5.6.4)
       nio4r (~> 2.0)
-    racc (1.6.0)
+    racc (1.6.1)
     rack (2.2.4)
     rack-oauth2 (1.21.3)
       activesupport
@@ -567,7 +567,7 @@ DEPENDENCIES
   money-rails
   newrelic-infinite_tracing
   newrelic_rpm
-  nokogiri (~> 1.13.0)
+  nokogiri (~> 1.13.10)
   omniauth-rails_csrf_protection
   omniauth-tara!
   paper_trail (~> 14.0)
