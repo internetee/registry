@@ -6,6 +6,7 @@ module EppRequestable
   end
 
   def create
+    authorize! :create, Epp::Server
     result = server.request(request_params[:payload])
     render_success(data: { xml: result.force_encoding('UTF-8') })
   rescue StandardError
