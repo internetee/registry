@@ -13,7 +13,6 @@ module Versions
       has_paper_trail versions: { class_name: "Version::#{model_name}Version" }
     end
 
-    # add creator and updator
     before_create :add_creator
     before_create :add_updator
     before_update :add_updator

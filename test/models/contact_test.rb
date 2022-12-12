@@ -3,6 +3,7 @@ require 'helpers/phone_format_helper_test'
 
 class ContactTest < ActiveJob::TestCase
   include PhoneFormatHelperTest
+  include ActiveJob::TestHelper
 
   setup do
     @contact = contacts(:john)

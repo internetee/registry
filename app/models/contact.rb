@@ -19,6 +19,21 @@ class Contact < ApplicationRecord
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
   has_many :actions, dependent: :destroy
 
+  after_save :touch_domain
+  def touch_domain
+    if domains.present?
+      domains.each do |domain|
+        RefreshUpdateAttributeJob.perform_later('Domain', domain.id, updated_at)
+      end
+    end
+
+    if registrant_domains.present?
+      registrant_domains.each do |domain|
+        RefreshUpdateAttributeJob.perform_later('Domain', domain.id, updated_at)
+      end
+    end
+  end
+
   attr_accessor :legal_document_id
 
   alias_attribute :kind, :ident_type
