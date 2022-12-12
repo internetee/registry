@@ -21,10 +21,16 @@ class Contact < ApplicationRecord
 
   after_save :touch_domain
   def touch_domain
-    return if domains.empty?
+    if domains.present?
+      domains.each do |domain|
+        RefreshUpdateAttributeJob.perform_later('Domain', domain.id, updated_at)
+      end
+    end
 
-    domains.each do |domain|
-      RefreshUpdateAttributeJob.perform_later('Domain', domain.id, updated_at)
+    if registrant_domains.present?
+      registrant_domains.each do |domain|
+        RefreshUpdateAttributeJob.perform_later('Domain', domain.id, updated_at)
+      end
     end
   end
 
