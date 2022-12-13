@@ -1,3 +1,6 @@
+13.12.2022
+* Refactored market share distributiond request for stats https://github.com/internetee/registry/pull/2498
+
 07.12.2022
 * return contact detaisl with authinfo pw of linked domain https://github.com/internetee/registry/issues/2492
 * fixed disputed status removal https://github.com/internetee/registry/issues/2503
