@@ -1,5 +1,6 @@
 14.12.2022
 * additional features for the XML console feature in registrar portal https://github.com/internetee/registry/pull/2509
+* poll ack for XML console https://github.com/internetee/registry/pull/2511
 
 13.12.2022
 * Refactored market share distributiond request for stats https://github.com/internetee/registry/pull/2498
