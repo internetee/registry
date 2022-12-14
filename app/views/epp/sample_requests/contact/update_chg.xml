@@ -7,14 +7,6 @@
         <contact:chg>
           <contact:postalInfo>
             <contact:name>John Doe</contact:name>
-            <contact:addr>
-              <contact:street>123 Example Dr.</contact:street>
-              <contact:street>Suite 100</contact:street>
-              <contact:city>Dulles</contact:city>
-              <contact:sp>VA</contact:sp>
-              <contact:pc>20166-6503</contact:pc>
-              <contact:cc>EE</contact:cc>
-            </contact:addr>
           </contact:postalInfo>
           <contact:voice>+123.7035555555</contact:voice>
           <contact:email>jdoe@example.com</contact:email>
