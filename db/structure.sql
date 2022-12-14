@@ -1670,13 +1670,14 @@ CREATE TABLE public.log_domains (
     item_id integer NOT NULL,
     event character varying NOT NULL,
     whodunnit character varying,
-    object jsonb,
+    object_json jsonb,
     object_changes_json json,
     created_at timestamp without time zone,
     session character varying,
     children jsonb,
     uuid character varying,
-    object_changes jsonb
+    object_changes jsonb,
+    object jsonb
 );
 
 
@@ -5466,6 +5467,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221206075912'),
 ('20221206090120'),
 ('20221206091556'),
-('20221207102831');
+('20221207102831'),
+('20221214073933'),
+('20221214074252');
 
 
