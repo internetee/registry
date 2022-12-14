@@ -21,7 +21,6 @@ class ReppV1StatsMarketShareTest < ActionDispatch::IntegrationTest
 
     assert json[:data].is_a? Array
     assert json[:data][0].is_a? Hash
-    assert_equal json[:data][0][:name], 'Good Names'
     assert_nil json[:data][0][:selected]
   end
 
