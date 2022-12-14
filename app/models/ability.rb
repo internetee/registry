@@ -33,6 +33,9 @@ class Ability
   def epp # Registrar/api_user dynamic role
     can :manage, Account
 
+    # Epp::Server
+    can :create, Epp::Server
+
     # Poll
     can :manage, :poll
 
