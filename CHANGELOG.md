@@ -1,3 +1,6 @@
+20.12.2022
+* Fixed migrations and modified object data type of log_domains table https://github.com/internetee/registry/pull/2515
+
 14.12.2022
 * additional features for the XML console feature in registrar portal https://github.com/internetee/registry/pull/2509
 * poll ack for XML console https://github.com/internetee/registry/pull/2511
