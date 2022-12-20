@@ -1,6 +1,6 @@
 class ModifyLogDomainsObjectChangesDataType < ActiveRecord::Migration[6.1]
   def up
-    add_column :log_domains, :object_changes_jsonb, :jsonb, default: '{}'
+    add_column :log_domains, :object_changes_jsonb, :jsonb
 
     # Copy data from old column to the new one
     Version::DomainVersion.update_all('object_changes_jsonb = object_changes::jsonb')
