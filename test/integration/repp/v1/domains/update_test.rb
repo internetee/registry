@@ -62,6 +62,7 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
     @auth_headers['Content-Type'] = 'application/json'
     new_registrant = contacts(:william)
     refute @domain.registrant == new_registrant
+    old_transfer_code = @domain.transfer_code
 
     payload = {
       domain: {
@@ -80,6 +81,7 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
+    refute_equal old_transfer_code, @domain.transfer_code
     assert @domain.registrant.code == new_registrant.code
     refute @domain.statuses.include? DomainStatus::PENDING_UPDATE
   end
