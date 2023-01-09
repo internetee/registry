@@ -1,3 +1,6 @@
+09.01.2023
+* authInfo code is reset on registrant change https://github.com/internetee/registry/pull/2519
+
 20.12.2022
 * Fixed migrations and modified object data type of log_domains table https://github.com/internetee/registry/pull/2515
 
