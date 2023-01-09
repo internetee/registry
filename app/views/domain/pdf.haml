@@ -116,13 +116,10 @@
 
   %body
     .container
-      #header.row
-        .col-sm-6.left
-          #header-content
-            %h1= "#{@domain.name} (#{Time.zone.now.to_date.strftime("%d/%m/%Y")})"
-        .col-sm-6.right
-          %img{src: "#{Rails.root}/public/eis-logo-black-et.png"}
-      .clear
+      %img{src: "#{Rails.root}/public/eis-logo-black-et.png"}
+      .row
+        .col-sm-12
+          %h1= "#{@domain.name} (#{Time.zone.now.to_date.strftime("%d/%m/%Y")})"
       %hr
       .row
         .col-sm-8.left

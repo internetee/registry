@@ -8,7 +8,7 @@
     <div class="panel-body">
         <dl class="dl-horizontal">
             <dt><%= t(:name) %></dt>
-            <dd><%= @domain.name %></dd>
+            <dd style="word-break:break-all;"><%= @domain.name %></dd>
 
             <dt><%= Domain.human_attribute_name :registered_at %></dt>
             <dd><%= l(@domain.registered_at) %></dd>
