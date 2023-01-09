@@ -514,7 +514,6 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
     refute_includes @domain.statuses, DomainStatus::PENDING_UPDATE
-
   end
 
   def test_skips_verification_when_provided_registrant_is_the_same_as_current_one
@@ -559,6 +558,8 @@ class EppDomainUpdateBaseTest < EppTestCase
     dispute.update!(starts_at: Time.zone.now, expires_at: Time.zone.now + 5.days, closed: nil)
     new_registrant = contacts(:william)
 
+    old_transfer_code = @domain.transfer_code
+
     assert @domain.disputed?
 
     request_xml = <<-XML
@@ -596,6 +597,7 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_not @domain.registrant_verification_asked?
     assert_not @domain.disputed?
     assert_no_emails
+    refute_equal @domain.transfer_code, old_transfer_code
   end
 
   def test_dispute_password_mandatory_when_registrant_changed

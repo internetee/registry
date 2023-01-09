@@ -68,6 +68,7 @@ module Actions
                              I18n.t(:object_status_prohibits_operation))
       else
         domain.registrant = new_registrant
+        domain.transfer_code = SecureRandom.hex
       end
     end
 
