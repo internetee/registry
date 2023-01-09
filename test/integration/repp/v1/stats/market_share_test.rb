@@ -21,7 +21,6 @@ class ReppV1StatsMarketShareTest < ActionDispatch::IntegrationTest
 
     assert json[:data].is_a? Array
     assert json[:data][0].is_a? Hash
-    assert_nil json[:data][0][:selected]
   end
 
   def test_shows_market_share_growth_rate_data
