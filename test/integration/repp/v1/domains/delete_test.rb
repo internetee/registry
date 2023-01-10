@@ -17,7 +17,7 @@ class ReppV1DomainsDeleteTest < ActionDispatch::IntegrationTest
     payload = {
       domain: {
         delete: {
-          verified: false,
+          verified: 'false',
         },
       },
     }
