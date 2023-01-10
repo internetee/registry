@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # core
 gem 'active_interaction', '~> 4.0'
-gem 'apipie-rails', '~> 0.6.0'
+gem 'apipie-rails', '~> 0.9.0'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.13.0' # for dates and times
 gem 'mimemagic', '0.4.3'
@@ -81,13 +81,13 @@ gem 'directo', github: 'internetee/directo', branch: 'master'
 gem 'strong_migrations'
 
 group :development, :test do
-  gem 'pry', '0.14.1'
+  gem 'pry', '0.14.2'
 end
 
 group :test do
   gem 'capybara'
   gem 'database_cleaner'
-  gem 'minitest', '~> 5.14'
+  gem 'minitest', '~> 5.17'
   gem 'simplecov', '0.17.1', require: false # CC last supported v0.17
   gem 'spy'
   gem 'webdrivers'
