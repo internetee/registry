@@ -81,7 +81,7 @@ gem 'directo', github: 'internetee/directo', branch: 'master'
 gem 'strong_migrations'
 
 group :development, :test do
-  gem 'pry', '0.14.1'
+  gem 'pry', '0.14.2'
 end
 
 group :test do
