@@ -303,4 +303,6 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
 
     assert_equal registry_response[:message], 'Invoice with nonexisted-invoice number not found'
   end
+
+  test 'it should ignore if you trying to set failed status to canceled'
 end

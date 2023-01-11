@@ -26,12 +26,15 @@ module EisBilling
 
     def payment_orders_handler
       if @invoice.payment_orders.present?
-        return if (@invoice.paid? && status.paid?) || (@invoice.cancelled? && status.cancelled?)
+        return if (@invoice.paid? && status.paid?) || (@invoice.unpaid? && status.issued?)
 
-        if status.cancelled? || status.failed?
+        if status.issued?
           @invoice.cancel_manualy
         elsif status.paid?
           @invoice.autobind_manually
+        else
+          # TODO
+          # CANCELLED
         end
       else
         return unless status.paid?
