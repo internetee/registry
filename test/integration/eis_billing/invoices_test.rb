@@ -26,7 +26,7 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
     @invoice.update(total: 120.0)
     @invoice.reload
 
-    incoming_params = { 
+    incoming_params = {
       invoice: {
         invoice_number: @invoice.number,
         initiator: 'registry',
