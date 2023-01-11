@@ -31,4 +31,22 @@ module Invoice::Cancellable
   def not_cancelled?
     !cancelled?
   end
+
+  def cancel_manualy
+    account_activity = AccountActivity.find_by(invoice_id: id)
+    account_activity_dup = account_activity.dup
+    account_activity_dup.sum = -account_activity.sum.to_i
+    account_activity_dup.save
+    account_activity.update(invoice_id: nil)
+    account_activity_dup.update(invoice_id: nil)
+    mark_cancelled_payment_order
+    account_activity.save && account_activity_dup.save
+  end
+
+  private
+
+  def mark_cancelled_payment_order
+    payment_order = payment_orders.last
+    payment_order.update(notes: 'Cancelled')
+  end
 end

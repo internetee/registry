@@ -23,4 +23,34 @@ module Invoice::Payable
   def unpaid?
     !paid?
   end
+
+  def process_payment(**options)
+    payment = options[:payment_type].constantize.new(invoice: self)
+    payment.response = options[:everypay_response]
+    payment.status = options[:payment_status]
+    payment.save!
+
+    bank_transaction = payment.base_transaction(sum: options[:sum],
+                                                paid_at: options[:transaction_time] || Time.zone.now,
+                                                buyer_name: buyer_name)
+    bank_transaction.bind_invoice(number)
+  end
+
+  def autobind_manually
+    return if paid?
+
+    bank_statement = BankStatement.new(
+      bank_code: Setting.registry_bank_code,
+      iban: Setting.registry_iban
+    )
+    bank_statement.bank_transactions.build(
+      description: description,
+      sum: total,
+      reference_no: reference_no,
+      paid_at: Time.zone.now.to_date,
+      currency: 'EUR'
+    )
+    bank_statement.save!
+    bank_statement.bind_invoices(manual: true)
+  end
 end

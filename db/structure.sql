@@ -4447,6 +4447,7 @@ CREATE INDEX index_log_domains_on_object ON public.log_domains USING gin (object
 
 
 --
+<<<<<<< HEAD
 -- Name: index_log_domains_on_object_changes; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4454,6 +4455,8 @@ CREATE INDEX index_log_domains_on_object_changes ON public.log_domains USING gin
 
 
 --
+=======
+>>>>>>> creating sync with billing
 -- Name: index_log_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -
 --
 
