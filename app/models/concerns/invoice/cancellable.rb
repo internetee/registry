@@ -33,8 +33,6 @@ module Invoice::Cancellable
   end
 
   def cancel_manualy
-    return unless cancellable?
-
     account_activity = AccountActivity.find_by(invoice_id: id)
     account_activity_dup = account_activity.dup
     account_activity_dup.sum = -account_activity.sum.to_i

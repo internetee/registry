@@ -256,7 +256,7 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
     assert_equal invoice.payment_orders.count, 1
     assert invoice.payment_orders.first.paid?
     assert invoice.account_activity
-
+    assert invoice.paid?
     assert_equal account.balance.to_f, 200.0
 
     decrease_balance_params = { 
@@ -265,7 +265,7 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
         initiator: 'registry',
         payment_reference: '93b29d54ae08f7728e72ee3fe0e88855cd1d266912039d7d23fa2b54b7e1b349',
         transaction_amount: 120.0,
-        status: 'cancelled',
+        status: 'unpaid',
         in_directo: false,
         everypay_response: {
           'some' => 'some'
@@ -278,6 +278,7 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
     invoice.reload
     invoice.payment_orders.each(&:reload)
     account.reload
+    assert invoice.unpaid?
 
     assert_equal account.balance.to_f, 100.0
   end
@@ -303,6 +304,4 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
 
     assert_equal registry_response[:message], 'Invoice with nonexisted-invoice number not found'
   end
-
-  test 'it should ignore if you trying to set failed status to canceled'
 end
