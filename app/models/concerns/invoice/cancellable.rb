@@ -35,7 +35,7 @@ module Invoice::Cancellable
   def cancel_manualy
     account_activity = AccountActivity.find_by(invoice_id: id)
     account_activity_dup = account_activity.dup
-    account_activity_dup.sum = -account_activity.sum.to_i
+    account_activity_dup.sum = -account_activity.sum.to_f
     account_activity_dup.save
     account_activity.update(invoice_id: nil)
     account_activity_dup.update(invoice_id: nil)

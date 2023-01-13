@@ -9,10 +9,6 @@ module EisBilling
     before_action :load_invoice, only: :update
 
     def update
-      p '=========='
-      p params
-      p '=========='
-
       if @invoice.update(modified_params) && payment_orders_handler
 
         render json: {
@@ -30,43 +26,27 @@ module EisBilling
     private
 
     def payment_orders_handler
-      p '-----'
-      p @invoice.cancelled?
-      p status.issued?
-      p status
-      p '------'
+      return false if @invoice.cancelled? && status.paid? || @invoice.cancelled? && status.issued?
+      return false if @invoice.paid? && (status.failed? || status.cancelled?)
 
-      if @invoice.payment_orders.present?
-        if @invoice.cancelled? && status.paid? || @invoice.cancelled? && status.issued?
-          @invoice.errors.add(:base, 'Unable to change status of record')
-
-          return false
-        end
-
-        if @invoice.paid? && (status.failed? || status.cancelled?)
-          @invoice.errors.add(:base, 'Unable to change status of record')
-
-          return false
-        end
-
-        return true if (@invoice.paid? && status.paid?) || (@invoice.unpaid? && status.issued?) || (@invoice.cancelled? && status.cancelled?)
-
-        if status.issued?
-          @invoice.cancel_manualy
-        elsif status.paid?
-          @invoice.autobind_manually
-        else
-          @invoice.cancel
-        end
-      else
-        return unless status.paid?
-
+      case 
+      when @invoice.paid? && status.paid?
+        true
+      when @invoice.unpaid? && status.issued?
+        true
+      when @invoice.cancelled? && (status.cancelled? || status.failed?)
+        true
+      when status.issued?
+        @invoice.cancel_manualy
+      when status.paid?
         @invoice.autobind_manually
+      else
+        @invoice.cancel
       end
     end
 
     def status
-      status = case params[:status][:status]
+      status = case params[:status]
                when 'paid'
                  'paid'
                when 'cancelled'

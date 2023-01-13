@@ -38,7 +38,8 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
           'some' => 'some'
         },
         sent_at_omniva: Time.zone.now - 10.minutes
-      }
+      },
+      status: 'paid'
     }
 
     @invoice.account_activity.delete && @invoice.reload
@@ -65,7 +66,8 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
           'some' => 'some'
         },
         sent_at_omniva: Time.zone.now - 10.minutes
-      }
+      },
+      status: 'unpaid'
     }
 
     assert_equal @invoice.payment_orders.pluck(:status), %w[issued issued]
@@ -89,7 +91,7 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
     invoice.update(total: 120.0)
     invoice.reload
 
-    incoming_params = { 
+    incoming_params = {
         invoice: {
           invoice_number: invoice.number,
           initiator: 'registry',
@@ -101,7 +103,8 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
             'some' => 'some'
           },
           sent_at_omniva: Time.zone.now - 10.minutes
-        }
+        },
+        status: 'paid'
     }
 
     assert invoice.payment_orders.empty?
@@ -130,7 +133,8 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
           'some' => 'some'
         },
         sent_at_omniva: Time.zone.now - 10.minutes
-      }
+      },
+      status: 'cancelled'
     }
 
     @invoice.payment_orders.destroy_all and @invoice.account_activity.destroy
@@ -165,7 +169,8 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
           'some' => 'some'
         },
         sent_at_omniva: Time.zone.now - 10.minutes
-      }
+      },
+      status: 'paid'
     }
 
     assert invoice.payment_orders.empty?
@@ -208,7 +213,8 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
           'some' => 'some'
         },
         sent_at_omniva: Time.zone.now - 10.minutes
-      }
+      },
+      status: 'paid'
     }
 
     put eis_billing_invoices_path, params: incoming_params
@@ -237,7 +243,8 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
           'some' => 'some'
         },
         sent_at_omniva: Time.zone.now - 10.minutes
-      }
+      },
+      status: 'paid'
     }
 
     assert invoice.payment_orders.empty?
@@ -271,7 +278,8 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
           'some' => 'some'
         },
         sent_at_omniva: Time.zone.now - 10.minutes
-      }
+      },
+      status: 'unpaid'
     }
 
     put eis_billing_invoices_path, params: decrease_balance_params
@@ -296,7 +304,8 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
           'some' => 'some'
         },
         sent_at_omniva: Time.zone.now - 10.minutes
-      }
+      },
+      status: 'paid'
     }
 
     put eis_billing_invoices_path, params: incoming_params
