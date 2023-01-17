@@ -1,3 +1,6 @@
+17.01.2023
+* removed unnecessary db migrations https://github.com/internetee/registry/issues/2534
+
 09.01.2023
 * authInfo code is reset on registrant change https://github.com/internetee/registry/pull/2519
 * DB migrations to revert conversion from json to jsonb in log_domains https://github.com/internetee/registry/pull/2518
