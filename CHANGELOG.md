@@ -1,5 +1,6 @@
 17.01.2023
 * removed unnecessary db migrations https://github.com/internetee/registry/issues/2534
+* admin view fix for long domain names https://github.com/internetee/registry/issues/2520
 
 09.01.2023
 * authInfo code is reset on registrant change https://github.com/internetee/registry/pull/2519
