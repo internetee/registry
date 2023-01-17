@@ -107,7 +107,7 @@ module Repp
       end
 
       def authenticate_user
-        username, password = Base64.urlsafe_decode64(basic_token).split(':')
+        username, password = Base64.urlsafe_decode64(basic_token).split(':', 2)
         @current_user ||= ApiUser.find_by(username: username, plain_text_password: password)
         user_active = @current_user.active?
 
