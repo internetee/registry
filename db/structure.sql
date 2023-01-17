@@ -1674,10 +1674,8 @@ CREATE TABLE public.log_domains (
     session character varying,
     children jsonb,
     uuid character varying,
-    object_changes_jsonb jsonb,
-    object_jsonb jsonb,
-    object_changes json,
-    object json
+    object_changes jsonb,
+    object jsonb
 );
 
 
@@ -4442,17 +4440,17 @@ CREATE INDEX index_log_domains_on_item_type_and_item_id ON public.log_domains US
 
 
 --
--- Name: index_log_domains_on_object_changes_jsonb; Type: INDEX; Schema: public; Owner: -
+-- Name: index_log_domains_on_object; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_log_domains_on_object_changes_jsonb ON public.log_domains USING gin (object_changes_jsonb);
+CREATE INDEX index_log_domains_on_object ON public.log_domains USING gin (object);
 
 
 --
--- Name: index_log_domains_on_object_jsonb; Type: INDEX; Schema: public; Owner: -
+-- Name: index_log_domains_on_object_changes; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_log_domains_on_object_jsonb ON public.log_domains USING gin (object_jsonb);
+CREATE INDEX index_log_domains_on_object_changes ON public.log_domains USING gin (object_changes);
 
 
 --
@@ -5469,8 +5467,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221206091556'),
 ('20221207102831'),
 ('20221214073933'),
-('20221214074252'),
-('20230103095457'),
-('20230103100621');
+('20221214074252');
 
 
