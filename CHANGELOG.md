@@ -1,3 +1,6 @@
+19.01.2023
+* apipie gem downgrade to 0.6.0 to fix nil value repp error https://github.com/internetee/registry/pull/2537
+
 17.01.2023
 * removed unnecessary db migrations https://github.com/internetee/registry/issues/2534
 * admin view fix for long domain names https://github.com/internetee/registry/issues/2520
