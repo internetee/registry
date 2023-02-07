@@ -30,6 +30,10 @@ module PaymentOrders
       valid_hmac? && valid_amount? && valid_account?
     end
 
+    def payment_reference?
+      response['payment_reference'].present?
+    end
+
     def settled_payment?
       SUCCESSFUL_PAYMENT.include?(response['payment_state'])
     end
