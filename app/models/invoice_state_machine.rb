@@ -17,28 +17,36 @@ class InvoiceStateMachine
     when :unpaid
       mark_as_unpaid
     else
-      raise "Inavalid state #{invoice.status}"
+      push_error
     end
   end
 
   private
 
   def mark_as_paid
-    raise "Inavalid state #{invoice.status}" unless invoice.unpaid? || invoice.paid?
+    return push_error unless invoice.payable? || invoice.paid?
 
     invoice.autobind_manually
+    invoice
   end
 
   def mark_as_cancel
-    # Paid invoice cannot be cancelled?
-    raise "Inavalid state #{invoice.status}" unless invoice.cancellable? || invoice.cancelled?
+    return push_error unless invoice.cancellable? || invoice.cancelled?
 
     invoice.cancel
+    invoice
   end
 
   def mark_as_unpaid
-    raise "Inavalid state #{invoice.status}" unless invoice.paid? && invoice.payment_orders.present? || invoice.unpaid?
+    return push_error if invoice.paid? || !invoice.cancellable?
 
     invoice.cancel_manualy
+    invoice
+  end
+
+  def push_error
+    invoice.errors.add(:base, "Inavalid state #{status}")
+
+    false
   end
 end
