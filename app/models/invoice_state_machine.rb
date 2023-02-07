@@ -1,5 +1,3 @@
-# enum status: %i[unpaid paid cancelled failed]
-
 class InvoiceStateMachine
   attr_reader :invoice, :status
 
@@ -24,21 +22,24 @@ class InvoiceStateMachine
   private
 
   def mark_as_paid
-    return push_error unless invoice.payable? || invoice.paid?
+    return push_error unless invoice.payable?
+    return true if invoice.paid?
 
     invoice.autobind_manually
     invoice
   end
 
   def mark_as_cancel
-    return push_error unless invoice.cancellable? || invoice.cancelled?
+    return push_error unless invoice.cancellable?
+    return true if invoice.cancelled?
 
     invoice.cancel
     invoice
   end
 
   def mark_as_unpaid
-    return push_error if invoice.paid? || !invoice.cancellable?
+    return push_error if invoice.paid? && invoice.payment_orders.last.payment_reference? || invoice.cancelled?
+    return true unless invoice.paid?
 
     invoice.cancel_manualy
     invoice
