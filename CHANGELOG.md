@@ -1,3 +1,6 @@
+07.02.2023
+* REPP support for . in the object codes https://github.com/internetee/registry/issues/2539
+
 19.01.2023
 * apipie gem downgrade to 0.6.0 to fix nil value repp error https://github.com/internetee/registry/pull/2537
 
