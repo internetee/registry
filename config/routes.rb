@@ -68,10 +68,12 @@ Rails.application.routes.draw do
 
   namespace :repp do
     namespace :v1 do
-      resources :contacts do
-        collection do
-          get 'check/:id', to: 'contacts#check'
-          get 'search(/:id)', to: 'contacts#search'
+      constraints id: %r{[^\/]+} do
+        resources :contacts do
+          collection do
+            get 'check/:id', to: 'contacts#check'
+            get 'search(/:id)', to: 'contacts#search'
+          end
         end
       end
 
