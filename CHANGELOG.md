@@ -1,3 +1,7 @@
+08.02.2023
+* Bumped rack from 2.2.4 to 2.2.6.2 https://github.com/internetee/registry/pull/2543
+* Bumped globalid from 0.5.2 to 1.0.1 https://github.com/internetee/registry/pull/2544
+
 07.02.2023
 * REPP support for . in the object codes https://github.com/internetee/registry/issues/2539
 
