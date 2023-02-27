@@ -38,7 +38,7 @@ class InvoiceStateMachine
   end
 
   def mark_as_unpaid
-    return push_error if invoice.paid? && invoice.payment_orders.last.payment_reference? || invoice.cancelled?
+    return push_error if invoice.paid? && invoice.payment_orders&.last&.payment_reference? || invoice.cancelled?
     return true unless invoice.paid?
 
     invoice.cancel_manualy
