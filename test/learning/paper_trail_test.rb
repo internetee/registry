@@ -10,6 +10,7 @@ class PaperTrailLearningTest < ActiveSupport::TestCase
       t.string :title
 
       # Otherwise `touch` fails silently
+      t.datetime :created_at
       t.datetime :updated_at
     end
   end

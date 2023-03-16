@@ -96,5 +96,7 @@ module DomainNameRegistry
     config.active_record.belongs_to_required_by_default = false
 
     config.action_dispatch.trusted_proxies = %w(127.0.0.1/32).map { |proxy| IPAddr.new(proxy) }
+
+    config.active_record.yaml_column_permitted_classes = [Symbol, Date, Time]
   end
 end
