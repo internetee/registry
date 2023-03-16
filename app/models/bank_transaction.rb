@@ -1,4 +1,4 @@
-class BankTransaction < ApplicationRecord
+class BankTransaction < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include Versions
   include TransactionPaidInvoices
   belongs_to :bank_statement

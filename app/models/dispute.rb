@@ -1,4 +1,4 @@
-class Dispute < ApplicationRecord
+class Dispute < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include WhoisStatusPopulate
   validates :domain_name, :password, :starts_at, :expires_at, presence: true
   before_validation :fill_empty_passwords, :set_expiry_date
