@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04]
+        os: [ubuntu-20.04]
         ruby: [ '2.7', '3.0.3'  ]
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
@@ -34,11 +34,14 @@ jobs:
         bundle env
         head -n1 $(which bundle)
     
-    - name: Install wkhtmltopdf (push)
+    - name: Install wkhtmlpdf (push)
       run: |
-        sudo apt-get install -y xfonts-base xfonts-75dpi
-        wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
-        sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+        sudo apt-get update
+        wget http://ppa.launchpad.net/linuxuprising/libpng12/ubuntu/pool/main/libp/libpng/libpng12-0_1.2.54-1ubuntu1.1+1~ppa0~eoan_amd64.deb
+        sudo dpkg -i libpng12-0_1.2.54-1ubuntu1.1+1~ppa0~eoan_amd64.deb
+        wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb
+        sudo apt-get install -y gdebi
+        sudo gdebi --non-interactive wkhtmltox_0.12.6-1.focal_amd64.deb
       if: github.event_name == 'push'
 
     - name: Set ENV for codeclimate (pull_request)
@@ -96,7 +99,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby: [ '2.7', '3.0.3' ]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
 
     env:
       CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
