@@ -7,7 +7,7 @@ class Invoice
     end
 
     def as_pdf
-      generator = PDFKit.new(invoice_html)
+      generator = PDFKit.new(invoice_html, { enable_local_file_access: true })
       generator.to_pdf
     end
 
