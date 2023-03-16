@@ -18,6 +18,14 @@ class Version::DomainVersion < PaperTrail::Version
     ]
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    super
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    super
+  end
+
   def self.was_contact_linked?(contact_id)
     sql = <<-SQL
       SELECT

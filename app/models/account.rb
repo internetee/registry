@@ -6,7 +6,7 @@ class Account < ApplicationRecord
 
   validates :account_type, presence: true
 
-  CASH = 'cash'
+  CASH = 'cash'.freeze
 
   def activities
     account_activities
@@ -16,7 +16,15 @@ class Account < ApplicationRecord
     [id, balance, currency, registrar]
   end
 
+  def self.ransackable_associations(auth_object = nil)
+    super
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    super
+  end
+
   def self.csv_header
-    ['Id', 'Balance', 'Currency', 'Registrar']
+    %w[Id Balance Currency Registrar]
   end
 end

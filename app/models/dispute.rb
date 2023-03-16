@@ -21,6 +21,14 @@ class Dispute < ApplicationRecord
     Domain.find_by(name: domain_name)
   end
 
+  def self.ransackable_associations(auth_object = nil)
+    super
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    super
+  end
+
   def self.close_by_domain(domain_name)
     dispute = Dispute.active.find_by(domain_name: domain_name)
     return false unless dispute

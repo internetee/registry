@@ -10,6 +10,10 @@ class BankStatement < ApplicationRecord
   PARTIALLY_BINDED = 'partially_binded'.freeze
   NOT_BINDED = 'not_binded'.freeze
 
+  def self.ransackable_attributes(auth_object = nil)
+    super
+  end
+
   # TODO: Cache this to database so it can be used for searching
   def status
     if bank_transactions.unbinded.count == bank_transactions.count

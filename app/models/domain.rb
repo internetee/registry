@@ -245,6 +245,14 @@ class Domain < ApplicationRecord
   end
 
   class << self
+    def ransackable_associations(auth_object = nil)
+      super
+    end
+
+    def ransackable_attributes(auth_object = nil)
+      super
+    end
+
     def nameserver_required?
       Setting.nameserver_required
     end
