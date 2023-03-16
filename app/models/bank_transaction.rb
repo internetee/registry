@@ -8,6 +8,14 @@ class BankTransaction < ApplicationRecord
     where('id NOT IN (SELECT bank_transaction_id FROM account_activities where bank_transaction_id IS NOT NULL)')
   }
 
+  def self.ransackable_associations(auth_object = nil)
+    super
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    super
+  end
+
   def binded?
     account_activity.present?
   end

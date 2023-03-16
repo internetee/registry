@@ -51,12 +51,9 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   def test_calculates_subtotal
-    line_item = InvoiceItem.new
-    invoice = Invoice.new(items: [line_item, line_item])
-
-    line_item.stub(:item_sum_without_vat, BigDecimal('2.5')) do
-      assert_equal BigDecimal(5), invoice.subtotal
-    end
+    line_item = InvoiceItem.new(price: BigDecimal('2.5'), quantity: 1)
+    invoice = Invoice.new(items: [line_item, line_item.dup])
+    assert_equal BigDecimal(5), invoice.subtotal
   end
 
   def test_returns_persisted_total
@@ -64,14 +61,10 @@ class InvoiceTest < ActiveSupport::TestCase
   end
 
   def test_calculates_total
-    line_item = InvoiceItem.new
-    invoice = Invoice.new
-    invoice.vat_rate = 10
-    invoice.items = [line_item, line_item]
-
-    line_item.stub(:item_sum_without_vat, BigDecimal('2.5')) do
-      assert_equal BigDecimal('5.50'), invoice.total
-    end
+    line_item = InvoiceItem.new(price: BigDecimal('2.5'), quantity: 1)
+    invoice = Invoice.new(vat_rate: 10)
+    invoice.items = [line_item, line_item.dup]
+    assert_equal BigDecimal('5.50'), invoice.total
   end
 
   def test_valid_without_buyer_vat_no
