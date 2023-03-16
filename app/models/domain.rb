@@ -768,7 +768,7 @@ class Domain < ApplicationRecord
 
   def as_pdf
     domain_html = ApplicationController.render(template: 'domain/pdf', assigns: { domain: self })
-    generator = PDFKit.new(domain_html)
+    generator = PDFKit.new(domain_html, { enable_local_file_access: true })
     generator.to_pdf
   end
 
