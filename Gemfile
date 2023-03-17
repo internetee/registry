@@ -19,7 +19,7 @@ gem 'figaro', '~> 1.2'
 gem 'paper_trail', '~> 14.0'
 gem 'pg', '1.4.5'
 # 1.8 is for Rails < 5.0
-gem 'ransack', '~> 2.6.0'
+gem 'ransack', '~> 4.0.0'
 gem 'truemail', '~> 3.0' # validates email by regexp, mail server existence and address existence
 gem 'validates_email_format_of', '1.7.2' # validates email against RFC 2822 and RFC 3696
 
@@ -74,7 +74,7 @@ gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'haml', '~> 6.0'
 gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'rexml'
-gem 'wkhtmltopdf-binary', '~> 0.12.5.1'
+gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
 
 gem 'directo', github: 'internetee/directo', branch: 'master'
 

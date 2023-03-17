@@ -25,6 +25,14 @@ class AccountActivity < ApplicationRecord
   end
 
   class << self
+    def ransackable_attributes(auth_object = nil)
+      super
+    end
+
+    def ransackable_associations(auth_object = nil)
+      super
+    end
+
     def types_for_select
       [CREATE, RENEW, ADD_CREDIT, UPDATE_CREDIT].map { |x| [I18n.t(x), x] }
     end

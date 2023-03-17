@@ -144,6 +144,14 @@ class Invoice < ApplicationRecord
     ]
   end
 
+  def self.ransackable_associations(auth_object = nil)
+    super
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    super
+  end
+
   def self.csv_header
     ['Number', 'Buyer', 'Due Date', 'Receipt Date', 'Issue Date', 'Total', 'Currency', 'Seller Name']
   end

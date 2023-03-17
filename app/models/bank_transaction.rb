@@ -1,4 +1,4 @@
-class BankTransaction < ApplicationRecord
+class BankTransaction < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include Versions
   include TransactionPaidInvoices
   belongs_to :bank_statement
@@ -7,6 +7,14 @@ class BankTransaction < ApplicationRecord
   scope :unbinded, lambda {
     where('id NOT IN (SELECT bank_transaction_id FROM account_activities where bank_transaction_id IS NOT NULL)')
   }
+
+  def self.ransackable_associations(auth_object = nil)
+    super
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    super
+  end
 
   def binded?
     account_activity.present?

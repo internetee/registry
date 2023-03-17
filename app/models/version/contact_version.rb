@@ -13,8 +13,16 @@ class Version::ContactVersion < PaperTrail::Version
       contact.ident_human_description,
       contact.registrar,
       event,
-      created_at.to_formatted_s(:db)
+      created_at.to_formatted_s(:db),
     ]
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    super
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    super
   end
 
   def self.csv_header
