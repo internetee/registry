@@ -13,16 +13,24 @@ class ReservedDomain < ApplicationRecord
   self.ignored_columns = %w[legacy_id]
 
   class << self
+    def ransackable_attributes(auth_object = nil)
+      super
+    end
+
+    def ransackable_associations(auth_object = nil)
+      super
+    end
+
     def pw_for(domain_name)
       name_in_ascii = SimpleIDN.to_ascii(domain_name)
       by_domain(domain_name).first.try(:password) || by_domain(name_in_ascii).first.try(:password)
     end
 
-    def by_domain name
+    def by_domain(name)
       where(name: name)
     end
 
-    def new_password_for name
+    def new_password_for(name)
       record = by_domain(name).first
       return unless record
 
@@ -31,7 +39,7 @@ class ReservedDomain < ApplicationRecord
     end
   end
 
-  def name= val
+  def name=(val)
     super SimpleIDN.to_unicode(val)
   end
 

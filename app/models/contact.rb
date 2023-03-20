@@ -183,6 +183,14 @@ class Contact < ApplicationRecord
   #
 
   class << self
+    def ransackable_associations(auth_object = nil)
+      super
+    end
+
+    def ransackable_attributes(auth_object = nil)
+      super
+    end
+
     def search_by_query(query)
       res = search(code_cont: query).result
       res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v.name} (#{v.code})" } }

@@ -21,6 +21,10 @@ module Billing
       new_record? || duration_changed?
     end
 
+    def self.ransackable_attributes(auth_object = nil)
+      super
+    end
+
     def self.operation_categories
       %w[create renew]
     end

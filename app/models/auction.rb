@@ -33,6 +33,14 @@ class Auction < ApplicationRecord
     where('domain ilike ?', "%#{domain_name.strip}%") if domain_name.present?
   }
 
+  def self.ransackable_attributes(auth_object = nil)
+    super
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    super
+  end
+
   def self.pending(domain_name)
     find_by(domain: domain_name.to_s, status: PENDING_STATUSES)
   end
