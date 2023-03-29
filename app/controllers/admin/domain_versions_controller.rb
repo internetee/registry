@@ -37,7 +37,11 @@ module Admin
       end
       where_s += '  AND 1=0' if registrants == []
       if registrars.present?
-        where_s += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id}'" }.join ','})"
+
+        # where_s += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id}'" }.join ','})"
+        where_s += " AND (object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id}'" }.join ','})
+                     OR (object_changes @> '#{{ 'registrar_id': registrars.map(&:id) }.to_json}'))"
+
       end
       where_s += '  AND 1=0' if registrars == []
 
