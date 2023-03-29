@@ -1,3 +1,6 @@
+29.03.2023
+* Fixed Domain_versions filter in admin that gave no results for create action https://github.com/internetee/registry/issues/2510
+
 08.02.2023
 * Bumped rack from 2.2.4 to 2.2.6.2 https://github.com/internetee/registry/pull/2543
 * Bumped globalid from 0.5.2 to 1.0.1 https://github.com/internetee/registry/pull/2544
