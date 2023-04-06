@@ -10,8 +10,8 @@ class BankStatement < ApplicationRecord
   PARTIALLY_BINDED = 'partially_binded'.freeze
   NOT_BINDED = 'not_binded'.freeze
 
-  def self.ransackable_attributes(auth_object = nil)
-    super
+  def self.ransackable_attributes(*)
+    authorizable_ransackable_attributes
   end
 
   # TODO: Cache this to database so it can be used for searching

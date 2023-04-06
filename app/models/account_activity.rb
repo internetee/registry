@@ -25,12 +25,12 @@ class AccountActivity < ApplicationRecord
   end
 
   class << self
-    def ransackable_attributes(auth_object = nil)
-      super
+    def ransackable_associations(*)
+      authorizable_ransackable_associations
     end
 
-    def ransackable_associations(auth_object = nil)
-      super
+    def ransackable_attributes(*)
+      authorizable_ransackable_attributes
     end
 
     def types_for_select

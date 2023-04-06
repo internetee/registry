@@ -87,7 +87,7 @@ class Nameserver < ApplicationRecord
       pluck(:hostname)
     end
 
-    def ransackable_attributes(auth_object = nil)
+    def ransackable_attributes(*)
       authorizable_ransackable_attributes
     end
   end

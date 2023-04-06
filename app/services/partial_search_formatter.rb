@@ -5,7 +5,11 @@ class PartialSearchFormatter
     search_params.each do |key, value|
       next unless key.include?('matches') && value.present?
 
-      search_params[key] = value =~ /\A\*.*\*\z/ ? value.gsub(/\A\*|\*\z/, '') : "%#{value}%"
+      if value =~ /\A\*.*\*\z/
+        search_params[key] = value.gsub(/\A\*|\*\z/, '')
+      else
+        search_params[key] = "%#{value}%"
+      end
     end
 
     search_params

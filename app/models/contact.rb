@@ -183,11 +183,11 @@ class Contact < ApplicationRecord
   #
 
   class << self
-    def ransackable_associations(auth_object = nil)
-      super
+    def ransackable_associations(*)
+      authorizable_ransackable_associations
     end
 
-    def ransackable_attributes(auth_object = nil)
+    def ransackable_attributes(*)
       authorizable_ransackable_attributes
     end
 
