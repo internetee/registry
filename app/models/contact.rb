@@ -188,7 +188,7 @@ class Contact < ApplicationRecord
     end
 
     def ransackable_attributes(auth_object = nil)
-      super
+      authorizable_ransackable_attributes
     end
 
     def search_by_query(query)

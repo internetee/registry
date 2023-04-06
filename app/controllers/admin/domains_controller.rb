@@ -5,27 +5,21 @@ module Admin
     before_action :set_domain, only: %i[show edit update download keep]
     authorize_resource
 
-    # rubocop:disable Metrics/MethodLength
     def index
       params[:q] ||= {}
-      domains = if params[:statuses_contains]
-                  Domain.includes(:registrar, :registrant).where(
-                    "domains.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
-                  )
-                else
-                  Domain.includes(:registrar, :registrant)
-                end
+      domains = Domain.includes(:registrar, :registrant).joins(:registrar, :registrant)
+      p = params[:statuses_contains]
+      domains = domains.where('domains.statuses @> ?::varchar[]', "{#{p.join(',')}}") if p.present?
 
       normalize_search_parameters do
         @q = domains.ransack(PartialSearchFormatter.format(params[:q]))
-        @domains = @q.result.page(params[:page])
+        @domains = @q.result(distinct: true).page(params[:page])
       end
 
       @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 
       render_by_format('admin/domains/index', 'domains')
     end
-    # rubocop:enable Metrics/MethodLength
 
     def show
       # Validation is needed to warn users

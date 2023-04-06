@@ -51,6 +51,14 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
   self.ignored_columns = %w[legacy_id]
 
   class << self
+    def ransackable_associations(auth_object = nil)
+      super
+    end
+
+    def ransackable_attributes(auth_object = nil)
+      authorizable_ransackable_attributes
+    end
+
     def ordered
       order(name: :asc)
     end

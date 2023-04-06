@@ -246,11 +246,11 @@ class Domain < ApplicationRecord
 
   class << self
     def ransackable_associations(auth_object = nil)
-      super
+      authorizable_ransackable_associations
     end
 
     def ransackable_attributes(auth_object = nil)
-      super
+      authorizable_ransackable_attributes
     end
 
     def nameserver_required?
@@ -755,12 +755,14 @@ class Domain < ApplicationRecord
   def as_csv_row
     [
       name,
-      registrant_name,
+      "#{registrant_name}, #{registrant_ident_info}",
       valid_to.to_formatted_s(:db),
       registrar,
       created_at.to_formatted_s(:db),
       statuses,
-      contacts.pluck(:code),
+      admin_contacts.map { |c| "#{c.name}, #{c.code}, #{ApplicationController.helpers.ident_for(c)}" },
+      tech_contacts.map { |c| "#{c.name}, #{c.code}, #{ApplicationController.helpers.ident_for(c)}" },
+      nameservers.pluck(:hostname),
       force_delete_date,
       force_delete_data,
     ]
@@ -783,10 +785,14 @@ class Domain < ApplicationRecord
     contact.try(:name) || 'Deleted'
   end
 
+  def registrant_ident_info
+    return ApplicationController.helpers.ident_for(registrant) if registrant
+  end
+
   def self.csv_header
     [
       'Domain', 'Registrant', 'Valid to', 'Registrar', 'Created at',
-      'Statuses', 'Contacts code', 'Force delete date', 'Force delete data'
+      'Statuses', 'Admin. contacts', 'Tech. contacts', 'Nameservers', 'Force delete date', 'Force delete data'
     ]
   end
 
