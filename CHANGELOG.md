@@ -1,3 +1,6 @@
+06.04.2023
+* Bump rack from 2.2.6.2 to 2.2.6.4 https://github.com/internetee/registry/pull/2551
+
 29.03.2023
 * Fixed Domain_versions filter in admin that gave no results for create action https://github.com/internetee/registry/issues/2510
 
