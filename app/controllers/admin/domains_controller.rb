@@ -5,6 +5,7 @@ module Admin
     before_action :set_domain, only: %i[show edit update download keep]
     authorize_resource
 
+    # rubocop:disable Metrics/MethodLength
     def index
       params[:q] ||= {}
       domains = Domain.includes(:registrar, :registrant).joins(:registrar, :registrant)
@@ -22,16 +23,6 @@ module Admin
       render_by_format('admin/domains/index', 'domains')
     end
 
-    def show
-      # Validation is needed to warn users
-      @domain.validate
-    end
-
-    def edit
-      build_associations
-    end
-
-    # rubocop:disable Metrics/MethodLength
     def update
       rollback_history = @domain.json_statuses_history&.[]('admin_store_statuses_history')
       dp = ignore_empty_statuses
@@ -50,6 +41,15 @@ module Admin
       end
     end
     # rubocop:enable Metrics/MethodLength
+
+    def show
+      # Validation is needed to warn users
+      @domain.validate
+    end
+
+    def edit
+      build_associations
+    end
 
     def versions
       @domain = Domain.where(id: params[:domain_id]).includes({ versions: :item }).first

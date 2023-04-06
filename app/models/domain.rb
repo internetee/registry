@@ -666,12 +666,6 @@ class Domain < ApplicationRecord
   end
 
   def manage_automatic_statuses
-    check_nameservers
-    check_statuses
-    check_pending_delete
-  end
-
-  def manage_automatic_statuses
     unless self.class.nameserver_required?
       deactivate if nameservers.reject(&:marked_for_destruction?).empty?
       activate if nameservers.reject(&:marked_for_destruction?).size >= Setting.ns_min_count
