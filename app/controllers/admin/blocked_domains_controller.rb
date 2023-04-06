@@ -6,7 +6,8 @@ module Admin
       params[:q] ||= {}
       domains = BlockedDomain.all.order(:name)
       @q = domains.ransack(PartialSearchFormatter.format(params[:q]))
-      @domains = @q.result.page(params[:page])
+      @result = @q.result
+      @domains = @result.page(params[:page])
       @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 
       render_by_format('admin/blocked_domains/index', 'blocked_domains')

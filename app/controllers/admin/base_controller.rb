@@ -26,7 +26,7 @@ module Admin
       respond_to do |format|
         format.html { render page }
         format.csv do
-          raw_csv = CsvGenerator.generate_csv(@q.result(distinct: true))
+          raw_csv = CsvGenerator.generate_csv(@result)
           send_data raw_csv,
                     filename: "#{filename}_#{Time.zone.now.to_formatted_s(:number)}.csv",
                     type: "#{Mime[:csv]}; charset=utf-8"

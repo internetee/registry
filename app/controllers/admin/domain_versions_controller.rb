@@ -47,8 +47,8 @@ module Admin
 
       versions = Version::DomainVersion.includes(:item).where(where_s).order(created_at: :desc, id: :desc)
       @q = versions.ransack(fix_date_params)
-
-      @versions = @q.result.page(params[:page])
+      @result = @q.result
+      @versions = @result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 
       render_by_format('admin/domain_versions/archive', 'domain_history')

@@ -13,7 +13,8 @@ module Admin
 
       normalize_search_parameters do
         @q = domains.ransack(PartialSearchFormatter.format(params[:q]))
-        @domains = @q.result(distinct: true).page(params[:page])
+        @result = @q.result.distinct
+        @domains = @result.page(params[:page])
       end
 
       @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?

@@ -7,8 +7,8 @@ module Admin
     def index
       @q = ApiLog::ReppLog.ransack(PartialSearchFormatter.format(params[:q]))
       @q.sorts = 'id desc' if @q.sorts.empty?
-
-      @repp_logs = @q.result
+      @result = @q.result
+      @repp_logs = @result
       if params[:q][:created_at_gteq].present?
         @repp_logs = @repp_logs.where("extract(epoch from created_at) >= extract(epoch from ?::timestamp)",
                                       Time.parse(params[:q][:created_at_gteq]))

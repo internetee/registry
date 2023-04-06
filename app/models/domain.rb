@@ -154,30 +154,30 @@ class Domain < ApplicationRecord
 
   validates :nameservers, domain_nameserver: {
     min: -> { Setting.ns_min_count },
-    max: -> { Setting.ns_max_count }
+    max: -> { Setting.ns_max_count },
   }
 
   validates :dnskeys, object_count: {
     min: -> { Setting.dnskeys_min_count },
-    max: -> { Setting.dnskeys_max_count }
+    max: -> { Setting.dnskeys_max_count },
   }
 
   validates :admin_domain_contacts, object_count: {
     min: -> { Setting.admin_contacts_min_count },
-    max: -> { Setting.admin_contacts_max_count }
+    max: -> { Setting.admin_contacts_max_count },
   }
 
   validates :tech_domain_contacts, object_count: {
     min: -> { Setting.tech_contacts_min_count },
-    max: -> { Setting.tech_contacts_max_count }
+    max: -> { Setting.tech_contacts_max_count },
   }
 
   validates :nameservers, uniqueness_multi: {
-    attribute: 'hostname'
+    attribute: 'hostname',
   }
 
   validates :dnskeys, uniqueness_multi: {
-    attribute: 'public_key'
+    attribute: 'public_key',
   }
 
   validate :validate_nameserver_ips
@@ -225,7 +225,7 @@ class Domain < ApplicationRecord
   end
 
   def delegated_nameservers
-    nameservers.select { |x| !x.hostname.end_with?(name) }
+    nameservers.reject { |x| x.hostname.end_with?(name) }
   end
 
   def extension_update_prohibited?
@@ -604,17 +604,17 @@ class Domain < ApplicationRecord
 
     # check for deleted status
     statuses.each do |s|
-      unless update.include? s
-        case s
-        when DomainStatus::PENDING_DELETE
-          self.delete_date = nil
-        when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
-          self.outzone_at = Time.zone.now if force_delete_scheduled?
-        when DomainStatus::EXPIRED # removal causes server hold to set
-          self.outzone_at = expire_time + 15.day
-        when DomainStatus::SERVER_HOLD # removal causes server hold to set
-          self.outzone_at = nil
-        end
+      next if update.include? s
+
+      case s
+      when DomainStatus::PENDING_DELETE
+        self.delete_date = nil
+      when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
+        self.outzone_at = Time.zone.now if force_delete_scheduled?
+      when DomainStatus::EXPIRED # removal causes server hold to set
+        self.outzone_at = expire_time + 15.day
+      when DomainStatus::SERVER_HOLD # removal causes server hold to set
+        self.outzone_at = nil
       end
     end
   end
@@ -626,7 +626,7 @@ class Domain < ApplicationRecord
   def set_pending_update
     if pending_update_prohibited?
       logger.info "DOMAIN STATUS UPDATE ISSUE ##{id}: PENDING_UPDATE not allowed to set. [#{statuses}]"
-      return nil
+      return
     end
     statuses << DomainStatus::PENDING_UPDATE
   end
@@ -655,7 +655,7 @@ class Domain < ApplicationRecord
   def set_pending_delete
     if pending_delete_prohibited?
       logger.info "DOMAIN STATUS UPDATE ISSUE ##{id}: PENDING_DELETE not allowed to set. [#{statuses}]"
-      return nil
+      return
     end
     statuses << DomainStatus::PENDING_DELETE
   end
@@ -663,6 +663,12 @@ class Domain < ApplicationRecord
   def set_server_hold
     statuses << DomainStatus::SERVER_HOLD
     self.outzone_at = Time.current
+  end
+
+  def manage_automatic_statuses
+    check_nameservers
+    check_statuses
+    check_pending_delete
   end
 
   def manage_automatic_statuses
@@ -814,7 +820,7 @@ class Domain < ApplicationRecord
   end
 
   def self.uses_zone?(zone)
-    exists?(["name ILIKE ?", "%.#{zone.origin}"])
+    exists?(['name ILIKE ?', "%.#{zone.origin}"])
   end
 
   def self.swap_elements(array, indexes)

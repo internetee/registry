@@ -19,7 +19,8 @@ module Admin
 
       normalize_search_parameters do
         @q = contacts.ransack(PartialSearchFormatter.format(search_params))
-        @contacts = @q.result.distinct.page(params[:page])
+        @result = @q.result.distinct
+        @contacts = @result.page(params[:page])
       end
 
       @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?

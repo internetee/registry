@@ -39,7 +39,8 @@ module Admin
 
       @q = invoices.ransack(params[:q])
       @q.sorts = 'number desc' if @q.sorts.empty?
-      @invoices = @q.result.page(params[:page])
+      @result = @q.result
+      @invoices = @result.page(params[:page])
       @invoices = @invoices.per(params[:results_per_page]) if paginate?
 
       render_by_format('admin/invoices/index', 'invoices')
