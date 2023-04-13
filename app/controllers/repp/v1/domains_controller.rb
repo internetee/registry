@@ -48,7 +48,7 @@ module Repp
         param :registrant, String, required: true, desc: 'Registrant contact code'
         param :reserved_pw, String, required: false, desc: 'Reserved password for domain'
         param :transfer_code, String, required: false, desc: 'Desired transfer code for domain'
-        param :period, Integer, required: true, desc: 'Registration period in months or years'
+        # param :period, Integer, required: true, desc: 'Registration period in months or years'
         param :period_unit, String, required: true, desc: 'Period type (month m) or (year y)'
         param :nameservers_attributes, Array, required: false, desc: 'Domain nameservers' do
           param :hostname, String, required: true, desc: 'Nameserver hostname'
