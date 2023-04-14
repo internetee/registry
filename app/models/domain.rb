@@ -755,7 +755,10 @@ class Domain < ApplicationRecord
   def as_csv_row
     [
       name,
-      "#{registrant_name}, #{registrant_ident_info}",
+      registrant_info[0],
+      registrant_info[1],
+      registrant_info[2],
+      registrant_info[3],
       valid_to.to_formatted_s(:db),
       registrar,
       created_at.to_formatted_s(:db),
@@ -774,15 +777,19 @@ class Domain < ApplicationRecord
     generator.to_pdf
   end
 
-  def registrant_name
-    return registrant.name if registrant
+  def registrant_info
+    if registrant
+      return [registrant.name, registrant.ident, registrant.ident_country_code,
+              registrant.ident_type]
+    end
 
     ver = Version::ContactVersion.where(item_id: registrant_id).last
     contact = Contact.all_versions_for([registrant_id], created_at).first
 
     contact = ObjectVersionsParser.new(ver).parse if contact.nil? && ver
 
-    contact.try(:name) || 'Deleted'
+    [contact.try(:name), contact.try(:ident), contact.try(:ident_country_code),
+     contact.try(:ident_type)] || ['Deleted']
   end
 
   def registrant_ident_info
@@ -791,8 +798,10 @@ class Domain < ApplicationRecord
 
   def self.csv_header
     [
-      'Domain', 'Registrant', 'Valid to', 'Registrar', 'Created at',
-      'Statuses', 'Admin. contacts', 'Tech. contacts', 'Nameservers', 'Force delete date', 'Force delete data'
+      'Domain', 'Registrant name', 'Registrant ident', 'Registrant ident country code',
+      'Registrant ident type', 'Valid to', 'Registrar', 'Created at',
+      'Statuses', 'Admin. contacts', 'Tech. contacts', 'Nameservers', 'Force delete date',
+      'Force delete data'
     ]
   end
 

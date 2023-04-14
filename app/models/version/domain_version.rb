@@ -11,7 +11,7 @@ class Version::DomainVersion < PaperTrail::Version
 
     [
       domain.name,
-      domain.registrant_name,
+      domain.registrant_info[0],
       domain.registrar,
       event,
       created_at.to_formatted_s(:db),
