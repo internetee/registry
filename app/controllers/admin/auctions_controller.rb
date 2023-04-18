@@ -15,7 +15,8 @@ module Admin
 
       normalize_search_parameters do
         @q = @auctions.ransack(PartialSearchFormatter.format(params[:q]))
-        @auctions = @q.result.page(params[:page])
+        @result = @q.result
+        @auctions = @result.page(params[:page])
       end
 
       @auctions = @auctions.per(params[:results_per_page_auction]) if params[:results_per_page_auction].to_i.positive?

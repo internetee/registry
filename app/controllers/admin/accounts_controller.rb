@@ -4,7 +4,8 @@ module Admin
 
     def index
       @q = Account.includes(:registrar).ransack(params[:q])
-      @accounts = @q.result.page(params[:page])
+      @result = @q.result
+      @accounts = @result.page(params[:page])
       @accounts = @accounts.per(params[:results_per_page]) if paginate?
 
       render_by_format('admin/accounts/index', 'accounts')

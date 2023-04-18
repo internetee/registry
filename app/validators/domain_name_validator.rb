@@ -3,7 +3,7 @@ class DomainNameValidator < ActiveModel::EachValidator
   # rubocop:disable Metrics/LineLength
   def validate_each(record, attribute, value)
     if !self.class.validate_format(value)
-      record.errors[attribute] << (options[:message] || record.errors.generate_message(attribute, :invalid))
+      record.errors.add(attribute, options[:message] || record.errors.generate_message(attribute, :invalid))
     elsif !self.class.validate_blocked(value)
       record.errors.add(:base, :domain_name_blocked)
     end
@@ -12,6 +12,7 @@ class DomainNameValidator < ActiveModel::EachValidator
   class << self
     def validate_format(value)
       return true unless value
+
       value = value.mb_chars.downcase.strip
 
       origins = DNS::Zone.origins
@@ -25,6 +26,7 @@ class DomainNameValidator < ActiveModel::EachValidator
       if value[2] == '-' && value[3] == '-'
         regexp = /\Axn--[a-zA-Z0-9-]{0,59}\.#{general_domains}\z/
         return false unless value.match?(regexp)
+
         value = SimpleIDN.to_unicode(value).mb_chars.downcase.strip
       end
 

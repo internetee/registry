@@ -17,12 +17,12 @@ class Version::ContactVersion < PaperTrail::Version
     ]
   end
 
-  def self.ransackable_attributes(auth_object = nil)
-    super
+  def self.ransackable_associations(*)
+    authorizable_ransackable_associations
   end
 
-  def self.ransackable_associations(auth_object = nil)
-    super
+  def self.ransackable_attributes(*)
+    authorizable_ransackable_attributes
   end
 
   def self.csv_header

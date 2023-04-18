@@ -10,8 +10,8 @@ module Admin
       search_params = PartialSearchFormatter.format(fix_date_params)
       versions = Version::ContactVersion.includes(:item).order(created_at: :desc, id: :desc)
       @q = versions.ransack(polymorphic_association(search_params))
-
-      @versions = @q.result.page(params[:page])
+      @result = @q.result
+      @versions = @result.page(params[:page])
       @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 
       render_by_format('admin/contact_versions/index', 'contact_history')
@@ -24,7 +24,7 @@ module Admin
       @versions_map = @versions.all.map(&:id)
 
       # what we do is calc amount of results until needed version
-      # then we cacl which page it is
+      # then we calc which page it is
       if params[:page].blank?
         counter = @versions_map.index(@version.id) + 1
         page = counter / per_page

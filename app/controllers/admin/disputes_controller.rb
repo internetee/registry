@@ -57,7 +57,8 @@ module Admin
 
     def sortable_dispute_query_for(disputes, query, closed: false)
       @q = disputes.order(:domain_name).ransack(query)
-      disputes = @q.result.page(closed ? params[:closed_page] : params[:page])
+      @result = @q.result
+      disputes = @result.page(closed ? params[:closed_page] : params[:page])
       return disputes.per(params[:results_per_page]) if params[:results_per_page].present?
 
       disputes

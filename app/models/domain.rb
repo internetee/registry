@@ -154,30 +154,30 @@ class Domain < ApplicationRecord
 
   validates :nameservers, domain_nameserver: {
     min: -> { Setting.ns_min_count },
-    max: -> { Setting.ns_max_count }
+    max: -> { Setting.ns_max_count },
   }
 
   validates :dnskeys, object_count: {
     min: -> { Setting.dnskeys_min_count },
-    max: -> { Setting.dnskeys_max_count }
+    max: -> { Setting.dnskeys_max_count },
   }
 
   validates :admin_domain_contacts, object_count: {
     min: -> { Setting.admin_contacts_min_count },
-    max: -> { Setting.admin_contacts_max_count }
+    max: -> { Setting.admin_contacts_max_count },
   }
 
   validates :tech_domain_contacts, object_count: {
     min: -> { Setting.tech_contacts_min_count },
-    max: -> { Setting.tech_contacts_max_count }
+    max: -> { Setting.tech_contacts_max_count },
   }
 
   validates :nameservers, uniqueness_multi: {
-    attribute: 'hostname'
+    attribute: 'hostname',
   }
 
   validates :dnskeys, uniqueness_multi: {
-    attribute: 'public_key'
+    attribute: 'public_key',
   }
 
   validate :validate_nameserver_ips
@@ -225,7 +225,7 @@ class Domain < ApplicationRecord
   end
 
   def delegated_nameservers
-    nameservers.select { |x| !x.hostname.end_with?(name) }
+    nameservers.reject { |x| x.hostname.end_with?(name) }
   end
 
   def extension_update_prohibited?
@@ -245,12 +245,12 @@ class Domain < ApplicationRecord
   end
 
   class << self
-    def ransackable_associations(auth_object = nil)
-      super
+    def ransackable_associations(*)
+      authorizable_ransackable_associations
     end
 
-    def ransackable_attributes(auth_object = nil)
-      super
+    def ransackable_attributes(*)
+      authorizable_ransackable_attributes
     end
 
     def nameserver_required?
@@ -604,17 +604,17 @@ class Domain < ApplicationRecord
 
     # check for deleted status
     statuses.each do |s|
-      unless update.include? s
-        case s
-        when DomainStatus::PENDING_DELETE
-          self.delete_date = nil
-        when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
-          self.outzone_at = Time.zone.now if force_delete_scheduled?
-        when DomainStatus::EXPIRED # removal causes server hold to set
-          self.outzone_at = expire_time + 15.day
-        when DomainStatus::SERVER_HOLD # removal causes server hold to set
-          self.outzone_at = nil
-        end
+      next if update.include? s
+
+      case s
+      when DomainStatus::PENDING_DELETE
+        self.delete_date = nil
+      when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
+        self.outzone_at = Time.zone.now if force_delete_scheduled?
+      when DomainStatus::EXPIRED # removal causes server hold to set
+        self.outzone_at = expire_time + 15.day
+      when DomainStatus::SERVER_HOLD # removal causes server hold to set
+        self.outzone_at = nil
       end
     end
   end
@@ -626,7 +626,7 @@ class Domain < ApplicationRecord
   def set_pending_update
     if pending_update_prohibited?
       logger.info "DOMAIN STATUS UPDATE ISSUE ##{id}: PENDING_UPDATE not allowed to set. [#{statuses}]"
-      return nil
+      return
     end
     statuses << DomainStatus::PENDING_UPDATE
   end
@@ -655,7 +655,7 @@ class Domain < ApplicationRecord
   def set_pending_delete
     if pending_delete_prohibited?
       logger.info "DOMAIN STATUS UPDATE ISSUE ##{id}: PENDING_DELETE not allowed to set. [#{statuses}]"
-      return nil
+      return
     end
     statuses << DomainStatus::PENDING_DELETE
   end
@@ -755,12 +755,17 @@ class Domain < ApplicationRecord
   def as_csv_row
     [
       name,
-      registrant_name,
+      registrant_info[0],
+      registrant_info[1],
+      registrant_info[2],
+      registrant_info[3],
       valid_to.to_formatted_s(:db),
       registrar,
       created_at.to_formatted_s(:db),
       statuses,
-      contacts.pluck(:code),
+      admin_contacts.map { |c| "#{c.name}, #{c.code}, #{ApplicationController.helpers.ident_for(c)}" },
+      tech_contacts.map { |c| "#{c.name}, #{c.code}, #{ApplicationController.helpers.ident_for(c)}" },
+      nameservers.pluck(:hostname),
       force_delete_date,
       force_delete_data,
     ]
@@ -772,21 +777,31 @@ class Domain < ApplicationRecord
     generator.to_pdf
   end
 
-  def registrant_name
-    return registrant.name if registrant
+  def registrant_info
+    if registrant
+      return [registrant.name, registrant.ident, registrant.ident_country_code,
+              registrant.ident_type]
+    end
 
     ver = Version::ContactVersion.where(item_id: registrant_id).last
     contact = Contact.all_versions_for([registrant_id], created_at).first
 
     contact = ObjectVersionsParser.new(ver).parse if contact.nil? && ver
 
-    contact.try(:name) || 'Deleted'
+    [contact.try(:name), contact.try(:ident), contact.try(:ident_country_code),
+     contact.try(:ident_type)] || ['Deleted']
+  end
+
+  def registrant_ident_info
+    return ApplicationController.helpers.ident_for(registrant) if registrant
   end
 
   def self.csv_header
     [
-      'Domain', 'Registrant', 'Valid to', 'Registrar', 'Created at',
-      'Statuses', 'Contacts code', 'Force delete date', 'Force delete data'
+      'Domain', 'Registrant name', 'Registrant ident', 'Registrant ident country code',
+      'Registrant ident type', 'Valid to', 'Registrar', 'Created at',
+      'Statuses', 'Admin. contacts', 'Tech. contacts', 'Nameservers', 'Force delete date',
+      'Force delete data'
     ]
   end
 
@@ -808,7 +823,7 @@ class Domain < ApplicationRecord
   end
 
   def self.uses_zone?(zone)
-    exists?(["name ILIKE ?", "%.#{zone.origin}"])
+    exists?(['name ILIKE ?', "%.#{zone.origin}"])
   end
 
   def self.swap_elements(array, indexes)

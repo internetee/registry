@@ -13,12 +13,12 @@ class ReservedDomain < ApplicationRecord
   self.ignored_columns = %w[legacy_id]
 
   class << self
-    def ransackable_attributes(auth_object = nil)
-      super
+    def ransackable_associations(*)
+      authorizable_ransackable_associations
     end
 
-    def ransackable_associations(auth_object = nil)
-      super
+    def ransackable_attributes(*)
+      authorizable_ransackable_attributes
     end
 
     def pw_for(domain_name)

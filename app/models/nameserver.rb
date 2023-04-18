@@ -86,6 +86,10 @@ class Nameserver < ApplicationRecord
     def hostnames
       pluck(:hostname)
     end
+
+    def ransackable_attributes(*)
+      authorizable_ransackable_attributes
+    end
   end
 
   private
