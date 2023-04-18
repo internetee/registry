@@ -1,3 +1,7 @@
+18.04.2023
+* Added child object info to admin domain view csv downloads https://github.com/internetee/registry/issues/2553
+* Added option for excact match searching to admin https://github.com/internetee/registry/issues/2554
+
 06.04.2023
 * Bump rack from 2.2.6.2 to 2.2.6.4 https://github.com/internetee/registry/pull/2551
 
