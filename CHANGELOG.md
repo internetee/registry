@@ -1,3 +1,6 @@
+20.04.2023
+* Sync invoice statuses with billing https://github.com/internetee/registry/pull/2531
+
 18.04.2023
 * Added child object info to admin domain view csv downloads https://github.com/internetee/registry/issues/2553
 * Added option for excact match searching to admin https://github.com/internetee/registry/issues/2554
