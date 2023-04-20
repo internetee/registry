@@ -64,6 +64,10 @@ class PaymentOrder < ApplicationRecord
     false
   end
 
+  def payment_reference?
+    response && response['payment_reference'].present?
+  end
+
   def base_transaction(sum:, paid_at:, buyer_name:)
     BankTransaction.new(
       description: invoice.order,

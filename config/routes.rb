@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     put '/directo_response', to: 'directo_response#update', as: 'directo_response'
     put '/e_invoice_response', to: 'e_invoice_response#update', as: 'e_invoice_response'
     post '/lhv_connect_transactions', to: 'lhv_connect_transactions#create', as: 'lhv_connect_transactions'
+    resource :invoices, only: [:update]
   end
 
   namespace :epp do
