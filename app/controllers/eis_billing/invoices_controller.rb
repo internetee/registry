@@ -1,9 +1,16 @@
 module EisBilling
   class InvoicesController < BaseController
     before_action :load_invoice, only: :update
+    skip_before_action :verify_authenticity_token, only: [:update]
 
     def update
       state = InvoiceStateMachine.new(invoice: @invoice, status: params[:status])
+
+      puts '-----'
+      puts @invoice
+      params[:status]
+      puts '----'
+
       if @invoice.update(modified_params) && state.call
         render json: {
           message: 'Invoice data was successfully updated',
