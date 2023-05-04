@@ -6,11 +6,6 @@ module EisBilling
     def update
       state = InvoiceStateMachine.new(invoice: @invoice, status: params[:status])
 
-      puts '-----'
-      puts @invoice
-      params[:status]
-      puts '----'
-
       if @invoice.update(modified_params) && state.call
         render json: {
           message: 'Invoice data was successfully updated',
