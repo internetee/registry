@@ -1,3 +1,6 @@
+04.05.2023
+* Fixed sync invoice statuses with billing https://github.com/internetee/registry/issues/2570
+
 20.04.2023
 * Sync invoice statuses with billing https://github.com/internetee/registry/pull/2531
 
