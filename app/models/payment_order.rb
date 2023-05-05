@@ -12,7 +12,7 @@ class PaymentOrder < ApplicationRecord
   belongs_to :invoice, optional: false
 
   validate :invoice_cannot_be_already_paid, on: :create
-  validate :supported_payment_method
+  # validate :supported_payment_method
 
   enum status: { issued: 'issued', paid: 'paid', cancelled: 'cancelled',
                  failed: 'failed' }
