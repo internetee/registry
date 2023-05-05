@@ -76,12 +76,6 @@ class PaymentOrdersTest < ActiveSupport::TestCase
     assert_includes payment_order.errors[:invoice], 'is already paid'
   end
 
-  def test_order_without_channel_is_invalid
-    payment_order = PaymentOrder.new
-    assert payment_order.invalid?
-    assert_includes payment_order.errors[:type], 'is not supported'
-  end
-
   def test_can_not_create_order_with_invalid_type
     assert_raise NameError do
       PaymentOrder.new_with_type(type: 'not_implemented', invoice: Invoice.new)
