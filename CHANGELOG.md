@@ -1,3 +1,6 @@
+05.05.2023
+* Removed payment check verification https://github.com/internetee/registry/pull/2572
+
 04.05.2023
 * Fixed sync invoice statuses with billing https://github.com/internetee/registry/issues/2570
 
