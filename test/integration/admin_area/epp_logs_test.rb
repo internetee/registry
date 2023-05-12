@@ -17,7 +17,7 @@ class AdminEppLogsIntegrationTest < ApplicationSystemTestCase
     send_epp_request_hello
     visit admin_epp_logs_path
 
-    find(:xpath, "//tbody/tr/td/a", match: :first).click
+    find(:xpath, '//tbody/tr/td/a', match: :first).click
     assert_text 'Details'
   end
 
@@ -27,12 +27,14 @@ class AdminEppLogsIntegrationTest < ApplicationSystemTestCase
     send_epp_request_hello
     visit admin_epp_logs_path
 
-    find(:xpath, "//a[contains(text(), 'Created at')]", match: :first).click
-    find(:xpath, "//a[contains(text(), 'Created at')]", match: :first).click
-
-    epp_log_date = find(:xpath, "//table/tbody/tr/td[6]", match: :first).text(:all)
     date_now = Date.today.to_s(:db)
+    epp_log_date = find(:xpath, '//table/tbody/tr/td[6]', match: :first).text(:all)
+    assert_match /#{date_now}/, epp_log_date
 
+    find(:xpath, "//a[contains(text(), 'Created at')]", match: :first).click
+    find(:xpath, "//a[contains(text(), 'Created at')]", match: :first).click
+
+    epp_log_date = find(:xpath, '//table/tbody/tr/td[6]', match: :first).text(:all)
     assert_match /#{date_now}/, epp_log_date
   end
 
@@ -57,9 +59,9 @@ class AdminEppLogsIntegrationTest < ApplicationSystemTestCase
       <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
         <hello/>
       </epp>
-      XML
+    XML
 
     get epp_hello_path, params: { frame: request_xml },
-        headers: { 'HTTP_COOKIE' => 'session=non-existent' }
+                        headers: { 'HTTP_COOKIE' => 'session=non-existent' }
   end
 end

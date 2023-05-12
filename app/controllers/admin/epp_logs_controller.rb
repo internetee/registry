@@ -6,16 +6,16 @@ module Admin
     # rubocop:disable Metrics/MethodLength
     def index
       @q = ApiLog::EppLog.ransack(PartialSearchFormatter.format(params[:q]))
-      @result = @q.result
       @q.sorts = 'id desc' if @q.sorts.empty?
+      @result = @q.result
 
       @epp_logs = @result
       if params[:q][:created_at_gteq].present?
-        @epp_logs = @epp_logs.where("extract(epoch from created_at) >= extract(epoch from ?::timestamp)",
+        @epp_logs = @epp_logs.where('extract(epoch from created_at) >= extract(epoch from ?::timestamp)',
                                     Time.parse(params[:q][:created_at_gteq]))
       end
       if params[:q][:created_at_lteq].present?
-        @epp_logs = @epp_logs.where("extract(epoch from created_at) <= extract(epoch from ?::timestamp)",
+        @epp_logs = @epp_logs.where('extract(epoch from created_at) <= extract(epoch from ?::timestamp)',
                                     Time.parse(params[:q][:created_at_lteq]))
       end
       @epp_logs = @epp_logs.page(params[:page])
@@ -35,7 +35,7 @@ module Admin
       default_date = params[:created_after]
       default_date = 'today' unless %w[today tomorrow yesterday].include?(default_date)
 
-      params[:q][:created_at_gteq] = Date.send(default_date).strftime("%Y-%m-%d")
+      params[:q][:created_at_gteq] = Date.send(default_date).strftime('%Y-%m-%d')
     end
 
     private
