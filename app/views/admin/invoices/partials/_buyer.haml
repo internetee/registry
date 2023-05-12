@@ -7,6 +7,9 @@
   %dt= t(:reg_no)
   %dd= @invoice.buyer_reg_no
 
+  %dt= Registrar.human_attribute_name :vat_no
+  %dd= @invoice.buyer_vat_no
+
   %dt= t(:address)
   %dd= @invoice.buyer_address
 

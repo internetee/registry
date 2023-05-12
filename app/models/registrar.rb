@@ -97,6 +97,7 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
       buyer_phone: phone,
       buyer_url: website,
       buyer_email: billing_email,
+      buyer_vat_no: vat_no,
       reference_no: reference_no,
       vat_rate: calculate_vat_rate,
       monthly_invoice: true,
@@ -137,6 +138,7 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
       buyer_phone: phone,
       buyer_url: website,
       buyer_email: billing_email,
+      buyer_vat_no: vat_no,
       reference_no: reference_no,
       vat_rate: calculate_vat_rate,
       items_attributes: [
