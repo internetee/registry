@@ -100,7 +100,7 @@ class ApiUser < User
       active,
       accredited?,
       accreditation_expire_date,
-      created_at, updated_at,
+      created_at, updated_at
     ]
   end
 

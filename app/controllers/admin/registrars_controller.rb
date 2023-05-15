@@ -40,9 +40,10 @@ module Admin
     def edit; end
 
     def show
-      method =  params[:records].present? ? params[:records] : 'api_users'
-      @result = @registrar.send(method)
-      render_by_format('admin/registrars/show', "#{@registrar.name.parameterize}_#{method}")
+      method = allowed_method(params[:records]) || 'api_users'
+      @result = @registrar.send(method.to_sym)
+      partial_name = "#{@registrar.name.parameterize}_#{method}"
+      render_by_format('admin/registrars/show', partial_name)
     end
 
     def update
@@ -175,6 +176,11 @@ module Admin
 
     def iban_max_length
       Iban.max_length
+    end
+
+    def allowed_method(records_param)
+      allowed_methods = %w[api_users white_ips]
+      records_param if allowed_methods.include?(records_param)
     end
   end
 end
