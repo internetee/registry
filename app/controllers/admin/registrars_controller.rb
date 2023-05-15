@@ -40,8 +40,9 @@ module Admin
     def edit; end
 
     def show
-      @result = @registrar.send(params[:records]) unless params[:records].blank?
-      render_by_format('admin/registrars/show', "#{@registrar.name.parameterize}_#{params[:records]}")
+      method =  params[:records].present? ? params[:records] : 'api_users'
+      @result = @registrar.send(method)
+      render_by_format('admin/registrars/show', "#{@registrar.name.parameterize}_#{method}")
     end
 
     def update
