@@ -72,5 +72,19 @@ class WhiteIp < ApplicationRecord
     rescue StandardError => _e
       nil
     end
+
+    def csv_header
+      %w[IPv4 IPv6 Interfaces Created Updated]
+    end
+  end
+
+  def as_csv_row
+    [
+      ipv4,
+      ipv6,
+      interfaces.join(', ').upcase,
+      created_at,
+      updated_at
+    ]
   end
 end

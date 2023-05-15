@@ -22,7 +22,7 @@ class CsvGenerator
     def custom_csv?(class_name)
       [
         Version::DomainVersion, Version::ContactVersion, Domain,
-        Contact, Invoice, Account, AccountActivity
+        Contact, Invoice, Account, AccountActivity, ApiUser, WhiteIp
       ].include?(class_name)
     end
   end

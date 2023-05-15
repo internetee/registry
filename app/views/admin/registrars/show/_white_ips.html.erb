@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-default white_ips">
     <div class="panel-heading">
         <%= t '.header' %>
     </div>
@@ -34,5 +34,7 @@
     <div class="panel-footer text-right">
         <%= link_to t('.new_btn'), new_admin_registrar_white_ip_path(registrar),
                     class: 'btn btn-default btn-xs' %>
+        <%= link_to 'Export to CSV', export_admin_registrar_path(registrar, records: 'white_ips', format: :csv),
+                    class: 'btn btn-default btn-xs' if registrar.white_ips.any? %>
     </div>
 </div>

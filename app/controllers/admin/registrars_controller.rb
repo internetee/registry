@@ -3,7 +3,7 @@ require 'net/http'
 module Admin
   class RegistrarsController < BaseController  # rubocop:disable Metrics/ClassLength
     load_and_authorize_resource
-    before_action :set_registrar, only: [:show, :edit, :update, :destroy]
+    before_action :set_registrar, only: %i[show edit update destroy]
     before_action :set_registrar_status_filter, only: [:index]
     helper_method :registry_vat_rate
     helper_method :iban_max_length
@@ -38,6 +38,11 @@ module Admin
     end
 
     def edit; end
+
+    def show
+      @result = @registrar.send(params[:records]) unless params[:records].blank?
+      render_by_format('admin/registrars/show', "#{@registrar.name.parameterize}_#{params[:records]}")
+    end
 
     def update
       if @registrar.update(registrar_params)
