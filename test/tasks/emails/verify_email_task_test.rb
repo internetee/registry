@@ -1,10 +1,10 @@
 require 'test_helper'
 
 class VerifyEmailTaskTest < ActiveJob::TestCase
-
   def setup
     @contact = contacts(:john)
     @invalid_contact = contacts(:invalid_email)
+    @registrar = registrars(:bestnames)
 
     @default_whitelist = Truemail.configure.whitelisted_domains
     @default_blacklist = Truemail.configure.blacklisted_domains
@@ -31,89 +31,58 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
     [domain(@invalid_contact.email)].reject(&:blank?)
   end
 
-  # def test_should_be_verified_duplicate_emails
-  #   william = Contact.where(email: "william@inbox.test").count
-  #
-  #   assert_equal william, 2
-  #   assert_equal Contact.all.count, 9
-  #   run_task
-  #   assert_equal ValidationEvent.count, Contact.count - 1
-  # end
+  def test_should_skip_duplicate_emails
+    william_contacts_count = Contact.where(email: 'william@inbox.test').count
 
-  # def test_should_not_affect_to_successfully_verified_emails
-  #   assert_equal ValidationEvent.count, 0
-  #   run_task
-  #   assert_equal ValidationEvent.count, Contact.count - 1 # Contact has duplicate email and it is skip
-  #
-  #   run_task
-  #   assert_equal ValidationEvent.count, Contact.count - 1
-  # end
+    assert_equal william_contacts_count, 2
+    assert_equal Contact.count, 9
+    run_task
+    assert_equal ValidationEvent.count, Contact.count - 1
+  end
 
-  # def test_should_verify_contact_which_was_not_verified
-  #   bestnames = registrars(:bestnames)
-  #   assert_equal ValidationEvent.count, 0
-  #   run_task
-  #   assert_equal ValidationEvent.count, Contact.count - 1 # Contact has duplicate email and it is skip
-  #
-  #   assert_equal Contact.count, 9
-  #   c = Contact.create(name: 'Jeembo',
-  #                      email: 'heey@jeembo.com',
-  #                      phone: '+555.555',
-  #                      ident: '1234',
-  #                      ident_type: 'priv',
-  #                      ident_country_code: 'US',
-  #                      registrar: bestnames,
-  #                      code: 'jeembo-01')
-  #
-  #   assert_equal Contact.count, 10
-  #   run_task
-  #   assert_equal ValidationEvent.count, Contact.count - 1
-  # end
+  def test_should_not_affect_successfully_verified_emails
+    assert_equal ValidationEvent.count, 0
+    run_task
 
-  # def test_should_verify_again_contact_which_has_faield_verification
-  #   assert_equal ValidationEvent.count, 0
-  #   run_task
-  #   assert_equal Contact.count, 9
-  #   assert_equal ValidationEvent.count, 8 # Contact has duplicate email and it is skip
-  #
-  #   contact = contacts(:john)
-  #   v = ValidationEvent.find_by(validation_eventable_id: contact.id)
-  #   v.update!(success: false)
-  #
-  #   run_task
-  #   assert_equal ValidationEvent.all.count, 9
-  # end
+    assert_equal ValidationEvent.count, Contact.count - 1
+    assert_equal ValidationEvent.where(success: true).count, 5
+    assert_equal ValidationEvent.where(success: false).count, 3
 
-  # def test_should_verify_contact_which_has_expired_date_of_verification
-  #   expired_date = Time.now - ValidationEvent::VALIDATION_PERIOD - 1.day
-  #
-  #   assert_equal ValidationEvent.count, 0
-  #   run_task
-  #   assert_equal Contact.count, 9
-  #   assert_equal ValidationEvent.count, 8 # Contact has duplicate email and it is skip
-  #
-  #   contact = contacts(:john)
-  #   v = ValidationEvent.find_by(validation_eventable_id: contact.id)
-  #   v.update!(created_at: expired_date)
-  #
-  #   run_task
-  #   assert_equal ValidationEvent.all.count, 9
-  # end
+    run_task
+    assert_equal ValidationEvent.where(success: true).count, 5
+    assert_equal ValidationEvent.where(success: false).count, 6
+  end
 
-  def test_fd_should_not_removed_if_change_email_to_another_invalid_one
+  def test_should_verify_contact_email_which_was_not_verified
+    assert_equal ValidationEvent.count, 0
+
+    run_task
+
+    assert_equal ValidationEvent.count, Contact.count - 1
+    assert_equal Contact.count, 9
+
+    assert_difference 'Contact.count', 1 do
+      create_valid_contact
+    end
+
+    assert_difference 'ValidationEvent.where(success: true).count', 1 do
+      run_task
+    end
+  end
+
+  def test_fd_should_not_be_removed_if_email_changed_to_another_invalid_one
     contact = contacts(:john)
 
     contact.domains.last.schedule_force_delete(type: :soft)
     assert contact.domains.last.force_delete_scheduled?
 
-    contact.update(email: "test@box.test")
+    contact.update!(email: 'test@box.test')
     contact.reload
 
     trumail_results = OpenStruct.new(success: false,
                                      email: contact.email,
-                                     domain: "box.tests",
-                                     errors: {:mx=>"target host(s) not found"},
-                                     )
+                                     domain: 'box.tests',
+                                     errors: { mx: 'target host(s) not found' })
     Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
 
     run_task
@@ -146,5 +115,16 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
     perform_enqueued_jobs do
       Rake::Task['verify_email:check_all'].execute
     end
+  end
+
+  def create_valid_contact
+    Contact.create!(name: 'Jeembo',
+                    email: 'heey@jeembo.com',
+                    phone: '+555.555',
+                    ident: '1234',
+                    ident_type: 'priv',
+                    ident_country_code: 'US',
+                    registrar: @registrar,
+                    code: 'jeembo-01')
   end
 end

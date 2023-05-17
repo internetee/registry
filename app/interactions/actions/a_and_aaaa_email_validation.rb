@@ -16,19 +16,28 @@ module Actions
     end
 
     def resolve_a_and_aaaa_records(dns_servers:, email_domain:, value:)
-      Resolv::DNS.open({ nameserver: dns_servers }) do |dns|
-        dns.timeouts = ENV['a_and_aaaa_validation_timeout'].to_i || 1
-        ress = nil
+      Resolv::DNS.open(nameserver: dns_servers, ndots: 1, search: []) do |dns|
+        dns.timeouts = (ENV['a_and_aaaa_validation_timeout'] || 1).to_i
 
         case value
         when 'A'
-          ress = dns.getresources email_domain, Resolv::DNS::Resource::IN::A
+          resolve_a_records(dns: dns, domain: email_domain)
         when 'AAAA'
-          ress = dns.getresources email_domain, Resolv::DNS::Resource::IN::AAAA
+          resolve_aaaa_records(dns: dns, domain: email_domain)
+        else
+          []
         end
-
-        ress.map(&:address)
       end
+    end
+
+    def resolve_a_records(dns:, domain:)
+      resources = dns.getresources(domain, Resolv::DNS::Resource::IN::A)
+      resources.map(&:address)
+    end
+
+    def resolve_aaaa_records(dns:, domain:)
+      resources = dns.getresources(domain, Resolv::DNS::Resource::IN::AAAA)
+      resources.map(&:address)
     end
   end
 end

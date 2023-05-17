@@ -2,19 +2,30 @@ class CheckForceDeleteLift < ApplicationJob
   queue_as :default
 
   def perform
-    domains = Domain.where("(status_notes->'serverForceDelete') is not null")
-                    .select { |d| d.registrant.need_to_lift_force_delete? }
+    domains = find_domains_to_lift_force_delete
 
     handle_refresh_status(domains) if domains.present?
-    domains = (domains + Domain.where("force_delete_data->'template_name' = ?", 'invalid_email')
-                               .where("force_delete_data->'force_delete_type' = ?", 'soft')).uniq
 
-    domains.each do |domain|
+    domains_to_process = find_domains_to_process(domains)
+
+    domains_to_process.each do |domain|
       Domains::ForceDeleteLift::Base.run(domain: domain)
     end
   end
 
   private
+
+  def find_domains_to_lift_force_delete
+    Domain.where("'#{DomainStatus::FORCE_DELETE}' = ANY (statuses)")
+          .select { |d| d.registrant.need_to_lift_force_delete? }
+  end
+
+  def find_domains_to_process(domains)
+    force_delete_template_domains = Domain.where("force_delete_data->'template_name' = ?", 'invalid_email')
+                                          .where("force_delete_data->'force_delete_type' = ?", 'soft')
+
+    (domains + force_delete_template_domains).uniq
+  end
 
   def handle_refresh_status(domains)
     domains.each do |domain|
