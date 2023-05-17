@@ -25,13 +25,13 @@ class VerifyEmailsJob < ApplicationJob
   end
 
   def need_to_verify?(contact)
-    return true unless contact.validation_events.any?
+    return true if contact.validation_events.empty?
 
     last_validation = contact.validation_events.last
+    expired_last_validation = last_validation.successful? && last_validation.created_at < validation_expiry_date
+    failed_last_regex_validation = last_validation.failed? && last_validation.event_data['check_level'] == 'regex'
 
-    return true if last_validation.successful? && last_validation.created_at < validation_expiry_date
-
-    last_validation.failed? && last_validation.event_data['check_level'] == 'regex' ? false : true
+    expired_last_validation || !failed_last_regex_validation
   end
 
   def logger
