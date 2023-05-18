@@ -1,4 +1,5 @@
 18.05.2023
+* Fixed epp logs sorting https://github.com/internetee/registry/issues/2568
 * English auctions trigger whois updates https://github.com/internetee/registry/issues/2577
 
 05.05.2023
