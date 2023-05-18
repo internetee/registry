@@ -1,3 +1,6 @@
+18.05.2023
+* English auctions trigger whois updates https://github.com/internetee/registry/issues/2577
+
 05.05.2023
 * Removed payment check verification https://github.com/internetee/registry/pull/2572
 
