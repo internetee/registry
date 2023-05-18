@@ -3,7 +3,7 @@ require 'net/http'
 module Admin
   class RegistrarsController < BaseController  # rubocop:disable Metrics/ClassLength
     load_and_authorize_resource
-    before_action :set_registrar, only: [:show, :edit, :update, :destroy]
+    before_action :set_registrar, only: %i[show edit update destroy]
     before_action :set_registrar_status_filter, only: [:index]
     helper_method :registry_vat_rate
     helper_method :iban_max_length
@@ -38,6 +38,13 @@ module Admin
     end
 
     def edit; end
+
+    def show
+      method = allowed_method(params[:records]) || 'api_users'
+      @result = @registrar.send(method.to_sym)
+      partial_name = "#{@registrar.name.parameterize}_#{method}"
+      render_by_format('admin/registrars/show', partial_name)
+    end
 
     def update
       if @registrar.update(registrar_params)
@@ -167,6 +174,11 @@ module Admin
 
     def iban_max_length
       Iban.max_length
+    end
+
+    def allowed_method(records_param)
+      allowed_methods = %w[api_users white_ips]
+      records_param if allowed_methods.include?(records_param)
     end
   end
 end

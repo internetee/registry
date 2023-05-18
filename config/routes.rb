@@ -326,6 +326,11 @@ Rails.application.routes.draw do
         post 'set_test_date_to_api_user', to: 'api_users#set_test_date_to_api_user', as: 'set_test_date_to_api_user'
         post 'remove_test_date_to_api_user', to: 'api_users#remove_test_date_to_api_user', as: 'remove_test_date_to_api_user'
       end
+
+      member do
+        get 'export/:records', to: 'registrars#show', constraints: { format: 'csv' },
+                               as: :export
+      end
     end
 
     resources :contacts do
@@ -336,7 +341,7 @@ Rails.application.routes.draw do
 
     resources :admin_users
     # /admin/api_users is mainly for manual testing
-    resources :api_users, only: [:index, :show] do
+    resources :api_users, only: %i[index show] do
       resources :certificates do
         member do
           post 'sign'

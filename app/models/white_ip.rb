@@ -13,6 +13,7 @@ class WhiteIp < ApplicationRecord
 
   def validate_ipv4_and_ipv6
     return if ipv4.present? || ipv6.present?
+
     errors.add(:base, I18n.t(:ipv4_or_ipv6_must_be_present))
   end
 
@@ -32,12 +33,12 @@ class WhiteIp < ApplicationRecord
     errors.add(:ipv6, :invalid)
   end
 
-  API = 'api'
-  REGISTRAR = 'registrar'
-  INTERFACES = [API, REGISTRAR]
+  API = 'api'.freeze
+  REGISTRAR = 'registrar'.freeze
+  INTERFACES = [API, REGISTRAR].freeze
 
-  scope :api, -> { where("interfaces @> ?::varchar[]", "{#{API}}") }
-  scope :registrar_area, -> { where("interfaces @> ?::varchar[]", "{#{REGISTRAR}}") }
+  scope :api, -> { where('interfaces @> ?::varchar[]', "{#{API}}") }
+  scope :registrar_area, -> { where('interfaces @> ?::varchar[]', "{#{REGISTRAR}}") }
 
   def interfaces=(interfaces)
     super(interfaces.reject(&:blank?))
@@ -72,5 +73,19 @@ class WhiteIp < ApplicationRecord
     rescue StandardError => _e
       nil
     end
+
+    def csv_header
+      %w[IPv4 IPv6 Interfaces Created Updated]
+    end
+  end
+
+  def as_csv_row
+    [
+      ipv4,
+      ipv6,
+      interfaces.join(', ').upcase,
+      created_at,
+      updated_at,
+    ]
   end
 end

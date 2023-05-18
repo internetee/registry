@@ -91,6 +91,24 @@ class ApiUser < User
     another_api_user.identity_code == identity_code
   end
 
+  def as_csv_row
+    [
+      username,
+      plain_text_password,
+      identity_code,
+      roles.join(', '),
+      active,
+      accredited?,
+      accreditation_expire_date,
+      created_at, updated_at
+    ]
+  end
+
+  def self.csv_header
+    ['Username', 'Password', 'Identity Code', 'Role', 'Active', 'Accredited',
+     'Accreditation Expire Date', 'Created', 'Updated']
+  end
+
   private
 
   def machine_readable_certificate(cert)

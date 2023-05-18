@@ -22,6 +22,26 @@ class AdminRegistrarsApiUsersSystemTest < ApplicationSystemTestCase
     assert_current_path admin_registrar_api_user_path(registrar, new_api_user)
   end
 
+  def test_downloads_api_users_list_as_csv
+    travel_to Time.zone.parse('2010-07-05 10:30')
+    registrar = registrars(:bestnames)
+    api_users = registrar.api_users
+    api_users.each do |u|
+      u.created_at = Time.zone.now
+      u.updated_at = Time.zone.now
+      u.save(validate: false)
+    end
+
+    visit admin_registrar_path(registrar)
+    within('.api_users') do
+      click_on 'Export to CSV'
+    end
+
+    assert_equal "attachment; filename=\"#{registrar.name.parameterize}_api_users_#{Time.zone.now.to_formatted_s(:number)}.csv\"; " \
+      "filename*=UTF-8''#{registrar.name.parameterize}_api_users_#{Time.zone.now.to_formatted_s(:number)}.csv", response_headers['Content-Disposition']
+    assert_equal file_fixture('api_users.csv').read, page.body
+  end
+
   def test_shows_api_user_details
     api_user = users(:api_bestnames)
 
