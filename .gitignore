@@ -15,3 +15,5 @@
 /config/master.key
 # Do not commit one. Instead, download the latest from https://github.com/internetee/style-guide.
 .rubocop.yml
+/lib/tasks/mock.rake
+
