@@ -1,4 +1,5 @@
 18.05.2023
+* Csv export option for registrar user and ip data in admin ui https://github.com/internetee/registry/issues/2567
 * Fixed epp logs sorting https://github.com/internetee/registry/issues/2568
 * VAT no added to the credit invoices https://github.com/internetee/registry/issues/2569
 * English auctions trigger whois updates https://github.com/internetee/registry/issues/2577
