@@ -1,4 +1,5 @@
 18.05.2023
+* Fixed ForceDelete conflicting statuses and excessive log issue https://github.com/internetee/registry/issues/2561
 * Csv export option for registrar user and ip data in admin ui https://github.com/internetee/registry/issues/2567
 * Fixed epp logs sorting https://github.com/internetee/registry/issues/2568
 * VAT no added to the credit invoices https://github.com/internetee/registry/issues/2569
