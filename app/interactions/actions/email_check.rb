@@ -24,10 +24,9 @@ module Actions
     end
 
     def calculate_check_level
-      check_level_sym = check_level.to_sym
-      return :mx if Rails.env.test? && check_level_sym == :smtp
+      return :mx if Rails.env.test? && check_level == 'smtp'
 
-      check_level_sym
+      check_level.to_sym
     end
 
     def filter_old_failed_records(result, contact)

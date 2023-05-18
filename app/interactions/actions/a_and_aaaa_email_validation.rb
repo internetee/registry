@@ -21,22 +21,22 @@ module Actions
 
         case value
         when 'A'
-          resolve_a_records(dns: dns, domain: email_domain)
+          resolve_a_records(dns: dns, hostname: email_domain)
         when 'AAAA'
-          resolve_aaaa_records(dns: dns, domain: email_domain)
+          resolve_aaaa_records(dns: dns, hostname: email_domain)
         else
           []
         end
       end
     end
 
-    def resolve_a_records(dns:, domain:)
-      resources = dns.getresources(domain, Resolv::DNS::Resource::IN::A)
+    def resolve_a_records(dns:, hostname:)
+      resources = dns.getresources(hostname, Resolv::DNS::Resource::IN::A)
       resources.map(&:address)
     end
 
-    def resolve_aaaa_records(dns:, domain:)
-      resources = dns.getresources(domain, Resolv::DNS::Resource::IN::AAAA)
+    def resolve_aaaa_records(dns:, hostname:)
+      resources = dns.getresources(hostname, Resolv::DNS::Resource::IN::AAAA)
       resources.map(&:address)
     end
   end
