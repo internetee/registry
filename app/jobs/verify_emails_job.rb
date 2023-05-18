@@ -31,7 +31,9 @@ class VerifyEmailsJob < ApplicationJob
     expired_last_validation = last_validation.successful? && last_validation.created_at < validation_expiry_date
     failed_last_regex_validation = last_validation.failed? && last_validation.event_data['check_level'] == 'regex'
 
-    expired_last_validation || !failed_last_regex_validation
+    return true if expired_last_validation
+
+    !failed_last_regex_validation
   end
 
   def logger
