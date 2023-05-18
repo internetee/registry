@@ -1,4 +1,7 @@
 class Auction < ApplicationRecord
+  after_create :whois_create
+  after_destroy :whois_destroy
+
   enum status: {
     started: 'started',
     awaiting_payment: 'awaiting_payment',
@@ -114,6 +117,17 @@ class Auction < ApplicationRecord
 
     new_auction = self.class.new(domain: domain, platform: new_platform)
     new_auction.start
+  end
+
+  def whois_create
+    Whois::Record.transaction do
+      whois_record = Whois::Record.find_or_create_by!(name: domain)
+      whois_record.update_from_auction(self)
+    end
+  end
+
+  def whois_destroy
+    Whois::Record.find_by(name: domain)&.destroy!
   end
 
   private
