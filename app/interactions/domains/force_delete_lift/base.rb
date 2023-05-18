@@ -16,10 +16,14 @@ module Domains
       end
 
       def force_delete_condition(domain)
-        domain.force_delete_scheduled? &&
+        force_delete_scheduled?(domain) &&
           template_of_invalid_email?(domain) &&
           contact_emails_valid?(domain) &&
           bounces_absent?(domain)
+      end
+
+      def force_delete_scheduled?(domain)
+        domain.force_delete_scheduled?
       end
 
       def template_of_invalid_email?(domain)
@@ -27,14 +31,11 @@ module Domains
       end
 
       def contact_emails_valid?(domain)
-        flag = nil
-
         domain.contacts.each do |c|
-          flag = c.need_to_lift_force_delete?
-          return flag unless flag
+          return false unless c.need_to_lift_force_delete?
         end
 
-        flag && domain.registrant.need_to_lift_force_delete?
+        domain.registrant.need_to_lift_force_delete?
       end
 
       def bounces_absent?(domain)

@@ -82,7 +82,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     statuses_to_be_added = [
       DomainStatus::FORCE_DELETE,
       DomainStatus::SERVER_RENEW_PROHIBITED,
-      DomainStatus::SERVER_TRANSFER_PROHIBITED
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
     ]
 
     @domain.schedule_force_delete(type: :soft)
@@ -94,7 +94,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     statuses_to_be_added = [
       DomainStatus::FORCE_DELETE,
       DomainStatus::SERVER_RENEW_PROHIBITED,
-      DomainStatus::SERVER_TRANSFER_PROHIBITED
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
     ]
 
     @domain.schedule_force_delete(type: :fast_track)
@@ -104,7 +104,7 @@ class ForceDeleteTest < ActionMailer::TestCase
 
   def test_scheduling_force_delete_allows_domain_deletion
     statuses_to_be_removed = [
-      DomainStatus::CLIENT_DELETE_PROHIBITED
+      DomainStatus::CLIENT_DELETE_PROHIBITED,
     ]
 
     @domain.statuses = statuses_to_be_removed + %w[other-status]
@@ -119,7 +119,7 @@ class ForceDeleteTest < ActionMailer::TestCase
       DomainStatus::PENDING_UPDATE,
       DomainStatus::PENDING_TRANSFER,
       DomainStatus::PENDING_RENEW,
-      DomainStatus::PENDING_CREATE
+      DomainStatus::PENDING_CREATE,
     ]
 
     @domain.statuses = statuses_to_be_removed + %w[other-status]
@@ -169,7 +169,7 @@ class ForceDeleteTest < ActionMailer::TestCase
     statuses = [
       DomainStatus::FORCE_DELETE,
       DomainStatus::SERVER_RENEW_PROHIBITED,
-      DomainStatus::SERVER_TRANSFER_PROHIBITED
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
     ]
     @domain.statuses = @domain.statuses + statuses
     @domain.save!
@@ -196,7 +196,7 @@ class ForceDeleteTest < ActionMailer::TestCase
   def test_cancelling_force_delete_keeps_previous_statuses
     statuses = [
       DomainStatus::SERVER_RENEW_PROHIBITED,
-      DomainStatus::SERVER_TRANSFER_PROHIBITED
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
     ]
 
     @domain.statuses = statuses
@@ -441,8 +441,8 @@ class ForceDeleteTest < ActionMailer::TestCase
 
     travel_to Time.zone.parse('2010-07-05')
     email = '`@internet2.ee'
-    invalid_email = '`@internet.ee'
-    asserted_text = "Invalid email: #{invalid_email}"
+    # invalid_email = '`@internet.ee'
+    # asserted_text = "Invalid email: #{invalid_email}"
 
     Truemail.configure.default_validation_type = :regex
 

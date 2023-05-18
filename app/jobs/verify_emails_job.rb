@@ -4,18 +4,16 @@ class VerifyEmailsJob < ApplicationJob
   def perform(email:, check_level: 'mx')
     contact = Contact.find_by(email: email)
 
-    return Rails.logger.info "No found #{email} contact" if contact.nil?
+    return logger.info "Contact #{email} not found!" if contact.nil?
 
-    return unless filter_check_level(contact)
+    return unless need_to_verify?(contact)
 
     validate_check_level(check_level)
-    action = Actions::EmailCheck.new(email: contact.email,
-                                     validation_eventable: contact,
-                                     check_level: check_level)
-    action.call
+
+    logger.info "Trying to verify contact email #{email} with check_level #{check_level}"
+    contact.verify_email(check_level: check_level)
   rescue StandardError => e
-    logger.error e.message
-    raise e
+    handle_error(e)
   end
 
   private
@@ -26,6 +24,18 @@ class VerifyEmailsJob < ApplicationJob
     raise StandardError, "Check level #{check_level} is invalid"
   end
 
+  def need_to_verify?(contact)
+    return true if contact.validation_events.empty?
+
+    last_validation = contact.validation_events.last
+    expired_last_validation = last_validation.successful? && last_validation.created_at < validation_expiry_date
+    failed_last_regex_validation = last_validation.failed? && last_validation.event_data['check_level'] == 'regex'
+
+    return true if expired_last_validation
+
+    !failed_last_regex_validation
+  end
+
   def logger
     @logger ||= Rails.logger
   end
@@ -34,12 +44,12 @@ class VerifyEmailsJob < ApplicationJob
     ValidationEvent::VALID_CHECK_LEVELS
   end
 
-  def filter_check_level(contact)
-    return true unless contact.validation_events.exists?
+  def validation_expiry_date
+    Time.zone.now - ValidationEvent::VALIDATION_PERIOD
+  end
 
-    data = contact.validation_events.order(created_at: :asc).last
-    return true if data.successful? && data.created_at < (Time.zone.now - ValidationEvent::VALIDATION_PERIOD)
-
-    !(data.failed? && data.event_data['check_level'] == 'regex')
+  def handle_error(error)
+    logger.error error.message
+    raise error
   end
 end
