@@ -22,7 +22,24 @@ class ApiUserTest < ActiveSupport::TestCase
     assert another_user.invalid?
 
     another_user.username = 'another'
+    another_user.identity_code = ''
     assert another_user.valid?
+  end
+
+  def test_invalid_when_one_registrar_and_identity_code_is_already_taken
+    user = valid_user
+    another_user = user.dup
+
+    assert another_user.invalid?
+
+    another_user.username = 'another'
+    assert another_user.invalid?
+  end
+
+  def test_valid_when_another_registrar_and_identity_code_is_already_taken
+    another_user = valid_user
+    @user.identity_code = another_user.identity_code
+    assert @user.valid?
   end
 
   def test_invalid_without_password
