@@ -24,6 +24,7 @@ class ApiUser < User
   validates :username, :plain_text_password, :registrar, :roles, presence: true
   validates :plain_text_password, length: { minimum: min_password_length }
   validates :username, uniqueness: true
+  validates :identity_code, uniqueness: { scope: :registrar_id }, if: -> { identity_code.present? }
 
   delegate :code, :name, to: :registrar, prefix: true
   delegate :legaldoc_mandatory?, to: :registrar
@@ -35,6 +36,8 @@ class ApiUser < User
   BILLING = 'billing'.freeze
 
   ROLES = %w[super epp billing].freeze # should not match to admin roles
+
+  scope :non_super, -> { where.not('roles @> ARRAY[?]::varchar[]', ['super']) }
 
   def ability
     @ability ||= Ability.new(self)
@@ -81,10 +84,14 @@ class ApiUser < User
   end
 
   def linked_users
-    self.class.where(identity_code: identity_code)
+    self.class.where(identity_code: identity_code, active: true)
         .where("identity_code IS NOT NULL AND identity_code != ''")
         .where.not(id: id)
         .includes(:registrar)
+  end
+
+  def api_users
+    self.class.where(registrar_id: registrar_id)
   end
 
   def linked_with?(another_api_user)
@@ -107,6 +114,14 @@ class ApiUser < User
   def self.csv_header
     ['Username', 'Password', 'Identity Code', 'Role', 'Active', 'Accredited',
      'Accreditation Expire Date', 'Created', 'Updated']
+  end
+
+  def self.ransackable_associations(*)
+    authorizable_ransackable_associations
+  end
+
+  def self.ransackable_attributes(*)
+    authorizable_ransackable_attributes
   end
 
   private

@@ -28,6 +28,8 @@ class Ability
   def super # Registrar/api_user dynamic role
     epp
     billing
+    can :manage, ApiUser
+    can :manage, WhiteIp
   end
 
   def epp # Registrar/api_user dynamic role

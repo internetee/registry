@@ -77,6 +77,10 @@ class WhiteIp < ApplicationRecord
     def csv_header
       %w[IPv4 IPv6 Interfaces Created Updated]
     end
+
+    def ransackable_attributes(auth_object = nil)
+      ["created_at", "creator_str", "id", "interfaces", "ipv4", "ipv6", "registrar_id", "updated_at", "updator_str"]
+    end
   end
 
   def as_csv_row

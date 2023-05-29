@@ -34,8 +34,12 @@ module Repp
                             iban: registrar.iban,
                             iban_max_length: Iban.max_length,
                             linked_users: serialized_users(current_user.linked_users),
+                            api_users: serialized_users(current_user.api_users),
+                            white_ips: serialized_ips(registrar.white_ips),
                             balance_auto_reload: type,
-                            min_deposit: Setting.minimum_deposit } }
+                            min_deposit: Setting.minimum_deposit },
+                 roles: ApiUser::ROLES,
+                 interfaces: WhiteIp::INTERFACES }
         render_success(data: resp)
       end
 
@@ -148,7 +152,8 @@ module Repp
         arr = []
         users.each do |u|
           arr << { id: u.id, username: u.username,
-                   role: u.roles.first, registrar_name: u.registrar.name }
+                   role: u.roles.first, registrar_name: u.registrar.name,
+                   active: u.active }
         end
 
         arr
@@ -164,6 +169,10 @@ module Repp
         end
 
         arr
+      end
+
+      def serialized_ips(ips)
+        ips.as_json(only: %i[id ipv4 ipv6 interfaces])
       end
     end
   end
