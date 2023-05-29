@@ -7,6 +7,7 @@ module Serializers
         @user = user
       end
 
+      # rubocop:disable Metrics/MethodLength
       def to_json(obj = user)
         json = {
           id: obj.id,
@@ -24,6 +25,7 @@ module Serializers
         json[:certificates] = certificates
         json
       end
+      # rubocop:enable Metrics/MethodLength
 
       private
 

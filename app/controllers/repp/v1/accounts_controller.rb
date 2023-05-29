@@ -25,6 +25,7 @@ module Repp
                                types_for_select: AccountActivity.types_for_select })
       end
 
+      # rubocop:disable Metrics/MethodLength
       api :get, '/repp/v1/accounts/details'
       desc 'Get current registrar account details'
       def details
@@ -42,6 +43,7 @@ module Repp
                  interfaces: WhiteIp::INTERFACES }
         render_success(data: resp)
       end
+      # rubocop:enable Metrics/MethodLength
 
       api :put, '/repp/v1/accounts'
       desc 'Update current registrar account details'

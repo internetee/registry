@@ -78,8 +78,8 @@ class WhiteIp < ApplicationRecord
       %w[IPv4 IPv6 Interfaces Created Updated]
     end
 
-    def ransackable_attributes(auth_object = nil)
-      ["created_at", "creator_str", "id", "interfaces", "ipv4", "ipv6", "registrar_id", "updated_at", "updator_str"]
+    def ransackable_attributes(*)
+      authorizable_ransackable_attributes
     end
   end
 

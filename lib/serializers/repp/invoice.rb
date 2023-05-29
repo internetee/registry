@@ -81,7 +81,7 @@ module Serializers
           total: invoice.total,
           recipient: invoice.buyer.billing_email,
           monthly_invoice: invoice.monthly_invoice,
-          reference_no: invoice.reference_no
+          reference_no: invoice.reference_no,
         }
       end
       # rubocop:enable Metrics/MethodLength
