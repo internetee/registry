@@ -7,7 +7,7 @@ module Repp
       include Shunter::Integration::Throttle
 
       api :GET, '/repp/v1/white_ips'
-      desc 'Get all whitelisted ips'
+      desc 'Get all whitelisted IPs'
       def index
         ips = current_user.registrar.white_ips
 
@@ -28,7 +28,7 @@ module Repp
       end
 
       api :PUT, '/repp/v1/white_ips/:id'
-      desc 'Update whitelisted ip address'
+      desc 'Update whitelisted IP address'
       def update
         unless @white_ip.update(white_ip_params)
           handle_non_epp_errors(@white_ip)
@@ -39,7 +39,7 @@ module Repp
       end
 
       api :DELETE, '/repp/v1/white_ips/:id'
-      desc 'Delete a specific whitelisted ip address'
+      desc 'Delete a specific whitelisted IP address'
       def destroy
         unless @white_ip.destroy
           handle_non_epp_errors(@white_ip)

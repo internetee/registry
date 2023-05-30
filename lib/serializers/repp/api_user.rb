@@ -21,6 +21,8 @@ module Serializers
           accreditation_expire_date: obj.accreditation_expire_date,
           created_at: obj.created_at,
           updated_at: obj.updated_at,
+          creator: obj.creator_str,
+          updator: obj.updator_str,
         }
         json[:certificates] = certificates
         json
