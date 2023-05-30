@@ -11,8 +11,14 @@ module Repp
       def index
         ips = current_user.registrar.white_ips
 
-        render_success(data: { ips: ips.as_json(except: %i[creator_str updator_str]),
+        render_success(data: { ips: ips.as_json,
                                count: ips.count })
+      end
+
+      api :GET, '/repp/v1/white_ips/:id'
+      desc 'Get a specific whitelisted IP address'
+      def show
+        render_success(data: { ip: @white_ip.as_json, interfaces: WhiteIp::INTERFACES })
       end
 
       api :POST, '/repp/v1/white_ips'
