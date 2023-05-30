@@ -58,7 +58,7 @@ module Repp
       private
 
       def white_ip_params
-        params.require(:white_ip).permit(:ipv4, :ipv6, interfaces: [])
+        params.require(:white_ip).permit(:id, :ipv4, :ipv6, interfaces: [])
       end
     end
   end
