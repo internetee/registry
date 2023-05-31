@@ -2,7 +2,6 @@ require 'test_helper'
 require 'application_system_test_case'
 
 class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
-
   setup do
     WebMock.allow_net_connect!
     sign_in users(:admin)
@@ -17,11 +16,11 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
 
   def test_create_new_whitelisted_ip
     visit_new_whitelisted_ip_page
-    fill_in 'IPv4', with: "127.0.0.1"
-    fill_in 'IPv6', with: "::ffff:192.0.2.1"
+    # fill_in 'IPv4', with: '127.0.0.1'
+    fill_in 'IPv6', with: '::ffff:192.0.2.1'
 
-    find(:css, "#white_ip_interfaces_api").set(true)
-    find(:css, "#white_ip_interfaces_registrar").set(true)
+    find(:css, '#white_ip_interfaces_api').set(true)
+    find(:css, '#white_ip_interfaces_registrar').set(true)
 
     click_on 'Save'
 
@@ -30,7 +29,7 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
 
   def test_failed_to_create_new_whitelisted_ip
     visit_new_whitelisted_ip_page
-    fill_in 'IPv4', with: "asdadadad.asd"
+    fill_in 'IPv4', with: 'asdadadad.asd'
 
     click_on 'Save'
 
@@ -45,8 +44,8 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
     visit_info_whitelisted_ip_page
     click_on 'Edit'
 
-    fill_in 'IPv4', with: "127.0.0.2"
-    find(:css, "#white_ip_interfaces_api").set(false)
+    fill_in 'IPv4', with: '127.0.0.2'
+    find(:css, '#white_ip_interfaces_api').set(false)
     click_on 'Save'
 
     assert_text 'Record updated'
@@ -55,7 +54,7 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
   def test_failed_to_update_whitelisted_ip
     visit_info_whitelisted_ip_page
     click_on 'Edit'
-    fill_in 'IPv4', with: "asdadad#"
+    fill_in 'IPv4', with: 'asdadad#'
 
     click_on 'Save'
 

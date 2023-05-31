@@ -42,6 +42,8 @@ class WhiteIp < ApplicationRecord
   end
 
   def validate_max_ip_count
+    return if errors.any?
+
     ip_addresses = registrar.white_ips
     total = ip_addresses.size + count_network_addresses(ipv4.presence || ipv6)
     limit = Setting.ip_whitelist_max_count
