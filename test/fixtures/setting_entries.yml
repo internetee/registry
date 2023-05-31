@@ -461,3 +461,11 @@ legal_document_is_mandatory:
   format: boolean
   created_at: <%= Time.zone.parse('2010-07-05') %>
   updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+ip_whitelist_max_count:
+  code: ip_whitelist_max_count
+  value: '256'
+  group: other
+  format: integer
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
