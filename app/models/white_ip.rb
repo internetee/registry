@@ -6,6 +6,7 @@ class WhiteIp < ApplicationRecord
   validate :valid_ipv6?
   validate :validate_ipv4_and_ipv6
   validate :validate_only_one_ip
+  validate :validate_max_ip_count
   before_save :normalize_blank_values
 
   def normalize_blank_values
@@ -38,6 +39,29 @@ class WhiteIp < ApplicationRecord
     IPAddr.new(ipv6, Socket::AF_INET6)
   rescue StandardError => _e
     errors.add(:ipv6, :invalid)
+  end
+
+  def validate_max_ip_count
+    ip_addresses = registrar.white_ips
+    total = ip_addresses.size + count_network_addresses(ipv4.presence || ipv6)
+    limit = Setting.ip_whitelist_max_count
+    return unless total >= limit
+
+    errors.add(:base, I18n.t(:ip_limit_exceeded, total: total, limit: limit))
+  end
+
+  def count_network_addresses(ip)
+    address = IPAddr.new(ip)
+
+    if address.ipv4?
+      subnet_mask = address.prefix
+      2**(32 - subnet_mask) - 2
+    elsif address.ipv6?
+      subnet_mask = address.prefix
+      2**(128 - subnet_mask) - 2
+    else
+      0
+    end
   end
 
   API = 'api'.freeze
