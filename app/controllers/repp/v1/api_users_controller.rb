@@ -61,7 +61,7 @@ module Repp
       private
 
       def api_user_params
-        params.require(:api_user).permit(:id, :username, :plain_text_password, :active,
+        params.require(:api_user).permit(:username, :plain_text_password, :active,
                                          :identity_code, { roles: [] })
       end
 

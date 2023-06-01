@@ -3,7 +3,7 @@ module Repp
     class WhiteIpsController < BaseController
       load_and_authorize_resource
 
-      THROTTLED_ACTIONS = %i[index create update destroy].freeze
+      THROTTLED_ACTIONS = %i[index show create update destroy].freeze
       include Shunter::Integration::Throttle
 
       api :GET, '/repp/v1/white_ips'
@@ -58,7 +58,7 @@ module Repp
       private
 
       def white_ip_params
-        params.require(:white_ip).permit(:id, :ipv4, :ipv6, interfaces: [])
+        params.require(:white_ip).permit(:ipv4, :ipv6, interfaces: [])
       end
     end
   end
