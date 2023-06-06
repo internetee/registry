@@ -85,6 +85,7 @@ class AdminRegistrarsApiUsersSystemTest < ApplicationSystemTestCase
   def unassociated_api_user
     new_api_user = users(:api_bestnames).dup
     new_api_user.username = "unique-#{rand(100)}"
+    new_api_user.identity_code = rand(10)
     new_api_user.save!
     new_api_user
   end

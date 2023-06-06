@@ -5,15 +5,15 @@ class Certificate < ApplicationRecord
 
   belongs_to :api_user
 
-  SIGNED = 'signed'
-  UNSIGNED = 'unsigned'
-  EXPIRED = 'expired'
-  REVOKED = 'revoked'
-  VALID = 'valid'
+  SIGNED = 'signed'.freeze
+  UNSIGNED = 'unsigned'.freeze
+  EXPIRED = 'expired'.freeze
+  REVOKED = 'revoked'.freeze
+  VALID = 'valid'.freeze
 
-  API = 'api'
-  REGISTRAR = 'registrar'
-  INTERFACES = [API, REGISTRAR]
+  API = 'api'.freeze
+  REGISTRAR = 'registrar'.freeze
+  INTERFACES = [API, REGISTRAR].freeze
 
   scope 'api', -> { where(interface: API) }
   scope 'registrar', -> { where(interface: REGISTRAR) }
@@ -21,6 +21,7 @@ class Certificate < ApplicationRecord
   validate :validate_csr_and_crt_presence
   def validate_csr_and_crt_presence
     return if csr.try(:scrub).present? || crt.try(:scrub).present?
+
     errors.add(:base, I18n.t(:crt_or_csr_must_be_present))
   end
 
@@ -28,8 +29,8 @@ class Certificate < ApplicationRecord
   def validate_csr_and_crt
     parsed_crt
     parsed_csr
-    rescue OpenSSL::X509::RequestError, OpenSSL::X509::CertificateError
-      errors.add(:base, I18n.t(:invalid_csr_or_crt))
+  rescue OpenSSL::X509::RequestError, OpenSSL::X509::CertificateError
+    errors.add(:base, I18n.t(:invalid_csr_or_crt))
   end
 
   validate :assign_metadata, on: :create
@@ -67,7 +68,8 @@ class Certificate < ApplicationRecord
 
     @cached_status = SIGNED
 
-    @cached_status = EXPIRED if parsed_crt.not_before > Time.zone.now.utc && parsed_crt.not_after < Time.zone.now.utc
+    expired = parsed_crt.not_before > Time.zone.now.utc && parsed_crt.not_after < Time.zone.now.utc
+    @cached_status = EXPIRED if expired
 
     crl = OpenSSL::X509::CRL.new(File.open("#{ENV['crl_dir']}/crl.pem").read)
     return @cached_status unless crl.revoked.map(&:serial).include?(parsed_crt.serial)
@@ -144,7 +146,8 @@ class Certificate < ApplicationRecord
     end
 
     def parse_md_from_string(crt)
-      return nil if crt.blank?
+      return if crt.blank?
+
       crt = crt.split(' ').join("\n")
       crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
       crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")

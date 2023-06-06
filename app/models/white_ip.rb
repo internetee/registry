@@ -5,6 +5,8 @@ class WhiteIp < ApplicationRecord
   validate :valid_ipv4?
   validate :valid_ipv6?
   validate :validate_ipv4_and_ipv6
+  validate :validate_only_one_ip
+  validate :validate_max_ip_count
   before_save :normalize_blank_values
 
   def normalize_blank_values
@@ -15,6 +17,12 @@ class WhiteIp < ApplicationRecord
     return if ipv4.present? || ipv6.present?
 
     errors.add(:base, I18n.t(:ipv4_or_ipv6_must_be_present))
+  end
+
+  def validate_only_one_ip
+    return unless ipv4.present? && ipv6.present?
+
+    errors.add(:base, I18n.t(:ip_must_be_one))
   end
 
   def valid_ipv4?
@@ -31,6 +39,31 @@ class WhiteIp < ApplicationRecord
     IPAddr.new(ipv6, Socket::AF_INET6)
   rescue StandardError => _e
     errors.add(:ipv6, :invalid)
+  end
+
+  def validate_max_ip_count
+    return if errors.any?
+
+    ip_addresses = registrar.white_ips
+    total = ip_addresses.size + count_network_addresses(ipv4.presence || ipv6)
+    limit = Setting.ip_whitelist_max_count
+    return unless total >= limit
+
+    errors.add(:base, I18n.t(:ip_limit_exceeded, total: total, limit: limit))
+  end
+
+  def count_network_addresses(ip)
+    address = IPAddr.new(ip)
+
+    if address.ipv4?
+      subnet_mask = address.prefix
+      2**(32 - subnet_mask) - 2
+    elsif address.ipv6?
+      subnet_mask = address.prefix
+      2**(128 - subnet_mask) - 2
+    else
+      0
+    end
   end
 
   API = 'api'.freeze
@@ -76,6 +109,10 @@ class WhiteIp < ApplicationRecord
 
     def csv_header
       %w[IPv4 IPv6 Interfaces Created Updated]
+    end
+
+    def ransackable_attributes(*)
+      authorizable_ransackable_attributes
     end
   end
 

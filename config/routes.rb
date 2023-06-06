@@ -108,6 +108,8 @@ Rails.application.routes.draw do
           get '/market_share_growth_rate', to: 'stats#market_share_growth_rate'
         end
       end
+      resources :api_users, only: %i[index show update create destroy]
+      resources :white_ips, only: %i[index show update create destroy]
       namespace :registrar do
         resources :notifications, only: %i[index show update] do
           collection do

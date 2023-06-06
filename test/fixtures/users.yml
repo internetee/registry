@@ -8,6 +8,16 @@ api_bestnames:
   roles:
     - super
 
+api_bestnames_epp:
+  username: test_bestnames_epp
+  plain_text_password: testtest
+  identity_code: 
+  type: ApiUser
+  registrar: bestnames
+  active: true
+  roles:
+    - epp
+
 api_goodnames:
   username: test_goodnames
   plain_text_password: testtest

@@ -30,6 +30,7 @@ class WhiteIpTest < ActiveSupport::TestCase
 
   def test_validates_ipv6_format
     white_ip = valid_white_ip
+    white_ip.ipv4 = nil
 
     white_ip.ipv6 = 'invalid'
     assert white_ip.invalid?
@@ -47,7 +48,7 @@ class WhiteIpTest < ActiveSupport::TestCase
 
     assert_nothing_raised { white_ip.save }
     assert white_ip.valid?
-    
+
     assert WhiteIp.include_ip?(white_ip.ipv6)
     assert_not WhiteIp.include_ip?('192.168.1.1')
   end
