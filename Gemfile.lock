@@ -202,9 +202,9 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    data_migrate (8.0.0)
-      activerecord (>= 5.0)
-      railties (>= 5.0)
+    data_migrate (10.0.0)
+      activerecord (>= 6.0)
+      railties (>= 6.0)
     database_cleaner (2.0.1)
       database_cleaner-active_record (~> 2.0.0)
     database_cleaner-active_record (2.0.0)
@@ -482,7 +482,7 @@ GEM
       attr_required (>= 0.0.5)
       httpclient (>= 2.4)
     temple (0.8.2)
-    thor (1.2.1)
+    thor (1.2.2)
     tilt (2.0.11)
     timeout (0.3.0)
     truemail (3.0.3)
@@ -545,7 +545,7 @@ DEPENDENCIES
   coffee-rails (>= 5.0)
   company_register!
   countries
-  data_migrate (~> 8.0)
+  data_migrate (~> 10.0)
   database_cleaner
   devise (~> 4.8)
   digidoc_client!
