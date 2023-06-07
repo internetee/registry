@@ -1,3 +1,10 @@
+07.06.2023
+* IP address allow-list and user management improvements https://github.com/internetee/registry/pull/2584
+* Update dependency apipie-rails to v1 https://github.com/internetee/registry/pull/2566
+* Update dependency data_migrate to v10 https://github.com/internetee/registry/pull/2586
+* Updated sidekiq version to v7 https://github.com/internetee/registry/pull/2587
+* Refactored parsed response for dnskey https://github.com/internetee/registry/pull/2588
+
 18.05.2023
 * Fixed ForceDelete conflicting statuses and excessive log issue https://github.com/internetee/registry/issues/2561
 * Csv export option for registrar user and ip data in admin ui https://github.com/internetee/registry/issues/2567
