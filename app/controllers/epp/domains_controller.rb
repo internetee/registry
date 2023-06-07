@@ -171,7 +171,10 @@ module Epp
     end
 
     def parsed_response_for_dnskey(value)
-      doc = Nokogiri::Slop params[:parsed_frame].css(value).to_html
+      frame = params[:parsed_frame].css(value)
+      return true if frame.empty?
+
+      doc = Nokogiri::Slop frame.to_html
       return true if doc.document.children.empty?
 
       store = []
