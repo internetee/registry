@@ -36,6 +36,8 @@ class Certificate < ApplicationRecord
   validate :assign_metadata, on: :create
 
   def assign_metadata
+    return if errors.any?
+
     origin = crt ? parsed_crt : parsed_csr
     parse_metadata(origin)
   rescue NoMethodError

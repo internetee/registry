@@ -1,0 +1,10 @@
+New certificate signing request (CSR) has been received. Please review the details below:
+
+CSR Details:
+
+Subject: <%= link_to(@certificate.parsed_csr.try(:subject),
+             admin_api_user_certificate_url(@api_user, @certificate))  %>
+Requested By: <%= @certificate.creator_str %>
+Requested Date: <%= l(@certificate.created_at) %>
+
+Please take the necessary steps to process the certificate signing request.

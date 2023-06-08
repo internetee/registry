@@ -110,6 +110,7 @@ Rails.application.routes.draw do
       end
       resources :api_users, only: %i[index show update create destroy]
       resources :white_ips, only: %i[index show update create destroy]
+      resources :certificates, only: %i[create]
       namespace :registrar do
         resources :notifications, only: %i[index show update] do
           collection do
