@@ -1,3 +1,6 @@
+09.06.2023
+* Downgrade Apipie-rails to version 0.6.0 https://github.com/internetee/registry/pull/2591
+
 07.06.2023
 * IP address allow-list and user management improvements https://github.com/internetee/registry/pull/2584
 * Update dependency apipie-rails to v1 https://github.com/internetee/registry/pull/2566
