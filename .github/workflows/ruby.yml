@@ -75,7 +75,6 @@ jobs:
         echo "ca_key_path:  'test/fixtures/files/test_ca/private/ca.key.pem'" >> config/application.yml
         echo "ca_key_password: 'password'" >> config/application.yml
         bundle exec rake db:setup:all
-        bundle exec rails db:migrate
         bundle exec rails test test/*
     - name: Save coverage
       run: ./cc-test-reporter format-coverage --output coverage/codeclimate.${{ matrix.ruby }}.json
