@@ -17,3 +17,4 @@
 .rubocop.yml
 /lib/tasks/mock.rake
 
+/node_modules
