@@ -7,8 +7,10 @@ module Whois
     end
 
     def execute
-      data = record['klass'].constantize.find_by(id: record['id'])
-      send "update_#{record['type']}", data
+      Whois::Record.transaction do
+        data = record['klass'].constantize.find_by(id: record['id'])
+        send "update_#{record['type']}", data
+      end
     end
 
     def update_domain(domain)
