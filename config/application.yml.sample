@@ -36,7 +36,6 @@ crl_path:     '/home/registry/registry/shared/ca/crl/crl.pem'
 crl_updater_path: '/home/registry/registry/shared/ca/crl/crlupdater.sh'
 ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
 ca_key_path:  '/home/registry/registry/shared/ca/private/ca.key.pem'
-ca_key_password: 'your-root-key-password'
 
 directo_invoice_url: 'https://domain/ddddd.asp'
 cdns_scanner_input_file: '/opt/cdns/input.txt'

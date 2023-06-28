@@ -1,6 +1,7 @@
 module Repp
   module V1
     class WhiteIpsController < BaseController
+      before_action :find_white_ip, only: %i[show update destroy]
       load_and_authorize_resource
 
       THROTTLED_ACTIONS = %i[index show create update destroy].freeze
@@ -56,6 +57,10 @@ module Repp
       end
 
       private
+
+      def find_white_ip
+        @white_ip = current_user.registrar.white_ips.find(params[:id])
+      end
 
       def white_ip_params
         params.require(:white_ip).permit(:ipv4, :ipv6, interfaces: [])

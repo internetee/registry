@@ -2,6 +2,7 @@ require 'serializers/repp/api_user'
 module Repp
   module V1
     class ApiUsersController < BaseController
+      before_action :find_api_user, only: %i[show update destroy]
       load_and_authorize_resource
 
       THROTTLED_ACTIONS = %i[index show create update destroy].freeze
@@ -59,6 +60,10 @@ module Repp
       end
 
       private
+
+      def find_api_user
+        @api_user = current_user.registrar.api_users.find(params[:id])
+      end
 
       def api_user_params
         params.require(:api_user).permit(:username, :plain_text_password, :active,

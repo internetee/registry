@@ -1,0 +1,50 @@
+Tere,
+<br><br>
+<p>
+Anname teada, et API kasutaja on esitanud .ee registrisüsteemiga integreerumiseks sertifikaadi taotluse.
+Oleme selle taotlusega seotud sertifikaadi edukalt töödelnud ja allkirjastanud.
+</p>
+<h3>API Kasutaja andmed:</h3>
+<ul>
+  <li><strong>API Kasutaja nimi:</strong> <%= @api_user.username %></li>
+  <li><strong>Sertifikaadi seerianumber:</strong> <%= @crt.serial %></li>
+  <li><strong>Sertifikaadi aegumiskuupäev:</strong> <%= @crt.not_after %></li>
+  <li><strong>Sertifikaadi subjekt:</strong> <%= @crt.subject %></li>
+</ul>
+<p>
+Allkirjastatud sertifikaat tagab turvalise suhtluse .ee registripidaja ning registri süsteemide vahel.
+See toimib digitaalse identiteedikinnitusena, võimaldades autoriseeritud juurdepääsu .ee liidestele.
+</p>
+Kui Teil on küsimusi või vajate täiendavat teavet seoses sertifikaadi taotluse või API integratsiooniga, võtke meiega ühendust.
+</p>
+<p>
+Parimate soovidega,
+</p>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+<hr>
+<br><br>
+
+Hi,
+<br><br>
+<p>
+We are writing to inform you that a certificate request has been made by an API user to integrate with our system.
+We have successfully processed and signed the certificate associated with this request.
+</p>
+<h3>Api User Details:</h3>
+<ul>
+  <li><strong>API User Name:</strong> <%= @api_user.username %></li>
+  <li><strong>Certificate Serial Number:</strong> <%= @crt.serial %></li>
+  <li><strong>Certificate Expiry Date:</strong> <%= @crt.not_after %></li>
+  <li><strong>Certificate Subject:</strong> <%= @crt.subject %></li>
+</ul>
+<p>
+The signed certificate ensures secure communication between the API user's integration and .ee registry system.
+It serves as a digital identity verification, enabling authorized access to the APIs.
+</p>
+<p>
+If you have any questions or require further information regarding this certificate request or the API integration, please do not hesitate to reach out to us.
+</p>
+<p>
+Best regards,
+</p>
+<%= render 'mailers/shared/signatures/signature.en.html' %>

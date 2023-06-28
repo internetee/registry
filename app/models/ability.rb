@@ -30,7 +30,7 @@ class Ability
     billing
     can :manage, ApiUser
     can :manage, WhiteIp
-    can :create, Certificate
+    can :manage, Certificate
   end
 
   def epp # Registrar/api_user dynamic role
