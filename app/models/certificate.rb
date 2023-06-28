@@ -39,8 +39,7 @@ class Certificate < ApplicationRecord
   def assign_metadata
     return if errors.any?
 
-    origin = crt ? parsed_crt : parsed_csr
-    parse_metadata(origin)
+    parse_metadata(certificate_origin)
   rescue NoMethodError
     errors.add(:base, I18n.t(:invalid_csr_or_crt))
   end
@@ -134,6 +133,10 @@ class Certificate < ApplicationRecord
   end
 
   private
+
+  def certificate_origin
+    crt ? parsed_crt : parsed_csr
+  end
 
   def create_tempfile(filename, content = '')
     tempfile = Tempfile.new(filename)
