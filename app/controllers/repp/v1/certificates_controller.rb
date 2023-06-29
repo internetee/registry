@@ -58,7 +58,7 @@ module Repp
       end
 
       def notify_admins
-        admin_users_emails = User.all.select { |u| u.roles.include? 'admin' }.pluck(:email)
+        admin_users_emails = User.admin.pluck(:email)
 
         return if admin_users_emails.empty?
 

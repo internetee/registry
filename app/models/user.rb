@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
   has_many :actions, dependent: :restrict_with_exception
 
+  scope :admin, -> { where("'admin' = ANY (roles)") }
+
   attr_accessor :phone
 
   self.ignored_columns = %w[legacy_id]
