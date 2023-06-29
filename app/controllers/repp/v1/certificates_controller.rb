@@ -58,7 +58,7 @@ module Repp
       end
 
       def notify_admins
-        admin_users_emails = User.admin.pluck(:email)
+        admin_users_emails = User.admin.pluck(:email).reject(&:blank?)
 
         return if admin_users_emails.empty?
 
