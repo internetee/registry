@@ -106,7 +106,7 @@ class AdminRegistrarsSystemTest < ApplicationSystemTestCase
 
     api_user = @registrar.api_users.first
     api_user.accreditation_date = date
-    api_user.accreditation_expire_date = api_user.accreditation_date + 1.year
+    api_user.accreditation_expire_date = date + 1.year
     api_user.save
 
     visit admin_registrars_path
@@ -117,10 +117,11 @@ class AdminRegistrarsSystemTest < ApplicationSystemTestCase
   def test_should_not_display_remove_test_if_accreditation_date_is_expired
     date = Time.zone.now - 1.year - 10.minutes
 
-    api_user = @registrar.api_users.first
-    api_user.accreditation_date = date
-    api_user.accreditation_expire_date = api_user.accreditation_date + 1.year
-    api_user.save
+    @registrar.api_users.each do |api_user|
+      api_user.accreditation_date = date
+      api_user.accreditation_expire_date = date + 1.year
+      api_user.save
+    end
 
     visit admin_registrars_path
 
