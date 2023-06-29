@@ -196,6 +196,7 @@ en:
   edit: 'Edit'
   save: 'Save'
   close: 'Close'
+  submit: 'Submit'
   log_out: 'Log out (%{user})'
   system: 'System'
   domains: 'Domains'
