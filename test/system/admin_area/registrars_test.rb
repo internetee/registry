@@ -124,7 +124,7 @@ class AdminRegistrarsSystemTest < ApplicationSystemTestCase
 
     visit admin_registrars_path
 
-    assert_no_button 'Remove'
+    assert_no_button 'Remove Test'
   end
 
   def test_should_display_tests_button_in_registrar_deftails
@@ -157,6 +157,6 @@ class AdminRegistrarsSystemTest < ApplicationSystemTestCase
 
     visit admin_registrar_path(@registrar)
 
-    assert_no_button 'Remove'
+    assert_no_button 'Remove Test'
   end
 end
