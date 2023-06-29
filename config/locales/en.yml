@@ -195,6 +195,7 @@ en:
   action: 'Action'
   edit: 'Edit'
   save: 'Save'
+  close: 'Close'
   log_out: 'Log out (%{user})'
   system: 'System'
   domains: 'Domains'

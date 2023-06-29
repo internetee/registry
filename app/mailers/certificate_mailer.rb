@@ -9,7 +9,7 @@ class CertificateMailer < ApplicationMailer
   def signed(email:, api_user:, crt:)
     @crt = crt
     @api_user = api_user
-    subject = "Certificate Signing Confirmation for API User '#{@api_user.username}'"
+    subject = 'Certificate Signing Confirmation'
     mail(to: email, subject: subject)
   end
 end
