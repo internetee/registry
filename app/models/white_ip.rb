@@ -2,10 +2,14 @@ class WhiteIp < ApplicationRecord
   include Versions
   belongs_to :registrar
 
+  attr_accessor :address
+
+  validate :validate_address_format
+  validates :ipv4, uniqueness: { scope: :registrar_id }, if: :ipv4?
+  validates :ipv6, uniqueness: { scope: :registrar_id }, if: :ipv6?
+  validate :validate_only_one_ip
   validate :valid_ipv4?
   validate :valid_ipv6?
-  validate :validate_ipv4_and_ipv6
-  validate :validate_only_one_ip
   validate :validate_max_ip_count
   before_save :normalize_blank_values
 
@@ -13,16 +17,35 @@ class WhiteIp < ApplicationRecord
     %i[ipv4 ipv6].each { |c| self[c].present? || self[c] = nil }
   end
 
-  def validate_ipv4_and_ipv6
-    return if ipv4.present? || ipv6.present?
+  def validate_address_format
+    return if address.blank?
 
-    errors.add(:base, I18n.t(:ipv4_or_ipv6_must_be_present))
+    ip_address = IPAddr.new(address)
+    ip_version = determine_ip_version(ip_address)
+
+    assign_ip_attributes(ip_version)
+  rescue IPAddr::InvalidAddressError
+    errors.add(:address, :invalid)
   end
 
   def validate_only_one_ip
-    return unless ipv4.present? && ipv6.present?
+    if ipv4.present? && ipv6.present?
+      errors.add(:base, I18n.t(:ip_must_be_one))
+    elsif ipv4.blank? && ipv6.blank?
+      errors.add(:base, I18n.t(:ipv4_or_ipv6_must_be_present))
+    end
+  end
 
-    errors.add(:base, I18n.t(:ip_must_be_one))
+  def validate_max_ip_count
+    return if errors.any?
+
+    total_exist = calculate_total_network_addresses(registrar.white_ips)
+    total_current = calculate_total_network_addresses([self])
+    total = total_exist + total_current
+    limit = Setting.ip_whitelist_max_count
+    return unless total >= limit
+
+    errors.add(:base, I18n.t(:ip_limit_exceeded, total: total, limit: limit))
   end
 
   def valid_ipv4?
@@ -39,31 +62,6 @@ class WhiteIp < ApplicationRecord
     IPAddr.new(ipv6, Socket::AF_INET6)
   rescue StandardError => _e
     errors.add(:ipv6, :invalid)
-  end
-
-  def validate_max_ip_count
-    return if errors.any?
-
-    ip_addresses = registrar.white_ips
-    total = ip_addresses.size + count_network_addresses(ipv4.presence || ipv6)
-    limit = Setting.ip_whitelist_max_count
-    return unless total >= limit
-
-    errors.add(:base, I18n.t(:ip_limit_exceeded, total: total, limit: limit))
-  end
-
-  def count_network_addresses(ip)
-    address = IPAddr.new(ip)
-
-    if address.ipv4?
-      subnet_mask = address.prefix
-      2**(32 - subnet_mask) - 2
-    elsif address.ipv6?
-      subnet_mask = address.prefix
-      2**(128 - subnet_mask) - 2
-    else
-      0
-    end
   end
 
   API = 'api'.freeze
@@ -124,5 +122,45 @@ class WhiteIp < ApplicationRecord
       created_at,
       updated_at,
     ]
+  end
+
+  private
+
+  def determine_ip_version(ip_address)
+    return :ipv4 if ip_address.ipv4?
+    return :ipv6 if ip_address.ipv6?
+
+    nil
+  end
+
+  def assign_ip_attributes(ip_version)
+    case ip_version
+    when :ipv4
+      self.ipv4 = address
+      self.ipv6 = nil
+    when :ipv6
+      self.ipv6 = address
+      self.ipv4 = nil
+    else
+      errors.add(:address, :invalid)
+    end
+  end
+
+  def count_network_addresses(ip)
+    address = IPAddr.new(ip)
+
+    if address.ipv4?
+      subnet_mask = address.prefix
+      (2**(32 - subnet_mask) - 2).abs
+    elsif address.ipv6?
+      subnet_mask = address.prefix
+      (2**(128 - subnet_mask) - 2).abs
+    else
+      0
+    end
+  end
+
+  def calculate_total_network_addresses(ips)
+    ips.sum { |ip| count_network_addresses(ip.ipv4.presence || ip.ipv6) }
   end
 end

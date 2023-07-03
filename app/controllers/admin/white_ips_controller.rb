@@ -2,17 +2,15 @@ module Admin
   class WhiteIpsController < BaseController
     load_and_authorize_resource
 
-    before_action :set_registrar, only: [:new, :show, :edit, :destroy, :update]
+    before_action :set_registrar, only: %i[new show edit destroy update]
 
     def new
       @white_ip = WhiteIp.new(registrar: @registrar)
     end
 
-    def show;
-    end
+    def show; end
 
-    def edit;
-    end
+    def edit; end
 
     def destroy
       if @white_ip.destroy

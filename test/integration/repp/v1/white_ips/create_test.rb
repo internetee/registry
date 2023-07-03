@@ -15,8 +15,7 @@ class ReppV1WhiteIpsCreateTest < ActionDispatch::IntegrationTest
   def test_creates_new_white_ip
     request_body = {
       white_ip: {
-        ipv4: '127.0.0.1',
-        ipv6: '',
+        address: '127.1.1.1',
         interfaces: ['API'],
       },
     }
@@ -31,14 +30,13 @@ class ReppV1WhiteIpsCreateTest < ActionDispatch::IntegrationTest
     white_ip = WhiteIp.find(json[:data][:ip][:id])
     assert white_ip.present?
 
-    assert_equal(request_body[:white_ip][:ipv4], white_ip.ipv4)
+    assert_equal(request_body[:white_ip][:address], white_ip.ipv4)
   end
 
   def test_validates_ip_max_count
     request_body = {
       white_ip: {
-        ipv4: '',
-        ipv6: '2001:db8::/120',
+        address: '2001:db8::/120',
         interfaces: ['API'],
       },
     }
@@ -50,14 +48,29 @@ class ReppV1WhiteIpsCreateTest < ActionDispatch::IntegrationTest
     assert json[:message].include? 'IP address limit exceeded'
   end
 
+  def test_validates_ip_uniqueness_per_registrar
+    white_ip = white_ips(:one)
+    request_body = {
+      white_ip: {
+        address: white_ip.ipv4,
+        interfaces: ['API'],
+      },
+    }
+
+    post '/repp/v1/white_ips', headers: @auth_headers, params: request_body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert json[:message].include? 'IPv4 has already been taken'
+  end
+
   def test_returns_error_response_if_throttled
     ENV['shunter_default_threshold'] = '1'
     ENV['shunter_enabled'] = 'true'
 
     request_body = {
       white_ip: {
-        ipv4: '127.0.0.1',
-        ipv6: '',
+        address: '127.0.0.1',
         interfaces: ['API'],
       },
     }
