@@ -1,4 +1,4 @@
-class WhiteIp < ApplicationRecord
+class WhiteIp < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include Versions
   belongs_to :registrar
 
