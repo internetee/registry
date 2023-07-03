@@ -1,14 +1,6 @@
 - content_for :actions do
-  = link_to(t(:delete), admin_api_user_certificate_path(@api_user, @certificate),
-    method: :delete, data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger')
+  = link_to(t(:delete), '#', "data-toggle": "modal", "data-target": "#deleteModal", class: 'btn btn-danger')
 = render 'shared/title', name: t(:certificates)
-
-- if @certificate.errors.any?
-  - @certificate.errors.each do |attr, err|
-    = err
-    %br
-- if @certificate.errors.any?
-  %hr
 
 .row
   .col-md-12
@@ -47,7 +39,8 @@
           .pull-right
             = link_to(t(:download), download_csr_admin_api_user_certificate_path(@api_user, @certificate), class: 'btn btn-default btn-xs')
             - unless @crt
-              = link_to(t(:sign_this_request), sign_admin_api_user_certificate_path(@api_user, @certificate), method: :post, class: 'btn btn-primary btn-xs')
+              - sign_revoke_url = sign_admin_api_user_certificate_path(@api_user, @certificate)
+              = link_to(t(:sign_this_request), '#', "data-toggle": "modal", "data-target": "#signRevokeModal", class: 'btn btn-primary btn-xs')
 
         .panel-body
           %dl.dl-horizontal
@@ -55,7 +48,7 @@
             %dd= @csr.version
 
             %dt= CertificationRequest.human_attribute_name :subject
-            %dd= @csr.subject
+            %dd{ style: 'word-break:break-all;' }= @csr.subject
 
             %dt= t(:signature_algorithm)
             %dd= @csr.signature_algorithm
@@ -71,7 +64,8 @@
           .pull-right
             = link_to(t(:download), download_crt_admin_api_user_certificate_path(@api_user, @certificate), class: 'btn btn-default btn-xs')
             - if !@certificate.revoked? && @certificate.csr
-              = link_to(t(:revoke_this_certificate), revoke_admin_api_user_certificate_path(@api_user, @certificate), method: :post, class: 'btn btn-primary btn-xs')
+              - sign_revoke_url = revoke_admin_api_user_certificate_path(@api_user, @certificate)
+              = link_to(t(:revoke_this_certificate), '#', "data-toggle": "modal", "data-target": "#signRevokeModal", class: 'btn btn-primary btn-xs')
         - if @crt
           .panel-body
             %dl.dl-horizontal
@@ -98,3 +92,37 @@
 
               %dt= Certificate.human_attribute_name :extensions
               %dd= @crt.extensions.map(&:to_s).join('<br>').html_safe
+
+.modal.fade{ id: "signRevokeModal", tabindex: "-1", role: "dialog", "aria-labelledby": "signRevokeModalLabel" }
+  .modal-dialog{ role: "document" }
+    .modal-content
+      = form_for(:certificate, url: sign_revoke_url) do |f|
+        .modal-header
+          %button.close{ type: "button", "data-dismiss": "modal", "aria-label": "Close" }
+            %span{ "aria-hidden" => "true" } &times;
+          %h4.modal-title{ id: "signRevokeModalLabel" }
+            = t(:enter_ca_key_password)
+        .modal-body
+          = f.password_field :password, required: true, class: 'form-control'
+        .modal-footer
+          %button.btn.btn-default{ type: "button", "data-dismiss": "modal" }
+            = t(:close)
+          %button.btn.btn-primary{ type: "submit" }
+            = @crt.nil? ? t(:sign) : t(:submit)
+
+.modal.fade{ id: "deleteModal", tabindex: "-1", role: "dialog", "aria-labelledby": "deleteModalLabel" }
+  .modal-dialog{ role: "document" }
+    .modal-content
+      = form_for(:certificate, url: admin_api_user_certificate_path(@api_user, @certificate), method: :delete) do |f|
+        .modal-header
+          %button.close{ type: "button", "data-dismiss": "modal", "aria-label": "Close" }
+            %span{ "aria-hidden" => "true" } &times;
+          %h4.modal-title{ id: "deleteModalLabel" }
+            = t(:enter_ca_key_password)
+        .modal-body
+          = f.password_field :password, required: true, class: 'form-control'
+        .modal-footer
+          %button.btn.btn-default{ type: "button", "data-dismiss": "modal" }
+            = t(:close)
+          %button.btn.btn-primary{ type: "submit" }
+            = t(:delete)

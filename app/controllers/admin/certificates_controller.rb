@@ -1,10 +1,9 @@
 module Admin
   class CertificatesController < BaseController
     load_and_authorize_resource
-    before_action :set_certificate, :set_api_user, only: [:sign, :show, :download_csr, :download_crt, :revoke, :destroy]
+    before_action :set_certificate, :set_api_user, only: %i[sign show download_csr download_crt revoke destroy]
 
-    def show;
-    end
+    def show; end
 
     def new
       @api_user = ApiUser.find(params[:api_user_id])
@@ -28,11 +27,9 @@ module Admin
     end
 
     def destroy
-      if @certificate.interface == Certificate::REGISTRAR
-        @certificate.revoke!
-      end
+      success = @certificate.revokable? ? revoke_and_destroy_certificate : @certificate.destroy
 
-      if @certificate.destroy
+      if success
         flash[:notice] = I18n.t('record_deleted')
         redirect_to admin_registrar_api_user_path(@api_user.registrar, @api_user)
       else
@@ -42,8 +39,9 @@ module Admin
     end
 
     def sign
-      if @certificate.sign!
+      if @certificate.sign!(password: certificate_params[:password])
         flash[:notice] = I18n.t('record_updated')
+        notify_api_user
         redirect_to [:admin, @api_user, @certificate]
       else
         flash.now[:alert] = I18n.t('failed_to_update_record')
@@ -52,7 +50,7 @@ module Admin
     end
 
     def revoke
-      if @certificate.revoke!
+      if @certificate.revoke!(password: certificate_params[:password])
         flash[:notice] = I18n.t('record_updated')
       else
         flash[:alert] = I18n.t('failed_to_update_record')
@@ -84,10 +82,22 @@ module Admin
 
     def certificate_params
       if params[:certificate]
-        params.require(:certificate).permit(:crt, :csr)
+        params.require(:certificate).permit(:crt, :csr, :password)
       else
         {}
       end
+    end
+
+    def notify_api_user
+      api_user_email = @api_user.registrar.email
+
+      CertificateMailer.signed(email: api_user_email, api_user: @api_user,
+                               crt: OpenSSL::X509::Certificate.new(@certificate.crt))
+                       .deliver_now
+    end
+
+    def revoke_and_destroy_certificate
+      @certificate.revoke!(password: certificate_params[:password]) && @certificate.destroy
     end
   end
 end

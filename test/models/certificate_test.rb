@@ -12,6 +12,6 @@ class CertificateTest < ActiveSupport::TestCase
   end
 
   def test_certificate_sign_returns_false
-    assert_not @certificate.sign!, 'false'
+    assert_not @certificate.sign!(password: ENV['ca_key_password']), 'false'
   end
 end

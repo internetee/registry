@@ -92,10 +92,10 @@ Rails.application.routes.draw do
       end
       resources :invoices, only: %i[index show] do
         collection do
-          get ':id/download', to: 'invoices#download'
           post 'add_credit'
         end
         member do
+          get 'download'
           post 'send_to_recipient', to: 'invoices#send_to_recipient'
           put 'cancel', to: 'invoices#cancel'
         end
@@ -108,8 +108,15 @@ Rails.application.routes.draw do
           get '/market_share_growth_rate', to: 'stats#market_share_growth_rate'
         end
       end
-      resources :api_users, only: %i[index show update create destroy]
+      resources :api_users, only: %i[index show update create destroy] do
+        resources :certificates, only: %i[show] do
+          member do
+            get 'download'
+          end
+        end
+      end
       resources :white_ips, only: %i[index show update create destroy]
+      resources :certificates, only: %i[create]
       namespace :registrar do
         resources :notifications, only: %i[index show update] do
           collection do

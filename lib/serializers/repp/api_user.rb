@@ -32,9 +32,9 @@ module Serializers
       private
 
       def certificates
-        user.certificates.map do |x|
+        user.certificates.unrevoked.map do |x|
           subject = x.csr ? x.parsed_csr.try(:subject) : x.parsed_crt.try(:subject)
-          { subject: subject.to_s, status: x.status }
+          { id: x.id, subject: subject.to_s, status: x.status }
         end
       end
     end

@@ -64,11 +64,11 @@
                         </td>
                         <td>
                             <% if !x.accredited? || x.accreditation_expired? %>
-                                <%= button_to t('.set_test_btn'),
+                                <%= button_to t(:set_test_btn),
                                               { controller: 'registrars', action: 'set_test_date', registrar_id: x.id},
                                               { method: :post, class: 'btn btn-primary'} %>
                             <% else %>
-                                <%= button_to t('.remove_test_btn'),
+                                <%= button_to t(:remove_test_btn),
                                               { controller: 'registrars', action: 'remove_test_date', registrar_id: x.id},
                                               { method: :post, class: 'btn btn-danger'} %>
                             <% end %>

@@ -1,0 +1,34 @@
+Tere,
+
+Anname teada, et API kasutaja on esitanud .ee registrisüsteemiga integreerumiseks sertifikaadi taotluse. Oleme selle taotlusega seotud sertifikaadi edukalt töödelnud ja allkirjastanud.
+
+API Kasutaja andmed:
+- API Kasutaja nimi: <%= @api_user.username %>
+- Sertifikaadi seerianumber: <%= @crt.serial %>
+- Sertifikaadi aegumiskuupäev: <%= @crt.not_after %>
+- Sertifikaadi subjekt: <%= @crt.subject %>
+
+Allkirjastatud sertifikaat tagab turvalise suhtluse .ee registripidaja ning registri süsteemide vahel. See toimib digitaalse identiteedikinnitusena, võimaldades autoriseeritud juurdepääsu .ee liidestele.
+
+Kui Teil on küsimusi või vajate täiendavat teavet seoses sertifikaadi taotluse või API integratsiooniga, võtke meiega ühendust.
+
+Parimate soovidega,
+<%= render 'mailers/shared/signatures/signature.et.text' %>
+---
+
+Hi,
+
+We are writing to inform you that a certificate request has been made by an API user to integrate with our system. We have successfully processed and signed the certificate associated with this request.
+
+API User Details:
+- API User Name: <%= @api_user.username %>
+- Certificate Serial Number: <%= @crt.serial %>
+- Certificate Expiry Date: <%= @crt.not_after %>
+- Certificate Subject: <%= @crt.subject %>
+
+The signed certificate ensures secure communication between the API user's integration and .ee registry system. It serves as a digital identity verification, enabling authorized access to the APIs.
+
+If you have any questions or require further information regarding this certificate request or the API integration, please do not hesitate to reach out to us.
+
+Best regards,
+<%= render 'mailers/shared/signatures/signature.en.text' %>

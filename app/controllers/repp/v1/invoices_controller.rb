@@ -2,6 +2,7 @@ require 'serializers/repp/invoice'
 module Repp
   module V1
     class InvoicesController < BaseController # rubocop:disable Metrics/ClassLength
+      before_action :find_invoice, only: %i[show download send_to_recipient cancel]
       load_and_authorize_resource
 
       THROTTLED_ACTIONS = %i[download add_credit send_to_recipient cancel index show].freeze
@@ -35,8 +36,6 @@ module Repp
       desc 'Download a specific invoice as pdf file'
       def download
         filename = "Invoice-#{@invoice.number}.pdf"
-        @response = { code: 1000, message: 'Command completed successfully',
-                      data: filename }
         send_data @invoice.as_pdf, filename: filename
       end
 
@@ -90,6 +89,10 @@ module Repp
       end
 
       private
+
+      def find_invoice
+        @invoice = current_user.registrar.invoices.find(params[:id])
+      end
 
       def index_params
         params.permit(:id, :limit, :offset, :details, :q, :simple,
