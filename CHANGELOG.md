@@ -1,3 +1,6 @@
+03.07.2023
+* REPP API endpoint for csr upload and cert download https://github.com/internetee/registry/pull/2589
+
 09.06.2023
 * Downgrade Apipie-rails to version 0.6.0 https://github.com/internetee/registry/pull/2591
 
