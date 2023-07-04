@@ -5,6 +5,7 @@ module Repp
 
       around_action :log_request
       before_action :authenticate_user
+      before_action :set_locale
       before_action :validate_webclient_ca
       before_action :validate_client_certs
       before_action :check_ip_restriction
@@ -175,6 +176,10 @@ module Repp
       def throttled_user
         authorize!(:throttled_user, @domain) unless current_user || action_name == 'tara_callback'
         current_user
+      end
+
+      def set_locale
+        I18n.locale = current_user&.try(:locale) || params[:locale] || I18n.default_locale
       end
     end
   end

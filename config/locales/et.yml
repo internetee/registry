@@ -17,3 +17,18 @@ et:
   you_have_a_new_invoice: 'Teil on uus arve.'
   monthly_invoice: "Siit tuleb aruanne möödunud kuul ettemaksukontoga seotud tasuliste toimingutega."
   sincerely: 'Lugupidamisega'
+
+  activerecord:
+    errors:
+      models:
+        white_ip:
+          attributes:
+            base:
+              address_invalid: 'IP-aadress on vale'
+              ipv4_or_ipv6_must_be_present: 'IPv4 või IPv6 peab olema olemas'
+              ip_must_be_one: 'Palun sisestage ainult üks IP-aadress'
+              ip_limit_exceeded: 'IP-aadressi piirang ületatud. Kokku aadresse: %{total}. Limiit: %{limit}.'
+            ipv4:
+              taken: 'on juba lisatud'
+            ipv6:
+              taken: 'on juba lisatud'
