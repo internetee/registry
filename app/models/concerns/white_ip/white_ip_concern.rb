@@ -16,6 +16,7 @@ module WhiteIp::WhiteIpConcern
       (ipv4 + ipv6).pluck(:id).flatten.uniq
     end
 
+    # rubocop:disable Style/CaseEquality
     def select_ipv4(ip)
       return [] if check_ip4(ip).blank?
 
@@ -27,6 +28,7 @@ module WhiteIp::WhiteIpConcern
 
       select { |white_ip| check_ip6(white_ip.ipv6) === check_ip6(ip) }
     end
+    # rubocop:enable Style/CaseEquality
 
     def csv_header
       %w[IPv4 IPv6 Interfaces Created Updated]
