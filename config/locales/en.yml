@@ -155,9 +155,9 @@ en:
               ip_must_be_one: 'Please enter only one IP address'
               ip_limit_exceeded: 'IP address limit exceeded. Total addresses: %{total}. Limit: %{limit}.'
             ipv4:
-              taken: 'is already taken'
+              taken: 'has already been taken'
             ipv6:
-              taken: 'is already taken'
+              taken: 'has already been taken'
 
 
     attributes:
