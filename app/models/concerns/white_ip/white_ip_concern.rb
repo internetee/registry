@@ -17,13 +17,13 @@ module WhiteIp::WhiteIpConcern
     end
 
     def select_ipv4(ip)
-      return [] unless check_ip4(ip).present?
+      return [] if check_ip4(ip).blank?
 
       select { |white_ip| check_ip4(white_ip.ipv4) == check_ip4(ip) }
     end
 
     def select_ipv6(ip)
-      return [] unless check_ip6(ip).present?
+      return [] if check_ip6(ip).blank?
 
       select { |white_ip| check_ip6(white_ip.ipv6) == check_ip6(ip) }
     end

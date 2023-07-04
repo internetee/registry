@@ -82,7 +82,7 @@ class WhiteIp < ApplicationRecord
       ipv4, ipv6,
       interfaces.join(', ').upcase,
       created_at,
-      updated_at,
+      updated_at
     ]
   end
 
