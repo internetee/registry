@@ -130,6 +130,11 @@ module Repp
         render(json: @response, status: :unauthorized)
       end
 
+      def render_unauthorized_response
+        @response = { code: 2202, message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip) }
+        render json: @response, status: :unauthorized
+      end
+
       def webclient_request?
         return false if Rails.env.test? || Rails.env.development?
 
@@ -144,8 +149,7 @@ module Repp
         webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
         return if request_name == webclient_cn
 
-        @response = { code: 2202,
-                      message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip) }
+        @response = { code: 2202, message: 'Invalid webclient certificate' }
 
         render(json: @response, status: :unauthorized)
       end

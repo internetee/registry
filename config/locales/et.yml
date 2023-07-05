@@ -2,6 +2,14 @@ et:
   username: 'Kasutajanimi'
   password: 'Parool'
 
+  time:
+    formats:
+      default: "%Y-%m-%d %H:%M"
+      long: "%A, %e. %B %Y, %H:%M"
+      short: "%d.%m.%y, %H:%M"
+      date: "%Y-%m-%d"
+      date_long: "%d. %B %Y"
+      filename: "%Y-%m-%d_%H.%M"
   date:
     month_names:
       [~, Jaanuar, Veebruar, Märts, April, Mai, Juuni, Juuli, August, September, Oktoober, November, Detsember]

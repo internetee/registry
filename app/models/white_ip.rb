@@ -7,8 +7,6 @@ class WhiteIp < ApplicationRecord
   attr_accessor :address
 
   validate :validate_address_format
-  validates :ipv4, uniqueness: { scope: :registrar_id }, if: :ipv4?
-  validates :ipv6, uniqueness: { scope: :registrar_id }, if: :ipv6?
   validate :validate_only_one_ip
   validate :valid_ipv4?
   validate :valid_ipv6?
@@ -68,7 +66,7 @@ class WhiteIp < ApplicationRecord
 
   API = 'api'.freeze
   REGISTRAR = 'registrar'.freeze
-  INTERFACES = [API, REGISTRAR].freeze
+  INTERFACES = [REGISTRAR, API].freeze
 
   scope :api, -> { where('interfaces @> ?::varchar[]', "{#{API}}") }
   scope :registrar_area, -> { where('interfaces @> ?::varchar[]', "{#{REGISTRAR}}") }
