@@ -6,8 +6,8 @@ IP-aadressi andmed:
 - IP-aadress: <%= @white_ip.ipv4.presence || @white_ip.ipv6 %>
 - Liidesed: <%= @white_ip.interfaces.join(', ') %>
 
-Kõik päringud, mis algavad IP-aadressist <%= @white_ip.ipv4.presence || @white_ip.ipv6 %>, saavad meie süsteemis piiranguteta juurdepääsu.
-Palun veenduge, et hoiaksite selle IP-aadressi turvalisust ja konfidentsiaalsust, et vältida volitamata juurdepääsu.
+Päringud IP-aadressist <%= @white_ip.ipv4.presence || @white_ip.ipv6 %> jõuavad nüüd .ee registrisüsteemini.
+Palun hoidke selle IP-aadressi turvalisust ja konfidentsiaalsust, et vältida volitamata juurdepääsu.
 
 Kui Teil on küsimusi seoses Teie lubatud IP-aadressi aktiveerimisega, võtke meiega ühendust.
 
@@ -23,7 +23,7 @@ IP address Details:
 - IP address: <%= @white_ip.ipv4.presence || @white_ip.ipv6 %>
 - Interfaces: <%= @white_ip.interfaces.join(', ') %>
 
-All requests originating from the IP address <%= @white_ip.ipv4.presence || @white_ip.ipv6 %> will now have unrestricted access to our system.
+All requests originating from the IP address <%= @white_ip.ipv4.presence || @white_ip.ipv6 %> will now have access to our system.
 Please ensure the security and confidentiality of this IP address to prevent unauthorized access.
 
 If you have any questions regarding the activation of your whitelisted IP address, please contact us.
