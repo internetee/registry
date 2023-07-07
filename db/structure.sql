@@ -2806,7 +2806,8 @@ CREATE TABLE public.white_ips (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
-    updator_str character varying
+    updator_str character varying,
+    committed boolean DEFAULT true
 );
 
 
@@ -5468,6 +5469,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221207102831'),
 ('20221214073933'),
 ('20221214074252'),
-('20230531111154');
+('20230531111154'),
+('20230707084741');
 
 

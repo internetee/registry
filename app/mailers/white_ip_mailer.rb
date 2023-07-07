@@ -14,4 +14,10 @@ class WhiteIpMailer < ApplicationMailer
     subject = '[Important] Whitelisted IP Address Removal Notification'
     mail(to: email, subject: subject)
   end
+
+  def committed(email:, ip:)
+    @white_ip = ip
+    subject = 'Whitelisted IP Address Activation Confirmation'
+    mail(to: email, subject: subject)
+  end
 end

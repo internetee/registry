@@ -31,21 +31,21 @@ module Repp
           return
         end
 
-        notify_admins if @white_ip.interfaces.include? WhiteIp::API
+        uncommit_and_notify_admins if api_interface?(@white_ip)
         render_success(data: { ip: { id: @white_ip.id } })
       end
 
       api :PUT, '/repp/v1/white_ips/:id'
       desc 'Update whitelisted IP address'
       def update
-        api = @white_ip.interfaces.include? WhiteIp::API
+        previously_api = api_interface?(@white_ip)
         unless @white_ip.update(white_ip_params)
           handle_non_epp_errors(@white_ip)
           return
         end
 
-        notify_admins if @white_ip.interfaces.include? WhiteIp::API
-        notify_admins if api && !@white_ip.interfaces.include?(WhiteIp::API)
+        uncommit_and_notify_admins if api_interface?(@white_ip)
+        uncommit_and_notify_admins if previously_api && !api_interface?(@white_ip)
         render_success(data: { ip: { id: @white_ip.id } })
       end
 
@@ -58,11 +58,15 @@ module Repp
           return
         end
 
-        notify_admins(ip: ip, action: 'deleted') if ip.interfaces.include?(WhiteIp::API)
+        uncommit_and_notify_admins(ip: ip, action: 'deleted') if ip.interfaces.include?(WhiteIp::API)
         render_success
       end
 
       private
+
+      def api_interface?(ip)
+        ip.interfaces.include? WhiteIp::API
+      end
 
       def find_white_ip
         @white_ip = current_user.registrar.white_ips.find(params[:id])
@@ -72,7 +76,8 @@ module Repp
         params.require(:white_ip).permit(:address, interfaces: [])
       end
 
-      def notify_admins(ip: @white_ip, action: 'updated')
+      def uncommit_and_notify_admins(ip: @white_ip, action: 'updated')
+        @white_ip.update(committed: false) if action == 'updated'
         admin_users_emails = User.admin.pluck(:email).reject(&:blank?)
 
         return if admin_users_emails.empty?

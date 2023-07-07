@@ -1,0 +1,32 @@
+Tere,
+
+Anname teada, et Teie konto juurde kuuluv lubatud IP-aadress on edukalt aktiveeritud.
+
+IP-aadressi andmed:
+- IP-aadress: <%= @white_ip.ipv4.presence || @white_ip.ipv6 %>
+- Liidesed: <%= @white_ip.interfaces.join(', ') %>
+
+Kõik päringud, mis algavad IP-aadressist <%= @white_ip.ipv4.presence || @white_ip.ipv6 %>, saavad meie süsteemis piiranguteta juurdepääsu.
+Palun veenduge, et hoiaksite selle IP-aadressi turvalisust ja konfidentsiaalsust, et vältida volitamata juurdepääsu.
+
+Kui Teil on küsimusi seoses Teie lubatud IP-aadressi aktiveerimisega, võtke meiega ühendust.
+
+Parimate soovidega,
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+---
+
+Hi,
+
+We would like to inform you that the whitelisted IP address associated with your account has been successfully activated.
+
+IP address Details:
+- IP address: <%= @white_ip.ipv4.presence || @white_ip.ipv6 %>
+- Interfaces: <%= @white_ip.interfaces.join(', ') %>
+
+All requests originating from the IP address <%= @white_ip.ipv4.presence || @white_ip.ipv6 %> will now have unrestricted access to our system.
+Please ensure the security and confidentiality of this IP address to prevent unauthorized access.
+
+If you have any questions regarding the activation of your whitelisted IP address, please contact us.
+
+Best regards,
+<%= render 'mailers/shared/signatures/signature.en.html' %>

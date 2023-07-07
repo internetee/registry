@@ -174,7 +174,7 @@ module Repp
       end
 
       def serialized_ips(ips)
-        ips.as_json(only: %i[id ipv4 ipv6 interfaces])
+        ips.as_json(only: %i[id ipv4 ipv6 interfaces committed])
       end
     end
   end

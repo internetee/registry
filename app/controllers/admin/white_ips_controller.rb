@@ -36,7 +36,11 @@ module Admin
     end
 
     def update
+      previously_committed = @white_ip.committed
+
       if @white_ip.update(white_ip_params)
+        notify_registrar if !previously_committed && @white_ip.committed
+
         flash[:notice] = I18n.t('record_updated')
         redirect_to [:admin, @registrar, @white_ip]
       else
@@ -52,7 +56,14 @@ module Admin
     end
 
     def white_ip_params
-      params.require(:white_ip).permit(:ipv4, :ipv6, :registrar_id, { interfaces: [] })
+      params.require(:white_ip).permit(:ipv4, :ipv6, :registrar_id, :committed, { interfaces: [] })
+    end
+
+    def notify_registrar
+      email = @white_ip.registrar.email
+
+      WhiteIpMailer.committed(email: email, ip: @white_ip)
+                   .deliver_now
     end
   end
 end
