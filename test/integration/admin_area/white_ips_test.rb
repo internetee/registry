@@ -46,7 +46,7 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
 
     fill_in 'IPv4', with: '127.0.0.2'
     find(:css, '#white_ip_interfaces_api').set(false)
-    find(:css, '#white_ip_committed').set(false)
+    find(:css, '#white_ip_committed').set(true)
     click_on 'Save'
 
     assert_text 'Record updated'
