@@ -1,6 +1,7 @@
 <p>This email is to inform you about an API Whitelisted IP address change by Registrar Portal API user. Please review the details below:</p>
 
 <ul>
+  <li>Registrar: <%= @api_user.registrar.name %></li>
   <li>API User: <%= @api_user.username  %></li>
   <li>IP Address: <%= @white_ip.ipv4.presence || @white_ip.ipv6 %></li>
   <li>Interface: <%= @white_ip.interfaces.join(', ') %></li>

@@ -16,7 +16,7 @@ class ReppV1ApiWhiteIpsUpdateTest < ActionDispatch::IntegrationTest
   def test_updates_white_ip
     request_body = {
       white_ip: {
-        address: '127.0.0.1',
+        address: '127.0.0.2',
       },
     }
 
@@ -28,7 +28,11 @@ class ReppV1ApiWhiteIpsUpdateTest < ActionDispatch::IntegrationTest
     assert_equal 'Command completed successfully', json[:message]
 
     ip = WhiteIp.find(json[:data][:ip][:id])
-    assert_equal ip.ipv4, @white_ip.ipv4
+    assert_equal ip.ipv4, '127.0.0.2'
+    refute ip.committed
+
+    last_email = ActionMailer::Base.deliveries.last
+    assert last_email.subject.include?('Whitelisted IP Address Change Notification')
   end
 
   def test_returns_error_if_ipv4_wrong_format

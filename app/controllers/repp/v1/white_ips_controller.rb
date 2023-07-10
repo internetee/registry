@@ -58,7 +58,7 @@ module Repp
           return
         end
 
-        uncommit_and_notify_admins(ip: ip, action: 'deleted') if ip.interfaces.include?(WhiteIp::API)
+        uncommit_and_notify_admins(ip: ip, action: 'deleted') if api_interface?(ip)
         render_success
       end
 
