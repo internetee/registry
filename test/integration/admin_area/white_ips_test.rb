@@ -41,12 +41,19 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
   end
 
   def test_update_whitelisted_ip
-    @white_ip.update!(committed: false)
     visit_info_whitelisted_ip_page
     click_on 'Edit'
 
     fill_in 'IPv4', with: '127.0.0.2'
     find(:css, '#white_ip_interfaces_api').set(false)
+    find(:css, '#white_ip_committed').set(false)
+    click_on 'Save'
+
+    assert_text 'Record updated'
+    refute @white_ip.committed
+
+    click_on 'Edit'
+
     find(:css, '#white_ip_committed').set(true)
     click_on 'Save'
 
