@@ -4714,14 +4714,6 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 
 CREATE INDEX index_whois_records_on_domain_id ON public.whois_records USING btree (domain_id);
 
-
---
--- Name: index_whois_records_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_whois_records_on_name ON public.whois_records USING btree (name);
-
-
 --
 -- Name: index_whois_records_on_registrar_id; Type: INDEX; Schema: public; Owner: -
 --
