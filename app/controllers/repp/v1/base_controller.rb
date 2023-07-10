@@ -122,13 +122,9 @@ module Repp
       end
 
       def check_ip_restriction
-        if webclient_request?
-          ip = request.headers['X-Client-IP']
-          return if registrar_ip_white?(ip)
-        else
-          ip = request.ip
-          return if @current_user.registrar.api_ip_white?(ip)
-        end
+        ip = webclient_request? ? request.headers['X-Client-IP'] : request.ip
+        return if registrar_ip_white?(ip) && webclient_request?
+        return if api_ip_white?(ip) && !webclient_request?
 
         render_unauthorized_response(ip)
       end
@@ -137,6 +133,10 @@ module Repp
         return true unless ip
 
         @current_user.registrar.registrar_ip_white?(ip)
+      end
+
+      def api_ip_white?(ip)
+        @current_user.registrar.api_ip_white?(ip)
       end
 
       def render_unauthorized_response(ip)
