@@ -33,10 +33,14 @@ Rails.application.load_tasks
 ActiveJob::Base.queue_adapter = :test
 
 class CompanyRegisterClientStub
-  Company = Struct.new(:registration_number, :company_name)
+  Company = Struct.new(:registration_number, :company_name, :status)
 
   def representation_rights(citizen_personal_code:, citizen_country_code:)
     [Company.new('1234567', 'ACME Ltd')]
+  end
+
+  def company_details(registration_number:)
+    [Company.new('1234567', 'ACME Ltd', 'R')]
   end
 end
 
