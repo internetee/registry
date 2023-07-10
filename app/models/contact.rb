@@ -8,6 +8,7 @@ class Contact < ApplicationRecord
   include Contact::Transferable
   include Contact::Identical
   include Contact::Archivable
+  include Contact::CompanyRegister
   include EmailVerifable
 
   belongs_to :original, class_name: 'Contact'
