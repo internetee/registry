@@ -122,20 +122,25 @@ module Repp
       end
 
       def check_ip_restriction
-        return if webclient_request? && registrar_ip_white?
-        return if !webclient_request? && @current_user.registrar.api_ip_white?(request.ip)
+        if webclient_request?
+          ip = request.headers['X-Client-IP']
+          return if registrar_ip_white?(ip)
+        else
+          ip = request.ip
+          return if @current_user.registrar.api_ip_white?(ip)
+        end
 
-        render_unauthorized_response
+        render_unauthorized_response(ip)
       end
 
-      def registrar_ip_white?
-        return true unless request.headers['X-Client-IP']
+      def registrar_ip_white?(ip)
+        return true unless ip
 
-        @current_user.registrar.registrar_ip_white?(request.headers['X-Client-IP'])
+        @current_user.registrar.registrar_ip_white?(ip)
       end
 
-      def render_unauthorized_response
-        @response = { code: 2202, message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip) }
+      def render_unauthorized_response(ip)
+        @response = { code: 2202, message: I18n.t('registrar.authorization.ip_not_allowed', ip: ip) }
         render json: @response, status: :unauthorized
       end
 
