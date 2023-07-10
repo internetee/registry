@@ -122,12 +122,16 @@ module Repp
       end
 
       def check_ip_restriction
-        return if webclient_request?
-        return if @current_user.registrar.api_ip_white?(request.ip)
+        return if webclient_request? && registrar_ip_white?
+        return if !webclient_request? && @current_user.registrar.api_ip_white?(request.ip)
 
-        @response = { code: 2202,
-                      message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip) }
-        render(json: @response, status: :unauthorized)
+        render_unauthorized_response
+      end
+
+      def registrar_ip_white?
+        return true unless request.headers['X-Client-IP']
+
+        @current_user.registrar.registrar_ip_white?(request.headers['X-Client-IP'])
       end
 
       def render_unauthorized_response
@@ -138,7 +142,11 @@ module Repp
       def webclient_request?
         return false if Rails.env.test? || Rails.env.development?
 
-        ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
+        webclient_ips.include?(request.ip)
+      end
+
+      def webclient_ips
+        ENV['webclient_ips'].to_s.split(',').map(&:strip)
       end
 
       def validate_webclient_ca

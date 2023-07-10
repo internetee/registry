@@ -311,6 +311,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.2)
     minitest (5.18.1)
+    minitest-stub_any_instance (1.0.3)
     monetize (1.9.4)
       money (~> 6.12)
     money (6.13.8)
@@ -571,6 +572,7 @@ DEPENDENCIES
   mime-types-data
   mimemagic (= 0.4.3)
   minitest (~> 5.17)
+  minitest-stub_any_instance
   money-rails
   newrelic-infinite_tracing
   newrelic_rpm
@@ -606,4 +608,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.6.1)
 
 BUNDLED WITH
-   2.4.13
+   2.4.14

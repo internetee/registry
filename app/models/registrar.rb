@@ -200,6 +200,12 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
     white_ips.api.include_ip?(ip)
   end
 
+  def registrar_ip_white?(ip)
+    return true unless Setting.registrar_ip_whitelist_enabled
+
+    white_ips.registrar_area.include_ip?(ip)
+  end
+
   def accredited?
     api_users.any? do |a|
       return true unless a.accreditation_date.nil?
