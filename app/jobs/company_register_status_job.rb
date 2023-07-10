@@ -7,6 +7,9 @@ class CompanyRegisterStatusJob < ApplicationJob
     company_status = contact.return_company_status
     return if company_status == Contact::REGISTERED || company_status == Contact::LIQUIDATED
 
+
+    # TODO:
+    # Need search only registrants!!!
     contacts = Contact.where(ident_type: 'org')
                 .where('checked_company_at IS NULL OR checked_company_at <= ?', days_interval.days.ago)
 
