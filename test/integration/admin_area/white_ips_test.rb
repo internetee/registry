@@ -41,6 +41,7 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
   end
 
   def test_update_whitelisted_ip
+    @white_ip.update!(committed: false)
     visit_info_whitelisted_ip_page
     click_on 'Edit'
 
@@ -50,6 +51,8 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
     click_on 'Save'
 
     assert_text 'Record updated'
+    assert @white_ip.committed
+
     last_email = ActionMailer::Base.deliveries.last
     assert last_email.subject.include?('Whitelisted IP Address Activation Confirmation')
     assert_equal last_email.to, @registrar.email
