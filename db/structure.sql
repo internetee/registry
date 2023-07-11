@@ -686,7 +686,8 @@ CREATE TABLE public.contacts (
     disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     email_history character varying,
     registrant_publishable boolean DEFAULT false,
-    checked_company_at timestamp without time zone
+    checked_company_at timestamp without time zone,
+    company_register_status character varying
 );
 
 
@@ -4714,6 +4715,7 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 
 CREATE INDEX index_whois_records_on_domain_id ON public.whois_records USING btree (domain_id);
 
+
 --
 -- Name: index_whois_records_on_registrar_id; Type: INDEX; Schema: public; Owner: -
 --
@@ -5470,4 +5472,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230612094319'),
 ('20230612094326'),
 ('20230612094335'),
-('20230710120154');
+('20230710120154'),
+('20230711083811');
+
