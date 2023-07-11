@@ -6,19 +6,19 @@ module Contact::CompanyRegister
     'l' => 'liquidated',
     'n' => 'bankrupt',
     'k' => 'deleted',
-}.freeze
+  }.freeze
 
-  REGISTERED = 'registered'
-  LIQUIDATED = 'liquidated'
-  BANKRUPT = 'bankrupt'
-  DELETED = 'deleted'
+  REGISTERED = 'registered'.freeze
+  LIQUIDATED = 'liquidated'.freeze
+  BANKRUPT = 'bankrupt'.freeze
+  DELETED = 'deleted'.freeze
 
   def company_is_relevant?
     company_register_status == REGISTERED && company_register_status == LIQUIDATED
   end
 
   def return_company_status
-    return unless return_company_data.present?
+    return if return_company_data.blank?
 
     status = return_company_data.first[:status].downcase
     COMPANY_STATUSES[status]
