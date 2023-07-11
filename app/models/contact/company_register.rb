@@ -10,6 +10,12 @@ module Contact::CompanyRegister
 
   REGISTERED = 'registered'
   LIQUIDATED = 'liquidated'
+  BANKRUPT = 'bankrupt'
+  DELETED = 'deleted'
+
+  def company_is_relevant?
+    company_register_status == REGISTERED && company_register_status == LIQUIDATED
+  end
 
   def return_company_status
     return unless return_company_data.present?
