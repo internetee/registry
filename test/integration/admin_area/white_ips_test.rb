@@ -46,9 +46,21 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
 
     fill_in 'IPv4', with: '127.0.0.2'
     find(:css, '#white_ip_interfaces_api').set(false)
+    find(:css, '#white_ip_committed').set(false)
     click_on 'Save'
 
     assert_text 'Record updated'
+
+    click_on 'Edit'
+
+    find(:css, '#white_ip_interfaces_api').set(false)
+    find(:css, '#white_ip_committed').set(true)
+    click_on 'Save'
+
+    assert_text 'Record updated'
+    last_email = ActionMailer::Base.deliveries.last
+    assert last_email.subject.include?('Whitelisted IP Address Activation Confirmation')
+    assert last_email.to.include?(@registrar.email)
   end
 
   def test_failed_to_update_whitelisted_ip
