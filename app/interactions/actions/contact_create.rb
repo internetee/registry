@@ -82,7 +82,7 @@ module Actions
       return true unless contact.org?
 
       company_status = contact.return_company_status
-      return if company_status == Contact::REGISTERED || company_status == Contact::LIQUIDATED
+      return if [Contact::REGISTERED, Contact::LIQUIDATED].include? company_status
 
       contact.add_epp_error('2003', nil, 'ident', I18n.t('errors.messages.company_not_registered'))
       @error = true

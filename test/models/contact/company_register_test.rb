@@ -10,7 +10,18 @@ class CompanyRegisterTest < ActiveSupport::TestCase
   end
 
   def test_return_company_status
+    original_new_method = CompanyRegister::Client.method(:new)
+    CompanyRegister::Client.define_singleton_method(:new) do
+      object = original_new_method.call
+      def object.company_details(registration_number:)
+        [Company.new('1234567', 'ACME Ltd', 'R')]
+      end
+      object
+    end
+
     assert_equal 'registered', @acme_ltd.return_company_status
+
+    CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end
 
   def test_return_company_data
