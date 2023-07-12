@@ -26,6 +26,12 @@
           .col-md-7
             = f.check_box :interfaces, { multiple: true }, x, nil
       = hidden_field_tag "white_ip[interfaces][]", nil
+      .form-group 
+        .col-md-4.control-label
+          = f.label :committed
+        .col-md-7
+          = f.check_box :committed
+
   %hr
   .row
     .col-md-8.text-right

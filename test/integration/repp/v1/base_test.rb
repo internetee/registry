@@ -51,13 +51,39 @@ class ReppV1BaseTest < ActionDispatch::IntegrationTest
     whiteip.update(ipv4: '1.1.1.1')
 
     get repp_v1_contacts_path, headers: @auth_headers
+
+    assert_unauthorized_ip
+
+    Setting.api_ip_whitelist_enabled = false
+    Setting.registrar_ip_whitelist_enabled = false
+  end
+
+  def test_takes_ip_whitelist_into_account_if_webclient_request
+    Setting.api_ip_whitelist_enabled = true
+    Setting.registrar_ip_whitelist_enabled = true
+
+    whiteip = white_ips(:one)
+    whiteip.update(interfaces: ['api'])
+
+    Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
+        get repp_v1_contacts_path, headers: @auth_headers.merge!({ 'X-Client-IP' => whiteip.ipv4 })
+      end
+    end
+
+    assert_unauthorized_ip
+
+    Setting.api_ip_whitelist_enabled = false
+    Setting.registrar_ip_whitelist_enabled = false
+  end
+
+  private
+
+  def assert_unauthorized_ip
     response_json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :unauthorized
     assert_equal 2202, response_json[:code]
     assert response_json[:message].include? 'Access denied from IP'
-
-    Setting.api_ip_whitelist_enabled = false
-    Setting.registrar_ip_whitelist_enabled = false
   end
 end

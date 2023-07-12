@@ -41,7 +41,7 @@ module Admin
     def sign
       if @certificate.sign!(password: certificate_params[:password])
         flash[:notice] = I18n.t('record_updated')
-        notify_api_user
+        notify_registrar
         redirect_to [:admin, @api_user, @certificate]
       else
         flash.now[:alert] = I18n.t('failed_to_update_record')
@@ -88,10 +88,10 @@ module Admin
       end
     end
 
-    def notify_api_user
-      api_user_email = @api_user.registrar.email
+    def notify_registrar
+      email = @api_user.registrar.email
 
-      CertificateMailer.signed(email: api_user_email, api_user: @api_user,
+      CertificateMailer.signed(email: email, api_user: @api_user,
                                crt: OpenSSL::X509::Certificate.new(@certificate.crt))
                        .deliver_now
     end

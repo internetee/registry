@@ -21,6 +21,9 @@ class ReppV1WhiteIpsDeleteTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
     refute WhiteIp.exists?(ip.id)
+
+    last_email = ActionMailer::Base.deliveries.last
+    assert last_email.subject.include?('Whitelisted IP Address Removal Notification')
   end
 
   def test_returns_error_response_if_throttled

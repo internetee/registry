@@ -1,6 +1,7 @@
 module Admin
   class BaseController < ApplicationController
     before_action :authenticate_admin_user!
+    before_action :set_locale
     helper_method :head_title_sufix
     before_action :set_paper_trail_whodunnit
 
@@ -32,6 +33,10 @@ module Admin
                     type: "#{Mime[:csv]}; charset=utf-8"
         end
       end
+    end
+
+    def set_locale
+      I18n.locale = params[:locale] || I18n.default_locale
     end
   end
 end

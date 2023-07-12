@@ -2,17 +2,15 @@ module Admin
   class WhiteIpsController < BaseController
     load_and_authorize_resource
 
-    before_action :set_registrar, only: [:new, :show, :edit, :destroy, :update]
+    before_action :set_registrar, only: %i[new show edit destroy update]
 
     def new
       @white_ip = WhiteIp.new(registrar: @registrar)
     end
 
-    def show;
-    end
+    def show; end
 
-    def edit;
-    end
+    def edit; end
 
     def destroy
       if @white_ip.destroy
@@ -38,7 +36,11 @@ module Admin
     end
 
     def update
+      previously_committed = @white_ip.committed
+
       if @white_ip.update(white_ip_params)
+        notify_registrar if !previously_committed && @white_ip.committed
+
         flash[:notice] = I18n.t('record_updated')
         redirect_to [:admin, @registrar, @white_ip]
       else
@@ -54,7 +56,14 @@ module Admin
     end
 
     def white_ip_params
-      params.require(:white_ip).permit(:ipv4, :ipv6, :registrar_id, { interfaces: [] })
+      params.require(:white_ip).permit(:ipv4, :ipv6, :registrar_id, :committed, { interfaces: [] })
+    end
+
+    def notify_registrar
+      email = @white_ip.registrar.email
+
+      WhiteIpMailer.committed(email: email, ip: @white_ip)
+                   .deliver_now
     end
   end
 end

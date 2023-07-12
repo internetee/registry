@@ -2,6 +2,14 @@ et:
   username: 'Kasutajanimi'
   password: 'Parool'
 
+  time:
+    formats:
+      default: "%Y-%m-%d %H:%M"
+      long: "%A, %e. %B %Y, %H:%M"
+      short: "%d.%m.%y, %H:%M"
+      date: "%Y-%m-%d"
+      date_long: "%d. %B %Y"
+      filename: "%Y-%m-%d_%H.%M"
   date:
     month_names:
       [~, Jaanuar, Veebruar, Märts, April, Mai, Juuni, Juuli, August, September, Oktoober, November, Detsember]
@@ -17,3 +25,18 @@ et:
   you_have_a_new_invoice: 'Teil on uus arve.'
   monthly_invoice: "Siit tuleb aruanne möödunud kuul ettemaksukontoga seotud tasuliste toimingutega."
   sincerely: 'Lugupidamisega'
+
+  activerecord:
+    errors:
+      models:
+        white_ip:
+          attributes:
+            base:
+              address_invalid: 'IP-aadress on vale'
+              ipv4_or_ipv6_must_be_present: 'Peab olema vähemalt üks IPv4 või IPv6'
+              ip_must_be_one: 'Palun sisestage ainult üks IP-aadress'
+              ip_limit_exceeded: 'IP-aadressi piirang ületatud. Kokku aadresse: %{total}. Limiit: %{limit}.'
+            ipv4:
+              taken: 'on juba lisatud'
+            ipv6:
+              taken: 'on juba lisatud'

@@ -8,7 +8,7 @@ class ReppV1RegistrarAuthCheckInfoTest < ActionDispatch::IntegrationTest
 
     @auth_headers = { 'Authorization' => token }
 
-    adapter = ENV["shunter_default_adapter"].constantize.new
+    adapter = ENV['shunter_default_adapter'].constantize.new
     adapter&.clear!
   end
 
@@ -40,8 +40,8 @@ class ReppV1RegistrarAuthCheckInfoTest < ActionDispatch::IntegrationTest
   end
 
   def test_returns_error_response_if_throttled
-    ENV["shunter_default_threshold"] = '1'
-    ENV["shunter_enabled"] = 'true'
+    ENV['shunter_default_threshold'] = '1'
+    ENV['shunter_enabled'] = 'true'
 
     get '/repp/v1/registrar/auth', headers: @auth_headers
     get '/repp/v1/registrar/auth', headers: @auth_headers
@@ -50,7 +50,7 @@ class ReppV1RegistrarAuthCheckInfoTest < ActionDispatch::IntegrationTest
     assert_response :bad_request
     assert_equal json[:code], 2502
     assert response.body.include?(Shunter.default_error_message)
-    ENV["shunter_default_threshold"] = '10000'
-    ENV["shunter_enabled"] = 'false'
+    ENV['shunter_default_threshold'] = '10000'
+    ENV['shunter_enabled'] = 'false'
   end
 end

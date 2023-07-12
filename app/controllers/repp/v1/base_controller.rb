@@ -5,6 +5,7 @@ module Repp
 
       around_action :log_request
       before_action :authenticate_user
+      before_action :set_locale
       before_action :validate_webclient_ca
       before_action :validate_client_certs
       before_action :check_ip_restriction
@@ -121,18 +122,36 @@ module Repp
       end
 
       def check_ip_restriction
-        return if webclient_request?
-        return if @current_user.registrar.api_ip_white?(request.ip)
+        ip = webclient_request? ? request.headers['X-Client-IP'] : request.ip
+        return if registrar_ip_white?(ip) && webclient_request?
+        return if api_ip_white?(ip) && !webclient_request?
 
-        @response = { code: 2202,
-                      message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip) }
-        render(json: @response, status: :unauthorized)
+        render_unauthorized_response(ip)
+      end
+
+      def registrar_ip_white?(ip)
+        return true unless ip
+
+        @current_user.registrar.registrar_ip_white?(ip)
+      end
+
+      def api_ip_white?(ip)
+        @current_user.registrar.api_ip_white?(ip)
+      end
+
+      def render_unauthorized_response(ip)
+        @response = { code: 2202, message: I18n.t('registrar.authorization.ip_not_allowed', ip: ip) }
+        render json: @response, status: :unauthorized
       end
 
       def webclient_request?
         return false if Rails.env.test? || Rails.env.development?
 
-        ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
+        webclient_ips.include?(request.ip)
+      end
+
+      def webclient_ips
+        ENV['webclient_ips'].to_s.split(',').map(&:strip)
       end
 
       def validate_webclient_ca
@@ -143,8 +162,7 @@ module Repp
         webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
         return if request_name == webclient_cn
 
-        @response = { code: 2202,
-                      message: I18n.t('registrar.authorization.ip_not_allowed', ip: request.ip) }
+        @response = { code: 2202, message: 'Invalid webclient certificate' }
 
         render(json: @response, status: :unauthorized)
       end
@@ -175,6 +193,10 @@ module Repp
       def throttled_user
         authorize!(:throttled_user, @domain) unless current_user || action_name == 'tara_callback'
         current_user
+      end
+
+      def set_locale
+        I18n.locale = current_user&.try(:locale) || params[:locale] || I18n.default_locale
       end
     end
   end

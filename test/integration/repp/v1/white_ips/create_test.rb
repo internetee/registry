@@ -15,9 +15,8 @@ class ReppV1WhiteIpsCreateTest < ActionDispatch::IntegrationTest
   def test_creates_new_white_ip
     request_body = {
       white_ip: {
-        ipv4: '127.0.0.1',
-        ipv6: '',
-        interfaces: ['API'],
+        address: '127.1.1.1',
+        interfaces: ['api'],
       },
     }
 
@@ -31,15 +30,42 @@ class ReppV1WhiteIpsCreateTest < ActionDispatch::IntegrationTest
     white_ip = WhiteIp.find(json[:data][:ip][:id])
     assert white_ip.present?
 
-    assert_equal(request_body[:white_ip][:ipv4], white_ip.ipv4)
+    assert_equal(request_body[:white_ip][:address], white_ip.ipv4)
+    refute white_ip.committed
+
+    last_email = ActionMailer::Base.deliveries.last
+    assert last_email.subject.include?('Whitelisted IP Address Change Notification')
+  end
+
+  def test_creates_new_white_ip_with_registrar_interface
+    request_body = {
+      white_ip: {
+        address: '127.1.1.1',
+        interfaces: ['registrar'],
+      },
+    }
+
+    post '/repp/v1/white_ips', headers: @auth_headers, params: request_body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+
+    white_ip = WhiteIp.find(json[:data][:ip][:id])
+    assert white_ip.present?
+
+    assert_equal(request_body[:white_ip][:address], white_ip.ipv4)
+    assert white_ip.committed
+
+    refute ActionMailer::Base.deliveries.last
   end
 
   def test_validates_ip_max_count
     request_body = {
       white_ip: {
-        ipv4: '',
-        ipv6: '2001:db8::/120',
-        interfaces: ['API'],
+        address: '2001:db8::/120',
+        interfaces: ['api'],
       },
     }
 
@@ -56,9 +82,8 @@ class ReppV1WhiteIpsCreateTest < ActionDispatch::IntegrationTest
 
     request_body = {
       white_ip: {
-        ipv4: '127.0.0.1',
-        ipv6: '',
-        interfaces: ['API'],
+        address: '127.0.0.1',
+        interfaces: ['api'],
       },
     }
 

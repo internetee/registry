@@ -19,6 +19,7 @@ require 'webmock/minitest'
 require 'support/assertions/epp_assertions'
 require 'sidekiq/testing'
 require 'spy/integration'
+require 'minitest/stub_any_instance'
 
 Sidekiq::Testing.fake!
 

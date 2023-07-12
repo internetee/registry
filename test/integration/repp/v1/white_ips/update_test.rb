@@ -16,7 +16,7 @@ class ReppV1ApiWhiteIpsUpdateTest < ActionDispatch::IntegrationTest
   def test_updates_white_ip
     request_body = {
       white_ip: {
-        ipv4: '127.0.0.1',
+        address: '127.0.0.2',
       },
     }
 
@@ -28,13 +28,17 @@ class ReppV1ApiWhiteIpsUpdateTest < ActionDispatch::IntegrationTest
     assert_equal 'Command completed successfully', json[:message]
 
     ip = WhiteIp.find(json[:data][:ip][:id])
-    assert_equal ip.ipv4, @white_ip.ipv4
+    assert_equal ip.ipv4, '127.0.0.2'
+    refute ip.committed
+
+    last_email = ActionMailer::Base.deliveries.last
+    assert last_email.subject.include?('Whitelisted IP Address Change Notification')
   end
 
   def test_returns_error_if_ipv4_wrong_format
     request_body = {
       white_ip: {
-        ipv4: 'wrongip',
+        address: 'wrongip',
       },
     }
 
@@ -42,21 +46,7 @@ class ReppV1ApiWhiteIpsUpdateTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :bad_request
-    assert json[:message].include? 'IPv4 is invalid'
-  end
-
-  def test_returns_error_if_both_ips
-    request_body = {
-      white_ip: {
-        ipv6: '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
-      },
-    }
-
-    put "/repp/v1/white_ips/#{@white_ip.id}", headers: @auth_headers, params: request_body
-    json = JSON.parse(response.body, symbolize_names: true)
-
-    assert_response :bad_request
-    assert json[:message].include? 'Please enter only one IP address'
+    assert json[:message].include? 'Address is invalid'
   end
 
   def test_returns_error_response_if_throttled
@@ -65,7 +55,7 @@ class ReppV1ApiWhiteIpsUpdateTest < ActionDispatch::IntegrationTest
 
     request_body = {
       white_ip: {
-        ipv4: '127.0.0.1',
+        address: '127.0.0.1',
       },
     }
 

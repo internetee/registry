@@ -9,6 +9,7 @@
                 <th class="col-xs-4"><%= WhiteIp.human_attribute_name :ipv4 %></th>
                 <th class="col-xs-6"><%= WhiteIp.human_attribute_name :ipv6 %></th>
                 <th class="col-xs-2"><%= WhiteIp.human_attribute_name :interfaces %></th>
+                <th class="col-xs-2"><%= WhiteIp.human_attribute_name :committed %></th>
             </tr>
         </thead>
 
@@ -26,6 +27,7 @@
                         <% end %>
                     </td>
                     <td><%= white_ip.interfaces.join(', ').upcase %></td>
+                    <td class="text-right"><%= white_ip.committed %></td>
                 </tr>
             <% end %>
         </tbody>
