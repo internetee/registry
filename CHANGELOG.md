@@ -1,3 +1,6 @@
+12.07.2023
+* REPP API endpoint for IP address checking https://github.com/internetee/registry/pull/2597
+
 03.07.2023
 * REPP API endpoint for csr upload and cert download https://github.com/internetee/registry/pull/2589
 
