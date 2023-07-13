@@ -39,7 +39,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     assert_nil @registrant_jack.checked_company_at
     assert_nil @registrant_jack.company_register_status
 
-    CompanyRegisterStatusJob.perform_now
+    CompanyRegisterStatusJob.perform_now(14, 0, 100, true)
 
     @registrant_acme.reload && @registrant_jack.reload
 
@@ -69,7 +69,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     @registrant_acme.reload && @registrant_jack.reload
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0)
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100, true)
 
     @registrant_acme.reload && @registrant_jack.reload
 
@@ -99,7 +99,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     @registrant_acme.reload && @registrant_jack.reload
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0)
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100, true)
 
     @registrant_acme.reload && @registrant_jack.reload
 
@@ -127,7 +127,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     @registrant_acme.reload && @registrant_jack.reload
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0)
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100, true)
 
     @registrant_acme.reload && @registrant_jack.reload
 
@@ -158,7 +158,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     @registrant_acme.reload && @registrant_jack.reload
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0)
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100, true)
 
     @registrant_acme.reload && @registrant_jack.reload
 
@@ -189,7 +189,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     @registrant_acme.update!(company_register_status: Contact::REGISTERED, checked_company_at: current_time - interval_days.days)
     @registrant_acme.reload && @registrant_jack.reload
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0)
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100, true)
 
     @registrant_acme.reload && @registrant_jack.reload
 
@@ -217,7 +217,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     @registrant_acme.update!(company_register_status: Contact::REGISTERED, checked_company_at: current_time - interval_days.days)
     @registrant_acme.reload && @registrant_jack.reload
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0)
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100, true)
 
     @registrant_acme.reload && @registrant_jack.reload
 
@@ -248,7 +248,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     @registrant_acme.update!(company_register_status: Contact::REGISTERED, checked_company_at: current_time - interval_days.days)
     @registrant_acme.reload && @registrant_jack.reload
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0)
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100, true)
 
     @registrant_acme.reload && @registrant_jack.reload
 
@@ -281,7 +281,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     @registrant_acme.update!(company_register_status: Contact::REGISTERED, checked_company_at: current_time - interval_days.days)
     @registrant_acme.reload && @registrant_jack.reload
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0)
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100, true)
 
     @registrant_acme.reload && @registrant_jack.reload
 
