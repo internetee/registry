@@ -1,7 +1,7 @@
 class CompanyRegisterStatusJob < ApplicationJob
   queue_as :default
 
-  def perform(days_interval = 14, spam_time_delay = 0.2, batch_size = 100)
+  def perform(days_interval = 14, spam_time_delay = 0.2, batch_size = 100, force_delete = false)
     sampling_registrant_contact(days_interval).find_in_batches(batch_size: batch_size) do |contacts|
       contacts.each do |contact|
         # avoid spamming company register
@@ -10,9 +10,13 @@ class CompanyRegisterStatusJob < ApplicationJob
         company_status = contact.return_company_status
         contact.update!(company_register_status: company_status, checked_company_at: Time.zone.now)
 
-        next unless [Contact::BANKRUPT, Contact::DELETED].include? company_status
+        next unless [Contact::BANKRUPT, Contact::DELETED, nil].include? company_status
 
-        schedule_force_delete(contact)
+        if force_delete
+          schedule_force_delete(contact)
+        else
+          generate_alert_list(contact, company_status)
+        end
       end
     end
   end
@@ -27,6 +31,12 @@ class CompanyRegisterStatusJob < ApplicationJob
               Contact::REGISTERED, days_interval.days.ago, Contact::LIQUIDATED, 1.day.ago)
   end
 
+  def generate_alert_list(contact, company_status)
+    File.open(Rails.root.join('contact_companies_alert_list.txt'), 'a') do |f|
+      f.puts "#{contact.name} - #{contact.ident} - #{company_status}"
+    end
+  end
+  
   def schedule_force_delete(contact)
     contact.domains.each do |domain|
       domain.schedule_force_delete(
