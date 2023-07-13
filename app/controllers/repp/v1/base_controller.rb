@@ -162,10 +162,7 @@ module Repp
       end
 
       def skip_webclient_user_cert_validation?
-        Rails.env.development? ||
-          Rails.env.test? ||
-          !webclient_request? ||
-          request.headers['Requester'] == 'tara'
+        !webclient_request? || request.headers['Requester'] == 'tara'
       end
 
       def auth_values_to_data(registrar:)
