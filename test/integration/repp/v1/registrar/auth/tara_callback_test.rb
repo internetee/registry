@@ -18,7 +18,12 @@ class ReppV1RegistrarAuthTaraCallbackTest < ActionDispatch::IntegrationTest
       },
     }
 
-    post '/repp/v1/registrar/auth/tara_callback', headers: @auth_headers, params: request_body
+    Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
+        post '/repp/v1/registrar/auth/tara_callback', headers: @auth_headers, params: request_body
+      end
+    end
+
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
@@ -38,6 +43,23 @@ class ReppV1RegistrarAuthTaraCallbackTest < ActionDispatch::IntegrationTest
     }
 
     post '/repp/v1/registrar/auth/tara_callback', headers: @auth_headers, params: request_body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :unauthorized
+    assert_equal 'No such user', json[:message]
+  end
+
+  def test_invalidates_user_if_not_webclient_request
+    request_body = {
+      auth: {
+        uid: 'EE1234',
+      },
+    }
+
+    Repp::V1::BaseController.stub_any_instance(:webclient_request?, false) do
+      post '/repp/v1/registrar/auth/tara_callback', headers: @auth_headers, params: request_body
+    end
+
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :unauthorized
