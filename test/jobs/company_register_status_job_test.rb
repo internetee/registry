@@ -292,4 +292,37 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     assert_equal @registrant_acme.registrar.notifications.count, 2
   end
+
+  def test_should_inform_contact_if_his_company_in_liquadation
+    original_new_method = CompanyRegister::Client.method(:new)
+    CompanyRegister::Client.define_singleton_method(:new) do
+      object = original_new_method.call
+      def object.company_details(registration_number:)
+        [Company.new('1234567', 'ACME Ltd', LIQUIDATED)]
+      end
+      object
+    end
+
+    ActionMailer::Base.deliveries.clear
+    assert_emails 0
+
+    interval_days = 5
+    current_time = Time.zone.now
+
+    @registrant_acme.update!(company_register_status: Contact::REGISTERED, checked_company_at: current_time - interval_days.days)
+    @registrant_acme.reload && @registrant_jack.reload
+
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100, true)
+
+    @registrant_acme.reload && @registrant_jack.reload
+
+    assert_equal Contact::LIQUIDATED, @registrant_acme.company_register_status
+    assert_equal current_time.to_date, @registrant_acme.checked_company_at.to_date
+
+    mail = ActionMailer::Base.deliveries.first
+    mail_html = Nokogiri::HTML(mail.html_part.body.decoded)
+    text = mail_html.css('p')[1].text
+
+    assert_equal text, "Eesti Interneti Sihtasutusele (EIS) on äriregistri vahendusel teatavaks saanud, et ettevõtte #{@registrant_jack.name} äriregistrikoodiga #{@registrant_jack.ident} suhtes käib likvideerimismenetlus. Tuletame teile meelde, et tulenevalt .ee domeenireeglitest peab domeeni registreerijaks olema eksisteeriv era- või juriidiline isik. Seega käivitame ettevõtte likvideerimise järel sellele kuuluvate registreeringute kustutusmenetluse. Kustutusmenetluse tulemusena eemaldatakse .ee domeeninimi registrist ning vabaneb kõigile soovijatele taaskord registreerimiseks."
+  end
 end
