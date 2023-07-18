@@ -10,6 +10,8 @@ class CompanyRegisterStatusJob < ApplicationJob
         company_status = contact.return_company_status
         contact.update!(company_register_status: company_status, checked_company_at: Time.zone.now)
 
+        ContactInformMailer.company_liquidation(contact: contact).deliver_now if company_status == Contact::LIQUIDATED
+
         next unless [Contact::BANKRUPT, Contact::DELETED, nil].include? company_status
 
         if force_delete
