@@ -9,6 +9,7 @@ module Repp
       before_action :set_locale
       before_action :validate_webclient_ca
       before_action :validate_api_user_cert
+      before_action :check_registrar_ip_restriction
       before_action :check_api_ip_restriction
       before_action :set_paper_trail_whodunnit
 

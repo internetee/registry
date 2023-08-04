@@ -67,7 +67,7 @@ class ReppV1BaseTest < ActionDispatch::IntegrationTest
 
     Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
       Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
-        get repp_v1_registrar_auth_index_path, headers: @auth_headers.merge!({ 'Request-IP' => whiteip.ipv4 })
+        get repp_v1_contacts_path, headers: @auth_headers.merge!({ 'Request-IP' => whiteip.ipv4 })
       end
     end
 

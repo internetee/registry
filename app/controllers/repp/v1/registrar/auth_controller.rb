@@ -2,9 +2,9 @@ module Repp
   module V1
     module Registrar
       class AuthController < BaseController
-        before_action :check_registrar_ip_restriction, only: :index
         before_action :validate_webclient_user_cert, only: :index
         skip_before_action :authenticate_user, only: :tara_callback
+        skip_before_action :check_registrar_ip_restriction, only: :tara_callback
         skip_before_action :check_api_ip_restriction, only: :tara_callback
         skip_before_action :validate_api_user_cert, only: :tara_callback
 

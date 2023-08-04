@@ -53,8 +53,8 @@ class ReppV1AccountsSwitchUserTest < ActionDispatch::IntegrationTest
   end
 
   def test_returns_error_response_if_throttled
-    ENV["shunter_default_threshold"] = '1'
-    ENV["shunter_enabled"] = 'true'
+    ENV['shunter_default_threshold'] = '1'
+    ENV['shunter_enabled'] = 'true'
 
     new_user = users(:api_goodnames)
     new_user.update(identity_code: '1234')
@@ -71,7 +71,7 @@ class ReppV1AccountsSwitchUserTest < ActionDispatch::IntegrationTest
     assert_response :bad_request
     assert_equal json[:code], 2502
     assert response.body.include?(Shunter.default_error_message)
-    ENV["shunter_default_threshold"] = '10000'
-    ENV["shunter_enabled"] = 'false'
+    ENV['shunter_default_threshold'] = '10000'
+    ENV['shunter_enabled'] = 'false'
   end
 end
