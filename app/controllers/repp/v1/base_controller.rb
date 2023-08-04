@@ -9,7 +9,7 @@ module Repp
       before_action :set_locale
       before_action :validate_webclient_ca
       before_action :validate_api_user_cert
-      before_action :check_ip_restriction
+      before_action :check_api_ip_restriction
       before_action :set_paper_trail_whodunnit
 
       private
@@ -87,22 +87,20 @@ module Repp
         render(json: @response, status: :unauthorized)
       end
 
-      def check_ip_restriction
-        ip = webclient_request? ? request.headers['Request-IP'] : request.ip
-        return if registrar_ip_white?(ip) && webclient_request?
-        return if api_ip_white?(ip) && !webclient_request?
+      def check_api_ip_restriction
+        return if webclient_request?
+        return if @current_user.registrar.api_ip_white?(request.ip)
+
+        render_unauthorized_ip_response(request.ip)
+      end
+
+      def check_registrar_ip_restriction
+        return unless webclient_request?
+
+        ip = request.headers['Request-IP']
+        return if @current_user.registrar.registrar_ip_white?(ip)
 
         render_unauthorized_ip_response(ip)
-      end
-
-      def registrar_ip_white?(ip)
-        return true unless ip
-
-        @current_user.registrar.registrar_ip_white?(ip)
-      end
-
-      def api_ip_white?(ip)
-        @current_user.registrar.api_ip_white?(ip)
       end
 
       def render_unauthorized_ip_response(ip)
@@ -162,7 +160,8 @@ module Repp
       end
 
       def skip_webclient_user_cert_validation?
-        !webclient_request? || request.headers['Requester'] == 'tara'
+        !webclient_request? || request.headers['Requester'] == 'tara' ||
+          Rails.env.development? || Rails.env.test?
       end
 
       def auth_values_to_data(registrar:)
