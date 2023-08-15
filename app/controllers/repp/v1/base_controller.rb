@@ -3,50 +3,17 @@ module Repp
     class BaseController < ActionController::API # rubocop:disable Metrics/ClassLength
       attr_reader :current_user
 
-      around_action :log_request
+      include ErrorAndLogHandler
+
       before_action :authenticate_user
       before_action :set_locale
       before_action :validate_webclient_ca
-      before_action :validate_client_certs
-      before_action :check_ip_restriction
+      before_action :validate_api_user_cert
+      before_action :check_registrar_ip_restriction
+      before_action :check_api_ip_restriction
       before_action :set_paper_trail_whodunnit
 
       private
-
-      def log_request
-        yield
-      rescue ActiveRecord::RecordNotFound
-        @response = { code: 2303, message: 'Object does not exist' }
-        render(json: @response, status: :not_found)
-      rescue ActionController::ParameterMissing, Apipie::ParamMissing => e
-        @response = { code: 2003, message: e.message.gsub(/\n/, '. ') }
-        render(json: @response, status: :bad_request)
-      rescue Apipie::ParamInvalid => e
-        @response = { code: 2005, message: e.message.gsub(/\n/, '. ') }
-        render(json: @response, status: :bad_request)
-      rescue CanCan::AccessDenied => e
-        @response = { code: 2201, message: 'Authorization error' }
-        logger.error e.to_s
-        render(json: @response, status: :unauthorized)
-      rescue Shunter::ThrottleError => e
-        @response = { code: 2502, message: Shunter.default_error_message }
-        logger.error e.to_s unless Rails.env.test?
-        render(json: @response, status: :bad_request)
-      ensure
-        create_repp_log
-      end
-
-      # rubocop:disable Metrics/AbcSize
-      def create_repp_log
-        ApiLog::ReppLog.create(
-          request_path: request.path, request_method: request.request_method,
-          request_params: request.params.except('route_info').to_json, uuid: request.try(:uuid),
-          response: @response.to_json, response_code: response.status, ip: request.ip,
-          api_user_name: current_user.try(:username),
-          api_user_registrar: current_user.try(:registrar).try(:to_s)
-        )
-      end
-      # rubocop:enable Metrics/AbcSize
 
       def set_domain
         registrar = current_user.registrar
@@ -121,25 +88,23 @@ module Repp
         render(json: @response, status: :unauthorized)
       end
 
-      def check_ip_restriction
-        ip = webclient_request? ? request.headers['X-Client-IP'] : request.ip
-        return if registrar_ip_white?(ip) && webclient_request?
-        return if api_ip_white?(ip) && !webclient_request?
+      def check_api_ip_restriction
+        return if webclient_request?
+        return if @current_user.registrar.api_ip_white?(request.ip)
 
-        render_unauthorized_response(ip)
+        render_unauthorized_ip_response(request.ip)
       end
 
-      def registrar_ip_white?(ip)
-        return true unless ip
+      def check_registrar_ip_restriction
+        return unless webclient_request?
 
-        @current_user.registrar.registrar_ip_white?(ip)
+        ip = request.headers['Request-IP']
+        return if @current_user.registrar.registrar_ip_white?(ip)
+
+        render_unauthorized_ip_response(ip)
       end
 
-      def api_ip_white?(ip)
-        @current_user.registrar.api_ip_white?(ip)
-      end
-
-      def render_unauthorized_response(ip)
+      def render_unauthorized_ip_response(ip)
         @response = { code: 2202, message: I18n.t('registrar.authorization.ip_not_allowed', ip: ip) }
         render json: @response, status: :unauthorized
       end
@@ -167,18 +132,37 @@ module Repp
         render(json: @response, status: :unauthorized)
       end
 
-      def validate_client_certs
+      def validate_api_user_cert
         return if Rails.env.development? || Rails.env.test?
         return if webclient_request?
-        return if @current_user.pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'],
-                                        request.env['HTTP_SSL_CLIENT_S_DN_CN'])
 
-        @response = { code: 2202, message: 'Invalid certificate' }
+        crt = request.env['HTTP_SSL_CLIENT_CERT']
+        com = request.env['HTTP_SSL_CLIENT_S_DN_CN']
+
+        return if @current_user.pki_ok?(crt, com)
+
+        render_invalid_cert_response
+      end
+
+      def validate_webclient_user_cert
+        return if skip_webclient_user_cert_validation?
+
+        crt = request.headers['User-Certificate']
+        com = request.headers['User-Certificate-CN']
+
+        return if @current_user.pki_ok?(crt, com, api: false)
+
+        render_invalid_cert_response
+      end
+
+      def render_invalid_cert_response
+        @response = { code: 2202, message: 'Invalid user certificate' }
         render(json: @response, status: :unauthorized)
       end
 
-      def logger
-        Rails.logger
+      def skip_webclient_user_cert_validation?
+        !webclient_request? || request.headers['Requester'] == 'tara' ||
+          Rails.env.development?
       end
 
       def auth_values_to_data(registrar:)

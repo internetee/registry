@@ -43,7 +43,7 @@ class ReppV1BaseTest < ActionDispatch::IntegrationTest
     assert_equal 'Invalid authorization information', response_json[:message]
   end
 
-  def test_takes_ip_whitelist_into_account
+  def test_takes_ip_whitelist_into_account_if_api_request
     Setting.api_ip_whitelist_enabled = true
     Setting.registrar_ip_whitelist_enabled = true
 
@@ -67,7 +67,7 @@ class ReppV1BaseTest < ActionDispatch::IntegrationTest
 
     Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
       Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
-        get repp_v1_contacts_path, headers: @auth_headers.merge!({ 'X-Client-IP' => whiteip.ipv4 })
+        get repp_v1_contacts_path, headers: @auth_headers.merge!({ 'Request-IP' => whiteip.ipv4 })
       end
     end
 
@@ -75,6 +75,43 @@ class ReppV1BaseTest < ActionDispatch::IntegrationTest
 
     Setting.api_ip_whitelist_enabled = false
     Setting.registrar_ip_whitelist_enabled = false
+  end
+
+  def test_validates_webclient_user_certificate_ok
+    cert = certificates(:registrar)
+    @auth_headers.merge!({ 'User-Certificate' => cert.crt, 'User-Certificate-CN' => cert.common_name })
+
+    Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
+        get repp_v1_registrar_auth_index_path, headers: @auth_headers
+      end
+    end
+
+    assert_response :ok
+  end
+
+  def test_validates_webclient_user_certificate_if_missing
+    Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
+        get repp_v1_registrar_auth_index_path, headers: @auth_headers
+      end
+    end
+
+    assert_unauthorized_user_cert
+  end
+
+  def test_validates_webclient_user_certificate_if_revoked
+    cert = certificates(:registrar)
+    cert.update(revoked: true)
+    @auth_headers.merge!({ 'User-Certificate' => cert.crt, 'User-Certificate-CN' => cert.common_name })
+
+    Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
+        get repp_v1_registrar_auth_index_path, headers: @auth_headers
+      end
+    end
+
+    assert_unauthorized_user_cert
   end
 
   private
@@ -85,5 +122,13 @@ class ReppV1BaseTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
     assert_equal 2202, response_json[:code]
     assert response_json[:message].include? 'Access denied from IP'
+  end
+
+  def assert_unauthorized_user_cert
+    response_json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :unauthorized
+    assert_equal 2202, response_json[:code]
+    assert response_json[:message].include? 'Invalid user certificate'
   end
 end
