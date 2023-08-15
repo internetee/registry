@@ -1,3 +1,6 @@
+15.08.2023
+* api user certificate validation improvements https://github.com/internetee/registry/pull/2602
+
 12.07.2023
 * Improved IP allow list management in admin https://github.com/internetee/registry/pull/2597
 
