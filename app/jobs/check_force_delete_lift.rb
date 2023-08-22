@@ -16,7 +16,7 @@ class CheckForceDeleteLift < ApplicationJob
   private
 
   def find_domains_to_lift_force_delete
-    Domain.where("'#{DomainStatus::FORCE_DELETE}' = ANY (statuses)")
+    Domain.where("'#{DomainStatus::FORCE_DELETE}' = ANY (statuses)").includes(:registrant, :contacts)
           .select { |d| d.registrant.need_to_lift_force_delete? && d.contacts.all?(&:need_to_lift_force_delete?) }
   end
 
