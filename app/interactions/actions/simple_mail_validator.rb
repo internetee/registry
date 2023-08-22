@@ -3,6 +3,10 @@ module Actions
     extend self
 
     def run(email:, level:)
+      local_part, domain = email.split('@')
+      decoded_domain = Addressable::IDNA.to_unicode(domain)
+      email = "#{local_part}@#{decoded_domain}"
+
       result = truemail_validate(email: email, level: level)
       result = validate_for_a_and_aaaa_records(email) if !result && level == :mx
       result
