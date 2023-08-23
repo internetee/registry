@@ -1,5 +1,6 @@
 23.08.2023
 * Fix for forceDeleteLift job https://github.com/internetee/registry/issues/2607
+* Punycode email support for EPP contact create and update API requests https://github.com/internetee/registry/pull/2609
 
 15.08.2023
 * api user certificate validation improvements https://github.com/internetee/registry/pull/2602
