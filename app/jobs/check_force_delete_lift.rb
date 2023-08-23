@@ -16,8 +16,8 @@ class CheckForceDeleteLift < ApplicationJob
   private
 
   def find_domains_to_lift_force_delete
-    Domain.where("'#{DomainStatus::FORCE_DELETE}' = ANY (statuses)")
-          .select { |d| d.registrant.need_to_lift_force_delete? }
+    Domain.where("'#{DomainStatus::FORCE_DELETE}' = ANY (statuses)").includes(:registrant, :contacts)
+          .select { |d| d.registrant.need_to_lift_force_delete? && d.contacts.all?(&:need_to_lift_force_delete?) }
   end
 
   def find_domains_to_process(domains)
@@ -33,22 +33,16 @@ class CheckForceDeleteLift < ApplicationJob
       event = registrant.validation_events.last
       next if event.blank?
 
-      domain_list(event).each { |d| refresh_status_notes(d, registrant) }
+      refresh_status_notes(domain, registrant)
     end
-  end
-
-  def domain_list(event)
-    domain_contacts = Contact.where(email: event.email).map(&:domain_contacts).flatten
-    registrant_ids = Registrant.where(email: event.email).pluck(:id)
-
-    (domain_contacts.map(&:domain).flatten + Domain.where(registrant_id: registrant_ids)).uniq
   end
 
   def refresh_status_notes(domain, registrant)
     return unless domain.status_notes[DomainStatus::FORCE_DELETE]
 
-    domain.status_notes[DomainStatus::FORCE_DELETE].slice!(registrant.email_history)
+    domain.status_notes[DomainStatus::FORCE_DELETE].slice!(registrant.email_history || '')
     domain.status_notes[DomainStatus::FORCE_DELETE].lstrip!
-    domain.save(validate: false)
+
+    domain.save(validate: false) if domain.changed?
   end
 end
