@@ -96,6 +96,13 @@ class EmailCheckTest < ActiveSupport::TestCase
     assert_equal contact_two.validation_events.count, 3
   end
 
+  def test_should_test_email_with_punnycode
+    email = "info@xn--energiathus-mfb.ee"
+    result = Actions::SimpleMailValidator.run(email: email, level: :mx)
+
+    assert result
+  end
+
   private
 
   def trumail_result

@@ -3,6 +3,8 @@ module Actions
     extend self
 
     def run(email:, level:)
+      email = decode_email_punycode(email)
+
       result = truemail_validate(email: email, level: level)
       result = validate_for_a_and_aaaa_records(email) if !result && level == :mx
       result
@@ -30,6 +32,12 @@ module Actions
       return if Rails.env.test?
 
       logger.info "Validated #{type} record for #{email}. Validation result - #{result}"
+    end
+
+    def decode_email_punycode(email)
+      local_part, domain = email.split('@')
+      decoded_domain = Addressable::IDNA.to_unicode(domain)
+      "#{local_part}@#{decoded_domain}"
     end
 
     def logger
