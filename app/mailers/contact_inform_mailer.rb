@@ -19,6 +19,13 @@ class ContactInformMailer < ApplicationMailer
     mail(to: contact.email, subject: subject)
   end
 
+  def company_liquidation(contact:)
+    @registrant = contact
+
+    subject = "Kas soovite oma .ee domeeni säilitada? / Do you wish to preserve your .ee registration?"
+    mail(to: contact.email, subject: subject)
+  end
+
   private
 
   def address_processing
