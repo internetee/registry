@@ -73,10 +73,10 @@ module Actions
         output_a_and_aaaa_validation_results(email: email, result: result_validation, type: 'AAAA')
       end
 
-      if result_validation.present?
-        result.success = true
-        result.errors.merge!({ mx: 'target host(s) not found, but was able to find A/AAAA records for domain'})
-      end
+      return if result_validation.blank?
+
+      result.success = true
+      result.errors.merge!({ mx: 'target host(s) not found, but was able to find A/AAAA records for domain' })
     end
 
     def handle_saving_result(contact, result)
