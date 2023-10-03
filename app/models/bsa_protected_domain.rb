@@ -1,0 +1,2 @@
+class BsaProtectedDomain < ApplicationRecord
+end
