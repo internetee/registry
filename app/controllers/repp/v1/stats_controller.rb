@@ -40,7 +40,7 @@ module Repp
       end
       # rubocop:enable Metrics/MethodLength
 
-      private
+      # private
 
       def search_params
         params.permit(:q, q: %i[start_date end_date compare_to_end_date compare_to_start_date])
@@ -102,6 +102,17 @@ module Repp
                .select("DISTINCT ON (object ->> 'name') object, created_at")
                .order(Arel.sql("object ->> 'name', created_at desc"))
       end
+
+      def log_domains2(event:, date_to:, date_from:)
+        domains = ::Version::DomainVersion.where(event: event)
+        domains.where!("object_changes ->> 'registrar_id' IS NOT NULL") if event == 'update'
+        domains.where('created_at > ?', date_to)
+               .where("object ->> 'created_at' <= ?", date_to)
+               .where("object ->> 'created_at' >= ?", date_from)
+              #  .select("DISTINCT ON (object ->> 'name') object, created_at")
+              #  .order(Arel.sql("object ->> 'name', created_at desc"))
+      end
+
 
       def group(domains)
         domains.group_by { |ld| ld.object['registrar_id'].to_s }

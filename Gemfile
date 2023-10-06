@@ -106,3 +106,4 @@ gem 'pg_query', '>= 0.9.0'
 
 # token
 gem 'jwt'
+gem 'benchmark-ips'
