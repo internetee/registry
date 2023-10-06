@@ -168,6 +168,7 @@ GEM
     aws-sigv4 (1.2.4)
       aws-eventstream (~> 1, >= 1.0.2)
     bcrypt (3.1.16)
+    benchmark-ips (2.12.0)
     bindata (2.4.14)
     bootsnap (1.9.3)
       msgpack (~> 1.0)
@@ -539,6 +540,7 @@ DEPENDENCIES
   airbrake
   apipie-rails (~> 0.6.0)
   aws-sdk-sesv2 (~> 1.19)
+  benchmark-ips
   bootsnap (>= 1.1.0)
   bootstrap-sass (~> 3.4)
   cancancan
@@ -604,4 +606,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.6.1)
 
 BUNDLED WITH
-   2.4.19
+   2.4.20
