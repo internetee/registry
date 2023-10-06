@@ -14,16 +14,21 @@ module Repp
         render_success(data: result)
       end
 
-      # rubocop:disable Metrics/MethodLength
-      api :get, '/repp/v1/stats/market_share_growth_rate'
-      desc 'Get market share and growth rate of registrars'
-      param :q, Hash, required: true, desc: 'Period parameters for data' do
-        param :end_date, String, required: true, desc: 'Period end date'
-        param :compare_to_end_date, String, required: true, desc: 'Comparison date'
-      end
+      # # rubocop:disable Metrics/MethodLength
+      # api :get, '/repp/v1/stats/market_share_growth_rate'
+      # desc 'Get market share and growth rate of registrars'
+      # param :q, Hash, required: true, desc: 'Period parameters for data' do
+      #   param :end_date, String, required: true, desc: 'Period end date'
+      #   param :compare_to_end_date, String, required: true, desc: 'Comparison date'
+      # end
       def market_share_growth_rate
         domains_by_rar = domains_by_registrar(@date_to, @date_from)
         prev_domains_by_rar = domains_by_registrar(@date_compare_to, @date_compare_from)
+
+        puts '---------'
+        puts domains_by_rar
+        puts prev_domains_by_rar
+        puts '---------'
 
         set_zero_values!(domains_by_rar, prev_domains_by_rar)
 
@@ -36,7 +41,77 @@ module Repp
                    data: { name: search_params[:end_date],
                            domains: serialize_growth_rate_result(domains_by_rar),
                            market_share: serialize_growth_rate_result(market_share_by_rar) } }
-        render_success(data: result)
+        # render_success(data: result)
+      end
+
+      # rubocop:disable Metrics/MethodLength
+      # api :get, '/repp/v1/stats/market_share_growth_rate2'
+      # desc 'Get market share and growth rate of registrars'
+      # param :q, Hash, required: true, desc: 'Period parameters for data' do
+      #   param :end_date, String, required: true, desc: 'Period end date'
+      #   param :compare_to_end_date, String, required: true, desc: 'Comparison date'
+      # end
+      def market_share_growth_rate2
+        # domains_by_rar = domains_by_registrar(@date_to, @date_from)
+        # prev_domains_by_rar = domains_by_registrar(@date_compare_to, @date_compare_from)
+
+        query = ActiveRecord::Base.send(:sanitize_sql_array, ["
+          SELECT \"object_changes\" -> 'registrar_id' ->> 1 AS \"registrar_id\", COUNT(*) AS \"domain_count\"
+          FROM \"log_domains\"
+          WHERE (\"event\" = 'create' OR \"event\" = 'update' OR \"event\" = 'delete')
+            AND \"created_at\" BETWEEN ? AND ?
+            AND (
+              \"event\" != 'update' OR
+              (\"event\" = 'update' AND \"object_changes\" ->> 'registrar_id' IS NOT NULL)
+            )
+          GROUP BY \"object_changes\" -> 'registrar_id' ->> 1", @date_from, @date_to])
+        
+        
+        result = ActiveRecord::Base.connection.execute(query)
+        
+        # Преобразование результата в хэш
+        domains_by_rar = {}
+        result.each do |row|
+          domains_by_rar[row['registrar_id']] = row['domain_count'].to_i
+        end
+
+        query = ActiveRecord::Base.send(:sanitize_sql_array, ["
+          SELECT \"object_changes\" -> 'registrar_id' ->> 1 AS \"registrar_id\", COUNT(*) AS \"domain_count\"
+          FROM \"log_domains\"
+          WHERE (\"event\" = 'create' OR \"event\" = 'update' OR \"event\" = 'delete')
+            AND \"created_at\" BETWEEN ? AND ?
+            AND (
+              \"event\" != 'update' OR
+              (\"event\" = 'update' AND \"object_changes\" ->> 'registrar_id' IS NOT NULL)
+            )
+          GROUP BY \"object_changes\" -> 'registrar_id' ->> 1", @date_compare_from, @date_compare_to])
+        
+        
+        result = ActiveRecord::Base.connection.execute(query)
+        
+        # Преобразование результата в хэш
+        prev_domains_by_rar = {}
+        result.each do |row|
+          prev_domains_by_rar[row['registrar_id']] = row['domain_count'].to_i
+        end
+
+        puts '---------'
+        puts domains_by_rar
+        puts prev_domains_by_rar
+        puts '---------'
+        
+        set_zero_values!(domains_by_rar, prev_domains_by_rar)
+
+        market_share_by_rar = calculate_market_share(domains_by_rar)
+        prev_market_share_by_rar = calculate_market_share(prev_domains_by_rar)
+
+        result = { prev_data: { name: search_params[:compare_to_end_date],
+                                domains: serialize_growth_rate_result(prev_domains_by_rar),
+                                market_share: serialize_growth_rate_result(prev_market_share_by_rar) },
+                    data: { name: search_params[:end_date],
+                            domains: serialize_growth_rate_result(domains_by_rar),
+                            market_share: serialize_growth_rate_result(market_share_by_rar) } }
+        # render_success(data: result)
       end
       # rubocop:enable Metrics/MethodLength
 
@@ -102,17 +177,6 @@ module Repp
                .select("DISTINCT ON (object ->> 'name') object, created_at")
                .order(Arel.sql("object ->> 'name', created_at desc"))
       end
-
-      def log_domains2(event:, date_to:, date_from:)
-        domains = ::Version::DomainVersion.where(event: event)
-        domains.where!("object_changes ->> 'registrar_id' IS NOT NULL") if event == 'update'
-        domains.where('created_at > ?', date_to)
-               .where("object ->> 'created_at' <= ?", date_to)
-               .where("object ->> 'created_at' >= ?", date_from)
-              #  .select("DISTINCT ON (object ->> 'name') object, created_at")
-              #  .order(Arel.sql("object ->> 'name', created_at desc"))
-      end
-
 
       def group(domains)
         domains.group_by { |ld| ld.object['registrar_id'].to_s }

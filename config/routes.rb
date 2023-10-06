@@ -106,6 +106,7 @@ Rails.application.routes.draw do
         collection do
           get '/market_share_distribution', to: 'stats#market_share_distribution'
           get '/market_share_growth_rate', to: 'stats#market_share_growth_rate'
+          get '/market_share_growth_rate2', to: 'stats#market_share_growth_rate2'
         end
       end
       resources :api_users, only: %i[index show update create destroy] do
