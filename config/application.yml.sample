@@ -252,3 +252,7 @@ billing_system_integrated: 'true'
 secret_access_word: 'please-Give-Me-accesS'
 secret_word: 'this-secret-should-be-change'
 allow_accr_endspoints: 'true'
+
+
+bsa_api_key: ''
+bsa_base_url: 'https://api-ote.bsagateway.co'
