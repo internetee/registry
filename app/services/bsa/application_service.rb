@@ -2,7 +2,8 @@
 
 module Bsa
   module ApplicationService
-    include Errors
+    include Core::Errors
+    include Core::Settings
 
     OK = '200'
 
@@ -14,9 +15,9 @@ module Bsa
       http
     end
 
-    def headers
+    def headers(content_type: 'x-www-form-urlencoded')
       {
-        'Content-Type' => 'application/x-www-form-urlencoded',
+        'Content-Type' => "application/#{content_type}",
       }
     end
 
@@ -24,18 +25,6 @@ module Bsa
       {
         'Authorization' => "Bearer #{token}",
       }
-    end
-
-    def bsa
-      'BSA'
-    end
-
-    def api_key
-      ENV['bsa_api_key']
-    end
-
-    def base_url
-      ENV['bsa_base_url']
     end
 
     def struct_response(response)
@@ -61,7 +50,7 @@ module Bsa
     end
 
     def redis
-      @redis ||= Redis.new(host: "redis", port: 6379, db: 7)
+      @redis ||= Redis.new(host: redist_host, port: redis_port, db: redis_db)
     end
   end
 end

@@ -1,6 +1,7 @@
 module Bsa
   class BlockOrderListService
-    include Bsa::ApplicationService
+    include ApplicationService
+    include Core::TokenHelper
 
     attr_reader :sort_by, :order, :offset, :limit, :q
 
@@ -25,27 +26,17 @@ module Bsa
 
     private
 
-    def token
-      response = Bsa::AuthService.call
-
-      if response.result?
-        response.body.id_token
-      else
-        raise Bsa::AuthError, "#{response.error.message}: #{response.error.description}"
-      end
-    end
-
     def endpoint
       "/bsa/api/blockrsporder?#{query_string}"
     end
 
     def query_string
       params = {
-        'sortBy' => @sort_by,
-        'order' => @order,
-        'offset' => @offset,
-        'limit' => @limit
-      }.merge(@q).compact
+        'sortBy' => sort_by,
+        'order' => order,
+        'offset' => offset,
+        'limit' => limit
+      }.merge(q).compact
     
       URI.encode_www_form(params)
     end
