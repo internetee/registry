@@ -32,12 +32,32 @@ Rails.application.load_tasks
 
 ActiveJob::Base.queue_adapter = :test
 
+$mock_redis = MockRedis.new
+
 class CompanyRegisterClientStub
   Company = Struct.new(:registration_number, :company_name)
 
   def representation_rights(citizen_personal_code:, citizen_country_code:)
     [Company.new('1234567', 'ACME Ltd')]
   end
+end
+
+def generate_test_bsa_token(expiry_time)
+  header = { typ: 'JWT', alg: 'none' }
+  payload = { exp: expiry_time.to_i }
+
+  header_enc = Base64.urlsafe_encode64(header.to_json)
+  
+  sio = StringIO.new
+  gz = Zlib::GzipWriter.new(sio)
+  gz.write payload.to_json
+  gz.close
+  payload_gzip = sio.string
+  sio.close
+
+  payload_enc = Base64.urlsafe_encode64(payload_gzip)
+
+  "#{header_enc}.#{payload_enc}."
 end
 
 CompanyRegister::Client = CompanyRegisterClientStub

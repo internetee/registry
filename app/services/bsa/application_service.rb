@@ -50,7 +50,7 @@ module Bsa
     end
 
     def redis
-      @redis ||= Redis.new(host: redist_host, port: redis_port, db: redis_db)
+      @redis ||= Rails.env.test? ? $mock_redis : Redis.new(host: redist_host, port: redis_port, db: redis_db) 
     end
   end
 end

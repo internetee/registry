@@ -2,12 +2,22 @@ module Bsa
   class AuthService
     include Bsa::ApplicationService
 
-    def self.call
-      new.call
+    attr_reader :redis_required
+
+    def self.call(redis_required: true)
+      new(redis_required: redis_required).call
+    end
+
+    def initialize(redis_required:)
+      @redis_required = redis_required
     end
 
     def call
-      check_for_expired_token ? build_struct(check_for_expired_token) : request_token
+      if redis_required
+        check_for_expired_token ? build_struct(check_for_expired_token) : request_token
+      else
+        request_token
+      end
     end
 
     private
@@ -24,7 +34,8 @@ module Bsa
 
       return res unless res.result?
       
-      redis.set('bsa_token', res.body.id_token)  
+      redis.set('bsa_token', res.body.id_token) if @redis_required
+
       res
     end
 
