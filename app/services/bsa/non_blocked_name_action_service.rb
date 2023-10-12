@@ -40,9 +40,9 @@ module Bsa
     def query_string
       params = {
         'action' => action,
-        'suborderid' => suborder_id,
+        'suborderid' => suborder_id
       }.compact
-    
+
       URI.encode_www_form(params)
     end
   end

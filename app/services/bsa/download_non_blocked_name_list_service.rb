@@ -22,6 +22,10 @@ module Bsa
         file.write(response.body)
       end
 
+      puts '----'
+      puts response.inspect
+      puts '-------'
+
       # TODO: finish with response
       # struct_response(response)
     end

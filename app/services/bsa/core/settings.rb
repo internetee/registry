@@ -4,11 +4,11 @@ module Bsa
       def bsa
         'BSA'
       end
-  
+
       def api_key
         ENV['bsa_api_key']
       end
-  
+
       def base_url
         ENV['bsa_base_url']
       end

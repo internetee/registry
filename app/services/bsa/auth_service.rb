@@ -33,14 +33,14 @@ module Bsa
       res = struct_response(response)
 
       return res unless res.result?
-      
+
       redis.set('bsa_token', res.body.id_token) if @redis_required
 
       res
     end
 
     def check_for_expired_token
-      retrieved_token = redis.get("bsa_token")
+      retrieved_token = redis.get('bsa_token')
       return if retrieved_token.nil?
 
       time = expire_token_at(retrieved_token)

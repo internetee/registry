@@ -34,7 +34,7 @@ module Bsa
         'offset' => offset,
         'limit' => limit
       }.compact
-    
+
       URI.encode_www_form(params)
     end
   end
