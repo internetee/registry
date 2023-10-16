@@ -544,13 +544,14 @@ ALTER SEQUENCE public.bounced_mail_addresses_id_seq OWNED BY public.bounced_mail
 
 CREATE TABLE public.bsa_protected_domains (
     id bigint NOT NULL,
-    order_id integer NOT NULL,
-    suborder_id integer NOT NULL,
+    order_id character varying NOT NULL,
+    suborder_id character varying NOT NULL,
     domain_name character varying NOT NULL,
     state integer DEFAULT 0 NOT NULL,
     registration_code character varying NOT NULL,
     create_date timestamp without time zone,
-    update_date timestamp without time zone
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 

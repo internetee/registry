@@ -1,24 +1,26 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 RESPONSE = {
-  "list": [
-  "label1",
-  "label2",
-  "label3",
-  "label4",
-  "label5"
+  "list": %w[
+    label1
+    label2
+    label3
+    label4
+    label5
   ],
   "offset": 0,
   "limit": 5,
   "count": 5,
   "total": 12
- }
+}.freeze
 
- INVALID_RESPONSE = {
+INVALID_RESPONSE = {
   "message": 'Unsupported Media Type',
   "description": 'The server is refusing to service the request because the entity of the request is in a format' \
-                  ' not supported by the requested resource for the requested method'
-}
+                 ' not supported by the requested resource for the requested method'
+}.freeze
 
 class Bsa::BlockOrderViewServiceTest < ActiveSupport::TestCase
   setup do

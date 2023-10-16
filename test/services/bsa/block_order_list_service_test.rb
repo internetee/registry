@@ -99,7 +99,7 @@ class Bsa::BlockOrderListServiceTest < ActiveSupport::TestCase
   end
 
   def test_parse_query_parameters
-    instance_serive = Bsa::BlockOrderListService.new(sort_by: 'createdAt', order: 'desc', offset: 0, limit: 100, q: { 'tld' => 'test' })
+    instance_serive = Bsa::BlockOrderListService.new(sort_by: 'createdBy', order: 'desc', offset: 0, limit: 100, q: { 'tld' => 'test' })
 
     result = instance_serive.send(:query_string)
 

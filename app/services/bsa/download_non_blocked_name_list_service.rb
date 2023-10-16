@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bsa
   class DownloadNonBlockedNameListService
     include ApplicationService
@@ -5,7 +7,7 @@ module Bsa
 
     attr_reader :suborder_id, :filename
 
-    def self.call(suborder_id:, filename: Time.now.strftime("%Y-%m-%d_%H-%M-%S"))
+    def self.call(suborder_id:, filename: Time.now.strftime('%Y-%m-%d_%H-%M-%S'))
       new(suborder_id: suborder_id, filename: filename).call
     end
 
@@ -18,16 +20,15 @@ module Bsa
       http = connect(url: base_url)
       response = http.get(endpoint, headers.merge(token_format(token)))
 
-      File.open("#{filename}.csv", 'wb') do |file|
-        file.write(response.body)
+      if [OK, ACCEPTED].include? response.code
+        File.open("#{filename}.csv", 'wb') do |file|
+          file.write(response.body)
+        end
+
+        Struct.new(:result?, :body).new(true, OpenStruct.new(message: "Data was added to #{filename}.csv file"))
+      else
+        Struct.new(:result?, :error).new(false, OpenStruct.new(message: response.message, code: response.code))
       end
-
-      puts '----'
-      puts response.inspect
-      puts '-------'
-
-      # TODO: finish with response
-      # struct_response(response)
     end
 
     private
