@@ -119,6 +119,7 @@ class Domain < ApplicationRecord
   validates :period, presence: true, numericality: { only_integer: true }
   validates :transfer_code, presence: true
   validate :validate_reservation
+  validate :validate_bsa_protection
 
   def validate_reservation
     return if persisted? || !in_reserved_list?
@@ -129,6 +130,19 @@ class Domain < ApplicationRecord
     end
 
     return if ReservedDomain.pw_for(name) == reserved_pw
+
+    errors.add(:base, :invalid_auth_information_reserved)
+  end
+
+  def validate_bsa_protection
+    return if persisted? || !in_bsa_protected_list?
+
+    if reserved_pw.blank?
+      errors.add(:base, :required_parameter_missing_reserved)
+      return false
+    end
+
+    return if BsaProtectedDomain.pw_for(name) == reserved_pw
 
     errors.add(:base, :invalid_auth_information_reserved)
   end
@@ -369,6 +383,10 @@ class Domain < ApplicationRecord
 
   def in_reserved_list?
     @in_reserved_list ||= ReservedDomain.by_domain(name).any?
+  end
+
+  def in_bsa_protected_list?
+    @in_bsa_protected_list ||= BsaProtectedDomain.by_domain(name).any?
   end
 
   def pending_transfer

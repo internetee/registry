@@ -68,10 +68,6 @@ module Admin
 
     private
 
-    def reserved_checked_elements
-      # params.require(:reserved_elements).permit(:name, :password)
-    end
-
     def reserved_domain_params
       params.require(:reserved_domain).permit(:name, :password)
     end

@@ -19,6 +19,7 @@ module Bsa
 
     def call
       http = connect(url: base_url)
+
       response = http.get(endpoint, headers.merge(token_format(token)))
 
       struct_response(response)
@@ -36,7 +37,9 @@ module Bsa
         'order' => order,
         'offset' => offset,
         'limit' => limit
-      }.merge(q).compact
+      }.compact
+
+      params['q'] = q.map { |key, value| "#{key}=#{value}" }.join('&') if q.present?
 
       URI.encode_www_form(params)
     end

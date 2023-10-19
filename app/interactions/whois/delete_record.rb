@@ -17,6 +17,7 @@ module Whois
       BlockedDomain.find_by(name: name).try(:generate_data)
       ReservedDomain.find_by(name: name).try(:generate_data)
       Dispute.active.find_by(domain_name: name).try(:generate_data)
+      BsaProtectedDomain.active.find_by(domain_name: name).try(:generate_data)
     end
 
     def delete_reserved(name)

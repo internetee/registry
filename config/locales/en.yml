@@ -659,6 +659,7 @@ en:
   previous: 'Previous'
   available_verification_url_not_found: 'Available verification url not found, for domain.'
   add_reserved_domain: 'Add domain to reserved list'
+  add_bsa_protected_domains: 'Add BSA protected domain to reserved list'
   add_blocked_domain: 'Add domain to blocked list'
   add_disputed_domain: 'Add domain to disputed list'
   edit_pw: 'Edit Pw'
