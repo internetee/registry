@@ -32,9 +32,9 @@ module Bsa
       parsed_data = parse_response(response)
       result = [OK, ACCEPTED].include? response.code
 
-      Struct.new(:result?, :error).new(result, OpenStruct.new(parsed_data)) unless result
+      return Struct.new(:result?, :error).new(result, OpenStruct.new(parsed_data)) unless result
 
-      if  parsed_data.is_a?(Array)
+      if parsed_data.is_a?(Array)
         Struct.new(:result?, :body).new(result, parsed_data.map { |data| OpenStruct.new(data) })
       else
         Struct.new(:result?, :body).new(result, OpenStruct.new(parsed_data))

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-RESPONSE = {
+RESPONSE_BLOCK_ORDER_LIST_SERVICE = {
   "list": [
     {
       "blockSubOrderId": 690_680_666_563_633,
@@ -71,13 +71,14 @@ class Bsa::BlockOrderListServiceTest < ActiveSupport::TestCase
     stub_request(:get, 'https://api-ote.bsagateway.co/bsa/api/blockrsporder')
       .to_return(
         status: 200,
-        body: RESPONSE.to_json,
+        body: RESPONSE_BLOCK_ORDER_LIST_SERVICE.to_json,
         headers: { 'Content-Type' => 'application/json' }
       )
 
     r = Bsa::BlockOrderListService.call
 
     assert r.result?
+
     assert_equal r.body.list.count, 2
   end
 
@@ -103,7 +104,7 @@ class Bsa::BlockOrderListServiceTest < ActiveSupport::TestCase
 
     result = instance_serive.send(:query_string)
 
-    assert_equal result, 'sortBy=createdAt&order=desc&offset=0&limit=100&tld=test'
+    assert_equal result, 'sortBy=createdBy&order=desc&offset=0&limit=100&q=tld%3Dtest'
   end
 
   private

@@ -19,7 +19,6 @@ module Bsa
 
     def call
       http = connect(url: base_url)
-
       response = http.get(endpoint, headers.merge(token_format(token)))
 
       struct_response(response)

@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-RESPONSE = 'some,csv,data'
+RESPONSE_DOWNLOAD = 'some,csv,data'
 
 class Bsa::BlockOrderViewServiceTest < ActiveSupport::TestCase
   setup do
@@ -19,7 +19,7 @@ class Bsa::BlockOrderViewServiceTest < ActiveSupport::TestCase
     stub_request(:get, 'https://api-ote.bsagateway.co/bsa/api/blockrsporder/1/nonblockednames')
       .to_return(
         status: 200,
-        body: RESPONSE.to_json,
+        body: RESPONSE_DOWNLOAD.to_json,
         headers: { 'Content-Type' => 'text/csv',
                    'Content-Disposition' => 'attachment; filename="mock-csv.csv"' }
       )
@@ -27,7 +27,7 @@ class Bsa::BlockOrderViewServiceTest < ActiveSupport::TestCase
     result = Bsa::DownloadNonBlockedNameListService.call(suborder_id: 1, filename: @filename)
 
     assert File.exist?("#{@filename}.csv")
-    assert_equal RESPONSE, File.read("#{@filename}.csv").gsub('"', '')
+    assert_equal RESPONSE_DOWNLOAD, File.read("#{@filename}.csv").gsub('"', '')
     assert result.result?
     assert_equal "Data was added to #{@filename}.csv file", result.body.message
   end

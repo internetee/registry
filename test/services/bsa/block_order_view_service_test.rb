@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-RESPONSE = {
+RESPONSE_BLOCK_VIEW_SERVICE = {
   "list": %w[
     label1
     label2
@@ -32,7 +32,7 @@ class Bsa::BlockOrderViewServiceTest < ActiveSupport::TestCase
     stub_request(:get, 'https://api-ote.bsagateway.co/bsa/api/blockrsporder/labels?blocksuborderid=1')
       .to_return(
         status: 200,
-        body: RESPONSE.to_json,
+        body: RESPONSE_BLOCK_VIEW_SERVICE.to_json,
         headers: { 'Content-Type' => 'application/json' }
       )
 

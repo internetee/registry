@@ -71,7 +71,7 @@ module DNS
     end
 
     def bsa_protected?
-      BsaProtectedDomain.where(name: name).any?
+      BsaProtectedDomain.where(domain_name: name).any?
     end
 
     def disputed?
