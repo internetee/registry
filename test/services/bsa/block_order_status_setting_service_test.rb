@@ -1,6 +1,6 @@
 require 'test_helper'
 
-BODY = [
+BODY_ORDER_STATUS_SETTING = [
   { blockSubOrderId: 1, status: 'ActivationInProgress' },
   { blockSubOrderId: 2, status: 'ActivationInProgress' },
   { blockSubOrderId: 4, status: 'Active' },
@@ -8,7 +8,7 @@ BODY = [
   { blockSubOrderId: 6, status: 'Closed' }
 ]
 
-RESPONSE = {
+RESPONSE_ORDER_STATUS_SETTING = {
   message: 'ok'
 }
 
@@ -28,11 +28,11 @@ class Bsa::BlockOrderListServiceTest < ActiveSupport::TestCase
     stub_request(:post, 'https://api-ote.bsagateway.co/bsa/api/blockrsporder/status')
       .to_return(
         status: 200,
-        body: RESPONSE.to_json,
+        body: RESPONSE_ORDER_STATUS_SETTING.to_json,
         headers: { 'Content-Type' => 'application/json' }
       )
 
-    r = Bsa::BlockOrderStatusSettingService.call(payload: BODY)
+    r = Bsa::BlockOrderStatusSettingService.call(payload: BODY_ORDER_STATUS_SETTING)
 
     assert r.result?
   end
@@ -45,7 +45,7 @@ class Bsa::BlockOrderListServiceTest < ActiveSupport::TestCase
         headers: { 'Content-Type' => 'application/json' }
       )
 
-    r = Bsa::BlockOrderStatusSettingService.call(payload: BODY)
+    r = Bsa::BlockOrderStatusSettingService.call(payload: BODY_ORDER_STATUS_SETTING)
 
     refute r.result?
     assert_equal r.error.message, 'Unsupported Media Type'

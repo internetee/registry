@@ -15,7 +15,7 @@ class UpdateGodaddyDomainsStatusJob < ApplicationJob
     payload = serialize_suborders_block(suborders_block: suborders_block, state: state)
 
     result = Bsa::BlockOrderStatusSettingService.call(payload: payload)
-    return result.error.inspect unless result.result?
+    return { message: result.error.message, description: result.error.description } unless result.result?
 
     refresh_statuses(suborders_block: suborders_block, state: state)
 

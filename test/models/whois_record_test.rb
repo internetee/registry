@@ -43,6 +43,7 @@ class WhoisRecordTest < ActiveSupport::TestCase
                     disclosed_attributes: %w[name])
 
     domain = domains(:shop)
+    domain.reload
     domain.update!(registrant: contact.becomes(Registrant))
 
     whois_record = whois_records(:shop)

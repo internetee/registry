@@ -1,0 +1,18 @@
+one:
+  order_id: 1
+  suborder_id: 1
+  domain_name: example1.ee
+  state: 2
+  registration_code: 1234567890
+  create_date: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+  created_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+  updated_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+two:
+  order_id: 2
+  suborder_id: 2
+  domain_name: example2.ee
+  state: 2
+  registration_code: 0987654321
+  create_date: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+  created_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>
+  updated_at: <%= Time.zone.parse('2010-07-05').to_s(:db) %>

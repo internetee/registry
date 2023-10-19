@@ -9,14 +9,14 @@ class FetchGodaddyBsaBlockOrderListJob < ApplicationJob
   LIMIT_MESSAGE = 'Limit reached. No more block orders to fetch'
   QUEUED_FOR_ACTIVATION = 'QueuedForActivation'
 
-  def perform(status_name=QUEUED_FOR_ACTIVATION)
+  def perform(status_name = QUEUED_FOR_ACTIVATION)
     fetch_block_order_list(offset: 0, status_name: status_name)
   end
 
   def fetch_block_order_list(offset:, status_name:)
     res = Bsa::BlockOrderListService.call(offset: offset, limit: LIMIT,
                                           q: { 'blockOrderStatus.name' => status_name })
-    return res.error.inspect unless res.result?
+    return { message: res.error.message, description: res.error.description } unless res.result?
     return LIMIT_MESSAGE if res.body.total.zero? || res.body.list.blank?
 
     bsa_attributes = collect_bsa_values(res)
