@@ -10,5 +10,4 @@ module BsaProtectedDomain::Ransackable
       authorizable_ransackable_attributes
     end
   end
-
 end

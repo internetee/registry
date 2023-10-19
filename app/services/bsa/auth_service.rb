@@ -51,7 +51,7 @@ module Bsa
     def payload
       {
         'apiKey' => api_key,
-        'space' => bsa
+        'space' => bsa,
       }
     end
 

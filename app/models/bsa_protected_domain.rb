@@ -18,7 +18,7 @@ class BsaProtectedDomain < ApplicationRecord
     ACTIVE => 4,
     QUEUED_FOR_RELEASE => 5,
     RELEASE_IN_PROGRESS => 6,
-    CLOSED => 7
+    CLOSED => 7,
   }
 
   class << self

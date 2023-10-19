@@ -5,6 +5,7 @@ module Bsa
 
     attr_reader :sort_by, :order, :offset, :limit, :q
 
+    # rubocop:disable Naming/MethodParameterName
     def self.call(sort_by: nil, order: nil, offset: nil, limit: nil, q: {})
       new(sort_by: sort_by, order: order, offset: offset, limit: limit, q: q).call
     end
@@ -16,6 +17,7 @@ module Bsa
       @limit = limit
       @q = q
     end
+    # rubocop:enable Naming/MethodParameterName
 
     def call
       http = connect(url: base_url)
@@ -35,7 +37,7 @@ module Bsa
         'sortBy' => sort_by,
         'order' => order,
         'offset' => offset,
-        'limit' => limit
+        'limit' => limit,
       }.compact
 
       params['q'] = q.map { |key, value| "#{key}=#{value}" }.join('&') if q.present?

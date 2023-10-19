@@ -7,7 +7,7 @@ module Bsa
 
     attr_reader :suborder_id, :filename
 
-    def self.call(suborder_id:, filename: Time.now.strftime('%Y-%m-%d_%H-%M-%S'))
+    def self.call(suborder_id:, filename: Time.zone.now.strftime('%Y-%m-%d_%H-%M-%S'))
       new(suborder_id: suborder_id, filename: filename).call
     end
 

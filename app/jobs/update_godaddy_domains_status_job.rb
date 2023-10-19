@@ -28,7 +28,9 @@ class UpdateGodaddyDomainsStatusJob < ApplicationJob
     end
   end
 
+  # rubocop:disable Rails::SkipsModelValidations
   def refresh_statuses(suborders_block:, state:)
     suborders_block.update_all(state: state)
   end
+  # rubocop:enable Rails::SkipsModelValidations
 end

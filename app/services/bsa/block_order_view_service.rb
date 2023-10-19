@@ -32,7 +32,7 @@ module Bsa
       params = {
         'blocksuborderid' => block_suborder_id,
         'offset' => offset,
-        'limit' => limit
+        'limit' => limit,
       }.compact
 
       URI.encode_www_form(params)

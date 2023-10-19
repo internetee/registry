@@ -1,7 +1,7 @@
 module Admin
   class BsaProtectedDomainsController < BaseController
     load_and_authorize_resource
-    before_action :set_domain, only: [:edit, :update]
+    before_action :set_domain, only: %i[edit update]
 
     def index
       params[:q] ||= {}
@@ -67,8 +67,6 @@ module Admin
     private
 
     def bsa_protected_domain_params
-      # params.require(:bsa_protected_domain).permit(:domain_name, :registration_code, :order_id, :suborder_id, :create_date, :state)
-
       params.require(:bsa_protected_domain).permit(:domain_name, :registration_code,
                                                    :order_id, :suborder_id, :create_date, :state).tap do |whitelisted|
         whitelisted[:state] = whitelisted[:state].to_i if whitelisted[:state].is_a?(String)

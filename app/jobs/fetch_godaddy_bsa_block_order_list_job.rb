@@ -39,8 +39,10 @@ class FetchGodaddyBsaBlockOrderListJob < ApplicationJob
         registration_code: SecureRandom.hex,
         create_date: DateTime.parse(block_order['createdDt']),
         created_at: Time.zone.now,
-        updated_at: Time.zone.now
+        updated_at: Time.zone.now,
       }
     end
   end
 end
+
+# rubocop:enable Metrics

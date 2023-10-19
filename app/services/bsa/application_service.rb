@@ -18,13 +18,13 @@ module Bsa
 
     def headers(content_type: 'x-www-form-urlencoded')
       {
-        'Content-Type' => "application/#{content_type}"
+        'Content-Type' => "application/#{content_type}",
       }
     end
 
     def token_format(token)
       {
-        'Authorization' => "Bearer #{token}"
+        'Authorization' => "Bearer #{token}",
       }
     end
 
@@ -54,8 +54,10 @@ module Bsa
       Time.at(payload['exp']).utc.in_time_zone
     end
 
+    # rubocop:disable Style/GlobalVars
     def redis
       @redis ||= Rails.env.test? ? $mock_redis : Redis.new(host: redist_host, port: redis_port, db: redis_db)
     end
+    # rubocop:enable Style/GlobalVars
   end
 end

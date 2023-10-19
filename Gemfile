@@ -90,10 +90,10 @@ group :test do
   gem 'database_cleaner'
   gem 'minitest', '~> 5.17'
   gem 'minitest-stub_any_instance'
+  gem 'mock_redis'
   gem 'selenium-webdriver'
   gem 'simplecov', '0.17.1', require: false # CC last supported v0.17
   gem 'spy'
-  gem 'mock_redis'
   gem 'webmock'
 end
 

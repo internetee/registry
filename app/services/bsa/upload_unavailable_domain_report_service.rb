@@ -15,8 +15,17 @@ module Bsa
 
     def call
       http = connect(url: base_url)
-      uri = URI("#{base_url}")
+      uri = URI(base_url.to_s)
 
+      request = configure_request(uri: uri)
+      response = http.request(request)
+
+      struct_response(response)
+    end
+
+    private
+
+    def configure_request(uri:)
       checksum = calculate_checksum(@file_path)
 
       request = Net::HTTP::Post.new(uri)
@@ -25,17 +34,11 @@ module Bsa
 
       form_data = [
         ['Zone', { 'checkSum' => checksum }.to_json],
-        ['File', File.open(@file_path)]
+        ['File', File.open(@file_path)],
       ]
 
       request.set_form form_data, 'multipart/form-data'
-
-      response = http.request(request)
-
-      struct_response(response)
     end
-
-    private
 
     def endpoint
       '/bsa/api/zonefile'
@@ -43,16 +46,14 @@ module Bsa
 
     def form_data_headers
       {
-        'Content-Type' => 'multipart/form-data'
+        'Content-Type' => 'multipart/form-data',
       }
     end
 
     def calculate_checksum(file_path)
       digest = OpenSSL::Digest.new('SHA256')
       File.open(file_path, 'rb') do |f|
-        while chunk = f.read(4096)
-          digest.update(chunk)
-        end
+        digest.update(chunk) while chunk == f.read(4096)
       end
       digest.hexdigest
     end
