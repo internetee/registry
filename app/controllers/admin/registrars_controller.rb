@@ -23,7 +23,7 @@ module Admin
 
     def create
       @registrar = Registrar.new(registrar_params)
-      @registrar.reference_no = ::Billing::ReferenceNo.generate
+      @registrar.reference_no = ::Billing::ReferenceNo.generate(owner: @registrar.name)
 
       if @registrar.valid?
         @registrar.transaction do

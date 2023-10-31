@@ -3,8 +3,8 @@ module Billing
     REGEXP = /\A\d{2,20}\z/
     MULTI_REGEXP = /(\d{2,20})/
 
-    def self.generate
-      result = EisBilling::GetReferenceNumber.send_request
+    def self.generate(owner:)
+      result = EisBilling::GetReferenceNumber.call(owner: owner)
       JSON.parse(result.body)['reference_number']
     end
 
