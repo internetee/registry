@@ -187,6 +187,7 @@ Download CRT file and create p12 file.
     openssl pkcs12 -export -inkey private/api-user.key.pem -in certs/api-user.crt.pem -out pkcs/api_user.p12
 
 Add api_user.p12 to your browser.
+NB! Try adding the option `-legacy` to `openssl pkcs12` if you get wrong password message.
 
 ID card login
 ---------------
