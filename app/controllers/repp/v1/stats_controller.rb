@@ -96,7 +96,8 @@ module Repp
                                                   .where('created_at >= ? AND created_at <= ?', date_from, date_to)
         registrar_counts = Hash.new(0)
         processed_domains = []
-        domain_versions.find_each(batch_size: 1000) do |v|
+        Rails.logger.info "Processing total #{domain_versions.size} log_domain records"
+        domain_versions.each do |v|
           registrar_ids = v.object_changes['registrar_id']
           next if registrar_ids.nil? || registrar_ids.empty?
 
