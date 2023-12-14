@@ -13,27 +13,31 @@ transfer_one:
   event: update
   object: 
     name: 'shop.test'
+    registrant_id: <%= ActiveRecord::FixtureSet.identify(:john) %>
   object_changes:
     registrar_id: [<%= ActiveRecord::FixtureSet.identify(:goodnames) %>, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
-  created_at: <%= 2.days.ago.to_s :db %>
+  created_at: <%= Time.zone.parse('2023-12-05') %>
 
 create_one:
   item_id: 1111111
   item_type: Domain
   event: create
   object_changes:
-    name: [null, 'deleted.test']
+    name: [null, 'cinema.test']
     registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:goodnames) %>]
-  created_at: <%= 3.months.ago.to_s :db %>
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2023-09-05') %>
 
 destroy_one:
   item_id: 1111111
   item_type: Domain
   event: destroy
+  object:
+    registrant_id: <%= ActiveRecord::FixtureSet.identify(:john) %>
   object_changes:
-    name: ['deleted.test', null]
+    name: ['cinema.test', null]
     registrar_id: [<%= ActiveRecord::FixtureSet.identify(:goodnames) %>, null]
-  created_at: <%= 2.days.ago.to_s :db %>
+  created_at: <%= Time.zone.parse('2023-12-05') %>
 
 create_two:
   item_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
@@ -42,13 +46,15 @@ create_two:
   object_changes:
     name: [null, 'library.test']
     registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
-  created_at: <%= 2.days.ago.to_s :db %>
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:acme_ltd) %>]
+  created_at: <%= Time.zone.parse('2023-12-05') %>
 
 create_three:
-  item_id: <%= ActiveRecord::FixtureSet.identify(:airport) %>
+  item_id: <%= ActiveRecord::FixtureSet.identify(:metro) %>
   item_type: Domain
   event: create
   object_changes:
-    name: [null, 'airport.test']
-    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
-  created_at: <%= 2.days.ago.to_s :db %>
+    name: [null, 'metro.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:goodnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:jack) %>]
+  created_at: <%= Time.zone.parse('2023-09-05') %>
