@@ -6,3 +6,49 @@ one:
     registrant_id: <%= ActiveRecord::FixtureSet.identify(:john) %>
     updated_at: <%= Time.zone.parse('2010-07-05') %>
   created_at: <%= Time.zone.parse('2010-07-05') %>
+
+transfer_one:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:shop) %>
+  item_type: Domain
+  event: update
+  object: 
+    name: 'shop.test'
+  object_changes:
+    registrar_id: [<%= ActiveRecord::FixtureSet.identify(:goodnames) %>, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+  created_at: <%= 2.days.ago.to_s :db %>
+
+create_one:
+  item_id: 1111111
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'deleted.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:goodnames) %>]
+  created_at: <%= 3.months.ago.to_s :db %>
+
+destroy_one:
+  item_id: 1111111
+  item_type: Domain
+  event: destroy
+  object_changes:
+    name: ['deleted.test', null]
+    registrar_id: [<%= ActiveRecord::FixtureSet.identify(:goodnames) %>, null]
+  created_at: <%= 2.days.ago.to_s :db %>
+
+create_two:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'library.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+  created_at: <%= 2.days.ago.to_s :db %>
+
+create_three:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:airport) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'airport.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+  created_at: <%= 2.days.ago.to_s :db %>

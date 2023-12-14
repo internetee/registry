@@ -36,6 +36,7 @@ module Repp
                    data: { name: search_params[:end_date],
                            domains: serialize_growth_rate_result(domains_by_rar),
                            market_share: serialize_growth_rate_result(market_share_by_rar) } }
+
         render_success(data: result)
       end
       # rubocop:enable Metrics/MethodLength
@@ -49,9 +50,9 @@ module Repp
 
       def set_date_params
         @date_to = to_date(search_params[:end_date]).end_of_month
-        @date_from = to_date(search_params[:start_date] || '01.05')
+        @date_from = to_date(search_params[:start_date] || '01.00')
         @date_compare_to = to_date(search_params[:compare_to_end_date]).end_of_month
-        @date_compare_from = to_date(search_params[:compare_to_start_date] || '01.05')
+        @date_compare_from = to_date(search_params[:compare_to_start_date] || '01.00')
       end
 
       def to_date(date_param)
@@ -78,15 +79,49 @@ module Repp
         end
       end
 
+      # def domains_by_registrar(date_to, date_from)
+      #   log_domains_del = log_domains(event: 'destroy', date_to: date_to, date_from: date_from)
+      #   log_domains_trans = log_domains(event: 'update', date_to: date_to, date_from: date_from)
+      #   logged_domains = log_domains_trans.map { |ld| ld.object['name'] } +
+      #                    log_domains_del.map { |ld| ld.object['name'] }
+      #   domains_grouped = ::Domain.where('created_at <= ? AND created_at >= ?', date_to, date_from)
+      #                             .where.not(name: logged_domains.uniq)
+      #                             .group(:registrar_id).count.stringify_keys
+
+      #   summarize([group(log_domains_del), group(log_domains_trans), domains_grouped])
+      # end
+
       def domains_by_registrar(date_to, date_from)
-        log_domains_del = log_domains(event: 'destroy', date_to: date_to, date_from: date_from)
-        log_domains_trans = log_domains(event: 'update', date_to: date_to, date_from: date_from)
-        logged_domains = log_domains_trans.map { |ld| ld.object['name'] } +
-                         log_domains_del.map { |ld| ld.object['name'] }
-        domains_grouped = ::Domain.where('created_at <= ? AND created_at >= ?', date_to, date_from)
-                                  .where.not(name: logged_domains.uniq)
-                                  .group(:registrar_id).count.stringify_keys
-        summarize([group(log_domains_del), group(log_domains_trans), domains_grouped])
+        domain_versions = ::Version::DomainVersion.where('object_changes IS NOT NULL')
+                                                  .where('created_at >= ? AND created_at <= ?', date_from, date_to)
+        registrar_counts = Hash.new(0)
+        processed_domains = []
+        domain_versions.find_each(batch_size: 1000) do |v|
+          registrar_ids = v.object_changes['registrar_id']
+          next if registrar_ids.nil? || registrar_ids.empty?
+
+          case v.event
+          when 'create'
+            processed_domains << v.object_changes['name'][1]
+            registrar_counts[registrar_ids[1].to_s] += 1
+          when 'update'
+            if processed_domains.include?(v.object['name'])
+              registrar_counts[registrar_ids[0].to_s] -= 1
+              registrar_counts[registrar_ids[1].to_s] += 1
+            else
+              registrar_counts[registrar_ids[1].to_s] += 1
+              processed_domains << v.object['name']
+            end
+          when 'destroy'
+            registrar_counts[registrar_ids[0].to_s] -= 1
+          end
+        end
+
+        current_domains_grouped = ::Domain.where('created_at <= ? AND created_at >= ?', date_to, date_from)
+                                          .where.not(name: processed_domains.uniq)
+                                          .group(:registrar_id).count.stringify_keys
+
+        summarize([registrar_counts, current_domains_grouped])
       end
 
       def summarize(arr)
@@ -94,14 +129,14 @@ module Repp
       end
 
       def log_domains(event:, date_to:, date_from:)
-        domains = ::Version::DomainVersion.where(event: event)
-        domains.where!("object_changes ->> 'registrar_id' IS NOT NULL") if event == 'update'
-        domains.where('created_at > ?', date_to)
-               .where("object ->> 'created_at' <= ?", date_to)
-               .where("object ->> 'created_at' >= ?", date_from)
-               .select("DISTINCT ON (object ->> 'name') object, created_at")
-               .order(Arel.sql("object ->> 'name', created_at desc"))
-      end
+        domain_version = ::Version::DomainVersion.where(event: event)
+        domain_version.where!("object_changes ->> 'registrar_id' IS NOT NULL") if event == 'update'
+        domain_version.where('created_at > ?', date_to)
+                      .where("object ->> 'created_at' <= ?", date_to)
+                      .where("object ->> 'created_at' >= ?", date_from)
+                      .select("DISTINCT ON (object ->> 'name') object, created_at")
+                      .order(Arel.sql("object ->> 'name', created_at desc"))
+      end 
 
       def group(domains)
         domains.group_by { |ld| ld.object['registrar_id'].to_s }
