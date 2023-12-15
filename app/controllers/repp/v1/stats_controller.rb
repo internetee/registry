@@ -50,9 +50,9 @@ module Repp
 
       def set_date_params
         @date_to = to_date(search_params[:end_date]).end_of_month
-        @date_from = to_date(search_params[:start_date] || '01.22')
+        @date_from = to_date(search_params[:start_date] || '01.00')
         @date_compare_to = to_date(search_params[:compare_to_end_date]).end_of_month
-        @date_compare_from = to_date(search_params[:compare_to_start_date] || '01.22')
+        @date_compare_from = to_date(search_params[:compare_to_start_date] || '01.00')
       end
 
       def to_date(date_param)
