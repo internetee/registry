@@ -19,8 +19,8 @@ class ReppV1StatsMarketShareTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
-    assert_equal json[:data], [{ name: @user.registrar.name, y: 4, sliced: true, selected: true },
-                               { name: 'Good Names', y: 2 }]
+    assert_equal json[:data], [{ name: 'Good Names', y: 2 },
+                               { name: @user.registrar.name, y: 4, sliced: true, selected: true }]
   end
 
   def test_shows_market_share_growth_rate_data
@@ -35,10 +35,10 @@ class ReppV1StatsMarketShareTest < ActionDispatch::IntegrationTest
     assert_equal 'Command completed successfully', json[:message]
 
     assert_equal json[:data], prev_data: { name: prev_date,
-                                           domains: [['Best Names', 1], ['Good Names', 2]],
-                                           market_share: [['Best Names', 33.3], ['Good Names', 66.7]] },
+                                           domains: [['Good Names', 3], ['Best Names', 0]],
+                                           market_share: [['Good Names', 100.0], ['Best Names', 0.0]] },
                               data: { name: @today,
-                                      domains: [['Best Names', 4], ['Good Names', 2]],
-                                      market_share: [['Best Names', 66.7], ['Good Names', 33.3]] }
+                                      domains: [['Good Names', 2], ['Best Names', 4]],
+                                      market_share: [['Good Names', 33.3], ['Best Names', 66.7]] }
   end
 end

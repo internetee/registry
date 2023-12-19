@@ -7,6 +7,46 @@ one:
     updated_at: <%= Time.zone.parse('2010-07-05') %>
   created_at: <%= Time.zone.parse('2010-07-05') %>
 
+create_one:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:shop) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'shop.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:goodnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2023-10-05') %>
+
+create_two:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:airport) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'airport.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2023-12-05') %>
+
+create_three:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:hospital) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'hospital.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:goodnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2023-12-05') %>
+
+create_four:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:invalid) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'invalid.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:invalid) %>]
+  created_at: <%= Time.zone.parse('2023-12-05') %>
+
 transfer_one:
   item_id: <%= ActiveRecord::FixtureSet.identify(:shop) %>
   item_type: Domain
@@ -18,7 +58,7 @@ transfer_one:
     registrar_id: [<%= ActiveRecord::FixtureSet.identify(:goodnames) %>, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
   created_at: <%= Time.zone.parse('2023-12-05') %>
 
-create_one:
+create_five:
   item_id: 1111111
   item_type: Domain
   event: create
@@ -39,7 +79,7 @@ destroy_one:
     registrar_id: [<%= ActiveRecord::FixtureSet.identify(:goodnames) %>, null]
   created_at: <%= Time.zone.parse('2023-12-05') %>
 
-create_two:
+create_six:
   item_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
   item_type: Domain
   event: create
@@ -49,7 +89,7 @@ create_two:
     registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:acme_ltd) %>]
   created_at: <%= Time.zone.parse('2023-12-05') %>
 
-create_three:
+create_seven:
   item_id: <%= ActiveRecord::FixtureSet.identify(:metro) %>
   item_type: Domain
   event: create

@@ -24,13 +24,14 @@ class PaperTrailLearningTest < ActiveSupport::TestCase
 
   def test_returns_version_count_on_domains
     @domain = domains(:airport)
-    @domain.save
-
-    assert_equal 1, @domain.versions.count
+    assert_difference -> { @domain.versions.count }, 1 do
+      @domain.save
+    end
 
     @domain.name = 'domain.test'
-    @domain.save!
-    assert_equal 2, @domain.versions.count
+    assert_difference -> { @domain.versions.count }, 1 do
+      @domain.save!
+    end
   end
 
   def test_returns_version_count_on_users
