@@ -44,7 +44,7 @@ module Repp
       private
 
       def search_params
-        params.permit(:q, q: %i[start_date end_date compare_to_end_date compare_to_start_date])
+        params.permit(:q, q: %i[end_date compare_to_end_date])
               .fetch(:q, {}) || {}
       end
 

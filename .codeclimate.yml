@@ -31,7 +31,7 @@ plugins:
         enabled: false
   rubocop:
     enabled: true
-    channel: rubocop-1-18-3
+    channel: rubocop-1-45
     checks:
       Rubocop/Style/ClassAndModuleChildren:
         enabled: false
