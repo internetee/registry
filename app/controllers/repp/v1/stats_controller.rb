@@ -157,7 +157,7 @@ module Repp
         SQL
 
         ActiveRecord::Base.connection.execute(
-          ActiveRecord::Base.send(:sanitize_sql_array, [sql, date_to: date_to])
+          ActiveRecord::Base.send(:sanitize_sql_array, [sql, { date_to: date_to }])
         ).each_with_object({}) do |row, hash|
           hash[row['registrar_id']] = row['total_domain_count'].to_i
         end
