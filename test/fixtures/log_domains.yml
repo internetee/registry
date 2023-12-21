@@ -6,3 +6,95 @@ one:
     registrant_id: <%= ActiveRecord::FixtureSet.identify(:john) %>
     updated_at: <%= Time.zone.parse('2010-07-05') %>
   created_at: <%= Time.zone.parse('2010-07-05') %>
+
+create_one:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:shop) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'shop.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:goodnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2023-10-05') %>
+
+create_two:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:airport) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'airport.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2023-12-05') %>
+
+create_three:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:hospital) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'hospital.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:goodnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2023-12-05') %>
+
+create_four:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:invalid) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'invalid.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:invalid) %>]
+  created_at: <%= Time.zone.parse('2023-12-05') %>
+
+transfer_one:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:shop) %>
+  item_type: Domain
+  event: update
+  object: 
+    name: 'shop.test'
+    registrant_id: <%= ActiveRecord::FixtureSet.identify(:john) %>
+  object_changes:
+    registrar_id: [<%= ActiveRecord::FixtureSet.identify(:goodnames) %>, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+  created_at: <%= Time.zone.parse('2023-12-05') %>
+
+create_five:
+  item_id: 1111111
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'cinema.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:goodnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2023-09-05') %>
+
+destroy_one:
+  item_id: 1111111
+  item_type: Domain
+  event: destroy
+  object:
+    registrant_id: <%= ActiveRecord::FixtureSet.identify(:john) %>
+  object_changes:
+    name: ['cinema.test', null]
+    registrar_id: [<%= ActiveRecord::FixtureSet.identify(:goodnames) %>, null]
+  created_at: <%= Time.zone.parse('2023-12-05') %>
+
+create_six:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:library) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'library.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:acme_ltd) %>]
+  created_at: <%= Time.zone.parse('2023-12-05') %>
+
+create_seven:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:metro) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'metro.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:goodnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:jack) %>]
+  created_at: <%= Time.zone.parse('2023-09-05') %>

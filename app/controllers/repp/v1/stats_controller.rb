@@ -9,7 +9,7 @@ module Repp
         param :end_date, String, required: true, desc: 'Period end date'
       end
       def market_share_distribution
-        domains_by_rar = domains_by_registrar(@date_to, @date_from)
+        domains_by_rar = domains_by_registrar(@date_to)
         result = serialize_distribution_result(domains_by_rar)
         render_success(data: result)
       end
@@ -22,8 +22,8 @@ module Repp
         param :compare_to_end_date, String, required: true, desc: 'Comparison date'
       end
       def market_share_growth_rate
-        domains_by_rar = domains_by_registrar(@date_to, @date_from)
-        prev_domains_by_rar = domains_by_registrar(@date_compare_to, @date_compare_from)
+        domains_by_rar = domains_by_registrar(@date_to)
+        prev_domains_by_rar = domains_by_registrar(@date_compare_to)
 
         set_zero_values!(domains_by_rar, prev_domains_by_rar)
 
@@ -36,6 +36,7 @@ module Repp
                    data: { name: search_params[:end_date],
                            domains: serialize_growth_rate_result(domains_by_rar),
                            market_share: serialize_growth_rate_result(market_share_by_rar) } }
+
         render_success(data: result)
       end
       # rubocop:enable Metrics/MethodLength
@@ -43,15 +44,13 @@ module Repp
       private
 
       def search_params
-        params.permit(:q, q: %i[start_date end_date compare_to_end_date compare_to_start_date])
+        params.permit(:q, q: %i[end_date compare_to_end_date])
               .fetch(:q, {}) || {}
       end
 
       def set_date_params
         @date_to = to_date(search_params[:end_date]).end_of_month
-        @date_from = to_date(search_params[:start_date] || '01.05')
         @date_compare_to = to_date(search_params[:compare_to_end_date]).end_of_month
-        @date_compare_from = to_date(search_params[:compare_to_start_date] || '01.05')
       end
 
       def to_date(date_param)
@@ -78,35 +77,108 @@ module Repp
         end
       end
 
-      def domains_by_registrar(date_to, date_from)
-        log_domains_del = log_domains(event: 'destroy', date_to: date_to, date_from: date_from)
-        log_domains_trans = log_domains(event: 'update', date_to: date_to, date_from: date_from)
-        logged_domains = log_domains_trans.map { |ld| ld.object['name'] } +
-                         log_domains_del.map { |ld| ld.object['name'] }
-        domains_grouped = ::Domain.where('created_at <= ? AND created_at >= ?', date_to, date_from)
-                                  .where.not(name: logged_domains.uniq)
-                                  .group(:registrar_id).count.stringify_keys
-        summarize([group(log_domains_del), group(log_domains_trans), domains_grouped])
-      end
+      # rubocop:disable Metrics/MethodLength
+      def domains_by_registrar(date_to)
+        sql = <<-SQL
+          SELECT
+            registrar_id,
+            SUM(domain_count) AS total_domain_count
+          FROM (
+            -- Query for current domains for each registrar
+            SELECT
+              registrar_id::text AS registrar_id,
+              COUNT(*) AS domain_count
+            FROM
+              domains
+            GROUP BY
+              registrar_id
 
-      def summarize(arr)
-        arr.inject { |memo, el| memo.merge(el) { |_, old_v, new_v| old_v + new_v } }
-      end
+            UNION ALL
 
-      def log_domains(event:, date_to:, date_from:)
-        domains = ::Version::DomainVersion.where(event: event)
-        domains.where!("object_changes ->> 'registrar_id' IS NOT NULL") if event == 'update'
-        domains.where('created_at > ?', date_to)
-               .where("object ->> 'created_at' <= ?", date_to)
-               .where("object ->> 'created_at' >= ?", date_from)
-               .select("DISTINCT ON (object ->> 'name') object, created_at")
-               .order(Arel.sql("object ->> 'name', created_at desc"))
-      end
+            -- Query for 'create' events and count domains created by registrar
+            SELECT
+              (object_changes->'registrar_id'->>1)::text AS registrar_id,
+              COUNT(*) * -1 AS domain_count
+            FROM
+              log_domains
+            WHERE
+              event = 'create'
+              AND created_at > :date_to
+            GROUP BY
+              registrar_id
 
-      def group(domains)
-        domains.group_by { |ld| ld.object['registrar_id'].to_s }
-               .transform_values(&:count)
+            UNION ALL
+
+            -- Query for 'update' events and count domains transferred to a new registrar
+            SELECT
+              (object_changes->'registrar_id'->>1)::text AS registrar_id,
+              COUNT(*) * -1 AS domain_count
+            FROM
+              log_domains
+            WHERE
+              event = 'update'
+              AND object_changes->'registrar_id' IS NOT NULL
+              AND created_at > :date_to
+            GROUP BY
+              registrar_id
+
+            UNION ALL
+
+            -- Query for 'update' events and count domains transferred from an old registrar
+            SELECT
+              (object_changes->'registrar_id'->>0)::text AS registrar_id,
+              COUNT(*) AS domain_count
+            FROM
+              log_domains
+            WHERE
+              event = 'update'
+              AND object_changes->'registrar_id' IS NOT NULL
+              AND created_at > :date_to
+            GROUP BY
+              registrar_id
+
+            UNION ALL
+
+            -- Query for 'destroy' events and count the number of domains destroyed associated with each registrar
+            SELECT
+              (object_changes->'registrar_id'->>0)::text AS registrar_id,
+              COUNT(*) AS domain_count
+            FROM
+                log_domains
+            WHERE
+                event = 'destroy'
+                AND object_changes->'registrar_id' IS NOT NULL
+                AND created_at > :date_to
+            GROUP BY
+                registrar_id
+
+            UNION ALL
+
+            -- Query for 'destroy' events and count the number of domains destroyed associated with each registrar
+            SELECT
+              (object->'registrar_id')::text AS registrar_id,
+              COUNT(*) AS domain_count
+            FROM
+                log_domains
+            WHERE
+                event = 'destroy'
+                AND object_changes IS NULL
+                AND created_at > :date_to
+            GROUP BY
+                registrar_id
+
+          ) AS combined
+          GROUP BY
+            registrar_id;
+        SQL
+
+        ActiveRecord::Base.connection.execute(
+          ActiveRecord::Base.send(:sanitize_sql_array, [sql, { date_to: date_to }])
+        ).each_with_object({}) do |row, hash|
+          hash[row['registrar_id']] = row['total_domain_count'].to_i
+        end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def registrar_names
         @registrar_names ||= ::Registrar.where(test_registrar: false)
@@ -120,7 +192,10 @@ module Repp
 
           name = registrar_names[key]
           hash = { name: name, y: value }
-          hash.merge!({ sliced: true, selected: true }) if current_user.registrar.name == name
+          if current_user.registrar.name == name
+            hash[:sliced] = true
+            hash[:selected] = true
+          end
           hash
         end.compact
       end

@@ -12,7 +12,7 @@ shop:
   period: 1
   period_unit: m
   uuid: 1b3ee442-e8fe-4922-9492-8fcb9dccc69c
-  created_at: <%= 2.days.ago.to_s :db %>
+  created_at: <%= 2.months.ago.to_s :db %>
 
 airport:
   name: airport.test
@@ -51,7 +51,7 @@ metro:
   period: 1
   period_unit: m
   uuid: ef97cb80-333b-4893-b9df-163f2b452798
-  created_at: <%= 2.days.ago.to_s :db %>
+  created_at: <%= 3.months.ago.to_s :db %>
 
 hospital:
   name: hospital.test

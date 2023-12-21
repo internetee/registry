@@ -1,3 +1,12 @@
 Name,Registrant,Registrar,Action,Created at
+,John,,destroy,2023-12-04 22:00:00
+hospital.test,John,Good Names,create,2023-12-04 22:00:00
+library.test,Acme Ltd,Best Names,create,2023-12-04 22:00:00
+shop.test,John,Best Names,update,2023-12-04 22:00:00
+invalid.test,any,Best Names,create,2023-12-04 22:00:00
+airport.test,John,Best Names,create,2023-12-04 22:00:00
+shop.test,John,Good Names,create,2023-10-04 21:00:00
+cinema.test,John,Good Names,create,2023-09-04 21:00:00
+metro.test,Jack,Good Names,create,2023-09-04 21:00:00
 ,test_code,Best Names,update,2018-04-23 15:50:48
 ,John,,update,2010-07-04 21:00:00
