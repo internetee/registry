@@ -74,9 +74,7 @@ destroy_one:
   event: destroy
   object:
     registrant_id: <%= ActiveRecord::FixtureSet.identify(:john) %>
-  object_changes:
-    name: ['cinema.test', null]
-    registrar_id: [<%= ActiveRecord::FixtureSet.identify(:goodnames) %>, null]
+    registrar_id: <%= ActiveRecord::FixtureSet.identify(:goodnames) %>
   created_at: <%= Time.zone.parse('2023-12-05') %>
 
 create_six:
