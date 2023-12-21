@@ -1,3 +1,6 @@
+21.12.2023
+* Registrar statistics calculation refactor https://github.com/internetee/registry/pull/2629
+
 23.08.2023
 * Fix for forceDeleteLift job https://github.com/internetee/registry/issues/2607
 * Punycode email support for EPP contact create and update API requests https://github.com/internetee/registry/pull/2609
