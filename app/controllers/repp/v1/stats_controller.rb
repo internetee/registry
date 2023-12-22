@@ -141,28 +141,13 @@ module Repp
 
             -- Query for 'destroy' events and count the number of domains destroyed associated with each registrar
             SELECT
-              (object_changes->'registrar_id'->>0)::text AS registrar_id,
-              COUNT(*) AS domain_count
-            FROM
-                log_domains
-            WHERE
-                event = 'destroy'
-                AND object_changes->'registrar_id' IS NOT NULL
-                AND created_at > :date_to
-            GROUP BY
-                registrar_id
-
-            UNION ALL
-
-            -- Query for 'destroy' events and count the number of domains destroyed associated with each registrar
-            SELECT
               (object->'registrar_id')::text AS registrar_id,
               COUNT(*) AS domain_count
             FROM
                 log_domains
             WHERE
                 event = 'destroy'
-                AND object_changes IS NULL
+                AND object IS NOT NULL
                 AND created_at > :date_to
             GROUP BY
                 registrar_id

@@ -1,5 +1,5 @@
 Name,Registrant,Registrar,Action,Created at
-,John,,destroy,2023-12-04 22:00:00
+,John,Good Names,destroy,2023-12-04 22:00:00
 hospital.test,John,Good Names,create,2023-12-04 22:00:00
 library.test,Acme Ltd,Best Names,create,2023-12-04 22:00:00
 shop.test,John,Best Names,update,2023-12-04 22:00:00
