@@ -1,3 +1,6 @@
+22.12.2023
+* Improvements for statistics queries https://github.com/internetee/registry/pull/2632
+
 21.12.2023
 * Registrar statistics calculation refactor https://github.com/internetee/registry/pull/2629
 
