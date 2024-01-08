@@ -3,6 +3,22 @@ module EmailVerifable
 
   included do
     scope :recently_not_validated, -> { where.not(id: ValidationEvent.validated_ids_by(name)) }
+
+    after_save :verify_email, if: :email_changed?
+  end
+
+  def remove_force_delete
+    domains.each do |domain|
+      contact_emails_valid?(domain) ? domain.cancel_force_delete : domain.schedule_force_delete
+    end
+  end
+
+  def contact_emails_valid?(domain)
+    domain.contacts.each do |c|
+      return false unless c.need_to_lift_force_delete?
+    end
+
+    domain.registrant.need_to_lift_force_delete?
   end
 
   def email_verification_failed?
