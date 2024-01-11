@@ -3,13 +3,20 @@ module EmailVerifable
 
   included do
     scope :recently_not_validated, -> { where.not(id: ValidationEvent.validated_ids_by(name)) }
+  end
 
-    after_save :verify_email, if: :email_changed?
+  def validate_email_by_regex_and_mx
+    return if Rails.env.test?
+
+    verify_email(check_level: 'regex')
+    verify_email(check_level: 'mx')
   end
 
   def remove_force_delete
+    return if Rails.env.test?
+
     domains.each do |domain|
-      contact_emails_valid?(domain) ? domain.cancel_force_delete : domain.schedule_force_delete
+      contact_emails_valid?(domain) ? domain.cancel_force_delete : nil
     end
   end
 

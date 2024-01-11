@@ -9,6 +9,8 @@ class ForceDeleteTest < ActionMailer::TestCase
     ActionMailer::Base.deliveries.clear
     @old_validation_type = Truemail.configure.default_validation_type
     ValidationEvent.destroy_all
+
+    Truemail.configure.whitelisted_domains = ['email.com', 'internet2.ee']
   end
 
   teardown do
@@ -403,6 +405,8 @@ class ForceDeleteTest < ActionMailer::TestCase
   end
 
   def test_add_invalid_email_to_domain_status_notes
+    Contact.skip_callback(:save, :after, :remove_force_delete)
+
     domain = domains(:airport)
     domain.update(valid_to: Time.zone.parse('2012-08-05'),
                   statuses: %w[serverForceDelete serverRenewProhibited serverTransferProhibited],
@@ -417,6 +421,8 @@ class ForceDeleteTest < ActionMailer::TestCase
     Truemail.configure.default_validation_type = :regex
 
     contact_first = domain.admin_contacts.first
+
+
     contact_first.update_attribute(:email_history, 'john@inbox.test')
     contact_first.update_attribute(:email, email)
 

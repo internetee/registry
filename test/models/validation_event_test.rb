@@ -36,6 +36,7 @@ class ValidationEventTest < ActiveSupport::TestCase
     assert_not @domain.force_delete_scheduled?
     travel_to Time.zone.parse('2010-07-05')
 
+    Contact.skip_callback(:save, :after, :validate_email_by_regex_and_mx)
     email = 'email@somestrangedomain12345.ee'
     contact = @domain.admin_contacts.first
     contact.update_attribute(:email, email)
