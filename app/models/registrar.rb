@@ -99,7 +99,7 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
       buyer_email: billing_email,
       buyer_vat_no: vat_no,
       reference_no: reference_no,
-      vat_rate: calculate_vat_rate,
+      vat_rate: calculate_vat_rate(current_year: summary['date'].to_date.year),
       monthly_invoice: true,
       metadata: { items: remove_line_duplicates(summary['invoice_lines']) },
       total: 0
@@ -325,8 +325,8 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
     !vat_liable_locally?
   end
 
-  def calculate_vat_rate
-    ::Invoice::VatRateCalculator.new(registrar: self).calculate
+  def calculate_vat_rate(current_year: Time.zone.today.year)
+    ::Invoice::VatRateCalculator.new(registrar: self, current_year: current_year).calculate
   end
 
   def remove_line_duplicates(invoice_lines, lines: [])
