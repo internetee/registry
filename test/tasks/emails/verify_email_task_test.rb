@@ -66,10 +66,9 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
       create_valid_contact
     end
 
-    # Validation email of new contact will be skipped because it validated in during create
-    # assert_difference 'ValidationEvent.where(success: true).count', 1 do
-    #   run_task
-    # end
+    assert_difference 'ValidationEvent.where(success: true).count', 1 do
+      run_task
+    end
   end
 
   def test_fd_should_not_be_removed_if_email_changed_to_another_invalid_one
