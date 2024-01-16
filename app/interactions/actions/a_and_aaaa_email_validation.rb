@@ -13,6 +13,8 @@ module Actions
       dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
 
       resolve_a_and_aaaa_records(dns_servers: dns_servers, email_domain: email_domain, value: value)
+    rescue Mail::Field::IncompleteParseError => e
+      Rails.logger.info "Failed to parse email #{email}."
     end
 
     def resolve_a_and_aaaa_records(dns_servers:, email_domain:, value:)
@@ -32,11 +34,15 @@ module Actions
 
     def resolve_a_records(dns:, hostname:)
       resources = dns.getresources(hostname, Resolv::DNS::Resource::IN::A)
+      return if resources.nil?
+
       resources.map(&:address)
     end
 
     def resolve_aaaa_records(dns:, hostname:)
       resources = dns.getresources(hostname, Resolv::DNS::Resource::IN::AAAA)
+      return if resources.nil?
+
       resources.map(&:address)
     end
   end

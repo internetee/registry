@@ -33,6 +33,8 @@ class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
 
   Capybara.server = :puma, { Silent: true }
 
+  # Webdrivers::Chromedriver.required_version = '114.0.5735.90'
+
   def setup
     DatabaseCleaner.start
     super

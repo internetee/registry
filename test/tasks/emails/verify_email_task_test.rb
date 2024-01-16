@@ -78,7 +78,7 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
     contact.domains.last.schedule_force_delete(type: :soft)
     assert contact.domains.last.force_delete_scheduled?
 
-    contact.update!(email: 'test@box.test')
+    contact.update_attribute(:email, 'test@box.test')
     contact.reload
 
     trumail_results = OpenStruct.new(success: false,

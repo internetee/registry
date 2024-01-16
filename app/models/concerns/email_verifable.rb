@@ -6,14 +6,14 @@ module EmailVerifable
   end
 
   def validate_email_by_regex_and_mx
-    return if Rails.env.test?
+    # return if Rails.env.test?
 
     verify_email(check_level: 'regex')
     verify_email(check_level: 'mx')
   end
 
-  def remove_force_delete
-    return if Rails.env.test?
+  def remove_force_delete_for_valid_contact
+    # return if Rails.env.test?
 
     domains.each do |domain|
       contact_emails_valid?(domain) ? domain.cancel_force_delete : nil
