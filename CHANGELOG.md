@@ -1,3 +1,6 @@
+18.01.2024
+* Fix for vat on monthly invoices from December '23 https://github.com/internetee/registry/issues/2639 
+
 22.12.2023
 * Improvements for statistics queries https://github.com/internetee/registry/pull/2632
 
