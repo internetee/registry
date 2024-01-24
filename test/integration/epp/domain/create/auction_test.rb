@@ -81,7 +81,7 @@ class EppDomainCreateAuctionTest < EppTestCase
 
   def test_registers_domain_with_correct_registration_code_when_payment_is_received
     @auction.update!(status: Auction.statuses[:payment_received],
-                     registration_code: 'auction001')
+                     registration_code: 'auction001', registration_deadline: 1.day.from_now)
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -243,6 +243,42 @@ class EppDomainCreateAuctionTest < EppTestCase
       post epp_create_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :parameter_value_policy_error
+  end
+
+  def test_domain_cannot_be_registred_when_deadline_is_reached
+    @auction.update!(status: Auction.statuses[:payment_received],
+                     registration_code: 'auction001', registration_deadline: 1.second.ago)
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>auction.test</domain:name>
+              <domain:registrant>#{contacts(:john).code}</domain:registrant>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+              <eis:reserved>
+                <eis:pw>auction001</eis:pw>
+              </eis:reserved>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
     response_xml = Nokogiri::XML(response.body)
     assert_correct_against_schema response_xml
     assert_epp_response :parameter_value_policy_error

@@ -43,7 +43,7 @@ module Actions
       return unless Domain.release_to_auction
 
       dn = DNS::DomainName.new(domain.name)
-      if dn.at_auction?
+      if dn.at_auction? || dn.is_deadline_is_reached?
         domain.add_epp_error('2306', nil, nil, 'Parameter value policy error: domain is at auction')
       elsif dn.awaiting_payment?
         domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw element' \

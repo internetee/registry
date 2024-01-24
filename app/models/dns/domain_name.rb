@@ -78,6 +78,10 @@ module DNS
       !not_auctionable?
     end
 
+    def is_deadline_is_reached?
+      pending_auction && pending_auction.payment_received? && pending_auction&.registration_deadline && Time.zone.now > pending_auction.registration_deadline
+    end
+
     def to_s
       name
     end

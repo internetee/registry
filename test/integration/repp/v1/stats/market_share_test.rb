@@ -24,7 +24,7 @@ class ReppV1StatsMarketShareTest < ActionDispatch::IntegrationTest
   end
 
   def test_shows_market_share_growth_rate_data
-    prev_date = Time.zone.today.last_month.strftime('%m.%y')
+    prev_date = Date.new(2023, 11, 1).strftime('%m.%y')
     get '/repp/v1/stats/market_share_growth_rate', headers: @auth_headers,
                                                    params: { q: { end_date: @today,
                                                                   compare_to_end_date: prev_date } }
