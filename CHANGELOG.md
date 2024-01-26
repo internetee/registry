@@ -1,3 +1,6 @@
+26.01.2024
+* Fix for auction race condition on domain registration deadline https://github.com/internetee/registry/issues/2641
+
 18.01.2024
 * Fix for vat on monthly invoices from December '23 https://github.com/internetee/registry/issues/2639 
 
