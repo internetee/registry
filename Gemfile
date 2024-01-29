@@ -77,7 +77,7 @@ gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'rexml'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
 
-gem 'directo', github: 'internetee/directo', branch: 'master'
+gem 'directo', github: 'internetee/directo', branch: 'change-directo-code'
 
 gem 'strong_migrations'
 

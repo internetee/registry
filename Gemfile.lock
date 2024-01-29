@@ -9,8 +9,8 @@ GIT
 
 GIT
   remote: https://github.com/internetee/directo.git
-  revision: 711ce2d942456ee830b649b03b7141e903a1d86b
-  branch: master
+  revision: c886fccb9ca2e5f481124f07e65613a5b64cab74
+  branch: change-directo-code
   specs:
     directo (1.0.1)
       money (~> 6.13)
@@ -604,4 +604,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.6.1)
 
 BUNDLED WITH
-   2.4.19
+   2.5.5
