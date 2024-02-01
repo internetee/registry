@@ -16,8 +16,8 @@ module Serializers
         return simple_object if @simplify
 
         json = { code: obj.code, name: obj.name, ident: ident, phone: obj.phone,
-                 created_at: obj.created_at, auth_info: obj.auth_info, email: obj.email,
-                 statuses: statuses, disclosed_attributes: obj.disclosed_attributes,
+                 created_at: obj.created_at, updated_at: obj.updated_at, auth_info: obj.auth_info,
+                 email: obj.email, statuses: statuses, disclosed_attributes: obj.disclosed_attributes,
                  registrar: registrar }
         json[:address] = address if @show_address
         if @domain_params
