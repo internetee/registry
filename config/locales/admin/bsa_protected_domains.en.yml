@@ -1,0 +1,11 @@
+en:
+  admin:
+    bsa_protected_domains:
+      index:
+        title: BSA protected domains
+        new_btn: New BSA protected domain
+        reset_btn: Reset
+        csv_btn: CSV
+
+      form:
+        password_hint: Generated automatically if left blank

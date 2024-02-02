@@ -25,6 +25,7 @@ module Whois
     def determine_collection
       case type
       when 'reserved' then ReservedDomain
+      when 'bsa_protected' then BsaProtectedDomain
       when 'blocked'  then BlockedDomain
       when 'domain'   then Domain
       when 'disputed' then Dispute

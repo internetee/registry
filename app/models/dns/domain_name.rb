@@ -70,6 +70,10 @@ module DNS
       ReservedDomain.where(name: name).any?
     end
 
+    def bsa_protected?
+      BsaProtectedDomain.where(domain_name: name).any?
+    end
+
     def disputed?
       Dispute.active.where(domain_name: name).any?
     end
@@ -91,7 +95,7 @@ module DNS
     attr_reader :name
 
     def not_auctionable?
-      blocked? || reserved? || disputed? || pending_auction.present?
+      blocked? || reserved? || disputed? || pending_auction.present? || bsa_protected?
     end
 
     def zone_with_same_origin?

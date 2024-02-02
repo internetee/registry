@@ -10,13 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
--- *not* creating schema, since initdb creates it
-
-
---
 -- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -546,6 +539,42 @@ ALTER SEQUENCE public.bounced_mail_addresses_id_seq OWNED BY public.bounced_mail
 
 
 --
+-- Name: bsa_protected_domains; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bsa_protected_domains (
+    id bigint NOT NULL,
+    order_id character varying NOT NULL,
+    suborder_id character varying NOT NULL,
+    domain_name character varying NOT NULL,
+    state integer DEFAULT 0 NOT NULL,
+    registration_code character varying NOT NULL,
+    create_date timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: bsa_protected_domains_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bsa_protected_domains_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bsa_protected_domains_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bsa_protected_domains_id_seq OWNED BY public.bsa_protected_domains.id;
+
+
+--
 -- Name: business_registry_contacts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -692,7 +721,9 @@ CREATE TABLE public.contacts (
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     email_history character varying,
-    registrant_publishable boolean DEFAULT false
+    registrant_publishable boolean DEFAULT false,
+    checked_company_at timestamp without time zone,
+    company_register_status character varying
 );
 
 
@@ -2837,11 +2868,12 @@ ALTER SEQUENCE public.white_ips_id_seq OWNED BY public.white_ips.id;
 CREATE TABLE public.whois_records (
     id integer NOT NULL,
     domain_id integer,
-    name character varying,
+    name character varying NOT NULL,
     json json,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    registrar_id integer
+    registrar_id integer,
+    CONSTRAINT whois_records_name_null CHECK ((name IS NOT NULL))
 );
 
 
@@ -2961,6 +2993,13 @@ ALTER TABLE ONLY public.blocked_domains ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.bounced_mail_addresses ALTER COLUMN id SET DEFAULT nextval('public.bounced_mail_addresses_id_seq'::regclass);
+
+
+--
+-- Name: bsa_protected_domains id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bsa_protected_domains ALTER COLUMN id SET DEFAULT nextval('public.bsa_protected_domains_id_seq'::regclass);
 
 
 --
@@ -3453,6 +3492,14 @@ ALTER TABLE ONLY public.blocked_domains
 
 ALTER TABLE ONLY public.bounced_mail_addresses
     ADD CONSTRAINT bounced_mail_addresses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: bsa_protected_domains bsa_protected_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bsa_protected_domains
+    ADD CONSTRAINT bsa_protected_domains_pkey PRIMARY KEY (id);
 
 
 --
@@ -4721,6 +4768,13 @@ CREATE INDEX index_whois_records_on_domain_id ON public.whois_records USING btre
 
 
 --
+-- Name: index_whois_records_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_whois_records_on_name ON public.whois_records USING btree (name);
+
+
+--
 -- Name: index_whois_records_on_registrar_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4767,6 +4821,13 @@ CREATE UNIQUE INDEX unique_data_migrations ON public.data_migrations USING btree
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING btree (version);
+
+
+--
+-- Name: unique_suborder_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_suborder_id ON public.bsa_protected_domains USING btree (suborder_id);
 
 
 --
@@ -5470,6 +5531,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221214073933'),
 ('20221214074252'),
 ('20230531111154'),
-('20230707084741');
+('20230612094319'),
+('20230612094326'),
+('20230612094335'),
+('20230707084741'),
+('20230710120154'),
+('20230711083811'),
+('20231003073022');
 
 

@@ -1,0 +1,72 @@
+<%= form_for([:admin, @domain], html: { class: 'form-horizontal' }) do |f| %>
+    <%= render 'shared/full_errors', object: @domain %>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <%= t(:general) %>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :name %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:domain_name, class: 'form-control', disabled: !f.object.new_record?) %>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :registration_code %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:registration_code, placeholder: t(:optional), class: 'form-control') %>
+                            <span class="help-block"><%= t '.password_hint' %></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :order_id %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:order_id, class: 'form-control', disabled: !f.object.new_record?) %>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :suborder_id %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:suborder_id, class: 'form-control', disabled: !f.object.new_record?) %>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :create_date %>
+                        </div>
+                        <div class="col-md-7">
+                          <%= f.text_field(:create_date, class: 'form-control js-datepicker', disabled: !f.object.new_record?) %>
+                        </div>
+                    </div>
+                      <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :state %>
+                        </div>
+                        <div class="col-md-7">
+                          <%= f.select :state, BsaProtectedDomain.states.map { |key, value| [key, value] }, { selected: @domain.state_before_type_cast }, class: 'form-control js-combobox', placeholder: t(:choose) %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 text-right">
+            <%= button_tag(t(:save), class: 'btn btn-primary') %>
+        </div>
+    </div>
+<% end %>

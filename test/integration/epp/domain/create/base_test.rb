@@ -4,6 +4,8 @@ class EppDomainCreateBaseTest < EppTestCase
   setup do
     adapter = ENV["shunter_default_adapter"].constantize.new
     adapter&.clear!
+
+    @bsa_domain = bsa_protected_domains(:one)
   end
 
   def test_illegal_chars_in_dns_key
@@ -936,5 +938,100 @@ class EppDomainCreateBaseTest < EppTestCase
     assert response.body.include?(Shunter.default_error_message)
     ENV["shunter_default_threshold"] = '10000'
     ENV["shunter_enabled"] = 'false'
+  end
+
+
+  def test_domain_cannnot_be_created_if_it_in_bsa_protected_list_through_epp
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{@bsa_domain.domain_name}</domain:name>
+              <domain:registrant>#{contacts(:john).code}</domain:registrant>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :required_parameter_missing
+  end
+
+  def test_bsa_protected_domain_can_be_created_with_valid_registration_code_through_epp
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{@bsa_domain.domain_name}</domain:name>
+              <domain:registrant>#{contacts(:john).code}</domain:registrant>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+              <eis:reserved>
+                <eis:pw>#{@bsa_domain.registration_code}</eis:pw>
+              </eis:reserved>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :completed_successfully
+  end
+
+  def test_bsa_protected_domain_cannot_be_created_with_invalid_registration_code_through_epp
+    request_xml = <<-XML
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+      <command>
+        <create>
+          <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+            <domain:name>#{@bsa_domain.domain_name}</domain:name>
+            <domain:registrant>#{contacts(:john).code}</domain:registrant>
+          </domain:create>
+        </create>
+        <extension>
+          <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+            <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            <eis:reserved>
+              <eis:pw>invalid</eis:pw>
+            </eis:reserved>
+          </eis:extdata>
+        </extension>
+      </command>
+    </epp>
+  XML
+
+  assert_no_difference 'Domain.count' do
+    post epp_create_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+  end
+  response_xml = Nokogiri::XML(response.body)
+  assert_correct_against_schema response_xml
+
+  assert_epp_response :invalid_authorization_information
   end
 end

@@ -310,6 +310,7 @@ Rails.application.routes.draw do
         get 'delete'
       end
     end
+
     resources :reserved_domains do
       member do
         get 'delete'
@@ -319,6 +320,17 @@ Rails.application.routes.draw do
         post 'release_to_auction', to: 'reserved_domains#release_to_auction', as: 'release_to_auction'
       end
     end
+
+    resources :bsa_protected_domains do
+      member do
+        get 'delete'
+      end
+
+      collection do
+        post 'release_to_auction', to: 'bsa_protected_domains#release_to_auction', as: 'release_to_auction'
+      end
+    end
+
     resources :disputes do
       member do
         get 'delete'

@@ -97,6 +97,7 @@ class Ability
     can :manage, Setting
     can :manage, BlockedDomain
     can :manage, ReservedDomain
+    can :manage, BsaProtectedDomain
     can :manage, DNS::Zone
     can :manage, Version::DomainVersion
     can :manage, Version::ContactVersion
