@@ -9,6 +9,8 @@ class ForceDeleteTest < ActionMailer::TestCase
     ActionMailer::Base.deliveries.clear
     @old_validation_type = Truemail.configure.default_validation_type
     ValidationEvent.destroy_all
+
+    Truemail.configure.whitelisted_domains = ['email.com', 'internet2.ee']
   end
 
   teardown do
@@ -417,6 +419,8 @@ class ForceDeleteTest < ActionMailer::TestCase
     Truemail.configure.default_validation_type = :regex
 
     contact_first = domain.admin_contacts.first
+
+
     contact_first.update_attribute(:email_history, 'john@inbox.test')
     contact_first.update_attribute(:email, email)
 

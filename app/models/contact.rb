@@ -85,6 +85,9 @@ class Contact < ApplicationRecord
   after_save :update_related_whois_records
   before_validation :clear_address_modifications, if: -> { !self.class.address_processing? }
 
+  # after_save :validate_email_by_regex_and_mx
+  # after_save :remove_force_delete_for_valid_contact
+
   self.ignored_columns = %w[legacy_id legacy_history_id]
 
   ORG = 'org'.freeze

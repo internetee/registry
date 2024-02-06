@@ -29,8 +29,6 @@ class ValidationEventTest < ActiveSupport::TestCase
     assert contact.need_to_start_force_delete?
   end
 
-
-
   def test_fd_didnt_set_if_mx_interation_less_then_value
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?

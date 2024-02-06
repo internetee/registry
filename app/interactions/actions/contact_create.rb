@@ -21,7 +21,12 @@ module Actions
 
       %i[regex mx].each do |m|
         result = Actions::SimpleMailValidator.run(email: contact.email, level: m)
-        next if result
+        if result
+          @contact.validate_email_by_regex_and_mx
+          @contact.remove_force_delete_for_valid_contact
+
+          next
+        end
 
         err_text = "email '#{contact.email}' didn't pass validation"
         contact.add_epp_error('2005', nil, nil, "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")

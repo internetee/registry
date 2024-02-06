@@ -321,6 +321,60 @@ class ContactTest < ActiveJob::TestCase
     assert_equal contact.email, 'test@test.test'
   end
 
+  # def test_verify_email_if_it_changed
+  #   # check that email is invalid
+  #   assert_equal @contact.validation_events.count, 0
+
+  #   trumail_results = OpenStruct.new(success: false,
+  #                                    email: @contact.email,
+  #                                    domain: 'box.tests',
+  #                                    errors: { mx: 'target host(s) not found' })
+
+  #   runner = Actions::EmailCheck.new(email: @contact.email,
+  #                                    validation_eventable: @contact,
+  #                                    check_level: 'mx')
+
+  #   runner.stub :call, trumail_results do
+  #     3.times do
+  #       perform_enqueued_jobs do
+  #         VerifyEmailsJob.perform_now(email: @contact.email, check_level: 'mx')
+  #       end
+  #     end
+  #   end
+
+  #   assert_equal @contact.validation_events.count, 3
+  #   validation_event = @contact.validation_events.last
+
+  #   assert_equal validation_event.check_level, 'mx'
+  #   assert_equal validation_event.success, false
+
+  #   # set force delete to releted contact domain because invlid email
+  #   assert @contact.need_to_start_force_delete?
+
+  #   @contact.domains.each do |domain|
+  #     domain.schedule_force_delete(type: :soft)
+  #   end
+
+  #   # check it
+  #   assert @contact.domains.first.force_delete_scheduled?
+
+  #   # change email to valid
+
+  #   Truemail.configure.whitelisted_domains = %w[email.com inbox.test outlook.test]
+
+  #   @contact.email = 'valid@email.com'
+  #   @contact.save! && @contact.reload
+
+  #   assert_equal @contact.validation_events.count, 1
+
+  #   perform_enqueued_jobs
+
+  #   # check that force delete is removed
+
+  #   @contact.reload
+  #   assert_not @contact.domains.first.force_delete_scheduled?
+  # end
+
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)
