@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class ReferenceNoTest < ActiveSupport::TestCase
+  setup do
+    @registrar = registrars(:bestnames)
+  end
+
   def test_returns_format_regexp
     format = /\A\d{2,20}\z/
     assert_equal format, Billing::ReferenceNo::REGEXP
@@ -10,7 +14,7 @@ class ReferenceNoTest < ActiveSupport::TestCase
     stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/reference_number_generator")
       .to_return(status: 200, body: "{\"reference_number\":\"12332\"}", headers: {})
 
-    reference_no = Billing::ReferenceNo.generate
+    reference_no = Billing::ReferenceNo.generate(owner: @registrar.name)
     assert_match Billing::ReferenceNo::REGEXP, reference_no
   end
 end

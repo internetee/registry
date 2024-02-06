@@ -2,6 +2,10 @@ require 'test_helper'
 
 # https://www.pangaliit.ee/settlements-and-standards/reference-number-of-the-invoice
 class ReferenceNoBaseTest < ActiveSupport::TestCase
+  setup do
+    @registrar = registrars(:bestnames)
+  end
+  
   def test_generates_random_base
     assert_not_equal Billing::ReferenceNo::Base.generate, Billing::ReferenceNo::Base.generate
   end
