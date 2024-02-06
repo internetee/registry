@@ -1,4 +1,5 @@
 06.02.2024
+* Updated request for getting reference data https://github.com/internetee/registry/pull/2625
 * Force Delete process end is triggered by email update https://github.com/internetee/registry/issues/2634
 
 26.01.2024
