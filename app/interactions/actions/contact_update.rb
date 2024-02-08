@@ -26,7 +26,7 @@ module Actions
       %i[regex mx].each do |m|
         result = Actions::SimpleMailValidator.run(email: @new_attributes[:email], level: m)
         if result
-          @contact.validate_email_by_regex_and_mx
+          @contact.validate_email_by_regex_and_mx(single_email: true)
           @contact.remove_force_delete_for_valid_contact
 
           next
