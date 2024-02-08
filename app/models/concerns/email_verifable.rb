@@ -11,7 +11,9 @@ module EmailVerifable
   end
 
   def remove_force_delete_for_valid_contact
-    domains.each do |domain|
+    domain_with_fd = domains.select(&:force_delete_scheduled?)
+
+    domain_with_fd.each do |domain|
       contact_emails_valid?(domain) ? domain.cancel_force_delete : nil
     end
   end
