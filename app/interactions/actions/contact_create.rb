@@ -1,11 +1,12 @@
 module Actions
   class ContactCreate
-    attr_reader :contact, :legal_document, :ident
+    attr_reader :contact, :legal_document, :ident, :result
 
     def initialize(contact, legal_document, ident)
       @contact = contact
       @legal_document = legal_document
       @ident = ident
+      @result = nil
     end
 
     def call
@@ -20,13 +21,8 @@ module Actions
       return if Rails.env.test?
 
       %i[regex mx].each do |m|
-        result = Actions::SimpleMailValidator.run(email: contact.email, level: m)
-        if result
-          @contact.validate_email_by_regex_and_mx(single_email: true)
-          @contact.remove_force_delete_for_valid_contact
-
-          next
-        end
+        @result = Actions::SimpleMailValidator.run(email: contact.email, level: m)
+        next if @result
 
         err_text = "email '#{contact.email}' didn't pass validation"
         contact.add_epp_error('2005', nil, nil, "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
