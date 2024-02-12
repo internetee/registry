@@ -126,12 +126,13 @@ module Actions
     end
 
     def validate_contact
+      return if @error || !contact.valid?
+
       [:regex, :mx].each do |m|
         @contact.verify_email(check_level: m, single_email: true)
       end
 
       @contact.remove_force_delete_for_valid_contact
-    end
     end
   end
 end

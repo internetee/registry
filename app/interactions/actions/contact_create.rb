@@ -91,6 +91,8 @@ module Actions
     end
 
     def validate_contact
+      return if @error || !contact.valid?
+
       [:regex, :mx].each do |m|
         contact.verify_email(check_level: m, single_email: true)
       end
