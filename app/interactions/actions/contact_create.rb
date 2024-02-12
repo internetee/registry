@@ -15,6 +15,7 @@ module Actions
       validate_ident
       maybe_change_email
       commit
+      validate_contact
     end
 
     def maybe_change_email
@@ -87,6 +88,12 @@ module Actions
       contact.generate_code
       contact.email_history = contact.email
       contact.save
+    end
+
+    def validate_contact
+      [:regex, :mx].each do |m|
+        contact.verify_email(check_level: m, single_email: true)
+      end
     end
   end
 end
