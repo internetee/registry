@@ -18,6 +18,7 @@ module Actions
       maybe_change_email if new_attributes[:email].present?
       maybe_filtering_old_failed_records
       commit
+      validate_contact
     end
 
     def maybe_change_email
@@ -25,12 +26,7 @@ module Actions
 
       %i[regex mx].each do |m|
         result = Actions::SimpleMailValidator.run(email: @new_attributes[:email], level: m)
-        if result
-          @contact.validate_email_by_regex_and_mx(single_email: true)
-          @contact.remove_force_delete_for_valid_contact
-
-          next
-        end
+        next if result
 
         err_text = "email '#{new_attributes[:email]}' didn't pass validation"
         contact.add_epp_error('2005', nil, nil, "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
@@ -127,6 +123,15 @@ module Actions
       end
 
       updated
+    end
+
+    def validate_contact
+      [:regex, :mx].each do |m|
+        @contact.verify_email(check_level: m, single_email: true)
+      end
+
+      @contact.remove_force_delete_for_valid_contact
+    end
     end
   end
 end
