@@ -104,7 +104,7 @@ jobs:
       - name: Give test coverage reporter executable permissions
         run: chmod +x cc-test-reporter
 
-      - uses: actions/download-artifact@v3.0.2
+      - uses: actions/download-artifact@v4.1.2
         with:
           name: coverage-${{ matrix.ruby }}
           path: coverage
