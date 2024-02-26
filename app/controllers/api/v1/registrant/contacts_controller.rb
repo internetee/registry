@@ -145,7 +145,7 @@ module Api
           contact.transaction do
             contact.save!
 
-            contact.validate_email_by_regex_and_mx
+            contact.validate_email_by_regex_and_mx(single_email: true)
             contact.remove_force_delete_for_valid_contact
 
             action = current_registrant_user.actions.create!(contact: contact, operation: :update)
