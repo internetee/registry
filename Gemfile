@@ -17,7 +17,7 @@ gem 'figaro', '~> 1.2'
 
 # model related
 gem 'paper_trail', '~> 14.0'
-gem 'pg', '1.5.5'
+gem 'pg', '1.5.6'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 4.0.0'
 gem 'truemail', '~> 3.0' # validates email by regexp, mail server existence and address existence
