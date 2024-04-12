@@ -1,6 +1,5 @@
 Domain Registry
 ===============
-[![Build Status](https://travis-ci.org/internetee/registry.svg?branch=master)](https://travis-ci.org/internetee/registry)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a91e4ae502a6c5245160/maintainability)](https://codeclimate.com/github/internetee/registry/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a91e4ae502a6c5245160/test_coverage)](https://codeclimate.com/github/internetee/registry/test_coverage)
 [![Documentation Status](https://readthedocs.org/projects/eeregistry/badge/?version=latest)](http://docs.internet.ee/en/latest/?badge=latest)
