@@ -19,4 +19,6 @@
 .DS_Store
 /node_modules
 contact_companies_alert_list.txt
+.DS_Store
+node_modules/
 
