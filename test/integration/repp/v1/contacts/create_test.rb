@@ -192,7 +192,7 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', 'K')]
       end
       object
@@ -226,7 +226,7 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', 'R')]
       end
       object

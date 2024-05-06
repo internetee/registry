@@ -10,6 +10,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+--
 -- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -2832,12 +2839,11 @@ ALTER SEQUENCE public.white_ips_id_seq OWNED BY public.white_ips.id;
 CREATE TABLE public.whois_records (
     id integer NOT NULL,
     domain_id integer,
-    name character varying NOT NULL,
+    name character varying,
     json json,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    registrar_id integer,
-    CONSTRAINT whois_records_name_null CHECK ((name IS NOT NULL))
+    registrar_id integer
 );
 
 
@@ -5466,9 +5472,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221214073933'),
 ('20221214074252'),
 ('20230531111154'),
-('20230612094319'),
-('20230612094326'),
-('20230612094335'),
 ('20230707084741'),
 ('20230710120154'),
 ('20230711083811');

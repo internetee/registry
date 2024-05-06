@@ -21,4 +21,5 @@
 contact_companies_alert_list.txt
 .DS_Store
 node_modules/
+/lib/tasks/data
 

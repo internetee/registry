@@ -13,7 +13,7 @@ class CompanyRegisterTest < ActiveSupport::TestCase
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', 'R')]
       end
       object
@@ -34,7 +34,7 @@ class CompanyRegisterTest < ActiveSupport::TestCase
   end
 
   def test_should_return_liquided_value
-    @company_register_stub.stub :company_details, [Company.new('1234567', 'ACME Ltd', 'L')] do
+    @company_register_stub.stub :simple_data, [Company.new('1234567', 'ACME Ltd', 'L')] do
       @acme_ltd.stub :company_register, @company_register_stub do
         assert_equal 'liquidated', @acme_ltd.return_company_status
       end

@@ -23,7 +23,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', REGISTERED)]
       end
       object
@@ -55,7 +55,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', REGISTERED)]
       end
       object
@@ -85,7 +85,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', REGISTERED)]
       end
       object
@@ -113,7 +113,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', LIQUIDATED)]
       end
       object
@@ -144,7 +144,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', LIQUIDATED)]
       end
       object
@@ -175,7 +175,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', BANKRUPT)]
       end
       object
@@ -203,7 +203,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', DELETED)]
       end
       object
@@ -231,7 +231,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', DELETED)]
       end
       object
@@ -264,7 +264,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', DELETED)]
       end
       object
@@ -297,7 +297,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
-      def object.company_details(registration_number:)
+      def object.simple_data(registration_number:)
         [Company.new('1234567', 'ACME Ltd', LIQUIDATED)]
       end
       object
