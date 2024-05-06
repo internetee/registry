@@ -39,7 +39,7 @@ class CompanyRegisterClientStub
     [Company.new('1234567', 'ACME Ltd')]
   end
 
-  def company_details(registration_number:)
+  def simple_data(registration_number:)
     [Company.new('1234567', 'ACME Ltd', 'R')]
   end
 end
