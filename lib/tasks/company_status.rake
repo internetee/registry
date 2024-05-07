@@ -8,10 +8,11 @@ require 'rake_option_parser_boilerplate'
 
 
 namespace :companies do
-  # bundle exec rake companies:check_all -- --open_data_file_path=lib/tasks/data/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=lib/tasks/data/missing_companies_in_business_registry.csv --deleted_companies_output_path=lib/tasks/data/deleted_companies_from_business_registry.csv
+  # bundle exec rake companies:check_all -- --open_data_file_path=lib/tasks/data/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=lib/tasks/data/missing_companies_in_business_registry.csv --deleted_companies_output_path=lib/tasks/data/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip
   desc 'Get Estonian companies status from Business Registry.'
 
   DELETED_FROM_REGISTRY_STATUS = 'K'
+  FILENAME = 'opendata_business_registry.csv.zip'
 
   task :check_all => :environment do
     options = initialize_rake_task
@@ -19,20 +20,15 @@ namespace :companies do
     open_data_file_path = options[:open_data_file_path]
     missing_companies_in_business_registry_path = options[:missing_companies_output_path]
     deleted_companies_from_business_registry_path = options[:deleted_companies_output_path]
+    download_path = options[:download_path]
     output_file_path = 'lib/tasks/data/temp_missing_companies_output.csv'
-
-    puts open_data_file_path
 
     puts "*** Run 1 step. Downloading fresh open data file. ***"
 
-    # Download file
-    url = 'https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip'
-    filename = 'ettevotja_rekvisiidid__lihtandmed.csv.zip'
-    download_open_data_file(url, filename)
+    download_open_data_file(download_path, FILENAME)
 
-    # Unzip file
     destination = 'lib/tasks/data/'
-    unzip_dile(filename, destination)
+    unzip_dile(FILENAME, destination)
 
     # Remove old file
     remove_old_file(output_file_path)
@@ -43,9 +39,9 @@ namespace :companies do
     puts "*** Run 3 step. Fetching detailed information from business registry. ***"
     sort_missing_companies_to_different_files(output_file_path, missing_companies_in_business_registry_path, deleted_companies_from_business_registry_path)
 
-    puts '*** Run 4 step. Remove temporary file. ***'
+    puts '*** Run 4 step. Remove temporary files. ***'
     remove_old_file(output_file_path)
-    FileUtils.rm(filename) if File.exist?(filename)
+    FileUtils.rm(FILENAME) if File.exist?(FILENAME)
 
     puts '*** Done ***'
   end
@@ -56,11 +52,13 @@ namespace :companies do
     open_data_file_path = 'lib/tasks/data/ettevotja_rekvisiidid__lihtandmed.csv'
     missing_companies_in_business_registry_path = 'lib/tasks/data/missing_companies_in_business_registry.csv'
     deleted_companies_from_business_registry_path = 'lib/tasks/data/deleted_companies_from_business_registry.csv'
+    url = 'https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip'
 
     options = {
       open_data_file_path: open_data_file_path,
       missing_companies_output_path: missing_companies_in_business_registry_path,
       deleted_companies_output_path: deleted_companies_from_business_registry_path,
+      download_path: url,
     }
 
     banner = 'Usage: rake companies:check_all -- [options]'
@@ -74,6 +72,7 @@ namespace :companies do
       open_data_file_path: ['-o [OPEN_DATA_FILE_PATH]', '--open_data_file_path [DOMAIN_NAME]', String],
       missing_companies_output_path: ['-m [MISSING_COMPANIES_OUTPUT_PATH]', '--missing_companies_output_path [MISSING_COMPANIES_OUTPUT_PATH]', String],
       deleted_companies_output_path: ['-s [DELETED_COMPANIES_OUTPUT_PATH]', '--deleted_companies_output_path [DELETED_COMPANIES_OUTPUT_PATH]', String],
+      download_path: ['-d [DOWNLOAD_PATH]', '--download_path [DOWNLOAD_PATH]', String],
     }
   end
 
