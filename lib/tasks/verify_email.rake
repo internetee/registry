@@ -4,17 +4,25 @@ require 'syslog/logger'
 require 'active_record'
 
 SPAM_PROTECT_TIMEOUT = 30.seconds
+PATCH_SIZE = 10
+PATCH_INTERVAL = 10.minutes
 
 namespace :verify_email do
   # bundle exec rake verify_email:check_all -- --check_level=mx --spam_protect=true
-  # bundle exec rake verify_email:check_all -- -dshop.test -cmx -strue
+  # bundle exec rake verify_email:check_all -- -d shop.test -c mx -s true
+  # bunlde exec rake verify_email:check_all -- -e email1@example.com,email2@example.com -c mx
+  # bundle exec rake verify_email:check_all -- --email_regex='^test\d*@example\.com$' --check_level=mx --spam_protect=true
   desc 'Starts verifying email jobs with optional check level and spam protection'
   task check_all: :environment do
     options = {
       domain_name: nil,
       check_level: 'mx',
       spam_protect: false,
+      emails: [],
+      email_regex: nil,
+      force: false
     }
+
     banner = 'Usage: rake verify_email:check_all -- [options]'
     options = RakeOptionParserBoilerplate.process_args(options: options,
                                                        banner: banner,
@@ -27,9 +35,11 @@ namespace :verify_email do
 end
 
 def enqueue_email_verification(email_contacts, options)
-  email_contacts.each do |email|
-    VerifyEmailsJob.set(wait_until: spam_protect_timeout(options))
-                   .perform_later(email: email, check_level: options[:check_level])
+  email_contacts.each_slice(PATCH_SIZE).with_index do |slice, index|
+    slice.each do |email|
+      VerifyEmailsJob.set(wait_until: spam_protect_timeout(options) + index * PATCH_INTERVAL)
+                     .perform_later(email: email, check_level: options[:check_level], force: options[:force])
+    end
   end
 end
 
@@ -38,7 +48,11 @@ def spam_protect_timeout(options)
 end
 
 def prepare_contacts(options)
-  if options[:domain_name].present?
+  if options[:emails].any?
+    options[:emails]
+  elsif options[:email_regex].present?
+    contacts_by_regex(options[:email_regex])
+  elsif options[:domain_name].present?
     contacts_by_domain(options[:domain_name])
   else
     unvalidated_and_failed_contacts_emails
@@ -70,10 +84,17 @@ def contacts_by_domain(domain_name)
   domain.contacts.pluck(:email).uniq
 end
 
+def contacts_by_regex(regex)
+  Contact.where('email ~ ?', regex).pluck(:email).uniq
+end
+
 def opts_hash
   {
     domain_name: ['-d [DOMAIN_NAME]', '--domain_name [DOMAIN_NAME]', String],
     check_level: ['-c [CHECK_LEVEL]', '--check_level [CHECK_LEVEL]', String],
     spam_protect: ['-s [SPAM_PROTECT]', '--spam_protect [SPAM_PROTECT]', FalseClass],
+    emails: ['-e [EMAILS]', '--emails [EMAILS]', Array],
+    email_regex: ['-r [EMAIL_REGEX]', '--email_regex [EMAIL_REGEX]', String],
+    force: ['-f', '--force', FalseClass]
   }
 end

@@ -1,12 +1,12 @@
 class VerifyEmailsJob < ApplicationJob
   discard_on StandardError
 
-  def perform(email:, check_level: 'mx')
+  def perform(email:, check_level: 'mx', force: false)
     contact = Contact.find_by(email: email)
 
     return logger.info "Contact #{email} not found!" if contact.nil?
 
-    return unless need_to_verify?(contact)
+    return unless need_to_verify?(contact, force)
 
     validate_check_level(check_level)
 
@@ -24,8 +24,8 @@ class VerifyEmailsJob < ApplicationJob
     raise StandardError, "Check level #{check_level} is invalid"
   end
 
-  def need_to_verify?(contact)
-    return true if contact.validation_events.empty?
+  def need_to_verify?(contact, force)
+    return true if contact.validation_events.empty? || force
 
     last_validation = contact.validation_events.last
     expired_last_validation = last_validation.successful? && last_validation.created_at < validation_expiry_date

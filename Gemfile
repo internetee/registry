@@ -94,6 +94,7 @@ group :test do
   # gem 'webdrivers'
   gem 'simplecov', '0.17.1', require: false # CC last supported v0.17
   gem 'spy'
+  gem 'webdrivers', '~> 3.2'
   gem 'webmock'
 end
 
