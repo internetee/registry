@@ -309,7 +309,9 @@ GEM
       nokogiri (~> 1)
       rake
     mini_mime (1.1.5)
+    mini_portile2 (2.8.0)
     mini_portile2 (2.8.5)
+    minitest (5.18.0)
     minitest (5.18.1)
     minitest-stub_any_instance (1.0.3)
     monetize (1.9.4)
@@ -534,7 +536,6 @@ GEM
     zeitwerk (2.6.13)
 
 PLATFORMS
-  ruby
   x86_64-linux
 
 DEPENDENCIES
