@@ -235,13 +235,9 @@ GEM
       thor (>= 0.14.0, < 2)
     globalid (1.0.1)
       activesupport (>= 5.0)
-    google-protobuf (3.25.2)
     google-protobuf (3.25.2-x86_64-linux)
     googleapis-common-protos-types (1.3.0)
       google-protobuf (~> 3.14)
-    grpc (1.60.0)
-      google-protobuf (~> 3.25)
-      googleapis-common-protos-types (~> 1.0)
     grpc (1.60.0-x86_64-linux)
       google-protobuf (~> 3.25)
       googleapis-common-protos-types (~> 1.0)
@@ -309,9 +305,6 @@ GEM
       nokogiri (~> 1)
       rake
     mini_mime (1.1.5)
-    mini_portile2 (2.8.0)
-    mini_portile2 (2.8.5)
-    minitest (5.18.0)
     minitest (5.18.1)
     minitest-stub_any_instance (1.0.3)
     monetize (1.9.4)
@@ -334,10 +327,7 @@ GEM
       newrelic_rpm (= 8.1.0)
     newrelic_rpm (8.1.0)
     nio4r (2.5.9)
-    nokogiri (1.16.2)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
-    nokogiri (1.16.2-x86_64-linux)
+    nokogiri (1.16.4-x86_64-linux)
       racc (~> 1.4)
     nori (2.6.0)
     omniauth (2.1.0)
@@ -571,7 +561,7 @@ DEPENDENCIES
   lhv!
   mime-types-data
   mimemagic (= 0.4.3)
-  minitest (~> 5.17)
+  minitest
   minitest-stub_any_instance
   money-rails
   newrelic-infinite_tracing

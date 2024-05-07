@@ -88,7 +88,7 @@ end
 group :test do
   gem 'capybara'
   gem 'database_cleaner'
-  gem 'minitest', '~> 5.17'
+  gem 'minitest'
   gem 'minitest-stub_any_instance'
   gem 'selenium-webdriver'
   # gem 'webdrivers'
