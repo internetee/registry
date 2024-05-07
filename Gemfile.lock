@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/internetee/company_register.git
-  revision: c1068845b71fc2f9b9b340bfe248d2da3bad7178
+  revision: 6465d5c49478b9de5a5fa009cb6b8123b3956dd1
   branch: 4-check-for-company-existence
   specs:
     company_register (0.1.0)
@@ -170,7 +170,7 @@ GEM
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
     bcrypt (3.1.16)
-    bigdecimal (3.1.7)
+    bigdecimal (3.1.8)
     bindata (2.4.14)
     bootsnap (1.17.1)
       msgpack (~> 1.2)
@@ -268,7 +268,7 @@ GEM
       mutex_m
       nkf
       rack (< 3)
-    i18n (1.14.4)
+    i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     i18n_data (0.13.0)
     isikukood (0.1.2)
