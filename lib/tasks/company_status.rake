@@ -7,14 +7,15 @@ require 'optparse'
 require 'rake_option_parser_boilerplate'
 
 
-namespace :companies do
-  # bundle exec rake companies:check_all -- --open_data_file_path=lib/tasks/data/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=lib/tasks/data/missing_companies_in_business_registry.csv --deleted_companies_output_path=lib/tasks/data/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip
+namespace :company_status do
+  # bundle exec rake company_status:check_for_exists -- --open_data_file_path=lib/tasks/data/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=lib/tasks/data/missing_companies_in_business_registry.csv --deleted_companies_output_path=lib/tasks/data/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip
   desc 'Get Estonian companies status from Business Registry.'
 
   DELETED_FROM_REGISTRY_STATUS = 'K'
   FILENAME = 'opendata_business_registry.csv.zip'
+  DESTINATION = 'lib/tasks/data/'
 
-  task :check_all => :environment do
+  task :check_for_exists => :environment do
     options = initialize_rake_task
 
     open_data_file_path = options[:open_data_file_path]
@@ -26,9 +27,7 @@ namespace :companies do
     puts "*** Run 1 step. Downloading fresh open data file. ***"
 
     download_open_data_file(download_path, FILENAME)
-
-    destination = 'lib/tasks/data/'
-    unzip_dile(FILENAME, destination)
+    unzip_file(FILENAME, DESTINATION)
 
     # Remove old file
     remove_old_file(output_file_path)
@@ -81,7 +80,7 @@ namespace :companies do
   end
 
 
-  def unzip_dile(filename, destination)
+  def unzip_file(filename, destination)
     Zip::File.open(filename) do |zip_file|
       zip_file.each do |entry|
         entry.extract(File.join(destination, entry.name)) { true } 

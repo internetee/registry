@@ -40,14 +40,6 @@ module Contact::CompanyRegister
     []
   end
 
-  def return_entries_and_rulings
-    return unless org?
-
-    company_register.entries_and_rulings(start_at: '2019-01-18T11:57:00', ends_at: '2019-01-19T11:57:00')
-  rescue CompanyRegister::NotAvailableError
-    []
-  end
-
   def company_register
     @company_register ||= CompanyRegister::Client.new
   end
