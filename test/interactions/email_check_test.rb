@@ -97,7 +97,7 @@ class EmailCheckTest < ActiveSupport::TestCase
   end
 
   def test_should_test_email_with_punnycode
-    email = "info@xn--energiathus-mfb.ee"
+    email = 'info@xn--energiathus-mfb.ee'
     result = Actions::SimpleMailValidator.run(email: email, level: :mx)
 
     assert result
