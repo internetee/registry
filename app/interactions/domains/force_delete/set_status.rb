@@ -12,6 +12,8 @@ module Domains
                                    expire_warning_period_days +
                                    redemption_grace_period_days
         domain.force_delete_start = Time.zone.today + 1.day
+
+        domain.status_notes[DomainStatus::FORCE_DELETE] = "Company no: #{domain.registrant.ident}" if reason == 'invalid_company'
       end
 
       def force_delete_soft
