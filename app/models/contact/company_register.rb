@@ -1,17 +1,10 @@
 module Contact::CompanyRegister
   extend ActiveSupport::Concern
 
-  COMPANY_STATUSES = {
-    'r' => 'registered',
-    'l' => 'liquidated',
-    'n' => 'bankrupt',
-    'k' => 'deleted',
-  }.freeze
-
-  REGISTERED = 'registered'.freeze
-  LIQUIDATED = 'liquidated'.freeze
-  BANKRUPT = 'bankrupt'.freeze
-  DELETED = 'deleted'.freeze
+  REGISTERED = 'R'.freeze
+  LIQUIDATED = 'L'.freeze
+  BANKRUPT = 'N'.freeze
+  DELETED = 'K'.freeze
 
   def company_is_relevant?
     company_register_status == REGISTERED && company_register_status == LIQUIDATED
@@ -20,8 +13,7 @@ module Contact::CompanyRegister
   def return_company_status
     return if return_company_data.blank?
 
-    status = return_company_data.first[:status].downcase
-    COMPANY_STATUSES[status]
+    return_company_data.first[:status]
   end
 
   def return_company_data
