@@ -8,39 +8,45 @@ require 'rake_option_parser_boilerplate'
 
 
 namespace :company_status do
-  # bundle exec rake company_status:check_for_exists -- --open_data_file_path=lib/tasks/data/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=lib/tasks/data/missing_companies_in_business_registry.csv --deleted_companies_output_path=lib/tasks/data/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip
+  # bundle exec rake company_status:check_all -- --open_data_file_path=lib/tasks/data/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=lib/tasks/data/missing_companies_in_business_registry.csv --deleted_companies_output_path=lib/tasks/data/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip
   desc 'Get Estonian companies status from Business Registry.'
 
   DELETED_FROM_REGISTRY_STATUS = 'K'
-  FILENAME = 'opendata_business_registry.csv.zip'
   DESTINATION = 'lib/tasks/data/'
+  COMPANY_STATUS = 'ettevotja_staatus'
+  BUSINESS_REGISTRY_CODE = 'ariregistri_kood'
 
-  task :check_for_exists => :environment do
+  task :check_all => :environment do
     options = initialize_rake_task
 
     open_data_file_path = options[:open_data_file_path]
     missing_companies_in_business_registry_path = options[:missing_companies_output_path]
     deleted_companies_from_business_registry_path = options[:deleted_companies_output_path]
     download_path = options[:download_path]
-    output_file_path = 'lib/tasks/data/temp_missing_companies_output.csv'
+    downloaded_filename = File.basename(URI(download_path).path)
 
     puts "*** Run 1 step. Downloading fresh open data file. ***"
+    remove_old_file(DESTINATION + downloaded_filename)
+    download_open_data_file(download_path, downloaded_filename)
+    unzip_file(downloaded_filename, DESTINATION)
 
-    download_open_data_file(download_path, FILENAME)
-    unzip_file(FILENAME, DESTINATION)
+    puts "*** Run 2 step. I am collecting data from open business registry sources. ***"
+    company_data = collect_company_data(open_data_file_path)
 
-    # Remove old file
-    remove_old_file(output_file_path)
-
-    puts "*** Run 2 step. Collecting companies what are not in the open data file. ***"
-    collect_companies_whats_not_in_open_data_file(open_data_file_path, output_file_path)
-
-    puts "*** Run 3 step. Fetching detailed information from business registry. ***"
-    sort_missing_companies_to_different_files(output_file_path, missing_companies_in_business_registry_path, deleted_companies_from_business_registry_path)
-
-    puts '*** Run 4 step. Remove temporary files. ***'
-    remove_old_file(output_file_path)
-    FileUtils.rm(FILENAME) if File.exist?(FILENAME)
+    puts "*** Run 3 step. I process companies, update their information, and sort them into different files based on whether the companies are missing or removed from the business registry ***"
+    Registrant.where(ident_type: 'org', ident_country_code: 'EE').find_each do |contact|
+      if company_data.key?(contact.ident)
+        update_company_status(contact: contact, status: company_data[contact.ident][COMPANY_STATUS])
+        puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} has status: #{company_data[contact.ident][COMPANY_STATUS]}"
+      else
+        update_company_status(contact: contact, status: 'K')
+        sort_companies_to_files(
+          contact: contact,
+          missing_companies_in_business_registry_path: missing_companies_in_business_registry_path,
+          deleted_companies_from_business_registry_path: deleted_companies_from_business_registry_path,
+        )
+      end
+    end
 
     puts '*** Done ***'
   end
@@ -90,6 +96,15 @@ namespace :company_status do
     puts "Archive invoke to #{destination}"
   end
 
+  def collect_company_data(open_data_file_path)
+    company_data = {}
+
+    CSV.foreach(open_data_file_path, headers: true, col_sep: ';', quote_char: '"', liberal_parsing: true) do |row|
+      company_data[row[BUSINESS_REGISTRY_CODE]] = row
+    end
+
+    company_data
+  end
 
   def download_open_data_file(url, filename)
     uri = URI(url)
@@ -110,86 +125,43 @@ namespace :company_status do
     puts "File saved as #{filename}"
   end
 
-  def collect_companies_whats_not_in_open_data_file(open_data_file_path, output_file_path)
-    codes_in_csv = collect_company_codes(open_data_file_path)
-    put_missing_companies_to_file(output_file_path, codes_in_csv)
+  def update_company_status(contact:, status:)
+    contact.update(company_register_status: status, checked_company_at: Time.zone.now)
   end
 
-  def collect_company_codes(open_data_file_path)
-    codes_in_csv = []
-    CSV.foreach(open_data_file_path, headers: true, col_sep: ';', quote_char: '"', liberal_parsing: true) do |row|
-      codes_in_csv << row['ariregistri_kood']
-    end
-
-    codes_in_csv
+  def put_company_to_missing_file(contact:, path:)
+    write_to_csv_file(csv_file_path: path, headers: ["ID", "Ident", "Name"], attrs: [contact.id, contact.ident, contact.name])
   end
 
-  def put_missing_companies_to_file(output_file_path, codes_in_csv)
-    CSV.open(output_file_path, 'wb', write_headers: true, headers: ["ID", "Code", "Name"]) do |csv|
-      Contact.where(ident_type: 'org', ident_country_code: 'EE').find_each do |contact|
-      # [16526891, 14836742, 12489420, 12226399, 12475122].each do |test_ident|
-        # Contact.where(ident: test_ident).limit(100).each do |contact|
-          unless codes_in_csv.include?(contact.ident)
-            csv << [contact.id, contact.ident, contact.name]
-          end
-        # end
+  def sort_companies_to_files(contact:, missing_companies_in_business_registry_path:, deleted_companies_from_business_registry_path:)
+    sleep 1
+    resp = contact.return_company_details
+
+    if resp.empty?
+      put_company_to_missing_file(contact: contact, path: missing_companies_in_business_registry_path)
+      puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} is missing in registry, company id: #{contact.id}"
+    else
+      status = resp.first.status.upcase
+      kandeliik_type = resp.first.kandeliik.last.last.kandeliik
+      kandeliik_tekstina = resp.first.kandeliik.last.last.kandeliik_tekstina
+      kande_kpv = resp.first.kandeliik.last.last.kande_kpv
+
+      if status == DELETED_FROM_REGISTRY_STATUS
+        csv_file_path = deleted_companies_from_business_registry_path
+        headers = ["ID", "Ident", "Name", "Status", "Kandeliik Type", "Kandeliik Tekstina", "kande_kpv"]
+        attrs = [contact.id, contact.ident, contact.name, status, kandeliik_type, kandeliik_tekstina, kande_kpv]
+        write_to_csv_file(csv_file_path: csv_file_path, headers: headers, attrs: attrs)
+
+        puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} has status #{status}, company id: #{contact.id}"
       end
     end
   end
 
-  def sort_missing_companies_to_different_files(output_file_path, missing_companies_in_business_registry_path, deleted_companies_from_business_registry_path)
-    contact_no_in_business_registry = []
-    contact_which_were_deleted = []
+  def write_to_csv_file(csv_file_path:, headers:, attrs:)
+    write_headers = !File.exist?(csv_file_path)
 
-    collect_missing_companies_ids(output_file_path).each do |id|
-      puts "Fetching data for ID: #{id}"
-      
-      contact = Contact.find(id.to_i)
-
-      resp = contact.return_company_details
-
-      if resp.empty?
-        contact_no_in_business_registry << [contact.id, contact.ident, contact.name]
-      else
-        status = resp.first.status.upcase
-        kandeliik_type = resp.first.kandeliik.last.last.kandeliik
-        kandeliik_tekstina = resp.first.kandeliik.last.last.kandeliik_tekstina
-        kande_kpv = resp.first.kandeliik.last.last.kande_kpv
-
-        if status == DELETED_FROM_REGISTRY_STATUS
-          contact_which_were_deleted << [contact.id, contact.ident, contact.name, status, kandeliik_type, kandeliik_tekstina, kande_kpv]
-        end
-      end
-
-      sleep 1
-    end
-
-    save_missing_companies(contact_no_in_business_registry, missing_companies_in_business_registry_path)
-    save_deleted_companies(contact_which_were_deleted, deleted_companies_from_business_registry_path)
-  end
-
-  def collect_missing_companies_ids(output_file_path)
-    ids = []
-    CSV.foreach(output_file_path, headers: true, quote_char: '"', liberal_parsing: true) do |row|
-      ids << row['ID']
-    end
-
-    ids
-  end
-
-  def save_missing_companies(contact_no_in_business_registry, missing_companies_in_business_registry_path)
-    CSV.open(missing_companies_in_business_registry_path, 'wb', write_headers: true, headers: ["ID",  "Code", "Name"]) do |csv|
-      contact_no_in_business_registry.each do |entry|
-        csv << entry
-      end
-    end
-  end
-
-  def save_deleted_companies(contact_which_were_deleted, deleted_companies_from_business_registry_path)
-    CSV.open(deleted_companies_from_business_registry_path, 'wb', write_headers: true, headers: ["ID", "Ident", "Name", "Status", "Kandeliik Type", "Kandeliik Tekstina", "kande_kpv"]) do |csv|
-      contact_which_were_deleted.each do |entry|
-        csv << entry
-      end
+    CSV.open(csv_file_path, "ab", write_headers: write_headers, headers: headers) do |csv|
+      csv <<  attrs
     end
   end
 end

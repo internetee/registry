@@ -3,28 +3,10 @@ require 'zip'
 class CompanyRegisterStatusJob < ApplicationJob
   queue_as :default
 
-  FILENAME = 'ettevotja_rekvisiidid__lihtandmed.csv.zip'
-  UNZIP_FILENAME = 'ettevotja_rekvisiidid__lihtandmed.csv'
-  DESTINATION = 'lib/tasks/data/'
-
-  def perform(days_interval = 14, spam_time_delay = 0.2, batch_size = 100, download_open_data_file_url='https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip')
-
-    download_open_data_file(download_open_data_file_url, DESTINATION + FILENAME)
-    unzip_file(FILENAME, DESTINATION)
-
-    codes_in_csv = collect_company_codes(DESTINATION + UNZIP_FILENAME)
-
+  def perform(days_interval = 14, spam_time_delay = 1, batch_size = 100)
     sampling_registrant_contact(days_interval).find_in_batches(batch_size: batch_size) do |contacts|
-      contacts.each do |contact|
-        if codes_in_csv.include?(contact.ident)
-          proceed_company_status(contact, spam_time_delay)
-        else
-          schedule_force_delete(contact)
-        end
-      end
+      contacts.each { |contact| proceed_company_status(contact, spam_time_delay) }
     end
-
-    remove_temp_file(DESTINATION + UNZIP_FILENAME)
   end
 
   private
@@ -36,65 +18,53 @@ class CompanyRegisterStatusJob < ApplicationJob
     company_status = contact.return_company_status
     contact.update!(company_register_status: company_status, checked_company_at: Time.zone.now)
 
-    puts company_status
+    puts "company id #{contact.id} status: #{company_status}"
+
     case company_status
-      when Contact::REGISTERED
-        lift_force_delete(contact) if check_for_force_delete(contact)
-      when Contact::LIQUIDATED
-        ContactInformMailer.company_liquidation(contact: contact).deliver_now
-      when Contact::BANKRUPT || Contact::DELETED
-        schedule_force_delete(contact)
-      end
-  end
+    when Contact::REGISTERED
+      puts '----'
+      r =  check_for_force_delete(contact)
+      puts r
+      puts '----'
 
-  def collect_company_codes(open_data_file_path)
-    codes_in_csv = []
-    CSV.foreach(open_data_file_path, headers: true, col_sep: ';', quote_char: '"', liberal_parsing: true) do |row|
-      codes_in_csv << row['ariregistri_kood']
+
+      if r
+        lift_force_delete(contact)
+      end
+    when Contact::LIQUIDATED
+      ContactInformMailer.company_liquidation(contact: contact).deliver_now
+    else
+      # Here is case when company is not found in the register or it is deleted (Contact::DELETED status) or bankrupt (Contact::BANKRUPT status)
+      schedule_force_delete(contact)
     end
 
-    codes_in_csv
-  end
 
-  def download_open_data_file(url, filename)
-    uri = URI(url)
+    status = company_status.blank? ? Contact::DELETED : company_status
+    puts "---"
+    puts status
+    puts "---"
 
-    Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
-      request = Net::HTTP::Get.new(uri)
-      response = http.request(request)
-    
-      if response.code == '200'
-        File.open(filename, 'wb') do |file|
-          file.write(response.body)
-        end
-      else
-        puts "Failed to download file: #{response.code} #{response.message}"
-      end
-    end
-
-    puts "File saved as #{filename}"
-  end
-
-  def unzip_file(filename, destination)
-    ::Zip::File.open(destination + filename) do |zip_file|
-      zip_file.each do |entry|
-        entry.extract(File.join(destination, entry.name)) { true } 
-      end
-    end
-
-    puts "Archive invoke to #{destination}"
+    update_validation_company_status(contact:contact , status: status)
   end
 
   def sampling_registrant_contact(days_interval)
-    Registrant.where(ident_type: 'org', ident_country_code: 'EE')
-              .where('(company_register_status IS NULL) OR
-                (company_register_status = ? AND (checked_company_at IS NULL OR checked_company_at <= ?)) OR
-                (company_register_status = ? AND (checked_company_at IS NULL OR checked_company_at <= ?))',
-              Contact::REGISTERED, days_interval.days.ago, Contact::LIQUIDATED, 1.day.ago)
+    Registrant.where(ident_type: 'org', ident_country_code: 'EE').where(
+      "(company_register_status IS NULL OR checked_company_at IS NULL) OR
+      (company_register_status = ? AND checked_company_at < ?) OR
+      company_register_status IN (?)",
+      Contact::REGISTERED, days_interval.days.ago, [Contact::LIQUIDATED, Contact::BANKRUPT, Contact::DELETED]
+    )
+
+  end
+
+  def update_validation_company_status(contact:, status:)
+    contact.update(company_register_status: status, checked_company_at: Time.zone.now)
   end
   
   def schedule_force_delete(contact)
     contact.domains.each do |domain|
+      next if domain.schedule_force_delete?
+
       domain.schedule_force_delete(
         type: :fast_track,
         notify_by_email: true,
@@ -105,8 +75,11 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def check_for_force_delete(contact)
-    contact.domains.any? do |domain| 
-      domain.schedule_force_delete? && domain.status_notes[DomainStatus::FORCE_DELETE].include?("Company no: #{contact.ident}")
+    contact.domains.any? && domain.status_notes[DomainStatus::FORCE_DELETE].include?("Company no: #{contact.ident}") do |domain|
+      # && domain.status_notes[DomainStatus::FORCE_DELETE].include?("Company no: #{contact.ident}")
+      puts '-@#@#-'
+
+      domain.schedule_force_delete? 
     end
   end
 
@@ -114,9 +87,5 @@ class CompanyRegisterStatusJob < ApplicationJob
     contact.domains.each do |domain|
       domain.lift_force_delete
     end
-  end
-
-  def remove_temp_file(distination)
-    FileUtils.rm(distination) if File.exist?(distination)
   end
 end
