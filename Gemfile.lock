@@ -261,7 +261,7 @@ GEM
     httpi (2.4.5)
       rack
       socksify
-    i18n (1.14.1)
+    i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     i18n_data (0.13.0)
     isikukood (0.1.2)
@@ -505,8 +505,9 @@ GEM
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
-    validates_email_format_of (1.7.2)
-      i18n
+    validates_email_format_of (1.8.0)
+      i18n (>= 0.8.0)
+      simpleidn
     warden (1.2.9)
       rack (>= 2.0.9)
     wasabi (3.6.1)
@@ -598,7 +599,7 @@ DEPENDENCIES
   strong_migrations
   truemail (~> 3.0)
   uglifier
-  validates_email_format_of (= 1.7.2)
+  validates_email_format_of (= 1.8.0)
   webmock
   whenever (= 1.0.0)
   wkhtmltopdf-binary (~> 0.12.6.1)
