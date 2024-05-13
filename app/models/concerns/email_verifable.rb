@@ -79,9 +79,7 @@ module EmailVerifable
     action.call
   end
 
-  # rubocop:disable Metrics/LineLength
   def process_error(field)
     errors.add(field, I18n.t('activerecord.errors.models.contact.attributes.email.email_regex_check_error'))
   end
-  # rubocop:enable Metrics/LineLength
 end

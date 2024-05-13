@@ -139,7 +139,7 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    addressable (2.8.1)
+    addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     aes_key_wrap (1.1.0)
     airbrake (11.0.3)
@@ -167,6 +167,7 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.2.4)
       aws-eventstream (~> 1, >= 1.0.2)
+    base64 (0.2.0)
     bcrypt (3.1.16)
     bindata (2.4.14)
     bootsnap (1.17.1)
@@ -176,15 +177,15 @@ GEM
       sassc (>= 2.0.0)
     builder (3.2.4)
     cancancan (3.3.0)
-    capybara (3.35.3)
+    capybara (3.40.0)
       addressable
+      matrix
       mini_mime (>= 0.1.3)
-      nokogiri (~> 1.8)
+      nokogiri (~> 1.11)
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
-    childprocess (3.0.0)
     chronic (0.10.2)
     coderay (1.1.3)
     coffee-rails (5.0.0)
@@ -235,13 +236,9 @@ GEM
       thor (>= 0.14.0, < 2)
     globalid (1.0.1)
       activesupport (>= 5.0)
-    google-protobuf (3.25.2)
     google-protobuf (3.25.2-x86_64-linux)
     googleapis-common-protos-types (1.3.0)
       google-protobuf (~> 3.14)
-    grpc (1.60.0)
-      google-protobuf (~> 3.25)
-      googleapis-common-protos-types (~> 1.0)
     grpc (1.60.0-x86_64-linux)
       google-protobuf (~> 3.25)
       googleapis-common-protos-types (~> 1.0)
@@ -301,6 +298,7 @@ GEM
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     marcel (1.0.2)
+    matrix (0.4.2)
     method_source (1.0.0)
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
@@ -309,7 +307,6 @@ GEM
       nokogiri (~> 1)
       rake
     mini_mime (1.1.5)
-    mini_portile2 (2.8.5)
     minitest (5.18.1)
     minitest-stub_any_instance (1.0.3)
     monetize (1.9.4)
@@ -332,10 +329,7 @@ GEM
       newrelic_rpm (= 8.1.0)
     newrelic_rpm (8.1.0)
     nio4r (2.5.9)
-    nokogiri (1.16.2)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
-    nokogiri (1.16.2-x86_64-linux)
+    nokogiri (1.16.4-x86_64-linux)
       racc (~> 1.4)
     nori (2.6.0)
     omniauth (2.1.0)
@@ -369,11 +363,11 @@ GEM
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    public_suffix (5.0.0)
+    public_suffix (5.0.5)
     puma (5.6.8)
       nio4r (~> 2.0)
     racc (1.7.3)
-    rack (2.2.8.1)
+    rack (2.2.9)
     rack-oauth2 (1.21.3)
       activesupport
       attr_required
@@ -421,7 +415,7 @@ GEM
       redis-client (>= 0.9.0)
     redis-client (0.14.1)
       connection_pool
-    regexp_parser (2.1.1)
+    regexp_parser (2.9.0)
     request_store (1.5.1)
       rack (>= 1.4)
     responders (3.0.1)
@@ -455,9 +449,11 @@ GEM
       wasabi (~> 3.4)
     select2-rails (4.0.13)
     selectize-rails (0.12.6)
-    selenium-webdriver (3.142.7)
-      childprocess (>= 0.5, < 4.0)
-      rubyzip (>= 1.2.2)
+    selenium-webdriver (4.20.1)
+      base64 (~> 0.2)
+      rexml (~> 3.2, >= 3.2.5)
+      rubyzip (>= 1.2.2, < 3.0)
+      websocket (~> 1.0)
     sidekiq (7.1.4)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
@@ -521,7 +517,8 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    websocket-driver (0.7.6)
+    websocket (1.2.10)
+    websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     whenever (1.0.0)
@@ -532,7 +529,6 @@ GEM
     zeitwerk (2.6.13)
 
 PLATFORMS
-  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -568,7 +564,7 @@ DEPENDENCIES
   lhv!
   mime-types-data
   mimemagic (= 0.4.3)
-  minitest (~> 5.17)
+  minitest
   minitest-stub_any_instance
   money-rails
   newrelic-infinite_tracing
@@ -605,4 +601,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.6.1)
 
 BUNDLED WITH
-   2.5.4
+   2.5.10

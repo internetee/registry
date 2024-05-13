@@ -2,6 +2,15 @@ require 'test_helper'
 
 class VerifyEmailTaskTest < ActiveJob::TestCase
   def setup
+    @task_name = 'verify_email:check_all'
+    @default_options = {
+      domain_name: nil,
+      check_level: 'mx',
+      spam_protect: false,
+      emails: [],
+      email_regex: nil,
+      force: false
+    }
     @contact = contacts(:john)
     @invalid_contact = contacts(:invalid_email)
     @registrar = registrars(:bestnames)
@@ -37,31 +46,30 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
     assert_equal william_contacts_count, 2
     assert_equal Contact.count, 9
     run_task
-    assert_equal ValidationEvent.count, Contact.count - 1
+    assert_equal ValidationEvent.count, Contact.count
   end
 
   def test_should_not_affect_successfully_verified_emails
     assert_equal ValidationEvent.count, 0
     run_task
 
-    assert_equal ValidationEvent.count, Contact.count - 1
+    assert_equal ValidationEvent.count, Contact.count
     assert_equal ValidationEvent.where(success: true).count, 5
-    assert_equal ValidationEvent.where(success: false).count, 3
+    assert_equal ValidationEvent.where(success: false).count, 4
 
     run_task
     assert_equal ValidationEvent.where(success: true).count, 5
-    assert_equal ValidationEvent.where(success: false).count, 6
+    assert_equal ValidationEvent.where(success: false).count, 8
   end
 
   def test_should_verify_contact_email_which_was_not_verified
-    
     assert_equal ValidationEvent.count, 0
-    
+
     run_task
-    
-    assert_equal ValidationEvent.count, Contact.count - 1
+
+    assert_equal ValidationEvent.count, Contact.count
     assert_equal Contact.count, 9
-    
+
     assert_difference 'Contact.count', 1 do
       create_valid_contact
     end
@@ -112,15 +120,72 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
     assert_predicate ValidationEvent.old_records.count, :zero?
   end
 
+  def test_task_invocation_with_emails_option
+    options = @default_options.merge(
+      emails: [@contact.email, @invalid_contact.email]
+    )
+
+    assert_equal ValidationEvent.count, 0
+
+    assert_difference 'ValidationEvent.where(success: true).count', 1 do
+      RakeOptionParserBoilerplate.stub(:process_args, options) do
+        run_task
+      end
+    end
+
+    assert_equal ValidationEvent.count, 2
+    assert_equal ValidationEvent.where(success: true).count, 1
+    assert_equal ValidationEvent.where(success: false).count, 1
+  end
+
+  def test_task_invocation_with_regex_option
+    options = @default_options.merge(
+      email_regex: '@inbox\.test$'
+    )
+
+    assert_equal ValidationEvent.count, 0
+
+    assert_difference 'ValidationEvent.where(success: true).count', 5 do
+      RakeOptionParserBoilerplate.stub(:process_args, options) do
+        run_task
+      end
+    end
+  end
+
+  def test_task_invocation_with_force_option_and_failed_last_regex_validation
+    options = @default_options.merge(
+      emails: [@contact.email, @invalid_contact.email],
+      check_level: 'regex'
+    )
+    assert_equal ValidationEvent.count, 0
+
+    assert_difference 'ValidationEvent.count', 2 do
+      RakeOptionParserBoilerplate.stub(:process_args, options) do
+        run_task
+      end
+    end
+
+    last_failed_validation = @invalid_contact.validation_events.last
+
+    options[:force] = true
+    assert_difference 'ValidationEvent.count', 0 do
+      RakeOptionParserBoilerplate.stub(:process_args, options) do
+        run_task
+      end
+    end
+
+    assert_not_equal last_failed_validation.id, @invalid_contact.validation_events.last.id
+  end
+
   def run_task
     perform_enqueued_jobs do
-      Rake::Task['verify_email:check_all'].execute
+      Rake::Task[@task_name].execute
     end
   end
 
   def create_valid_contact
     Contact.create!(name: 'Jeembo',
-                    email: 'heey@jeembo.com',
+                    email: 'heey@inbox.test',
                     phone: '+555.555',
                     ident: '1234',
                     ident_type: 'priv',

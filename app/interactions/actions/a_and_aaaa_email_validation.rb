@@ -10,11 +10,13 @@ module Actions
 
     def check_for_records_value(email:, value:)
       email_domain = Mail::Address.new(email).domain
+
       dns_servers = ENV['dnssec_resolver_ips'].to_s.split(',').map(&:strip)
 
       resolve_a_and_aaaa_records(dns_servers: dns_servers, email_domain: email_domain, value: value)
-    rescue Mail::Field::IncompleteParseError => e
-      Rails.logger.info "Failed to parse email #{email}."
+    rescue Mail::Field::ParseError => e
+      Rails.logger.info "Mail parsing error: #{e.message}"
+      []
     end
 
     def resolve_a_and_aaaa_records(dns_servers:, email_domain:, value:)

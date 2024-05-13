@@ -62,17 +62,24 @@ Truemail.configure do |config|
   # domain only, i.e. if domain whitelisted, validation will passed to Regex, MX or SMTP validators.
   # Validation of email which not contains whitelisted domain always will return false.
   # It is equal false by default.
-  #config.whitelist_validation = true
+  # config.whitelist_validation = true
 
   # Optional parameter. Validation of email which contains blacklisted domain always will
   # return false. Other validations will not processed even if it was defined in validation_type_for
   # It is equal to empty array by default.
-  #config.blacklisted_domains = []
+  # config.blacklisted_domains = []
 
   # Optional parameter. This option will provide to use not RFC MX lookup flow.
   # It means that MX and Null MX records will be cheked on the DNS validation layer only.
   # By default this option is disabled.
   # config.not_rfc_mx_lookup_flow = true
+
+  # Optional parameter. This option will provide to use smtp fail fast behavior. When
+  # smtp_fail_fast = true it means that Truemail ends smtp validation session after first
+  # attempt on the first mx server in any fail cases (network connection/timeout error,
+  # smtp validation error). This feature helps to reduce total time of SMTP validation
+  # session up to 1 second. By default this option is disabled.
+  # config.smtp_fail_fast = true
 
   # Optional parameter. This option will be parse bodies of SMTP errors. It will be helpful
   # if SMTP server does not return an exact answer that the email does not exist

@@ -14,7 +14,8 @@
     },
     {
       "matchDepTypes": [".ruby-version"],
-      "addLabels": ["ruby-version"]
+      "addLabels": ["ruby-version"],
+      "automerge": false
     }
   ],
   "docker": {
