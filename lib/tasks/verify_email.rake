@@ -37,7 +37,7 @@ end
 def enqueue_email_verification(email_contacts, options)
   email_contacts.each_slice(PATCH_SIZE).with_index do |slice, index|
     slice.each do |email|
-      VerifyEmailsJob.set(wait_until: spam_protect_timeout(options) + index * PATCH_INTERVAL)
+      VerifyEmailsJob.set(wait: spam_protect_timeout(options) + index * PATCH_INTERVAL)
                      .perform_later(email: email, check_level: options[:check_level], force: options[:force])
     end
   end
