@@ -21,7 +21,7 @@ gem 'pg', '1.5.6'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 4.0.0'
 gem 'truemail', '~> 3.0' # validates email by regexp, mail server existence and address existence
-gem 'validates_email_format_of', '1.8.0' # validates email against RFC 2822 and RFC 3696
+gem 'validates_email_format_of', '1.8.2' # validates email against RFC 2822 and RFC 3696
 
 # 0.7.3 is the latest for Rails 4.2, however, it is absent on Rubygems server
 # https://github.com/huacnlee/rails-settings-cached/issues/165

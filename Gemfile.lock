@@ -500,14 +500,14 @@ GEM
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.8.2)
+    unf_ext (0.0.9.1)
     validate_email (0.1.6)
       activemodel (>= 3.0)
       mail (>= 2.2.5)
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
-    validates_email_format_of (1.8.0)
+    validates_email_format_of (1.8.2)
       i18n (>= 0.8.0)
       simpleidn
     warden (1.2.9)
@@ -601,7 +601,7 @@ DEPENDENCIES
   strong_migrations
   truemail (~> 3.0)
   uglifier
-  validates_email_format_of (= 1.8.0)
+  validates_email_format_of (= 1.8.2)
   webmock
   whenever (= 1.0.0)
   wkhtmltopdf-binary (~> 0.12.6.1)
