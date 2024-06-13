@@ -677,6 +677,7 @@ class Domain < ApplicationRecord
       statuses << DomainStatus::OK
     elsif (statuses.length > 1) || !valid?
       statuses.delete(DomainStatus::OK)
+      statuses.delete(DomainStatus::EXPIRED) unless expired?
     end
 
     p_d = statuses.include?(DomainStatus::PENDING_DELETE)
