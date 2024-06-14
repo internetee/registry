@@ -1,18 +1,19 @@
 module Actions
   class EmailCheck
-    attr_reader :email, :validation_eventable, :check_level
+    attr_reader :email, :validation_eventable, :check_level, :single_email
 
     SAVE_RESULTS_BATCH_SIZE = 500
 
-    def initialize(email:, validation_eventable:, check_level: nil)
+    def initialize(email:, validation_eventable:, single_email: false, check_level: nil)
       @email = email
       @validation_eventable = validation_eventable
       @check_level = check_level || :mx
+      @single_email = single_email
     end
 
     def call
       result = check_email(email)
-      save_result(result)
+      single_email ?  save_single_result(validation_eventable: validation_eventable, result: result) : save_result(result)
       handle_logging(result)
       result.success
     end
@@ -46,6 +47,15 @@ module Actions
 
     def filter_old_records(contact:, success:)
       contact.validation_events.destroy_all if success
+    end
+
+    def save_single_result(validation_eventable:, result:)
+      handle_mx_validation(result) if !result.success && @check_level == 'mx'
+      result.configuration = nil
+
+      handle_saving_result(validation_eventable, result)
+    rescue ActiveRecord::RecordNotSaved
+      logger.info "Cannot save validation result for #{log_object_id}" and return true
     end
 
     def save_result(result)
