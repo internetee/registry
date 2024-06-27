@@ -469,7 +469,7 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    simpleidn (0.2.1)
+    simpleidn (0.2.2)
       unf (~> 0.1.4)
     sixarm_ruby_unaccent (1.2.0)
     socksify (1.7.1)
@@ -596,7 +596,7 @@ DEPENDENCIES
   selenium-webdriver
   sidekiq (~> 7.0)
   simplecov (= 0.17.1)
-  simpleidn (= 0.2.1)
+  simpleidn (= 0.2.2)
   spy
   strong_migrations
   truemail (~> 3.0)
