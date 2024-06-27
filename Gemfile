@@ -43,7 +43,7 @@ gem 'data_migrate', '~> 9.0'
 gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
 gem 'money-rails'
-gem 'simpleidn', '0.2.1' # For punycode
+gem 'simpleidn', '0.2.2' # For punycode
 gem 'whenever', '1.0.0', require: false
 
 # country listing
