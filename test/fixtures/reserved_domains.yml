@@ -1,3 +1,7 @@
 one:
   name: reserved.test
   password: reserved-001
+
+two:
+  name: company-name.test
+  password: company-002

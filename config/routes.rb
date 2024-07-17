@@ -181,7 +181,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       namespace :business_registry do
-        get 'check/:name', to: 'check#show', as: 'check', constraints: { name: /[^\/]+/ }
+        get 'check', to: 'check#show', as: 'check'
         post 'reserve', to: 'reserve#create', as: 'reserve'
         get 'registration_code/:name', to: 'registration_code#show', as: 'registration_code', constraints: { name: /[^\/]+/ }
         delete 'release/:name', to: 'release#destroy', as: 'release', constraints: { name: /[^\/]+/ }
