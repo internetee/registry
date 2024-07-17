@@ -293,7 +293,7 @@ GEM
       activerecord
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
-    libxml-ruby (3.2.1)
+    libxml-ruby (5.0.3)
     logger (1.4.3)
     loofah (2.21.4)
       crass (~> 1.0.2)
@@ -606,4 +606,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.6.1)
 
 BUNDLED WITH
-   2.5.4
+   2.5.15
