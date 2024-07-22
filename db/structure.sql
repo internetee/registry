@@ -692,7 +692,9 @@ CREATE TABLE public.contacts (
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     email_history character varying,
-    registrant_publishable boolean DEFAULT false
+    registrant_publishable boolean DEFAULT false,
+    checked_company_at timestamp without time zone,
+    company_register_status character varying
 );
 
 
@@ -2565,7 +2567,9 @@ CREATE TABLE public.reserved_domains (
     updator_str character varying,
     legacy_id integer,
     name character varying NOT NULL,
-    password character varying NOT NULL
+    password character varying NOT NULL,
+    access_token character varying,
+    token_created_at timestamp without time zone
 );
 
 
@@ -4658,6 +4662,13 @@ CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_ve
 
 
 --
+-- Name: index_reserved_domains_on_access_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_reserved_domains_on_access_token ON public.reserved_domains USING btree (access_token);
+
+
+--
 -- Name: index_setting_entries_on_code; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5472,6 +5483,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230531111154'),
 ('20230707084741'),
 ('20240816091049'),
-('20240816092636');
-
-
+('20240816092636'),
+('20230710120154'),
+('20230711083811'),
+('20240722085530');

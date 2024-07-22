@@ -1,16 +1,17 @@
 module Api
   module V1
     module BusinessRegistry
-      class ReleaseController < ::Api::V1::BaseController
+      class TokenController < ::Api::V1::BaseController
         before_action :set_cors_header
         before_action :find_reserved_domain
-        before_action :authenticate, only: [:destroy]
+        before_action :authenticate, only: [:update]
 
-        def destroy
-          if @reserved_domain.destroy
-            render json: { message: "Domain '#{@reserved_domain.name}' has been successfully released" }, status: :ok
+        def update
+          if @reserved_domain.token_expired?
+            @reserved_domain.refresh_token
+            render json: { message: "Token refreshed", token: @reserved_domain.access_token }, status: :ok
           else
-            render json: { error: "Failed to release domain", details: @reserved_domain.errors.full_messages }, status: :unprocessable_entity
+            render json: { message: "Token is still valid", token: @reserved_domain.access_token }, status: :ok
           end
         end
 
@@ -28,10 +29,9 @@ module Api
         def find_reserved_domain
           token = request.headers['Authorization']&.split(' ')&.last
           @reserved_domain = ReservedDomain.find_by(access_token: token)
+          
           if @reserved_domain.nil?
             render json: { error: "Invalid token" }, status: :unauthorized
-          elsif @reserved_domain.token_expired?
-            render json: { error: "Token expired" }, status: :unauthorized
           end
         end
       end
