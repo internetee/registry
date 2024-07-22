@@ -4,7 +4,7 @@ module Api
       class CheckController < ::Api::V1::BaseController
         before_action :set_cors_header
         before_action :validate_organization_name
-        # before_action :authenticate
+        before_action :authenticate, only: [:show]
 
         def show
           name = params[:organization_name]
@@ -19,6 +19,8 @@ module Api
           allowed_origins = ENV['ALLOWED_ORIGINS'].split(',')
           if allowed_origins.include?(request.headers['Origin'])
             response.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
+          else
+            render json: { error: "Unauthorized origin" }, status: :unauthorized
           end
         end
 
