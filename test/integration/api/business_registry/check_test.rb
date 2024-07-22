@@ -5,11 +5,15 @@ class CheckTest < ApplicationIntegrationTest
 
   def setup
     super
+    @valid_ip = '127.0.0.1'
+    @invalid_ip = '192.168.1.1'
+    ENV['auction_api_allowed_ips'] = @valid_ip
+
     ENV['ALLOWED_ORIGINS'] = 'http://example.com,http://test.com'
   end
 
   def test_return_list_of_available_organization_domain_names
-    get '/api/v1/business_registry/check?organization_name=Company Name AS', headers: { 'Origin' => 'http://example.com' }
+    get '/api/v1/business_registry/check?organization_name=Company Name AS', headers: { 'Origin' => 'http://example.com', 'REMOTE_ADDR' => @valid_ip }
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :success
@@ -23,7 +27,7 @@ class CheckTest < ApplicationIntegrationTest
   end
 
   def test_single_word_company_name
-    get '/api/v1/business_registry/check?organization_name=Reserved', headers: { 'Origin' => 'http://test.com' }
+    get '/api/v1/business_registry/check?organization_name=Reserved', headers: { 'Origin' => 'http://test.com', 'REMOTE_ADDR' => @valid_ip }
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :success
@@ -34,7 +38,7 @@ class CheckTest < ApplicationIntegrationTest
   end
 
   def test_invalid_organization_name
-    get '/api/v1/business_registry/check?organization_name=Invalid!@#Name', headers: { 'Origin' => 'http://example.com' }
+    get '/api/v1/business_registry/check?organization_name=Invalid!@#Name', headers: { 'Origin' => 'http://example.com', 'REMOTE_ADDR' => @valid_ip }
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :bad_request
@@ -42,9 +46,9 @@ class CheckTest < ApplicationIntegrationTest
   end
 
   def test_cors_with_disallowed_origin
-    get '/api/v1/business_registry/check?organization_name=Test', headers: { 'Origin' => 'http://malicious.com' }
+    get '/api/v1/business_registry/check?organization_name=Test', headers: { 'Origin' => 'http://malicious.com', 'REMOTE_ADDR' => @valid_ip }
     
-    assert_response :success
+    assert_response :unauthorized
     assert_nil response.headers['Access-Control-Allow-Origin']
   end
 end

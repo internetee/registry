@@ -1,17 +1,68 @@
 require 'test_helper'
 
 class RegistrationCodeTest < ApplicationIntegrationTest
-  def setup
-    super
+  fixtures :reserved_domains
 
-    # @contact = contacts(:john)
+  def setup
+    @reserved_domain = reserved_domains(:one)
+    @reserved_domain.refresh_token
+    @reserved_domain.update(token_created_at: Time.current)
+    @allowed_origins = ['http://example.com', 'https://test.com']
+    ENV['ALLOWED_ORIGINS'] = @allowed_origins.join(',')
+
+    @valid_ip = '127.0.0.1'
+    @invalid_ip = '192.168.1.1'
+    ENV['auction_api_allowed_ips'] = @valid_ip
   end
 
-  def test_return_code_that_all_ok
-    get '/api/v1/business_registry/registration_code/common.ee'
-    json = JSON.parse(response.body, symbolize_names: true)
+  test "should return registration code for a valid token" do
+    @reserved_domain.refresh_token
+    get api_v1_business_registry_registration_code_path, 
+      headers: { 
+        'Authorization' => "Bearer #{@reserved_domain.reload.access_token}",
+        'Origin' => @allowed_origins.first,
+        'REMOTE_ADDR' => @valid_ip
+      }
+    assert_response :success
+    assert_equal @allowed_origins.first, response.headers['Access-Control-Allow-Origin']
+    json_response = JSON.parse(response.body)
+    assert_equal @reserved_domain.name, json_response['name']
+    assert_equal @reserved_domain.password, json_response['registration_code']
+  end
 
-    puts(json)
-    # assert_equal json[:errors], 'Contact not found'
+  test "should return error for expired token" do
+    @reserved_domain.update(token_created_at: 31.days.ago)
+    get api_v1_business_registry_registration_code_path, 
+        headers: { 
+          'Authorization' => "Bearer #{@reserved_domain.reload.access_token}",
+          'Origin' => @allowed_origins.first,
+          'REMOTE_ADDR' => @valid_ip
+        }
+    assert_response :unauthorized
+    json_response = JSON.parse(response.body)
+    assert_equal "Token expired", json_response['error']
+  end
+
+  test "should return error for invalid token" do
+    get api_v1_business_registry_registration_code_path, 
+        headers: { 
+          'Authorization' => "Bearer invalid_token",
+          'Origin' => @allowed_origins.first,
+          'REMOTE_ADDR' => @valid_ip
+        }
+    assert_response :unauthorized
+    json_response = JSON.parse(response.body)
+    assert_equal "Invalid token", json_response['error']
+  end
+
+  test "should not set CORS header for disallowed origin" do
+    get api_v1_business_registry_registration_code_path, 
+        headers: { 
+          'Authorization' => "Bearer #{@reserved_domain.access_token}",
+          'Origin' => 'http://malicious.com',
+          'REMOTE_ADDR' => @valid_ip
+        }
+    assert_response :unauthorized
+    assert_nil response.headers['Access-Control-Allow-Origin']
   end
 end

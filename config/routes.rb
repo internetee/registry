@@ -183,8 +183,9 @@ Rails.application.routes.draw do
       namespace :business_registry do
         get 'check', to: 'check#show', as: 'check'
         post 'reserve', to: 'reserve#create', as: 'reserve'
-        get 'registration_code/:name', to: 'registration_code#show', as: 'registration_code', constraints: { name: /[^\/]+/ }
-        delete 'release/:name', to: 'release#destroy', as: 'release', constraints: { name: /[^\/]+/ }
+        get 'registration_code', to: 'registration_code#show', as: 'registration_code'
+        delete 'release', to: 'release#destroy', as: 'release'
+        patch 'token', to: 'token#update'
       end
 
       namespace :registrant do

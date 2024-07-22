@@ -2751,6 +2751,8 @@ CREATE TABLE public.reserved_domains (
     name character varying NOT NULL,
     password character varying NOT NULL,
     expire_at timestamp without time zone
+    access_token character varying,
+    token_created_at timestamp without time zone
 );
 
 
@@ -4936,7 +4938,10 @@ CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_ve
 --
 
 CREATE INDEX index_reserve_domain_invoices_on_invoice_number ON public.reserve_domain_invoices USING btree (invoice_number);
+-- Name: index_reserved_domains_on_access_token; Type: INDEX; Schema: public; Owner: -
+--
 
+CREATE UNIQUE INDEX index_reserved_domains_on_access_token ON public.reserved_domains USING btree (access_token);
 
 --
 -- Name: index_setting_entries_on_code; Type: INDEX; Schema: public; Owner: -
@@ -5780,4 +5785,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250313122119'),
 ('20250319104749'),
 ('20250310133151'),
-('20250314133357');
+('20250314133357'),
+('20240722085530');
