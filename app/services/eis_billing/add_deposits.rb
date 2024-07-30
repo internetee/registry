@@ -6,7 +6,7 @@ module EisBilling
       @invoice = invoice
     end
 
-    def send_invoice
+    def call
       send_request(json_obj: parse_invoice)
     end
 
@@ -19,15 +19,17 @@ module EisBilling
       data[:customer_name] = invoice.buyer_name
       data[:customer_email] = invoice.buyer_email
       data[:custom_field1] = invoice.description
-      data[:custom_field2] = INITIATOR
+      data[:custom_field2] = invoice&.initiator || INITIATOR
       data[:invoice_number] = invoice.number
       data[:reference_number] = invoice.reference_no
+      data[:reserved_domain_name] = invoice.reserved_domain_name
+      data[:token] = invoice.token
 
       data
     end
 
     def send_request(json_obj:)
-      http = EisBilling::Base.base_request(url: invoice_generator_url)
+      http = EisBilling::Base.base_request
       http.post(invoice_generator_url, json_obj.to_json, EisBilling::Base.headers)
     end
 

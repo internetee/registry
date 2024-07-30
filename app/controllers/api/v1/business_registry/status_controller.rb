@@ -1,13 +1,32 @@
 module Api
   module V1
     module BusinessRegistry
-      class RegistrationCodeController < ::Api::V1::BaseController
+      class StatusController < ::Api::V1::BaseController
         # before_action :set_cors_header
+        # before_action :validate_params
+        # before_action :authenticate, only: [:create]
         before_action :find_reserved_domain
-        # before_action :authenticate, only: [:show]
 
         def show
-          render json: { name: @reserved_domain.name, registration_code: @reserved_domain.password }, status: :ok
+          domain_name = @reserved_domain_status.name
+          token = @reserved_domain_status.access_token
+
+          result = EisBilling::GetReservedDomainInvoiceStatus.new(domain_name: domain_name, token: token).call
+          if result.status_code_success
+
+            if result.paid?
+              @reserved_domain_status.paid!
+              reserve_domain = ReservedDomain.find_by(name: domain_name)
+              reserved_domain = ReservedDomain.new(name: domain_name).save! if reserve_domain.nil?
+
+              render json: { invoice_status: result.status, reserve_domain_name: reserve_domain.name, password: reserve_domain.password }, status: :ok
+            else
+              render json: { invoice_status: result.status }, status: :ok
+            end
+
+          else
+            render json: { error: "Failed to get domain status", details: result.details }, status: :unprocessable_entity
+          end
         end
 
         private
@@ -29,10 +48,6 @@ module Api
             render json: { error: "Invalid token" }, status: :unauthorized
           elsif @reserved_domain_status.token_expired?
             render json: { error: "Token expired. Please refresh the token. TODO: provide endpoint" }, status: :unauthorized
-          else
-            @reserved_domain = ReservedDomain.find_by(name: @reserved_domain_status.name)
-            
-            render json: { error: "Domain not found in reserved list" }, status: :not_found if @reserved_domain.nil?
           end
         end
       end

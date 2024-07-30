@@ -181,11 +181,12 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       namespace :business_registry do
-        get 'check', to: 'check#show', as: 'check'
+        get 'domain_names', to: 'domain_names#show', as: 'domain_names'
+        get 'status', to: 'status#show', as: 'status'
         post 'reserve', to: 'reserve#create', as: 'reserve'
         get 'registration_code', to: 'registration_code#show', as: 'registration_code'
         delete 'release', to: 'release#destroy', as: 'release'
-        patch 'token', to: 'token#update'
+        patch 'refresh_token', to: 'refresh_token#update'
       end
 
       namespace :registrant do

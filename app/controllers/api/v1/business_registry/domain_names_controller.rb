@@ -1,7 +1,7 @@
 module Api
   module V1
     module BusinessRegistry
-      class CheckController < ::Api::V1::BaseController
+      class DomainNamesController < ::Api::V1::BaseController
         before_action :set_cors_header
         before_action :validate_organization_name
         before_action :authenticate, only: [:show]
