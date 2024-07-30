@@ -77,7 +77,7 @@ class InvoiceTest < ActiveSupport::TestCase
   def test_buyer_vat_no_is_taken_from_registrar_by_default
     invoice_n = Invoice.order(number: :desc).last.number
     response = OpenStruct.new(body: "{\"invoice_number\":\"#{invoice_n + 3}\"}")
-    Spy.on(EisBilling::GetInvoiceNumber, :send_invoice).and_return(response)
+    Spy.on(EisBilling::GetInvoiceNumber, :call).and_return(response)
 
     registrar = registrars(:bestnames)
     registrar.vat_no = 'US1234'
@@ -168,7 +168,7 @@ class InvoiceTest < ActiveSupport::TestCase
     transaction.sum = 250
 
     response = OpenStruct.new(body: "{\"invoice_number\":\"#{invoice_n + 3}\"}")
-    Spy.on(EisBilling::GetInvoiceNumber, :send_invoice).and_return(response)
+    Spy.on(EisBilling::GetInvoiceNumber, :call).and_return(response)
 
     assert_emails 1 do
       Invoice.create_from_transaction!(transaction)

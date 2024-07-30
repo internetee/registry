@@ -1,8 +1,4 @@
 class ReservedDomain < ApplicationRecord
-  has_secure_token :access_token
-
-  before_create :set_token_created_at
-
   include Versions # version/reserved_domain_version.rb
   include WhoisStatusPopulate
   before_save :fill_empty_passwords
@@ -72,20 +68,5 @@ class ReservedDomain < ApplicationRecord
 
   def remove_data
     UpdateWhoisRecordJob.perform_later name, 'reserved'
-  end
-
-  def token_expired?
-    token_created_at.nil? || token_created_at < 30.days.ago
-  end
-
-  def refresh_token
-    regenerate_access_token
-    update(token_created_at: Time.current)
-  end
-
-  private
-
-  def set_token_created_at
-    self.token_created_at = Time.current
   end
 end
