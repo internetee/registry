@@ -7,10 +7,15 @@ module Api
         before_action :authenticate, only: [:destroy]
 
         def destroy
-          if @reserved_domain.destroy
-            render json: { message: "Domain '#{@reserved_domain.name}' has been successfully released" }, status: :ok
+          if @reserved_domain_status.token_expired?
+            render json: { error: "Token expired. Please refresh the token. TODO: provide endpoint" }, status: :unauthorized
           else
-            render json: { error: "Failed to release domain", details: @reserved_domain.errors.full_messages }, status: :unprocessable_entity
+            if @reserved_domain_status.destroy
+              EisBilling::SendReservedDomainCancellationInvoiceStatus.new(domain_name: domain_name, token: @reserved_domain_status.access_token).call
+              render json: { message: "Domain '#{@reserved_domain.name}' has been successfully released" }, status: :ok
+            else
+              render json: { error: "Failed to release domain", details: @reserved_domain.errors.full_messages }, status: :unprocessable_entity
+            end
           end
         end
 
@@ -27,10 +32,10 @@ module Api
 
         def find_reserved_domain
           token = request.headers['Authorization']&.split(' ')&.last
-          @reserved_domain = ReservedDomain.find_by(access_token: token)
-          if @reserved_domain.nil?
+          @reserved_domain_status = ReservedDomainStatus.find_by(access_token: token)
+          if @reserved_domain_status.nil?
             render json: { error: "Invalid token" }, status: :unauthorized
-          elsif @reserved_domain.token_expired?
+          elsif @reserved_domain_status.token_expired?
             render json: { error: "Token expired" }, status: :unauthorized
           end
         end

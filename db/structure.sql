@@ -2607,6 +2607,18 @@ CREATE TABLE public.repp_logs (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     uuid character varying
+-- Name: reserved_domain_statuses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.reserved_domain_statuses (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    access_token character varying NOT NULL,
+    token_created_at timestamp without time zone NOT NULL,
+    reserved_domain_id bigint,
+    status integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -2615,6 +2627,10 @@ CREATE TABLE public.repp_logs (
 --
 
 CREATE SEQUENCE public.repp_logs_id_seq
+-- Name: reserved_domain_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.reserved_domain_statuses_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2627,6 +2643,10 @@ CREATE SEQUENCE public.repp_logs_id_seq
 --
 
 ALTER SEQUENCE public.repp_logs_id_seq OWNED BY public.repp_logs.id;
+-- Name: reserved_domain_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.reserved_domain_statuses_id_seq OWNED BY public.reserved_domain_statuses.id;
 
 
 --
@@ -2675,9 +2695,7 @@ CREATE TABLE public.reserved_domains (
     updator_str character varying,
     legacy_id integer,
     name character varying NOT NULL,
-    password character varying NOT NULL,
-    access_token character varying,
-    token_created_at timestamp without time zone
+    password character varying NOT NULL
 );
 
 
@@ -3444,6 +3462,10 @@ ALTER TABLE ONLY public.registrars ALTER COLUMN id SET DEFAULT nextval('public.r
 --
 
 ALTER TABLE ONLY public.repp_logs ALTER COLUMN id SET DEFAULT nextval('public.repp_logs_id_seq'::regclass);
+-- Name: reserved_domain_statuses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reserved_domain_statuses ALTER COLUMN id SET DEFAULT nextval('public.reserved_domain_statuses_id_seq'::regclass);
 
 
 --
@@ -4010,7 +4032,11 @@ ALTER TABLE ONLY public.registrars
 
 ALTER TABLE ONLY public.repp_logs
     ADD CONSTRAINT repp_logs_pkey PRIMARY KEY (id);
+-- Name: reserved_domain_statuses reserved_domain_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
 
+ALTER TABLE ONLY public.reserved_domain_statuses
+    ADD CONSTRAINT reserved_domain_statuses_pkey PRIMARY KEY (id);
 
 --
 -- Name: reserve_domain_invoices reserve_domain_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
@@ -4833,10 +4859,18 @@ CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_ve
 --
 
 CREATE INDEX index_reserve_domain_invoices_on_invoice_number ON public.reserve_domain_invoices USING btree (invoice_number);
--- Name: index_reserved_domains_on_access_token; Type: INDEX; Schema: public; Owner: -
+-- Name: index_reserved_domain_statuses_on_access_token; Type: INDEX; Schema: public; Owner: -
+
+
+
+CREATE UNIQUE INDEX index_reserved_domain_statuses_on_access_token ON public.reserved_domain_statuses USING btree (access_token);
+
+
+--
+-- Name: index_reserved_domain_statuses_on_reserved_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_reserved_domains_on_access_token ON public.reserved_domains USING btree (access_token);
+CREATE INDEX index_reserved_domain_statuses_on_reserved_domain_id ON public.reserved_domain_statuses USING btree (reserved_domain_id);
 
 --
 -- Name: index_setting_entries_on_code; Type: INDEX; Schema: public; Owner: -
@@ -5091,6 +5125,14 @@ ALTER TABLE ONLY public.actions
 
 ALTER TABLE ONLY public.epp_sessions
     ADD CONSTRAINT fk_rails_adff2dc8e3 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: reserved_domain_statuses fk_rails_b7bdc811c5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reserved_domain_statuses
+    ADD CONSTRAINT fk_rails_b7bdc811c5 FOREIGN KEY (reserved_domain_id) REFERENCES public.reserved_domains(id);
 
 
 --
@@ -5673,4 +5715,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241104104620'),
 ('20241112093540'),
 ('20241112124405'),
-('20240722085530');
+('20240722085530'),
+('20240723110208');
+
