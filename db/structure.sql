@@ -2556,6 +2556,41 @@ ALTER SEQUENCE public.registrars_id_seq OWNED BY public.registrars.id;
 
 
 --
+-- Name: reserved_domain_statuses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.reserved_domain_statuses (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    access_token character varying NOT NULL,
+    token_created_at timestamp without time zone NOT NULL,
+    reserved_domain_id bigint,
+    status integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: reserved_domain_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.reserved_domain_statuses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reserved_domain_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.reserved_domain_statuses_id_seq OWNED BY public.reserved_domain_statuses.id;
+
+
+--
 -- Name: reserved_domains; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2567,9 +2602,7 @@ CREATE TABLE public.reserved_domains (
     updator_str character varying,
     legacy_id integer,
     name character varying NOT NULL,
-    password character varying NOT NULL,
-    access_token character varying,
-    token_created_at timestamp without time zone
+    password character varying NOT NULL
 );
 
 
@@ -3325,6 +3358,13 @@ ALTER TABLE ONLY public.registrars ALTER COLUMN id SET DEFAULT nextval('public.r
 
 
 --
+-- Name: reserved_domain_statuses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reserved_domain_statuses ALTER COLUMN id SET DEFAULT nextval('public.reserved_domain_statuses_id_seq'::regclass);
+
+
+--
 -- Name: reserved_domains id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3865,6 +3905,14 @@ ALTER TABLE ONLY public.registrant_verifications
 
 ALTER TABLE ONLY public.registrars
     ADD CONSTRAINT registrars_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reserved_domain_statuses reserved_domain_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reserved_domain_statuses
+    ADD CONSTRAINT reserved_domain_statuses_pkey PRIMARY KEY (id);
 
 
 --
@@ -4662,10 +4710,17 @@ CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_ve
 
 
 --
--- Name: index_reserved_domains_on_access_token; Type: INDEX; Schema: public; Owner: -
+-- Name: index_reserved_domain_statuses_on_access_token; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_reserved_domains_on_access_token ON public.reserved_domains USING btree (access_token);
+CREATE UNIQUE INDEX index_reserved_domain_statuses_on_access_token ON public.reserved_domain_statuses USING btree (access_token);
+
+
+--
+-- Name: index_reserved_domain_statuses_on_reserved_domain_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserved_domain_statuses_on_reserved_domain_id ON public.reserved_domain_statuses USING btree (reserved_domain_id);
 
 
 --
@@ -4914,6 +4969,14 @@ ALTER TABLE ONLY public.actions
 
 ALTER TABLE ONLY public.epp_sessions
     ADD CONSTRAINT fk_rails_adff2dc8e3 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: reserved_domain_statuses fk_rails_b7bdc811c5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reserved_domain_statuses
+    ADD CONSTRAINT fk_rails_b7bdc811c5 FOREIGN KEY (reserved_domain_id) REFERENCES public.reserved_domains(id);
 
 
 --
@@ -5486,4 +5549,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240816092636'),
 ('20230710120154'),
 ('20230711083811'),
-('20240722085530');
+('20240722085530'),
+('20240723110208');
