@@ -9,7 +9,7 @@ module Api
         def show
           name = params[:organization_name]
           all_variants = ::BusinessRegistry::DomainNameGeneratorService.generate(name)
-          available_variants = ::BusinessRegistry::DomainAvailabilityChecker.filter_available(all_variants)
+          available_variants = ::BusinessRegistry::DomainAvailabilityCheckerService.filter_available(all_variants)
           render json: { variants: available_variants }, status: :ok
         end
 
