@@ -5,7 +5,7 @@ class AddDepositsTest < ActiveSupport::TestCase
   setup do
     @original_base_url = ENV['eis_billing_system_base_url']
     @original_billing_secret = ENV['billing_secret']
-    ENV['eis_billing_system_base_url'] = 'https://test-billing.example.com'
+    ENV['eis_billing_system_base_url'] = 'http://eis_billing_system:3000'
     ENV['billing_secret'] = 'test_secret'
 
     @invoice = Struct.new(:total, :number, :buyer_name, :buyer_email, :description, :initiator, :reference_no, :reserved_domain_name, :token).new(
@@ -37,7 +37,7 @@ class AddDepositsTest < ActiveSupport::TestCase
   test "call sends correct request and returns response" do
     expected_response = '{"status": "success"}'
     
-    stub_request(:post, "https://test-billing.example.com/api/v1/invoice_generator/invoice_generator")
+    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
       .with(
         body: {
           transaction_amount: "100.5",
@@ -64,12 +64,12 @@ class AddDepositsTest < ActiveSupport::TestCase
     assert_equal expected_response, result.body
     assert_equal '200', result.code
 
-    assert_requested :post, "https://test-billing.example.com/api/v1/invoice_generator/invoice_generator", times: 1
+    assert_requested :post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator", times: 1
   end
 
   test "invoice_generator_url returns correct URL" do
     add_deposits = EisBilling::AddDeposits.new(@invoice)
-    expected_url = "https://test-billing.example.com/api/v1/invoice_generator/invoice_generator"
+    expected_url = "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator"
     assert_equal expected_url, add_deposits.send(:invoice_generator_url)
   end
 end

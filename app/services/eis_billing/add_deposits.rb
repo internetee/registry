@@ -19,11 +19,11 @@ module EisBilling
       data[:customer_name] = invoice.buyer_name
       data[:customer_email] = invoice.buyer_email
       data[:custom_field1] = invoice.description
-      data[:custom_field2] = invoice&.initiator || INITIATOR
+      data[:custom_field2] = invoice.is_a?(ActiveRecord::Base) ? EisBilling::Base::INITIATOR : (invoice&.initiator || EisBilling::Base::INITIATOR)
       data[:invoice_number] = invoice.number
       data[:reference_number] = invoice.reference_no
-      data[:reserved_domain_name] = invoice.reserved_domain_name
-      data[:token] = invoice.token
+      data[:reserved_domain_name] = invoice.is_a?(ActiveRecord::Base) ? nil : invoice&.reserved_domain_name
+      data[:token] = invoice.is_a?(ActiveRecord::Base) ? nil : invoice&.token
 
       data
     end
