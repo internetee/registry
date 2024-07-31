@@ -5,8 +5,12 @@ class RegistrationCodeTest < ApplicationIntegrationTest
 
   def setup
     @reserved_domain = reserved_domains(:one)
-    @reserved_domain.refresh_token
-    @reserved_domain.update(token_created_at: Time.current)
+    @reserved_domain_status = ReservedDomainStatus.create(
+      reserved_domain: @reserved_domain,
+      name: @reserved_domain.name,
+      token_created_at: Time.current
+    )
+    @reserved_domain_status.refresh_token
     @allowed_origins = ['http://example.com', 'https://test.com']
     ENV['ALLOWED_ORIGINS'] = @allowed_origins.join(',')
 
@@ -16,10 +20,9 @@ class RegistrationCodeTest < ApplicationIntegrationTest
   end
 
   test "should return registration code for a valid token" do
-    @reserved_domain.refresh_token
     get api_v1_business_registry_registration_code_path, 
       headers: { 
-        'Authorization' => "Bearer #{@reserved_domain.reload.access_token}",
+        'Authorization' => "Bearer #{@reserved_domain_status.access_token}",
         'Origin' => @allowed_origins.first,
         'REMOTE_ADDR' => @valid_ip
       }
@@ -31,16 +34,16 @@ class RegistrationCodeTest < ApplicationIntegrationTest
   end
 
   test "should return error for expired token" do
-    @reserved_domain.update(token_created_at: 31.days.ago)
+    @reserved_domain_status.update(token_created_at: 31.days.ago)
     get api_v1_business_registry_registration_code_path, 
         headers: { 
-          'Authorization' => "Bearer #{@reserved_domain.reload.access_token}",
+          'Authorization' => "Bearer #{@reserved_domain_status.access_token}",
           'Origin' => @allowed_origins.first,
           'REMOTE_ADDR' => @valid_ip
         }
     assert_response :unauthorized
     json_response = JSON.parse(response.body)
-    assert_equal "Token expired", json_response['error']
+    assert_equal "Token expired. Please refresh the token. TODO: provide endpoint", json_response['error']
   end
 
   test "should return error for invalid token" do
@@ -58,7 +61,7 @@ class RegistrationCodeTest < ApplicationIntegrationTest
   test "should not set CORS header for disallowed origin" do
     get api_v1_business_registry_registration_code_path, 
         headers: { 
-          'Authorization' => "Bearer #{@reserved_domain.access_token}",
+          'Authorization' => "Bearer #{@reserved_domain_status.access_token}",
           'Origin' => 'http://malicious.com',
           'REMOTE_ADDR' => @valid_ip
         }
