@@ -11,10 +11,10 @@ module Api
             render json: { error: "Token expired. Please refresh the token. TODO: provide endpoint" }, status: :unauthorized
           else
             if @reserved_domain_status.destroy
-              EisBilling::SendReservedDomainCancellationInvoiceStatus.new(domain_name: domain_name, token: @reserved_domain_status.access_token).call
-              render json: { message: "Domain '#{@reserved_domain.name}' has been successfully released" }, status: :ok
+              EisBilling::SendReservedDomainCancellationInvoiceStatus.new(domain_name: @reserved_domain_status.name, token: @reserved_domain_status.access_token).call
+              render json: { message: "Domain '#{@reserved_domain_status.name}' has been successfully released" }, status: :ok
             else
-              render json: { error: "Failed to release domain", details: @reserved_domain.errors.full_messages }, status: :unprocessable_entity
+              render json: { error: "Failed to release domain", details: @reserved_domain_status.errors.full_messages }, status: :unprocessable_entity
             end
           end
         end

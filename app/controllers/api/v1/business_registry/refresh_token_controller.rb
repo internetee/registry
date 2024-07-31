@@ -2,9 +2,9 @@ module Api
   module V1
     module BusinessRegistry
       class RefreshTokenController < ::Api::V1::BaseController
-        # before_action :set_cors_header
+        before_action :set_cors_header
         before_action :find_reserved_domain
-        # before_action :authenticate, only: [:update]
+        before_action :authenticate, only: [:update]
 
         def update
           @reserved_domain_status.refresh_token

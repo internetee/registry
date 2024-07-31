@@ -2,11 +2,13 @@ module Api
   module V1
     module BusinessRegistry
       class ReserveController < ::Api::V1::BaseController
-        # before_action :set_cors_header
-        # before_action :validate_params
-        # before_action :authenticate, only: [:create]
+        before_action :set_cors_header
+        before_action :validate_params
+        before_action :authenticate, only: [:create]
 
         INITIATOR = 'business_registry'.freeze
+        OK = '200'.freeze
+        CREATED = '201'.freeze
 
         def create
           domain_name = params[:domain_name]&.downcase&.strip
@@ -23,13 +25,12 @@ module Api
             reference_no = nil
             invoice = invoice_structure(invoice_number, reference_no, reserved_domain_status.access_token)
             result = EisBilling::AddDeposits.new(invoice).call
-
-            pared_result = JSON.parse(result.body)
+            wrap_result = wrap_result(result)
             
-            if result.code == "201" || result.code == "200"
-              render json: { message: "Domain reserved successfully", token: reserved_domain_status.access_token, linkpay: pared_result['everypay_link'] }, status: :created
+            if wrap_result.status_code_success
+              render json: { message: "Domain reserved successfully", token: reserved_domain_status.access_token, linkpay: wrap_result.linkpay }, status: :created
             else
-              render json: { error: "Failed to reserve domain", details: pared_result }, status: :unprocessable_entity
+              render json: { error: "Failed to reserve domain", details: wrap_result.details }, status: :unprocessable_entity
             end
           else
             render json: { error: "Failed to reserve domain", details: reserved_domain_status.errors.full_messages }, status: :unprocessable_entity
@@ -37,6 +38,13 @@ module Api
         end
 
         private
+
+        def wrap_result(result)
+          parsed_result = JSON.parse(result.body)
+
+          Struct.new(:status_code_success, :linkpay, :details)
+            .new(result.code == OK || result.code == CREATED, parsed_result['everypay_link'], parsed_result)
+        end
 
         def reservetion_domain_price
           124.00
