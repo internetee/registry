@@ -2,9 +2,8 @@ module Api
   module V1
     module BusinessRegistry
       class StatusController < ::Api::V1::BaseController
-        # before_action :set_cors_header
-        # before_action :validate_params
-        # before_action :authenticate, only: [:create]
+        before_action :set_cors_header
+        before_action :authenticate, only: [:create]
         before_action :find_reserved_domain
 
         def show
@@ -16,10 +15,14 @@ module Api
 
             if result.paid?
               @reserved_domain_status.paid!
-              reserve_domain = ReservedDomain.find_by(name: domain_name)
-              reserved_domain = ReservedDomain.new(name: domain_name).save! if reserve_domain.nil?
+              reserved_domain = ReservedDomain.find_by(name: domain_name)
 
-              render json: { invoice_status: result.status, reserve_domain_name: reserve_domain.name, password: reserve_domain.password }, status: :ok
+              if reserved_domain.nil?
+                reserved_domain = ReservedDomain.new(name: domain_name)
+                reserved_domain.save!
+              end
+
+              render json: { invoice_status: result.status, reserved_domain: reserved_domain.name, password: reserved_domain.password }, status: :ok
             else
               render json: { invoice_status: result.status }, status: :ok
             end
