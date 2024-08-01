@@ -1,75 +1,42 @@
 module Api
   module V1
     module BusinessRegistry
-      class ReserveController < ::Api::V1::BaseController
-        before_action :set_cors_header
-        before_action :validate_params
+      class ReserveController < BaseController
         before_action :authenticate, only: [:create]
-
-        INITIATOR = 'business_registry'.freeze
-        OK = '200'.freeze
-        CREATED = '201'.freeze
+        skip_before_action :find_reserved_domain, only: [:create]
+        before_action :validate_params
 
         def create
           domain_name = params[:domain_name]&.downcase&.strip
+          reserved_domain = ReservedDomain.find_by(name: domain_name)
 
-          reserved_domain_status = ReservedDomainStatus.new(name: domain_name)
-          reservied_domain = ReservedDomain.find_by(name: domain_name)
-
-          if reservied_domain.present?
-            render json: { message: "Domain already reserved" }, status: :ok
-          elsif reserved_domain_status.save
-            invoice_number = EisBilling::GetInvoiceNumber.call
-            invoice_number = JSON.parse(invoice_number.body)['invoice_number'].to_i
-
-            reference_no = nil
-            invoice = invoice_structure(invoice_number, reference_no, reserved_domain_status.access_token)
-            result = EisBilling::AddDeposits.new(invoice).call
-            wrap_result = wrap_result(result)
-            
-            if wrap_result.status_code_success
-              render json: { message: "Domain reserved successfully", token: reserved_domain_status.access_token, linkpay: wrap_result.linkpay }, status: :created
-            else
-              render json: { error: "Failed to reserve domain", details: wrap_result.details }, status: :unprocessable_entity
-            end
+          if reserved_domain.present?
+            render_success({ message: "Domain already reserved" })
           else
-            render json: { error: "Failed to reserve domain", details: reserved_domain_status.errors.full_messages }, status: :unprocessable_entity
+            reserve_new_domain(domain_name)
           end
         end
 
         private
 
-        def wrap_result(result)
-          parsed_result = JSON.parse(result.body)
-
-          Struct.new(:status_code_success, :linkpay, :details)
-            .new(result.code == OK || result.code == CREATED, parsed_result['everypay_link'], parsed_result)
-        end
-
-        def reservetion_domain_price
-          124.00
-        end
-
-        def invoice_structure(invoice_number, reference_no, token)
-          description = 'description'
-
-          Struct.new(:total, :number, :buyer_name, :buyer_email, :description, :initiator, :reference_no, :reserved_domain_name, :token
-          ).new(reservetion_domain_price, invoice_number, params[:buyer_name], params[:buyer_email], description, INITIATOR, reference_no, params[:domain_name], token)
-        end
-
-        def set_cors_header
-          allowed_origins = ENV['ALLOWED_ORIGINS'].split(',')
-          if allowed_origins.include?(request.headers['Origin'])
-            response.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
+        def reserve_new_domain(domain_name)
+          reserved_domain_status = ReservedDomainStatus.new(name: domain_name)
+          
+          if reserved_domain_status.reserve_domain
+            render_success({ 
+              message: "Domain reserved successfully", 
+              token: reserved_domain_status.access_token, 
+              linkpay: reserved_domain_status.linkpay 
+            }, :created)
           else
-            render json: { error: "Unauthorized origin" }, status: :unauthorized
+            render_error("Failed to reserve domain", :unprocessable_entity, reserved_domain_status.errors.full_messages)
           end
         end
 
         def validate_params
-          if params[:domain_name].blank? || params[:buyer_name].blank? || params[:buyer_email].blank?
-            render json: { error: "Missing required parameter: name" }, status: :bad_request
-          end
+          return if params[:domain_name].present?
+
+          render_error("Missing required parameter: name", :bad_request)
         end
       end
     end

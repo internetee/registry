@@ -2,7 +2,9 @@ require 'test_helper'
 
 class ReservedDomainStatusTest < ActiveSupport::TestCase
   def setup
+    ENV['eis_billing_system_base_url'] ||= 'https://eis_billing_system:3000'
     @reserved_domain_status = ReservedDomainStatus.new(name: 'example.test')
+    stub_eis_billing_requests
   end
 
   test "should be valid with valid attributes" do
@@ -49,4 +51,77 @@ class ReservedDomainStatusTest < ActiveSupport::TestCase
     assert_equal 2, ReservedDomainStatus.statuses[:canceled]
     assert_equal 3, ReservedDomainStatus.statuses[:failed]
   end
+
+  test "reserve_domain should return true and set status to pending on success" do
+    assert @reserved_domain_status.reserve_domain
+    assert_equal "pending", @reserved_domain_status.status
+    assert_not_nil @reserved_domain_status.linkpay
+  end
+
+  test "reserve_domain should return false and set status to failed on failure" do
+    stub_add_deposits_request(status: 400, body: { error: "Some error" }.to_json)
+    assert_not @reserved_domain_status.reserve_domain
+    assert_equal "failed", @reserved_domain_status.status
+    assert_nil @reserved_domain_status.linkpay
+  end
+
+  test "reserve_domain should add error message on failure" do
+    stub_add_deposits_request(status: 400, body: { error: "Some error" }.to_json)
+    @reserved_domain_status.reserve_domain
+    assert_includes @reserved_domain_status.errors.full_messages.join, "Some error"
+  end
+
+  test "reservation_domain_price should return correct price" do
+    assert_equal 124.00, @reserved_domain_status.send(:reservation_domain_price)
+  end
+
+  test "create_invoice should return correct structure" do
+    @reserved_domain_status.save
+    invoice = @reserved_domain_status.send(:create_invoice, 12345)
+    assert_equal 124.00, invoice.total
+    assert_equal 12345, invoice.number
+    assert_nil invoice.buyer_name
+    assert_nil invoice.buyer_email
+    assert_equal 'description', invoice.description
+    assert_equal 'business_registry', invoice.initiator
+    assert_nil invoice.reference_no
+    assert_equal 'example.test', invoice.reserved_domain_name
+    assert_equal @reserved_domain_status.access_token, invoice.token
+  end
+
+  private
+
+  def stub_eis_billing_requests
+    stub_invoice_number_request
+    stub_add_deposits_request
+  end
+
+  def stub_invoice_number_request
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator")
+      .with(
+        headers: {
+          'Accept'=>'*/*',
+          'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Authorization'=>/Bearer .+/,
+          'Content-Type'=>'application/json',
+          'User-Agent'=>'Ruby'
+        }
+      )
+      .to_return(status: 200, body: { invoice_number: '12345' }.to_json, headers: { 'Content-Type' => 'application/json' })
+  end
+
+  def stub_add_deposits_request(status: 201, body: { everypay_link: 'https://pay.example.com' }.to_json)
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
+      .with(
+        headers: {
+          'Accept'=>'*/*',
+          'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'Authorization'=>/Bearer .+/,
+          'Content-Type'=>'application/json',
+          'User-Agent'=>'Ruby'
+        }
+      )
+      .to_return(status: status, body: body, headers: { 'Content-Type' => 'application/json' })
+  end
+
 end

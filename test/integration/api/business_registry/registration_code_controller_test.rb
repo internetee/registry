@@ -43,7 +43,7 @@ class RegistrationCodeTest < ApplicationIntegrationTest
         }
     assert_response :unauthorized
     json_response = JSON.parse(response.body)
-    assert_equal "Token expired. Please refresh the token. TODO: provide endpoint", json_response['error']
+    assert_equal "Token expired. Please refresh the token: PATCH || PUT '/api/v1/business_registry/refresh_token'", json_response['error']
   end
 
   test "should return error for invalid token" do
