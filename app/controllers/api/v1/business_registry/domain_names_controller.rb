@@ -2,9 +2,11 @@ module Api
   module V1
     module BusinessRegistry
       class DomainNamesController < ::Api::V1::BaseController
-        before_action :set_cors_header
-        before_action :validate_organization_name
         before_action :authenticate, only: [:show]
+        
+        include Concerns::CorsHeaders
+        
+        before_action :validate_organization_name
 
         def show
           name = params[:organization_name]
@@ -14,15 +16,6 @@ module Api
         end
 
         private
-
-        def set_cors_header
-          allowed_origins = ENV['ALLOWED_ORIGINS'].split(',')
-          if allowed_origins.include?(request.headers['Origin'])
-            response.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
-          else
-            render json: { error: "Unauthorized origin" }, status: :unauthorized
-          end
-        end
 
         def validate_organization_name
           name = params[:organization_name]
