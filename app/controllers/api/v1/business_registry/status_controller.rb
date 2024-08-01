@@ -1,50 +1,42 @@
 module Api
   module V1
     module BusinessRegistry
-      class StatusController < ::Api::V1::BaseController
-        before_action :set_cors_header
+      class StatusController < BaseController
         before_action :authenticate, only: [:create]
-        before_action :find_reserved_domain
+        skip_before_action :find_reserved_domain, only: [:show]
+        before_action :find_reserved_domain_status, only: [:show]
 
         def show
-          domain_name = @reserved_domain_status.name
-          token = @reserved_domain_status.access_token
-
-          result = EisBilling::GetReservedDomainInvoiceStatus.new(domain_name: domain_name, token: token).call
-          if result.status_code_success
-
-            if result.paid?
-              @reserved_domain_status.paid!
-              reserved_domain = ReservedDomain.find_by(name: domain_name)
-
-              if reserved_domain.nil?
-                reserved_domain = ReservedDomain.new(name: domain_name)
-                reserved_domain.save!
-              end
-
-              render json: { invoice_status: result.status, reserved_domain: reserved_domain.name, password: reserved_domain.password }, status: :ok
-            else
-              render json: { invoice_status: result.status }, status: :ok
-            end
-
-          else
-            render json: { error: "Failed to get domain status", details: result.details }, status: :unprocessable_entity
-          end
+          result = fetch_domain_status
+          result.status_code_success ? handle_successful_status(result) : render_error("Failed to get domain status", :unprocessable_entity, result.details)
         end
 
         private
 
-        def set_cors_header
-          allowed_origins = ENV['ALLOWED_ORIGINS'].split(',')
-          if allowed_origins.include?(request.headers['Origin'])
-            response.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
-          else
-            render json: { error: "Unauthorized origin" }, status: :unauthorized
-          end
+        def fetch_domain_status = EisBilling::GetReservedDomainInvoiceStatus.new(
+                                    domain_name: @reserved_domain_status.name,
+                                    token: @reserved_domain_status.access_token
+                                  ).call
+
+        def handle_successful_status(result) = result.paid? ? handle_paid_status : render_success({ invoice_status: result.status })
+
+        def find_or_create_reserved_domain = ReservedDomain.find_or_create_by!(name: @reserved_domain_status.name)
+
+        def extract_token_from_header = request.headers['Authorization']&.split(' ')&.last
+
+        def handle_paid_status
+          @reserved_domain_status.paid!
+          reserved_domain = find_or_create_reserved_domain
+          
+          render_success({
+            invoice_status: 'paid',
+            reserved_domain: reserved_domain.name,
+            password: reserved_domain.password
+          })
         end
 
-        def find_reserved_domain
-          token = request.headers['Authorization']&.split(' ')&.last
+        def find_reserved_domain_status
+          token = extract_token_from_header
           @reserved_domain_status = ReservedDomainStatus.find_by(access_token: token)
 
           if @reserved_domain_status.nil?

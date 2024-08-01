@@ -42,7 +42,7 @@ class Api::V1::BusinessRegistry::ReleaseControllerTest < ActionDispatch::Integra
     delete api_v1_business_registry_release_url, headers: common_headers
 
     assert_response :unauthorized
-    assert_equal({ 'error' => 'Token expired' }, JSON.parse(response.body))
+    assert_equal({ 'error' => "Token expired. Please refresh the token: PATCH || PUT '/api/v1/business_registry/refresh_token'" }, JSON.parse(response.body))
   end
 
   test "destroy fails with invalid token" do
