@@ -6,9 +6,7 @@ class Api::V1::BusinessRegistry::ReserveControllerTest < ActionDispatch::Integra
     @valid_domain = 'newdomain.test'
     @existing_domain = reserved_domains(:one).name
     @valid_params = { 
-      domain_name: @valid_domain,
-      buyer_name: "John Doe",
-      buyer_email: "john@example.com"
+      domain_name: @valid_domain
     }
     @allowed_origins = ['http://example.com', 'https://test.com']
     ENV['ALLOWED_ORIGINS'] = @allowed_origins.join(',')
@@ -16,12 +14,12 @@ class Api::V1::BusinessRegistry::ReserveControllerTest < ActionDispatch::Integra
     ENV['auction_api_allowed_ips'] = @valid_ip
     ENV['eis_billing_system_base_url'] = 'https://eis_billing_system:3000'
     ENV['billing_secret'] = 'test_secret'
+
+    stub_invoice_number_request
+    stub_add_deposits_request
   end
 
   test "should reserve a new domain" do
-    stub_invoice_number_request
-    stub_add_deposits_request
-
     assert_difference('ReservedDomainStatus.count') do
       post api_v1_business_registry_reserve_path, 
            params: @valid_params, 
@@ -47,23 +45,21 @@ class Api::V1::BusinessRegistry::ReserveControllerTest < ActionDispatch::Integra
   end
 
   test "should handle errors when saving ReservedDomainStatus" do
-    ReservedDomainStatus.stub :new, ReservedDomainStatus.new do
-      ReservedDomainStatus.stub_any_instance :save, false do
-        post api_v1_business_registry_reserve_path, 
-             params: @valid_params,
-             headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+    ReservedDomainStatus.stub_any_instance(:save, false) do
+      post api_v1_business_registry_reserve_path, 
+           params: @valid_params,
+           headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
 
-        assert_response :unprocessable_entity
-        json_response = JSON.parse(response.body)
-        assert_equal "Failed to reserve domain", json_response['error']
-        assert_not_nil json_response['details']
-      end
+      assert_response :unprocessable_entity
+      json_response = JSON.parse(response.body)
+      assert_equal "Failed to reserve domain", json_response['error']
+      assert_not_nil json_response['details']
     end
   end
 
   test "should handle missing parameters" do
     post api_v1_business_registry_reserve_path, 
-         params: { domain_name: @valid_domain },
+         params: {},
          headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
 
     assert_response :bad_request
