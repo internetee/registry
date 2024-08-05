@@ -3,19 +3,9 @@ require 'webmock/minitest'
 
 class AddDepositsTest < ActiveSupport::TestCase
   setup do
-    @original_base_url = ENV['eis_billing_system_base_url']
-    @original_billing_secret = ENV['billing_secret']
-    ENV['eis_billing_system_base_url'] = 'http://eis_billing_system:3000'
-    ENV['billing_secret'] = 'test_secret'
-
     @invoice = Struct.new(:total, :number, :buyer_name, :buyer_email, :description, :initiator, :reference_no, :reserved_domain_name, :token).new(
       100.50, '12345', 'John Doe', 'john@example.com', 'Test invoice', 'test_initiator', 'REF001', 'example.com', 'test_token'
     )
-  end
-
-  teardown do
-    ENV['eis_billing_system_base_url'] = @original_base_url
-    ENV['billing_secret'] = @original_billing_secret
   end
 
   test "parse_invoice returns correct data" do

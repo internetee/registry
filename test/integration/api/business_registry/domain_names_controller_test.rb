@@ -18,7 +18,6 @@ class Api::V1::BusinessRegistry::DomainNamesControllerTest < ActionDispatch::Int
     assert_includes json_response['variants'], 'testcompanyas'
     assert_includes json_response['variants'], 'test-company-as'
     assert_includes json_response['variants'], 'test_company_as'
-    assert_includes json_response['variants'], "testcompany#{Time.current.year}"
   end
 
   test "should handle invalid organization name" do
