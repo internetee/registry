@@ -15,9 +15,9 @@ class Api::V1::BusinessRegistry::DomainNamesControllerTest < ActionDispatch::Int
     assert_response :success
     assert_equal @allowed_origins.first, response.headers['Access-Control-Allow-Origin']
     json_response = JSON.parse(response.body)
-    assert_includes json_response['variants'], 'testcompany'
-    assert_includes json_response['variants'], 'test-company'
-    assert_includes json_response['variants'], 'test_company'
+    assert_includes json_response['variants'], 'testcompanyas'
+    assert_includes json_response['variants'], 'test-company-as'
+    assert_includes json_response['variants'], 'test_company_as'
     assert_includes json_response['variants'], "testcompany#{Time.current.year}"
   end
 
