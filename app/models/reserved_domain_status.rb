@@ -6,6 +6,9 @@ class ReservedDomainStatus < ApplicationRecord
 
   enum status: { pending: 0, paid: 1, canceled: 2, failed: 3 }
 
+  before_validation :normalize_name, on: %w[create, update]
+  validates :name, domain_name: true
+
   INITIATOR = 'business_registry'.freeze
   OK = '200'.freeze
   CREATED = '201'.freeze
@@ -35,6 +38,10 @@ class ReservedDomainStatus < ApplicationRecord
   end
 
   private
+
+  def normalize_name
+    self.name = SimpleIDN.to_unicode(name).mb_chars.downcase.strip
+  end
 
   def set_token_created_at
     self.token_created_at = Time.current

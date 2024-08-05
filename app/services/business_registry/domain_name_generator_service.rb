@@ -1,11 +1,12 @@
 module BusinessRegistry
   class DomainNameGeneratorService
-    LEGAL_FORMS = %w[AS OU FIE OÜ].freeze
+    LEGAL_FORMS = %w[AS OU FIE OÜ MTÜ].freeze
     
     def self.generate(name)
-      base_name = remove_legal_forms(sanitize_input(name))
-      variants = generate_variants(base_name)
-      variants + generate_additional_variants(variants)
+      base_name = sanitize_input(name)
+      legal_form = extract_legal_form(base_name)
+      base_variants = generate_variants(base_name.sub(/\s+#{legal_form}\s*$/i, ''))
+      base_variants + generate_variants_with_legal_form(base_name, legal_form)
     end
     
     private
@@ -14,9 +15,9 @@ module BusinessRegistry
       name.gsub(/[^[:alnum:]\s\-]/, '').strip
     end
     
-    def self.remove_legal_forms(name)
+    def self.extract_legal_form(name)
       words = name.split
-      words.reject { |word| LEGAL_FORMS.include?(word.upcase) }.join(' ').strip
+      LEGAL_FORMS.find { |form| words.last.upcase == form }
     end
     
     def self.generate_variants(name)
@@ -27,9 +28,22 @@ module BusinessRegistry
       ]
     end
     
-    def self.generate_additional_variants(variants)
-      current_year = Time.current.year
-      variants.map { |v| "#{v}#{current_year}" }
+    def self.generate_variants_with_legal_form(name, legal_form)
+      return [] unless legal_form
+      
+      base_name = name.sub(/\s+#{legal_form}\s*$/i, '').downcase
+      base_variants = generate_variants(base_name)
+      
+      legal_form_variants = [
+        legal_form.downcase,
+        legal_form.downcase.tr('ü', 'u'),
+        "-#{legal_form.downcase}",
+        "-#{legal_form.downcase.tr('ü', 'u')}",
+        "_#{legal_form.downcase}",
+        "_#{legal_form.downcase.tr('ü', 'u')}"
+      ]
+      
+      base_variants.product(legal_form_variants).map(&:join)
     end
   end
 end
