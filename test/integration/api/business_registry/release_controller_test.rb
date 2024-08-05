@@ -11,7 +11,6 @@ class Api::V1::BusinessRegistry::ReleaseControllerTest < ActionDispatch::Integra
     )
     ENV['ALLOWED_ORIGINS'] = 'https://example.com,https://test.com'
     ENV['auction_api_allowed_ips'] = '127.0.0.1'
-    ENV['eis_billing_system_base_url'] = 'https://eis_billing_system:3000'
 
     stub_request(:patch, "#{ENV['eis_billing_system_base_url']}/api/v1/invoice/reserved_domain_cancellation_statuses")
       .to_return(status: 200, body: "", headers: {})

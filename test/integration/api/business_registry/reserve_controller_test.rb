@@ -12,8 +12,6 @@ class Api::V1::BusinessRegistry::ReserveControllerTest < ActionDispatch::Integra
     ENV['ALLOWED_ORIGINS'] = @allowed_origins.join(',')
     @valid_ip = '127.0.0.1'
     ENV['auction_api_allowed_ips'] = @valid_ip
-    ENV['eis_billing_system_base_url'] = 'https://eis_billing_system:3000'
-    ENV['billing_secret'] = 'test_secret'
 
     stub_invoice_number_request
     stub_add_deposits_request
@@ -80,12 +78,12 @@ class Api::V1::BusinessRegistry::ReserveControllerTest < ActionDispatch::Integra
   private
 
   def stub_invoice_number_request
-    stub_request(:post, "#{ENV['eis_billing_system_base_url']}/api/v1/invoice_generator/invoice_number_generator")
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator")
       .to_return(status: 200, body: { invoice_number: '12345' }.to_json, headers: { 'Content-Type' => 'application/json' })
   end
 
   def stub_add_deposits_request
-    stub_request(:post, "#{ENV['eis_billing_system_base_url']}/api/v1/invoice_generator/invoice_generator")
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
       .to_return(status: 201, body: { everypay_link: 'https://pay.example.com' }.to_json, headers: { 'Content-Type' => 'application/json' })
   end
 end

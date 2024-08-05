@@ -2,7 +2,6 @@ require 'test_helper'
 
 class ReservedDomainStatusTest < ActiveSupport::TestCase
   def setup
-    ENV['eis_billing_system_base_url'] ||= 'https://eis_billing_system:3000'
     @reserved_domain_status = ReservedDomainStatus.new(name: 'example.test')
     stub_eis_billing_requests
   end
