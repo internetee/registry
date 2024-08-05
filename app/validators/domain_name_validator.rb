@@ -2,11 +2,7 @@ class DomainNameValidator < ActiveModel::EachValidator
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/LineLength
   def validate_each(record, attribute, value)
-    origins = DNS::Zone.origins
-
-    if origins.include?(value)
-      record.errors.add(:base, :domain_name_blocked)
-    elsif !self.class.validate_format(value)
+    if !self.class.validate_format(value)
       record.errors.add(attribute, options[:message] || record.errors.generate_message(attribute, :invalid))
     elsif !self.class.validate_blocked(value)
       record.errors.add(:base, :domain_name_blocked)
@@ -22,7 +18,7 @@ class DomainNameValidator < ActiveModel::EachValidator
       origins = DNS::Zone.origins
       # if someone tries to register an origin domain, let this validation pass
       # the error will be caught in blocked domains validator
-      return false unless origins.include?(value.split('.').last)
+      return true if origins.include?(value)
 
       general_domains = /(#{origins.join('|')})/
 
@@ -32,7 +28,6 @@ class DomainNameValidator < ActiveModel::EachValidator
         return false unless value.match?(regexp)
 
         value = SimpleIDN.to_unicode(value).mb_chars.downcase.strip
-
       end
 
       unicode_chars = /\u00E4\u00F5\u00F6\u00FC\u0161\u017E/ # äõöüšž
