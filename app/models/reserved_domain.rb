@@ -6,6 +6,7 @@ class ReservedDomain < ApplicationRecord
   before_save :sync_dispute_password
   after_destroy :remove_data
 
+  before_validation :normalize_name, on: %w[create, update]
   validates :name, domain_name: true, uniqueness: true
 
   alias_attribute :registration_code, :password
@@ -40,7 +41,7 @@ class ReservedDomain < ApplicationRecord
   end
 
   def name=(val)
-    super SimpleIDN.to_unicode(val)
+    super SimpleIDN.to_unicode(val).mb_chars.downcase.strip
   end
 
   def fill_empty_passwords
@@ -68,5 +69,11 @@ class ReservedDomain < ApplicationRecord
 
   def remove_data
     UpdateWhoisRecordJob.perform_later name, 'reserved'
+  end
+
+  private
+
+  def normalize_name
+    self.name = SimpleIDN.to_unicode(name).mb_chars.downcase.strip
   end
 end

@@ -89,6 +89,21 @@ class ReservedDomainStatusTest < ActiveSupport::TestCase
     assert_equal @reserved_domain_status.access_token, invoice.token
   end
 
+  def test_create_reserved_domain_with_punycode_name
+    reserved_domain = ReservedDomainStatus.create(name: 'xn--4ca7aey.test')
+    assert reserved_domain.valid?
+  end
+
+  def test_create_reserved_domain_with_unicode_name
+    reserved_domain = ReservedDomainStatus.create(name: 'õäöü.test')
+    assert reserved_domain.valid?
+  end
+
+  def test_cannot_to_register_invalid_domain_format
+    reserved_domain = ReservedDomainStatus.new(name: 'example')
+    assert_not reserved_domain.valid?
+  end
+
   private
 
   def stub_eis_billing_requests
