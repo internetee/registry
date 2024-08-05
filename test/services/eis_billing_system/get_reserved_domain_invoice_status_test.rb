@@ -6,13 +6,6 @@ class EisBilling::GetReservedDomainInvoiceStatusTest < ActiveSupport::TestCase
     @domain_name = 'example.com'
     @token = 'test_token'
     @service = EisBilling::GetReservedDomainInvoiceStatus.new(domain_name: @domain_name, token: @token)
-    
-    @original_base_url = ENV['eis_billing_system_base_url']
-    ENV['eis_billing_system_base_url'] = 'https://test-billing.example.com'
-  end
-
-  def teardown
-    ENV['eis_billing_system_base_url'] = @original_base_url
   end
 
   test 'initialization sets domain_name and token' do
