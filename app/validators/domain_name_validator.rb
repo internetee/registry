@@ -18,7 +18,7 @@ class DomainNameValidator < ActiveModel::EachValidator
       origins = DNS::Zone.origins
       # if someone tries to register an origin domain, let this validation pass
       # the error will be caught in blocked domains validator
-      return true if origins.include?(value)
+      return true if origins.include?(value.split('.').last)
 
       general_domains = /(#{origins.join('|')})/
 
@@ -28,6 +28,7 @@ class DomainNameValidator < ActiveModel::EachValidator
         return false unless value.match?(regexp)
 
         value = SimpleIDN.to_unicode(value).mb_chars.downcase.strip
+
       end
 
       unicode_chars = /\u00E4\u00F5\u00F6\u00FC\u0161\u017E/ # äõöüšž
