@@ -326,6 +326,9 @@ GEM
     net-ftp (0.3.7)
       net-protocol
       time
+    net-imap (0.4.14)
+      date
+      net-protocol
     net-pop (0.1.2)
       net-protocol
     net-protocol (0.1.3)
@@ -582,6 +585,7 @@ DEPENDENCIES
   minitest-stub_any_instance
   money-rails
   net-ftp
+  net-imap
   net-pop
   newrelic-infinite_tracing
   newrelic_rpm
