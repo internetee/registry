@@ -326,6 +326,8 @@ GEM
     net-ftp (0.3.7)
       net-protocol
       time
+    net-pop (0.1.2)
+      net-protocol
     net-protocol (0.1.3)
       timeout
     net-smtp (0.3.3)
@@ -580,6 +582,7 @@ DEPENDENCIES
   minitest-stub_any_instance
   money-rails
   net-ftp
+  net-pop
   newrelic-infinite_tracing
   newrelic_rpm
   nokogiri (~> 1.16.0)
