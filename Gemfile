@@ -17,7 +17,7 @@ gem 'figaro', '~> 1.2'
 
 # model related
 gem 'paper_trail', '~> 14.0'
-gem 'pg', '1.5.7'
+gem 'pg', '1.5.6'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 4.0.0'
 gem 'truemail', '~> 3.0' # validates email by regexp, mail server existence and address existence
@@ -43,7 +43,7 @@ gem 'data_migrate', '~> 9.0'
 gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
 gem 'money-rails'
-gem 'simpleidn', '0.2.3' # For punycode
+gem 'simpleidn', '0.2.2' # For punycode
 gem 'whenever', '1.0.0', require: false
 
 # country listing
@@ -78,7 +78,9 @@ gem 'rexml'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
 
 gem 'directo', github: 'internetee/directo', branch: 'master'
-
+gem 'net-ftp'
+gem 'net-pop'
+gem 'net-imap'
 gem 'strong_migrations'
 
 group :development, :test do

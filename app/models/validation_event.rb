@@ -10,6 +10,8 @@ class ValidationEvent < ApplicationRecord
   VALID_CHECK_LEVELS = %w[regex mx smtp].freeze
   VALID_EVENTS_COUNT_THRESHOLD = 5
   MX_CHECK = 3
+  MAX_RETRY_COUNT = 10
+  INITIAL_RETRY_DELAY = 5.minutes
 
   INVALID_EVENTS_COUNT_BY_LEVEL = {
     regex: 1,
@@ -34,6 +36,13 @@ class ValidationEvent < ApplicationRecord
   scope :mx, -> { where('event_data @> ?', { 'check_level': 'mx' }.to_json) }
   scope :smtp, -> { where('event_data @> ?', { 'check_level': 'smtp' }.to_json) }
   scope :by_object, ->(object) { where(validation_eventable: object) }
+  scope :greylisted_smtp_errors, -> {
+    where(success: false)
+      .where("event_data->>'check_level' = ?", 'smtp')
+      .where("event_data->'smtp_debug'->0->'response'->'errors'->>'rcptto' LIKE ?", '%Greylisted for%')
+      .where('created_at > ?', 24.hours.ago)
+  }
+
 
   def self.validated_ids_by(klass)
     old_records
@@ -48,6 +57,10 @@ class ValidationEvent < ApplicationRecord
 
   def successful?
     success
+  end
+
+  def greylisted?
+    event_type == 'smtp' && event_data['error'].include?('Greylisted for')
   end
 
   def event_type
