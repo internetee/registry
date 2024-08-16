@@ -46,6 +46,7 @@ class Contact < ApplicationRecord
     [\u005B-\u005F\u007B-\u007E\u2040-\u206F\u20A0-\u20BF\u2100-\u218F])/x
 
   validates :name, :email, presence: true
+  validates :name, length: { maximum: 255, message: :too_long_contact_name }
   validates :name, format: { without: NAME_REGEXP, message: :invalid }, if: -> { priv? }
 
   validates :street, :city, :zip, :country_code, presence: true, if: lambda {

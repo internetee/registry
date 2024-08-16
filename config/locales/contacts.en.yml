@@ -15,6 +15,7 @@ en:
             name:
               blank: "Required parameter missing - name"
               invalid: "Name is invalid"
+              too_long_contact_name: "Contact name is too long, max 255 characters"
             phone:
               blank: "Required parameter missing - phone"
               invalid: "Phone nr is invalid"

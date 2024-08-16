@@ -661,17 +661,17 @@ ALTER SEQUENCE public.contact_requests_id_seq OWNED BY public.contact_requests.i
 
 CREATE TABLE public.contacts (
     id integer NOT NULL,
-    code character varying NOT NULL,
-    phone character varying,
-    email character varying NOT NULL,
-    fax character varying,
+    code character varying(255) NOT NULL,
+    phone character varying(255),
+    email character varying(255) NOT NULL,
+    fax character varying(255),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    ident character varying,
-    ident_type character varying,
-    auth_info character varying NOT NULL,
-    name character varying NOT NULL,
-    org_name character varying,
+    ident character varying(255),
+    ident_type character varying(255),
+    auth_info character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    org_name character varying(255),
     registrar_id integer NOT NULL,
     creator_str character varying,
     updator_str character varying,
@@ -5470,6 +5470,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221214073933'),
 ('20221214074252'),
 ('20230531111154'),
-('20230707084741');
+('20230707084741'),
+('20240816091049'),
+('20240816092636');
 
 
