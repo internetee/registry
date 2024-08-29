@@ -1,3 +1,6 @@
+29.08.2024
+* Set 255 char limit to contact name length https://github.com/internetee/registry/issues/2682
+
 06.02.2024
 * Updated request for getting reference data https://github.com/internetee/registry/pull/2625
 * Force Delete process end is triggered by email update https://github.com/internetee/registry/issues/2634
