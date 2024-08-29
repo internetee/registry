@@ -74,6 +74,7 @@ module Epp
 
     def validate_against_schema
       return if %w[hello error].include?(params[:action])
+
       schema.validate(params[:nokogiri_frame]).each do |error|
         epp_errors.add(:epp_errors,
                        code: 2001,
@@ -100,6 +101,7 @@ module Epp
 
     def current_user
       return unless signed_in?
+
       epp_session.user
     end
 

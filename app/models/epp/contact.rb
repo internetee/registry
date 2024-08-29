@@ -12,6 +12,7 @@ class Epp::Contact < Contact
 
   def manage_permissions
     return unless update_prohibited? || delete_prohibited?
+
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     throw(:abort)
   end
@@ -76,6 +77,7 @@ class Epp::Contact < Contact
       ],
       '2005' => [ # Value syntax error
         [:name, :invalid],
+        [:name, :too_long_contact_name],
         [:phone, :invalid],
         [:email, :invalid],
         [:country_code, :invalid],
