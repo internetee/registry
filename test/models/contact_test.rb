@@ -375,6 +375,59 @@ class ContactTest < ActiveJob::TestCase
   #   assert_not @contact.domains.first.force_delete_scheduled?
   # end
 
+  def test_should_be_validated_only_one_contact_with_same_email
+    trumail_results = OpenStruct.new(success: false,
+                                     email: @contact.email,
+                                     domain: 'box.tests',
+                                     errors: { mx: 'target host(s) not found' })
+
+    Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
+    Spy.on_instance_method(Actions::AAndAaaaEmailValidation, :call).and_return([true])
+
+    contact_1 = contacts(:john)
+    contact_2 = contacts(:william)
+
+    assert_equal contact_1.validation_events.count, 0
+    assert_equal contact_2.validation_events.count, 0
+
+    contact_1.email = 'test@example.com' && contact_1.save! && contact_1.reload
+    contact_2.email = 'test@example.com' && contact_2.save! && contact_2.reload
+
+    contact_1.validate_email_by_regex_and_mx(single_email: true)
+
+    contact_1.reload && contact_2.reload
+
+    assert_equal contact_1.validation_events.count, 1
+    assert_equal contact_2.validation_events.count, 0
+  end
+
+  def test_should_be_validated_serial_contacts_with_same_email
+    trumail_results = OpenStruct.new(success: false,
+                                     email: @contact.email,
+                                     domain: 'box.tests',
+                                     errors: { mx: 'target host(s) not found' })
+
+    Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_results)
+    Spy.on_instance_method(Actions::AAndAaaaEmailValidation, :call).and_return([true])
+
+    contact_1 = contacts(:john)
+    contact_2 = contacts(:william)
+
+    assert_equal contact_1.validation_events.count, 0
+    assert_equal contact_2.validation_events.count, 0
+
+    contact_1.update_attribute(:email, 'tester@example.com')
+    contact_2.update_attribute(:email, 'tester@example.com')
+    contact_1.reload && contact_2.reload
+
+    contact_1.validate_email_by_regex_and_mx(single_email: false)
+
+    contact_1.reload && contact_2.reload
+
+    assert_equal contact_1.validation_events.count, 1
+    assert_equal contact_2.validation_events.count, 1
+  end
+
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)

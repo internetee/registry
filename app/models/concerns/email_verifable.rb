@@ -5,17 +5,15 @@ module EmailVerifable
     scope :recently_not_validated, -> { where.not(id: ValidationEvent.validated_ids_by(name)) }
   end
 
-  def validate_email_by_regex_and_mx
-    # return if Rails.env.test?
-
-    verify_email(check_level: 'regex')
-    verify_email(check_level: 'mx')
+  def validate_email_by_regex_and_mx(single_email: false)
+    verify_email(check_level: 'regex', single_email: single_email)
+    verify_email(check_level: 'mx', single_email: single_email)
   end
 
   def remove_force_delete_for_valid_contact
-    # return if Rails.env.test?
+    domain_with_fd = domains.select(&:force_delete_scheduled?)
 
-    domains.each do |domain|
+    domain_with_fd.each do |domain|
       contact_emails_valid?(domain) ? domain.cancel_force_delete : nil
     end
   end
@@ -68,14 +66,15 @@ module EmailVerifable
     process_error(:billing_email) unless result
   end
 
-  def verify_email(check_level: 'regex')
-    verify(email: email, check_level: check_level)
+  def verify_email(check_level: 'regex', single_email: false)
+    verify(email: email, check_level: check_level, single_email: single_email)
   end
 
-  def verify(email:, check_level: 'regex')
+  def verify(email:, check_level: 'regex', single_email: false)
     action = Actions::EmailCheck.new(email: email,
                                      validation_eventable: self,
-                                     check_level: check_level)
+                                     check_level: check_level,
+                                     single_email: single_email)
     action.call
   end
 

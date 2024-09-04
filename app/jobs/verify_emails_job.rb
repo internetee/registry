@@ -1,7 +1,7 @@
 class VerifyEmailsJob < ApplicationJob
   discard_on StandardError
 
-  def perform(email:, check_level: 'mx')
+  def perform(email:, check_level: 'mx', single_check: false)
     contact = Contact.find_by(email: email)
 
     return logger.info "Contact #{email} not found!" if contact.nil?
@@ -11,7 +11,7 @@ class VerifyEmailsJob < ApplicationJob
     validate_check_level(check_level)
 
     logger.info "Trying to verify contact email #{email} with check_level #{check_level}"
-    contact.verify_email(check_level: check_level)
+    contact.verify_email(check_level: check_level, single_email: single_check)
   rescue StandardError => e
     handle_error(e)
   end
