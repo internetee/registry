@@ -1,3 +1,6 @@
+04.09.2024
+* Fixed force delete removal issue when e-mail address is fixed https://github.com/internetee/registry/issues/2634
+
 29.08.2024
 * Set 255 char limit to contact name length https://github.com/internetee/registry/issues/2682
 
