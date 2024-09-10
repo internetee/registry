@@ -319,7 +319,6 @@ GEM
       nokogiri (~> 1)
       rake
     mini_mime (1.1.5)
-    mini_portile2 (2.8.6)
     minitest (5.22.3)
     minitest-stub_any_instance (1.0.3)
     monetize (1.9.4)
@@ -348,8 +347,8 @@ GEM
       newrelic_rpm (= 8.1.0)
     newrelic_rpm (8.1.0)
     nio4r (2.5.9)
-    nokogiri (1.16.5)
-      mini_portile2 (~> 2.8.2)
+    nkf (0.2.0)
+    nokogiri (1.16.5-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.5-x86_64-linux)
       racc (~> 1.4)
@@ -550,7 +549,7 @@ GEM
     zeitwerk (2.6.13)
 
 PLATFORMS
-  ruby
+  arm64-darwin-23
   x86_64-linux
 
 DEPENDENCIES
@@ -623,4 +622,4 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.6.1)
 
 BUNDLED WITH
-   2.5.10
+   2.5.18

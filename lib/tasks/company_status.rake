@@ -8,7 +8,7 @@ require 'rake_option_parser_boilerplate'
 
 
 namespace :company_status do
-  # bundle exec rake company_status:check_all -- --open_data_file_path=lib/tasks/data/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=lib/tasks/data/missing_companies_in_business_registry.csv --deleted_companies_output_path=lib/tasks/data/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip
+  # bundle exec rake company_status:check_all -- --open_data_file_path=lib/tasks/data/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=lib/tasks/data/missing_companies_in_business_registry.csv --deleted_companies_output_path=lib/tasks/data/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip --soft_delete_enable=false
   desc 'Get Estonian companies status from Business Registry.'
 
   DELETED_FROM_REGISTRY_STATUS = 'K'
@@ -23,6 +23,7 @@ namespace :company_status do
     missing_companies_in_business_registry_path = options[:missing_companies_output_path]
     deleted_companies_from_business_registry_path = options[:deleted_companies_output_path]
     download_path = options[:download_path]
+    soft_delete_enable = options[:soft_delete_enable]
     downloaded_filename = File.basename(URI(download_path).path)
 
     puts "*** Run 1 step. Downloading fresh open data file. ***"
@@ -44,6 +45,7 @@ namespace :company_status do
           contact: contact,
           missing_companies_in_business_registry_path: missing_companies_in_business_registry_path,
           deleted_companies_from_business_registry_path: deleted_companies_from_business_registry_path,
+          soft_delete_enable: soft_delete_enable
         )
       end
     end
@@ -64,6 +66,7 @@ namespace :company_status do
       missing_companies_output_path: missing_companies_in_business_registry_path,
       deleted_companies_output_path: deleted_companies_from_business_registry_path,
       download_path: url,
+      soft_delete_enable: false,
     }
 
     banner = 'Usage: rake companies:check_all -- [options]'
@@ -78,6 +81,7 @@ namespace :company_status do
       missing_companies_output_path: ['-m [MISSING_COMPANIES_OUTPUT_PATH]', '--missing_companies_output_path [MISSING_COMPANIES_OUTPUT_PATH]', String],
       deleted_companies_output_path: ['-s [DELETED_COMPANIES_OUTPUT_PATH]', '--deleted_companies_output_path [DELETED_COMPANIES_OUTPUT_PATH]', String],
       download_path: ['-d [DOWNLOAD_PATH]', '--download_path [DOWNLOAD_PATH]', String],
+      soft_delete_enable: ['-e [SOFT_DELETE_ENABLE]', '--soft_delete_enable [SOFT_DELETE_ENABLE]', FalseClass],
     }
   end
 
@@ -133,13 +137,14 @@ namespace :company_status do
     write_to_csv_file(csv_file_path: path, headers: ["ID", "Ident", "Name"], attrs: [contact.id, contact.ident, contact.name])
   end
 
-  def sort_companies_to_files(contact:, missing_companies_in_business_registry_path:, deleted_companies_from_business_registry_path:)
+  def sort_companies_to_files(contact:, missing_companies_in_business_registry_path:, deleted_companies_from_business_registry_path:, soft_delete_enable:)
     sleep 1
     resp = contact.return_company_details
 
     if resp.empty?
       put_company_to_missing_file(contact: contact, path: missing_companies_in_business_registry_path)
       puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} is missing in registry, company id: #{contact.id}"
+      soft_delete_company(contact) if soft_delete_enable
     else
       status = resp.first.status.upcase
       kandeliik_type = resp.first.kandeliik.last.last.kandeliik
@@ -153,8 +158,17 @@ namespace :company_status do
         write_to_csv_file(csv_file_path: csv_file_path, headers: headers, attrs: attrs)
 
         puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} has status #{status}, company id: #{contact.id}"
+        soft_delete_company(contact) if soft_delete_enable
       end
     end
+  end
+
+  def soft_delete_company(contact)
+    contact.domains.reject { |domain| domain.force_delete_scheduled? }.each do |domain|
+      domain.schedule_force_delete(type: :soft)
+    end
+    
+    puts "Soft delete process initiated for company: #{contact.name} with ID: #{contact.id}"
   end
 
   def write_to_csv_file(csv_file_path:, headers:, attrs:)
