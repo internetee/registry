@@ -21,7 +21,7 @@ class CompanyRegisterStatusJob < ApplicationJob
 
   def perform(days_interval = 14, spam_time_delay = 1, batch_size = 100)
     sampling_registrant_contact(days_interval).find_in_batches(batch_size: batch_size) do |contacts|
-      contacts.each { |contact| proceed_company_status(contact, spam_time_delay) }
+      contacts.reject { |contact| whitelisted_company?(contact) }.each { |contact| proceed_company_status(contact, spam_time_delay) }
     end
   end
 
@@ -83,27 +83,30 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def lift_force_delete(contact)
-    contact.domains.each do |domain|
-      domain.lift_force_delete
-    end
+    contact.domains.each(&:lift_force_delete)
   end
 
   def delete_process(contact)
     company_details_response = contact.return_company_details
 
-      if company_details_response.empty?
-        schedule_force_delete(contact)
-        
-        return
-      end
+    if company_details_response.empty?
+      schedule_force_delete(contact)
+      return
+    end
 
-      kandeliik_tekstina = company_details_response.first.kandeliik.last.last.kandeliik_tekstina
-      
-      if kandeliik_tekstina == PAYMENT_STATEMENT_BUSINESS_REGISTRY_REASON
-        soft_delete_company(contact)
-      else
-        schedule_force_delete(contact)
-      end
+    kandeliik_tekstina = extract_kandeliik_tekstina(company_details_response)
+    
+    if kandeliik_tekstina == PAYMENT_STATEMENT_BUSINESS_REGISTRY_REASON
+      soft_delete_company(contact)
+    else
+      schedule_force_delete(contact)
+    end
+  end
+
+  private
+
+  def extract_kandeliik_tekstina(company_details_response)
+    company_details_response.first.kandeliik.last.last.kandeliik_tekstina
   end
 
   def soft_delete_company(contact)
@@ -112,5 +115,13 @@ class CompanyRegisterStatusJob < ApplicationJob
     end
     
     puts "Soft delete process initiated for company: #{contact.name} with ID: #{contact.id}"
+  end
+
+  def whitelisted_companies
+    @whitelisted_companies ||= ENV['whitelist_companies'].split(',')
+  end
+
+  def whitelisted_company?(contact)
+    whitelisted_companies.include?(contact.ident)
   end
 end
