@@ -1,20 +1,6 @@
 require 'zip'
 
 class CompanyRegisterStatusJob < ApplicationJob
-# TODO:
-# 1) whitelist for some organizations
-
-# Done
-# 2) if company os K or N or missing, then:
-# 2.1) get info about this ocmpanuy if it exists and if it hasn't financial statements, then soft delete
-# 2.2) other cases force delete
-
-# Done
-# 4) if org with fd is existed again or org with sd pay his invoices, then we remove fd and sd
-
-# 5) scan should work everyday for all organizaion states (who has fd and who hasn't)
-# 
-
   PAYMENT_STATEMENT_BUSINESS_REGISTRY_REASON = 'Kustutamiskanne dokumentide hoidjata'
 
   queue_as :default
