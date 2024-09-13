@@ -6,13 +6,12 @@ require 'uri'
 require 'optparse'
 require 'rake_option_parser_boilerplate'
 
-
 namespace :company_status do
-  # bundle exec rake company_status:check_all -- --open_data_file_path=lib/tasks/data/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=lib/tasks/data/missing_companies_in_business_registry.csv --deleted_companies_output_path=lib/tasks/data/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip --soft_delete_enable=false
+  # bundle exec rake company_status:check_all -- --open_data_file_path=tmp/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=tmp/missing_companies_in_business_registry.csv --deleted_companies_output_path=tmp/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip --soft_delete_enable=false
   desc 'Get Estonian companies status from Business Registry.'
 
   DELETED_FROM_REGISTRY_STATUS = 'K'
-  DESTINATION = 'lib/tasks/data/'
+  DESTINATION = 'tmp/'
   COMPANY_STATUS = 'ettevotja_staatus'
   BUSINESS_REGISTRY_CODE = 'ariregistri_kood'
 
@@ -56,9 +55,9 @@ namespace :company_status do
   private
 
   def initialize_rake_task
-    open_data_file_path = 'lib/tasks/data/ettevotja_rekvisiidid__lihtandmed.csv'
-    missing_companies_in_business_registry_path = 'lib/tasks/data/missing_companies_in_business_registry.csv'
-    deleted_companies_from_business_registry_path = 'lib/tasks/data/deleted_companies_from_business_registry.csv'
+    open_data_file_path = "#{DESTINATION}ettevotja_rekvisiidid__lihtandmed.csv"
+    missing_companies_in_business_registry_path = "#{DESTINATION}missing_companies_in_business_registry.csv"
+    deleted_companies_from_business_registry_path = "#{DESTINATION}deleted_companies_from_business_registry.csv"
     url = 'https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip'
 
     options = {
