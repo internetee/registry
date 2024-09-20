@@ -24,6 +24,7 @@ namespace :company_status do
     download_path = options[:download_path]
     soft_delete_enable = options[:soft_delete_enable]
     downloaded_filename = File.basename(URI(download_path).path)
+    registrants_only = options[:registrants_only]
 
     puts "*** Run 1 step. Downloading fresh open data file. ***"
     remove_old_file(DESTINATION + downloaded_filename)
@@ -34,7 +35,14 @@ namespace :company_status do
     company_data = collect_company_data(open_data_file_path)
 
     puts "*** Run 3 step. I process companies, update their information, and sort them into different files based on whether the companies are missing or removed from the business registry ***"
-    Registrant.where(ident_type: 'org', ident_country_code: 'EE').find_each do |contact|
+
+    whitelisted_companies = JSON.parse(ENV['whitelist_companies']) # ["12345678", "87654321"]    
+    contacts_query = Contact.where(ident_type: 'org', ident_country_code: 'EE')
+    contacts_query = contacts_query.where(type: 'Registrant') if registrants_only
+    
+    contacts_query.find_each do |contact|
+      next if whitelisted_companies.include?(contact.ident)
+      
       if company_data.key?(contact.ident)
         update_company_status(contact: contact, status: company_data[contact.ident][COMPANY_STATUS])
         puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} has status: #{company_data[contact.ident][COMPANY_STATUS]}"
@@ -66,6 +74,7 @@ namespace :company_status do
       deleted_companies_output_path: deleted_companies_from_business_registry_path,
       download_path: url,
       soft_delete_enable: false,
+      registrants_only: false,
     }
 
     banner = 'Usage: rake companies:check_all -- [options]'
@@ -81,6 +90,7 @@ namespace :company_status do
       deleted_companies_output_path: ['-s [DELETED_COMPANIES_OUTPUT_PATH]', '--deleted_companies_output_path [DELETED_COMPANIES_OUTPUT_PATH]', String],
       download_path: ['-d [DOWNLOAD_PATH]', '--download_path [DOWNLOAD_PATH]', String],
       soft_delete_enable: ['-e [SOFT_DELETE_ENABLE]', '--soft_delete_enable [SOFT_DELETE_ENABLE]', FalseClass],
+      registrants_only: ['-r [REGISTRANTS_ONLY]', '--registrants_only [REGISTRANTS_ONLY]', TrueClass],
     }
   end
 
@@ -133,7 +143,7 @@ namespace :company_status do
   end
 
   def put_company_to_missing_file(contact:, path:)
-    write_to_csv_file(csv_file_path: path, headers: ["ID", "Ident", "Name"], attrs: [contact.id, contact.ident, contact.name])
+    write_to_csv_file(csv_file_path: path, headers: ["ID", "Ident", "Name", "Contact Type"], attrs: [contact.id, contact.ident, contact.name, determine_contact_type(contact)])
   end
 
   def sort_companies_to_files(contact:, missing_companies_in_business_registry_path:, deleted_companies_from_business_registry_path:, soft_delete_enable:)
@@ -152,14 +162,22 @@ namespace :company_status do
 
       if status == DELETED_FROM_REGISTRY_STATUS
         csv_file_path = deleted_companies_from_business_registry_path
-        headers = ["ID", "Ident", "Name", "Status", "Kandeliik Type", "Kandeliik Tekstina", "kande_kpv"]
-        attrs = [contact.id, contact.ident, contact.name, status, kandeliik_type, kandeliik_tekstina, kande_kpv]
+        headers = ["ID", "Ident", "Name", "Status", "Kandeliik Type", "Kandeliik Tekstina", "kande_kpv", "Contact Type"]
+        attrs = [contact.id, contact.ident, contact.name, status, kandeliik_type, kandeliik_tekstina, kande_kpv, determine_contact_type(contact)]
         write_to_csv_file(csv_file_path: csv_file_path, headers: headers, attrs: attrs)
 
         puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} has status #{status}, company id: #{contact.id}"
         soft_delete_company(contact) if soft_delete_enable
       end
     end
+  end
+
+  def determine_contact_type(contact)
+    roles = []
+    roles << 'Registrant' if contact.registrant_domains.any?
+    roles += contact.domain_contacts.pluck(:type).uniq if contact.domain_contacts.any?
+    roles << 'Unknown' if roles.empty?
+    roles.join(', ')
   end
 
   def soft_delete_company(contact)

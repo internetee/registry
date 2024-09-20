@@ -107,3 +107,8 @@ gem 'pg_query', '>= 0.9.0'
 
 # token
 gem 'jwt'
+gem 'net-ftp'
+gem 'net-smtp', require: false
+gem 'net-imap', require: false
+gem 'net-pop', require: false
+gem 'matrix'
