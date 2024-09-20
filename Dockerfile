@@ -21,13 +21,13 @@ RUN wget -q "https://storage.googleapis.com/chrome-for-testing-public/${CHROME_V
     && mv /opt/chromedriver-linux64/chromedriver /usr/local/bin/ \
     && rm -rf chromedriver-linux64.zip /opt/chromedriver-linux64
 
-
 RUN mkdir -p /opt/webapps/app/tmp/pids
 WORKDIR /opt/webapps/app
 COPY Gemfile Gemfile.lock ./
 # ADD vendor/gems/omniauth-tara ./vendor/gems/omniauth-tara
 RUN gem install bundler && bundle install --jobs 20 --retry 5
 
+# Add Chrome to PATH
 ENV PATH="/opt/chrome-linux64:${PATH}"
 
 EXPOSE 3000

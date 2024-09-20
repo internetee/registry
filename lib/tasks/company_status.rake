@@ -7,11 +7,11 @@ require 'optparse'
 require 'rake_option_parser_boilerplate'
 
 namespace :company_status do
-  # bundle exec rake company_status:check_all -- --open_data_file_path=tmp/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=tmp/missing_companies_in_business_registry.csv --deleted_companies_output_path=tmp/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip --soft_delete_enable=false
+  # bundle exec rake company_status:check_all -- --open_data_file_path=tmp/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=tmp/missing_companies_in_business_registry.csv --deleted_companies_output_path=tmp/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip --soft_delete_enable=false --registrants_only=true
   desc 'Get Estonian companies status from Business Registry.'
 
   DELETED_FROM_REGISTRY_STATUS = 'K'
-  DESTINATION = 'tmp/'
+  DESTINATION = Rails.root.join('tmp').to_s + '/'
   COMPANY_STATUS = 'ettevotja_staatus'
   BUSINESS_REGISTRY_CODE = 'ariregistri_kood'
 
@@ -37,10 +37,16 @@ namespace :company_status do
     puts "*** Run 3 step. I process companies, update their information, and sort them into different files based on whether the companies are missing or removed from the business registry ***"
 
     whitelisted_companies = JSON.parse(ENV['whitelist_companies']) # ["12345678", "87654321"]    
+  
     contacts_query = Contact.where(ident_type: 'org', ident_country_code: 'EE')
-    contacts_query = contacts_query.where(type: 'Registrant') if registrants_only
+
+    if options[:registrants_only]
+      contacts_query = contacts_query.joins(:registrant_domains).distinct
+    end
+
+    unique_contacts = contacts_query.to_a.uniq(&:ident)
     
-    contacts_query.find_each do |contact|
+    unique_contacts.each do |contact|
       next if whitelisted_companies.include?(contact.ident)
       
       if company_data.key?(contact.ident)
@@ -90,7 +96,7 @@ namespace :company_status do
       deleted_companies_output_path: ['-s [DELETED_COMPANIES_OUTPUT_PATH]', '--deleted_companies_output_path [DELETED_COMPANIES_OUTPUT_PATH]', String],
       download_path: ['-d [DOWNLOAD_PATH]', '--download_path [DOWNLOAD_PATH]', String],
       soft_delete_enable: ['-e [SOFT_DELETE_ENABLE]', '--soft_delete_enable [SOFT_DELETE_ENABLE]', FalseClass],
-      registrants_only: ['-r [REGISTRANTS_ONLY]', '--registrants_only [REGISTRANTS_ONLY]', TrueClass],
+      registrants_only: ['-r', '--registrants_only [REGISTRANTS_ONLY]', FalseClass],
     }
   end
 
@@ -191,8 +197,13 @@ namespace :company_status do
   def write_to_csv_file(csv_file_path:, headers:, attrs:)
     write_headers = !File.exist?(csv_file_path)
 
-    CSV.open(csv_file_path, "ab", write_headers: write_headers, headers: headers) do |csv|
-      csv <<  attrs
+    begin
+      CSV.open(csv_file_path, "ab", write_headers: write_headers, headers: headers) do |csv|
+        csv <<  attrs
+      end
+      puts "Successfully wrote to CSV: #{csv_file_path}"
+    rescue => e
+      puts "Error writing to CSV: #{e.message}"
     end
   end
 end
