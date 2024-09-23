@@ -30,10 +30,10 @@ class CompanyStatusRakeTaskTest < ActiveSupport::TestCase
             collect_company_data_method.call(open_data_file_path)
           end
         end
-        
+
+       
         # Выполняем задачу
-        silence_stream(STDOUT) { @task.execute }
-        
+        @task.execute
         # Проверяем, что опции установлены корректно
         assert_equal 'tmp/ettevotja_rekvisiidid__lihtandmed.csv', options[:open_data_file_path]
         assert_equal 'tmp/missing_companies_in_business_registry.csv', options[:missing_companies_output_path]

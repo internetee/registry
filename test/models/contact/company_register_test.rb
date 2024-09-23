@@ -19,7 +19,7 @@ class CompanyRegisterTest < ActiveSupport::TestCase
       object
     end
 
-    assert_equal 'registered', @acme_ltd.return_company_status
+    assert_equal Contact::CompanyRegister::REGISTERED.downcase, @acme_ltd.return_company_status.downcase
 
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end
@@ -36,7 +36,7 @@ class CompanyRegisterTest < ActiveSupport::TestCase
   def test_should_return_liquided_value
     @company_register_stub.stub :simple_data, [Company.new('1234567', 'ACME Ltd', 'L')] do
       @acme_ltd.stub :company_register, @company_register_stub do
-        assert_equal 'liquidated', @acme_ltd.return_company_status
+        assert_equal Contact::CompanyRegister::LIQUIDATED.downcase, @acme_ltd.return_company_status.downcase
       end
     end
   end

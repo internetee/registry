@@ -1,13 +1,16 @@
 require 'test_helper'
+require 'rake'
 
 class ProcessPaymentsTaskTest < ActiveJob::TestCase
   setup do
+    Rake::Task['invoices:process_payments'].reenable
+
     @payment_amount = payment_amount = 0.1
     @payment_currency = payment_currency = 'EUR'
     @payment_date = payment_date = Date.parse('2010-07-05')
     @payment_reference_number = payment_reference_number = '13'
     @payment_description = payment_description = @invoice_number = '1234'
-    beneficiary_iban = 'GB33BUKB20201555555555'
+    @beneficiary_iban = 'GB33BUKB20201555555555'
 
     @invoice = create_payable_invoice(number: @invoice_number,
                                       total: payment_amount,
@@ -19,47 +22,16 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
     response_message = {
       message: 'got it'
     }
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_status')
-    .to_return(status: 200, body: response_message.to_json, headers: {})
 
-    Setting.registry_iban = beneficiary_iban
-
-    Lhv::ConnectApi.class_eval do
-      define_method :credit_debit_notification_messages do
-        transaction = OpenStruct.new(amount: payment_amount,
-                                     currency: payment_currency,
-                                     date: payment_date,
-                                     payment_reference_number: payment_reference_number,
-                                     payment_description: payment_description)
-        message = OpenStruct.new(bank_account_iban: beneficiary_iban,
-                                 credit_transactions: [transaction])
-        [message]
-      end
-    end
+    Setting.registry_iban = @beneficiary_iban
   end
 
   def test_not_raises_error_if_bad_reference
-    @payment_description = 'some weird description 252923'
-    beneficiary_iban = 'GB33BUKB20201555555555'
-
-    Lhv::ConnectApi.class_eval do
-      define_method :credit_debit_notification_messages do
-        transaction = OpenStruct.new(amount: @payment_amount,
-                                     currency: @payment_currency,
-                                     date: @payment_date,
-                                     payment_reference_number: @payment_reference_number,
-                                     payment_description: @payment_description)
-        message = OpenStruct.new(bank_account_iban: beneficiary_iban,
-                                 credit_transactions: [transaction])
-        [message]
-      end
-    end
-
     assert_no_difference 'AccountActivity.count' do
       assert_no_difference 'Invoice.count' do
         assert_no_difference -> {@account.balance} do
           assert_nothing_raised do
-            capture_io { run_task }
+            capture_io { run_task(bad_reference: true) }
           end
         end
       end
@@ -84,22 +56,6 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_if_invoice_is_overdue_than_48_hours
-    invoice_n = Invoice.order(number: :desc).last.number
-
-    Spy.on_instance_method(SendEInvoiceJob, :perform_now).and_return(true)
-
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/e_invoice/e_invoice')
-      .to_return(status: 200, body: '', headers: {})
-
-    stub_request(:put, 'https://registry:3000/eis_billing/e_invoice_response')
-      .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}", headers: {})
-
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
-      .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}", headers: {})
-
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator')
-      .to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
-
     assert_not @invoice.paid?
 
     @account_activity.update(activity_type: 'add_credit', bank_transaction: nil,
@@ -168,23 +124,6 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_credits_registrar_athout_invoice_beforehand
-    invoice_n = Invoice.order(number: :desc).last.number
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
-      .to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_n + 3}\"}")
-
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator')
-      .to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
-
-    Spy.on_instance_method(SendEInvoiceJob, :perform_now).and_return(true)
-
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/e_invoice/e_invoice')
-      .to_return(status: 200, body: '', headers: {})
-
-    stub_request(:put, 'https://registry:3000/eis_billing/e_invoice_response')
-      .to_return(status: 200,
-                 body: "{\"invoice_number\":\"#{invoice_n + 3}\"}, {\"date\":\"#{Time.zone.now-10.minutes}\"}",
-                 headers: {})
-
     registrar = registrars(:bestnames)
 
     assert_changes -> { registrar.accounts.first.balance } do
@@ -204,16 +143,6 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_topup_creates_invoice_and_send_it_as_paid
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator')
-      .to_return(status: 200, body: { everypay_link: 'http://link.test' }.to_json, headers: {})
-
-    invoice_n = Invoice.order(number: :desc).last.number
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator')
-      .to_return(status: 200, body: { invoice_number: (invoice_n + 3).to_s }.to_json, headers: {})
-
-    stub_request(:post, 'https://eis_billing_system:3000/api/v1/e_invoice/e_invoice')
-      .to_return(status: 200, body: '', headers: {})
-
     registrar = registrars(:bestnames)
     @invoice.payment_orders.destroy_all
     @invoice.destroy
@@ -248,8 +177,35 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
 
   private
 
-  def run_task
-    Rake::Task['invoices:process_payments'].execute
+  def run_task(bad_reference: false)
+    response_message = {
+      message: 'got it'
+    }
+    invoice_number = Invoice.order(number: :desc).last.number
+    stub_request(:post, 'https://eis_billing_system:3000/api/v1/invoice_generator/invoice_status')
+      .to_return(status: 200, body: response_message.to_json, headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator").
+      to_return(status: 200, body: "{\"invoice_number\":\"#{invoice_number + 10}\"}", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator").
+      to_return(status: 200, body: "{\"everypay_link\":\"http://link.test\"}", headers: {})
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/e_invoice/e_invoice").
+      to_return(status: 200, body: "", headers: {})
+
+    Lhv::ConnectApi.class_eval do
+      define_method :credit_debit_notification_messages do
+        transaction = OpenStruct.new(amount: 0.1,
+                                     currency: 'EUR',
+                                     date: Date.parse('2010-07-05'),
+                                     payment_reference_number: bad_reference ? 'some weird description 252923' : '13',
+                                     payment_description: '1234')
+        message = OpenStruct.new(bank_account_iban: 'GB33BUKB20201555555555',
+                                 credit_transactions: [transaction])
+        [message]
+      end
+    end
+
+    Rake::Task['invoices:process_payments'].reenable
+    Rake::Task['invoices:process_payments'].invoke
   end
 
   def create_payable_invoice(attributes = {})

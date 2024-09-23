@@ -1,7 +1,9 @@
 require 'test_helper'
+require 'rake'
 
 class EppClearExpiredSessionsTaskTest < ActiveSupport::TestCase
   setup do
+    Rails.application.load_tasks
     @original_session_timeout = EppSession.timeout
   end
 

@@ -1,9 +1,11 @@
 require 'test_helper'
+require 'rake'
 
 class ReloadBalanceTaskTest < ActiveSupport::TestCase
   include ActionView::Helpers::NumberHelper
 
   setup do
+    Rails.application.load_tasks
     @registrar = registrars(:bestnames)
     Spy.on_instance_method(EisBilling::BaseController, :authorized).and_return(true)
   end
