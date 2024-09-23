@@ -4,7 +4,6 @@ class CheckForceDeleteTaskTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   def setup
-    Rails.application.load_tasks
     @contact = contacts(:john)
     @invalid_contact = contacts(:invalid_email)
   end

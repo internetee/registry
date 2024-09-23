@@ -4,7 +4,6 @@ require 'minitest/mock'
 
 class CompanyStatusRakeTaskTest < ActiveSupport::TestCase
   def setup
-    Rails.application.load_tasks
     @task = Rake::Task['company_status:check_all']
   end
 
