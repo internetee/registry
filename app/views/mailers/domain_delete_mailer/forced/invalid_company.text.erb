@@ -1,0 +1,46 @@
+<p>Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt</p>
+
+<p>Eesti Interneti Sihtasutusele on saanud teatavaks, et juriidiline isik registrikoodiga <%= @domain.registrant.ident %> on äriregistrist kustutatud.</p>
+
+<p>Kuna äriregistrist kustutatud juriidiline isik ei saa olla domeeni registreerijaks, algas domeeni <%= @domain.name %> suhtes 45 päevane kustutusmenetlus. Menetluse käigus on domeen 15 esimest päeva internetis kättesaadav.</p>
+
+<p>Domeeni suhtes õigust omaval isikul on võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @registrar.name %> domeeni üleandmise taotlus koos seda tõendava dokumendiga.</p>
+
+<p>Kui kontaktandmed ei ole <%= @delete_period_length %> päeva jooksul parandatud, läheb domeen <%= @domain.name %> <%= @domain.force_delete_date %> domeenioksjonile <a href="https://auction.internet.ee">.ee oksjonikeskkonda</a>. Juhul kui domeenile <%= @domain.name %> ei tehta oksjonil 24h möödudes pakkumist, domeen vabaneb ja on registreerimiseks vabalt kättesaadav kõigile huvilistele. Muude võimalike oksjoni tulemuste kohta loe <a href="https://www.internet.ee/domeenid/domeenide-oksjonikeskkonna-kasutajatingimused#3-oksjonikeskkonna-enampakkumisel-osalemise-tingimused">siit</a>.</p>
+
+<p>Lisaküsimuste korral võtke palun ühendust oma registripidajaga:</p>
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+
+<hr>
+
+<p>Dear registrant/administrative contact of .ee domain,</p>
+
+<p>Estonian Internet Foundation has learned that contact(s) phone number data of the domain <%= @domain.name %> are invalid.</p>
+<p>Estonian Internet Foundation has learned that the legal person with registry code <%= @domain.registrant.ident %> has been deleted from the Business Registry.</p>
+
+<p>As a terminated legal person cannot be the registrant of a domain, a 45-day deletion process has started for the <%= @domain.name %> domain. For the first 15 days the domain will remain available on the Internet during the deletion process.</p>
+
+<p>The registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar <%= @registrar.name %> with legal documentation.</p>
+
+<p>If the data is not fixed within <%= @delete_period_length %> days, the domain <%= @domain.name %> will go to domain auction on <%= @domain.force_delete_date %> in the <a href="https://auction.internet.ee">.ee auction environment</a>. If no offer is made for the domain <%= @domain.name %> at auction within 24 hours, the domain will be released and made freely available for registration to anyone interested on a first-come, first-served basis. Read more about other potential auction results <a href="https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment">here</a>.</p>
+
+<p>Should you have additional questions, please contact your registrar:</p>
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+<%= render 'mailers/shared/signatures/signature.en.html' %>
+<hr>
+
+<p>Уважаемый регистрант/административный контакт домена .ee</p>
+
+<p>Целевому учреждению Eesti Internet (EIS) стало известно, что юридическое лицо с регистрационным кодом <%= @domain.registrant.ident %> удалено из коммерческого реестра.</p>
+
+<p>Поскольку удаленное из коммерческого регистра юридическое лицо не может являться регистрантом домена, <%= Date.today.strftime('%d.%m.%y') %> начат 45-дневный процесс удаления домена <%= @domain.name %>. Домен доступен в интернете на протяжении 15 дней после начала процесса удаления.</p>
+
+<p>Лицо, обладающее правом на домен, может подать регистратору <%= @registrar.name %> домена <%= @domain.name %> ходатайство о передаче домена, представив вместе с ходатайством подтверждающие документы. Документы должны быть представлены регистратору в течение 45 дней.</p>
+
+<p>Если контактные данные не будут исправлены в течение <%= @delete_period_length %> дней, домен <%= @domain.name %> отправится <%= @domain.force_delete_date %> на доменный аукцион в <a href="https://auction.internet.ee">аукционной среде.ee</a>. Если в течение 24 часов в отношении домена <%= @domain.name %> е поступит предложений, домен освободится и станет доступным для всех желающих по принципу «кто раньше». О других возможных результатах аукциона читайте <a href="https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment">здесь</a>.</p>
+
+<p>В случае возникновения дополнительных вопросов свяжитесь, пожалуйста, со своим регистратором:
+    <%= render 'mailers/shared/registrar/registrar.ru.html', registrar: @registrar %></p>
+
+<%= render 'mailers/shared/signatures/signature.ru.html' %>

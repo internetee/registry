@@ -202,6 +202,7 @@ en:
       invalid_cert: 'Invalid certificate'
       failed_epp_conn: 'Failed to open connection to EPP server!'
       epp_conn_error: 'CONNECTION ERROR - Is the EPP server running?'
+      company_not_registered: 'Company is not registered'
 
   code: 'Code'
   action: 'Action'
