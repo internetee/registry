@@ -17,6 +17,11 @@ class ApplicationSystemTestCase < ActionDispatch::IntegrationTest
 end
 
 class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
+  # include Capybara::DSL
+  # include Capybara::Minitest::Assertions
+  # include AbstractController::Translation
+  # include Devise::Test::IntegrationHelpers
+
   self.use_transactional_tests = false
   DatabaseCleaner.strategy = :truncation
 
@@ -30,10 +35,6 @@ class JavaScriptApplicationSystemTestCase < ApplicationSystemTestCase
 
     Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
   end
-
-  Capybara.server = :puma, { Silent: true }
-
-  # Webdrivers::Chromedriver.required_version = '114.0.5735.90'
 
   def setup
     DatabaseCleaner.start

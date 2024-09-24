@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'rake'
 
 class EppClearExpiredSessionsTaskTest < ActiveSupport::TestCase
   setup do

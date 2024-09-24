@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'rake'
 
 class ArchiveContactsTaskTest < ActiveSupport::TestCase
   def test_archives_inactive_contacts

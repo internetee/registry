@@ -692,7 +692,9 @@ CREATE TABLE public.contacts (
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     email_history character varying,
-    registrant_publishable boolean DEFAULT false
+    registrant_publishable boolean DEFAULT false,
+    checked_company_at timestamp without time zone,
+    company_register_status character varying
 );
 
 
@@ -5470,7 +5472,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221214073933'),
 ('20221214074252'),
 ('20230531111154'),
+('20230612094319'),
+('20230612094326'),
+('20230612094335'),
 ('20230707084741'),
+('20230710120154'),
+('20230711083811'),
 ('20240816091049'),
 ('20240816092636');
 
