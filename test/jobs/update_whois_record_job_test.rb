@@ -1,7 +1,11 @@
 require 'test_helper'
 require 'rake'
 
-class SendEInvoiceJobTest < ActiveJob::TestCase
+class UpdateWhoisRecordJobTest < ActiveJob::TestCase
+  # setup do
+  #   Rails.application.load_tasks
+  # end
+
   def test_job_is_updating_domains
     domain_names = Domain.find_in_batches.first.map(&:name)
     assert_domains_processed_by_task(domain_names, 'domain')

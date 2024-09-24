@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'rake'
 
-class ReloadBalanceTaskTest < ActiveSupport::TestCase
+class ReloadBalanceRakeTaskTest < ActiveSupport::TestCase
   include ActionView::Helpers::NumberHelper
 
   setup do
