@@ -51,7 +51,7 @@ class CompanyRegisterStatusJob < ApplicationJob
 
   def schedule_force_delete(contact)
     contact.domains.each do |domain|
-      next if domain.schedule_force_delete?
+      next if domain.force_delete_scheduled?
 
       domain.schedule_force_delete(
         type: :fast_track,
@@ -64,7 +64,7 @@ class CompanyRegisterStatusJob < ApplicationJob
 
   def check_for_force_delete(contact)
     contact.domains.any? && domain.status_notes[DomainStatus::FORCE_DELETE].include?("Company no: #{contact.ident}") do |domain|
-      domain.schedule_force_delete? 
+      domain.force_delete_scheduled?
     end
   end
 
@@ -77,6 +77,7 @@ class CompanyRegisterStatusJob < ApplicationJob
 
     if company_details_response.empty?
       schedule_force_delete(contact)
+
       return
     end
 
