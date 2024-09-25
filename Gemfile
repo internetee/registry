@@ -69,7 +69,7 @@ gem 'redis'
 gem 'sidekiq', '~> 7.0'
 
 gem 'company_register', github: 'internetee/company_register',
-                        branch: 'master'
+                        branch: '4-check-for-company-existence'
 gem 'domain_name'
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'haml', '~> 6.0'
