@@ -187,11 +187,18 @@ namespace :company_status do
   end
 
   def soft_delete_company(contact)
-    contact.domains.reject { |domain| domain.force_delete_scheduled? }.each do |domain|
+    # contact.domains.reject { |domain| domain.force_delete_scheduled? }.each do |domain|
+    #   domain.schedule_force_delete(type: :soft)
+    # end
+    # 
+    
+    contact.domains.each do |domain|
+      next if domain.force_delete_scheduled?
+
       domain.schedule_force_delete(type: :soft)
+      puts "Soft delete process initiated for company: #{contact.name} with ID: #{contact.id} domain: #{domain.name}"
     end
 
-    puts "Soft delete process initiated for company: #{contact.name} with ID: #{contact.id}"
   end
 
   def write_to_csv_file(csv_file_path:, headers:, attrs:)
