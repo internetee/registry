@@ -166,7 +166,7 @@ namespace :company_status do
     if resp.empty?
       put_company_to_missing_file(contact: contact, path: missing_companies_in_business_registry_path)
       puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} is missing in registry, company id: #{contact.id}"
-      soft_delete_company(contact) if soft_delete_enable
+      soft_delete_company(contact)
     else
       status = resp.first.status.upcase
       kandeliik_type = resp.first.kandeliik.last.last.kandeliik
@@ -180,7 +180,7 @@ namespace :company_status do
         write_to_csv_file(csv_file_path: csv_file_path, headers: headers, attrs: attrs)
 
         puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} has status #{status}, company id: #{contact.id}"
-        soft_delete_company(contact) if soft_delete_enable
+        soft_delete_company(contact)
       end
     end
   end
