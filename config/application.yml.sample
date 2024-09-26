@@ -256,3 +256,5 @@ allow_accr_endspoints: 'true'
 whitelist_companies:
   - '12345678'
   - '87654321'
+
+business_registry_sleep_time: 4

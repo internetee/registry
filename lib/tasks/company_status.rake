@@ -153,7 +153,7 @@ namespace :company_status do
   end
 
   def sort_companies_to_files(contact:, missing_companies_in_business_registry_path:, deleted_companies_from_business_registry_path:, soft_delete_enable:)
-    sleep 1
+    sleep ENV['business_registry_sleep_time'].present? ? ENV['business_registry_sleep_time'].to_i : 2
     resp = contact.return_company_details
 
     if resp.empty?
