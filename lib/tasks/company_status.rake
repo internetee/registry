@@ -7,7 +7,7 @@ require 'optparse'
 require 'rake_option_parser_boilerplate'
 
 namespace :company_status do
-  # bundle exec rake company_status:check_all -- --open_data_file_path=tmp/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=tmp/missing_companies_in_business_registry.csv --deleted_companies_output_path=tmp/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip --soft_delete_enable=false --registrants_only=true
+  # bundle exec rake company_status:check_all -- --open_data_file_path=tmp/ettevotja_rekvisiidid__lihtandmed.csv --missing_companies_output_path=tmp/missing_companies_in_business_registry.csv --deleted_companies_output_path=tmp/deleted_companies_from_business_registry.csv --download_path=https://avaandmed.ariregister.rik.ee/sites/default/files/avaandmed/ettevotja_rekvisiidid__lihtandmed.csv.zip --soft_delete_enable=false --sleep_time=4 --registrants_only=true
   desc 'Get Estonian companies status from Business Registry.'
 
   DELETED_FROM_REGISTRY_STATUS = 'K'
@@ -25,6 +25,7 @@ namespace :company_status do
     soft_delete_enable = options[:soft_delete_enable]
     downloaded_filename = File.basename(URI(download_path).path)
     are_registrants_only = options[:registrants_only]
+    sleep_time = options[:sleep_time]
 
     puts "*** Run 1 step. Downloading fresh open data file. ***"
     remove_old_file(DESTINATION + downloaded_filename)
@@ -58,7 +59,8 @@ namespace :company_status do
           contact: contact,
           missing_companies_in_business_registry_path: missing_companies_in_business_registry_path,
           deleted_companies_from_business_registry_path: deleted_companies_from_business_registry_path,
-          soft_delete_enable: soft_delete_enable
+          soft_delete_enable: soft_delete_enable,
+          sleep_time: sleep_time
         )
       end
     end
@@ -81,6 +83,7 @@ namespace :company_status do
       download_path: url,
       soft_delete_enable: false,
       registrants_only: false,
+      sleep_time: 2,
     }
 
     banner = 'Usage: rake companies:check_all -- [options]'
@@ -97,6 +100,7 @@ namespace :company_status do
       download_path: ['-d [DOWNLOAD_PATH]', '--download_path [DOWNLOAD_PATH]', String],
       soft_delete_enable: ['-e [SOFT_DELETE_ENABLE]', '--soft_delete_enable [SOFT_DELETE_ENABLE]', FalseClass],
       registrants_only: ['-r', '--registrants_only [REGISTRANTS_ONLY]', FalseClass],
+      sleep_time: ['-s', '--sleep_time [SLEEP_TIME]', Integer],
     }
   end
 
@@ -152,8 +156,11 @@ namespace :company_status do
     write_to_csv_file(csv_file_path: path, headers: ["ID", "Ident", "Name", "Contact Type"], attrs: [contact.id, contact.ident, contact.name, determine_contact_type(contact)])
   end
 
-  def sort_companies_to_files(contact:, missing_companies_in_business_registry_path:, deleted_companies_from_business_registry_path:, soft_delete_enable:)
-    sleep ENV['business_registry_sleep_time'].present? ? ENV['business_registry_sleep_time'].to_i : 2
+  def sort_companies_to_files(contact:, missing_companies_in_business_registry_path:, deleted_companies_from_business_registry_path:, soft_delete_enable:, sleep_time:)
+    sleep sleep_time
+    puts "Sleeping for #{sleep_time} seconds"
+
+
     resp = contact.return_company_details
 
     if resp.empty?
