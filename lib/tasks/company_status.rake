@@ -27,6 +27,8 @@ namespace :company_status do
     are_registrants_only = options[:registrants_only]
     sleep_time = options[:sleep_time]
 
+    puts "SOFT DELETE ENABLE: #{soft_delete_enable}"
+
     puts "*** Run 1 step. Downloading fresh open data file. ***"
     remove_old_file(DESTINATION + downloaded_filename)
     download_open_data_file(download_path, downloaded_filename)
@@ -166,7 +168,7 @@ namespace :company_status do
     if resp.empty?
       put_company_to_missing_file(contact: contact, path: missing_companies_in_business_registry_path)
       puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} is missing in registry, company id: #{contact.id}"
-      soft_delete_company(contact)
+      soft_delete_company(contact) if soft_delete_enable
     else
       status = resp.first.status.upcase
       kandeliik_type = resp.first.kandeliik.last.last.kandeliik
@@ -180,7 +182,7 @@ namespace :company_status do
         write_to_csv_file(csv_file_path: csv_file_path, headers: headers, attrs: attrs)
 
         puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} has status #{status}, company id: #{contact.id}"
-        soft_delete_company(contact)
+        soft_delete_company(contact) if soft_delete_enable
       end
     end
   end
@@ -198,10 +200,15 @@ namespace :company_status do
     #   domain.schedule_force_delete(type: :soft)
     # end
     # 
+  
+    puts "Try to set soft delete for company: #{contact.name} with ID: #{contact.id}"
+    puts "Contact domains: #{contact.domains.map(&:name)}"
     
     contact.domains.each do |domain|
+      puts "Domain: #{domain.name} with force delete scheduled: #{domain.force_delete_scheduled?}"
       next if domain.force_delete_scheduled?
 
+      puts "Try to set soft delete for domain: #{domain.name}"
       domain.schedule_force_delete(type: :soft)
       puts "Soft delete process initiated for company: #{contact.name} with ID: #{contact.id} domain: #{domain.name}"
     end
