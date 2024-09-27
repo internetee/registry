@@ -195,19 +195,9 @@ namespace :company_status do
   end
 
   def soft_delete_company(contact)
-    # contact.domains.reject { |domain| domain.force_delete_scheduled? }.each do |domain|
-    #   domain.schedule_force_delete(type: :soft)
-    # end
-    # 
-  
-    puts "Try to set soft delete for company: #{contact.name} with ID: #{contact.id}"
-    puts "Contact (registrant) domains: #{contact.registrant_domains.map(&:name)}"
-    
     contact.registrant_domains.each do |domain|
-      puts "Domain: #{domain.name} with force delete scheduled: #{domain.force_delete_scheduled?}"
       next if domain.force_delete_scheduled?
 
-      puts "Try to set soft delete for domain: #{domain.name}"
       domain.schedule_force_delete(type: :soft)
       puts "Soft delete process initiated for company: #{contact.name} with ID: #{contact.id} domain: #{domain.name}"
     end
