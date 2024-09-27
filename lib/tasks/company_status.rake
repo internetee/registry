@@ -162,7 +162,6 @@ namespace :company_status do
     sleep sleep_time
     puts "Sleeping for #{sleep_time} seconds"
 
-
     resp = contact.return_company_details
 
     if resp.empty?
@@ -202,9 +201,9 @@ namespace :company_status do
     # 
   
     puts "Try to set soft delete for company: #{contact.name} with ID: #{contact.id}"
-    puts "Contact domains: #{contact.domains.map(&:name)}"
+    puts "Contact (registrant) domains: #{contact.registrant_domains.map(&:name)}"
     
-    contact.domains.each do |domain|
+    contact.registrant_domains.each do |domain|
       puts "Domain: #{domain.name} with force delete scheduled: #{domain.force_delete_scheduled?}"
       next if domain.force_delete_scheduled?
 
