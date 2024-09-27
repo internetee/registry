@@ -9,7 +9,6 @@ module Domains
         compose(NotifyRegistrar, inputs.to_h)
         compose(NotifyByEmail, inputs.to_h)
         compose(NotifyMultiyearsExpirationDomain, inputs.to_h)
-        puts "SetForceDelete has been executed"
       end
     end
   end

@@ -48,7 +48,6 @@ module Domain::ForceDelete
   end
 
   def schedule_force_delete(type: :fast_track, notify_by_email: false, reason: nil, email: nil)
-    puts "Schedule force delete for domain: #{name} with type: #{type}"
     Domains::ForceDelete::SetForceDelete.run(domain: self, type: type, reason: reason,
                                              notify_by_email: notify_by_email, email: email)
   end

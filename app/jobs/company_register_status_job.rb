@@ -50,7 +50,7 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def schedule_force_delete(contact)
-    contact.domains.each do |domain|
+    contact.registrant_domains.each do |domain|
       next if domain.force_delete_scheduled?
 
       domain.schedule_force_delete(
@@ -63,13 +63,13 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def check_for_force_delete(contact)
-    contact.domains.any? && domain.status_notes[DomainStatus::FORCE_DELETE].include?("Company no: #{contact.ident}") do |domain|
+    contact.registrant_domains.any? && domain.status_notes[DomainStatus::FORCE_DELETE].include?("Company no: #{contact.ident}") do |domain|
       domain.force_delete_scheduled?
     end
   end
 
   def lift_force_delete(contact)
-    contact.domains.each(&:lift_force_delete)
+    contact.registrant_domains.each(&:lift_force_delete)
   end
 
   def delete_process(contact)
@@ -97,7 +97,7 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def soft_delete_company(contact)
-    contact.domains.reject { |domain| domain.force_delete_scheduled? }.each do |domain|
+    contact.registrant_domains.reject { |domain| domain.force_delete_scheduled? }.each do |domain|
       domain.schedule_force_delete(type: :soft)
     end
 
