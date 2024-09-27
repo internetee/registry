@@ -252,3 +252,7 @@ billing_system_integrated: 'true'
 secret_access_word: 'please-Give-Me-accesS'
 secret_word: 'this-secret-should-be-change'
 allow_accr_endspoints: 'true'
+
+whitelist_companies:
+  - '12345678'
+  - '87654321'

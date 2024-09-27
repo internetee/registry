@@ -692,7 +692,9 @@ CREATE TABLE public.contacts (
     uuid uuid DEFAULT public.gen_random_uuid() NOT NULL,
     disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     email_history character varying,
-    registrant_publishable boolean DEFAULT false
+    registrant_publishable boolean DEFAULT false,
+    checked_company_at timestamp without time zone,
+    company_register_status character varying
 );
 
 
@@ -1097,6 +1099,45 @@ CREATE SEQUENCE public.email_addresses_verifications_id_seq
 --
 
 ALTER SEQUENCE public.email_addresses_verifications_id_seq OWNED BY public.email_addresses_verifications.id;
+
+
+--
+-- Name: epp_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.epp_logs (
+    id bigint NOT NULL,
+    request text,
+    response text,
+    request_command character varying(255),
+    request_object character varying,
+    request_successful boolean,
+    api_user_name character varying(255),
+    api_user_registrar character varying(255),
+    ip character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    uuid character varying
+);
+
+
+--
+-- Name: epp_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.epp_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: epp_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.epp_logs_id_seq OWNED BY public.epp_logs.id;
 
 
 --
@@ -2554,6 +2595,45 @@ ALTER SEQUENCE public.registrars_id_seq OWNED BY public.registrars.id;
 
 
 --
+-- Name: repp_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repp_logs (
+    id bigint NOT NULL,
+    request_path character varying(255),
+    request_method character varying(255),
+    request_params text,
+    response text,
+    response_code character varying(255),
+    api_user_name character varying(255),
+    api_user_registrar character varying(255),
+    ip character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    uuid character varying
+);
+
+
+--
+-- Name: repp_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repp_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repp_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repp_logs_id_seq OWNED BY public.repp_logs.id;
+
+
+--
 -- Name: reserved_domains; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3062,6 +3142,13 @@ ALTER TABLE ONLY public.email_addresses_verifications ALTER COLUMN id SET DEFAUL
 
 
 --
+-- Name: epp_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.epp_logs ALTER COLUMN id SET DEFAULT nextval('public.epp_logs_id_seq'::regclass);
+
+
+--
 -- Name: epp_sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3321,6 +3408,13 @@ ALTER TABLE ONLY public.registrars ALTER COLUMN id SET DEFAULT nextval('public.r
 
 
 --
+-- Name: repp_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repp_logs ALTER COLUMN id SET DEFAULT nextval('public.repp_logs_id_seq'::regclass);
+
+
+--
 -- Name: reserved_domains id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3565,6 +3659,14 @@ ALTER TABLE ONLY public.email_addresses_validations
 
 ALTER TABLE ONLY public.email_addresses_verifications
     ADD CONSTRAINT email_addresses_verifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: epp_logs epp_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.epp_logs
+    ADD CONSTRAINT epp_logs_pkey PRIMARY KEY (id);
 
 
 --
@@ -3864,6 +3966,14 @@ ALTER TABLE ONLY public.registrars
 
 
 --
+-- Name: repp_logs repp_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repp_logs
+    ADD CONSTRAINT repp_logs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: reserved_domains reserved_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4053,6 +4163,13 @@ ALTER TABLE ONLY public.whois_records
 
 ALTER TABLE ONLY public.zones
     ADD CONSTRAINT zones_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: epp_logs_uuid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX epp_logs_uuid ON public.epp_logs USING btree (uuid);
 
 
 --
@@ -4756,6 +4873,13 @@ CREATE INDEX log_nameservers_object_legacy_id ON public.log_contacts USING btree
 
 
 --
+-- Name: repp_logs_uuid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX repp_logs_uuid ON public.repp_logs USING btree (uuid);
+
+
+--
 -- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4992,6 +5116,7 @@ ALTER TABLE ONLY public.users
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('0'),
 ('20140616073945'),
 ('20140620130107'),
 ('20140627082711'),
@@ -5470,7 +5595,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221214073933'),
 ('20221214074252'),
 ('20230531111154'),
+('20230612094319'),
+('20230612094326'),
+('20230612094335'),
 ('20230707084741'),
+('20230710120154'),
+('20230711083811'),
 ('20240816091049'),
 ('20240816092636');
 

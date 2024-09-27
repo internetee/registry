@@ -38,6 +38,8 @@ class Domain < ApplicationRecord
                 :epp_pending_delete,
                 :reserved_pw
 
+  attr_accessor :skip_multiyears_expiration_email_validation
+
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
   alias_attribute :auth_info, :transfer_code # Old attribute name; for PaperTrail
