@@ -17,6 +17,8 @@ class CompanyRegisterStatusJob < ApplicationJob
     # avoid spamming company register
     sleep spam_time_delay
 
+    puts "WHAT YOU GONNA DO WHEN I COME FOR YOU?"
+
     company_status = contact.return_company_status
     contact.update!(company_register_status: company_status, checked_company_at: Time.zone.now)
 
@@ -63,8 +65,8 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def check_for_force_delete(contact)
-    contact.registrant_domains.any? && domain.status_notes[DomainStatus::FORCE_DELETE].include?("Company no: #{contact.ident}") do |domain|
-      domain.force_delete_scheduled?
+    contact.registrant_domains.any? do |domain|
+      domain.status_notes[DomainStatus::FORCE_DELETE].include?("Company no: #{contact.ident}")
     end
   end
 
