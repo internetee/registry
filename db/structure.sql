@@ -2681,6 +2681,29 @@ CREATE TABLE public.repp_logs (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     uuid character varying
+);
+
+
+--
+-- Name: repp_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repp_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repp_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repp_logs_id_seq OWNED BY public.repp_logs.id;
+
+
+--
 -- Name: reserved_domain_statuses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3553,6 +3576,9 @@ ALTER TABLE ONLY public.registrars ALTER COLUMN id SET DEFAULT nextval('public.r
 --
 
 ALTER TABLE ONLY public.repp_logs ALTER COLUMN id SET DEFAULT nextval('public.repp_logs_id_seq'::regclass);
+
+
+--
 -- Name: reserved_domain_statuses id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4139,6 +4165,8 @@ ALTER TABLE ONLY public.registrars
 
 ALTER TABLE ONLY public.repp_logs
     ADD CONSTRAINT repp_logs_pkey PRIMARY KEY (id);
+
+--
 -- Name: reserved_domain_statuses reserved_domain_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5814,6 +5842,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230707084741'),
 ('20230710120154'),
 ('20230711083811'),
+('20240723110208'),
 ('20240816091049'),
 ('20240816092636'),
 ('20240924103554'),
