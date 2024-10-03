@@ -181,7 +181,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       namespace :business_registry do
-        get 'domain_names', to: 'domain_names#show', as: 'domain_names'
+        get 'domain_names/:organization_name', to: 'domain_names#show', as: 'domain_names'
         get 'status', to: 'status#show', as: 'status'
         post 'reserve', to: 'reserve#create', as: 'reserve'
         get 'registration_code', to: 'registration_code#show', as: 'registration_code'
