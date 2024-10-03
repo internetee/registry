@@ -6,7 +6,13 @@ module BusinessRegistry
       base_name = sanitize_input(name)
       legal_form = extract_legal_form(base_name)
       base_variants = generate_variants(base_name.sub(/\s+#{legal_form}\s*$/i, ''))
-      base_variants + generate_variants_with_legal_form(base_name, legal_form)
+      all_variants = base_variants + generate_variants_with_legal_form(base_name, legal_form)
+      unique_variants = all_variants.uniq
+      
+      zone_origins = DNS::Zone.pluck(:origin).uniq
+      domain_names = unique_variants.product(zone_origins).map { |variant, origin| "#{variant}.#{origin}" }
+      
+      domain_names.uniq
     end
     
     private
