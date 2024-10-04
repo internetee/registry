@@ -7,6 +7,17 @@ module Api
 
       def authenticate
         ip_allowed = allowed_ips.include?(request.remote_ip)
+
+        puts '---- authenticate ----'
+        puts request.remote_ip
+        puts allowed_ips
+        puts ip_allowed
+        Rails.logger.info("request.remote_ip: #{request.remote_ip}")
+        Rails.logger.info("allowed_ips: #{allowed_ips}")
+        Rails.logger.info("ip_allowed: #{ip_allowed}")
+
+        puts '---- authenticate ----'
+
         head :unauthorized unless ip_allowed
       end
 
