@@ -196,9 +196,9 @@ namespace :company_status do
 
   def soft_delete_company(contact)
     contact.registrant_domains.each do |domain|
-      next if domain.force_delete_scheduled?
+      # next if domain.force_delete_scheduled?
 
-      domain.schedule_force_delete(type: :soft)
+      domain.schedule_force_delete(type: :soft, notify_by_email: true, reason: 'invalid_company', email: contact.email)
       puts "Soft delete process initiated for company: #{contact.name} with ID: #{contact.id} domain: #{domain.name}"
     end
 
