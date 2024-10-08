@@ -71,7 +71,7 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def lift_force_delete(contact)
-    contact.registrant_domains.each(&:lift_force_delete)
+    contact.registrant_domains.each(&:cancel_force_delete)
   end
 
   def delete_process(contact)

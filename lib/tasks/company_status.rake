@@ -47,16 +47,17 @@ namespace :company_status do
       contacts_query = contacts_query.joins(:registrant_domains).distinct
     end
 
-    unique_contacts = contacts_query.to_a.uniq(&:ident)
+    unique_contacts = contacts_query.to_a.uniq(&:code)
 
     unique_contacts.each do |contact|
       next if whitelisted_companies.include?(contact.ident)
 
-      if company_data.key?(contact.ident)
-        update_company_status(contact: contact, status: company_data[contact.ident][COMPANY_STATUS])
-        puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} has status: #{company_data[contact.ident][COMPANY_STATUS]}"
-      else
-        update_company_status(contact: contact, status: 'K')
+      status = company_data.fetch(contact.ident, {}).fetch(COMPANY_STATUS, 'K')
+      update_company_status(contact: contact, status: status)
+      puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} has status: #{status}"
+
+      puts "Contact domain: #{contact.registrant_domains.pluck(:name)}"
+      if status == 'K'
         sort_companies_to_files(
           contact: contact,
           missing_companies_in_business_registry_path: missing_companies_in_business_registry_path,
@@ -155,7 +156,7 @@ namespace :company_status do
   end
 
   def put_company_to_missing_file(contact:, path:)
-    write_to_csv_file(csv_file_path: path, headers: ["ID", "Ident", "Name", "Contact Type"], attrs: [contact.id, contact.ident, contact.name, determine_contact_type(contact)])
+    write_to_csv_file(csv_file_path: path, headers: ["ID", "Code", "Ident", "Name", "Contact Type"], attrs: [contact.id, contact.code, contact.ident, contact.name, determine_contact_type(contact)])
   end
 
   def sort_companies_to_files(contact:, missing_companies_in_business_registry_path:, deleted_companies_from_business_registry_path:, soft_delete_enable:, sleep_time:)
@@ -176,8 +177,8 @@ namespace :company_status do
 
       if status == DELETED_FROM_REGISTRY_STATUS
         csv_file_path = deleted_companies_from_business_registry_path
-        headers = ["ID", "Ident", "Name", "Status", "Kandeliik Type", "Kandeliik Tekstina", "kande_kpv", "Contact Type"]
-        attrs = [contact.id, contact.ident, contact.name, status, kandeliik_type, kandeliik_tekstina, kande_kpv, determine_contact_type(contact)]
+        headers = ["ID", "Code", "Ident", "Name", "Status", "Kandeliik Type", "Kandeliik Tekstina", "kande_kpv", "Contact Type"]
+        attrs = [contact.id, contact.code, contact.ident, contact.name, status, kandeliik_type, kandeliik_tekstina, kande_kpv, determine_contact_type(contact)]
         write_to_csv_file(csv_file_path: csv_file_path, headers: headers, attrs: attrs)
 
         puts "Company: #{contact.name} with ident: #{contact.ident} and ID: #{contact.id} has status #{status}, company id: #{contact.id}"
