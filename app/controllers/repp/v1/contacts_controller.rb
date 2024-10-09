@@ -2,10 +2,10 @@ require 'serializers/repp/contact'
 module Repp
   module V1
     class ContactsController < BaseController # rubocop:disable Metrics/ClassLength
-      before_action :find_contact, only: %i[show update destroy]
+      before_action :find_contact, only: %i[show update destroy verify]
       skip_around_action :log_request, only: :search
 
-      THROTTLED_ACTIONS = %i[index check search create show update destroy].freeze
+      THROTTLED_ACTIONS = %i[index check search create show update destroy verify].freeze
       include Shunter::Integration::Throttle
 
       api :get, '/repp/v1/contacts'
@@ -116,6 +116,22 @@ module Repp
         render_success
       end
 
+      api :POST, '/repp/v1/contacts/verify/:contact_code'
+      desc 'Generate and send identification request to a contact'
+      def verify
+        authorize! :verify, Epp::Contact
+        action = Actions::ContactVerify.new(@contact)
+
+        unless action.call
+          handle_non_epp_errors(@contact)
+          return
+        end
+
+        data = { contact: { code: params[:id] } }
+
+        render_success(data: data)
+      end
+
       private
 
       def index_params
@@ -217,7 +233,8 @@ module Repp
       end
 
       def contact_params
-        params.require(:contact).permit(:id, :name, :email, :phone, :legal_document,
+        params.require(:contact).permit(:id, :name, :email, :phone, :legal_document, :verified,
+                                        :verification_link,
                                         legal_document: %i[body type],
                                         ident: [%i[ident ident_type ident_country_code]],
                                         addr: [%i[country_code city street zip state]])
