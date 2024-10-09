@@ -10,6 +10,7 @@ module Eeid
       rescue_from Shunter::ThrottleError, with: :handle_throttle_error
 
       # POST /eeid/webhooks/identification_requests
+
       def create
         return render_unauthorized unless ip_whitelisted?
         return render_invalid_signature unless valid_hmac_signature?(request.headers['X-HMAC-Signature'])
@@ -17,8 +18,7 @@ module Eeid
         verify_contact(permitted_params[:reference])
         render json: { status: 'success' }, status: :ok
       rescue StandardError => e
-        Rails.logger.error("Error handling webhook: #{e.message}")
-        render json: { error: 'Internal Server Error' }, status: :internal_server_error
+        handle_error(e)
       end
 
       private
@@ -62,6 +62,11 @@ module Eeid
       def throttled_user
         # Create a mock user-like object with the request IP
         OpenStruct.new(id: request.remote_ip, class: 'WebhookRequest')
+      end
+
+      def handle_error(error)
+        Rails.logger.error("Error handling webhook: #{error.message}")
+        render json: { error: 'Internal Server Error' }, status: :internal_server_error
       end
 
       def handle_throttle_error

@@ -259,3 +259,7 @@ allow_accr_endspoints: 'true'
 whitelist_companies:
   - '12345678'
   - '87654321'
+
+eeid_base_url: 'http://eid.test'
+ident_service_client_id: 123
+ident_service_client_secret: 321
