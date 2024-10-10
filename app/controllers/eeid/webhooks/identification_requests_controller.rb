@@ -4,13 +4,14 @@ module Eeid
   module Webhooks
     # Controller for handling eeID identification requests webhook
     class IdentificationRequestsController < ActionController::Base
+      skip_before_action :verify_authenticity_token
+
       THROTTLED_ACTIONS = %i[create].freeze
       include Shunter::Integration::Throttle
 
       rescue_from Shunter::ThrottleError, with: :handle_throttle_error
 
       # POST /eeid/webhooks/identification_requests
-
       def create
         return render_unauthorized unless ip_whitelisted?
         return render_invalid_signature unless valid_hmac_signature?(request.headers['X-HMAC-Signature'])
