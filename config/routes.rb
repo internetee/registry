@@ -74,6 +74,7 @@ Rails.application.routes.draw do
           collection do
             get 'check/:id', to: 'contacts#check'
             get 'search(/:id)', to: 'contacts#search'
+            post 'verify/:id', to: 'contacts#verify'
           end
         end
       end
@@ -369,6 +370,12 @@ Rails.application.routes.draw do
 
     authenticate :admin_user do
       mount Sidekiq::Web, at: 'sidekiq'
+    end
+  end
+
+  namespace :eeid do
+    namespace :webhooks do
+      resources :identification_requests, only: :create
     end
   end
 
