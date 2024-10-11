@@ -56,7 +56,7 @@ module Eeid
     end
 
     def build_request(endpoint, method, body)
-      uri = URI.parse("#{BASE_URL}/#{endpoint}")
+      uri = URI.parse("#{BASE_URL}#{endpoint}")
       request = create_request(uri, method)
       request['Authorization'] = "Bearer #{@token}"
       request.body = body.to_json if body
