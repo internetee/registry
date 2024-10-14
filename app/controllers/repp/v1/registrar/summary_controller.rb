@@ -59,6 +59,7 @@ module Repp
           # WHERE attached_obj_type = 'Epp::Domain' AND name IS NULL;
           message = 'orphan message, domain deleted, registrar should dequeue: '
           Rails.logger.error message + e.to_s
+          nil
         end
         # rubocop:enable Style/RescueStandardError
 

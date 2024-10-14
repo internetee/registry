@@ -3,6 +3,7 @@ class Action < ApplicationRecord
 
   belongs_to :user
   belongs_to :contact, optional: true
+  has_many :notifications, dependent: :nullify
   has_many :subactions, class_name: 'Action',
                         foreign_key: 'bulk_action_id',
                         inverse_of: :bulk_action,
