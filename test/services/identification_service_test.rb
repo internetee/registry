@@ -25,7 +25,7 @@ class IdentificationServiceTest < ActiveSupport::TestCase
         headers: { 'Authorization' => 'Bearer mock_token' },
         body: request_params.to_json
       )
-      .to_return(status: 201, body: response_body)
+      .to_return(status: 201, body: response_body, headers: { 'Content-Type' => 'application/json' })
 
     result = @service.create_identification_request(request_params)
     assert_equal JSON.parse(response_body), result
@@ -49,7 +49,7 @@ class IdentificationServiceTest < ActiveSupport::TestCase
         headers: { 'Authorization' => 'Bearer mock_token' },
         body: request_params.to_json
       )
-      .to_return(status: 400, body: { error: 'Bad Request' }.to_json)
+      .to_return(status: 400, body: { error: 'Bad Request' }.to_json, headers: { 'Content-Type' => 'application/json' })
 
     assert_raises(Eeid::IdentError, 'Bad Request') do
       @service.create_identification_request(request_params)
@@ -65,7 +65,7 @@ class IdentificationServiceTest < ActiveSupport::TestCase
 
     stub_request(:get, %r{api/ident/v1/identification_requests/#{id}})
       .with(headers: { 'Authorization' => 'Bearer mock_token' })
-      .to_return(status: 200, body: response_body)
+      .to_return(status: 200, body: response_body, headers: { 'Content-Type' => 'application/json' })
 
     result = @service.get_identification_request(id)
     assert_equal JSON.parse(response_body), result
