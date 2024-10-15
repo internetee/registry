@@ -1,0 +1,44 @@
+Tere,
+<br><br>
+<p>
+Anname teada, et järgmise kontakti kinnitamisprotsess on edukalt lõpule viidud.
+</p>
+<h3>Kontaktandmed:</h3>
+<ul>
+  <li><strong>Kood:</strong> <%= @contact.code %></li>
+  <li><strong>Nimi:</strong> <%= @contact.name %></li>
+  <li><strong>Identifikaator:</strong> <%= ident_for(@contact) %></li>
+</ul>
+<p>
+Täielikud tulemused leiate manuses olevast PDF-failist.
+</p>
+Kui Teil on küsimusi seoses kontakti kinnitamise või muude teenustega registripidaja portaalis, võtke meiega ühendust.
+</p>
+<p>
+Parimate soovidega,
+</p>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+<hr>
+<br><br>
+
+Hi,
+<br><br>
+<p>
+We are writing to inform you that the verification process for the following contact has been successfully completed.
+</p>
+<h3>Contact Details:</h3>
+<ul>
+  <li><strong>Code:</strong> <%= @contact.code %></li>
+  <li><strong>Name:</strong> <%= @contact.name %></li>
+  <li><strong>Ident:</strong> <%= ident_for(@contact) %></li>
+</ul>
+<p>
+The full result can be found in the attached PDF file.
+</p>
+<p>
+If you have any questions regarding the contact verification or other services in the Registrar Portal, please do not hesitate to reach out to us.
+</p>
+<p>
+Best regards,
+</p>
+<%= render 'mailers/shared/signatures/signature.en.html' %>

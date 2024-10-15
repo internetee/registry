@@ -2,10 +2,10 @@ require 'serializers/repp/contact'
 module Repp
   module V1
     class ContactsController < BaseController # rubocop:disable Metrics/ClassLength
-      before_action :find_contact, only: %i[show update destroy verify]
-      skip_around_action :log_request, only: :search
+      before_action :find_contact, only: %i[show update destroy verify download_poi]
+      skip_around_action :log_request, only: %i[search]
 
-      THROTTLED_ACTIONS = %i[index check search create show update destroy verify].freeze
+      THROTTLED_ACTIONS = %i[index check search create show update destroy verify download_poi].freeze
       include Shunter::Integration::Throttle
 
       api :get, '/repp/v1/contacts'
@@ -130,6 +130,19 @@ module Repp
         data = { contact: { code: params[:id] } }
 
         render_success(data: data)
+      end
+
+      api :get, '/repp/v1/contacts/download_poi/:contact_code'
+      desc 'Get proof of identity pdf file for a contact'
+      def download_poi
+        authorize! :verify, Epp::Contact
+        ident_service = Eeid::IdentificationService.new
+        response = ident_service.get_proof_of_identity(@contact.verification_id)
+
+        send_data response[:data], filename: "proof_of_identity_#{@contact.verification_id}.pdf",
+                                   type: 'application/pdf', disposition: 'inline'
+      rescue Eeid::IdentError => e
+        handle_non_epp_errors(@contact, e.message)
       end
 
       private

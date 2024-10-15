@@ -696,7 +696,8 @@ CREATE TABLE public.contacts (
     checked_company_at timestamp without time zone,
     company_register_status character varying
     ident_request_sent_at timestamp without time zone,
-    verified_at timestamp without time zone
+    verified_at timestamp without time zone,
+    verification_id character varying
 );
 
 
@@ -5613,6 +5614,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240816091049'),
 ('20240816092636'),
 ('20240903131540'),
-('20240924103554');
+('20240924103554'),
+('20241015071505');
 
 
