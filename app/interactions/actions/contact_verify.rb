@@ -23,8 +23,8 @@ module Actions
 
     def create_identification_request
       ident_service = Eeid::IdentificationService.new
-      request = ident_service.create_identification_request(request_payload)
-      ContactMailer.identification_requested(contact: contact, link: request['link']).deliver_now
+      response = ident_service.create_identification_request(request_payload)
+      ContactMailer.identification_requested(contact: contact, link: response['link']).deliver_now
     rescue Eeid::IdentError => e
       Rails.logger.error e.message
       contact.errors.add(:base, :verification_error)

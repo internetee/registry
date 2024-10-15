@@ -17,5 +17,9 @@ module Eeid
     def get_identification_request(id)
       request_endpoint("/api/ident/v1/identification_requests/#{id}")
     end
+
+    def get_proof_of_identity(id)
+      request_endpoint("/api/ident/v1/identification_requests/#{id}/proof_of_identity")
+    end
   end
 end

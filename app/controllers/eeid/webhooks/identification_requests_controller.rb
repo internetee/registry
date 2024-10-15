@@ -16,7 +16,10 @@ module Eeid
         return render_unauthorized unless ip_whitelisted?
         return render_invalid_signature unless valid_hmac_signature?(request.headers['X-HMAC-Signature'])
 
-        verify_contact(permitted_params[:reference])
+        contact = Contact.find_by_code(permitted_params[:reference])
+        poi = catch_poi
+        verify_contact(contact)
+        inform_registrar(contact, poi)
         render json: { status: 'success' }, status: :ok
       rescue StandardError => e
         handle_error(e)
@@ -42,15 +45,30 @@ module Eeid
         ActiveSupport::SecurityUtils.secure_compare(computed_signature, hmac_signature)
       end
 
-      def verify_contact(ref)
-        contact = Contact.find_by_code(ref)
-
+      def verify_contact(contact)
+        ref = permitted_params[:reference]
         if contact&.ident_request_sent_at.present?
-          contact.update(verified_at: Time.zone.now)
+          contact.update(verified_at: Time.zone.now, verification_id: permitted_params[:identification_request_id])
           Rails.logger.info("Contact verified: #{ref}")
         else
           Rails.logger.error("Valid contact not found for reference: #{ref}")
         end
+      end
+
+      def catch_poi
+        ident_service = Eeid::IdentificationService.new
+        response = ident_service.get_proof_of_identity(permitted_params[:identification_request_id])
+        raise StandardError, response[:error] if response[:error].present?
+
+        response[:data]
+      end
+
+      def inform_registrar(contact, poi)
+        email = contact&.registrar&.email
+        return unless email
+
+        RegistrarMailer.contact_verified(email: email, contact: contact, poi: poi)
+                       .deliver_now
       end
 
       def ip_whitelisted?
@@ -67,7 +85,7 @@ module Eeid
 
       def handle_error(error)
         Rails.logger.error("Error handling webhook: #{error.message}")
-        render json: { error: 'Internal Server Error' }, status: :internal_server_error
+        render json: { error: error.message }, status: :internal_server_error
       end
 
       def handle_throttle_error

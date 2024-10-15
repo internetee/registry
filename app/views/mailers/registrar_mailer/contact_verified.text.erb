@@ -1,0 +1,32 @@
+Tere,
+
+Anname teada, et järgmise kontakti kinnitamisprotsess on edukalt lõpule viidud.
+
+Kontaktandmed:
+- Kood: <%= @contact.code %>
+- Nimi: <%= @contact.name %>
+- Identifikaator: <%= ident_for(@contact) %>
+
+Täielikke tulemusi saab vaadata kontakti lehelt registripidaja portaalis.
+
+Kui Teil on küsimusi seoses kontakti kinnitamise või muude teenustega registripidaja portaalis, võtke meiega ühendust.
+
+Parimate soovidega,
+<%= render 'mailers/shared/signatures/signature.et.text' %>
+---
+
+Hi,
+
+We are writing to inform you that the verification process for the following contact has been successfully completed.
+
+Contact Details:
+- Code: <%= @contact.code %>
+- Name: <%= @contact.name %>
+- Ident: <%= ident_for(@contact) %>
+
+The full result can be viewed on the contact page in the Registrar Portal.
+
+If you have any questions regarding the contact verification or other services in the Registrar Portal, please do not hesitate to reach out to us.
+
+Best regards,
+<%= render 'mailers/shared/signatures/signature.en.text' %>

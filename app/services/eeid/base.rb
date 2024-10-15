@@ -85,10 +85,17 @@ module Eeid
     end
 
     def handle_response(response)
-      parsed_response = JSON.parse(response.body)
+      case response['content-type']
+      when 'application/pdf', 'application/octet-stream'
+        parsed_response = { data: response.body, message: response['content-disposition'] }
+      when %r{application/json}
+        parsed_response = JSON.parse(response.body).with_indifferent_access
+      else
+        raise IdentError, 'Unsupported content type'
+      end
+
       raise IdentError, parsed_response['error'] unless response.is_a?(Net::HTTPSuccess)
 
-      Rails.logger.debug("Request successful: #{response.body}")
       parsed_response
     end
 
