@@ -1,3 +1,6 @@
+17.10.2024
+* Fix for handling db relationships for poll messages https://github.com/internetee/registry/pull/2698
+
 04.09.2024
 * Fixed force delete removal issue when e-mail address is fixed https://github.com/internetee/registry/issues/2634
 
