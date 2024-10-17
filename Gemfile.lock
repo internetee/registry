@@ -194,7 +194,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.2.3)
+    concurrent-ruby (1.3.4)
     connection_pool (2.4.1)
     countries (4.0.1)
       i18n_data (~> 0.13.0)
@@ -262,7 +262,7 @@ GEM
     httpi (2.4.5)
       rack
       socksify
-    i18n (1.14.5)
+    i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     i18n_data (0.13.0)
     isikukood (0.1.2)
@@ -311,7 +311,7 @@ GEM
       rake
     mini_mime (1.1.5)
     mini_portile2 (2.8.6)
-    minitest (5.18.1)
+    minitest (5.25.1)
     minitest-stub_any_instance (1.0.3)
     monetize (1.9.4)
       money (~> 6.12)
@@ -361,8 +361,8 @@ GEM
       validate_url
       webfinger (~> 1.2)
     orm_adapter (0.5.0)
-    paper_trail (14.0.0)
-      activerecord (>= 6.0)
+    paper_trail (15.2.0)
+      activerecord (>= 6.1)
       request_store (~> 1.4)
     pdfkit (0.8.7.2)
     pg (1.5.8)
@@ -377,7 +377,7 @@ GEM
     puma (5.6.9)
       nio4r (~> 2.0)
     racc (1.7.3)
-    rack (2.2.8.1)
+    rack (2.2.10)
     rack-oauth2 (1.21.3)
       activesupport
       attr_required
@@ -426,7 +426,7 @@ GEM
     redis-client (0.14.1)
       connection_pool
     regexp_parser (2.1.1)
-    request_store (1.5.1)
+    request_store (1.7.0)
       rack (>= 1.4)
     responders (3.0.1)
       actionpack (>= 5.0)
@@ -536,7 +536,7 @@ GEM
     wkhtmltopdf-binary (0.12.6.6)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.13)
+    zeitwerk (2.6.18)
 
 PLATFORMS
   ruby
@@ -584,7 +584,7 @@ DEPENDENCIES
   nokogiri (~> 1.16.0)
   omniauth-rails_csrf_protection
   omniauth-tara!
-  paper_trail (~> 14.0)
+  paper_trail (~> 15.0)
   pdfkit
   pg (= 1.5.8)
   pg_query (>= 0.9.0)
