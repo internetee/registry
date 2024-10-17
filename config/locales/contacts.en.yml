@@ -9,6 +9,9 @@ en:
       models:
         contact:
           attributes:
+            base:
+              verification_exists: Contact already verified
+              verification_error: Sending identification request failed
             code:
               blank: "Required parameter missing - code"
               too_long_contact_code: "Contact code is too long, max 100 characters"

@@ -1,0 +1,31 @@
+<%
+    contact = RegistrantPresenter.new(registrant: @contact, view: self)
+    registrar = RegistrarPresenter.new(registrar: @contact.registrar, view: self)
+%>
+Tere <%= contact.name %>,
+
+Teie registripidaja <%= registrar.name %> on palunud teil kinnitada oma isikut, et jätkata domeeni toimingutega. 
+Palun kinnitage oma isikut, klõpsates alloleval lingil:
+<%= @verification_link %>
+
+Kontaktandmed:
+<%= render 'mailers/shared/registrant/registrant.et.text', registrant: contact, with_phone: true %>
+
+Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
+<%= render 'mailers/shared/registrar/registrar.et.text', registrar: registrar %>
+<%= render 'mailers/shared/signatures/signature.et.text' %>
+
+----------------------------------------------------------------------------------
+
+Hi <%= contact.name %>,
+
+Your registrar <%= registrar.name %> has requested that you verify your identity in order to proceed with domain actions. 
+Please confirm your identity to continue by clicking the link below:
+<%= @verification_link %>
+
+Contact information:
+<%= render 'mailers/shared/registrant/registrant.en.text', registrant: contact, with_phone: true %>
+
+In case of problems please turn to your registrar:
+<%= render 'mailers/shared/registrar/registrar.en.text', registrar: registrar %>
+<%= render 'mailers/shared/signatures/signature.en.text' %>

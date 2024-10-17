@@ -9,6 +9,14 @@ class ContactMailer < ApplicationMailer
     mail(to: contact.email, bcc: old_email, subject: subject)
   end
 
+  def identification_requested(contact:, link:)
+    @contact = contact
+    @verification_link = link
+
+    subject = default_i18n_subject(contact_code: contact.code)
+    mail(to: contact.email, subject: subject)
+  end
+
   private
 
   def address_processing
