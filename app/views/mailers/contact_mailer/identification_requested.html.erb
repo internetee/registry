@@ -1,0 +1,34 @@
+<%
+    contact = RegistrantPresenter.new(registrant: @contact, view: self)
+    registrar = RegistrarPresenter.new(registrar: @contact.registrar, view: self)
+%>
+Tere <%= contact.name %>,
+<br><br>
+Teie registripidaja <%= registrar.name %> on palunud Teil kinnitada oma isikut, et jätkata domeeni toimingutega. 
+<br><br>
+Palun kinnitage oma isikut, et jätkata.
+<br><br>
+<a href="<%= @verification_link %>" style="display: inline-block; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px;">Jätka eeID-ga</a>
+<br><br>
+Kontaktandmed:<br>
+<%= render 'mailers/shared/registrant/registrant.et.html', registrant: contact, with_phone: true %>
+<br><br>
+Probleemide korral pöörduge oma registripidaja poole:
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: registrar %>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+<hr>
+<br><br>
+Hi <%= contact.name %>,
+<br><br>
+Your registrar <%= registrar.name %> has requested that you verify your identity in order to proceed with domain actions. 
+<br><br>
+Please confirm your identity to continue.
+<br><br>
+<a href="<%= @verification_link %>" style="display: inline-block; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px;">Continue with eeID</a>
+<br><br>
+Contact information:<br>
+<%= render 'mailers/shared/registrant/registrant.en.html', registrant: contact, with_phone: true %>
+<br><br>
+In case of problems please turn to your registrar:
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: registrar %>
+<%= render 'mailers/shared/signatures/signature.en.html' %>
