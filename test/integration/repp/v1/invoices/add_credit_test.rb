@@ -10,7 +10,7 @@ class ReppV1InvoicesAddCreditTest < ActionDispatch::IntegrationTest
 
     @original_registry_vat_rate = Setting.registry_vat_prc
     eis_response = OpenStruct.new(body: '{"everypay_link":"https://link.test"}')
-    Spy.on_instance_method(EisBilling::AddDeposits, :send_invoice).and_return(eis_response)
+    Spy.on_instance_method(EisBilling::AddDeposits, :call).and_return(eis_response)
     Spy.on_instance_method(EisBilling::BaseController, :authorized).and_return(true)
 
     invoice = Invoice.last

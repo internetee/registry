@@ -157,7 +157,7 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
     end
 
     add_invoice_instance = EisBilling::AddDeposits.new(invoice)
-    result = add_invoice_instance.send_invoice
+    result = add_invoice_instance.call
 
     link = JSON.parse(result.body)['everypay_link']
 
