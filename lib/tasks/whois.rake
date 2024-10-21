@@ -45,7 +45,7 @@ namespace :whois do
   end
 
   desc 'Update whois status records for zones'
-  task update_status: :environment do
+  task update_zone_statuses: :environment do
     DNS::Zone.all.each(&:generate_data)
   end
 end
