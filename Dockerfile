@@ -1,10 +1,10 @@
 FROM internetee/ruby:3.0-buster
 
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4EB27DB2A3B88B8B
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    postgresql-client \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# # RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4EB27DB2A3B88B8B
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     git \
+#     postgresql-client \
+#   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN apt-get remove -y google-chrome-stable
 RUN apt-get purge -y google-chrome-stable
