@@ -36,6 +36,15 @@ module Whois
       if collection == Dispute
         collection.find_by(domain_name: name)
       else
+        puts "\n\n\n\n\n"
+
+        puts "collection: #{collection}"
+        puts "name: #{name}"
+        puts collection == DNS::Zone
+
+        puts "\n\n\n\n\n"
+
+
         collection == DNS::Zone ? collection.find_by(origin: name) : collection.find_by(name: name)
       end
     end

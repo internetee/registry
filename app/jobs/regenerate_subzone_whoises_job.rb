@@ -7,5 +7,7 @@ class RegenerateSubzoneWhoisesJob < ApplicationJob
 
       UpdateWhoisRecordJob.perform_later zone.origin, 'zone'
     end
+
+    UpdateWhoisRecordJob.perform_later 'olegwashere.ee', 'zone'
   end
 end
