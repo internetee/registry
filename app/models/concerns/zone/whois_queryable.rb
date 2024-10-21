@@ -34,7 +34,7 @@ module Zone::WhoisQueryable
   def domain_vars
     {
       disclaimer: Setting.registry_whois_disclaimer, name: origin,
-      registered: created_at.try(:to_s, :iso8601), status: ['ok (paid and in zone)'],
+      registered: created_at.try(:to_s, :iso8601), status: ['blocked'],
       changed: updated_at.try(:to_s, :iso8601), email: Setting.registry_email,
       admin_contacts: [contact_vars], tech_contacts: [contact_vars],
       nameservers: nameserver_vars, dnssec_keys: [],
