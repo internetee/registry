@@ -1,3 +1,6 @@
+21.10.2024
+* Show 2nd level zones as blocked in whois https://github.com/internetee/registry/pull/2700
+
 17.10.2024
 * Fix for handling db relationships for poll messages https://github.com/internetee/registry/pull/2698
 
