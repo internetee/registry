@@ -43,4 +43,9 @@ namespace :whois do
     end
     puts "\n-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
+
+  desc 'Update whois status records for zones'
+  task update_zone_statuses: :environment do
+    DNS::Zone.all.each(&:generate_data)
+  end
 end
