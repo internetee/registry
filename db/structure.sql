@@ -2641,7 +2641,8 @@ CREATE TABLE public.reserved_domain_statuses (
     reserved_domain_id bigint,
     status integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    linkpay_url character varying DEFAULT ''::character varying
 );
 
 
@@ -5745,4 +5746,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241112093540'),
 ('20241112124405'),
 ('20240722085530'),
-('20240723110208');
+('20240723110208'),
+('20241022121525');
