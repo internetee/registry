@@ -54,11 +54,9 @@ RUN apt-get install -y --no-install-recommends > /dev/null \
   libxslt1-dev \
   libxml2-dev \
   python-dev \
-  unzip \    
-#   libc6-i386 \
-#   lib32gcc-s1 \
   wkhtmltopdf \
   xvfb \
+  unzip \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -85,18 +83,11 @@ RUN gem install bundler && bundle install --jobs 20 --retry 5
 
 ENV PATH="/opt/chrome-linux64:${PATH}"
 
-# RUN apt-get update && apt-get install -y --no-install-recommends > /dev/null \
-#     libc6-i386 \
-#     lib32gcc-s1 \
-#     wkhtmltopdf \
-#     xvfb \
-#     && apt-get clean \
-#     && rm -rf /var/lib/apt/lists/*
-
 RUN ln -s /lib/ld-linux.so.2 /lib/ld-linux.so.2 || true
 
 # Обертка для wkhtmltopdf с xvfb
 RUN echo '#!/bin/bash\nxvfb-run -a --server-args="-screen 0, 1024x768x24" /usr/bin/wkhtmltopdf "$@"' > /usr/local/bin/wkhtmltopdf \
     && chmod +x /usr/local/bin/wkhtmltopdf
+
 
 EXPOSE 3000
