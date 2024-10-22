@@ -13,8 +13,6 @@ class ReservedDomainStatus < ApplicationRecord
   OK = '200'.freeze
   CREATED = '201'.freeze
 
-  attr_accessor :linkpay
-
   def token_expired? = token_created_at.nil? || token_created_at < 30.days.ago
 
   def refresh_token
@@ -27,8 +25,8 @@ class ReservedDomainStatus < ApplicationRecord
 
     result = reservation_domain_proceeds
     if result.status_code_success
-      update(status: :pending)
-      self.linkpay = result.linkpay
+      update(status: :pending, linkpay_url: result.linkpay)
+
       true
     else
       update(status: :failed)

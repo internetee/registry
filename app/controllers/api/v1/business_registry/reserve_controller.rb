@@ -26,7 +26,7 @@ module Api
             render_success({ 
               message: "Domain reserved successfully", 
               token: reserved_domain_status.access_token, 
-              linkpay: reserved_domain_status.linkpay 
+              linkpay: reserved_domain_status.linkpay_url
             }, :created)
           else
             render_error("Failed to reserve domain", :unprocessable_entity, reserved_domain_status.errors.full_messages)
