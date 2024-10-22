@@ -18,7 +18,15 @@ module Api
                                     token: @reserved_domain_status.access_token
                                   ).call
 
-        def handle_successful_status(result) = result.paid? ? handle_paid_status : render_success({ invoice_status: result.status })
+        def handle_successful_status(result)
+          return handle_paid_status if result.paid?
+
+          render_success({ 
+            invoice_status: result.status,
+            domain_name: @reserved_domain_status.name,
+            linkpay: @reserved_domain_status.linkpay_url
+          })
+        end
 
         def find_or_create_reserved_domain = ReservedDomain.find_or_create_by!(name: @reserved_domain_status.name)
 

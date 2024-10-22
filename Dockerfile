@@ -23,7 +23,7 @@ ENV LANG et_EE.UTF-8
 RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc -s | apt-key add -
 RUN sh -c 'echo "deb https://apt-archive.postgresql.org/pub/repos/apt bionic-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 RUN apt-get update > /dev/null && apt-get install -y --no-install-recommends > /dev/null \
-    postgresql-client-11=* \
+    postgresql-client-13=* \
     libpq-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*

@@ -10,13 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
--- *not* creating schema, since initdb creates it
-
-
---
 -- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -2645,7 +2638,8 @@ CREATE TABLE public.reserved_domain_statuses (
     reserved_domain_id bigint,
     status integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    linkpay_url character varying DEFAULT ''::character varying
 );
 
 
@@ -5675,6 +5669,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230711083811'),
 ('20240723110208'),
 ('20240816091049'),
-('20240816092636');
+('20240816092636'),
+('20241022121525');
 
 
