@@ -10,10 +10,10 @@ module Api
           domain_name = params[:domain_name]&.downcase&.strip
           reserved_domain = ReservedDomain.find_by(name: domain_name)
 
-          if reserved_domain.present?
-            render_success({ message: "Domain already reserved" })
-          else
+          if ::BusinessRegistry::DomainAvailabilityCheckerService.is_domain_available?(domain_name)
             reserve_new_domain(domain_name)
+          else
+            render_success({ message: "Domain is not available" })
           end
         end
 

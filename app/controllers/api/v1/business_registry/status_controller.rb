@@ -30,28 +30,15 @@ module Api
 
         def find_or_create_reserved_domain = ReservedDomain.find_or_create_by!(name: @reserved_domain_status.name)
 
-        def extract_token_from_header = request.headers['Authorization']&.split(' ')&.last
-
         def handle_paid_status
-          @reserved_domain_status.paid!
           reserved_domain = find_or_create_reserved_domain
-          
+          @reserved_domain_status.update(status: 'paid', reserved_domain_id: reserved_domain.id)
+
           render_success({
             invoice_status: 'paid',
             reserved_domain: reserved_domain.name,
             password: reserved_domain.password
           })
-        end
-
-        def find_reserved_domain_status
-          token = extract_token_from_header
-          @reserved_domain_status = ReservedDomainStatus.find_by(access_token: token)
-
-          if @reserved_domain_status.nil?
-            render json: { error: "Invalid token" }, status: :unauthorized
-          elsif @reserved_domain_status.token_expired?
-            render json: { error: "Token expired. Please refresh the token. TODO: provide endpoint" }, status: :unauthorized
-          end
         end
       end
     end
