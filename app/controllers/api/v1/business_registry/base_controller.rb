@@ -20,6 +20,21 @@ module Api
         def allowed_ips
           ENV['business_registry_allowed_ips'].to_s.split(',').map(&:strip)
         end
+
+        private
+
+        def extract_token_from_header = request.headers['Authorization']&.split(' ')&.last
+
+        def find_reserved_domain_status
+          token = extract_token_from_header
+          @reserved_domain_status = ReservedDomainStatus.find_by(access_token: token)
+  
+          if @reserved_domain_status.nil?
+            render json: { error: "Invalid token" }, status: :unauthorized
+          elsif @reserved_domain_status.token_expired?
+            render json: { error: "Token expired. Please refresh the token. TODO: provide endpoint" }, status: :unauthorized
+          end
+        end
       end
     end
   end
