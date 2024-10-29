@@ -12,6 +12,8 @@ class ReservedDomain < ApplicationRecord
 
   self.ignored_columns = %w[legacy_id]
 
+  MAX_DOMAIN_NAME_PER_REQUEST = 20
+
   class << self
     def ransackable_associations(*)
       authorizable_ransackable_associations
@@ -36,6 +38,28 @@ class ReservedDomain < ApplicationRecord
 
       record.regenerate_password
       record.save
+    end
+
+    def wrap_reserved_domains_to_struct(reserved_domains, success, errors = nil)
+      Struct.new(:reserved_domains, :success, :errors).new(reserved_domains, success, errors)
+    end
+
+    def reserve_domains_without_payment(domain_names)
+      if domain_names.count > MAX_DOMAIN_NAME_PER_REQUEST
+        return wrap_reserved_domains_to_struct(domain_names, false, "The maximum number of domain names per request is #{MAX_DOMAIN_NAME_PER_REQUEST}")
+      end
+
+      available_domains = BusinessRegistry::DomainAvailabilityCheckerService.filter_available(domain_names)
+
+      reserved_domains = []
+      available_domains.each do |domain_name|
+        reserved_domain = ReservedDomain.new(name: domain_name)
+        reserved_domain.regenerate_password
+        reserved_domain.save
+        reserved_domains << reserved_domain
+      end
+
+      wrap_reserved_domains_to_struct(reserved_domains, true)
     end
   end
 

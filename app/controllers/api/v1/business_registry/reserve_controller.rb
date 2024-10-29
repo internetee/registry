@@ -1,6 +1,8 @@
 module Api
   module V1
     module BusinessRegistry
+      # DEPRECATED
+
       class ReserveController < BaseController
         before_action :authenticate, only: [:create]
         skip_before_action :find_reserved_domain, only: [:create]
