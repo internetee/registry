@@ -183,8 +183,10 @@ Rails.application.routes.draw do
       namespace :business_registry do
         get 'domain_names/:organization_name', to: 'domain_names#show', as: 'domain_names'
         get 'status', to: 'status#show', as: 'status'
+        get 'long_reserve_domains_status', to: 'long_reserve_domains_status#show', as: 'long_reserve_domains_status'
         post 'reserve', to: 'reserve#create', as: 'reserve'
         post 'reserve_domains', to: 'reserve_domains#create', as: 'reserve_domains'
+        post 'long_reserve_domains', to: 'long_reserve_domains#create', as: 'long_reserve_domains'
         get 'registration_code', to: 'registration_code#show', as: 'registration_code'
         delete 'release', to: 'release#destroy', as: 'release'
         patch 'refresh_token', to: 'refresh_token#update'
