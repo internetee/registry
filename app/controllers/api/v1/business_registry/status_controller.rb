@@ -1,6 +1,7 @@
 module Api
   module V1
     module BusinessRegistry
+      # DEPRECATED
       class StatusController < BaseController
         before_action :authenticate, only: [:create]
         skip_before_action :find_reserved_domain, only: [:show]

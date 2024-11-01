@@ -1,6 +1,8 @@
 module Api
   module V1
     module BusinessRegistry
+      # DEPRECATED
+      
       class RefreshTokenController < ::Api::V1::BaseController
         before_action :authenticate, only: [:update]
         

@@ -2630,19 +2630,15 @@ ALTER SEQUENCE public.repp_logs_id_seq OWNED BY public.repp_logs.id;
 
 
 --
--- Name: reserved_domain_statuses; Type: TABLE; Schema: public; Owner: -
+-- Name: reserve_domain_invoices; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.reserved_domain_statuses (
+CREATE TABLE public.reserve_domain_invoices (
     id bigint NOT NULL,
-    name character varying NOT NULL,
-    access_token character varying NOT NULL,
-    token_created_at timestamp without time zone NOT NULL,
-    reserved_domain_id bigint,
-    status integer DEFAULT 0 NOT NULL,
+    invoice_number character varying,
+    domain_names character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    linkpay_url character varying DEFAULT ''::character varying
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -2652,9 +2648,10 @@ CREATE TABLE public.reserved_domain_statuses (
 
 CREATE SEQUENCE public.repp_logs_id_seq
 -- Name: reserved_domain_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.reserved_domain_statuses_id_seq
+CREATE SEQUENCE public.reserve_domain_invoices_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2668,9 +2665,10 @@ CREATE SEQUENCE public.reserved_domain_statuses_id_seq
 
 ALTER SEQUENCE public.repp_logs_id_seq OWNED BY public.repp_logs.id;
 -- Name: reserved_domain_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.reserved_domain_statuses_id_seq OWNED BY public.reserved_domain_statuses.id;
+ALTER SEQUENCE public.reserve_domain_invoices_id_seq OWNED BY public.reserve_domain_invoices.id;
 
 
 --
@@ -3489,10 +3487,10 @@ ALTER TABLE ONLY public.repp_logs ALTER COLUMN id SET DEFAULT nextval('public.re
 
 
 --
--- Name: reserved_domain_statuses id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: reserve_domain_invoices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.reserved_domain_statuses ALTER COLUMN id SET DEFAULT nextval('public.reserved_domain_statuses_id_seq'::regclass);
+ALTER TABLE ONLY public.reserve_domain_invoices ALTER COLUMN id SET DEFAULT nextval('public.reserve_domain_invoices_id_seq'::regclass);
 
 
 --
@@ -4061,11 +4059,11 @@ ALTER TABLE ONLY public.repp_logs
     ADD CONSTRAINT repp_logs_pkey PRIMARY KEY (id);
 
 --
--- Name: reserved_domain_statuses reserved_domain_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: reserve_domain_invoices reserve_domain_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.reserved_domain_statuses
-    ADD CONSTRAINT reserved_domain_statuses_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.reserve_domain_invoices
+    ADD CONSTRAINT reserve_domain_invoices_pkey PRIMARY KEY (id);
 
 --
 -- Name: reserve_domain_invoices reserve_domain_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
@@ -5157,14 +5155,6 @@ ALTER TABLE ONLY public.epp_sessions
 
 
 --
--- Name: reserved_domain_statuses fk_rails_b7bdc811c5; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.reserved_domain_statuses
-    ADD CONSTRAINT fk_rails_b7bdc811c5 FOREIGN KEY (reserved_domain_id) REFERENCES public.reserved_domains(id);
-
-
---
 -- Name: account_activities fk_rails_b80dbb973d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5736,7 +5726,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230707084741'),
 ('20230710120154'),
 ('20230711083811'),
-('20240723110208'),
 ('20240816091049'),
 ('20240816092636'),
 ('20240924103554'),

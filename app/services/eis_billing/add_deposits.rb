@@ -22,8 +22,8 @@ module EisBilling
       data[:custom_field2] = invoice.is_a?(ActiveRecord::Base) ? EisBilling::Base::INITIATOR : (invoice&.initiator || EisBilling::Base::INITIATOR)
       data[:invoice_number] = invoice.number
       data[:reference_number] = invoice.reference_no
-      data[:reserved_domain_name] = invoice.is_a?(ActiveRecord::Base) ? nil : invoice&.reserved_domain_name
-      data[:token] = invoice.is_a?(ActiveRecord::Base) ? nil : invoice&.token
+      data[:reserved_domain_names] = invoice.is_a?(ActiveRecord::Base) ? nil : invoice&.reserved_domain_names
+      # data[:token] = invoice.is_a?(ActiveRecord::Base) ? nil : invoice&.token
 
       data
     end
