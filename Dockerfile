@@ -82,12 +82,10 @@ COPY Gemfile Gemfile.lock ./
 RUN gem install bundler && bundle install --jobs 20 --retry 5
 
 ENV PATH="/opt/chrome-linux64:${PATH}"
-
 RUN ln -s /lib/ld-linux.so.2 /lib/ld-linux.so.2 || true
 
 # Обертка для wkhtmltopdf с xvfb
 RUN echo '#!/bin/bash\nxvfb-run -a --server-args="-screen 0, 1024x768x24" /usr/bin/wkhtmltopdf "$@"' > /usr/local/bin/wkhtmltopdf \
     && chmod +x /usr/local/bin/wkhtmltopdf
-
 
 EXPOSE 3000

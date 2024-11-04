@@ -9,12 +9,12 @@ module Api
         before_action :available_domains?, only: [:create]
 
         def create
-          result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+          result = ReserveDomainInvoice.create_list_of_domains(@domain_names, success_business_registry_customer_url, failed_business_registry_customer_url)
 
           if result.status_code_success
             render_success({ 
               message: "Domains are in pending status. Need to pay for domains.", 
-              linkpay: result.linkpay,
+              oneoff_payment_link: result.oneoff_payment_link,
               invoice_number: result.invoice_number,
               available_domains: ReserveDomainInvoice.filter_available_domains(@domain_names)
             }, :created)
@@ -24,6 +24,14 @@ module Api
         end
 
         private
+
+        def success_business_registry_customer_url
+          params[:success_business_registry_customer_url]
+        end
+
+        def failed_business_registry_customer_url
+          params[:failed_business_registry_customer_url]
+        end
 
         def domain_names
           @domain_names ||= params[:domain_names]
@@ -52,6 +60,28 @@ module Api
             render_error("Invalid parameter: domain_names must be a non-empty array of valid domain names", :bad_request)
             return
           end
+
+          # Валидация URL параметров
+          if params[:success_business_registry_customer_url].present?
+            unless valid_url?(params[:success_business_registry_customer_url])
+              render_error("Invalid success URL format", :bad_request)
+              return
+            end
+          end
+
+          if params[:failed_business_registry_customer_url].present?
+            unless valid_url?(params[:failed_business_registry_customer_url])
+              render_error("Invalid failed URL format", :bad_request)
+              return
+            end
+          end
+        end
+
+        def valid_url?(url)
+          uri = URI.parse(url)
+          uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+        rescue URI::InvalidURIError
+          false
         end
       end
     end

@@ -6,7 +6,7 @@ class ReserveDomainInvoice < ApplicationRecord
     keyword_init: true)
   end
 
-  class InvoiceResponseStruct < Struct.new(:status_code_success, :linkpay, :invoice_number, :details, 
+  class InvoiceResponseStruct < Struct.new(:status_code_success, :oneoff_payment_link, :invoice_number, :details, 
     keyword_init: true)
   end
 
@@ -14,9 +14,10 @@ class ReserveDomainInvoice < ApplicationRecord
   HTTP_OK = '200'
   HTTP_CREATED = '201'
   DEFAULT_AMOUNT = '10.00'
+  ONE_OFF_CUSTOMER_URL = 'https://registry.test'
 
   class << self
-    def create_list_of_domains(domain_names)
+    def create_list_of_domains(domain_names, success_business_registry_customer_url, failed_business_registry_customer_url)
       normalized_names = normalize_domain_names(domain_names)
       available_names = filter_available_domains(normalized_names)
 
@@ -24,9 +25,13 @@ class ReserveDomainInvoice < ApplicationRecord
 
       invoice = create_invoice_with_domains(available_names)
       result = process_invoice(invoice)
+      oneoff_result = EisBilling::OneoffService.call(invoice_number: invoice.number.to_s, customer_url: ONE_OFF_CUSTOMER_URL, amount: invoice.total)
       
-      create_reserve_domain_invoice(invoice.number, available_names)
-      build_response(result, invoice.number)
+      if oneoff_result.code == HTTP_OK || oneoff_result.code == HTTP_CREATED
+        create_reserve_domain_invoice(invoice.number, available_names, success_business_registry_customer_url, failed_business_registry_customer_url)
+      end
+
+      build_response(oneoff_result, invoice.number)
     end
 
     def is_any_available_domains?(domain_names)
@@ -80,10 +85,12 @@ class ReserveDomainInvoice < ApplicationRecord
       EisBilling::AddDeposits.new(invoice).call
     end
 
-    def create_reserve_domain_invoice(invoice_number, domain_names)
+    def create_reserve_domain_invoice(invoice_number, domain_names, success_business_registry_customer_url, failed_business_registry_customer_url)
       create(
         invoice_number: invoice_number,
-        domain_names: domain_names
+        domain_names: domain_names,
+        success_business_registry_customer_url: success_business_registry_customer_url,
+        failed_business_registry_customer_url: failed_business_registry_customer_url
       )
     end
 
@@ -92,7 +99,7 @@ class ReserveDomainInvoice < ApplicationRecord
       
       InvoiceResponseStruct.new(
         status_code_success: success_status?(result.code),
-        linkpay: parsed_result['everypay_link'],
+        oneoff_payment_link: parsed_result['oneoff_redirect_link'],
         invoice_number: invoice_number,
         details: parsed_result
       )
