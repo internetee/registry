@@ -14,7 +14,10 @@ class ReserveDomainInvoice < ApplicationRecord
   HTTP_OK = '200'
   HTTP_CREATED = '201'
   DEFAULT_AMOUNT = '10.00'
-  ONE_OFF_CUSTOMER_URL = 'https://registry.test'
+  ONE_OFF_CUSTOMER_URL = 'https://registry.test/eis_billing/callback'
+
+
+  enum status: { pending: 0, paid: 1, cancelled: 2, failed: 3 }
 
   class << self
     def create_list_of_domains(domain_names, success_business_registry_customer_url, failed_business_registry_customer_url)
