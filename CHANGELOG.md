@@ -1,3 +1,6 @@
+08.11.2024
+* update for business registry verification https://github.com/internetee/registry/pull/2693
+
 21.10.2024
 * Show 2nd level zones as blocked in whois https://github.com/internetee/registry/pull/2700
 
