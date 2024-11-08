@@ -1,0 +1,34 @@
+<p>Lugupeetud ettevõtte <%= @registrant.name %> esindaja,</p>
+
+<p>Eesti Interneti Sihtasutusele (EIS) on äriregistri vahendusel teatavaks saanud, et ettevõtte <%= @registrant.name %> äriregistrikoodiga <%= @registrant.ident %> suhtes käib likvideerimismenetlus. Tuletame teile meelde, et tulenevalt .ee domeenireeglitest peab domeeni registreerijaks olema eksisteeriv era- või juriidiline isik. Seega käivitame ettevõtte likvideerimise järel sellele kuuluvate registreeringute kustutusmenetluse. Kustutusmenetluse tulemusena eemaldatakse .ee domeeninimi registrist ning vabaneb kõigile soovijatele taaskord registreerimiseks.</p>
+<p>Kui soovite ettevõttele kuuluvaid registreeritud domeene ka edaspidi kasutada, soovitame teil ette valmistada registreeringute üleandmine uuele omanikule enne praeguse omaniku likvideerimist. Lähemalt leiate selle kohta infot meie kodulehelt.</p>
+
+<p>.ee domeeni registris kuuluvad ettevõttele <%= @registrant.ident %> järgmised registreeringud:</p>
+<ul>
+  <% @registrant.domains.each do |domain| %>
+    <li><%= domain.name %></li>
+  <% end %>
+</ul>
+
+<p>Lisaküsimuste korral võtke palun ühendust oma registripidajaga:</p>
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrant.registrar %>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+
+<hr>
+
+<p>Dear representative of <%= @registrant.name %>,</p>
+
+<p>The Estonian Internet Foundation (EIS) has found through the Estonian business register that the company <%= @registrant.name %> with the business registry code <%= @registrant.ident %> is in liquidation proceedings. Please note that according to the .ee domain regulation, the registrant of the domain must be an existing private or legal entity. Therefore, the registry will start the registration deletion procedure once the liquidation of the company has been finalized. After the registration deletion procedure, the domain name will be open to register again for everyone.</p>
+<p>If you want to continue to use the registered domains belonging to your company, we recommend you to prepare the transfer of the registrations to the new owner before the liquidation of the current owner will be finalized. Learn more on our website.</p>
+
+<p>The following registrations belong to the company <%= @registrant.ident %> in the .ee domain register:</p>
+<ul>
+  <% @registrant.domains.each do |domain| %>
+    <li><%= domain.name %></li>
+  <% end %>
+</ul>
+
+<p>Should you have additional questions, please contact your registrar:</p>
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrant.registrar %>
+<%= render 'mailers/shared/signatures/signature.en.html' %>
+<hr>
