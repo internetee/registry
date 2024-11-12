@@ -694,7 +694,7 @@ CREATE TABLE public.contacts (
     email_history character varying,
     registrant_publishable boolean DEFAULT false,
     checked_company_at timestamp without time zone,
-    company_register_status character varying
+    company_register_status character varying,
     ident_request_sent_at timestamp without time zone,
     verified_at timestamp without time zone,
     verification_id character varying
