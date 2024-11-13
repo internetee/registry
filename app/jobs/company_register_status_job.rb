@@ -7,7 +7,11 @@ class CompanyRegisterStatusJob < ApplicationJob
 
   def perform(days_interval = 14, spam_time_delay = 1, batch_size = 100)
     sampling_registrant_contact(days_interval).find_in_batches(batch_size: batch_size) do |contacts|
-      contacts.reject { |contact| whitelisted_company?(contact) }.each { |contact| proceed_company_status(contact, spam_time_delay) }
+      contacts_to_check = contacts.reject { |contact| whitelisted_company?(contact) }
+
+      contacts_to_check.each do |contact|
+        proceed_company_status(contact, spam_time_delay)
+      end
     end
   end
 
@@ -17,12 +21,8 @@ class CompanyRegisterStatusJob < ApplicationJob
     # avoid spamming company register
     sleep spam_time_delay
 
-    puts "WHAT YOU GONNA DO WHEN I COME FOR YOU?"
-
     company_status = contact.return_company_status
     contact.update!(company_register_status: company_status, checked_company_at: Time.zone.now)
-
-    puts "company id #{contact.id} status: #{company_status}"
 
     case company_status
     when Contact::REGISTERED
@@ -44,7 +44,6 @@ class CompanyRegisterStatusJob < ApplicationJob
       company_register_status IN (?)",
       Contact::REGISTERED, days_interval.days.ago, [Contact::LIQUIDATED, Contact::BANKRUPT, Contact::DELETED]
     )
-
   end
 
   def update_validation_company_status(contact:, status:)
@@ -66,7 +65,8 @@ class CompanyRegisterStatusJob < ApplicationJob
 
   def check_for_force_delete(contact)
     contact.registrant_domains.any? do |domain|
-      domain.status_notes[DomainStatus::FORCE_DELETE].include?("Company no: #{contact.ident}")
+      notes = domain.status_notes[DomainStatus::FORCE_DELETE]
+      notes && notes.include?("Company no: #{contact.ident}")
     end
   end
 
@@ -107,9 +107,14 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def whitelisted_companies
-    @whitelisted_companies ||= ENV['whitelist_companies'].split(',')
+    @whitelisted_companies ||= begin
+      raw_list = ENV['whitelist_companies'] || '[]'
+      JSON.parse(raw_list)
+    rescue JSON::ParserError
+      []
+    end
   end
-
+  
   def whitelisted_company?(contact)
     whitelisted_companies.include?(contact.ident)
   end

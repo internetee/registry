@@ -1,8 +1,9 @@
 require 'test_helper'
+require 'minitest/mock'
 
 class FormHelperTest < ActionView::TestCase
   def test_legal_document_field
-    meth = MiniTest::Mock.new
+    meth = Minitest::Mock.new
     returned_legal_document_field = ApplicationController.helpers.legal_document_field('Hello', meth)
 
     assert returned_legal_document_field.include? 'data-legal-document="true"'
