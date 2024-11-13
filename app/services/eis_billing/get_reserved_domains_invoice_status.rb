@@ -1,18 +1,19 @@
 module EisBilling
   class GetReservedDomainsInvoiceStatus < EisBilling::Base
-    attr_reader :invoice_number
+    attr_reader :invoice_number, :user_unique_id
 
     PAID = 'paid'.freeze
     OK = '200'.freeze
     CREATED = '201'.freeze
 
     # rubocop:disable Lint/MissingSuper
-    def initialize(invoice_number:)
+    def initialize(invoice_number:, user_unique_id:)
       @invoice_number = invoice_number
+      @user_unique_id = user_unique_id
     end
 
-    def self.call(invoice_number:)
-      new(invoice_number: invoice_number).call
+    def self.call(invoice_number:, user_unique_id:)
+      new(invoice_number: invoice_number, user_unique_id: user_unique_id).call
     end
 
     def call
@@ -30,7 +31,7 @@ module EisBilling
     end
 
     def reserved_domain_invoice_statuses_url
-      "#{EisBilling::Base::BASE_URL}/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{invoice_number}"
+      "#{EisBilling::Base::BASE_URL}/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{invoice_number}&user_unique_id=#{user_unique_id}"
     end
   end
 end

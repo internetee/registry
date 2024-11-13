@@ -14,16 +14,16 @@ module EisBilling
 
     def parse_invoice
       data = {}
+
       data[:transaction_amount] = invoice.total.to_s
       data[:order_reference] = invoice.number
       data[:customer_name] = invoice.buyer_name
       data[:customer_email] = invoice.buyer_email
-      data[:custom_field1] = invoice.description
+      data[:custom_field1] = invoice.user_unique_id || invoice.description
       data[:custom_field2] = invoice.is_a?(ActiveRecord::Base) ? EisBilling::Base::INITIATOR : (invoice&.initiator || EisBilling::Base::INITIATOR)
       data[:invoice_number] = invoice.number
       data[:reference_number] = invoice.reference_no
       data[:reserved_domain_names] = invoice.is_a?(ActiveRecord::Base) ? nil : invoice&.reserved_domain_names
-      # data[:token] = invoice.is_a?(ActiveRecord::Base) ? nil : invoice&.token
 
       data
     end

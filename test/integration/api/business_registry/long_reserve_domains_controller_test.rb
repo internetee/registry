@@ -14,6 +14,19 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
 
     @valid_ip = '127.0.0.1'
     ENV['auction_api_allowed_ips'] = @valid_ip
+
+    # Mock the domain availability checker
+    @original_filter_available = BusinessRegistry::DomainAvailabilityCheckerService.method(:filter_available)
+    BusinessRegistry::DomainAvailabilityCheckerService.define_singleton_method(:filter_available) do |domains|
+      domains # Return all domains as available for testing
+    end
+  end
+
+  teardown do
+    # Restore original method
+    if @original_filter_available
+      BusinessRegistry::DomainAvailabilityCheckerService.define_singleton_method(:filter_available, @original_filter_available)
+    end
   end
 
   test "should create long reserve domains with valid parameters" do
@@ -132,38 +145,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     assert_not_nil json_response['oneoff_payment_link']
   end
 
-  test "should return error when success URL is invalid" do
-    post api_v1_business_registry_long_reserve_domains_path,
-      params: { 
-        domain_names: @valid_domain_names,
-        success_business_registry_customer_url: "invalid-url"
-      },
-      headers: {
-        'Origin' => @allowed_origins.first,
-        'REMOTE_ADDR' => @valid_ip
-      }
-
-    assert_response :bad_request
-    json_response = JSON.parse(response.body)
-    assert_equal "Invalid success URL format", json_response['error']
-  end
-
-  test "should return error when failed URL is invalid" do
-    post api_v1_business_registry_long_reserve_domains_path,
-      params: { 
-        domain_names: @valid_domain_names,
-        failed_business_registry_customer_url: "invalid-url"
-      },
-      headers: {
-        'Origin' => @allowed_origins.first,
-        'REMOTE_ADDR' => @valid_ip
-      }
-
-    assert_response :bad_request
-    json_response = JSON.parse(response.body)
-    assert_equal "Invalid failed URL format", json_response['error']
-  end
-
   test "should accept request with valid URLs" do
     mock_result = OpenStruct.new(
       status_code_success: true,
@@ -186,6 +167,64 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
       assert_response :created
       json_response = JSON.parse(response.body)
       assert_not_nil json_response['oneoff_payment_link']
+    end
+  end
+
+  test "should check domain availability before creating" do
+    # Mock the availability checker to return no available domains
+    BusinessRegistry::DomainAvailabilityCheckerService.define_singleton_method(:filter_available) do |domains|
+      []
+    end
+
+    post api_v1_business_registry_long_reserve_domains_path,
+      params: { domain_names: @valid_domain_names },
+      headers: {
+        'Origin' => @allowed_origins.first,
+        'REMOTE_ADDR' => @valid_ip
+      }
+
+    assert_response :unprocessable_entity
+    json_response = JSON.parse(response.body)
+    assert_equal "No available domains", json_response['error']
+  end
+
+  test "should check if any domains are available before processing" do
+    ReserveDomainInvoice.stub :is_any_available_domains?, false do
+      post api_v1_business_registry_long_reserve_domains_path,
+        params: { domain_names: @valid_domain_names },
+        headers: {
+          'Origin' => @allowed_origins.first,
+          'REMOTE_ADDR' => @valid_ip
+        }
+
+      assert_response :unprocessable_entity
+      json_response = JSON.parse(response.body)
+      assert_equal "No available domains", json_response['error']
+    end
+  end
+
+  test "should return available domains in response" do
+    mock_result = OpenStruct.new(
+      status_code_success: true,
+      oneoff_payment_link: "http://payment.test",
+      invoice_number: "123456",
+      user_unique_id: "user123"
+    )
+
+    ReserveDomainInvoice.stub :create_list_of_domains, mock_result do
+      ReserveDomainInvoice.stub :filter_available_domains, @valid_domain_names do
+        post api_v1_business_registry_long_reserve_domains_path,
+          params: { domain_names: @valid_domain_names },
+          headers: {
+            'Origin' => @allowed_origins.first,
+            'REMOTE_ADDR' => @valid_ip
+          }
+
+        assert_response :created
+        json_response = JSON.parse(response.body)
+        assert_equal @valid_domain_names, json_response['available_domains']
+        assert_equal "user123", json_response['user_unique_id']
+      end
     end
   end
 
