@@ -2713,9 +2713,8 @@ CREATE TABLE public.reserve_domain_invoices (
     domain_names character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    success_business_registry_customer_url character varying,
-    failed_business_registry_customer_url character varying,
-    status integer DEFAULT 0
+    status integer DEFAULT 0,
+    metainfo character varying
 );
 
 
