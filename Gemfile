@@ -86,11 +86,11 @@ group :development, :test do
 end
 
 group :test do
-  gem 'capybara'
+  gem 'capybara', '~> 3.40.0'
   gem 'database_cleaner'
   gem 'minitest', '~> 5.17'
   gem 'minitest-stub_any_instance'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '~> 4.26'
   # gem 'webdrivers'
   gem 'simplecov', '0.17.1', require: false # CC last supported v0.17
   gem 'spy'

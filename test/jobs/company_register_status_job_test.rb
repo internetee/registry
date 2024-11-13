@@ -22,9 +22,9 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
   def test_if_company_wasn_not_checked_before_it_should_be_checked
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
-      object = original_new_method.call      
+      object = original_new_method.call
       def object.simple_data(registration_number:)
-        [Company.new('1234567', 'ACME Ltd', REGISTERED)]
+        [Company.new('16752073', 'ACME Ltd', REGISTERED), Company.new('14112620', 'Jack', REGISTERED)]
       end
       object
     end
@@ -43,10 +43,11 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     @registrant_acme.reload && @registrant_jack.reload
 
-    assert_not_nil @registrant_acme.checked_company_at
-    assert_not_nil @registrant_acme.company_register_status
     assert_not_nil @registrant_jack.checked_company_at
     assert_not_nil @registrant_jack.company_register_status
+    assert_not_nil @registrant_acme.checked_company_at
+    assert_not_nil @registrant_acme.company_register_status
+
 
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end
