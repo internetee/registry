@@ -42,6 +42,10 @@ class CompanyRegisterClientStub
   def simple_data(registration_number:)
     [Company.new('1234567', 'ACME Ltd', 'R')]
   end
+
+  def company_details(registration_number:)
+    []
+  end
 end
 
 CompanyRegister::Client = CompanyRegisterClientStub
