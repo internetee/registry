@@ -2724,8 +2724,10 @@ CREATE TABLE public.reserve_domain_invoices (
 
 CREATE SEQUENCE public.repp_logs_id_seq
 -- Name: reserved_domain_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+
 -- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
+
 
 CREATE SEQUENCE public.reserve_domain_invoices_id_seq
     START WITH 1
@@ -2775,6 +2777,8 @@ CREATE SEQUENCE public.reserve_domain_invoices_id_seq
 
 
 --
+-- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+
 -- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
