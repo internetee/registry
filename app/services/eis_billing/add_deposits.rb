@@ -13,23 +13,35 @@ module EisBilling
     private
 
     def parse_invoice
-      data = {}
+      {
+        transaction_amount: invoice.total.to_s,
+        order_reference: invoice.number,
+        customer_name: invoice.buyer_name,
+        customer_email: invoice.buyer_email,
+        custom_field1: custom_field1_value,
+        custom_field2: custom_field2_value,
+        invoice_number: invoice.number,
+        reference_number: invoice.reference_no,
+        reserved_domain_names: reserved_domain_names
+      }
+    end
 
-      data[:transaction_amount] = invoice.total.to_s
-      data[:order_reference] = invoice.number
-      data[:customer_name] = invoice.buyer_name
-      data[:customer_email] = invoice.buyer_email
-      data[:custom_field1] = if invoice.is_a?(ActiveRecord::Base)
-                              invoice.description
-                            else
-                              invoice.respond_to?(:user_unique_id) ? invoice.user_unique_id : invoice.description
-                            end
-      data[:custom_field2] = invoice.is_a?(ActiveRecord::Base) ? EisBilling::Base::INITIATOR : (invoice&.initiator || EisBilling::Base::INITIATOR)
-      data[:invoice_number] = invoice.number
-      data[:reference_number] = invoice.reference_no
-      data[:reserved_domain_names] = invoice.is_a?(ActiveRecord::Base) ? nil : invoice&.reserved_domain_names
+    def custom_field1_value
+      if invoice.is_a?(ActiveRecord::Base)
+        invoice.description
+      else
+        invoice.respond_to?(:user_unique_id) ? invoice.user_unique_id : invoice.description
+      end
+    end
 
-      data
+    def custom_field2_value
+      invoice.is_a?(ActiveRecord::Base) ? 
+        EisBilling::Base::INITIATOR : 
+        (invoice&.initiator || EisBilling::Base::INITIATOR)
+    end
+
+    def reserved_domain_names
+      invoice.is_a?(ActiveRecord::Base) ? nil : invoice&.reserved_domain_names
     end
 
     def send_request(json_obj:)
