@@ -13,6 +13,12 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
     end
   end
 
+  teardown do
+    if @original_filter_available
+      BusinessRegistry::DomainAvailabilityCheckerService.define_singleton_method(:filter_available, @original_filter_available)
+    end
+  end
+
   test "should reserve multiple domains successfully" do
     domain_names = ["new1.test", "new2.test"]
     

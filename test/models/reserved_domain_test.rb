@@ -11,6 +11,12 @@ class ReservedDomainTest < ActiveSupport::TestCase
     end
   end
 
+  teardown do
+    if @original_filter_available
+      BusinessRegistry::DomainAvailabilityCheckerService.define_singleton_method(:filter_available, @original_filter_available)
+    end
+  end
+
   test "fixture is valid" do
     assert @reserved_domain.valid?
   end
