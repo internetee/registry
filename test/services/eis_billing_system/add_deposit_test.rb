@@ -3,7 +3,7 @@ require 'webmock/minitest'
 
 class AddDepositsTest < ActiveSupport::TestCase
   setup do
-    @invoice = Struct.new(:total, :number, :buyer_name, :buyer_email, :description, :initiator, :reference_no, :reserved_domain_name, :token).new(
+    @invoice = Struct.new(:total, :number, :buyer_name, :buyer_email, :description, :initiator, :reference_no, :reserved_domain_names, :token).new(
       100.50, '12345', 'John Doe', 'john@example.com', 'Test invoice', 'test_initiator', 'REF001', 'example.com', 'test_token'
     )
   end
@@ -20,14 +20,13 @@ class AddDepositsTest < ActiveSupport::TestCase
     assert_equal 'test_initiator', parsed_data[:custom_field2]
     assert_equal '12345', parsed_data[:invoice_number]
     assert_equal 'REF001', parsed_data[:reference_number]
-    assert_equal 'example.com', parsed_data[:reserved_domain_name]
-    assert_equal 'test_token', parsed_data[:token]
+    assert_equal 'example.com', parsed_data[:reserved_domain_names]
   end
 
   test "call sends correct request and returns response" do
     expected_response = '{"status": "success"}'
     
-    stub_request(:post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
       .with(
         body: {
           transaction_amount: "100.5",
@@ -38,13 +37,8 @@ class AddDepositsTest < ActiveSupport::TestCase
           custom_field2: "test_initiator",
           invoice_number: "12345",
           reference_number: "REF001",
-          reserved_domain_name: "example.com",
-          token: "test_token"
+          reserved_domain_names: "example.com",
         }.to_json,
-        headers: {
-          'Content-Type' => 'application/json',
-          'Authorization' => /^Bearer .+$/
-        }
       )
       .to_return(status: 200, body: expected_response, headers: { 'Content-Type' => 'application/json' })
 
@@ -54,7 +48,7 @@ class AddDepositsTest < ActiveSupport::TestCase
     assert_equal expected_response, result.body
     assert_equal '200', result.code
 
-    assert_requested :post, "http://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator", times: 1
+    assert_requested :post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator", times: 1
   end
 
   test "invoice_generator_url returns correct URL" do

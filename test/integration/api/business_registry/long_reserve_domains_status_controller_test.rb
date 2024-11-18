@@ -3,11 +3,13 @@ require 'test_helper'
 class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < ActionDispatch::IntegrationTest
   def setup
     @domain_names = ['example1.test', 'example2.test']
-    @invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names)
+    @invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names, metainfo: SecureRandom.uuid[0..7])
     @allowed_origins = ['http://example.com', 'https://test.com']
     ENV['ALLOWED_ORIGINS'] = @allowed_origins.join(',')
     @valid_ip = '127.0.0.1'
     ENV['auction_api_allowed_ips'] = @valid_ip
+
+    stub_reserved_domains_invoice_status
   end
 
   test "shows paid status and creates reserved domains" do
@@ -17,10 +19,11 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
         message: 'Payment received',
         invoice_status: 'paid',
         invoice_number: @invoice.invoice_number
-      }
+      },
+      user_unique_id: @invoice.metainfo
     )
 
-    get api_v1_business_registry_long_reserve_domains_status_path(invoice_number: @invoice.invoice_number),
+    get api_v1_business_registry_long_reserve_domains_status_path(invoice_number: @invoice.invoice_number, user_unique_id: @invoice.metainfo),
         headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
 
     assert_response :success
@@ -38,10 +41,11 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
         message: 'Payment pending',
         invoice_status: 'unpaid',
         invoice_number: @invoice.invoice_number
-      }
+      },
+      user_unique_id: @invoice.metainfo
     )
 
-    get api_v1_business_registry_long_reserve_domains_status_path(invoice_number: @invoice.invoice_number),
+    get api_v1_business_registry_long_reserve_domains_status_path(invoice_number: @invoice.invoice_number, user_unique_id: @invoice.metainfo),
         headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
 
     assert_response :success
@@ -66,10 +70,11 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
         message: 'Error occurred',
         invoice_status: 'error',
         invoice_number: @invoice.invoice_number
-      }
+      },
+      user_unique_id: @invoice.metainfo
     )
 
-    get api_v1_business_registry_long_reserve_domains_status_path(invoice_number: @invoice.invoice_number),
+    get api_v1_business_registry_long_reserve_domains_status_path(invoice_number: @invoice.invoice_number, user_unique_id: @invoice.metainfo),
         headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
 
     assert_response :success
@@ -80,8 +85,8 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
 
   private
 
-  def stub_billing_request(status:, body:)
-    stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{@invoice.invoice_number}")
+  def stub_billing_request(status:, body:, user_unique_id: nil)
+    stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{@invoice.invoice_number}&user_unique_id=#{user_unique_id}")
       .with(
         headers: EisBilling::Base.headers
       )
@@ -90,5 +95,13 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
         body: body.to_json,
         headers: { 'Content-Type' => 'application/json' }
       )
+  end
+
+  def stub_reserved_domains_invoice_status
+    stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{@invoice.invoice_number}&user_unique_id=#{@invoice.metainfo}")
+      .with(
+        headers: EisBilling::Base.headers
+      )
+      .to_return(status: 200, body: {}.to_json, headers: { 'Content-Type' => 'application/json' })
   end
 end

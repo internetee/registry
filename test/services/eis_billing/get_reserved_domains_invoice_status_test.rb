@@ -69,16 +69,10 @@ class EisBilling::GetReservedDomainsInvoiceStatusTest < ActiveSupport::TestCase
   end
 
   test "class method call creates instance and calls instance method" do
-    stub_billing_request(
-      status: 200,
-      body: {
-        message: 'Payment received',
-        invoice_status: 'paid',
-        invoice_number: @invoice_number
-      }
-    )
+    stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{@invoice_number}&user_unique_id=user123")
+        .to_return(status: 200, body: { invoice_status: 'paid' }.to_json, headers: {})
 
-    result = EisBilling::GetReservedDomainsInvoiceStatus.call(invoice_number: @invoice_number)
+    result = EisBilling::GetReservedDomainsInvoiceStatus.call(invoice_number: @invoice_number, user_unique_id: 'user123')
 
     assert result.status_code_success
     assert result.paid?
@@ -88,7 +82,7 @@ class EisBilling::GetReservedDomainsInvoiceStatusTest < ActiveSupport::TestCase
   private
 
   def stub_billing_request(status:, body:)
-    stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{@invoice_number}")
+    stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{@invoice_number}&user_unique_id=")
       .with(
         headers: EisBilling::Base.headers
       )

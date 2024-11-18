@@ -75,6 +75,8 @@ class ReserveDomainInvoice < ApplicationRecord
           invoice.paid!
           invoice.create_reserved_domains
           ReserveDomainInvoice.cancel_intersecting_invoices(domain_names)
+
+          return true
         end
       end
     end
