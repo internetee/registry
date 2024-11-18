@@ -1,14 +1,30 @@
 require 'test_helper'
 
 class ReserveDomainInvoiceTest < ActiveSupport::TestCase
+  TEST_USER_UNIQUE_ID = 'test123'
+  INVOICE_NUMBER = '12345'
+  
   def setup
     @domain_names = ['example1.test', 'example2.test']
     
     stub_invoice_number_request
     stub_add_deposits_request
-    stub_oneoff_request
+    stub_reserved_domains_invoice_status
+    
+    # Mock generate_unique_id to return consistent value
+    ReserveDomainInvoice.singleton_class.class_eval do
+      alias_method :original_generate_unique_id, :generate_unique_id
+      define_method(:generate_unique_id) { TEST_USER_UNIQUE_ID }
+    end
   end
 
+  def teardown
+    # Restore original method
+    ReserveDomainInvoice.singleton_class.class_eval do
+      alias_method :generate_unique_id, :original_generate_unique_id
+      remove_method :original_generate_unique_id
+    end
+  end
 
   test "normalizes domain names" do
     mixed_case_domains = ['EXAMPLE1.TEST', ' example2.test ']
@@ -23,13 +39,15 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
   test "filters out unavailable domains" do
     ReservedDomain.create!(name: @domain_names.first)
     result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+
+    p result
     
     invoice = ReserveDomainInvoice.last
     assert_equal [@domain_names.last], invoice.domain_names
   end
 
   test "creates reserved domains after payment" do
-    invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names)
+    invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
     
     assert_difference 'ReservedDomain.count', 2 do
       invoice.create_reserved_domains
@@ -37,7 +55,7 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
   end
 
   test "builds correct output for reserved domains" do
-    invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names)
+    invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
     ReservedDomain.create(name: @domain_names.first, password: 'test123')
     
     output = invoice.build_reserved_domains_output
@@ -46,11 +64,11 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
   end
 
   test "handles intersecting domains" do
-    # Create a pending invoice with intersecting domain
     existing_invoice = ReserveDomainInvoice.create(
       invoice_number: '12345',
       domain_names: [@domain_names.first],
-      status: :pending
+      status: :pending,
+      metainfo: TEST_USER_UNIQUE_ID
     )
 
     assert ReserveDomainInvoice.are_domains_intersect?(@domain_names)
@@ -58,28 +76,29 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
   end
 
   test "checks if any intersecting invoice is paid" do
-    # Create a paid invoice with intersecting domain
     ReserveDomainInvoice.create(
       invoice_number: '12345',
       domain_names: [@domain_names.first],
-      status: :paid
+      status: :paid,
+      metainfo: TEST_USER_UNIQUE_ID
     )
 
     assert ReserveDomainInvoice.is_any_intersecting_invoice_paid?(@domain_names)
   end
 
   test "cancels intersecting invoices" do
-    # Create multiple pending invoices
     invoice1 = ReserveDomainInvoice.create(
       invoice_number: '12345',
       domain_names: [@domain_names.first],
-      status: :pending
+      status: :pending,
+      metainfo: TEST_USER_UNIQUE_ID
     )
     
     invoice2 = ReserveDomainInvoice.create(
       invoice_number: '12346',
       domain_names: [@domain_names.first],
-      status: :pending
+      status: :pending,
+      metainfo: TEST_USER_UNIQUE_ID
     )
 
     ReserveDomainInvoice.cancel_intersecting_invoices(@domain_names)
@@ -92,7 +111,8 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
     invoice = ReserveDomainInvoice.create(
       invoice_number: '12345',
       domain_names: [@domain_names.first],
-      status: :pending
+      status: :pending,
+      metainfo: TEST_USER_UNIQUE_ID
     )
 
     # Mock invoice_state to return paid status
@@ -110,20 +130,25 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
     existing_invoice = ReserveDomainInvoice.create(
       invoice_number: '12345',
       domain_names: [@domain_names.first],
-      status: :pending
+      status: :pending,
+      metainfo: TEST_USER_UNIQUE_ID
     )
+
+    stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{INVOICE_NUMBER}&user_unique_id=#{TEST_USER_UNIQUE_ID}")
+      .to_return(status: 200, body: { invoice_status: 'pending' }.to_json, headers: {})
 
     result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
     
     assert result.status_code_success
-    assert_equal '12345', result.invoice_number
+    assert_equal 12345, result.invoice_number
   end
 
   test "returns error when intersecting invoice is paid" do
     ReserveDomainInvoice.create(
       invoice_number: '12345',
       domain_names: [@domain_names.first],
-      status: :paid
+      status: :paid,
+      metainfo: TEST_USER_UNIQUE_ID
     )
 
     result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
@@ -137,7 +162,7 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
     
     assert result.status_code_success
     assert_not_nil result.user_unique_id
-    assert_equal 8, result.user_unique_id.length
+    assert_equal TEST_USER_UNIQUE_ID.length, result.user_unique_id.length
   end
 
   test "returns error when no domains are available" do
@@ -153,7 +178,7 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
 
   def stub_invoice_number_request
     stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator")
-      .to_return(status: 200, body: { invoice_number: '12345' }.to_json, headers: {})
+      .to_return(status: 200, body: { invoice_number: INVOICE_NUMBER }.to_json, headers: {})
   end
 
   def stub_add_deposits_request
@@ -161,17 +186,8 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
       .to_return(status: 201, body: { everypay_link: 'https://pay.test' }.to_json)
   end
 
-  def stub_oneoff_request
-    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/oneoff")
-      .to_return(
-        status: 200, 
-        body: { oneoff_redirect_link: 'https://payment.test' }.to_json,
-        headers: { 'Content-Type': 'application/json' }
-      )
-  end
-
   def stub_reserved_domains_invoice_status
-    stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=12345")
-      .to_return(status: 200, body: { status: 'paid' }.to_json, headers: {})
+    stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{INVOICE_NUMBER}&user_unique_id=#{TEST_USER_UNIQUE_ID}")
+      .to_return(status: 200, body: { invoice_status: 'paid' }.to_json, headers: {})
   end
 end

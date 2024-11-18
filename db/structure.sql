@@ -2719,7 +2719,7 @@ CREATE TABLE public.reserve_domain_invoices (
 
 
 --
--- Name: repp_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.repp_logs_id_seq
@@ -4171,12 +4171,14 @@ ALTER TABLE ONLY public.registrars
 ALTER TABLE ONLY public.repp_logs
     ADD CONSTRAINT repp_logs_pkey PRIMARY KEY (id);
 
+
 --
 -- Name: reserve_domain_invoices reserve_domain_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.reserve_domain_invoices
     ADD CONSTRAINT reserve_domain_invoices_pkey PRIMARY KEY (id);
+
 
 --
 -- Name: reserve_domain_invoices reserve_domain_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -

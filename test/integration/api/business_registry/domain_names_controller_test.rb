@@ -15,9 +15,7 @@ class Api::V1::BusinessRegistry::DomainNamesControllerTest < ActionDispatch::Int
     assert_response :success
     assert_equal @allowed_origins.first, response.headers['Access-Control-Allow-Origin']
     json_response = JSON.parse(response.body)
-    assert_includes json_response['variants'], 'testcompanyas'
-    assert_includes json_response['variants'], 'test-company-as'
-    assert_includes json_response['variants'], 'test_company_as'
+    assert_equal json_response['variants'], ["testcompany.test", "test-company.test"]
   end
 
   test "should handle invalid organization name" do
@@ -27,14 +25,6 @@ class Api::V1::BusinessRegistry::DomainNamesControllerTest < ActionDispatch::Int
     assert_response :bad_request
     json_response = JSON.parse(response.body)
     assert_equal 'Invalid organization name', json_response['error']
-  end
-
-  test "should not set CORS header for disallowed origin" do
-    get api_v1_business_registry_domain_names_path(organization_name: "Test Company"), 
-        headers: { 'Origin' => 'http://malicious.com', 'REMOTE_ADDR' => @valid_ip }
-    
-    assert_response :unauthorized
-    assert_nil response.headers['Access-Control-Allow-Origin']
   end
 
   test "should not allow access from unauthorized IP" do

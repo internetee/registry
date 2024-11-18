@@ -7,7 +7,7 @@ module EisBilling
     CREATED = '201'.freeze
 
     # rubocop:disable Lint/MissingSuper
-    def initialize(invoice_number:, user_unique_id:)
+    def initialize(invoice_number:, user_unique_id: nil)
       @invoice_number = invoice_number
       @user_unique_id = user_unique_id
     end
