@@ -37,13 +37,12 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
   end
 
   test "filters out unavailable domains" do
-    ReservedDomain.create!(name: @domain_names.first)
-    result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
-
-    p result
+    domain_names = ['domain-one.test', 'domain-two.test']
+    ReservedDomain.create!(name: domain_names.first)
+    result = ReserveDomainInvoice.create_list_of_domains(domain_names)
     
     invoice = ReserveDomainInvoice.last
-    assert_equal [@domain_names.last], invoice.domain_names
+    assert_equal [domain_names.last], invoice.domain_names
   end
 
   test "creates reserved domains after payment" do
