@@ -1,3 +1,6 @@
+19.11.2024
+* contact verification with eeID for the registrar portal https://github.com/internetee/registry/pull/2696
+
 08.11.2024
 * update for business registry verification https://github.com/internetee/registry/pull/2693
 
