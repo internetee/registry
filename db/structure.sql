@@ -694,7 +694,10 @@ CREATE TABLE public.contacts (
     email_history character varying,
     registrant_publishable boolean DEFAULT false,
     checked_company_at timestamp without time zone,
-    company_register_status character varying
+    company_register_status character varying,
+    ident_request_sent_at timestamp without time zone,
+    verified_at timestamp without time zone,
+    verification_id character varying
 );
 
 
@@ -4264,6 +4267,13 @@ CREATE INDEX index_contacts_on_registrar_id_and_ident_type ON public.contacts US
 
 
 --
+-- Name: index_contacts_on_verified_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contacts_on_verified_at ON public.contacts USING btree (verified_at);
+
+
+--
 -- Name: index_csync_records_on_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5602,6 +5612,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230710120154'),
 ('20230711083811'),
 ('20240816091049'),
-('20240816092636');
+('20240816092636'),
+('20240903131540'),
+('20240924103554'),
+('20241015071505');
 
 

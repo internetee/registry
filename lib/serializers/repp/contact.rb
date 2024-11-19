@@ -18,7 +18,8 @@ module Serializers
         json = { code: obj.code, name: obj.name, ident: ident, phone: obj.phone,
                  created_at: obj.created_at, auth_info: obj.auth_info, email: obj.email,
                  statuses: statuses, disclosed_attributes: obj.disclosed_attributes,
-                 registrar: registrar }
+                 registrar: registrar, ident_request_sent_at: obj.ident_request_sent_at,
+                 verified_at: obj.verified_at }
         json[:address] = address if @show_address
         if @domain_params
           json[:domains] = domains

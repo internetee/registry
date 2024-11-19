@@ -88,6 +88,9 @@ registrant_api_auth_allowed_ips: '127.0.0.1, 0.0.0.0' #ips, separated with comma
 # Accreditation Center API
 accr_center_api_auth_allowed_ips: '127.0.0.1, 0.0.0.0' #ips, separated with commas
 
+# Webhooks
+webhook_allowed_ips: '127.0.0.1, 0.0.0.0' #ips, separated with commas
+
 # Shared key for REST-WHOIS Bounces API incl. CERT
 rwhois_bounces_api_shared_key: testkey
 
@@ -256,3 +259,7 @@ allow_accr_endspoints: 'true'
 whitelist_companies:
   - '12345678'
   - '87654321'
+
+eeid_base_url: 'http://eid.test'
+ident_service_client_id: 123
+ident_service_client_secret: 321

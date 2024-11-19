@@ -2,10 +2,10 @@ require 'serializers/repp/contact'
 module Repp
   module V1
     class ContactsController < BaseController # rubocop:disable Metrics/ClassLength
-      before_action :find_contact, only: %i[show update destroy]
-      skip_around_action :log_request, only: :search
+      before_action :find_contact, only: %i[show update destroy verify download_poi]
+      skip_around_action :log_request, only: %i[search]
 
-      THROTTLED_ACTIONS = %i[index check search create show update destroy].freeze
+      THROTTLED_ACTIONS = %i[index check search create show update destroy verify download_poi].freeze
       include Shunter::Integration::Throttle
 
       api :get, '/repp/v1/contacts'
@@ -116,6 +116,35 @@ module Repp
         render_success
       end
 
+      api :POST, '/repp/v1/contacts/verify/:contact_code'
+      desc 'Generate and send identification request to a contact'
+      def verify
+        authorize! :verify, Epp::Contact
+        action = Actions::ContactVerify.new(@contact)
+
+        unless action.call
+          handle_non_epp_errors(@contact)
+          return
+        end
+
+        data = { contact: { code: params[:id] } }
+
+        render_success(data: data)
+      end
+
+      api :get, '/repp/v1/contacts/download_poi/:contact_code'
+      desc 'Get proof of identity pdf file for a contact'
+      def download_poi
+        authorize! :verify, Epp::Contact
+        ident_service = Eeid::IdentificationService.new
+        response = ident_service.get_proof_of_identity(@contact.verification_id)
+
+        send_data response[:data], filename: "proof_of_identity_#{@contact.verification_id}.pdf",
+                                   type: 'application/pdf', disposition: 'inline'
+      rescue Eeid::IdentError => e
+        handle_non_epp_errors(@contact, e.message)
+      end
+
       private
 
       def index_params
@@ -217,7 +246,8 @@ module Repp
       end
 
       def contact_params
-        params.require(:contact).permit(:id, :name, :email, :phone, :legal_document,
+        params.require(:contact).permit(:id, :name, :email, :phone, :legal_document, :verified,
+                                        :verification_link,
                                         legal_document: %i[body type],
                                         ident: [%i[ident ident_type ident_country_code]],
                                         addr: [%i[country_code city street zip state]])
