@@ -19,7 +19,7 @@ module Api
           if result.status_code_success
             render_success({ 
               message: "Domains are in pending status. Need to pay for domains.", 
-              oneoff_payment_link: result.oneoff_payment_link,
+              linkpay_url: result.linkpay_url,
               invoice_number: result.invoice_number,
               user_unique_id: result.user_unique_id,
               available_domains: ReserveDomainInvoice.filter_available_domains(@domain_names)

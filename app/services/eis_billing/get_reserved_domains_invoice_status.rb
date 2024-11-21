@@ -20,6 +20,10 @@ module EisBilling
       http = EisBilling::Base.base_request
       res = http.get(reserved_domain_invoice_statuses_url, EisBilling::Base.headers)
 
+      puts '---'
+      puts "res: #{res.inspect}"
+      puts '---'
+
       wrap_result(res)
     end
 

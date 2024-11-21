@@ -32,7 +32,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
   test "should create long reserve domains with valid parameters" do
     mock_result = OpenStruct.new(
       status_code_success: true,
-      oneoff_payment_link: "http://payment.test",
+      linkpay_url: "http://payment.test",
       invoice_number: "123456"
     )
 
@@ -52,7 +52,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
       json_response = JSON.parse(response.body)
       
       assert_equal "Domains are in pending status. Need to pay for domains.", json_response['message']
-      assert_equal "http://payment.test", json_response['oneoff_payment_link']
+      assert_equal "http://payment.test", json_response['linkpay_url']
       assert_equal "123456", json_response['invoice_number']
     end
   end
@@ -142,13 +142,13 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
 
     assert_response :created
     json_response = JSON.parse(response.body)
-    assert_not_nil json_response['oneoff_payment_link']
+    assert_not_nil json_response['linkpay_url']
   end
 
   test "should accept request with valid URLs" do
     mock_result = OpenStruct.new(
       status_code_success: true,
-      oneoff_payment_link: "http://payment.test",
+      linkpay_url: "http://payment.test",
       invoice_number: "123456"
     )
 
@@ -166,7 +166,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
 
       assert_response :created
       json_response = JSON.parse(response.body)
-      assert_not_nil json_response['oneoff_payment_link']
+      assert_not_nil json_response['linkpay_url']
     end
   end
 
@@ -206,7 +206,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
   test "should return available domains in response" do
     mock_result = OpenStruct.new(
       status_code_success: true,
-      oneoff_payment_link: "http://payment.test",
+      linkpay_url: "http://payment.test",
       invoice_number: "123456",
       user_unique_id: "user123"
     )

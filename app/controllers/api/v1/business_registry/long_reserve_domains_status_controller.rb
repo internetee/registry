@@ -7,6 +7,8 @@ module Api
         def show
           result = @reserved_domain_invoice.invoice_state
 
+          puts "result: #{result.inspect}"
+
           if result.paid?
             @reserved_domain_invoice.create_reserved_domains
             render json: { status: 'paid', message: result.message, reserved_domains: @reserved_domain_invoice.build_reserved_domains_output }
@@ -19,7 +21,7 @@ module Api
 
         def set_reserved_domain_invoice
           @reserved_domain_invoice = ReserveDomainInvoice.find_by(invoice_number: params[:invoice_number], metainfo: params[:user_unique_id])
-
+          puts "reserved_domain_invoice: #{@reserved_domain_invoice.inspect}"
           raise ActiveRecord::RecordNotFound, 'Reserved domain invoice not found' if @reserved_domain_invoice.nil?
         end
       end
