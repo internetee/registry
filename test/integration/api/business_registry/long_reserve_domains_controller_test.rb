@@ -3,10 +3,6 @@ require 'test_helper'
 class LongReserveDomainsControllerTest < ApplicationIntegrationTest
   def setup
     @valid_domain_names = ['example1.test', 'example2.test']
-    @success_url = 'https://success.test'
-    @failed_url = 'https://failed.test'
-    @allowed_origins = ['http://example.com', 'https://test.com']
-    ENV['ALLOWED_ORIGINS'] = @allowed_origins.join(',')
     
     stub_invoice_number_request
     stub_add_deposits_request
@@ -40,8 +36,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
       post api_v1_business_registry_long_reserve_domains_path,
         params: { 
           domain_names: @valid_domain_names,
-          success_business_registry_customer_url: @success_url,
-          failed_business_registry_customer_url: @failed_url
         },
         headers: {
           'Origin' => @allowed_origins.first,
