@@ -2,7 +2,6 @@ require 'test_helper'
 
 class Api::V1::BusinessRegistry::DomainNamesControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @allowed_origins = ['http://example.com', 'https://test.com']
     @valid_ip = '127.0.0.1'
     ENV['auction_api_allowed_ips'] = @valid_ip
   end

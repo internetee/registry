@@ -6,7 +6,7 @@ class ReserveDomainInvoice < ApplicationRecord
     keyword_init: true)
   end
 
-  class InvoiceResponseStruct < Struct.new(:status_code_success, :oneoff_payment_link, :invoice_number, :details, :user_unique_id,
+  class InvoiceResponseStruct < Struct.new(:status_code_success, :linkpay_url, :invoice_number, :details, :user_unique_id,
     keyword_init: true)
   end
 
@@ -152,7 +152,7 @@ class ReserveDomainInvoice < ApplicationRecord
       
       InvoiceResponseStruct.new(
         status_code_success: success_status?(result.code),
-        oneoff_payment_link: parsed_result['everypay_link'],
+        linkpay_url: parsed_result['everypay_link'],
         invoice_number: invoice_number,
         user_unique_id: user_unique_id,
         details: parsed_result
