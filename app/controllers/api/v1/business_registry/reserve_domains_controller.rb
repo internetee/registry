@@ -2,8 +2,6 @@ module Api
   module V1
     module BusinessRegistry
       class ReserveDomainsController < BaseController
-        before_action :authenticate, only: [:create]
-        skip_before_action :find_reserved_domain, only: [:create]
         before_action :validate_params
 
         def create

@@ -2,8 +2,6 @@ module Api
   module V1
     module BusinessRegistry
       class LongReserveDomainsController < BaseController
-        before_action :authenticate, only: [:create]
-        skip_before_action :find_reserved_domain, only: [:create]
         before_action :domain_names
         before_action :validate_params
         before_action :available_domains?, only: [:create]

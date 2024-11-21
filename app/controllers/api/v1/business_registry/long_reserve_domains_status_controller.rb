@@ -2,9 +2,6 @@ module Api
   module V1
     module BusinessRegistry
       class LongReserveDomainsStatusController < BaseController
-        before_action :authenticate, only: [:create]
-        skip_before_action :find_reserved_domain, only: [:show]
-
         before_action :set_reserved_domain_invoice, only: [:show]
         
         def show
