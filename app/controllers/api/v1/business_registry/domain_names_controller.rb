@@ -1,12 +1,7 @@
 module Api
   module V1
     module BusinessRegistry
-      class DomainNamesController < ::Api::V1::BusinessRegistry::BaseController
-        before_action :authenticate, only: [:show]
-        skip_before_action :find_reserved_domain, only: [:show]
-        
-        include Concerns::CorsHeaders
-        
+      class DomainNamesController < BaseController
         before_action :validate_organization_name
 
         def show
