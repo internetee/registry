@@ -38,7 +38,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
           domain_names: @valid_domain_names,
         },
         headers: {
-          'Origin' => @allowed_origins.first,
           'REMOTE_ADDR' => @valid_ip
         }
 
@@ -54,7 +53,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
   test "should return error when domain names parameter is missing" do
     post api_v1_business_registry_long_reserve_domains_path,
       headers: {
-        'Origin' => @allowed_origins.first,
         'REMOTE_ADDR' => @valid_ip
       }
 
@@ -67,7 +65,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     post api_v1_business_registry_long_reserve_domains_path,
       params: { domain_names: "not-an-array" },
       headers: {
-        'Origin' => @allowed_origins.first,
         'REMOTE_ADDR' => @valid_ip
       }
 
@@ -82,7 +79,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     post api_v1_business_registry_long_reserve_domains_path,
       params: { domain_names: domain_names },
       headers: {
-        'Origin' => @allowed_origins.first,
         'REMOTE_ADDR' => @valid_ip
       }
 
@@ -97,7 +93,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     post api_v1_business_registry_long_reserve_domains_path,
       params: { domain_names: invalid_domain_names },
       headers: {
-        'Origin' => @allowed_origins.first,
         'REMOTE_ADDR' => @valid_ip
       }
 
@@ -116,7 +111,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
       post api_v1_business_registry_long_reserve_domains_path,
         params: { domain_names: @valid_domain_names },
         headers: {
-          'Origin' => @allowed_origins.first,
           'REMOTE_ADDR' => @valid_ip
         }
 
@@ -130,7 +124,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     post api_v1_business_registry_long_reserve_domains_path,
       params: { domain_names: @valid_domain_names },
       headers: {
-        'Origin' => @allowed_origins.first,
         'REMOTE_ADDR' => @valid_ip
       }
 
@@ -154,7 +147,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
           failed_business_registry_customer_url: "https://failed.example.com"
         },
         headers: {
-          'Origin' => @allowed_origins.first,
           'REMOTE_ADDR' => @valid_ip
         }
 
@@ -173,7 +165,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     post api_v1_business_registry_long_reserve_domains_path,
       params: { domain_names: @valid_domain_names },
       headers: {
-        'Origin' => @allowed_origins.first,
         'REMOTE_ADDR' => @valid_ip
       }
 
@@ -187,7 +178,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
       post api_v1_business_registry_long_reserve_domains_path,
         params: { domain_names: @valid_domain_names },
         headers: {
-          'Origin' => @allowed_origins.first,
           'REMOTE_ADDR' => @valid_ip
         }
 
@@ -210,7 +200,6 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
         post api_v1_business_registry_long_reserve_domains_path,
           params: { domain_names: @valid_domain_names },
           headers: {
-            'Origin' => @allowed_origins.first,
             'REMOTE_ADDR' => @valid_ip
           }
 
