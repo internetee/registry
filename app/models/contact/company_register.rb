@@ -23,18 +23,39 @@ module Contact::CompanyRegister
   def return_company_data
     return unless org?
 
-    company_register.simple_data(registration_number: ident)
-  rescue CompanyRegister::NotAvailableError
-    Rails.logger.info "ERROR HAPPENED: CompanyRegister::NotAvailableError"
-    []
+    retries = 1
+    begin
+      company_register.simple_data(registration_number: ident)
+    rescue CompanyRegister::NotAvailableError
+      Rails.logger.info "CompanyRegister::NotAvailableError occurred, attempt #{retries}"
+      if retries <= 3  # максимум 3 попытки
+        sleep 1  # ждем 1 секунду
+        retries += 1
+        retry
+      else
+        Rails.logger.error "Failed to fetch company data after #{retries-1} retries"
+        []
+      end
+    end
   end
 
   def return_company_details
     return unless org?
 
-    company_register.company_details(registration_number: ident)
-  rescue CompanyRegister::NotAvailableError
-    []
+    retries = 1
+    begin
+      company_register.company_details(registration_number: ident)
+    rescue CompanyRegister::NotAvailableError
+      Rails.logger.info "CompanyRegister::NotAvailableError occurred, attempt #{retries}"
+      if retries <= 3  # максимум 3 попытки
+        sleep 1  # ждем 1 секунду
+        retries += 1
+        retry
+      else
+        Rails.logger.error "Failed to fetch company details after #{retries-1} retries"
+        []
+      end
+    end
   end
 
   def company_register
