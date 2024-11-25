@@ -83,7 +83,14 @@ module Actions
 
       Rails.logger.info "======= I AM HERE"
 
-      company_status = contact.return_company_status
+      # company_status = contact.return_company_status
+      # Rails.logger.info "company_status: #{company_status}"
+
+      company_register = CompanyRegister::Client.new
+      res = company_register.simple_data(registration_number: ident.to_s)
+      Rails.logger.info "res: #{res.inspect}"
+
+      company_status = res.first[:status]
       Rails.logger.info "company_status: #{company_status}"
 
       return if [Contact::REGISTERED, Contact::LIQUIDATED].include? company_status
