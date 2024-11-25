@@ -24,8 +24,8 @@ module Contact::CompanyRegister
     return unless org?
 
     company_register.simple_data(registration_number: ident)
-  rescue CompanyRegister::NotAvailableError => e
-    Rails.logger.info "ERROR HAPPENED: CompanyRegister::NotAvailableError #{e.message}"
+  rescue CompanyRegister::NotAvailableError
+    Rails.logger.info "ERROR HAPPENED: CompanyRegister::NotAvailableError"
     []
   end
 
