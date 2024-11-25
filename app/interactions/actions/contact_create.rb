@@ -86,6 +86,15 @@ module Actions
       # company_status = contact.return_company_status
       # Rails.logger.info "company_status: #{company_status}"
 
+      CompanyRegister.configure do |config|
+        config.username = ENV['company_register_username']
+        config.password = ENV['company_register_password']
+        config.cache_period = ENV['company_register_cache_period_days'].to_i.days
+        config.test_mode = ENV['company_register_test_mode'] == 'true'
+      end
+
+      Rails.logger.info "CompanyRegister.configure: #{CompanyRegister.configuration.inspect}"
+
       company_register = CompanyRegister::Client.new
       res = company_register.simple_data(registration_number: ident.to_s)
       Rails.logger.info "res: #{res.inspect}"
