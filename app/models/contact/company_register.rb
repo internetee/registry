@@ -11,6 +11,10 @@ module Contact::CompanyRegister
   end
 
   def return_company_status
+    Rails.logger.info "ident: #{ident}"
+    Rails.logger.info "org?: #{org?}"
+    Rails.logger.info "return_company_data: #{return_company_data.inspect}"
+
     return if return_company_data.blank?
 
     return_company_data.first[:status]
