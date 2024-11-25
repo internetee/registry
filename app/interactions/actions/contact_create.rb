@@ -81,6 +81,10 @@ module Actions
     def maybe_company_is_relevant
       return true unless contact.org?
 
+      p '-=-------'
+      p contact.inspect
+      p '-=-------'
+
       company_status = contact.return_company_status
       return if [Contact::REGISTERED, Contact::LIQUIDATED].include? company_status
 
