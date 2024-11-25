@@ -81,16 +81,20 @@ module Actions
     def maybe_company_is_relevant
       return true unless contact.org?
 
-      if contact.ident.blank?
-        contact.add_epp_error('2003', nil, 'ident', "#{I18n.t('errors.messages.required_ident_attribute_missing')}\n #{contact.inspect}")
-        @error = true
-        return
-      end
+      Rails.logger.info "======= I AM HERE"
 
       company_status = contact.return_company_status
+      Rails.logger.info "company_status: #{company_status}"
+
       return if [Contact::REGISTERED, Contact::LIQUIDATED].include? company_status
+      Rails.logger.info Contact::REGISTERED
+      Rails.logger.info Contact::LIQUIDATED
+      Rails.logger.info "======= I AM HERE 2"
 
       contact.add_epp_error('2003', nil, 'ident', I18n.t('errors.messages.company_not_registered'))
+
+      Rails.logger.info "======="
+
       @error = true
     end
 
