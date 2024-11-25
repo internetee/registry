@@ -14,7 +14,7 @@ module Actions
       maybe_attach_legal_doc
       validate_ident
       maybe_change_email
-      maybe_company_is_relevant
+      # maybe_company_is_relevant
       commit
       validate_contact
     end
@@ -78,29 +78,16 @@ module Actions
       @error = true
     end
 
-    def maybe_company_is_relevant
-      return true unless contact.org?
+    # def maybe_company_is_relevant
+    #   return true unless contact.org?
 
-      Rails.logger.info "======= I AM HERE"
-      Rails.logger.info ENV['company_register_username']
-      Rails.logger.info ENV['company_register_password']
-      Rails.logger.info ENV['company_register_cache_period_days']
-      Rails.logger.info ENV['company_register_test_mode']
+    #   company_status = contact.return_company_status
 
-      company_status = contact.return_company_status
-      Rails.logger.info "company_status: #{company_status}"
+    #   return if [Contact::REGISTERED, Contact::LIQUIDATED].include? company_status
+    #   contact.add_epp_error('2003', nil, 'ident', I18n.t('errors.messages.company_not_registered'))
 
-      return if [Contact::REGISTERED, Contact::LIQUIDATED].include? company_status
-      Rails.logger.info Contact::REGISTERED
-      Rails.logger.info Contact::LIQUIDATED
-      Rails.logger.info "======= I AM HERE 2"
-
-      contact.add_epp_error('2003', nil, 'ident', I18n.t('errors.messages.company_not_registered'))
-
-      Rails.logger.info "======="
-
-      @error = true
-    end
+    #   @error = true
+    # end
 
     def maybe_attach_legal_doc
       ::Actions::BaseAction.attach_legal_doc_to_new(contact, legal_document, domain: false)
