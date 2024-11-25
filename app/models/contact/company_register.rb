@@ -11,13 +11,15 @@ module Contact::CompanyRegister
   end
 
   def return_company_status
+    company_register_2 = CompanyRegister::Client.new
     Rails.logger.info "ident: #{ident}"
     Rails.logger.info "org?: #{org?}"
-    Rails.logger.info "return_company_data: #{return_company_data.inspect}"
+    # Rails.logger.info "return_company_data: #{return_company_data.inspect}"
+    return_company_data_2 = company_register_2.simple_data(registration_number: ident)
+    Rails.logger.info "return_company_data_2: #{return_company_data_2.inspect}"
+    return if return_company_data_2.blank?
 
-    return if return_company_data.blank?
-
-    return_company_data.first[:status]
+    return_company_data_2.first[:status]
   end
 
   def return_company_data
