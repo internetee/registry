@@ -2,6 +2,11 @@ module Actions
   class ContactCreate
     attr_reader :contact, :legal_document, :ident, :result
 
+    REGISTERED = 'R'.freeze
+    LIQUIDATED = 'L'.freeze
+    BANKRUPT = 'N'.freeze
+    DELETED = 'K'.freeze
+
     def initialize(contact, legal_document, ident)
       @contact = contact
       @legal_document = legal_document
@@ -81,12 +86,8 @@ module Actions
     def maybe_company_is_relevant
       return true unless contact.org?
 
-      p '-=-------'
-      p contact.inspect
-      p '-=-------'
-
       company_status = contact.return_company_status
-      return if [Contact::REGISTERED, Contact::LIQUIDATED].include? company_status
+      return if [REGISTERED, LIQUIDATED].include? company_status
 
       contact.add_epp_error('2003', nil, 'ident', I18n.t('errors.messages.company_not_registered'))
       @error = true
