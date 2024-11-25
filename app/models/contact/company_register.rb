@@ -21,9 +21,14 @@ module Contact::CompanyRegister
   end
 
   def return_company_data
+    Rails.logger.info "inside return_company_data"
+    Rails.logger.info "ident: #{ident}"
+    Rails.logger.info "org?: #{org?}"
     return unless org?
 
-    company_register.simple_data(registration_number: ident.to_s)
+    res = company_register.simple_data(registration_number: ident.to_s)
+    Rails.logger.info "res: #{res.inspect}"
+    res
   rescue CompanyRegister::NotAvailableError
     Rails.logger.info "ERROR HAPPENED: CompanyRegister::NotAvailableError"
     []
