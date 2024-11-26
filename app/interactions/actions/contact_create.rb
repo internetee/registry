@@ -14,7 +14,7 @@ module Actions
       maybe_attach_legal_doc
       validate_ident
       maybe_change_email
-      maybe_company_is_relevant
+      # maybe_company_is_relevant
       commit
       validate_contact
     end
@@ -78,15 +78,16 @@ module Actions
       @error = true
     end
 
-    def maybe_company_is_relevant
-      return true unless contact.org?
+    # def maybe_company_is_relevant
+    #   return true unless contact.org?
 
-      company_status = contact.return_company_status
-      return if [Contact::REGISTERED, Contact::LIQUIDATED].include? company_status
+    #   company_status = contact.return_company_status
 
-      contact.add_epp_error('2003', nil, 'ident', I18n.t('errors.messages.company_not_registered'))
-      @error = true
-    end
+    #   return if [Contact::REGISTERED, Contact::LIQUIDATED].include? company_status
+    #   contact.add_epp_error('2003', nil, 'ident', I18n.t('errors.messages.company_not_registered'))
+
+    #   @error = true
+    # end
 
     def maybe_attach_legal_doc
       ::Actions::BaseAction.attach_legal_doc_to_new(contact, legal_document, domain: false)

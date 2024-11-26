@@ -10,13 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
--- *not* creating schema, since initdb creates it
-
-
---
 -- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -2637,6 +2630,40 @@ ALTER SEQUENCE public.repp_logs_id_seq OWNED BY public.repp_logs.id;
 
 
 --
+-- Name: reserve_domain_invoices; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.reserve_domain_invoices (
+    id bigint NOT NULL,
+    invoice_number character varying,
+    domain_names character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    status integer DEFAULT 0,
+    metainfo character varying
+);
+
+
+--
+-- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.reserve_domain_invoices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.reserve_domain_invoices_id_seq OWNED BY public.reserve_domain_invoices.id;
+
+
+--
 -- Name: reserved_domains; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3418,6 +3445,13 @@ ALTER TABLE ONLY public.repp_logs ALTER COLUMN id SET DEFAULT nextval('public.re
 
 
 --
+-- Name: reserve_domain_invoices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reserve_domain_invoices ALTER COLUMN id SET DEFAULT nextval('public.reserve_domain_invoices_id_seq'::regclass);
+
+
+--
 -- Name: reserved_domains id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3974,6 +4008,14 @@ ALTER TABLE ONLY public.registrars
 
 ALTER TABLE ONLY public.repp_logs
     ADD CONSTRAINT repp_logs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reserve_domain_invoices reserve_domain_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reserve_domain_invoices
+    ADD CONSTRAINT reserve_domain_invoices_pkey PRIMARY KEY (id);
 
 
 --
@@ -4782,6 +4824,13 @@ CREATE INDEX index_registrant_verifications_on_created_at ON public.registrant_v
 --
 
 CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_verifications USING btree (domain_id);
+
+
+--
+-- Name: index_reserve_domain_invoices_on_invoice_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserve_domain_invoices_on_invoice_number ON public.reserve_domain_invoices USING btree (invoice_number);
 
 
 --
@@ -5613,8 +5662,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230711083811'),
 ('20240816091049'),
 ('20240816092636'),
-('20240903131540'),
 ('20240924103554'),
-('20241015071505');
+('20241015071505'),
+('20241030095636'),
+('20241104104620'),
+('20241112093540'),
+('20241112124405');
 
 

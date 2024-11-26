@@ -19,7 +19,7 @@ module Contact::CompanyRegister
   def return_company_data
     return unless org?
 
-    company_register.simple_data(registration_number: ident)
+    company_register.simple_data(registration_number: ident.to_s)
   rescue CompanyRegister::NotAvailableError
     []
   end
