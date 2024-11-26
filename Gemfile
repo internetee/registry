@@ -19,7 +19,7 @@ gem 'figaro', '~> 1.2'
 gem 'paper_trail', '~> 14.0'
 gem 'pg', '1.5.9'
 # 1.8 is for Rails < 5.0
-gem 'ransack', '~> 4.0.0'
+gem 'ransack', '~> 4.2.0'
 gem 'truemail', '~> 3.0' # validates email by regexp, mail server existence and address existence
 gem 'validates_email_format_of', '1.8.2' # validates email against RFC 2822 and RFC 3696
 
