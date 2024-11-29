@@ -73,7 +73,7 @@ class ReserveDomainInvoice < ApplicationRecord
         if invoice.pending? && result.paid?
 
           invoice.paid!
-          invoice.create_reserved_domains
+          invoice.create_paid_reserved_domains
           ReserveDomainInvoice.cancel_intersecting_invoices(domain_names)
 
           return true
@@ -180,11 +180,27 @@ class ReserveDomainInvoice < ApplicationRecord
     EisBilling::GetReservedDomainsInvoiceStatus.call(invoice_number: invoice_number, user_unique_id: metainfo)
   end
 
-  def create_reserved_domains
-    domain_names.map { |name| ReservedDomain.create(name: name) if ReservedDomain.find_by(name: name).nil? }
+  def create_paid_reserved_domains
+    domain_names.map do |name| 
+      next if ReservedDomain.find_by(name: name).present?
+      
+      ReservedDomain.create(
+        name: name,
+        expire_at: Time.current + ReservedDomain::PAID_RESERVATION_EXPIRY
+      )
+    end
   end
 
   def build_reserved_domains_output
-    domain_names.map { |name| ReservedDomain.where(name: name).pluck(:name, :password).to_h }
+    domain_names.map do |name|
+      domain = ReservedDomain.find_by(name: name)
+      next unless domain
+
+      {
+        name: domain.name,
+        password: domain.password,
+        expire_at: domain.expire_at
+      }
+    end.compact
   end
 end
