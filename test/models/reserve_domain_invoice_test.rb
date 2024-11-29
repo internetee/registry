@@ -49,17 +49,23 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
     invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
     
     assert_difference 'ReservedDomain.count', 2 do
-      invoice.create_reserved_domains
+      invoice.create_paid_reserved_domains
     end
   end
 
   test "builds correct output for reserved domains" do
     invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
-    ReservedDomain.create(name: @domain_names.first, password: 'test123')
+    ReservedDomain.create(
+      name: @domain_names.first, 
+      password: 'test123',
+      expire_at: Time.current + ReservedDomain::PAID_RESERVATION_EXPIRY
+    )
     
     output = invoice.build_reserved_domains_output
-    assert_equal @domain_names.count, output.length
-    assert_equal 'test123', output.first[@domain_names.first]
+    assert_equal @domain_names.count - 1, output.length
+    domain_output = output.find { |d| d[:name] == @domain_names.first }
+    assert_equal 'test123', domain_output[:password]
+    assert_not_nil domain_output[:expire_at]
   end
 
   test "handles intersecting domains" do

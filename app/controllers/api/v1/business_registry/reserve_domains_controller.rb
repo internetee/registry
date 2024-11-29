@@ -11,7 +11,13 @@ module Api
           if result.success
             render_success({ 
               message: "Domains reserved successfully", 
-              reserved_domains: result.reserved_domains.map { |domain| { name: domain.name, password: domain.password } }
+              reserved_domains: result.reserved_domains.map do |domain|
+                {
+                  name: domain.name,
+                  password: domain.password,
+                  expire_at: domain.expire_at
+                }
+              end
             }, :created)
           else
             render_error(result.errors, :unprocessable_entity)

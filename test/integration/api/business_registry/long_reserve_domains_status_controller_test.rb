@@ -18,7 +18,8 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
       body: {
         message: 'Payment received',
         invoice_status: 'paid',
-        invoice_number: @invoice.invoice_number
+        invoice_number: @invoice.invoice_number,
+        reserved_domain_names: @invoice.domain_names
       },
       user_unique_id: @invoice.metainfo
     )
@@ -81,6 +82,41 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
     json_response = JSON.parse(response.body)
     assert_equal 'error', json_response['status']
     assert_equal 'Error occurred', json_response['message']
+  end
+
+  test "shows paid status with expire_at for reserved domains" do
+    stub_billing_request(
+      status: 200,
+      body: {
+        message: 'Payment received',
+        invoice_status: 'paid',
+        invoice_number: @invoice.invoice_number,
+        reserved_domain_names: @invoice.domain_names
+      },
+      user_unique_id: @invoice.metainfo
+    )
+
+    get api_v1_business_registry_long_reserve_domains_status_path(
+      invoice_number: @invoice.invoice_number, 
+      user_unique_id: @invoice.metainfo
+    ),
+    headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+    
+    assert_equal 'paid', json_response['status']
+    assert_equal 'Payment received', json_response['message']
+    
+    # Проверяем структуру reserved_domains
+    reserved_domain = json_response['reserved_domains'].first
+    assert_not_nil reserved_domain['name']
+    assert_not_nil reserved_domain['password']
+    assert_not_nil reserved_domain['expire_at']
+    
+    # Проверяем, что expire_at установлен на 1 год
+    expire_at = Time.parse(reserved_domain['expire_at'])
+    assert_in_delta Time.current + ReservedDomain::PAID_RESERVATION_EXPIRY, expire_at, 5.seconds
   end
 
   private

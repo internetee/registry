@@ -7,10 +7,8 @@ module Api
         def show
           result = @reserved_domain_invoice.invoice_state
 
-          puts "result: #{result.inspect}"
-
           if result.paid?
-            @reserved_domain_invoice.create_reserved_domains
+            @reserved_domain_invoice.create_paid_reserved_domains
             render json: { status: 'paid', message: result.message, reserved_domains: @reserved_domain_invoice.build_reserved_domains_output }
           else
             render json: { status: result.status, message: result.message, names: @reserved_domain_invoice.domain_names }

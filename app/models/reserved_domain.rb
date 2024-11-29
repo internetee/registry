@@ -14,6 +14,9 @@ class ReservedDomain < ApplicationRecord
 
   MAX_DOMAIN_NAME_PER_REQUEST = 20
 
+  FREE_RESERVATION_EXPIRY = 7.days
+  PAID_RESERVATION_EXPIRY = 1.year
+
   class << self
     def ransackable_associations(*)
       authorizable_ransackable_associations
@@ -53,7 +56,10 @@ class ReservedDomain < ApplicationRecord
 
       reserved_domains = []
       available_domains.each do |domain_name|
-        reserved_domain = ReservedDomain.new(name: domain_name)
+        reserved_domain = ReservedDomain.new(
+          name: domain_name,
+          expire_at: Time.current + FREE_RESERVATION_EXPIRY
+        )
         reserved_domain.regenerate_password
         reserved_domain.save
         reserved_domains << reserved_domain
