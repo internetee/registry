@@ -41,4 +41,61 @@ class BusinessRegistry::DomainAvailabilityCheckerServiceTest < ActiveSupport::Te
     available = BusinessRegistry::DomainAvailabilityCheckerService.filter_available(domain_names)
     assert_empty available
   end
+
+  test "should remove expired reserved domain and make it available" do
+    expired_domain = ReservedDomain.create!(
+      name: "expired-domain.test",
+      expire_at: 1.day.ago
+    )
+    
+    Epp::Domain.stub :check_availability, [
+      {name: "expired-domain.test", avail: 1}
+    ] do
+      available = BusinessRegistry::DomainAvailabilityCheckerService.filter_available(["expired-domain.test"])
+      assert_equal ["expired-domain.test"], available
+      assert_nil ReservedDomain.find_by(id: expired_domain.id)
+    end
+  end
+
+  test "should keep non-expired reserved domain as unavailable" do
+    active_domain = ReservedDomain.create!(
+      name: "active-domain.test",
+      expire_at: 1.day.from_now
+    )
+    
+    Epp::Domain.stub :check_availability, [
+      {name: "active-domain.test", avail: 1}
+    ] do
+      available = BusinessRegistry::DomainAvailabilityCheckerService.filter_available(["active-domain.test"])
+      assert_empty available
+      assert ReservedDomain.exists?(id: active_domain.id)
+    end
+  end
+
+  test "should keep reserved domain without expiration as unavailable" do
+    permanent_domain = ReservedDomain.create!(
+      name: "permanent-domain.test",
+      expire_at: nil
+    )
+    
+    Epp::Domain.stub :check_availability, [
+      {name: "permanent-domain.test", avail: 1}
+    ] do
+      available = BusinessRegistry::DomainAvailabilityCheckerService.filter_available(["permanent-domain.test"])
+      assert_empty available
+      assert ReservedDomain.exists?(id: permanent_domain.id)
+    end
+  end
+
+  test "is_domain_available? should handle expired domains" do
+    expired_domain = ReservedDomain.create!(
+      name: "expired-domain.test",
+      expire_at: 1.day.ago
+    )
+    
+    Epp::Domain.stub :check_availability, [{name: "expired-domain.test", avail: 1}] do
+      assert BusinessRegistry::DomainAvailabilityCheckerService.is_domain_available?("expired-domain.test")
+      assert_nil ReservedDomain.find_by(id: expired_domain.id)
+    end
+  end
 end
