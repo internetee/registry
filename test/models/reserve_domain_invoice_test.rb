@@ -173,6 +173,46 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
     end
   end
 
+  test "should handle expired reserved domains in domain filtering" do
+    expired_domain = ReservedDomain.create!(
+      name: @domain_names.first,
+      expire_at: 1.day.ago
+    )
+    
+    result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+    
+    assert result.status_code_success
+    assert_includes result.reserved_domain_names, @domain_names.second
+    assert_nil ReservedDomain.find_by(id: expired_domain.id)
+  end
+
+  test "should not affect non-expired reserved domains in domain filtering" do
+    active_domain = ReservedDomain.create!(
+      name: @domain_names.first,
+      expire_at: 1.day.from_now
+    )
+    
+    result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+    
+    assert result.status_code_success
+    refute_includes result.reserved_domain_names, @domain_names.first
+    assert ReservedDomain.exists?(id: active_domain.id)
+  end
+
+  test "should not affect permanent reserved domains in domain filtering" do
+    permanent_domain = ReservedDomain.create!(
+      name: @domain_names.first,
+      expire_at: nil
+    )
+    
+    result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+    
+    assert result.status_code_success
+    puts result
+    refute_includes result.reserved_domain_names, @domain_names.first
+    assert ReservedDomain.exists?(id: permanent_domain.id)
+  end
+
   private
 
   def stub_invoice_number_request

@@ -6,7 +6,7 @@ class ReserveDomainInvoice < ApplicationRecord
     keyword_init: true)
   end
 
-  class InvoiceResponseStruct < Struct.new(:status_code_success, :linkpay_url, :invoice_number, :details, :user_unique_id,
+  class InvoiceResponseStruct < Struct.new(:status_code_success, :linkpay_url, :invoice_number, :details, :reserved_domain_names, :user_unique_id,
     keyword_init: true)
   end
 
@@ -41,7 +41,7 @@ class ReserveDomainInvoice < ApplicationRecord
 
       result = process_invoice(invoice)
       create_reserve_domain_invoice(invoice.number, available_names, invoice.user_unique_id)
-      build_response(result, invoice.number, invoice.user_unique_id)
+      build_response(result, invoice.number, invoice.user_unique_id, available_names)
     end
 
     def are_domains_intersect?(domain_names)
@@ -146,7 +146,7 @@ class ReserveDomainInvoice < ApplicationRecord
       )
     end
 
-    def build_response(result, invoice_number, user_unique_id)
+    def build_response(result, invoice_number, user_unique_id, domain_names)
       parsed_result = JSON.parse(result.body)
       # link = JSON.parse(result.body)['everypay_link']
       
@@ -155,6 +155,7 @@ class ReserveDomainInvoice < ApplicationRecord
         linkpay_url: parsed_result['everypay_link'],
         invoice_number: invoice_number,
         user_unique_id: user_unique_id,
+        reserved_domain_names: domain_names,
         details: parsed_result
       )
     end
