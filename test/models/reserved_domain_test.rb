@@ -95,4 +95,40 @@ class ReservedDomainTest < ActiveSupport::TestCase
       assert_equal "available.test", result.reserved_domains.first.name
     end
   end
+
+  test "expired? should return true when expire_at is in the past" do
+    @reserved_domain.expire_at = 1.day.ago
+    assert @reserved_domain.expired?
+  end
+
+  test "expired? should return false when expire_at is in the future" do
+    @reserved_domain.expire_at = 1.day.from_now
+    assert_not @reserved_domain.expired?
+  end
+
+  test "expired? should return false when expire_at is nil" do
+    @reserved_domain.expire_at = nil
+    assert_not @reserved_domain.expired?
+  end
+
+  test "destroy_if_expired should destroy domain when expired" do
+    @reserved_domain.expire_at = 1.day.ago
+    assert_difference 'ReservedDomain.count', -1 do
+      @reserved_domain.destroy_if_expired
+    end
+  end
+
+  test "destroy_if_expired should not destroy domain when not expired" do
+    @reserved_domain.expire_at = 1.day.from_now
+    assert_no_difference 'ReservedDomain.count' do
+      @reserved_domain.destroy_if_expired
+    end
+  end
+
+  test "destroy_if_expired should not destroy domain when expire_at is nil" do
+    @reserved_domain.expire_at = nil
+    assert_no_difference 'ReservedDomain.count' do
+      @reserved_domain.destroy_if_expired
+    end
+  end
 end
