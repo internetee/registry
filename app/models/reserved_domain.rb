@@ -63,6 +63,14 @@ class ReservedDomain < ApplicationRecord
     end
   end
 
+  def expired?
+    expire_at.present? && expire_at < Time.current
+  end
+
+  def destroy_if_expired
+    destroy if expired?
+  end
+
   def name=(val)
     super SimpleIDN.to_unicode(val)
   end

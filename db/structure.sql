@@ -2723,7 +2723,8 @@ CREATE TABLE public.reserved_domains (
     updator_str character varying,
     legacy_id integer,
     name character varying NOT NULL,
-    password character varying NOT NULL
+    password character varying NOT NULL,
+    expire_at timestamp without time zone
 );
 
 
@@ -5744,4 +5745,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241112124405'),
 ('20240722085530'),
 ('20240723110208'),
-('20241022121525');
+('20241022121525'),
+('20241129095711');
