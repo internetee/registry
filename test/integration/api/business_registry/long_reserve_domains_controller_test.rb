@@ -10,6 +10,13 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
 
     @valid_ip = '127.0.0.1'
     ENV['auction_api_allowed_ips'] = @valid_ip
+    @valid_token = 'valid_test_token'
+    ENV['business_registry_api_tokens'] = @valid_token
+
+    @auth_headers = {
+      'REMOTE_ADDR' => @valid_ip,
+      'Authorization' => "Bearer #{@valid_token}"
+    }
 
     # Mock the domain availability checker
     @original_filter_available = BusinessRegistry::DomainAvailabilityCheckerService.method(:filter_available)
@@ -37,9 +44,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
         params: { 
           domain_names: @valid_domain_names,
         },
-        headers: {
-          'REMOTE_ADDR' => @valid_ip
-        }
+        headers: @auth_headers
 
       assert_response :created
       json_response = JSON.parse(response.body)
@@ -52,9 +57,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
 
   test "should return error when domain names parameter is missing" do
     post api_v1_business_registry_long_reserve_domains_path,
-      headers: {
-        'REMOTE_ADDR' => @valid_ip
-      }
+      headers: @auth_headers
 
     assert_response :bad_request
     json_response = JSON.parse(response.body)
@@ -64,9 +67,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
   test "should return error when domain names is not an array" do
     post api_v1_business_registry_long_reserve_domains_path,
       params: { domain_names: "not-an-array" },
-      headers: {
-        'REMOTE_ADDR' => @valid_ip
-      }
+      headers: @auth_headers
 
     assert_response :bad_request
     json_response = JSON.parse(response.body)
@@ -78,9 +79,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     
     post api_v1_business_registry_long_reserve_domains_path,
       params: { domain_names: domain_names },
-      headers: {
-        'REMOTE_ADDR' => @valid_ip
-      }
+      headers: @auth_headers
 
     assert_response :unprocessable_entity
     json_response = JSON.parse(response.body)
@@ -92,9 +91,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     
     post api_v1_business_registry_long_reserve_domains_path,
       params: { domain_names: invalid_domain_names },
-      headers: {
-        'REMOTE_ADDR' => @valid_ip
-      }
+      headers: @auth_headers
 
     assert_response :bad_request
     json_response = JSON.parse(response.body)
@@ -110,9 +107,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     ReserveDomainInvoice.stub :create_list_of_domains, mock_result do
       post api_v1_business_registry_long_reserve_domains_path,
         params: { domain_names: @valid_domain_names },
-        headers: {
-          'REMOTE_ADDR' => @valid_ip
-        }
+        headers: @auth_headers
 
       assert_response :unprocessable_entity
       json_response = JSON.parse(response.body)
@@ -123,9 +118,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
   test "should handle missing callback urls" do
     post api_v1_business_registry_long_reserve_domains_path,
       params: { domain_names: @valid_domain_names },
-      headers: {
-        'REMOTE_ADDR' => @valid_ip
-      }
+      headers: @auth_headers
 
     assert_response :created
     json_response = JSON.parse(response.body)
@@ -146,9 +139,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
           success_business_registry_customer_url: "https://success.example.com",
           failed_business_registry_customer_url: "https://failed.example.com"
         },
-        headers: {
-          'REMOTE_ADDR' => @valid_ip
-        }
+        headers: @auth_headers
 
       assert_response :created
       json_response = JSON.parse(response.body)
@@ -164,9 +155,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
 
     post api_v1_business_registry_long_reserve_domains_path,
       params: { domain_names: @valid_domain_names },
-      headers: {
-        'REMOTE_ADDR' => @valid_ip
-      }
+      headers: @auth_headers
 
     assert_response :unprocessable_entity
     json_response = JSON.parse(response.body)
@@ -177,9 +166,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     ReserveDomainInvoice.stub :is_any_available_domains?, false do
       post api_v1_business_registry_long_reserve_domains_path,
         params: { domain_names: @valid_domain_names },
-        headers: {
-          'REMOTE_ADDR' => @valid_ip
-        }
+        headers: @auth_headers
 
       assert_response :unprocessable_entity
       json_response = JSON.parse(response.body)
@@ -199,9 +186,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
       ReserveDomainInvoice.stub :filter_available_domains, @valid_domain_names do
         post api_v1_business_registry_long_reserve_domains_path,
           params: { domain_names: @valid_domain_names },
-          headers: {
-            'REMOTE_ADDR' => @valid_ip
-          }
+          headers: @auth_headers
 
         assert_response :created
         json_response = JSON.parse(response.body)

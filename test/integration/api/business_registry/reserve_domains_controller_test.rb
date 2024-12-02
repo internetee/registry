@@ -6,6 +6,14 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
     ENV['ALLOWED_ORIGINS'] = @allowed_origins.join(',')
     @valid_ip = '127.0.0.1'
     ENV['auction_api_allowed_ips'] = @valid_ip
+    @valid_token = 'valid_test_token'
+    ENV['business_registry_api_tokens'] = @valid_token
+
+    @auth_headers = {
+      'Origin' => @allowed_origins.first,
+      'REMOTE_ADDR' => @valid_ip,
+      'Authorization' => "Bearer #{@valid_token}"
+    }
 
     @original_filter_available = BusinessRegistry::DomainAvailabilityCheckerService.method(:filter_available)
     BusinessRegistry::DomainAvailabilityCheckerService.define_singleton_method(:filter_available) do |domains|
@@ -25,7 +33,7 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
     assert_difference 'ReservedDomain.count', 2 do
       post api_v1_business_registry_reserve_domains_path,
            params: { domain_names: domain_names },
-           headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+           headers: @auth_headers
     end
 
     assert_response :created
@@ -42,7 +50,7 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
   test "should handle invalid domain names" do
     post api_v1_business_registry_reserve_domains_path,
          params: { domain_names: ["invalid@domain.test"] },
-         headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+         headers: @auth_headers
 
     assert_response :bad_request
     json_response = JSON.parse(response.body)
@@ -52,7 +60,7 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
   test "should handle empty domain names array" do
     post api_v1_business_registry_reserve_domains_path,
          params: { domain_names: [] },
-         headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+         headers: @auth_headers
 
     assert_response :bad_request
     json_response = JSON.parse(response.body)
@@ -62,7 +70,7 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
   test "should handle missing domain_names parameter" do
     post api_v1_business_registry_reserve_domains_path,
          params: {},
-         headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+         headers: @auth_headers
 
     assert_response :bad_request
     json_response = JSON.parse(response.body)
@@ -74,7 +82,7 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
     
     post api_v1_business_registry_reserve_domains_path,
          params: { domain_names: domain_names },
-         headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+         headers: @auth_headers
 
     assert_response :unprocessable_entity
     json_response = JSON.parse(response.body)
@@ -87,7 +95,7 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
     assert_difference 'ReservedDomain.count', 2 do
       post api_v1_business_registry_reserve_domains_path,
            params: { domain_names: domain_names },
-           headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+           headers: @auth_headers
     end
 
     assert_response :created
@@ -110,7 +118,7 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
     
     post api_v1_business_registry_reserve_domains_path,
          params: { domain_names: [domain_name] },
-         headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+         headers: @auth_headers
 
     assert_response :created
     json_response = JSON.parse(response.body)
