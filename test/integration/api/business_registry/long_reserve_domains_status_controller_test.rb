@@ -8,6 +8,14 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
     ENV['ALLOWED_ORIGINS'] = @allowed_origins.join(',')
     @valid_ip = '127.0.0.1'
     ENV['auction_api_allowed_ips'] = @valid_ip
+    @valid_token = 'valid_test_token'
+    ENV['business_registry_api_tokens'] = @valid_token
+
+    @auth_headers = {
+      'Origin' => @allowed_origins.first,
+      'REMOTE_ADDR' => @valid_ip,
+      'Authorization' => "Bearer #{@valid_token}"
+    }
 
     stub_reserved_domains_invoice_status
   end
@@ -25,7 +33,7 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
     )
 
     get api_v1_business_registry_long_reserve_domains_status_path(invoice_number: @invoice.invoice_number, user_unique_id: @invoice.metainfo),
-        headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+        headers: @auth_headers
 
     assert_response :success
     json_response = JSON.parse(response.body)
@@ -47,7 +55,7 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
     )
 
     get api_v1_business_registry_long_reserve_domains_status_path(invoice_number: @invoice.invoice_number, user_unique_id: @invoice.metainfo),
-        headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+        headers: @auth_headers
 
     assert_response :success
     json_response = JSON.parse(response.body)
@@ -59,7 +67,7 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
 
   test "returns 404 for non-existent invoice" do
     get api_v1_business_registry_long_reserve_domains_status_path('nonexistent'),
-        headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+        headers: @auth_headers
 
     assert_response :not_found
   end
@@ -76,7 +84,7 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
     )
 
     get api_v1_business_registry_long_reserve_domains_status_path(invoice_number: @invoice.invoice_number, user_unique_id: @invoice.metainfo),
-        headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+        headers: @auth_headers
 
     assert_response :success
     json_response = JSON.parse(response.body)
@@ -100,7 +108,7 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
       invoice_number: @invoice.invoice_number, 
       user_unique_id: @invoice.metainfo
     ),
-    headers: { 'Origin' => @allowed_origins.first, 'REMOTE_ADDR' => @valid_ip }
+    headers: @auth_headers
 
     assert_response :success
     json_response = JSON.parse(response.body)
