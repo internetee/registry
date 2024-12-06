@@ -185,6 +185,7 @@ Rails.application.routes.draw do
         get 'domain_names/:organization_name', to: 'domain_names#show', as: 'domain_names'
         get 'long_reserve_domains_status', to: 'long_reserve_domains_status#show', as: 'long_reserve_domains_status'
         post 'reserve_domains', to: 'reserve_domains#create', as: 'reserve_domains'
+        get 'reserve_domains/:user_unique_id', to: 'reserve_domains#show', as: 'reserve_domains_data'
         post 'long_reserve_domains', to: 'long_reserve_domains#create', as: 'long_reserve_domains'
         get 'registration_code', to: 'registration_code#show', as: 'registration_code'
       end
