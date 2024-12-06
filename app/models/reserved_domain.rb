@@ -43,13 +43,13 @@ class ReservedDomain < ApplicationRecord
       record.save
     end
 
-    def wrap_reserved_domains_to_struct(reserved_domains, success, errors = nil)
-      Struct.new(:reserved_domains, :success, :errors).new(reserved_domains, success, errors)
+    def wrap_reserved_domains_to_struct(reserved_domains, success, user_unique_id = nil, errors = nil)
+      Struct.new(:reserved_domains, :success, :user_unique_id, :errors).new(reserved_domains, success, user_unique_id, errors)
     end
 
     def reserve_domains_without_payment(domain_names)
       if domain_names.count > MAX_DOMAIN_NAME_PER_REQUEST
-        return wrap_reserved_domains_to_struct(domain_names, false, "The maximum number of domain names per request is #{MAX_DOMAIN_NAME_PER_REQUEST}")
+        return wrap_reserved_domains_to_struct(domain_names, false, nil, "The maximum number of domain names per request is #{MAX_DOMAIN_NAME_PER_REQUEST}")
       end
 
       available_domains = BusinessRegistry::DomainAvailabilityCheckerService.filter_available(domain_names)
@@ -65,7 +65,10 @@ class ReservedDomain < ApplicationRecord
         reserved_domains << reserved_domain
       end
 
-      wrap_reserved_domains_to_struct(reserved_domains, true)
+      return wrap_reserved_domains_to_struct(reserved_domains, false, nil, "No available domains") if reserved_domains.empty?
+
+      unique_id = FreeDomainReservationHolder.create!(domain_names: available_domains).user_unique_id
+      wrap_reserved_domains_to_struct(reserved_domains, true, unique_id)
     end
   end
 
