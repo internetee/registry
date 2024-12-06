@@ -2722,13 +2722,6 @@ CREATE TABLE public.reserve_domain_invoices (
 -- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.repp_logs_id_seq
--- Name: reserved_domain_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
-
--- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-
 CREATE SEQUENCE public.reserve_domain_invoices_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -2738,47 +2731,6 @@ CREATE SEQUENCE public.reserve_domain_invoices_id_seq
 
 
 --
--- Name: repp_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repp_logs_id_seq OWNED BY public.repp_logs.id;
--- Name: reserved_domain_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
--- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.reserve_domain_invoices_id_seq OWNED BY public.reserve_domain_invoices.id;
-
-
---
--- Name: reserve_domain_invoices; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.reserve_domain_invoices (
-    id bigint NOT NULL,
-    invoice_number character varying,
-    domain_names character varying[] DEFAULT '{}'::character varying[],
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    status integer DEFAULT 0,
-    metainfo character varying
-);
-
-
---
--- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.reserve_domain_invoices_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
-
 -- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -3591,13 +3543,6 @@ ALTER TABLE ONLY public.reserve_domain_invoices ALTER COLUMN id SET DEFAULT next
 
 
 --
--- Name: reserve_domain_invoices id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.reserve_domain_invoices ALTER COLUMN id SET DEFAULT nextval('public.reserve_domain_invoices_id_seq'::regclass);
-
-
---
 -- Name: reserved_domains id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4170,14 +4115,6 @@ ALTER TABLE ONLY public.registrars
 
 ALTER TABLE ONLY public.repp_logs
     ADD CONSTRAINT repp_logs_pkey PRIMARY KEY (id);
-
-
---
--- Name: reserve_domain_invoices reserve_domain_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.reserve_domain_invoices
-    ADD CONSTRAINT reserve_domain_invoices_pkey PRIMARY KEY (id);
 
 
 --
@@ -5001,18 +4938,7 @@ CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_ve
 --
 
 CREATE INDEX index_reserve_domain_invoices_on_invoice_number ON public.reserve_domain_invoices USING btree (invoice_number);
--- Name: index_reserved_domain_statuses_on_access_token; Type: INDEX; Schema: public; Owner: -
 
-
-
-CREATE UNIQUE INDEX index_reserved_domain_statuses_on_access_token ON public.reserved_domain_statuses USING btree (access_token);
-
-
---
--- Name: index_reserved_domain_statuses_on_reserved_domain_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_reserved_domain_statuses_on_reserved_domain_id ON public.reserved_domain_statuses USING btree (reserved_domain_id);
 
 --
 -- Name: index_setting_entries_on_code; Type: INDEX; Schema: public; Owner: -
@@ -5859,6 +5785,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250314133357'),
 ('20240722085530'),
 ('20240723110208'),
-('20241022121525'),
-('20241129095711'),
-('20241206085817');
+('20241022121525');
+
+
