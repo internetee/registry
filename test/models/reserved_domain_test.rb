@@ -66,6 +66,7 @@ class ReservedDomainTest < ActiveSupport::TestCase
     result = ReservedDomain.reserve_domains_without_payment(domain_names)
     
     assert_not result.success
+    p result
     assert_includes result.errors, "The maximum number of domain names per request is #{ReservedDomain::MAX_DOMAIN_NAME_PER_REQUEST}"
   end
 
@@ -129,6 +130,29 @@ class ReservedDomainTest < ActiveSupport::TestCase
     @reserved_domain.expire_at = nil
     assert_no_difference 'ReservedDomain.count' do
       @reserved_domain.destroy_if_expired
+    end
+  end
+
+  test "reserve_domains_without_payment should create holder and return unique_id" do
+    domain_names = ['test1.test', 'test2.test']
+    
+    result = ReservedDomain.reserve_domains_without_payment(domain_names)
+    
+    assert result.success
+    assert_not_nil result.user_unique_id
+    assert_equal 10, result.user_unique_id.length
+    assert_equal domain_names.count, result.reserved_domains.count
+  end
+
+  test "reserve_domains_without_payment should return error when no domains available" do
+    domain_names = ['test1.test']
+    
+    BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, [] do
+      result = ReservedDomain.reserve_domains_without_payment(domain_names)
+      
+      assert_not result.success
+      assert_nil result.user_unique_id
+      assert_equal "No available domains", result.errors
     end
   end
 end

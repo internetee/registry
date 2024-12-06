@@ -131,7 +131,7 @@ class ReserveDomainInvoice < ApplicationRecord
     end
 
     def generate_unique_id
-      SecureRandom.uuid[0..7]
+      SecureRandom.uuid[0..9]
     end
 
     def process_invoice(invoice)

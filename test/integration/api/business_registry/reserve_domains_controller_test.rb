@@ -30,7 +30,7 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
   test "should reserve multiple domains successfully" do
     domain_names = ["new1.test", "new2.test"]
     
-    assert_difference 'ReservedDomain.count', 2 do
+    assert_difference ['ReservedDomain.count'], 2 do
       post api_v1_business_registry_reserve_domains_path,
            params: { domain_names: domain_names },
            headers: @auth_headers
@@ -40,6 +40,8 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
     json_response = JSON.parse(response.body)
     assert_equal "Domains reserved successfully", json_response['message']
     assert_equal 2, json_response['reserved_domains'].length
+    assert_not_nil json_response['user_unique_id']
+    assert_equal 10, json_response['user_unique_id'].length
     
     json_response['reserved_domains'].each do |domain|
       assert domain_names.include?(domain['name'])
@@ -126,5 +128,19 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
     
     expire_at = Time.parse(domain['expire_at'])
     assert_in_delta Time.current + ReservedDomain::FREE_RESERVATION_EXPIRY, expire_at, 5.seconds
+  end
+
+  test "should return error when no domains are available" do
+    domain_names = ["new1.test", "new2.test"]
+    
+    BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, [] do
+      post api_v1_business_registry_reserve_domains_path,
+           params: { domain_names: domain_names },
+           headers: @auth_headers
+
+      assert_response :unprocessable_entity
+      json_response = JSON.parse(response.body)
+      assert_equal "No available domains", json_response['error']
+    end
   end
 end

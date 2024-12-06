@@ -1169,6 +1169,38 @@ ALTER SEQUENCE public.epp_sessions_id_seq OWNED BY public.epp_sessions.id;
 
 
 --
+-- Name: free_domain_reservation_holders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.free_domain_reservation_holders (
+    id bigint NOT NULL,
+    user_unique_id character varying NOT NULL,
+    domain_names character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: free_domain_reservation_holders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.free_domain_reservation_holders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: free_domain_reservation_holders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.free_domain_reservation_holders_id_seq OWNED BY public.free_domain_reservation_holders.id;
+
+
+--
 -- Name: invoice_items; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3235,6 +3267,13 @@ ALTER TABLE ONLY public.epp_sessions ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: free_domain_reservation_holders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.free_domain_reservation_holders ALTER COLUMN id SET DEFAULT nextval('public.free_domain_reservation_holders_id_seq'::regclass);
+
+
+--
 -- Name: invoice_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3768,6 +3807,14 @@ ALTER TABLE ONLY public.epp_logs
 
 ALTER TABLE ONLY public.epp_sessions
     ADD CONSTRAINT epp_sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: free_domain_reservation_holders free_domain_reservation_holders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.free_domain_reservation_holders
+    ADD CONSTRAINT free_domain_reservation_holders_pkey PRIMARY KEY (id);
 
 
 --
@@ -5746,4 +5793,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240722085530'),
 ('20240723110208'),
 ('20241022121525'),
-('20241129095711');
+('20241129095711'),
+('20241206085817');

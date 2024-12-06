@@ -17,7 +17,8 @@ module Api
                   password: domain.password,
                   expire_at: domain.expire_at
                 }
-              end
+              end,
+              user_unique_id: result.user_unique_id
             }, :created)
           else
             render_error(result.errors, :unprocessable_entity)
