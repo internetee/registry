@@ -2,7 +2,12 @@ module Api
   module V1
     module BusinessRegistry
       class ReserveDomainsController < BaseController
-        before_action :validate_params
+        before_action :validate_params, only: :create
+        before_action :set_free_domain_reservation_holder, only: :show
+
+        def show
+          render_success(@free_domain_reservation_holder.output_reserved_domains)
+        end
 
         def create
           domain_names = params[:domain_names]
@@ -26,6 +31,11 @@ module Api
         end
 
         private
+
+        def set_free_domain_reservation_holder
+          @free_domain_reservation_holder = FreeDomainReservationHolder.find_by(user_unique_id: params[:user_unique_id])
+          render_error("Reserved domains not found. Invalid user_unique_id", :not_found) unless @free_domain_reservation_holder
+        end
 
         def validate_params
           domain_names = params[:domain_names]

@@ -143,4 +143,35 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
       assert_equal "No available domains", json_response['error']
     end
   end
+
+  test "should get reserved domains info by user_unique_id" do
+    # Create test data
+    domain_names = ["test1.test", "test2.test"]
+    result = ReservedDomain.reserve_domains_without_payment(domain_names)
+    
+    # Make request
+    get api_v1_business_registry_reserve_domains_data_path(user_unique_id: result.user_unique_id),
+        headers: @auth_headers
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+    
+    # Check response structure
+    assert_equal 2, json_response.length
+    json_response.each do |domain|
+      assert_includes domain_names, domain['name']
+      assert_not_nil domain['password']
+      assert_not_nil domain['expire_at']
+      assert Time.parse(domain['expire_at']) > Time.current
+    end
+  end
+
+  test "should return error for non-existent user_unique_id" do
+    get api_v1_business_registry_reserve_domains_data_path(user_unique_id: 'non-existent'),
+        headers: @auth_headers
+
+    assert_response :not_found
+    json_response = JSON.parse(response.body)
+    assert_equal "Reserved domains not found. Invalid user_unique_id", json_response['error']
+  end
 end
