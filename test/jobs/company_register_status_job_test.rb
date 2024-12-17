@@ -154,6 +154,36 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end
 
+  def test_companies_with_invalid_ident_should_receive_invalid_ident_notification
+    original_new_method = CompanyRegister::Client.method(:new)
+    CompanyRegister::Client.define_singleton_method(:new) do
+      object = original_new_method.call
+      def object.simple_data(registration_number:)
+        [Company.new('16752073', 'ACME Ltd', DELETED)]
+      end
+      object
+    end
+
+    @registrant_acme.update!(
+      company_register_status: Contact::DELETED,
+      checked_company_at: nil,
+      ident_type: 'org',
+      ident_country_code: 'EE',
+      ident: '16752073'
+    )
+
+    @registrant_acme.reload
+
+    CompanyRegisterStatusJob.perform_now(14, 0, 100)
+
+    @registrant_acme.reload
+
+    assert_equal Contact::DELETED, @registrant_acme.company_register_status
+    assert_equal @registrant_acme.registrant_domains.first.registrar.notifications.last.text, I18n.t('invalid_ident', ident: @registrant_acme.ident)
+
+    CompanyRegister::Client.define_singleton_method(:new, original_new_method)
+  end
+
   def test_companies_with_force_delete_and_status_R_should_be_lifted
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do

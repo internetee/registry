@@ -40,3 +40,5 @@ et:
               taken: 'on juba lisatud'
             ipv6:
               taken: 'on juba lisatud'
+
+  invalid_ident: 'Vigane ident %{ident}'
