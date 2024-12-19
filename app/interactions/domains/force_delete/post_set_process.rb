@@ -12,7 +12,6 @@ module Domains
         # Allow deletion
         statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
 
-        puts "Try to save domain: #{domain.name} with statuses: #{statuses}"
         domain.save(validate: false)
       end
     end
