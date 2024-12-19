@@ -1,0 +1,24 @@
+<h1>Force Delete Daily Summary - <%= Date.current %></h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Domain</th>
+      <th>Reason</th>
+      <th>Type</th>
+      <th>Start Date</th>
+      <th>Delete Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @domains.each do |domain| %>
+      <tr>
+        <td><%= domain[:name] %></td>
+        <td><%= domain[:reason] %></td>
+        <td><%= domain[:force_delete_type] %></td>
+        <td><%= domain[:force_delete_start]&.to_date %></td>
+        <td><%= domain[:force_delete_date]&.to_date %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table> 
