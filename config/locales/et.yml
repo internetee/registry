@@ -41,4 +41,4 @@ et:
             ipv6:
               taken: 'on juba lisatud'
 
-  invalid_ident: 'Vigane ident %{ident}'
+  invalid_ident: 'Jõustatud kustutamine määratud domainile %{domain_name}. Väljaandmise kuupäev: %{outzone_date}. Kustutamise kuupäev: %{purge_date}. Vigane ident %{ident}'

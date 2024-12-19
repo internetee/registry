@@ -675,7 +675,7 @@ en:
   actions: Actions
   contact_has_been_archived: 'Contact with code %{contact_code} has been archieved because it has been orphaned for longer than %{orphan_months} months.'
   dns_policy_violation: "Data management policy violation: DNSKEY does not match or not found in the authoritative nameservers"
-  invalid_ident: 'Invalid ident %{ident}'
+  invalid_ident: 'Force delete set on domain %{domain_name}. Outzone date: %{outzone_date}. Purge date: %{purge_date}. Invalid ident %{ident}'
 
   number:
     currency:

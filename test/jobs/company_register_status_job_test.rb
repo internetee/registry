@@ -179,7 +179,13 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     @registrant_acme.reload
 
     assert_equal Contact::DELETED, @registrant_acme.company_register_status
-    assert_equal @registrant_acme.registrant_domains.first.registrar.notifications.last.text, I18n.t('invalid_ident', ident: @registrant_acme.ident)
+
+    template = I18n.t('invalid_ident',
+                     ident: @registrant_acme.ident,
+                     domain_name: @registrant_acme.registrant_domains.first.name,
+                     outzone_date: @registrant_acme.registrant_domains.first.outzone_date,
+                     purge_date: @registrant_acme.registrant_domains.first.purge_date)
+    assert_equal @registrant_acme.registrant_domains.first.registrar.notifications.last.text, template
 
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end

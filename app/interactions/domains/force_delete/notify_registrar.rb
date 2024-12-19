@@ -7,7 +7,11 @@ module Domains
 
       def notify_without_email
         template = if reason == 'invalid_company'
-                     I18n.t('invalid_ident', ident: domain.registrant.ident)
+                     I18n.t('invalid_ident',
+                            ident: domain.registrant.ident,
+                            domain_name: domain.name,
+                            outzone_date: domain.outzone_date,
+                            purge_date: domain.purge_date)
                    else
                      I18n.t('force_delete_set_on_domain',
                             domain_name: domain.name,
@@ -22,7 +26,11 @@ module Domains
 
       def notify_with_email
         template = if reason == 'invalid_company'
-                     I18n.t('invalid_ident', ident: domain.registrant.ident)
+                     I18n.t('invalid_ident',
+                            ident: domain.registrant.ident,
+                            domain_name: domain.name,
+                            outzone_date: domain.outzone_date,
+                            purge_date: domain.purge_date)
                    else
                      I18n.t('force_delete_auto_email',
                             domain_name: domain.name,
