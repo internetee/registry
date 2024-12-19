@@ -39,7 +39,7 @@ namespace :company_status do
 
     puts "*** Run 3 step. I process companies, update their information, and sort them into different files based on whether the companies are missing or removed from the business registry ***"
 
-    whitelisted_companies = JSON.parse(ENV['whitelist_companies']) # ["12345678", "87654321"]    
+    whitelisted_companies = ENV['whitelist_companies'].present? ? JSON.parse(ENV['whitelist_companies']) : []
 
     contacts_query = Contact.where(ident_type: 'org', ident_country_code: 'EE')
 
