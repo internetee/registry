@@ -10,6 +10,10 @@ class ReservedDomain < ApplicationRecord
 
   alias_attribute :registration_code, :password
 
+  ransacker :expire_date do
+    Arel.sql('DATE(expire_at)')
+  end
+
   self.ignored_columns = %w[legacy_id]
 
   MAX_DOMAIN_NAME_PER_REQUEST = 20
