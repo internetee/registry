@@ -52,7 +52,6 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
     invoice = Invoice.find(@invoice.id)
     assert_includes invoice.payment_orders.pluck(:status), 'paid'
     assert_includes invoice.payment_orders.pluck(:status), 'issued'
-    assert_includes invoice.payment_orders.pluck(:status), 'issued'
   end
 
   test 'it should update invoice data as directo and omniva' do
