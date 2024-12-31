@@ -1,3 +1,6 @@
+31.12.2024
+* Fix for lifting ForceDelete https://github.com/internetee/registry/pull/2670
+
 19.11.2024
 * contact verification with eeID for the registrar portal https://github.com/internetee/registry/pull/2696
 
