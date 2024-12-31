@@ -1,6 +1,7 @@
 31.12.2024
 * Fix for expired status in domain history https://github.com/internetee/registry/issues/2665
 * Fix for lifting ForceDelete https://github.com/internetee/registry/pull/2670
+* Poll message fix for ForceDelete messages https://github.com/internetee/registry/issues/2714
 
 19.11.2024
 * contact verification with eeID for the registrar portal https://github.com/internetee/registry/pull/2696
