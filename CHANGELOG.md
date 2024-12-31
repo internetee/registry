@@ -1,4 +1,5 @@
 31.12.2024
+* Fix for expired status in domain history https://github.com/internetee/registry/issues/2665
 * Fix for lifting ForceDelete https://github.com/internetee/registry/pull/2670
 
 19.11.2024
