@@ -108,3 +108,8 @@ gem 'pg_query', '>= 0.9.0'
 # token
 gem 'jwt'
 gem 'net-ftp'
+
+# gem 'mail', '2.8.1'
+gem 'net-imap'
+gem 'net-pop'
+gem 'net-smtp'
