@@ -63,7 +63,7 @@ gem 'omniauth-tara', github: 'internetee/omniauth-tara'
 gem 'airbrake'
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
-gem 'jquery-ui-rails', '6.0.1'
+gem 'jquery-ui-rails', '7.0.0'
 gem 'pdfkit'
 gem 'redis'
 gem 'sidekiq', '~> 7.0'
