@@ -92,7 +92,7 @@ group :test do
   gem 'minitest-stub_any_instance'
   gem 'selenium-webdriver', '~> 4.26'
   # gem 'webdrivers'
-  gem 'simplecov', '0.17.1', require: false # CC last supported v0.17
+  gem 'simplecov', '0.22.0', require: false # CC last supported v0.17
   gem 'spy'
   gem 'webmock'
 end
