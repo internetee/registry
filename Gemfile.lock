@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/internetee/company_register.git
-  revision: 1e91fec78212d7e549a1c2362c011761a447bbcd
-  branch: issues-with-upcoming-data
+  revision: 30b2c4d2f0bb882370e174fc965cd9fd02b42951
+  branch: master
   specs:
     company_register (0.1.0)
       activesupport
@@ -304,7 +304,7 @@ GEM
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
     libxml-ruby (3.2.1)
-    logger (1.6.5)
+    logger (1.6.4)
     loofah (2.24.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
