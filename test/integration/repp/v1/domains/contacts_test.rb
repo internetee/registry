@@ -108,8 +108,31 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     refute @domain.tech_contacts.find_by(code: contact.code).present?
   end
 
+  def test_can_remove_all_admin_contacts_for_private_registrant
+    Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
+
+    @domain.registrant.update!(ident_type: 'priv')
+    @domain.reload
+    assert_not @domain.registrant.org?
+
+    contact = @domain.admin_contacts.last
+
+    payload = { contacts: [ { code: contact.code, type: 'admin' } ] }
+    delete "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    @domain.reload
+    assert_response :ok
+    assert_equal 1000, json[:code]
+
+    assert_empty @domain.admin_contacts
+  end
+
   def test_can_not_remove_one_and_only_contact
     Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
+
+    @domain.registrant.update!(ident_type: 'org')
+    @domain.reload
 
     contact = @domain.admin_contacts.last
 
