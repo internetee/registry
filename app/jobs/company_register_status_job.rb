@@ -3,6 +3,13 @@ require 'zip'
 class CompanyRegisterStatusJob < ApplicationJob
   PAYMENT_STATEMENT_BUSINESS_REGISTRY_REASON = 'Kustutamiskanne dokumentide hoidjata'
 
+  REGISTRY_STATUSES = {
+    Contact::REGISTERED => 'registered',
+    Contact::LIQUIDATED => 'liquidated',
+    Contact::BANKRUPT => 'bankrupt',
+    Contact::DELETED => 'deleted'
+  }
+
   queue_as :default
 
   def perform(days_interval = 14, spam_time_delay = 1, batch_size = 100)
@@ -58,7 +65,8 @@ class CompanyRegisterStatusJob < ApplicationJob
         type: :fast_track,
         notify_by_email: true,
         reason: 'invalid_company',
-        email: contact.email
+        email: contact.email,
+        notes: "Contact has status #{REGISTRY_STATUSES[contact.company_register_status]}"
       )
     end
   end
