@@ -26,6 +26,7 @@ module Contact::CompanyRegister
 
   def return_company_details
     return unless org?
+    return [] unless ident.is_a?(String)
 
     company_register.company_details(registration_number: ident)
   rescue CompanyRegister::NotAvailableError
