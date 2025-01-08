@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/internetee/company_register.git
-  revision: 30b2c4d2f0bb882370e174fc965cd9fd02b42951
-  branch: master
+  revision: d74af7ac588ba5b767ec425a37385de3b715145d
+  branch: issues-with-upcoming-data
   specs:
     company_register (0.1.0)
       activesupport
@@ -214,7 +214,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    date (3.3.4)
+    date (3.4.1)
     devise (4.8.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -347,9 +347,9 @@ GEM
       net-protocol
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.1.3)
+    net-protocol (0.2.2)
       timeout
-    net-smtp (0.3.3)
+    net-smtp (0.5.0)
       net-protocol
     netrc (0.11.0)
     newrelic-infinite_tracing (8.1.0)
@@ -520,7 +520,7 @@ GEM
     tilt (2.0.11)
     time (0.3.0)
       date
-    timeout (0.3.0)
+    timeout (0.4.3)
     truemail (3.0.3)
       simpleidn (~> 0.2.1)
     tzinfo (2.0.6)
