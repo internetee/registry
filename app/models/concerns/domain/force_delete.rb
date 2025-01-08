@@ -47,9 +47,9 @@ module Domain::ForceDelete
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
-  def schedule_force_delete(type: :fast_track, notify_by_email: false, reason: nil, email: nil)
+  def schedule_force_delete(type: :fast_track, notify_by_email: false, reason: nil, email: nil, notes: nil)
     Domains::ForceDelete::SetForceDelete.run(domain: self, type: type, reason: reason,
-                                             notify_by_email: notify_by_email, email: email)
+                                             notify_by_email: notify_by_email, email: email, notes: notes)
   end
 
   def cancel_force_delete
