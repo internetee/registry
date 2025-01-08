@@ -8,7 +8,7 @@ gem 'iso8601', '0.13.0' # for dates and times
 gem 'mimemagic', '0.4.3'
 gem 'mime-types-data'
 gem 'puma'
-gem 'rails', '~> 6.1.4'
+gem 'rails', '~> 8.0.0'
 gem 'rest-client'
 gem 'uglifier'
 
