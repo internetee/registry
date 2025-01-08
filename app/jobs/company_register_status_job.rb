@@ -75,15 +75,18 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def delete_process(contact)
+    Rails.logger.info("Processing company details for contact #{contact.id} with ident: #{contact.ident} (#{contact.ident.class})")
     company_details_response = contact.return_company_details
 
     if company_details_response.empty?
+      Rails.logger.info("Empty company details response for contact #{contact.id}")
       schedule_force_delete(contact)
 
       return
     end
 
     kandeliik_tekstina = extract_kandeliik_tekstina(company_details_response)
+    Rails.logger.info("Kandeliik tekstina for contact #{contact.id}: #{kandeliik_tekstina}")
 
     if kandeliik_tekstina == PAYMENT_STATEMENT_BUSINESS_REGISTRY_REASON
       soft_delete_company(contact)
