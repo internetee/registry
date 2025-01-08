@@ -16,7 +16,7 @@ gem 'uglifier'
 gem 'figaro', '~> 1.2'
 
 # model related
-gem 'paper_trail', '~> 14.0'
+gem 'paper_trail', '~> 16.0'
 gem 'pg', '1.5.9'
 # 1.8 is for Rails < 5.0
 gem 'ransack', '~> 4.0.0'
