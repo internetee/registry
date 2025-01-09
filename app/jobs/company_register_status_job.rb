@@ -111,7 +111,14 @@ class CompanyRegisterStatusJob < ApplicationJob
 
   def soft_delete_company(contact)
     contact.registrant_domains.reject { |domain| domain.force_delete_scheduled? }.each do |domain|
-      domain.schedule_force_delete(type: :soft)
+      next if domain.force_delete_scheduled?
+
+      domain.schedule_force_delete(
+        type: :soft,
+        notify_by_email: true,
+        reason: 'invalid_company',
+        email: contact.email,
+        notes: "Contact has status #{REGISTRY_STATUSES[contact.company_register_status]}")
     end
 
     puts "Soft delete process initiated for company: #{contact.name} with ID: #{contact.id}"
