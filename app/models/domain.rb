@@ -164,15 +164,35 @@ class Domain < ApplicationRecord
     max: -> { Setting.dnskeys_max_count },
   }
 
-  validates :admin_domain_contacts, object_count: {
-    min: -> { Setting.admin_contacts_min_count },
-    max: -> { Setting.admin_contacts_max_count },
-  }
+  def self.admin_contacts_validation_rules(for_org:)
+    {
+      min: -> { for_org ? Setting.admin_contacts_min_count : 0 },
+      max: -> { Setting.admin_contacts_max_count }
+    }
+  end
 
-  validates :tech_domain_contacts, object_count: {
-    min: -> { Setting.tech_contacts_min_count },
-    max: -> { Setting.tech_contacts_max_count },
-  }
+  def self.tech_contacts_validation_rules(for_org:)
+    {
+      min: -> { for_org ? Setting.tech_contacts_min_count : 0 },
+      max: -> { Setting.tech_contacts_max_count }
+    }
+  end
+
+  validates :admin_domain_contacts,
+            object_count: admin_contacts_validation_rules(for_org: true),
+            if: :require_admin_contacts?
+
+  validates :admin_domain_contacts,
+            object_count: admin_contacts_validation_rules(for_org: false),
+            unless: :require_admin_contacts?
+
+  validates :tech_domain_contacts,
+            object_count: tech_contacts_validation_rules(for_org: true),
+            if: :require_tech_contacts?
+
+  validates :tech_domain_contacts,
+            object_count: tech_contacts_validation_rules(for_org: false),
+            unless: :require_tech_contacts?
 
   validates :nameservers, uniqueness_multi: {
     attribute: 'hostname',
@@ -834,5 +854,13 @@ class Domain < ApplicationRecord
       array[index[0]], array[index[1]] = array[index[1]], array[index[0]]
     end
     array
+  end
+
+  def require_admin_contacts?
+    registrant.present? && registrant.org?
+  end
+
+  def require_tech_contacts?
+    registrant.present? && registrant.org?
   end
 end

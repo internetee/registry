@@ -114,7 +114,9 @@ class Epp::Domain < Domain
 
   def attach_default_contacts
     return if registrant.blank?
+
     registrant_obj = Contact.find_by(code: registrant.code)
+    return if registrant_obj.priv?
 
     tech_contacts << registrant_obj if tech_domain_contacts.blank?
     admin_contacts << registrant_obj if admin_domain_contacts.blank? && !registrant.org?

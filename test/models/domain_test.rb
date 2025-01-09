@@ -221,6 +221,10 @@ class DomainTest < ActiveSupport::TestCase
     assert domain.valid?, proc { domain.errors.full_messages }
 
     domain.admin_domain_contacts.clear
+
+    domain.registrant.update!(ident_type: 'org')
+    domain.reload
+    assert domain.registrant.org?
     assert domain.invalid?
 
     domain.admin_domain_contacts.clear
@@ -235,6 +239,10 @@ class DomainTest < ActiveSupport::TestCase
     max_count = 2
     Setting.tech_contacts_min_count = min_count
     Setting.tech_contacts_max_count = max_count
+
+    domain.registrant.update!(ident_type: 'org')
+    domain.reload
+    assert domain.registrant.org?
 
     domain.tech_domain_contacts.clear
     min_count.times { domain.tech_domain_contacts.build(domain_contact_attributes) }
@@ -473,6 +481,56 @@ class DomainTest < ActiveSupport::TestCase
     @domain.statuses << DomainStatus::PENDING_DELETE_CONFIRMATION
 
     assert_not @domain.renewable?
+  end
+
+  def test_validates_admin_contact_count_for_private_registrant
+    domain_contact_attributes = domain_contacts(:shop_jane).dup.attributes
+    domain = valid_domain
+    max_count = 2
+    Setting.admin_contacts_max_count = max_count
+
+    domain.registrant.update!(ident_type: 'priv')
+    domain.reload
+    assert_not domain.registrant.org?
+
+    # Valid without any admin contacts
+    domain.admin_domain_contacts.clear
+    assert domain.valid?, proc { domain.errors.full_messages }
+
+    # Valid with some admin contacts
+    domain.admin_domain_contacts.clear
+    max_count.pred.times { domain.admin_domain_contacts.build(domain_contact_attributes) }
+    assert domain.valid?, proc { domain.errors.full_messages }
+
+    # Invalid when exceeding max contacts
+    domain.admin_domain_contacts.clear
+    max_count.next.times { domain.admin_domain_contacts.build(domain_contact_attributes) }
+    assert domain.invalid?
+  end
+
+  def test_validates_tech_contact_count_for_private_registrant
+    domain_contact_attributes = domain_contacts(:shop_william).dup.attributes
+    domain = valid_domain
+    max_count = 2
+    Setting.tech_contacts_max_count = max_count
+
+    domain.registrant.update!(ident_type: 'priv')
+    domain.reload
+    assert_not domain.registrant.org?
+
+    # Valid without any tech contacts
+    domain.tech_domain_contacts.clear
+    assert domain.valid?, proc { domain.errors.full_messages }
+
+    # Valid with some tech contacts
+    domain.tech_domain_contacts.clear
+    max_count.pred.times { domain.tech_domain_contacts.build(domain_contact_attributes) }
+    assert domain.valid?, proc { domain.errors.full_messages }
+
+    # Invalid when exceeding max contacts
+    domain.tech_domain_contacts.clear
+    max_count.next.times { domain.tech_domain_contacts.build(domain_contact_attributes) }
+    assert domain.invalid?
   end
 
   private
