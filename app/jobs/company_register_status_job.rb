@@ -51,8 +51,9 @@ class CompanyRegisterStatusJob < ApplicationJob
              "(company_register_status IS NULL OR checked_company_at IS NULL) OR
              (company_register_status = ? AND checked_company_at < ?) OR
              company_register_status IN (?)",
-             Contact::REGISTERED, 365.days.ago, [Contact::LIQUIDATED, Contact::BANKRUPT, Contact::DELETED]
-           ).distinct
+             Contact::REGISTERED, days_interval.days.ago, [Contact::LIQUIDATED, Contact::BANKRUPT, Contact::DELETED]
+           )
+           .distinct
   end
 
   def update_validation_company_status(contact:, status:)
