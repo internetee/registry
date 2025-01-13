@@ -75,8 +75,7 @@ class CompanyRegisterStatusJob < ApplicationJob
 
   def check_for_force_delete(contact)
     contact.registrant_domains.any? do |domain|
-      notes = domain.status_notes[DomainStatus::FORCE_DELETE]
-      notes && notes.include?("Company no: #{contact.ident}")
+      domain.force_delete_scheduled? && notes.include?("Company no: #{contact.ident}")
     end
   end
 
