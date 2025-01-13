@@ -8,6 +8,7 @@ module Domains
 
         domain.force_delete_domain_statuses_history = nil
         domain.admin_store_statuses_history = nil
+        domain.skip_whois_record_update = true
         domain.save(validate: false)
       end
     end

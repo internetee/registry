@@ -14,6 +14,7 @@ module Domains
         domain.admin_store_statuses_history -= domain_statuses unless domain.admin_store_statuses_history.nil?
         rejected_statuses = domain.statuses.reject { |a| domain_statuses.include? a }
         domain.statuses = rejected_statuses
+        domain.skip_whois_record_update = true
         domain.save(validate: false)
       end
     end
