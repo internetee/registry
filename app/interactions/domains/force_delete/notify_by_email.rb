@@ -4,6 +4,7 @@ module Domains
       def execute
         return unless notify_by_email
 
+        domain.skip_whois_record_update = false
         if type == :fast_track
           send_email
           domain.update(contact_notification_sent_date: Time.zone.today)
