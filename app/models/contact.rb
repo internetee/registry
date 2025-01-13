@@ -87,6 +87,11 @@ class Contact < ApplicationRecord
   after_save :update_related_whois_records
   before_validation :clear_address_modifications, if: -> { !self.class.address_processing? }
 
+  # TODO: remove after testing
+  after_save do
+    Rails.logger.info "Contact saved or updated: #{id}"
+  end
+
   self.ignored_columns = %w[legacy_id legacy_history_id]
 
   ORG = 'org'.freeze
