@@ -29,7 +29,6 @@ class CompanyRegisterStatusJob < ApplicationJob
     sleep spam_time_delay
 
     company_status = contact.return_company_status
-    contact.update!(company_register_status: company_status, checked_company_at: Time.zone.now)
 
     case company_status
     when Contact::REGISTERED
