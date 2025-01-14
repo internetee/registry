@@ -1,0 +1,6 @@
+en:
+  registrar_mailer:
+    contact_verified:
+      subject: >-
+        Teade: Kontakti [%{contact_code}] kinnitamine edukalt lõpule viidud
+        / Notification: Contact [%{contact_code}] verification successfully completed
