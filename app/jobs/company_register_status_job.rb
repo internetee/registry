@@ -87,7 +87,11 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def lift_force_delete(contact)
-    contact.registrant_domains.each(&:cancel_force_delete)
+    contact.registrant_domains.each do |domain|
+      next unless domain.force_delete_scheduled?
+
+      domain.cancel_force_delete
+    end
   end
 
   def delete_process(contact)
