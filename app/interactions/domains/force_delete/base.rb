@@ -16,6 +16,9 @@ module Domains
       string  :email,
               default: nil,
               description: 'Possible invalid email to notify on'
+      string  :notes,
+              default: nil,
+              description: 'Notes to add reason to the force delete'
 
       validates :type, inclusion: { in: %i[fast_track soft] }
     end

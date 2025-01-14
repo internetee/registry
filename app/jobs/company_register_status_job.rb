@@ -3,6 +3,13 @@ require 'zip'
 class CompanyRegisterStatusJob < ApplicationJob
   PAYMENT_STATEMENT_BUSINESS_REGISTRY_REASON = 'Kustutamiskanne dokumentide hoidjata'
 
+  REGISTRY_STATUSES = {
+    Contact::REGISTERED => 'registered',
+    Contact::LIQUIDATED => 'liquidated',
+    Contact::BANKRUPT => 'bankrupt',
+    Contact::DELETED => 'deleted'
+  }
+
   queue_as :default
 
   def perform(days_interval = 14, spam_time_delay = 1, batch_size = 100)
@@ -22,13 +29,14 @@ class CompanyRegisterStatusJob < ApplicationJob
     sleep spam_time_delay
 
     company_status = contact.return_company_status
-    contact.update!(company_register_status: company_status, checked_company_at: Time.zone.now)
 
     case company_status
     when Contact::REGISTERED
       lift_force_delete(contact) if check_for_force_delete(contact)
     when Contact::LIQUIDATED
-      ContactInformMailer.company_liquidation(contact: contact).deliver_now
+      unless contact.company_register_status == Contact::LIQUIDATED
+        ContactInformMailer.company_liquidation(contact: contact).deliver_now
+      end
     else
       delete_process(contact)
     end
@@ -38,12 +46,15 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def sampling_registrant_contact(days_interval)
-    Registrant.where(ident_type: 'org', ident_country_code: 'EE').where(
-      "(company_register_status IS NULL OR checked_company_at IS NULL) OR
-      (company_register_status = ? AND checked_company_at < ?) OR
-      company_register_status IN (?)",
-      Contact::REGISTERED, days_interval.days.ago, [Contact::LIQUIDATED, Contact::BANKRUPT, Contact::DELETED]
-    )
+    Contact.joins(:registrant_domains)
+           .where(ident_type: 'org', ident_country_code: 'EE')
+           .where(
+             "(company_register_status IS NULL OR checked_company_at IS NULL) OR
+             (company_register_status = ? AND checked_company_at < ?) OR
+             company_register_status IN (?)",
+             Contact::REGISTERED, days_interval.days.ago, [Contact::LIQUIDATED, Contact::BANKRUPT, Contact::DELETED]
+           )
+           .distinct
   end
 
   def update_validation_company_status(contact:, status:)
@@ -58,7 +69,8 @@ class CompanyRegisterStatusJob < ApplicationJob
         type: :fast_track,
         notify_by_email: true,
         reason: 'invalid_company',
-        email: contact.email
+        email: contact.email,
+        notes: "Contact has status #{REGISTRY_STATUSES[contact.company_register_status]}"
       )
     end
   end
@@ -66,24 +78,37 @@ class CompanyRegisterStatusJob < ApplicationJob
   def check_for_force_delete(contact)
     contact.registrant_domains.any? do |domain|
       notes = domain.status_notes[DomainStatus::FORCE_DELETE]
-      notes && notes.include?("Company no: #{contact.ident}")
+      notes_check = notes && notes.include?("Company no: #{contact.ident}")
+      
+      if !notes_check && domain.force_delete_data.present?
+        domain.template_name == 'invalid_company'
+      else
+        notes_check
+      end
     end
   end
 
   def lift_force_delete(contact)
-    contact.registrant_domains.each(&:cancel_force_delete)
+    contact.registrant_domains.each do |domain|
+      next unless domain.force_delete_scheduled?
+
+      domain.cancel_force_delete
+    end
   end
 
   def delete_process(contact)
+    Rails.logger.info("Processing company details for contact #{contact.id} with ident: #{contact.ident} (#{contact.ident.class})")
     company_details_response = contact.return_company_details
 
     if company_details_response.empty?
+      Rails.logger.info("Empty company details response for contact #{contact.id}")
       schedule_force_delete(contact)
 
       return
     end
 
     kandeliik_tekstina = extract_kandeliik_tekstina(company_details_response)
+    Rails.logger.info("Kandeliik tekstina for contact #{contact.id}: #{kandeliik_tekstina}")
 
     if kandeliik_tekstina == PAYMENT_STATEMENT_BUSINESS_REGISTRY_REASON
       soft_delete_company(contact)
@@ -100,7 +125,14 @@ class CompanyRegisterStatusJob < ApplicationJob
 
   def soft_delete_company(contact)
     contact.registrant_domains.reject { |domain| domain.force_delete_scheduled? }.each do |domain|
-      domain.schedule_force_delete(type: :soft)
+      next if domain.force_delete_scheduled?
+
+      domain.schedule_force_delete(
+        type: :soft,
+        notify_by_email: true,
+        reason: 'invalid_company',
+        email: contact.email,
+        notes: "Contact has status #{REGISTRY_STATUSES[contact.company_register_status]}")
     end
 
     puts "Soft delete process initiated for company: #{contact.name} with ID: #{contact.id}"
