@@ -34,7 +34,9 @@ class CompanyRegisterStatusJob < ApplicationJob
     when Contact::REGISTERED
       lift_force_delete(contact) if check_for_force_delete(contact)
     when Contact::LIQUIDATED
-      ContactInformMailer.company_liquidation(contact: contact).deliver_now
+      unless contact.company_register_status == Contact::LIQUIDATED
+        ContactInformMailer.company_liquidation(contact: contact).deliver_now
+      end
     else
       delete_process(contact)
     end
