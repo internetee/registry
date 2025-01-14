@@ -79,7 +79,7 @@ class CompanyRegisterStatusJob < ApplicationJob
       notes_check = notes && notes.include?("Company no: #{contact.ident}")
       
       if !notes_check && domain.force_delete_data.present?
-        domain.force_delete_data['template_name'] == 'invalid_company'
+        domain.template_name == 'invalid_company'
       else
         notes_check
       end
