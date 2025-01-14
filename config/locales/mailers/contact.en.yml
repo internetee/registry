@@ -4,3 +4,7 @@ en:
       subject: >-
         Teie domeenide kontakt epostiaadress on muutunud
         / Contact e-mail addresses of your domains have changed [%{contact_code}]
+    identification_requested:
+      subject: >-
+        Palun kinnitage oma isik domeeni toimingute jätkamiseks
+        / Please verify your identity to proceed with domain operations
