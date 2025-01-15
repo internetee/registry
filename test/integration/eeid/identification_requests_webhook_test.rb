@@ -32,7 +32,10 @@ class Eeid::IdentificationRequestsWebhookTest < ActionDispatch::IntegrationTest
     assert_equal({ 'status' => 'success' }, JSON.parse(response.body))
     assert_not_nil @contact.reload.verified_at
     assert_equal @contact.verification_id, '123'
-    assert_notify_registrar('Successful Contact Verification')
+    assert_notify_registrar(
+      "Teade: Kontakti [#{@contact.code}] kinnitamine edukalt lõpule viidud " \
+        "/ Notification: Contact [#{@contact.code}] verification successfully completed"
+    )
   end
 
   test 'should return unauthorized for invalid HMAC signature' do

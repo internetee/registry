@@ -23,7 +23,7 @@ class ReppV1ContactsVerifyTest < ActionDispatch::IntegrationTest
           claims_required: [{ type: 'sub', value: "#{@contact.ident_country_code}#{@contact.ident}" }],
           reference: @contact.code
         }
-      ).to_return(status: 200, body: { id: '123' }.to_json, headers: { 'Content-Type' => 'application/json' })
+      ).to_return(status: 200, body: { id: '123', link: 'http://link' }.to_json, headers: { 'Content-Type' => 'application/json' })
   end
 
   def test_returns_error_when_not_found
@@ -47,7 +47,10 @@ class ReppV1ContactsVerifyTest < ActionDispatch::IntegrationTest
     assert contact.present?
     assert contact.ident_request_sent_at
     assert_nil contact.verified_at
-    assert_notify_contact('Identification requested')
+    assert_notify_contact(
+      'Palun kinnitage oma isik domeeni toimingute jätkamiseks ' \
+        '/ Please verify your identity to proceed with domain operations'
+    )
   end
 
   def test_handles_non_epp_error

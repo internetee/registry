@@ -6,7 +6,7 @@ Tere <%= contact.name %>,
 
 Teie registripidaja <%= registrar.name %> on palunud teil kinnitada oma isikut, et jätkata domeeni toimingutega. 
 Palun kinnitage oma isikut, klõpsates alloleval lingil:
-<%= @verification_link %>
+<%= @verification_link + "?ui_locales=et" %>
 
 Kontaktandmed:
 <%= render 'mailers/shared/registrant/registrant.et.text', registrant: contact, with_phone: true %>
@@ -21,7 +21,7 @@ Hi <%= contact.name %>,
 
 Your registrar <%= registrar.name %> has requested that you verify your identity in order to proceed with domain actions. 
 Please confirm your identity to continue by clicking the link below:
-<%= @verification_link %>
+<%= @verification_link + "?ui_locales=en" %>
 
 Contact information:
 <%= render 'mailers/shared/registrant/registrant.en.text', registrant: contact, with_phone: true %>
