@@ -1,5 +1,6 @@
 15.01.2025
 * Removed Russian transaltios from the automated email templates https://github.com/internetee/registry/issues/2690
+* Improved verification email translations https://github.com/internetee/registry/pull/2737
 
 31.12.2024
 * Fix for expired status in domain history https://github.com/internetee/registry/issues/2665
