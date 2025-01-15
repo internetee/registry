@@ -29,20 +29,3 @@ Registrar of the <%= @domain.name %>:
 You can find an overview of all your domains at the registrant's portal https://registrant.internet.ee/.
 
 <%= render 'mailers/shared/signatures/signature.en.html' %>
-
---------------------------------------
-
-Срок действия домена <%= @domain.name %> истек
-
-Уважаемый регистрант/административный контакт домена .ee
-
-Срок действия доменного имени <%= @domain.name %> истек, и с <%= @domain.on_hold_date %> оно больше не доступно в интернете. У домена указаны неверные контактные данные. Обновление и перенос к другому регистратору заблокированы до исправления контактных данных. Для исправления контактных данных и обновления регистрации вашего домена, пожалуйста, обратитесь в вашему регистратору.
-
-Если доменное имя не продлено, домен <%= @domain.name %> будет удален и <%= @domain.delete_date %> идет на аукцион в .ee среду аукциона. О проведении доменных аукционов читайте здесь https://www.internet.ee/domeny/dogovor-pol-zovatelya-aukcionnoj-sredy#3-usloviya-uchastiya-v-aukcione.
-
-Pегистратор домена <%= @domain.name %>:
-<%= render 'mailers/shared/registrar/registrar.ru.html', registrar: @registrar %>
-
-Обзор всех связанных с вами доменов можете получить на портале регистратора https://registrant.internet.ee/.
-
-<%= render 'mailers/shared/signatures/signature.ru.html' %>
