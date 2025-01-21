@@ -3,6 +3,40 @@ on: [push]
 
 
 jobs:
+  bundle_audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.0
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: config bundler
+        run:  |
+          bundle config set without 'development staging production'
+          bundle config set deployment '[secure]'
+          bundle env
+          head -n1 $(which bundle)
+      - name: Bundle Audit Check
+        run: bundle exec bundle-audit check --update
+
+  brakeman:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.0
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: config bundler
+        run:  |
+          bundle config set without 'development staging production'
+          bundle config set deployment '[secure]'
+          bundle env
+          head -n1 $(which bundle)
+      - name: Run Brakeman
+        run: bundle exec brakeman --quiet --skip-libs --exit-on-warn --ignore-config=.brakeman-ignore
+
   test:
     services:
       postgres:
