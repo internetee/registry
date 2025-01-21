@@ -83,6 +83,8 @@ gem 'strong_migrations'
 
 group :development, :test do
   gem 'pry', '0.15.2'
+  gem 'bundle-audit', require: false
+  gem 'brakeman', require: false
 end
 
 group :test do
