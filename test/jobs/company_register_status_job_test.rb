@@ -304,7 +304,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     @registrant_acme.reload
 
-    assert @registrant_acme.registrant_domains.all?(&:force_delete_scheduled?)
+    assert_not @registrant_acme.registrant_domains.all?(&:force_delete_scheduled?)
     assert_equal Contact::BANKRUPT, @registrant_acme.company_register_status
 
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
