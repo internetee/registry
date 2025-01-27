@@ -29,6 +29,8 @@ class CompanyRegisterStatusJob < ApplicationJob
       lift_force_delete(contact) if check_for_force_delete(contact)
     when Contact::LIQUIDATED
       ContactInformMailer.company_liquidation(contact: contact).deliver_now
+    when Contact::BANKRUPT
+      Rails.logger.info("Company #{contact.ident} is bankrupt. No action needed.")
     else
       delete_process(contact)
     end

@@ -274,7 +274,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end
 
-  def test_companies_with_status_N_should_be_scheduled_for_force_delete
+  def test_companies_with_status_N_should_not_be_scheduled_for_force_delete
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
@@ -303,7 +303,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     @registrant_acme.reload
 
-    assert @registrant_acme.registrant_domains.all?(&:force_delete_scheduled?)
+    assert_not @registrant_acme.registrant_domains.all?(&:force_delete_scheduled?)
     assert_equal Contact::BANKRUPT, @registrant_acme.company_register_status
 
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
