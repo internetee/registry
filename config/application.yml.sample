@@ -261,5 +261,7 @@ whitelist_companies:
   - '87654321'
 
 eeid_base_url: 'http://eid.test'
-ident_service_client_id: 123
-ident_service_client_secret: 321
+priv_ident_service_client_id: 123
+priv_ident_service_client_secret: 321
+birthday_ident_service_client_id: 456
+birthday_ident_service_client_secret: 654

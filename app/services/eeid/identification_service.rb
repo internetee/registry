@@ -3,11 +3,11 @@
 module Eeid
   # This class handles identification services.
   class IdentificationService < Base
-    CLIENT_ID = ENV['ident_service_client_id']
-    CLIENT_SECRET = ENV['ident_service_client_secret']
-
-    def initialize
-      super(CLIENT_ID, CLIENT_SECRET)
+    def initialize(ident_type = 'priv')
+      super(
+        ENV["#{ident_type}_ident_service_client_id"],
+        ENV["#{ident_type}_ident_service_client_secret"]
+      )
     end
 
     def create_identification_request(request_params)

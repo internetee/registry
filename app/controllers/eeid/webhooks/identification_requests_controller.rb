@@ -17,7 +17,7 @@ module Eeid
         return render_invalid_signature unless valid_hmac_signature?(request.headers['X-HMAC-Signature'])
 
         contact = Contact.find_by_code(permitted_params[:reference])
-        poi = catch_poi
+        poi = catch_poi(contact)
         verify_contact(contact)
         inform_registrar(contact, poi)
         render json: { status: 'success' }, status: :ok
@@ -55,8 +55,8 @@ module Eeid
         end
       end
 
-      def catch_poi
-        ident_service = Eeid::IdentificationService.new
+      def catch_poi(contact)
+        ident_service = Eeid::IdentificationService.new(contact.ident_type)
         response = ident_service.get_proof_of_identity(permitted_params[:identification_request_id])
         raise StandardError, response[:error] if response[:error].present?
 
