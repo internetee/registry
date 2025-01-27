@@ -37,6 +37,8 @@ class CompanyRegisterStatusJob < ApplicationJob
       unless contact.company_register_status == Contact::LIQUIDATED
         ContactInformMailer.company_liquidation(contact: contact).deliver_now
       end
+    when Contact::BANKRUPT
+      Rails.logger.info("Company #{contact.ident} is bankrupt. No action needed.")
     else
       delete_process(contact)
     end
