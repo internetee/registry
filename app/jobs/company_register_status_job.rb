@@ -36,18 +36,22 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def handle_company_statuses(contact, company_status)
+    return if company_status == Contact::BANKRUPT
+
     case company_status
     when Contact::REGISTERED
       lift_force_delete(contact) if check_for_force_delete(contact)
     when Contact::LIQUIDATED
-      unless contact.company_register_status == Contact::LIQUIDATED
-        ContactInformMailer.company_liquidation(contact: contact).deliver_now
-      end
-    when Contact::BANKRUPT
-      Rails.logger.info("Company #{contact.ident} is bankrupt. No action needed.")
+      send_email_for_liquidation(contact)
     else
       delete_process(contact)
     end
+  end
+
+  def send_email_for_liquidation(contact)
+    return if contact.company_register_status == Contact::LIQUIDATED
+
+    ContactInformMailer.company_liquidation(contact: contact).deliver_now
   end
 
   def sampling_registrant_contact(days_interval)
