@@ -30,6 +30,12 @@ class CompanyRegisterStatusJob < ApplicationJob
 
     company_status = contact.return_company_status
 
+    handle_company_statuses(contact, company_status)
+    status = company_status.blank? ? Contact::DELETED : company_status
+    update_validation_company_status(contact:contact , status: status)
+  end
+
+  def handle_company_statuses(contact, company_status)
     case company_status
     when Contact::REGISTERED
       lift_force_delete(contact) if check_for_force_delete(contact)
@@ -42,9 +48,6 @@ class CompanyRegisterStatusJob < ApplicationJob
     else
       delete_process(contact)
     end
-
-    status = company_status.blank? ? Contact::DELETED : company_status
-    update_validation_company_status(contact:contact , status: status)
   end
 
   def sampling_registrant_contact(days_interval)
