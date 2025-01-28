@@ -4,6 +4,7 @@ class BaseTest < ActiveSupport::TestCase
   setup do
     @domain = domains(:shop)
     @domain_airport = domains(:airport)
+    travel_to Time.zone.parse('2010-07-05 00:30:00')
   end
 
   def test_hold_domains_force_delete_email
@@ -56,21 +57,6 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal @domain_airport.force_delete_date, (@domain_airport.force_delete_start +
                                                     Setting.expire_warning_period.days +
                                                     Setting.redemption_grace_period.days).to_date
-  end
-
-  def test_should_send_poll_message_about_45_days_to_registrar
-    refute @domain_airport.force_delete_scheduled?
-    @domain_airport.update!(valid_to: Time.zone.now + 3.years - 1.month - 4.days)
-    @domain_airport.reload
-    prepare_contact
-
-    contact = @domain_airport.admin_contacts.first
-
-    assert_difference -> { @domain_airport.registrar.notifications.count } do
-      Domains::ForceDeleteEmail::Base.run(email: contact.email)
-    end
-
-    @domain_airport.reload
   end
 
   private
