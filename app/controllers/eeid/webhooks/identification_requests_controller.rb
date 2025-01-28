@@ -14,9 +14,10 @@ module Eeid
       # POST /eeid/webhooks/identification_requests
       def create
         return render_unauthorized unless ip_whitelisted?
-        return render_invalid_signature unless valid_hmac_signature?(request.headers['X-HMAC-Signature'])
 
         contact = Contact.find_by_code(permitted_params[:reference])
+        return render_invalid_signature unless valid_hmac_signature?(contact.ident_type, request.headers['X-HMAC-Signature'])
+
         poi = catch_poi(contact)
         verify_contact(contact)
         inform_registrar(contact, poi)
@@ -39,8 +40,8 @@ module Eeid
         render json: { error: 'Invalid HMAC signature' }, status: :unauthorized
       end
 
-      def valid_hmac_signature?(hmac_signature)
-        secret = ENV['ident_service_client_secret']
+      def valid_hmac_signature?(ident_type, hmac_signature)
+        secret = ENV["#{ident_type}_ident_service_client_secret"]
         computed_signature = OpenSSL::HMAC.hexdigest('SHA256', secret, request.raw_post)
         ActiveSupport::SecurityUtils.secure_compare(computed_signature, hmac_signature)
       end
