@@ -17,7 +17,6 @@ class OrgRegistrantPhoneCheckerJob < ApplicationJob
 
     Contact.where(ident_type: 'org', ident_country_code: 'EE').joins(:registrant_domains).each do |registrant_user|
       is_phone_number_matching = check_the_registrant_phone_number(registrant_user)
-
       call_disclosure_action(is_phone_number_matching, registrant_user)
       sleep(spam_delay)
     end
@@ -62,27 +61,12 @@ class OrgRegistrantPhoneCheckerJob < ApplicationJob
 
   def check_the_registrant_phone_number(registrant_user)
     phone_numbers = fetch_phone_number_from_company_register(registrant_user.ident)
-
-    # TODO: implement phone number check
-    # If phone number is matching with registrant phone number, then return return true, else return false
-
     phone_numbers.any? do |phone_number|
-      puts '---- business registry phone number ----'
-      puts phone_number
-      puts '---- registrant phone number ----'
-      puts registrant_user.phone
-      puts '---- format phone number ----'
-      puts format_phone_number(phone_number)
-      puts '---- format registrant phone number ----'
-      puts format_phone_number(registrant_user.phone)
-
       format_phone_number(phone_number) == format_phone_number(registrant_user.phone)
     end
   end
 
   def format_phone_number(phone_number)
-    # phone number from business registry is "+3725655662"
-    # we need to format it to "+3725655662"
     phone_number.gsub(/\D/, '')
   end
 
