@@ -42,7 +42,8 @@ module Actions
       {
         claims_required: [
           { type: 'birthdate', value: contact.ident },
-          { type: 'name', value: contact.name }
+          { type: 'name', value: contact.name },
+          { type: 'country', value: contact.ident_country_code }
         ],
         reference: contact.code
       }
