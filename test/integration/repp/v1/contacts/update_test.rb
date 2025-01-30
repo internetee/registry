@@ -142,4 +142,31 @@ class ReppV1ContactsUpdateTest < ActionDispatch::IntegrationTest
     ENV["shunter_default_threshold"] = '10000'
     ENV["shunter_enabled"] = 'false'
   end
+
+  def test_validates_phone_number_after_update
+    @contact.update!(
+      phone: '+372.555666777',
+      ident_type: 'org',
+      ident_country_code: 'EE',
+      ident: '12345678'
+    )
+
+    request_body = {
+      contact: {
+        phone: '+372.123456789'
+      }
+    }
+
+    assert_enqueued_with(job: OrgRegistrantPhoneCheckerJob) do
+      put "/repp/v1/contacts/#{@contact.code}", headers: @auth_headers, params: request_body
+    end
+
+    assert_response :ok
+    json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+
+    @contact.reload
+    assert_equal '+372.123456789', @contact.phone
+  end
 end

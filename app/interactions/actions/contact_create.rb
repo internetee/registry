@@ -12,11 +12,12 @@ module Actions
     def call
       maybe_remove_address
       maybe_attach_legal_doc
-      validate_ident
+      maybe_validate_ident
       maybe_change_email
       # maybe_company_is_relevant
       commit
-      validate_contact
+      maybe_validate_phone_number
+      maybe_validate_contact
     end
 
     def maybe_change_email
@@ -45,7 +46,7 @@ module Actions
       contact.country_code = nil
     end
 
-    def validate_ident
+    def maybe_validate_ident
       validate_ident_integrity
       validate_ident_birthday
 
@@ -102,12 +103,16 @@ module Actions
       contact.save
     end
 
-    def validate_contact
+    def maybe_validate_contact
       return if @error || !contact.valid?
 
       [:regex, :mx].each do |m|
         contact.verify_email(check_level: m, single_email: true)
       end
+    end
+
+    def maybe_validate_phone_number
+      OrgRegistrantPhoneCheckerJob.perform_later(type: 'single', registrant_user_code: contact.code)
     end
   end
 end

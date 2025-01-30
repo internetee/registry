@@ -253,4 +253,32 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
 
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end
+
+  def test_validates_phone_number_after_create
+    request_body = {
+      contact: {
+        name: 'Test Company',
+        phone: '+372.51111112',
+        email: 'test@company.com',
+        ident: {
+          ident_type: 'org',
+          ident_country_code: 'EE',
+          ident: '12345678',
+        },
+      },
+    }
+
+    assert_enqueued_with(job: OrgRegistrantPhoneCheckerJob) do
+      post '/repp/v1/contacts', headers: @auth_headers, params: request_body
+    end
+
+    assert_response :ok
+    json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+
+    contact = Contact.find_by(code: json[:data][:contact][:code])
+    assert contact.present?
+    assert_equal '+372.51111112', contact.phone
+  end
 end

@@ -1,7 +1,8 @@
 class OrgRegistrantPhoneCheckerJob < ApplicationJob
   queue_as :default
 
-  def perform(type: 'bulk', registrant_user_code: nil, spam_delay: 1 )
+  def perform(type: 'bulk', registrant_user_code: nil, spam_delay: 1)
+    puts '??? PERFROMED ???'
     case type
     when 'bulk'
       execute_bulk_checker(spam_delay)
