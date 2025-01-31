@@ -206,8 +206,6 @@ class Domain < ApplicationRecord
 
   validate :statuses_uniqueness
 
-  validate :validate_admin_contact_type
-
   def security_level_resolver
     resolver = Dnsruby::Resolver.new(nameserver: Dnskey::RESOLVERS)
     resolver.do_validation = true
@@ -862,20 +860,7 @@ class Domain < ApplicationRecord
     return true if registrant.org?
     return false unless registrant.priv?
     
-    case registrant.ident_type
-    when 'birthday'
-      birth_date = Date.parse(registrant.ident)
-      calculate_age(birth_date) < 18
-    when 'priv'
-      if registrant.ident_country_code == 'EE' && registrant.ident.match?(/^\d{11}$/)
-        birth_date = parse_estonian_id_birth_date(registrant.ident)
-        calculate_age(birth_date) < 18
-      else
-        false
-      end
-    else
-      false
-    end
+    underage_registrant?
   end
 
   def require_tech_contacts?
@@ -883,6 +868,33 @@ class Domain < ApplicationRecord
   end
 
   private
+
+  def underage_registrant?
+    case registrant.ident_type
+    when 'birthday'
+      underage_by_birthday?
+    when 'priv'
+      underage_by_estonian_id?
+    else
+      false
+    end
+  end
+
+  def underage_by_birthday?
+    birth_date = Date.parse(registrant.ident)
+    calculate_age(birth_date) < 18
+  end
+
+  def underage_by_estonian_id?
+    return false unless estonian_id?
+    
+    birth_date = parse_estonian_id_birth_date(registrant.ident)
+    calculate_age(birth_date) < 18
+  end
+
+  def estonian_id?
+    registrant.ident_country_code == 'EE' && registrant.ident.match?(/^\d{11}$/)
+  end
 
   def calculate_age(birth_date)
     ((Time.zone.now - birth_date.to_time) / 1.year.seconds).floor
@@ -903,13 +915,5 @@ class Domain < ApplicationRecord
                  end
                  
     Date.parse("#{birth_year}-#{month}-#{day}")
-  end
-
-  def validate_admin_contact_type
-    admin_contacts.each do |contact|
-      if contact.org?
-        errors.add(:admin_contacts, 'Admin contact must be a private person')
-      end
-    end
   end
 end
