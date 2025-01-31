@@ -66,13 +66,19 @@ class ReppV1ContactsVerifyTest < ActionDispatch::IntegrationTest
     assert_emails 0
   end
 
-  def test_does_not_verify_already_verified_contact
+  def test_reverify_already_verified_contact
     @contact.update!(verified_at: Time.zone.now - 1.day)
     post "/repp/v1/contacts/verify/#{@contact.code}", headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :bad_request
-    assert_equal 'Contact already verified', json[:message]
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+
+    contact = Contact.find_by(code: json[:data][:contact][:code])
+    assert contact.present?
+    assert contact.ident_request_sent_at
+    assert_nil contact.verified_at
   end
 
   def test_returns_error_response_if_throttled

@@ -4,7 +4,7 @@ class Eeid::IdentificationRequestsWebhookTest < ActionDispatch::IntegrationTest
   setup do
     @contact = contacts(:john)
     @secret = 'valid_secret'
-    ENV['ident_service_client_secret'] = @secret
+    ENV['priv_ident_service_client_secret'] = @secret
     payload = {
       identification_request_id: '123',
       reference: @contact.code

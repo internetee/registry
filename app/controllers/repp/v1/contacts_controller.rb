@@ -136,7 +136,7 @@ module Repp
       desc 'Get proof of identity pdf file for a contact'
       def download_poi
         authorize! :verify, Epp::Contact
-        ident_service = Eeid::IdentificationService.new
+        ident_service = Eeid::IdentificationService.new(@contact.ident_type)
         response = ident_service.get_proof_of_identity(@contact.verification_id)
 
         send_data response[:data], filename: "proof_of_identity_#{@contact.verification_id}.pdf",
