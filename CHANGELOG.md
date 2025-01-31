@@ -1,4 +1,5 @@
 31.01.2025
+* Added birthday ident verification https://github.com/internetee/registry/pull/2740
 * Admin contact required conditions https://github.com/internetee/registry/pull/2743
 
 28.01.2025
