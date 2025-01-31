@@ -173,7 +173,7 @@ class Domain < ApplicationRecord
 
   def self.tech_contacts_validation_rules(for_org:)
     {
-      min: -> { for_org ? Setting.tech_contacts_min_count : 0 },
+      min: -> { 0 },
       max: -> { Setting.tech_contacts_max_count }
     }
   end

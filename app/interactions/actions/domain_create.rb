@@ -15,7 +15,7 @@ module Actions
       assign_registrant
       assign_nameservers
       assign_domain_contacts
-      domain.attach_default_contacts
+      # domain.attach_default_contacts
       assign_expiry_time
       maybe_attach_legal_doc
 

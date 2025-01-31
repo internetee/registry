@@ -381,6 +381,20 @@ class Epp::Domain < Domain
 
       result
     end
+
+    def admin_contacts_validation_rules(for_org:)
+      {
+        min: -> { for_org ? Setting.admin_contacts_min_count : 0 },
+        max: -> { Setting.admin_contacts_max_count }
+      }
+    end
+
+    def tech_contacts_validation_rules(for_org:)
+      {
+        min: 0,
+        max: -> { Setting.tech_contacts_max_count }
+      }
+    end
   end
 
   private
@@ -390,5 +404,30 @@ class Epp::Domain < Domain
     return false if new_registrant.try(:identical_to?, registrant)
 
     registrant.code != code
+  end
+
+  def admin_contacts_validation_rules(for_org:)
+    {
+      min: -> { for_org ? Setting.admin_contacts_min_count : 0 },
+      max: -> { Setting.admin_contacts_max_count }
+    }
+  end
+
+  def require_admin_contacts?
+    return true if registrant.org?
+    return false unless registrant.priv?
+    
+    underage_registrant?
+  end
+
+  def tech_contacts_validation_rules(for_org:)
+    {
+      min: 0, # Технический контакт опционален для всех
+      max: -> { Setting.tech_contacts_max_count }
+    }
+  end
+
+  def require_tech_contacts?
+    registrant.present? && registrant.org?
   end
 end

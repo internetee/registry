@@ -235,9 +235,7 @@ class DomainTest < ActiveSupport::TestCase
   def test_validates_tech_contact_count
     domain_contact_attributes = domain_contacts(:shop_william).dup.attributes
     domain = valid_domain
-    min_count = 1
     max_count = 2
-    Setting.tech_contacts_min_count = min_count
     Setting.tech_contacts_max_count = max_count
 
     domain.registrant.update!(ident_type: 'org')
@@ -245,15 +243,11 @@ class DomainTest < ActiveSupport::TestCase
     assert domain.registrant.org?
 
     domain.tech_domain_contacts.clear
-    min_count.times { domain.tech_domain_contacts.build(domain_contact_attributes) }
     assert domain.valid?, proc { domain.errors.full_messages }
 
     domain.tech_domain_contacts.clear
     max_count.times { domain.tech_domain_contacts.build(domain_contact_attributes) }
     assert domain.valid?, proc { domain.errors.full_messages }
-
-    domain.tech_domain_contacts.clear
-    assert domain.invalid?
 
     domain.tech_domain_contacts.clear
     max_count.next.times { domain.tech_domain_contacts.build(domain_contact_attributes) }

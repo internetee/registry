@@ -639,7 +639,7 @@ class EppDomainCreateBaseTest < EppTestCase
     assert_equal name, domain.name
     assert_equal registrant, domain.registrant
     assert_equal [contact], domain.admin_contacts
-    assert_equal [contact], domain.tech_contacts
+    assert_empty domain.tech_contacts
     assert_not_empty domain.transfer_code
 
     default_registration_period = 1.year + 1.day
