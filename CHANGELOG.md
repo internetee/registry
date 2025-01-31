@@ -1,3 +1,6 @@
+31.01.2025
+* Admin contact required conditions https://github.com/internetee/registry/pull/2743
+
 28.01.2025
 * Adding technical contact is now optional https://github.com/internetee/registry/issues/2701
 * Adding admin contact is now optional for private regsitrants https://github.com/internetee/registry/issues/2702
