@@ -493,16 +493,13 @@ class DomainTest < ActiveSupport::TestCase
     domain.reload
     assert_not domain.registrant.org?
 
-    # Valid without any admin contacts
     domain.admin_domain_contacts.clear
     assert domain.valid?, proc { domain.errors.full_messages }
 
-    # Valid with some admin contacts
     domain.admin_domain_contacts.clear
     max_count.pred.times { domain.admin_domain_contacts.build(domain_contact_attributes) }
     assert domain.valid?, proc { domain.errors.full_messages }
 
-    # Invalid when exceeding max contacts
     domain.admin_domain_contacts.clear
     max_count.next.times { domain.admin_domain_contacts.build(domain_contact_attributes) }
     assert domain.invalid?
@@ -518,19 +515,110 @@ class DomainTest < ActiveSupport::TestCase
     domain.reload
     assert_not domain.registrant.org?
 
-    # Valid without any tech contacts
     domain.tech_domain_contacts.clear
     assert domain.valid?, proc { domain.errors.full_messages }
 
-    # Valid with some tech contacts
     domain.tech_domain_contacts.clear
     max_count.pred.times { domain.tech_domain_contacts.build(domain_contact_attributes) }
     assert domain.valid?, proc { domain.errors.full_messages }
 
-    # Invalid when exceeding max contacts
     domain.tech_domain_contacts.clear
     max_count.next.times { domain.tech_domain_contacts.build(domain_contact_attributes) }
     assert domain.invalid?
+  end
+
+  def test_validates_admin_contact_required_for_legal_entity_registrant
+    domain = valid_domain
+    registrant = domain.registrant
+    
+    registrant.update!(ident_type: 'org')
+    domain.reload
+    assert registrant.org?
+    
+    domain.admin_domain_contacts.clear
+    assert domain.invalid?
+    assert_includes domain.errors.full_messages, 'Admin domain contacts Admin contacts count must be between 1-10'
+    
+    domain.admin_domain_contacts.build(contact: contacts(:john))
+    assert domain.valid?
+  end
+
+  def test_validates_admin_contact_requirements_by_registrant_type
+    domain = valid_domain
+    registrant = domain.registrant
+    
+    registrant.update!(ident_type: 'org')
+    domain.reload
+    assert registrant.org?
+    domain.admin_domain_contacts.clear
+    assert domain.invalid?
+    
+    registrant.update!(
+      ident_type: 'birthday',
+      ident: (Time.zone.now - 20.years).strftime('%Y-%m-%d')
+    )
+    domain.reload
+    assert registrant.priv?
+    domain.admin_domain_contacts.clear
+    assert domain.valid?
+    
+    registrant.update!(
+      ident_type: 'birthday',
+      ident: (Time.zone.now - 16.years).strftime('%Y-%m-%d')
+    )
+    domain.reload
+    assert registrant.priv?
+    domain.admin_domain_contacts.clear
+    assert domain.invalid?
+  end
+
+  def test_validates_admin_contact_required_for_underage_estonian_id
+    domain = valid_domain
+    registrant = domain.registrant
+    
+    registrant.update!(
+      ident_type: 'priv',
+      ident: '61203150222',
+      ident_country_code: 'EE'
+    )
+    domain.reload
+    
+    domain.admin_domain_contacts.clear
+    assert domain.invalid?
+    assert_includes domain.errors.full_messages, 'Admin domain contacts Admin contacts count must be between 1-10'
+    
+    domain.admin_domain_contacts.build(contact: contacts(:john))
+    assert domain.valid?
+  end
+
+  def test_validates_admin_contact_optional_for_adult_estonian_id
+    domain = valid_domain
+    registrant = domain.registrant
+    
+    registrant.update!(
+      ident_type: 'priv',
+      ident: '38903111310',
+      ident_country_code: 'EE'
+    )
+    domain.reload
+    
+    domain.admin_domain_contacts.clear
+    assert domain.valid?
+  end
+
+  def test_validates_admin_contact_optional_for_non_estonian_private_id
+    domain = valid_domain
+    registrant = domain.registrant
+    
+    registrant.update!(
+      ident_type: 'priv',
+      ident: '12345678',
+      ident_country_code: 'LV'
+    )
+    domain.reload
+    
+    domain.admin_domain_contacts.clear
+    assert domain.valid?
   end
 
   private

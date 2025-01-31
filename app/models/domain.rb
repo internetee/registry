@@ -206,6 +206,8 @@ class Domain < ApplicationRecord
 
   validate :statuses_uniqueness
 
+  validate :validate_admin_contact_type
+
   def security_level_resolver
     resolver = Dnsruby::Resolver.new(nameserver: Dnskey::RESOLVERS)
     resolver.do_validation = true
@@ -857,10 +859,57 @@ class Domain < ApplicationRecord
   end
 
   def require_admin_contacts?
-    registrant.present? && registrant.org?
+    return true if registrant.org?
+    return false unless registrant.priv?
+    
+    case registrant.ident_type
+    when 'birthday'
+      birth_date = Date.parse(registrant.ident)
+      calculate_age(birth_date) < 18
+    when 'priv'
+      if registrant.ident_country_code == 'EE' && registrant.ident.match?(/^\d{11}$/)
+        birth_date = parse_estonian_id_birth_date(registrant.ident)
+        calculate_age(birth_date) < 18
+      else
+        false
+      end
+    else
+      false
+    end
   end
 
   def require_tech_contacts?
     registrant.present? && registrant.org?
+  end
+
+  private
+
+  def calculate_age(birth_date)
+    ((Time.zone.now - birth_date.to_time) / 1.year.seconds).floor
+  end
+
+  def parse_estonian_id_birth_date(id_code)
+    century_number = id_code[0].to_i
+    year_digits = id_code[1..2]
+    month = id_code[3..4]
+    day = id_code[5..6]
+    
+    birth_year = case century_number
+                 when 1, 2 then "18#{year_digits}"
+                 when 3, 4 then "19#{year_digits}"
+                 when 5, 6 then "20#{year_digits}"
+                 else
+                   raise ArgumentError, "Invalid century number in Estonian ID"
+                 end
+                 
+    Date.parse("#{birth_year}-#{month}-#{day}")
+  end
+
+  def validate_admin_contact_type
+    admin_contacts.each do |contact|
+      if contact.org?
+        errors.add(:admin_contacts, 'Admin contact must be a private person')
+      end
+    end
   end
 end

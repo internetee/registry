@@ -146,4 +146,98 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
 
     assert @domain.admin_contacts.any?
   end
+
+  def test_cannot_remove_admin_contact_for_legal_entity
+    @domain.registrant.update!(ident_type: 'org')
+    @domain.reload
+    assert @domain.registrant.org?
+    
+    contact = @domain.admin_contacts.last
+    payload = { contacts: [ { code: contact.code, type: 'admin' } ] }
+    
+    delete "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+    
+    assert_response :bad_request
+    assert_equal 2004, json[:code]
+    assert @domain.admin_contacts.any?
+  end
+
+  def test_cannot_remove_admin_contact_for_underage_private_registrant
+    @domain.registrant.update!(
+      ident_type: 'birthday',
+      ident: (Time.zone.now - 16.years).strftime('%Y-%m-%d')
+    )
+    @domain.reload
+    assert @domain.registrant.priv?
+    
+    contact = @domain.admin_contacts.last
+    payload = { contacts: [ { code: contact.code, type: 'admin' } ] }
+    
+    delete "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+    
+    assert_response :bad_request
+    assert_equal 2004, json[:code]
+    assert @domain.admin_contacts.any?
+  end
+
+  def test_can_remove_admin_contact_for_adult_private_registrant
+    @domain.registrant.update!(
+      ident_type: 'birthday',
+      ident: (Time.zone.now - 20.years).strftime('%Y-%m-%d')
+    )
+    @domain.reload
+    assert @domain.registrant.priv?
+    
+    contact = @domain.admin_contacts.last
+    payload = { contacts: [ { code: contact.code, type: 'admin' } ] }
+    
+    delete "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+    
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_empty @domain.admin_contacts
+  end
+
+  def test_cannot_remove_admin_contact_for_underage_estonian_id
+    @domain.registrant.update!(
+      ident_type: 'priv',
+      ident: '61203150222',
+      ident_country_code: 'EE'
+    )
+    @domain.reload
+    assert @domain.registrant.priv?
+    
+    contact = @domain.admin_contacts.last
+    payload = { contacts: [ { code: contact.code, type: 'admin' } ] }
+    
+    delete "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+    
+    assert_response :bad_request
+    assert_equal 2004, json[:code]
+    assert @domain.admin_contacts.any?
+  end
+
+  def test_can_remove_admin_contact_for_adult_estonian_id
+    @domain.registrant.update!(
+      ident_type: 'priv',
+      ident: '38903111310',
+      ident_country_code: 'EE'
+    )
+    @domain.reload
+    assert @domain.registrant.priv?
+    
+    contact = @domain.admin_contacts.last
+    payload = { contacts: [ { code: contact.code, type: 'admin' } ] }
+    
+    delete "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+    
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_empty @domain.admin_contacts
+  end
 end
