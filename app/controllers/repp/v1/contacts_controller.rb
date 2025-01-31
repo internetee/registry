@@ -94,7 +94,6 @@ module Repp
         action = Actions::ContactUpdate.new(@contact, contact_params_with_address(required: false),
                                             contact_params[:legal_document],
                                             contact_ident_params(required: false), current_user)
-
         unless action.call
           handle_errors(@contact)
           return

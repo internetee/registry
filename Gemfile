@@ -69,7 +69,7 @@ gem 'redis'
 gem 'sidekiq', '~> 7.0'
 
 gem 'company_register', github: 'internetee/company_register',
-                        branch: '4-check-for-company-existence'
+                        branch: 'issues-with-upcoming-data'
 gem 'domain_name'
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'haml', '~> 6.0'
@@ -108,3 +108,6 @@ gem 'pg_query', '>= 0.9.0'
 # token
 gem 'jwt'
 gem 'net-ftp'
+
+# https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
+gem 'concurrent-ruby', '1.3.4'

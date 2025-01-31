@@ -18,7 +18,8 @@ module Actions
       maybe_change_email if new_attributes[:email].present?
       maybe_filtering_old_failed_records
       commit
-      validate_contact
+      maybe_validate_phone_number
+      maybe_validate_contact
     end
 
     def maybe_change_email
@@ -125,7 +126,7 @@ module Actions
       updated
     end
 
-    def validate_contact
+    def maybe_validate_contact
       return if @error || !contact.valid?
 
       [:regex, :mx].each do |m|
@@ -133,6 +134,10 @@ module Actions
       end
 
       @contact.remove_force_delete_for_valid_contact
+    end
+
+    def maybe_validate_phone_number
+      OrgRegistrantPhoneCheckerJob.perform_later(type: 'single', registrant_user_code: contact.code)
     end
   end
 end
