@@ -27,6 +27,8 @@ class OrgRegistrantPhoneCheckerJob < ApplicationJob
 
   def execute_single_checker(registrant_user_code)
     registrant_user = Contact.where(ident_type: 'org', ident_country_code: 'EE').joins(:registrant_domains).find_by(code: registrant_user_code)
+    return if registrant_user.nil?
+
     is_phone_number_matching = check_the_registrant_phone_number(registrant_user)
 
     call_disclosure_action(is_phone_number_matching, registrant_user)
