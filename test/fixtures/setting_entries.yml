@@ -469,3 +469,27 @@ ip_whitelist_max_count:
   format: integer
   created_at: <%= Time.zone.parse('2010-07-05') %>
   updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+admin_contacts_required_for_org:
+  code: admin_contacts_required_for_org
+  value: 'true'
+  group: domain_validation
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+admin_contacts_required_for_minors:
+  code: admin_contacts_required_for_minors
+  value: 'true'
+  group: domain_validation
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+admin_contacts_allowed_ident_type:
+  code: admin_contacts_allowed_ident_type
+  value: '{"birthday":true,"priv":true,"org":false}'
+  group: domain_validation
+  format: array
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>

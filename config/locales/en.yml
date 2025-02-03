@@ -81,6 +81,7 @@ en:
 
         domain:
           <<: *epp_domain_ar_attributes
+          admin_contact_invalid_ident_type: "Administrative contact with identification type '%{ident_type}' is not allowed"
 
         nameserver:
           attributes:

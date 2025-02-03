@@ -87,6 +87,17 @@ class SettingEntry < ApplicationRecord
   end
 
   def array_format
-    JSON.parse(value).to_a
+    begin
+      if value.is_a?(String)
+        JSON.parse(value)
+      elsif value.is_a?(Hash)
+        value
+      else
+        { 'birthday' => true, 'priv' => true, 'org' => true }
+      end
+    rescue JSON::ParserError => e
+      puts "JSON Parse error: #{e.message}"
+      { 'birthday' => true, 'priv' => true, 'org' => true }
+    end
   end
 end

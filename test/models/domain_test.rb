@@ -9,6 +9,9 @@ class DomainTest < ActiveSupport::TestCase
     @original_max_admin_contact_count = Setting.admin_contacts_max_count
     @original_min_tech_contact_count = Setting.tech_contacts_min_count
     @original_max_tech_contact_count = Setting.tech_contacts_max_count
+    @original_admin_contacts_required_for_org = Setting.admin_contacts_required_for_org
+    @original_admin_contacts_required_for_minors = Setting.admin_contacts_required_for_minors
+    @original_admin_contacts_allowed_ident_type = Setting.admin_contacts_allowed_ident_type
   end
 
   teardown do
@@ -17,6 +20,9 @@ class DomainTest < ActiveSupport::TestCase
     Setting.admin_contacts_max_count = @original_max_admin_contact_count
     Setting.tech_contacts_min_count = @original_min_tech_contact_count
     Setting.tech_contacts_max_count = @original_max_tech_contact_count
+    Setting.admin_contacts_required_for_org = @original_admin_contacts_required_for_org
+    Setting.admin_contacts_required_for_minors = @original_admin_contacts_required_for_minors
+    Setting.admin_contacts_allowed_ident_type = @original_admin_contacts_allowed_ident_type
   end
 
   def test_valid_domain_is_valid
@@ -611,6 +617,42 @@ class DomainTest < ActiveSupport::TestCase
     )
     domain.reload
     
+    domain.admin_domain_contacts.clear
+    assert domain.valid?
+  end
+
+  def test_validates_admin_contact_required_for_org_based_on_setting
+    domain = valid_domain
+    domain.registrant.update!(ident_type: 'org')
+    domain.reload
+    
+    # When setting is true
+    Setting.admin_contacts_required_for_org = true
+    domain.admin_domain_contacts.clear
+    assert domain.invalid?
+    assert_includes domain.errors.full_messages, 
+                    'Admin domain contacts Admin contacts count must be between 1-10'
+
+    # When setting is false
+    Setting.admin_contacts_required_for_org = false
+    domain.admin_domain_contacts.clear
+    assert domain.valid?
+  end
+
+  def test_validates_admin_contact_required_for_minors_based_on_setting
+    domain = valid_domain
+    domain.registrant.update!(ident_type: 'birthday', ident: '2010-07-05')
+    domain.reload
+    
+    # When setting is true
+    Setting.admin_contacts_required_for_minors = true
+    domain.admin_domain_contacts.clear
+    assert domain.invalid?
+    assert_includes domain.errors.full_messages, 
+                    'Admin domain contacts Admin contacts count must be between 1-10'
+
+    # When setting is false
+    Setting.admin_contacts_required_for_minors = false
     domain.admin_domain_contacts.clear
     assert domain.valid?
   end

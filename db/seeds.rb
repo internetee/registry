@@ -7,6 +7,19 @@ ActiveRecord::Base.transaction do
   SettingEntry.create(code: 'directo_sales_agent', value: 'HELEN', format: 'string', group: 'billing')
   SettingEntry.create(code: 'admin_contacts_min_count', value: '1', format: 'integer', group: 'domain_validation')
   SettingEntry.create(code: 'admin_contacts_max_count', value: '10', format: 'integer', group: 'domain_validation')
+  SettingEntry.create(code: 'admin_contacts_required_for_org', value: 'true', format: 'boolean', group: 'domain_validation')
+  SettingEntry.create(code: 'admin_contacts_required_for_minors', value: 'true', format: 'boolean', group: 'domain_validation')
+  SettingEntry.create(
+    code: 'admin_contacts_allowed_ident_type', 
+    value: {
+      'birthday' => true,
+      'priv' => true,
+      'org' => true
+    }.to_json, 
+    format: 'array', 
+    group: 'domain_validation'
+  )
+
   SettingEntry.create(code: 'tech_contacts_min_count', value: '1', format: 'integer', group: 'domain_validation')
   SettingEntry.create(code: 'tech_contacts_max_count', value: '10', format: 'integer', group: 'domain_validation')
   SettingEntry.create(code: 'orphans_contacts_in_months', value: '6', format: 'integer', group: 'domain_validation')

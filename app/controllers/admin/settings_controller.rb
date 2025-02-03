@@ -27,12 +27,25 @@ module Admin
 
     def casted_settings
       settings = {}
-
+    
       params[:settings].each do |k, v|
-        settings[k] = { value: v }
+        setting = SettingEntry.find(k)
+        value = if setting.format == 'array'
+          processed_hash = available_options.each_with_object({}) do |option, hash|
+            hash[option] = (v[option] == "true")
+          end
+          processed_hash.to_json
+        else
+          v
+        end
+        settings[k] = { value: value }
       end
-
+    
       settings
+    end
+    
+    def available_options
+      %w[birthday priv org]
     end
   end
 end
