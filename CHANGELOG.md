@@ -1,3 +1,6 @@
+03.02.2025
+* Added nil check for registrant in phone checker job https://github.com/internetee/registry/pull/2746
+
 31.01.2025
 * Added birthday ident verification https://github.com/internetee/registry/pull/2740
 * Business Registry gem update https://github.com/internetee/registry/pull/2741
