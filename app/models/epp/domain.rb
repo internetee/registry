@@ -29,9 +29,8 @@ class Epp::Domain < Domain
     active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
     active_techs = tech_domain_contacts.select { |x| !x.marked_for_destruction? }
 
-    # Проверка количества админ контактов
     if require_admin_contacts? && active_admins.empty?
-      add_epp_error('2306', 'contact', nil, 'Admin contacts are required')
+      add_epp_error('2306', 'contact', nil, 'Admin contact is required')
       ok = false
     end
 
