@@ -75,14 +75,18 @@ class CompanyRegisterStatusJob < ApplicationJob
     contact.registrant_domains.each do |domain|
       next if domain.force_delete_scheduled?
 
-      company_status = company_status.nil? ? 'No information' : REGISTRY_STATUSES[company_status]
+      company_status = if company_status.nil? 
+        'Contact not found in EE business registry' 
+      else
+        "Contact has status #{REGISTRY_STATUSES[company_status]}"
+      end
 
       domain.schedule_force_delete(
         type: :fast_track,
         notify_by_email: true,
         reason: 'invalid_company',
         email: contact.email,
-        notes: "Contact has status #{company_status}"
+        notes: company_status
       )
     end
   end

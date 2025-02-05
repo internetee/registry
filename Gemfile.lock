@@ -304,7 +304,7 @@ GEM
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
     libxml-ruby (3.2.1)
-    logger (1.6.4)
+    logger (1.6.5)
     loofah (2.24.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -349,7 +349,7 @@ GEM
       net-protocol
     net-protocol (0.2.2)
       timeout
-    net-smtp (0.5.0)
+    net-smtp (0.5.1)
       net-protocol
     netrc (0.11.0)
     newrelic-infinite_tracing (8.1.0)
