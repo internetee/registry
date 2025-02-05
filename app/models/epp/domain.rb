@@ -29,6 +29,12 @@ class Epp::Domain < Domain
     active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
     active_techs = tech_domain_contacts.select { |x| !x.marked_for_destruction? }
 
+    # Проверка количества админ контактов
+    if require_admin_contacts? && active_admins.empty?
+      add_epp_error('2306', 'contact', nil, 'Admin contacts are required')
+      ok = false
+    end
+
     # validate registrant here as well
     ([Contact.find(registrant.id)] + active_admins + active_techs).each do |x|
       unless x.valid?
