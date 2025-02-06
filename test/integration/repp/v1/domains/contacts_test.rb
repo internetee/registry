@@ -142,7 +142,7 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
 
     @domain.reload
     assert_response :bad_request
-    assert_equal 2004, json[:code]
+    assert_equal 2306, json[:code]
 
     assert @domain.admin_contacts.any?
   end
@@ -159,7 +159,7 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
     
     assert_response :bad_request
-    assert_equal 2004, json[:code]
+    assert_equal 2306, json[:code]
     assert @domain.admin_contacts.any?
   end
 
@@ -178,7 +178,7 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
     
     assert_response :bad_request
-    assert_equal 2004, json[:code]
+    assert_equal 2306, json[:code]
     assert @domain.admin_contacts.any?
   end
 
@@ -217,7 +217,7 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
     
     assert_response :bad_request
-    assert_equal 2004, json[:code]
+    assert_equal 2306, json[:code]
     assert @domain.admin_contacts.any?
   end
 

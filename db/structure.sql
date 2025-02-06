@@ -1169,6 +1169,38 @@ ALTER SEQUENCE public.epp_sessions_id_seq OWNED BY public.epp_sessions.id;
 
 
 --
+-- Name: free_domain_reservation_holders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.free_domain_reservation_holders (
+    id bigint NOT NULL,
+    user_unique_id character varying NOT NULL,
+    domain_names character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: free_domain_reservation_holders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.free_domain_reservation_holders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: free_domain_reservation_holders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.free_domain_reservation_holders_id_seq OWNED BY public.free_domain_reservation_holders.id;
+
+
+--
 -- Name: invoice_items; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2675,7 +2707,8 @@ CREATE TABLE public.reserved_domains (
     updator_str character varying,
     legacy_id integer,
     name character varying NOT NULL,
-    password character varying NOT NULL
+    password character varying NOT NULL,
+    expire_at timestamp without time zone
 );
 
 
@@ -3183,6 +3216,13 @@ ALTER TABLE ONLY public.epp_logs ALTER COLUMN id SET DEFAULT nextval('public.epp
 --
 
 ALTER TABLE ONLY public.epp_sessions ALTER COLUMN id SET DEFAULT nextval('public.epp_sessions_id_seq'::regclass);
+
+
+--
+-- Name: free_domain_reservation_holders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.free_domain_reservation_holders ALTER COLUMN id SET DEFAULT nextval('public.free_domain_reservation_holders_id_seq'::regclass);
 
 
 --
@@ -3712,6 +3752,14 @@ ALTER TABLE ONLY public.epp_logs
 
 ALTER TABLE ONLY public.epp_sessions
     ADD CONSTRAINT epp_sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: free_domain_reservation_holders free_domain_reservation_holders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.free_domain_reservation_holders
+    ADD CONSTRAINT free_domain_reservation_holders_pkey PRIMARY KEY (id);
 
 
 --
@@ -5667,6 +5715,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241030095636'),
 ('20241104104620'),
 ('20241112093540'),
-('20241112124405');
+('20241112124405'),
+('20241129095711'),
+('20241206085817'),
+('20250204094550');
 
 

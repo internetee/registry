@@ -969,6 +969,98 @@ class EppDomainUpdateBaseTest < EppTestCase
     ENV["shunter_enabled"] = 'false'
   end
 
+  def test_does_not_update_domain_with_invalid_admin_contact_ident_type
+    admin_contact = contacts(:william)
+    admin_contact.update!(ident_type: 'org')
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>shop.test</domain:name>
+              <domain:add>
+                <domain:contact type="admin">#{admin_contact.code}</domain:contact>
+              </domain:add>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :parameter_value_policy_error
+  end
+
+  def test_updates_domain_with_valid_admin_contact_ident_type
+    admin_contact = contacts(:william)
+    admin_contact.update!(ident_type: 'priv')
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>shop.test</domain:name>
+              <domain:add>
+                <domain:contact type="admin">#{admin_contact.code}</domain:contact>
+              </domain:add>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :completed_successfully
+  end
+
+  def test_skips_admin_contact_ident_type_validation_for_existing_contacts
+    admin_contact = contacts(:william)
+    admin_contact.update!(ident_type: 'org')
+    @domain.admin_contacts << admin_contact
+    @domain.save!
+
+    # Change allowed types after domain is created
+    Setting.admin_contacts_allowed_ident_type = { 'birthday' => true, 'priv' => true, 'org' => false }
+
+    # Try to update domain with some other changes
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>shop.test</domain:name>
+              <domain:chg>
+                <domain:authInfo>
+                  <domain:pw>new_pw</domain:pw>
+                </domain:authInfo>
+              </domain:chg>
+            </domain:update>
+          </update>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :completed_successfully
+  end
+
   private
 
   def assert_verification_and_notification_emails

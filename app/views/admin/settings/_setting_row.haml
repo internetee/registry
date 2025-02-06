@@ -1,6 +1,32 @@
 %tr{class: (@errors && @errors.has_key?(setting.code) && "danger")}
   %td.col-md-6= setting.code.humanize
-  - if [TrueClass, FalseClass].include?(setting.retrieve.class)
+  - if setting.format == 'array'
+    %td.col-md-6
+      - available_options = ['birthday', 'priv', 'org']
+      - begin
+        - raw_value = setting.retrieve
+        - current_values = if raw_value.is_a?(Hash)
+          - raw_value
+        - elsif raw_value.is_a?(Array) && raw_value.first.is_a?(Array)
+          - Hash[raw_value]
+        - elsif raw_value.is_a?(Array)
+          - available_options.each_with_object({}) { |opt, hash| hash[opt] = raw_value.include?(opt) }
+        - else
+          - begin
+            - parsed = JSON.parse(raw_value.to_s)
+            - parsed.is_a?(Hash) ? parsed : available_options.each_with_object({}) { |opt, hash| hash[opt] = true }
+          - rescue => e
+            - available_options.each_with_object({}) { |opt, hash| hash[opt] = true }
+      .row
+        - available_options.each do |option|
+          .col-md-4
+            .checkbox
+              %label
+                = check_box_tag "settings[#{setting.id}][#{option}]", "true", current_values[option], 
+                  id: "setting_#{setting.id}_#{option}",
+                  data: { value: current_values[option] }
+                = option.humanize
+  - elsif [TrueClass, FalseClass].include?(setting.retrieve.class)
     %td.col-md-6
       = hidden_field_tag("[settings][#{setting.id}]", '', id: nil)
       = check_box_tag("[settings][#{setting.id}]", true, setting.retrieve)

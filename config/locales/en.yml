@@ -81,6 +81,7 @@ en:
 
         domain:
           <<: *epp_domain_ar_attributes
+          admin_contact_invalid_ident_type: "Admin contact can be private person only"
 
         nameserver:
           attributes:

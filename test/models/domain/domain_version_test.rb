@@ -14,6 +14,7 @@ class DomainVersionTest < ActiveSupport::TestCase
   end
 
   def test_assigns_creator_to_paper_trail_whodunnit
+    Setting.admin_contacts_allowed_ident_type = { 'org' => true, 'priv' => true, 'birthday' => true }
     duplicate_domain = prepare_duplicate_domain
 
     PaperTrail.request.whodunnit = @user.id_role_username

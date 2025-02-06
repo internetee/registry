@@ -29,6 +29,11 @@ class Epp::Domain < Domain
     active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
     active_techs = tech_domain_contacts.select { |x| !x.marked_for_destruction? }
 
+    if require_admin_contacts? && active_admins.empty?
+      add_epp_error('2306', 'contact', nil, 'Admin contact is required')
+      ok = false
+    end
+
     # validate registrant here as well
     ([Contact.find(registrant.id)] + active_admins + active_techs).each do |x|
       unless x.valid?
@@ -36,6 +41,23 @@ class Epp::Domain < Domain
         ok = false
       end
     end
+
+    # Validate admin contacts ident type only for new domains or new admin contacts
+    allowed_types = Setting.admin_contacts_allowed_ident_type
+    if allowed_types.present?
+      active_admins.each do |admin_contact|
+        next if !new_record? && admin_contact.persisted? && !admin_contact.changed?
+        
+        contact = admin_contact.contact
+        unless allowed_types[contact.ident_type] == true
+          add_epp_error('2306', 'contact', contact.code, 
+            I18n.t('activerecord.errors.models.domain.admin_contact_invalid_ident_type',
+                   ident_type: contact.ident_type))
+          ok = false
+        end
+      end
+    end
+
     ok
   end
 
@@ -95,7 +117,8 @@ class Epp::Domain < Domain
         [:base, :key_data_not_allowed],
         [:period, :not_a_number],
         [:period, :not_an_integer],
-        [:registrant, :cannot_be_missing]
+        [:registrant, :cannot_be_missing],
+        [:admin_contacts, :invalid_ident_type]
       ],
       '2308' => [
         [:base, :domain_name_blocked, { value: { obj: 'name', val: name_dirty } }],
@@ -414,15 +437,15 @@ class Epp::Domain < Domain
   end
 
   def require_admin_contacts?
-    return true if registrant.org?
+    return true if registrant.org? && Setting.admin_contacts_required_for_org
     return false unless registrant.priv?
     
-    underage_registrant?
+    underage_registrant? && Setting.admin_contacts_required_for_minors
   end
 
   def tech_contacts_validation_rules(for_org:)
     {
-      min: 0, # Технический контакт опционален для всех
+      min: 0,
       max: -> { Setting.tech_contacts_max_count }
     }
   end

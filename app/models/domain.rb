@@ -186,6 +186,8 @@ class Domain < ApplicationRecord
             object_count: admin_contacts_validation_rules(for_org: false),
             unless: :require_admin_contacts?
 
+  validate :validate_admin_contacts_ident_type, on: :create
+
   validates :tech_domain_contacts,
             object_count: tech_contacts_validation_rules(for_org: true),
             if: :require_tech_contacts?
@@ -857,10 +859,10 @@ class Domain < ApplicationRecord
   end
 
   def require_admin_contacts?
-    return true if registrant.org?
+    return true if registrant.org? && Setting.admin_contacts_required_for_org
     return false unless registrant.priv?
     
-    underage_registrant?
+    underage_registrant? && Setting.admin_contacts_required_for_minors
   end
 
   def require_tech_contacts?
@@ -915,5 +917,19 @@ class Domain < ApplicationRecord
                  end
                  
     Date.parse("#{birth_year}-#{month}-#{day}")
+  end
+
+  def validate_admin_contacts_ident_type
+    allowed_types = Setting.admin_contacts_allowed_ident_type
+    return if allowed_types.blank?
+
+    admin_contacts.each do |contact|
+      next if allowed_types[contact.ident_type] == true
+      
+      errors.add(:admin_contacts, I18n.t(
+        'activerecord.errors.models.domain.admin_contact_invalid_ident_type',
+        ident_type: contact.ident_type
+      ))
+    end
   end
 end

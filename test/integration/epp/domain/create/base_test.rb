@@ -597,6 +597,8 @@ class EppDomainCreateBaseTest < EppTestCase
   end
 
   def test_registers_new_domain_with_required_attributes
+    Setting.admin_contacts_allowed_ident_type = { 'org' => true, 'priv' => true, 'birthday' => true }
+
     now = Time.zone.parse('2010-07-05')
     travel_to now
     name = "new.#{dns_zones(:one).origin}"
@@ -644,6 +646,8 @@ class EppDomainCreateBaseTest < EppTestCase
 
     default_registration_period = 1.year + 1.day
     assert_equal now + default_registration_period, domain.expire_time
+
+    Setting.admin_contacts_allowed_ident_type = { 'org' => false, 'priv' => true, 'birthday' => true }
   end
 
   def test_registers_domain_without_legaldoc_if_optout
@@ -1107,5 +1111,79 @@ class EppDomainCreateBaseTest < EppTestCase
     assert response.body.include?(Shunter.default_error_message)
     ENV["shunter_default_threshold"] = '10000'
     ENV["shunter_enabled"] = 'false'
+  end
+
+  def test_does_not_register_domain_with_invalid_admin_contact_ident_type
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+    admin_contact = contacts(:william)
+    admin_contact.update!(ident_type: 'org')
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{admin_contact.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_no_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :parameter_value_policy_error
+  end
+
+  def test_registers_domain_with_valid_admin_contact_ident_type
+    name = "new.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+    admin_contact = contacts(:william)
+    admin_contact.update!(ident_type: 'priv')
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{admin_contact.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count' do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :completed_successfully
   end
 end
