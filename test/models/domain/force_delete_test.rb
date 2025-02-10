@@ -535,6 +535,31 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_enqueued_jobs 8
   end
 
+  def test_client_hold_does_not_return_after_manual_removal
+    domain = domains(:shop)
+    domain.update(valid_to: Time.zone.parse('2010-10-05'))
+
+    travel_to Time.zone.parse('2010-07-05')
+    domain.schedule_force_delete(type: :fast_track)
+    
+    travel_to Time.zone.parse('2010-07-25')
+    Domains::ClientHold::SetClientHold.run!
+    domain.reload
+
+    assert_includes(domain.statuses, DomainStatus::CLIENT_HOLD)
+    assert_equal(domain.force_delete_data['client_hold_mandatory'], 'Has been set')
+
+    domain.statuses.delete(DomainStatus::CLIENT_HOLD)
+    domain.save!
+    domain.reload
+
+    Domains::ClientHold::SetClientHold.run!
+    domain.reload
+
+    assert_not_includes(domain.statuses, DomainStatus::CLIENT_HOLD)
+    assert_equal(domain.force_delete_data['client_hold_mandatory'], 'Has been set')
+  end
+
   def prepare_bounced_email_address(email)
     @bounced_mail = BouncedMailAddress.new
     @bounced_mail.email = email
