@@ -1,3 +1,6 @@
+12.02.2025
+* Re-enabled org validation against Est business registry https://github.com/internetee/registry/pull/2723
+
 03.02.2025
 * Added nil check for registrant in phone checker job https://github.com/internetee/registry/pull/2746
 
