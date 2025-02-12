@@ -11,6 +11,7 @@ module Domains
 
         # Allow deletion
         statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
+        domain.skip_whois_record_update = notify_by_email ? true : false
 
         domain.save(validate: false)
       end

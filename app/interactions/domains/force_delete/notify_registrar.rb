@@ -11,7 +11,8 @@ module Domains
                             ident: domain.registrant.ident,
                             domain_name: domain.name,
                             outzone_date: domain.outzone_date,
-                            purge_date: domain.purge_date)
+                            purge_date: domain.purge_date,
+                            notes: notes)
                    else
                      I18n.t('force_delete_set_on_domain',
                             domain_name: domain.name,
@@ -30,7 +31,8 @@ module Domains
                             ident: domain.registrant.ident,
                             domain_name: domain.name,
                             outzone_date: domain.outzone_date,
-                            purge_date: domain.purge_date)
+                            purge_date: domain.purge_date,
+                            notes: notes)
                    else
                      I18n.t('force_delete_auto_email',
                             domain_name: domain.name,

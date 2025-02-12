@@ -89,6 +89,8 @@ class Domain < ApplicationRecord
   has_many :registrant_verifications, dependent: :destroy
   has_one :csync_record, dependent: :destroy
 
+  attribute :skip_whois_record_update, :boolean, default: false
+
   after_initialize do
     self.pending_json = {} if pending_json.blank?
     self.statuses = [] if statuses.nil?
@@ -721,6 +723,8 @@ class Domain < ApplicationRecord
   end
 
   def update_whois_record
+    return if skip_whois_record_update
+
     UpdateWhoisRecordJob.set(wait: 1.minute).perform_later name, 'domain'
   end
 

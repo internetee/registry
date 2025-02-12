@@ -8,6 +8,7 @@ module Domains
       def execute
         domain.force_delete_domain_statuses_history = domain.statuses
         domain.statuses |= STATUSES_TO_SET
+        domain.skip_whois_record_update = true
         domain.save(validate: false)
       end
     end
