@@ -160,6 +160,8 @@ en:
             ipv6:
               taken: 'has already been taken'
 
+        admin_domain_contact:
+          contact_too_young: "Administrative contact must be at least 18 years old"
 
     attributes:
       epp_domain: &epp_domain_attributes

@@ -1,4 +1,8 @@
 class AdminDomainContact < DomainContact
+  include AgeValidation
+  
+  validate :validate_contact_age
+
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def self.replace(current_contact, new_contact)
@@ -23,4 +27,14 @@ class AdminDomainContact < DomainContact
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
+
+  private
+
+  def validate_contact_age
+    return unless contact&.underage?
+
+    errors.add(:contact, I18n.t(
+      'activerecord.errors.models.admin_domain_contact.contact_too_young'
+    ))
+  end
 end

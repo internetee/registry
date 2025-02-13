@@ -10,6 +10,7 @@ class Contact < ApplicationRecord
   include Contact::Archivable
   include Contact::CompanyRegister
   include EmailVerifable
+  include AgeValidation
 
   belongs_to :original, class_name: 'Contact'
   belongs_to :registrar, required: true
