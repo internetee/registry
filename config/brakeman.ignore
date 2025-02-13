@@ -24,6 +24,29 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "0ea9954ae16ee933c41a032d69ffc412f3d68df1b6dc6639bc508ae1529468fc",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/version/domain_version.rb",
+      "line": 43,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "count_by_sql(\"      SELECT\\n        COUNT(*)\\n      FROM\\n        #{table_name}\\n      WHERE\\n        (children->'registrant') @> '#{contact_id}'\\n        OR\\n        (children->'admin_contacts') @> '#{contact_id}'\\n        OR\\n        (children->'tech_contacts') @> '#{contact_id}'\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Version::DomainVersion",
+        "method": "Version::DomainVersion.was_contact_linked?"
+      },
+      "user_input": "contact_id",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "5794d1babfc87482d5d4961472a856b58c3302f40f110f8cadf7b62bbb0c17ca",
@@ -54,6 +77,29 @@
       "confidence": "Weak",
       "cwe_id": [
         79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "616c98aaedbc846f8dc64ceabadb079fa574f1993ce1b3f5baf17cc4b607f685",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/version/domain_version.rb",
+      "line": 63,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "count_by_sql(\"      SELECT\\n        COUNT(*)\\n      FROM\\n        #{table_name}\\n      WHERE\\n        created_at < TIMESTAMP WITH TIME ZONE '#{period.ago}'\\n        AND (\\n          (children->'registrant') @> '#{contact_id}'\\n          OR\\n          (children->'admin_contacts') @> '#{contact_id}'\\n          OR\\n          (children->'tech_contacts') @> '#{contact_id}'\\n        )\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Version::DomainVersion",
+        "method": "Version::DomainVersion.contact_unlinked_more_than?"
+      },
+      "user_input": "period.ago",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
       ],
       "note": ""
     },
@@ -163,8 +209,31 @@
         1104
       ],
       "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "dffdd6b8ce313afc878aabf717a3c9eb30769eb16d268d71eebfdecb4767a4ba",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/admin/domain_versions_controller.rb",
+      "line": 48,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Version::DomainVersion.includes(:item).where((((((\"1=1\" + case key\nwhen \"event\" then\n  \" AND event = '#{value}'\"\nwhen \"name\" then\n  \" AND (object->>'name' ~* '#{value}' OR object_changes->>'name' ~* '#{value}')\"\nelse\n  create_where_string(key, value)\nend) + \"  AND object->>'registrant_id' IN (#{Contact.where(\"name ilike ?\", \"%#{(params[:q] or {}).deep_dup.except(:created_at_gteq, :created_at_lteq)[:registrant].strip}%\").map do\n \"'#{r.id}'\"\n end.join(\",\")})\") + \"  AND 1=0\") + \" AND (object->>'registrar_id' IN (#{Registrar.where(\"name ilike ?\", \"%#{(params[:q] or {}).deep_dup.except(:created_at_gteq, :created_at_lteq)[:registrar].strip}%\").map do\n \"'#{r.id}'\"\n end.join(\",\")})\\n                     OR (object_changes @> '#{{ :registrar_id => Registrar.where(\"name ilike ?\", \"%#{(params[:q] or {}).deep_dup.except(:created_at_gteq, :created_at_lteq)[:registrar].strip}%\").map(&:id) }.to_json}'))\") + \"  AND 1=0\"))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Admin::DomainVersionsController",
+        "method": "index"
+      },
+      "user_input": "Registrar.where(\"name ilike ?\", \"%#{(params[:q] or {}).deep_dup.except(:created_at_gteq, :created_at_lteq)[:registrar].strip}%\").map",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
     }
   ],
-  "updated": "2025-02-13 12:47:40 +0000",
+  "updated": "2025-02-13 13:59:29 +0000",
   "brakeman_version": "6.2.2"
 }
