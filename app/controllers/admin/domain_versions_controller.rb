@@ -4,9 +4,11 @@ module Admin
 
     def index
       params[:q] ||= {}
-
       search_params = params[:q].deep_dup.except(:created_at_gteq, :created_at_lteq)
-
+      
+      conditions = []
+      values = []
+      
       if search_params[:registrant].present?
         registrants = Contact.where('name ilike ?', "%#{search_params[:registrant].strip}%")
         search_params.delete(:registrant)
@@ -17,35 +19,44 @@ module Admin
         search_params.delete(:registrar)
       end
 
-      where_s = '1=1'
-
       search_params.each do |key, value|
         next if value.empty?
 
-        where_s += case key
-                   when 'event'
-                     " AND event = '#{value}'"
-                   when 'name'
-                     " AND (object->>'name' ~* '#{value}' OR object_changes->>'name' ~* '#{value}')"
-                   else
-                     create_where_string(key, value)
-                   end
+        case key
+        when 'event'
+          conditions << 'event = ?'
+          values << value
+        when 'name'
+          conditions << "(object->>'name' ~* ? OR object_changes->>'name' ~* ?)"
+          values.concat([value, value])
+        else
+          conditions << "object->>? ~* ?"
+          values.concat([key, value])
+        end
       end
 
       if registrants.present?
-        where_s += "  AND object->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id}'" }.join ','})"
+        conditions << "object->>'registrant_id' IN (?)"
+        values << registrants.map(&:id)
+      elsif registrants == []
+        conditions << '1=0'
       end
-      where_s += '  AND 1=0' if registrants == []
+
       if registrars.present?
-
-        # where_s += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id}'" }.join ','})"
-        where_s += " AND (object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id}'" }.join ','})
-                     OR (object_changes @> '#{{ 'registrar_id': registrars.map(&:id) }.to_json}'))"
-
+        conditions << "(object->>'registrar_id' IN (?) OR object_changes @> ?)"
+        values << registrars.map(&:id)
+        values << { registrar_id: registrars.map(&:id) }.to_json
+      elsif registrars == []
+        conditions << '1=0'
       end
-      where_s += '  AND 1=0' if registrars == []
 
-      versions = Version::DomainVersion.includes(:item).where(where_s).order(created_at: :desc, id: :desc)
+      where_clause = conditions.join(' AND ')
+      where_clause = '1=1' if where_clause.empty?
+
+      versions = Version::DomainVersion.includes(:item)
+                                     .where(where_clause, *values)
+                                     .order(created_at: :desc, id: :desc)
+                                     
       @q = versions.ransack(fix_date_params)
       @result = @q.result
       @versions = @result.page(params[:page])
@@ -77,7 +88,7 @@ module Admin
     end
 
     def create_where_string(key, value)
-      " AND object->>'#{key}' ~* '#{value}'"
+      ["object->>? ~* ?", key, value]
     end
 
     private

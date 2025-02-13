@@ -31,16 +31,16 @@ class Version::DomainVersion < PaperTrail::Version
       SELECT
         COUNT(*)
       FROM
-        #{table_name}
+        #{connection.quote_table_name(table_name)}
       WHERE
-        (children->'registrant') @> '#{contact_id}'
+        (children->'registrant') @> ?
         OR
-        (children->'admin_contacts') @> '#{contact_id}'
+        (children->'admin_contacts') @> ?
         OR
-        (children->'tech_contacts') @> '#{contact_id}'
+        (children->'tech_contacts') @> ?
     SQL
 
-    count_by_sql(sql).nonzero?
+    count_by_sql([sql, contact_id.to_s, contact_id.to_s, contact_id.to_s]).nonzero?
   end
 
   def self.contact_unlinked_more_than?(contact_id:, period:)
@@ -48,19 +48,25 @@ class Version::DomainVersion < PaperTrail::Version
       SELECT
         COUNT(*)
       FROM
-        #{table_name}
+        #{connection.quote_table_name(table_name)}
       WHERE
-        created_at < TIMESTAMP WITH TIME ZONE '#{period.ago}'
+        created_at < ?
         AND (
-          (children->'registrant') @> '#{contact_id}'
+          (children->'registrant') @> ?
           OR
-          (children->'admin_contacts') @> '#{contact_id}'
+          (children->'admin_contacts') @> ?
           OR
-          (children->'tech_contacts') @> '#{contact_id}'
+          (children->'tech_contacts') @> ?
         )
     SQL
 
-    count_by_sql(sql).nonzero?
+    count_by_sql([
+      sql,
+      period.ago,
+      contact_id.to_s,
+      contact_id.to_s,
+      contact_id.to_s
+    ]).nonzero?
   end
 
   def self.csv_header

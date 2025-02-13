@@ -35,7 +35,7 @@ jobs:
           bundle env
           head -n1 $(which bundle)
       - name: Run Brakeman
-        run: bundle exec brakeman --quiet --skip-libs --exit-on-warn --ignore-config=.brakeman-ignore
+        run: bundle exec brakeman --quiet --skip-libs --exit-on-warn --ignore-config=config/brakeman.ignore
 
   test:
     services:

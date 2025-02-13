@@ -3,7 +3,7 @@ module Billing::Price::Expirable
 
   class_methods do
     def expired
-      where("#{attribute_alias(:expire_time)} < ?", Time.zone.now)
+      where(arel_table[attribute_alias(:expire_time)].lt(Time.zone.now))
     end
   end
 
