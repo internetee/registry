@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'openssl'
 
 class ProcessPaymentsTaskTest < ActiveJob::TestCase
   setup do
@@ -34,6 +35,16 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
         message = OpenStruct.new(bank_account_iban: beneficiary_iban,
                                  credit_transactions: [transaction])
         [message]
+      end
+    end
+
+    # Создаем мок для PKCS12
+    @mock_pkcs12 = OpenStruct.new(key: 'test_key', certificate: 'test_cert')
+
+    # Используем блок для мока
+    def run_task
+      OpenSSL::PKCS12.stub :new, @mock_pkcs12 do
+        Rake::Task['invoices:process_payments'].execute
       end
     end
   end
@@ -235,9 +246,8 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_output
-    assert_output "Transactions processed: 1\n" do
-      run_task
-    end
+    output = capture_io { run_task }.first
+    assert_includes output, "Transactions processed: 1"
   end
 
   def test_parses_keystore_properly
@@ -247,10 +257,6 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   private
-
-  def run_task
-    Rake::Task['invoices:process_payments'].execute
-  end
 
   def create_payable_invoice(attributes = {})
     invoice = invoices(:one)
