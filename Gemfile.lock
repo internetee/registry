@@ -228,8 +228,9 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    dnsruby (1.61.5)
-      simpleidn (~> 0.1)
+    dnsruby (1.72.3)
+      base64 (~> 0.2.0)
+      simpleidn (~> 0.2.1)
     docile (1.3.5)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -596,7 +597,7 @@ DEPENDENCIES
   devise (~> 4.8)
   digidoc_client!
   directo!
-  dnsruby (~> 1.61)
+  dnsruby (~> 1.70)
   domain_name
   e_invoice!
   epp!

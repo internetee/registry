@@ -44,7 +44,7 @@ gem 'selectize-rails', '0.12.6' # include selectize.js for select
 
 # registry specfic
 gem 'data_migrate', '~> 9.0'
-gem 'dnsruby', '~> 1.61'
+gem 'dnsruby', '~> 1.70'
 gem 'isikukood' # for EE-id validation
 gem 'money-rails'
 gem 'simpleidn', '0.2.3' # For punycode
