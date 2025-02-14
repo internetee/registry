@@ -5,9 +5,10 @@ module Admin
 
     def create
       if ::DNS::Zone.origins.include?(params[:origin])
-
-        @zonefile = ActiveRecord::Base.connection.execute(
-          "select generate_zonefile('#{params[:origin]}')"
+        @zonefile = ActiveRecord::Base.connection.exec_query(
+          "select generate_zonefile($1)",
+          'Generate Zonefile',
+          [[nil, params[:origin]]]
         )[0]['generate_zonefile']
 
         send_data @zonefile, filename: "#{params[:origin]}.txt"

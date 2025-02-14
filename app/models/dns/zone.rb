@@ -22,8 +22,10 @@ module DNS
 
       $stdout << "#{Time.zone.now.utc} - Generating zonefile #{filename}\n"
 
-      zf = ActiveRecord::Base.connection.execute(
-        "select generate_zonefile('#{origin}')"
+      zf = ActiveRecord::Base.connection.exec_query(
+        "select generate_zonefile($1)",
+        'Generate Zonefile',
+        [[nil, origin]]
       )[0]['generate_zonefile']
 
       File.open("#{ENV['zonefile_export_dir']}/#{filename}", 'w') { |f| f.write(zf) }

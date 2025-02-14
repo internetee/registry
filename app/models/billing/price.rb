@@ -52,14 +52,19 @@ module Billing
     end
 
     def self.upcoming
-      where("#{attribute_alias(:effect_time)} > ?", Time.zone.now)
+      where(arel_table[attribute_alias(:effect_time)].gt(Time.zone.now))
     end
 
     def self.effective
-      condition = "#{attribute_alias(:effect_time)} <= :now " \
-      " AND (#{attribute_alias(:expire_time)} >= :now" \
-      " OR #{attribute_alias(:expire_time)} IS NULL)"
-      where(condition, now: Time.zone.now)
+      effect_time = arel_table[attribute_alias(:effect_time)]
+      expire_time = arel_table[attribute_alias(:expire_time)]
+      now = Time.zone.now
+
+      where(
+        effect_time.lteq(now).and(
+          expire_time.gteq(now).or(expire_time.eq(nil))
+        )
+      )
     end
 
     def self.valid
