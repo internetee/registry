@@ -185,6 +185,8 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
                      domain_name: @registrant_acme.registrant_domains.first.name,
                      outzone_date: @registrant_acme.registrant_domains.first.outzone_date,
                      purge_date: @registrant_acme.registrant_domains.first.purge_date,
+                     force_delete_type: 'Fast Track',
+                     force_delete_start_date: @registrant_acme.registrant_domains.first.force_delete_start.strftime('%d.%m.%Y'),
                      notes: "Contact has status deleted")
     assert_equal @registrant_acme.registrant_domains.first.registrar.notifications.last.text, template
 
