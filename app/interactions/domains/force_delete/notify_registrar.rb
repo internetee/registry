@@ -5,9 +5,19 @@ module Domains
         email.present? ? notify_with_email : notify_without_email
       end
 
+      def force_delete_type
+        type == :soft ? 'Soft' : 'Fast Track'
+      end
+
+      def force_delete_start_date
+        domain.force_delete_start.strftime('%d.%m.%Y')
+      end
+
       def notify_without_email
         template = if reason == 'invalid_company'
                      I18n.t('invalid_ident',
+                            force_delete_type: force_delete_type,
+                            force_delete_start_date: force_delete_start_date,
                             ident: domain.registrant.ident,
                             domain_name: domain.name,
                             outzone_date: domain.outzone_date,
@@ -28,6 +38,8 @@ module Domains
       def notify_with_email
         template = if reason == 'invalid_company'
                      I18n.t('invalid_ident',
+                            force_delete_type: force_delete_type,
+                            force_delete_start_date: force_delete_start_date,
                             ident: domain.registrant.ident,
                             domain_name: domain.name,
                             outzone_date: domain.outzone_date,
