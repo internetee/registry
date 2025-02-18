@@ -1,0 +1,7 @@
+one:
+  user: api_bestnames
+  private_key: "encrypted_private_key_data"
+  csr: "dummy_csr_data"
+  certificate: "dummy_certificate_data"
+  status: "active"
+  expires_at: <%= 60.days.from_now %>
