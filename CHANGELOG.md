@@ -1,3 +1,6 @@
+19.02.2025
+* Fixed set clientHold job from resetting the status after removal by client https://github.com/internetee/registry/issues/2742
+
 12.02.2025
 * Re-enabled org validation against Est business registry https://github.com/internetee/registry/pull/2723
 
