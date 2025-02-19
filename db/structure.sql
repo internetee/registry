@@ -587,7 +587,11 @@ CREATE TABLE public.certificates (
     common_name character varying,
     md5 character varying,
     interface character varying,
-    revoked boolean DEFAULT false NOT NULL
+    revoked boolean DEFAULT false NOT NULL,
+    private_key bytea,
+    p12 bytea,
+    p12_password_digest character varying,
+    expires_at timestamp without time zone
 );
 
 
@@ -2813,45 +2817,6 @@ ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 
 
 --
--- Name: user_certificates; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.user_certificates (
-    id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    private_key bytea NOT NULL,
-    csr text,
-    certificate text,
-    p12 bytea,
-    status character varying,
-    expires_at timestamp without time zone,
-    revoked_at timestamp without time zone,
-    p12_password_digest character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: user_certificates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.user_certificates_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: user_certificates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.user_certificates_id_seq OWNED BY public.user_certificates.id;
-
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3549,13 +3514,6 @@ ALTER TABLE ONLY public.setting_entries ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.settings_id_seq'::regclass);
-
-
---
--- Name: user_certificates id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_certificates ALTER COLUMN id SET DEFAULT nextval('public.user_certificates_id_seq'::regclass);
 
 
 --
@@ -4257,14 +4215,6 @@ ALTER TABLE ONLY public.zones
 
 
 --
--- Name: user_certificates user_certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_certificates
-    ADD CONSTRAINT user_certificates_pkey PRIMARY KEY (id);
-
-
---
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4950,20 +4900,6 @@ CREATE UNIQUE INDEX index_settings_on_thing_type_and_thing_id_and_var ON public.
 
 
 --
--- Name: index_user_certificates_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_certificates_on_user_id ON public.user_certificates USING btree (user_id);
-
-
---
--- Name: index_user_certificates_on_user_id_and_status; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_certificates_on_user_id_and_status ON public.user_certificates USING btree (user_id, status);
-
-
---
 -- Name: index_users_on_identity_code; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5106,14 +5042,6 @@ ALTER TABLE ONLY public.domains
 
 ALTER TABLE ONLY public.domains
     ADD CONSTRAINT domains_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
-
-
---
--- Name: user_certificates fk_rails_03b0a0c9d8; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_certificates
-    ADD CONSTRAINT fk_rails_03b0a0c9d8 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -5795,6 +5723,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241129095711'),
 ('20241206085817'),
 ('20250204094550'),
-('20250218115707');
+('20250219102811');
 
 

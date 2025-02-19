@@ -20,7 +20,6 @@ class ApiUser < User
   # TODO: should have max request limit per day?
   belongs_to :registrar
   has_many :certificates
-  has_many :user_certificates
 
   validates :username, :plain_text_password, :registrar, :roles, presence: true
   validates :plain_text_password, length: { minimum: min_password_length }

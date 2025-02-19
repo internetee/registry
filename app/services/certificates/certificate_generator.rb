@@ -3,7 +3,6 @@ module Certificates
     attribute :username, Types::Strict::String
     attribute :registrar_code, Types::Coercible::String
     attribute :registrar_name, Types::Strict::String
-    attribute :user_certificate, Types.Instance(UserCertificate)
 
     CERTS_PATH = Rails.root.join('certs')
     CA_PATH = CERTS_PATH.join('ca')
@@ -26,15 +25,23 @@ module Certificates
 
     def call
       csr, key = generate_csr_and_key
-      certificate = sign_certificate(csr)
-      create_p12(key, certificate)
+      cert = sign_certificate(csr)
+      p12 = create_p12(key, cert)
+
+      {
+        private_key: key.export(OpenSSL::Cipher.new('AES-256-CBC'), CA_PASSWORD),
+        csr: csr.to_pem,
+        crt: cert.to_pem,
+        p12: p12.to_der,
+        expires_at: cert.not_after
+      }
     end
+
+    private
 
     def generate_csr_and_key
       key = OpenSSL::PKey::RSA.new(4096)
-      encrypted_key = key.export(OpenSSL::Cipher.new('AES-256-CBC'), CA_PASSWORD)
-      save_private_key(encrypted_key)
-
+      
       request = OpenSSL::X509::Request.new
       request.version = 0
       request.subject = OpenSSL::X509::Name.new([
@@ -47,12 +54,7 @@ module Certificates
       request.sign(key, OpenSSL::Digest::SHA256.new)
       
       save_csr(request)
-      
-      user_certificate&.update!(
-        private_key: encrypted_key,
-        csr: request.to_pem,
-        status: 'pending'
-      )
+      save_private_key(key.export(OpenSSL::Cipher.new('AES-256-CBC'), CA_PASSWORD))
       
       [request, key]
     end
@@ -80,54 +82,27 @@ module Certificates
       cert.add_extension(extension_factory.create_extension("subjectKeyIdentifier", "hash"))
 
       cert.sign(ca_key, OpenSSL::Digest::SHA256.new)
-      
       save_certificate(cert)
-      
-      user_certificate&.update!(
-        certificate: cert.to_pem,
-        status: 'active',
-        expires_at: cert.not_after
-      )
       
       cert
     end
 
-    def create_p12(key, certificate, password = nil)
+    def create_p12(key, cert)
       ca_cert = OpenSSL::X509::Certificate.new(File.read(CA_CERT_PATH))
       
       p12 = OpenSSL::PKCS12.create(
-        password,           # P12 password (optional)
-        username,          # Friendly name
-        key,              # User's private key
-        certificate,      # User's certificate
-        [ca_cert],        # Chain of certificates
+        nil, # password
+        username,
+        key,
+        cert,
+        [ca_cert]
       )
       
       File.open(CERTS_PATH.join(USER_P12_NAME), 'wb') do |file|
         file.write(p12.to_der)
       end
       
-      user_certificate&.update!(
-        p12: p12.to_der,
-        p12_password_digest: password ? BCrypt::Password.create(password) : nil
-      )
-      
       p12
-    end
-
-    def renew_certificate
-      raise "Certificate not found" unless user_certificate&.certificate.present?
-      raise "Cannot renew revoked certificate" if user_certificate.revoked?
-      
-      # Используем существующий CSR
-      csr = OpenSSL::X509::Request.new(user_certificate.csr)
-      
-      # Создаем новый сертификат
-      certificate = sign_certificate(csr)
-      
-      # Создаем новый P12 с существующим ключом
-      key = OpenSSL::PKey::RSA.new(user_certificate.private_key, CA_PASSWORD)
-      create_p12(key, certificate)
     end
 
     private
@@ -136,8 +111,6 @@ module Certificates
       FileUtils.mkdir_p(CERTS_PATH)
       FileUtils.mkdir_p(CA_PATH.join('certs'))
       FileUtils.mkdir_p(CA_PATH.join('private'))
-      
-      # Set proper permissions for private directory
       FileUtils.chmod(0700, CA_PATH.join('private'))
     end
 
