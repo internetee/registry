@@ -5,16 +5,20 @@ module Domains
              class: Domain,
              description: 'Domain to set ClientHold on'
 
+      CLIENT_HOLD_SET_NOTE = "Has been set".freeze
+
       # rubocop:disable Metrics/AbcSize
       def execute
         notify_on_grace_period if should_notify_on_soft_force_delete?
 
         return unless client_holdable?
+        return if domain.force_delete_data['client_hold_mandatory'].to_s.downcase == CLIENT_HOLD_SET_NOTE.downcase
 
         domain.statuses << DomainStatus::CLIENT_HOLD
         to_stdout("DomainCron.start_client_hold: #{domain.id} (#{domain.name}) #{domain.changes}\n")
-
+        domain.force_delete_data['client_hold_mandatory'] = CLIENT_HOLD_SET_NOTE
         domain.save(validate: false)
+
         notify_client_hold
 
         to_stdout("Successfully set client_hold on (#{domain.name})")
