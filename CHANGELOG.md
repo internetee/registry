@@ -1,3 +1,9 @@
+21.02.2025
+* nomethod error fix for cases without forceDelete set date https://github.com/internetee/registry/pull/2758
+
+20.02.2025
+* Fixes for FOrceDelete status handling and notifications https://github.com/internetee/registry/pull/2755
+
 19.02.2025
 * Fixed set clientHold job from resetting the status after removal by client https://github.com/internetee/registry/issues/2742
 
