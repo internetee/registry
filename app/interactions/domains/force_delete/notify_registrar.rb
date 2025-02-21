@@ -10,7 +10,11 @@ module Domains
       end
 
       def force_delete_start_date
-        domain.force_delete_start.strftime('%d.%m.%Y')
+        if domain.force_delete_start.present?
+          domain.force_delete_start&.strftime('%d.%m.%Y')
+        else
+          (Time.zone.today + Setting.expire_warning_period.days)&.strftime('%d.%m.%Y')
+        end
       end
 
       def notify_without_email
