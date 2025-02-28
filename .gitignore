@@ -24,3 +24,5 @@ Dockerfile.dev
 .cursor/
 .cursorrules
 /certs/
+certs/ca/certs/ca_*.pem
+certs/ca/private/ca_*.pem

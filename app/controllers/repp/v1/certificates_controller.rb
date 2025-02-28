@@ -21,12 +21,44 @@ module Repp
         @api_user = current_user.registrar.api_users.find(cert_params[:api_user_id])
 
         csr = decode_cert_params(cert_params[:csr])
+        interface = cert_params[:interface].presence || 'api'
+        
+        # Validate interface
+        unless Certificate::INTERFACES.include?(interface)
+          render_error(I18n.t('errors.invalid_interface'), :unprocessable_entity) and return
+        end
 
-        @certificate = @api_user.certificates.build(csr: csr)
+        @certificate = @api_user.certificates.build(csr: csr, interface: interface)
 
         if @certificate.save
-          notify_admins
-          render_success(data: { api_user: { id: @api_user.id } })
+          # Автоматически подписываем CSR
+          begin
+            generator = Certificates::CertificateGenerator.new(
+              username: @api_user.username,
+              registrar_code: @api_user.registrar.code,
+              registrar_name: @api_user.registrar.name,
+              user_csr: csr,
+              interface: interface
+            )
+            
+            result = generator.call
+            @certificate.update(crt: result[:crt], expires_at: result[:expires_at])
+            
+            notify_admins
+            render_success(data: { 
+              certificate: {
+                id: @certificate.id,
+                common_name: @certificate.common_name,
+                expires_at: @certificate.expires_at,
+                interface: @certificate.interface,
+                status: @certificate.status
+              } 
+            })
+          rescue StandardError => e
+            Rails.logger.error("Certificate generation error: #{e.message}")
+            @certificate.destroy # Удаляем частично созданный сертификат
+            render_error(I18n.t('errors.certificate_generation_failed'), :unprocessable_entity)
+          end
         else
           handle_non_epp_errors(@certificate)
         end
@@ -48,7 +80,7 @@ module Repp
       end
 
       def cert_params
-        params.require(:certificate).permit(:api_user_id, csr: %i[body type])
+        params.require(:certificate).permit(:api_user_id, :interface, csr: %i[body type])
       end
 
       def decode_cert_params(csr_params)
