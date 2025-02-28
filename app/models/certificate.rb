@@ -52,6 +52,24 @@ class Certificate < ApplicationRecord
     @p_csr ||= OpenSSL::X509::Request.new(csr) if csr
   end
 
+  def parsed_private_key
+    return nil if private_key.blank?
+    
+    decoded_key = Base64.decode64(private_key)
+    OpenSSL::PKey::RSA.new(decoded_key, Certificates::CertificateGenerator::CA_PASSWORD)
+  rescue OpenSSL::PKey::RSAError
+    nil
+  end
+
+  def parsed_p12
+    return nil if p12.blank?
+    
+    decoded_p12 = Base64.decode64(p12)
+    OpenSSL::PKCS12.new(decoded_p12)
+  rescue OpenSSL::PKCS12::PKCS12Error
+    nil
+  end
+
   def revoked?
     status == REVOKED
   end
@@ -68,7 +86,7 @@ class Certificate < ApplicationRecord
 
     if certificate_expired?
       @cached_status = EXPIRED
-    elsif certificate_revoked?
+    elsif revoked || certificate_revoked?
       @cached_status = REVOKED
     end
 
@@ -99,6 +117,55 @@ class Certificate < ApplicationRecord
     end
 
     handle_revocation_failure(err_output)
+  end
+
+  def renewable?
+    return false if revoked?
+    return false if crt.blank?
+    return false if expires_at.blank?
+    
+    expires_at > Time.current && expires_at <= 30.days.from_now
+  end
+
+  def expired?
+    return false if revoked?
+    return false if crt.blank?
+    return false if expires_at.blank?
+    
+    expires_at < Time.current
+  end
+
+  def renew
+    raise "Certificate cannot be renewed" unless renewable?
+
+    generator = Certificates::CertificateGenerator.new(
+      username: api_user.username,
+      registrar_code: api_user.registrar_code,
+      registrar_name: api_user.registrar_name,
+      certificate: self
+    )
+
+    generator.renew_certificate
+  end
+
+  def self.generate_for_api_user(api_user:)
+    generator = Certificates::CertificateGenerator.new(
+      username: api_user.username,
+      registrar_code: api_user.registrar_code,
+      registrar_name: api_user.registrar_name
+    )
+    
+    cert_data = generator.call
+    
+    create!(
+      api_user: api_user,
+      interface: 'api',
+      private_key: Base64.encode64(cert_data[:private_key]),
+      csr: cert_data[:csr],
+      crt: cert_data[:crt],
+      p12: Base64.encode64(cert_data[:p12]),
+      expires_at: cert_data[:expires_at]
+    )
   end
 
   private
@@ -194,7 +261,21 @@ class Certificate < ApplicationRecord
   end
 
   def certificate_revoked?
-    crl = OpenSSL::X509::CRL.new(File.open("#{ENV['crl_dir']}/crl.pem").read)
-    crl.revoked.map(&:serial).include?(parsed_crt.serial)
+    # Check if the certificate has been marked as revoked in the database
+    return true if revoked
+    
+    # Also check the CRL file
+    begin
+      crl_path = "#{ENV['crl_dir']}/crl.pem"
+      if File.exist?(crl_path)
+        crl = OpenSSL::X509::CRL.new(File.open(crl_path).read)
+        crl.revoked.map(&:serial).include?(parsed_crt.serial)
+      else
+        false
+      end
+    rescue => e
+      Rails.logger.error("Error checking CRL: #{e.message}")
+      false
+    end
   end
 end
