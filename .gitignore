@@ -22,3 +22,5 @@
 ettevotja_rekvisiidid__lihtandmed.csv.zip
 Dockerfile.dev
 /certs/
+certs/ca/certs/ca_*.pem
+certs/ca/private/ca_*.pem

@@ -15,10 +15,11 @@ class Certificate < ApplicationRecord
   API = 'api'.freeze
   REGISTRAR = 'registrar'.freeze
   INTERFACES = [API, REGISTRAR].freeze
-
   scope 'api', -> { where(interface: API) }
   scope 'registrar', -> { where(interface: REGISTRAR) }
   scope 'unrevoked', -> { where(revoked: false) }
+
+  validates :interface, inclusion: { in: INTERFACES }
 
   validate :validate_csr_and_crt_presence
   def validate_csr_and_crt_presence
@@ -42,6 +43,41 @@ class Certificate < ApplicationRecord
     parse_metadata(certificate_origin)
   rescue NoMethodError
     errors.add(:base, I18n.t(:invalid_csr_or_crt))
+  end
+
+  validate :check_active_certificates, on: :create
+  def check_active_certificates
+    return unless api_user && interface
+    
+    active_certs = api_user.certificates.where(interface: interface, revoked: false)
+                          .where('expires_at > ?', Time.current)
+    
+    if active_certs.exists?
+      errors.add(:base, I18n.t('certificate.errors.active_certificate_exists'))
+    end
+  end
+
+  validate :check_ca_certificate, if: -> { crt.present? }
+  def check_ca_certificate
+    begin
+      cert = parsed_crt
+      return if cert.nil?
+      
+      # Получаем правильный CA для интерфейса
+      ca_cert_path = interface == API ? 
+        Certificates::CertificateGenerator::CA_CERT_PATHS['api'] : 
+        Certificates::CertificateGenerator::CA_CERT_PATHS['registrar']
+      
+      ca_cert = OpenSSL::X509::Certificate.new(File.read(ca_cert_path))
+      
+      # Проверяем, что сертификат подписан правильным CA
+      unless cert.issuer.to_s == ca_cert.subject.to_s
+        errors.add(:base, I18n.t('certificate.errors.invalid_ca'))
+      end
+    rescue StandardError => e
+      Rails.logger.error("Error checking CA: #{e.message}")
+      errors.add(:base, I18n.t('certificate.errors.ca_check_failed'))
+    end
   end
 
   def parsed_crt
@@ -97,26 +133,40 @@ class Certificate < ApplicationRecord
     csr_file = create_tempfile('client_csr', csr)
     crt_file = Tempfile.new('client_crt')
 
-    err_output = execute_openssl_sign_command(password, csr_file.path, crt_file.path)
+    begin
+      err_output = execute_openssl_sign_command(password, csr_file.path, crt_file.path)
 
-    update_certificate_details(crt_file) and return true if err_output.match?(/Data Base Updated/)
+      update_certificate_details(crt_file) and return true if err_output.match?(/Data Base Updated/)
 
-    log_failed_to_create_certificate(err_output)
-    false
+      log_failed_to_create_certificate(err_output)
+      false
+    ensure
+      # Make sure to close and unlink the tempfiles to prevent leaks
+      csr_file.close
+      csr_file.unlink
+      crt_file.close
+      crt_file.unlink
+    end
   end
 
   def revoke!(password:)
     crt_file = create_tempfile('client_crt', crt)
 
-    err_output = execute_openssl_revoke_command(password, crt_file.path)
+    begin
+      err_output = execute_openssl_revoke_command(password, crt_file.path)
 
-    if revocation_successful?(err_output)
-      update_revocation_status
-      self.class.update_crl
-      return self
+      if revocation_successful?(err_output)
+        update_revocation_status
+        self.class.update_crl
+        return self
+      end
+
+      handle_revocation_failure(err_output)
+    ensure
+      # Make sure to close and unlink the tempfile to prevent leaks
+      crt_file.close
+      crt_file.unlink
     end
-
-    handle_revocation_failure(err_output)
   end
 
   def renewable?
@@ -148,23 +198,34 @@ class Certificate < ApplicationRecord
     generator.renew_certificate
   end
 
-  def self.generate_for_api_user(api_user:)
+  def self.generate_for_api_user(api_user:, interface: 'api')
+    # Проверяем наличие активных сертификатов
+    active_certs = api_user.certificates.where(interface: interface, revoked: false)
+                          .where('expires_at > ?', Time.current)
+    
+    if active_certs.exists?
+      Rails.logger.warn("User #{api_user.username} already has an active certificate for interface #{interface}")
+      return active_certs.first
+    end
+
     generator = Certificates::CertificateGenerator.new(
       username: api_user.username,
       registrar_code: api_user.registrar_code,
-      registrar_name: api_user.registrar_name
+      registrar_name: api_user.registrar_name,
+      interface: interface
     )
     
     cert_data = generator.call
     
     create!(
       api_user: api_user,
-      interface: 'api',
+      interface: interface,
       private_key: Base64.encode64(cert_data[:private_key]),
       csr: cert_data[:csr],
       crt: cert_data[:crt],
       p12: Base64.encode64(cert_data[:p12]),
-      expires_at: cert_data[:expires_at]
+      expires_at: cert_data[:expires_at],
+      revoked: false
     )
   end
 
@@ -257,11 +318,32 @@ class Certificate < ApplicationRecord
   end
 
   def certificate_expired?
-    parsed_crt.not_before > Time.zone.now.utc && parsed_crt.not_after < Time.zone.now.utc
+    parsed_crt.not_after < Time.zone.now.utc
   end
 
   def certificate_revoked?
-    crl = OpenSSL::X509::CRL.new(File.open("#{ENV['crl_dir']}/crl.pem").read)
-    crl.revoked.map(&:serial).include?(parsed_crt.serial)
+    return true if revoked
+    
+    begin
+      crl_path = "#{ENV['crl_dir']}/crl.pem"
+      return false unless File.exist?(crl_path)
+      
+      crl_content = File.read(crl_path)
+      return false if crl_content.blank?
+      
+      crl = OpenSSL::X509::CRL.new(crl_content)
+      
+      # Make sure we can read the serial from the certificate
+      begin
+        cert_serial = parsed_crt.serial
+        return crl.revoked.any? { |revoked_cert| revoked_cert.serial == cert_serial }
+      rescue StandardError => e
+        Rails.logger.error("Error checking certificate serial: #{e.message}")
+        return false
+      end
+    rescue StandardError => e
+      Rails.logger.error("Error checking CRL: #{e.message}")
+      return false
+    end
   end
 end
