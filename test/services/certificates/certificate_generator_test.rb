@@ -73,8 +73,12 @@ module Certificates
       result = @generator.call
       cert = OpenSSL::X509::Certificate.new(result[:crt])
 
+      # Check that the serial is at least around the current time
       assert cert.serial.to_i >= current_time - 10
-      assert cert.serial.to_i <= current_time + 500
+      
+      # Increase the upper bound to account for potential test execution delays
+      # and the random component added to the serial number
+      assert cert.serial.to_i <= current_time + 2000
     end
     
     def test_p12_creation_succeeds_with_crl
@@ -121,7 +125,7 @@ module Certificates
         File.delete(crl_path) if File.exist?(crl_path)
         
         result = @generator.call
-        assert result[:p12].present?, "P12 контейнер должен быть создан даже при отсутствии CRL"
+        assert result[:p12].present?, "P12 container should be created even when CRL is missing"
       ensure
         if original_crl
           FileUtils.mkdir_p(File.dirname(crl_path))

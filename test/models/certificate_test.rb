@@ -80,7 +80,7 @@ class CertificateTest < ActiveSupport::TestCase
       revoked = @certificate.respond_to?(:certificate_revoked?) ? @certificate.certificate_revoked? : nil
 
       if revoked != nil
-        assert_not revoked, "Сертификат не должен считаться отозванным при отсутствии CRL"
+        assert_not revoked, "Certificate should not be considered revoked when CRL is missing"
       end
     ensure
       if original_crl
@@ -91,23 +91,23 @@ class CertificateTest < ActiveSupport::TestCase
   end
   
   def test_certificate_status
-    @certificate.update(status: "signed") if @certificate.respond_to?(:status)
+    # Skip this test if the Certificate model doesn't have the status attribute in the database
+    skip unless Certificate.column_names.include?('status')
     
-    if @certificate.respond_to?(:status) && @certificate.respond_to?(:revoked?)
-      assert_equal "signed", @certificate.status
-      assert_not @certificate.revoked?, "Сертификат со статусом 'signed' не должен считаться отозванным"
-    end
+    # Now we know the column exists, so we can safely update it
+    @certificate.update(status: "signed")
+    assert_equal "signed", @certificate.status
+    assert_not @certificate.revoked?, "Certificate with 'signed' status should not be considered revoked"
 
-    @certificate.update(status: "revoked") if @certificate.respond_to?(:status)
-    
-    if @certificate.respond_to?(:status) && @certificate.respond_to?(:revoked?)
-      assert_equal "revoked", @certificate.status
-      assert @certificate.revoked?, "Сертификат со статусом 'revoked' должен считаться отозванным"
-    end
+    @certificate.update(status: "revoked") 
+    assert_equal "revoked", @certificate.status
+    assert @certificate.revoked?, "Certificate with 'revoked' status should be considered revoked"
   end
   
   def test_p12_status_with_properly_initialized_crl
-    skip unless @certificate.respond_to?(:certificate_revoked?)
+    # Skip if either certificate_revoked? method is missing or status column doesn't exist
+    skip unless (@certificate.respond_to?(:certificate_revoked?) && 
+                Certificate.column_names.include?('status'))
 
     crl_dir = ENV['crl_dir'] || Rails.root.join('ca/crl').to_s
     crl_path = "#{crl_dir}/crl.pem"
@@ -121,15 +121,24 @@ class CertificateTest < ActiveSupport::TestCase
       FileUtils.mkdir_p(crl_dir) unless Dir.exist?(crl_dir)
       File.write(crl_path, "-----BEGIN X509 CRL-----\nMIHsMIGTAgEBMA0GCSqGSIb3DQEBCwUAMBQxEjAQBgNVBAMMCVRlc3QgQ0EgMhcN\nMjQwNTEzMTcyMDM1WhcNMjUwNTEzMTcyMDM1WjBEMBMCAgPoFw0yMTA1MTMxNzIw\nMzVaMBMCAgPpFw0yMTA1MTMxNzIwMzVaMBMCAgPqFw0yMTA1MTMxNzIwMzVaMA0G\nCSqGSIb3DQEBCwUAA4GBAGX5rLzwJVAPhJ1iQZLFfzjwVJVGqDIZXt1odApM7/KA\nXrQ5YLVunSBGQTbuRQKNQZQO+snGnZUxJ5OW9eRqp8HWFpCFZbWSJ86eNfuX+GD3\nwgGP/1Zv+iRiZG8ccHQC4fNxQNctMFMccRVmcpOJ8s7h+Y5ohiUXyGTiLbBu4Np3\n-----END X509 CRL-----")
     
-      assert_not @certificate.certificate_revoked?, "Сертификат не должен считаться отозванным с пустым CRL"
+      assert_not @certificate.certificate_revoked?, "Certificate should not be considered revoked with an empty CRL"
 
-      if @certificate.respond_to?(:status=)
-        @certificate.status = "signed"
-        assert_equal "signed", @certificate.status
-        
+      # Only update the status if the status column exists
+      @certificate.update(status: "signed")
+      assert_equal "signed", @certificate.status
+      
+      # Use a regular stub instead of Mocha if possible
+      if @certificate.respond_to?(:stubs)
         @certificate.stubs(:certificate_revoked?).returns(true)
-        assert @certificate.certificate_revoked?
-        
+      else
+        # Simple stub alternative
+        def @certificate.certificate_revoked?; true; end
+      end
+      
+      assert @certificate.certificate_revoked?
+      
+      # Skip the expectations part if we can't use Mocha
+      if defined?(Mocha) && @certificate.respond_to?(:expects)
         if @certificate.respond_to?(:p12=)
           @certificate.expects(:status=).with("revoked").at_least_once
         end
@@ -139,6 +148,13 @@ class CertificateTest < ActiveSupport::TestCase
         File.write(crl_path, original_crl)
       else
         File.delete(crl_path) if File.exist?(crl_path)
+      end
+      
+      # Restore the original method if we used the simple stub
+      if !@certificate.respond_to?(:stubs) && @certificate.respond_to?(:certificate_revoked?)
+        class << @certificate
+          remove_method :certificate_revoked?
+        end
       end
     end
   end
