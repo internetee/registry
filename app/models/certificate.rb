@@ -168,6 +168,60 @@ class Certificate < ApplicationRecord
     )
   end
 
+  def self.diagnose_crl_issue
+    crl_path = "#{ENV['crl_dir']}/crl.pem"
+    
+    Rails.logger.info("CRL path: #{crl_path}")
+    Rails.logger.info("CRL exists: #{File.exist?(crl_path)}")
+    
+    return false unless File.exist?(crl_path)
+    
+    crl = OpenSSL::X509::CRL.new(File.open(crl_path).read)
+    
+    Rails.logger.info("CRL issuer: #{crl.issuer}")
+    Rails.logger.info("CRL last update: #{crl.last_update}")
+    Rails.logger.info("CRL next update: #{crl.next_update}")
+    Rails.logger.info("CRL revoked certificates count: #{crl.revoked.size}")
+    
+    if crl.revoked.any?
+      crl.revoked.each do |revoked|
+        Rails.logger.info("Revoked serial: #{revoked.serial}, time: #{revoked.time}")
+      end
+    end
+    
+    true
+  rescue => e
+    Rails.logger.error("Error parsing CRL file: #{e.message}")
+    false
+  end
+
+  def self.regenerate_crl
+    ca_base_path = ENV['ca_dir'] || Rails.root.join('certs', 'ca').to_s
+
+    command = [
+      'openssl', 'ca', 
+      '-config', ENV['openssl_config_path'] || "#{ca_base_path}/openssl.cnf",
+      '-keyfile', ENV['ca_key_path'] || "#{ca_base_path}/private/ca.key.pem", 
+      '-cert', ENV['ca_cert_path'] || "#{ca_base_path}/certs/ca.crt.pem",
+      '-crldays', '3650', 
+      '-gencrl', 
+      '-out', ENV['crl_path'] || "#{ca_base_path}/crl/crl.pem"
+    ]
+    
+    output, error, status = Open3.capture3(*command)
+    
+    if status.success?
+      Rails.logger.info("CRL regenerated successfully")
+      true
+    else
+      Rails.logger.error("Failed to regenerate CRL: #{error}")
+      false
+    end
+  rescue => e
+    Rails.logger.error("Error in regenerate_crl: #{e.message}")
+    false
+  end
+
   private
 
   def certificate_origin
@@ -261,21 +315,28 @@ class Certificate < ApplicationRecord
   end
 
   def certificate_revoked?
-    # Check if the certificate has been marked as revoked in the database
     return true if revoked
     
-    # Also check the CRL file
-    begin
-      crl_path = "#{ENV['crl_dir']}/crl.pem"
-      if File.exist?(crl_path)
-        crl = OpenSSL::X509::CRL.new(File.open(crl_path).read)
-        crl.revoked.map(&:serial).include?(parsed_crt.serial)
-      else
-        false
-      end
-    rescue => e
-      Rails.logger.error("Error checking CRL: #{e.message}")
-      false
+    crl_path = "#{ENV['crl_dir']}/crl.pem"
+    return false unless File.exist?(crl_path)
+    
+    crl = OpenSSL::X509::CRL.new(File.open(crl_path).read)
+
+    if crl.next_update && crl.next_update < Time.now
+      Rails.logger.warn("CRL file is expired! next_update: #{crl.next_update}")
+      return false
     end
+
+    cert_serial = parsed_crt.serial
+    is_revoked = crl.revoked.map(&:serial).include?(cert_serial)
+    
+    if is_revoked
+      Rails.logger.warn("Certificate with serial #{cert_serial} found in CRL!")
+    end
+    
+    is_revoked
+  rescue => e
+    Rails.logger.error("Error checking CRL: #{e.message}")
+    false
   end
 end

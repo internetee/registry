@@ -142,7 +142,7 @@ module Certificates
         ca_cert = OpenSSL::X509::Certificate.new(File.read(CA_CERT_PATH))
 
         cert = OpenSSL::X509::Certificate.new
-        cert.serial = 0
+        cert.serial = Time.now.to_i + Random.rand(1000)
         cert.version = 2
         cert.not_before = Time.now
         cert.not_after = Time.now + 365 * 24 * 60 * 60 # 1 year
