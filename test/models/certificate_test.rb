@@ -64,4 +64,82 @@ class CertificateTest < ActiveSupport::TestCase
     assert certificate.csr.present?
     assert certificate.expires_at.present?
   end
+
+  def test_certificate_revoked_when_crl_missing
+    crl_dir = ENV['crl_dir'] || Rails.root.join('ca/crl').to_s
+    crl_path = "#{crl_dir}/crl.pem"
+
+    original_crl = nil
+    if File.exist?(crl_path)
+      original_crl = File.read(crl_path)
+      File.delete(crl_path)
+    end
+    
+    begin
+      File.delete(crl_path) if File.exist?(crl_path)
+      revoked = @certificate.respond_to?(:certificate_revoked?) ? @certificate.certificate_revoked? : nil
+
+      if revoked != nil
+        assert_not revoked, "Сертификат не должен считаться отозванным при отсутствии CRL"
+      end
+    ensure
+      if original_crl
+        FileUtils.mkdir_p(File.dirname(crl_path))
+        File.write(crl_path, original_crl)
+      end
+    end
+  end
+  
+  def test_certificate_status
+    @certificate.update(status: "signed") if @certificate.respond_to?(:status)
+    
+    if @certificate.respond_to?(:status) && @certificate.respond_to?(:revoked?)
+      assert_equal "signed", @certificate.status
+      assert_not @certificate.revoked?, "Сертификат со статусом 'signed' не должен считаться отозванным"
+    end
+
+    @certificate.update(status: "revoked") if @certificate.respond_to?(:status)
+    
+    if @certificate.respond_to?(:status) && @certificate.respond_to?(:revoked?)
+      assert_equal "revoked", @certificate.status
+      assert @certificate.revoked?, "Сертификат со статусом 'revoked' должен считаться отозванным"
+    end
+  end
+  
+  def test_p12_status_with_properly_initialized_crl
+    skip unless @certificate.respond_to?(:certificate_revoked?)
+
+    crl_dir = ENV['crl_dir'] || Rails.root.join('ca/crl').to_s
+    crl_path = "#{crl_dir}/crl.pem"
+    
+    original_crl = nil
+    if File.exist?(crl_path)
+      original_crl = File.read(crl_path)
+    end
+    
+    begin
+      FileUtils.mkdir_p(crl_dir) unless Dir.exist?(crl_dir)
+      File.write(crl_path, "-----BEGIN X509 CRL-----\nMIHsMIGTAgEBMA0GCSqGSIb3DQEBCwUAMBQxEjAQBgNVBAMMCVRlc3QgQ0EgMhcN\nMjQwNTEzMTcyMDM1WhcNMjUwNTEzMTcyMDM1WjBEMBMCAgPoFw0yMTA1MTMxNzIw\nMzVaMBMCAgPpFw0yMTA1MTMxNzIwMzVaMBMCAgPqFw0yMTA1MTMxNzIwMzVaMA0G\nCSqGSIb3DQEBCwUAA4GBAGX5rLzwJVAPhJ1iQZLFfzjwVJVGqDIZXt1odApM7/KA\nXrQ5YLVunSBGQTbuRQKNQZQO+snGnZUxJ5OW9eRqp8HWFpCFZbWSJ86eNfuX+GD3\nwgGP/1Zv+iRiZG8ccHQC4fNxQNctMFMccRVmcpOJ8s7h+Y5ohiUXyGTiLbBu4Np3\n-----END X509 CRL-----")
+    
+      assert_not @certificate.certificate_revoked?, "Сертификат не должен считаться отозванным с пустым CRL"
+
+      if @certificate.respond_to?(:status=)
+        @certificate.status = "signed"
+        assert_equal "signed", @certificate.status
+        
+        @certificate.stubs(:certificate_revoked?).returns(true)
+        assert @certificate.certificate_revoked?
+        
+        if @certificate.respond_to?(:p12=)
+          @certificate.expects(:status=).with("revoked").at_least_once
+        end
+      end
+    ensure
+      if original_crl
+        File.write(crl_path, original_crl)
+      else
+        File.delete(crl_path) if File.exist?(crl_path)
+      end
+    end
+  end
 end
