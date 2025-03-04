@@ -15,10 +15,31 @@ module Certificates
     USER_CRT_NAME = 'user.crt'
     USER_P12_NAME = 'user.p12'
     
-    # CA files
-    CA_CERT_PATH = Rails.root.join('test/fixtures/files/test_ca/certs/ca.crt.pem')
-    CA_KEY_PATH = Rails.root.join('test/fixtures/files/test_ca/private/ca.key.pem')
-    CA_PASSWORD = '123456'
+    # CA файлы - используем методы вместо констант для возможности переопределения из ENV
+    def self.ca_cert_path
+      ENV['ca_cert_path'] || Rails.root.join('test/fixtures/files/test_ca/certs/ca.crt.pem').to_s
+    end
+    
+    def self.ca_key_path
+      ENV['ca_key_path'] || Rails.root.join('test/fixtures/files/test_ca/private/ca.key.pem').to_s
+    end
+    
+    def self.ca_password
+      ENV['ca_key_password'] || '123456'
+    end
+    
+    # Методы экземпляра для доступа к CA путям
+    def ca_cert_path
+      self.class.ca_cert_path
+    end
+    
+    def ca_key_path
+      self.class.ca_key_path
+    end
+    
+    def ca_password
+      self.class.ca_password
+    end
 
     def initialize(*)
       super
@@ -44,19 +65,16 @@ module Certificates
       
       cert = sign_certificate(csr)
       
-      # Only create p12 when we have the original key
-      p12 = user_csr ? nil : create_p12(key, cert)
+      # Always create p12 when we have a key, regardless of user_csr
+      p12_data = create_p12(key, cert)
 
       result = {
         csr: csr.to_pem,
         crt: cert.to_pem,
-        expires_at: cert.not_after
+        expires_at: cert.not_after,
+        private_key: key.export(OpenSSL::Cipher.new('AES-256-CBC'), ca_password),
+        p12: p12_data
       }
-      
-      unless user_csr
-        result[:private_key] = key.export(OpenSSL::Cipher.new('AES-256-CBC'), CA_PASSWORD)
-        result[:p12] = p12.to_der if p12
-      end
       
       result
     end
@@ -90,7 +108,7 @@ module Certificates
       request.version = 0
       request.subject = OpenSSL::X509::Name.new([
         ['CN', username, OpenSSL::ASN1::UTF8STRING],
-        ['OU', registrar_code, OpenSSL::ASN1::UTF8STRING],
+        ['OU', 'REGISTRAR', OpenSSL::ASN1::UTF8STRING],
         ['O', registrar_name, OpenSSL::ASN1::UTF8STRING]
       ])
       
@@ -98,18 +116,18 @@ module Certificates
       request.sign(key, OpenSSL::Digest::SHA256.new)
       
       save_csr(request)
-      save_private_key(key.export(OpenSSL::Cipher.new('AES-256-CBC'), CA_PASSWORD))
+      save_private_key(key.export(OpenSSL::Cipher.new('AES-256-CBC'), ca_password))
       
       [request, key]
     end
 
     def sign_certificate(csr)
       begin
-        ca_key_content = File.read(CA_KEY_PATH)
+        ca_key_content = File.read(ca_key_path)
         Rails.logger.debug("CA key file exists and has size: #{ca_key_content.size} bytes")
         
         # Try different password combinations
-        passwords_to_try = [CA_PASSWORD, '', 'changeit', 'password']
+        passwords_to_try = [ca_password, '', 'changeit', 'password']
         
         ca_key = nil
         last_error = nil
@@ -117,11 +135,11 @@ module Certificates
         passwords_to_try.each do |password|
           begin
             ca_key = OpenSSL::PKey::RSA.new(ca_key_content, password)
-            Rails.logger.debug("Successfully loaded CA key with password: #{password == CA_PASSWORD ? 'default' : password}")
+            Rails.logger.debug("Successfully loaded CA key with password: #{password == ca_password ? 'default' : password}")
             break
           rescue => e
             last_error = e
-            Rails.logger.debug("Failed to load CA key with password: #{password == CA_PASSWORD ? 'default' : password}, error: #{e.message}")
+            Rails.logger.debug("Failed to load CA key with password: #{password == ca_password ? 'default' : password}, error: #{e.message}")
           end
         end
         
@@ -139,7 +157,7 @@ module Certificates
           end
         end
         
-        ca_cert = OpenSSL::X509::Certificate.new(File.read(CA_CERT_PATH))
+        ca_cert = OpenSSL::X509::Certificate.new(File.read(ca_cert_path))
 
         cert = OpenSSL::X509::Certificate.new
         cert.serial = Time.now.to_i + Random.rand(1000)
@@ -165,7 +183,7 @@ module Certificates
         cert
       rescue => e
         Rails.logger.error("Error signing certificate: #{e.message}")
-        Rails.logger.error("CA key path: #{CA_KEY_PATH}, exists: #{File.exist?(CA_KEY_PATH)}")
+        Rails.logger.error("CA key path: #{ca_key_path}, exists: #{File.exist?(ca_key_path)}")
         
         # For test purposes, we'll create a self-signed certificate as a fallback
         key = generate_key
@@ -193,21 +211,57 @@ module Certificates
     end
 
     def create_p12(key, cert)
-      ca_cert = OpenSSL::X509::Certificate.new(File.read(CA_CERT_PATH))
+      ca_cert = OpenSSL::X509::Certificate.new(File.read(ca_cert_path))
       
-      p12 = OpenSSL::PKCS12.create(
-        nil, # password
-        username,
-        key,
-        cert,
-        [ca_cert]
-      )
+      Rails.logger.info("Creating PKCS12 container for #{username}")
+      Rails.logger.info("Certificate Subject: #{cert.subject}")
+      Rails.logger.info("Certificate Issuer: #{cert.issuer}")
       
+      # Используем стандартные алгоритмы для максимальной совместимости
+      # p12 = OpenSSL::PKCS12.create(
+      #   # "changeit", # Стандартный пароль для Java keystore
+      #   "",
+      #   "#{username}", 
+      #   key,
+      #   cert,
+      #   [ca_cert]
+      # )
+
+      begin
+        p12 = OpenSSL::PKCS12.create(
+          '123456',     # Используем пароль '123456'
+          username,
+          key,
+          cert,
+          [ca_cert],
+          "PBE-SHA1-3DES",
+          "PBE-SHA1-3DES",
+          2048,
+          2048             # Увеличиваем mac_iter до 2048 для совместимости
+        )
+      rescue => e
+        Rails.logger.error("Ошибка при создании PKCS12: #{e.message}")
+        raise
+      end
+      
+      # # Преобразуем PKCS12 объект в бинарные данные
+      # p12_data = p12.to_der
+      
+      # # Сохраняем копию для отладки
+      # pkcs12_path = CERTS_PATH.join(USER_P12_NAME)
+      # File.open(pkcs12_path, 'wb') do |file|
+      #   file.write(p12_data)
+      # end
+
       File.open(CERTS_PATH.join(USER_P12_NAME), 'wb') do |file|
         file.write(p12.to_der)
       end
       
-      p12
+      # Rails.logger.info("Created PKCS12 with standard algorithms (size: #{p12_data.bytesize} bytes)")
+      
+      # Возвращаем бинарные данные
+      # p12_data
+      p12.to_der
     end
 
     def ensure_directories_exist

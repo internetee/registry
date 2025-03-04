@@ -61,7 +61,12 @@ module Repp
           )
           
           result = generator.call
-          @certificate.update(crt: result[:crt], expires_at: result[:expires_at])
+          @certificate.update(
+            crt: result[:crt], 
+            expires_at: result[:expires_at],
+            p12: result[:p12],
+            private_key: result[:private_key]
+          )
           
           # Make sure we definitely call notify_admins
           notify_admins
@@ -83,8 +88,24 @@ module Repp
       desc "Download a specific api user's specific certificate"
       param :type, String, required: true, desc: 'Type of certificate (csr or crt)'
       def download
-        filename = "#{@api_user.username}_#{Time.zone.today.strftime('%y%m%d')}_portal.#{params[:type]}.pem"
-        send_data @certificate[params[:type].to_s], filename: filename
+        extension = params[:type] == 'p12' ? 'p12' : 'pem'
+        filename = "#{@api_user.username}_#{Time.zone.today.strftime('%y%m%d')}_portal.#{extension}"
+        
+        # Добавим логирование для отладки
+        Rails.logger.info("Download certificate type: #{params[:type]}")
+        Rails.logger.info("Certificate has p12: #{@certificate.p12.present?}")
+        
+        data = if params[:type] == 'p12' && @certificate.p12.present?
+          Rails.logger.info("Decoding p12 from Base64")
+          decoded = Base64.decode64(@certificate.p12)
+          Rails.logger.info("Decoded p12 size: #{decoded.bytesize} bytes")
+          decoded
+        else
+          Rails.logger.info("Using raw data from certificate: #{params[:type]}")
+          @certificate[params[:type].to_s]
+        end
+        
+        send_data data, filename: filename
       end
 
       private
