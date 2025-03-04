@@ -217,50 +217,28 @@ module Certificates
       Rails.logger.info("Certificate Subject: #{cert.subject}")
       Rails.logger.info("Certificate Issuer: #{cert.issuer}")
       
-      # Используем стандартные алгоритмы для максимальной совместимости
-      # p12 = OpenSSL::PKCS12.create(
-      #   # "changeit", # Стандартный пароль для Java keystore
-      #   "",
-      #   "#{username}", 
-      #   key,
-      #   cert,
-      #   [ca_cert]
-      # )
-
       begin
+        # Используем стандартные алгоритмы для максимальной совместимости
         p12 = OpenSSL::PKCS12.create(
-          '123456',     # Используем пароль '123456'
+          '123456',     # Оставляем тот же пароль
           username,
           key,
           cert,
-          [ca_cert],
-          "PBE-SHA1-3DES",
-          "PBE-SHA1-3DES",
-          2048,
-          2048             # Увеличиваем mac_iter до 2048 для совместимости
+          [ca_cert]
+          # Убираем явное указание алгоритмов и итераций
         )
       rescue => e
         Rails.logger.error("Error creating PKCS12: #{e.message}")
         raise
       end
       
-      # # Преобразуем PKCS12 объект в бинарные данные
-      # p12_data = p12.to_der
-      
-      # # Сохраняем копию для отладки
-      # pkcs12_path = CERTS_PATH.join(USER_P12_NAME)
-      # File.open(pkcs12_path, 'wb') do |file|
-      #   file.write(p12_data)
-      # end
-
       File.open(CERTS_PATH.join(USER_P12_NAME), 'wb') do |file|
         file.write(p12.to_der)
       end
       
-      # Rails.logger.info("Created PKCS12 with standard algorithms (size: #{p12_data.bytesize} bytes)")
+      Rails.logger.info("Created PKCS12 with standard algorithms (size: #{p12.to_der.bytesize} bytes)")
       
       # Возвращаем бинарные данные
-      # p12_data
       p12.to_der
     end
 
