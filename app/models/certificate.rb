@@ -56,17 +56,27 @@ class Certificate < ApplicationRecord
     return nil if private_key.blank?
     
     decoded_key = Base64.decode64(private_key)
-    OpenSSL::PKey::RSA.new(decoded_key, Certificates::CertificateGenerator::CA_PASSWORD)
+    OpenSSL::PKey::RSA.new(decoded_key, Certificates::CertificateGenerator.ca_password)
   rescue OpenSSL::PKey::RSAError
     nil
   end
+
+  # def parsed_p12
+  #   return nil if p12.blank?
+    
+  #   decoded_p12 = Base64.decode64(p12)
+  #   OpenSSL::PKCS12.new(decoded_p12)
+  # rescue OpenSSL::PKCS12::PKCS12Error
+  #   nil
+  # end
 
   def parsed_p12
     return nil if p12.blank?
     
     decoded_p12 = Base64.decode64(p12)
-    OpenSSL::PKCS12.new(decoded_p12)
-  rescue OpenSSL::PKCS12::PKCS12Error
+    OpenSSL::PKCS12.new(decoded_p12, '123456')
+  rescue OpenSSL::PKCS12::PKCS12Error => e
+    Rails.logger.error("Ошибка разбора PKCS12: #{e.message}")
     nil
   end
 
