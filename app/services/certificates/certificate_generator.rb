@@ -240,7 +240,7 @@ module Certificates
           2048             # Увеличиваем mac_iter до 2048 для совместимости
         )
       rescue => e
-        Rails.logger.error("Ошибка при создании PKCS12: #{e.message}")
+        Rails.logger.error("Error creating PKCS12: #{e.message}")
         raise
       end
       
