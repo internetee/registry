@@ -33,9 +33,35 @@ module Serializers
 
       def certificates
         user.certificates.unrevoked.map do |x|
-          subject = x.csr ? x.parsed_csr.try(:subject) : x.parsed_crt.try(:subject)
-          { id: x.id, subject: subject.to_s, status: x.status }
+          subject_str = extract_subject(x)
+          { id: x.id, subject: subject_str, status: x.status }
         end
+      end
+      
+      def extract_subject(certificate)
+        subject = nil
+        
+        if certificate.csr.present?
+          begin
+            if certificate.parsed_csr
+              subject = certificate.parsed_csr.subject.to_s
+            end
+          rescue StandardError => e
+            Rails.logger.warn("Error extracting subject from CSR: #{e.message}")
+          end
+        end
+        
+        if subject.blank? && certificate.crt.present?
+          begin
+            if certificate.parsed_crt
+              subject = certificate.parsed_crt.subject.to_s
+            end
+          rescue StandardError => e
+            Rails.logger.warn("Error extracting subject from CRT: #{e.message}")
+          end
+        end
+        
+        subject.presence || certificate.common_name.presence || 'Unknown'
       end
     end
   end

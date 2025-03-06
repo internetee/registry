@@ -118,7 +118,11 @@ Rails.application.routes.draw do
         end
       end
       resources :white_ips, only: %i[index show update create destroy]
-      resources :certificates, only: %i[create]
+      resources :certificates, only: %i[create] do
+        scope module: :certificates do
+          post 'p12', to: 'p12#create', on: :collection
+        end
+      end
       namespace :registrar do
         resources :notifications, only: %i[index show update] do
           collection do
