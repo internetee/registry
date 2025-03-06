@@ -86,23 +86,14 @@ module Domains
         @domain.template_name = 'legal_person'
         @domain.save!
 
-        original_method = DomainDeleteMailer.method(:forced)
-
-        DomainDeleteMailer.define_singleton_method(:forced) do |domain:, registrar:, registrant:, template_name:|
-          raise "Incorrect domain" unless domain.is_a?(Domain)
-          raise "Incorrect registrar" unless registrar.is_a?(Registrar)
-          raise "Incorrect registrant" unless registrant.is_a?(Contact)
-          raise "Incorrect template_name" unless template_name == 'legal_person'
-
-          OpenStruct.new(deliver_now: true)
-          
+        mail_mock = OpenStruct.new(deliver_now: true)
+        
+        DomainDeleteMailer.stub(:forced, mail_mock) do
           Domain.stub_any_instance(:force_delete_scheduled?, true) do
             assert_nothing_raised do
               ProcessClientHold.new(domain: @domain).send_mail
             end
           end
-        ensure
-          DomainDeleteMailer.define_singleton_method(:forced, original_method)
         end
       end
 
