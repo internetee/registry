@@ -90,17 +90,14 @@ class OrgRegistrantPhoneCheckerJob < ApplicationJob
   def fetch_phone_number_from_company_register(company_code)
     cache_key = "company_register:#{company_code}:phone_numbers"
     
-    # Skip cache in test environment if environment variable is set
     return fetch_from_company_register(company_code) if Rails.env.test? && ENV['SKIP_COMPANY_REGISTER_CACHE']
     
-    # Try to get data from cache
     Rails.cache.fetch(cache_key, expires_in: CACHE_EXPIRES_IN) do
       fetch_from_company_register(company_code)
     end
   end
 
   def fetch_from_company_register(company_code)
-    # If not in cache, request API with retries
     with_retry(
       exceptions: API_EXCEPTIONS,
       logger: Rails.logger,

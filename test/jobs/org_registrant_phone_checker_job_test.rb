@@ -13,15 +13,11 @@ class OrgRegistrantPhoneCheckerJobTest < ActiveSupport::TestCase
       ident: '12345678'
     )
     
-    # Set environment variable to skip cache in tests
     ENV['SKIP_COMPANY_REGISTER_CACHE'] = 'true'
-    
-    # Clear cache before each test to avoid interference
     Rails.cache.clear if defined?(Rails.cache)
   end
   
   teardown do
-    # Reset environment variable after tests
     ENV['SKIP_COMPANY_REGISTER_CACHE'] = nil
   end
 
