@@ -1,3 +1,7 @@
+07.03.2025
+* fixed logging and notificaiton issues with business regsitry validation https://github.com/internetee/registry/issues/2754
+* fixed http timeout in phone nr validation https://github.com/internetee/registry/pull/2762
+
 21.02.2025
 * nomethod error fix for cases without forceDelete set date https://github.com/internetee/registry/pull/2758
 
