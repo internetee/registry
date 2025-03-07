@@ -21,3 +21,6 @@
 /import
 ettevotja_rekvisiidid__lihtandmed.csv.zip
 Dockerfile.dev
+.cursor/
+.cursorrules
+certs/
