@@ -7,6 +7,33 @@ class EmailCheckTest < ActiveSupport::TestCase
     @contact = contacts(:john)
   end
 
+  def test_validates_regex_email_format
+    valid_emails = [
+      'user@domain.com',
+      'user_@domain.com',
+      'user.name@domain.com',
+      'hello.world@example.com',
+      '_user.email@domain.com',
+      '__user.email@domain.com',
+    ]
+
+    valid_emails.each_with_index do |email, index|
+      assert Actions::EmailCheck.new(email: email, validation_eventable: @contact, check_level: 'regex').call
+    end
+
+    invalid_emails = [
+      'user..name@domain.com',
+      '.user@domain.com',
+      'user.@domain.com',
+      'us"er@domain.com',
+      'user@domain..com'
+    ]
+
+    invalid_emails.each do |email|
+      refute Actions::EmailCheck.new(email: email, validation_eventable: @contact, check_level: 'regex').call
+    end
+  end
+
   def test_invalid_email_in_mx_level_with_a_and_aaaa_records
     Spy.on_instance_method(Actions::EmailCheck, :check_email).and_return(trumail_result)
     Spy.on_instance_method(Actions::AAndAaaaEmailValidation, :call).and_return([true])
