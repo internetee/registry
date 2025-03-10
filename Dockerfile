@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ruby:3.0.3-slim-buster
+FROM --platform=linux/amd64 ruby:3.1-bullseye
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt-get update > /dev/null && apt-get install -y --no-install-recommends > /dev/null \
@@ -33,14 +33,14 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 
 RUN apt-get install -y --no-install-recommends > /dev/null \
   nodejs=* \
-  qt5-default=* \
-  libqt5webkit5-dev=* \
-  gstreamer1.0-plugins-base=* \
-  libappindicator3-1=* \
-  gstreamer1.0-tools=* \
-  qtdeclarative5-dev=* \
-  fonts-liberation=* \
-  gstreamer1.0-x=* \
+  # qt5-default=* \
+  # libqt5webkit5-dev=* \
+  # gstreamer1.0-plugins-base=* \
+  # libappindicator3-1=* \
+  # gstreamer1.0-tools=* \
+  # qtdeclarative5-dev=* \
+  # fonts-liberation=* \
+  # gstreamer1.0-x=* \
   libasound2=* \
   libnspr4=* \
   libnss3=* \
@@ -64,7 +64,7 @@ RUN apt-get install -y --no-install-recommends > /dev/null \
 
 RUN apt-get autoremove -y && apt-get clean
 
-ENV CHROME_VERSION="128.0.6613.137"
+ENV CHROME_VERSION="133.0.6943.53"
 
 RUN wget -q "https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chrome-linux64.zip" \
     && unzip chrome-linux64.zip -d /opt/ \
@@ -75,7 +75,7 @@ RUN wget -q "https://storage.googleapis.com/chrome-for-testing-public/${CHROME_V
     && mv /opt/chromedriver-linux64/chromedriver /usr/local/bin/ \
     && rm -rf chromedriver-linux64.zip /opt/chromedriver-linux64
 
-RUN npm install --global yarn
+# RUN npm install --global yarn
 
 RUN mkdir -p /opt/webapps/app/tmp/pids
 WORKDIR /opt/webapps/app
