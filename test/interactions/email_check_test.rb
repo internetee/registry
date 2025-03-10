@@ -22,11 +22,14 @@ class EmailCheckTest < ActiveSupport::TestCase
     end
 
     invalid_emails = [
+      '@@domain.com',
+      '`@domain.com',
       'user..name@domain.com',
       '.user@domain.com',
       'user.@domain.com',
       'us"er@domain.com',
-      'user@domain..com'
+      'user@domain..com',
+      '~@internet.ee'
     ]
 
     invalid_emails.each do |email|
