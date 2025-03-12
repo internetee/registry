@@ -80,6 +80,13 @@ class ApiUser < User
     cert = machine_readable_certificate(crt)
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
 
+    puts '----'
+    puts "origin: #{origin.inspect}\n\n"
+    puts "cert: #{cert.inspect}\n\n"
+    puts "md5: #{md5}\n\n"
+    puts "com: #{com}\n\n"
+    puts "----\n\n\n"
+
     origin.exists?(md5: md5, common_name: com, revoked: false)
   end
 
