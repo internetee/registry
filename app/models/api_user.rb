@@ -74,18 +74,24 @@ class ApiUser < User
   end
 
   def pki_ok?(crt, com, api: true)
+    puts '====== incoming params ======'
+    puts "crt: #{crt.inspect}\n\n"
+    puts "com: #{com.inspect}\n\n"
+    puts "api: #{api}\n\n"
+    puts '====== incoming params ======'
+
     return false if crt.blank? || com.blank?
 
-    origin = api ? certificates.api : certificates.registrar
-    cert = machine_readable_certificate(crt)
-    md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
+    puts '====== handler ======'
 
-    puts '----'
+    origin = api ? certificates.api : certificates.registrar
     puts "origin: #{origin.inspect}\n\n"
+    cert = machine_readable_certificate(crt)
     puts "cert: #{cert.inspect}\n\n"
+    md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
     puts "md5: #{md5}\n\n"
-    puts "com: #{com}\n\n"
-    puts "----\n\n\n"
+
+    puts '====== handler ====== \n\n\n'
 
     origin.exists?(md5: md5, common_name: com, revoked: false)
   end
