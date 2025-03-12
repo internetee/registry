@@ -78,7 +78,7 @@ class ApiUser < User
     puts "crt: #{crt}\n\n"
     puts "com: #{com}\n\n"
     puts "api: #{api}\n\n"
-    puts '====== incoming params ======'
+    puts "====== incoming params ======\n\n"
 
     return false if crt.blank? || com.blank?
 
@@ -87,11 +87,11 @@ class ApiUser < User
     origin = api ? certificates.api : certificates.registrar
     puts "origin: #{origin}\n\n"
     cert = machine_readable_certificate(crt)
-    puts "cert: #{cert.to_der}\n\n"
+    puts "cert: #{cert}\n\n"
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
     puts "md5: #{md5}\n\n"
 
-    puts '====== handler ====== \n\n\n'
+    puts "====== handler ====== \n\n\n"
 
     origin.exists?(md5: md5, common_name: com, revoked: false)
   end
