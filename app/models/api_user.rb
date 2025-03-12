@@ -75,8 +75,8 @@ class ApiUser < User
 
   def pki_ok?(crt, com, api: true)
     puts '====== incoming params ======'
-    puts "crt: #{crt.inspect}\n\n"
-    puts "com: #{com.inspect}\n\n"
+    puts "crt: #{crt}\n\n"
+    puts "com: #{com}\n\n"
     puts "api: #{api}\n\n"
     puts '====== incoming params ======'
 
@@ -85,9 +85,9 @@ class ApiUser < User
     puts '====== handler ======'
 
     origin = api ? certificates.api : certificates.registrar
-    puts "origin: #{origin.inspect}\n\n"
+    puts "origin: #{origin}\n\n"
     cert = machine_readable_certificate(crt)
-    puts "cert: #{cert.inspect}\n\n"
+    puts "cert: #{cert.to_der}\n\n"
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
     puts "md5: #{md5}\n\n"
 
