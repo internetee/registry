@@ -74,24 +74,24 @@ class ApiUser < User
   end
 
   def pki_ok?(crt, com, api: true)
-    puts '====== incoming params ======'
-    puts "crt: #{crt}\n\n"
-    puts "com: #{com}\n\n"
-    puts "api: #{api}\n\n"
-    puts "====== incoming params ======\n\n"
+    Rails.logger.info '====== incoming params ======'
+    Rails.logger.info "crt: #{crt}\n\n"
+    Rails.logger.info "com: #{com}\n\n"
+    Rails.logger.info "api: #{api}\n\n"
+    Rails.logger.info "====== incoming params ======\n\n"
 
     return false if crt.blank? || com.blank?
 
-    puts '====== handler ======'
+    Rails.logger.info '====== handler ======'
 
     origin = api ? certificates.api : certificates.registrar
-    puts "origin: #{origin}\n\n"
+    Rails.logger.info "origin: #{origin}\n\n"
     cert = machine_readable_certificate(crt)
-    puts "cert: #{cert}\n\n"
+    Rails.logger.info "cert: #{cert}\n\n"
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
-    puts "md5: #{md5}\n\n"
+    Rails.logger.info "md5: #{md5}\n\n"
 
-    puts "====== handler ====== \n\n\n"
+    Rails.logger.info "====== handler ====== \n\n\n"
 
     origin.exists?(md5: md5, common_name: com, revoked: false)
   end
