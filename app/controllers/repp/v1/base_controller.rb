@@ -150,17 +150,7 @@ module Repp
         crt = request.headers['User-Certificate']
         com = request.headers['User-Certificate-CN']
 
-        Rails.logger.info "--------------------------------"
-        Rails.logger.info "Headers: crt=#{crt}, com=#{com}"
-        Rails.logger.info "test"
-        Rails.logger.info "#{@current_user.inspect}"
-        Rails.logger.info "--------------------------------"
-
         return if @current_user.pki_ok?(crt, com, api: false)
-
-        Rails.logger.info "-------------------------------- FAIL"
-        Rails.logger.info @current_user.pki_ok?(crt, com, api: false)
-        Rails.logger.info "-------------------------------- FAIL"
 
         render_invalid_cert_response
       end
