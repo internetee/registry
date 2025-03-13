@@ -13,8 +13,7 @@ module Repp
           api_user_id = p12_params[:api_user_id]
           render_error(I18n.t('errors.messages.not_found'), :not_found) and return if api_user_id.blank?
 
-          api_user = current_user.registrar.api_users.find(api_user_id)
-          certificate = Certificate.generate_for_api_user(api_user: api_user)
+          certificate = ::Certificates::CertificateGenerator.new(api_user_id: api_user_id).execute
           render_success(data: { certificate: certificate })
         end
 

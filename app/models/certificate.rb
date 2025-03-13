@@ -52,34 +52,6 @@ class Certificate < ApplicationRecord
     @p_csr ||= OpenSSL::X509::Request.new(csr) if csr
   end
 
-  def parsed_private_key
-    return nil if private_key.blank?
-    
-    decoded_key = Base64.decode64(private_key)
-    OpenSSL::PKey::RSA.new(decoded_key, Certificates::CertificateGenerator.ca_password)
-  rescue OpenSSL::PKey::RSAError
-    nil
-  end
-
-  # def parsed_p12
-  #   return nil if p12.blank?
-    
-  #   decoded_p12 = Base64.decode64(p12)
-  #   OpenSSL::PKCS12.new(decoded_p12)
-  # rescue OpenSSL::PKCS12::PKCS12Error
-  #   nil
-  # end
-
-  def parsed_p12
-    return nil if p12.blank?
-    
-    decoded_p12 = Base64.decode64(p12)
-    OpenSSL::PKCS12.new(decoded_p12, '123456')
-  rescue OpenSSL::PKCS12::PKCS12Error => e
-    Rails.logger.error("Ошибка разбора PKCS12: #{e.message}")
-    nil
-  end
-
   def revoked?
     status == REVOKED
   end
@@ -96,7 +68,7 @@ class Certificate < ApplicationRecord
 
     if certificate_expired?
       @cached_status = EXPIRED
-    elsif revoked || certificate_revoked?
+    elsif certificate_revoked?
       @cached_status = REVOKED
     end
 
@@ -127,109 +99,6 @@ class Certificate < ApplicationRecord
     end
 
     handle_revocation_failure(err_output)
-  end
-
-  def renewable?
-    return false if revoked?
-    return false if crt.blank?
-    return false if expires_at.blank?
-    
-    expires_at > Time.current && expires_at <= 30.days.from_now
-  end
-
-  def expired?
-    return false if revoked?
-    return false if crt.blank?
-    return false if expires_at.blank?
-    
-    expires_at < Time.current
-  end
-
-  def renew
-    raise "Certificate cannot be renewed" unless renewable?
-
-    generator = Certificates::CertificateGenerator.new(
-      username: api_user.username,
-      registrar_code: api_user.registrar_code,
-      registrar_name: api_user.registrar_name,
-      certificate: self
-    )
-
-    generator.renew_certificate
-  end
-
-  def self.generate_for_api_user(api_user:)
-    generator = Certificates::CertificateGenerator.new(
-      username: api_user.username,
-      registrar_code: api_user.registrar_code,
-      registrar_name: api_user.registrar_name
-    )
-    
-    cert_data = generator.call
-    
-    create!(
-      api_user: api_user,
-      interface: 'api',
-      private_key: Base64.encode64(cert_data[:private_key]),
-      csr: cert_data[:csr],
-      crt: cert_data[:crt],
-      p12: Base64.encode64(cert_data[:p12]),
-      expires_at: cert_data[:expires_at]
-    )
-  end
-
-  def self.diagnose_crl_issue
-    crl_path = "#{ENV['crl_dir']}/crl.pem"
-    
-    Rails.logger.info("CRL path: #{crl_path}")
-    Rails.logger.info("CRL exists: #{File.exist?(crl_path)}")
-    
-    return false unless File.exist?(crl_path)
-    
-    crl = OpenSSL::X509::CRL.new(File.open(crl_path).read)
-    
-    Rails.logger.info("CRL issuer: #{crl.issuer}")
-    Rails.logger.info("CRL last update: #{crl.last_update}")
-    Rails.logger.info("CRL next update: #{crl.next_update}")
-    Rails.logger.info("CRL revoked certificates count: #{crl.revoked.size}")
-    
-    if crl.revoked.any?
-      crl.revoked.each do |revoked|
-        Rails.logger.info("Revoked serial: #{revoked.serial}, time: #{revoked.time}")
-      end
-    end
-    
-    true
-  rescue => e
-    Rails.logger.error("Error parsing CRL file: #{e.message}")
-    false
-  end
-
-  def self.regenerate_crl
-    ca_base_path = ENV['ca_dir'] || Rails.root.join('certs', 'ca').to_s
-
-    command = [
-      'openssl', 'ca', 
-      '-config', ENV['openssl_config_path'] || "#{ca_base_path}/openssl.cnf",
-      '-keyfile', ENV['ca_key_path'] || "#{ca_base_path}/private/ca.key.pem", 
-      '-cert', ENV['ca_cert_path'] || "#{ca_base_path}/certs/ca.crt.pem",
-      '-crldays', '3650', 
-      '-gencrl', 
-      '-out', ENV['crl_path'] || "#{ca_base_path}/crl/crl.pem"
-    ]
-    
-    output, error, status = Open3.capture3(*command)
-    
-    if status.success?
-      Rails.logger.info("CRL regenerated successfully")
-      true
-    else
-      Rails.logger.error("Failed to regenerate CRL: #{error}")
-      false
-    end
-  rescue => e
-    Rails.logger.error("Error in regenerate_crl: #{e.message}")
-    false
   end
 
   private
@@ -325,28 +194,7 @@ class Certificate < ApplicationRecord
   end
 
   def certificate_revoked?
-    return true if revoked
-    
-    crl_path = "#{ENV['crl_dir']}/crl.pem"
-    return false unless File.exist?(crl_path)
-    
-    crl = OpenSSL::X509::CRL.new(File.open(crl_path).read)
-
-    if crl.next_update && crl.next_update < Time.now
-      Rails.logger.warn("CRL file is expired! next_update: #{crl.next_update}")
-      return false
-    end
-
-    cert_serial = parsed_crt.serial
-    is_revoked = crl.revoked.map(&:serial).include?(cert_serial)
-    
-    if is_revoked
-      Rails.logger.warn("Certificate with serial #{cert_serial} found in CRL!")
-    end
-    
-    is_revoked
-  rescue => e
-    Rails.logger.error("Error checking CRL: #{e.message}")
-    false
+    crl = OpenSSL::X509::CRL.new(File.open("#{ENV['crl_dir']}/crl.pem").read)
+    crl.revoked.map(&:serial).include?(parsed_crt.serial)
   end
 end

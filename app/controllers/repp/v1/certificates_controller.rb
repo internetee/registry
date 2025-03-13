@@ -20,65 +20,13 @@ module Repp
       def create
         @api_user = current_user.registrar.api_users.find(cert_params[:api_user_id])
 
-        # Handle the invalid certificate test case explicitly - if the body is literally "invalid"
-        if cert_params[:csr] && cert_params[:csr][:body] == 'invalid'
-          @epp_errors = ActiveModel::Errors.new(self)
-          @epp_errors.add(:epp_errors, msg: 'Invalid CSR or CRT', code: '2304')
-          render_epp_error(:bad_request) and return
-        end
-
         csr = decode_cert_params(cert_params[:csr])
-        interface = cert_params[:interface].presence || 'api'
-        
-        # Проверяем, что CSR был успешно декодирован
-        if csr.nil?
-          @epp_errors = ActiveModel::Errors.new(self)
-          @epp_errors.add(:epp_errors, msg: I18n.t('errors.invalid_csr_format'), code: '2304')
-          render_epp_error(:bad_request) and return
-        end
-        
-        # Validate interface
-        unless Certificate::INTERFACES.include?(interface)
-          render_epp_error(:unprocessable_entity, message: I18n.t('errors.invalid_interface')) and return
-        end
 
-        # Validate CSR content to ensure it's a valid binary string before saving
-        unless csr.is_a?(String) && csr.valid_encoding?
-          @epp_errors = ActiveModel::Errors.new(self)
-          @epp_errors.add(:epp_errors, msg: I18n.t('errors.invalid_certificate'), code: '2304')
-          render_epp_error(:bad_request) and return
-        end
-
-        @certificate = @api_user.certificates.build(csr: csr, interface: interface)
+        @certificate = @api_user.certificates.build(csr: csr)
 
         if @certificate.save
-          generator = ::Certificates::CertificateGenerator.new(
-            username: @api_user.username,
-            registrar_code: @api_user.registrar.code,
-            registrar_name: @api_user.registrar.name,
-            user_csr: csr,
-            interface: interface
-          )
-          
-          result = generator.call
-          @certificate.update(
-            crt: result[:crt], 
-            expires_at: result[:expires_at],
-            p12: result[:p12],
-            private_key: result[:private_key]
-          )
-          
-          # Make sure we definitely call notify_admins
           notify_admins
-          render_success(data: { 
-            certificate: {
-              id: @certificate.id,
-              common_name: @certificate.common_name,
-              expires_at: @certificate.expires_at,
-              interface: @certificate.interface,
-              status: @certificate.status
-            } 
-          })
+          render_success(data: { api_user: { id: @api_user.id } })
         else
           handle_non_epp_errors(@certificate)
         end
@@ -90,18 +38,11 @@ module Repp
       def download
         extension = params[:type] == 'p12' ? 'p12' : 'pem'
         filename = "#{@api_user.username}_#{Time.zone.today.strftime('%y%m%d')}_portal.#{extension}"
-        
-        # Добавим логирование для отладки
-        Rails.logger.info("Download certificate type: #{params[:type]}")
-        Rails.logger.info("Certificate has p12: #{@certificate.p12.present?}")
-        
+
         data = if params[:type] == 'p12' && @certificate.p12.present?
-          Rails.logger.info("Decoding p12 from Base64")
           decoded = Base64.decode64(@certificate.p12)
-          Rails.logger.info("Decoded p12 size: #{decoded.bytesize} bytes")
           decoded
         else
-          Rails.logger.info("Using raw data from certificate: #{params[:type]}")
           @certificate[params[:type].to_s]
         end
         
