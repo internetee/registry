@@ -131,7 +131,7 @@ class Certificate < ApplicationRecord
     cn = pc.scan(%r{\/CN=(.+)}).flatten.first
     self.common_name = cn.split('/').first
     self.md5 = OpenSSL::Digest::MD5.new(origin.to_der).to_s if crt
-    self.interface = crt ? API : REGISTRAR
+    self.interface = crt ? API : REGISTRAR if interface.blank?
   end
 
   def create_tempfile(filename, content = '')
