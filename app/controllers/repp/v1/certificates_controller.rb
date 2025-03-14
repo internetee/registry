@@ -36,7 +36,14 @@ module Repp
       desc "Download a specific api user's specific certificate"
       param :type, String, required: true, desc: 'Type of certificate (csr or crt)'
       def download
-        extension = params[:type] == 'p12' ? 'p12' : 'pem'
+        extension = case params[:type]
+                   when 'p12' then 'p12'
+                   when 'private_key' then 'key'
+                   when 'csr' then 'csr'
+                   when 'crt' then 'crt'
+                   else 'pem'
+                   end
+
         filename = "#{@api_user.username}_#{Time.zone.today.strftime('%y%m%d')}_portal.#{extension}"
 
         data = if params[:type] == 'p12' && @certificate.p12.present?

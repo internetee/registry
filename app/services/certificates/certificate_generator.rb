@@ -124,7 +124,7 @@ module Certificates
       cert
     end
 
-    def create_user_p12(key, cert, password = '123456')
+    def create_user_p12(key, cert, password = P12_PASSWORD)
       ca_cert = OpenSSL::X509::Certificate.new(File.read(ca_cert_path))
 
       p12 = OpenSSL::PKCS12.create(
