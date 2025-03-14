@@ -52,6 +52,25 @@ class Certificate < ApplicationRecord
     @p_csr ||= OpenSSL::X509::Request.new(csr) if csr
   end
 
+  def parsed_private_key
+    return nil if private_key.blank?
+    
+    OpenSSL::PKey::RSA.new(private_key)
+  rescue OpenSSL::PKey::RSAError => e
+    Rails.logger.error("Failed to parse private key: #{e.message}")
+    nil
+  end
+
+  def parsed_p12
+    return nil if p12.blank?
+    
+    decoded_p12 = Base64.decode64(p12)
+    OpenSSL::PKCS12.new(decoded_p12, Certificates::CertificateGenerator::P12_PASSWORD)
+  rescue OpenSSL::PKCS12::PKCS12Error => e
+    Rails.logger.error("Failed to parse PKCS12: #{e.message}")
+    nil
+  end
+
   def revoked?
     status == REVOKED
   end

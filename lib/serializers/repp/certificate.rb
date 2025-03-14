@@ -9,8 +9,7 @@ module Serializers
 
       def to_json(obj = certificate)
         json = obj.as_json.except('csr', 'crt', 'private_key', 'p12')
-        
-        # Безопасно извлекаем данные из сертификатов
+
         begin
           csr = obj.parsed_csr
         rescue StandardError => e
@@ -46,7 +45,6 @@ module Serializers
         json[:csr] = csr_data(csr) if csr
         json[:crt] = crt_data(crt) if crt
         
-        # Если в тестовой среде данные не удалось извлечь, добавляем заглушки
         if (Rails.env.test? || ENV['SKIP_CERTIFICATE_VALIDATIONS'] == 'true')
           if csr.nil? && obj.csr.present?
             json[:csr] = { version: 0, subject: obj.common_name || 'Test Subject', alg: 'sha256WithRSAEncryption' }
