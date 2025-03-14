@@ -80,6 +80,12 @@ class ApiUser < User
     cert = machine_readable_certificate(crt)
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
 
+    Rails.logger.info '============== pki_ok? =============='
+    Rails.logger.info md5
+    Rails.logger.info com
+    Rails.logger.info origin.exists?(md5: md5, common_name: com, revoked: false)
+    Rails.logger.info '============== pki_ok? =============='
+
     origin.exists?(md5: md5, common_name: com, revoked: false)
   end
 
