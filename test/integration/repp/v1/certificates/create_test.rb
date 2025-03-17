@@ -40,7 +40,7 @@ class ReppV1CertificatesCreateTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :bad_request
-    assert json[:message].include? 'Invalid CSR or CRT'
+    assert json[:message].include? I18n.t(:crt_or_csr_must_be_present)
   end
 
   def test_returns_error_response_if_throttled

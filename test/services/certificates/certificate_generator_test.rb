@@ -2,153 +2,88 @@ require 'test_helper'
 
 module Certificates
   class CertificateGeneratorTest < ActiveSupport::TestCase
-    setup do
-      @certificate = certificates(:api)
-      @generator = CertificateGenerator.new(
-        username: "test_user",
-        registrar_code: "REG123",
-        registrar_name: "Test Registrar"
-      )
+    test "generate client private key" do
+      generator = CertificateGenerator.new(api_user_id: users(:api_bestnames).id)
+      private_key = generator.generate_user_key
+
+      assert_instance_of OpenSSL::PKey::RSA, private_key
+      assert_equal 4096, private_key.n.num_bits
     end
 
-    def test_generates_new_certificate
-      result = @generator.call
-      
-      assert result[:private_key].present?
-      assert result[:csr].present?
-      assert result[:crt].present?
-      assert result[:p12].present?
-      assert result[:expires_at].present?
-      
-      assert_instance_of String, result[:private_key]
-      assert_instance_of String, result[:csr]
-      assert_instance_of String, result[:crt]
-      assert_instance_of String, result[:p12]
-      assert_instance_of Time, result[:expires_at]
+    test "generate client csr" do
+      generator = CertificateGenerator.new(api_user_id: users(:api_bestnames).id)
+      private_key = generator.generate_user_key
+      csr = generator.generate_user_csr(private_key)
+
+      assert_instance_of OpenSSL::X509::Request, csr
+      assert csr.verify(csr.public_key)
+      assert_equal "/CN=#{generator.username}/OU=REGISTRAR/O=#{generator.registrar_name}", csr.subject.to_s
     end
 
-    def test_uses_existing_csr_and_private_key
-      existing_csr = @certificate.csr
-      existing_private_key = "existing_private_key"
-      @certificate.update!(private_key: existing_private_key)
-      
-      result = @generator.call
-      
-      assert result[:csr].present?
-      assert result[:private_key].present?
-      assert_not_equal existing_csr, result[:csr]
-      assert_not_equal existing_private_key, result[:private_key]
+    test "generate client ctr" do
+      generator = CertificateGenerator.new(api_user_id: users(:api_bestnames).id)
+      private_key = generator.generate_user_key
+      csr = generator.generate_user_csr(private_key)
+      certificate = generator.sign_user_certificate(csr)
+
+      ca_cert = OpenSSL::X509::Certificate.new(File.read(generator.ca_cert_path))
+
+      assert_instance_of OpenSSL::X509::Certificate, certificate
+      assert_equal csr.subject.to_s, certificate.subject.to_s
+      assert_equal 2, certificate.version
+      assert certificate.verify(ca_cert.public_key)
     end
 
-    def test_renew_certificate
-      @certificate.update!(
-        expires_at: 20.days.from_now
-      )
-      
-      result = CertificateGenerator.new(
-        username: @certificate.common_name,
-        registrar_code: "REG123",
-        registrar_name: "Test Registrar"
-      ).call
-      
-      assert result[:crt].present?
-      assert result[:private_key].present?
-    end
-    
-    def test_generates_unique_serial_numbers
-      result1 = @generator.call
-      result2 = @generator.call
-      
-      cert1 = OpenSSL::X509::Certificate.new(result1[:crt])
-      cert2 = OpenSSL::X509::Certificate.new(result2[:crt])
-      
-      assert_not_equal 0, cert1.serial.to_i
-      assert_not_equal 0, cert2.serial.to_i
-      assert_not_equal cert1.serial.to_i, cert2.serial.to_i
-    end
-    
-    def test_serial_based_on_time
-      current_time = Time.now.to_i
-      
-      result = @generator.call
-      cert = OpenSSL::X509::Certificate.new(result[:crt])
+    test "generate client p12" do
+      generator = CertificateGenerator.new(api_user_id: users(:api_bestnames).id)
+      private_key = generator.generate_user_key
+      csr = generator.generate_user_csr(private_key)
+      certificate = generator.sign_user_certificate(csr)
 
-      # Check that the serial is at least around the current time
-      assert cert.serial.to_i >= current_time - 10
+      p12 = generator.create_user_p12(private_key, certificate)
       
-      # Increase the upper bound to account for potential test execution delays
-      # and the random component added to the serial number
-      assert cert.serial.to_i <= current_time + 2000
-    end
-    
-    def test_p12_creation_succeeds_with_crl
-      crl_dir = ENV['crl_dir'] || Rails.root.join('ca/crl').to_s
-      crl_path = "#{crl_dir}/crl.pem"
-
-      original_crl = nil
-      if File.exist?(crl_path)
-        original_crl = File.read(crl_path)
-      end
-
-      FileUtils.mkdir_p(crl_dir) unless Dir.exist?(crl_dir)
+      # Verify P12 can be loaded back with correct password
+      loaded_p12 = OpenSSL::PKCS12.new(p12, CertificateGenerator::P12_PASSWORD)
       
-      begin
-        if File.exist?(crl_path)
-          File.delete(crl_path)
-        end
-        
-        File.write(crl_path, "-----BEGIN X509 CRL-----\nMIHsMIGTAgEBMA0GCSqGSIb3DQEBCwUAMBQxEjAQBgNVBAMMCVRlc3QgQ0EgMhcN\nMjQwNTEzMTcyMDM1WhcNMjUwNTEzMTcyMDM1WjBEMBMCAgPoFw0yMTA1MTMxNzIw\nMzVaMBMCAgPpFw0yMTA1MTMxNzIwMzVaMBMCAgPqFw0yMTA1MTMxNzIwMzVaMA0G\nCSqGSIb3DQEBCwUAA4GBAGX5rLzwJVAPhJ1iQZLFfzjwVJVGqDIZXt1odApM7/KA\nXrQ5YLVunSBGQTbuRQKNQZQO+snGnZUxJ5OW9eRqp8HWFpCFZbWSJ86eNfuX+GD3\nwgGP/1Zv+iRiZG8ccHQC4fNxQNctMFMccRVmcpOJ8s7h+Y5ohiUXyGTiLbBu4Np3\n-----END X509 CRL-----")
-
-        result = @generator.call
-        assert result[:p12].present?
-
-        certificate = Certificate.last
-        assert_equal "signed", certificate.status if certificate.respond_to?(:status)
-      ensure
-        if original_crl
-          File.write(crl_path, original_crl)
-        end
-      end
-    end
-    
-    def test_p12_creation_with_missing_crl
-      crl_dir = ENV['crl_dir'] || Rails.root.join('ca/crl').to_s
-      crl_path = "#{crl_dir}/crl.pem"
-
-      original_crl = nil
-      if File.exist?(crl_path)
-        original_crl = File.read(crl_path)
-        File.delete(crl_path)
-      end
-      
-      begin
-        File.delete(crl_path) if File.exist?(crl_path)
-        
-        result = @generator.call
-        assert result[:p12].present?, "P12 container should be created even when CRL is missing"
-      ensure
-        if original_crl
-          FileUtils.mkdir_p(File.dirname(crl_path))
-          File.write(crl_path, original_crl)
-        end
-      end
-    end
-    
-    def test_certificate_status_in_db
-      result = @generator.call
-
-      assert result[:crt].present?
-      assert result[:p12].present?
-
-      if defined?(Certificate) && Certificate.method_defined?(:create_from_result)
-        certificate = Certificate.create_from_result(result)
-        assert_equal "signed", certificate.status if certificate.respond_to?(:status)
-      end
-      
-      assert_nothing_raised do
-        OpenSSL::X509::Certificate.new(result[:crt])
-      end
+      assert_instance_of OpenSSL::PKCS12, loaded_p12
+      assert_equal certificate.to_der, loaded_p12.certificate.to_der
+      assert_equal private_key.to_der, loaded_p12.key.to_der
     end
 
+    test "serial number should be created for each certificate" do
+      generator = CertificateGenerator.new(api_user_id: users(:api_bestnames).id)
+      
+      # Generate two certificates and compare their serial numbers
+      csr1 = generator.generate_user_csr(generator.generate_user_key)
+      cert1 = generator.sign_user_certificate(csr1)
+      serial1 = cert1.serial.to_s(16) # Convert to hex string
+      
+      csr2 = generator.generate_user_csr(generator.generate_user_key)
+      cert2 = generator.sign_user_certificate(csr2)
+      serial2 = cert2.serial.to_s(16) # Convert to hex string
+      
+      assert_not_equal serial1, serial2
+      assert_match(/^[0-9A-Fa-f]+$/, serial1)
+      assert_match(/^[0-9A-Fa-f]+$/, serial2)
+    end
+
+    test "generated data should be store in database" do
+      generator = CertificateGenerator.new(api_user_id: users(:api_bestnames).id)
+      certificate_record = generator.execute
+
+      assert certificate_record.persisted?
+      assert_not_nil certificate_record.private_key
+      assert_not_nil certificate_record.csr
+      assert_not_nil certificate_record.crt
+      assert_not_nil certificate_record.p12
+      assert_equal 'registrar', certificate_record.interface
+      assert_equal CertificateGenerator::P12_PASSWORD, certificate_record.p12_password_digest
+      assert_equal users(:api_bestnames).username, certificate_record.common_name
+      
+      # Verify the certificate can be parsed back from stored data
+      cert = OpenSSL::X509::Certificate.new(certificate_record.crt)
+      assert_equal certificate_record.serial, cert.serial.to_s
+      assert_equal certificate_record.expires_at.to_i, cert.not_after.to_i
+    end
   end
 end 

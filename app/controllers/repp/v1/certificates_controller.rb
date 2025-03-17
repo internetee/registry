@@ -39,8 +39,8 @@ module Repp
         extension = case params[:type]
                    when 'p12' then 'p12'
                    when 'private_key' then 'key'
-                   when 'csr' then 'csr'
-                   when 'crt' then 'crt'
+                   when 'csr' then 'csr.pem'
+                   when 'crt' then 'crt.pem'
                    else 'pem'
                    end
 

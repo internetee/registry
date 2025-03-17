@@ -102,10 +102,10 @@ module Certificates
       ca_key = OpenSSL::PKey::RSA.new(File.read(ca_key_path), ca_password)
       
       cert = OpenSSL::X509::Certificate.new
-      cert.serial = self.class.generate_serial_number # Используем новый метод генерации серийного номера
+      cert.serial = self.class.generate_serial_number 
       cert.version = 2
       cert.not_before = Time.now
-      cert.not_after = Time.now + 365 * 24 * 60 * 60  # 1 год
+      cert.not_after = Time.now + 365 * 24 * 60 * 60 # TODO: 1 year (temporary)
       
       cert.subject = csr.subject
       cert.public_key = csr.public_key
