@@ -167,8 +167,7 @@ module Actions
     end
 
     def assign_tech_contact_changes
-      props = gather_domain_contacts(params[:contacts].select { |c| c[:type] == 'tech' },
-                                     admin: false)
+      props = gather_domain_contacts(params[:contacts].select { |c| c[:type] == 'tech' }, admin: false)
 
       start_validate_email(props) if props.present?
 
