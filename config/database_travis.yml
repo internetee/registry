@@ -7,13 +7,8 @@ default: &default
   password: password
 
 test:
-  primary:
-    <<: *default
-    database: registry_test
-  primary_replica:
-    <<: *default
-    database: registry_test
-    replica: true
+  <<: *default
+  database: registry_test
 
 demo:
   <<: *default
