@@ -261,26 +261,26 @@ module Actions
     end
 
     def verify_registrant_change?
-      return validate_dispute_case if domain.disputed? && params[:reserved_pw].present?
+      return validate_dispute_case if domain.disputed?
       return false if !@changes_registrant || true?(params[:registrant][:verified])
-      return true unless domain.disputed?
-
-      domain.add_epp_error('2304', nil, nil, 'Required parameter missing; reservedpw element ' \
-                           'required for dispute domains')
 
       true
     end
 
     def validate_dispute_case
       dispute = Dispute.active.find_by(domain_name: domain.name, password: params[:reserved_pw])
-      if dispute
-        Dispute.close_by_domain(domain.name)
-        false
+      Dispute.close_by_domain(domain.name) and return false if dispute
+
+      if params[:reserved_pw].present?
+        domain.add_epp_error(
+          '2202', nil, nil, 'Invalid authorization information; invalid reserved>pw value'
+        )
       else
-        domain.add_epp_error('2202', nil, nil,
-                             'Invalid authorization information; invalid reserved>pw value')
-        true
+        domain.add_epp_error(
+          '2304', nil, nil, 'Required parameter missing; reservedpw element required for dispute domains'
+        )
       end
+      true
     end
 
     def commit
