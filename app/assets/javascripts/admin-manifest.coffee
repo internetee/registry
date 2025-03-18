@@ -8,6 +8,10 @@
 #= require jquery-ui/widgets/datepicker
 #= require select2
 #= require jquery.doubleScroll
+#= require codemirror/codemirror.js
+#= require codemirror/codemirror/modes/sql.js
+#= require codemirror/codemirror/addons/hint/show-hint.js
+#= require codemirror/codemirror/addons/hint/sql-hint.js
 
 # Load order does matter
 #= require polyfills/node_list_for_each

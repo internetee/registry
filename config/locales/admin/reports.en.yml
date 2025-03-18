@@ -1,0 +1,16 @@
+en:
+  admin:
+    reports:
+      created: "Report created successfully."
+      updated: "Report updated successfully."
+      deleted: "Report deleted successfully."
+      index:
+        new_report: "New Report"
+        run: "Run"
+      new:
+        title: "Create New Report"
+      edit:
+        title: "Edit Report"
+      run:
+        title: "Report Results: %{name}"
+        csv_btn: "Export as CSV"
