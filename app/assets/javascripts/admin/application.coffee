@@ -34,6 +34,32 @@ $(window).load ->
     return
 
   positionSlider()
+
   $(window).scroll(positionSlider).resize positionSlider
   #due .report-table width: auto top scrollbar appears after resize so we do fake resize action
   $(window).resize()
+
+# https://github.com/codemirror/CodeMirror/blob/master/mode/sql/index.html
+window.init_sql_editor = (mime, tables) ->
+  editor = CodeMirror.fromTextArea $('#report_sql_query').get(0),
+    mime: mime
+    hint: CodeMirror.hint.sql
+    matchBrackets: true
+    smartIndent: true
+    autofocus: true
+    theme: 'base16-light'
+    lineNumbers: true
+    mode: "text/x-sql"
+    tabSize: 4
+    height: 'auto'
+    extraKeys:
+      "Esc": 'autocomplete'
+      "Ctrl": 'autocomplete'
+      "Ctrl-Space": 'autocomplete'
+      "Ctrl-Enter": ->
+        $(editor.getInputField()).parents('form').submit()
+    hintOptions:
+      tables: tables
+
+  editor.setSize('100%', '300')
+  editor.focus()

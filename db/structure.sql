@@ -693,11 +693,11 @@ CREATE TABLE public.contacts (
     disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     email_history character varying,
     registrant_publishable boolean DEFAULT false,
-    checked_company_at timestamp without time zone,
-    company_register_status character varying,
     ident_request_sent_at timestamp without time zone,
     verified_at timestamp without time zone,
-    verification_id character varying
+    verification_id character varying,
+    checked_company_at timestamp without time zone,
+    company_register_status character varying
 );
 
 
@@ -1105,45 +1105,6 @@ ALTER SEQUENCE public.email_addresses_verifications_id_seq OWNED BY public.email
 
 
 --
--- Name: epp_logs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.epp_logs (
-    id bigint NOT NULL,
-    request text,
-    response text,
-    request_command character varying(255),
-    request_object character varying,
-    request_successful boolean,
-    api_user_name character varying(255),
-    api_user_registrar character varying(255),
-    ip character varying(255),
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    uuid character varying
-);
-
-
---
--- Name: epp_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.epp_logs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: epp_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.epp_logs_id_seq OWNED BY public.epp_logs.id;
-
-
---
 -- Name: epp_sessions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1173,38 +1134,6 @@ CREATE SEQUENCE public.epp_sessions_id_seq
 --
 
 ALTER SEQUENCE public.epp_sessions_id_seq OWNED BY public.epp_sessions.id;
-
-
---
--- Name: free_domain_reservation_holders; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.free_domain_reservation_holders (
-    id bigint NOT NULL,
-    user_unique_id character varying NOT NULL,
-    domain_names character varying[] DEFAULT '{}'::character varying[],
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: free_domain_reservation_holders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.free_domain_reservation_holders_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: free_domain_reservation_holders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.free_domain_reservation_holders_id_seq OWNED BY public.free_domain_reservation_holders.id;
 
 
 --
@@ -2630,64 +2559,26 @@ ALTER SEQUENCE public.registrars_id_seq OWNED BY public.registrars.id;
 
 
 --
--- Name: repp_logs; Type: TABLE; Schema: public; Owner: -
+-- Name: reports; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.repp_logs (
+CREATE TABLE public.reports (
     id bigint NOT NULL,
-    request_path character varying(255),
-    request_method character varying(255),
-    request_params text,
-    response text,
-    response_code character varying(255),
-    api_user_name character varying(255),
-    api_user_registrar character varying(255),
-    ip character varying(255),
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    uuid character varying
-);
-
-
---
--- Name: repp_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.repp_logs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: repp_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.repp_logs_id_seq OWNED BY public.repp_logs.id;
-
-
---
--- Name: reserve_domain_invoices; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.reserve_domain_invoices (
-    id bigint NOT NULL,
-    invoice_number character varying,
-    domain_names character varying[] DEFAULT '{}'::character varying[],
+    name character varying,
+    description text,
+    sql_query text,
+    created_by integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    status integer DEFAULT 0,
-    metainfo character varying
+    parameters json
 );
 
 
 --
--- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.reserve_domain_invoices_id_seq
+CREATE SEQUENCE public.reports_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2696,10 +2587,10 @@ CREATE SEQUENCE public.reserve_domain_invoices_id_seq
 
 
 --
--- Name: reserve_domain_invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.reserve_domain_invoices_id_seq OWNED BY public.reserve_domain_invoices.id;
+ALTER SEQUENCE public.reports_id_seq OWNED BY public.reports.id;
 
 
 --
@@ -2714,8 +2605,7 @@ CREATE TABLE public.reserved_domains (
     updator_str character varying,
     legacy_id integer,
     name character varying NOT NULL,
-    password character varying NOT NULL,
-    expire_at timestamp without time zone
+    password character varying NOT NULL
 );
 
 
@@ -3212,24 +3102,10 @@ ALTER TABLE ONLY public.email_addresses_verifications ALTER COLUMN id SET DEFAUL
 
 
 --
--- Name: epp_logs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.epp_logs ALTER COLUMN id SET DEFAULT nextval('public.epp_logs_id_seq'::regclass);
-
-
---
 -- Name: epp_sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.epp_sessions ALTER COLUMN id SET DEFAULT nextval('public.epp_sessions_id_seq'::regclass);
-
-
---
--- Name: free_domain_reservation_holders id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.free_domain_reservation_holders ALTER COLUMN id SET DEFAULT nextval('public.free_domain_reservation_holders_id_seq'::regclass);
 
 
 --
@@ -3485,17 +3361,10 @@ ALTER TABLE ONLY public.registrars ALTER COLUMN id SET DEFAULT nextval('public.r
 
 
 --
--- Name: repp_logs id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: reports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repp_logs ALTER COLUMN id SET DEFAULT nextval('public.repp_logs_id_seq'::regclass);
-
-
---
--- Name: reserve_domain_invoices id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.reserve_domain_invoices ALTER COLUMN id SET DEFAULT nextval('public.reserve_domain_invoices_id_seq'::regclass);
+ALTER TABLE ONLY public.reports ALTER COLUMN id SET DEFAULT nextval('public.reports_id_seq'::regclass);
 
 
 --
@@ -3746,27 +3615,11 @@ ALTER TABLE ONLY public.email_addresses_verifications
 
 
 --
--- Name: epp_logs epp_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.epp_logs
-    ADD CONSTRAINT epp_logs_pkey PRIMARY KEY (id);
-
-
---
 -- Name: epp_sessions epp_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.epp_sessions
     ADD CONSTRAINT epp_sessions_pkey PRIMARY KEY (id);
-
-
---
--- Name: free_domain_reservation_holders free_domain_reservation_holders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.free_domain_reservation_holders
-    ADD CONSTRAINT free_domain_reservation_holders_pkey PRIMARY KEY (id);
 
 
 --
@@ -4058,19 +3911,11 @@ ALTER TABLE ONLY public.registrars
 
 
 --
--- Name: repp_logs repp_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: reports reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repp_logs
-    ADD CONSTRAINT repp_logs_pkey PRIMARY KEY (id);
-
-
---
--- Name: reserve_domain_invoices reserve_domain_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.reserve_domain_invoices
-    ADD CONSTRAINT reserve_domain_invoices_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.reports
+    ADD CONSTRAINT reports_pkey PRIMARY KEY (id);
 
 
 --
@@ -4263,13 +4108,6 @@ ALTER TABLE ONLY public.whois_records
 
 ALTER TABLE ONLY public.zones
     ADD CONSTRAINT zones_pkey PRIMARY KEY (id);
-
-
---
--- Name: epp_logs_uuid; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX epp_logs_uuid ON public.epp_logs USING btree (uuid);
 
 
 --
@@ -4882,13 +4720,6 @@ CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_ve
 
 
 --
--- Name: index_reserve_domain_invoices_on_invoice_number; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_reserve_domain_invoices_on_invoice_number ON public.reserve_domain_invoices USING btree (invoice_number);
-
-
---
 -- Name: index_setting_entries_on_code; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4984,13 +4815,6 @@ CREATE INDEX log_domains_object_legacy_id ON public.log_contacts USING btree (((
 --
 
 CREATE INDEX log_nameservers_object_legacy_id ON public.log_contacts USING btree ((((object ->> 'legacy_domain_id'::text))::integer));
-
-
---
--- Name: repp_logs_uuid; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX repp_logs_uuid ON public.repp_logs USING btree (uuid);
 
 
 --
@@ -5230,7 +5054,6 @@ ALTER TABLE ONLY public.users
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('0'),
 ('20140616073945'),
 ('20140620130107'),
 ('20140627082711'),
@@ -5709,14 +5532,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221214073933'),
 ('20221214074252'),
 ('20230531111154'),
-('20230612094319'),
-('20230612094326'),
-('20230612094335'),
 ('20230707084741'),
 ('20230710120154'),
 ('20230711083811'),
 ('20240816091049'),
 ('20240816092636'),
+('20240903131540'),
 ('20240924103554'),
 ('20241015071505'),
 ('20241030095636'),
@@ -5729,5 +5550,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250219102811'),
 ('20250313122119'),
 ('20250319104749');
-
-
+('20250310133151'),
+('20250314133357');

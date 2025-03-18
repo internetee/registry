@@ -291,6 +291,8 @@ en:
   contact: 'Contact'
   starting_balance: 'Starting balance'
   destroyed: 'Destroyed'
+  reports: 'Reports'
+  reset: 'Reset'
 
   approve: 'Approve'
   domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
