@@ -17,6 +17,8 @@ module Actions
 
       ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
 
+      ask_registrant_verification
+
       commit
     end
 
@@ -251,8 +253,15 @@ module Actions
       false
     end
 
+    def ask_registrant_verification
+      if verify_registrant_change? && !bypass_verify &&
+         Setting.request_confirmation_on_registrant_change_enabled
+        domain.registrant_verification_asked!(params, params[:registrar])
+      end
+    end
+
     def verify_registrant_change?
-      return validate_dispute_case if params[:reserved_pw]
+      return validate_dispute_case if domain.disputed? && params[:reserved_pw].present?
       return false if !@changes_registrant || true?(params[:registrant][:verified])
       return true unless domain.disputed?
 
@@ -274,17 +283,7 @@ module Actions
       end
     end
 
-    def ask_registrant_verification
-      if verify_registrant_change? && !bypass_verify &&
-         Setting.request_confirmation_on_registrant_change_enabled
-        domain.registrant_verification_asked!(params, params[:registrar])
-      end
-    end
-
     def commit
-      return false if any_errors?
-
-      ask_registrant_verification
       return false if any_errors?
 
       domain.save
