@@ -590,11 +590,11 @@ CREATE TABLE public.certificates (
     revoked boolean DEFAULT false NOT NULL,
     private_key bytea,
     p12 bytea,
-    p12_password_digest character varying,
     expires_at timestamp without time zone,
     serial character varying,
     revoked_at timestamp without time zone,
-    revoked_reason integer
+    revoked_reason integer,
+    p12_password character varying
 );
 
 
@@ -5727,6 +5727,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241206085817'),
 ('20250204094550'),
 ('20250219102811'),
-('20250313122119');
+('20250313122119'),
+('20250319104749');
 
 

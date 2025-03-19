@@ -79,7 +79,8 @@ module Serializers
       def p12_data(obj)
         {
           body: obj.p12,
-          type: 'PKCS12'
+          type: 'PKCS12',
+          password: obj.p12_password
         }
       end
 

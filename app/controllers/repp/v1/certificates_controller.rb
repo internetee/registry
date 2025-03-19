@@ -98,7 +98,6 @@ module Repp
       end
 
       def notify_admins
-        # Simply use AdminUser model to get all admin emails
         admin_users_emails = AdminUser.pluck(:email).reject(&:blank?)
         
         return if admin_users_emails.empty?

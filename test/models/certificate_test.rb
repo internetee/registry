@@ -9,4 +9,36 @@ class CertificateTest < ActiveSupport::TestCase
   def test_certificate_sign_returns_false
     assert_not @certificate.sign!(password: ENV['ca_key_password']), 'false'
   end
+
+  # Revocation tests
+  def test_revoke_with_valid_password
+    assert @certificate.revoke!(password: ENV['ca_key_password'])
+    assert @certificate.revoked?
+    assert_not_nil @certificate.revoked_at
+    assert_equal Certificate::REVOCATION_REASONS[:unspecified], @certificate.revoked_reason
+  end
+
+  def test_revoke_with_invalid_password
+    assert_not @certificate.revoke!(password: 'wrong_password')
+    assert_not @certificate.revoked?
+    assert_nil @certificate.revoked_at
+    assert_nil @certificate.revoked_reason
+  end
+
+  def test_revoke_updates_certificate_status
+    assert_equal Certificate::SIGNED, @certificate.status
+    @certificate.revoke!(password: ENV['ca_key_password'])
+    assert_equal Certificate::REVOKED, @certificate.status
+  end
+
+  def test_revokable_for_different_interfaces
+    @certificate.update!(interface: Certificate::REGISTRAR)
+    assert @certificate.revokable?
+
+    @certificate.update!(interface: Certificate::API)
+    assert_not @certificate.revokable?
+
+    @certificate.update!(interface: Certificate::REGISTRAR, crt: nil)
+    assert_not @certificate.revokable?
+  end
 end
