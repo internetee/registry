@@ -3,15 +3,14 @@ module Certificates
     attribute :api_user_id, Types::Coercible::Integer
     attribute? :interface, Types::String.optional
 
-    P12_PASSWORD = 'todo-change-me'
-
     def execute
       api_user = ApiUser.find(api_user_id)
+      password = generate_random_password
 
       private_key = generate_user_key
       csr = generate_user_csr(private_key)
       certificate = sign_user_certificate(csr)
-      p12 = create_user_p12(private_key, certificate)
+      p12 = create_user_p12(private_key, certificate, password)
 
       certificate_record = api_user.certificates.build(
         private_key: private_key.to_pem,
@@ -20,7 +19,7 @@ module Certificates
         p12: Base64.strict_encode64(p12),
         expires_at: certificate.not_after,
         interface: interface || 'registrar',
-        p12_password_digest: P12_PASSWORD,
+        p12_password: password,
         serial: certificate.serial.to_s,
         common_name: api_user.username
       )
@@ -124,7 +123,7 @@ module Certificates
       cert
     end
 
-    def create_user_p12(key, cert, password = P12_PASSWORD)
+    def create_user_p12(key, cert, password)
       ca_cert = OpenSSL::X509::Certificate.new(File.read(ca_cert_path))
 
       p12 = OpenSSL::PKCS12.create(
@@ -136,6 +135,12 @@ module Certificates
       )
       
       p12.to_der
+    end
+
+    private
+
+    def generate_random_password
+      SecureRandom.hex(8)
     end
   end
 end
