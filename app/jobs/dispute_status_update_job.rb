@@ -19,7 +19,10 @@ class DisputeStatusUpdateJob < ApplicationJob
   def clean_disputed
     domains = Domain.where("array_to_string(statuses, '||') ILIKE ?", '%disputed%')
     domains.each do |domain|
-      domain.unmark_as_disputed unless domain.disputed?
+      unless domain.disputed?
+        domain.unmark_as_disputed 
+        @logger.info "DisputeStatusUpdateJob - Found domain #{domain.name} with disputed status. But disputed record already closed. Unmarking dispute status"
+      end
     end
   end
 
