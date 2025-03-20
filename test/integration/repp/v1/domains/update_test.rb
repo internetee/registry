@@ -85,4 +85,40 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
     assert @domain.registrant.code == new_registrant.code
     refute @domain.statuses.include? DomainStatus::PENDING_UPDATE
   end
+
+  def test_adds_epp_error_when_reserved_pw_is_missing_for_disputed_domain
+    Dispute.create!(domain_name: @domain.name, password: '1234567890', starts_at: Time.zone.now, expires_at: Time.zone.now + 5.days)
+
+    @auth_headers['Content-Type'] = 'application/json'
+    payload = {
+      domain: {
+        reserved_pw: nil,
+      },
+    }
+
+    put "/repp/v1/domains/#{@domain.name}", headers: @auth_headers, params: payload.to_json
+    @domain.reload
+    json = JSON.parse(response.body, symbolize_names: true)
+    assert_response :bad_request
+    assert_equal 2304, json[:code]
+    assert_equal 'Required parameter missing; reservedpw element required for dispute domains', json[:message]
+  end
+
+  def test_adds_epp_error_when_reserved_pw_is_invalid_for_disputed_domain
+    Dispute.create!(domain_name: @domain.name, password: '1234567890', starts_at: Time.zone.now, expires_at: Time.zone.now + 5.days)
+
+    @auth_headers['Content-Type'] = 'application/json'
+    payload = {
+      domain: {
+        reserved_pw: 'invalid',
+      },
+    }
+
+    put "/repp/v1/domains/#{@domain.name}", headers: @auth_headers, params: payload.to_json
+    @domain.reload
+    json = JSON.parse(response.body, symbolize_names: true)
+    assert_response :bad_request
+    assert_equal 2202, json[:code]
+    assert_equal 'Invalid authorization information; invalid reserved>pw value', json[:message]
+  end
 end
