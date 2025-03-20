@@ -1,3 +1,6 @@
+20.03.2025
+* fixed registrant transfer issue with disputed domains https://github.com/internetee/registry/issues/2594
+
 07.03.2025
 * fixed logging and notificaiton issues with business regsitry validation https://github.com/internetee/registry/issues/2754
 * fixed http timeout in phone nr validation https://github.com/internetee/registry/pull/2762
