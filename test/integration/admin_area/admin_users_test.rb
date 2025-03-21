@@ -23,11 +23,13 @@ class AdminAreaAdminUsersIntegrationTest < JavaScriptApplicationSystemTestCase
     createNewAdminUser(true)
 
     visit admin_admin_users_path
+    assert_selector 'a', text: 'test_user_name'
     click_on 'test_user_name'
 
     assert_text 'General'
     click_on 'Edit'
 
+    assert_selector 'input[name*="password"]'
     fill_in 'Password', with: 'test_password'
     fill_in 'Password confirmation', with: 'test_password'
 
