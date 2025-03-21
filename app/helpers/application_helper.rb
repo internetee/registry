@@ -6,6 +6,7 @@ module ApplicationHelper
 
   def env_style
     return '' if unstable_env.nil?
+
     "background-image: url(#{image_path("#{unstable_env}.png")});"
   end
 
@@ -91,5 +92,19 @@ module ApplicationHelper
 
   def body_css_class
     [controller_path.split('/').map!(&:dasherize), action_name.dasherize, 'page'].join('-')
+  end
+
+  def db_hint_options
+    result = {}
+    # Get all tables from the database
+    ActiveRecord::Base.connection.tables.each do |table_name|
+      # Skip internal Rails tables
+      next if table_name.match(/^(ar_internal_metadata|schema_migrations)$/)
+
+      # Get all columns for each table
+      columns = ActiveRecord::Base.connection.columns(table_name).map(&:name)
+      result[table_name] = columns
+    end
+    result
   end
 end
