@@ -42,9 +42,13 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
     visit_admin_blocked_domains_path
     add_domain_into_blocked_list(true)
 
+    assert_selector 'input[name="Name"]'
     fill_in 'Name', with: @domain.name
+
+    assert_selector 'span.glyphicon-search'
     find(:xpath, "//span[@class='glyphicon glyphicon-search']").click
 
+    assert_selector 'table', wait: 5
     assert_text @domain.name
   end
 
