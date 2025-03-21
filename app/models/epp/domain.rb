@@ -37,7 +37,7 @@ class Epp::Domain < Domain
     # validate registrant here as well
     ([Contact.find(registrant.id)] + active_admins + active_techs).each do |x|
       unless x.valid?
-        if x.type == 'AdminDomainContact' && x.underage?
+        if x.class.name == 'AdminDomainContact' && x.contact.underage?
           add_epp_error('2304', nil, nil, I18n.t('activerecord.errors.models.domain.contact_too_young'))
         else
           add_epp_error('2304', nil, nil, I18n.t(:contact_is_not_valid, value: x.try(:code)))
