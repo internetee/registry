@@ -61,7 +61,7 @@ class ReppV1WhiteIpsCreateTest < ActionDispatch::IntegrationTest
     refute ActionMailer::Base.deliveries.last
   end
 
-  def test_validates_ip_max_count
+  def test_validates_ipv6_range
     request_body = {
       white_ip: {
         address: '2001:db8::/120',
@@ -73,7 +73,7 @@ class ReppV1WhiteIpsCreateTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :bad_request
-    assert json[:message].include? 'IP address limit exceeded'
+    assert json[:message].include? 'IPv6 address must be either a single address or a /64 range'
   end
 
   def test_returns_error_response_if_throttled
