@@ -1,3 +1,6 @@
+21.03.2025
+* force admin cotact age restriction https://github.com/internetee/registry/issues/2750
+
 20.03.2025
 * fixed registrant transfer issue with disputed domains https://github.com/internetee/registry/issues/2594
 
