@@ -39,13 +39,11 @@ class WhiteIp < ApplicationRecord
   def validate_max_ip_count
     return if errors.any?
 
-    total_exist = calculate_total_network_addresses(registrar.white_ips)
-    total_current = calculate_total_network_addresses([self])
-    total = total_exist + total_current
-    limit = Setting.ip_whitelist_max_count
-    return unless total >= limit
-
-    errors.add(:base, :ip_limit_exceeded, total: total, limit: limit)
+    if ipv4.present?
+      validate_ipv4_limit
+    elsif ipv6.present?
+      validate_ipv6_range
+    end
   end
 
   def valid_ipv4?
@@ -106,21 +104,39 @@ class WhiteIp < ApplicationRecord
     end
   end
 
-  def count_network_addresses(ip)
-    address = IPAddr.new(ip)
+  def validate_ipv4_limit
+    total_exist = calculate_total_ipv4_addresses(registrar.white_ips)
+    total_current = calculate_total_ipv4_addresses([self])
+    total = total_exist + total_current
+    limit = Setting.ip_whitelist_max_count
+    return unless total >= limit
 
-    if address.ipv4?
-      subnet_mask = address.prefix
-      (2**(32 - subnet_mask) - 2).abs
-    elsif address.ipv6?
-      subnet_mask = address.prefix
-      (2**(128 - subnet_mask) - 2).abs
-    else
-      0
+    errors.add(:base, :ip_limit_exceeded, total: total, limit: limit)
+  end
+
+  def validate_ipv6_range
+    return unless ipv6.present?
+    
+    address = IPAddr.new(ipv6)
+    subnet_mask = address.prefix
+    
+    unless subnet_mask == 128 || subnet_mask == 64
+      errors.add(:base, :ipv6_must_be_single_or_64_range)
     end
   end
 
-  def calculate_total_network_addresses(ips)
-    ips.sum { |ip| count_network_addresses(ip.ipv4.presence || ip.ipv6) }
+  def calculate_total_ipv4_addresses(ips)
+    ips.sum do |ip| 
+      next 0 unless ip.ipv4.present?
+      count_ipv4_addresses(ip.ipv4)
+    end
+  end
+
+  def count_ipv4_addresses(ip)
+    address = IPAddr.new(ip)
+    return 0 unless address.ipv4?
+    
+    subnet_mask = address.prefix
+    (2**(32 - subnet_mask) - 2).abs
   end
 end

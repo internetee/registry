@@ -155,6 +155,7 @@ en:
               ipv4_or_ipv6_must_be_present: 'IPv4 or IPv6 must be present'
               ip_must_be_one: 'Please enter only one IP address'
               ip_limit_exceeded: 'IP address limit exceeded. Total addresses: %{total}. Limit: %{limit}.'
+              ipv6_must_be_single_or_64_range: 'IPv6 address must be either a single address or a /64 range'
             ipv4:
               taken: 'has already been taken'
             ipv6:

@@ -53,6 +53,35 @@ class WhiteIpTest < ActiveSupport::TestCase
     assert_not WhiteIp.include_ip?('192.168.1.1')
   end
 
+  def test_validates_ipv6_64_range
+    white_ip = WhiteIp.new
+    white_ip.registrar = registrars(:bestnames)
+    white_ip.ipv6 = '2001:db8::/64'
+    
+    assert white_ip.valid?, 'IPv6 /64 range should be valid'
+  end
+
+  def test_validates_ipv6_single_address
+    white_ip = WhiteIp.new
+    white_ip.registrar = registrars(:bestnames)
+    white_ip.ipv6 = '2001:db8::1'
+    
+    assert white_ip.valid?, 'Single IPv6 address should be valid'
+  end
+
+  def test_rejects_invalid_ipv6_range
+    white_ip = WhiteIp.new
+    white_ip.registrar = registrars(:bestnames)
+    
+    white_ip.ipv6 = '2001:db8::/48'
+    assert white_ip.invalid?, 'IPv6 /48 range should be invalid'
+    assert_includes white_ip.errors.full_messages, 'IPv6 address must be either a single address or a /64 range'
+
+    white_ip.ipv6 = '2001:db8::/96'
+    assert white_ip.invalid?, 'IPv6 /96 range should be invalid'
+    assert_includes white_ip.errors.full_messages, 'IPv6 address must be either a single address or a /64 range'
+  end
+
   private
 
   def valid_white_ip
