@@ -597,7 +597,7 @@ class EppDomainCreateBaseTest < EppTestCase
   end
 
   def test_registers_new_domain_with_required_attributes
-    Setting.admin_contacts_allowed_ident_type = { 'org' => true, 'priv' => true, 'birthday' => true }
+    Setting.admin_contacts_allowed_ident_type = { 'org' => true, 'priv' => true, 'birthday' => true }.to_json
 
     now = Time.zone.parse('2010-07-05')
     travel_to now
@@ -647,7 +647,7 @@ class EppDomainCreateBaseTest < EppTestCase
     default_registration_period = 1.year + 1.day
     assert_equal now + default_registration_period, domain.expire_time
 
-    Setting.admin_contacts_allowed_ident_type = { 'org' => false, 'priv' => true, 'birthday' => true }
+    Setting.admin_contacts_allowed_ident_type = { 'org' => false, 'priv' => true, 'birthday' => true }.to_json
   end
 
   def test_registers_domain_without_legaldoc_if_optout

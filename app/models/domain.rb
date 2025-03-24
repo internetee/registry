@@ -12,6 +12,7 @@ class Domain < ApplicationRecord
   include Domain::Releasable
   include Domain::Disputable
   include Domain::BulkUpdatable
+  include AgeValidation
 
   PERIODS = [
     ['3 months', '3m'],
@@ -866,7 +867,7 @@ class Domain < ApplicationRecord
     return true if registrant.org? && Setting.admin_contacts_required_for_org
     return false unless registrant.priv?
     
-    underage_registrant? && Setting.admin_contacts_required_for_minors
+    registrant.underage? && Setting.admin_contacts_required_for_minors
   end
 
   def require_tech_contacts?
@@ -876,51 +877,7 @@ class Domain < ApplicationRecord
   private
 
   def underage_registrant?
-    case registrant.ident_type
-    when 'birthday'
-      underage_by_birthday?
-    when 'priv'
-      underage_by_estonian_id?
-    else
-      false
-    end
-  end
-
-  def underage_by_birthday?
-    birth_date = Date.parse(registrant.ident)
-    calculate_age(birth_date) < 18
-  end
-
-  def underage_by_estonian_id?
-    return false unless estonian_id?
-    
-    birth_date = parse_estonian_id_birth_date(registrant.ident)
-    calculate_age(birth_date) < 18
-  end
-
-  def estonian_id?
-    registrant.ident_country_code == 'EE' && registrant.ident.match?(/^\d{11}$/)
-  end
-
-  def calculate_age(birth_date)
-    ((Time.zone.now - birth_date.to_time) / 1.year.seconds).floor
-  end
-
-  def parse_estonian_id_birth_date(id_code)
-    century_number = id_code[0].to_i
-    year_digits = id_code[1..2]
-    month = id_code[3..4]
-    day = id_code[5..6]
-    
-    birth_year = case century_number
-                 when 1, 2 then "18#{year_digits}"
-                 when 3, 4 then "19#{year_digits}"
-                 when 5, 6 then "20#{year_digits}"
-                 else
-                   raise ArgumentError, "Invalid century number in Estonian ID"
-                 end
-                 
-    Date.parse("#{birth_year}-#{month}-#{day}")
+    registrant.underage?
   end
 
   def validate_admin_contacts_ident_type

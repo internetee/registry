@@ -587,7 +587,14 @@ class DomainTest < ActiveSupport::TestCase
     assert domain.invalid?
     assert_includes domain.errors.full_messages, 'Admin domain contacts Admin contacts count must be between 1-10'
     
-    domain.admin_domain_contacts.build(contact: contacts(:john))
+    admin_contact = contacts(:john)
+    admin_contact.update!(
+      ident_type: 'priv',
+      ident: '37810166020',
+      ident_country_code: 'EE'
+    )
+    
+    domain.admin_domain_contacts.build(contact: admin_contact)
     assert domain.valid?
   end
 
