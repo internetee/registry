@@ -41,7 +41,6 @@ module ReportRunner
           query = report.sql_query.dup
           handle_parameters(query, report, permitted_param_set)
           results << run_query(query)
-          p results
         end
       else
         results << run_query(report.sql_query.dup)
