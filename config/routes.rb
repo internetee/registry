@@ -373,7 +373,7 @@ Rails.application.routes.draw do
     resources :mass_actions, only: %i[index create]
     resources :bounced_mail_addresses, only: %i[index show destroy]
 
-    resources :reports, except: :show do
+    resources :reports do
       member do
         post :run
       end

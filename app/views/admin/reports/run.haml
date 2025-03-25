@@ -3,43 +3,32 @@
 - content_for :page_name do
   = @page_title
 = render "shared/title", name: @report.name
+= render "admin/reports/partials/parameters_form"
 
+%br
 .row
   .col-md-12
-    = form_with url: run_admin_report_path(@report), html: { style: 'margin-bottom: 0;', autocomplete: 'off' } do |f|
-      - if @report.parameters.present?
-        - @report.parameters.each do |param, props|
-          .row
-            .col-md-6
-              .form-group
-                = label_tag param, param.humanize
-                - if props["type"] == "date"
-                  = f.date_field param, class: 'form-control', value: params[param] || props['default']
-                - elsif props["type"] == "string"
-                  = f.text_field param, class: 'form-control', value: params[param] || props['default']
-      .row
-        .col-md-12
-          .d-flex.flex-wrap.gap-2
-            %button.btn.btn-primary
-              = t('admin.reports.index.run')
-            %button.btn.btn-primary{ type: 'submit', name: 'format', value: 'csv' }
-              = t('.csv_btn')
-
-%hr
-
-.row
-  .col-md-12
-    - if @results.any?
-      .table-responsive
-        %table.table.table-hover.table-bordered.table-condensed
-          %thead
-            %tr
-              - @results.columns.each do |column|
-                %th= column.humanize
-          %tbody
-            - @results.rows.each do |row|
+    - if @unified_results.present? && @unified_results.is_a?(ActiveRecord::Result)
+      - if @unified_results.rows.any?
+        .table-responsive
+          %table.table.table-hover.table-bordered.table-condensed
+            %thead
               %tr
-                - row.each do |value|
-                  %td= value
+                - @unified_results.columns.each do |column|
+                  %th= column
+            %tbody
+              - @unified_results.rows.each do |row|
+                %tr
+                  - row.each do |value|
+                    %td= value
+        .text-muted.mt-2
+          = t('.total_rows', count: @unified_results.rows.length)
+      - else
+        .alert.alert-info
+          = t('.no_data')
+    - elsif flash[:alert].present?
+      .alert.alert-danger
+        = flash[:alert]
     - else
-      %p No results found or error running the report.
+      .alert.alert-info
+        = t('.no_results')

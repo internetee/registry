@@ -61,5 +61,5 @@ window.init_sql_editor = (mime, tables) ->
     hintOptions:
       tables: tables
 
-  editor.setSize('100%', '300')
+  editor.setSize('100%', '500')
   editor.focus()

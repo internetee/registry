@@ -17,11 +17,10 @@
         %tbody
           - @reports.each do |report|
             %tr
-              %td= report.name
+              %td= link_to(report.name, admin_report_path(report))
               %td= report.description
               %td
                 %div{class: 'action-buttons'}
-                  = button_to(t('.run'), run_admin_report_path(report), method: :post, class: "btn btn-success btn-xs")
                   = link_to(t(:edit), edit_admin_report_path(report), class: "btn btn-primary btn-xs") 
                   = link_to(t(:delete), admin_report_path(report), method: :delete, class: "btn btn-danger btn-xs", data: { confirm: 'Are you sure?' })
 .row
