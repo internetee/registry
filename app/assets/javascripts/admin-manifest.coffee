@@ -20,4 +20,5 @@
 #= require spell_check
 #= require admin/application
 #= require admin/app
+#= require admin/reports
 #= require_tree ./admin
