@@ -1,3 +1,5 @@
+require 'active_record_result_combiner'
+
 module Admin
   class ReportsController < BaseController
     load_and_authorize_resource
@@ -23,7 +25,6 @@ module Admin
 
     def update
       params_to_update = report_params
-      parse_json_parameters(params_to_update)
 
       if @report.update(params_to_update)
         redirect_to admin_reports_path, notice: t('.updated')
@@ -38,13 +39,20 @@ module Admin
     end
 
     def run
-      query = @report.sql_query
-      parameter_values = handle_parameters(query)
+      result = ReportRunner.run_report(@report, params[:report_parameters])
 
-      @page_title = build_page_title(parameter_values)
-      @results = run_report(query)
-
-      respond_to_format
+      case result[:status]
+      when :completed
+        @unified_results = result[:results]
+        @page_title = result[:page_title]
+        respond_to_format
+      when :error
+        flash[:alert] = "Error running report: #{result[:error]}"
+        redirect_to admin_reports_path
+      when :timeout
+        flash[:alert] = 'Report execution timed out'
+        redirect_to admin_reports_path
+      end
     end
 
     private
@@ -53,39 +61,22 @@ module Admin
       params.require(:report).permit(:name, :description, :sql_query, :parameters)
     end
 
-    def run_report(query)
-      ActiveRecord::Base.connected_to(role: :reading, prevent_writes: true) do
-        ActiveRecord::Base.connection.exec_query(sanitize_sql(query))
+    def respond_to_format
+      respond_to do |format|
+        format.html
+        format.csv do
+          filename = "#{@page_title}_report".parameterize
+          csv_data = generate_csv(@unified_results)
+          send_data csv_data, filename: "#{filename}.csv"
+        end
       end
-    rescue StandardError => e
-      flash[:alert] = "Error running report: #{e.message}"
-      []
     end
 
-    def sanitize_sql(query)
-      ActiveRecord::Base.sanitize_sql_array([query])
-    end
-
-    def parse_json_parameters(params_to_update)
-      if params_to_update[:parameters].present? && params_to_update[:parameters].is_a?(String)
-        params_to_update[:parameters] = JSON.parse(params_to_update[:parameters])
-      else
-        params_to_update[:parameters] = nil
-      end
-    rescue JSON::ParserError => e
-      @report.errors.add(:parameters, "Invalid JSON format: #{e.message}")
-      render :edit
-    end
-
-    # Generate CSV from ActiveRecord results
     def generate_csv(results)
       return '' if results.empty?
 
       CSV.generate(headers: true) do |csv|
-        # Add headers from the columns
-        csv << results.columns.map(&:humanize)
-
-        # Add each row of data
+        csv << results.columns
         results.rows.each do |row|
           csv << row
         end
@@ -93,44 +84,6 @@ module Admin
     rescue StandardError => e
       Rails.logger.error("CSV Generation Error: #{e.message}")
       ''
-    end
-
-    def handle_parameters(query, parameter_values = [])
-      return parameter_values if @report.parameters.blank?
-
-      @report.parameters.each_key do |param|
-        value = retrieve_parameter_value(param)
-        substitute_query_param(query, param, value)
-        parameter_values << "#{param.humanize}: #{value}" if params[param].present?
-      end
-
-      parameter_values
-    end
-
-    def substitute_query_param(query, param, value)
-      query.gsub!(":#{param}", ActiveRecord::Base.connection.quote(value))
-    end
-
-    def retrieve_parameter_value(param)
-      params[param].present? ? params[param] : @report.parameters[param]['default']
-    end
-
-    def build_page_title(parameter_values)
-      if parameter_values.any?
-        "#{@report.name} - #{parameter_values.join(', ')}"
-      else
-        @report.name
-      end
-    end
-
-    def respond_to_format
-      respond_to do |format|
-        format.html
-        format.csv do
-          filename = "#{@page_title}_report.csv".parameterize
-          send_data generate_csv(@results), filename: filename
-        end
-      end
     end
   end
 end

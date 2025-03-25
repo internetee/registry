@@ -1,0 +1,6 @@
+- content_for :actions do
+  = link_to(t(:back), admin_reports_path, class: "btn btn-default")
+- content_for :page_name do
+  = @page_title
+= render "shared/title", name: @report.name
+= render "admin/reports/partials/parameters_form"
