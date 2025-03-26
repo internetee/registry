@@ -72,10 +72,15 @@ class ActiveRecordResultCombinerTest < ActiveSupport::TestCase
   def test_combine_results_with_differences
     combined_result = ActiveRecordResultCombiner.combine_results([@result1, @result2])
 
-    expected_columns = ['column1 (1)', 'column2 (1)', 'column1 (2)', 'column2 (2)', 'column1 Difference', 'column2 Difference']
+    expected_columns = [
+      'column1 (1)', 'column2 (1)',
+      'column1 (2)', 'column2 (2)',
+      'column1 Diff', 'column1 Diff %',
+      'column2 Diff', 'column2 Diff %'
+    ]
     expected_rows = [
-      [1, 2, 5, 6, 4, 4],
-      [3, 4, 7, 8, 4, 4]
+      [1, 2, 5, 6, 4.0, 400.0, 4, 200.0],
+      [3, 4, 7, 8, 4.0, 133.33, 4.0, 100.0]
     ]
 
     assert_equal expected_columns, combined_result.columns
@@ -86,14 +91,15 @@ class ActiveRecordResultCombinerTest < ActiveSupport::TestCase
     combined_result = ActiveRecordResultCombiner.combine_results([@result1, @result2, @result3])
 
     expected_columns = [
-      'column1 (1)', 'column2 (1)',      # First result columns
-      'column1 (2)', 'column2 (2)',      # Second result columns
-      'column1 (3)', 'column2 (3)',      # Third result columns
-      'column1 Difference', 'column2 Difference'  # Differences between first and last
+      'column1 (1)', 'column2 (1)',
+      'column1 (2)', 'column2 (2)',
+      'column1 (3)', 'column2 (3)',
+      'column1 Diff', 'column1 Diff %',
+      'column2 Diff', 'column2 Diff %'
     ]
     expected_rows = [
-      [1, 2, 5, 6, 9, 10, 8, 8],    # First row with differences (9-1=8, 10-2=8)
-      [3, 4, 7, 8, 11, 12, 8, 8]    # Second row with differences (11-3=8, 12-4=8)
+      [1, 2, 5, 6, 9, 10, 8, 800.0, 8, 400.0],    # First row with differences (9-1=8, 10-2=8)
+      [3, 4, 7, 8, 11, 12, 8, 266.67, 8, 200.0]    # Second row with differences (11-3=8, 12-4=8)
     ]
 
     assert_equal expected_columns, combined_result.columns
@@ -124,57 +130,49 @@ class ActiveRecordResultCombinerTest < ActiveSupport::TestCase
 
     expected_columns = [
       'string_col',
-      'int_col (1)', 'float_col (1)',    # First result numeric columns
-      'int_col (2)', 'float_col (2)',    # Second result numeric columns
-      'int_col Difference', 'float_col Difference' # Only numeric differences
+      'int_col (1)', 'float_col (1)',
+      'int_col (2)', 'float_col (2)',
+      'int_col Diff', 'int_col Diff %',
+      'float_col Diff', 'float_col Diff %'
+    ]
+    expected_rows = [
+      ['test', 1, 1.5, 3, 3.5, 2.0, 200.0, 2.0, 133.33],
+      ['example', 2, 2.5, 4, 4.5, 2.0, 100.0, 2.0, 80.0]
     ]
 
     assert_equal expected_columns, combined_result.columns
-    assert_equal 2, combined_result.rows.length
-
-    first_row = combined_result.rows[0]
-    # Check the structure of the first row
-    assert_equal 'test', first_row[0]                    # string_col remains unchanged
-    assert_equal 1, first_row[1]                         # int_col (1)
-    assert_equal 1.5, first_row[2]                       # float_col (1)
-    assert_equal 3, first_row[3]                         # int_col (2)
-    assert_equal 3.5, first_row[4]                       # float_col (2)
-    assert_equal 2, first_row[5]                         # int_col difference (3 - 1)
-    assert_in_delta 2.0, first_row[6], 0.001            # float_col difference (3.5 - 1.5)
-
-    # Verify second row follows the same pattern
-    second_row = combined_result.rows[1]
-    assert_equal 'example', second_row[0]                # string_col remains unchanged
-    assert_equal 2, second_row[1]                        # int_col (1)
-    assert_equal 2.5, second_row[2]                      # float_col (1)
-    assert_equal 4, second_row[3]                        # int_col (2)
-    assert_equal 4.5, second_row[4]                      # float_col (2)
-    assert_equal 2, second_row[5]                        # int_col difference (4 - 2)
-    assert_in_delta 2.0, second_row[6], 0.001           # float_col difference (4.5 - 2.5)
+    assert_equal expected_rows, combined_result.rows
   end
 
   # Null value handling tests
   def test_combine_results_with_null_values
     combined_result = ActiveRecordResultCombiner.combine_results([@null_result1, @null_result2])
 
-    expected_columns = ['column1 (1)', 'column2 (1)', 'column1 (2)', 'column2 (2)', 'column1 Difference', 'column2 Difference']
+    expected_columns = [
+      'column1 (1)', 'column2 (1)',
+      'column1 (2)', 'column2 (2)',
+      'column1 Diff', 'column1 Diff %',
+      'column2 Diff', 'column2 Diff %'
+    ]
+
+    expected_rows = [
+      [1, nil, 5, nil, 4.0, 400.0, nil, nil],
+      [nil, 4, nil, 8, nil, nil, 4.0, 100.0]
+    ]
 
     assert_equal expected_columns, combined_result.columns
-    assert_equal 2, combined_result.rows.length
-
-    # Check that differences with nulls are handled gracefully
-    assert_nil combined_result.rows[1][-2]  # Difference when both values are null
+    assert_equal expected_rows, combined_result.rows
   end
 
   # Wide result tests
   def test_combine_results_with_multiple_columns
     combined_result = ActiveRecordResultCombiner.combine_results([@wide_result1, @wide_result2])
 
-    expected_column_count = 12 # 4 original + 4 second result + 4 differences
+    expected_column_count = 16 # 4 original + 4 second result + 8 differences
     assert_equal expected_column_count, combined_result.columns.length
 
     # Check differences for all numeric columns
     first_row_differences = combined_result.rows[0][-4..]
-    assert_equal [8, 8, 8, 8], first_row_differences
+    assert_equal [8.0, 266.67, 8.0, 200.0], first_row_differences
   end
 end
