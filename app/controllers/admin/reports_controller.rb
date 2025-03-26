@@ -27,7 +27,7 @@ module Admin
       params_to_update = report_params
 
       if @report.update(params_to_update)
-        redirect_to admin_reports_path, notice: t('.updated')
+        redirect_to admin_report_path(@report), notice: t('.updated')
       else
         render :edit
       end

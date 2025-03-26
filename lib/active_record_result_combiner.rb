@@ -1,3 +1,4 @@
+# Combines multiple ActiveRecord::Result objects, preserving data types and calculating differences for numeric columns
 module ActiveRecordResultCombiner
   module_function
 
@@ -37,7 +38,8 @@ module ActiveRecordResultCombiner
     # Add difference columns only for numeric columns
     if results.size > 1
       numeric_columns.each do |col|
-        all_columns << "#{col} Difference"
+        all_columns << "#{col} Diff"
+        all_columns << "#{col} Diff %"
       end
     end
 
@@ -83,7 +85,6 @@ module ActiveRecordResultCombiner
 
     row
   end
-
   def calculate_differences(first_result, last_result, row_index, numeric_columns)
     differences = []
     numeric_columns.each_with_index do |col, col_index|
@@ -93,8 +94,12 @@ module ActiveRecordResultCombiner
 
       if first_value.nil? || last_value.nil?
         differences << nil
+        differences << nil
       else
-        differences << (last_value.to_f - first_value.to_f)
+        difference = (last_value.to_f - first_value.to_f).round(2)
+        differences << difference
+        percentage_difference = first_value.to_f != 0 ? ((difference / first_value.to_f) * 100).round(2) : nil
+        differences << percentage_difference
       end
     end
     differences
