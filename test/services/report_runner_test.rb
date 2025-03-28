@@ -6,8 +6,16 @@ class ReportRunnerTest < ActiveSupport::TestCase
     @report = reports(:one)
     @params = ActionController::Parameters.new({ '0' => { 'start_date' => '2025-01-01' } })
 
+    # Save the original connection configuration
+    @original_db_config = ActiveRecord::Base.connection_db_config
+
     # Set up the connection pool for the reading role
     ActiveRecord::Base.connects_to(database: { reading: :test, writing: :test })
+  end
+
+  teardown do
+    # Restore the original connection configuration
+    ActiveRecord::Base.establish_connection(@original_db_config)
   end
 
   def test_run_report_returns_completed_status_with_results_when_successful
