@@ -369,6 +369,13 @@ Rails.application.routes.draw do
     resources :mass_actions, only: %i[index create]
     resources :bounced_mail_addresses, only: %i[index show destroy]
 
+    resources :reports do
+      member do
+        post :run
+        post :duplicate
+      end
+    end
+
     authenticate :admin_user do
       mount Sidekiq::Web, at: 'sidekiq'
     end
