@@ -1,3 +1,6 @@
+28.03.2025
+* IPv6 address range support for access whitelisting https://github.com/internetee/registry/issues/2769
+
 21.03.2025
 * force admin cotact age restriction https://github.com/internetee/registry/issues/2750
 
