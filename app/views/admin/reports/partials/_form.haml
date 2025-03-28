@@ -16,13 +16,13 @@
 
       .form-group 
         .col-md-2.control-label
-          = f.label :parameters
+          = f.label :parameters, 'Input Parameters'
         .col-md-10
           = f.text_area :parameters, value: @report.parameters&.to_json, class: 'form-control', placeholder: 'e.g., {"start_date": {"type": "date", "default": "2024-01-01"}, "status": {"type": "string", "default": "active"}}'
 
       .form-group
         .col-md-2.control-label
-          = f.label :sql_query
+          = f.label :sql_query, class: 'required'
         .col-md-10
           = f.text_area :sql_query, rows: 30, class: 'form-control'
   %hr

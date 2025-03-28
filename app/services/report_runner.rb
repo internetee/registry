@@ -1,3 +1,5 @@
+require 'active_record_result_combiner'
+
 module ReportRunner
   REPORT_TIMEOUT = 300 # 5 minutes timeout
   THREAD_CHECK_INTERVAL = 0.5 # Check thread status every 0.5 seconds
@@ -32,14 +34,13 @@ module ReportRunner
 
     def execute_report(report, params)
       results = []
+      report_parameters = report.parameters.is_a?(Array) ? report.parameters[0] : report.parameters
 
-      if report.parameters.present?
-        return [] if params.blank?
-
+      if params.present?
         params.each_value do |parameter_set|
-          permitted_param_set = parameter_set.permit(report.parameters.keys)
+          permitted_param_set = parameter_set.permit(report_parameters.keys)
           query = report.sql_query.dup
-          handle_parameters(query, report, permitted_param_set)
+          handle_parameters(query, permitted_param_set)
           results << run_query(query)
         end
       else
@@ -89,14 +90,12 @@ module ReportRunner
       ActiveRecord::Base.sanitize_sql_array([query])
     end
 
-    def handle_parameters(query, report, params)
-      return [] if report.parameters.blank?
-
+    def handle_parameters(query, param_set)
       parameter_values = []
-      report.parameters.each_key do |param|
-        value = retrieve_parameter_value(param, params, report)
+      param_set.each_key do |param|
+        value = param_set[param]
         substitute_query_param(query, param, value)
-        parameter_values << "#{param.humanize}: #{value}" if params[param].present?
+        parameter_values << "#{param.humanize}: #{value}"
       end
 
       parameter_values
@@ -106,12 +105,8 @@ module ReportRunner
       query.gsub!(":#{param}", ActiveRecord::Base.connection.quote(value))
     end
 
-    def retrieve_parameter_value(param, params, report)
-      params[param].present? ? params[param] : report.parameters[param]['default']
-    end
-
     def build_page_title(report, params)
-      return report.name unless report.parameters.present? && params.present?
+      return report.name unless params.present?
 
       parameter_values = params.to_unsafe_h.values.map do |param_set|
         param_set.map { |param, value| "#{param.humanize}: #{value}" if value.present? }.compact

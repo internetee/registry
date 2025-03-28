@@ -4,6 +4,7 @@ module ActiveRecordResultCombiner
 
   def combine_results(results)
     return ActiveRecord::Result.new([], []) if results.empty?
+    return results.first if results.size == 1
 
     columns = build_columns(results)
     rows = build_rows(results)
@@ -32,14 +33,14 @@ module ActiveRecordResultCombiner
         col_name = col
         col_name += " (#{index + 1})" if results.size > 1
         all_columns << col_name
-      end
-    end
 
-    # Add difference columns only for numeric columns
-    if results.size > 1
-      numeric_columns.each do |col|
-        all_columns << "#{col} Diff"
-        all_columns << "#{col} Diff %"
+        # Add difference columns after each result except the first
+        if results.size > 1 && index > 0 && numeric_columns.include?(col)
+          prev_index = index
+          curr_index = index + 1
+          all_columns << "#{col} Diff (#{prev_index}->#{curr_index})"
+          all_columns << "#{col} Diff %(#{prev_index}->#{curr_index})"
+        end
       end
     end
 
@@ -68,41 +69,34 @@ module ActiveRecordResultCombiner
       row << first_row[col_index]
     end
 
-    # Add data from all results (except group columns)
-    results.each do |result|
+    # Add data from all results and calculate differences
+    results.each_with_index do |result, result_index|
       result.columns.each_with_index do |col, col_index|
         next if group_columns.include?(col)
 
-        row << result.rows[index][col_index]
-      end
-    end
+        current_value = result.rows[index][col_index]
+        row << current_value
 
-    # Add differences for numeric columns
-    if results.size > 1
-      differences = calculate_differences(results.first, results.last, index, numeric_columns)
-      row.concat(differences)
+        # Calculate differences with previous result
+        if result_index > 0 && numeric_columns.include?(col)
+          prev_value = results[result_index - 1].rows[index][col_index]
+          differences = calculate_single_difference(prev_value, current_value)
+          row.concat(differences)
+        end
+      end
     end
 
     row
   end
-  def calculate_differences(first_result, last_result, row_index, numeric_columns)
-    differences = []
-    numeric_columns.each_with_index do |col, col_index|
-      col_index_in_result = first_result.columns.index(col)
-      first_value = first_result.rows[row_index][col_index_in_result]
-      last_value = last_result.rows[row_index][col_index_in_result]
 
-      if first_value.nil? || last_value.nil?
-        differences << nil
-        differences << nil
-      else
-        difference = (last_value.to_f - first_value.to_f).round(2)
-        differences << difference
-        percentage_difference = first_value.to_f != 0 ? ((difference / first_value.to_f) * 100).round(2) : nil
-        differences << percentage_difference
-      end
+  def calculate_single_difference(prev_value, current_value)
+    if prev_value.nil? || current_value.nil?
+      [nil, nil]
+    else
+      difference = (current_value.to_f - prev_value.to_f).round(2)
+      percentage = prev_value.to_f != 0 ? ((difference / prev_value.to_f) * 100).round(2) : nil
+      [difference, percentage]
     end
-    differences
   end
 
   def identify_numeric_columns(result)
@@ -123,5 +117,5 @@ module ActiveRecordResultCombiner
     end
   end
 
-  private_class_method :build_columns, :build_rows, :build_row, :calculate_differences, :identify_numeric_columns
+  private_class_method :build_columns, :build_rows, :build_row, :calculate_single_difference, :identify_numeric_columns
 end
