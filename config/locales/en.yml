@@ -293,7 +293,7 @@ en:
   destroyed: 'Destroyed'
   reports: 'Reports'
   reset: 'Reset'
-
+  duplicate: 'Duplicate'
   approve: 'Approve'
   domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
 

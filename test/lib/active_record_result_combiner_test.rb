@@ -74,13 +74,10 @@ class ActiveRecordResultCombinerTest < ActiveSupport::TestCase
 
     expected_columns = [
       'column1 (1)', 'column2 (1)',
-      'column1 (2)', 'column2 (2)',
-      'column1 Diff', 'column1 Diff %',
-      'column2 Diff', 'column2 Diff %'
-    ]
+      'column1 (2)', 'column1 Diff (1->2)', 'column1 Diff %(1->2)',
+      'column2 (2)', 'column2 Diff (1->2)', 'column2 Diff %(1->2)']
     expected_rows = [
-      [1, 2, 5, 6, 4.0, 400.0, 4, 200.0],
-      [3, 4, 7, 8, 4.0, 133.33, 4.0, 100.0]
+      [1, 2, 5, 4.0, 400.0, 6, 4.0, 200.0], [3, 4, 7, 4.0, 133.33, 8, 4.0, 100.0]
     ]
 
     assert_equal expected_columns, combined_result.columns
@@ -91,15 +88,14 @@ class ActiveRecordResultCombinerTest < ActiveSupport::TestCase
     combined_result = ActiveRecordResultCombiner.combine_results([@result1, @result2, @result3])
 
     expected_columns = [
-      'column1 (1)', 'column2 (1)',
-      'column1 (2)', 'column2 (2)',
-      'column1 (3)', 'column2 (3)',
-      'column1 Diff', 'column1 Diff %',
-      'column2 Diff', 'column2 Diff %'
+      'column1 (1)', 'column2 (1)', 'column1 (2)', 'column1 Diff (1->2)', 'column1 Diff %(1->2)',
+      'column2 (2)', 'column2 Diff (1->2)', 'column2 Diff %(1->2)',
+      'column1 (3)', 'column1 Diff (2->3)', 'column1 Diff %(2->3)', 'column2 (3)',
+      'column2 Diff (2->3)', 'column2 Diff %(2->3)'
     ]
     expected_rows = [
-      [1, 2, 5, 6, 9, 10, 8, 800.0, 8, 400.0],    # First row with differences (9-1=8, 10-2=8)
-      [3, 4, 7, 8, 11, 12, 8, 266.67, 8, 200.0]    # Second row with differences (11-3=8, 12-4=8)
+      [1, 2, 5, 4.0, 400.0, 6, 4.0, 200.0, 9, 4.0, 80.0, 10, 4.0, 66.67],
+      [3, 4, 7, 4.0, 133.33, 8, 4.0, 100.0, 11, 4.0, 57.14, 12, 4.0, 50.0]
     ]
 
     assert_equal expected_columns, combined_result.columns
@@ -129,15 +125,14 @@ class ActiveRecordResultCombinerTest < ActiveSupport::TestCase
     combined_result = ActiveRecordResultCombiner.combine_results([@mixed_result1, @mixed_result2])
 
     expected_columns = [
-      'string_col',
-      'int_col (1)', 'float_col (1)',
-      'int_col (2)', 'float_col (2)',
-      'int_col Diff', 'int_col Diff %',
-      'float_col Diff', 'float_col Diff %'
+      'string_col', 'int_col (1)', 'float_col (1)',
+      'int_col (2)', 'int_col Diff (1->2)', 'int_col Diff %(1->2)',
+      'float_col (2)', 'float_col Diff (1->2)',
+      'float_col Diff %(1->2)'
     ]
     expected_rows = [
-      ['test', 1, 1.5, 3, 3.5, 2.0, 200.0, 2.0, 133.33],
-      ['example', 2, 2.5, 4, 4.5, 2.0, 100.0, 2.0, 80.0]
+      ['test', 1, 1.5, 3, 2.0, 200.0, 3.5, 2.0, 133.33],
+      ['example', 2, 2.5, 4, 2.0, 100.0, 4.5, 2.0, 80.0]
     ]
 
     assert_equal expected_columns, combined_result.columns
@@ -150,14 +145,12 @@ class ActiveRecordResultCombinerTest < ActiveSupport::TestCase
 
     expected_columns = [
       'column1 (1)', 'column2 (1)',
-      'column1 (2)', 'column2 (2)',
-      'column1 Diff', 'column1 Diff %',
-      'column2 Diff', 'column2 Diff %'
+      'column1 (2)', 'column1 Diff (1->2)', 'column1 Diff %(1->2)',
+      'column2 (2)', 'column2 Diff (1->2)', 'column2 Diff %(1->2)'
     ]
 
     expected_rows = [
-      [1, nil, 5, nil, 4.0, 400.0, nil, nil],
-      [nil, 4, nil, 8, nil, nil, 4.0, 100.0]
+      [1, nil, 5, 4.0, 400.0, nil, nil, nil], [nil, 4, nil, nil, nil, 8, 4.0, 100.0]
     ]
 
     assert_equal expected_columns, combined_result.columns
@@ -173,6 +166,6 @@ class ActiveRecordResultCombinerTest < ActiveSupport::TestCase
 
     # Check differences for all numeric columns
     first_row_differences = combined_result.rows[0][-4..]
-    assert_equal [8.0, 266.67, 8.0, 200.0], first_row_differences
+    assert_equal [266.67, 12, 8.0, 200.0], first_row_differences
   end
 end

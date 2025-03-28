@@ -376,6 +376,7 @@ Rails.application.routes.draw do
     resources :reports do
       member do
         post :run
+        post :duplicate
       end
     end
 
