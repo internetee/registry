@@ -55,6 +55,19 @@ module Admin
       end
     end
 
+    def duplicate
+      dup_report = @report.dup
+      dup_report.name = "#{@report.name} (copy)"
+      # Explicitly clone the parameters JSON to ensure it's properly copied
+      dup_report.parameters = @report.parameters.to_json
+
+      if dup_report.save
+        redirect_to admin_report_path(dup_report), notice: t('.created')
+      else
+        redirect_to admin_report_path(@report), alert: 'Failed to duplicate report'
+      end
+    end
+
     private
 
     def report_params
