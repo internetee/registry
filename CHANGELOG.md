@@ -1,3 +1,6 @@
+31.03.205
+* Fixed local part validation of email addresses https://github.com/internetee/registry/issues/2747
+
 28.03.2025
 * IPv6 address range support for access whitelisting https://github.com/internetee/registry/issues/2769
 
