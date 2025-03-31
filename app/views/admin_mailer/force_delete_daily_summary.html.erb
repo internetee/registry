@@ -1,5 +1,6 @@
 <h1>Force Delete Daily Summary - <%= Date.current %></h1>
 
+<h2>Force Deleted Domains</h2>
 <table>
   <thead>
     <tr>
@@ -11,13 +12,43 @@
     </tr>
   </thead>
   <tbody>
-    <% @domains.each do |domain| %>
+    <% if @force_deleted_domains.present? %>
+      <% @force_deleted_domains.each do |domain| %>
+        <tr>
+          <td><%= domain[:name] %></td>
+          <td><%= domain[:reason] %></td>
+          <td><%= domain[:force_delete_type] %></td>
+          <td><%= domain[:force_delete_start]&.to_date %></td>
+          <td><%= domain[:force_delete_date]&.to_date %></td>
+        </tr>
+      <% end %>
+    <% else %>
       <tr>
-        <td><%= domain[:name] %></td>
-        <td><%= domain[:reason] %></td>
-        <td><%= domain[:force_delete_type] %></td>
-        <td><%= domain[:force_delete_start]&.to_date %></td>
-        <td><%= domain[:force_delete_date]&.to_date %></td>
+        <td colspan="5">No force deleted domains found</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table> 
+
+<h2>Lifted Force Delete Domains</h2>
+
+  <thead>
+    <tr>
+      <th>Domain</th>
+      <th>Reason</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @lifted_domains.present? %>
+      <% @lifted_domains.each do |domain| %>
+        <tr>
+          <td><%= domain[:name] %></td>
+          <td><%= domain[:reason] %></td>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="1">No lifted domains found</td>
       </tr>
     <% end %>
   </tbody>
