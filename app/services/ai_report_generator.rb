@@ -35,7 +35,7 @@ class AiReportGenerator
           { role: 'system', content: system_prompt },
           { role: 'user', content: user_prompt }
         ],
-        temperature: ENV['openai_temperature'] || 0.7
+        temperature: ENV['openai_temperature'].to_f || 0.6
       }
     )
 
