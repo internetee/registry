@@ -1,8 +1,8 @@
 # app/models/report.rb
 class Report < ApplicationRecord
+  self.table_name = 'admin_reports'
   validates :name, presence: true, uniqueness: true
   validates :sql_query, presence: true
-  # TODO: validate parameters if parameters is an Array
 
   belongs_to :creator, class_name: 'AdminUser', foreign_key: :created_by, optional: true
 

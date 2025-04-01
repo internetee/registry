@@ -343,6 +343,41 @@ ALTER SEQUENCE public.actions_id_seq OWNED BY public.actions.id;
 
 
 --
+-- Name: admin_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.admin_reports (
+    id bigint NOT NULL,
+    name character varying,
+    description text,
+    sql_query text,
+    parameters json,
+    created_by integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: admin_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.admin_reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: admin_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.admin_reports_id_seq OWNED BY public.admin_reports.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3079,6 +3114,13 @@ ALTER TABLE ONLY public.actions ALTER COLUMN id SET DEFAULT nextval('public.acti
 
 
 --
+-- Name: admin_reports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_reports ALTER COLUMN id SET DEFAULT nextval('public.admin_reports_id_seq'::regclass);
+
+
+--
 -- Name: auctions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3583,6 +3625,14 @@ ALTER TABLE ONLY public.accounts
 
 ALTER TABLE ONLY public.actions
     ADD CONSTRAINT actions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: admin_reports admin_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_reports
+    ADD CONSTRAINT admin_reports_pkey PRIMARY KEY (id);
 
 
 --
