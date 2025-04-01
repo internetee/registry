@@ -87,7 +87,7 @@ ActiveRecord::Base.transaction do
   )
 
   # First registrar
-  Registrar.where(name: 'Registrar First').first_or_create!(
+  registrar = Registrar.where(name: 'Registrar First').first_or_create!(
     name: 'Registrar First',
     reg_no: '90010019',
     accounting_customer_code: '1234',
@@ -104,7 +104,7 @@ ActiveRecord::Base.transaction do
     code: 'REG1'
   )
 
-#  registrar.accounts.create!(account_type: Account::CASH, currency: 'EUR')
+  registrar.accounts.create!(account_type: Account::CASH, currency: 'EUR')
 
 #  ApiUser.create!(
 #    username: 'api_first',
@@ -114,8 +114,6 @@ ActiveRecord::Base.transaction do
 #    registrar: registrar,
 #    roles: ['epp']
 #  )
-
-
 
 #  ZonefileSetting.create!(
 #    origin: 'tld',

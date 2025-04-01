@@ -291,7 +291,9 @@ en:
   contact: 'Contact'
   starting_balance: 'Starting balance'
   destroyed: 'Destroyed'
-
+  reports: 'Reports'
+  reset: 'Reset'
+  duplicate: 'Duplicate'
   approve: 'Approve'
   domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
 
@@ -701,3 +703,20 @@ en:
   sign_in: "Sign in"
   signed_in_successfully: "Signed in successfully"
   bulk_renew_completed: "Bulk renew for domains completed"
+
+  admin:
+    reports:
+      run:
+        total_rows:
+          zero: "No rows found"
+          one: "1 row found"
+          other: "%{count} rows found"
+        no_data: "The query returned no data"
+        no_results: "No results found or error running the report"
+      partials:
+        parameters_form:
+          parameter_set: "Parameter Set %{number}"
+          run_report: "Run Report"
+          add_parameter_set: "Add Parameter Set"
+          csv_btn: "Download CSV"
+          no_parameters: "This report has no parameters and will run directly."

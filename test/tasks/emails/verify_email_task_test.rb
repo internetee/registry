@@ -54,14 +54,13 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
   end
 
   def test_should_verify_contact_email_which_was_not_verified
-    
     assert_equal ValidationEvent.count, 0
-    
+
     run_task
-    
+
     assert_equal ValidationEvent.count, Contact.count - 1
     assert_equal Contact.count, 9
-    
+
     assert_difference 'Contact.count', 1 do
       create_valid_contact
     end
@@ -120,7 +119,7 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
 
   def create_valid_contact
     Contact.create!(name: 'Jeembo',
-                    email: 'heey@jeembo.com',
+                    email: 'heey@inbox.test',
                     phone: '+555.555',
                     ident: '1234',
                     ident_type: 'priv',

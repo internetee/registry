@@ -1,5 +1,6 @@
 class Ability
   include CanCan::Ability
+
   def initialize(user, ip = nil)
     @ip = ip
     alias_action :show, to: :view
@@ -123,6 +124,7 @@ class Ability
     can :access, :settings_menu
     can :manage, :mass_actions
     can :manage, BouncedMailAddress
+    can :manage, Report
   end
 
   def static_registrant

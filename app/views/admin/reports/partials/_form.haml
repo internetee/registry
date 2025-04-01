@@ -1,0 +1,36 @@
+= form_for([:admin, @report], url: url, method: method, html: { class: 'form-horizontal' }) do |f|
+  = render 'shared/full_errors', object: @report
+  .row
+    .col-md-12
+      .form-group
+        .col-md-2.control-label
+          = f.label :name, class: 'required'
+        .col-md-10
+          = f.text_field :name, class: 'form-control', required: true
+
+      .form-group
+        .col-md-2.control-label
+          = f.label :description
+        .col-md-10
+          = f.text_area :description, rows: 5, class: 'form-control'
+
+      .form-group 
+        .col-md-2.control-label
+          = f.label :parameters, 'Input Parameters'
+        .col-md-10
+          = f.text_area :parameters, value: @report.parameters&.to_json, class: 'form-control', placeholder: 'e.g., [{"name":"start_date","type": "date", "default": "2024-01-01"}, {"name":"status","type":"string","default": "inactive"}]'
+
+      .form-group
+        .col-md-2.control-label
+          = f.label :sql_query, class: 'required'
+        .col-md-10
+          = f.text_area :sql_query, rows: 30, class: 'form-control'
+  %hr
+  .row
+    .col-md-12.text-right
+      = button_tag(t(:save), class: 'btn btn-warning')
+
+:javascript
+  window.onload = function() {
+    init_sql_editor("text/x-plsql", #{raw db_hint_options.to_json});
+  };
