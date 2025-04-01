@@ -265,3 +265,5 @@ priv_ident_service_client_id: 123
 priv_ident_service_client_secret: 321
 birthday_ident_service_client_id: 456
 birthday_ident_service_client_secret: 654
+
+allow_validate_business_contacts: 'true'

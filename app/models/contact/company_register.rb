@@ -6,10 +6,6 @@ module Contact::CompanyRegister
   BANKRUPT = 'N'.freeze
   DELETED = 'K'.freeze
 
-  def company_is_relevant?
-    company_register_status == REGISTERED && company_register_status == LIQUIDATED
-  end
-
   def return_company_status
     return if return_company_data.blank?
 

@@ -221,6 +221,42 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end
 
+  def test_skip_company_validation_if_flag_is_set
+    ENV['allow_validate_business_contacts'] = 'false'
+    original_new_method = CompanyRegister::Client.method(:new)
+    CompanyRegister::Client.define_singleton_method(:new) do
+      object = original_new_method.call
+      def object.simple_data(registration_number:)
+        [Company.new('1234567', 'ACME Ltd', 'K')]
+      end
+      object
+    end
+
+    request_body = {
+      "contact": {
+        "name": 'Donald Trump',
+        "phone": '+372.51111112',
+        "email": 'donald@trumptower.com',
+        "ident": {
+          "ident_type": 'org',
+          "ident_country_code": 'EE',
+          "ident": '70000313',
+        },
+      },
+    }
+
+    post '/repp/v1/contacts', headers: @auth_headers, params: request_body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+
+    CompanyRegister::Client.define_singleton_method(:new, original_new_method)
+    ENV['allow_validate_business_contacts'] = 'true'
+  end
+
+
   def test_contact_created_with_existed_company
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
