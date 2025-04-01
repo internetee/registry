@@ -374,6 +374,7 @@ Rails.application.routes.draw do
     resources :bounced_mail_addresses, only: %i[index show destroy]
 
     resources :reports do
+      post :generate_with_ai, on: :collection
       member do
         post :run
         post :duplicate

@@ -2,25 +2,23 @@
   .col-md-12
     = form_with url: run_admin_report_path(@report), html: { style: 'margin-bottom: 0;', autocomplete: 'off' } do |f|
       - if @report.parameters.present?
+        - parameters = @report.parameters.is_a?(Hash) ? [@report.parameters] : @report.parameters
         #report-parameters
           - parameter_sets = if params[:report_parameters].present?
             - params[:report_parameters].to_unsafe_h
-          - elsif @report.parameters.is_a?(Array)
-            - @report.parameters.each_with_index.map { |param_set, i| [i.to_s, param_set.transform_values { |v| v["default"] }] }.to_h
           - else
-            - { "0" => @report.parameters.transform_values { |v| v["default"] } }
+            - { "0" => parameters.map { |param| [param["name"], param["default"]] }.to_h }
 
-          - parameters = @report.parameters.is_a?(Array) ? @report.parameters[0] : @report.parameters
           - parameter_sets.each do |set_index, set_values|
             .row.parameter-group
-              - parameters.each do |param, props|
+              - parameters.each do |param|
                 .col-md-6
                   .form-group
-                    = label_tag param, param.humanize
-                    - if props["type"] == "date"
-                      = date_field_tag "report_parameters[#{set_index}][#{param}]", (set_values[param] || props['default']), class: 'form-control'
-                    - elsif props["type"] == "string"
-                      = text_field_tag "report_parameters[#{set_index}][#{param}]", (set_values[param] || props['default']), class: 'form-control'
+                    = label_tag param["name"], param["name"].humanize
+                    - if param["type"] == "date"
+                      = date_field_tag "report_parameters[#{set_index}][#{param["name"]}]", (set_values[param["name"]] || param["default"]), class: 'form-control'
+                    - elsif param["type"] == "string"
+                      = text_field_tag "report_parameters[#{set_index}][#{param["name"]}]", (set_values[param["name"]] || param["default"]), class: 'form-control'
 
         .d-flex.flex-wrap.gap-2
           %button.btn.btn-secondary#add-parameter-group{ type: 'button' }= t('.add_parameter_set')

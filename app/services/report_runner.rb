@@ -34,11 +34,11 @@ module ReportRunner
 
     def execute_report(report, params)
       results = []
-      report_parameters = report.parameters.is_a?(Array) ? report.parameters[0] : report.parameters
+      report_parameters = report.parameters.is_a?(Array) ? report.parameters : [report.parameters]
 
       if params.present?
         params.each_value do |parameter_set|
-          permitted_param_set = parameter_set.permit(report_parameters.keys)
+          permitted_param_set = parameter_set.permit(report_parameters.map { |param| param["name"] })
           query = report.sql_query.dup
           handle_parameters(query, permitted_param_set)
           results << run_query(query)

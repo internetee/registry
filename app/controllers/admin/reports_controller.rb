@@ -68,7 +68,54 @@ module Admin
       end
     end
 
+    def generate_with_ai
+      return redirect_with_prompt_error if params[:prompt].blank?
+
+      response = AiReportGenerator.new(params[:prompt], params[:schema]).generate
+
+      if response[:success]
+        create_report_from_ai_response(response)
+      else
+        redirect_to new_admin_report_path(ai: true), alert: "AI report generation failed: #{response[:error]}"
+      end
+    end
+
     private
+
+    def redirect_with_prompt_error
+      redirect_to new_admin_report_path(ai: true), alert: 'Please provide a description for the AI to generate a report'
+    end
+
+    def create_report_from_ai_response(response)
+      result = response[:result].with_indifferent_access
+      @report = build_report(result)
+      ensure_unique_report_name
+
+      if @report.save
+        redirect_to admin_report_path(@report), notice: 'AI successfully generated your report'
+      else
+        flash.now[:alert] = "Failed to save the generated report: #{@report.errors.full_messages.join(', ')}"
+        render :new
+      end
+    end
+
+    def build_report(result)
+      Report.new(
+        name: result[:name],
+        description: result[:description],
+        sql_query: result[:sql_query],
+        parameters: result[:parameters].to_json
+      )
+    end
+
+    def ensure_unique_report_name
+      return unless Report.exists?(name: @report.name)
+
+      base_name = @report.name
+      counter = 1
+      counter += 1 while Report.exists?(name: "#{base_name} (#{counter})")
+      @report.name = "#{base_name} (#{counter})"
+    end
 
     def report_params
       params.require(:report).permit(:name, :description, :sql_query, :parameters)

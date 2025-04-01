@@ -100,6 +100,7 @@ end
 gem 'aws-sdk-sesv2', '~> 1.19'
 gem 'newrelic-infinite_tracing'
 gem 'newrelic_rpm'
+gem 'ruby-openai'
 
 # profiles
 gem 'pghero'
