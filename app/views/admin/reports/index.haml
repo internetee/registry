@@ -1,5 +1,6 @@
 - content_for :actions do
-  = link_to(t('.new_report'), new_admin_report_path, class: 'btn btn-primary')
+  = link_to(t('.create_report'), new_admin_report_path, class: 'btn btn-primary')
+  = link_to(t('.generate_ai_report'), new_admin_report_path(ai: true), class: 'btn btn-primary')
 = render 'shared/title', name: t(:reports)
 = render 'admin/reports/partials/search_form'
 

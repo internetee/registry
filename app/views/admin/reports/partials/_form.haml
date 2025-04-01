@@ -12,13 +12,13 @@
         .col-md-2.control-label
           = f.label :description
         .col-md-10
-          = f.text_area :description, class: 'form-control'
+          = f.text_area :description, rows: 5, class: 'form-control'
 
       .form-group 
         .col-md-2.control-label
           = f.label :parameters, 'Input Parameters'
         .col-md-10
-          = f.text_area :parameters, value: @report.parameters&.to_json, class: 'form-control', placeholder: 'e.g., {"start_date": {"type": "date", "default": "2024-01-01"}, "status": {"type": "string", "default": "active"}}'
+          = f.text_area :parameters, value: @report.parameters&.to_json, class: 'form-control', placeholder: 'e.g., [{"name":"start_date","type": "date", "default": "2024-01-01"}, {"name":"status","type":"string","default": "inactive"}]'
 
       .form-group
         .col-md-2.control-label
