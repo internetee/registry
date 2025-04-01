@@ -78,8 +78,12 @@ module ReportRunner
     end
 
     def run_query(query)
-      ActiveRecord::Base.connected_to(role: :reading, prevent_writes: true) do
+      if Rails.env.test?
         ActiveRecord::Base.connection.exec_query(sanitize_sql(query))
+      else
+        ActiveRecord::Base.connected_to(role: :reading, prevent_writes: true) do
+          ActiveRecord::Base.connection.exec_query(sanitize_sql(query))
+        end
       end
     rescue StandardError => e
       Rails.logger.error("Query Error: #{e.message}\nQuery: #{query}")

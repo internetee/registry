@@ -10,8 +10,8 @@ class AiReportGenerator
 
   def generate
     system_prompt = <<~PROMPT
-      You are an expert SQL developer. Your task is to create an SQL query based on a user's request.
-      Use the provided database schema to create an accurate SQL query.
+      You are an expert SQL developer. Your task is to create a readonly SQL query based on a user's request.
+      Use the provided database schema to create an accurate SQL query. Do not create any write and delete queries.
 
       Database Schema:
       #{@schema}
