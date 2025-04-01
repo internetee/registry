@@ -8,9 +8,10 @@ class ForceDeleteDailyAdminNotifierJob < ApplicationJob
   private
 
   def force_deleted_domains
-    Domain.where("force_delete_start >= ? AND force_delete_start <= ?", 
-                 Time.zone.yesterday.beginning_of_day, 
-                 Time.zone.yesterday.end_of_day)
+    Domain.where("json_statuses_history->>'force_delete_domain_statuses_history_data' IS NOT NULL").
+          where("(json_statuses_history->'force_delete_domain_statuses_history_data'->>'date')::timestamp >= ? AND (json_statuses_history->'force_delete_domain_statuses_history_data'->>'date')::timestamp <= ?",
+                Time.zone.yesterday.beginning_of_day,
+                Time.zone.yesterday.end_of_day)
   end
 
   def lifted_force_delete_domains
