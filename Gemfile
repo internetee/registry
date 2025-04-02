@@ -10,6 +10,7 @@ gem 'mime-types-data'
 gem 'puma'
 gem 'rails', '~> 6.1.4'
 gem 'rest-client'
+gem 'rubyzip', require: 'zip'
 gem 'uglifier'
 
 # load env

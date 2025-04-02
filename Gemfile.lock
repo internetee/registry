@@ -623,6 +623,7 @@ DEPENDENCIES
   redis
   rest-client
   rexml
+  rubyzip
   sass-rails
   select2-rails (= 4.0.13)
   selectize-rails (= 0.12.6)
