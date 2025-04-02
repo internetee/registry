@@ -1,4 +1,7 @@
-31.03.205
+02.04.2025
+* option to skip buiness registry validation for test environments https://github.com/internetee/registry/pull/2775
+
+31.03.2025
 * Fixed local part validation of email addresses https://github.com/internetee/registry/issues/2747
 
 28.03.2025
