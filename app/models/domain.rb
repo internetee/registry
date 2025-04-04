@@ -48,7 +48,9 @@ class Domain < ApplicationRecord
 
   store_accessor :json_statuses_history,
                  :force_delete_domain_statuses_history,
-                 :admin_store_statuses_history
+                 :admin_store_statuses_history,
+                 :lift_force_delete_domain_statuses_history_data,
+                 :force_delete_domain_statuses_history_data
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validation, probably some global logic?
