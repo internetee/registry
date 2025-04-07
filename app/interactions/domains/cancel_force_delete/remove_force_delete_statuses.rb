@@ -15,6 +15,10 @@ module Domains
         rejected_statuses = domain.statuses.reject { |a| domain_statuses.include? a }
         domain.statuses = rejected_statuses
         domain.skip_whois_record_update = true
+        domain.lift_force_delete_domain_statuses_history_data = {
+          reason: domain.status_notes[DomainStatus::FORCE_DELETE],
+          date: Time.zone.now
+        }
         domain.save(validate: false)
       end
     end
