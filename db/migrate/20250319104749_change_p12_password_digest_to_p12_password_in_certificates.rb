@@ -7,9 +7,12 @@ class ChangeP12PasswordDigestToP12PasswordInCertificates < ActiveRecord::Migrati
 
     # Only copy data if p12_password_digest exists
     if column_exists?(:certificates, :p12_password_digest)
-      Certificate.find_each do |cert|
-        cert.update_column(:p12_password, cert.p12_password_digest) if cert.p12_password_digest.present?
-      end
+      # Use direct SQL to copy data
+      execute <<-SQL
+        UPDATE certificates 
+        SET p12_password = p12_password_digest 
+        WHERE p12_password_digest IS NOT NULL
+      SQL
 
       safety_assured { remove_column :certificates, :p12_password_digest }
     end
@@ -23,9 +26,12 @@ class ChangeP12PasswordDigestToP12PasswordInCertificates < ActiveRecord::Migrati
 
     # Only copy data if p12_password exists
     if column_exists?(:certificates, :p12_password)
-      Certificate.find_each do |cert|
-        cert.update_column(:p12_password_digest, cert.p12_password) if cert.p12_password.present?
-      end
+      # Use direct SQL to copy data
+      execute <<-SQL
+        UPDATE certificates 
+        SET p12_password_digest = p12_password 
+        WHERE p12_password IS NOT NULL
+      SQL
 
       safety_assured { remove_column :certificates, :p12_password }
     end
