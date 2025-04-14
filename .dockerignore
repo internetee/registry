@@ -1,0 +1,55 @@
+# Git
+.git
+.gitignore
+.github
+
+# Docker
+Dockerfile
+Dockerfile.production
+docker-compose.yml
+.dockerignore
+
+# Rails
+.bundle
+log/*
+tmp/*
+db/*.sqlite3
+db/*.sqlite3-journal
+storage/*
+public/assets
+public/packs
+node_modules
+yarn-error.log
+
+# Environment
+.env
+.env.*
+config/master.key
+config/credentials.yml.enc
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+*.md
+
+# Development and test files
+spec/
+test/
+features/
+coverage/
+.rspec
+.rubocop.yml
+.ruby-version
+.byebug_history
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.idea
+.vscode
+*.swp
+*.swo
+*~
