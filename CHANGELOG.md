@@ -1,3 +1,6 @@
+04.04.2025
+* Daily report of domains with ForceDelete statuses https://github.com/internetee/registry/issues/2772
+
 02.04.2025
 * option to skip buiness registry validation for test environments https://github.com/internetee/registry/pull/2775
 
