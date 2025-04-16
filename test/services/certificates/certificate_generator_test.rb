@@ -40,10 +40,11 @@ module Certificates
       csr = generator.generate_user_csr(private_key)
       certificate = generator.sign_user_certificate(csr)
 
-      p12 = generator.create_user_p12(private_key, certificate)
+      password = SecureRandom.hex(8)
+      p12 = generator.create_user_p12(private_key, certificate, password)
       
       # Verify P12 can be loaded back with correct password
-      loaded_p12 = OpenSSL::PKCS12.new(p12, CertificateGenerator::P12_PASSWORD)
+      loaded_p12 = OpenSSL::PKCS12.new(p12, password)
       
       assert_instance_of OpenSSL::PKCS12, loaded_p12
       assert_equal certificate.to_der, loaded_p12.certificate.to_der
@@ -77,7 +78,6 @@ module Certificates
       assert_not_nil certificate_record.crt
       assert_not_nil certificate_record.p12
       assert_equal 'registrar', certificate_record.interface
-      assert_equal CertificateGenerator::P12_PASSWORD, certificate_record.p12_password_digest
       assert_equal users(:api_bestnames).username, certificate_record.common_name
       
       # Verify the certificate can be parsed back from stored data
