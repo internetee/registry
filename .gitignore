@@ -23,6 +23,9 @@ ettevotja_rekvisiidid__lihtandmed.csv.zip
 Dockerfile.dev
 .cursor/
 .cursorrules
-
-# Ignore sensitive certificates
 /certs/
+certs/ca/certs/ca_*.pem
+certs/ca/private/ca_*.pem
+.cursor/
+.cursorrules
+certs/

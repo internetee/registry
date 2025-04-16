@@ -79,6 +79,9 @@ gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
 gem 'directo', github: 'internetee/directo', branch: 'master'
 
 gem 'strong_migrations'
+gem 'dry-types'
+gem 'dry-struct'
+gem 'openssl'
 
 group :development, :test do
   gem 'pry', '0.15.2'

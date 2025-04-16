@@ -587,7 +587,14 @@ CREATE TABLE public.certificates (
     common_name character varying,
     md5 character varying,
     interface character varying,
-    revoked boolean DEFAULT false NOT NULL
+    revoked boolean DEFAULT false NOT NULL,
+    private_key bytea,
+    p12 bytea,
+    expires_at timestamp without time zone,
+    serial character varying,
+    revoked_at timestamp without time zone,
+    revoked_reason integer,
+    p12_password character varying
 );
 
 
@@ -5718,6 +5725,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241112124405'),
 ('20241129095711'),
 ('20241206085817'),
-('20250204094550');
+('20250204094550'),
+('20250219102811'),
+('20250313122119'),
+('20250319104749');
 
 

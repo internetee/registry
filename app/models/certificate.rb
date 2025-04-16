@@ -4,6 +4,8 @@ class Certificate < ApplicationRecord
   include Versions
   include Certificate::CertificateConcern
 
+  self.ignored_columns = ["p12_password_digest"]
+
   belongs_to :api_user
 
   SIGNED = 'signed'.freeze
@@ -19,6 +21,13 @@ class Certificate < ApplicationRecord
   scope 'api', -> { where(interface: API) }
   scope 'registrar', -> { where(interface: REGISTRAR) }
   scope 'unrevoked', -> { where(revoked: false) }
+
+  # Базовые причины отзыва (самые частые)
+  REVOCATION_REASONS = {
+    unspecified: 0,
+    key_compromise: 1,
+    cessation_of_operation: 5
+  }.freeze
 
   validate :validate_csr_and_crt_presence
   def validate_csr_and_crt_presence
@@ -52,8 +61,27 @@ class Certificate < ApplicationRecord
     @p_csr ||= OpenSSL::X509::Request.new(csr) if csr
   end
 
+  def parsed_private_key
+    return nil if private_key.blank?
+    
+    OpenSSL::PKey::RSA.new(private_key)
+  rescue OpenSSL::PKey::RSAError => e
+    Rails.logger.error("Failed to parse private key: #{e.message}")
+    nil
+  end
+
+  def parsed_p12
+    return nil if p12.blank?
+    
+    decoded_p12 = Base64.decode64(p12)
+    OpenSSL::PKCS12.new(decoded_p12, p12_password)
+  rescue OpenSSL::PKCS12::PKCS12Error => e
+    Rails.logger.error("Failed to parse PKCS12: #{e.message}")
+    nil
+  end
+
   def revoked?
-    status == REVOKED
+    revoked
   end
 
   def revokable?
@@ -62,17 +90,10 @@ class Certificate < ApplicationRecord
 
   def status
     return UNSIGNED if crt.blank?
-    return @cached_status if @cached_status
-
-    @cached_status = SIGNED
-
-    if certificate_expired?
-      @cached_status = EXPIRED
-    elsif certificate_revoked?
-      @cached_status = REVOKED
-    end
-
-    @cached_status
+    return REVOKED if revoked?
+    return EXPIRED if expires_at && expires_at < Time.current
+    
+    SIGNED
   end
 
   def sign!(password:)
@@ -87,18 +108,14 @@ class Certificate < ApplicationRecord
     false
   end
 
-  def revoke!(password:)
-    crt_file = create_tempfile('client_crt', crt)
+  def revoke!(password:, reason: :unspecified)
+    return false unless password == ENV['ca_key_password']
 
-    err_output = execute_openssl_revoke_command(password, crt_file.path)
-
-    if revocation_successful?(err_output)
-      update_revocation_status
-      self.class.update_crl
-      return self
-    end
-
-    handle_revocation_failure(err_output)
+    update!(
+      revoked: true,
+      revoked_at: Time.current,
+      revoked_reason: REVOCATION_REASONS[reason]
+    )
   end
 
   private
@@ -112,7 +129,7 @@ class Certificate < ApplicationRecord
     cn = pc.scan(%r{\/CN=(.+)}).flatten.first
     self.common_name = cn.split('/').first
     self.md5 = OpenSSL::Digest::MD5.new(origin.to_der).to_s if crt
-    self.interface = crt ? API : REGISTRAR
+    self.interface = crt ? API : REGISTRAR if interface.blank?
   end
 
   def create_tempfile(filename, content = '')
