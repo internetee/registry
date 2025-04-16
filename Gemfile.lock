@@ -517,10 +517,6 @@ GEM
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
       redis-client (>= 0.14.0)
-    sidekiq-unique-jobs (8.0.10)
-      concurrent-ruby (~> 1.0, >= 1.0.5)
-      sidekiq (>= 7.0.0, < 8.0.0)
-      thor (>= 1.0, < 3.0)
     simplecov (0.17.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -659,7 +655,6 @@ DEPENDENCIES
   selectize-rails (= 0.12.6)
   selenium-webdriver (~> 4.26)
   sidekiq (~> 7.0)
-  sidekiq-unique-jobs (~> 8.0)
   simplecov (= 0.17.1)
   simpleidn (= 0.2.3)
   spy
