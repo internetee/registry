@@ -22,7 +22,6 @@ class Certificate < ApplicationRecord
   scope 'registrar', -> { where(interface: REGISTRAR) }
   scope 'unrevoked', -> { where(revoked: false) }
 
-  # Базовые причины отзыва (самые частые)
   REVOCATION_REASONS = {
     unspecified: 0,
     key_compromise: 1,
@@ -55,17 +54,23 @@ class Certificate < ApplicationRecord
 
   def parsed_crt
     @p_crt ||= OpenSSL::X509::Certificate.new(crt) if crt
+  rescue StandardError => e
+    Rails.logger.error("Failed to parse CRT: #{e.message}")
+    nil
   end
 
   def parsed_csr
     @p_csr ||= OpenSSL::X509::Request.new(csr) if csr
+  rescue StandardError => e
+    Rails.logger.error("Failed to parse CSR: #{e.message}")
+    nil
   end
 
   def parsed_private_key
     return nil if private_key.blank?
     
     OpenSSL::PKey::RSA.new(private_key)
-  rescue OpenSSL::PKey::RSAError => e
+  rescue StandardError => e
     Rails.logger.error("Failed to parse private key: #{e.message}")
     nil
   end
@@ -75,7 +80,7 @@ class Certificate < ApplicationRecord
     
     decoded_p12 = Base64.decode64(p12)
     OpenSSL::PKCS12.new(decoded_p12, p12_password)
-  rescue OpenSSL::PKCS12::PKCS12Error => e
+  rescue StandardError => e
     Rails.logger.error("Failed to parse PKCS12: #{e.message}")
     nil
   end

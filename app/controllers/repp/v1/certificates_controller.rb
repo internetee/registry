@@ -70,13 +70,10 @@ module Repp
       def decode_cert_params(csr_params)
         return if csr_params.blank?
 
-        # Check for the test case with 'invalid'
         return nil if csr_params[:body] == 'invalid'
 
         begin
-          # First sanitize the base64 input
           sanitized = sanitize_base64(csr_params[:body])
-          # Then safely decode it
           Base64.decode64(sanitized)
         rescue StandardError => e
           Rails.logger.error("Failed to decode certificate: #{e.message}")
@@ -87,13 +84,7 @@ module Repp
       def sanitize_base64(text)
         return '' if text.blank?
         
-        # First make sure we're dealing with a valid string
-        text = text.to_s
-        
-        # Remove any invalid UTF-8 characters
-        text = text.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
-        
-        # Remove any whitespace, newlines, etc.
+        text = text.to_s.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
         text.gsub(/\s+/, '')
       end
 

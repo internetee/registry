@@ -10,38 +10,14 @@ module Serializers
       def to_json(obj = certificate)
         json = obj.as_json.except('csr', 'crt', 'private_key', 'p12')
 
-        begin
-          csr = obj.parsed_csr
-        rescue StandardError => e
-          Rails.logger.warn("Error parsing CSR: #{e.message}")
-          csr = nil
-        end
-        
-        begin
-          crt = obj.parsed_crt
-        rescue StandardError => e
-          Rails.logger.warn("Error parsing CRT: #{e.message}")
-          crt = nil
-        end
-        
-        begin
-          p12 = obj.parsed_p12
-        rescue StandardError => e
-          Rails.logger.warn("Error parsing P12: #{e.message}")
-          p12 = nil
-        end
-        
-        begin
-          private_key = obj.parsed_private_key
-        rescue StandardError => e
-          Rails.logger.warn("Error parsing private key: #{e.message}")
-          private_key = nil
-        end
+        csr = obj.parsed_csr
+        crt = obj.parsed_crt
+        p12 = obj.parsed_p12
+        private_key = obj.parsed_private_key
 
         json[:private_key] = private_key_data(private_key) if private_key
         json[:p12] = p12_data(obj) if obj.p12.present? && p12
         json[:expires_at] = obj.expires_at if obj.expires_at.present?
-        
         json[:csr] = csr_data(csr) if csr
         json[:crt] = crt_data(crt) if crt
         
