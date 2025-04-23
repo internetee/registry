@@ -1,6 +1,6 @@
 class AdminDomainContact < DomainContact
   include AgeValidation
-  
+
   validate :validate_contact_age
 
   # rubocop:disable Metrics/AbcSize
@@ -33,8 +33,6 @@ class AdminDomainContact < DomainContact
   def validate_contact_age
     return unless contact&.underage?
 
-    errors.add(:contact, I18n.t(
-      'activerecord.errors.models.admin_domain_contact.contact_too_young'
-    ))
+    errors.add(:base, :contact_too_young)
   end
 end

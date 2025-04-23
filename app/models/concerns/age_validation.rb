@@ -17,13 +17,17 @@ module AgeValidation
   def underage_by_birthday?
     birth_date = Date.parse(ident)
     calculate_age(birth_date) < 18
+  rescue ArgumentError
+    true
   end
 
   def underage_by_estonian_id?
     return false unless estonian_id?
-    
+
     birth_date = parse_estonian_id_birth_date(ident)
     calculate_age(birth_date) < 18
+  rescue ArgumentError
+    true
   end
 
   def estonian_id?
@@ -50,4 +54,4 @@ module AgeValidation
                  
     Date.parse("#{birth_year}-#{month}-#{day}")
   end
-end 
+end
