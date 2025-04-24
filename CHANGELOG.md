@@ -1,3 +1,6 @@
+24.04.2025
+* Fixed admin contact validation error handling https://github.com/internetee/registry/issues/2783
+
 04.04.2025
 * Daily report of domains with ForceDelete statuses https://github.com/internetee/registry/issues/2772
 
