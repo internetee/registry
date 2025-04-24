@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+.github
+
+# Docker
+.dockerignore
+Dockerfile*
+docker-compose*
+
+# Rails specific
+log/*
+tmp/*
+storage/*
+.bundle
+.byebug_history
+.rspec
+spec/
+test/
+coverage/
+public/assets
+public/packs
+node_modules
+yarn-error.log
+
+# Environment files
+.env*
+config/master.key
+config/credentials/*.key
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+docs/
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS specific
+.DS_Store
+Thumbs.db

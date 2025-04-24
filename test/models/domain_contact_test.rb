@@ -20,15 +20,14 @@ class DomainContactTest < ActiveSupport::TestCase
       ident_type: 'birthday',
       ident: (Time.zone.now - 16.years).strftime('%Y-%m-%d')
     )
-    
+
     domain_contact = AdminDomainContact.new(
       domain: domains(:shop),
       contact: admin_contact
     )
-    
+
     assert_not domain_contact.valid?
-    assert_includes domain_contact.errors.full_messages, 
-                    'Contact Administrative contact must be at least 18 years old'
+    assert_includes domain_contact.errors.full_messages, 'Administrative contact must be at least 18 years old'
   end
 
   def test_validates_admin_contact_age_with_estonian_id
@@ -38,15 +37,14 @@ class DomainContactTest < ActiveSupport::TestCase
       ident: '61203150222',
       ident_country_code: 'EE'
     )
-    
+
     domain_contact = AdminDomainContact.new(
       domain: domains(:shop),
       contact: admin_contact
     )
-    
+
     assert_not domain_contact.valid?
-    assert_includes domain_contact.errors.full_messages, 
-                    'Contact Administrative contact must be at least 18 years old'
+    assert_includes domain_contact.errors.full_messages, 'Administrative contact must be at least 18 years old'
   end
 
   def test_allows_adult_admin_contact_with_birthday
@@ -55,12 +53,12 @@ class DomainContactTest < ActiveSupport::TestCase
       ident_type: 'birthday',
       ident: (Time.zone.now - 20.years).strftime('%Y-%m-%d')
     )
-    
+
     domain_contact = AdminDomainContact.new(
       domain: domains(:shop),
       contact: admin_contact
     )
-    
+
     assert domain_contact.valid?
   end
 
@@ -71,13 +69,12 @@ class DomainContactTest < ActiveSupport::TestCase
       ident: '38903111310',
       ident_country_code: 'EE'
     )
-    
+
     domain_contact = AdminDomainContact.new(
       domain: domains(:shop),
       contact: admin_contact
     )
-    
+
     assert domain_contact.valid?
   end
-
 end

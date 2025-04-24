@@ -3,10 +3,9 @@ class DomainContact < ApplicationRecord
   # STI: admin_domain_contact
   include Versions # version/domain_contact_version.rb
   include EppErrors
+
   belongs_to :contact
   belongs_to :domain
-
-  validates :contact, presence: true
 
   after_destroy :update_contact
   attr_accessor :value_typeahead
