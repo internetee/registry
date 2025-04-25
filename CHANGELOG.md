@@ -1,3 +1,6 @@
+25.04.2025
+* Certificate generation feature for users https://github.com/internetee/registry/pull/2756
+
 24.04.2025
 * Fixed admin contact validation error handling https://github.com/internetee/registry/issues/2783
 
