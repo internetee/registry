@@ -5,6 +5,7 @@ api:
   md5: e6771ed5dc857a1dbcc1e0a36baa1fee
   interface: api
   revoked: false
+  expires_at: <%= 1.year.from_now %>
 registrar:
   api_user: api_bestnames
   common_name: registry.test
@@ -12,3 +13,4 @@ registrar:
   md5: e6771ed5dc857a1dbcc1e0a36baa1fee
   interface: registrar
   revoked: false
+  expires_at: <%= 1.year.from_now %>
