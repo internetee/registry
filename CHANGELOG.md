@@ -1,3 +1,6 @@
+02.05.2025
+* ForceDelete is not lifted with any contact update any more https://github.com/internetee/registry/issues/2782
+
 25.04.2025
 * Certificate generation feature for users https://github.com/internetee/registry/pull/2756
 
