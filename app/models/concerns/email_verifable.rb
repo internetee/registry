@@ -14,8 +14,18 @@ module EmailVerifable
     domain_with_fd = domains.select(&:force_delete_scheduled?)
 
     domain_with_fd.each do |domain|
-      contact_emails_valid?(domain) ? domain.cancel_force_delete : nil
+      cancel_force_delete_if_domain_attributes_are_valid?(domain)
     end
+  end
+
+  def cancel_force_delete_if_domain_attributes_are_valid?(domain)
+    domain.cancel_force_delete if contact_emails_valid?(domain) && !is_domain_has_invalid_org_contact?(domain)
+  end
+
+  def is_domain_has_invalid_org_contact?(domain)
+    return unless domain.force_delete_scheduled?
+
+    domain.status_notes.any? { |note| note.include?("Company no: #{domain.registrant.identifier.code}") }
   end
 
   def contact_emails_valid?(domain)

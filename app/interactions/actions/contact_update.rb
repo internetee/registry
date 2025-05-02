@@ -24,6 +24,7 @@ module Actions
 
     def maybe_change_email
       return if Rails.env.test?
+      return if contact.email == new_attributes[:email]
 
       %i[regex mx].each do |m|
         result = Actions::SimpleMailValidator.run(email: @new_attributes[:email], level: m)
@@ -71,6 +72,10 @@ module Actions
     end
 
     def maybe_update_ident
+      return if contact.identifier.code == ident[:ident] && 
+              contact.identifier.type == ident[:ident_type] && 
+              contact.identifier.country_code == ident[:ident_country_code]
+      
       unless ident.is_a?(Hash)
         contact.add_epp_error('2308', nil, nil, I18n.t('epp.contacts.errors.valid_ident'))
         @error = true
