@@ -67,13 +67,23 @@ module Admin
     end
 
     def upload_spreadsheet
-      if params[:q].nil?
+      if params[:q].nil? || params[:q][:file].nil?
         flash[:alert] = 'No file upload! Look at the left of upload button!'
         redirect_to admin_auctions_path and return
       end
 
-      filename = params[:q][:file]
-      table = CSV.parse(File.read(filename), headers: true)
+      uploaded_file = params[:q][:file]
+      unless uploaded_file.is_a?(ActionDispatch::Http::UploadedFile)
+        flash[:alert] = 'Invalid file upload!'
+        redirect_to admin_auctions_path and return
+      end
+
+      unless uploaded_file.content_type == 'text/csv'
+        flash[:alert] = 'Only CSV files are allowed!'
+        redirect_to admin_auctions_path and return
+      end
+
+      table = CSV.parse(uploaded_file.read, headers: true)
 
       failed_names = []
       reserved_domains = []

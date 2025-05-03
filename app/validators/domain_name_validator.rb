@@ -14,25 +14,26 @@ class DomainNameValidator < ActiveModel::EachValidator
       return true unless value
 
       value = value.mb_chars.downcase.strip
-
       origins = DNS::Zone.origins
+
       # if someone tries to register an origin domain, let this validation pass
       # the error will be caught in blocked domains validator
       return true if origins.include?(value)
 
-      general_domains = /(#{origins.join('|')})/
+      # Используем Regexp.union для безопасного объединения origins
+      general_domains = Regexp.new("(#{Regexp.union(origins).source})")
 
       # it's punycode
       if value[2] == '-' && value[3] == '-'
-        regexp = /\Axn--[a-zA-Z0-9-]{0,59}\.#{general_domains}\z/
+        regexp = /\Axn--[a-zA-Z0-9-]{0,59}\.#{general_domains.source}\z/
         return false unless value.match?(regexp)
-
         value = SimpleIDN.to_unicode(value).mb_chars.downcase.strip
       end
 
       unicode_chars = /\u00E4\u00F5\u00F6\u00FC\u0161\u017E/ # äõöüšž
       regexp = /\A[a-zA-Z0-9#{unicode_chars.source}][a-zA-Z0-9#{unicode_chars.source}-]{0,62}\.#{general_domains.source}\z/
       end_regexp = /\-\.#{general_domains.source}\z/ # should not contain dash as a closing char
+      
       !!(value =~ regexp && value !~ end_regexp)
     end
 
@@ -42,6 +43,25 @@ class DomainNameValidator < ActiveModel::EachValidator
       return false if BlockedDomain.where(name: SimpleIDN.to_unicode(value)).any?
 
       DNS::Zone.where(origin: value).count.zero?
+    end
+
+    private
+
+    def build_general_domains_regexp(origins)
+      Regexp.new("(#{Regexp.union(origins).source})")
+    end
+
+    def build_punycode_regexp
+      /\Axn--[a-zA-Z0-9-]{0,59}\.[a-z0-9.-]+\z/
+    end
+
+    def build_domain_regexp
+      unicode_chars = /\u00E4\u00F5\u00F6\u00FC\u0161\u017E/ # äõöüšž
+      /\A[a-zA-Z0-9#{unicode_chars.source}][a-zA-Z0-9#{unicode_chars.source}-]{0,62}\.[a-z0-9.-]+\z/
+    end
+
+    def build_end_regexp
+      /\-\.[a-z0-9.-]+\z/ # should not contain dash as a closing char
     end
   end
   # rubocop:enable Metrics/CyclomaticComplexity
