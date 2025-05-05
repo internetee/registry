@@ -4,7 +4,7 @@ module Domains
       def execute
         domain.force_delete_type = type
         type == :fast_track ? force_delete_fast_track : force_delete_soft
-        domain.status_notes[DomainStatus::FORCE_DELETE] = "Company no: #{domain.registrant.ident}" if reason == 'invalid_company'
+        domain.status_notes[DomainStatus::FORCE_DELETE] = "Company no: #{domain.registrant.ident} #{"+ #{notes}" if notes.present?}" if reason == 'invalid_company'
         domain.skip_whois_record_update = true
         domain.force_delete_domain_statuses_history_data = {
           reason: domain.status_notes[DomainStatus::FORCE_DELETE],

@@ -71,7 +71,7 @@ class CompanyRegisterStatusJob < ApplicationJob
     contact.update(company_register_status: status, checked_company_at: Time.zone.now)
   end
 
-  def schedule_force_delete(contact, company_status)
+  def schedule_force_delete(contact, company_status, kandeliik_tekstina)
     contact.registrant_domains.each do |domain|
       next if domain.force_delete_scheduled?
 
@@ -80,7 +80,7 @@ class CompanyRegisterStatusJob < ApplicationJob
         notify_by_email: true,
         reason: 'invalid_company',
         email: contact.email,
-        notes: company_status_notes(company_status)
+        notes: company_status_notes(company_status) + "#{" + #{kandeliik_tekstina}" if kandeliik_tekstina.present?}"
       )
     end
   end
@@ -112,7 +112,7 @@ class CompanyRegisterStatusJob < ApplicationJob
 
     if company_details_response.empty?
       Rails.logger.info("Empty company details response for contact #{contact.id}")
-      schedule_force_delete(contact, company_status)
+      schedule_force_delete(contact, company_status, nil)
 
       return
     end
@@ -121,9 +121,9 @@ class CompanyRegisterStatusJob < ApplicationJob
     Rails.logger.info("Kandeliik tekstina for contact #{contact.id}: #{kandeliik_tekstina}")
 
     if kandeliik_tekstina == PAYMENT_STATEMENT_BUSINESS_REGISTRY_REASON
-      soft_delete_company(contact, company_status)
+      soft_delete_company(contact, company_status, kandeliik_tekstina)
     else
-      schedule_force_delete(contact, company_status)
+      schedule_force_delete(contact, company_status, kandeliik_tekstina)
     end
   end
 
@@ -133,7 +133,7 @@ class CompanyRegisterStatusJob < ApplicationJob
     company_details_response.first.kandeliik.last.last.kandeliik_tekstina
   end
 
-  def soft_delete_company(contact, company_status)
+  def soft_delete_company(contact, company_status, kandeliik_tekstina)
     contact.registrant_domains.reject { |domain| domain.force_delete_scheduled? }.each do |domain|
       next if domain.force_delete_scheduled?
       
@@ -142,7 +142,8 @@ class CompanyRegisterStatusJob < ApplicationJob
         notify_by_email: true,
         reason: 'invalid_company',
         email: contact.email,
-        notes: company_status_notes(company_status))
+        notes: company_status_notes(company_status) + "#{" + #{kandeliik_tekstina}" if kandeliik_tekstina.present?}"
+      )
     end
 
     puts "Soft delete process initiated for company: #{contact.name} with ID: #{contact.id}"
