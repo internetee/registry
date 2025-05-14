@@ -78,26 +78,19 @@ class CertificateTest < ActiveSupport::TestCase
   end
 
   def test_validation_in_controller_context
-    # Проверяем, что валидация работает при интеграции с контроллером
-    # Здесь мы эмулируем logику контроллера
-    
     api_user = @certificate.api_user
-    # Устанавливаем неправильное имя пользователя
     api_user.update!(username: 'different_username')
     
-    # Создаем CSR, который не будет соответствовать имени пользователя
     cert = Certificate.new(
       api_user: api_user,
       csr: @certificate.csr
     )
     
-    # В продакшн среде должна работать валидация
     Rails.env.stub :test?, false do
       assert_not cert.save
       assert_includes cert.errors.full_messages, I18n.t(:csr_common_name_must_match_username)
     end
     
-    # В тестовой среде должна быть возможность пропустить валидацию
     assert cert.save(validate: false)
   end
 end

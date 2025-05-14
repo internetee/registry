@@ -24,13 +24,11 @@ module Repp
 
         @certificate = @api_user.certificates.build(csr: csr)
         
-        # Проверяем наличие CSR
         if csr.blank?
           @certificate.errors.add(:base, I18n.t(:crt_or_csr_must_be_present))
           return handle_non_epp_errors(@certificate)
         end
         
-        # В тестах пропускаем валидацию CSR параметров, но только если CSR не 'invalid'
         if Rails.env.test? && cert_params[:csr][:body] != 'invalid'
           result = @certificate.save(validate: false) 
         else
