@@ -229,6 +229,7 @@ en:
   valid_from: 'Valid from'
   general: 'General'
   contacts: 'Contacts'
+  tools: 'Tools'
   identity_code: 'Identity code'
   nameservers: 'Nameservers'
   hostname: 'Hostname'
