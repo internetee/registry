@@ -1,0 +1,93 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <h1>WordCloud Generation Progress</h1>
+      
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="progress mb-3">
+            <div id="progress-bar" class="progress-bar" role="progressbar" style="width: <%= @progress_data[:progress] %>%;" 
+                 aria-valuenow="<%= @progress_data[:progress] %>" aria-valuemin="0" aria-valuemax="100">
+              <%= @progress_data[:progress] %>%
+            </div>
+          </div>
+          
+          <div id="status-message">
+            <% case @progress_data[:status] %>
+            <% when 'not_started' %>
+              <div class="alert alert-info">Waiting to start processing...</div>
+            <% when 'processing' %>
+              <div class="alert alert-info">Processing in progress...</div>
+            <% when 'completed' %>
+              <div class="alert alert-success">
+                WordCloud generation completed!
+                <%= link_to "View WordCloud", admin_tools_wordcloud_path, class: "btn btn-primary" %>
+              </div>
+            <% when 'failed' %>
+              <div class="alert alert-danger">
+                Error: <%= @progress_data[:error] || "Unknown error occurred" %>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="mt-3">
+            <%= link_to "Back to Tools", admin_tools_path, class: "btn btn-secondary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Only poll if the process is not completed or failed
+    if ("<%= @progress_data[:status] %>" !== "completed" && "<%= @progress_data[:status] %>" !== "failed") {
+      pollProgress();
+    }
+  });
+  
+  function pollProgress() {
+    const progressBar = document.getElementById('progress-bar');
+    const statusMessage = document.getElementById('status-message');
+    
+    // Poll every 2 seconds
+    setInterval(function() {
+      fetch('<%= status_admin_tools_wordcloud_path %>')
+        .then(response => response.json())
+        .then(data => {
+          // Update progress bar
+          progressBar.style.width = data.progress + '%';
+          progressBar.setAttribute('aria-valuenow', data.progress);
+          progressBar.textContent = data.progress + '%';
+          
+          // Update status message
+          let statusHtml = '';
+          switch(data.status) {
+            case 'not_started':
+              statusHtml = '<div class="alert alert-info">Waiting to start processing...</div>';
+              break;
+            case 'processing':
+              statusHtml = '<div class="alert alert-info">Processing in progress...</div>';
+              break;
+            case 'completed':
+              statusHtml = '<div class="alert alert-success">WordCloud generation completed! ' +
+                           '<a href="<%= admin_tools_wordcloud_path %>">View WordCloud</a></div>';
+              // Redirect after a short delay
+              setTimeout(function() {
+                window.location.href = '<%= admin_tools_wordcloud_path %>';
+              }, 2000);
+              break;
+            case 'failed':
+              statusHtml = '<div class="alert alert-danger">Error: ' + 
+                           (data.error || "Unknown error occurred") + '</div>';
+              break;
+          }
+          statusMessage.innerHTML = statusHtml;
+        })
+        .catch(error => {
+          console.error('Error polling progress:', error);
+        });
+    }, 2000);
+  }
+</script> 

@@ -113,3 +113,6 @@ gem 'net-ftp'
 
 # https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
 gem 'concurrent-ruby', '1.3.4'
+
+# gives you access to stdin, stdout, and stderr when running other programs
+gem 'open3'
