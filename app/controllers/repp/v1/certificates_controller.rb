@@ -72,11 +72,7 @@ module Repp
 
       def decode_cert_params(csr_params)
         return if csr_params.blank?
-
-        if csr_params[:body] == 'invalid'
-          Rails.logger.info("Received 'invalid' CSR in test")
-          return nil
-        end
+        return nil if csr_params[:body] == 'invalid'
 
         begin
           sanitized = sanitize_base64(csr_params[:body])
