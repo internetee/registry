@@ -1,11 +1,11 @@
 Top 10 most frequent words:
 1. tr: 4
-2. auto: 4
-3. 2-: 4
-4. faktor: 4
+2. 2-: 4
+3. faktor: 4
+4. auto: 3
 5. e-: 2
 6. i-: 2
-7. digi: 2
-8. car: 2
+7. car: 2
+8. pood: 2
 9. ai: 1
 10. robot: 1

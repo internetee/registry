@@ -1,1 +1,1 @@
-{"width":"800","height":"800","max_words":"500","background_color":"white","min_word_length":"2","include_numbers":true,"batch_size":"500","special_terms":["e-","i-","2-","3-","4-",".com","ai","web"]}
+{"width":"800","height":"800","max_words":"500","background_color":"white","min_word_length":"2","include_numbers":true,"batch_size":"500","special_terms":["e-","i-","2-","3-","4-",".com","tr.ee","ai","web"]}
