@@ -26,7 +26,7 @@ class AiReportGenerator
 
     response = @client.chat(
       parameters: {
-        model: ENV['openai_model'] || 'gpt-4o',
+        model: ENV['OPENAI_MODEL'] || 'gpt-4o',
         response_format: {
           type: 'json_schema',
           json_schema: response_schema
@@ -35,7 +35,7 @@ class AiReportGenerator
           { role: 'system', content: system_prompt },
           { role: 'user', content: user_prompt }
         ],
-        temperature: ENV['openai_temperature'].to_f || 0.6
+        temperature: ENV['OPENAI_TEMPERATURE'].to_f || 0.6
       }
     )
 

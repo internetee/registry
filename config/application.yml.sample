@@ -197,11 +197,6 @@ shunter_redis_port: "6379"
 shunter_default_timespan: '60'
 shunter_default_threshold: '100'
 
-openai_access_token: ''
-openai_organization_id: ''
-openai_model: 'gpt-4o'
-openai_temperature: 0.7
-
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:
   payments_seb_bank_certificate: 'test/fixtures/files/seb_bank_cert.pem'
