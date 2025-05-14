@@ -41,4 +41,63 @@ class CertificateTest < ActiveSupport::TestCase
     @certificate.update!(interface: Certificate::REGISTRAR, crt: nil)
     assert_not @certificate.revokable?
   end
+
+  def test_csr_common_name_must_match_username
+    api_user = @certificate.api_user
+    
+    new_cert = Certificate.new(
+      api_user: api_user,
+      csr: @certificate.csr
+    )
+    api_user.update!(username: 'different_username')
+    
+    new_cert.send(:validate_csr_parameters)
+    
+    assert_includes new_cert.errors.full_messages, I18n.t(:csr_common_name_must_match_username)
+  end
+  
+  def test_csr_country_validation
+    api_user = @certificate.api_user
+    csr_content = @certificate.csr
+    
+    new_cert = Certificate.new(
+      api_user: api_user,
+      csr: csr_content
+    )
+    api_user.registrar.update!(address_country_code: 'EE', vat_rate: 22)
+    
+    new_cert.send(:validate_csr_parameters)
+    
+    assert_not_includes new_cert.errors.full_messages, I18n.t(:csr_country_must_match_registrar_country)
+    
+    new_cert.errors.clear
+    api_user.registrar.update!(address_country_code: 'US', vat_rate: nil)
+    new_cert.send(:validate_csr_parameters)
+    
+    assert_includes new_cert.errors.full_messages, I18n.t(:csr_country_must_match_registrar_country)
+  end
+
+  def test_validation_in_controller_context
+    # Проверяем, что валидация работает при интеграции с контроллером
+    # Здесь мы эмулируем logику контроллера
+    
+    api_user = @certificate.api_user
+    # Устанавливаем неправильное имя пользователя
+    api_user.update!(username: 'different_username')
+    
+    # Создаем CSR, который не будет соответствовать имени пользователя
+    cert = Certificate.new(
+      api_user: api_user,
+      csr: @certificate.csr
+    )
+    
+    # В продакшн среде должна работать валидация
+    Rails.env.stub :test?, false do
+      assert_not cert.save
+      assert_includes cert.errors.full_messages, I18n.t(:csr_common_name_must_match_username)
+    end
+    
+    # В тестовой среде должна быть возможность пропустить валидацию
+    assert cert.save(validate: false)
+  end
 end

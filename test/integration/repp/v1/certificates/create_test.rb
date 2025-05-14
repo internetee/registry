@@ -13,9 +13,21 @@ class ReppV1CertificatesCreateTest < ActionDispatch::IntegrationTest
   end
 
   def test_creates_new_api_user_certificate_and_informs_admins
+    # Отладка - декодируем CSR и проверяем CN
+    csr_base64 = request_body[:certificate][:csr][:body]
+    csr_decoded = Base64.decode64(csr_base64)
+    puts "Decoded CSR: #{csr_decoded}"
+    puts "User username: #{@user.username}"
+    
     assert_difference('Certificate.count') do
       assert_difference 'ActionMailer::Base.deliveries.size', +1 do
         post repp_v1_certificates_path, headers: @auth_headers, params: request_body
+        
+        # Добавляем отладочный вывод
+        if response.status != 200
+          puts "Response status: #{response.status}"
+          puts "Response body: #{response.body}"
+        end
       end
     end
     json = JSON.parse(response.body, symbolize_names: true)
@@ -37,6 +49,11 @@ class ReppV1CertificatesCreateTest < ActionDispatch::IntegrationTest
     }
 
     post repp_v1_certificates_path, headers: @auth_headers, params: request_body
+    
+    # Отладочный вывод
+    puts "Response status: #{response.status}"
+    puts "Response body: #{response.body}"
+    
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :bad_request
