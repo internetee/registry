@@ -19,23 +19,15 @@ module Repp
       desc 'Submit a new api user certificate signing request'
       def create
         @api_user = current_user.registrar.api_users.find(cert_params[:api_user_id])
-
         csr = decode_cert_params(cert_params[:csr])
 
-        @certificate = @api_user.certificates.build(csr: csr)
-        
         if csr.blank?
           @certificate.errors.add(:base, I18n.t(:crt_or_csr_must_be_present))
           return handle_non_epp_errors(@certificate)
         end
-        
-        if Rails.env.test? && cert_params[:csr][:body] != 'invalid'
-          result = @certificate.save(validate: false) 
-        else
-          result = @certificate.save
-        end
 
-        if result
+        @certificate = @api_user.certificates.build(csr: csr)
+        if @certificate.save
           notify_admins
           render_success(data: { api_user: { id: @api_user.id } })
         else
