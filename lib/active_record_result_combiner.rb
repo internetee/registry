@@ -38,8 +38,8 @@ module ActiveRecordResultCombiner
         if results.size > 1 && index > 0 && numeric_columns.include?(col)
           prev_index = index
           curr_index = index + 1
-          all_columns << "Diff (#{prev_index}->#{curr_index})"
-          all_columns << "Diff %(#{prev_index}->#{curr_index})"
+          all_columns << "#{col} Diff (#{prev_index}->#{curr_index})"
+          all_columns << "#{col} Diff %(#{prev_index}->#{curr_index})"
         end
       end
     end
