@@ -7,6 +7,16 @@
       return;
   }
 
+  function updateParameterSetTitles() {
+    const groups = parameterContainer.querySelectorAll('.parameter-group');
+    groups.forEach((group, index) => {
+      const titleElement = group.querySelector('.parameter-set-title');
+      if (titleElement) {
+        titleElement.textContent = `Parameter Set ${index + 1}`;
+      }
+    });
+  }
+
   function updateRemoveButtonVisibility() {
     const groups = parameterContainer.querySelectorAll('.parameter-group');
     if (removeButton) {
@@ -27,6 +37,7 @@
     });
     
     parameterContainer.appendChild(template);
+    updateParameterSetTitles();
     updateRemoveButtonVisibility();
   });
 
@@ -36,8 +47,12 @@
       const groups = parameterContainer.querySelectorAll('.parameter-group');
       if (groups.length > 1) {
         groups[groups.length - 1].remove();
+        updateParameterSetTitles();
         updateRemoveButtonVisibility();
       }
     }
   });
+
+  // Initialize titles on page load
+  updateParameterSetTitles();
 })();

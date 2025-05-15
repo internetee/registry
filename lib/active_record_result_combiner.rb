@@ -38,8 +38,8 @@ module ActiveRecordResultCombiner
         if results.size > 1 && index > 0 && numeric_columns.include?(col)
           prev_index = index
           curr_index = index + 1
-          all_columns << "#{col} Diff (#{prev_index}->#{curr_index})"
-          all_columns << "#{col} Diff %(#{prev_index}->#{curr_index})"
+          all_columns << "Diff (#{prev_index}->#{curr_index})"
+          all_columns << "Diff %(#{prev_index}->#{curr_index})"
         end
       end
     end
@@ -93,7 +93,7 @@ module ActiveRecordResultCombiner
     if prev_value.nil? || current_value.nil?
       [nil, nil]
     else
-      difference = (current_value.to_f - prev_value.to_f).round(2)
+      difference = (prev_value.to_f - current_value.to_f).round(2)
       percentage = prev_value.to_f != 0 ? ((difference / prev_value.to_f) * 100).round(2) : nil
       [difference, percentage]
     end

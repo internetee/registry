@@ -11,6 +11,9 @@
 
           - parameter_sets.each do |set_index, set_values|
             .row.parameter-group
+              .col-12.mb-2
+                %p.parameter-set-title{style: 'margin-left: 14px;'}
+                  = "Parameter Set #{set_index.to_i + 1}"
               - parameters.each do |param|
                 .col-md-6
                   .form-group
