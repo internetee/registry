@@ -96,7 +96,8 @@ module Admin
           background_color: params[:background_color].presence || 'white',
           min_word_length: params[:min_word_length].presence || 2,
           include_numbers: params[:include_numbers] == '1',
-          batch_size: params[:batch_size].presence || 500
+          batch_size: params[:batch_size].presence || 500,
+          additional_prompt: params[:additional_prompt].presence || nil
         }
 
         # Process additional stopwords

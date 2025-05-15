@@ -53,8 +53,12 @@ print(f"Using special terms: {SPECIAL_TERMS}")
 BATCH_SIZE = int(config.get('batch_size', 500))
 print(f"Using batch size: {BATCH_SIZE}")
 
+# Get additional prompt from config or use default
+ADDITIONAL_PROMPT = config.get('additional_prompt', None)
+print(f"Using additional prompt: {ADDITIONAL_PROMPT}")
+
 # Function to extract words using OpenAI API
-def extract_words_with_openai(domain_names, special_terms, batch_size=BATCH_SIZE):
+def extract_words_with_openai(domain_names, special_terms, batch_size=BATCH_SIZE, additional_prompt=ADDITIONAL_PROMPT):
     # Get API key from environment variable
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
@@ -94,6 +98,8 @@ Follow these rules strictly:
 4. Keep all resulting words in lowercase and remove the `.ee` extension from all the words
 5. Try to find the most common words and phrases in the domain names.
 6. Return ONLY a space-separated list of words and numberswith no explanations, no formatting, no introductions, and no additional text.
+
+{additional_prompt}
 
 Example output format:
 word1 word2 word3 word4 word5
