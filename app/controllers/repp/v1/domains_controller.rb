@@ -80,7 +80,7 @@ module Repp
         handle_errors(@domain) and return unless action.call
         # rubocop:enable Style/AndOr
 
-        render_success(data: { domain: { name: @domain.name,
+        render_success(message: message, data: { domain: { name: @domain.name,
                                          transfer_code: @domain.transfer_code,
                                          id: @domain.reload.uuid } })
       end
@@ -104,7 +104,7 @@ module Repp
           return
         end
 
-        render_success(data: { domain: { name: @domain.name } })
+        render_success(message: message, data: { domain: { name: @domain.name } })
       end
 
       api :GET, '/repp/v1/domains/:domain_name/transfer_info'
@@ -237,6 +237,10 @@ module Repp
 
       def offset
         index_params[:offset] || 0
+      end
+
+      def message
+        "Command completed successfully#{@domain.skipped_domain_contacts_validation if @domain.skipped_domain_contacts_validation.present?}"
       end
 
       def index_params
