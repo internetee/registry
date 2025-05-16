@@ -1,7 +1,7 @@
 xml.epp_head do
   xml.response do
     xml.result('code' => '1000') do
-      xml.msg 'Command completed successfully'
+      xml.msg "Command completed successfully#{@domain.skipped_domain_contacts_validation if @domain.skipped_domain_contacts_validation.present?}"
     end
 
     xml.resData do
