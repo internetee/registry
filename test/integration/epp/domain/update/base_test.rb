@@ -1311,7 +1311,7 @@ class EppDomainUpdateBaseTest < EppTestCase
     domain.reload
 
     assert_epp_response :completed_successfully
-    assert response.body.include? "Admin contact #{new_admin_being_added.code} was discarded as duplicate;"
+    assert response.body.include? "Tech contact #{new_tech_being_added_and_skipped.code} was discarded as duplicate;"
   end
 
   private
