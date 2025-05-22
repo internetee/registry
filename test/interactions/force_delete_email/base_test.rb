@@ -28,8 +28,8 @@ class BaseTest < ActiveSupport::TestCase
     prepare_contact
 
     contact = @domain_airport.admin_contacts.first
-
     Domains::ForceDeleteEmail::Base.run(email: contact.email)
+
     @domain_airport.reload
 
     assert @domain_airport.force_delete_scheduled?

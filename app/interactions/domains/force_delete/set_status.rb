@@ -4,13 +4,12 @@ module Domains
       def execute
         domain.force_delete_type = type
         type == :fast_track ? force_delete_fast_track : force_delete_soft
-        domain.status_notes[DomainStatus::FORCE_DELETE] = "Company no: #{domain.registrant.ident}" if reason == 'invalid_company'
+        set_status_notes
         domain.skip_whois_record_update = true
         domain.force_delete_domain_statuses_history_data = {
           reason: domain.status_notes[DomainStatus::FORCE_DELETE],
           date: Time.zone.now
         }
-        domain.save(validate: false)
       end
 
       def force_delete_fast_track
@@ -26,6 +25,11 @@ module Domains
       end
 
       private
+
+      def set_status_notes
+        domain.status_notes[DomainStatus::FORCE_DELETE] = "Company no: #{domain.registrant.ident}" if reason == 'invalid_company'
+        domain.status_notes[DomainStatus::FORCE_DELETE] = email if reason == 'invalid_email'
+      end
 
       def soft_forcedelete_dates(years)
         domain.force_delete_start = domain.valid_to - years.years
