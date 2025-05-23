@@ -67,7 +67,7 @@ gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
 gem 'jquery-ui-rails', '6.0.1'
 gem 'pdfkit'
 gem 'redis'
-gem 'sidekiq', '~> 7.0'
+gem 'sidekiq', '~> 8.0'
 gem 'company_register', github: 'internetee/company_register', branch: :master
 gem 'domain_name'
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
