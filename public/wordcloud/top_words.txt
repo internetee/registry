@@ -1,11 +1,11 @@
 Top 10 most frequent words:
-1. tr: 4
-2. auto: 4
-3. 2-: 4
-4. faktor: 4
-5. e-: 2
-6. i-: 2
-7. digi: 2
-8. car: 2
-9. pood: 2
-10. ai: 1
+1. auto: 71
+2. eesti: 62
+3. 24: 60
+4. ehitus: 40
+5. shop: 33
+6. rent: 33
+7. pood: 28
+8. estonia: 26
+9. tartu: 24
+10. tech: 23

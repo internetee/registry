@@ -5,6 +5,9 @@ require 'open3'
 # using an external Python script with progress tracking
 class GenerateWordCloudJob < ApplicationJob
   def perform(domains_file_path, user_id, config = {})
+
+    Rails.logger.info("Generating wordcloud for #{domains_file_path}")
+
     @domains_file_path = domains_file_path
     @user_id = user_id
     @config = config
