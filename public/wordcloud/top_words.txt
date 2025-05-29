@@ -1,11 +1,11 @@
 Top 10 most frequent words:
-1. auto: 71
-2. eesti: 62
-3. 24: 60
-4. ehitus: 40
-5. shop: 33
-6. rent: 33
-7. pood: 28
-8. estonia: 26
-9. tartu: 24
-10. tech: 23
+1. auto: 80
+2. eesti: 65
+3. 24: 62
+4. ehitus: 43
+5. rent: 36
+6. shop: 34
+7. estonia: 30
+8. pood: 27
+9. tech: 27
+10. tartu: 24

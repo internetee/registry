@@ -90,7 +90,7 @@ async def extract_words_with_openai(domain_names, batch_size=BATCH_SIZE):
     client = AsyncOpenAI(api_key=api_key)
     
     # Get model and temperature from environment variables
-    model = os.environ.get("OPENAI_MODEL", "gpt-4.1-2025-04-14")
+    model = os.environ.get("OPENAI_MODEL", "gpt-4o-2024-11-20")
     temperature = float(os.environ.get("OPENAI_TEMPERATURE", "0"))
     max_tokens = int(os.environ.get("OPENAI_MAX_TOKENS", "16000"))
 
@@ -104,7 +104,7 @@ async def extract_words_with_openai(domain_names, batch_size=BATCH_SIZE):
     num_batches = (len(filtered_domains) + batch_size - 1) // batch_size
     
     # Create semaphore to limit concurrent requests
-    semaphore = asyncio.Semaphore(8)  # Limit to 5 concurrent requests
+    semaphore = asyncio.Semaphore(10)  # Limit to 10 concurrent requests
     
     async def process_batch(batch_idx):
         async with semaphore:
