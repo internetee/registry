@@ -1,4 +1,5 @@
 30.05.2025
+* Improvements for daily FD domains report https://github.com/internetee/registry/issues/2781
 * Fixed duplicate domain history records in admin: https://github.com/internetee/registry/issues/2792
 
 02.05.2025
