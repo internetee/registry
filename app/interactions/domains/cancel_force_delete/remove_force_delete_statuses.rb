@@ -19,7 +19,6 @@ module Domains
           reason: domain.status_notes[DomainStatus::FORCE_DELETE],
           date: Time.zone.now
         }
-        domain.save(validate: false)
       end
     end
   end
