@@ -27,15 +27,8 @@ module Domains
       private
 
       def set_status_notes
-        if reason == 'invalid_company'
-          note = "Company no: #{domain.registrant.ident}"
-          note += " + #{notes}" if notes.present?
-          domain.status_notes[DomainStatus::FORCE_DELETE] = note
-        end
-
-        if reason == 'invalid_email'
-          domain.status_notes[DomainStatus::FORCE_DELETE] = email
-        end
+        domain.status_notes[DomainStatus::FORCE_DELETE] = "Company no: #{domain.registrant.ident} #{"+ #{notes}" if notes.present?}" if reason == 'invalid_company'
+        domain.status_notes[DomainStatus::FORCE_DELETE] = email if reason == 'invalid_email'
       end
 
       def soft_forcedelete_dates(years)
