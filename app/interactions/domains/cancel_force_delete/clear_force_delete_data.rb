@@ -7,7 +7,6 @@ module Domains
         domain.force_delete_start = nil
         domain.status_notes[DomainStatus::FORCE_DELETE] = nil
         domain.skip_whois_record_update = false
-        domain.save(validate: false)
       end
     end
   end
