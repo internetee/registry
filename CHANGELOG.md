@@ -1,3 +1,6 @@
+30.05.2025
+* Fixed duplicate domain history records in admin: https://github.com/internetee/registry/issues/2792
+
 02.05.2025
 * ForceDelete is not lifted with any contact update any more https://github.com/internetee/registry/issues/2782
 
