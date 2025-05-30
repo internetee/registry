@@ -27,7 +27,7 @@ module Domains
       private
 
       def set_status_notes
-        domain.status_notes[DomainStatus::FORCE_DELETE] = "Company no: #{domain.registrant.ident}" if reason == 'invalid_company'
+        domain.status_notes[DomainStatus::FORCE_DELETE] = "Company no: #{domain.registrant.ident} #{"+ #{notes}" if notes.present?}" if reason == 'invalid_company'
         domain.status_notes[DomainStatus::FORCE_DELETE] = email if reason == 'invalid_email'
       end
 
