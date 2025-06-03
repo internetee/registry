@@ -1,0 +1,42 @@
+.row
+  .col-md-12
+    = form_with url: run_admin_report_path(@report), html: { style: 'margin-bottom: 0;', autocomplete: 'off' } do |f|
+      - if @report.parameters.present?
+        - parameters = @report.parameters.is_a?(Hash) ? [@report.parameters] : @report.parameters
+        #report-parameters
+          - parameter_sets = if params[:report_parameters].present?
+            - params[:report_parameters].to_unsafe_h
+          - else
+            - { "0" => parameters.map { |param| [param["name"], param["default"]] }.to_h }
+
+          - parameter_sets.each do |set_index, set_values|
+            .row.parameter-group
+              .col-12.mb-2
+                %p.parameter-set-title{style: 'margin-left: 14px;'}
+                  = "Parameter Set #{set_index.to_i + 1}"
+              - parameters.each do |param|
+                .col-md-6
+                  .form-group
+                    = label_tag param["name"], param["name"].humanize
+                    - if param["type"] == "date"
+                      = date_field_tag "report_parameters[#{set_index}][#{param["name"]}]", (set_values[param["name"]] || param["default"]), class: 'form-control'
+                    - elsif param["type"] == "string"
+                      = text_field_tag "report_parameters[#{set_index}][#{param["name"]}]", (set_values[param["name"]] || param["default"]), class: 'form-control'
+
+        .d-flex.flex-wrap.gap-2
+          %button.btn.btn-secondary#add-parameter-group{ type: 'button' }= t('.add_parameter_set')
+          %button.btn.btn-danger.remove-parameter-group{ type: 'button', style: "display: #{parameter_sets.size > 1 ? 'inline-block' : 'none'};" }
+            %span.glyphicon.glyphicon-trash
+      - else
+        .alert.alert-info
+          This report has no parameters and will run directly.
+
+      %hr
+      .row
+        .col-md-12
+          .d-flex.flex-wrap.gap-2
+            %button.btn.btn-primary{ type: 'submit' }
+              = t('admin.reports.index.run')
+            %button.btn.btn-primary{ type: 'submit', name: 'format', value: 'csv' }
+              = t('.csv_btn')
+
