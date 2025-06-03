@@ -851,7 +851,7 @@ class Domain < ApplicationRecord
   end
 
   def self.outzone_candidates
-    where("#{attribute_alias(:outzone_time)} < ?", Time.zone.now)
+    where(arel_table[attribute_alias(:outzone_time)].lt(Time.zone.now))
   end
 
   def self.uses_zone?(zone)

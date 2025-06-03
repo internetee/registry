@@ -32,17 +32,28 @@ module Admin
       params[:q] ||= {}
       return unless default_dates?
 
-      default_date = params[:created_after]
-      default_date = 'today' unless %w[today tomorrow yesterday].include?(default_date)
-
-      params[:q][:created_at_gteq] = Date.send(default_date).strftime('%Y-%m-%d')
+      params[:q][:created_at_gteq] = format_date(parse_default_date)
     end
 
     private
 
     def default_dates?
-      params[:q] ||= {}
-      params[:q][:created_at_gteq].nil? && params[:q][:created_at_lteq].nil? && params[:created_after].present?
+      params[:q][:created_at_gteq].nil? && 
+      params[:q][:created_at_lteq].nil? && 
+      params[:created_after].present?
+    end
+
+    def parse_default_date
+      case params[:created_after]
+      when 'today'     then Date.today
+      when 'tomorrow'  then Date.tomorrow
+      when 'yesterday' then Date.yesterday
+      else Date.today
+      end
+    end
+
+    def format_date(date)
+      date.strftime('%Y-%m-%d')
     end
   end
 end

@@ -29,6 +29,10 @@ gem 'validates_email_format_of', '1.8.2' # validates email against RFC 2822 and 
 gem 'nokogiri', '~> 1.16.0'
 
 # style
+# https://github.com/twbs/bootstrap-sass/issues/1251
+# TODO: Unfortunatelly, this gem is not maintained anymore and 3.4.1 is the latest version
+# In this github repo serial tips how to be careful with this gem
+# or need to find some other gem/approach
 gem 'bootstrap-sass', '~> 3.4'
 gem 'cancancan'
 gem 'coffee-rails', '>= 5.0'
@@ -41,7 +45,7 @@ gem 'selectize-rails', '0.12.6' # include selectize.js for select
 
 # registry specfic
 gem 'data_migrate', '~> 9.0'
-gem 'dnsruby', '~> 1.61'
+gem 'dnsruby', '~> 1.70'
 gem 'isikukood' # for EE-id validation
 gem 'money-rails'
 gem 'simpleidn', '0.2.3' # For punycode
@@ -64,7 +68,7 @@ gem 'omniauth-tara', github: 'internetee/omniauth-tara'
 gem 'airbrake'
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
-gem 'jquery-ui-rails', '6.0.1'
+gem 'jquery-ui-rails', '7.0.0'
 gem 'pdfkit'
 gem 'redis'
 gem 'sidekiq', '~> 7.0'
@@ -85,6 +89,8 @@ gem 'openssl'
 
 group :development, :test do
   gem 'pry', '0.15.2'
+  gem 'bundle-audit', require: false
+  gem 'brakeman', require: false
 end
 
 group :test do
