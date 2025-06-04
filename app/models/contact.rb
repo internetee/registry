@@ -85,7 +85,7 @@ class Contact < ApplicationRecord
                                                                                 country_code: country_code) },
               mapping: [%w[ident code], %w[ident_type type], %w[ident_country_code country_code]]
 
-  after_save :update_related_whois_records
+  after_commit :update_related_whois_records
   before_validation :clear_address_modifications, if: -> { !self.class.address_processing? }
 
   # TODO: remove after testing
