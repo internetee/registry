@@ -539,12 +539,16 @@ class Contact < ApplicationRecord
   end
 
   def update_related_whois_records
+    Rails.logger.info "\n\n============ update_related_whois_records ==========="
     # not doing anything if no real changes
     ignored_columns = %w[updated_at created_at statuses status_notes]
+    Rails.logger.info saved_changes.slice(*(self.class.column_names - ignored_columns)).empty?
     return if saved_changes.slice(*(self.class.column_names - ignored_columns)).empty?
 
     names = related_domain_descriptions.keys
+    Rails.logger.info "names: #{names}"
     UpdateWhoisRecordJob.perform_later(names, 'domain') if names.present?
+    Rails.logger.info "============\n\n" 
   end
 
   def children_log
