@@ -542,7 +542,10 @@ class Contact < ApplicationRecord
     Rails.logger.info "\n\n============ update_related_whois_records ==========="
     # not doing anything if no real changes
     ignored_columns = %w[updated_at created_at statuses status_notes]
-    Rails.logger.info saved_changes.slice(*(self.class.column_names - ignored_columns)).empty?
+    Rails.logger.info "Contact: #{self.inspect}\n"
+    Rails.logger.info "Saved changes: #{saved_changes}"
+
+    
     return if saved_changes.slice(*(self.class.column_names - ignored_columns)).empty?
 
     names = related_domain_descriptions.keys
