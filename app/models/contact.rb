@@ -85,7 +85,8 @@ class Contact < ApplicationRecord
                                                                                 country_code: country_code) },
               mapping: [%w[ident code], %w[ident_type type], %w[ident_country_code country_code]]
 
-  after_save :update_related_whois_records
+  # after_save :update_related_whois_records
+  after_commit :update_related_whois_records
   before_validation :clear_address_modifications, if: -> { !self.class.address_processing? }
 
   # TODO: remove after testing
@@ -546,7 +547,8 @@ class Contact < ApplicationRecord
     Rails.logger.info "Saved changes: #{saved_changes}"
 
     
-    return if saved_changes.slice(*(self.class.column_names - ignored_columns)).empty?
+    # return if saved_changes.slice(*(self.class.column_names - ignored_columns)).empty?
+    return if (previous_changes.keys - ignored_columns).empty?
 
     names = related_domain_descriptions.keys
     Rails.logger.info "names: #{names}"
