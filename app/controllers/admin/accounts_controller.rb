@@ -1,6 +1,7 @@
 module Admin
   class AccountsController < BaseController
     load_and_authorize_resource
+    # We fixed it!
 
     def index
       @q = Account.includes(:registrar).ransack(params[:q])
