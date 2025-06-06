@@ -1,3 +1,6 @@
+06.06.2025
+* Improvments to ent-to-end id processing https://github.com/internetee/registry/pull/2796
+
 03.06.2025
 * removed build_deploy_staging.yml from workflow as deprecated https://github.com/internetee/registry/issues/2797
 
