@@ -282,6 +282,54 @@ class Domain < ApplicationRecord
       authorizable_ransackable_attributes
     end
 
+    def ransackable_scopes(*)
+      [:registrant_ident_cont_any, :contacts_ident_cont_any]
+    end
+
+    def registrant_ident_cont_any(value)
+      return all if value.blank?
+      
+      # Split the value into parts and create search conditions
+      parts = value.split('-')
+      conditions = []
+      
+      # Add the original value
+      conditions << "contacts.ident ILIKE '%#{value}%'"
+      
+      # Add conditions for each part
+      parts.each do |part|
+        conditions << "contacts.ident ILIKE '%#{part}%'"
+      end
+      
+      # Add condition with hyphens removed
+      clean_value = value.gsub('-', '')
+      conditions << "REPLACE(contacts.ident, '-', '') ILIKE '%#{clean_value}%'"
+      
+      joins(:registrant).where(conditions.join(' OR '))
+    end
+
+    def contacts_ident_cont_any(value)
+      return all if value.blank?
+      
+      # Split the value into parts and create search conditions
+      parts = value.split('-')
+      conditions = []
+      
+      # Add the original value
+      conditions << "contacts.ident ILIKE '%#{value}%'"
+      
+      # Add conditions for each part
+      parts.each do |part|
+        conditions << "contacts.ident ILIKE '%#{part}%'"
+      end
+      
+      # Add condition with hyphens removed
+      clean_value = value.gsub('-', '')
+      conditions << "REPLACE(contacts.ident, '-', '') ILIKE '%#{clean_value}%'"
+      
+      joins(:contacts).where(conditions.join(' OR '))
+    end
+
     def nameserver_required?
       Setting.nameserver_required
     end
