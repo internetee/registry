@@ -1,10 +1,9 @@
 class PartialSearchFormatter
   def self.format(params)
     search_params = params.deep_dup
-
+    
     search_params.each do |key, value|
       next unless should_format?(key, value)
-
       search_params[key] = format_value(value)
     end
 
