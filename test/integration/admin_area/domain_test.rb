@@ -7,7 +7,7 @@ class Admin::DomainsControllerTest < ApplicationIntegrationTest
         @john.update!(ident: '1234-1234') # ident with hyphen
         registrant = @john.becomes(Registrant)
         @domain = domains(:shop)
-        @domain.update!(registrant: @john) # make sure the domain is linked to @john
+        @domain.update!(registrant: registrant) # make sure the domain is linked to registrant
     end
 
     def test_search_by_hyphenated_registrant_ident_should_succeed
