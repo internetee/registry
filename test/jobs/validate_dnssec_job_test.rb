@@ -112,7 +112,7 @@ class ValidateDnssecJobTest < ActiveJob::TestCase
     assert_match /No related nameservers for this domain/, log_output.string
   end
 
-  test "perform without domain_name executes else branch" do
+  def perform_without_domain_name_executes_else_block
     # Use existing domain fixture
     domain = domains(:shop)
     
