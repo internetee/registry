@@ -62,6 +62,16 @@ RUN apt-get install -y --no-install-recommends > /dev/null \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+# Install Python packages for wordcloud generation
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    python3-setuptools \
+    python3-dev \
+    && pip3 install --upgrade pip setuptools wheel \
+    && pip3 install --no-cache-dir numpy Pillow matplotlib wordcloud openai dotenv \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN apt-get autoremove -y && apt-get clean
 
 ENV CHROME_VERSION="128.0.6613.137"
@@ -95,7 +105,6 @@ ENV PATH="/opt/chrome-linux64:${PATH}"
 
 RUN ln -s /lib/ld-linux.so.2 /lib/ld-linux.so.2 || true
 
-# Обертка для wkhtmltopdf с xvfb
 RUN echo '#!/bin/bash\nxvfb-run -a --server-args="-screen 0, 1024x768x24" /usr/bin/wkhtmltopdf "$@"' > /usr/local/bin/wkhtmltopdf \
     && chmod +x /usr/local/bin/wkhtmltopdf
 
