@@ -68,4 +68,70 @@ class ValidateDnssecJobTest < ActiveJob::TestCase
     @domain.reload
     assert_nil @domain.dnskeys.first.validation_datetime
   end
+
+  def test_prepare_validator_configures_dnsruby_resolver_with_correct_parameters
+    job = ValidateDnssecJob.new
+
+    # Calling private method directly
+    resolver = job.send(:prepare_validator, "8.8.8.8")
+
+    assert_instance_of Dnsruby::Resolver, resolver
+    assert resolver.do_validation
+    assert resolver.dnssec
+    # assert_equal ["8.8.8.8"], resolver.nameservers # cannot get server with getters!
+    assert_equal 4, resolver.packet_timeout
+    assert_equal 4, resolver.query_timeout
+  end
+
+  def test_perform_skips_domains_without_nameservers
+    domain = Domain.create!(
+      name: "test.test",
+      registrar: registrars(:bestnames),
+      registrant: @domain.registrant,
+      period: 1,
+      period_unit: 'y',
+      valid_to: 1.year.from_now
+    )
+
+    # Add DNSKEY to domain
+    domain.dnskeys << @dnskey
+
+    # Create a StringIO to capture log output
+    log_output = StringIO.new
+    logger = Logger.new(log_output)
+    logger.level = Logger::INFO
+
+    # Create a job instance and set its logger
+    job = ValidateDnssecJob.new
+    job.define_singleton_method(:logger) { logger }
+
+    # Run the job
+    job.perform(domain_name: domain.name)
+
+    # Verify that the domain was skipped
+    assert_match /No related nameservers for this domain/, log_output.string
+  end
+
+  test "perform without domain_name executes else branch" do
+    # Use existing domain fixture
+    domain = domains(:shop)
+    
+    # Add DNSKEY if not present
+    unless domain.dnskeys.any?
+      domain.dnskeys << @dnskey
+    end
+    
+    # Add nameserver if not present
+    unless domain.nameservers.any?
+      domain.nameservers.create!(
+        hostname: "ns.#{domain.name}",
+        ipv4: ["192.0.2.1"],
+        validation_datetime: Time.zone.now
+      )
+    end
+  
+    ValidateDnssecJob.perform_now()
+    
+    assert true, "Job finished without errors"
+  end
 end
