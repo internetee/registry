@@ -71,16 +71,23 @@ class ValidateDnssecJobTest < ActiveJob::TestCase
 
   def test_prepare_validator_configures_dnsruby_resolver_with_correct_parameters
     job = ValidateDnssecJob.new
-
-    # Calling private method directly
+    
+    # To store original environment variable
+    original_timeout = ENV['nameserver_validation_timeout']
+    
+    # Seadista kindel väärtus testiks
+    ENV['nameserver_validation_timeout'] = '4'
+    
     resolver = job.send(:prepare_validator, "8.8.8.8")
-
+    
     assert_instance_of Dnsruby::Resolver, resolver
     assert resolver.do_validation
     assert resolver.dnssec
-    # assert_equal ["8.8.8.8"], resolver.nameservers # cannot get server with getters!
     assert_equal 4, resolver.packet_timeout
     assert_equal 4, resolver.query_timeout
+    
+    # Restore original environment variable
+    ENV['nameserver_validation_timeout'] = original_timeout
   end
 
   def test_perform_skips_domains_without_nameservers
