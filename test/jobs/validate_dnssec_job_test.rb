@@ -68,4 +68,77 @@ class ValidateDnssecJobTest < ActiveJob::TestCase
     @domain.reload
     assert_nil @domain.dnskeys.first.validation_datetime
   end
+
+  def test_prepare_validator_configures_dnsruby_resolver_with_correct_parameters
+    job = ValidateDnssecJob.new
+    
+    # To store original environment variable
+    original_timeout = ENV['nameserver_validation_timeout']
+    
+    # Seadista kindel väärtus testiks
+    ENV['nameserver_validation_timeout'] = '4'
+    
+    resolver = job.send(:prepare_validator, "8.8.8.8")
+    
+    assert_instance_of Dnsruby::Resolver, resolver
+    assert resolver.do_validation
+    assert resolver.dnssec
+    assert_equal 4, resolver.packet_timeout
+    assert_equal 4, resolver.query_timeout
+    
+    # Restore original environment variable
+    ENV['nameserver_validation_timeout'] = original_timeout
+  end
+
+  def test_perform_skips_domains_without_nameservers
+    domain = Domain.create!(
+      name: "test.test",
+      registrar: registrars(:bestnames),
+      registrant: @domain.registrant,
+      period: 1,
+      period_unit: 'y',
+      valid_to: 1.year.from_now
+    )
+
+    # Add DNSKEY to domain
+    domain.dnskeys << @dnskey
+
+    # Create a StringIO to capture log output
+    log_output = StringIO.new
+    logger = Logger.new(log_output)
+    logger.level = Logger::INFO
+
+    # Create a job instance and set its logger
+    job = ValidateDnssecJob.new
+    job.define_singleton_method(:logger) { logger }
+
+    # Run the job
+    job.perform(domain_name: domain.name)
+
+    # Verify that the domain was skipped
+    assert_match /No related nameservers for this domain/, log_output.string
+  end
+
+  def perform_without_domain_name_executes_else_block
+    # Use existing domain fixture
+    domain = domains(:shop)
+    
+    # Add DNSKEY if not present
+    unless domain.dnskeys.any?
+      domain.dnskeys << @dnskey
+    end
+    
+    # Add nameserver if not present
+    unless domain.nameservers.any?
+      domain.nameservers.create!(
+        hostname: "ns.#{domain.name}",
+        ipv4: ["192.0.2.1"],
+        validation_datetime: Time.zone.now
+      )
+    end
+  
+    ValidateDnssecJob.perform_now()
+    
+    assert true, "Job finished without errors"
+  end
 end
