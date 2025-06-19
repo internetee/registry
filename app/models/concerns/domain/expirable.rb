@@ -7,7 +7,7 @@ module Domain::Expirable
 
   class_methods do
     def expired
-      where("#{attribute_alias(:expire_time)} <= ?", Time.zone.now)
+      where(arel_table[attribute_alias(:expire_time)].lteq(Time.zone.now))
     end
   end
 
@@ -15,8 +15,12 @@ module Domain::Expirable
     !expired?
   end
 
+  def expire_time
+    valid_to
+  end
+
   def expired?
-    expire_time <= Time.zone.now
+    expire_time && expire_time <= Time.zone.now
   end
 
   def expirable?

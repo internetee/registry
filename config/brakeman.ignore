@@ -1,0 +1,239 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "073ab4fa3fa3668c64f56e38b25ae1a403f28942f1c83b57f81eeb339eeafe0e",
+      "check_name": "FileAccess",
+      "message": "Parameter value used in file name",
+      "file": "app/controllers/repp/v1/registrar/xml_console_controller.rb",
+      "line": 27,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "File.read(safe_xml_path(validate_path_component(params[:obj]), validate_path_component(params[:epp_action])))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Repp::V1::Registrar::XmlConsoleController",
+        "method": "load_xml"
+      },
+      "user_input": "params[:epp_action]",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "0ea9954ae16ee933c41a032d69ffc412f3d68df1b6dc6639bc508ae1529468fc",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/version/domain_version.rb",
+      "line": 43,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "count_by_sql(\"      SELECT\\n        COUNT(*)\\n      FROM\\n        #{table_name}\\n      WHERE\\n        (children->'registrant') @> '#{contact_id}'\\n        OR\\n        (children->'admin_contacts') @> '#{contact_id}'\\n        OR\\n        (children->'tech_contacts') @> '#{contact_id}'\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Version::DomainVersion",
+        "method": "Version::DomainVersion.was_contact_linked?"
+      },
+      "user_input": "contact_id",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "5794d1babfc87482d5d4961472a856b58c3302f40f110f8cadf7b62bbb0c17ca",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/admin/certificates/show.haml",
+      "line": 94,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "OpenSSL::X509::Certificate.new(Certificate.find(params[:id]).crt).extensions.map(&:to_s).join(\"<br>\")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::CertificatesController",
+          "method": "show",
+          "line": 7,
+          "file": "app/controllers/admin/certificates_controller.rb",
+          "rendered": {
+            "name": "admin/certificates/show",
+            "file": "app/views/admin/certificates/show.haml"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/certificates/show"
+      },
+      "user_input": "Certificate.find(params[:id]).crt",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "616c98aaedbc846f8dc64ceabadb079fa574f1993ce1b3f5baf17cc4b607f685",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/version/domain_version.rb",
+      "line": 63,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "count_by_sql(\"      SELECT\\n        COUNT(*)\\n      FROM\\n        #{table_name}\\n      WHERE\\n        created_at < TIMESTAMP WITH TIME ZONE '#{period.ago}'\\n        AND (\\n          (children->'registrant') @> '#{contact_id}'\\n          OR\\n          (children->'admin_contacts') @> '#{contact_id}'\\n          OR\\n          (children->'tech_contacts') @> '#{contact_id}'\\n        )\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Version::DomainVersion",
+        "method": "Version::DomainVersion.contact_unlinked_more_than?"
+      },
+      "user_input": "period.ago",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 123,
+      "fingerprint": "715ee6d743a8af33c7b930d728708ce19c765fb40e2ad9d2b974db04d92dc7d1",
+      "check_name": "EOLRuby",
+      "message": "Support for Ruby 3.1.3 ends on 2025-03-31",
+      "file": ".ruby-version",
+      "line": 1,
+      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "Weak",
+      "cwe_id": [
+        1104
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "9a499147f5b245ec452f500ff64170077d236f919b300c9070c4b72a3d5eef7b",
+      "check_name": "Send",
+      "message": "User controlled method execution",
+      "file": "app/controllers/epp/base_controller.rb",
+      "line": 149,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "send(\"validate_#{params[:action]}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Epp::BaseController",
+        "method": "validate_request"
+      },
+      "user_input": "params[:action]",
+      "confidence": "High",
+      "cwe_id": [
+        77
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SSL Verification Bypass",
+      "warning_code": 71,
+      "fingerprint": "9f074087a4fac6b15a21c44cfb9299ae563bc4f280d9a266718d95e5faf8fd71",
+      "check_name": "SSLVerify",
+      "message": "SSL certificate verification was bypassed",
+      "file": "app/interactions/actions/do_request.rb",
+      "line": 44,
+      "link": "https://brakemanscanner.org/docs/warning_types/ssl_verification_bypass/",
+      "code": "Net::HTTP.start(uri.hostname, uri.port, :use_ssl => (uri.scheme == \"https\"), :verify_mode => (OpenSSL::SSL::VERIFY_NONE))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Actions::DoRequest",
+        "method": "do_test_request"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        295
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SSL Verification Bypass",
+      "warning_code": 71,
+      "fingerprint": "b4bf5f9bb847d22e1dd75607bfbe15b22177d74606c659586909002c98690ba8",
+      "check_name": "SSLVerify",
+      "message": "SSL certificate verification was bypassed",
+      "file": "app/interactions/actions/do_request.rb",
+      "line": 34,
+      "link": "https://brakemanscanner.org/docs/warning_types/ssl_verification_bypass/",
+      "code": "Net::HTTP.start(uri.hostname, uri.port, :use_ssl => (uri.scheme == \"https\"), :verify_mode => (OpenSSL::SSL::VERIFY_NONE), :cert => OpenSSL::X509::Certificate.new(File.read(ENV[\"cert_path\"])), :key => OpenSSL::PKey::RSA.new(File.read(ENV[\"key_path\"])))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Actions::DoRequest",
+        "method": "do_dev_request"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        295
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 120,
+      "fingerprint": "d84924377155b41e094acae7404ec2e521629d86f97b0ff628e3d1b263f8101c",
+      "check_name": "EOLRails",
+      "message": "Support for Rails 6.1.7.9 ended on 2024-10-01",
+      "file": "Gemfile.lock",
+      "line": 422,
+      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        1104
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "dffdd6b8ce313afc878aabf717a3c9eb30769eb16d268d71eebfdecb4767a4ba",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/admin/domain_versions_controller.rb",
+      "line": 48,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Version::DomainVersion.includes(:item).where((((((\"1=1\" + case key\nwhen \"event\" then\n  \" AND event = '#{value}'\"\nwhen \"name\" then\n  \" AND (object->>'name' ~* '#{value}' OR object_changes->>'name' ~* '#{value}')\"\nelse\n  create_where_string(key, value)\nend) + \"  AND object->>'registrant_id' IN (#{Contact.where(\"name ilike ?\", \"%#{(params[:q] or {}).deep_dup.except(:created_at_gteq, :created_at_lteq)[:registrant].strip}%\").map do\n \"'#{r.id}'\"\n end.join(\",\")})\") + \"  AND 1=0\") + \" AND (object->>'registrar_id' IN (#{Registrar.where(\"name ilike ?\", \"%#{(params[:q] or {}).deep_dup.except(:created_at_gteq, :created_at_lteq)[:registrar].strip}%\").map do\n \"'#{r.id}'\"\n end.join(\",\")})\\n                     OR (object_changes @> '#{{ :registrar_id => Registrar.where(\"name ilike ?\", \"%#{(params[:q] or {}).deep_dup.except(:created_at_gteq, :created_at_lteq)[:registrar].strip}%\").map(&:id) }.to_json}'))\") + \"  AND 1=0\"))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Admin::DomainVersionsController",
+        "method": "index"
+      },
+      "user_input": "Registrar.where(\"name ilike ?\", \"%#{(params[:q] or {}).deep_dup.except(:created_at_gteq, :created_at_lteq)[:registrar].strip}%\").map",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    }
+  ],
+  "updated": "2025-02-13 13:59:29 +0000",
+  "brakeman_version": "6.2.2"
+}
