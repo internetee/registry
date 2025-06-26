@@ -76,14 +76,15 @@ class AdminAreaZonesIntegrationTest < ApplicationIntegrationTest
   end
 
   def test_fails_to_update_zone_with_invalid_data
-    patch admin_zone_path(@zone), params: { zone: { origin: '' }}
+    patch admin_zone_path(@zone), params: { zone: { ttl: '' }}
 
     assert_response :success
 
-    assert_includes response.body, '<form', "'form' element not found after invalid update"
-
+    assert_includes response.body, "Ttl", "Ttl field error should be shown"
+    assert_includes response.body, "Ttl is missing", "Presence validation message expected"
+  
     @zone.reload
-    assert_not_equal '', @zone.origin
+    refute_equal '', @zone.ttl, "Ttl should not have changed"
   end
 
   def test_redirects_to_index_after_successful_operations
