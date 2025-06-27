@@ -697,7 +697,8 @@ CREATE TABLE public.contacts (
     company_register_status character varying,
     ident_request_sent_at timestamp without time zone,
     verified_at timestamp without time zone,
-    verification_id character varying
+    verification_id character varying,
+    system_disclosed_attributes character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -5728,6 +5729,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250204094550'),
 ('20250219102811'),
 ('20250313122119'),
-('20250319104749');
+('20250319104749'),
+('20250627084536');
 
 
