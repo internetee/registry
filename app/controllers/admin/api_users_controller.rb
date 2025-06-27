@@ -60,9 +60,9 @@ module Admin
         Actions::RecordDateOfTest.record_result_to_api_user(api_user:user_api,
                                                             date: demo_user_api['accreditation_date']) unless demo_user_api.empty?
         
-        redirect_to request.referrer, notice: 'User Api found'                                                    
+        redirect_to request.referrer, notice: 'User API found'                                                    
       when "404"
-        redirect_to request.referrer, notice: 'User Api not found or not accredited yet'
+        redirect_to request.referrer, notice: 'User API not found or not accredited yet'
       else
         redirect_to request.referrer, notice: 'Something went wrong'
       end
