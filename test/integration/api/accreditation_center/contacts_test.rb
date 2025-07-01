@@ -20,4 +20,20 @@ class ContactsTest < ApplicationIntegrationTest
 
     assert_equal json[:contact][:name], 'John'
   end
+
+  def test_parameter_missing_error
+    get '/api/v1/accreditation_center/contacts'  # without name parameter
+    json = JSON.parse(response.body, symbolize_names: true)
+  
+    assert_response 404
+    assert_equal 'Contact not found', json[:errors]
+  end
+
+  def test_record_not_found_error
+    get '/api/v1/accreditation_center/contacts/?id=non_existent'
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response 404
+    assert_equal 'Contact not found', json[:errors]
+  end
 end
