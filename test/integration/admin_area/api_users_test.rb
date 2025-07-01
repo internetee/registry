@@ -39,25 +39,22 @@ class AdminAreaRegistrarsIntegrationTest < ActionDispatch::IntegrationTest
     assert_equal @api_user.accreditation_expire_date.to_date, api_user.accreditation_expire_date.to_date
   end
 
-  def test_index_api_users
-    get admin_api_users_path
-    assert_response :success
-    
-    assert_select 'table'
-    assert_select 'table tr', minimum: 2
+  def test_index_api_users_listings
+    [
+      {},
+      { q: { registrar_id: @api_user.registrar_id } }
+    ].each do |params|
+      get admin_api_users_path, params: params
+      assert_response :success
+      assert_select 'table'
+      assert_select 'table tr', minimum: 2
+    end
   end
 
-  def test_index_api_users_with_registrar_id
-    get admin_api_users_path, params: {q: { registrar_id: @api_user.registrar_id } }
-    assert_response :success
-    assert_select 'table tr', minimum: 2
-  end
-
-  def test_index_with_pagination
-    get admin_api_users_path, params: { results_per_page: 1 }
+  def test_index_pagination_and_page_parameter
+    get admin_api_users_path, params: { results_per_page: 1, page: 2 }
     assert_response :success
   
-    assert_select 'table tr', minimum: 2
     assert_select 'table tr', maximum: 2  
     assert_select 'table tr', count: 2
   end
@@ -104,5 +101,19 @@ class AdminAreaRegistrarsIntegrationTest < ActionDispatch::IntegrationTest
     api_user.reload
     assert_nil api_user.accreditation_date
     assert_nil api_user.accreditation_expire_date
+  end
+
+  def test_destroy_api_user
+    api_user = users(:api_bestnames)
+
+    # Removing epp_session from database before deleting the api user
+    EppSession.where(user_id: api_user.id).destroy_all
+
+    assert_difference('ApiUser.count', -1) do
+      delete admin_registrar_api_user_path(api_user.registrar, api_user)
+    end
+
+    assert_redirected_to admin_registrar_path(api_user.registrar)
+    assert_not ApiUser.exists?(api_user.id)
   end
 end
