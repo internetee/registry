@@ -68,6 +68,30 @@ class ArchivableContactTest < ActiveSupport::TestCase
                  registrar.notifications.last.text)
   end
 
+  def test_write_to_registrar_log_creates_log_file
+    contact = archivable_contact
+    registrar = contact.registrar
+    log_dir = '/tmp/test_logs'
+    ENV['contact_archivation_log_file_dir'] = log_dir
+
+    # Using Stub to avoid creating the log file in the filesystem
+    FileUtils.stub(:mkdir_p, true) do
+      file_mock = Minitest::Mock.new
+
+      file_mock.expect(:write, nil) do |arg|
+        arg.to_s.include?(contact.code)
+      end
+
+      file_mock.expect(:close, nil)
+
+      File.stub(:new, file_mock) do
+        contact.archive(extra_log: true, verified: true, notify: false)
+      end
+
+      assert_mock file_mock
+    end
+  end
+
   private
 
   def archivable_contact
