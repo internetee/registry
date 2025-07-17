@@ -31,6 +31,7 @@ module Admin
 
       if @domain.update(dp)
         flash[:notice] = I18n.t('domain_updated')
+        inform_registrar_about_status_changes
         redirect_to [:admin, @domain]
       else
         @domain.reload
@@ -109,6 +110,20 @@ module Admin
       else
         { statuses: [] }
       end
+    end
+
+    def inform_registrar_about_status_changes
+      return unless @domain.saved_change_to_statuses?
+
+      old_statuses, new_statuses = @domain.saved_change_to_statuses
+      removed = old_statuses - new_statuses
+      added   = new_statuses - old_statuses
+  
+      msg = []
+      msg << "Set on #{@domain.name}: #{added.join(', ')}" unless added.empty?
+      msg << "Removed from #{@domain.name}: #{removed.join(', ')}" unless removed.empty?
+
+      @domain.registrar.notifications.create!(text: msg.join('. ')) if msg.any?
     end
 
     def build_associations
