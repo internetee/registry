@@ -13,7 +13,7 @@
   - tech_contacts  = @domain.tech_contacts
   - admin_contacts = @domain.admin_contacts
   - registrant     = [@domain.registrant]
-  - event = t('current_state')
+  - event = t('.current_state')
   - creator = @domain.creator_str
 
 = render 'shared/title', name: @domain.name
@@ -28,7 +28,7 @@
             = event
             = creator
           - else
-            = t('current_state')
+            = t('.current_state')
             = creator
       .panel-body
         %dl.dl-horizontal
@@ -138,7 +138,7 @@
     .panel.panel-default{:style => "min-height:450px;"}
       %ul.nav.nav-pills.nav-stacked
         %li{class: ('active' if @version.nil?)}
-          = link_to t('current_state'), admin_domain_version_path(current: 1, domain_id: @domain.id)
+          = link_to t('.current_state'), admin_domain_version_path(current: 1, domain_id: @domain.id)
         - @versions.each do |vs|
           %li{class: (@version && vs.id == @version.id) && :active}
             = link_to admin_domain_version_path(vs) do
