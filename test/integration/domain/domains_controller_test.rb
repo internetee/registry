@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DomainTest < ApplicationIntegrationTest
+class DomainsControllerTest < ApplicationIntegrationTest
 
   def setup
     @domain = domains(:shop)
