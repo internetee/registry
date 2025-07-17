@@ -56,14 +56,18 @@ module Admin
 
     def show
       per_page = 7
-      @version = Version::DomainVersion.find(params[:id])
-      @versions = Version::DomainVersion.where(item_id: @version.item_id).order(created_at: :desc, id: :desc)
+      if params[:current]
+        @domain = Domain.find(params[:domain_id] || params[:id])
+        @version = nil
+      else
+        @version = Version::DomainVersion.find(params[:id])
+        @domain = Domain.find(@version.item_id)
+      end
+      @versions = Version::DomainVersion.where(item_id: @domain.id).order(created_at: :desc, id: :desc)
       @versions_map = @versions.all.map(&:id)
 
-      # what we do is calc amount of results until needed version
-      # then we cacl which page it is
       if params[:page].blank?
-        counter = @versions_map.index(@version.id) + 1
+        counter = @version ? (@versions_map.index(@version.id) + 1) : 1
         page = counter / per_page
         page += 1 if (counter % per_page) != 0
         params[:page] = page

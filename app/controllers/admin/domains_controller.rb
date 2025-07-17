@@ -54,10 +54,22 @@ module Admin
     def versions
       @domain = Domain.where(id: params[:domain_id]).includes({ versions: :item }).first
       @versions = @domain.versions
-      @last_version = @versions.last
       @old_versions = Kaminari.paginate_array(@versions.not_creates.reverse)
                               .page(params[:page])
                               .per(DEFAULT_VERSIONS_PER_PAGE)
+
+      @post_update_domains = []
+      old_versions_arr = @old_versions.to_a
+      old_versions_arr.each_with_index do |version, idx|
+        next_version = old_versions_arr[idx - 1] # reverse order!
+        if next_version
+          @post_update_domains << (next_version.reify || @domain)
+        else
+          @post_update_domains << @domain
+        end
+      end
+
+      @post_update_domains.sort_by! { |d| -d.updated_at.to_i }
     end
 
     def download
