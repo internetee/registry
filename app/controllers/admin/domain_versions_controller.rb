@@ -2,6 +2,8 @@ module Admin
   class DomainVersionsController < BaseController
     load_and_authorize_resource class: Version::DomainVersion
 
+    PER_PAGE = 7
+
     def index
       params[:q] ||= {}
 
@@ -55,25 +57,18 @@ module Admin
     end
 
     def show
-      per_page = 7
       if params[:current]
         @domain = Domain.find(params[:domain_id] || params[:id])
-        @version = nil
       else
         @version = Version::DomainVersion.find(params[:id])
         @domain = Domain.find(@version.item_id)
       end
+
       @versions = Version::DomainVersion.where(item_id: @domain.id).order(created_at: :desc, id: :desc)
       @versions_map = @versions.all.map(&:id)
 
-      if params[:page].blank?
-        counter = @version ? (@versions_map.index(@version.id) + 1) : 1
-        page = counter / per_page
-        page += 1 if (counter % per_page) != 0
-        params[:page] = page
-      end
-
-      @versions = @versions.page(params[:page]).per(per_page)
+      get_page if params[:page].blank?
+      @versions = @versions.page(params[:page]).per(PER_PAGE)
     end
 
     def search
@@ -85,6 +80,13 @@ module Admin
     end
 
     private
+
+    def get_page
+      counter = @version ? (@versions_map.index(@version.id) + 1) : 1
+      page = counter / PER_PAGE
+      page += 1 if (counter % PER_PAGE) != 0
+      params[:page] = page
+    end
 
     def fix_date_params
       params_copy = params[:q].deep_dup

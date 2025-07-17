@@ -52,24 +52,12 @@ module Admin
     end
 
     def versions
-      @domain = Domain.where(id: params[:domain_id]).includes({ versions: :item }).first
+      @domain = get_domain_with_versions
       @versions = @domain.versions
-      @old_versions = Kaminari.paginate_array(@versions.not_creates.reverse)
-                              .page(params[:page])
-                              .per(DEFAULT_VERSIONS_PER_PAGE)
+      @old_versions = paginate_versions(@versions.not_creates.reverse)
 
-      @post_update_domains = []
-      old_versions_arr = @old_versions.to_a
-      old_versions_arr.each_with_index do |version, idx|
-        next_version = old_versions_arr[idx - 1] # reverse order!
-        if next_version
-          @post_update_domains << (next_version.reify || @domain)
-        else
-          @post_update_domains << @domain
-        end
-      end
-
-      @post_update_domains.sort_by! { |d| -d.updated_at.to_i }
+      post_update_domains = generate_collection_of_post_update_domains(@old_versions.to_a)
+      @post_update_domains = sort_post_update_domains(post_update_domains)
     end
 
     def download
@@ -83,6 +71,33 @@ module Admin
     end
 
     private
+
+    def get_domain_with_versions
+      Domain.where(id: params[:domain_id]).includes({ versions: :item }).first
+    end
+
+    def paginate_versions(versions)
+      Kaminari.paginate_array(versions).page(params[:page]).per(DEFAULT_VERSIONS_PER_PAGE)
+    end
+
+    def generate_collection_of_post_update_domains(old_versions_arr)
+      post_update_domains = []
+
+      old_versions_arr.each_with_index do |version, idx|
+        next_version = old_versions_arr[idx - 1] # reverse order!
+        if next_version
+          post_update_domains << (next_version.reify || @domain)
+        else
+          post_update_domains << @domain
+        end
+      end
+
+      post_update_domains
+    end
+
+    def sort_post_update_domains(post_update_domains)
+      post_update_domains.sort_by! { |d| -d.updated_at.to_i }
+    end
 
     def set_domain
       @domain = Domain.find(params[:id])
