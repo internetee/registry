@@ -1,6 +1,7 @@
 18.07.2025
 * Update actions/upload-artifact action to v4.6.2 https://github.com/internetee/registry/pull/2800
 * Added extra test coverage for LhvConnectTransactionsController https://github.com/internetee/registry/pull/2815
+* Updated set_test_date_to_api_user method on api_users_controller https://github.com/internetee/registry/issues/2816
 
 06.06.2025
 * Improvments to ent-to-end id processing https://github.com/internetee/registry/pull/2796
