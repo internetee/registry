@@ -2,6 +2,8 @@ module Admin
   class DomainVersionsController < BaseController
     load_and_authorize_resource class: Version::DomainVersion
 
+    PER_PAGE = 7
+
     def index
       params[:q] ||= {}
 
@@ -55,21 +57,18 @@ module Admin
     end
 
     def show
-      per_page = 7
-      @version = Version::DomainVersion.find(params[:id])
-      @versions = Version::DomainVersion.where(item_id: @version.item_id).order(created_at: :desc, id: :desc)
-      @versions_map = @versions.all.map(&:id)
-
-      # what we do is calc amount of results until needed version
-      # then we cacl which page it is
-      if params[:page].blank?
-        counter = @versions_map.index(@version.id) + 1
-        page = counter / per_page
-        page += 1 if (counter % per_page) != 0
-        params[:page] = page
+      if params[:current]
+        @domain = Domain.find(params[:domain_id] || params[:id])
+      else
+        @version = Version::DomainVersion.find(params[:id])
+        @domain = Domain.find(@version.item_id)
       end
 
-      @versions = @versions.page(params[:page]).per(per_page)
+      @versions = Version::DomainVersion.where(item_id: @domain.id).order(created_at: :desc, id: :desc)
+      @versions_map = @versions.all.map(&:id)
+
+      get_page if params[:page].blank?
+      @versions = @versions.page(params[:page]).per(PER_PAGE)
     end
 
     def search
@@ -81,6 +80,13 @@ module Admin
     end
 
     private
+
+    def get_page
+      counter = @version ? (@versions_map.index(@version.id) + 1) : 1
+      page = counter / PER_PAGE
+      page += 1 if (counter % PER_PAGE) != 0
+      params[:page] = page
+    end
 
     def fix_date_params
       params_copy = params[:q].deep_dup

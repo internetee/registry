@@ -15,18 +15,19 @@
     - event          = version.event
     - creator        = plain_username(version.terminator)
     - whodunnit      = version.try(:whodunnit)
-  - else # pending history
+  - else # current version
     - epp_req = false
     - nameservers    = domain.nameservers
     - dnskeys        = domain.dnskeys
-    - tech_contacts  = domain.tech_contacts
-    - admin_contacts = domain.admin_contacts
-    - registrant     = domain.registrant
-    - unless registrant
-      - ver = Version::ContactVersion.where(item_id: domain.registrant_id).where(event: :destroy).last
-      - registrant = ver.reify
-      - registrant.version_loader = ver
-    - registrant     = [registrant]
+    - if defined?(@last_version) && @last_version
+      - children = HashWithIndifferentAccess.new(@last_version.children)
+      - tech_contacts  = Contact.all_versions_for(children[:tech_contacts], @last_version.created_at)
+      - admin_contacts = Contact.all_versions_for(children[:admin_contacts], @last_version.created_at)
+      - registrant     = Contact.all_versions_for(children[:registrant], @last_version.created_at)
+    - else
+      - tech_contacts  = domain.tech_contacts
+      - admin_contacts = domain.admin_contacts
+      - registrant     = [domain.registrant]
     - creator        = pending_user.try(:username)
     - event          = 'pending'
     - whodunnit      = false
