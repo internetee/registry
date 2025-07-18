@@ -1,3 +1,6 @@
+18.07.2025
+* Update actions/upload-artifact action to v4.6.2 https://github.com/internetee/registry/pull/2800
+
 06.06.2025
 * Improvments to ent-to-end id processing https://github.com/internetee/registry/pull/2796
 * Fix stale data in Whois update job https://github.com/internetee/registry/pull/2808
