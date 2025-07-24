@@ -59,4 +59,28 @@ class AdminCertificatesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to admin_api_user_certificate_path(@api_user, @certificate)
     assert_equal I18n.t('record_updated'), flash[:notice]
   end
+
+  def test_revoke_certificate_failure
+    Certificate.stub_any_instance(:revoke!, false) do
+      post revoke_admin_api_user_certificate_path(api_user_id: @api_user.id, id: @certificate.id),
+           params: { certificate: { password: @password } }
+    end
+
+    assert_redirected_to admin_api_user_certificate_path(@api_user, @certificate)
+    assert_equal I18n.t('failed_to_update_record'), flash[:alert]
+  end
+
+  def test_destroy_revocable_certificate
+    @certificate.update!(interface: Certificate::REGISTRAR)
+
+    Certificate.stub_any_instance(:revoke!, true) do
+      assert_difference -> { Certificate.count }, -1 do
+        delete admin_api_user_certificate_path(api_user_id: @api_user.id, id: @certificate.id),
+               params: { certificate: { password: @password } }
+      end
+    end
+
+    assert_redirected_to admin_registrar_api_user_path(@api_user.registrar, @api_user)
+    assert_equal I18n.t('record_deleted'), flash[:notice]
+  end
 end 
