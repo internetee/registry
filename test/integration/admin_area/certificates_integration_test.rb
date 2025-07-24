@@ -42,12 +42,17 @@ class AdminCertificatesControllerTest < ActionDispatch::IntegrationTest
 
   def test_sign_certificate
     Certificate.stub_any_instance(:sign!, true) do
-      post sign_admin_api_user_certificate_path(api_user_id: @api_user.id, id: @certificate.id),
-           params: { certificate: { password: @password } }
+      assert_difference -> { ActionMailer::Base.deliveries.size }, 1 do
+        post sign_admin_api_user_certificate_path(api_user_id: @api_user.id, id: @certificate.id),
+             params: { certificate: { password: @password } }
+      end
     end
 
     assert_redirected_to admin_api_user_certificate_path(@api_user, @certificate)
     assert_equal I18n.t('record_updated'), flash[:notice]
+
+    mail = ActionMailer::Base.deliveries.last
+    assert_includes mail.to, @api_user.registrar.email
   end
 
   def test_revoke_certificate
