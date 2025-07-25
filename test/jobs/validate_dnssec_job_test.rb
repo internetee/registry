@@ -68,4 +68,92 @@ class ValidateDnssecJobTest < ActiveJob::TestCase
     @domain.reload
     assert_nil @domain.dnskeys.first.validation_datetime
   end
+
+  def test_prepare_validator_configures_dnsruby_resolver_with_correct_parameters
+    job = ValidateDnssecJob.new
+    
+    original_timeout = ENV['nameserver_validation_timeout']
+    
+    # Timout set for current test - in given time DNSSEC validation should be finished
+    ENV['nameserver_validation_timeout'] = '4'
+    
+    resolver = job.send(:prepare_validator, "8.8.8.8")
+
+    assert_instance_of Dnsruby::Resolver, resolver
+    
+    assert resolver.do_validation
+    assert resolver.dnssec
+    assert_equal 4, resolver.packet_timeout
+    assert_equal 4, resolver.query_timeout
+    
+    ENV['nameserver_validation_timeout'] = original_timeout
+  end
+
+  def test_perform_skips_validation_if_no_nameservers_present
+    domain = Domain.create!(
+      name: "test.test",
+      registrar: registrars(:bestnames),
+      registrant: @domain.registrant,
+      period: 1,
+      period_unit: 'y',
+      valid_to: 1.year.from_now
+    )
+
+    dnskey = @dnskey
+    domain.dnskeys << dnskey
+
+    original_validation_time = dnskey.validation_datetime
+
+    ValidateDnssecJob.new.perform(domain_name: domain.name)
+
+    dnskey.reload
+    assert_equal dnskey.validation_datetime, dnskey.validation_datetime, "Expected DNSKEY validation_datetime to be set after successful validation"
+  end
+
+  def test_perform_updates_dnskey_validation_if_nameservers_present
+    domain = Domain.create!(
+      name: "test.test",
+      registrar: registrars(:bestnames),
+      registrant: @domain.registrant,
+      period: 1,
+      period_unit: 'y',
+      valid_to: 1.year.from_now
+    )
+
+    dnskey = @dnskey
+    domain.dnskeys << dnskey
+
+    nameserver = domain.nameservers.create!(
+      hostname: 'ns1.test.test',
+      ipv4: ['192.0.2.1']
+    )
+    
+    nameserver.update(validation_datetime: Time.zone.now - 1.minute)
+
+    mock_zone_data = ZoneAnswer.new
+    Spy.on_instance_method(ValidateDnssecJob, :prepare_validator).and_return(Dnsruby::Resolver.new)
+    Spy.on_instance_method(Dnsruby::Resolver, :query).and_return(mock_zone_data)
+
+    ValidateDnssecJob.perform_now(domain_name: domain.name)
+  
+    dnskey.reload
+    assert_not_nil dnskey.validation_datetime, "Expected DNSKEY validation_datetime to be set after successful validation"
+  end
+
+  def perform_without_domain_name_executes_else_block
+    domain = domains(:shop)
+
+    domain.dnskeys << @dnskey unless domain.dnskeys.any?
+    
+    # Add nameserver if not present
+    unless domain.nameservers.any?
+      domain.nameservers.create!(
+        hostname: "ns.#{domain.name}",
+        ipv4: ["192.0.2.1"],
+        validation_datetime: Time.zone.now
+      )
+    end
+  
+    ValidateDnssecJob.perform_now
+  end
 end
