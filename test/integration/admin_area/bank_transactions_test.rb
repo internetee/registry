@@ -6,7 +6,7 @@ class AdminAreaBankTransactionsIntegrationTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:admin)
     @bank_statement = bank_statements(:one)
-    @bank_transaction = bank_transactions(:one)
+    @bank_transaction = bank_transactions(:with_statement)
   end
 
   def test_new_page_accessible

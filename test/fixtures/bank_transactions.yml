@@ -1,5 +1,11 @@
 one:
-  bank_statement: one
+  sum: 1
+  currency: EUR
+  description: Order nr 1 from registrar 1234567 second number 2345678
+  iban: US75512108001245126199
+
+with_statement:
+  bank_statement: two
   sum: 1
   currency: EUR
   description: Order nr 1 from registrar 1234567 second number 2345678
