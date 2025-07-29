@@ -1,4 +1,5 @@
 one:
+  bank_statement: one
   sum: 1
   currency: EUR
   description: Order nr 1 from registrar 1234567 second number 2345678
