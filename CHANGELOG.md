@@ -1,3 +1,6 @@
+29.07.2025
+* Added extra test coverage for validate_dnssec_job https://github.com/internetee/registry/pull/2811
+
 18.07.2025
 * Update actions/upload-artifact action to v4.6.2 https://github.com/internetee/registry/pull/2800
 * Added extra test coverage for LhvConnectTransactionsController https://github.com/internetee/registry/pull/2815
