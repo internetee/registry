@@ -1,5 +1,6 @@
 29.07.2025
 * Added extra test coverage for validate_dnssec_job https://github.com/internetee/registry/pull/2811
+* Added new tests for zones_controller https://github.com/internetee/registry/pull/2813
 
 18.07.2025
 * Update actions/upload-artifact action to v4.6.2 https://github.com/internetee/registry/pull/2800
