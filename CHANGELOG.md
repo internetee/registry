@@ -1,3 +1,6 @@
+30.07.2025
+* Fixed domain history presentation offset in admin https://github.com/internetee/registry/issues/2822
+
 29.07.2025
 * Added extra test coverage for validate_dnssec_job https://github.com/internetee/registry/pull/2811
 * Added new tests for zones_controller https://github.com/internetee/registry/pull/2813
