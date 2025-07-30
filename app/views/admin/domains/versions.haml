@@ -32,10 +32,10 @@
                   domain: @domain, version: @last_version
 
           -# all other older versions
-          - @old_versions.each do |version|
+          - @old_versions.each_with_index do |version, idx|
             %tr.small
               = render 'admin/domains/partials/version',
-                domain: version.reify, version: version.previous
+                domain: @post_update_domains[idx], version: version
 
 .row 
   .col-md-6 
