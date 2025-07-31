@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ruby:3.0.3-slim-buster
+FROM --platform=linux/amd64 ruby:3.0.3-bullseye
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt-get update > /dev/null && apt-get install -y --no-install-recommends > /dev/null \
@@ -29,27 +29,27 @@ RUN apt-get update > /dev/null && apt-get install -y --no-install-recommends > /
     && rm -rf /var/lib/apt/lists/*
 
 # add repository for Node.js in the LTS version
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash -
 
 RUN apt-get install -y --no-install-recommends > /dev/null \
-  nodejs=* \
-  qt5-default=* \
-  libqt5webkit5-dev=* \
-  gstreamer1.0-plugins-base=* \
-  libappindicator3-1=* \
-  gstreamer1.0-tools=* \
-  qtdeclarative5-dev=* \
-  fonts-liberation=* \
-  gstreamer1.0-x=* \
-  libasound2=* \
-  libnspr4=* \
-  libnss3=* \
-  libxss1=* \
-  libxtst6=* \
-  xdg-utils=* \
-  qtdeclarative5-dev=* \
-  fonts-liberation=* \
-  gstreamer1.0-x=* \
+  nodejs \
+  qtbase5-dev \
+  libqt5webkit5-dev \
+  gstreamer1.0-plugins-base \
+  libappindicator3-1 \
+  gstreamer1.0-tools \
+  qtdeclarative5-dev \
+  fonts-liberation \
+  gstreamer1.0-x \
+  libasound2 \
+  libnspr4 \
+  libnss3 \
+  libxss1 \
+  libxtst6 \
+  xdg-utils \
+  qtdeclarative5-dev \
+  fonts-liberation \
+  gstreamer1.0-x \
   wkhtmltopdf \
   libxslt1-dev \
   libxml2-dev \

@@ -31,6 +31,7 @@ module Admin
 
       if @domain.update(dp)
         flash[:notice] = I18n.t('domain_updated')
+        inform_registrar_about_status_changes
         redirect_to [:admin, @domain]
       else
         @domain.reload
@@ -108,6 +109,22 @@ module Admin
         params.require(:domain).permit({ statuses: [], status_notes_array: [] })
       else
         { statuses: [] }
+      end
+    end
+
+    def inform_registrar_about_status_changes
+      return unless @domain.saved_change_to_statuses?
+
+      old_statuses, new_statuses = @domain.saved_change_to_statuses
+      removed = old_statuses - new_statuses
+      added   = new_statuses - old_statuses
+  
+      added.each do |status|
+        @domain.registrar.notifications.create!(text: "#{status} set on domain #{@domain.name}")
+      end
+
+      removed.each do |status|
+        @domain.registrar.notifications.create!(text: "#{status} is cancelled on domain #{@domain.name}")
       end
     end
 
