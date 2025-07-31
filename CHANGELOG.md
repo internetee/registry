@@ -1,3 +1,6 @@
+31.07.2025
+* Poll messages for registry admin initiated domain status changes https://github.com/internetee/registry/issues/2823
+
 30.07.2025
 * Fixed domain history presentation offset in admin https://github.com/internetee/registry/issues/2822
 
