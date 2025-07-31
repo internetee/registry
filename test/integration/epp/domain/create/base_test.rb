@@ -603,7 +603,8 @@ class EppDomainCreateBaseTest < EppTestCase
     travel_to now
     name = "new.#{dns_zones(:one).origin}"
     contact = contacts(:john)
-    registrant = contact.becomes(Registrant)
+    # registrant = contact.becomes(Registrant)
+    registrant = contacts(:william)
 
     registrant.update!(ident_type: 'org')
     registrant.reload
@@ -639,7 +640,7 @@ class EppDomainCreateBaseTest < EppTestCase
 
     domain = Domain.find_by(name: name)
     assert_equal name, domain.name
-    assert_equal registrant, domain.registrant
+    assert_equal registrant.code, domain.registrant.code
     assert_equal [contact], domain.admin_contacts
     assert_empty domain.tech_contacts
     assert_not_empty domain.transfer_code
@@ -1185,5 +1186,435 @@ class EppDomainCreateBaseTest < EppTestCase
     response_xml = Nokogiri::XML(response.body)
     assert_correct_against_schema response_xml
     assert_epp_response :completed_successfully
+  end
+
+  def test_registers_domain_with_duplicate_registrant_and_admin
+    duplicate_contact = Contact.create!(
+      name: 'Duplicate Test',
+      code: 'duplicate-001',
+      email: 'duplicate@test.com',
+      phone: '+123.4567890',
+      ident: '12345X',
+      ident_type: 'priv',
+      ident_country_code: 'US',
+      registrar: registrars(:bestnames)
+    )
+    
+    registrant = duplicate_contact.becomes(Registrant)
+    
+    admin_contact = Contact.create!(
+      name: duplicate_contact.name,
+      code: 'duplicate-admin-001',
+      email: duplicate_contact.email,
+      phone: duplicate_contact.phone,
+      ident: duplicate_contact.ident,
+      ident_type: duplicate_contact.ident_type,
+      ident_country_code: duplicate_contact.ident_country_code,
+      registrar: registrars(:bestnames)
+    )
+    
+    name = "domain-reg-admin-duplicate-#{Time.now.to_i}.#{dns_zones(:one).origin}"
+    
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{admin_contact.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count', 1 do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :completed_successfully
+    
+    domain = Domain.find_by(name: name)
+    assert_not_nil domain, "Domain should have been created"
+    assert response.body.include? "Admin contact #{admin_contact.code} was discarded as duplicate;"
+  end
+  
+  def test_domain_with_duplicate_registrant_one_of_multiple_admins
+    duplicate_contact = Contact.create!(
+      name: 'Duplicate Test',
+      code: 'duplicate-002',
+      email: 'duplicate@test.com',
+      phone: '+123.4567890',
+      ident: '12345X',
+      ident_type: 'priv',
+      ident_country_code: 'US',
+      registrar: registrars(:bestnames)
+    )
+    
+    registrant = duplicate_contact.becomes(Registrant)
+    
+    admin1 = Contact.create!(
+      name: duplicate_contact.name,
+      code: 'duplicate-admin-002',
+      email: duplicate_contact.email,
+      phone: duplicate_contact.phone,
+      ident: duplicate_contact.ident,
+      ident_type: duplicate_contact.ident_type,
+      ident_country_code: duplicate_contact.ident_country_code,
+      registrar: registrars(:bestnames)
+    )
+    
+    admin2 = contacts(:william)
+    name = "domain-reg-admin-multiple-#{Time.now.to_i}.#{dns_zones(:one).origin}"
+    
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{admin1.code}</domain:contact>
+              <domain:contact type="admin">#{admin2.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count', 1 do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :completed_successfully
+
+    domain = Domain.find_by(name: name)
+    assert_not_nil domain, "Domain should have been created"
+    assert_equal 1, domain.admin_contacts.count, "Should have only one admin contact"
+    assert_equal admin2.code, domain.admin_contacts.first.code, "Should keep the non-duplicate admin"
+    
+    assert response.body.include? "Admin contact #{admin1.code} was discarded as duplicate;"
+  end
+  
+  def test_domain_with_duplicate_admin_and_tech
+    registrant = contacts(:acme_ltd).becomes(Registrant)
+    
+    admin = Contact.create!(
+      name: 'Duplicate Admin Tech Test',
+      code: 'duplicate-admin-003',
+      email: 'admin-tech@test.com',
+      phone: '+123.4567890',
+      ident: '12346X',
+      ident_type: 'priv',
+      ident_country_code: 'US',
+      registrar: registrars(:bestnames)
+    )
+    
+    tech = Contact.create!(
+      name: admin.name,
+      code: 'duplicate-tech-003',
+      email: admin.email,
+      phone: admin.phone,
+      ident: admin.ident,
+      ident_type: admin.ident_type,
+      ident_country_code: admin.ident_country_code,
+      registrar: registrars(:bestnames)
+    )
+    
+    name = "domain-admin-tech-duplicate-#{Time.now.to_i}.#{dns_zones(:one).origin}"
+    
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{admin.code}</domain:contact>
+              <domain:contact type="tech">#{tech.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count', 1 do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :completed_successfully
+    
+    domain = Domain.find_by(name: name)
+    assert_not_nil domain, "Domain should have been created"
+    assert_equal 1, domain.admin_contacts.count, "Should have one admin contact"
+    assert_equal admin.code, domain.admin_contacts.first.code, "Should keep the admin contact"
+    assert_empty domain.tech_contacts, "Tech contacts should be empty due to duplication with admin"
+    
+    assert response.body.include? "Tech contact #{tech.code} was discarded as duplicate;"
+  end
+  
+  def test_domain_with_duplicate_one_admin_one_tech
+    registrant = contacts(:acme_ltd).becomes(Registrant)
+    
+    admin1 = Contact.create!(
+      name: 'First Admin',
+      code: 'duplicate-admin-004',
+      email: 'first-admin@test.com',
+      phone: '+123.4567890',
+      ident: '12347X',
+      ident_type: 'priv',
+      ident_country_code: 'US',
+      registrar: registrars(:bestnames)
+    )
+    
+    admin2 = contacts(:william)
+
+    tech1 = Contact.create!(
+      name: admin1.name,
+      code: 'duplicate-tech-004',
+      email: admin1.email,
+      phone: admin1.phone,
+      ident: admin1.ident,
+      ident_type: admin1.ident_type,
+      ident_country_code: admin1.ident_country_code,
+      registrar: registrars(:bestnames)
+    )
+    
+    tech2 = contacts(:jack)
+    
+    name = "domain-one-admin-one-tech-dup-#{Time.now.to_i}.#{dns_zones(:one).origin}"
+    
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{admin1.code}</domain:contact>
+              <domain:contact type="admin">#{admin2.code}</domain:contact>
+              <domain:contact type="tech">#{tech1.code}</domain:contact>
+              <domain:contact type="tech">#{tech2.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count', 1 do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :completed_successfully
+    
+    domain = Domain.find_by(name: name)
+    assert_not_nil domain, "Domain should have been created"
+    assert_equal 2, domain.admin_contacts.count, "Should have both admin contacts"
+    
+    tech_contacts = domain.tech_contacts
+    assert_equal 1, tech_contacts.count, "Should have only the non-duplicate tech contact"
+    assert_equal tech2.code, tech_contacts.first.code, "Should keep the non-duplicate tech contact"
+    
+    assert response.body.include? "Tech contact #{tech1.code} was discarded as duplicate;"
+  end
+  
+  def test_domain_with_duplicate_registrant_admin_tech
+    duplicate_contact = Contact.create!(
+      name: 'Full Duplicate Test',
+      code: 'duplicate-005',
+      email: 'full-duplicate@test.com',
+      phone: '+123.5678901',
+      ident: '12348X',
+      ident_type: 'priv',
+      ident_country_code: 'US',
+      registrar: registrars(:bestnames)
+    )
+
+    registrant = duplicate_contact.becomes(Registrant)
+    
+    admin = Contact.create!(
+      name: duplicate_contact.name,
+      code: 'duplicate-admin-005',
+      email: duplicate_contact.email,
+      phone: duplicate_contact.phone,
+      ident: duplicate_contact.ident,
+      ident_type: duplicate_contact.ident_type,
+      ident_country_code: duplicate_contact.ident_country_code,
+      registrar: registrars(:bestnames)
+    )
+    
+    tech = Contact.create!(
+      name: duplicate_contact.name,
+      code: 'duplicate-tech-005',
+      email: duplicate_contact.email,
+      phone: duplicate_contact.phone,
+      ident: duplicate_contact.ident,
+      ident_type: duplicate_contact.ident_type,
+      ident_country_code: duplicate_contact.ident_country_code,
+      registrar: registrars(:bestnames)
+    )
+    
+    name = "domain-all-duplicates-#{Time.now.to_i}.#{dns_zones(:one).origin}"
+    
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{admin.code}</domain:contact>
+              <domain:contact type="tech">#{tech.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count', 1 do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :completed_successfully
+
+    domain = Domain.find_by(name: name)
+    assert_not_nil domain, "Domain should have been created"
+    assert_empty domain.admin_contacts, "Admin contacts should be empty due to duplication"
+    assert_empty domain.tech_contacts, "Tech contacts should be empty due to duplication"
+    assert response.body.include? "Admin contact #{admin.code} was discarded as duplicate;"
+    assert response.body.include? "Tech contact #{tech.code} was discarded as duplicate;"
+  end
+  
+  def test_domain_with_duplicate_registrant_one_admin_one_tech
+    duplicate_contact = Contact.create!(
+      name: 'Partial Duplicate Test',
+      code: 'duplicate-006',
+      email: 'partial-duplicate@test.com',
+      phone: '+123.6789012',
+      ident: '12349X',
+      ident_type: 'priv',
+      ident_country_code: 'US',
+      registrar: registrars(:bestnames)
+    )
+    
+    registrant = duplicate_contact.becomes(Registrant)
+    
+    admin1 = Contact.create!(
+      name: duplicate_contact.name,
+      code: 'duplicate-admin-006',
+      email: duplicate_contact.email,
+      phone: duplicate_contact.phone,
+      ident: duplicate_contact.ident,
+      ident_type: 'priv',
+      ident_country_code: duplicate_contact.ident_country_code,
+      registrar: registrars(:bestnames)
+    )
+    
+    admin2 = contacts(:jack)
+    admin2.ident_type = 'priv'
+    admin2.save!
+    
+    tech1 = Contact.create!(
+      name: duplicate_contact.name,
+      code: 'duplicate-tech-006',
+      email: duplicate_contact.email,
+      phone: duplicate_contact.phone,
+      ident: duplicate_contact.ident,
+      ident_type: duplicate_contact.ident_type,
+      ident_country_code: duplicate_contact.ident_country_code,
+      registrar: registrars(:bestnames)
+    )
+    
+    tech2 = contacts(:william)
+    
+    name = "domain-partial-duplicates-#{Time.now.to_i}.#{dns_zones(:one).origin}"
+    
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+              <domain:contact type="admin">#{admin1.code}</domain:contact>
+              <domain:contact type="admin">#{admin2.code}</domain:contact>
+              <domain:contact type="tech">#{tech1.code}</domain:contact>
+              <domain:contact type="tech">#{tech2.code}</domain:contact>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count', 1 do
+      post epp_create_path, params: { frame: request_xml },
+           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+    
+    response_xml = Nokogiri::XML(response.body)
+    assert_correct_against_schema response_xml
+    assert_epp_response :completed_successfully
+    
+    domain = Domain.find_by(name: name)
+    assert_not_nil domain, "Domain should have been created"
+    assert_equal 1, domain.admin_contacts.count, "Should have only the non-duplicate admin contact"
+    assert_equal admin2.code, domain.admin_contacts.first.code, "Should keep the non-duplicate admin contact"
+    assert_equal 1, domain.tech_contacts.count, "Should have only the non-duplicate tech contact"
+    assert_equal tech2.code, domain.tech_contacts.first.code, "Should keep the non-duplicate tech contact"
+    
+    assert response.body.include? "Admin contact #{admin1.code} was discarded as duplicate;"
+    assert response.body.include? "Tech contact #{tech1.code} was discarded as duplicate;"
   end
 end
