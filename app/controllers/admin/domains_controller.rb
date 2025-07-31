@@ -119,11 +119,13 @@ module Admin
       removed = old_statuses - new_statuses
       added   = new_statuses - old_statuses
   
-      msg = []
-      msg << "Set on #{@domain.name}: #{added.join(', ')}" unless added.empty?
-      msg << "Removed from #{@domain.name}: #{removed.join(', ')}" unless removed.empty?
+      added.each do |status|
+        @domain.registrar.notifications.create!(text: "#{status} set on domain #{@domain.name}")
+      end
 
-      @domain.registrar.notifications.create!(text: msg.join('. ')) if msg.any?
+      removed.each do |status|
+        @domain.registrar.notifications.create!(text: "#{status} is cancelled on domain #{@domain.name}")
+      end
     end
 
     def build_associations
