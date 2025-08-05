@@ -57,7 +57,7 @@ jobs:
           bundle exec rake db:setup:all
           bundle exec rails test test/*
 
-      - name: Upload coverage to Qlty
-        env:
-          QLTY_TOKEN: ${{ secrets.QLTY_TOKEN }}
-        run: npx --yes @qlty/cli coverage --token "$QLTY_TOKEN" coverage/.resultset.json
+    #  - name: Upload coverage to Qlty
+    #    env:
+    #      QLTY_TOKEN: ${{ secrets.QLTY_TOKEN }}
+    #    run: npx --yes @qlty/cli coverage --token "$QLTY_TOKEN" coverage/.resultset.json
