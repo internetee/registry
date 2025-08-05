@@ -60,4 +60,4 @@ jobs:
       - name: Upload coverage to Qlty
         env:
           QLTY_TOKEN: ${{ secrets.QLTY_TOKEN }}
-        run: npx --yes qlty coverage --token "$QLTY_TOKEN" coverage/.resultset.json
+        run: npx --yes @qlty/cli coverage --token "$QLTY_TOKEN" coverage/.resultset.json
