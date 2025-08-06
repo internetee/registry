@@ -1,3 +1,11 @@
+06,08,2025
+*  Replacing codeclimate with qlty.sh https://github.com/internetee/registry/pull/2837
+*  Adding tests for admin/bank_statements_controller https://github.com/internetee/registry/pull/2832
+*  Adding test coverage to app/controllers/admin/accounts_controller https://github.com/internetee/registry/pull/2831
+*  Adding test coverage/repp/v1/certificates/p12 controller https://github.com/internetee/registry/pull/2830
+*  Added new tests for admin/domains_controller https://github.com/internetee/registry/pull/2829
+*  Added new tests for Admin certificates_controller methods coverage https://github.com/internetee/registry/pull/2827
+
 31.07.2025
 * Poll messages for registry admin initiated domain status changes https://github.com/internetee/registry/issues/2823
 
