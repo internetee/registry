@@ -6,8 +6,10 @@ class DNSValidator
   
   attr_reader :domain, :results
   
-  def initialize(domain)
-    @domain = domain
+  def initialize(domain:, name:)
+    @domain = domain.present? ? domain : Domain.find_by_name(name)
+    raise "Domain not found" if @domain.blank?
+
     @results = {
       nameservers: {},
       dns_records: {},
@@ -18,8 +20,8 @@ class DNSValidator
     }
   end
 
-  def self.validate(domain)
-    new(domain).validate
+  def self.validate(domain:, name:)
+    new(domain: domain, name: name).validate
   end
   
   def validate
