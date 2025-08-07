@@ -109,4 +109,58 @@ class ReppV1DomainsNameserversTest < ActionDispatch::IntegrationTest
     assert_equal 'Data management policy violation; Nameserver count must be between 2-11 for active ' \
                  'domains [nameservers]', json[:message]
   end
+
+  def test_validates_dns_when_adding_nameserver
+    ENV['DNS_VALIDATION_ENABLED'] = 'true'
+    
+    # Mock successful DNS validation
+    DNSValidator.stub :validate, { errors: [] } do
+      payload = {
+        nameservers: [
+          { hostname: "ns3.example.com",
+            ipv4: ["192.168.1.1"],
+            ipv6: ["FE80::AEDE:48FF:FE00:1122"]}
+        ]
+      }
+
+      post "/repp/v1/domains/#{@domain.name}/nameservers", params: payload, headers: @auth_headers
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      assert_response :ok
+      assert_equal 1000, json[:code]
+      assert_equal 'Command completed successfully', json[:message]
+      
+      @domain.reload
+      assert @domain.nameservers.where(hostname: 'ns3.example.com').any?
+    end
+  ensure
+    ENV.delete('DNS_VALIDATION_ENABLED')
+  end
+
+  def test_fails_to_add_nameserver_with_invalid_dns
+    ENV['DNS_VALIDATION_ENABLED'] = 'true'
+    
+    # Mock DNS validation failure
+    DNSValidator.stub :validate, { errors: ['Nameserver ns3.example.com is not authoritative for domain'] } do
+      payload = {
+        nameservers: [
+          { hostname: "ns3.example.com",
+            ipv4: ["192.168.1.1"],
+            ipv6: ["FE80::AEDE:48FF:FE00:1122"]}
+        ]
+      }
+
+      post "/repp/v1/domains/#{@domain.name}/nameservers", params: payload, headers: @auth_headers
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      assert_response :bad_request
+      assert_equal 2306, json[:code]
+      assert json[:message].include?('Nameserver ns3.example.com is not authoritative')
+      
+      @domain.reload
+      refute @domain.nameservers.where(hostname: 'ns3.example.com').any?
+    end
+  ensure
+    ENV.delete('DNS_VALIDATION_ENABLED')
+  end
 end

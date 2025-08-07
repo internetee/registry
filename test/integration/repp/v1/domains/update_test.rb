@@ -121,4 +121,5 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
     assert_equal 2202, json[:code]
     assert_equal 'Invalid authorization information; invalid reserved>pw value', json[:message]
   end
+
 end

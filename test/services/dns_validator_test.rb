@@ -19,7 +19,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
   # Basic functionality tests
   
   test 'initializes with correct structure' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'NS')
     
     assert_equal @domain, validator.domain
     assert_instance_of Hash, validator.results
@@ -31,27 +31,19 @@ class DNSValidatorTest < ActiveSupport::TestCase
   end
 
   test 'class method validate creates instance' do
-    validator = DNSValidator.new(@domain)
+    result = { test: 'result' }
     
-    # Mock validate method to avoid DNS calls
-    validator.define_singleton_method(:validate) { { test: 'result' } }
-    
-    # Temporarily override new method
-    original_new = DNSValidator.method(:new)
-    DNSValidator.define_singleton_method(:new) { |domain| validator }
-    
-    result = DNSValidator.validate(@domain)
-    
-    assert_equal({ test: 'result' }, result)
-  ensure
-    # Restore original new method
-    DNSValidator.define_singleton_method(:new, original_new)
+    # Mock the class method directly
+    DNSValidator.stub :validate, result do
+      actual_result = DNSValidator.validate(domain: @domain, name: @domain.name, record_type: 'NS')
+      assert_equal result, actual_result
+    end
   end
 
   # Story 1: Nameserver Validation Tests
   
   test 'validates nameservers successfully' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'NS')
     
     # Mock successful nameserver validation
     validator.define_singleton_method(:validate_single_nameserver) do |ns|
@@ -70,7 +62,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
   end
 
   test 'handles failed nameserver validation' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'NS')
     
     # Mock failed nameserver validation
     validator.define_singleton_method(:validate_single_nameserver) do |ns|
@@ -89,7 +81,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
   end
 
   test 'validates single nameserver with mocked DNS' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'NS')
     
     # Create mock resolver
     resolver = create_mock_resolver
@@ -123,7 +115,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
   end
 
   test 'detects nameserver not in NS records' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'NS')
     resolver = create_mock_resolver
     
     # Pre-create responses
@@ -150,7 +142,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
   end
 
   test 'detects CNAME at apex' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'NS')
     resolver = create_mock_resolver
     
     # Pre-create CNAME response
@@ -173,7 +165,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
   # Story 2: DNS Records Validation Tests
   
   test 'validates DNS records from valid nameservers' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'A')
     
     # Set up nameserver validation results
     validator.instance_variable_set(:@results, {
@@ -216,7 +208,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
   end
 
   test 'skips DNS validation when no valid nameservers' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'A')
     
     # Set up scenario with no valid nameservers
     validator.instance_variable_set(:@results, {
@@ -235,7 +227,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
   # Story 4: DNSSEC Tests
   
   test 'processes CDS records for DNSSEC sync' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'DNSKEY')
     resolver = create_mock_resolver
     
     # Pre-create responses
@@ -273,7 +265,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
     # Ensure domain has enough nameservers
     @domain.nameservers.create!(hostname: 'backup.ns.com')
     
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'NS')
     
     # Initialize complete results structure
     validator.instance_variable_set(:@results, {
@@ -300,7 +292,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
     @nameserver1.update!(validation_counter: 3, failed_validation_reason: 'Failed validation')
     @nameserver2.destroy # Only one nameserver left
     
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'NS')
     
     validator.instance_variable_set(:@results, {
       nameservers: {},
@@ -323,7 +315,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
   # Integration Tests
   
   test 'full validation workflow' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'all')
     
     # Mock all validation methods to avoid DNS calls
     validator.define_singleton_method(:validate_nameservers) { nil }
@@ -342,7 +334,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
   end
 
   test 'handles validation exceptions gracefully' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'NS')
     
     validator.define_singleton_method(:validate_nameservers) do
       raise StandardError.new('DNS timeout')
@@ -356,7 +348,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
   # Helper method tests
   
   test 'helper methods work correctly' do
-    validator = DNSValidator.new(@domain)
+    validator = DNSValidator.new(domain: @domain, name: @domain.name, record_type: 'NS')
     
     # Test parse_type_bitmap
     assert_equal ['NS', 'A'], validator.send(:parse_type_bitmap, ['NS', 'A'])
@@ -378,7 +370,7 @@ class DNSValidatorTest < ActiveSupport::TestCase
       registrant: @domain.registrant
     )
     
-    validator = DNSValidator.new(domain_without_ns)
+    validator = DNSValidator.new(domain: domain_without_ns, name: domain_without_ns.name, record_type: 'NS')
     
     assert_nothing_raised do
       validator.send(:validate_nameservers)

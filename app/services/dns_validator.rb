@@ -4,11 +4,12 @@ require 'dnsruby'
 class DNSValidator
   include Dnsruby
   
-  attr_reader :domain, :results
+  attr_reader :domain, :results, :record_type
   
-  def initialize(domain:, name:)
+  def initialize(domain:, name:, record_type:)
     @domain = domain.present? ? domain : Domain.find_by_name(name)
     raise "Domain not found" if @domain.blank?
+    @record_type = record_type
 
     @results = {
       nameservers: {},
@@ -20,17 +21,31 @@ class DNSValidator
     }
   end
 
-  def self.validate(domain:, name:)
-    new(domain: domain, name: name).validate
+  def self.validate(domain:, name:, record_type:)
+    new(domain: domain, name: name, record_type: record_type).validate
   end
   
   def validate
     Rails.logger.info "Starting DNS validation for domain: #{domain.name}"
     
-    validate_nameservers
-    validate_dns_records
-    check_dnssec_sync_records
-    check_csync_records
+    case record_type
+    when 'NS'
+      validate_nameservers
+    when 'A', 'AAAA'
+      validate_dns_records
+    when 'DNSKEY'
+      check_dnssec_sync_records
+    when 'CSYNC'
+      check_csync_records
+    when 'all'
+      validate_nameservers
+      validate_dns_records
+      check_dnssec_sync_records
+      check_csync_records
+    else
+      raise "Invalid record type: #{record_type}"
+    end
+    
     apply_enforcement_actions
     
     Rails.logger.info "DNS validation completed for domain: #{domain.name}"
@@ -638,8 +653,8 @@ class DNSValidator
   
   # Class methods for easy usage
   class << self
-    def validate_domain(domain)
-      validator = new(domain)
+    def validate_domain(domain, record_type: 'all')
+      validator = new(domain: domain, name: domain.name, record_type: record_type)
       validator.validate
     end
   end

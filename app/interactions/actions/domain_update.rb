@@ -13,6 +13,8 @@ module Actions
       validate_domain_integrity
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
+      validate_ns_records
+      validate_dns_records
       assign_requested_statuses
 
       ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
@@ -95,6 +97,39 @@ module Actions
       else
         domain.add_epp_error('2303', 'hostAttr', ns_attr[:hostname], %i[nameservers not_found])
       end
+    end
+
+    def validate_ns_records
+      return unless domain.nameservers.any?
+      return unless dns_validation_enabled?
+
+      result = DNSValidator.validate(domain: domain, name: domain.name, record_type: 'NS')
+      return if result[:errors].blank?
+
+      assign_dns_validation_error(result[:errors])
+    end
+
+    def validate_dns_records
+      return unless domain.dnskeys.any?
+      return unless dns_validation_enabled?
+
+      result = DNSValidator.validate(domain: domain, name: domain.name, record_type: 'DNSKEY')
+      return if result[:errors].blank?
+
+      assign_dns_validation_error(result[:errors])
+    end
+
+    def assign_dns_validation_error(errors)
+      errors.each do |error|
+        domain.add_epp_error('2306', nil, nil, error)
+      end
+    end
+
+    def dns_validation_enabled?
+      # Enable DNS validation in production or when explicitly enabled
+      # Disabled in test environment by default unless explicitly enabled
+      return ENV['DNS_VALIDATION_ENABLED'] == 'true' if Rails.env.test?
+      Rails.env.production? || ENV['DNS_VALIDATION_ENABLED'] == 'true'
     end
 
     def assign_dnssec_modifications
