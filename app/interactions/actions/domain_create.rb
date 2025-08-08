@@ -185,7 +185,6 @@ module Actions
 
     def validate_ns_records
       return unless domain.nameservers.any?
-      return unless dns_validation_enabled?
 
       result = DNSValidator.validate(domain: domain, name: domain.name, record_type: 'NS')
       return if result[:errors].blank?
@@ -195,7 +194,6 @@ module Actions
 
     def validate_dns_records
       return unless domain.dnskeys.any?
-      return unless dns_validation_enabled?
 
       result = DNSValidator.validate(domain: domain, name: domain.name, record_type: 'DNSKEY')
       return if result[:errors].blank?
@@ -226,13 +224,6 @@ module Actions
       errors.each do |error|
         domain.add_epp_error('2306', nil, nil, error)
       end
-    end
-
-    def dns_validation_enabled?
-      # Enable DNS validation in production or when explicitly enabled
-      # Disabled in test environment by default unless explicitly enabled
-      return ENV['DNS_VALIDATION_ENABLED'] == 'true' if Rails.env.test?
-      Rails.env.production? || ENV['DNS_VALIDATION_ENABLED'] == 'true'
     end
 
     def validation_process_errored?

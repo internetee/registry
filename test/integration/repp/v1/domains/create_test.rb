@@ -8,6 +8,16 @@ class ReppV1DomainsCreateTest < ActionDispatch::IntegrationTest
     token = "Basic #{token}"
 
     @auth_headers = { 'Authorization' => token }
+    
+    # Mock DNSValidator to return success by default
+    # Individual tests can override this if they need to test DNS validation
+    @original_validate = DNSValidator.method(:validate)
+    DNSValidator.define_singleton_method(:validate) { |**args| { errors: [] } }
+  end
+  
+  def teardown
+    # Restore original validate method
+    DNSValidator.define_singleton_method(:validate, @original_validate)
   end
 
   def test_creates_new_domain_successfully

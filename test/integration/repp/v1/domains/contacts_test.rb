@@ -41,7 +41,8 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
   end
 
   def test_can_add_new_admin_contacts
-    new_contact = contacts(:john)
+    DNSValidator.stub :validate, { errors: [] } do
+      new_contact = contacts(:john)
     refute  @domain.admin_contacts.find_by(code: new_contact.code).present?
 
     payload = { contacts: [ { code: new_contact.code, type: 'admin' } ] }
@@ -52,10 +53,12 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
 
     assert @domain.admin_contacts.find_by(code: new_contact.code).present?
+    end
   end
 
   def test_can_add_new_tech_contacts
-    new_contact = contacts(:john)
+    DNSValidator.stub :validate, { errors: [] } do
+      new_contact = contacts(:john)
     refute  @domain.tech_contacts.find_by(code: new_contact.code).present?
 
     payload = { contacts: [ { code: new_contact.code, type: 'tech' } ] }
@@ -67,10 +70,12 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     @domain.reload
 
     assert @domain.tech_contacts.find_by(code: new_contact.code).present?
+    end
   end
 
   def test_can_remove_admin_contacts
-    Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
+    DNSValidator.stub :validate, { errors: [] } do
+      Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
 
     contact = contacts(:john)
     payload = { contacts: [ { code: contact.code, type: 'admin' } ] }
@@ -85,10 +90,12 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
 
     refute @domain.admin_contacts.find_by(code: contact.code).present?
+    end
   end
 
   def test_can_remove_tech_contacts
-    Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
+    DNSValidator.stub :validate, { errors: [] } do
+      Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
 
     contact = contacts(:john)
     payload = { contacts: [ { code: contact.code, type: 'tech' } ] }
@@ -106,10 +113,12 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
 
     refute @domain.tech_contacts.find_by(code: contact.code).present?
+    end
   end
 
   def test_can_remove_all_admin_contacts_for_private_registrant
-    Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
+    DNSValidator.stub :validate, { errors: [] } do
+      Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
 
     @domain.registrant.update!(ident_type: 'priv')
     @domain.reload
@@ -126,6 +135,7 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
 
     assert_empty @domain.admin_contacts
+    end
   end
 
   def test_can_not_remove_one_and_only_contact
@@ -183,10 +193,11 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
   end
 
   def test_can_remove_admin_contact_for_adult_private_registrant
-    @domain.registrant.update!(
-      ident_type: 'birthday',
-      ident: (Time.zone.now - 20.years).strftime('%Y-%m-%d')
-    )
+    DNSValidator.stub :validate, { errors: [] } do
+      @domain.registrant.update!(
+        ident_type: 'birthday',
+        ident: (Time.zone.now - 20.years).strftime('%Y-%m-%d')
+      )
     @domain.reload
     assert @domain.registrant.priv?
     
@@ -199,6 +210,7 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     assert_response :ok
     assert_equal 1000, json[:code]
     assert_empty @domain.admin_contacts
+    end
   end
 
   def test_cannot_remove_admin_contact_for_underage_estonian_id
@@ -222,11 +234,12 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
   end
 
   def test_can_remove_admin_contact_for_adult_estonian_id
-    @domain.registrant.update!(
-      ident_type: 'priv',
-      ident: '38903111310',
-      ident_country_code: 'EE'
-    )
+    DNSValidator.stub :validate, { errors: [] } do
+      @domain.registrant.update!(
+        ident_type: 'priv',
+        ident: '38903111310',
+        ident_country_code: 'EE'
+      )
     @domain.reload
     assert @domain.registrant.priv?
     
@@ -239,5 +252,6 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     assert_response :ok
     assert_equal 1000, json[:code]
     assert_empty @domain.admin_contacts
+    end
   end
 end

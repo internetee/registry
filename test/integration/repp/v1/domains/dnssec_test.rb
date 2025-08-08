@@ -11,6 +11,15 @@ class ReppV1DomainsDnssecTest < ActionDispatch::IntegrationTest
 
     adapter = ENV["shunter_default_adapter"].constantize.new
     adapter&.clear!
+    
+    # Mock DNSValidator to return success
+    @original_validate = DNSValidator.method(:validate)
+    DNSValidator.define_singleton_method(:validate) { |**args| { errors: [] } }
+  end
+  
+  def teardown
+    # Restore original validate method
+    DNSValidator.define_singleton_method(:validate, @original_validate)
   end
 
   def test_shows_dnssec_keys_associated_with_domain
