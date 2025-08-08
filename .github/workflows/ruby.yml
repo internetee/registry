@@ -60,7 +60,7 @@ jobs:
       - uses: qltysh/qlty-action/coverage@v2
         if: github.event_name == 'push'
         with:
-          oidc: true
+          token: ${{ secrets.QLTY_TOKEN }}
           files: coverage/.resultset.json
 
       - uses: actions/upload-artifact@v4
