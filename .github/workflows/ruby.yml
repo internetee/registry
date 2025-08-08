@@ -58,6 +58,7 @@ jobs:
           bundle exec rails test test/*
 
       - uses: qltysh/qlty-action/coverage@v2
+        if: github.event_name == 'push'
         with:
           oidc: true
           files: coverage/.resultset.json
