@@ -1,4 +1,10 @@
-06,08,2025
+08.08.2025
+* Upload coverage to qlty https://github.com/internetee/registry/pull/2840
+* Adding test coverage for bounced_mail_addresses_controller https://github.com/internetee/registry/pull/2835
+* Adding tests for admin/billing/prices_controller https://github.com/internetee/registry/pull/2834
+* Adding tests for admin/bank_transactions_controller https://github.com/internetee/registry/pull/2833
+
+06.08.2025
 *  Replacing codeclimate with qlty.sh https://github.com/internetee/registry/pull/2837
 *  Adding tests for admin/bank_statements_controller https://github.com/internetee/registry/pull/2832
 *  Adding test coverage to app/controllers/admin/accounts_controller https://github.com/internetee/registry/pull/2831
