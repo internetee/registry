@@ -12,11 +12,17 @@ class EppDomainUpdateRemDnsTest < EppTestCase
     @original_registrant_change_verification =
     Setting.request_confirmation_on_registrant_change_enabled
     ActionMailer::Base.deliveries.clear
+    
+    # Mock DNSValidator to return success
+    @original_validate = DNSValidator.method(:validate)
+    DNSValidator.define_singleton_method(:validate) { |**args| { errors: [] } }
   end
 
   teardown do
     Setting.request_confirmation_on_registrant_change_enabled =
       @original_registrant_change_verification
+    # Restore original validate method
+    DNSValidator.define_singleton_method(:validate, @original_validate)
   end
 
   def test_remove_dnskey_if_explicitly_set

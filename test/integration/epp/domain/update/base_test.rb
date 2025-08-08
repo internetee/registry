@@ -13,11 +13,17 @@ class EppDomainUpdateBaseTest < EppTestCase
 
     adapter = ENV["shunter_default_adapter"].constantize.new
     adapter&.clear!
+    
+    # Mock DNSValidator to return success
+    @original_validate = DNSValidator.method(:validate)
+    DNSValidator.define_singleton_method(:validate) { |**args| { errors: [] } }
   end
 
   teardown do
     Setting.request_confirmation_on_registrant_change_enabled =
       @original_registrant_change_verification
+    # Restore original validate method
+    DNSValidator.define_singleton_method(:validate, @original_validate)
   end
 
   def test_update_dnskey_with_invalid_alg

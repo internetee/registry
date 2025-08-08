@@ -12,6 +12,15 @@ class APIDomainAdminContactsTest < ApplicationIntegrationTest
                       ident_country_code: @admin_current.ident_country_code)
     adapter = ENV["shunter_default_adapter"].constantize.new
     adapter&.clear!
+    
+    # Mock DNSValidator to return success
+    @original_validate = DNSValidator.method(:validate)
+    DNSValidator.define_singleton_method(:validate) { |**args| { errors: [] } }
+  end
+  
+  def teardown
+    # Restore original validate method
+    DNSValidator.define_singleton_method(:validate, @original_validate)
   end
 
   def test_replace_all_admin_contacts_when_ident_data_doesnt_match
