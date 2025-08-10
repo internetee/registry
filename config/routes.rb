@@ -250,6 +250,17 @@ Rails.application.routes.draw do
     end
     # post 'admi/upload_spreadsheet', to: 'customers#upload_spreadsheet', as: :customers_upload_spreadsheet
 
+    resources :tools, only: %i[index]
+
+    namespace :tools do
+      resource :wordcloud, controller: 'wordcloud', only: %i[create] do
+        collection do
+          get '', to: 'wordcloud#index'
+          get 'progress', to: 'wordcloud#progress', as: :progress
+          get 'status', to: 'wordcloud#status', as: :status
+        end
+      end
+    end
 
     resources :bank_statements do
       resources :bank_transactions
