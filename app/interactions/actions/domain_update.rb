@@ -29,12 +29,157 @@ module Actions
 
       assign_admin_contact_changes
       assign_tech_contact_changes
+      check_for_cross_role_duplicates
     end
 
     def check_for_same_contacts(contacts, contact_type)
       return if contacts.uniq.count == contacts.count
 
       domain.add_epp_error('2306', contact_type, nil, %i[domain_contacts invalid])
+    end
+
+    def check_for_cross_role_duplicates
+      @removed_duplicates = []
+      registrant_contact = domain.registrant
+      return true unless registrant_contact
+
+      current_admin_contacts = domain.admin_domain_contacts.map { |dc| { contact_id: dc.contact_id, contact_code: dc.contact.code } }
+      current_tech_contacts = domain.tech_domain_contacts.map { |dc| { contact_id: dc.contact_id, contact_code: dc.contact.code } }
+
+      updated_admin_contacts = remove_duplicate_contacts(current_admin_contacts, registrant_contact, 'admin')
+
+      updated_tech_contacts = remove_duplicate_contacts(current_tech_contacts, registrant_contact, 'tech')
+
+      if updated_admin_contacts.present?
+        updated_admin_contacts.each do |admin_hash|
+          admin_contact_object = Contact.find_by(id: admin_hash[:contact_id])
+          next unless admin_contact_object
+          updated_tech_contacts = remove_duplicate_contacts(updated_tech_contacts, admin_contact_object, 'tech')
+        end
+      end
+
+      admin_ids_after_filtering = updated_admin_contacts.map { |c| c[:contact_id] }
+      current_admin_ids_from_map = current_admin_contacts.map { |c| c[:contact_id] }
+      domain.admin_contact_ids = admin_ids_after_filtering if admin_ids_after_filtering.sort != current_admin_ids_from_map.sort
+
+      tech_ids_after_filtering = updated_tech_contacts.map { |c| c[:contact_id] }
+      current_tech_ids_from_map = current_tech_contacts.map { |c| c[:contact_id] }
+      domain.tech_contact_ids = tech_ids_after_filtering if tech_ids_after_filtering.sort != current_tech_ids_from_map.sort
+
+      notify_about_removed_duplicates unless @removed_duplicates.empty?
+
+      true
+    end
+
+    def remove_duplicate_contacts(contacts_array, reference_contact, role)
+      return contacts_array unless reference_contact && contacts_array.present?
+
+      contacts_array.reject do |contact_hash|
+        contact = Contact.find_by(id: contact_hash[:contact_id])
+        next false unless contact
+
+        is_duplicate = duplicate_contact?(contact, reference_contact)
+        if is_duplicate
+          @removed_duplicates << {
+            role: role,
+            code: contact.code,
+            duplicate_of: reference_contact.code
+          }
+        end
+        is_duplicate
+      end
+    end
+
+    def duplicate_contact?(contact1, contact2)
+      return false unless contact1 && contact2
+
+      contact1.code == contact2.code ||
+        (contact1.name == contact2.name &&
+         contact1.ident == contact2.ident &&
+         contact1.email == contact2.email &&
+         contact1.phone == contact2.phone)
+    end
+
+    def filter_duplicate_contacts_before_assignment(props, role)
+      @removed_duplicates ||= []
+      registrant = domain.registrant
+      
+      # Get existing contacts
+      existing_admin_contacts = domain.admin_domain_contacts.map(&:contact)
+      existing_tech_contacts = domain.tech_domain_contacts.map(&:contact)
+      
+      # Filter new contacts being added
+      filtered_props = props.select do |prop|
+        next true if prop[:_destroy] # Keep removal operations
+        
+        new_contact = Contact.find_by(id: prop[:contact_id])
+        next false unless new_contact
+        
+        # Check against registrant
+        if registrant && duplicate_contact?(new_contact, registrant)
+          @removed_duplicates << {
+            role: role,
+            code: new_contact.code,
+            duplicate_of: registrant.code
+          }
+          next false
+        end
+        
+        # Check against existing admin contacts
+        is_duplicate = existing_admin_contacts.any? { |existing| duplicate_contact?(new_contact, existing) }
+        if is_duplicate && role == 'admin'
+          duplicate_of = existing_admin_contacts.find { |existing| duplicate_contact?(new_contact, existing) }
+          @removed_duplicates << {
+            role: role,
+            code: new_contact.code,
+            duplicate_of: duplicate_of.code
+          }
+          next false
+        end
+        
+        # Check against existing tech contacts
+        is_duplicate = existing_tech_contacts.any? { |existing| duplicate_contact?(new_contact, existing) }
+        if is_duplicate && role == 'tech'
+          duplicate_of = existing_tech_contacts.find { |existing| duplicate_contact?(new_contact, existing) }
+          @removed_duplicates << {
+            role: role,
+            code: new_contact.code,
+            duplicate_of: duplicate_of.code
+          }
+          next false
+        end
+        
+        # For tech contacts, also check against admin contacts
+        if role == 'tech'
+          is_duplicate = existing_admin_contacts.any? { |existing| duplicate_contact?(new_contact, existing) }
+          if is_duplicate
+            duplicate_of = existing_admin_contacts.find { |existing| duplicate_contact?(new_contact, existing) }
+            @removed_duplicates << {
+              role: role,
+              code: new_contact.code,
+              duplicate_of: duplicate_of.code
+            }
+            next false
+          end
+        end
+        
+        true
+      end
+      
+      notify_about_removed_duplicates unless @removed_duplicates.empty?
+      filtered_props
+    end
+
+    def notify_about_removed_duplicates
+      return if @removed_duplicates.empty?
+
+      # Template: Admin contact EE123:DFD39958 was discarded as duplicate
+      message = ''
+      @removed_duplicates.each do |duplicate|
+        message += ". #{duplicate[:role].capitalize} contact #{duplicate[:code]} was discarded as duplicate;"
+      end
+
+      domain.skipped_domain_contacts_validation = message
     end
 
     def validate_domain_integrity
@@ -161,8 +306,10 @@ module Actions
         domain.add_epp_error('2304', 'admin', DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED,
                              I18n.t(:object_status_prohibits_operation))
       elsif props.present?
-        domain.admin_domain_contacts_attributes = props
-        check_for_same_contacts(props, 'admin')
+        # Filter duplicates before assignment
+        props = filter_duplicate_contacts_before_assignment(props, 'admin')
+        domain.admin_domain_contacts_attributes = props if props.present?
+        check_for_same_contacts(props, 'admin') if props.present?
       end
     end
 
@@ -176,8 +323,10 @@ module Actions
         domain.add_epp_error('2304', 'tech', DomainStatus::SERVER_TECH_CHANGE_PROHIBITED,
                              I18n.t(:object_status_prohibits_operation))
       elsif props.present?
-        domain.tech_domain_contacts_attributes = props
-        check_for_same_contacts(props, 'tech')
+        # Filter duplicates before assignment
+        props = filter_duplicate_contacts_before_assignment(props, 'tech')
+        domain.tech_domain_contacts_attributes = props if props.present?
+        check_for_same_contacts(props, 'tech') if props.present?
       end
     end
 
