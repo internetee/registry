@@ -51,7 +51,10 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     assert_response :ok
     assert_equal 1000, json[:code]
 
-    assert @domain.admin_contacts.find_by(code: new_contact.code).present?
+    # Becase we implemented feature which allows us avoid duplicates of contacts, 
+    # I changed this value from assert to assert_not. 
+    # PS! Tech contact and registrant are same, that's why tech contact is not added.
+    assert_not @domain.admin_contacts.find_by(code: new_contact.code).present?
   end
 
   def test_can_add_new_tech_contacts
@@ -66,13 +69,16 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     @domain.reload
 
-    assert @domain.tech_contacts.find_by(code: new_contact.code).present?
+    # Becase we implemented feature which allows us avoid duplicates of contacts, 
+    # I changed this value from assert to assert_not. 
+    # PS! Tech contact and registrant are same, that's why tech contact is not added.
+    assert_not @domain.tech_contacts.find_by(code: new_contact.code).present?
   end
 
   def test_can_remove_admin_contacts
     Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
 
-    contact = contacts(:john)
+    contact = contacts(:william)
     payload = { contacts: [ { code: contact.code, type: 'admin' } ] }
     post "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload
     assert @domain.admin_contacts.find_by(code: contact.code).present?
@@ -90,7 +96,7 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
   def test_can_remove_tech_contacts
     Spy.on_instance_method(Actions::DomainUpdate, :validate_email).and_return(true)
 
-    contact = contacts(:john)
+    contact = contacts(:william)
     payload = { contacts: [ { code: contact.code, type: 'tech' } ] }
     post "/repp/v1/domains/#{@domain.name}/contacts", headers: @auth_headers, params: payload
     assert @domain.tech_contacts.find_by(code: contact.code).present?
@@ -281,6 +287,6 @@ class ReppV1DomainsContactsTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
 
     domain.reload
-    assert domain.admin_contacts.find_by(code: new_admin.code).present?
+    assert_not domain.admin_contacts.find_by(code: new_admin.code).present?
   end
 end
