@@ -1,3 +1,6 @@
+18.08.2025
+* Added test coverage for admin/contact_versions_controller https://github.com/internetee/registry/pull/2836 
+
 08.08.2025
 * Upload coverage to qlty https://github.com/internetee/registry/pull/2840
 * Adding test coverage for bounced_mail_addresses_controller https://github.com/internetee/registry/pull/2835
