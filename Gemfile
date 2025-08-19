@@ -8,7 +8,7 @@ gem 'iso8601', '0.13.0' # for dates and times
 gem 'mimemagic', '0.4.3'
 gem 'mime-types-data'
 gem 'puma'
-gem 'rails', '~> 6.1.4'
+gem 'rails', '~> 7.1.5', '>= 7.1.5.2'
 gem 'rest-client'
 gem 'rubyzip', require: 'zip'
 gem 'uglifier'
@@ -17,10 +17,10 @@ gem 'uglifier'
 gem 'figaro', '~> 1.2'
 
 # model related
-gem 'paper_trail', '~> 14.0'
+gem 'paper_trail', '~> 15.0', '>= 15.0.0'
 gem 'pg', '1.5.9'
 # 1.8 is for Rails < 5.0
-gem 'ransack', '~> 4.0.0'
+gem 'ransack', '~> 4.1.0'
 gem 'truemail', '~> 3.0' # validates email by regexp, mail server existence and address existence
 gem 'validates_email_format_of', '1.8.2' # validates email against RFC 2822 and RFC 3696
 
@@ -34,13 +34,13 @@ gem 'cancancan'
 gem 'coffee-rails', '>= 5.0'
 gem 'devise', '~> 4.8'
 gem 'jquery-rails'
-gem 'kaminari'
+gem 'kaminari', '>= 1.2.2'
 gem 'sass-rails'
 gem 'select2-rails', '4.0.13' # for autocomplete
 gem 'selectize-rails', '0.12.6' # include selectize.js for select
 
 # registry specfic
-gem 'data_migrate', '~> 9.0'
+gem 'data_migrate', '~> 9.1', '>= 9.1.0'
 gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
 gem 'money-rails'
@@ -78,7 +78,7 @@ gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
 
 gem 'directo', github: 'internetee/directo', branch: 'master'
 
-gem 'strong_migrations'
+gem 'strong_migrations', '>= 1.4.1'
 gem 'dry-types'
 gem 'dry-struct'
 gem 'openssl'
@@ -89,7 +89,7 @@ end
 
 group :test do
   gem 'capybara', '~> 3.40.0'
-  gem 'database_cleaner'
+  gem 'database_cleaner', '>= 2.0.2'
   gem 'minitest', '~> 5.17'
   gem 'minitest-stub_any_instance'
   gem 'selenium-webdriver', '~> 4.26'
@@ -104,7 +104,7 @@ gem 'newrelic-infinite_tracing'
 gem 'newrelic_rpm'
 
 # profiles
-gem 'pghero'
+gem 'pghero', '>= 3.2.0'
 gem 'pg_query', '>= 0.9.0'
 
 # token
