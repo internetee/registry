@@ -4,12 +4,13 @@ require 'dnsruby'
 class DNSValidator
   include Dnsruby
   
-  attr_reader :domain, :results, :record_type
+  attr_reader :domain, :results, :record_type, :apply_changes
   
-  def initialize(domain:, name:, record_type:)
+  def initialize(domain:, name:, record_type:, apply_changes: true)
     @domain = domain.present? ? domain : Domain.find_by_name(name)
     raise "Domain not found" if @domain.blank?
     @record_type = record_type
+    @apply_changes = apply_changes
 
     @results = {
       nameservers: {},
@@ -21,8 +22,8 @@ class DNSValidator
     }
   end
 
-  def self.validate(domain:, name:, record_type:)
-    new(domain: domain, name: name, record_type: record_type).validate
+  def self.validate(domain:, name:, record_type:, apply_changes: true)
+    new(domain: domain, name: name, record_type: record_type, apply_changes: apply_changes).validate
   end
   
   def validate
@@ -289,28 +290,44 @@ class DNSValidator
           key_tag: record.key_tag,
           algorithm: record.algorithm,
           digest_type: record.digest_type,
-          digest: record.digest,
-          nameserver: nameserver.hostname
+          digest: record.digest.upcase,
+          nameserver: nameserver.hostname,
+          validated: false
         }
+        
+        # Validate CDS record if DNSSEC is enabled
+        if domain.dnskeys.any? && validate_dnssec_chain(nameserver)
+          cds_data[:validated] = true
+        end
         
         @results[:dnssec][:cds_records] << cds_data
         
-        # Check if DS record update is needed
-        if record.algorithm == 0
-          @results[:dnssec][:ds_updates_needed] << {
-            action: 'remove_ds',
-            reason: 'CDS record with algorithm 0 indicates DS removal'
-          }
-        else
-          # Check if we need to update DS records
-          existing_ds = domain.dnskeys.find_by(ds_key_tag: record.key_tag)
-          if !existing_ds || existing_ds.ds_digest != record.digest
+        # Only process validated CDS records or if no DNSSEC validation required
+        if cds_data[:validated] || domain.dnskeys.empty?
+          # Check if DS record update is needed
+          if record.algorithm == 0
             @results[:dnssec][:ds_updates_needed] << {
-              action: 'update_ds',
-              cds_data: cds_data,
-              reason: 'CDS record indicates DS record update needed'
+              action: 'remove_ds',
+              reason: 'CDS record with algorithm 0 indicates DS removal',
+              validated: cds_data[:validated]
             }
+          else
+            # Check if we need to update DS records
+            existing_ds = domain.dnskeys.find_by(ds_key_tag: record.key_tag.to_s)
+            if !existing_ds || 
+               existing_ds.ds_digest != record.digest.upcase ||
+               existing_ds.ds_alg != record.algorithm ||
+               existing_ds.ds_digest_type != record.digest_type
+              @results[:dnssec][:ds_updates_needed] << {
+                action: 'update_ds',
+                cds_data: cds_data,
+                reason: 'CDS record indicates DS record update needed',
+                validated: cds_data[:validated]
+              }
+            end
           end
+        else
+          @results[:warnings] << "CDS record from #{nameserver.hostname} not validated - skipping"
         end
       end
     rescue Dnsruby::NXDomain
@@ -328,30 +345,78 @@ class DNSValidator
       response.answer.each do |record|
         next unless record.type == 'CDNSKEY'
         
+        # Handle the special delete CDNSKEY (algorithm 0)
+        if record.algorithm == 0
+          @results[:dnssec][:cdnskey_records] << {
+            flags: record.flags,
+            protocol: record.protocol,
+            algorithm: 0,
+            public_key: nil,
+            nameserver: nameserver.hostname,
+            validated: true,
+            action: 'delete'
+          }
+          
+          @results[:dnssec][:ds_updates_needed] << {
+            action: 'remove_all_dnskeys',
+            reason: 'CDNSKEY with algorithm 0 indicates removal of all DNSSEC keys',
+            validated: true
+          }
+          next
+        end
+        
         cdnskey_data = {
           flags: record.flags,
           protocol: record.protocol,
           algorithm: record.algorithm,
           public_key: Base64.strict_encode64(record.key),
-          nameserver: nameserver.hostname
+          nameserver: nameserver.hostname,
+          validated: false
         }
+        
+        # Validate CDNSKEY record if DNSSEC is enabled
+        if domain.dnskeys.any? && validate_dnssec_chain(nameserver)
+          cdnskey_data[:validated] = true
+        end
         
         @results[:dnssec][:cdnskey_records] << cdnskey_data
         
-        # Check if this DNSKEY exists in our database
-        existing_key = domain.dnskeys.find_by(
-          flags: record.flags,
-          protocol: record.protocol,
-          alg: record.algorithm,
-          public_key: cdnskey_data[:public_key]
-        )
-        
-        unless existing_key
-          @results[:dnssec][:ds_updates_needed] << {
-            action: 'add_dnskey',
-            cdnskey_data: cdnskey_data,
-            reason: 'CDNSKEY record indicates new DNSKEY should be added'
-          }
+        # Only process validated CDNSKEY records or if no DNSSEC validation required
+        if cdnskey_data[:validated] || domain.dnskeys.empty?
+          # Check if this DNSKEY exists in our database
+          existing_key = domain.dnskeys.find_by(
+            flags: record.flags,
+            protocol: record.protocol,
+            alg: record.algorithm,
+            public_key: cdnskey_data[:public_key]
+          )
+          
+          unless existing_key
+            @results[:dnssec][:ds_updates_needed] << {
+              action: 'add_dnskey',
+              cdnskey_data: cdnskey_data,
+              reason: 'CDNSKEY record indicates new DNSKEY should be added',
+              validated: cdnskey_data[:validated]
+            }
+          end
+          
+          # Check for key rotation - if CDNSKEY exists but old keys should be removed
+          if cdnskey_data[:flags] == 257 # KSK
+            old_keys = domain.dnskeys.where(flags: 257).where.not(
+              public_key: cdnskey_data[:public_key]
+            )
+            if old_keys.any?
+              @results[:dnssec][:ds_updates_needed] << {
+                action: 'rotate_ksk',
+                cdnskey_data: cdnskey_data,
+                old_keys: old_keys.pluck(:id),
+                reason: 'CDNSKEY indicates KSK rotation',
+                validated: cdnskey_data[:validated]
+              }
+            end
+          end
+        else
+          @results[:warnings] << "CDNSKEY record from #{nameserver.hostname} not validated - skipping"
         end
       end
     rescue Dnsruby::NXDomain
@@ -378,21 +443,20 @@ class DNSValidator
   def check_single_csync_record(nameserver)
     begin
       resolver = create_resolver(nameserver.hostname)
-      response = resolver.query(domain.name, 'CSYNC')
+      
+      # Since Dnsruby doesn't support CSYNC, we need to query TYPE62
+      # CSYNC is RFC 7477, type 62
+      message = Dnsruby::Message.new(domain.name, 'TYPE62', 'IN')
+      response = resolver.send_message(message)
       
       response.answer.each do |record|
-        next unless record.type == 'CSYNC'
-        
-        csync_data = {
-          serial: record.serial,
-          flags: record.flags,
-          type_bitmap: parse_type_bitmap(record.types),
-          nameserver: nameserver.hostname
-        }
+        # Parse CSYNC record manually
+        csync_data = parse_csync_record(record, nameserver)
+        next unless csync_data
         
         @results[:csync][:csync_records] << csync_data
         
-        # Check what needs to be synchronized
+        # Check what needs to be synchronized based on type bitmap
         if csync_data[:type_bitmap].include?('NS')
           check_ns_sync_needed(nameserver)
         end
@@ -410,6 +474,92 @@ class DNSValidator
     rescue StandardError => e
       @results[:warnings] << "Failed to query CSYNC records from #{nameserver.hostname}: #{e.message}"
     end
+  end
+  
+  def parse_csync_record(record, nameserver)
+    return nil unless record.type_string == 'TYPE62' || record.type == 62
+    
+    # CSYNC record format: SOA serial (4 bytes) + flags (2 bytes) + type bitmap
+    rdata = record.rdata
+    return nil if rdata.nil? || rdata.length < 6
+    
+    # Parse binary data
+    data = rdata.unpack('C*')
+    
+    # Extract SOA serial (32 bits)
+    serial = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3]
+    
+    # Extract flags (16 bits)
+    flags = (data[4] << 8) | data[5]
+    
+    # Parse type bitmap (remaining bytes)
+    type_bitmap = parse_dns_type_bitmap(data[6..-1])
+    
+    {
+      serial: serial,
+      flags: flags,
+      type_bitmap: type_bitmap,
+      nameserver: nameserver.hostname,
+      immediate: (flags & 0x01) == 1,  # Bit 0: immediate flag
+      soaminimum: (flags & 0x02) == 2  # Bit 1: soaminimum flag
+    }
+  rescue StandardError => e
+    Rails.logger.error "Failed to parse CSYNC record: #{e.message}"
+    nil
+  end
+  
+  def parse_dns_type_bitmap(bitmap_data)
+    return [] if bitmap_data.nil? || bitmap_data.empty?
+    
+    types = []
+    i = 0
+    
+    while i < bitmap_data.length
+      window_number = bitmap_data[i]
+      bitmap_length = bitmap_data[i + 1]
+      
+      break if i + 2 + bitmap_length > bitmap_data.length
+      
+      bitmap = bitmap_data[(i + 2)...(i + 2 + bitmap_length)]
+      
+      bitmap.each_with_index do |byte, byte_index|
+        8.times do |bit|
+          if (byte & (0x80 >> bit)) != 0
+            type_number = (window_number * 256) + (byte_index * 8) + bit
+            types << dns_type_name(type_number)
+          end
+        end
+      end
+      
+      i += 2 + bitmap_length
+    end
+    
+    types
+  end
+  
+  def dns_type_name(type_number)
+    type_map = {
+      1 => 'A',
+      2 => 'NS',
+      5 => 'CNAME',
+      6 => 'SOA',
+      12 => 'PTR',
+      15 => 'MX',
+      16 => 'TXT',
+      28 => 'AAAA',
+      33 => 'SRV',
+      43 => 'DS',
+      46 => 'RRSIG',
+      47 => 'NSEC',
+      48 => 'DNSKEY',
+      50 => 'NSEC3',
+      51 => 'NSEC3PARAM',
+      59 => 'CDS',
+      60 => 'CDNSKEY',
+      62 => 'CSYNC'
+    }
+    
+    type_map[type_number] || "TYPE#{type_number}"
   end
   
   def check_ns_sync_needed(nameserver)
@@ -477,7 +627,7 @@ class DNSValidator
   
   # Story 6: Apply enforcement actions based on validation results
   def apply_enforcement_actions
-    Rails.logger.info "Applying enforcement actions for domain: #{domain.name}"
+    Rails.logger.info "Applying enforcement actions for domain: #{domain.name} (apply_changes: #{@apply_changes})"
     
     # Handle failed nameservers
     domain.nameservers.each do |nameserver|
@@ -485,7 +635,7 @@ class DNSValidator
         @results[:warnings] << "Nameserver #{nameserver.hostname} has failed validation #{nameserver.validation_counter} times"
         
         # Auto-remove if configured and we have enough nameservers
-        if should_auto_remove_nameserver? && domain.nameservers.count > 2
+        if @apply_changes && should_auto_remove_nameserver? && domain.nameservers.count > 2
           Rails.logger.info "Auto-removing failed nameserver: #{nameserver.hostname}"
           
           # Notify registrar
@@ -499,30 +649,56 @@ class DNSValidator
       end
     end
     
-    # Apply DNSSEC updates if needed
-    @results[:dnssec][:ds_updates_needed].each do |update|
-      case update[:action]
-      when 'update_ds'
-        update_ds_record(update[:cds_data])
-      when 'remove_ds'
-        remove_ds_records
-      when 'add_dnskey'
-        add_dnskey(update[:cdnskey_data])
+    # Apply DNSSEC updates if needed (only if apply_changes is true)
+    if @apply_changes
+      @results[:dnssec][:ds_updates_needed].each do |update|
+        # Skip non-validated updates unless explicitly allowed
+        next if update[:validated] == false && require_dnssec_validation?
+        
+        case update[:action]
+        when 'update_ds'
+          update_ds_record(update[:cds_data])
+        when 'remove_ds'
+          remove_ds_records
+        when 'remove_all_dnskeys'
+          remove_all_dnskeys
+        when 'add_dnskey'
+          add_dnskey(update[:cdnskey_data])
+        when 'rotate_ksk'
+          rotate_ksk(update[:cdnskey_data], update[:old_keys])
+        end
       end
-    end
-    
-    # Apply delegation updates if needed
-    @results[:csync][:delegation_updates_needed].each do |update|
-      case update[:type]
-      when 'ns_records'
-        update_ns_records(update)
-      when 'a_records', 'aaaa_records'
-        update_glue_records(update)
+      
+      # Apply delegation updates if needed
+      @results[:csync][:delegation_updates_needed].each do |update|
+        case update[:type]
+        when 'ns_records'
+          update_ns_records(update)
+        when 'a_records', 'aaaa_records'
+          update_glue_records(update)
+        end
+      end
+    else
+      Rails.logger.info "Skipping enforcement actions (apply_changes is false)"
+      
+      # Log what would have been done
+      if @results[:dnssec][:ds_updates_needed].any?
+        @results[:warnings] << "DNSSEC updates detected but not applied (validation mode only):"
+        @results[:dnssec][:ds_updates_needed].each do |update|
+          @results[:warnings] << "  - #{update[:action]}: #{update[:reason]}"
+        end
+      end
+      
+      if @results[:csync][:delegation_updates_needed].any?
+        @results[:warnings] << "Delegation updates detected but not applied (validation mode only):"
+        @results[:csync][:delegation_updates_needed].each do |update|
+          @results[:warnings] << "  - #{update[:type]}: #{update[:reason] || 'Update needed'}"
+        end
       end
     end
     
     # Send notifications if there are errors
-    if @results[:errors].any?
+    if @results[:errors].any? && @apply_changes
       create_notification(
         "DNS validation errors found for domain #{domain.name}: #{@results[:errors].join(', ')}"
       )
@@ -550,6 +726,40 @@ class DNSValidator
   
   def parse_type_bitmap(types)
     types.is_a?(Array) ? types : [types].compact
+  end
+  
+  # DNSSEC validation methods
+  def validate_dnssec_chain(nameserver)
+    begin
+      resolver = create_resolver(nameserver.hostname)
+      resolver.dnssec = true
+      
+      # Try to get DNSKEY records with validation
+      response = resolver.query(domain.name, 'DNSKEY')
+      
+      # Check if response is authenticated
+      return response.security_level == Dnsruby::Message::SecurityLevel.SECURE
+    rescue StandardError => e
+      Rails.logger.warn "DNSSEC validation failed for #{domain.name} via #{nameserver.hostname}: #{e.message}"
+      false
+    end
+  end
+  
+  def require_dnssec_validation?
+    # Require validation if domain already has DNSSEC enabled
+    # Can be configured via settings if needed
+    domain.dnskeys.any?
+  end
+  
+  def dnssec_validates?
+    # Simple DNSSEC validation check
+    return true unless domain.dnskeys.any?
+    
+    valid_nameservers = domain.nameservers.select do |ns|
+      validate_dnssec_chain(ns)
+    end
+    
+    valid_nameservers.any?
   end
   
   def query_a_records_for_host(hostname)
@@ -606,6 +816,34 @@ class DNSValidator
       ds_key_tag: nil
     )
     Rails.logger.info "Removed DS records for #{domain.name}"
+    create_notification("DS records removed for domain #{domain.name} based on CDS record")
+  end
+  
+  def remove_all_dnskeys
+    count = domain.dnskeys.count
+    domain.dnskeys.destroy_all
+    Rails.logger.info "Removed all #{count} DNSKEY records for #{domain.name}"
+    create_notification("All DNSSEC keys removed for domain #{domain.name} based on CDNSKEY record")
+  end
+  
+  def rotate_ksk(cdnskey_data, old_key_ids)
+    # Add new KSK
+    new_key = domain.dnskeys.build(
+      flags: cdnskey_data[:flags],
+      protocol: cdnskey_data[:protocol],
+      alg: cdnskey_data[:algorithm],
+      public_key: cdnskey_data[:public_key]
+    )
+    
+    if new_key.save
+      # Remove old KSKs
+      domain.dnskeys.where(id: old_key_ids).destroy_all
+      Rails.logger.info "Rotated KSK for #{domain.name}: added new key, removed #{old_key_ids.size} old keys"
+      create_notification("KSK rotation completed for domain #{domain.name}")
+    else
+      Rails.logger.error "Failed to rotate KSK: #{new_key.errors.full_messages.join(', ')}"
+      @results[:errors] << "Failed to rotate KSK: #{new_key.errors.full_messages.join(', ')}"
+    end
   end
   
   def add_dnskey(cdnskey_data)
@@ -653,9 +891,21 @@ class DNSValidator
   
   # Class methods for easy usage
   class << self
-    def validate_domain(domain, record_type: 'all')
-      validator = new(domain: domain, name: domain.name, record_type: record_type)
+    def validate_domain(domain, record_type: 'all', apply_changes: true)
+      validator = new(domain: domain, name: domain.name, record_type: record_type, apply_changes: apply_changes)
       validator.validate
+    end
+    
+    def check_only(domain:, name: nil, record_type: 'all')
+      new(domain: domain, name: name || domain&.name, record_type: record_type, apply_changes: false).validate
+    end
+    
+    def apply_dnssec_updates(domain:, name: nil)
+      new(domain: domain, name: name || domain&.name, record_type: 'DNSKEY', apply_changes: true).validate
+    end
+    
+    def apply_delegation_updates(domain:, name: nil)
+      new(domain: domain, name: name || domain&.name, record_type: 'CSYNC', apply_changes: true).validate
     end
   end
 end
