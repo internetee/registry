@@ -19,8 +19,8 @@ jobs:
             const botUsers = ['dependabot[bot]', 'renovate[bot]', 'snyk-bot'];
 
             if (!botUsers.includes(pr.user.login)) {
-              core.setFailed('Author is not a bot – skip auto-merge');
-              return; 
+              core.notice('Author is not a bot – skip auto-merge');
+              return; // workflow jätkab või lihtsalt lõpetab selle stepi
             }
 
             function isPatchUpdate(from, to) {
@@ -56,7 +56,7 @@ jobs:
             }
 
             if (!isPatch) {
-              core.setFailed('PR is not a patch version update – auto-merge not allowed');
+              core.notice('PR is not a patch version update – auto-merge not allowed');
               return; // Skip auto-merge
             }
 
