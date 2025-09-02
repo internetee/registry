@@ -1,0 +1,67 @@
+name: auto-merge
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, labeled]
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR merge-conditions
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const botUsers = ['dependabot[bot]', 'renovate[bot]', 'snyk-bot'];
+            
+            if (!botUsers.includes(pr.user.login)) {
+              core.setFailed('Autor ei ole bot');
+              return;
+            }
+
+            function isPatchUpdate(from, to) {
+              const fromParts = from.split('.').map(Number);
+              const toParts = to.split('.').map(Number);
+              if (fromParts.length !== toParts.length) return false;
+              for (let i = 0; i < fromParts.length - 1; i++) {
+                if (fromParts[i] !== toParts[i]) return false;
+              }
+              return toParts[toParts.length - 1] === fromParts[fromParts.length - 1] + 1;
+            }
+
+            let isPatch = false;
+
+            if (pr.user.login === 'dependabot[bot]') {
+              const regex = /from\s+(\d+(?:\.\d+)+)\s+to\s+(\d+(?:\.\d+)+)/i;
+              const match = pr.title.match(regex);
+              if (match) {
+                const fromVersion = match[1];
+                const toVersion = match[2];
+                if (isPatchUpdate(fromVersion, toVersion)) isPatch = true;
+              }
+            }
+
+            if (pr.user.login === 'renovate[bot]') {
+              const patchRegex = /patch\s+(\d+(?:\.\d+)+)\s*->\s*(\d+(?:\.\d+)+)/i;
+              const match = pr.body && pr.body.match(patchRegex);
+              if (match) {
+                const fromVersion = match[1];
+                const toVersion = match[2];
+                if (isPatchUpdate(fromVersion, toVersion)) isPatch = true;
+              }
+            }
+
+            if (!isPatch) {
+              core.setFailed('PR is not a patch version update');
+              return;
+            }
+
+            core.notice('All conditions met – merge allowed');
+
+      - name: Enable auto-merge
+        if: ${{ success() && github.event.pull_request.merged == false }}
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          merge-method: squash
