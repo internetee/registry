@@ -14,10 +14,10 @@ jobs:
           script: |
             const pr = context.payload.pull_request;
             const botUsers = ['dependabot[bot]', 'renovate[bot]', 'snyk-bot'];
-            
+
             if (!botUsers.includes(pr.user.login)) {
-              core.setFailed('Autor ei ole bot');
-              return;
+              core.notice('Author is not a bot – skip auto-merge');
+              return; 
             }
 
             function isPatchUpdate(from, to) {
@@ -53,8 +53,8 @@ jobs:
             }
 
             if (!isPatch) {
-              core.setFailed('PR is not a patch version update');
-              return;
+              core.notice('PR is not a patch version update – auto-merge not allowed');
+              return; // Skip auto-merge
             }
 
             core.notice('All conditions met – merge allowed');
