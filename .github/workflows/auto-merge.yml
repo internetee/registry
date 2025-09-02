@@ -8,6 +8,9 @@ jobs:
   auto-merge:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
       - name: Check PR merge-conditions
         uses: actions/github-script@v6
         with:
@@ -16,7 +19,7 @@ jobs:
             const botUsers = ['dependabot[bot]', 'renovate[bot]', 'snyk-bot'];
 
             if (!botUsers.includes(pr.user.login)) {
-              core.notice('Author is not a bot – skip auto-merge');
+              core.setFailed('Author is not a bot – skip auto-merge');
               return; 
             }
 
@@ -53,14 +56,17 @@ jobs:
             }
 
             if (!isPatch) {
-              core.notice('PR is not a patch version update – auto-merge not allowed');
+              core.setFailed('PR is not a patch version update – auto-merge not allowed');
               return; // Skip auto-merge
             }
 
             core.notice('All conditions met – merge allowed');
 
       - name: Enable auto-merge
-        if: ${{ success() && github.event.pull_request.merged == false }}
+        if: ${{ success() && github.event.pull_request.merged == false && 
+              (github.event.pull_request.user.login == 'dependabot[bot]' || 
+               github.event.pull_request.user.login == 'renovate[bot]' || 
+               github.event.pull_request.user.login == 'snyk-bot') }}
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
