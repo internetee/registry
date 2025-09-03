@@ -16,56 +16,62 @@ jobs:
         with:
           script: |
             const pr = context.payload.pull_request;
-            const botUsers = ['dependabot[bot]', 'renovate[bot]', 'snyk-bot'];
+            const botUsers = ['dependabot[bot]', 'snyk-bot'];
 
             if (!botUsers.includes(pr.user.login)) {
               core.notice('Author is not a bot – skip auto-merge');
-              return; // workflow jätkab või lihtsalt lõpetab selle stepi
+              return;
             }
+
+            const title = pr.title.toLowerCase();
+            const body = (pr.body || '').toLowerCase();
+
+            const isPin = /\bpin\b/i.test(title) || /\bpin\b/i.test(body);
+            const isDigest = /\bdigest\b/i.test(title) || /\bdigest\b/i.test(body);
+
+            if (isPin || isDigest) {
+              core.notice(`PR is ${isPin ? 'pin' : 'digest'} update – merge allowed`);
+              return;
+            }
+
+            const regex = /from\s+v?(\d+(?:\.\d+)+)\s+to\s+v?(\d+(?:\.\d+)+)/i;
+            const match = title.match(regex);
+
+            if (!match) {
+              core.notice('No version pattern found – skip auto-merge');
+              return;
+            }
+
+            const fromVersion = match[1];
+            const toVersion = match[2];
+
+            core.notice(`Detected version change: ${fromVersion} → ${toVersion}`);
 
             function isPatchUpdate(from, to) {
               const fromParts = from.split('.').map(Number);
               const toParts = to.split('.').map(Number);
+
               if (fromParts.length !== toParts.length) return false;
+
               for (let i = 0; i < fromParts.length - 1; i++) {
                 if (fromParts[i] !== toParts[i]) return false;
               }
-              return toParts[toParts.length - 1] === fromParts[fromParts.length - 1] + 1;
+
+              return fromParts[fromParts.length - 1] !== toParts[toParts.length - 1];
             }
 
-            let isPatch = false;
-
-            if (pr.user.login === 'dependabot[bot]') {
-              const regex = /from\s+(\d+(?:\.\d+)+)\s+to\s+(\d+(?:\.\d+)+)/i;
-              const match = pr.title.match(regex);
-              if (match) {
-                const fromVersion = match[1];
-                const toVersion = match[2];
-                if (isPatchUpdate(fromVersion, toVersion)) isPatch = true;
-              }
-            }
-
-            if (pr.user.login === 'renovate[bot]') {
-              const patchRegex = /patch\s+(\d+(?:\.\d+)+)\s*->\s*(\d+(?:\.\d+)+)/i;
-              const match = pr.body && pr.body.match(patchRegex);
-              if (match) {
-                const fromVersion = match[1];
-                const toVersion = match[2];
-                if (isPatchUpdate(fromVersion, toVersion)) isPatch = true;
-              }
-            }
+            const isPatch = isPatchUpdate(fromVersion, toVersion);
 
             if (!isPatch) {
-              core.notice('PR is not a patch version update – auto-merge not allowed');
-              return; // Skip auto-merge
+              core.notice('PR is NOT a patch update – auto-merge not allowed');
+              return;
             }
 
-            core.notice('All conditions met – merge allowed');
+            core.notice('Patch update detected – merge allowed');
 
       - name: Enable auto-merge
-        if: ${{ success() && github.event.pull_request.merged == false && 
-              (github.event.pull_request.user.login == 'dependabot[bot]' || 
-               github.event.pull_request.user.login == 'renovate[bot]' || 
+        if: ${{ success() && github.event.pull_request.merged == false &&
+              (github.event.pull_request.user.login == 'dependabot[bot]' ||
                github.event.pull_request.user.login == 'snyk-bot') }}
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
