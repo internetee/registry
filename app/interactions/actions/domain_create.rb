@@ -18,6 +18,8 @@ module Actions
       # domain.attach_default_contacts
       assign_expiry_time
       maybe_attach_legal_doc
+      validate_ns_records
+      validate_dns_records
 
       commit
     end
@@ -181,6 +183,24 @@ module Actions
       ::Actions::BaseAction.attach_legal_doc_to_new(domain, params[:legal_document], domain: true)
     end
 
+    def validate_ns_records
+      return unless domain.nameservers.any?
+
+      result = DNSValidator.validate(domain: domain, name: domain.name, record_type: 'NS')
+      return if result[:errors].blank?
+
+      assign_dns_validation_error(result[:errors])
+    end
+
+    def validate_dns_records
+      return unless domain.dnskeys.any?
+
+      result = DNSValidator.validate(domain: domain, name: domain.name, record_type: 'DNSKEY')
+      return if result[:errors].blank?
+
+      assign_dns_validation_error(result[:errors])
+    end
+
     def process_auction_and_disputes
       dn = DNS::DomainName.new(domain.name)
       Dispute.close_by_domain(domain.name)
@@ -198,6 +218,12 @@ module Actions
 
       process_auction_and_disputes
       domain.save
+    end
+
+    def assign_dns_validation_error(errors)
+      errors.each do |error|
+        domain.add_epp_error('2306', nil, nil, error)
+      end
     end
 
     def validation_process_errored?
