@@ -1,79 +1,31 @@
-name: auto-merge
+name: Dependabot auto-merge
 
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened, labeled]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
-  auto-merge:
+  auto-merge-patch:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'internetee/registry'
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Check PR merge-conditions
-        uses: actions/github-script@v6
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@d7267f607e9d3fb96fc2fbe83e0af444713e90b7
         with:
-          script: |
-            const pr = context.payload.pull_request;
-            const botUsers = ['dependabot[bot]', 'snyk-bot'];
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-            if (!botUsers.includes(pr.user.login)) {
-              core.notice('Author is not a bot – skip auto-merge');
-              return;
-            }
-
-            const title = pr.title.toLowerCase();
-            const body = (pr.body || '').toLowerCase();
-
-            const isPin = /\bpin\b/i.test(title) || /\bpin\b/i.test(body);
-            const isDigest = /\bdigest\b/i.test(title) || /\bdigest\b/i.test(body);
-
-            if (isPin || isDigest) {
-              core.notice(`PR is ${isPin ? 'pin' : 'digest'} update – merge allowed`);
-              return;
-            }
-
-            const regex = /from\s+v?(\d+(?:\.\d+)+)\s+to\s+v?(\d+(?:\.\d+)+)/i;
-            const match = title.match(regex);
-
-            if (!match) {
-              core.notice('No version pattern found – skip auto-merge');
-              return;
-            }
-
-            const fromVersion = match[1];
-            const toVersion = match[2];
-
-            core.notice(`Detected version change: ${fromVersion} → ${toVersion}`);
-
-            function isPatchUpdate(from, to) {
-              const fromParts = from.split('.').map(Number);
-              const toParts = to.split('.').map(Number);
-
-              if (fromParts.length !== toParts.length) return false;
-
-              for (let i = 0; i < fromParts.length - 1; i++) {
-                if (fromParts[i] !== toParts[i]) return false;
-              }
-
-              return fromParts[fromParts.length - 1] !== toParts[toParts.length - 1];
-            }
-
-            const isPatch = isPatchUpdate(fromVersion, toVersion);
-
-            if (!isPatch) {
-              core.notice('PR is NOT a patch update – auto-merge not allowed');
-              return;
-            }
-
-            core.notice('Patch update detected – merge allowed');
-
-      - name: Enable auto-merge
-        if: ${{ success() && github.event.pull_request.merged == false &&
-              (github.event.pull_request.user.login == 'dependabot[bot]' ||
-               github.event.pull_request.user.login == 'snyk-bot') }}
-        uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          merge-method: squash
+      - name: Enable auto-merge for patch updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        run: |
+          gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
