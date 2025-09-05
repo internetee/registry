@@ -1,3 +1,49 @@
+18.08.2025
+* Added test coverage for admin/contact_versions_controller https://github.com/internetee/registry/pull/2836 
+
+08.08.2025
+* Upload coverage to qlty https://github.com/internetee/registry/pull/2840
+* Adding test coverage for bounced_mail_addresses_controller https://github.com/internetee/registry/pull/2835
+* Adding tests for admin/billing/prices_controller https://github.com/internetee/registry/pull/2834
+* Adding tests for admin/bank_transactions_controller https://github.com/internetee/registry/pull/2833
+
+06.08.2025
+*  Replacing codeclimate with qlty.sh https://github.com/internetee/registry/pull/2837
+*  Adding tests for admin/bank_statements_controller https://github.com/internetee/registry/pull/2832
+*  Adding test coverage to app/controllers/admin/accounts_controller https://github.com/internetee/registry/pull/2831
+*  Adding test coverage/repp/v1/certificates/p12 controller https://github.com/internetee/registry/pull/2830
+*  Added new tests for admin/domains_controller https://github.com/internetee/registry/pull/2829
+*  Added new tests for Admin certificates_controller methods coverage https://github.com/internetee/registry/pull/2827
+
+31.07.2025
+* Poll messages for registry admin initiated domain status changes https://github.com/internetee/registry/issues/2823
+
+30.07.2025
+* Fixed domain history presentation offset in admin https://github.com/internetee/registry/issues/2822
+
+29.07.2025
+* Added extra test coverage for validate_dnssec_job https://github.com/internetee/registry/pull/2811
+* Added new tests for zones_controller https://github.com/internetee/registry/pull/2813
+* Updated test coverage/api users controller https://github.com/internetee/registry/pull/2819
+* Added new test for model models/concerns/contact/archivable https://github.com/internetee/registry/pull/2820
+* Added extra test coverage for accreditation_center/base_controller https://github.com/internetee/registry/pull/2821
+
+18.07.2025
+* Update actions/upload-artifact action to v4.6.2 https://github.com/internetee/registry/pull/2800
+* Added extra test coverage for LhvConnectTransactionsController https://github.com/internetee/registry/pull/2815
+* Updated set_test_date_to_api_user method on api_users_controller https://github.com/internetee/registry/issues/2816
+
+06.06.2025
+* Improvments to ent-to-end id processing https://github.com/internetee/registry/pull/2796
+* Fix stale data in Whois update job https://github.com/internetee/registry/pull/2808
+
+03.06.2025
+* removed build_deploy_staging.yml from workflow as deprecated https://github.com/internetee/registry/issues/2797
+
+30.05.2025
+* Improvements for daily FD domains report https://github.com/internetee/registry/issues/2781
+* Fixed duplicate domain history records in admin: https://github.com/internetee/registry/issues/2792
+
 02.05.2025
 * ForceDelete is not lifted with any contact update any more https://github.com/internetee/registry/issues/2782
 

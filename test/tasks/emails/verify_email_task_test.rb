@@ -54,6 +54,7 @@ class VerifyEmailTaskTest < ActiveJob::TestCase
   end
 
   def test_should_verify_contact_email_which_was_not_verified
+    ValidationEvent.delete_all
     assert_equal ValidationEvent.count, 0
 
     run_task

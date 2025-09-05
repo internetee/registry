@@ -52,18 +52,20 @@ module Admin
 
       response = base_get_request(uri: uri, port: ENV['registry_demo_registrar_port'])
 
-      if response.code == "200"
+      case response.code
+      when "200"
         result = JSON.parse(response.body)
         demo_user_api = result['user_api']
 
         Actions::RecordDateOfTest.record_result_to_api_user(api_user:user_api,
                                                             date: demo_user_api['accreditation_date']) unless demo_user_api.empty?
-        return redirect_to request.referrer, notice: 'User Api found'
+        
+        redirect_to request.referrer, notice: 'User API found'                                                    
+      when "404"
+        redirect_to request.referrer, notice: 'User API not found or not accredited yet'
       else
-        return redirect_to request.referrer, notice: 'User Api no found or not accriditated yet'
+        redirect_to request.referrer, notice: 'Something went wrong'
       end
-
-      redirect_to request.referrer, notice: 'Something goes wrong'
     end
 
     def remove_test_date_to_api_user

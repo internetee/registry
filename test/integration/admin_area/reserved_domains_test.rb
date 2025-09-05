@@ -49,4 +49,17 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
                  response.headers['Content-Disposition']
     assert_not_empty response.body
   end
+
+  def test_release_to_auction
+    visit admin_reserved_domains_path
+  
+    first("input[type='checkbox']").set(true)
+  
+    click_on 'Send to the auction list'
+  
+    assert_current_path admin_auctions_path
+  
+    assert_text 'reserved.test'
+    assert_text 'started'
+  end
 end

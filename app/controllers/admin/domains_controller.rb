@@ -31,6 +31,7 @@ module Admin
 
       if @domain.update(dp)
         flash[:notice] = I18n.t('domain_updated')
+        inform_registrar_about_status_changes
         redirect_to [:admin, @domain]
       else
         @domain.reload
@@ -52,12 +53,12 @@ module Admin
     end
 
     def versions
-      @domain = Domain.where(id: params[:domain_id]).includes({ versions: :item }).first
+      @domain = get_domain_with_versions
       @versions = @domain.versions
-      @last_version = @versions.last
-      @old_versions = Kaminari.paginate_array(@versions.not_creates.reverse)
-                              .page(params[:page])
-                              .per(DEFAULT_VERSIONS_PER_PAGE)
+      @old_versions = paginate_versions(@versions.not_creates.reverse)
+
+      post_update_domains = generate_collection_of_post_update_domains(@old_versions.to_a)
+      @post_update_domains = sort_post_update_domains(post_update_domains)
     end
 
     def download
@@ -72,6 +73,33 @@ module Admin
 
     private
 
+    def get_domain_with_versions
+      Domain.where(id: params[:domain_id]).includes({ versions: :item }).first
+    end
+
+    def paginate_versions(versions)
+      Kaminari.paginate_array(versions).page(params[:page]).per(DEFAULT_VERSIONS_PER_PAGE)
+    end
+
+    def generate_collection_of_post_update_domains(old_versions_arr)
+      post_update_domains = []
+
+      old_versions_arr.each_with_index do |version, idx|
+        next_version = old_versions_arr[idx - 1] # reverse order!
+        if next_version
+          post_update_domains << (next_version.reify || @domain)
+        else
+          post_update_domains << @domain
+        end
+      end
+
+      post_update_domains
+    end
+
+    def sort_post_update_domains(post_update_domains)
+      post_update_domains.sort_by! { |d| -d.updated_at.to_i }
+    end
+
     def set_domain
       @domain = Domain.find(params[:id])
     end
@@ -81,6 +109,22 @@ module Admin
         params.require(:domain).permit({ statuses: [], status_notes_array: [] })
       else
         { statuses: [] }
+      end
+    end
+
+    def inform_registrar_about_status_changes
+      return unless @domain.saved_change_to_statuses?
+
+      old_statuses, new_statuses = @domain.saved_change_to_statuses
+      removed = old_statuses - new_statuses
+      added   = new_statuses - old_statuses
+  
+      added.each do |status|
+        @domain.registrar.notifications.create!(text: "#{status} set on domain #{@domain.name}")
+      end
+
+      removed.each do |status|
+        @domain.registrar.notifications.create!(text: "#{status} is cancelled on domain #{@domain.name}")
       end
     end
 

@@ -1,38 +1,56 @@
 module Domains
   module ForceDeleteEmail
+    # Processes domains with invalid emails by flagging them for force deletion
+    # when email addresses are identified as invalid or bouncing
     class Base < ActiveInteraction::Base
       string :email,
              description: 'Bounced email to set ForceDelete from'
 
       def execute
-        domain_contacts = Contact.where(email: email).map(&:domain_contacts).flatten
-        registrant_ids = Registrant.where(email: email).pluck(:id)
+        # Return early if no affected domains or if any domains are on hold
+        affected_domains = find_affected_domains
+        return if should_skip_processing?(affected_domains)
 
-        domains = domain_contacts.map(&:domain).flatten +
-                  Domain.where(registrant_id: registrant_ids)
-
-        return if expired_or_hold_domains_exists?(domains)
-
-        domains.each do |domain|
-          next if domain.expired?
-
-          before_execute_force_delete(domain)
-        end
+        process_affected_domains(affected_domains)
       end
 
       private
 
-      def expired_or_hold_domains_exists?(domains)
+      def should_skip_processing?(domains)
+        domains.empty? || domains_on_hold_exist?(domains)
+      end
+
+      def process_affected_domains(domains)
+        domains.each do |domain|
+          next if domain.expired?
+
+          process_domain_for_force_delete(domain)
+        end
+      end
+
+      def find_affected_domains
+        # Find domains through contacts
+        contact_domains = Contact.where(email: email).flat_map(&:domain_contacts)
+                                 .flat_map(&:domain)
+
+        # Find domains through registrants
+        registrant_domains = Domain.where(registrant_id: Registrant.where(email: email).select(:id))
+
+        # Combine and remove duplicates
+        (contact_domains + registrant_domains).uniq
+      end
+
+      def domains_on_hold_exist?(domains)
         domains.any? do |domain|
           domain.statuses.include?(DomainStatus::SERVER_HOLD) && email.include?(domain.name)
         end
       end
 
-      def before_execute_force_delete(domain)
-        if domain.force_delete_scheduled? && !domain.status_notes[DomainStatus::FORCE_DELETE].nil?
-          added_additional_email_into_notes(domain)
+      def process_domain_for_force_delete(domain)
+        if domain.force_delete_scheduled? && domain.status_notes[DomainStatus::FORCE_DELETE].present?
+          add_email_to_notes(domain)
         else
-          process_force_delete(domain)
+          schedule_force_delete(domain)
         end
       end
 
@@ -43,30 +61,27 @@ module Domains
                           purge_date: domain.purge_date,
                           email: domain.status_notes[DomainStatus::FORCE_DELETE])
 
-        return if domain.registrar.notifications.last.text.include? template
+        return if domain.registrar.notifications.last&.text&.include?(template)
 
         domain.registrar.notifications.create!(text: template)
       end
 
-      def process_force_delete(domain)
-        domain.schedule_force_delete(type: :soft,
-                                     notify_by_email: true,
-                                     reason: 'invalid_email',
-                                     email: email)
-        save_status_note(domain)
+      def schedule_force_delete(domain)
+        domain.schedule_force_delete(
+          type: :soft,
+          notify_by_email: true,
+          reason: 'invalid_email',
+          email: email
+        )
       end
 
-      def added_additional_email_into_notes(domain)
-        return if domain.status_notes[DomainStatus::FORCE_DELETE].include? email
+      def add_email_to_notes(domain)
+        return if domain.status_notes[DomainStatus::FORCE_DELETE].include?(email)
 
+        # Uncomment if notification is needed
         # notify_registrar(domain)
 
         domain.status_notes[DomainStatus::FORCE_DELETE].concat(" #{email}")
-        domain.save(validate: false)
-      end
-
-      def save_status_note(domain)
-        domain.status_notes[DomainStatus::FORCE_DELETE] = email
         domain.save(validate: false)
       end
     end
