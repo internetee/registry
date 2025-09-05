@@ -167,6 +167,7 @@ Rails.application.routes.draw do
           patch 'contacts', to: 'domains/contacts#update'
           patch 'admin_contacts', to: 'domains/admin_contacts#update'
           post 'renew/bulk', to: 'domains/renews#bulk_renew'
+          post 'nameservers/bulk', to: 'domains/nameservers#bulk_update'
         end
       end
     end

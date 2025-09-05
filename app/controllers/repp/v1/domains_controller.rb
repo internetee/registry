@@ -1,4 +1,5 @@
 require 'serializers/repp/domain'
+require 'csv'
 module Repp
   module V1
     class DomainsController < BaseController # rubocop:disable Metrics/ClassLength
@@ -124,12 +125,27 @@ module Repp
       end
 
       api :POST, '/repp/v1/domains/transfer'
-      desc 'Transfer multiple domains'
+      desc 'Transfer multiple domains (supports JSON data or CSV file upload)'
+      param :data, Hash, required: false, desc: 'JSON data for domain transfers' do
+        param :domain_transfers, Array, required: true, desc: 'Array of domain transfers' do
+          param :domain_name, String, required: true, desc: 'Domain name'
+          param :transfer_code, String, required: true, desc: 'Transfer authorization code'
+        end
+      end
       def transfer
         authorize! :transfer, Epp::Domain
         @errors ||= []
         @successful = []
-        transfer_params[:domain_transfers].each do |transfer|
+
+        if params[:csv_file].present?
+          # Handle CSV file upload
+          domain_transfers = parse_transfer_csv(params[:csv_file])
+        else
+          # Handle JSON data
+          domain_transfers = transfer_params[:domain_transfers]
+        end
+
+        domain_transfers.each do |transfer|
           initiate_transfer(transfer)
         end
 
@@ -179,6 +195,10 @@ module Repp
       end
 
       def transfer_params
+        # Allow csv_file parameter
+        params.permit(:csv_file)
+        return {} if params[:csv_file].present?
+        
         params.require(:data).require(:domain_transfers)
         params.require(:data).permit(domain_transfers: [%i[domain_name transfer_code]])
       end
@@ -281,6 +301,36 @@ module Repp
                                        admin_contacts: [], tech_contacts: [],
                                        dnskeys_attributes: [%i[flags alg protocol public_key]],
                                        delete: [:verified])
+      end
+
+      # Parse CSV file for domain transfers
+      # Expected CSV format: Domain, Transfer code
+      def parse_transfer_csv(csv_file)
+        domain_transfers = []
+        
+        begin
+          CSV.foreach(csv_file.path, headers: true) do |row|
+            next if row['Domain'].blank? || row['Transfer code'].blank?
+            
+            domain_transfers << {
+              domain_name: row['Domain'].strip,
+              transfer_code: row['Transfer code'].strip
+            }
+          end
+        rescue CSV::MalformedCSVError => e
+          @errors << { type: 'csv_error', message: "Invalid CSV format: #{e.message}" }
+          return []
+        rescue StandardError => e
+          @errors << { type: 'csv_error', message: "Error processing CSV: #{e.message}" }
+          return []
+        end
+
+        # Validate CSV headers
+        if domain_transfers.empty?
+          @errors << { type: 'csv_error', message: 'CSV file is empty or missing required headers: Domain, Transfer code' }
+        end
+
+        domain_transfers
       end
     end
   end
