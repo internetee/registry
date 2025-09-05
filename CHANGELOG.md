@@ -1,3 +1,6 @@
+05.09.2025
+* Added reports module to admin https://github.com/internetee/registry/issues/2749
+
 18.08.2025
 * Added test coverage for admin/contact_versions_controller https://github.com/internetee/registry/pull/2836 
 
