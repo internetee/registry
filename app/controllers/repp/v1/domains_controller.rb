@@ -137,17 +137,13 @@ module Repp
         @errors ||= []
         @successful = []
 
-        if params[:csv_file].present?
-          # Handle CSV file upload
-          domain_transfers = parse_transfer_csv(params[:csv_file])
+        domain_transfers = if params[:csv_file].present?
+          parse_transfer_csv(params[:csv_file])
         else
-          # Handle JSON data
-          domain_transfers = transfer_params[:domain_transfers]
+          transfer_params[:domain_transfers]
         end
 
-        domain_transfers.each do |transfer|
-          initiate_transfer(transfer)
-        end
+        domain_transfers.each { |transfer| initiate_transfer(transfer) }
 
         render_success(data: { success: @successful, failed: @errors })
       end
@@ -303,8 +299,6 @@ module Repp
                                        delete: [:verified])
       end
 
-      # Parse CSV file for domain transfers
-      # Expected CSV format: Domain, Transfer code
       def parse_transfer_csv(csv_file)
         domain_transfers = []
         
@@ -325,7 +319,6 @@ module Repp
           return []
         end
 
-        # Validate CSV headers
         if domain_transfers.empty?
           @errors << { type: 'csv_error', message: 'CSV file is empty or missing required headers: Domain, Transfer code' }
         end

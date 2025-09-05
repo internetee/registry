@@ -61,24 +61,17 @@ module Repp
           end
         end
         def bulk_update
-          authorize! :update, Epp::Domain
+          authorize! :manage, :repp
           @errors ||= []
           @successful = []
 
-          # Get permitted parameters
-          permitted_params = bulk_params
-
-          if permitted_params[:csv_file].present?
-            # Handle CSV file upload
-            nameserver_changes = parse_nameserver_csv(permitted_params[:csv_file])
+          nameserver_changes = if bulk_params[:csv_file].present?
+            parse_nameserver_csv(bulk_params[:csv_file])
           else
-            # Handle JSON data
-            nameserver_changes = permitted_params[:nameserver_changes]
+            bulk_params[:nameserver_changes]
           end
 
-          nameserver_changes.each do |change|
-            process_nameserver_change(change)
-          end
+          nameserver_changes.each { |change| process_nameserver_change(change) }
 
           render_success(data: { success: @successful, failed: @errors })
         end
@@ -95,20 +88,15 @@ module Repp
 
         def bulk_params
           if params[:csv_file].present?
-            # Allow csv_file and new_hostname parameters for CSV upload
             params.permit(:csv_file, :new_hostname, ipv4: [], ipv6: [])
           else
-            # Allow JSON data parameters
             params.require(:data).require(:nameserver_changes)
             params.require(:data).permit(nameserver_changes: [%i[domain_name new_hostname], { ipv4: [], ipv6: [] }])
           end
         end
 
-        # Parse CSV file for nameserver changes
-        # Expected CSV format: Domain
         def parse_nameserver_csv(csv_file)
           nameserver_changes = []
-          permitted_params = bulk_params
           
           begin
             CSV.foreach(csv_file.path, headers: true) do |row|
@@ -116,9 +104,9 @@ module Repp
               
               nameserver_changes << {
                 domain_name: row['Domain'].strip,
-                new_hostname: permitted_params[:new_hostname] || '',
-                ipv4: permitted_params[:ipv4] || [],
-                ipv6: permitted_params[:ipv6] || []
+                new_hostname: bulk_params[:new_hostname] || '',
+                ipv4: bulk_params[:ipv4] || [],
+                ipv6: bulk_params[:ipv6] || []
               }
             end
           rescue CSV::MalformedCSVError => e
@@ -129,23 +117,20 @@ module Repp
             return []
           end
 
-          # Validate CSV headers and required params
           if nameserver_changes.empty?
             @errors << { type: 'csv_error', message: 'CSV file is empty or missing required header: Domain' }
-          elsif permitted_params[:new_hostname].blank?
+          elsif bulk_params[:new_hostname].blank?
             @errors << { type: 'csv_error', message: 'new_hostname parameter is required when using CSV' }
           end
 
           nameserver_changes
         end
 
-        # Process individual nameserver change
         def process_nameserver_change(change)
           begin
             domain = Epp::Domain.find_by!('name = ? OR name_puny = ?', 
                                          change[:domain_name], change[:domain_name])
             
-            # Check if user has permission for this domain
             unless domain.registrar == current_user.registrar
               @errors << { 
                 type: 'nameserver_change', 
@@ -155,11 +140,9 @@ module Repp
               return
             end
 
-            # Replace first nameserver or add new one if hostname doesn't exist
             existing_hostnames = domain.nameservers.map(&:hostname)
             
             if existing_hostnames.include?(change[:new_hostname])
-              # Hostname already exists, no changes needed
               @successful << { type: 'nameserver_change', domain_name: domain.name }
               return
             end
@@ -167,12 +150,10 @@ module Repp
             nameserver_actions = []
             
             if domain.nameservers.count > 0
-              # Replace first nameserver with new one
               first_ns = domain.nameservers.first
               nameserver_actions << { hostname: first_ns.hostname, action: 'rem' }
             end
             
-            # Add new nameserver
             nameserver_actions << { 
               hostname: change[:new_hostname], 
               action: 'add',
