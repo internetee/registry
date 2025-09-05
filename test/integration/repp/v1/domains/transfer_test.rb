@@ -171,4 +171,30 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     ENV["shunter_default_threshold"] = '10000'
     ENV["shunter_enabled"] = 'false'
   end
+
+  def test_transfers_domains_with_valid_csv
+    csv_file = fixture_file_upload('files/domain_transfer_valid.csv', 'text/csv')
+    
+    post "/repp/v1/domains/transfer", headers: @auth_headers, params: { csv_file: csv_file }
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+    assert_equal 1, json[:data][:success].length
+    assert_equal @domain.name, json[:data][:success][0][:domain_name]
+  end
+
+  def test_returns_error_with_invalid_csv_headers
+    csv_file = fixture_file_upload('files/domain_transfer_invalid.csv', 'text/csv')
+    
+    post "/repp/v1/domains/transfer", headers: @auth_headers, params: { csv_file: csv_file }
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 1, json[:data][:failed].length
+    assert_equal 'csv_error', json[:data][:failed][0][:type]
+    assert_includes json[:data][:failed][0][:message], 'CSV file is empty or missing required headers'
+  end
 end
