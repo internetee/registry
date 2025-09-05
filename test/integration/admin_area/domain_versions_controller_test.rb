@@ -8,7 +8,6 @@ class AdminAreaDomainVersionsControllerIntegrationTest < ApplicationIntegrationT
     @registrar = registrars(:bestnames)
     @domain = domains(:shop)
     
-    # Ensure we have domain versions to test with
     @version = Version::DomainVersion.where(item_id: @domain.id).first
     skip "No domain versions found for testing" unless @version
   end
