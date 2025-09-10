@@ -1,10 +1,11 @@
 class ExpireCertificateReminderJob < ApplicationJob
   queue_as :default
-
-  DEADLINE = 1.month
   
   def perform
-    Certificate.where('expires_at < ?', DEADLINE.from_now).each do |certificate|
+    deadline_days = Setting.certificate_reminder_deadline || 30
+    deadline = deadline_days.days.from_now
+    
+    Certificate.where('expires_at < ?', deadline).where(reminder_sent: false).each do |certificate|
       send_reminder(certificate)
     end
   end
@@ -19,5 +20,6 @@ class ExpireCertificateReminderJob < ApplicationJob
 
   def send_email(registrar, certificate)
     CertificateMailer.certificate_expiring(email: registrar.email, certificate: certificate).deliver_now
+    certificate.update(reminder_sent: true)
   end
 end
