@@ -3,7 +3,7 @@ name: Auto approve & merge Dependabot and Renovate PRs
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened, labeled]
-    branches: [main]
+    branches: [master]
 
 permissions:
   contents: write
