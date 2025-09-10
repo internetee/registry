@@ -12,7 +12,7 @@ permissions:
 jobs:
   auto-approve-merge:
     runs-on: ubuntu-latest
-    if: (github.actor == 'dependabot[bot]' || github.actor == 'renovate[bot]') && github.repository == 'internetee/registry'
+    if: github.actor == 'dependabot[bot]' || github.actor == 'renovate[bot]'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -48,13 +48,15 @@ jobs:
               echo "Auto-merge: Dependabot non-patch update, skipping"
             fi
           elif [ "${{ github.actor }}" == "renovate[bot]" ]; then
-            # Check if PR is patch update based on renovate.json configuration
-            if [[ "${{ github.event.pull_request.title }}" == *"patch"* ]] || [[ "${{ github.event.pull_request.title }}" == *"pin"* ]] || [[ "${{ github.event.pull_request.title }}" == *"digest"* ]] || [[ "${{ github.event.pull_request.title }}" == *"bump"* ]]; then
+            # Check if PR has patch label (set by renovate.json configuration)
+            # Extract label names from the labels array
+            LABEL_NAMES=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name' | tr '\n' ' ')
+            if [[ "$LABEL_NAMES" == *"patch"* ]] || [[ "$LABEL_NAMES" == *"bundler"* ]] || [[ "$LABEL_NAMES" == *"ruby-version"* ]] || [[ "$LABEL_NAMES" == *"github-actions"* ]]; then
               echo "auto_merge=true" >> $GITHUB_OUTPUT
-              echo "Auto-merge: Renovate patch/pin/digest update detected"
+              echo "Auto-merge: Renovate patch update detected (label-based): $LABEL_NAMES"
             else
               echo "auto_merge=false" >> $GITHUB_OUTPUT
-              echo "Auto-merge: Renovate non-patch update, skipping"
+              echo "Auto-merge: Renovate non-patch update, skipping. Labels: $LABEL_NAMES"
             fi
           else
             echo "auto_merge=false" >> $GITHUB_OUTPUT

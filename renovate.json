@@ -7,7 +7,8 @@
       "matchUpdateTypes": ["patch", "pin", "digest"],
       "automerge": true,
       "automergeType": "pr",
-      "addLabels": ["patch"]
+      "addLabels": ["patch", "dependencies"],
+      "requiredStatusChecks": null
     },
     {
       "matchUpdateTypes": ["minor"],
@@ -22,9 +23,10 @@
     {
       "matchDepTypes": ["ruby", "bundler", "Gemfile", "Gemfile.lock"],
       "matchUpdateTypes": ["patch"],
-      "addLabels": ["bundler"],
+      "addLabels": ["bundler", "dependencies"],
       "automerge": true,
-      "automergeType": "pr"
+      "automergeType": "pr",
+      "requiredStatusChecks": null
     },
     {
       "matchDepTypes": ["ruby", "bundler", "Gemfile", "Gemfile.lock"],
@@ -35,9 +37,10 @@
     {
       "matchDepTypes": [".ruby-version"],
       "matchUpdateTypes": ["patch"],
-      "addLabels": ["ruby-version"],
+      "addLabels": ["ruby-version", "dependencies"],
       "automerge": true,
-      "automergeType": "pr"
+      "automergeType": "pr",
+      "requiredStatusChecks": null
     },
     {
       "matchDepTypes": [".ruby-version"],
@@ -48,9 +51,10 @@
     {
       "matchFileNames": [".github/workflows/ruby.yml"],
       "matchUpdateTypes": ["patch", "minor"],
-      "addLabels": ["github-actions"],
+      "addLabels": ["github-actions", "dependencies"],
       "automerge": true,
-      "automergeType": "pr"
+      "automergeType": "pr",
+      "requiredStatusChecks": null
     }
   ],
   "docker": {
