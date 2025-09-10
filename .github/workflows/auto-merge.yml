@@ -12,7 +12,7 @@ permissions:
 jobs:
   auto-approve-merge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]' || github.actor == 'renovate[bot]'
+    if: (github.actor == 'dependabot[bot]' || github.actor == 'renovate[bot]') && github.repository == 'internetee/registry'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -71,7 +71,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 30
-          running-workflow-name: 'auto-approve-merge'
 
       - name: Auto-merge PR
         if: steps.check_auto_merge.outputs.auto_merge == 'true'
