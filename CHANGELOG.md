@@ -1,3 +1,6 @@
+10.09.2025
+* Improved test coverage of admin/settings_controller https://github.com/internetee/registry/pull/2852
+
 05.09.2025
 * Added reports module to admin https://github.com/internetee/registry/issues/2749
 
