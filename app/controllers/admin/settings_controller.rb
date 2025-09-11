@@ -10,6 +10,7 @@ module Admin
                                     .where.not(code: 'default_language')
       @billing_settings = SettingEntry.with_group('billing')
       @contacts_settings = SettingEntry.with_group('contacts')
+      @certificate_settings = SettingEntry.with_group('certificate')
     end
 
     def create
