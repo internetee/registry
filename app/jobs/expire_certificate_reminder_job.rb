@@ -16,10 +16,10 @@ class ExpireCertificateReminderJob < ApplicationJob
     registrar = certificate.api_user.registrar
 
     send_email(registrar, certificate)
+    certificate.update(reminder_sent: true)
   end
 
   def send_email(registrar, certificate)
     CertificateMailer.certificate_expiring(email: registrar.email, certificate: certificate).deliver_now
-    certificate.update(reminder_sent: true)
   end
 end
