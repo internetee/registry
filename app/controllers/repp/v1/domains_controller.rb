@@ -289,7 +289,9 @@ module Repp
             raise ActionController::ParameterMissing.new(:domain_transfers, "domain_transfers cannot be empty")
           end
           
+          Rails.logger.info "[REPP Transfer] Required params validation passed"
           result = data_params.permit(domain_transfers: [%i[domain_name transfer_code]])
+          Rails.logger.info "[REPP Transfer] Permitted params result: #{result.inspect}"
           result
         rescue ActionController::ParameterMissing => e
           Rails.logger.error "[REPP Transfer] Parameter missing error: #{e.message}"

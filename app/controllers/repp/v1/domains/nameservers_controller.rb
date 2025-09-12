@@ -9,6 +9,13 @@ module Repp
         THROTTLED_ACTIONS = %i[index create destroy].freeze
         include Shunter::Integration::Throttle
 
+        COMMAND_FAILED_EPP_CODE = 2400
+        PROHIBIT_EPP_CODE = 2304
+        OBJECT_DOES_NOT_EXIST_EPP_CODE = 2303
+        AUTHORIZATION_ERROR_EPP_CODE = 2201
+        PARAMETER_VALUE_POLICY_ERROR_EPP_CODE = 2306
+        UNKNOWN_EPP_CODE = 2000
+
         api :GET, '/repp/v1/domains/:domain_name/nameservers'
         desc "Get domain's nameservers"
         def index
@@ -61,83 +68,131 @@ module Repp
           end
         end
         def bulk_update
-          begin
-            authorize! :manage, :repp
-            
-            @errors ||= []
-            @successful = []
+          authorize! :manage, :repp
+          
+          @errors ||= []
+          @successful = []
 
-            nameserver_changes = if is_csv_request?
-              parse_nameserver_csv_from_body(request.raw_post)
-            elsif bulk_params[:csv_file].present?
-              parse_nameserver_csv(bulk_params[:csv_file])
-            else
-              bulk_params[:nameserver_changes]
-            end
-            
-            nameserver_changes.each { |change| process_nameserver_change(change) }
+          nameserver_changes = if is_csv_request?
+            parse_nameserver_csv_from_body(request.raw_post)
+          elsif bulk_params[:csv_file].present?
+            parse_nameserver_csv(bulk_params[:csv_file])
+          else
+            bulk_params[:nameserver_changes]
+          end
+          
+          nameserver_changes.each { |change| process_nameserver_change(change) }
 
-            if @errors.any? && @successful.empty?
-              error_summary = analyze_nameserver_errors(@errors)
-              message = build_nameserver_error_message(error_summary, nameserver_changes.count)
-              
-              @response = { 
-                code: 2304, 
-                message: message, 
-                data: { 
-                  success: @successful, 
-                  failed: @errors,
-                  summary: {
-                    total: nameserver_changes.count,
-                    successful: @successful.count,
-                    failed: @errors.count,
-                    error_breakdown: error_summary
-                  }
-                } 
+          if @errors.any? && @successful.empty?
+            render_empty_success_objects_with_errors(nameserver_changes_count: nameserver_changes.count)
+          elsif @errors.any? && @successful.any?
+            render_success_objects_and_objects_with_errors(nameserver_changes_count: nameserver_changes.count)
+          else
+            render_success(data: { 
+              success: @successful, 
+              failed: @errors,
+              summary: {
+                total: nameserver_changes.count,
+                successful: @successful.count,
+                failed: @errors.count
               }
-              render(json: @response, status: :bad_request)
-            elsif @errors.any? && @successful.any?
-              error_summary = analyze_nameserver_errors(@errors)
-              message = "#{@successful.count} nameserver changes successful, #{@errors.count} failed. " + 
-                       build_nameserver_error_message(error_summary, @errors.count, partial: true)
-              
-              @response = { 
-                code: 2400, 
-                message: message, 
-                data: { 
-                  success: @successful, 
-                  failed: @errors,
-                  summary: {
-                    total: nameserver_changes.count,
-                    successful: @successful.count,
-                    failed: @errors.count,
-                    error_breakdown: error_summary
-                  }
-                } 
-              }
-              render(json: @response, status: :multi_status)
-            else
-              render_success(data: { 
-                success: @successful, 
-                failed: @errors,
-                summary: {
-                  total: nameserver_changes.count,
-                  successful: @successful.count,
-                  failed: @errors.count
-                }
-              })
-            end
-            
-          rescue StandardError => e
-            Rails.logger.error "[REPP Nameservers] Exception occurred: #{e.class} - #{e.message}"
-            Rails.logger.error "[REPP Nameservers] Backtrace: #{e.backtrace.join("\n")}"
-            
-            @response = { code: 2304, message: "Nameserver bulk update failed: #{e.message}", data: {} }
-            render(json: @response, status: :bad_request)
+            })
           end
         end
 
         private
+
+        def render_success_objects_and_objects_with_errors(nameserver_changes_count:)
+          error_summary = analyze_nameserver_errors(@errors)
+          message = "#{successful.count} nameserver changes successful, #{errors.count} failed. " + 
+                    build_nameserver_error_message(error_summary, errors.count, partial: true)
+          
+          response = build_nameserver_response_for_bulk_operation(code: COMMAND_FAILED_EPP_CODE, message: message, successful: @successful, errors: @errors, nameserver_changes_count: nameserver_changes_count, error_summary: error_summary)
+          render(json: response, status: :multi_status)
+        end
+
+        def render_empty_success_objects_with_errors(nameserver_changes_count:)
+          error_summary = analyze_nameserver_errors(@errors)
+          message = build_nameserver_error_message(error_summary, nameserver_changes_count)
+          
+          @response = build_nameserver_response_for_bulk_operation(code: PROHIBIT_EPP_CODE, message: message, successful: @successful, errors: @errors, nameserver_changes_count: nameserver_changes_count, error_summary: error_summary)
+          render(json: @response, status: :bad_request)
+        end
+
+        def build_nameserver_response_for_bulk_operation(code:, message:, successful:, errors:, nameserver_changes_count:, error_summary:)
+          {
+            code: code, 
+            message: message, 
+            data: { 
+              success: successful, 
+              failed: errors,
+              summary: {
+                total: nameserver_changes_count,
+                successful: successful.count,
+                failed: errors.count,
+                error_breakdown: error_summary
+              }
+            } 
+          }
+        end
+
+        def csv_parse_wrapper(csv_data)
+          yield
+        rescue CSV::MalformedCSVError => e
+          @errors << { type: 'csv_error', message: "Invalid CSV format: #{e.message}" }
+          return []
+        rescue StandardError => e
+          @errors << { type: 'csv_error', message: "Error processing CSV: #{e.message}" }
+          return []
+        end
+
+        def parse_nameserver_csv(csv_file)
+          nameserver_changes = []
+          
+          csv_parse_wrapper(csv_file) do
+            CSV.foreach(csv_file.path, headers: true) do |row|
+              next if row['Domain'].blank?
+              
+              nameserver_changes << {
+                domain_name: row['Domain'].strip,
+                new_hostname: bulk_params[:new_hostname] || '',
+                ipv4: bulk_params[:ipv4] || [],
+                ipv6: bulk_params[:ipv6] || []
+              }
+            end
+          end
+
+          if nameserver_changes.empty?
+            @errors << { type: 'csv_error', message: 'CSV file is empty or missing required header: Domain' }
+          elsif bulk_params[:new_hostname].blank?
+            @errors << { type: 'csv_error', message: 'new_hostname parameter is required when using CSV' }
+          end
+
+          nameserver_changes
+        end
+
+        def parse_nameserver_csv_from_body(csv_data)
+          nameserver_changes = []
+          
+          csv_parse_wrapper(csv_data) do
+            CSV.parse(csv_data, headers: true) do |row|
+              next if row['Domain'].blank? || row['New_Nameserver'].blank?
+              
+              nameserver_changes << {
+                domain_name: row['Domain'].strip,
+                new_hostname: row['New_Nameserver'].strip,
+                ipv4: row['IPv4']&.split(',')&.map(&:strip) || [],
+                ipv6: row['IPv6']&.split(',')&.map(&:strip) || []
+              }
+            end
+          end
+
+          if nameserver_changes.empty?
+            @errors << { type: 'csv_error', message: 'CSV file is empty or missing required headers: Domain, New_Nameserver' }
+          end
+
+          nameserver_changes
+        end
 
         def set_nameserver
           @nameserver = @domain.nameservers.find_by!(hostname: params[:id])
@@ -156,52 +211,44 @@ module Repp
           end
         end
 
-        def parse_nameserver_csv(csv_file)
-          nameserver_changes = []
-          
-          begin
-            CSV.foreach(csv_file.path, headers: true) do |row|
-              next if row['Domain'].blank?
-              
-              nameserver_changes << {
-                domain_name: row['Domain'].strip,
-                new_hostname: bulk_params[:new_hostname] || '',
-                ipv4: bulk_params[:ipv4] || [],
-                ipv6: bulk_params[:ipv6] || []
-              }
-            end
-          rescue CSV::MalformedCSVError => e
-            @errors << { type: 'csv_error', message: "Invalid CSV format: #{e.message}" }
-            return []
-          rescue StandardError => e
-            @errors << { type: 'csv_error', message: "Error processing CSV: #{e.message}" }
-            return []
-          end
+        def build_error_info(change:, error_code:, error_message:, details:)
+          {
+            type: 'nameserver_change',
+            domain_name: change[:domain_name],
+            error_code: error_code.to_s,
+            error_message: error_message,
+            details: details
+          }
+        end
 
-          if nameserver_changes.empty?
-            @errors << { type: 'csv_error', message: 'CSV file is empty or missing required header: Domain' }
-          elsif bulk_params[:new_hostname].blank?
-            @errors << { type: 'csv_error', message: 'new_hostname parameter is required when using CSV' }
-          end
-
-          nameserver_changes
+        def process_nameserver_change_wrapper(change)
+          yield
+        rescue ActiveRecord::RecordNotFound => e
+          @errors << build_error_info(
+            change: change, error_code: OBJECT_DOES_NOT_EXIST_EPP_CODE, 
+            error_message: 'Domain not found', 
+            details: { code: OBJECT_DOES_NOT_EXIST_EPP_CODE.to_s, msg: 'Domain not found' }
+          )
+        rescue StandardError => e
+          @errors << build_error_info(
+            change: change, 
+            error_code: UNKNOWN_EPP_CODE, 
+            error_message: e.message, 
+            details: { message: e.message }
+          )
         end
 
         def process_nameserver_change(change)
-          
-          begin
+          process_nameserver_change_wrapper(change) do
             domain = Epp::Domain.find_by!('name = ? OR name_puny = ?', 
                                          change[:domain_name], change[:domain_name])
             
             unless domain.registrar == current_user.registrar
-              error_info = {
-                type: 'nameserver_change',
-                domain_name: change[:domain_name],
-                error_code: '2201',
-                error_message: 'Authorization error',
-                details: { code: '2201', msg: 'Authorization error' }
-              }
-              @errors << error_info
+              @errors << build_error_info(
+                change: change, 
+                error_code: AUTHORIZATION_ERROR_EPP_CODE, 
+                error_message: 'Authorization error', 
+                details: { code: AUTHORIZATION_ERROR_EPP_CODE.to_s, msg: 'Authorization error' })
               return
             end
 
@@ -246,24 +293,6 @@ module Repp
               
               @errors << error_info
             end
-          rescue ActiveRecord::RecordNotFound
-            error_info = {
-              type: 'nameserver_change',
-              domain_name: change[:domain_name],
-              error_code: '2303',
-              error_message: 'Domain not found',
-              details: { code: '2303', msg: 'Domain not found' }
-            }
-            @errors << error_info
-          rescue StandardError => e
-            error_info = {
-              type: 'nameserver_change',
-              domain_name: change[:domain_name],
-              error_code: 'UNKNOWN',
-              error_message: e.message,
-              details: { message: e.message }
-            }
-            @errors << error_info
           end
         end
 
@@ -271,34 +300,7 @@ module Repp
           request.content_type&.include?('text/csv') || request.content_type&.include?('application/csv')
         end
 
-        def parse_nameserver_csv_from_body(csv_data)
-          nameserver_changes = []
-          
-          begin
-            CSV.parse(csv_data, headers: true) do |row|
-              next if row['Domain'].blank? || row['New_Nameserver'].blank?
-              
-              nameserver_changes << {
-                domain_name: row['Domain'].strip,
-                new_hostname: row['New_Nameserver'].strip,
-                ipv4: row['IPv4']&.split(',')&.map(&:strip) || [],
-                ipv6: row['IPv6']&.split(',')&.map(&:strip) || []
-              }
-            end
-          rescue CSV::MalformedCSVError => e
-            @errors << { type: 'csv_error', message: "Invalid CSV format: #{e.message}" }
-            return []
-          rescue StandardError => e
-            @errors << { type: 'csv_error', message: "Error processing CSV: #{e.message}" }
-            return []
-          end
 
-          if nameserver_changes.empty?
-            @errors << { type: 'csv_error', message: 'CSV file is empty or missing required headers: Domain, New_Nameserver' }
-          end
-
-          nameserver_changes
-        end
 
         def analyze_nameserver_errors(errors)
           error_counts = {}
@@ -328,13 +330,13 @@ module Repp
           
           error_summary.each do |error_info|
             case error_info[:code]
-            when '2303'
+            when OBJECT_DOES_NOT_EXIST_EPP_CODE.to_s
               messages << "#{error_info[:count]} domain#{'s' if error_info[:count] > 1} not found"
-            when '2201'
+            when AUTHORIZATION_ERROR_EPP_CODE.to_s
               messages << "#{error_info[:count]} domain#{'s' if error_info[:count] > 1} unauthorized"
-            when '2304'
+            when PROHIBIT_EPP_CODE.to_s
               messages << "#{error_info[:count]} domain#{'s' if error_info[:count] > 1} prohibited from changes"
-            when '2306'
+            when PARAMETER_VALUE_POLICY_ERROR_EPP_CODE.to_s
               messages << "#{error_info[:count]} nameserver#{'s' if error_info[:count] > 1} invalid"
             else
               messages << "#{error_info[:count]} change#{'s' if error_info[:count] > 1} failed (#{error_info[:message]})"
