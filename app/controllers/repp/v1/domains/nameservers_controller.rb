@@ -61,39 +61,23 @@ module Repp
           end
         end
         def bulk_update
-          Rails.logger.info "[REPP Nameservers] Starting bulk nameserver update"
-          Rails.logger.info "[REPP Nameservers] Request params: #{params.inspect}"
-          Rails.logger.info "[REPP Nameservers] Content-Type: #{request.content_type}"
-          
           begin
             authorize! :manage, :repp
-            Rails.logger.info "[REPP Nameservers] Authorization successful"
             
             @errors ||= []
             @successful = []
 
             nameserver_changes = if is_csv_request?
-              Rails.logger.info "[REPP Nameservers] Processing CSV data from raw body"
               parse_nameserver_csv_from_body(request.raw_post)
             elsif bulk_params[:csv_file].present?
-              Rails.logger.info "[REPP Nameservers] Processing CSV file upload"
               parse_nameserver_csv(bulk_params[:csv_file])
             else
-              Rails.logger.info "[REPP Nameservers] Processing JSON data"
               bulk_params[:nameserver_changes]
             end
             
-            Rails.logger.info "[REPP Nameservers] Nameserver changes to process: #{nameserver_changes.inspect}"
-
             nameserver_changes.each { |change| process_nameserver_change(change) }
 
-            Rails.logger.info "[REPP Nameservers] Processing complete. Successful: #{@successful.count}, Failed: #{@errors.count}"
-            
-            # Применяем ту же логику ответов что и в transfer
             if @errors.any? && @successful.empty?
-              # Все изменения провалились
-              Rails.logger.error "[REPP Nameservers] All nameserver changes failed"
-              
               error_summary = analyze_nameserver_errors(@errors)
               message = build_nameserver_error_message(error_summary, nameserver_changes.count)
               
@@ -113,9 +97,6 @@ module Repp
               }
               render(json: @response, status: :bad_request)
             elsif @errors.any? && @successful.any?
-              # Частичный успех
-              Rails.logger.warn "[REPP Nameservers] Partial success: #{@successful.count} succeeded, #{@errors.count} failed"
-              
               error_summary = analyze_nameserver_errors(@errors)
               message = "#{@successful.count} nameserver changes successful, #{@errors.count} failed. " + 
                        build_nameserver_error_message(error_summary, @errors.count, partial: true)
@@ -136,8 +117,6 @@ module Repp
               }
               render(json: @response, status: :multi_status)
             else
-              # Все успешно
-              Rails.logger.info "[REPP Nameservers] All nameserver changes successful"
               render_success(data: { 
                 success: @successful, 
                 failed: @errors,
@@ -209,15 +188,12 @@ module Repp
         end
 
         def process_nameserver_change(change)
-          Rails.logger.info "[REPP Nameservers] Processing domain: #{change[:domain_name]}"
           
           begin
             domain = Epp::Domain.find_by!('name = ? OR name_puny = ?', 
                                          change[:domain_name], change[:domain_name])
-            Rails.logger.info "[REPP Nameservers] Domain found: #{domain.name}"
             
             unless domain.registrar == current_user.registrar
-              Rails.logger.warn "[REPP Nameservers] Authorization failed for #{domain.name}"
               error_info = {
                 type: 'nameserver_change',
                 domain_name: change[:domain_name],
@@ -230,10 +206,8 @@ module Repp
             end
 
             existing_hostnames = domain.nameservers.map(&:hostname)
-            Rails.logger.info "[REPP Nameservers] Existing nameservers: #{existing_hostnames}"
             
             if existing_hostnames.include?(change[:new_hostname])
-              Rails.logger.info "[REPP Nameservers] Nameserver already exists, marking as successful"
               @successful << { type: 'nameserver_change', domain_name: domain.name }
               return
             end
@@ -243,7 +217,6 @@ module Repp
             if domain.nameservers.count > 0
               first_ns = domain.nameservers.first
               nameserver_actions << { hostname: first_ns.hostname, action: 'rem' }
-              Rails.logger.info "[REPP Nameservers] Removing old nameserver: #{first_ns.hostname}"
             end
             
             nameserver_actions << { 
@@ -252,19 +225,14 @@ module Repp
               ipv4: change[:ipv4] || [],
               ipv6: change[:ipv6] || []
             }
-            Rails.logger.info "[REPP Nameservers] Adding new nameserver: #{change[:new_hostname]}"
             
             nameserver_params = { nameservers: nameserver_actions }
 
             action = Actions::DomainUpdate.new(domain, nameserver_params, false)
 
             if action.call
-              Rails.logger.info "[REPP Nameservers] Nameserver change successful for #{domain.name}"
               @successful << { type: 'nameserver_change', domain_name: domain.name }
-            else
-              Rails.logger.info "[REPP Nameservers] Nameserver change failed for #{domain.name}"
-              Rails.logger.info "[REPP Nameservers] Domain errors: #{domain.errors.inspect}"
-              
+            else      
               epp_error = domain.errors.where(:epp_errors).first
               error_details = epp_error&.options || { message: domain.errors.full_messages.join(', ') }
               
@@ -279,7 +247,6 @@ module Repp
               @errors << error_info
             end
           rescue ActiveRecord::RecordNotFound
-            Rails.logger.warn "[REPP Nameservers] Domain not found: #{change[:domain_name]}"
             error_info = {
               type: 'nameserver_change',
               domain_name: change[:domain_name],
@@ -289,7 +256,6 @@ module Repp
             }
             @errors << error_info
           rescue StandardError => e
-            Rails.logger.error "[REPP Nameservers] Unexpected error for #{change[:domain_name]}: #{e.message}"
             error_info = {
               type: 'nameserver_change',
               domain_name: change[:domain_name],
@@ -331,7 +297,6 @@ module Repp
             @errors << { type: 'csv_error', message: 'CSV file is empty or missing required headers: Domain, New_Nameserver' }
           end
 
-          Rails.logger.info "[REPP Nameservers] Parsed #{nameserver_changes.count} nameserver changes from CSV"
           nameserver_changes
         end
 
