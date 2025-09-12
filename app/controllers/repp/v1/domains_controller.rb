@@ -148,6 +148,9 @@ module Repp
           domain_transfers = if is_csv_request?
             Rails.logger.info "[REPP Transfer] Processing CSV data from raw body"
             parse_transfer_csv_from_body(request.raw_post)
+          elsif params[:csv_file].present?
+            Rails.logger.info "[REPP Transfer] Processing CSV file upload"
+            parse_transfer_csv(params[:csv_file])
           else
             Rails.logger.info "[REPP Transfer] Processing JSON data"
             Rails.logger.info "[REPP Transfer] transfer_params call starting"

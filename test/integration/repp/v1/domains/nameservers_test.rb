@@ -131,8 +131,9 @@ class ReppV1DomainsNameserversTest < ActionDispatch::IntegrationTest
          params: { csv_file: csv_file, new_hostname: 'ns1.newserver.ee' }
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :ok
-    assert_equal 1000, json[:code]
+    assert_response :bad_request
+    assert_equal 2304, json[:code]
+    assert_includes json[:message], 'changes failed'
     assert_equal 1, json[:data][:failed].length
     assert_equal 'csv_error', json[:data][:failed][0][:type]
     assert_includes json[:data][:failed][0][:message], 'CSV file is empty or missing required header'
