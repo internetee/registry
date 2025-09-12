@@ -1,3 +1,6 @@
+12.09.2025
+* Automated pull request merging https://github.com/internetee/registry/pull/2846
+
 10.09.2025
 * Improved test coverage of admin/settings_controller https://github.com/internetee/registry/pull/2852
 * Improved test coverage of registry_lock_controller https://github.com/internetee/registry/pull/2850
