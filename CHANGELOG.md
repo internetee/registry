@@ -1,3 +1,6 @@
+15.09.2025
+* Fixed ident request webhook hmac validation https://github.com/internetee/registry/pull/2856
+
 12.09.2025
 * Automated pull request merging https://github.com/internetee/registry/pull/2846
 
