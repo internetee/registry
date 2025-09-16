@@ -197,7 +197,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.3.4)
+    concurrent-ruby (1.3.5)
     connection_pool (2.4.1)
     countries (4.0.1)
       i18n_data (~> 0.13.0)
@@ -248,6 +248,7 @@ GEM
       dry-logic (~> 1.4)
       zeitwerk (~> 2.6)
     erubi (1.13.1)
+    event_stream_parser (1.0.0)
     execjs (2.7.0)
     faraday (2.12.2)
       faraday-net_http (>= 2.0, < 3.5)
@@ -255,6 +256,8 @@ GEM
       logger
     faraday-follow_redirects (0.3.0)
       faraday (>= 1, < 3)
+    faraday-multipart (1.1.0)
+      multipart-post (~> 2.0)
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
     ffi (1.15.0)
@@ -358,6 +361,7 @@ GEM
       money (~> 6.13.2)
       railties (>= 3.0)
     msgpack (1.7.2)
+    multipart-post (2.4.1)
     mutex_m (0.3.0)
     net-ftp (0.3.7)
       net-protocol
@@ -484,6 +488,10 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.4.0)
+    ruby-openai (8.1.0)
+      event_stream_parser (>= 0.3.0, < 2.0.0)
+      faraday (>= 1)
+      faraday-multipart (>= 1)
     rubyzip (2.3.2)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
@@ -602,7 +610,7 @@ DEPENDENCIES
   capybara (~> 3.40.0)
   coffee-rails (>= 5.0)
   company_register!
-  concurrent-ruby (= 1.3.4)
+  concurrent-ruby (= 1.3.5)
   countries
   data_migrate (~> 9.0)
   database_cleaner
@@ -649,6 +657,7 @@ DEPENDENCIES
   redis
   rest-client
   rexml
+  ruby-openai
   rubyzip
   sass-rails
   select2-rails (= 4.0.13)

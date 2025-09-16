@@ -1,0 +1,5 @@
+- content_for :actions do
+  = link_to(t(:back), admin_reports_path, class: "btn btn-default")
+= render "shared/title", name: t(".title")
+
+= render "admin/reports/partials/form", url: admin_report_path(@report), method: :patch

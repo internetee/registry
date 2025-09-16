@@ -1,7 +1,7 @@
 Domain Registry
 ===============
-[![Maintainability](https://api.codeclimate.com/v1/badges/a91e4ae502a6c5245160/maintainability)](https://codeclimate.com/github/internetee/registry/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/a91e4ae502a6c5245160/test_coverage)](https://codeclimate.com/github/internetee/registry/test_coverage)
+[![Maintainability](https://qlty.sh/gh/internetee/projects/registry/maintainability.svg)](https://qlty.sh/gh/internetee/projects/registry)
+[![Code Coverage](https://qlty.sh/gh/internetee/projects/registry/coverage.svg)](https://qlty.sh/gh/internetee/projects/registry)
 [![Documentation Status](https://readthedocs.org/projects/eeregistry/badge/?version=latest)](http://docs.internet.ee/en/latest/?badge=latest)
 
 Full stack top-level domain (TLD) management.

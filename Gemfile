@@ -62,26 +62,24 @@ gem 'omniauth-tara', github: 'internetee/omniauth-tara'
 # gem 'omniauth-tara', path: 'vendor/gems/omniauth-tara'
 
 gem 'airbrake'
-gem 'epp', github: 'internetee/epp', branch: :master
-gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
-gem 'jquery-ui-rails', '6.0.1'
-gem 'pdfkit'
-gem 'redis'
-gem 'sidekiq', '~> 7.0'
 gem 'company_register', github: 'internetee/company_register', branch: :master
+gem 'directo', github: 'internetee/directo', branch: 'master'
 gem 'domain_name'
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
+gem 'epp', github: 'internetee/epp', branch: :master
+gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
 gem 'haml', '~> 6.0'
+gem 'jquery-ui-rails', '6.0.1'
 gem 'lhv', github: 'internetee/lhv', branch: 'master'
+gem 'pdfkit'
+gem 'redis'
 gem 'rexml'
-gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
-
-gem 'directo', github: 'internetee/directo', branch: 'master'
-
+gem 'sidekiq', '~> 7.0'
 gem 'strong_migrations'
 gem 'dry-types'
 gem 'dry-struct'
 gem 'openssl'
+gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
 
 group :development, :test do
   gem 'pry', '0.15.2'
@@ -102,6 +100,7 @@ end
 gem 'aws-sdk-sesv2', '~> 1.19'
 gem 'newrelic-infinite_tracing'
 gem 'newrelic_rpm'
+gem 'ruby-openai'
 
 # profiles
 gem 'pghero'
@@ -112,4 +111,4 @@ gem 'jwt'
 gem 'net-ftp'
 
 # https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
-gem 'concurrent-ruby', '1.3.4'
+gem 'concurrent-ruby', '1.3.5'

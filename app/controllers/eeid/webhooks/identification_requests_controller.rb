@@ -42,8 +42,24 @@ module Eeid
 
       def valid_hmac_signature?(ident_type, hmac_signature)
         secret = ENV["#{ident_type}_ident_service_client_secret"]
-        computed_signature = OpenSSL::HMAC.hexdigest('SHA256', secret, request.raw_post)
-        ActiveSupport::SecurityUtils.secure_compare(computed_signature, hmac_signature)
+        Rails.logger.debug("[valid_hmac_signature?] ident_type: #{ident_type}")
+        Rails.logger.debug("[valid_hmac_signature?] ENV secret present: #{secret.present?}")
+        Rails.logger.debug("[valid_hmac_signature?] request.raw_post: #{request.raw_post.inspect}")
+        Rails.logger.debug("[valid_hmac_signature?] Provided HMAC signature: #{hmac_signature.inspect}")
+
+        # Remove all spaces and newlines from raw body for canonicalization
+        canonical_body = request.raw_post.to_s.gsub(/[\s]+/, '')
+        Rails.logger.debug("[valid_hmac_signature?] request.body (canonical no-space): #{canonical_body}")
+
+        provided = hmac_signature.to_s.strip
+
+        computed_signature = OpenSSL::HMAC.hexdigest('SHA256', secret, canonical_body)
+        Rails.logger.debug("[valid_hmac_signature?] Computed HMAC signature: #{computed_signature}")
+
+        result = ActiveSupport::SecurityUtils.secure_compare(computed_signature, provided)
+        Rails.logger.debug("[valid_hmac_signature?] Signature valid: #{result}")
+
+        result
       end
 
       def verify_contact(contact)
