@@ -1,0 +1,19 @@
+= form_with url: generate_with_ai_admin_reports_path, method: :post, html: { class: 'form-horizontal' } do
+  = render 'shared/full_errors', object: @report
+  .row
+    .col-md-12
+      .form-group
+        .col-md-2.control-label
+          = label_tag :prompt, t('.prompt'), class: 'required'
+        .col-md-10
+          = text_area_tag :prompt, nil, class: 'form-control', rows: 4, required: true, placeholder: t('.prompt_placeholder')
+
+      .form-group
+        .col-md-2.control-label
+          = label_tag :schema, t('.schema')
+        .col-md-10
+          = text_area_tag :schema, nil, class: 'form-control', rows: 6, placeholder: t('.schema_placeholder')
+  %hr
+  .row
+    .col-md-12.text-right
+      = submit_tag(t('.submit'), class: 'btn btn-warning')

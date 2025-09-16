@@ -1,3 +1,18 @@
+15.09.2025
+* Fixed ident request webhook hmac validation https://github.com/internetee/registry/pull/2856
+
+12.09.2025
+* Automated pull request merging https://github.com/internetee/registry/pull/2846
+
+10.09.2025
+* Improved test coverage of admin/settings_controller https://github.com/internetee/registry/pull/2852
+* Improved test coverage of registry_lock_controller https://github.com/internetee/registry/pull/2850
+* Domain Versions Controller Tests https://github.com/internetee/registry/pull/2844
+* Added test coverage/admin/contacts controller https://github.com/internetee/registry/pull/2843
+
+05.09.2025
+* Added reports module to admin https://github.com/internetee/registry/issues/2749
+
 18.08.2025
 * Added test coverage for admin/contact_versions_controller https://github.com/internetee/registry/pull/2836 
 
