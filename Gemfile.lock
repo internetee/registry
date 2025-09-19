@@ -197,7 +197,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.3.4)
+    concurrent-ruby (1.3.5)
     connection_pool (2.4.1)
     countries (4.0.1)
       i18n_data (~> 0.13.0)
@@ -610,7 +610,7 @@ DEPENDENCIES
   capybara (~> 3.40.0)
   coffee-rails (>= 5.0)
   company_register!
-  concurrent-ruby (= 1.3.4)
+  concurrent-ruby (= 1.3.5)
   countries
   data_migrate (~> 9.0)
   database_cleaner
@@ -657,8 +657,8 @@ DEPENDENCIES
   redis
   rest-client
   rexml
-  rubyzip
   ruby-openai
+  rubyzip
   sass-rails
   select2-rails (= 4.0.13)
   selectize-rails (= 0.12.6)
