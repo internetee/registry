@@ -1,3 +1,6 @@
+19.09.2025
+* Migrated from codeclimate.yml to qlty.toml https://github.com/internetee/registry/pull/2841 
+
 15.09.2025
 * Fixed ident request webhook hmac validation https://github.com/internetee/registry/pull/2856
 
