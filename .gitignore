@@ -29,3 +29,4 @@ certs/ca/private/ca_*.pem
 .cursor/
 .cursorrules
 certs/
+CLAUDE.md
