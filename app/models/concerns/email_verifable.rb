@@ -19,6 +19,8 @@ module EmailVerifable
   end
 
   def cancel_force_delete_if_domain_attributes_are_valid?(domain)
+    return if domain.template_name == 'invalid_company'
+    
     domain.cancel_force_delete if contact_emails_valid?(domain) && !is_domain_has_invalid_org_contact?(domain)
   end
 
