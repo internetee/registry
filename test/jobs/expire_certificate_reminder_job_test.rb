@@ -7,7 +7,6 @@ class ExpireCertificateReminderJobTest < ActiveJob::TestCase
     ActionMailer::Base.deliveries.clear
     @certificate = certificates(:api)
     
-    # Устанавливаем настройку по умолчанию для тестов (30 дней)
     create_setting_if_not_exists('certificate_reminder_deadline', '30', 'integer', 'certificate')
   end
 
@@ -48,10 +47,8 @@ class ExpireCertificateReminderJobTest < ActiveJob::TestCase
   end
 
   def test_uses_custom_deadline_setting
-    # Изменяем настройку на 10 дней
     update_setting('certificate_reminder_deadline', '10')
     
-    # Сертификат истекает через 2 недели (больше 10 дней)
     @certificate.update(expires_at: 2.weeks.from_now)
     
     perform_enqueued_jobs do
@@ -60,7 +57,6 @@ class ExpireCertificateReminderJobTest < ActiveJob::TestCase
 
     assert_emails 0
     
-    # Сертификат истекает через 5 дней (меньше 10 дней)
     @certificate.update(expires_at: 5.days.from_now)
     
     perform_enqueued_jobs do
