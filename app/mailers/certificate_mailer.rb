@@ -12,10 +12,4 @@ class CertificateMailer < ApplicationMailer
     subject = 'Certificate Signing Confirmation'
     mail(to: email, subject: subject)
   end
-
-  def certificate_expiring(email:, certificate:)
-    @certificate = certificate
-    subject = 'Certificate Expiring'
-    mail(to: email, subject: subject)
-  end
 end
