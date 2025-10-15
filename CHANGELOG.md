@@ -1,3 +1,8 @@
+19.09.2025
+* Migrated from codeclimate.yml to qlty.toml https://github.com/internetee/registry/pull/2841
+* Sending merge notifications to Mattermost https://github.com/internetee/registry/pull/2857
+* Improved test coverage to force_delete_controller https://github.com/internetee/registry/pull/2849
+
 15.09.2025
 * Fixed ident request webhook hmac validation https://github.com/internetee/registry/pull/2856
 
