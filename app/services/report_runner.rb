@@ -38,7 +38,17 @@ module ReportRunner
 
       if params.present?
         params.each_value do |parameter_set|
-          permitted_param_set = parameter_set.permit(report_parameters.map { |param| param["name"] })
+          # Build permit list - for array parameters (type: 'registrars'), we need to specify them as { param_name: [] }
+          permit_list = report_parameters.map do |param|
+            # Check if parameter type indicates an array (registrars, or any type ending with 's' that suggests plural)
+            if param["type"] == "registrars" || (param["type"]&.end_with?("s") && param["type"] != "date")
+              { param["name"] => [] }
+            else
+              param["name"]
+            end
+          end
+
+          permitted_param_set = parameter_set.permit(*permit_list)
           query = report.sql_query.dup
           handle_parameters(query, permitted_param_set)
           results << run_query(query)
@@ -79,10 +89,10 @@ module ReportRunner
 
     def run_query(query)
       if Rails.env.test?
-        ActiveRecord::Base.connection.exec_query(sanitize_sql(query))
+        ActiveRecord::Base.connection.exec_query(query)
       else
         ActiveRecord::Base.connected_to(role: :reading, prevent_writes: true) do
-          ActiveRecord::Base.connection.exec_query(sanitize_sql(query))
+          ActiveRecord::Base.connection.exec_query(query)
         end
       end
     rescue StandardError => e
@@ -90,23 +100,35 @@ module ReportRunner
       raise e
     end
 
-    def sanitize_sql(query)
-      ActiveRecord::Base.sanitize_sql_array([query])
-    end
-
     def handle_parameters(query, param_set)
       parameter_values = []
       param_set.each_key do |param|
         value = param_set[param]
         substitute_query_param(query, param, value)
-        parameter_values << "#{param.humanize}: #{value}"
+        parameter_values << "#{param.humanize}: #{value}" if value.present?
       end
 
       parameter_values
     end
 
     def substitute_query_param(query, param, value)
-      query.gsub!(":#{param}", ActiveRecord::Base.connection.quote(value))
+      if value.blank?
+        # Replace :param with NULL for SQL compatibility
+        query.gsub!(":#{param}", "NULL")
+      elsif value.is_a?(Array)
+        # Handle array values (from multiselect) - convert to PostgreSQL array format
+        # For integer arrays (like registrar_ids), we need integers without quotes
+        if param.to_s.include?('id') && value.all? { |v| v.to_s.match?(/^\d+$/) }
+          array_values = value.map(&:to_i).join(',')
+          query.gsub!(":#{param}", "ARRAY[#{array_values}]")
+        else
+          # For string arrays, use quotes
+          array_values = value.map { |v| ActiveRecord::Base.connection.quote(v) }.join(',')
+          query.gsub!(":#{param}", "ARRAY[#{array_values}]")
+        end
+      else
+        query.gsub!(":#{param}", ActiveRecord::Base.connection.quote(value))
+      end
     end
 
     def build_page_title(report, params)
