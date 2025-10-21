@@ -35,10 +35,6 @@ jobs:
           bundle env
           head -n1 $(which bundle)
 
-      - name: Run Bundler Audit
-        run: bundle exec bundle-audit check --update
-        continue-on-error: true
-
       - name: Run Tests
         env:
           PG_DATABASE: postgres
