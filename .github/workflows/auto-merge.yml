@@ -40,9 +40,11 @@ jobs:
       - name: Check if PR should be auto-merged
         id: check_auto_merge
         run: |
+          # Set default UPDATE_TYPE to avoid unbound variable errors
+          UPDATE_TYPE="${{ steps.metadata.outputs.update-type || 'unknown' }}"
+          
           if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
-            UPDATE_TYPE="${{ steps.metadata.outputs.update-type }}"
-            if [[ "${{ steps.metadata.outputs.update-type }}"; then
+            if [[ "$UPDATE_TYPE" == "version-update:semver-patch" ]]; then
               echo "auto_merge=true" >> $GITHUB_OUTPUT
               echo "update_type=${UPDATE_TYPE}" >> $GITHUB_OUTPUT
               echo "Auto-merge: Dependabot patch update detected"
