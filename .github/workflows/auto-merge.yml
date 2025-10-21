@@ -12,19 +12,20 @@ permissions:
 jobs:
   auto-approve-merge:
     runs-on: ubuntu-latest
-    if: (github.actor == 'dependabot[bot]' || github.actor == 'renovate[bot]') && github.repository == 'internetee/registry'
     steps:
       - name: Checkout repository
+        if: github.repository == 'internetee/registry'
         uses: actions/checkout@v5
 
       - name: Install GitHub CLI
         run: |
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          sudo apt update
-          sudo apt install gh
+          sudo apt-get update
+          sudo apt-get install -y gh
 
       - name: Auto approve PR
+        if: |
+          github.actor == 'dependabot[bot]' ||
+          github.actor == 'renovate[bot]'
         uses: hmarr/auto-approve-action@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -40,28 +41,33 @@ jobs:
         id: check_auto_merge
         run: |
           if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
-            if [[ "${{ steps.metadata.outputs.update-type }}" == "version-update:semver-patch" ]]; then
+            UPDATE_TYPE="${{ steps.metadata.outputs.update-type }}"
+            if [[ "${{ steps.metadata.outputs.update-type }}"; then
               echo "auto_merge=true" >> $GITHUB_OUTPUT
+              echo "update_type=${UPDATE_TYPE}" >> $GITHUB_OUTPUT
               echo "Auto-merge: Dependabot patch update detected"
             else
               echo "auto_merge=false" >> $GITHUB_OUTPUT
+              echo "update_type=${UPDATE_TYPE}" >> $GITHUB_OUTPUT
               echo "Auto-merge: Dependabot non-patch update, skipping"
             fi
           elif [ "${{ github.actor }}" == "renovate[bot]" ]; then
-            # Check if PR has patch label (set by renovate.json configuration)
-            # Extract label names from the labels array
-            LABEL_NAMES=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name' | tr '\n' ' ')
-            if [[ "$LABEL_NAMES" == *"patch"* ]] || [[ "$LABEL_NAMES" == *"bundler"* ]] || [[ "$LABEL_NAMES" == *"ruby-version"* ]] || [[ "$LABEL_NAMES" == *"github-actions"* ]]; then
+            # Check if the PR has the 'patch' label but NOT 'minor' or 'major' labels
+            LABELS=$(gh pr view ${{ github.event.pull_request.number }} --json labels -q '.labels[].name' | tr '\n' ' ')
+            if [[ "$LABELS" == *"patch"* ]] && [[ "$LABELS" != *"minor"* ]] && [[ "$LABELS" != *"major"* ]]; then
               echo "auto_merge=true" >> $GITHUB_OUTPUT
-              echo "Auto-merge: Renovate patch update detected (label-based): $LABEL_NAMES"
+              echo "update_type=renovate-patch-only" >> $GITHUB_OUTPUT
             else
               echo "auto_merge=false" >> $GITHUB_OUTPUT
-              echo "Auto-merge: Renovate non-patch update, skipping. Labels: $LABEL_NAMES"
+              echo "update_type=renovate-non-patch-or-mixed" >> $GITHUB_OUTPUT
             fi
           else
             echo "auto_merge=false" >> $GITHUB_OUTPUT
+            echo "update_type=${UPDATE_TYPE}" >> $GITHUB_OUTPUT
             echo "Auto-merge: Unknown actor, skipping"
           fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
         shell: bash
 
       - name: Wait for CI checks
@@ -82,13 +88,4 @@ jobs:
           }
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Send Mattermost notification
-        if: steps.check_auto_merge.outputs.auto_merge == 'true'
-        run: |
-          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
-          curl -X POST -H "Authorization: Bearer ${{ secrets.MATTERMOST_BOT_TOKEN }}" \
-                -H "Content-Type: application/json" \
-                -d "{\"channel_id\":\"${{ secrets.MATTERMOST_CHANNEL_ID }}\",\"message\":\"[${{ github.repository }}] PR #${{ github.event.pull_request.number }}: \\\"${{ github.event.pull_request.title }}\\\" was auto-merged by ${{ github.actor }}.\nUpdate type: ${{ steps.metadata.outputs.update-type || 'patch' }}\nMerged at: $TIMESTAMP\nLink: ${{ github.event.pull_request.html_url }}\"}" \
-                https://mattermost.example.com/api/v4/posts
   

@@ -1,0 +1,37 @@
+name: Notify PR Merged
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  notify:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Mattermost notification
+        env:
+          MATTERMOST_BOT_TOKEN: ${{ secrets.MATTERMOST_BOT_TOKEN }}
+          MATTERMOST_CHANNEL_ID: ${{ secrets.MATTERMOST_CHANNEL_ID }}
+          MATTERMOST_BASE_URL: ${{ secrets.MATTERMOST_BASE_URL }}
+          REPO: ${{ github.repository }}
+          ACTOR: ${{ github.actor }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          MERGED_AT: ${{ github.event.pull_request.merged_at }}
+        run: |
+          if [ -z "$MATTERMOST_BOT_TOKEN" ] || [ -z "$MATTERMOST_CHANNEL_ID" ] || [ -z "$MATTERMOST_BASE_URL" ]; then
+            echo "Missing Mattermost secrets (MATTERMOST_BOT_TOKEN, MATTERMOST_CHANNEL_ID, MATTERMOST_BASE_URL)" >&2
+            exit 1
+          fi
+          curl -sS -X POST \
+            -H "Authorization: Bearer $MATTERMOST_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"channel_id\":\"$MATTERMOST_CHANNEL_ID\",\"message\":\"[$REPO] PR #$PR_NUMBER: \\\"$PR_TITLE\\\" was merged by $ACTOR.\\nMerged at: $MERGED_AT\\nLink: $PR_URL\"}" \
+            "$MATTERMOST_BASE_URL/api/v4/posts"

@@ -35,6 +35,10 @@ jobs:
           bundle env
           head -n1 $(which bundle)
 
+      - name: Run Bundler Audit
+        run: bundle exec bundle-audit check --update
+        continue-on-error: true
+
       - name: Run Tests
         env:
           PG_DATABASE: postgres
@@ -64,6 +68,11 @@ jobs:
           files: coverage/.resultset.json
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: coverage
-          path: coverage/
+          path: |
+            coverage/.resultset.json
+            coverage/index.html
+            coverage/assets/
+          include-hidden-files: true
