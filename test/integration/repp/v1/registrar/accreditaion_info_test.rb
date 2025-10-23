@@ -1,37 +1,42 @@
 require 'test_helper'
 
 class ReppV1AccreditationInfoTest < ActionDispatch::IntegrationTest
-  if Feature.allow_accr_endspoints?
-    def setup
-      @user = users(:api_bestnames)
-      token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
-      token = "Basic #{token}"
+  def setup
+    @user = users(:api_bestnames)
+    token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
+    token = "Basic #{token}"
 
-      @auth_headers = { 'Authorization' => token }
-    end
+    @auth_headers = { 'Authorization' => token }
+     # Enable the accreditation endpoints feature for testing
+    ENV['allow_accr_endspoints'] = 'true'
+  end
 
-    def test_valid_login
-      get '/repp/v1/registrar/accreditation/get_info', headers: @auth_headers
-      json = JSON.parse(response.body, symbolize_names: true)
+  def teardown
+    ENV.delete('allow_accr_endspoints')
+    super
+  end
 
-      assert_response :ok
-      assert_equal json[:data][:username], @user.username
-      assert json[:data][:roles].include? 'super'
-      assert_equal json[:data][:registrar_name], 'Best Names'
-      assert_equal json[:data][:registrar_reg_no], '1234'
-    end
+  def test_valid_login
+    get '/repp/v1/registrar/accreditation/get_info', headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
 
-    def test_invalid_login
-      token = Base64.encode64("#{@user.username}:0066600")
-      token = "Basic #{token}"
+    assert_response :ok
+    assert_equal json[:data][:username], @user.username
+    assert json[:data][:roles].include? 'super'
+    assert_equal json[:data][:registrar_name], 'Best Names'
+    assert_equal json[:data][:registrar_reg_no], '1234'
+  end
 
-      auth_headers = { 'Authorization' => token }
+  def test_invalid_login
+    token = Base64.encode64("#{@user.username}:0066600")
+    token = "Basic #{token}"
 
-      get '/repp/v1/registrar/accreditation/get_info', headers: auth_headers
-      json = JSON.parse(response.body, symbolize_names: true)
+    auth_headers = { 'Authorization' => token }
 
-      assert_response :unauthorized
-      assert_equal json[:message], 'Invalid authorization information'
-    end
+    get '/repp/v1/registrar/accreditation/get_info', headers: auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :unauthorized
+    assert_equal json[:message], 'Invalid authorization information'
   end
 end

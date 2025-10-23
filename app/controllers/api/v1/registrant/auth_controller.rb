@@ -49,10 +49,21 @@ module Api
         end
 
         def check_ip_whitelist
-          allowed_ips = ENV['registrant_api_auth_allowed_ips'].to_s.split(',').map(&:strip)
-          return if allowed_ips.include?(request.ip) || Rails.env.development?
+          Rails.logger.debug "[check_ip_whitelist] Request IP: #{request.ip}"
+          return if ip_allowed?(request.ip) || Rails.env.development?
 
           render json: { errors: [{ base: ['Not authorized'] }] }, status: :unauthorized
+        end
+
+        def ip_allowed?(ip)
+          allowed_ips = ENV['registrant_api_auth_allowed_ips'].to_s.split(',').map(&:strip)
+          allowed_ips.any? do |entry|
+            begin
+              IPAddr.new(entry).include?(ip)
+            rescue IPAddr::InvalidAddressError
+              ip == entry
+            end
+          end
         end
       end
     end
