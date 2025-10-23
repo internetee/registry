@@ -404,4 +404,6 @@ Rails.application.routes.draw do
 
   # To prevent users seeing the default welcome message "Welcome aboard" from Rails
   root to: redirect('admin/sign_in')
+
+  get '/health', to: 'health_check#show'
 end

@@ -2,7 +2,7 @@ require 'sidekiq/web' # Require at the top of the initializer
 
 Sidekiq.configure_server do |config|
   config.logger.level = Logger::INFO
-  
+
   # Custom job logging format
   Sidekiq.logger.formatter = proc do |severity, datetime, progname, msg|
     thread_id = Thread.current.object_id.to_s(36)

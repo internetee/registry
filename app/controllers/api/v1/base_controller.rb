@@ -6,8 +6,13 @@ module Api
       private
 
       def authenticate
+<<<<<<< HEAD
         ip_allowed = allowed_ips.include?(request.remote_ip)
 
+=======
+        Rails.logger.debug "[authenticate] Request IP: #{request.remote_ip}"
+        ip_allowed = ip_allowed?(request.remote_ip)
+>>>>>>> 7c3dc141b (Corrected accreditation integration tests)
         head :unauthorized unless ip_allowed
       end
 
@@ -22,8 +27,15 @@ module Api
         render json: json, status: :not_found
       end
 
-      def allowed_ips
-        ENV['auction_api_allowed_ips'].split(',').map(&:strip)
+      def ip_allowed?(ip)
+        allowed_ips = ENV['auction_api_allowed_ips'].to_s.split(',').map(&:strip)
+        allowed_ips.any? do |entry|
+          begin
+            IPAddr.new(entry).include?(ip)
+          rescue IPAddr::InvalidAddressError
+            ip == entry
+          end
+        end
       end
     end
   end
