@@ -5,6 +5,7 @@ module Epp
 
     THROTTLED_ACTIONS = %i[login hello].freeze
     include Shunter::Integration::Throttle
+    include WebclientIpHelper
 
     def hello
       render_epp_response('greeting')
@@ -14,7 +15,7 @@ module Epp
       success = true
       @api_user = ApiUser.find_by(login_params)
 
-      webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
+      webclient_request = webclient_ip_allowed?(request.ip)
       if webclient_request && !Rails.env.test? && !Rails.env.development?
         client_md5 = Certificate.parse_md_from_string(request.env['HTTP_SSL_CLIENT_CERT'])
         raise 'webclient cert (cert_path) missing, registrar (r)epp disabled' if ENV['cert_path'].blank?

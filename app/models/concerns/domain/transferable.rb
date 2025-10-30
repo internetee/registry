@@ -56,7 +56,7 @@ module Domain::Transferable
     return if registrant.registrar == new_registrar
     self.registrant = registrant.transfer(new_registrar).becomes(Registrant)
   end
-
+  
   def transfer_domain_contacts(new_registrar)
     copied_ids = []
     domain_contacts.each do |dc|
