@@ -19,7 +19,7 @@ module Api
           if result.status_code_success
             render_success({ 
               message: "Domains are in pending status. Need to pay for domains.", 
-              linkpay_url: result.linkpay_url,
+              linkpay_url: decode_linkpay_url(result.linkpay_url),
               invoice_number: result.invoice_number,
               user_unique_id: result.user_unique_id,
               available_domains: ReserveDomainInvoice.filter_available_domains(@domain_names)
@@ -30,6 +30,11 @@ module Api
         end
 
         private
+
+        def decode_linkpay_url(url)
+          return url if url.blank?
+          CGI.unescape(url.gsub('\u0026', '&'))
+        end
 
         def domain_names
           @domain_names ||= params[:domain_names]
