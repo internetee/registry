@@ -8,9 +8,9 @@ module Api
           @contact = Contact.find_by(code: params[:id])
 
           if @contact
-            render json: { code: 1000, contact: Serializers::Repp::Contact.new(@contact,
-                                                                               show_address: false).to_json },
-                   status: :ok
+            render json: {
+              contact: Serializers::Repp::Contact.new(@contact, show_address: false).to_json
+            }, status: :ok
           else
             render json: { errors: 'Contact not found' }, status: :not_found
           end

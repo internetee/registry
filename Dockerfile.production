@@ -85,6 +85,7 @@ RUN apt-get update -qq && \
     libjpeg62-turbo \
     xfonts-base \
     xfonts-75dpi \
+    dnsutils \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

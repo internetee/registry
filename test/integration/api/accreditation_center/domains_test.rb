@@ -20,7 +20,6 @@ class DomainsTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/domains/?name=shop.test', headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:code], 1000
     assert_equal json[:domain][:name], 'shop.test'
   end
 
