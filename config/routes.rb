@@ -132,7 +132,6 @@ Rails.application.routes.draw do
         end
         resource :accreditation, only: [:index] do
           collection do
-            get '/get_info', to: 'accreditation_info#index'
             post '/push_results', to: 'accreditation_results#create'
           end
         end
@@ -346,8 +345,6 @@ Rails.application.routes.draw do
       resources :white_ips
 
       collection do
-        post 'set_test_date', to: 'registrars#set_test_date', as: 'set_test_date'
-        post 'remove_test_date', to: 'registrars#remove_test_date', as: 'remove_test_date'
         post 'set_test_date_to_api_user', to: 'api_users#set_test_date_to_api_user', as: 'set_test_date_to_api_user'
         post 'remove_test_date_to_api_user', to: 'api_users#remove_test_date_to_api_user', as: 'remove_test_date_to_api_user'
       end
@@ -404,4 +401,6 @@ Rails.application.routes.draw do
 
   # To prevent users seeing the default welcome message "Welcome aboard" from Rails
   root to: redirect('admin/sign_in')
+
+  get '/health', to: 'health_check#show'
 end

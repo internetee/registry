@@ -1,9 +1,12 @@
+require 'ipaddr'
+
 module Repp
   module V1
     class BaseController < ActionController::API # rubocop:disable Metrics/ClassLength
       attr_reader :current_user
 
       include ErrorAndLogHandler
+      include WebclientIpHelper
 
       before_action :authenticate_user
       before_action :set_locale
@@ -112,17 +115,15 @@ module Repp
       def webclient_request?
         return false if Rails.env.test? || Rails.env.development?
 
-        webclient_ips.include?(request.ip)
-      end
-
-      def webclient_ips
-        ENV['webclient_ips'].to_s.split(',').map(&:strip)
+        webclient_ip_allowed?(request.ip)
       end
 
       def validate_webclient_ca
         return unless webclient_request?
 
         request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']
+        Rails.logger.debug "[validate_webclient_ca] HTTP_SSL_CLIENT_S_DN_CN: #{request.env['HTTP_SSL_CLIENT_S_DN_CN']}"
+        Rails.logger.debug "[validate_webclient_ca] All request.env keys: #{request.env.keys.select { |k| k.to_s.include?('SSL') || k.to_s.include?('HTTP') }}"
 
         webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
         return if request_name == webclient_cn
@@ -139,7 +140,16 @@ module Repp
         crt = request.env['HTTP_SSL_CLIENT_CERT']
         com = request.env['HTTP_SSL_CLIENT_S_DN_CN']
 
-        return if @current_user.pki_ok?(crt, com)
+        Rails.logger.debug "[validate_api_user_cert] Certificate present: #{crt.present?}"
+        Rails.logger.debug "[validate_api_user_cert] Certificate CN present: #{com.present?}"
+        Rails.logger.debug "[validate_api_user_cert] Certificate CN: #{com}"
+        Rails.logger.debug "[validate_api_user_cert] Current user: #{@current_user&.username}"
+        Rails.logger.debug "[validate_api_user_cert] All SSL-related env vars: #{request.env.keys.select { |k| k.to_s.include?('SSL') || k.to_s.include?('HTTP_SSL') }}"
+
+        pki_result = @current_user.pki_ok?(crt, com)
+        Rails.logger.debug "[validate_api_user_cert] PKI validation result: #{pki_result}"
+
+        return if pki_result
 
         render_invalid_cert_response
       end
@@ -150,7 +160,16 @@ module Repp
         crt = request.headers['User-Certificate']
         com = request.headers['User-Certificate-CN']
 
-        return if @current_user.pki_ok?(crt, com, api: false)
+        Rails.logger.debug "[validate_webclient_user_cert] Certificate header present: #{crt.present?}"
+        Rails.logger.debug "[validate_webclient_user_cert] Certificate CN header present: #{com.present?}"
+        Rails.logger.debug "[validate_webclient_user_cert] Certificate CN: #{com}"
+        Rails.logger.debug "[validate_webclient_user_cert] Current user: #{@current_user&.username}"
+        Rails.logger.debug "[validate_webclient_user_cert] All headers: #{request.headers.to_h.select { |k, v| k.to_s.include?('Certificate') || k.to_s.include?('User') }}"
+
+        pki_result = @current_user.pki_ok?(crt, com, api: false)
+        Rails.logger.debug "[validate_webclient_user_cert] PKI validation result: #{pki_result}"
+
+        return if pki_result
 
         render_invalid_cert_response
       end
