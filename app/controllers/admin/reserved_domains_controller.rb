@@ -73,7 +73,7 @@ module Admin
     end
 
     def reserved_domain_params
-      params.require(:reserved_domain).permit(:name, :password)
+      params.require(:reserved_domain).permit(:name, :password, :expire_at)
     end
 
     def set_domain
