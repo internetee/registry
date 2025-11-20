@@ -8,8 +8,6 @@ module Api
           login = @current_user
           registrar = @current_user.registrar
 
-          render_success(data: nil) and return unless login
-
           data = set_values_to_data(login: login, registrar: registrar)
 
           render_success(data: data)

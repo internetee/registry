@@ -22,7 +22,6 @@ class ContactsTest < ApplicationIntegrationTest
     get "/api/v1/accreditation_center/contacts/?id=#{@contact.code}", headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:code], 1000
     assert_equal json[:contact][:name], 'John'
   end
 

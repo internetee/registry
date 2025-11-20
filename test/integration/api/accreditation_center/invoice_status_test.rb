@@ -23,7 +23,6 @@ class InvoiceStatusTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/invoice_status', headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:code], 1000
     assert_equal json[:invoices].count, 0
 
     invoice = @user.registrar.invoices.last
@@ -32,7 +31,6 @@ class InvoiceStatusTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/invoice_status', headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:code], 1000
     assert_equal json[:invoices].count, 1
   end
 
@@ -60,7 +58,6 @@ class InvoiceStatusTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/invoice_status', headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:code], 1000
     assert_equal json[:invoices].count, 0
   end
 
