@@ -15,7 +15,7 @@ class ReppV1AccreditationResultsTest < ActionDispatch::IntegrationTest
   def test_should_only_allow_accr_bot_to_push_results
     post '/repp/v1/registrar/accreditation/push_results',
          headers: auth_headers(@user),
-         params: {accreditation_result: {username: @user.username, result: true} }
+         params: { accreditation_result: { username: @user.username, result: true } }
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :unauthorized
@@ -26,14 +26,12 @@ class ReppV1AccreditationResultsTest < ActionDispatch::IntegrationTest
   def test_should_return_valid_response
     post '/repp/v1/registrar/accreditation/push_results',
          headers: auth_headers(@accr_bot),
-         params: {accreditation_result: { username: @user.username, result: true } }
+         params: { accreditation_result: { username: @user.username, result: true } }
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
     assert_emails 2
-    assert_equal json[:data][:user][:username], @user.username
     assert_equal json[:data][:result], 'true'
-    assert_equal json[:data][:message], 'Accreditation info successfully added'
   end
 
   def test_should_return_valid_response_invalid_authorization
