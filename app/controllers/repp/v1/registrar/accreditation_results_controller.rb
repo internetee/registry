@@ -18,8 +18,8 @@ module Repp
 
         def authorize_accr_bot
           accr_bot_username = ENV['accr_bot_username'] || 'accr_bot'
-          return unauthorized unless @current_user&.username == accr_bot_username
-          return if Rails.env.test?
+          return render_unauthorized unless @current_user&.username == accr_bot_username
+          return if Rails.env.test? || Rails.env.development?
 
           validate_accr_bot_cert
         end
@@ -29,11 +29,13 @@ module Repp
           expected_cn = ENV['accr_bot_cert_cn'] || 'accr_bot'
           cert_cn = request.env['HTTP_SSL_CLIENT_S_DN_CN']
           cert_pem = request.env['HTTP_SSL_CLIENT_CERT']
+          Rails.logger.debug "[validate_accr_bot_cert] cert_cn: #{cert_cn}"
+          Rails.logger.debug "[validate_accr_bot_cert] expected_cn: #{expected_cn}"
 
-          return unauthorized('Invalid certificate CN') unless cert_cn == expected_cn
+          return render_unauthorized('Invalid certificate CN') unless cert_cn == expected_cn
           return if @current_user.pki_ok?(cert_pem, cert_cn, api: true)
 
-          unauthorized('Certificate not registered')
+          render_unauthorized('Certificate not registered')
         end
 
         def check_feature_enabled
@@ -48,15 +50,13 @@ module Repp
 
           user.accreditation_date = DateTime.current
           user.accreditation_expire_date = user.accreditation_date + ENV.fetch('accr_expiry_months', 24).to_i.months
-
+ 
           if user.save
             notify_registrar(user)
             notify_admins
-            render_success(data: { user: user,
-                                   result: result,
-                                   message: 'Accreditation info successfully added' })
+            render_success(message: 'Accreditation info successfully added', data: { result: result })
           else
-            render_failed
+            handle_non_epp_errors(user)
           end
         end
 
@@ -75,19 +75,7 @@ module Repp
           end
         end
 
-        def render_failed
-          @response = { code: 2202, message: 'Invalid authorization information' }
-          render(json: @response, status: :unauthorized)
-        end
-
-        def render_success(code: nil, message: nil, data: nil)
-          @response = { code: code || 1000, message: message || 'Command completed successfully',
-                        data: data || {} }
-
-          render(json: @response, status: :ok)
-        end
-
-        def unauthorized(reason = 'Only accr_bot can update accreditation results')
+        def render_unauthorized(reason = 'Only accr_bot can update accreditation results')
           render(json: { code: 2202, message: reason }, status: :unauthorized)
         end
       end
