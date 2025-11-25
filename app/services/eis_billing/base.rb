@@ -3,8 +3,8 @@ module EisBilling
     BASE_URL = ENV['eis_billing_system_base_url'] || 'https://st-billing.infra.tld.ee'
     INITIATOR = 'registry'.freeze
 
-    def self.base_request(url:)
-      uri = URI(url)
+    def self.base_request
+      uri = URI(BASE_URL)
       http = Net::HTTP.new(uri.host, uri.port)
 
       http.use_ssl = true unless Rails.env.development?

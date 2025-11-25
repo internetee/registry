@@ -267,3 +267,9 @@ birthday_ident_service_client_id: 456
 birthday_ident_service_client_secret: 654
 
 allow_validate_business_contacts: 'true'
+ident_service_client_id: 123
+ident_service_client_secret: 321
+
+business_registry_allowed_origins: "http://registry.test,https://registry.test"
+business_registry_allowed_ips: "127.0.0.1,0.0.0.0,192.168.65.1"
+business_registry_api_tokens: "token1,token2"

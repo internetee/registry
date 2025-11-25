@@ -1,3 +1,6 @@
+14.11.2025
+* API endpoint for Estonian Business Registry integration https://github.com/internetee/registry/pull/2676
+
 19.09.2025
 * Migrated from codeclimate.yml to qlty.toml https://github.com/internetee/registry/pull/2841
 * Sending merge notifications to Mattermost https://github.com/internetee/registry/pull/2857
