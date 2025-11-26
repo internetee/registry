@@ -41,7 +41,7 @@ module Repp
         def check_feature_enabled
           return if Feature.allow_accr_endspoints?
 
-          render json: { errors: 'Accreditation Center API is not allowed' }, status: :forbidden
+          render_unauthorized('Accreditation Center API is not enabled')
         end
 
         def record_accreditation_result(username, result)
