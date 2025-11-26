@@ -68,6 +68,7 @@ module Repp
           admin_users_emails = User.all.reject { |u| u.roles.nil? }
                                    .select { |u| u.roles.include? 'admin' }.pluck(:email)
 
+          admin_users_emails.compact!
           return if admin_users_emails.empty?
 
           admin_users_emails.each do |email|
