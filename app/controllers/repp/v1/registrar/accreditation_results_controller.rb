@@ -11,7 +11,7 @@ module Repp
           username = params[:accreditation_result][:username]
           result = params[:accreditation_result][:result]
 
-          record_accreditation_result(username, result) if result
+          record_accreditation_result(username) if result.to_s == 'true'
         end
 
         private
@@ -44,17 +44,23 @@ module Repp
           render_unauthorized('Accreditation Center API is not enabled')
         end
 
-        def record_accreditation_result(username, result)
+        def record_accreditation_result(username)
           user = ApiUser.find_by(username: username)
           raise ActiveRecord::RecordNotFound if user.nil?
 
           user.accreditation_date = DateTime.current
           user.accreditation_expire_date = user.accreditation_date + ENV.fetch('accr_expiry_months', 24).to_i.months
  
+          user_data = {
+            username: user.username,
+            accreditation_date: user.accreditation_date,
+            accreditation_expire_date: user.accreditation_expire_date
+          }
+
           if user.save
             notify_registrar(user)
             notify_admins
-            render_success(message: 'Accreditation info successfully added', data: { result: result })
+            render_success(message: 'Accreditation info successfully added', data: user_data )
           else
             handle_non_epp_errors(user)
           end

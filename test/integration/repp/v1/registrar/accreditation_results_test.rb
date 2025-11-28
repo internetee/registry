@@ -31,7 +31,9 @@ class ReppV1AccreditationResultsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
     assert_emails 2
-    assert_equal json[:data][:result], 'true'
+    assert_equal json[:data][:username], @user.username
+    assert_equal json[:data][:accreditation_date].to_date, DateTime.current.to_date
+    assert_equal json[:data][:accreditation_expire_date].to_date, (DateTime.current + ENV.fetch('accr_expiry_months', 24).to_i.months).to_date
   end
 
   def test_should_return_valid_response_invalid_authorization
