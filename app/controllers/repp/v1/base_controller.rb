@@ -115,10 +115,9 @@ module Repp
       def webclient_request?
         return false if Rails.env.test? || Rails.env.development?
 
-        ip_allowed = webclient_ip_allowed?(request.ip)
-        return false unless ip_allowed
+        webclient_ip_allowed?(request.ip)
 
-        webclient_cn_valid?
+        # webclient_cn_valid?
       end
 
       def validate_webclient
