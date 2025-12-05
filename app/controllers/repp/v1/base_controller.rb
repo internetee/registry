@@ -10,7 +10,7 @@ module Repp
 
       before_action :authenticate_user
       before_action :set_locale
-      before_action :validate_webclient_ca
+      before_action :validate_webclient
       before_action :validate_api_user_cert
       before_action :check_registrar_ip_restriction
       before_action :check_api_ip_restriction
@@ -115,22 +115,29 @@ module Repp
       def webclient_request?
         return false if Rails.env.test? || Rails.env.development?
 
-        webclient_ip_allowed?(request.ip)
+        ip_allowed = webclient_ip_allowed?(request.ip)
+        return false unless ip_allowed
+
+        webclient_cn_valid?
       end
 
-      def validate_webclient_ca
+      def validate_webclient
         return unless webclient_request?
 
-        request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']
-        Rails.logger.debug "[validate_webclient_ca] HTTP_SSL_CLIENT_S_DN_CN: #{request.env['HTTP_SSL_CLIENT_S_DN_CN']}"
-        Rails.logger.debug "[validate_webclient_ca] All request.env keys: #{request.env.keys.select { |k| k.to_s.include?('SSL') || k.to_s.include?('HTTP') }}"
-
-        webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
-        return if request_name == webclient_cn
+        return if webclient_cn_valid?
 
         @response = { code: 2202, message: 'Invalid webclient certificate' }
 
         render(json: @response, status: :unauthorized)
+      end
+
+      def webclient_cn_valid?
+        request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']
+        webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
+        Rails.logger.debug "[validate_webclient_cn] HTTP_SSL_CLIENT_S_DN_CN: #{request.env['HTTP_SSL_CLIENT_S_DN_CN']}"
+        Rails.logger.debug "[validate_webclient_cn] All request.env keys: #{request.env.keys.select { |k| k.to_s.include?('SSL') || k.to_s.include?('HTTP') }}"
+
+        request_name == webclient_cn
       end
 
       def validate_api_user_cert
