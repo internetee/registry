@@ -13,7 +13,7 @@ module Eeid
 
       # POST /eeid/webhooks/identification_requests
       def create
-        return render_unauthorized unless ip_whitelisted?
+        return render_unauthorized unless ip_allowed?(request.remote_ip)
 
         contact = Contact.find_by_code(permitted_params[:reference])
         return render_invalid_signature unless valid_hmac_signature?(contact.ident_type, request.headers['X-HMAC-Signature'])
@@ -26,13 +26,14 @@ module Eeid
         handle_error(e)
       end
 
-      private
+      private 
 
       def permitted_params
         params.permit(:identification_request_id, :reference, :client_id)
       end
 
       def render_unauthorized
+        Rails.logger.debug("IPAddress #{request.remote_ip} not authorized")
         render json: { error: "IPAddress #{request.remote_ip} not authorized" }, status: :unauthorized
       end
 
@@ -88,10 +89,22 @@ module Eeid
                        .deliver_now
       end
 
-      def ip_whitelisted?
-        allowed_ips = ENV['webhook_allowed_ips'].to_s.split(',').map(&:strip)
+      def ip_allowed?(ip)
+        return true if Rails.env.development?
 
-        allowed_ips.include?(request.remote_ip) || Rails.env.development?
+        Rails.logger.debug "[ip_allowed?] IP: #{ip}"
+        Rails.logger.debug "[ip_allowed?] Webhook IPs: #{webhook_ips}"
+        webhook_ips.any? do |entry|
+          begin
+            IPAddr.new(entry).include?(ip)
+          rescue IPAddr::InvalidAddressError
+            ip == entry
+          end
+        end
+      end
+
+      def webhook_ips
+        ENV['webhook_allowed_ips'].to_s.split(',').map(&:strip)
       end
 
       # Mock throttled_user using request IP

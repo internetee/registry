@@ -19,7 +19,7 @@ class ReppV1RegistrarAuthTaraCallbackTest < ActionDispatch::IntegrationTest
     }
 
     Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
-      Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient, true) do
         post '/repp/v1/registrar/auth/tara_callback', headers: @auth_headers, params: request_body
       end
     end
