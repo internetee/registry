@@ -81,9 +81,7 @@ gem 'dry-struct'
 gem 'openssl'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
 
-gem 'directo', github: 'internetee/directo', branch: 'master'
 gem 'net-ftp'
-gem 'strong_migrations'
 
 group :development, :test do
   gem 'pry', '0.15.2'
@@ -112,7 +110,6 @@ gem 'pg_query', '>= 0.9.0'
 
 # token
 gem 'jwt'
-gem 'net-ftp'
 
 # https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
 gem 'concurrent-ruby', '1.3.5'

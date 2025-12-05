@@ -6,13 +6,8 @@ module Api
       private
 
       def authenticate
-<<<<<<< HEAD
-        ip_allowed = allowed_ips.include?(request.remote_ip)
-
-=======
         Rails.logger.debug "[authenticate] Request IP: #{request.remote_ip}"
         ip_allowed = ip_allowed?(request.remote_ip)
->>>>>>> 7c3dc141b (Corrected accreditation integration tests)
         head :unauthorized unless ip_allowed
       end
 
