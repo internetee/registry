@@ -16,6 +16,8 @@ module Repp
       before_action :check_api_ip_restriction
       before_action :set_paper_trail_whodunnit
 
+      WEBCLIENT_REQUESTERS = %w[webclient tara].freeze
+
       private
 
       def set_domain
@@ -115,7 +117,8 @@ module Repp
       def webclient_request?
         return false if Rails.env.test? || Rails.env.development?
 
-        webclient_ip_allowed?(request.ip) && request.headers['Requester'] == 'webclient'
+        Rails.logger.debug "[webclient_request?] Requester: #{request.headers['Requester']}"
+        webclient_ip_allowed?(request.ip) && WEBCLIENT_REQUESTERS.include?(request.headers['Requester'])
       end
 
       def validate_webclient
@@ -131,8 +134,8 @@ module Repp
       def webclient_cn_valid?
         request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']
         webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
-        Rails.logger.debug "[validate_webclient_cn] HTTP_SSL_CLIENT_S_DN_CN: #{request.env['HTTP_SSL_CLIENT_S_DN_CN']}"
-        Rails.logger.debug "[validate_webclient_cn] All request.env keys: #{request.env.keys.select { |k| k.to_s.include?('SSL') || k.to_s.include?('HTTP') }}"
+        Rails.logger.debug "[webclient_cn_valid?] HTTP_SSL_CLIENT_S_DN_CN: #{request.env['HTTP_SSL_CLIENT_S_DN_CN']}"
+        Rails.logger.debug "[webclient_cn_valid?] All request.env keys: #{request.env.keys.select { |k| k.to_s.include?('SSL') || k.to_s.include?('HTTP') }}"
 
         request_name == webclient_cn
       end
