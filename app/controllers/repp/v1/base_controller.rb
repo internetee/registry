@@ -115,9 +115,7 @@ module Repp
       def webclient_request?
         return false if Rails.env.test? || Rails.env.development?
 
-        webclient_ip_allowed?(request.ip)
-
-        # webclient_cn_valid?
+        webclient_ip_allowed?(request.ip) && request.headers['Requester'] == 'webclient'
       end
 
       def validate_webclient
@@ -186,8 +184,7 @@ module Repp
       end
 
       def skip_webclient_user_cert_validation?
-        !webclient_request? || request.headers['Requester'] == 'tara' ||
-          Rails.env.development?
+        !webclient_request? || request.headers['Requester'] == 'tara'
       end
 
       def auth_values_to_data(registrar:)
