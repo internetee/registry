@@ -7,6 +7,7 @@ module Api
 
       def authenticate
         ip_allowed = allowed_ips.include?(request.remote_ip)
+
         head :unauthorized unless ip_allowed
       end
 
