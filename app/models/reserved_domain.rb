@@ -10,7 +10,16 @@ class ReservedDomain < ApplicationRecord
 
   alias_attribute :registration_code, :password
 
+  ransacker :expire_date do
+    Arel.sql('DATE(expire_at)')
+  end
+
   self.ignored_columns = %w[legacy_id]
+
+  MAX_DOMAIN_NAME_PER_REQUEST = 20
+
+  FREE_RESERVATION_EXPIRY = 7.days
+  PAID_RESERVATION_EXPIRY = 1.year
 
   class << self
     def ransackable_associations(*)
@@ -37,6 +46,42 @@ class ReservedDomain < ApplicationRecord
       record.regenerate_password
       record.save
     end
+
+    def wrap_reserved_domains_to_struct(reserved_domains, success, user_unique_id = nil, errors = nil)
+      Struct.new(:reserved_domains, :success, :user_unique_id, :errors).new(reserved_domains, success, user_unique_id, errors)
+    end
+
+    def reserve_domains_without_payment(domain_names)
+      if domain_names.count > MAX_DOMAIN_NAME_PER_REQUEST
+        return wrap_reserved_domains_to_struct(domain_names, false, nil, "The maximum number of domain names per request is #{MAX_DOMAIN_NAME_PER_REQUEST}")
+      end
+
+      available_domains = BusinessRegistry::DomainAvailabilityCheckerService.filter_available(domain_names)
+
+      reserved_domains = []
+      available_domains.each do |domain_name|
+        reserved_domain = ReservedDomain.new(
+          name: domain_name,
+          expire_at: Time.current + FREE_RESERVATION_EXPIRY
+        )
+        reserved_domain.regenerate_password
+        reserved_domain.save
+        reserved_domains << reserved_domain
+      end
+
+      return wrap_reserved_domains_to_struct(reserved_domains, false, nil, "No available domains") if reserved_domains.empty?
+
+      unique_id = FreeDomainReservationHolder.create!(domain_names: available_domains).user_unique_id
+      wrap_reserved_domains_to_struct(reserved_domains, true, unique_id)
+    end
+  end
+
+  def expired?
+    expire_at.present? && expire_at < Time.current
+  end
+
+  def destroy_if_expired
+    destroy if expired?
   end
 
   def name=(val)
