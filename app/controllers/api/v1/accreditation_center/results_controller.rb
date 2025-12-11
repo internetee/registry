@@ -3,7 +3,7 @@ require 'serializers/repp/contact'
 module Api
   module V1
     module AccreditationCenter
-      class ResultsController < ::Api::V1::AccreditationCenter::BaseController
+      class ResultsController < BaseController
         def show
           accr_users = []
           registrar = Registrar.find_by(name: params[:registrar_name])

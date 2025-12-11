@@ -65,25 +65,23 @@ gem 'airbrake'
 gem 'company_register', github: 'internetee/company_register', branch: :master
 gem 'directo', github: 'internetee/directo', branch: 'master'
 gem 'domain_name'
+gem 'dry-struct'
+gem 'dry-types'
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
 gem 'haml', '~> 6.0'
 gem 'jquery-ui-rails', '6.0.1'
 gem 'lhv', github: 'internetee/lhv', branch: 'master'
+gem 'openssl'
 gem 'pdfkit'
 gem 'redis'
 gem 'rexml'
 gem 'sidekiq', '~> 7.0'
 gem 'strong_migrations'
-gem 'dry-types'
-gem 'dry-struct'
-gem 'openssl'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
 
-gem 'directo', github: 'internetee/directo', branch: 'master'
 gem 'net-ftp'
-gem 'strong_migrations'
 
 group :development, :test do
   gem 'pry', '0.15.2'
@@ -112,7 +110,6 @@ gem 'pg_query', '>= 0.9.0'
 
 # token
 gem 'jwt'
-gem 'net-ftp'
 
 # https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
 gem 'concurrent-ruby', '1.3.5'

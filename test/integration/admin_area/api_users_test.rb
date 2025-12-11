@@ -4,39 +4,20 @@ class AdminAreaRegistrarsIntegrationTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   setup do
-    ENV['registry_demo_registrar_api_user_url'] = 'http://registry.test:3000/api/v1/accreditation_center/show_api_user'
-    ENV['registry_demo_registrar_port'] = '3000'
+    ENV['accr_expiry_months'] = '24'
     @api_user = users(:api_bestnames)
     sign_in users(:admin)
   end
 
   def test_set_test_date_to_api_user
-    # ENV['registry_demo_registrar_api_user_url'] = 'http://testapi.test'
-
-    date = Time.zone.now - 10.minutes
-
-    api_user = @api_user.dup
-    api_user.accreditation_date = date
-    api_user.accreditation_expire_date = api_user.accreditation_date + 1.year
-    api_user.save
-
     assert_nil @api_user.accreditation_date
-    assert_equal api_user.accreditation_date, date
 
-    # api_v1_accreditation_center_show_api_user_url
-    stub_request(:get, "http://registry.test:3000/api/v1/accreditation_center/show_api_user?username=#{@api_user.username}&identity_code=#{@api_user.identity_code}")
-      .with(
-        headers: {
-          'Accept' => '*/*',
-          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-          'User-Agent' => 'Ruby'
-        }
-      )
-      .to_return(status: 200, body: { code: 200, user_api: api_user }.to_json, headers: {})
-    post set_test_date_to_api_user_admin_registrars_path, params: { user_api_id: @api_user.id }, headers: { 'HTTP_REFERER' => root_path }
+    post set_test_date_to_api_user_admin_registrars_path(@api_user.registrar),
+         params: { user_api_id: @api_user.id },
+         headers: { 'HTTP_REFERER' => admin_registrar_path(@api_user.registrar) }
     @api_user.reload
-    assert_equal @api_user.accreditation_date.to_date, api_user.accreditation_date.to_date
-    assert_equal @api_user.accreditation_expire_date.to_date, api_user.accreditation_expire_date.to_date
+    assert_equal @api_user.accreditation_date.to_date, Time.zone.now.to_date
+    assert_equal @api_user.accreditation_expire_date.to_date, Time.zone.now.to_date + 24.months
   end
 
   def test_index_api_users_listings
@@ -54,7 +35,7 @@ class AdminAreaRegistrarsIntegrationTest < ActionDispatch::IntegrationTest
   def test_index_pagination_and_page_parameter
     get admin_api_users_path, params: { results_per_page: 1, page: 2 }
     assert_response :success
-  
+
     assert_select 'table tr', maximum: 2  
     assert_select 'table tr', count: 2
   end
@@ -62,10 +43,10 @@ class AdminAreaRegistrarsIntegrationTest < ActionDispatch::IntegrationTest
   def test_update_api_user_successfully
     api_user = users(:api_bestnames)
     new_username = 'updated_username'
-    
+
     patch admin_registrar_api_user_path(api_user.registrar, api_user), 
           params: { api_user: { username: new_username } }
-    
+
     assert_redirected_to admin_registrar_api_user_path(api_user.registrar, api_user)
     api_user.reload
     assert_equal new_username, api_user.username
