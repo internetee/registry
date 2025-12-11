@@ -207,7 +207,7 @@ en:
       failed_epp_conn: 'Failed to open connection to EPP server!'
       epp_conn_error: 'CONNECTION ERROR - Is the EPP server running?'
       company_not_registered: 'Company is not registered'
-
+      domain_name_blocked: 'Data management policy violation: Domain name is blocked [name]'
   code: 'Code'
   action: 'Action'
   edit: 'Edit'
@@ -291,7 +291,9 @@ en:
   contact: 'Contact'
   starting_balance: 'Starting balance'
   destroyed: 'Destroyed'
-
+  reports: 'Reports'
+  reset: 'Reset'
+  duplicate: 'Duplicate'
   approve: 'Approve'
   domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
 
@@ -654,6 +656,9 @@ en:
   id: ID
   created_at_from: 'Created at from'
   created_at_until: 'Created at until'
+  expired_at: 'Expired at'
+  expire_at: 'Expire at'
+  not_set: 'Not set'
   is_registrant: 'Is registrant'
   force_delete_set_on_domain: 'Force delete set on domain %{domain_name}. Outzone date: %{outzone_date}. Purge date: %{purge_date}'
   hold_client_on_domain: 'clientHold status set on domain %{domain_name}. Outzone date: %{outzone_date}. Purge date: %{purge_date}'

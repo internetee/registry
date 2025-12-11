@@ -1,5 +1,5 @@
 name: Github Testing
-on: [push]
+on: [push, pull_request]
 
 jobs:
   test:
@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -64,6 +64,11 @@ jobs:
           files: coverage/.resultset.json
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: coverage
-          path: coverage/
+          path: |
+            coverage/.resultset.json
+            coverage/index.html
+            coverage/assets/
+          include-hidden-files: true

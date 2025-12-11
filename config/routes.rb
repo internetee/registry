@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     put '/directo_response', to: 'directo_response#update', as: 'directo_response'
     put '/e_invoice_response', to: 'e_invoice_response#update', as: 'e_invoice_response'
     post '/lhv_connect_transactions', to: 'lhv_connect_transactions#create', as: 'lhv_connect_transactions'
+    get 'callback', to: 'business_registry_callback#callback', as: 'callback'
     resource :invoices, only: [:update]
   end
 
@@ -181,6 +182,15 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      namespace :business_registry do
+        get 'domain_names/:organization_name', to: 'domain_names#show', as: 'domain_names'
+        get 'long_reserve_domains_status', to: 'long_reserve_domains_status#show', as: 'long_reserve_domains_status'
+        post 'reserve_domains', to: 'reserve_domains#create', as: 'reserve_domains'
+        get 'reserve_domains/:user_unique_id', to: 'reserve_domains#show', as: 'reserve_domains_data'
+        post 'long_reserve_domains', to: 'long_reserve_domains#create', as: 'long_reserve_domains'
+        get 'registration_code', to: 'registration_code#show', as: 'registration_code'
+      end
+
       namespace :registrant do
         post 'auth/eid', to: 'auth#eid'
         get 'confirms/:name/:template/:token', to: 'confirms#index', constraints: { name: /[^\/]+/ }
@@ -373,6 +383,14 @@ Rails.application.routes.draw do
     resources :repp_logs
     resources :mass_actions, only: %i[index create]
     resources :bounced_mail_addresses, only: %i[index show destroy]
+
+    resources :reports do
+      post :generate_with_ai, on: :collection
+      member do
+        post :run
+        post :duplicate
+      end
+    end
 
     authenticate :admin_user do
       mount Sidekiq::Web, at: 'sidekiq'

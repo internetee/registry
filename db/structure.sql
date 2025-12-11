@@ -343,6 +343,41 @@ ALTER SEQUENCE public.actions_id_seq OWNED BY public.actions.id;
 
 
 --
+-- Name: admin_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.admin_reports (
+    id bigint NOT NULL,
+    name character varying,
+    description text,
+    sql_query text,
+    parameters json,
+    created_by integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: admin_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.admin_reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: admin_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.admin_reports_id_seq OWNED BY public.admin_reports.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2715,7 +2750,9 @@ CREATE TABLE public.reserved_domains (
     legacy_id integer,
     name character varying NOT NULL,
     password character varying NOT NULL,
-    expire_at timestamp without time zone
+    expire_at timestamp without time zone,
+    access_token character varying,
+    token_created_at timestamp without time zone
 );
 
 
@@ -3076,6 +3113,13 @@ ALTER TABLE ONLY public.accounts ALTER COLUMN id SET DEFAULT nextval('public.acc
 --
 
 ALTER TABLE ONLY public.actions ALTER COLUMN id SET DEFAULT nextval('public.actions_id_seq'::regclass);
+
+
+--
+-- Name: admin_reports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_reports ALTER COLUMN id SET DEFAULT nextval('public.admin_reports_id_seq'::regclass);
 
 
 --
@@ -3583,6 +3627,14 @@ ALTER TABLE ONLY public.accounts
 
 ALTER TABLE ONLY public.actions
     ADD CONSTRAINT actions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: admin_reports admin_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_reports
+    ADD CONSTRAINT admin_reports_pkey PRIMARY KEY (id);
 
 
 --
@@ -5728,6 +5780,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250204094550'),
 ('20250219102811'),
 ('20250313122119'),
-('20250319104749');
+('20250319104749'),
+('20250310133151'),
+('20250314133357'),
+('20240722085530'),
+('20240723110208'),
+('20241022121525');
 
 
