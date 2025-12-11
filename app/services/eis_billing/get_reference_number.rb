@@ -12,7 +12,7 @@ module EisBilling
     end
 
     def call
-      http = EisBilling::Base.base_request(url: reference_number_generator_url)
+      http = EisBilling::Base.base_request
       http.post(reference_number_generator_url, payload.to_json, EisBilling::Base.headers)
     end
 
