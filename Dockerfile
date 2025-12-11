@@ -54,11 +54,9 @@ RUN apt-get install -y --no-install-recommends > /dev/null \
   libxslt1-dev \
   libxml2-dev \
   python-dev \
-  unzip \    
-#   libc6-i386 \
-#   lib32gcc-s1 \
   wkhtmltopdf \
   xvfb \
+  unzip \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -84,15 +82,6 @@ COPY Gemfile Gemfile.lock ./
 RUN gem install bundler && bundle install --jobs 20 --retry 5
 
 ENV PATH="/opt/chrome-linux64:${PATH}"
-
-# RUN apt-get update && apt-get install -y --no-install-recommends > /dev/null \
-#     libc6-i386 \
-#     lib32gcc-s1 \
-#     wkhtmltopdf \
-#     xvfb \
-#     && apt-get clean \
-#     && rm -rf /var/lib/apt/lists/*
-
 RUN ln -s /lib/ld-linux.so.2 /lib/ld-linux.so.2 || true
 
 # Обертка для wkhtmltopdf с xvfb
