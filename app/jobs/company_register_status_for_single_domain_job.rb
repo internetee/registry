@@ -98,6 +98,8 @@ class CompanyRegisterStatusForSingleDomainJob < ApplicationJob
     # Simple data (status)
     puts "  Calling simple_data..."
     simple_data = client.simple_data(registration_number: registration_number)
+
+
     if simple_data.blank?
       puts "  Simple data: EMPTY (company not found in registry)"
       @company_status = nil
@@ -131,6 +133,9 @@ class CompanyRegisterStatusForSingleDomainJob < ApplicationJob
         puts "  Raw company_details: #{company_details.inspect}"
       end
     end
+  rescue CompanyRegister::SoapFaultError => e
+    puts "  ERROR: Company register SOAP fault: #{e.message}"
+    return
   rescue CompanyRegister::NotAvailableError => e
     puts ""
     puts "  ERROR: Company register not available!"
