@@ -369,7 +369,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     )
 
     @registrant_acme.reload
-    
+
     assert_not @registrant_acme.registrant_domains.any?(&:force_delete_scheduled?)
 
     CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
@@ -378,6 +378,141 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     assert @registrant_acme.registrant_domains.all?(&:force_delete_scheduled?)
     assert_equal Contact::DELETED, @registrant_acme.company_register_status
+
+    CompanyRegister::Client.define_singleton_method(:new, original_new_method)
+  end
+
+  def test_soap_fault_error_on_simple_data_skips_contact_without_changes
+    original_new_method = CompanyRegister::Client.method(:new)
+    CompanyRegister::Client.define_singleton_method(:new) do
+      object = original_new_method.call
+      def object.simple_data(registration_number:)
+        raise CompanyRegister::SOAPFaultError, "Päringute limiit on täis"
+      end
+      object
+    end
+
+    interval_days = 14
+    current_time = Time.zone.now
+
+    @registrant_acme.update!(
+      company_register_status: Contact::REGISTERED,
+      checked_company_at: current_time - (interval_days.days + 1.day),
+      ident_type: 'org',
+      ident_country_code: 'EE',
+      ident: '16752073'
+    )
+
+    @registrant_acme.reload
+    old_status = @registrant_acme.company_register_status
+    old_checked_at = @registrant_acme.checked_company_at
+
+    assert_not @registrant_acme.registrant_domains.any?(&:force_delete_scheduled?)
+
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+
+    @registrant_acme.reload
+
+    # Status should remain unchanged
+    assert_equal old_status, @registrant_acme.company_register_status
+    # checked_company_at should remain unchanged
+    assert_equal old_checked_at.to_i, @registrant_acme.checked_company_at.to_i
+    # No force delete should be scheduled
+    assert_not @registrant_acme.registrant_domains.any?(&:force_delete_scheduled?)
+
+    CompanyRegister::Client.define_singleton_method(:new, original_new_method)
+  end
+
+  def test_soap_fault_error_on_company_details_skips_force_delete
+    original_new_method = CompanyRegister::Client.method(:new)
+    CompanyRegister::Client.define_singleton_method(:new) do
+      object = original_new_method.call
+      def object.simple_data(registration_number:)
+        [Company.new('16752073', 'ACME Ltd', DELETED)]
+      end
+      def object.company_details(registration_number:)
+        raise CompanyRegister::SOAPFaultError, "Päringute limiit on täis"
+      end
+      object
+    end
+
+    interval_days = 14
+    current_time = Time.zone.now
+
+    @registrant_acme.update!(
+      company_register_status: Contact::REGISTERED,
+      checked_company_at: current_time - (interval_days.days + 1.day),
+      ident_type: 'org',
+      ident_country_code: 'EE',
+      ident: '16752073'
+    )
+
+    @registrant_acme.reload
+
+    assert_not @registrant_acme.registrant_domains.any?(&:force_delete_scheduled?)
+
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+
+    @registrant_acme.reload
+
+    # Status should be updated (simple_data worked)
+    assert_equal Contact::DELETED, @registrant_acme.company_register_status
+    # But no force delete should be scheduled (company_details failed)
+    assert_not @registrant_acme.registrant_domains.any?(&:force_delete_scheduled?)
+
+    CompanyRegister::Client.define_singleton_method(:new, original_new_method)
+  end
+
+  def test_soap_fault_error_continues_processing_other_contacts
+    original_new_method = CompanyRegister::Client.method(:new)
+    CompanyRegister::Client.define_singleton_method(:new) do
+      object = original_new_method.call
+      def object.simple_data(registration_number:)
+        if registration_number == '16752073'
+          raise CompanyRegister::SOAPFaultError, "Päringute limiit on täis"
+        else
+          [Company.new(registration_number, 'Other Company', REGISTERED)]
+        end
+      end
+      object
+    end
+
+    interval_days = 14
+    current_time = Time.zone.now
+
+    # First contact will fail
+    @registrant_acme.update!(
+      company_register_status: nil,
+      checked_company_at: nil,
+      ident_type: 'org',
+      ident_country_code: 'EE',
+      ident: '16752073'
+    )
+
+    # Second contact will succeed
+    @registrant_jack.update!(
+      company_register_status: nil,
+      checked_company_at: nil,
+      ident_type: 'org',
+      ident_country_code: 'EE',
+      ident: '14112620'
+    )
+
+    @registrant_acme.reload
+    @registrant_jack.reload
+
+    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+
+    @registrant_acme.reload
+    @registrant_jack.reload
+
+    # First contact should remain unchanged (SOAP fault)
+    assert_nil @registrant_acme.company_register_status
+    assert_nil @registrant_acme.checked_company_at
+
+    # Second contact should be updated (success)
+    assert_equal Contact::REGISTERED, @registrant_jack.company_register_status
+    assert_not_nil @registrant_jack.checked_company_at
 
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end

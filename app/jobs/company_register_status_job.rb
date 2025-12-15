@@ -34,6 +34,8 @@ class CompanyRegisterStatusJob < ApplicationJob
     status = company_status.blank? ? Contact::DELETED : company_status
 
     update_validation_company_status(contact:contact , status: status)
+  rescue CompanyRegister::SOAPFaultError => e
+    Rails.logger.error("SOAPFaultError for contact #{contact.id} (#{contact.ident}): #{e.message}. Skipping contact.")
   end
 
   def handle_company_statuses(contact, company_status)
@@ -125,6 +127,8 @@ class CompanyRegisterStatusJob < ApplicationJob
     else
       schedule_force_delete(contact, company_status, kandeliik_tekstina)
     end
+  rescue CompanyRegister::SOAPFaultError => e
+    Rails.logger.error("Error getting company details for #{contact.ident}: #{e.message}")
   end
 
   private
