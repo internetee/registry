@@ -1,4 +1,5 @@
 require 'zip'
+require 'csv'
 
 class CompanyRegisterStatusJob < ApplicationJob
   PAYMENT_STATEMENT_BUSINESS_REGISTRY_REASON = 'Kustutamiskanne dokumentide hoidjata'
@@ -12,30 +13,49 @@ class CompanyRegisterStatusJob < ApplicationJob
 
   queue_as :default
 
-  def perform(days_interval = 14, spam_time_delay = 1, batch_size = 100)
-    sampling_registrant_contact(days_interval).find_in_batches(batch_size: batch_size) do |contacts|
+  def perform(spam_time_delay = 1, batch_size = 100, missing_companies_filename = 'missing_companies_in_business_registry.csv')
+    sampling_registrant_contact.find_in_batches(batch_size: batch_size) do |contacts|
       contacts_to_check = contacts.reject { |contact| whitelisted_company?(contact) }
 
       contacts_to_check.each do |contact|
-        proceed_company_status(contact, spam_time_delay)
+        proceed_company_status(contact, spam_time_delay, missing_companies_filename)
       end
     end
   end
 
   private
 
-  def proceed_company_status(contact, spam_time_delay)
+  def proceed_company_status(contact, spam_time_delay, missing_companies_filename)
     # avoid spamming company register
     sleep spam_time_delay
 
     company_status = contact.return_company_status
 
     handle_company_statuses(contact, company_status)
-    status = company_status.blank? ? Contact::DELETED : company_status
 
-    update_validation_company_status(contact:contact , status: status)
+    if company_status.blank?
+      save_contact_to_csv(contact, missing_companies_filename)
+      return
+    end
+
+    update_validation_company_status(contact:contact , status: company_status)
   rescue CompanyRegister::SOAPFaultError => e
     Rails.logger.error("SOAPFaultError for contact #{contact.id} (#{contact.ident}): #{e.message}. Skipping contact.")
+  end
+
+
+  def save_contact_to_csv(contact, missing_companies_filename)
+    file_path = Rails.root.join('tmp', missing_companies_filename)
+
+    write_headers = !(File.exist?(file_path) && !File.zero?(file_path))
+
+    attributes = contact.attributes
+    headers    = attributes.keys
+    values     = attributes.values_at(*headers)
+
+    CSV.open(file_path, write_headers ? 'wb' : 'ab', write_headers: write_headers, headers: headers) do |csv|
+      csv << values
+    end
   end
 
   def handle_company_statuses(contact, company_status)
@@ -46,8 +66,10 @@ class CompanyRegisterStatusJob < ApplicationJob
       lift_force_delete(contact) if check_for_force_delete(contact)
     when Contact::LIQUIDATED
       send_email_for_liquidation(contact)
-    else
+    when Contact::DELETED
       delete_process(contact, company_status)
+    else
+      save_contact_to_csv(contact)
     end
   end
 
@@ -57,20 +79,12 @@ class CompanyRegisterStatusJob < ApplicationJob
     ContactInformMailer.company_liquidation(contact: contact).deliver_now
   end
 
-  def sampling_registrant_contact(days_interval)
-    Contact.joins(:registrant_domains)
-           .where(ident_type: 'org', ident_country_code: 'EE')
-           .where(
-             "(company_register_status IS NULL OR checked_company_at IS NULL) OR
-             (company_register_status = ? AND checked_company_at < ?) OR
-             company_register_status IN (?)",
-             Contact::REGISTERED, days_interval.days.ago, [Contact::LIQUIDATED, Contact::BANKRUPT, Contact::DELETED]
-           )
-           .distinct
+  def sampling_registrant_contact
+    Contact.joins(:registrant_domains).where(ident_type: 'org', ident_country_code: 'EE').where(checked_company_at: Date.current.all_day)
   end
 
   def update_validation_company_status(contact:, status:)
-    contact.update(company_register_status: status, checked_company_at: Time.zone.now)
+    contact.update(company_register_status: status, checked_company_at: Date.current)
   end
 
   def schedule_force_delete(contact, company_status, kandeliik_tekstina)
