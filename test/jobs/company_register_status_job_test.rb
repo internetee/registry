@@ -39,7 +39,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     assert_nil @registrant_jack.checked_company_at
     assert_nil @registrant_jack.company_register_status
 
-    CompanyRegisterStatusJob.perform_now(14, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload && @registrant_jack.reload
 
@@ -52,7 +52,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end
 
-  def test_companies_what_was_checked_before_specific_days_should_be_not_checked
+  def test_companies_what_was_checked_after_specific_days_should_be_not_checked
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
@@ -62,12 +62,9 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
       object
     end
 
-    interval_days = 14
-    current_time = Time.zone.now
-
     @registrant_acme.update!(
       company_register_status: Contact::REGISTERED,
-      checked_company_at: current_time - (interval_days.days - 2.days),
+      checked_company_at: Time.zone.now - 1.year + 2.days,
       ident_type: 'org',
       ident_country_code: 'EE',
       ident: '16752073'
@@ -77,7 +74,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     old_checked_at = @registrant_acme.checked_company_at
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload
 
@@ -109,7 +106,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     assert_nil @registrant_acme.checked_company_at
     assert_nil @registrant_acme.company_register_status
 
-    CompanyRegisterStatusJob.perform_now(14, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload
 
@@ -129,12 +126,9 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
       object
     end
 
-    interval_days = 14
-    current_time = Time.zone.now
-
     @registrant_acme.update!(
       company_register_status: Contact::REGISTERED,
-      checked_company_at: current_time - (interval_days.days + 1.day),
+      checked_company_at: Time.zone.now - 1.year - 1.day,
       ident_type: 'org',
       ident_country_code: 'EE',
       ident: '16752073'
@@ -144,12 +138,12 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     old_checked_at = @registrant_acme.checked_company_at
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload
 
     assert_not_equal old_checked_at.to_date, @registrant_acme.checked_company_at.to_date
-    assert_equal current_time.to_date, @registrant_acme.checked_company_at.to_date
+    assert_equal Time.zone.now.to_date, @registrant_acme.checked_company_at.to_date
 
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end
@@ -174,7 +168,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     @registrant_acme.reload
 
-    CompanyRegisterStatusJob.perform_now(14, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload
 
@@ -203,12 +197,9 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
       object
     end
 
-    interval_days = 14
-    current_time = Time.zone.now
-
     @registrant_acme.update!(
       company_register_status: nil,
-      checked_company_at: current_time - (interval_days.days + 1.day),
+      checked_company_at: Time.zone.now - 1.year,
       ident_type: 'org',
       ident_country_code: 'EE',
       ident: '16752073'
@@ -227,7 +218,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     assert @registrant_acme.registrant_domains.all?(&:force_delete_scheduled?)
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload
 
@@ -247,12 +238,9 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
       object
     end
 
-    interval_days = 14
-    current_time = Time.zone.now
-
     @registrant_acme.update!(
       company_register_status: Contact::REGISTERED,
-      checked_company_at: current_time - (interval_days.days + 1.day),
+      checked_company_at: Time.zone.now - 1.year,
       ident_type: 'org',
       ident_country_code: 'EE',
       ident: '16752073'
@@ -263,7 +251,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     ActionMailer::Base.deliveries.clear
     assert_emails 0
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload
 
@@ -287,12 +275,9 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
       object
     end
 
-    interval_days = 14
-    current_time = Time.zone.now
-
     @registrant_acme.update!(
       company_register_status: Contact::REGISTERED,
-      checked_company_at: current_time - (interval_days.days + 1.day),
+      checked_company_at: Time.zone.now - 1.year,
       ident_type: 'org',
       ident_country_code: 'EE',
       ident: '16752073'
@@ -302,7 +287,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     
     assert_not @registrant_acme.registrant_domains.any?(&:force_delete_scheduled?)
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload
 
@@ -322,12 +307,9 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
       object
     end
 
-    interval_days = 14
-    current_time = Time.zone.now
-
     @registrant_acme.update!(
       company_register_status: Contact::REGISTERED,
-      checked_company_at: current_time - (interval_days.days + 1.day),
+      checked_company_at: Time.zone.now - 1.year,
       ident_type: 'org',
       ident_country_code: 'EE',
       ident: '16752073'
@@ -337,7 +319,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     
     assert_not @registrant_acme.registrant_domains.any?(&:force_delete_scheduled?)
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload
 
@@ -347,7 +329,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end
 
-  def test_company_information_what_was_not_found_in_register_should_be_deleted
+  def test_company_information_what_was_not_found_in_register_should_be_added_to_missing_companies_file
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
@@ -357,12 +339,9 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
       object
     end
 
-    interval_days = 14
-    current_time = Time.zone.now
-
     @registrant_acme.update!(
       company_register_status: Contact::REGISTERED,
-      checked_company_at: current_time - (interval_days.days + 1.day),
+      checked_company_at: Time.zone.now - 1.year,
       ident_type: 'org',
       ident_country_code: 'EE',
       ident: '16752073'
@@ -372,12 +351,15 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     assert_not @registrant_acme.registrant_domains.any?(&:force_delete_scheduled?)
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0, 100, 'missing_companies_in_business_registry.csv')
 
     @registrant_acme.reload
 
-    assert @registrant_acme.registrant_domains.all?(&:force_delete_scheduled?)
-    assert_equal Contact::DELETED, @registrant_acme.company_register_status
+    assert_equal Contact::REGISTERED, @registrant_acme.company_register_status
+    assert File.exist?(Rails.root.join('tmp', 'missing_companies_in_business_registry.csv'))
+    assert File.read(Rails.root.join('tmp', 'missing_companies_in_business_registry.csv')).include?(@registrant_acme.id.to_s)
+    FileUtils.rm(Rails.root.join('tmp', 'missing_companies_in_business_registry.csv'))
+    assert_not File.exist?(Rails.root.join('tmp', 'missing_companies_in_business_registry.csv'))
 
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
   end
@@ -392,12 +374,9 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
       object
     end
 
-    interval_days = 14
-    current_time = Time.zone.now
-
     @registrant_acme.update!(
       company_register_status: Contact::REGISTERED,
-      checked_company_at: current_time - (interval_days.days + 1.day),
+      checked_company_at: Time.zone.now - 1.year,
       ident_type: 'org',
       ident_country_code: 'EE',
       ident: '16752073'
@@ -409,7 +388,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     assert_not @registrant_acme.registrant_domains.any?(&:force_delete_scheduled?)
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload
 
@@ -436,12 +415,9 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
       object
     end
 
-    interval_days = 14
-    current_time = Time.zone.now
-
     @registrant_acme.update!(
       company_register_status: Contact::REGISTERED,
-      checked_company_at: current_time - (interval_days.days + 1.day),
+      checked_company_at: Time.zone.now - 1.year,
       ident_type: 'org',
       ident_country_code: 'EE',
       ident: '16752073'
@@ -451,7 +427,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
 
     assert_not @registrant_acme.registrant_domains.any?(&:force_delete_scheduled?)
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload
 
@@ -477,9 +453,6 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
       object
     end
 
-    interval_days = 14
-    current_time = Time.zone.now
-
     # First contact will fail
     @registrant_acme.update!(
       company_register_status: nil,
@@ -501,7 +474,7 @@ class CompanyRegisterStatusJobTest < ActiveSupport::TestCase
     @registrant_acme.reload
     @registrant_jack.reload
 
-    CompanyRegisterStatusJob.perform_now(interval_days, 0, 100)
+    CompanyRegisterStatusJob.perform_now(0)
 
     @registrant_acme.reload
     @registrant_jack.reload

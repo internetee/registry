@@ -31,7 +31,7 @@ class CompanyRegisterStatusJob < ApplicationJob
 
     company_status = contact.return_company_status
 
-    handle_company_statuses(contact, company_status)
+    handle_company_statuses(contact, company_status, missing_companies_filename)
 
     if company_status.blank?
       save_contact_to_csv(contact, missing_companies_filename)
@@ -58,7 +58,7 @@ class CompanyRegisterStatusJob < ApplicationJob
     end
   end
 
-  def handle_company_statuses(contact, company_status)
+  def handle_company_statuses(contact, company_status, missing_companies_filename)
     return if company_status == Contact::BANKRUPT
 
     case company_status
@@ -69,7 +69,7 @@ class CompanyRegisterStatusJob < ApplicationJob
     when Contact::DELETED
       delete_process(contact, company_status)
     else
-      save_contact_to_csv(contact)
+      save_contact_to_csv(contact, missing_companies_filename)
     end
   end
 
@@ -80,7 +80,11 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def sampling_registrant_contact
-    Contact.joins(:registrant_domains).where(ident_type: 'org', ident_country_code: 'EE').where(checked_company_at: Date.current.all_day)
+    base = Contact.joins(:registrant_domains)
+                  .where(ident_type: 'org', ident_country_code: 'EE')
+
+    base.where(checked_company_at: nil)
+        .or(base.where('checked_company_at <= ?', 1.year.ago))
   end
 
   def update_validation_company_status(contact:, status:)
