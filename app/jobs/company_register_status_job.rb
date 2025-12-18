@@ -30,6 +30,7 @@ class CompanyRegisterStatusJob < ApplicationJob
     sleep spam_time_delay
 
     company_status = contact.return_company_status
+    Rails.logger.info "Checking contact with id #{contact.id} and its ident: #{contact.ident}. His status from business registry is #{company_status}"
 
     handle_company_statuses(contact, company_status, missing_companies_filename)
 
@@ -45,6 +46,7 @@ class CompanyRegisterStatusJob < ApplicationJob
 
 
   def save_contact_to_csv(contact, missing_companies_filename)
+    Rails.logger.info("Saving contact #{contact.id} to CSV because company status is blank.")
     file_path = Rails.root.join('tmp', missing_companies_filename)
 
     write_headers = !(File.exist?(file_path) && !File.zero?(file_path))
@@ -76,6 +78,7 @@ class CompanyRegisterStatusJob < ApplicationJob
   def send_email_for_liquidation(contact)
     return if contact.company_register_status == Contact::LIQUIDATED
 
+    Rails.logger.info("Sending email for liquidation for contact #{contact.id}")
     ContactInformMailer.company_liquidation(contact: contact).deliver_now
   end
 
@@ -119,6 +122,7 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
 
   def lift_force_delete(contact)
+    Rails.logger.info("Lifting force delete for contact #{contact.id}")
     contact.registrant_domains.each do |domain|
       next unless domain.force_delete_scheduled?
 
