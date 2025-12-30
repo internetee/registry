@@ -151,7 +151,7 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
       ]
     )
 
-    unless payable
+    unless payable && (accepts_e_invoices? && !accept_pdf_invoices?)
       InvoiceMailer.invoice_email(invoice: invoice, recipient: billing_email, paid: !payable)
                    .deliver_later(wait: 1.minute)
     end
@@ -305,6 +305,20 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
     return contact_email if self[:billing_email].blank?
 
     self[:billing_email]
+  end
+
+  def accepts_e_invoices?
+    return false unless address_country_code == 'EE'
+
+    result = company_register.e_invoice_recipients(registration_numbers: reg_no).first
+    result.status == 'OK'
+  rescue CompanyRegister::NotAvailableError, CompanyRegister::SOAPFaultError => e
+    Rails.logger.error("Error checking e-invoice status for #{reg_no}: #{e.message}")
+    false
+  end
+
+  def company_register
+    @company_register ||= CompanyRegister::Client.new
   end
 
   private
