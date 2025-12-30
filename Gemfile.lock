@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/internetee/company_register.git
-  revision: 2c31da54c57db13324161eeb8db7e9f81af81987
-  branch: master
+  revision: ee8d63cc26174d7ba663817ede6173ec173486f5
+  branch: e-invoice-recipient
   specs:
     company_register (0.1.0)
       activesupport
