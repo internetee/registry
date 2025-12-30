@@ -54,7 +54,7 @@ module Contact::CompanyRegister
   end
 
   def is_contact_estonian_org?
-    org? && country_code == 'EE'
+    org? && ident_country_code == 'EE'
   end
 
   def company_register
