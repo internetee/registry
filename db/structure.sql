@@ -1,5 +1,6 @@
 \restrict OgpBVS4LcDZVV6fZTwmnzAAWL70pwHISsUhjW2gqrf2CNdzHNtVCcfzYehS3JFu
 
+
 -- Dumped from database version 13.4 (Debian 13.4-4.pgdg110+1)
 -- Dumped by pg_dump version 13.22 (Debian 13.22-0+deb11u1)
 
@@ -5808,6 +5809,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260406125446'),
 ('20251230104312'),
 ('20260220111500');
-
-
-
