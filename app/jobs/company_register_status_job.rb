@@ -4,7 +4,6 @@ require 'csv'
 class CompanyRegisterStatusJob < ApplicationJob
   PAYMENT_STATEMENT_BUSINESS_REGISTRY_REASON = 'Kustutamiskanne dokumentide hoidjata'
 
-  # Check intervals for different statuses
   CHECK_INTERVAL_REGISTERED = 1.year
   CHECK_INTERVAL_LIQUIDATED_BANKRUPT = 1.month
   CHECK_INTERVAL_DELETED = 1.day
@@ -192,7 +191,12 @@ class CompanyRegisterStatusJob < ApplicationJob
   end
   
   def whitelisted_company?(contact)
-    whitelisted_companies.include?(contact.ident)
+    if whitelisted_companies.include?(contact.ident)
+      Rails.logger.info("Contact #{contact.id} (#{contact.ident}) is whitelisted. Skipping company status check.")
+      return true
+    end
+
+    false
   end
 
   def company_status_notes(company_status)
