@@ -540,7 +540,7 @@ class Contact < ApplicationRecord
 
   def update_related_whois_records
     # not doing anything if no real changes
-    ignored_columns = %w[updated_at created_at statuses status_notes]
+    ignored_columns = %w[updated_at created_at statuses status_notes checked_company_at company_register_status]
 
     return if (previous_changes.keys - ignored_columns).empty?
 
