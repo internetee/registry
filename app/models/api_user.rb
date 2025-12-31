@@ -127,10 +127,45 @@ class ApiUser < User
   private
 
   def machine_readable_certificate(cert)
-    cert = cert.split(' ').join("\n")
-    cert.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
-    cert.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
+    Rails.logger.debug "[machine_readable_certificate] Original cert: #{cert}"
+
+    # Handle URL-encoded certificates (in case HAProxy url_dec didn't work properly)
+    # Only decode actual URL-encoded characters (%XX), preserving + signs
+    if cert.include?('%')
+      # Custom decoding that only handles %XX patterns, not + signs
+      cert = cert.gsub(/%[0-9A-Fa-f]{2}/) { |match| [match[1..2]].pack('H*') }
+      Rails.logger.debug "[machine_readable_certificate] URL-decoded cert: #{cert}"
+    end
+
+    # Handle certificates that might have spaces instead of newlines
+    if cert.include?(' ') && !cert.include?("\n")
+      cert = cert.split(' ').join("\n")
+      Rails.logger.debug "[machine_readable_certificate] Fixed newlines: #{cert}"
+    end
+
+    # Fix common certificate header/footer formatting issues
+    cert = cert.gsub(/-----BEGIN\s*CERTIFICATE\s*-----/, '-----BEGIN CERTIFICATE-----')
+    cert = cert.gsub(/-----END\s*CERTIFICATE\s*-----/, '-----END CERTIFICATE-----')
+
+    # Ensure proper newlines around headers
+    cert = cert.gsub(/([^-])-----BEGIN CERTIFICATE-----/, "\\1\n-----BEGIN CERTIFICATE-----")
+    cert = cert.gsub(/-----END CERTIFICATE-----([^-])/, "-----END CERTIFICATE-----\n\\1")
+
+    # Remove any extra whitespace and ensure proper formatting
+    cert = cert.strip
+
+    Rails.logger.debug "[machine_readable_certificate] Final formatted cert: #{cert}"
+
+    # Validate that we have a proper certificate structure
+    unless cert.match?(/-----BEGIN CERTIFICATE-----\n.*\n-----END CERTIFICATE-----/m)
+      Rails.logger.error '[machine_readable_certificate] Invalid certificate format after parsing'
+      raise ArgumentError, 'Invalid certificate format'
+    end
 
     OpenSSL::X509::Certificate.new(cert)
+  rescue OpenSSL::X509::CertificateError => e
+    Rails.logger.error "[machine_readable_certificate] Failed to parse certificate: #{e.message}"
+    Rails.logger.error "[machine_readable_certificate] Certificate content: #{cert}"
+    raise e
   end
 end

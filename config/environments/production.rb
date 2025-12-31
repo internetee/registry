@@ -19,7 +19,7 @@ Rails.application.configure do
   # For large-scale production use, consider using a caching reverse proxy like nginx, varnish or squid.
   # config.action_dispatch.rack_cache = true
 
-  config.public_file_server.enabled = false
+  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = Uglifier.new(harmony: true)
@@ -42,12 +42,14 @@ Rails.application.configure do
   # config.action_cable.url = 'wss://example.com/cable'
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
+  config.assume_ssl = ActiveModel::Type::Boolean.new.cast(ENV.fetch('RAILS_ASSUME_SSL', false))
+
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = false
+  config.force_ssl = ActiveModel::Type::Boolean.new.cast(ENV.fetch('RAILS_FORCE_SSL', true))
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :debug
+  config.log_level = (ENV['RAILS_LOG_LEVEL'] || 'info').to_sym
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id, :subdomain, :remote_ip]

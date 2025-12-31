@@ -7,11 +7,11 @@
 
 <div class="page-header">
     <div class="row" style="display: flex; flex-direction: row; align-items: baseline;">
-        <div class="col-sm-8">
+        <div class="col-sm-6">
             <h1><%= @api_user.username %></h1>
         </div>
 
-        <div class="col-sm-4 text-right" style="display: flex; flex-direction: row; align-items: baseline; justify-content: space-evenly;">
+        <div class="col-sm-6 text-right" style="display: flex; flex-direction: row; align-items: baseline; justify-content: flex-end;">
             <%= link_to t('.edit_btn'), edit_admin_registrar_api_user_path(@api_user.registrar,
                                                                            @api_user),
                         class: 'btn btn-primary' %>
