@@ -5,6 +5,7 @@ module Contact::CompanyRegister
   LIQUIDATED = 'L'.freeze
   BANKRUPT = 'N'.freeze
   DELETED = 'K'.freeze
+  NOT_FOUND = 'X'.freeze
 
   def return_company_status
     return if return_company_data.blank?
