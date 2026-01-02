@@ -13,7 +13,7 @@ module Actions
     def self.attach_legal_doc_to_new(entity, legal_doc, domain: true)
       return unless legal_doc
 
-      doc = LegalDocument.create(
+      doc = LegalDocument.new(
         documentable_type: domain ? Domain : Contact,
         document_type: legal_doc[:type],
         body: legal_doc[:body]
