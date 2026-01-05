@@ -15,7 +15,7 @@ class EppContactCreateBaseTest < EppTestCase
   end
 
   def test_creates_single_file_on_filesystem_for_single_legaldoc
-    name = 'contact_with_doc'
+    name = 'John Doe'
     email = 'doc@registrar.test'
     phone = '+1.2'
     doc_content = "test" * 2000 
@@ -45,15 +45,13 @@ class EppContactCreateBaseTest < EppTestCase
     XML
 
     assert_difference 'LegalDocument.count', 1 do
-      Actions::SimpleMailValidator.stub :run, true do
-        mock_result = OpenStruct.new(success: true, to_h: {}, configuration: nil)
-        mock_validator = OpenStruct.new(result: mock_result)
-        
-        Truemail.stub :validate, mock_validator do
-          Rails.env.stub :test?, false do
-            post epp_create_path, params: { frame: request_xml },
-                 headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
-          end
+      mock_result = OpenStruct.new(success: true, to_h: {}, configuration: nil)
+      mock_validator = OpenStruct.new(result: mock_result)
+      
+      Truemail.stub :validate, mock_validator do
+        Rails.env.stub :test?, false do
+          post epp_create_path, params: { frame: request_xml },
+               headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
         end
       end
     end
