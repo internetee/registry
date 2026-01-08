@@ -1,0 +1,88 @@
+name: PR Deploy to Staging (Kubernetes)
+
+on:
+  pull_request:
+    types: [opened, synchronize] 
+    branches:
+      - master
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+env:
+  APP_NAME: registry
+  ECR_URL: 034362061030.dkr.ecr.eu-north-1.amazonaws.com
+  AWS_REGION: eu-north-1
+  EKS_ASSUME_ROLE_ARN: arn:aws:iam::605134427993:role/terraform 
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    # environment: staging
+
+    steps:
+      - name: ⬇️ Checkout application code
+        uses: actions/checkout@v4 
+
+      - name: 🔑 Configure AWS Credentials (for ECR and EKS)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.GH_ACTIONS_DEPLOY_ROLE_ARN }} 
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🛠️ Build and Tag Docker image
+        id: docker_build
+        run: |
+          TAG="pr-${{ github.event.pull_request.number }}"
+          echo "IMAGE_TAG=$TAG" >> $GITHUB_OUTPUT
+          
+          docker build --platform linux/amd64 -f Dockerfile.production \
+            -t ${{ env.APP_NAME }}:${TAG} .
+            
+      - name: 🔑 ECR Login using AWS CLI
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | \
+          docker login --username AWS --password-stdin ${{ env.ECR_URL }}
+
+      - name: ⬆️ Push Docker image to ECR
+        run: |
+          TAG=${{ steps.docker_build.outputs.IMAGE_TAG }}
+          ECR_IMAGE="${{ env.ECR_URL }}/${{ env.APP_NAME }}:${TAG}"
+          docker tag ${{ env.APP_NAME }}:${TAG} ${ECR_IMAGE}
+          docker push ${ECR_IMAGE}
+      
+      - name: 🔐 Mint GitHub App installation token (for IaC repo)
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: internetee
+          repositories: Ry_AWS_IaC
+
+      - name: 🚀 Trigger IaC deploy (repository_dispatch)
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: internetee/Ry_AWS_IaC
+          event-type: deploy-service-staging
+          client-payload: |
+            {
+              "app_name": "${{ env.APP_NAME }}",
+              "image_tag": "${{ steps.docker_build.outputs.IMAGE_TAG }}",
+              "namespace": "${{ env.APP_NAME }}"
+            }
+            
+      - name: 💬 Post deploy trigger info to PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🟦 **Image pushed to ECR** and **deploy triggered** in IaC repo.\n\nApp: ${{ env.APP_NAME }}\nImage Tag: ${{ steps.docker_build.outputs.IMAGE_TAG }}\nIaC workflow: internetee/Ry_AWS_IaC (event: deploy-registry-staging)'
+            })
+            
