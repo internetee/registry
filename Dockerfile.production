@@ -57,9 +57,6 @@ RUN gem install bundler && \
 # Copy application code
 COPY . .
 
-# Precompile assets
-RUN RAILS_ENV=production bundle exec rake assets:precompile
-
 # Final stage for app image
 FROM base
 
