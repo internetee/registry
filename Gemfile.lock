@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/internetee/company_register.git
-  revision: 2c31da54c57db13324161eeb8db7e9f81af81987
-  branch: master
+  revision: f87f64b231f112ccfdb1dac5e43965f9fd7b2c56
+  branch: soap-fault-exception-handler
   specs:
     company_register (0.1.0)
       activesupport
