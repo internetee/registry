@@ -1,0 +1,33 @@
+<p>Domeeninini <%= @domain.name %> on kustustusmenetluses ja ei ole alates <%= @domain.on_hold_date %> internetis kättesaadav kuna oleme tuvastanud kontaktides olulisi puuduseid.</p>
+
+<p>Lugupeetud .ee domeeni registreerija/halduskontakt</p>
+
+Domeeniga on seotud puudulikke kontakti objekte, millest tulenevalt on Eesti Interneti SA blokeerinud domeeni pikendamise ja registripidaja vahetuse, kuniks kontaktandmed korrastatakse. Andmete korrastamiseks ja registreeringu pikendamiseks pöörduge palun oma registripidaja poole.</p>
+
+<p><%= @domain.name %> andmete parandamata jätmise korral läheb see <%= @domain.delete_date %> oksjonile .ee oksjonikeskkonda. Domeenioksjonite kohta loe lähemalt <a href="https://www.internet.ee/domeenioksjonid">siit</a>.</p>
+
+<p>Domeeni <%= @domain.name %> registripidaja:</p>
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+
+<p>Ülevaate kõikidest endaga seotud domeenidest saate <a href="https://registrant.internet.ee/">registreerija portaalist</a>.</p>
+
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+
+<hr>
+
+<p>Domain <%= @domain.name %> has expired</p>
+
+<p>Dear registrant/administrative contact of .ee domain,</p>
+
+<p>The domain name <%= @domain.name %> has expired and since <%= @domain.on_hold_date %> is no longer available on the Internet. Domain registration has invalid contact data. Renewal and registrar transfer is therefore prohibited until contact data has been fixed. To correct the data and renew your domain registration, please contact your registrar.</p>
+
+<p>If you do not renew the <%= @domain.name %> domain registration, it is deleted and put on auction to .ee domain auction environment at <%= @domain.delete_date %>. Read more about .ee domain auctions <a href="https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment">here</a>.</p>
+
+<p>Registrar of the <%= @domain.name %>:</p>
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+
+<p>You can find an overview of all your domains at the <a href="https://registrant.internet.ee/">registrant's portal</a>.</p>
+
+<%= render 'mailers/shared/signatures/signature.en.html' %>
+
+<hr>
