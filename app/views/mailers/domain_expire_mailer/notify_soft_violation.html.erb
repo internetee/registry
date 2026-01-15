@@ -1,12 +1,15 @@
-<p>Domeeninini <%= @domain.name %> on kustustusmenetluses ja ei ole alates <%= @domain.on_hold_date %> internetis kättesaadav kuna oleme tuvastanud kontaktides olulisi puuduseid.</p>
+<p>Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt</p>
 
-<p>Lugupeetud .ee domeeni registreerija/halduskontakt</p>
+<p>Anname teada, et domeen <%= @domain.name %> on suunatud kustutusmenetlusse ja ei ole alates <%= (@domain.force_delete_start + 15.days).strftime('%Y-%m-%d') %> internetis kättesaadav.</p>
 
-Domeeniga on seotud puudulikke kontakti objekte, millest tulenevalt on Eesti Interneti SA blokeerinud domeeni pikendamise ja registripidaja vahetuse, kuniks kontaktandmed korrastatakse. Andmete korrastamiseks ja registreeringu pikendamiseks pöörduge palun oma registripidaja poole.</p>
+<p>Kustutusmenetlus algatati domeeniga seotud kontaktandmete puudulikkuse tõttu ning viiakse läbi ka juhul, kui domeeni aegumiskuupäev on kustutusmenetluse lõpust hilisem. Tulenevalt .ee domeenireeglitest on blokeerinud domeeni pikendamise ja registripidaja vahetuse toimingud.</p>
 
-<p><%= @domain.name %> andmete parandamata jätmise korral läheb see <%= @domain.delete_date %> oksjonile .ee oksjonikeskkonda. Domeenioksjonite kohta loe lähemalt <a href="https://www.internet.ee/domeenioksjonid">siit</a>.</p>
+<p>Andmete korrastamiseks pöörduge palun oma registripidaja poole. Peale andmete täiendamist eemaldatakse domeenile lisatud piirangud.</p>
+
+<p>Kontaktandmete korrastamata jätmisel läheb domeen <%= (@domain.force_delete_start + 45.days).strftime('%Y-%m-%d') %> oksjonile meie  Oksjonikeskkonda, kus saavad sellele pakkumisi teha ning registreerimise eelisõiguse omandada kõik huvilised üle kogu maailma. Domeenioksjonite kohta loe lähemalt <a href="https://www.internet.ee/domeenioksjonid">siit</a>.</p>
 
 <p>Domeeni <%= @domain.name %> registripidaja:</p>
+
 <%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
 
 <p>Ülevaate kõikidest endaga seotud domeenidest saate <a href="https://registrant.internet.ee/">registreerija portaalist</a>.</p>
@@ -15,19 +18,23 @@ Domeeniga on seotud puudulikke kontakti objekte, millest tulenevalt on Eesti Int
 
 <hr>
 
-<p>Domain <%= @domain.name %> has expired</p>
+<p>Domain <%= @domain.name %> deletion procedure started</p>
 
-<p>Dear registrant/administrative contact of .ee domain,</p>
+<p>Dear registrant/administrative contact of domain <%= @domain.name %>,</p>
 
-<p>The domain name <%= @domain.name %> has expired and since <%= @domain.on_hold_date %> is no longer available on the Internet. Domain registration has invalid contact data. Renewal and registrar transfer is therefore prohibited until contact data has been fixed. To correct the data and renew your domain registration, please contact your registrar.</p>
+<p>We inform you that the domain <%= @domain.name %> has been directed to deletion procedure and is not accessible on the Internet as of <%= (@domain.force_delete_start + 15.days).strftime('%Y-%m-%d') %>.</p>
 
-<p>If you do not renew the <%= @domain.name %> domain registration, it is deleted and put on auction to .ee domain auction environment at <%= @domain.delete_date %>. Read more about .ee domain auctions <a href="https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment">here</a>.</p>
+<p>The deletion procedure was initiated due to insufficient contact data associated with the domain and will be carried out even if the domain expiration date is later than the end of the deletion procedure. Due to .ee domain rules, domain renewal and registrar change operations are blocked.</p>
 
-<p>Registrar of the <%= @domain.name %>:</p>
+<p>To correct the data, please contact your registrar. After updating the data, restrictions added to the domain will be removed.</p>
+
+<p>If the contact data is not corrected, the domain will go to auction in our Auction Environment on <%= (@domain.force_delete_start + 45.days).strftime('%Y-%m-%d') %>, where all interested parties from around the world can bid on it and acquire the priority right for registration. Read more about domain auctions <a href="https://www.internet.ee/domains/auctions">here</a>.</p>
+
+<p>Registrar of the domain <%= @domain.name %>:</p>
+
 <%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
 
-<p>You can find an overview of all your domains at the <a href="https://registrant.internet.ee/">registrant's portal</a>.</p>
+<p>You can find an overview of all your domains at the <a href="https://registrant.internet.ee/">registrant portal</a>.</p>
 
 <%= render 'mailers/shared/signatures/signature.en.html' %>
-
 <hr>
