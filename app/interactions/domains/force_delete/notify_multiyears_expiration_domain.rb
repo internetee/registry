@@ -8,7 +8,7 @@ module Domains
         return unless multiyear_registrations?
 
         recipients.each do |recipient|
-          DomainExpireEmailJob.set(wait_until: send_time).perform_later(domain.id, recipient)
+          DomainExpireEmailJob.set(wait_until: send_time).perform_later(domain.id, recipient, multiyears_expiration: true)
         end
       end
 
