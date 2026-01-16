@@ -1,10 +1,11 @@
 name: PR Deploy to Staging (Kubernetes)
 
 on:
-  pull_request:
-    types: [opened, synchronize] 
-    branches:
-      - master
+  workflow_dispatch:
+  # pull_request:
+  #   types: [opened, synchronize] 
+  #   branches:
+  #     - master
 
 permissions:
   id-token: write
