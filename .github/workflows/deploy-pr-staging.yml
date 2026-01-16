@@ -2,17 +2,11 @@ name: PR Deploy to Staging (Kubernetes)
 
 on:
   workflow_dispatch:
-    # inputs:
-    #     environment:
-    #       description: 'Where to deploy?'
-    #       type: choice
-    #       required: true
-    #       options:
-    #         - staging
-        version_to_deploy:
-          description: 'What version (tag) to deploy? (e.g., pr-2889)'
-          required: true
-          type: string
+    inputs:
+      pr_number:
+        description: 'Number of PR to deploy (only digits, e.g., 2889)'
+        required: true
+        type: string
   # pull_request:
   #   types: [opened, synchronize] 
   #   branches:
