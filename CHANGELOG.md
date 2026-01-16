@@ -1,3 +1,10 @@
+31.12.2025
+* Fixed domain search with contact indent in admin https://github.com/internetee/registry/issues/2877
+
+11.12.2025
+* Prevent Force Delete from being canceled on unrelated updates https://github.com/internetee/registry/pull/2867
+* Fixes for accreditation api https://github.com/internetee/registry/pull/2875
+
 14.11.2025
 * API endpoint for Estonian Business Registry integration https://github.com/internetee/registry/pull/2676
 

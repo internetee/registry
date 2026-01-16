@@ -12,9 +12,21 @@ module Admin
       p = params[:statuses_contains]
       domains = domains.where('domains.statuses @> ?::varchar[]', "{#{p.join(',')}}") if p.present?
 
+      contact_ident_value = params[:q][:contacts_ident_matches]
       normalize_search_parameters do
-        @q = domains.ransack(PartialSearchFormatter.format(params[:q]))
+        ransack_params = params[:q].dup
+        ransack_params.delete(:contacts_ident_matches)
+
+        @q = domains.ransack(PartialSearchFormatter.format(ransack_params))
         @result = @q.result.distinct
+
+        if contact_ident_value.present?
+          formatted_ident = PartialSearchFormatter.format_value(contact_ident_value)
+          @result = @result.joins(:contacts)
+                           .where('contacts_domains.ident ILIKE ?', formatted_ident)
+                           .distinct
+        end
+
         @domains = @result.page(params[:page])
       end
 

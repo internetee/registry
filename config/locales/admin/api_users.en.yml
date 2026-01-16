@@ -3,8 +3,8 @@ en:
     api_users:
       index:
         header: API users
-        set_test_btn: Set Test
-        remove_test_btn: Remove Test
+        set_test_btn: Set Accreditation
+        remove_test_btn: Remove Accreditation
 
       new:
         header: New API user

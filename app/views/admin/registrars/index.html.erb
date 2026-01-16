@@ -35,7 +35,7 @@
                     </th>
                     </th>
                     <th>
-                        Test status
+                        Accreditation status
                     </th>
                 </tr>
                 </thead>
@@ -64,13 +64,9 @@
                         </td>
                         <td>
                             <% if !x.accredited? || x.accreditation_expired? %>
-                                <%= button_to t(:set_test_btn),
-                                              { controller: 'registrars', action: 'set_test_date', registrar_id: x.id},
-                                              { method: :post, class: 'btn btn-primary'} %>
+                                <span class="text-danger">Not accredited</span>
                             <% else %>
-                                <%= button_to t(:remove_test_btn),
-                                              { controller: 'registrars', action: 'remove_test_date', registrar_id: x.id},
-                                              { method: :post, class: 'btn btn-danger'} %>
+                                <span class="text-success">Accredited</span>
                             <% end %>
                         </td>
                     </tr>
