@@ -87,10 +87,16 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🟦 **Image pushed to ECR** and **deploy triggered** in IaC repo.\n\nApp: ${{ env.APP_NAME }}\nImage Tag: ${{ steps.docker_build.outputs.IMAGE_TAG }}\nIaC workflow: internetee/Ry_AWS_IaC (event: deploy-registry-staging)'
-            })
+            const prNumber = context.issue.number || ${{ github.event.inputs.pr_number }};
+            
+            if (prNumber) {
+              github.rest.issues.createComment({
+                issue_number: parseInt(prNumber),
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '🟦 **Image pushed to ECR** and **deploy triggered** in IaC repo.\n\nApp: ${{ env.APP_NAME }}\nImage Tag: ${{ steps.docker_build.outputs.IMAGE_TAG }}\nIaC workflow: internetee/Ry_AWS_IaC (event: deploy-service-staging)'
+              })
+            } else {
+              core.info("No PR number found, skipping comment.");
+            }
             
