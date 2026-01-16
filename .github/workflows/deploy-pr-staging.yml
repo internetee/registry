@@ -2,6 +2,17 @@ name: PR Deploy to Staging (Kubernetes)
 
 on:
   workflow_dispatch:
+    # inputs:
+    #     environment:
+    #       description: 'Where to deploy?'
+    #       type: choice
+    #       required: true
+    #       options:
+    #         - staging
+        version_to_deploy:
+          description: 'What version (tag) to deploy? (e.g., pr-2889)'
+          required: true
+          type: string
   # pull_request:
   #   types: [opened, synchronize] 
   #   branches:
@@ -25,7 +36,9 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout application code
-        uses: actions/checkout@v4 
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ github.event.inputs.pr_number }}/merge
 
       - name: 🔑 Configure AWS Credentials (for ECR and EKS)
         uses: aws-actions/configure-aws-credentials@v4
@@ -36,7 +49,7 @@ jobs:
       - name: 🛠️ Build and Tag Docker image
         id: docker_build
         run: |
-          TAG="pr-${{ github.event.pull_request.number }}"
+          TAG="pr-${{ github.event.inputs.pr_number }}"
           echo "IMAGE_TAG=$TAG" >> $GITHUB_OUTPUT
           
           docker build --platform linux/amd64 -f Dockerfile.production \
