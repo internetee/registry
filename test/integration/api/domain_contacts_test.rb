@@ -1,6 +1,17 @@
 require 'test_helper'
 
 class APIDomainContactsTest < ApplicationIntegrationTest
+  def setup
+    # Mock DNSValidator to return success
+    @original_validate = DNSValidator.method(:validate)
+    DNSValidator.define_singleton_method(:validate) { |**args| { errors: [] } }
+  end
+  
+  def teardown
+    # Restore original validate method
+    DNSValidator.define_singleton_method(:validate, @original_validate)
+  end
+  
   def test_replace_all_tech_contacts_of_the_current_registrar
     patch '/repp/v1/domains/contacts', params: { current_contact_id: 'william-001',
                                                  new_contact_id: 'john-001' },

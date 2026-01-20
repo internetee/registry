@@ -6,10 +6,16 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
     @new_registrar = registrars(:goodnames)
     @original_transfer_wait_time = Setting.transfer_wait_time
     Setting.transfer_wait_time = 0 # Auto-approval
+    
+    # Mock DNSValidator to return success
+    @original_validate = DNSValidator.method(:validate)
+    DNSValidator.define_singleton_method(:validate) { |**args| { errors: [] } }
   end
 
   teardown do
     Setting.transfer_wait_time = @original_transfer_wait_time
+    # Restore original validate method
+    DNSValidator.define_singleton_method(:validate, @original_validate)
   end
 
   def test_creates_new_domain_transfer

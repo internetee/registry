@@ -1,6 +1,17 @@
 require 'test_helper'
 
 class APINameserversPutTest < ApplicationIntegrationTest
+  def setup
+    # Mock DNSValidator to return success
+    @original_validate = DNSValidator.method(:validate)
+    DNSValidator.define_singleton_method(:validate) { |**args| { errors: [] } }
+  end
+  
+  def teardown
+    # Restore original validate method
+    DNSValidator.define_singleton_method(:validate, @original_validate)
+  end
+  
   def test_replaces_registrar_nameservers
     old_nameserver_ids = [nameservers(:shop_ns1).id,
                           nameservers(:airport_ns1).id,

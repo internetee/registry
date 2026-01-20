@@ -13,6 +13,8 @@ module Actions
       validate_domain_integrity
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
+      validate_ns_records
+      validate_dns_records
       assign_requested_statuses
 
       ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
@@ -94,6 +96,30 @@ module Actions
         @nameservers << { id: ns.id, _destroy: 1 }
       else
         domain.add_epp_error('2303', 'hostAttr', ns_attr[:hostname], %i[nameservers not_found])
+      end
+    end
+
+    def validate_ns_records
+      return unless domain.nameservers.any?
+
+      result = DNSValidator.validate(domain: domain, name: domain.name, record_type: 'NS')
+      return if result[:errors].blank?
+
+      assign_dns_validation_error(result[:errors])
+    end
+
+    def validate_dns_records
+      return unless domain.dnskeys.any?
+
+      result = DNSValidator.validate(domain: domain, name: domain.name, record_type: 'DNSKEY')
+      return if result[:errors].blank?
+
+      assign_dns_validation_error(result[:errors])
+    end
+
+    def assign_dns_validation_error(errors)
+      errors.each do |error|
+        domain.add_epp_error('2306', nil, nil, error)
       end
     end
 
