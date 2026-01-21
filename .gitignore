@@ -21,6 +21,7 @@
 /import
 ettevotja_rekvisiidid__lihtandmed.csv.zip
 Dockerfile.dev
+Dockerfile.dev.v2
 .cursor/
 .cursorrules
 /certs/
