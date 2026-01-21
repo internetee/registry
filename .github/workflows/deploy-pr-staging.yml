@@ -85,14 +85,14 @@ jobs:
         with:
           script: |
             const prNumber = context.issue.number || ${{ github.event.inputs.pr_number }};
-            const url = `https://auction-pr-${prNumber}.cloud.tld.ee`; 
+            const url = `https://registry-pr-${prNumber}.cloud.tld.ee`; 
             
             if (prNumber) {
               github.rest.issues.createComment({
                 issue_number: parseInt(prNumber),
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: `🟦 **Deploy Triggered!** 🚀\n\nApp: **auction-center**\nLink: [${url}](${url})\n\n*(Link will be available in 2-3 minutes)*`
+                body: `🟦 **Deploy Triggered!** 🚀\n\nApp: **registry**\nLink: [${url}](${url})\n\n*(Link will be available in 2-3 minutes)*`
               })
             }
             
