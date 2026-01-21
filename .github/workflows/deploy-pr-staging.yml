@@ -1,4 +1,4 @@
-name: PR Deploy to Staging (Kubernetes)
+name: 01 PR Deploy to Staging (Kubernetes)
 
 on:
   workflow_dispatch:
