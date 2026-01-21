@@ -54,6 +54,15 @@
           - @contacts_settings.each do |setting|
             = render 'setting_row', setting: setting
 
+  .panel.panel-default
+    .panel-heading
+      = t('.certificate')
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %tbody
+          - @certificate_settings.each do |setting|
+            = render 'setting_row', setting: setting
+
   .row
     .col-md-12.text-right
       = submit_tag(t('.save_btn'), class: 'btn btn-success', name: nil)

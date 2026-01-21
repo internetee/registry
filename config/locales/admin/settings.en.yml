@@ -9,6 +9,7 @@ en:
         billing: Billing
         contacts: Contacts
         save_btn: Save
+        certificate: Certificate
 
       create:
         saved: Settings have been successfully updated
