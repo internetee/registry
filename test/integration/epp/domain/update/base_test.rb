@@ -1091,6 +1091,229 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert_epp_response :object_status_prohibits_operation
   end
 
+  # UPDATE TESTS FOR DUPLICATE CONTACTS
+  def test_update_domain_with_duplicate_registrant_and_single_admin
+    domain = domains(:shop)
+    
+    duplicate_contact = Contact.create!(
+      name: 'Partial Duplicate Test',
+      code: 'duplicate-006',
+      email: 'partial-duplicate@test.com',
+      phone: '+123.6789012',
+      ident: '12349X',
+      ident_type: 'priv',
+      ident_country_code: 'US',
+      registrar: registrars(:bestnames)
+    )
+    
+    registrant = duplicate_contact.becomes(Registrant)
+    
+    new_admin = Contact.create!(
+      name: duplicate_contact.name,
+      code: 'duplicate-admin-006',
+      email: duplicate_contact.email,
+      phone: duplicate_contact.phone,
+      ident: duplicate_contact.ident,
+      ident_type: 'priv',
+      ident_country_code: duplicate_contact.ident_country_code,
+      registrar: registrars(:bestnames)
+    )
+
+    domain.update(registrant: registrant) && domain.reload
+
+    old_admin = domain.admin_contacts.first
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{domain.name}</domain:name>
+              <domain:chg/>
+              <domain:add>
+                <domain:contact type="admin">#{new_admin.code}</domain:contact>
+              </domain:add>
+              <domain:rem>
+                <domain:contact type="admin">#{old_admin.code}</domain:contact>
+              </domain:rem>
+            </domain:update>
+          </update>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path(domain_name: domain.name), params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    domain.reload
+
+    assert_epp_response :completed_successfully
+    assert response.body.include? "Admin contact #{new_admin.code} was discarded as duplicate;"
+  end
+
+  def test_update_domain_with_registrant_admin_tech_all_duplicates
+    domain = domains(:airport)
+
+    initial_admin_contact = contacts(:jane)
+    initial_tech_contact = contacts(:william)
+    domain.admin_contacts = [initial_admin_contact]
+    domain.tech_contacts = [initial_tech_contact]
+    domain.save!
+    domain.reload
+
+    base_duplicate_data_contact = Contact.create!(
+      name: 'All Roles Are The Same Person',
+      code: "base-all-roles-#{SecureRandom.hex(3)}",
+      email: 'all.roles.same.person@example.com',
+      phone: '+1.999888777',
+      ident: 'ARSAMEP123',
+      ident_type: 'priv',
+      ident_country_code: 'US',
+      registrar: domain.registrar
+    )
+
+    new_registrant = base_duplicate_data_contact.becomes(Registrant)
+    domain.update!(registrant: new_registrant)
+    domain.reload
+
+    new_admin_being_added = Contact.create!(
+      name: base_duplicate_data_contact.name,
+      code: "admin-dup-all-roles-#{SecureRandom.hex(3)}",
+      email: base_duplicate_data_contact.email,
+      phone: base_duplicate_data_contact.phone,
+      ident: base_duplicate_data_contact.ident,
+      ident_type: base_duplicate_data_contact.ident_type,
+      ident_country_code: base_duplicate_data_contact.ident_country_code,
+      registrar: domain.registrar
+    )
+
+    new_tech_being_added = Contact.create!(
+      name: base_duplicate_data_contact.name,
+      code: "tech-dup-all-roles-#{SecureRandom.hex(3)}",
+      email: base_duplicate_data_contact.email,
+      phone: base_duplicate_data_contact.phone,
+      ident: base_duplicate_data_contact.ident,
+      ident_type: base_duplicate_data_contact.ident_type,
+      ident_country_code: base_duplicate_data_contact.ident_country_code,
+      registrar: domain.registrar
+    )
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{domain.name}</domain:name>
+              <domain:chg/>
+              <domain:add>
+                <domain:contact type="admin">#{new_admin_being_added.code}</domain:contact>
+                <domain:contact type="tech">#{new_tech_being_added.code}</domain:contact>
+              </domain:add>
+              <domain:rem>
+                <domain:contact type="admin">#{initial_admin_contact.code}</domain:contact>
+                <domain:contact type="tech">#{initial_tech_contact.code}</domain:contact>
+              </domain:rem>
+            </domain:update>
+          </update>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path(domain_name: domain.name), params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => "session=api_bestnames" }
+    domain.reload
+
+    assert_epp_response :completed_successfully
+    assert response.body.include? "Admin contact #{new_admin_being_added.code} was discarded as duplicate;"
+    assert response.body.include? "Tech contact #{new_tech_being_added.code} was discarded as duplicate;"
+  end
+
+  def test_update_domain_with_duplicate_admin_and_tech_registrant_is_different
+    domain = domains(:library)
+
+    initial_admin_contact = contacts(:john)
+    initial_tech_contact = contacts(:william)
+    domain.admin_contacts = [initial_admin_contact]
+    domain.tech_contacts = [initial_tech_contact]
+    domain.save!
+    domain.reload
+
+    admin_tech_duplicate_base = Contact.create!(
+      name: 'Admin And Tech Are Same Person',
+      code: "base-adm-tech-#{SecureRandom.hex(3)}",
+      email: 'admin.tech.same.person@example.com',
+      phone: '+1.555444333',
+      ident: 'ATSAMEP456',
+      ident_type: 'priv',
+      ident_country_code: 'US',
+      registrar: domain.registrar
+    )
+
+    new_admin_being_added = Contact.create!(
+      name: admin_tech_duplicate_base.name,
+      code: "admin-dup-adm-tech-#{SecureRandom.hex(3)}",
+      email: admin_tech_duplicate_base.email,
+      phone: admin_tech_duplicate_base.phone,
+      ident: admin_tech_duplicate_base.ident,
+      ident_type: admin_tech_duplicate_base.ident_type,
+      ident_country_code: admin_tech_duplicate_base.ident_country_code,
+      registrar: domain.registrar
+    )
+
+    new_tech_being_added_and_skipped = Contact.create!(
+      name: admin_tech_duplicate_base.name,
+      code: "tech-dup-adm-tech-#{SecureRandom.hex(3)}",
+      email: admin_tech_duplicate_base.email,
+      phone: admin_tech_duplicate_base.phone,
+      ident: admin_tech_duplicate_base.ident,
+      ident_type: admin_tech_duplicate_base.ident_type,
+      ident_country_code: admin_tech_duplicate_base.ident_country_code,
+      registrar: domain.registrar
+    )
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{domain.name}</domain:name>
+              <domain:chg/>
+              <domain:add>
+                <domain:contact type="admin">#{new_admin_being_added.code}</domain:contact>
+                <domain:contact type="tech">#{new_tech_being_added_and_skipped.code}</domain:contact>
+              </domain:add>
+              <domain:rem>
+                <domain:contact type="admin">#{initial_admin_contact.code}</domain:contact>
+                <domain:contact type="tech">#{initial_tech_contact.code}</domain:contact>
+              </domain:rem>
+            </domain:update>
+          </update>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path(domain_name: domain.name), params: { frame: request_xml }, headers: { 'HTTP_COOKIE' => "session=api_bestnames" }
+    domain.reload
+
+    assert_epp_response :completed_successfully
+    assert response.body.include? "Tech contact #{new_tech_being_added_and_skipped.code} was discarded as duplicate;"
+  end
+
   private
 
   def assert_verification_and_notification_emails
