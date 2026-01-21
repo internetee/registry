@@ -7,10 +7,6 @@ on:
         description: 'Number of PR to deploy (only digits, e.g., 2889)'
         required: true
         type: string
-  # pull_request:
-  #   types: [opened, synchronize] 
-  #   branches:
-  #     - master
 
 permissions:
   id-token: write
@@ -80,7 +76,8 @@ jobs:
             {
               "app_name": "${{ env.APP_NAME }}",
               "image_tag": "${{ steps.docker_build.outputs.IMAGE_TAG }}",
-              "namespace": "${{ env.APP_NAME }}"
+              "namespace": "${{ env.APP_NAME }}",
+              "pr_number": "${{ inputs.pr_number }}"
             }
             
       - name: 💬 Post deploy trigger info to PR
@@ -88,15 +85,14 @@ jobs:
         with:
           script: |
             const prNumber = context.issue.number || ${{ github.event.inputs.pr_number }};
+            const url = `https://auction-pr-${prNumber}.cloud.tld.ee`; 
             
             if (prNumber) {
               github.rest.issues.createComment({
                 issue_number: parseInt(prNumber),
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: '🟦 **Image pushed to ECR** and **deploy triggered** in IaC repo.\n\nApp: ${{ env.APP_NAME }}\nImage Tag: ${{ steps.docker_build.outputs.IMAGE_TAG }}\nIaC workflow: internetee/Ry_AWS_IaC (event: deploy-service-staging)'
+                body: `🟦 **Deploy Triggered!** 🚀\n\nApp: **auction-center**\nLink: [${url}](${url})\n\n*(Link will be available in 2-3 minutes)*`
               })
-            } else {
-              core.info("No PR number found, skipping comment.");
             }
             
