@@ -16,6 +16,9 @@ module Contact::CompanyRegister
     return unless org?
 
     company_register.simple_data(registration_number: ident.to_s)
+  rescue CompanyRegister::SoapFaultError => e
+    Rails.logger.error("Error getting company data for #{ident}: #{e.message}")
+    false
   rescue CompanyRegister::NotAvailableError
     []
   end
@@ -24,6 +27,9 @@ module Contact::CompanyRegister
     return unless org?
     
     company_register.company_details(registration_number: ident.to_s)
+  rescue CompanyRegister::SoapFaultError => e
+    Rails.logger.error("Error getting company details for #{ident}: #{e.message}")
+    false
   rescue CompanyRegister::NotAvailableError
     []
   end
