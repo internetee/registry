@@ -10,12 +10,23 @@ class ReppV1CertificatesCreateTest < ActionDispatch::IntegrationTest
 
     adapter = ENV['shunter_default_adapter'].constantize.new
     adapter&.clear!
+    
+    @user.registrar.update!(address_country_code: 'ET',vat_rate: 22)
   end
 
   def test_creates_new_api_user_certificate_and_informs_admins
+    original_username = @user.username
+    @user.update!(username: 'host.ee') && @user.reload
+
+    token = Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
+    headers = { 'Authorization' => "Basic #{token}" }
+
     assert_difference('Certificate.count') do
       assert_difference 'ActionMailer::Base.deliveries.size', +1 do
-        post repp_v1_certificates_path, headers: @auth_headers, params: request_body
+        post repp_v1_certificates_path, headers: headers, params: request_body
+
+        puts "Response status: #{response.status}"
+        puts "Response body: #{response.body}"
       end
     end
     json = JSON.parse(response.body, symbolize_names: true)
@@ -23,6 +34,8 @@ class ReppV1CertificatesCreateTest < ActionDispatch::IntegrationTest
     assert_response :ok
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
+    
+    @user.update!(username: original_username)
   end
 
   def test_return_error_when_invalid_certificate

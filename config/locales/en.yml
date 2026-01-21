@@ -711,3 +711,7 @@ en:
     errors:
       invalid_ca: "Invalid Certificate Authority for this interface"
       active_certificate_exists: "Active certificate already exists for this user and interface"
+
+  # Adding translation keys for certificate CSR validation
+  csr_common_name_must_match_username: "Certificate CN (common name) must match the username of the account"
+  csr_country_must_match_registrar_country: "Certificate C (country) must match the country of the registrar"
