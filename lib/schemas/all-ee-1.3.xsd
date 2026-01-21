@@ -27,7 +27,7 @@
       schemaLocation="lib/schemas/host-1.0.xsd"/>
     <!-- EPP protocol extension: .ee specific -->
     <import namespace="https://epp.tld.ee/schema/eis-1.0"
-      schemaLocation="lib/schemas/eis-1.0.xsd"/>
+      schemaLocation="lib/schemas/ee-1.1.xsd"/>
     <import namespace="https://epp.tld.ee/schema/contact-ee-1.1"
       schemaLocation="lib/schemas/contact-ee-1.1.xsd"/>
     <import namespace="https://epp.tld.ee/schema/domain-ee-1.2"
