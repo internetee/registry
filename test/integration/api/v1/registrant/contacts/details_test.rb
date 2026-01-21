@@ -39,7 +39,8 @@ class RegistrantApiV1ContactDetailsTest < ActionDispatch::IntegrationTest
                     auth_info: @contact.auth_info,
                     statuses: @contact.statuses,
                     disclosed_attributes: @contact.disclosed_attributes,
-                    registrant_publishable: @contact.registrant_publishable }),
+                    registrant_publishable: @contact.registrant_publishable,
+                    system_disclosed_attributes: @contact.system_disclosed_attributes }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
