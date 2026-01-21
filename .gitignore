@@ -21,6 +21,7 @@
 /import
 ettevotja_rekvisiidid__lihtandmed.csv.zip
 Dockerfile.dev
+Dockerfile.dev.v2
 .cursor/
 .cursorrules
 /certs/
@@ -29,3 +30,4 @@ certs/ca/private/ca_*.pem
 .cursor/
 .cursorrules
 certs/
+Dockerfile.dev.v2
