@@ -1,0 +1,40 @@
+<p>Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt</p>
+
+<p>Anname teada, et domeen <%= @domain.name %> on suunatud kustutusmenetlusse ja ei ole alates <%= (@domain.force_delete_start + 15.days).strftime('%Y-%m-%d') %> internetis kättesaadav.</p>
+
+<p>Kustutusmenetlus algatati domeeni registreerimisega seotud nõuetele mitte vastavate andmete tõttu - registreerijat ei eksisteeri või on kontaktandmed puudulikud. Tulenevalt .ee domeenireeglitest on blokeeritud domeeni pikendamise ja registripidaja vahetuse toimingud.</p>
+
+<p>Andmete korrastamiseks pöörduge palun oma registripidaja poole. Peale andmete parandamist eemaldatakse domeenile lisatud piirangud.</p>
+
+<p>Registreerimisandmete korrastamata jätmisel läheb domeen <%= (@domain.force_delete_start + 45.days).strftime('%Y-%m-%d') %> oksjonile .ee  Oksjonikeskkonda, kus saavad sellele pakkumisi teha ning registreerimise eelisõiguse omandada kõik huvilised üle kogu maailma. Domeenioksjonite kohta loe lähemalt <a href="https://www.internet.ee/domeenioksjonid">siit</a>.</p>
+
+<p>Domeeni <%= @domain.name %> registripidaja:</p>
+
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+
+<p>Ülevaate kõikidest endaga seotud domeenidest saate <a href="https://registrant.internet.ee/">registreerija portaalist</a>.</p>
+
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+
+<hr>
+
+<p>Domain <%= @domain.name %> deletion procedure started</p>
+
+<p>Dear registrant/administrative contact of domain <%= @domain.name %>,</p>
+
+<p>We are informing you that the domain <%= @domain.name %> has been entered into the Force Delete procedure and is unavailable on the internet since <%= (@domain.force_delete_start + 15.days).strftime('%Y-%m-%d') %>.</p>
+
+<p>The Force Delete procedure was initiated due to data associated with the domain registration that does not meet the requirements—either the registrant does not exist or the contact information is incomplete. In accordance with .ee domain rules, domain renewal and registrar transfer operations have been blocked.</p>
+
+<p>To rectify the data, please contact your registrar. Once the data has been corrected, the restrictions placed on the domain will be removed.</p>
+
+<p>If the registration data is not updated, the domain will proceed to the .ee Auction Portal on <%= (@domain.force_delete_start + 45.days).strftime('%Y-%m-%d') %>, where any interested party worldwide can place bids and acquire the priority right to register it. Read more about domain auctions <a href="https://www.internet.ee/domains/auctions">here</a>.</p>
+
+<p>Registrar of the domain <%= @domain.name %>:</p>
+
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+
+<p>You can find an overview of all your domains at the <a href="https://registrant.internet.ee/">registrant portal</a>.</p>
+
+<%= render 'mailers/shared/signatures/signature.en.html' %>
+<hr>
