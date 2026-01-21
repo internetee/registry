@@ -76,7 +76,7 @@ gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'openssl'
 gem 'pdfkit'
 gem 'redis'
-gem 'rexml'
+gem 'rexml', '>= 3.4.2'
 gem 'sidekiq', '~> 7.0'
 gem 'strong_migrations'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
@@ -92,11 +92,11 @@ group :test do
   gem 'database_cleaner'
   gem 'minitest', '~> 5.17'
   gem 'minitest-stub_any_instance'
-  gem 'selenium-webdriver', '~> 4.26'
+  gem 'selenium-webdriver', '~> 4.27', '>= 4.27.0'
   # gem 'webdrivers'
   gem 'simplecov', '0.17.1', require: false # CC last supported v0.17
   gem 'spy'
-  gem 'webmock'
+  gem 'webmock', '>= 3.15.1'
 end
 
 gem 'aws-sdk-sesv2', '~> 1.19'
