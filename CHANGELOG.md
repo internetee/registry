@@ -1,5 +1,7 @@
 22.01.2026
+* Fixed duplicate legaldoc creation issue https://github.com/internetee/registry/issues/336
 * Improved test vocerage to mass_actions_controller https://github.com/internetee/registry/pull/2858
+* Added exception handler for business registry reponses https://github.com/internetee/registry/pull/2883
 
 21.01.2026
 * Disclose phone nr in whois for org owned domain registrations https://github.com/internetee/registry/pull/2818
