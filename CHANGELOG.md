@@ -1,3 +1,6 @@
+22.01.2026
+* Improved test vocerage to mass_actions_controller https://github.com/internetee/registry/pull/2858
+
 21.01.2026
 * Disclose phone nr in whois for org owned domain registrations https://github.com/internetee/registry/pull/2818
 * Improved handling of multi-year soft domain Force Delete procedure https://github.com/internetee/registry/pull/2890
