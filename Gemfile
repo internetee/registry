@@ -62,7 +62,7 @@ gem 'omniauth-tara', github: 'internetee/omniauth-tara'
 # gem 'omniauth-tara', path: 'vendor/gems/omniauth-tara'
 
 gem 'airbrake'
-gem 'company_register', github: 'internetee/company_register', branch: :master
+gem 'company_register', github: 'internetee/company_register', branch: 'master'
 gem 'directo', github: 'internetee/directo', branch: 'master'
 gem 'domain_name'
 gem 'dry-struct'
