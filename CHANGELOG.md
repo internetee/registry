@@ -1,3 +1,10 @@
+21.01.2026
+* Disclose phone nr in whois for org owned domain registrations https://github.com/internetee/registry/pull/2818
+* Improved handling of multi-year soft domain Force Delete procedure https://github.com/internetee/registry/pull/2890
+
+31.12.2025
+* Fixed domain search with contact indent in admin https://github.com/internetee/registry/issues/2877
+
 11.12.2025
 * Prevent Force Delete from being canceled on unrelated updates https://github.com/internetee/registry/pull/2867
 * Fixes for accreditation api https://github.com/internetee/registry/pull/2875
