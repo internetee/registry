@@ -112,6 +112,8 @@ USER 1000:1000
 # Entrypoint prepares the database.
 # ENTRYPOINT ["/opt/webapps/app/bin/docker-entrypoint"]
 
+RUN bundle exec rails assets:precompile
+
 # Expose port
 EXPOSE 3000
 
