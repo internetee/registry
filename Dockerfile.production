@@ -57,6 +57,12 @@ RUN gem install bundler && \
 # Copy application code
 COPY . .
 
+# Precompile assets in build stage (Node.js 14 is available here)
+# Use dummy SECRET_KEY_BASE for asset precompilation only
+ARG SECRET_KEY_BASE=dummy_key_for_assets_precompilation
+ENV SECRET_KEY_BASE=${SECRET_KEY_BASE}
+RUN bundle exec rails assets:precompile
+
 # Final stage for app image
 FROM base
 
@@ -111,8 +117,6 @@ USER 1000:1000
 
 # Entrypoint prepares the database.
 # ENTRYPOINT ["/opt/webapps/app/bin/docker-entrypoint"]
-
-RUN bundle exec rails assets:precompile
 
 # Expose port
 EXPOSE 3000
