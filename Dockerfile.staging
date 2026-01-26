@@ -5,8 +5,8 @@ FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim AS base
 # Rails app lives here
 WORKDIR /opt/webapps/app
 
-# Set production environment
-ENV RAILS_ENV="production" \
+# Set staging environment
+ENV RAILS_ENV="staging" \
     RAILS_LOG_TO_STDOUT=true \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle"
@@ -61,8 +61,8 @@ COPY . .
 # Use dummy SECRET_KEY_BASE for asset precompilation only
 ARG SECRET_KEY_BASE=dummy_key_for_assets_precompilation
 ENV SECRET_KEY_BASE=${SECRET_KEY_BASE}
-RUN RAILS_ENV=production bundle exec rails assets:precompile && \
-    echo "Assets precompiled successfully" && \
+RUN RAILS_ENV=staging bundle exec rails assets:precompile && \
+    echo "Assets precompiled successfully for staging" && \
     ls -la public/assets/ | head -20
 
 # Final stage for app image

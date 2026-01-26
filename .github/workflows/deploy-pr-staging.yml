@@ -41,8 +41,8 @@ jobs:
         run: |
           TAG="pr-${{ github.event.inputs.pr_number }}"
           echo "IMAGE_TAG=$TAG" >> $GITHUB_OUTPUT
-          
-          docker build --platform linux/amd64 -f Dockerfile.production \
+
+          docker build --no-cache --platform linux/amd64 -f Dockerfile.staging \
             -t ${{ env.APP_NAME }}:${TAG} .
             
       - name: 🔑 ECR Login using AWS CLI
