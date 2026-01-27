@@ -58,7 +58,8 @@ RUN gem install bundler && \
 COPY . .
 
 # Copy sample config for asset precompilation (real values come from env at runtime)
-RUN cp config/application.yml.sample config/application.yml
+RUN cp config/application.yml.sample config/application.yml && \
+    cp config/database.yml.sample config/database.ym
 
 # Precompile assets
 RUN RAILS_ENV=staging SECRET_KEY_BASE=dummy_for_assets \
