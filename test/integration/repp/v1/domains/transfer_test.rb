@@ -77,11 +77,11 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     post "/repp/v1/domains/transfer", headers: @auth_headers, params: payload
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :ok
-    assert_equal 1000, json[:code]
-    assert_equal 'Command completed successfully', json[:message]
+    assert_response :bad_request
+    assert_equal 2304, json[:code]
+    assert_equal 'All 1 transfers failed: 1 domain prohibited from transfer', json[:message]
 
-    assert_equal 'Object status prohibits operation', json[:data][:failed][0][:errors][:msg]
+    assert_equal 'Object status prohibits operation', json[:data][:failed][0][:error_message]
 
     @domain.reload
 
@@ -99,11 +99,11 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     post "/repp/v1/domains/transfer", headers: @auth_headers, params: payload
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :ok
-    assert_equal 1000, json[:code]
-    assert_equal 'Command completed successfully', json[:message]
+    assert_response :bad_request
+    assert_equal 2304, json[:code]
+    assert_equal 'All 1 transfers failed: 1 domain with invalid transfer code', json[:message]
 
-    assert_equal "Invalid authorization information", json[:data][:failed][0][:errors][:msg]
+    assert_equal "Invalid authorization information", json[:data][:failed][0][:error_message]
   end
 
   def test_does_not_transfer_domain_to_same_registrar
@@ -120,11 +120,11 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     post "/repp/v1/domains/transfer", headers: @auth_headers, params: payload
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :ok
-    assert_equal 1000, json[:code]
-    assert_equal 'Command completed successfully', json[:message]
+    assert_response :bad_request
+    assert_equal 2304, json[:code]
+    assert_equal 'All 1 transfers failed: 1 domain already belong to your registrar', json[:message]
 
-    assert_equal 'Domain already belongs to the querying registrar', json[:data][:failed][0][:errors][:msg]
+    assert_equal 'Domain already belongs to the querying registrar', json[:data][:failed][0][:error_message]
 
     @domain.reload
 
@@ -145,11 +145,11 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     post "/repp/v1/domains/transfer", headers: @auth_headers, params: payload
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :ok
-    assert_equal 1000, json[:code]
-    assert_equal 'Command completed successfully', json[:message]
+    assert_response :bad_request
+    assert_equal 2304, json[:code]
+    assert_equal 'All 1 transfers failed: 1 domain not eligible for transfer', json[:message]
 
-    assert_equal 'Object is not eligible for transfer', json[:data][:failed][0][:errors][:msg]
+    assert_equal 'Object is not eligible for transfer', json[:data][:failed][0][:error_message]
 
     @domain.reload
 
@@ -170,5 +170,33 @@ class ReppV1DomainsTransferTest < ActionDispatch::IntegrationTest
     assert response.body.include?(Shunter.default_error_message)
     ENV["shunter_default_threshold"] = '10000'
     ENV["shunter_enabled"] = 'false'
+  end
+
+  def test_transfers_domains_with_valid_csv
+    csv_file = fixture_file_upload('files/domain_transfer_valid.csv', 'text/csv')
+    
+    post "/repp/v1/domains/transfer", headers: @auth_headers, params: { csv_file: csv_file }
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    # Поскольку домен hospital.test принадлежит другому регистратору, трансфер должен быть успешным
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+    assert_equal 1, json[:data][:success].length
+    assert_equal 'hospital.test', json[:data][:success][0][:domain_name]
+  end
+
+  def test_returns_error_with_invalid_csv_headers
+    csv_file = fixture_file_upload('files/domain_transfer_invalid.csv', 'text/csv')
+    
+    post "/repp/v1/domains/transfer", headers: @auth_headers, params: { csv_file: csv_file }
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal 2304, json[:code]
+    assert_includes json[:message], 'transfers failed'
+    assert_equal 1, json[:data][:failed].length
+    assert_equal 'csv_error', json[:data][:failed][0][:type]
+    assert_includes json[:data][:failed][0][:message], 'CSV file is empty or missing required headers'
   end
 end
