@@ -77,7 +77,7 @@ gem 'openssl'
 gem 'pdfkit'
 gem 'redis'
 gem 'rexml'
-gem 'sidekiq', '~> 7.0'
+gem 'sidekiq', '~> 8.0'
 gem 'strong_migrations'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
 
