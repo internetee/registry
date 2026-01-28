@@ -79,3 +79,4 @@ jobs:
               "namespace": "${{ env.APP_NAME }}",
               "pr_number": "${{ inputs.pr_number }}"
             }
+            

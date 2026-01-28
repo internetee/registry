@@ -18,11 +18,6 @@ jobs:
             const appName = '${{ github.event.client_payload.app_name }}';
             const namespace = '${{ github.event.client_payload.namespace }}';
 
-            if (!prNumber || !deployUrl) {
-              console.log('Missing PR number or deploy URL');
-              return;
-            }
-
             const body = `## 🚀 Deploy Complete!
 
             | Property | Value |
@@ -40,5 +35,3 @@ jobs:
               issue_number: parseInt(prNumber),
               body: body
             });
-
-            console.log(`Comment posted to PR #${prNumber}`);
