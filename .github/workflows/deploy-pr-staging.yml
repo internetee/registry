@@ -79,20 +79,3 @@ jobs:
               "namespace": "${{ env.APP_NAME }}",
               "pr_number": "${{ inputs.pr_number }}"
             }
-            
-      - name: 💬 Post deploy trigger info to PR
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prNumber = context.issue.number || ${{ github.event.inputs.pr_number }};
-            const url = `https://registry-pr-${prNumber}.cloud.tld.ee`; 
-            
-            if (prNumber) {
-              github.rest.issues.createComment({
-                issue_number: parseInt(prNumber),
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `🟦 **Deploy Triggered!** 🚀\n\nApp: **registry**\nLink: [${url}](${url})\n\n*(Link will be available in 2-3 minutes)*`
-              })
-            }
-            
