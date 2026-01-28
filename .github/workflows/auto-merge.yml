@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Checkout repository
         if: github.repository == 'internetee/registry'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install GitHub CLI
         run: |
