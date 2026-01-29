@@ -79,10 +79,7 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
 
   def test_delete_whitelisted_ip
     visit_info_whitelisted_ip_page
-    click_on 'Delete'
-
-    page.driver.browser.switch_to.alert.accept
-
+    accept_confirm { click_on 'Delete' }
     assert_text 'Record deleted'
   end
 
