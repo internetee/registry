@@ -62,7 +62,7 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
     assert_text 'Add domain to blocked list'
 
     fill_in 'Name', with: @domain.name
-    click_on 'Save'
+    safe_click_on 'Save'
 
     if success
       assert_text 'Domain added!'
@@ -84,5 +84,12 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
   def search_blocked_domain(name)
     fill_in 'Name', with: name
     find('.glyphicon-search').click
+  end
+
+  def safe_click_on(locator, **options)
+    click_on locator, **options
+  rescue Selenium::WebDriver::Error::UnknownError => e
+    raise unless e.message.include?('Node with given id does not belong to the document')
+    click_on locator, **options
   end
 end
