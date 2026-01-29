@@ -79,6 +79,9 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
 
   def delete_first_blocked_domain
     accept_confirm { click_link_or_button 'Delete', match: :first }
+  rescue Selenium::WebDriver::Error::UnknownError => e
+    raise unless e.message.include?('Node with given id does not belong to the document')
+    accept_confirm { click_link_or_button 'Delete', match: :first }
   end
 
   def search_blocked_domain(name)
