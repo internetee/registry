@@ -122,6 +122,8 @@ USER 1000:1000
 # Entrypoint prepares the database.
 # ENTRYPOINT ["/opt/webapps/app/bin/docker-entrypoint"]
 
+COPY config/application.yml.sample config/application.yml
+
 # Expose port
 EXPOSE 3000
 
