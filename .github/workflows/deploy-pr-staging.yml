@@ -1,11 +1,19 @@
-name: 01 PR Deploy to Staging (Kubernetes)
+name: 01 Deploy to Staging (Kubernetes)
 
 on:
   workflow_dispatch:
     inputs:
-      pr_number:
-        description: 'Number of PR to deploy (only digits, e.g., 2889)'
+      deploy_target:
+        description: 'What to deploy'
         required: true
+        type: choice
+        options:
+          - pr
+          - master
+        default: pr
+      pr_number:
+        description: 'Number of PR to deploy (only digits, e.g., 2889). Required only for PR deploy.'
+        required: false
         type: string
 
 permissions:
@@ -25,10 +33,17 @@ jobs:
     # environment: staging
 
     steps:
+      - name: ✅ Validate inputs
+        run: |
+          if [[ "${{ inputs.deploy_target }}" == "pr" && -z "${{ inputs.pr_number }}" ]]; then
+            echo "::error::PR number is required when deploy target is 'pr'"
+            exit 1
+          fi
+
       - name: ⬇️ Checkout application code
         uses: actions/checkout@v4
         with:
-          ref: refs/pull/${{ github.event.inputs.pr_number }}/merge
+          ref: ${{ inputs.deploy_target == 'master' && 'master' || format('refs/pull/{0}/merge', inputs.pr_number) }}
 
       - name: 🔑 Configure AWS Credentials (for ECR and EKS)
         uses: aws-actions/configure-aws-credentials@v4
@@ -39,7 +54,13 @@ jobs:
       - name: 🛠️ Build and Tag Docker image
         id: docker_build
         run: |
-          TAG="pr-${{ github.event.inputs.pr_number }}"
+          if [[ "${{ inputs.deploy_target }}" == "master" ]]; then
+            SHORT_SHA=$(git rev-parse --short HEAD)
+            TAG="master-${SHORT_SHA}"
+          else
+            TAG="pr-${{ inputs.pr_number }}"
+          fi
+
           echo "IMAGE_TAG=$TAG" >> $GITHUB_OUTPUT
 
           docker build --no-cache --platform linux/amd64 -f Dockerfile.staging \
@@ -77,6 +98,6 @@ jobs:
               "app_name": "${{ env.APP_NAME }}",
               "image_tag": "${{ steps.docker_build.outputs.IMAGE_TAG }}",
               "namespace": "${{ env.APP_NAME }}",
-              "pr_number": "${{ inputs.pr_number }}"
+              "pr_number": "${{ inputs.deploy_target == 'master' && '0' || inputs.pr_number }}"
             }
             
