@@ -2,6 +2,10 @@ et:
   username: 'Kasutajanimi'
   password: 'Parool'
 
+  # Adding translation keys for certificate CSR validation
+  csr_common_name_must_match_username: "Sertifikaadi CN (üldine nimi) peab vastama konto kasutajanimele"
+  csr_country_must_match_registrar_country: "Sertifikaadi C (riik) peab vastama registripidaja riigile"
+
   time:
     formats:
       default: "%Y-%m-%d %H:%M"
