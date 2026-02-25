@@ -1,10 +1,11 @@
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)
-  - nameservers    = Nameserver.all_versions_for(children[:nameservers], @domain.updated_at)
-  - dnskeys        = Dnskey.all_versions_for(children[:dnskeys], @domain.updated_at)
-  - tech_contacts  = Contact.all_versions_for(children[:tech_contacts], @domain.updated_at)
-  - admin_contacts = Contact.all_versions_for(children[:admin_contacts], @domain.updated_at)
-  - registrant     = Contact.all_versions_for(children[:registrant], @domain.updated_at)
+  - version_timestamp = @domain.try(:updated_at) || @version.created_at
+  - nameservers    = Nameserver.all_versions_for(children[:nameservers], version_timestamp)
+  - dnskeys        = Dnskey.all_versions_for(children[:dnskeys], version_timestamp)
+  - tech_contacts  = Contact.all_versions_for(children[:tech_contacts], version_timestamp)
+  - admin_contacts = Contact.all_versions_for(children[:admin_contacts], version_timestamp)
+  - registrant     = Contact.all_versions_for(children[:registrant], version_timestamp)
   - event       = @version.event
   - creator     = plain_username(@version.terminator)
 - else
@@ -34,18 +35,27 @@
         %dl.dl-horizontal
           %dt= t(:name)
           - if !@domain.name
-            - domain_name = Domain.find(@version.item_id).try(:name)
+            - domain_name = @version.try(:object).try(:[], 'name') || 'N/A'
           - else
             - domain_name = @domain.name
-          %dd= link_to(domain_name, admin_domain_path(@version ? @version.item_id : @domain.id))
+          - if @domain_deleted
+            %dd= domain_name
+          - else
+            %dd= link_to(domain_name, admin_domain_path(@version ? @version.item_id : @domain.id))
 
           %dt= t('.created')
           %dd
-            = l(@domain.created_at, format: :short)
+            - if @domain.try(:created_at)
+              = l(@domain.created_at, format: :short)
+            - else
+              = l(@version.created_at, format: :short)
 
           %dt= t('.updated')
           %dd
-            = l(@domain.updated_at, format: :short)
+            - if @domain.try(:updated_at)
+              = l(@domain.updated_at, format: :short)
+            - else
+              = l(@version.created_at, format: :short)
 
           %br
 
@@ -112,11 +122,20 @@
                 \...#{ns[:public_key].to_s[-20,20]}
             %br
 
-          - if @domain.registrar
+          - if !@domain_deleted && @domain.registrar
             %dt= t(:registrar_name)
             %dd{class: changing_css_class(@version,"registrar_id")}
               = link_to admin_registrar_path(@domain.registrar), target: "registrar_#{@domain.registrar.id}" do
                 = @domain.registrar.name
+          - elsif @domain_deleted && @version.try(:object).try(:[], 'registrar_id')
+            - registrar = Registrar.find_by(id: @version.object['registrar_id'])
+            %dt= t(:registrar_name)
+            %dd{class: changing_css_class(@version,"registrar_id")}
+              - if registrar
+                = link_to admin_registrar_path(registrar), target: "registrar_#{registrar.id}" do
+                  = registrar.name
+              - else
+                = "Registrar ID: #{@version.object['registrar_id']}"
             %span{:style => "margin: 20px 20px; clear:both;"}
 
         - if @version && (prev = @versions_map[(@versions_map.index(@version.id) - 1)]) && @versions_map.index(@version.id) != 0
@@ -137,8 +156,9 @@
   .col-md-4
     .panel.panel-default{:style => "min-height:450px;"}
       %ul.nav.nav-pills.nav-stacked
-        %li{class: ('active' if @version.nil?)}
-          = link_to t('.current_state'), admin_domain_version_path(current: 1, domain_id: @domain.id)
+        - unless @domain_deleted
+          %li{class: ('active' if @version.nil?)}
+            = link_to t('.current_state'), admin_domain_version_path(current: 1, domain_id: @domain.id)
         - @versions.each do |vs|
           %li{class: (@version && vs.id == @version.id) && :active}
             = link_to admin_domain_version_path(vs) do

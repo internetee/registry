@@ -61,10 +61,37 @@ module Admin
         @domain = Domain.find(params[:domain_id] || params[:id])
       else
         @version = Version::DomainVersion.find(params[:id])
-        @domain = Domain.find(@version.item_id)
+        @domain = Domain.find_by(id: @version.item_id)
+
+        if @domain.nil?
+          @domain = @version.reify
+          @domain_deleted = true
+
+          # For 'create' events, reify returns nil because there's no prior state.
+          # Try to reconstruct from a later version or from object_changes.
+          if @domain.nil?
+            next_version = Version::DomainVersion
+                            .where(item_id: @version.item_id)
+                            .where.not(object: nil)
+                            .order(created_at: :asc, id: :asc)
+                            .first
+            @domain = next_version&.reify
+
+            if @domain.nil?
+              @domain = Domain.new
+              changes = @version.object_changes || {}
+              changes.each do |attr, values|
+                value = values.is_a?(Array) ? values.last : values
+                @domain.send("#{attr}=", value) if @domain.respond_to?("#{attr}=")
+              rescue StandardError
+                next
+              end
+            end
+          end
+        end
       end
 
-      @versions = Version::DomainVersion.where(item_id: @domain.id).order(created_at: :desc, id: :desc)
+      @versions = Version::DomainVersion.where(item_id: @version&.item_id || @domain.id).order(created_at: :desc, id: :desc)
       @versions_map = @versions.all.map(&:id)
 
       get_page if params[:page].blank?
