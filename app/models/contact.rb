@@ -9,6 +9,7 @@ class Contact < ApplicationRecord
   include Contact::Identical
   include Contact::Archivable
   include Contact::CompanyRegister
+  include Contact::Nameable
   include EmailVerifable
   include AgeValidation
 
@@ -43,13 +44,6 @@ class Contact < ApplicationRecord
           user.country.alpha2,
           user.username)
   end)
-
-  NAME_REGEXP = /([\u00A1-\u00B3\u00B5-\u00BF\u0021-\u0026\u0028-\u002C\u003A-\u0040]|
-    [\u005B-\u005F\u007B-\u007E\u2040-\u206F\u20A0-\u20BF\u2100-\u218F])/x
-
-  validates :name, :email, presence: true
-  validates :name, length: { maximum: 255, message: :too_long_contact_name }
-  validates :name, format: { without: NAME_REGEXP, message: :invalid }, if: -> { priv? }
 
   validates :street, :city, :zip, :country_code, presence: true, if: lambda {
     self.class.address_processing?
@@ -486,18 +480,6 @@ class Contact < ApplicationRecord
     # use domain_filters.sort == v.sort if should be exact match
     grouped_domains.reject { |_, v| ([].push(filters).flatten & v).empty? }.keys
   end
-
-  # def qualified_domain_ids(domain_filter)
-  #   registrant_ids = registrant_domains.pluck(:id)
-  #   return registrant_ids if domain_filter == 'Registrant'
-
-  #   if %w[AdminDomainContact TechDomainContact].include? domain_filter
-  #     DomainContact.where(contact_id: id, type: domain_filter).pluck(:domain_id)
-  #   else
-  #     (DomainContact.where(contact_id: id).pluck(:domain_id) +
-  #      registrant_ids).uniq
-  #   end
-  # end
 
   def update_prohibited?
     (statuses & [
