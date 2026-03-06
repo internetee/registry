@@ -7,12 +7,17 @@ class FreeDomainReservationHolder < ApplicationRecord
   end
 
   def output_reserved_domains
-    reserved_domains.map do |domain|
-      {
-        name: domain.name,
-        password: domain.password,
-        expire_at: domain.expire_at
-      }
+    domain_names.map do |name|
+      domain = ReservedDomain.find_by(name: name)
+      registered = Domain.exists?(name: name)
+
+      if registered
+        { name: name, status: 'registered' }
+      elsif domain
+        { name: name, password: domain.password, expire_at: domain.expire_at, status: 'reserved' }
+      else
+        { name: name, status: 'expired' }
+      end
     end
   end
 
