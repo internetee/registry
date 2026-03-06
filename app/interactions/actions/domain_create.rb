@@ -15,7 +15,6 @@ module Actions
       assign_registrant
       assign_nameservers
       assign_domain_contacts
-      # domain.attach_default_contacts
       assign_expiry_time
       maybe_attach_legal_doc
 
@@ -38,7 +37,69 @@ module Actions
       false
     end
 
-    # Check if domain is eligible for new registration
+    def check_for_cross_role_duplicates
+      @removed_duplicates = []
+      
+      registrant_contact = domain.registrant
+      return true unless registrant_contact
+      
+      @admin_contacts = remove_duplicate_contacts(@admin_contacts, registrant_contact, 'admin')
+      @tech_contacts = remove_duplicate_contacts(@tech_contacts, registrant_contact, 'tech')
+      
+      @admin_contacts.each do |admin|
+        contact = Contact.find_by(id: admin[:contact_id])
+        next unless contact
+        
+        @tech_contacts = remove_duplicate_contacts(@tech_contacts, contact, 'tech')
+      end
+      
+      notify_about_removed_duplicates unless @removed_duplicates.empty?
+      
+      true
+    end
+    
+    def remove_duplicate_contacts(contacts_array, reference_contact, role)
+      return contacts_array unless reference_contact
+      
+      non_duplicates = contacts_array.reject do |contact_hash|
+        contact = Contact.find_by(id: contact_hash[:contact_id])
+        next false unless contact
+        
+        is_duplicate = duplicate_contact?(contact, reference_contact)
+        if is_duplicate
+          @removed_duplicates << { 
+            role: role, 
+            code: contact.code,
+            duplicate_of: reference_contact.code
+          }
+        end
+        is_duplicate
+      end
+      
+      non_duplicates
+    end
+    
+    def duplicate_contact?(contact1, contact2)
+      return false unless contact1 && contact2
+
+      contact1.code == contact2.code ||
+        (contact1.name == contact2.name &&
+         contact1.ident == contact2.ident &&
+         contact1.email == contact2.email &&
+         contact1.phone == contact2.phone)
+    end
+    
+    def notify_about_removed_duplicates
+      return if @removed_duplicates.empty?
+      
+      message = ''
+      @removed_duplicates.each do |duplicate|
+        message += ". #{duplicate[:role].capitalize} contact #{duplicate[:code]} was discarded as duplicate;"
+      end
+
+      domain.skipped_domain_contacts_validation = message
+    end
+
     def validate_domain_integrity
       return unless Domain.release_to_auction
 
@@ -132,9 +193,11 @@ module Actions
       params[:admin_contacts]&.each { |c| assign_contact(c) }
       params[:tech_contacts]&.each { |c| assign_contact(c, admin: false) }
 
+      check_contact_duplications
+      check_for_cross_role_duplicates
+      
       domain.admin_domain_contacts_attributes = @admin_contacts
       domain.tech_domain_contacts_attributes = @tech_contacts
-      check_contact_duplications
     end
 
     def assign_expiry_time
