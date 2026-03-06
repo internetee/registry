@@ -22,6 +22,12 @@
                       = date_field_tag "report_parameters[#{set_index}][#{param["name"]}]", (set_values[param["name"]] || param["default"]), class: 'form-control'
                     - elsif param["type"] == "string"
                       = text_field_tag "report_parameters[#{set_index}][#{param["name"]}]", (set_values[param["name"]] || param["default"]), class: 'form-control'
+                    - elsif param["type"] == "registrar"
+                      = select_tag "report_parameters[#{set_index}][#{param["name"]}]", options_from_collection_for_select(Registrar.order(:name), :id, :name, (set_values[param["name"]] || param["default"])), { include_blank: 'All Registrars', class: 'form-control' }
+                    - elsif param["type"] == "registrars"
+                      - selected_ids = (set_values[param["name"]] || param["default"] || [])
+                      - selected_ids = selected_ids.is_a?(String) ? selected_ids.split(',').map(&:strip) : selected_ids
+                      = select_tag "report_parameters[#{set_index}][#{param["name"]}][]", options_from_collection_for_select(Registrar.order(:name), :id, :name, selected_ids), { multiple: true, class: 'form-control js-combobox', include_blank: 'Select registrars (Ctrl/Cmd+Click for multiple)' }
 
         .d-flex.flex-wrap.gap-2
           %button.btn.btn-secondary#add-parameter-group{ type: 'button' }= t('.add_parameter_set')
