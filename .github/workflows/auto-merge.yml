@@ -74,7 +74,7 @@ jobs:
 
       - name: Wait for CI checks
         if: steps.check_auto_merge.outputs.auto_merge == 'true'
-        uses: lewagon/wait-on-check-action@v1.3.4
+        uses: lewagon/wait-on-check-action@v1.5.0
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
