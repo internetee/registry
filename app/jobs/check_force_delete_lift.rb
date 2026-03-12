@@ -11,6 +11,8 @@ class CheckForceDeleteLift < ApplicationJob
     domains_to_process.each do |domain|
       Domains::ForceDeleteLift::Base.run(domain: domain)
     end
+
+    sync_force_delete_status_notes
   end
 
   private
@@ -44,5 +46,36 @@ class CheckForceDeleteLift < ApplicationJob
     domain.status_notes[DomainStatus::FORCE_DELETE].lstrip!
 
     domain.save(validate: false) if domain.changed?
+  end
+
+  def sync_force_delete_status_notes
+    invalid_email_fd_domains = Domain.where("'#{DomainStatus::FORCE_DELETE}' = ANY (statuses)")
+                                     .where("force_delete_data->'template_name' = ?", 'invalid_email')
+                                     .includes(registrant: :validation_events,
+                                               contacts: :validation_events)
+
+    invalid_email_fd_domains.each do |domain|
+      update_status_notes_for_domain(domain)
+    end
+  end
+
+  def update_status_notes_for_domain(domain)
+    current_notes = domain.status_notes[DomainStatus::FORCE_DELETE]
+    return if current_notes.blank?
+
+    current_invalid_emails = collect_current_invalid_emails(domain)
+    new_notes = current_invalid_emails.join(' ')
+
+    return if current_notes == new_notes
+    return if new_notes.blank?
+
+    domain.status_notes[DomainStatus::FORCE_DELETE] = new_notes
+    domain.save(validate: false)
+  end
+
+  def collect_current_invalid_emails(domain)
+    failed_emails = domain.contacts.select(&:email_verification_failed?).map(&:email)
+    failed_emails << domain.registrant.email if domain.registrant.email_verification_failed?
+    failed_emails.uniq
   end
 end
