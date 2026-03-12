@@ -41,7 +41,7 @@ jobs:
           fi
 
       - name: ⬇️ Checkout application code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.deploy_target == 'master' && 'master' || format('refs/pull/{0}/merge', inputs.pr_number) }}
 
