@@ -1,3 +1,7 @@
+12.03.2026
+* Update ForceDelete notes according to the currently active reason https://github.com/internetee/registry/pull/2901
+* Status info for business registry reserved domains https://github.com/internetee/registry/pull/2904
+
 22.01.2026
 * Fixed duplicate legaldoc creation issue https://github.com/internetee/registry/issues/336
 * Improved test vocerage to mass_actions_controller https://github.com/internetee/registry/pull/2858

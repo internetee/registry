@@ -194,13 +194,15 @@ class ReserveDomainInvoice < ApplicationRecord
   def build_reserved_domains_output
     domain_names.map do |name|
       domain = ReservedDomain.find_by(name: name)
-      next unless domain
+      registered = Domain.exists?(name: name)
 
-      {
-        name: domain.name,
-        password: domain.password,
-        expire_at: domain.expire_at
-      }
-    end.compact
+      if registered
+        { name: name, status: 'registered' }
+      elsif domain
+        { name: name, password: domain.password, expire_at: domain.expire_at, status: 'reserved' }
+      else
+        { name: name, status: 'expired' }
+      end
+    end
   end
 end
