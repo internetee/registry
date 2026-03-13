@@ -58,7 +58,7 @@ gem 'digidoc_client',
 
 # TARA
 gem 'omniauth-rails_csrf_protection'
-gem 'omniauth-tara', github: 'internetee/omniauth-tara'
+gem 'omniauth-tara', github: 'internetee/omniauth-tara', branch: 'master'
 # gem 'omniauth-tara', path: 'vendor/gems/omniauth-tara'
 
 gem 'airbrake'
@@ -102,7 +102,7 @@ end
 gem 'aws-sdk-sesv2', '~> 1.19'
 gem 'newrelic-infinite_tracing'
 gem 'newrelic_rpm'
-gem 'ruby-openai', '>= 8.2.0'
+gem 'ruby-openai', '>= 8.2.1'
 
 # profiles
 gem 'pghero'
