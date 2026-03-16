@@ -1,0 +1,103 @@
+name: 01 Deploy to Staging (Kubernetes)
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: 'What to deploy'
+        required: true
+        type: choice
+        options:
+          - pr
+          - master
+        default: pr
+      pr_number:
+        description: 'Number of PR to deploy (only digits, e.g., 2889). Required only for PR deploy.'
+        required: false
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+env:
+  APP_NAME: registry
+  ECR_URL: 034362061030.dkr.ecr.eu-north-1.amazonaws.com
+  AWS_REGION: eu-north-1
+  EKS_ASSUME_ROLE_ARN: arn:aws:iam::605134427993:role/terraform 
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    # environment: staging
+
+    steps:
+      - name: ✅ Validate inputs
+        run: |
+          if [[ "${{ inputs.deploy_target }}" == "pr" && -z "${{ inputs.pr_number }}" ]]; then
+            echo "::error::PR number is required when deploy target is 'pr'"
+            exit 1
+          fi
+
+      - name: ⬇️ Checkout application code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.deploy_target == 'master' && 'master' || format('refs/pull/{0}/merge', inputs.pr_number) }}
+
+      - name: 🔑 Configure AWS Credentials (for ECR and EKS)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.GH_ACTIONS_DEPLOY_ROLE_ARN }} 
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🛠️ Build and Tag Docker image
+        id: docker_build
+        run: |
+          if [[ "${{ inputs.deploy_target }}" == "master" ]]; then
+            SHORT_SHA=$(git rev-parse --short HEAD)
+            TAG="master-${SHORT_SHA}"
+          else
+            TAG="pr-${{ inputs.pr_number }}"
+          fi
+
+          echo "IMAGE_TAG=$TAG" >> $GITHUB_OUTPUT
+
+          docker build --no-cache --platform linux/amd64 -f Dockerfile.staging \
+            -t ${{ env.APP_NAME }}:${TAG} .
+            
+      - name: 🔑 ECR Login using AWS CLI
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | \
+          docker login --username AWS --password-stdin ${{ env.ECR_URL }}
+
+      - name: ⬆️ Push Docker image to ECR
+        run: |
+          TAG=${{ steps.docker_build.outputs.IMAGE_TAG }}
+          ECR_IMAGE="${{ env.ECR_URL }}/${{ env.APP_NAME }}:${TAG}"
+          docker tag ${{ env.APP_NAME }}:${TAG} ${ECR_IMAGE}
+          docker push ${ECR_IMAGE}
+      
+      - name: 🔐 Mint GitHub App installation token (for IaC repo)
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: internetee
+          repositories: Ry_AWS_IaC
+
+      - name: 🚀 Trigger IaC deploy (repository_dispatch)
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: internetee/Ry_AWS_IaC
+          event-type: deploy-service-staging
+          client-payload: |
+            {
+              "app_name": "${{ env.APP_NAME }}",
+              "image_tag": "${{ steps.docker_build.outputs.IMAGE_TAG }}",
+              "namespace": "${{ env.APP_NAME }}",
+              "pr_number": "${{ inputs.deploy_target == 'master' && '0' || inputs.pr_number }}"
+            }
+            

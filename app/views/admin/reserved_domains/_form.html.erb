@@ -27,6 +27,14 @@
                             <span class="help-block"><%= t '.password_hint' %></span>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :expire_at %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field :expire_at, class: 'form-control js-datepicker', value: f.object.expire_at.present? ? l(f.object.expire_at, format: :short) : nil %>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

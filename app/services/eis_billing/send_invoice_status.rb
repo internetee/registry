@@ -10,7 +10,7 @@ module EisBilling
         status: status,
       }
 
-      http = EisBilling::Base.base_request(url: invoice_status_url)
+      http = EisBilling::Base.base_request
       http.post(invoice_status_url, json_obj.to_json, EisBilling::Base.headers)
     end
 

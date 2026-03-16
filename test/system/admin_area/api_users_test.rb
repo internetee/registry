@@ -16,8 +16,8 @@ class AdminApiUsersSystemTest < ApplicationSystemTestCase
   def test_should_display_tests_button_in_api_user
     visit admin_api_users_path
 
-    assert_button 'Set Test'
-    assert_no_button 'Remove Test'
+    assert_button 'Set Accreditation'
+    assert_no_button 'Remove Accreditation'
   end
 
   def test_should_display_remove_test_if_there_accreditated_apiuser
@@ -30,7 +30,7 @@ class AdminApiUsersSystemTest < ApplicationSystemTestCase
 
     visit admin_api_users_path
 
-    assert_button 'Remove Test'
+    assert_button 'Remove Accreditation'
   end
 
   def test_should_not_display_remove_test_if_api_user_accreditation_date_is_expired
@@ -43,15 +43,15 @@ class AdminApiUsersSystemTest < ApplicationSystemTestCase
 
     visit admin_api_users_path
 
-    assert_no_button 'Remove'
+    assert_no_button 'Remove Accreditation'
   end
 
   def test_should_display_tests_button_in_api_user_details
     api_user = @registrar.api_users.first
 
     visit admin_api_user_path(api_user)
-    assert_button 'Set Test'
-    assert_no_button 'Remove Test'
+    assert_button 'Set Accreditation'
+    assert_no_button 'Remove Accreditation'
   end
 
   def test_should_display_remove_test_in_api_user_details_if_there_accreditated_apiuser
@@ -64,7 +64,7 @@ class AdminApiUsersSystemTest < ApplicationSystemTestCase
 
     visit admin_api_user_path(api_user)
 
-    assert_button 'Remove Test'
+    assert_button 'Remove Accreditation'
   end
 
   def test_should_not_display_remove_test_if_api_user_accreditation_date_is_expired_in_api_details
@@ -77,6 +77,6 @@ class AdminApiUsersSystemTest < ApplicationSystemTestCase
 
     visit admin_api_user_path(api_user)
 
-    assert_no_button 'Remove'
+    assert_no_button 'Remove Accreditation'
   end
 end

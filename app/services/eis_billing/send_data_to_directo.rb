@@ -12,7 +12,7 @@ module EisBilling
         initiator: INITIATOR,
       }
 
-      http = EisBilling::Base.base_request(url: directo_url)
+      http = EisBilling::Base.base_request
       http.post(directo_url, prepared_data.to_json, EisBilling::Base.headers)
     end
 

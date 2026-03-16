@@ -28,6 +28,8 @@ class ReppV1RetainedDomainsTest < ActionDispatch::IntegrationTest
     get repp_v1_retained_domains_path({ 'type' => 'reserved' })
     response_json = JSON.parse(response.body, symbolize_names: true)
 
+    puts response_json
+
     assert response_json[:count] == 1
 
     expected_objects = [{ name: 'reserved.test',

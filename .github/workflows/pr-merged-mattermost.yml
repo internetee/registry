@@ -1,0 +1,37 @@
+name: Notify Auto-Merged PRs
+
+on:
+  workflow_run:
+    workflows: ["Auto approve & merge Dependabot and Renovate PRs"]
+    types: [completed]
+    branches: [master]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  notify:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Mattermost notification
+        env:
+          MATTERMOST_BOT_TOKEN: ${{ secrets.MATTERMOST_BOT_TOKEN }}
+          MATTERMOST_CHANNEL_ID: ${{ secrets.MATTERMOST_CHANNEL_ID }}
+          MATTERMOST_BASE_URL: ${{ secrets.MATTERMOST_BASE_URL }}
+          REPO: ${{ github.repository }}
+          WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
+          WORKFLOW_URL: ${{ github.event.workflow_run.html_url }}
+          COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          if [ -z "$MATTERMOST_BOT_TOKEN" ] || [ -z "$MATTERMOST_CHANNEL_ID" ] || [ -z "$MATTERMOST_BASE_URL" ]; then
+            echo "Missing Mattermost secrets (MATTERMOST_BOT_TOKEN, MATTERMOST_CHANNEL_ID, MATTERMOST_BASE_URL)" >&2
+            exit 1
+          fi
+          curl -sS -X POST \
+            -H "Authorization: Bearer $MATTERMOST_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"channel_id\":\"$MATTERMOST_CHANNEL_ID\",\"message\":\"🤖 [$REPO] Auto-merge workflow completed successfully!\\nWorkflow: $WORKFLOW_NAME\\nBranch: $BRANCH\\nCommit: $COMMIT_SHA\\nLink: $WORKFLOW_URL\"}" \
+            "$MATTERMOST_BASE_URL/api/v4/posts"

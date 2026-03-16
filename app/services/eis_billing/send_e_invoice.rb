@@ -7,7 +7,7 @@ module EisBilling
     def self.send_info(invoice:, payable:)
       prepared_data = prepare_data(invoice: invoice, payable: payable)
 
-      http = EisBilling::Base.base_request(url: e_invoice_url)
+      http = EisBilling::Base.base_request
       http.post(e_invoice_url, prepared_data.to_json, EisBilling::Base.headers)
     end
 

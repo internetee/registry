@@ -40,3 +40,12 @@ registrant:
   type: RegistrantUser
   registrant_ident: US-1234
   username: Registrant User
+
+accr_bot:
+  username: accr_bot
+  plain_text_password: accr_bot
+  type: ApiUser
+  registrar: goodnames
+  active: true
+  roles:
+    - epp

@@ -1,0 +1,33 @@
+Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt
+
+Anname teada, et domeen <%= @domain.name %> on suunatud kustutusmenetlusse ja ei ole alates <%= (@domain.force_delete_start + 15.days).strftime('%Y-%m-%d') %> internetis kättesaadav. 
+
+Kustutusmenetlus algatati domeeni registreerimisega seotud nõuetele mitte vastavate andmete tõttu - registreerijat ei eksisteeri või on kontaktandmed puudulikud. Tulenevalt .ee domeenireeglitest on blokeeritud domeeni pikendamise ja registripidaja vahetuse toimingud. 
+
+Andmete korrastamiseks pöörduge palun oma registripidaja poole. Peale andmete parandamist eemaldatakse domeenile lisatud piirangud.
+
+Registreerimisandmete korrastamata jätmisel läheb domeen <%= (@domain.force_delete_start + 45.days).strftime('%Y-%m-%d') %> oksjonile .ee  Oksjonikeskkonda, kus saavad sellele pakkumisi teha ning registreerimise eelisõiguse omandada kõik huvilised üle kogu maailma. Domeenioksjonite kohta loe lähemalt <a href="https://www.internet.ee/domeenioksjonid">siit</a>.
+
+Domeeni <%= @domain.name %> registripidaja:
+
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+
+Ülevaate kõikidest endaga seotud domeenidest saate <a href="https://registrant.internet.ee/">registreerija portaalist</a>.
+
+--------------------------------------
+
+Dear registrant/administrative contact of <%= @domain.name %> domain,
+We are informing you that the domain <%= @domain.name %> has been entered into the Force Delete procedure and is unavailable on the internet since <%= (@domain.force_delete_start + 15.days).strftime('%Y-%m-%d') %>. 
+
+The Force Delete procedure was initiated due to data associated with the domain registration that does not meet the requirements—either the registrant does not exist or the contact information is incomplete. In accordance with .ee domain rules, domain renewal and registrar transfer operations have been blocked.
+
+To rectify the data, please contact your registrar. Once the data has been corrected, the restrictions placed on the domain will be removed.
+If the registration data is not updated, the domain will proceed to the .ee Auction Portal on <%= (@domain.force_delete_start + 45.days).strftime('%Y-%m-%d') %>, where any interested party worldwide can place bids and acquire the priority right to register it. Read more about domain auctions here.
+
+Registrar of the domain <%= @domain.name %>:
+
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+
+You can find an overview of all your domains at the <a href="https://registrant.internet.ee/">registrant portal</a>.
+
+<%= render 'mailers/shared/signatures/signature.en.html' %>

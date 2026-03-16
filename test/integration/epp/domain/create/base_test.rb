@@ -4,6 +4,56 @@ class EppDomainCreateBaseTest < EppTestCase
   setup do
     adapter = ENV["shunter_default_adapter"].constantize.new
     adapter&.clear!
+    @original_legal_docs_dir = ENV['legal_documents_dir']
+    @test_legal_docs_dir = Dir.mktmpdir
+    ENV['legal_documents_dir'] = @test_legal_docs_dir
+  end
+
+  teardown do
+    ENV['legal_documents_dir'] = @original_legal_docs_dir
+    FileUtils.remove_entry @test_legal_docs_dir
+  end
+
+  def test_creates_single_file_on_filesystem_for_single_legaldoc_domain
+    name = "new-doc.#{dns_zones(:one).origin}"
+    contact = contacts(:john)
+    registrant = contact.becomes(Registrant)
+    doc_content = "test" * 2000
+    doc_type = "pdf"
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <create>
+            <domain:create xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{name}</domain:name>
+              <domain:registrant>#{registrant.code}</domain:registrant>
+            </domain:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{doc_content}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    assert_difference 'Domain.count' do
+      assert_difference 'LegalDocument.count', 1 do
+        Rails.env.stub :test?, false do
+          post epp_create_path, params: { frame: request_xml },
+               headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+        end
+      end
+    end
+
+    assert_epp_response :completed_successfully
+
+    # Check filesystem
+    files = Dir[File.join(@test_legal_docs_dir, '**', '*.pdf')]
+    assert_equal 1, files.count, "Expected 1 legal document file, found #{files.count}. Files: #{files}"
   end
 
   def test_illegal_chars_in_dns_key

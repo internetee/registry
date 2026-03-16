@@ -30,7 +30,7 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
 
   def test_update_reserved_domain
     visit admin_reserved_domains_path
-    click_link_or_button 'Edit Pw', match: :first
+    click_link_or_button 'Edit', match: :first
     fill_in 'Password', with: '12345678'
     click_on 'Save'
 

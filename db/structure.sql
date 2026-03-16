@@ -1,3 +1,8 @@
+\restrict OgpBVS4LcDZVV6fZTwmnzAAWL70pwHISsUhjW2gqrf2CNdzHNtVCcfzYehS3JFu
+
+-- Dumped from database version 13.4 (Debian 13.4-4.pgdg110+1)
+-- Dumped by pg_dump version 13.22 (Debian 13.22-0+deb11u1)
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -732,7 +737,8 @@ CREATE TABLE public.contacts (
     company_register_status character varying,
     ident_request_sent_at timestamp without time zone,
     verified_at timestamp without time zone,
-    verification_id character varying
+    verification_id character varying,
+    system_disclosed_attributes character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -2641,7 +2647,8 @@ CREATE TABLE public.registrars (
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
     legaldoc_optout boolean DEFAULT false NOT NULL,
     legaldoc_optout_comment text,
-    email_history character varying
+    email_history character varying,
+    accept_pdf_invoices boolean DEFAULT true
 );
 
 
@@ -2750,7 +2757,9 @@ CREATE TABLE public.reserved_domains (
     legacy_id integer,
     name character varying NOT NULL,
     password character varying NOT NULL,
-    expire_at timestamp without time zone
+    expire_at timestamp without time zone,
+    access_token character varying,
+    token_created_at timestamp without time zone
 );
 
 
@@ -5277,6 +5286,8 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
+\unrestrict OgpBVS4LcDZVV6fZTwmnzAAWL70pwHISsUhjW2gqrf2CNdzHNtVCcfzYehS3JFu
+
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
@@ -5765,10 +5776,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230707084741'),
 ('20230710120154'),
 ('20230711083811'),
+('20240722085530'),
+('20240723110208'),
 ('20240816091049'),
 ('20240816092636'),
 ('20240924103554'),
 ('20241015071505'),
+('20241022121525'),
 ('20241030095636'),
 ('20241104104620'),
 ('20241112093540'),
@@ -5777,7 +5791,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241206085817'),
 ('20250204094550'),
 ('20250219102811'),
-('20250313122119'),
-('20250319104749'),
 ('20250310133151'),
-('20250314133357');
+('20250313122119'),
+('20250314133357'),
+('20250319104749'),
+('20250627084536'),
+('20251230104312');
+
+

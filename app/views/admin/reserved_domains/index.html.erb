@@ -25,6 +25,15 @@
             <%= f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control js-datepicker', placeholder: t(:created_at_until) %>
           </div>
         </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <%= f.label t(:expired_at) %>
+            <%= f.search_field :expire_date_eq, 
+                value: params[:q][:expire_date_eq], 
+                class: 'form-control js-datepicker', 
+                placeholder: t(:expired_at) %>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-md-3">
@@ -77,6 +86,9 @@
                 <%= sort_link(@q, 'updated_at', t(:updated_at)) %>
               </th>
               <th class="col-xs-2">
+                <%= sort_link(@q, 'expire_at', t(:expire_at)) %>
+              </th>
+              <th class="col-xs-2">
                 <%= t(:actions) %>
               </th>
             </tr>
@@ -100,7 +112,14 @@
                   <%= l(x.updated_at, format: :short) %>
                 </td>
                 <td>
-                  <%= link_to(t(:edit_pw), edit_admin_reserved_domain_path(id: x.id), class: 'btn btn-primary btn-xs') %>
+                  <% if x.expire_at.present? %>
+                    <span class="label <%= x.expire_at < Date.today ? 'label-danger' : 'label-success' %>"><%= l(x.expire_at, format: :short) %></span>
+                  <% else %>
+                    <span class="label" style="background-color: #aaa; color: #fff;"><%= t(:not_set) %></span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to(t(:edit), edit_admin_reserved_domain_path(id: x.id), class: 'btn btn-primary btn-xs') %>
                   <%= link_to(t(:delete), delete_admin_reserved_domain_path(id: x.id), data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger btn-xs') %>
                 </td>
               </tr>
