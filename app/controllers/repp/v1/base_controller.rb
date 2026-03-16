@@ -59,8 +59,10 @@ module Repp
         @epp_errors ||= ActiveModel::Errors.new(self)
         @epp_errors.add(:epp_errors, msg: 'Command failed', code: '2304') if data != {}
 
-        error_options = @epp_errors.errors.uniq
-                                   .select { |error| error.options[:code].present? }[0].options
+        epp_error = @epp_errors.errors.uniq
+                               .select { |error| error.options[:code].present? }.first
+
+        error_options = epp_error&.options || { code: '2400', msg: 'Command failed' }
 
         @response = { code: error_options[:code].to_i, message: error_options[:msg], data: data }
         render(json: @response, status: status)
