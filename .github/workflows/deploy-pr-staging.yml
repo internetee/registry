@@ -15,6 +15,22 @@ on:
         description: 'Number of PR to deploy (only digits, e.g., 2889). Required only for PR deploy.'
         required: false
         type: string
+      registrar_url:
+        description: 'Registrar base URL override (e.g. https://registrar1-dev.cloud.tld.ee)'
+        required: false
+        type: string
+      billing_url:
+        description: 'Billing base URL override (e.g. https://billing1-dev.cloud.tld.ee)'
+        required: false
+        type: string
+      registrant_url:
+        description: 'Registrant base URL override (e.g. https://registrant1-dev.cloud.tld.ee)'
+        required: false
+        type: string
+      eeidmanager_url:
+        description: 'EEID Manager base URL override (e.g. https://eeidmanager1-dev.cloud.tld.ee)'
+        required: false
+        type: string
 
 permissions:
   id-token: write
@@ -98,6 +114,13 @@ jobs:
               "app_name": "${{ env.APP_NAME }}",
               "image_tag": "${{ steps.docker_build.outputs.IMAGE_TAG }}",
               "namespace": "${{ env.APP_NAME }}",
-              "pr_number": "${{ inputs.deploy_target == 'master' && '0' || inputs.pr_number }}"
+              "pr_number": "${{ inputs.deploy_target == 'master' && '0' || inputs.pr_number }}",
+              "source_repo": "internetee/registry",
+              "url_overrides": {
+                "registrar_url": "${{ inputs.registrar_url }}",
+                "billing_url": "${{ inputs.billing_url }}",
+                "registrant_url": "${{ inputs.registrant_url }}",
+                "eeidmanager_url": "${{ inputs.eeidmanager_url }}"
+              }
             }
             
