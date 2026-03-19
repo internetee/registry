@@ -196,6 +196,38 @@ ActiveRecord::Base.transaction do
       end
     end
   end
+
+  # Custom User requested by the user
+  puts "Processing Custom Registrar: REG1..."
+  custom_registrar = Registrar.find_or_create_by!(code: "REG1") do |r|
+    r.name = "Registrar First AS"
+    r.reg_no = "10300220"
+    r.email = "registrar1@example.com"
+    r.phone = "+37200000766"
+    r.address_street = "Staging St 1"
+    r.address_city = "Tallinn"
+    r.address_zip = "10111"
+    r.address_country_code = "EE"
+    r.accounting_customer_code = "REG1"
+    r.language = "en"
+    r.reference_no = Billing::ReferenceNo.generate(owner: r) rescue "1234567"
+  end
+  custom_registrar.accounts.find_or_create_by!(account_type: Account::CASH, currency: 'EUR')
+  
+  api_user = ApiUser.find_or_create_by!(username: "Märi Änn R1") do |u|
+    u.plain_text_password = "password"
+    u.registrar = custom_registrar
+    u.roles = ["super"] # From staging: roles=["super"]
+    u.active = true
+    u.identity_code = "60001019906"
+  end
+
+  # Allow the requested IP for this user
+  custom_registrar.white_ips.find_or_create_by!(
+    ipv4: '85.253.229.124',
+    interfaces: ['api', 'registrar']
+  )
+  puts "  Custom Staging User & Registrar ensured!"
 end
 
 puts "Mock Data Generation Completed!"
