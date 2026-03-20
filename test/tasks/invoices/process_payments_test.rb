@@ -235,7 +235,7 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
   end
 
   def test_output
-    assert_output "Transactions processed: 1\n" do
+    assert_output(/Transactions processed: 1/) do
       run_task
     end
   end

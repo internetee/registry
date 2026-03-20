@@ -92,6 +92,7 @@ module Contact::Nameable
     matched_term = restricted_terms.find { |term| name_contains_org_term?(name, term) }
     return unless matched_term
 
+    errors.add(:name, :org_term_in_priv_name, term: matched_term)
     add_epp_error('2005', nil, nil,
                   I18n.t('activerecord.errors.models.contact.attributes.name.org_term_in_priv_name',
                          term: matched_term))
