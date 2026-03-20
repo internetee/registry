@@ -123,6 +123,7 @@ module Repp
 
       def validate_webclient
         return unless webclient_request?
+        return if (Rails.env.staging? || Rails.env.development?) && ENV['BYPASS_WEBCLIENT_CERT'] == 'true'
 
         return if webclient_cn_valid?
 

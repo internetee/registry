@@ -7,7 +7,6 @@ module Repp
         skip_before_action :check_registrar_ip_restriction, only: :tara_callback
         skip_before_action :check_api_ip_restriction, only: :tara_callback
         skip_before_action :validate_api_user_cert, only: :tara_callback
-        skip_before_action :validate_webclient, only: :tara_callback, if: -> { (Rails.env.staging? || Rails.env.development?) && ENV['BYPASS_WEBCLIENT_CERT'] == 'true' }
 
         THROTTLED_ACTIONS = %i[index tara_callback].freeze
         include Shunter::Integration::Throttle
