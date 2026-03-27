@@ -304,7 +304,7 @@ class EppDomainUpdateBaseTest < EppTestCase
     XML
 
     assert_no_enqueued_jobs
-    assert_enqueued_jobs 3 do
+    assert_enqueued_jobs 4 do
       post epp_update_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
@@ -387,7 +387,7 @@ class EppDomainUpdateBaseTest < EppTestCase
     XML
 
     assert_no_enqueued_jobs
-    assert_enqueued_jobs 3 do
+    assert_enqueued_jobs 4 do
       post epp_update_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
@@ -427,7 +427,7 @@ class EppDomainUpdateBaseTest < EppTestCase
     XML
 
     assert_no_enqueued_jobs
-    assert_enqueued_jobs 3 do
+    assert_enqueued_jobs 4 do
       post epp_update_path, params: { frame: request_xml },
            headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
     end
