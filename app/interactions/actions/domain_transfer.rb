@@ -17,9 +17,10 @@ module Actions
       # return domain.pending_transfer if domain.pending_transfer
       # attach_legal_document(::Deserializers::Xml::LegalDocument.new(frame).call)
 
-      return if domain.errors[:epp_errors].any?
+      return false if domain.errors[:epp_errors].any?
 
       commit
+      true
     end
 
     def domain_exists?
@@ -34,6 +35,8 @@ module Actions
       validate_registrar
       validate_eligilibty
       validate_not_discarded
+      validate_ns_records
+      validate_dns_records
     end
 
     def valid_transfer_code?
@@ -60,6 +63,30 @@ module Actions
       return unless domain.discarded?
 
       domain.add_epp_error('2106', nil, nil, 'Object is not eligible for transfer')
+    end
+
+    def validate_ns_records
+      return unless domain.nameservers.any?
+
+      result = DNSValidator.validate(domain: domain, name: domain.name, record_type: 'NS')
+      return if result[:errors].blank?
+
+      assign_dns_validation_error(result[:errors])
+    end
+
+    def validate_dns_records
+      return unless domain.dnskeys.any?
+
+      result = DNSValidator.validate(domain: domain, name: domain.name, record_type: 'DNSKEY')
+      return if result[:errors].blank?
+
+      assign_dns_validation_error(result[:errors])
+    end
+
+    def assign_dns_validation_error(errors)
+      errors.each do |error|
+        domain.add_epp_error('2306', nil, nil, error)
+      end
     end
 
     def commit

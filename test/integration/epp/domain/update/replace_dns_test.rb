@@ -1,6 +1,17 @@
 require 'test_helper'
 
 class EppDomainUpdateReplaceDnsTest < EppTestCase
+  def setup
+    # Mock DNSValidator to return success
+    @original_validate = DNSValidator.method(:validate)
+    DNSValidator.define_singleton_method(:validate) { |**args| { errors: [] } }
+  end
+  
+  def teardown
+    # Restore original validate method
+    DNSValidator.define_singleton_method(:validate, @original_validate)
+  end
+  
   def test_parsed_response_for_dnskey_with_spaces_in_request
     doc = Nokogiri::XML::Document.parse(schema_update)
     params = { parsed_frame: doc }
