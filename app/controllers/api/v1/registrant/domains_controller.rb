@@ -7,13 +7,14 @@ module Api
         before_action :set_tech_flag, only: [:show]
 
         LIMIT_DOMAIN_TOTAL = 3000
+        LIMIT_PARTIAL = 100
 
         def index
-          limit = params[:limit] || 200
+          limit = params[:limit] || LIMIT_PARTIAL
           offset = params[:offset] || 0
           simple = params[:simple] == 'true' || false
 
-          if limit.to_i > 200 || limit.to_i < 1
+          if limit.to_i > LIMIT_PARTIAL || limit.to_i < 1
             render(json: { errors: [{ limit: ['parameter is out of range'] }] },
                    status: :bad_request) && return
           end
@@ -24,13 +25,15 @@ module Api
           end
 
           domains = current_user_domains
-          serialized_domains = domains.limit(limit).offset(offset).map do |item|
-            serializer = Serializers::RegistrantApi::Domain.new(item, simplify: simple)
-            serializer.to_json
+          @domains = Rails.cache.fetch(domains) do
+            domains.limit(limit).offset(offset).map do |item|
+              serializer = Serializers::RegistrantApi::Domain.new(item, simplify: simple)
+              serializer.to_json
+            end
           end
 
           render json: { total: current_user_domains_total_count, count: domains.count,
-                         domains: serialized_domains }
+                         domains: @domains }
         end
 
         def show
