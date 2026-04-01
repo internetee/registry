@@ -14,8 +14,7 @@ module Repp
         api :GET, 'repp/v1/registrar/auth'
         desc 'check user auth info and return data'
         def index
-          registrar = current_user.registrar
-          render_success(data: auth_values_to_data(registrar: registrar))
+          render_success(data: auth_values_to_data(mode: 'registrar'))
         end
 
         api :POST, 'repp/v1/registrar/auth/tara_callback'
@@ -29,7 +28,8 @@ module Repp
           end
 
           token = Base64.urlsafe_encode64("#{user.username}:#{user.plain_text_password}")
-          render_success(data: { token: token, username: user.username })
+          data = auth_values_to_data(user, mode: 'accreditation').merge(token: token)
+          render_success(data: data)
         end
 
         private

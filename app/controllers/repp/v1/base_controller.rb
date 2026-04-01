@@ -115,7 +115,7 @@ module Repp
       end
 
       def webclient_request?
-        return false if Rails.env.test? || Rails.env.development?
+        return false if Rails.env.test?
 
         Rails.logger.debug "[webclient_request?] Requester: #{request.headers['Requester']}"
         webclient_ip_allowed?(request.ip) && WEBCLIENT_REQUESTERS.include?(request.headers['Requester'])
@@ -133,6 +133,8 @@ module Repp
       end
 
       def webclient_cn_valid?
+        return true if Rails.env.test? || Rails.env.development?
+
         request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']
         webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
         Rails.logger.debug "[webclient_cn_valid?] HTTP_SSL_CLIENT_S_DN_CN: #{request.env['HTTP_SSL_CLIENT_S_DN_CN']}"
@@ -188,15 +190,27 @@ module Repp
       end
 
       def skip_webclient_user_cert_validation?
-        !webclient_request? || request.headers['Requester'] == 'tara'
+        Rails.env.test? || Rails.env.development? ||
+          !webclient_request? || request.headers['Requester'] == 'tara'
       end
 
-      def auth_values_to_data(registrar:)
-        data = current_user.as_json(only: %i[id username roles])
+      def auth_values_to_data(user = current_user, mode:)
+        data = user.as_json(only: %i[id username roles])
+        registrar = user.registrar
         data[:registrar_name] = registrar.name
         data[:legaldoc_mandatory] = registrar.legaldoc_mandatory?
         data[:address_processing] = Contact.address_processing?
-        data[:abilities] = Ability.new(current_user).permissions
+        data[:abilities] = Ability.new(user).permissions
+
+        if mode == 'accreditation'
+          data[:name] = user.name
+          data[:accreditation_date] = user.accreditation_date
+          data[:accreditation_expire_date] = user.accreditation_expire_date
+          data[:registrar_reg_no] = registrar.reg_no
+          data[:registrar_email] = registrar.email
+          data[:code] = registrar.code
+        end
+
         data
       end
 
