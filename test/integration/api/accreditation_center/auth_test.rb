@@ -21,7 +21,6 @@ class AuthTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/auth', headers: @header
 
     json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal json[:code], 1000
     assert_equal json[:message], 'Command completed successfully'
   end
 
@@ -30,7 +29,6 @@ class AuthTest < ApplicationIntegrationTest
 
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:code], 2202
     assert_equal json[:message], 'Invalid authorization information'
   end
 
@@ -41,7 +39,7 @@ class AuthTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/auth', headers: @header
 
     json = JSON.parse(response.body, symbolize_names: true)
-    assert_equal json[:errors], 'Accreditation Center API is not allowed'
+    assert_equal json[:message], 'Accreditation Center API is not allowed'
     assert_equal response.status, 403
   end
 

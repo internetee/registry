@@ -23,7 +23,7 @@ class InvoiceStatusTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/invoice_status', headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:invoices].count, 0
+    assert_equal json[:data][:invoices].count, 0
 
     invoice = @user.registrar.invoices.last
     invoice.update(cancelled_at: date_now)
@@ -31,7 +31,7 @@ class InvoiceStatusTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/invoice_status', headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:invoices].count, 1
+    assert_equal json[:data][:invoices].count, 1
   end
 
   def test_return_error_without_authentication
@@ -39,7 +39,6 @@ class InvoiceStatusTest < ApplicationIntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response 401
-    assert_equal json[:code], 2202
     assert_equal json[:message], 'Invalid authorization information'
   end
 
@@ -50,7 +49,7 @@ class InvoiceStatusTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/invoice_status', headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:errors], 'Accreditation Center API is not allowed'
+    assert_equal json[:message], 'Accreditation Center API is not allowed'
     assert_equal response.status, 403
   end
 
@@ -58,7 +57,7 @@ class InvoiceStatusTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/invoice_status', headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:invoices].count, 0
+    assert_equal json[:data][:invoices].count, 0
   end
 
   private

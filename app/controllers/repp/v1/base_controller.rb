@@ -190,7 +190,7 @@ module Repp
       end
 
       def skip_webclient_user_cert_validation?
-        Rails.env.test? || Rails.env.development? ||
+        Rails.env.development? ||
           !webclient_request? || request.headers['Requester'] == 'tara'
       end
 
