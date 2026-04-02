@@ -34,6 +34,7 @@ module Actions
       validate_registrar
       validate_eligilibty
       validate_not_discarded
+      maybe_validate_phone_number
     end
 
     def valid_transfer_code?
@@ -65,6 +66,10 @@ module Actions
     def commit
       bare_domain = Domain.find(domain.id)
       ::DomainTransfer.request(bare_domain, user)
+    end
+
+    def maybe_validate_phone_number
+      OrgRegistrantPhoneCheckerJob.perform_later(type: 'single', registrant_user_code: domain.registrant.code)
     end
   end
 end
