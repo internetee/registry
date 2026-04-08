@@ -1,3 +1,6 @@
+08.04.2026
+* Fix for handling new ECC based business registry certificates https://github.com/internetee/registry/pull/2914
+
 02.04.2026
 * Check contact phone for publishing on domain registration https://github.com/internetee/registry/issues/2908
 
