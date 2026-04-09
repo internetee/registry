@@ -286,6 +286,32 @@ class Domain < ApplicationRecord
       Setting.nameserver_required
     end
 
+    def listing_user_domains(registrant_user, company_codes, admin: false)
+      direct = if admin
+                 registrant_user_direct_admin_registrant_domains(registrant_user)
+               else
+                 registrant_user_direct_domains(registrant_user)
+               end
+
+      if company_codes.blank?
+        return direct
+      end
+
+      org_contacts = Contact.org_contacts_by_codes(company_codes, registrant_user.country.alpha2)
+      company_registrant = registrant_user_company_registrant(org_contacts)
+      company_by_contact = registrant_user_domains_company(org_contacts, except_tech: admin)
+
+      from(
+        "(#{direct.to_sql} UNION " \
+        "#{company_registrant.to_sql} UNION " \
+        "#{company_by_contact.to_sql}) AS domains"
+      )
+    end
+
+    def listing_user_domains_count(registrant_user, company_codes)
+      listing_user_domains(registrant_user, company_codes, admin: false).count
+    end
+
     def registrant_user_admin_registrant_domains(registrant_user)
       companies = Contact.registrant_user_company_contacts(registrant_user)
       from(

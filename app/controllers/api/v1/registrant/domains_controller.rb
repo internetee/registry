@@ -23,13 +23,17 @@ module Api
                    status: :bad_request) && return
           end
 
-          domains = current_user_domains
+          company_codes = listing_company_codes
+          admin = listing_admin_flag(company_codes)
+          domains = Domain.listing_user_domains(current_registrant_user, company_codes, admin: admin)
+
           serialized_domains = domains.limit(limit).offset(offset).map do |item|
             serializer = Serializers::RegistrantApi::Domain.new(item, simplify: simple)
             serializer.to_json
           end
 
-          render json: { total: current_user_domains_total_count, count: domains.count,
+          total = Domain.listing_user_domains_count(current_registrant_user, company_codes)
+          render json: { total: total, count: domains.count,
                          domains: serialized_domains }
         end
 
@@ -50,6 +54,19 @@ module Api
           # current_user_domains scope depends on tech flag
           # However, if it's not present, tech contact can not see specific domain entry at all.
           params.merge!(tech: 'true')
+        end
+
+        def listing_company_codes
+          ListingCompanyCodesResolver.new(current_registrant_user).call
+        end
+
+        def listing_admin_flag(company_codes)
+          if params[:tech] == 'init'
+            total = Domain.listing_user_domains_count(current_registrant_user, company_codes)
+            return total >= LIMIT_DOMAIN_TOTAL
+          end
+
+          params[:tech] != 'true'
         end
 
         def current_user_domains_total_count
