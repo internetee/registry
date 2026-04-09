@@ -13,35 +13,38 @@ class ListingCompanyCodesResolver
   def call
     return [] if @user.ident.include?('-')
 
-    cached_primary, cached_stale = read_cache
-    if cached_primary
-      log(:info, 'cache_hit')
-      return cached_primary
-    end
-
-    fetch_live(cached_stale)
+    fetch_with_stale_fallback
   end
 
   private
 
-  def fetch_live(cached_stale)
-    results = @company_register.representation_rights(
-      citizen_personal_code: @user.ident,
-      citizen_country_code: @user.country.alpha3
-    )
-    codes = results.map(&:registration_number).compact.uniq
-
-    write_cache(codes)
+  # Primary caching is handled by CompanyRegister::Client internally
+  # (cache_store.fetch with cache_period TTL). This resolver only adds
+  # a stale fallback layer: on every successful lookup (cached or live),
+  # we persist codes to a stale key with an extended TTL. On error,
+  # we fall back to that stale key.
+  def fetch_with_stale_fallback
+    codes = resolve_company_codes
+    write_stale_cache(codes)
     log(:info, 'live_success')
     codes
   rescue CompanyRegister::NotAvailableError
-    stale_fallback(cached_stale)
+    stale_fallback
   rescue CompanyRegister::SOAPFaultError
     log(:error, 'soap_fault_direct_only')
     []
   end
 
-  def stale_fallback(cached_stale)
+  def resolve_company_codes
+    results = @company_register.representation_rights(
+      citizen_personal_code: @user.ident,
+      citizen_country_code: @user.country.alpha3
+    )
+    results.map(&:registration_number).compact.uniq
+  end
+
+  def stale_fallback
+    cached_stale = @cache.read(stale_key)
     if cached_stale
       log(:warn, 'stale_fallback')
       cached_stale
@@ -51,15 +54,8 @@ class ListingCompanyCodesResolver
     end
   end
 
-  def read_cache
-    primary = @cache.read(primary_key)
-    stale = @cache.read(stale_key)
-    [primary, stale]
-  end
-
-  def write_cache(codes)
+  def write_stale_cache(codes)
     ttl = cache_ttl
-    @cache.write(primary_key, codes, expires_in: ttl)
     @cache.write(stale_key, codes, expires_in: ttl + STALE_GRACE_PERIOD)
   rescue StandardError => e
     log(:warn, 'cache_write_failed', error: e.message)
@@ -73,10 +69,6 @@ class ListingCompanyCodesResolver
     else
       period
     end
-  end
-
-  def primary_key
-    "registrant/listing_company_codes/#{CACHE_VERSION}/#{@user.id}"
   end
 
   def stale_key

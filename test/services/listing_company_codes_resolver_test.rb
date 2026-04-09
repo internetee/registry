@@ -21,17 +21,7 @@ class ListingCompanyCodesResolverTest < ActiveSupport::TestCase
     user&.destroy
   end
 
-  def test_cache_hit_returns_cached_codes
-    codes = %w[1234567 7654321]
-    Rails.cache.write(primary_key, codes, expires_in: 1.day)
-
-    stub = build_stub(expected_result: :should_not_be_called)
-    resolver = build_resolver(company_register: stub)
-
-    assert_equal codes, resolver.call
-  end
-
-  def test_live_success_returns_codes_and_writes_cache
+  def test_live_success_returns_codes_and_writes_stale_cache
     companies = [Company.new('1234567', 'ACME'), Company.new('7654321', 'Globex')]
     stub = build_stub(expected_result: companies)
 
@@ -39,7 +29,6 @@ class ListingCompanyCodesResolverTest < ActiveSupport::TestCase
     result = resolver.call
 
     assert_equal %w[1234567 7654321], result
-    assert_equal %w[1234567 7654321], Rails.cache.read(primary_key)
     assert_equal %w[1234567 7654321], Rails.cache.read(stale_key)
   end
 
@@ -50,7 +39,6 @@ class ListingCompanyCodesResolverTest < ActiveSupport::TestCase
     result = resolver.call
 
     assert_equal [], result
-    assert_equal [], Rails.cache.read(primary_key)
     assert_equal [], Rails.cache.read(stale_key)
   end
 
@@ -130,18 +118,6 @@ class ListingCompanyCodesResolverTest < ActiveSupport::TestCase
     assert_includes log_output.string, 'invalid_cache_period'
   ensure
     CompanyRegister.configuration.cache_period = original_period
-  end
-
-  def test_logs_cache_hit
-    log_output = StringIO.new
-    logger = Logger.new(log_output)
-    Rails.cache.write(primary_key, %w[1234567], expires_in: 1.day)
-
-    stub = build_stub(expected_result: :should_not_be_called)
-    resolver = build_resolver(company_register: stub, logger: logger)
-    resolver.call
-
-    assert_includes log_output.string, 'cache_hit'
   end
 
   def test_logs_live_success
@@ -231,10 +207,6 @@ class ListingCompanyCodesResolverTest < ActiveSupport::TestCase
     end
 
     stub
-  end
-
-  def primary_key
-    "registrant/listing_company_codes/v1/#{@user.id}"
   end
 
   def stale_key
