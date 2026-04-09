@@ -204,8 +204,8 @@ module Repp
 
         if mode == 'accreditation'
           data[:name] = user.name
-          data[:accreditation_date] = user.accreditation_date
-          data[:accreditation_expire_date] = user.accreditation_expire_date
+          data[:accreditation_date] = registrar.accreditation_date
+          data[:accreditation_expire_date] = registrar.accreditation_expire_date
           data[:registrar_reg_no] = registrar.reg_no
           data[:registrar_email] = registrar.email
           data[:code] = registrar.code

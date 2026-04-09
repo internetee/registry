@@ -1,0 +1,32 @@
+Tere,
+
+Anname teada, et registripidaja akrediteerimise testinõuete täitmine on edukalt lõpule viidud.
+
+Registripidaja andmed:
+- Nimi: <%= @registrar&.name || '-' %>
+- Akrediteerimise kuupäev: <%= @registrar&.accreditation_date ? l(@registrar.accreditation_date, format: :long) : '-' %>
+- Akrediteering kehtib kuni: <%= @registrar&.accreditation_expire_date ? l(@registrar.accreditation_expire_date, format: :long) : '-' %>
+
+Akrediteerimise staatus on uuendatud.
+
+Kui Teil on küsimusi seoses akrediteerimise protsessiga, võtke meiega ühendust.
+
+Parimate soovidega,
+<%= render 'mailers/shared/signatures/signature.et.text' %>
+---
+
+Hi,
+
+We are writing to inform you that the registrar has successfully completed the accreditation test requirements.
+
+Registrar Details:
+- Name: <%= @registrar&.name || '-' %>
+- Accreditation Date: <%= @registrar&.accreditation_date ? l(@registrar.accreditation_date, format: :long) : '-' %>
+- Accreditation Valid Until: <%= @registrar&.accreditation_expire_date ? l(@registrar.accreditation_expire_date, format: :long) : '-' %>
+
+The accreditation status has been updated.
+
+If you have any questions regarding the accreditation process, please contact us.
+
+Best regards,
+<%= render 'mailers/shared/signatures/signature.en.text' %>

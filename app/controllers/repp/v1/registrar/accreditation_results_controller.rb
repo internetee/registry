@@ -2,16 +2,19 @@ module Repp
   module V1
     module Registrar
       class AccreditationResultsController < BaseController
-        before_action :check_feature_enabled, :authorize_accr_bot
+        before_action :authorize_accr_bot
 
         api :POST, 'repp/v1/registrar/accreditation/push_results'
         desc 'added datetime results'
 
         def create
-          username = params[:accreditation_result][:username]
-          result = params[:accreditation_result][:result]
+          name = params[:accreditation_result][:registrar_name]
+          last_theory_test_passed_at = params[:accreditation_result][:last_theory_test_passed_at]
 
-          record_accreditation_result(username) if result.to_s == 'true'
+          record_accreditation_result(name, last_theory_test_passed_at)
+        rescue StandardError => e
+          Rails.logger.error "Failed to record accreditation result for registrar '#{name}': #{e.message}"
+          render(json: { code: 2304, message: e.message }, status: :unprocessable_entity)
         end
 
         private
@@ -38,39 +41,35 @@ module Repp
           render_unauthorized('Certificate not registered')
         end
 
-        def check_feature_enabled
-          return if Feature.allow_accr_endspoints?
+        def record_accreditation_result(name, last_theory_test_passed_at)
+          registrar = ::Registrar.find_by(name: name)
+          raise ActiveRecord::RecordNotFound if registrar.nil?
 
-          render_unauthorized('Accreditation Center API is not enabled')
-        end
+          accreditation_date = parse_last_theory_test_passed_at(last_theory_test_passed_at)
+          registrar.accreditation_date = accreditation_date
+          expire_date = accreditation_date.nil? ? nil : accreditation_date + ENV.fetch('accr_expiry_months', 24).to_i.months
+          registrar.accreditation_expire_date = expire_date
 
-        def record_accreditation_result(username)
-          user = ApiUser.find_by(username: username)
-          raise ActiveRecord::RecordNotFound if user.nil?
-
-          user.accreditation_date = DateTime.current
-          user.accreditation_expire_date = user.accreditation_date + ENV.fetch('accr_expiry_months', 24).to_i.months
- 
-          user_data = {
-            username: user.username,
-            accreditation_date: user.accreditation_date,
-            accreditation_expire_date: user.accreditation_expire_date
+          data = {
+            registrar_name: registrar.name,
+            accreditation_date: registrar.accreditation_date,
+            accreditation_expire_date: registrar.accreditation_expire_date
           }
 
-          if user.save
-            notify_registrar(user)
-            notify_admins
-            render_success(message: 'Accreditation info successfully added', data: user_data )
+          if registrar.save
+            notify_registrar(registrar)
+            notify_admins(registrar)
+            render_success(message: 'Accreditation info successfully added', data: data)
           else
-            handle_non_epp_errors(user)
+            handle_non_epp_errors(registrar)
           end
         end
 
-        def notify_registrar(user)
-          AccreditationCenterMailer.test_was_successfully_passed_registrar(user.registrar.email).deliver_now
+        def notify_registrar(registrar)
+          AccreditationMailer.test_was_successfully_passed_registrar(registrar.email).deliver_now
         end
 
-        def notify_admins
+        def notify_admins(registrar)
           admin_users_emails = User.all.reject { |u| u.roles.nil? }
                                    .select { |u| u.roles.include? 'admin' }.pluck(:email)
 
@@ -78,12 +77,18 @@ module Repp
           return if admin_users_emails.empty?
 
           admin_users_emails.each do |email|
-            AccreditationCenterMailer.test_was_successfully_passed_admin(email).deliver_now
+            AccreditationMailer.test_was_successfully_passed_admin(email, registrar).deliver_now
           end
         end
 
         def render_unauthorized(reason = 'Only accr_bot can update accreditation results')
           render(json: { code: 2202, message: reason }, status: :unauthorized)
+        end
+
+        def parse_last_theory_test_passed_at(value)
+          return if value.blank?
+
+          Time.zone.parse(value.to_s) || raise(ArgumentError, 'Invalid last_theory_test_passed_at')
         end
       end
     end
