@@ -8,15 +8,15 @@ class NotifyAccreditationAdminsAndRegistrarsJobTest < ActiveJob::TestCase
   end
 
   def test_inform_registrars_if_accredation_date_is_expires
-    api_user = users(:api_bestnames)
-    api_user.accreditation_date = Time.now - 2.year - 1.day
-    api_user.accreditation_expire_date = Time.now - 1.day
-    api_user.save
-    api_user.reload
+    registrar = registrars(:bestnames)
+    registrar.accreditation_date = Time.now - 2.year - 1.day
+    registrar.accreditation_expire_date = Time.now - 1.day
+    registrar.save
+    registrar.reload
 
-      perform_enqueued_jobs do
-        NotifyAccreditationAdminsAndRegistrarsJob.perform_now
-      end
+    perform_enqueued_jobs do
+      NotifyAccreditationAdminsAndRegistrarsJob.perform_now
+    end
 
     assert_emails 1
   end
@@ -34,5 +34,4 @@ class NotifyAccreditationAdminsAndRegistrarsJobTest < ActiveJob::TestCase
   #
   #   assert_emails 1
   # end
-
 end
