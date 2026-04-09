@@ -32,4 +32,7 @@ certs/ca/private/ca_*.pem
 certs/
 Dockerfile.dev.v2
 CLAUDE.md
+AGENT.md
 .claude/
+.memory-bank
+own

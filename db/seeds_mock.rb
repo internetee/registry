@@ -246,10 +246,12 @@ ActiveRecord::Base.transaction do
   puts "  PRIV contact: #{priv_contact.name} (ident=#{priv_contact.ident})"
 
   # ORG contacts — for company-linked domains
-  # These registration numbers must match what we put in the cache
+  # These registration numbers come from CompanyRegister demo endpoint
+  # for test user 60001019906 (test_mode: true in config/application.yml)
   mock_companies = [
-    { reg_number: '12345678', name: 'ACME Test OÜ', code: 'TARA:ORG:ACME' },
-    { reg_number: '87654321', name: 'Globex Test AS', code: 'TARA:ORG:GLOBEX' },
+    { reg_number: '12345678', name: 'Andmesilla DEMO OÜ', code: 'TARA:ORG:ANDMESILLA' },
+    { reg_number: '10112390', name: 'SAUTEC AS', code: 'TARA:ORG:SAUTEC' },
+    { reg_number: '10001880', name: 'OÜ Spider Autogrupp', code: 'TARA:ORG:SPIDER' },
   ]
 
   org_contacts = mock_companies.map do |company|
@@ -317,45 +319,26 @@ ActiveRecord::Base.transaction do
     end
   end
 
-  # Pre-populate caches so company-linked domains appear immediately
-  company_codes = mock_companies.map { |c| c[:reg_number] }
-
-  # 1. Populate CompanyRegister gem's internal cache (simulates successful SOAP response)
-  gem_cache_key = { fyysilise_isiku_kood: '60001019906',
-                    fyysilise_isiku_koodi_riik: 'EST',
-                    keel: 'eng' }.to_json
-  gem_cache_value = {
-    esindus_v1_response: {
-      paring: {},
-      keha: {
-        ettevotjad: {
-          item: mock_companies.map { |c| { ariregistri_kood: c[:reg_number], arinimi: c[:name] } }
-        }
-      }
-    }
-  }
-  cache_period = CompanyRegister.configuration.cache_period
-  cache_period = 1.day if cache_period.nil? || cache_period <= 0
-  Rails.cache.write(gem_cache_key, gem_cache_value, expires_in: cache_period)
-  puts "  Gem cache populated (TTL=#{cache_period.inspect}, key=#{gem_cache_key[0..50]}...)"
-
-  # 2. Populate stale fallback cache (used by ListingCompanyCodesResolver on outage)
-  stale_key = "registrant/listing_company_codes_stale/v1/#{registrant_user.id}"
-  Rails.cache.write(stale_key, company_codes, expires_in: cache_period + 24.hours)
-  puts "  Stale cache populated (TTL=#{(cache_period + 24.hours).inspect}, key=#{stale_key})"
-
   puts ""
   puts "  Test data summary:"
   puts "    User: EE-60001019906 (MARY ANN O'CONNEZ-SUSLIK)"
   puts "    Direct domains: maryann-1.ee, maryann-2.ee"
-  puts "    Company domains: acme-1.ee, acme-2.ee (ACME Test OÜ, reg=12345678)"
-  puts "                     globex-1.ee, globex-2.ee (Globex Test AS, reg=87654321)"
-  puts "    Gem cache key: #{gem_cache_key}"
+  puts "    Company domains (from demo business registry):"
+  puts "      andmesilla-1.ee, andmesilla-2.ee (Andmesilla DEMO OÜ, reg=12345678)"
+  puts "      sautec-1.ee, sautec-2.ee (SAUTEC AS, reg=10112390)"
+  puts "      spider-1.ee, spider-2.ee (OÜ Spider Autogrupp, reg=10001880)"
   puts ""
-  puts "  To simulate outage:"
-  puts "    1. Clear gem cache: Rails.cache.delete('#{gem_cache_key}')"
-  puts "    2. Change company_register_password to 'invalid' and restart"
-  puts "    3. Domains listing should still show company domains via stale fallback"
+  puts "  Prerequisites:"
+  puts "    company_register_test_mode: 'true' in config/application.yml"
+  puts ""
+  puts "  Testing procedure:"
+  puts "    1. Run this seed: rails runner db/seeds_mock.rb"
+  puts "    2. Restart the app"
+  puts "    3. Log in via TARA with 60001019906 (+37200000766 for Mobile-ID)"
+  puts "    4. You should see 8 domains (2 direct + 6 company-linked)"
+  puts "    5. To simulate outage: set company_register_password to 'invalid' and restart"
+  puts "    6. Company-linked domains should still appear via stale cache"
+  puts "    7. After stale TTL expires (cache_period + 24h) they will disappear"
   puts "=========================================="
 
   # Custom User requested by the user
