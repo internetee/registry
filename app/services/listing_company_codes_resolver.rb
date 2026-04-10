@@ -8,18 +8,23 @@ class ListingCompanyCodesResolver
   FALLBACK_TTL = 1.day
 
   # Network-level errors that indicate the business registry is unreachable.
-  # These bubble up from Net::HTTP (used by the company_register gem's Savon adapter)
-  # and are NOT wrapped into CompanyRegister::NotAvailableError by the gem.
-  NETWORK_ERRORS = [
-    Net::OpenTimeout,
-    Net::ReadTimeout,
-    Errno::ECONNREFUSED,
-    Errno::EHOSTUNREACH,
-    Errno::ENETUNREACH,
-    Errno::ETIMEDOUT,
-    SocketError,
-    OpenSSL::SSL::SSLError,
-  ].freeze
+  # The company_register gem does NOT wrap these into CompanyRegister::NotAvailableError —
+  # depending on the HTTP adapter in use (HTTPI or Net::HTTP), raw errors bubble up.
+  # We treat all of them as "business registry is unavailable" and fall back to stale cache.
+  def self.network_error_classes
+    classes = [
+      Net::OpenTimeout,
+      Net::ReadTimeout,
+      Errno::ECONNREFUSED,
+      Errno::EHOSTUNREACH,
+      Errno::ENETUNREACH,
+      Errno::ETIMEDOUT,
+      SocketError,
+      OpenSSL::SSL::SSLError,
+    ]
+    classes << HTTPI::Error if defined?(HTTPI::Error)
+    classes
+  end
 
   def initialize(user, cache: Rails.cache, company_register: CompanyRegister::Client.new, logger: Rails.logger)
     @user = user
@@ -51,7 +56,7 @@ class ListingCompanyCodesResolver
   rescue CompanyRegister::SOAPFaultError
     log(:error, 'soap_fault_direct_only')
     []
-  rescue *NETWORK_ERRORS => e
+  rescue *self.class.network_error_classes => e
     log(:warn, 'network_error', error_class: e.class.name, error_message: e.message)
     stale_fallback
   end

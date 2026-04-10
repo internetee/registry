@@ -109,6 +109,32 @@ class ListingCompanyCodesResolverTest < ActiveSupport::TestCase
     assert_equal stale_codes, resolver.call
   end
 
+  def test_httpi_ssl_error_uses_stale_fallback
+    skip 'HTTPI not loaded' unless defined?(HTTPI::SSLError)
+
+    stale_codes = %w[1234567]
+    Rails.cache.write(stale_key, stale_codes, expires_in: 1.hour)
+
+    underlying = OpenSSL::SSL::SSLError.new('certificate verify failed')
+    stub = Object.new
+    stub.define_singleton_method(:representation_rights) do |**_kwargs|
+      raise HTTPI::SSLError.new(underlying.message, underlying)
+    end
+    resolver = build_resolver(company_register: stub)
+
+    assert_equal stale_codes, resolver.call
+  end
+
+  def test_openssl_error_uses_stale_fallback
+    stale_codes = %w[1234567]
+    Rails.cache.write(stale_key, stale_codes, expires_in: 1.hour)
+
+    stub = build_stub(raise_error: OpenSSL::SSL::SSLError)
+    resolver = build_resolver(company_register: stub)
+
+    assert_equal stale_codes, resolver.call
+  end
+
   def test_network_error_without_stale_returns_empty
     stub = build_stub(raise_error: Net::OpenTimeout)
     resolver = build_resolver(company_register: stub)
