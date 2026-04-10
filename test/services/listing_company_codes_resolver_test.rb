@@ -79,6 +79,54 @@ class ListingCompanyCodesResolverTest < ActiveSupport::TestCase
     assert_equal [], resolver.call
   end
 
+  def test_net_open_timeout_uses_stale_fallback
+    stale_codes = %w[1234567]
+    Rails.cache.write(stale_key, stale_codes, expires_in: 1.hour)
+
+    stub = build_stub(raise_error: Net::OpenTimeout)
+    resolver = build_resolver(company_register: stub)
+
+    assert_equal stale_codes, resolver.call
+  end
+
+  def test_net_read_timeout_uses_stale_fallback
+    stale_codes = %w[1234567]
+    Rails.cache.write(stale_key, stale_codes, expires_in: 1.hour)
+
+    stub = build_stub(raise_error: Net::ReadTimeout)
+    resolver = build_resolver(company_register: stub)
+
+    assert_equal stale_codes, resolver.call
+  end
+
+  def test_connection_refused_uses_stale_fallback
+    stale_codes = %w[1234567]
+    Rails.cache.write(stale_key, stale_codes, expires_in: 1.hour)
+
+    stub = build_stub(raise_error: Errno::ECONNREFUSED)
+    resolver = build_resolver(company_register: stub)
+
+    assert_equal stale_codes, resolver.call
+  end
+
+  def test_network_error_without_stale_returns_empty
+    stub = build_stub(raise_error: Net::OpenTimeout)
+    resolver = build_resolver(company_register: stub)
+
+    assert_equal [], resolver.call
+  end
+
+  def test_logs_network_error
+    log_output = StringIO.new
+    logger = Logger.new(log_output)
+
+    stub = build_stub(raise_error: Net::OpenTimeout)
+    resolver = build_resolver(company_register: stub, logger: logger)
+    resolver.call
+
+    assert_includes log_output.string, 'network_error'
+  end
+
   def test_soap_fault_returns_empty_without_stale_fallback
     Rails.cache.write(stale_key, %w[1234567], expires_in: 1.hour)
 

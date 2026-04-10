@@ -1,7 +1,25 @@
+require 'net/http'
+require 'openssl'
+require 'socket'
+
 class ListingCompanyCodesResolver
   CACHE_VERSION = 'v1'
   STALE_GRACE_PERIOD = 24.hours
   FALLBACK_TTL = 1.day
+
+  # Network-level errors that indicate the business registry is unreachable.
+  # These bubble up from Net::HTTP (used by the company_register gem's Savon adapter)
+  # and are NOT wrapped into CompanyRegister::NotAvailableError by the gem.
+  NETWORK_ERRORS = [
+    Net::OpenTimeout,
+    Net::ReadTimeout,
+    Errno::ECONNREFUSED,
+    Errno::EHOSTUNREACH,
+    Errno::ENETUNREACH,
+    Errno::ETIMEDOUT,
+    SocketError,
+    OpenSSL::SSL::SSLError,
+  ].freeze
 
   def initialize(user, cache: Rails.cache, company_register: CompanyRegister::Client.new, logger: Rails.logger)
     @user = user
@@ -33,6 +51,9 @@ class ListingCompanyCodesResolver
   rescue CompanyRegister::SOAPFaultError
     log(:error, 'soap_fault_direct_only')
     []
+  rescue *NETWORK_ERRORS => e
+    log(:warn, 'network_error', error_class: e.class.name, error_message: e.message)
+    stale_fallback
   end
 
   def resolve_company_codes
