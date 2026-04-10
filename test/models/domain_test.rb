@@ -670,6 +670,56 @@ class DomainTest < ActiveSupport::TestCase
     domains(:shop)
   end
 
+  def test_listing_user_domains_returns_direct_domains_without_company_codes
+    user = users(:registrant)
+    result = Domain.listing_user_domains(user, [])
+    domain_names = result.pluck(:name)
+
+    assert_includes domain_names, 'shop.test'
+    assert_includes domain_names, 'airport.test'
+    assert_includes domain_names, 'hospital.test'
+  end
+
+  def test_listing_user_domains_includes_company_linked_domains
+    user = users(:registrant)
+    # jack's ident 12345678 is ORG, metro domain is only reachable via company codes
+    result = Domain.listing_user_domains(user, %w[12345678])
+    domain_names = result.pluck(:name)
+
+    assert_includes domain_names, 'metro.test'
+    assert_includes domain_names, 'shop.test'
+  end
+
+  def test_listing_user_domains_deduplicates
+    user = users(:registrant)
+    # acme_ltd ident 1234567, library is accessible both directly (john is tech contact) and via company
+    result = Domain.listing_user_domains(user, %w[1234567])
+    domain_ids = result.pluck(:id)
+
+    assert_equal domain_ids.uniq.size, domain_ids.size
+  end
+
+  def test_listing_user_domains_admin_flag_excludes_tech_contacts
+    user = users(:registrant)
+    result_admin = Domain.listing_user_domains(user, [], admin: true)
+    result_normal = Domain.listing_user_domains(user, [], admin: false)
+
+    admin_names = result_admin.pluck(:name)
+    normal_names = result_normal.pluck(:name)
+
+    # admin: true uses except_tech which excludes tech-only contacts
+    # library is linked to john only as tech contact, so should not appear in admin mode via direct path
+    assert_includes normal_names, 'library.test'
+    assert_not_includes admin_names, 'library.test'
+  end
+
+  def test_listing_user_domains_count_returns_correct_count
+    user = users(:registrant)
+    count = Domain.listing_user_domains_count(user, [])
+
+    assert_equal Domain.listing_user_domains(user, [], admin: false).count, count
+  end
+
   def inactive_domain
     Setting.nameserver_required = true
     domain = @domain

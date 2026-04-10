@@ -197,6 +197,150 @@ ActiveRecord::Base.transaction do
     end
   end
 
+  # ============================================================
+  # Stale Fallback Testing Data (registrant_center#165)
+  # ============================================================
+  #
+  # TARA test user: MARY ANN O'CONNEZ-SUSLIK
+  #   Personal code: 60001019906
+  #   Phone (Mobile-ID): +37200000766
+  #
+  # Testing procedure:
+  #   1. Run this seed: rails runner db/seeds_mock.rb
+  #   2. Log into registrant center via TARA with 60001019906
+  #   3. Open /api/v1/registrant/domains?tech=init
+  #   4. You should see BOTH direct domains (maryann-*.ee) AND company-linked domains (acme-*.ee, globex-*.ee)
+  #   5. To simulate business registry outage: change company_register_password to invalid value and restart
+  #   6. Clear primary gem cache: Rails.cache.delete(gem_cache_key) — see below
+  #   7. Reload domains listing — company-linked domains should still appear (stale fallback)
+  #   8. After stale TTL expires (cache_period + 24h), company-linked domains will disappear
+  #
+  puts "=========================================="
+  puts "Setting up Stale Fallback Test Data..."
+  puts "=========================================="
+
+  # Use existing registrar (MOCKREG1) for test domains
+  test_registrar = Registrar.find_by!(code: "MOCKREG1")
+
+  # RegistrantUser matching TARA test ID
+  registrant_user = RegistrantUser.find_or_create_by!(registrant_ident: 'EE-60001019906') do |u|
+    u.username = "MARY ANN O'CONNEZ-SUSLIK"
+  end
+  registrant_user.update!(username: "MARY ANN O'CONNEZ-SUSLIK")
+  puts "  RegistrantUser: #{registrant_user.username} (#{registrant_user.registrant_ident})"
+
+  # PRIV contact matching user's ident — for direct domains
+  priv_contact = Registrant.find_or_create_by!(code: "TARA:PRIV:60001019906") do |c|
+    c.name = "MARY ANN O'CONNEZ-SUSLIK"
+    c.email = "maryann+mock@example.com"
+    c.phone = '+372.50000766'
+    c.registrar = test_registrar
+    c.country_code = 'EE'
+    c.city = 'Tallinn'
+    c.street = 'Test St 1'
+    c.zip = '10111'
+    c.ident_country_code = 'EE'
+    c.ident_type = 'priv'
+    c.ident = '60001019906'
+  end
+  puts "  PRIV contact: #{priv_contact.name} (ident=#{priv_contact.ident})"
+
+  # ORG contacts — for company-linked domains
+  # These registration numbers come from CompanyRegister demo endpoint
+  # for test user 60001019906 (test_mode: true in config/application.yml)
+  mock_companies = [
+    { reg_number: '12345678', name: 'Andmesilla DEMO OÜ', code: 'TARA:ORG:ANDMESILLA' },
+    { reg_number: '10112390', name: 'SAUTEC AS', code: 'TARA:ORG:SAUTEC' },
+    { reg_number: '10001880', name: 'OÜ Spider Autogrupp', code: 'TARA:ORG:SPIDER' },
+  ]
+
+  org_contacts = mock_companies.map do |company|
+    contact = Registrant.find_or_create_by!(code: company[:code]) do |c|
+      c.name = company[:name]
+      c.email = "#{company[:name].parameterize}+mock@example.com"
+      c.phone = generate_phone
+      c.registrar = test_registrar
+      c.country_code = 'EE'
+      c.city = 'Tallinn'
+      c.street = 'Business St 1'
+      c.zip = '10111'
+      c.ident_country_code = 'EE'
+      c.ident_type = 'org'
+      c.ident = company[:reg_number]
+    end
+    puts "  ORG contact: #{contact.name} (ident=#{contact.ident})"
+    contact
+  end
+
+  # Direct domains — owned by PRIV contact (always visible)
+  2.times do |i|
+    domain_name = "maryann-#{i+1}.#{zone_origin}"
+    domain = Domain.find_or_create_by!(name: domain_name) do |d|
+      d.registrar = test_registrar
+      d.registrant = priv_contact
+      d.period = 1
+      d.period_unit = 'y'
+      d.valid_to = 1.year.from_now
+      d.admin_contacts << priv_contact
+      d.tech_contacts << priv_contact
+      2.times do |j|
+        d.nameservers.build(
+          hostname: "ns#{j+1}.#{domain_name}",
+          ipv4: ["192.0.2.#{100+i*10+j}"],
+          ipv6: ["2001:db8::#{100+i*10+j}"]
+        )
+      end
+    end
+    puts "  Direct domain: #{domain.name} (registrant=#{priv_contact.name})" if domain.persisted?
+  end
+
+  # Company-linked domains — owned by ORG contacts (visible via company representation)
+  org_contacts.each_with_index do |org_contact, ci|
+    2.times do |i|
+      prefix = org_contact.name.split.first.downcase
+      domain_name = "#{prefix}-#{i+1}.#{zone_origin}"
+      domain = Domain.find_or_create_by!(name: domain_name) do |d|
+        d.registrar = test_registrar
+        d.registrant = org_contact
+        d.period = 1
+        d.period_unit = 'y'
+        d.valid_to = 1.year.from_now
+        d.admin_contacts << org_contact
+        d.tech_contacts << org_contact
+        2.times do |j|
+          d.nameservers.build(
+            hostname: "ns#{j+1}.#{domain_name}",
+            ipv4: ["192.0.2.#{200+ci*20+i*10+j}"],
+            ipv6: ["2001:db8::#{200+ci*20+i*10+j}"]
+          )
+        end
+      end
+      puts "  Company domain: #{domain.name} (registrant=#{org_contact.name})" if domain.persisted?
+    end
+  end
+
+  puts ""
+  puts "  Test data summary:"
+  puts "    User: EE-60001019906 (MARY ANN O'CONNEZ-SUSLIK)"
+  puts "    Direct domains: maryann-1.ee, maryann-2.ee"
+  puts "    Company domains (from demo business registry):"
+  puts "      andmesilla-1.ee, andmesilla-2.ee (Andmesilla DEMO OÜ, reg=12345678)"
+  puts "      sautec-1.ee, sautec-2.ee (SAUTEC AS, reg=10112390)"
+  puts "      spider-1.ee, spider-2.ee (OÜ Spider Autogrupp, reg=10001880)"
+  puts ""
+  puts "  Prerequisites:"
+  puts "    company_register_test_mode: 'true' in config/application.yml"
+  puts ""
+  puts "  Testing procedure:"
+  puts "    1. Run this seed: rails runner db/seeds_mock.rb"
+  puts "    2. Restart the app"
+  puts "    3. Log in via TARA with 60001019906 (+37200000766 for Mobile-ID)"
+  puts "    4. You should see 8 domains (2 direct + 6 company-linked)"
+  puts "    5. To simulate outage: set company_register_password to 'invalid' and restart"
+  puts "    6. Company-linked domains should still appear via stale cache"
+  puts "    7. After stale TTL expires (cache_period + 24h) they will disappear"
+  puts "=========================================="
+
   # Custom User requested by the user
   puts "Processing Custom Registrar: REG1..."
   custom_registrar = Registrar.find_or_create_by!(code: "REG1") do |r|
