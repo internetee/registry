@@ -57,21 +57,15 @@ module Admin
     end
 
     def show
-      @domain_deleted = false
-
       if params[:current]
         @domain = Domain.find(params[:domain_id] || params[:id])
       else
         @version = Version::DomainVersion.find(params[:id])
-        resolver = Admin::DomainVersionResolver.new(@version)
-        @domain = resolver.domain
-        @domain_deleted = resolver.deleted?
-        @deleted_domain_name = resolver.domain_name if @domain_deleted
-        @deleted_registrar = resolver.registrar if @domain_deleted
-        @deleted_registrar_id = resolver.registrar_id if @domain_deleted
+        @resolver = Version::DomainVersion::Resolver.new(@version)
+        @domain = @resolver.domain
       end
 
-      item_id = @version ? @version.item_id : @domain.id
+      item_id = @resolver&.item_id || @domain.id
       @versions = Version::DomainVersion.where(item_id: item_id).order(created_at: :desc, id: :desc)
       @versions_map = @versions.all.map(&:id)
 

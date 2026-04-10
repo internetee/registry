@@ -1,6 +1,7 @@
+- deleted = @resolver&.deleted?
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)
-  - version_timestamp = @domain.try(:updated_at) || @version.created_at
+  - version_timestamp = @domain.updated_at || @version.created_at
   - nameservers    = Nameserver.all_versions_for(children[:nameservers], version_timestamp)
   - dnskeys        = Dnskey.all_versions_for(children[:dnskeys], version_timestamp)
   - tech_contacts  = Contact.all_versions_for(children[:tech_contacts], version_timestamp)
@@ -34,28 +35,17 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t(:name)
-          - if @domain.name.present?
-            - domain_name = @domain.name
-          - else
-            - domain_name = @deleted_domain_name || 'N/A'
-          - if @domain_deleted
+          - domain_name = (@resolver ? @resolver.domain_name : @domain.name).presence || t('.unknown_name')
+          - if deleted
             %dd= domain_name
           - else
             %dd= link_to(domain_name, admin_domain_path(@version ? @version.item_id : @domain.id))
 
           %dt= t('.created')
-          %dd
-            - if @domain.try(:created_at)
-              = l(@domain.created_at, format: :short)
-            - else
-              = l(@version.created_at, format: :short)
+          %dd= l(@domain.created_at, format: :short)
 
           %dt= t('.updated')
-          %dd
-            - if @domain.try(:updated_at)
-              = l(@domain.updated_at, format: :short)
-            - else
-              = l(@version.created_at, format: :short)
+          %dd= l(@domain.updated_at, format: :short)
 
           %br
 
@@ -122,19 +112,17 @@
                 \...#{ns[:public_key].to_s[-20,20]}
             %br
 
-          - if !@domain_deleted && @domain.registrar
+          - registrar = @resolver ? @resolver.registrar : @domain.registrar
+          - registrar_id = @resolver ? @resolver.registrar_id : @domain.registrar&.id
+          - if registrar
             %dt= t(:registrar_name)
             %dd{class: changing_css_class(@version,"registrar_id")}
-              = link_to admin_registrar_path(@domain.registrar), target: "registrar_#{@domain.registrar.id}" do
-                = @domain.registrar.name
-          - elsif @domain_deleted && @deleted_registrar_id
+              = link_to admin_registrar_path(registrar), target: "registrar_#{registrar.id}" do
+                = registrar.name
+          - elsif registrar_id
             %dt= t(:registrar_name)
             %dd{class: changing_css_class(@version,"registrar_id")}
-              - if @deleted_registrar
-                = link_to admin_registrar_path(@deleted_registrar), target: "registrar_#{@deleted_registrar.id}" do
-                  = @deleted_registrar.name
-              - else
-                = "Registrar ID: #{@deleted_registrar_id}"
+              = "Registrar ID: #{registrar_id}"
           %span{:style => "margin: 20px 20px; clear:both;"}
 
         - if @version && (prev = @versions_map[(@versions_map.index(@version.id) - 1)]) && @versions_map.index(@version.id) != 0
@@ -155,7 +143,7 @@
   .col-md-4
     .panel.panel-default{:style => "min-height:450px;"}
       %ul.nav.nav-pills.nav-stacked
-        - unless @domain_deleted
+        - unless deleted
           %li{class: ('active' if @version.nil?)}
             = link_to t('.current_state'), admin_domain_version_path(current: 1, domain_id: @domain.id)
         - @versions.each do |vs|
