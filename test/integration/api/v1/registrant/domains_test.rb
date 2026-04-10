@@ -2,8 +2,6 @@ require 'test_helper'
 require 'auth_token/auth_token_creator'
 
 class RegistrantApiV1DomainsTest < ActionDispatch::IntegrationTest
-  CompanyStub = Struct.new(:registration_number, :company_name)
-
   setup do
     Rails.cache.clear
     @user = users(:registrant)
@@ -13,13 +11,13 @@ class RegistrantApiV1DomainsTest < ActionDispatch::IntegrationTest
 
   def test_get_default_counts_of_domains
     get api_v1_registrant_domains_path + "?tech=init", as: :json,
-    headers: { 'HTTP_AUTHORIZATION' => auth_token }
+        headers: { 'HTTP_AUTHORIZATION' => auth_token }
 
     assert_response :ok
 
     response_json = JSON.parse(response.body)
-    assert_equal response_json['count'], response_json['total']
-    assert response_json['total'] > 0
+    assert_equal 4, response_json['total']
+    assert_equal 4, response_json['count']
   end
 
   def test_get_default_counts_of_direct_domains
@@ -32,12 +30,11 @@ class RegistrantApiV1DomainsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
     response_json = JSON.parse(response.body)
-    assert response_json['total'] > 0
-    assert response_json['count'] > 0
+    assert_equal 4, response_json['total']
+    assert_equal 4, response_json['count']
   end
 
   def test_outage_with_stale_cache_returns_company_linked_domains
-    # Pre-populate stale cache with acme_ltd's registration number
     stale_key = "registrant/listing_company_codes_stale/v1/#{@user.id}"
     Rails.cache.write(stale_key, %w[1234567], expires_in: 1.hour)
 
@@ -64,7 +61,7 @@ class RegistrantApiV1DomainsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
     response_json = JSON.parse(response.body)
-    assert response_json['total'] > 0
+    assert_equal 4, response_json['total']
     domain_names = response_json['domains'].map { |d| d['name'] }
     assert_includes domain_names, 'shop.test'
   end
@@ -79,7 +76,7 @@ class RegistrantApiV1DomainsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
     response_json = JSON.parse(response.body)
-    assert response_json['total'] > 0
+    assert_equal 4, response_json['total']
     domain_names = response_json['domains'].map { |d| d['name'] }
     assert_includes domain_names, 'shop.test'
   end
@@ -94,24 +91,24 @@ class RegistrantApiV1DomainsTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
     response_json = JSON.parse(response.body)
-    assert response_json['total'] >= response_json['count']
+    assert_equal response_json['count'], response_json['total']
   end
 
   def test_resolver_called_once_per_request
     call_count = 0
-    original_new = ListingCompanyCodesResolver.method(:new)
-
-    ListingCompanyCodesResolver.define_singleton_method(:new) do |*args, **kwargs|
+    counting_factory = lambda do |user|
       call_count += 1
-      original_new.call(*args, **kwargs)
+      resolver = Object.new
+      resolver.define_singleton_method(:call) { [] }
+      resolver
     end
 
-    get api_v1_registrant_domains_path + "?tech=init", as: :json,
-        headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    ListingCompanyCodesResolver.stub(:new, counting_factory) do
+      get api_v1_registrant_domains_path + "?tech=init", as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    end
 
     assert_equal 1, call_count
-  ensure
-    ListingCompanyCodesResolver.define_singleton_method(:new, original_new)
   end
 
   def test_json_shape_preserved

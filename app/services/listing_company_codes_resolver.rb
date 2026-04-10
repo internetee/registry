@@ -1,6 +1,7 @@
 require 'net/http'
 require 'openssl'
 require 'socket'
+require 'httpi'
 
 class ListingCompanyCodesResolver
   CACHE_VERSION = 'v1'
@@ -10,21 +11,19 @@ class ListingCompanyCodesResolver
   # Network-level errors that indicate the business registry is unreachable.
   # The company_register gem does NOT wrap these into CompanyRegister::NotAvailableError —
   # depending on the HTTP adapter in use (HTTPI or Net::HTTP), raw errors bubble up.
-  # We treat all of them as "business registry is unavailable" and fall back to stale cache.
-  def self.network_error_classes
-    classes = [
-      Net::OpenTimeout,
-      Net::ReadTimeout,
-      Errno::ECONNREFUSED,
-      Errno::EHOSTUNREACH,
-      Errno::ENETUNREACH,
-      Errno::ETIMEDOUT,
-      SocketError,
-      OpenSSL::SSL::SSLError,
-    ]
-    classes << HTTPI::Error if defined?(HTTPI::Error)
-    classes
-  end
+  NETWORK_ERRORS = [
+    Net::OpenTimeout,
+    Net::ReadTimeout,
+    Errno::ECONNREFUSED,
+    Errno::EHOSTUNREACH,
+    Errno::ENETUNREACH,
+    Errno::ETIMEDOUT,
+    SocketError,
+    OpenSSL::SSL::SSLError,
+    HTTPI::Error,
+  ].freeze
+
+  attr_reader :user, :cache, :company_register, :logger
 
   def initialize(user, cache: Rails.cache, company_register: CompanyRegister::Client.new, logger: Rails.logger)
     @user = user
@@ -34,7 +33,7 @@ class ListingCompanyCodesResolver
   end
 
   def call
-    return [] if @user.ident.include?('-')
+    return [] if user.ident.include?('-')
 
     fetch_with_stale_fallback
   end
@@ -56,21 +55,21 @@ class ListingCompanyCodesResolver
   rescue CompanyRegister::SOAPFaultError
     log(:error, 'soap_fault_direct_only')
     []
-  rescue *self.class.network_error_classes => e
+  rescue *NETWORK_ERRORS => e
     log(:warn, 'network_error', error_class: e.class.name, error_message: e.message)
     stale_fallback
   end
 
   def resolve_company_codes
-    results = @company_register.representation_rights(
-      citizen_personal_code: @user.ident,
-      citizen_country_code: @user.country.alpha3
+    results = company_register.representation_rights(
+      citizen_personal_code: user.ident,
+      citizen_country_code: user.country.alpha3
     )
     results.map(&:registration_number).compact.uniq
   end
 
   def stale_fallback
-    cached_stale = @cache.read(stale_key)
+    cached_stale = cache.read(stale_key)
     if cached_stale
       log(:warn, 'stale_fallback')
       cached_stale
@@ -80,9 +79,12 @@ class ListingCompanyCodesResolver
     end
   end
 
+  # Stale-cache write is an observability concern, not the read path.
+  # Any cache backend failure (Redis down, memcache timeout, etc.) must not
+  # break the live lookup that already succeeded — we just lose the fallback
+  # for the next outage window and log it.
   def write_stale_cache(codes)
-    ttl = cache_ttl
-    @cache.write(stale_key, codes, expires_in: ttl + STALE_GRACE_PERIOD)
+    cache.write(stale_key, codes, expires_in: cache_ttl + STALE_GRACE_PERIOD)
   rescue StandardError => e
     log(:warn, 'cache_write_failed', error: e.message)
   end
@@ -98,10 +100,16 @@ class ListingCompanyCodesResolver
   end
 
   def stale_key
-    "registrant/listing_company_codes_stale/#{CACHE_VERSION}/#{@user.id}"
+    "registrant/listing_company_codes_stale/#{CACHE_VERSION}/#{user.id}"
   end
 
   def log(level, outcome, extra = {})
-    @logger.send(level, { user_id: @user.id, outcome: outcome }.merge(extra).to_json)
+    payload = { user_id: user.id, outcome: outcome }.merge(extra).to_json
+
+    case level
+    when :info then logger.info(payload)
+    when :warn then logger.warn(payload)
+    when :error then logger.error(payload)
+    end
   end
 end
