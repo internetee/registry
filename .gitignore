@@ -33,3 +33,6 @@ certs/
 Dockerfile.dev.v2
 CLAUDE.md
 .claude/
+.memory-bank
+AGENT.md
+own
