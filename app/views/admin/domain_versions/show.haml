@@ -34,10 +34,10 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t(:name)
-          - if !@domain.name
-            - domain_name = @version.try(:object).try(:[], 'name') || 'N/A'
-          - else
+          - if @domain.name.present?
             - domain_name = @domain.name
+          - else
+            - domain_name = @deleted_domain_name || 'N/A'
           - if @domain_deleted
             %dd= domain_name
           - else
@@ -127,16 +127,15 @@
             %dd{class: changing_css_class(@version,"registrar_id")}
               = link_to admin_registrar_path(@domain.registrar), target: "registrar_#{@domain.registrar.id}" do
                 = @domain.registrar.name
-          - elsif @domain_deleted && @version.try(:object).try(:[], 'registrar_id')
-            - registrar = Registrar.find_by(id: @version.object['registrar_id'])
+          - elsif @domain_deleted && @deleted_registrar_id
             %dt= t(:registrar_name)
             %dd{class: changing_css_class(@version,"registrar_id")}
-              - if registrar
-                = link_to admin_registrar_path(registrar), target: "registrar_#{registrar.id}" do
-                  = registrar.name
+              - if @deleted_registrar
+                = link_to admin_registrar_path(@deleted_registrar), target: "registrar_#{@deleted_registrar.id}" do
+                  = @deleted_registrar.name
               - else
-                = "Registrar ID: #{@version.object['registrar_id']}"
-            %span{:style => "margin: 20px 20px; clear:both;"}
+                = "Registrar ID: #{@deleted_registrar_id}"
+          %span{:style => "margin: 20px 20px; clear:both;"}
 
         - if @version && (prev = @versions_map[(@versions_map.index(@version.id) - 1)]) && @versions_map.index(@version.id) != 0
           = link_to(t(:previous),

@@ -137,4 +137,63 @@ class AdminAreaDomainVersionsControllerIntegrationTest < ApplicationIntegrationT
       get admin_domain_version_path(999999), params: { current: true }
     end
   end
+
+  def test_show_create_version_of_deleted_domain
+    deleted_item_id = 9_999_001
+    create_version = Version::DomainVersion.create!(
+      item_type: 'Domain',
+      item_id: deleted_item_id,
+      event: 'create',
+      whodunnit: users(:admin).id.to_s,
+      object: nil,
+      object_changes: {
+        'name' => [nil, 'ghost.test'],
+        'registrar_id' => [nil, @registrar.id],
+        'registrant_id' => [nil, contacts(:john).id],
+      },
+      created_at: Time.zone.parse('2024-01-01')
+    )
+
+    get admin_domain_version_path(create_version.id)
+
+    assert_response :ok
+    assert_includes response.body, 'ghost.test'
+    assert_includes response.body, @registrar.name
+  end
+
+  def test_show_update_version_of_deleted_domain
+    deleted_item_id = 9_999_002
+    Version::DomainVersion.create!(
+      item_type: 'Domain',
+      item_id: deleted_item_id,
+      event: 'create',
+      whodunnit: users(:admin).id.to_s,
+      object: nil,
+      object_changes: {
+        'name' => [nil, 'gone.test'],
+        'registrar_id' => [nil, @registrar.id],
+      },
+      created_at: Time.zone.parse('2024-01-01')
+    )
+    update_version = Version::DomainVersion.create!(
+      item_type: 'Domain',
+      item_id: deleted_item_id,
+      event: 'update',
+      whodunnit: users(:admin).id.to_s,
+      object: {
+        'name' => 'gone.test',
+        'registrar_id' => @registrar.id,
+      },
+      object_changes: {
+        'statuses' => [[], ['serverHold']],
+      },
+      created_at: Time.zone.parse('2024-02-01')
+    )
+
+    get admin_domain_version_path(update_version.id)
+
+    assert_response :ok
+    assert_includes response.body, 'gone.test'
+    assert_includes response.body, @registrar.name
+  end
 end
