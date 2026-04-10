@@ -3,6 +3,7 @@
 -- Dumped from database version 13.4 (Debian 13.4-4.pgdg110+1)
 -- Dumped by pg_dump version 13.23 (Debian 13.23-1.pgdg11+1)
 
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -5863,6 +5864,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260406125446'),
 ('20260529120000'),
 ('20260601120000'),
-('20260608120000');
-
+('20260608120000'),
+('20260410130124');
 
