@@ -85,6 +85,7 @@ module Api
           contact = Contact.find_by(uuid: uuid, ident: current_registrant_user.ident,
                                     ident_type: 'priv', ident_country_code: country)
           return contact if contact
+          return nil unless Setting.company_register_api_enabled
 
           Contact.find_by(uuid: uuid, ident_type: 'org', ident: company_codes,
                           ident_country_code: country)
@@ -97,6 +98,8 @@ module Api
         end
 
         def current_user_contacts
+          return current_registrant_user.direct_contacts unless Setting.company_register_api_enabled
+
           current_registrant_user.contacts(representable: false)
         rescue CompanyRegister::NotAvailableError
           current_registrant_user.direct_contacts

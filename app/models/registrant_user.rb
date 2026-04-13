@@ -18,7 +18,6 @@ class RegistrantUser < User
   end
 
   def companies(company_register = CompanyRegister::Client.new)
-    return [] unless Setting.company_register_api_enabled
     return [] if ident.include?('-')
 
     company_register.representation_rights(citizen_personal_code: ident,
