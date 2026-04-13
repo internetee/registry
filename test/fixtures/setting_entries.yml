@@ -501,3 +501,11 @@ validate_business_contacts:
   format: boolean
   created_at: <%= Time.zone.parse('2010-07-05') %>
   updated_at: <%= Time.zone.parse('2010-07-05') %>
+
+company_register_api_enabled:
+  code: company_register_api_enabled
+  value: 'true'
+  group: contacts
+  format: boolean
+  created_at: <%= Time.zone.parse('2010-07-05') %>
+  updated_at: <%= Time.zone.parse('2010-07-05') %>
