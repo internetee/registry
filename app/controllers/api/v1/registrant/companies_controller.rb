@@ -16,6 +16,8 @@ module Api
         end
 
         def current_user_companies
+          return [:ok, []] unless Setting.company_register_api_enabled
+
           [:ok, current_registrant_user.companies]
         rescue CompanyRegister::NotAvailableError
           [:service_unavailable, []]
