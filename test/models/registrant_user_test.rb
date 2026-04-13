@@ -81,6 +81,18 @@ class RegistrantUserTest < ActiveSupport::TestCase
     end
   end
 
+  def test_companies_returns_empty_when_company_register_api_disabled
+    Setting.company_register_api_enabled = 'false'
+
+    company_register = Minitest::Mock.new
+    result = @user.companies(company_register)
+
+    assert_equal [], result
+    company_register.verify
+  ensure
+    Setting.company_register_api_enabled = 'true'
+  end
+
   def test_queries_company_register_for_associated_companies
     assert_equal 'US-1234', @user.registrant_ident
 
