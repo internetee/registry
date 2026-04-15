@@ -1,5 +1,5 @@
 class NotifyAccreditationAdminsAndRegistrarsJob < ApplicationJob
-  MONTH_BEFORE = 5.minutes.freeze
+  MONTH_BEFORE = 1.month.freeze
 
   def perform
     notify_month_before
