@@ -7,7 +7,7 @@
         <thead>
             <tr>
                 <th class="col-xs-6"><%= ApiUser.human_attribute_name :username %></th>
-                <th class="col-xs-6"><%= ApiUser.human_attribute_name :active %></th>
+                <th class="col-xs-6 text-right"><%= ApiUser.human_attribute_name :active %></th>
             </tr>
         </thead>
 
@@ -15,7 +15,7 @@
             <% registrar.api_users.each do |api_user| %>
                 <tr>
                     <td><%= link_to api_user, admin_registrar_api_user_path(registrar, api_user) %></td>
-                    <td><%= api_user.active %></td>
+                    <td class="text-right"><%= api_user.active %></td>
                 </tr>
             <% end %>
         </tbody>
