@@ -16,7 +16,7 @@ module Eeid
         return render_unauthorized unless ip_allowed?(request.remote_ip)
 
         contact = Contact.find_by_code(permitted_params[:reference])
-        # return render_invalid_signature unless valid_hmac_signature?(contact.ident_type, request.headers['X-HMAC-Signature'])
+        return render_invalid_signature unless valid_hmac_signature?(contact.ident_type, request.headers['X-HMAC-Signature'])
 
         poi = catch_poi(contact)
         verify_contact(contact)
