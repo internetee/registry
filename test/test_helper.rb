@@ -57,6 +57,8 @@ class ActiveSupport::TestCase
   fixtures :all
   set_fixture_class log_domains: Version::DomainVersion
 
+  parallelize(workers: :number_of_processors)
+
   teardown do
     travel_back
   end
