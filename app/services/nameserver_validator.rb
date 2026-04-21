@@ -11,11 +11,9 @@ module NameserverValidator
     result_response = validate(domain_name: domain_name, hostname: nameserver.hostname)
 
     unless result_response[:result] && result_response[:reason] == :exception
-      if result_response[:error_info].to_s.include? "Nameserver invalid!"
+      if result_response[:error_info].to_s.include? 'Nameserver invalid!'
         if nameserver.ipv4.present?
           result_response = validate(domain_name: domain_name, hostname: nameserver.ipv4)
-        # elsif nameserver.ipv6.present?
-        #   result_response = validate(domain_name: domain_name, hostname: nameserver.ipv6)
         end
 
         return { result: false, reason: 'glup record' } unless result_response[:result]
