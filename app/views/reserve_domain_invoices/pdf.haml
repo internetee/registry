@@ -1,39 +1,212 @@
-%html{ lang: I18n.locale.to_s }
+%html{lang: I18n.locale.to_s}
   %head
-    %meta{ charset: 'utf-8' }
+    %meta{charset: "utf-8"}
     :css
-      body { font-family: sans-serif; font-size: 12px; }
-      h1 { margin: 0 0 10px 0; font-size: 18px; }
-      .muted { color: #666; }
-      .row { margin: 8px 0; }
-      table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-      th, td { border-bottom: 1px solid #ddd; padding: 6px; text-align: left; }
-      th { background: #f7f7f7; }
-      .right { text-align: right; }
+      .container {
+        margin: auto;
+        font-size: 12px;
+      }
+
+      .col-md-12 {
+
+      }
+
+      .col-md-6 {
+        width: 49%;
+        display: inline-block;
+      }
+
+      .col-xs-4 {
+        width: 33%;
+      }
+
+      .col-xs-2 {
+        width: 16%;
+      }
+
+      .col-md-3 {
+        width: 24%;
+        display: inline-block;
+      }
+
+      .left {
+        float: left;
+      }
+
+      .left {
+        padding-right: 5px;
+      }
+
+      .right {
+        float: right;
+      }
+
+      .text-right {
+        text-align: right;
+      }
+
+      dt {
+        float: left;
+        width: 100px;
+        clear: left;
+        text-align: right;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: bold;
+        line-height: 1.42857;
+      }
+
+      dd {
+        margin-left: 120px;
+        line-height: 1.42857;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+
+      th {
+        text-align: left;
+        border: 0px;
+        border-top: 1px solid #DDD;
+        padding: 6px;
+      }
+
+      thead th {
+        border-bottom: 2px solid #DDD;
+        border-top: 0px;
+      }
+
+      td {
+        border-top: 1px solid #DDD;
+      }
+
+      td {
+        padding: 6px;
+      }
+
+      .no-border {
+        border: 0px;
+      }
+
+      hr {
+        height: 1px;
+        border: 0;
+        color: #DDD;
+        background-color: #DDD;
+      }
+
+      .clear {
+        clear: both;
+      }
+
+      .pull-down {
+        margin-top: 50px;
+      }
+
+      #header {
+        position: relative;
+        min-height: 100px;
+      }
+
+      img {
+        width: 106px;
+        height: 102px;
+      }
+
+      #header-content {
+        position: absolute;
+        bottom: 0;
+      }
+
+      #footer {
+        position: absolute;
+        bottom: 0px;
+        width: 99%;
+      }
+
+      h1 {
+        margin-bottom: 5px;
+      }
   %body
-    %h1 Invoice #{@invoice.invoice_number}
-    .row.muted
-      Generated at #{I18n.l(Time.zone.now)}
+    .container
+      #header.row
+        .col-sm-6.left
+          #header-content
+            %h1
+              = "Invoice #{@invoice.invoice_number}"
+        .col-sm-6.right
+          %img{src: "#{Rails.root}/public/eis-logo-black-et.png"}
+      .clear
+      %hr
+      .row
+        .col-md-6.left
+          %h4 Details
+          %hr
+          %dl.dl-horizontal
+            %dt= t(:invoice_number)
+            %dd= @invoice.invoice_number
 
-    .row
-      %strong User unique id:
-      = @invoice.metainfo
+            %dt User unique id
+            %dd= @invoice.metainfo
 
-    .row
-      %strong Reserved domains:
+            %dt Generated at
+            %dd= l(Time.zone.now)
 
-    %table
-      %thead
-        %tr
-          %th Domain
-          %th.right Price
-      %tbody
-        - @invoice.domain_names.each do |name|
-          %tr
-            %td= name
-            %td.right= number_to_currency(ReserveDomainInvoice::DEFAULT_AMOUNT)
-      %tfoot
-        %tr
-          %th.right Total
-          %th.right= number_to_currency(@invoice.total)
+      .clear
+      .row.pull-down
+        .col-md-12
+          .table-responsive
+            %table.table.table-hover.table-condensed
+              %thead
+                %tr
+                  %th{class: 'col-xs-4'}= t(:description)
+                  %th{class: 'col-xs-2 text-right'}= t(:price)
+              %tbody
+                - @invoice.domain_names.each do |name|
+                  %tr
+                    %td= name
+                    %td.text-right= number_to_currency(ReserveDomainInvoice::DEFAULT_AMOUNT)
+              %tfoot
+                %tr
+                  %th.no-border
+                  %th= t(:total)
+                  %td.text-right= number_to_currency(@invoice.total)
 
+      #footer
+        %hr
+        .row
+          .col-md-3.left
+            = Setting.registry_juridical_name
+            %br
+            = [Setting.registry_street, Setting.registry_city, Setting.registry_state, Setting.registry_zip].reject(&:blank?).join(', ')
+            %br
+            = Country.new(Setting.registry_country_code).try(:to_s)
+            %br
+            = "#{t('reg_no')} #{Setting.registry_reg_no}"
+            %br
+            = "#{Registrar.human_attribute_name :vat_no} #{Setting.registry_vat_no}"
+
+          .col-md-3.left
+            = Setting.registry_phone
+            %br
+            = Setting.registry_email
+            %br
+            = Setting.registry_url
+
+          .col-md-3.text-right.left
+            = t(:bank)
+            %br
+            = t(:iban)
+            %br
+            = t(:swift)
+
+          .col-md-3.left
+            = Setting.registry_bank
+            %br
+            = Setting.registry_iban
+            %br
+            = Setting.registry_swift
