@@ -1,0 +1,39 @@
+%html{ lang: I18n.locale.to_s }
+  %head
+    %meta{ charset: 'utf-8' }
+    :css
+      body { font-family: sans-serif; font-size: 12px; }
+      h1 { margin: 0 0 10px 0; font-size: 18px; }
+      .muted { color: #666; }
+      .row { margin: 8px 0; }
+      table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+      th, td { border-bottom: 1px solid #ddd; padding: 6px; text-align: left; }
+      th { background: #f7f7f7; }
+      .right { text-align: right; }
+  %body
+    %h1 Invoice #{@invoice.invoice_number}
+    .row.muted
+      Generated at #{I18n.l(Time.zone.now)}
+
+    .row
+      %strong User unique id:
+      = @invoice.metainfo
+
+    .row
+      %strong Reserved domains:
+
+    %table
+      %thead
+        %tr
+          %th Domain
+          %th.right Price
+      %tbody
+        - @invoice.domain_names.each do |name|
+          %tr
+            %td= name
+            %td.right= number_to_currency(ReserveDomainInvoice::DEFAULT_AMOUNT)
+      %tfoot
+        %tr
+          %th.right Total
+          %th.right= number_to_currency(@invoice.total)
+

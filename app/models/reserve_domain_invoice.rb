@@ -180,6 +180,11 @@ class ReserveDomainInvoice < ApplicationRecord
     EisBilling::GetReservedDomainsInvoiceStatus.call(invoice_number: invoice_number, user_unique_id: metainfo)
   end
 
+  def as_pdf
+    generator = PDFKit.new(pdf_html, { enable_local_file_access: true })
+    generator.to_pdf
+  end
+
   def create_paid_reserved_domains
     domain_names.map do |name| 
       next if ReservedDomain.find_by(name: name).present?
@@ -204,5 +209,18 @@ class ReserveDomainInvoice < ApplicationRecord
         { name: name, status: 'expired' }
       end
     end
+  end
+
+  def total
+    domain_names.count * DEFAULT_AMOUNT
+  end
+
+  private
+
+  def pdf_html
+    ApplicationController.render(
+      template: 'reserve_domain_invoices/pdf',
+      assigns: { invoice: self }
+    )
   end
 end
