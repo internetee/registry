@@ -46,6 +46,10 @@
         text-align: right;
       }
 
+      .text-center {
+        text-align: center;
+      }
+
       dt {
         float: left;
         width: 140px;
@@ -183,24 +187,19 @@
                     %td.text-right= eur.(row[:price])
               %tfoot
                 %tr
-                  %th.no-border{colspan: 2}
-                  %th Ridade summa
+                  %th.no-border.text-right{colspan: 2} Ridade summa
                   %td.text-right= eur.(@pdf.rows_sum)
                 %tr
-                  %th.no-border{colspan: 2}
-                  %th= "Käibemaks #{number_to_percentage(@pdf.vat_rate * 100, precision: 0)}"
+                  %th.no-border.text-right{colspan: 2}= "Käibemaks #{number_to_percentage(@pdf.vat_rate * 100, precision: 0)}"
                   %td.text-right= eur.(@pdf.vat_amount)
                 %tr
-                  %th.no-border{colspan: 2}
-                  %th Summa kokku
+                  %th.no-border.text-right{colspan: 2} Summa kokku
                   %td.text-right= eur.(@pdf.grand_total)
                 %tr
-                  %th.no-border{colspan: 2}
-                  %th Tasutud summa
+                  %th.no-border.text-right{colspan: 2} Tasutud summa
                   %td.text-right= eur.(@pdf.amount_paid)
                 %tr
-                  %th.no-border{colspan: 2}
-                  %th Enammakstud / tagastatav summa
+                  %th.no-border.text-right{colspan: 2} Enammakstud / tagastatav summa
                   %td.text-right= eur.(@pdf.overpaid)
 
       #footer
@@ -209,15 +208,13 @@
           .col-md-3.left
             = Setting.registry_juridical_name
             %br
-            = [Setting.registry_street, Setting.registry_city, Setting.registry_state, Setting.registry_zip].reject(&:blank?).join(', ')
-            %br
-            = Country.new(Setting.registry_country_code).try(:to_s)
+            = [Setting.registry_street, Setting.registry_city].reject(&:blank?).join(', ')
             %br
             = "#{t('reg_no')} #{Setting.registry_reg_no}"
             %br
             = "#{Registrar.human_attribute_name :vat_no} #{Setting.registry_vat_no}"
 
-          .col-md-3.left
+          .col-md-3.left.text-center
             = Setting.registry_phone
             %br
             = Setting.registry_email
