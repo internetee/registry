@@ -1,3 +1,4 @@
+- eur = ->(value) { "#{format('%.2f', value).tr('.', ',')} EUR" }
 %html{lang: I18n.locale.to_s}
   %head
     %meta{charset: "utf-8"}
@@ -47,7 +48,7 @@
 
       dt {
         float: left;
-        width: 100px;
+        width: 140px;
         clear: left;
         text-align: right;
         overflow: hidden;
@@ -58,7 +59,7 @@
       }
 
       dd {
-        margin-left: 120px;
+        margin-left: 160px;
         line-height: 1.42857;
       }
 
@@ -104,7 +105,7 @@
       }
 
       .pull-down {
-        margin-top: 50px;
+        margin-top: 40px;
       }
 
       #header {
@@ -136,45 +137,75 @@
       #header.row
         .col-sm-6.left
           #header-content
-            %h1
-              = "Invoice #{@invoice.invoice_number}"
+            %h1= "Arve #{@pdf.invoice.invoice_number}"
         .col-sm-6.right
           %img{src: "#{Rails.root}/public/eis-logo-black-et.png"}
       .clear
       %hr
       .row
         .col-md-6.left
-          %h4 Details
-          %hr
           %dl.dl-horizontal
-            %dt= t(:invoice_number)
-            %dd= @invoice.invoice_number
+            %dt Arve kuupäev
+            %dd= l(@pdf.invoice_date)
 
-            %dt User unique id
-            %dd= @invoice.metainfo
+            %dt Kasutaja unikaalne ID
+            %dd= @pdf.invoice.metainfo
 
-            %dt Generated at
-            %dd= l(Time.zone.now)
+            - if @pdf.payment_date
+              %dt Makse kuupäev
+              %dd= l(@pdf.payment_date)
+
+        .col-md-6.right
+          %h4 Arve saaja
+          %hr
+          - if @pdf.private_individual?
+            %p eraisik
+          - else
+            %p= @pdf.customer_name.presence || '[Kliendi nimi]'
+            %p= @pdf.customer_address.presence || '[Kliendi aadress]'
+            %p
+              KMKR / VAT nr
+              = @pdf.customer_vat_no.presence || '[Kliendi VAT number]'
 
       .clear
       .row.pull-down
         .col-md-12
+          %h4 Domeeninimede broneerimine
           .table-responsive
             %table.table.table-hover.table-condensed
               %thead
                 %tr
-                  %th{class: 'col-xs-4'}= t(:description)
-                  %th{class: 'col-xs-2 text-right'}= t(:price)
+                  %th{class: 'col-xs-4'} Domeeninimi
+                  %th{class: 'col-xs-2'} Staatus
+                  %th{class: 'col-xs-2 text-right'} Summa
               %tbody
-                - @invoice.domain_names.each do |name|
+                - @pdf.rows.each do |row|
                   %tr
-                    %td= name
-                    %td.text-right= number_to_currency(ReserveDomainInvoice::DEFAULT_AMOUNT)
+                    %td= row[:name]
+                    %td= row[:reserved] ? 'Reserveeritud' : 'Reserveerimine ebaõnnestus'
+                    %td.text-right= eur.(row[:price])
               %tfoot
                 %tr
-                  %th.no-border
-                  %th= t(:total)
-                  %td.text-right= number_to_currency(@invoice.total)
+                  %th.no-border{colspan: 2}
+                  %th Ridade summa
+                  %td.text-right= eur.(@pdf.rows_sum)
+                %tr
+                  %th.no-border{colspan: 2}
+                  %th= "Käibemaks #{number_to_percentage(@pdf.vat_rate * 100, precision: 0)}"
+                  %td.text-right= eur.(@pdf.vat_amount)
+                %tr
+                  %th.no-border{colspan: 2}
+                  %th Summa kokku
+                  %td.text-right= eur.(@pdf.grand_total)
+                - if @pdf.amount_paid
+                  %tr
+                    %th.no-border{colspan: 2}
+                    %th Tasutud summa
+                    %td.text-right= eur.(@pdf.amount_paid)
+                  %tr
+                    %th.no-border{colspan: 2}
+                    %th Enammakstud / tagastatav summa
+                    %td.text-right= eur.(@pdf.overpaid)
 
       #footer
         %hr

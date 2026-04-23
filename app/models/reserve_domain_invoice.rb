@@ -180,9 +180,8 @@ class ReserveDomainInvoice < ApplicationRecord
     EisBilling::GetReservedDomainsInvoiceStatus.call(invoice_number: invoice_number, user_unique_id: metainfo)
   end
 
-  def as_pdf
-    generator = PDFKit.new(pdf_html, { enable_local_file_access: true })
-    generator.to_pdf
+  def as_pdf(context = {})
+    PdfGenerator.new(self, context).as_pdf
   end
 
   def create_paid_reserved_domains
@@ -211,16 +210,4 @@ class ReserveDomainInvoice < ApplicationRecord
     end
   end
 
-  def total
-    domain_names.count * DEFAULT_AMOUNT
-  end
-
-  private
-
-  def pdf_html
-    ApplicationController.render(
-      template: 'reserve_domain_invoices/pdf',
-      assigns: { invoice: self }
-    )
-  end
 end
