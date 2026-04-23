@@ -148,9 +148,6 @@
             %dt Arve kuupäev
             %dd= l(@pdf.invoice_date)
 
-            %dt Kasutaja unikaalne ID
-            %dd= @pdf.invoice.metainfo
-
             - if @pdf.payment_date
               %dt Makse kuupäev
               %dd= l(@pdf.payment_date)
@@ -197,15 +194,14 @@
                   %th.no-border{colspan: 2}
                   %th Summa kokku
                   %td.text-right= eur.(@pdf.grand_total)
-                - if @pdf.amount_paid
-                  %tr
-                    %th.no-border{colspan: 2}
-                    %th Tasutud summa
-                    %td.text-right= eur.(@pdf.amount_paid)
-                  %tr
-                    %th.no-border{colspan: 2}
-                    %th Enammakstud / tagastatav summa
-                    %td.text-right= eur.(@pdf.overpaid)
+                %tr
+                  %th.no-border{colspan: 2}
+                  %th Tasutud summa
+                  %td.text-right= eur.(@pdf.amount_paid)
+                %tr
+                  %th.no-border{colspan: 2}
+                  %th Enammakstud / tagastatav summa
+                  %td.text-right= eur.(@pdf.overpaid)
 
       #footer
         %hr

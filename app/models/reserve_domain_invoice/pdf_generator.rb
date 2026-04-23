@@ -1,7 +1,6 @@
 class ReserveDomainInvoice
   class PdfGenerator
-    attr_reader :invoice, :customer_name, :customer_address, :customer_vat_no,
-                :amount_paid, :payment_date
+    attr_reader :invoice, :customer_name, :customer_address, :customer_vat_no, :payment_date
 
     def initialize(invoice, context = {})
       @invoice = invoice
@@ -11,6 +10,10 @@ class ReserveDomainInvoice
       @private_individual = context[:private_individual]
       @amount_paid = context[:amount_paid]
       @payment_date = context[:payment_date]
+    end
+
+    def amount_paid
+      @amount_paid || grand_total
     end
 
     def as_pdf
@@ -38,8 +41,6 @@ class ReserveDomainInvoice
     end
 
     def overpaid
-      return unless amount_paid
-
       (amount_paid.to_f - grand_total).round(2)
     end
 
