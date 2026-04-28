@@ -57,27 +57,9 @@ module Repp
           }
 
           if registrar.save
-            notify_registrar(registrar)
-            notify_admins(registrar)
             render_success(message: 'Accreditation info successfully added', data: data)
           else
             handle_non_epp_errors(registrar)
-          end
-        end
-
-        def notify_registrar(registrar)
-          AccreditationMailer.test_was_successfully_passed_registrar(registrar.email).deliver_now
-        end
-
-        def notify_admins(registrar)
-          admin_users_emails = User.all.reject { |u| u.roles.nil? }
-                                   .select { |u| u.roles.include? 'admin' }.pluck(:email)
-
-          admin_users_emails.compact!
-          return if admin_users_emails.empty?
-
-          admin_users_emails.each do |email|
-            AccreditationMailer.test_was_successfully_passed_admin(email, registrar).deliver_now
           end
         end
 
