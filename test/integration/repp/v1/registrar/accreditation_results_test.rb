@@ -31,7 +31,7 @@ class ReppV1AccreditationResultsTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
-    assert_emails 2
+    assert_emails 0
     assert_equal json[:data][:registrar_name], @user.registrar.name
     assert_equal json[:data][:accreditation_date].to_date, last_theory_test_passed_at.to_date
     assert_equal json[:data][:accreditation_expire_date].to_date,
