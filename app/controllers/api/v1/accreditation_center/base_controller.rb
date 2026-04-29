@@ -4,7 +4,7 @@ module Api
   module V1
     module AccreditationCenter
       class BaseController < ActionController::API
-        before_action :check_feature_enabled, :authenticate_user
+        before_action :check_feature_enabled, :check_ip_whitelist, :authenticate_user
 
         rescue_from ActiveRecord::RecordNotFound, with: :show_not_found_error
         rescue_from ActiveRecord::RecordInvalid, with: :show_invalid_record_error
@@ -64,6 +64,24 @@ module Api
                         data: data || {} }
 
           render(json: @response, status: :ok)
+        end
+
+        def check_ip_whitelist
+          Rails.logger.debug "[check_ip_whitelist] Request IP: #{request.ip}"
+          return if ip_allowed?(request.ip) || Rails.env.development?
+
+          render_error('Not authorized', :unauthorized)
+        end
+
+        def ip_allowed?(ip)
+          allowed_ips = ENV['accreditation_center_allowed_ips'].to_s.split(',').map(&:strip)
+          allowed_ips.any? do |entry|
+            begin
+              IPAddr.new(entry).include?(ip)
+            rescue IPAddr::InvalidAddressError
+              ip == entry
+            end
+          end
         end
       end
     end
