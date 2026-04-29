@@ -70,7 +70,7 @@ module Api
           Rails.logger.debug "[check_ip_whitelist] Request IP: #{request.ip}"
           return if ip_allowed?(request.ip) || Rails.env.development?
 
-          render_error('Not authorized', :unauthorized)
+          render_error("IP address #{request.ip} is not authorized", :unauthorized)
         end
 
         def ip_allowed?(ip)
