@@ -8,12 +8,11 @@ class ReserveDomainInvoice
       @customer_address = context[:customer_address]
       @customer_vat_no = context[:customer_vat_no]
       @private_individual = context[:private_individual]
-      @amount_paid = context[:amount_paid]
       @payment_date = context[:payment_date]
     end
 
     def amount_paid
-      @amount_paid || grand_total
+      grand_total
     end
 
     def as_pdf
@@ -21,7 +20,7 @@ class ReserveDomainInvoice
     end
 
     def rows
-      invoice.domain_names.map { |name| { name: name, reserved: true, price: ReserveDomainInvoice::DEFAULT_AMOUNT } }
+      invoice.domain_names.map { |name| { name: name, reserved: true, price: net_price_per_domain } }
     end
 
     def rows_sum
@@ -33,15 +32,11 @@ class ReserveDomainInvoice
     end
 
     def vat_amount
-      (rows_sum * vat_rate).round(2)
+      (grand_total - rows_sum).round(2)
     end
 
     def grand_total
-      (rows_sum + vat_amount).round(2)
-    end
-
-    def overpaid
-      (amount_paid.to_f - grand_total).round(2)
+      (invoice.domain_names.size * ReserveDomainInvoice::DEFAULT_AMOUNT).round(2)
     end
 
     def invoice_date
@@ -53,6 +48,10 @@ class ReserveDomainInvoice
     end
 
     private
+
+    def net_price_per_domain
+      (ReserveDomainInvoice::DEFAULT_AMOUNT / (1 + vat_rate)).round(2)
+    end
 
     def html
       ApplicationController.render(template: 'reserve_domain_invoices/pdf', assigns: { pdf: self })

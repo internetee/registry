@@ -26,7 +26,6 @@ module Api
             customer_address: params[:customer_address].presence,
             customer_vat_no: params[:customer_vat_no].presence,
             private_individual: ActiveModel::Type::Boolean.new.cast(params[:private_individual]),
-            amount_paid: params[:amount_paid].presence&.to_d,
             payment_date: parse_date(params[:payment_date])
           }
         end
