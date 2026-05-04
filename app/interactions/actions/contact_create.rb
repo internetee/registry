@@ -85,7 +85,6 @@ module Actions
 
     def maybe_company_is_relevant
       return true unless Setting.validate_business_contacts
-      return true if ENV['allow_validate_business_contacts'] && ENV['allow_validate_business_contacts'] == 'false'
       return true unless contact.org?
       return true unless contact.ident_country_code == 'EE'
 
