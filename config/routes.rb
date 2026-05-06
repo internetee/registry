@@ -183,6 +183,7 @@ Rails.application.routes.draw do
       namespace :business_registry do
         get 'domain_names/:organization_name', to: 'domain_names#show', as: 'domain_names'
         get 'long_reserve_domains_status', to: 'long_reserve_domains_status#show', as: 'long_reserve_domains_status'
+        get 'reserved_domains_invoice_pdf', to: 'reserved_domains_invoice_pdf#show', as: 'reserved_domains_invoice_pdf'
         post 'reserve_domains', to: 'reserve_domains#create', as: 'reserve_domains'
         get 'reserve_domains/:user_unique_id', to: 'reserve_domains#show', as: 'reserve_domains_data'
         post 'long_reserve_domains', to: 'long_reserve_domains#create', as: 'long_reserve_domains'
@@ -208,13 +209,9 @@ Rails.application.routes.draw do
       namespace :accreditation_center do
         # At the moment invoice_status endpoint returns only cancelled invoices. But in future logic of this enpoint can change.
         # And it will need to return invoices of different statuses. I decided to leave the name of the endpoint "invoice_status"
-        resources :invoice_status, only: [ :index ]
-        resource :domains, only: [ :show ], param: :name
-        resource :contacts, only: [ :show ], param: :id
-        resource :results, only: [ :show ], param: :name
-        # resource :auth, only: [ :index ]
-        get 'show_api_user', to: 'results#show_api_user'
-        get 'list_accreditated_api_users', to: 'results#list_accreditated_api_users'
+        resources :invoice_status, only: [:index]
+        resource :domains, only: [:show], param: :name
+        resource :contacts, only: [:show], param: :id
         get 'auth', to: 'auth#index'
       end
 

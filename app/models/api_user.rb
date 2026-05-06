@@ -59,16 +59,6 @@ class ApiUser < User
     username
   end
 
-  def accredited?
-    !accreditation_date.nil?
-  end
-
-  def accreditation_expired?
-    return false if accreditation_expire_date.nil?
-
-    accreditation_expire_date < Time.zone.now
-  end
-
   def unread_notifications
     registrar.notifications.unread
   end
@@ -105,15 +95,13 @@ class ApiUser < User
       identity_code,
       roles.join(', '),
       active,
-      accredited?,
-      accreditation_expire_date,
       created_at, updated_at
     ]
   end
 
   def self.csv_header
-    ['Username', 'Password', 'Identity Code', 'Role', 'Active', 'Accredited',
-     'Accreditation Expire Date', 'Created', 'Updated']
+    ['Username', 'Password', 'Identity Code', 'Role', 'Active',
+     'Created', 'Updated']
   end
 
   def self.ransackable_associations(*)

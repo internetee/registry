@@ -160,9 +160,9 @@ release_domains_to_auction: 'true'
 auction_api_allowed_ips: '' # 192.0.2.0, 192.0.2.1
 
 action_mailer_default_protocol: # default: http
-action_mailer_default_host:
+action_mailer_default_host: 'registry.staging'
 action_mailer_default_port: # default: no port (80)
-action_mailer_default_from: # no-reply@example.com
+action_mailer_default_from: 'no-reply@registry.staging'
 action_mailer_force_delete_from: # `From` header for `DomainDeleteMailer#forced` email
 
 lhv_p12_keystore:
@@ -273,3 +273,13 @@ ident_service_client_secret: 321
 business_registry_allowed_origins: "http://registry.test,https://registry.test"
 business_registry_allowed_ips: "127.0.0.1,0.0.0.0,192.168.65.1"
 business_registry_api_tokens: "token1,token2"
+
+staging:
+  action_mailer_default_host: 'registry.staging.test'
+  action_mailer_default_from: 'no-reply@registry.staging.test'
+  action_mailer_force_delete_from: 'legal@registry.staging.test'
+
+staging:
+  action_mailer_default_host: 'registry.staging.test'
+  action_mailer_default_from: 'no-reply@registry.staging.test'
+  action_mailer_force_delete_from: 'legal@registry.staging.test'

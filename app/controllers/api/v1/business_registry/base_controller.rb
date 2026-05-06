@@ -3,10 +3,22 @@ module Api
     module BusinessRegistry
       class BaseController < ::Api::V1::BaseController
         class AuthorizationError < StandardError; end
-        
+
+        BILLING_NETWORK_ERRORS = [
+          Net::OpenTimeout,
+          Net::ReadTimeout,
+          Errno::ECONNREFUSED,
+          Errno::EHOSTUNREACH,
+          SocketError,
+          OpenSSL::SSL::SSLError,
+          EOFError,
+          IOError
+        ].freeze
+
         before_action :authenticate_token!
-        
+
         rescue_from AuthorizationError, with: :render_unauthorized
+        rescue_from(*BILLING_NETWORK_ERRORS, with: :render_billing_unavailable)
         
         def render_error(message, status, details = nil)
           error_response = { error: message }
@@ -42,6 +54,11 @@ module Api
 
         def render_unauthorized
           render_error('Unauthorized', :unauthorized)
+        end
+
+        def render_billing_unavailable(exception)
+          Rails.logger.error("Billing service unreachable: #{exception.class} #{exception.message}")
+          render_error('Billing service unavailable', :bad_gateway, { reason: exception.class.to_s })
         end
       end
     end

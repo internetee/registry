@@ -18,6 +18,7 @@ module Actions
       ::Actions::BaseAction.maybe_attach_legal_doc(domain, params[:legal_document])
 
       ask_registrant_verification
+      maybe_validate_phone_number
 
       commit
     end
@@ -297,6 +298,10 @@ module Actions
 
     def true?(obj)
       obj.to_s.downcase == 'true'
+    end
+
+    def maybe_validate_phone_number
+      OrgRegistrantPhoneCheckerJob.perform_later(type: 'single', registrant_user_code: domain.registrant.code)
     end
   end
 end

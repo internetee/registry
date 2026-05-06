@@ -37,6 +37,13 @@ en:
           header: Whitelisted IPs
           new_btn: New whitelisted IP
 
+        accreditation:
+          header: Accreditation
+          accreditation_not_accredited: Not accredited
+          accreditation_expired: Expired
+          accreditation_expires_soon: Expires soon
+          accreditation_accredited: Accredited
+
       edit:
         header: Edit registrar
 

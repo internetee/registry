@@ -117,11 +117,13 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
     assert_equal 'Payment received', json_response['message']
     
     # Проверяем структуру reserved_domains
-    reserved_domain = json_response['reserved_domains'].first
+    reserved_domain = json_response['reserved_domains'].find { |d| d['status'] == 'reserved' }
+    assert_not_nil reserved_domain
     assert_not_nil reserved_domain['name']
     assert_not_nil reserved_domain['password']
     assert_not_nil reserved_domain['expire_at']
-    
+    assert_equal 'reserved', reserved_domain['status']
+
     # Проверяем, что expire_at установлен на 1 год
     expire_at = Time.parse(reserved_domain['expire_at'])
     assert_in_delta Time.current + ReservedDomain::PAID_RESERVATION_EXPIRY, expire_at, 5.seconds

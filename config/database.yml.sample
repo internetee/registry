@@ -16,8 +16,13 @@ default: &default
 #
 
 staging:
-  <<: *default
-  database: registry_staging
+  primary:
+    <<: *default
+    database: registry_staging
+  primary_replica:
+    <<: *default
+    database: registry_staging
+    replica: true
 
 demo:
   <<: *default

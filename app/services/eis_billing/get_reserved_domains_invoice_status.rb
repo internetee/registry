@@ -24,7 +24,11 @@ module EisBilling
     end
 
     def wrap_result(result)
-      parsed_result = JSON.parse(result.body)
+      parsed_result = begin
+                        JSON.parse(result.body)
+                      rescue JSON::ParserError
+                        {}
+                      end
 
       Struct.new(:message, :status, :paid?, :status_code_success, :invoice_number, :details)
         .new(parsed_result['message'], parsed_result['invoice_status'], parsed_result['invoice_status'] == PAID, result.code == OK || result.code == CREATED, parsed_result['invoice_number'], parsed_result['details'])

@@ -1,0 +1,231 @@
+- eur = ->(value) { "#{format('%.2f', value).tr('.', ',')} EUR" }
+%html{lang: I18n.locale.to_s}
+  %head
+    %meta{charset: "utf-8"}
+    :css
+      .container {
+        margin: auto;
+        font-size: 12px;
+      }
+
+      .col-md-12 {
+
+      }
+
+      .col-md-6 {
+        width: 49%;
+        display: inline-block;
+      }
+
+      .col-xs-4 {
+        width: 33%;
+      }
+
+      .col-xs-2 {
+        width: 16%;
+      }
+
+      .col-md-3 {
+        width: 24%;
+        display: inline-block;
+      }
+
+      .col-md-4 {
+        width: 32%;
+        display: inline-block;
+      }
+
+      .left {
+        float: left;
+      }
+
+      .left {
+        padding-right: 5px;
+      }
+
+      .right {
+        float: right;
+      }
+
+      .text-right {
+        text-align: right;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      dt {
+        float: left;
+        width: 140px;
+        clear: left;
+        text-align: right;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: bold;
+        line-height: 1.42857;
+      }
+
+      dd {
+        margin-left: 160px;
+        line-height: 1.42857;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+
+      th {
+        text-align: left;
+        border: 0px;
+        border-top: 1px solid #DDD;
+        padding: 6px;
+      }
+
+      thead th {
+        border-bottom: 2px solid #DDD;
+        border-top: 0px;
+      }
+
+      td {
+        border-top: 1px solid #DDD;
+      }
+
+      td {
+        padding: 6px;
+      }
+
+      .no-border {
+        border: 0px;
+      }
+
+      hr {
+        height: 1px;
+        border: 0;
+        color: #DDD;
+        background-color: #DDD;
+      }
+
+      .clear {
+        clear: both;
+      }
+
+      .pull-down {
+        margin-top: 40px;
+      }
+
+      #header {
+        position: relative;
+        min-height: 100px;
+      }
+
+      img {
+        width: 106px;
+        height: 102px;
+      }
+
+      #header-content {
+        position: absolute;
+        bottom: 0;
+      }
+
+      #footer {
+        position: absolute;
+        bottom: 0px;
+        width: 99%;
+      }
+
+      h1 {
+        margin-bottom: 5px;
+      }
+  %body
+    .container
+      #header.row
+        .col-sm-6.left
+          #header-content
+            %h1= "Arve #{@pdf.invoice.invoice_number}"
+        .col-sm-6.right
+          %img{src: "#{Rails.root}/public/eis-logo-black-et.png"}
+      .clear
+      %hr
+      .row
+        .col-md-6.left
+          %dl.dl-horizontal
+            %dt Arve kuupäev
+            %dd= l(@pdf.invoice_date)
+
+            - if @pdf.payment_date
+              %dt Makse kuupäev
+              %dd= l(@pdf.payment_date)
+
+        .col-md-6.right
+          %h4 Arve saaja
+          %hr
+          - if @pdf.private_individual?
+            %p eraisik
+          - else
+            %p= @pdf.customer_name.presence || '[Kliendi nimi]'
+            %p= @pdf.customer_address.presence || '[Kliendi aadress]'
+            %p
+              KMKR / VAT nr
+              = @pdf.customer_vat_no.presence || '[Kliendi VAT number]'
+
+      .clear
+      .row.pull-down
+        .col-md-12
+          %h4 Domeeninimede broneerimine
+          .table-responsive
+            %table.table.table-hover.table-condensed
+              %thead
+                %tr
+                  %th{class: 'col-xs-4'} Domeeninimi
+                  %th{class: 'col-xs-2'} Staatus
+                  %th{class: 'col-xs-2 text-right'} Summa
+              %tbody
+                - @pdf.rows.each do |row|
+                  %tr
+                    %td= row[:name]
+                    %td= row[:reserved] ? 'Reserveeritud' : 'Reserveerimine ebaõnnestus'
+                    %td.text-right= eur.(row[:price])
+              %tfoot
+                %tr
+                  %th.no-border.text-right{colspan: 2} Ridade summa
+                  %td.text-right= eur.(@pdf.rows_sum)
+                %tr
+                  %th.no-border.text-right{colspan: 2}= "Käibemaks #{number_to_percentage(@pdf.vat_rate * 100, precision: 0)}"
+                  %td.text-right= eur.(@pdf.vat_amount)
+                %tr
+                  %th.no-border.text-right{colspan: 2} Summa kokku
+                  %td.text-right= eur.(@pdf.grand_total)
+                %tr
+                  %th.no-border.text-right{colspan: 2} Tasutud summa
+                  %td.text-right= eur.(@pdf.amount_paid)
+
+      #footer
+        %hr
+        .row
+          .col-md-4.left
+            = Setting.registry_juridical_name
+            %br
+            = [Setting.registry_street, Setting.registry_city].reject(&:blank?).join(', ')
+            %br
+            = "#{t('reg_no')} #{Setting.registry_reg_no}"
+            %br
+            = "#{Registrar.human_attribute_name :vat_no} #{Setting.registry_vat_no}"
+
+          .col-md-4.left.text-center
+            = Setting.registry_phone
+            %br
+            = Setting.registry_email
+            %br
+            = Setting.registry_url
+
+          .col-md-4.left.text-right
+            = "#{t(:bank)}: #{Setting.registry_bank}"
+            %br
+            = "#{t(:iban)}: #{Setting.registry_iban}"
+            %br
+            = "#{t(:swift)}: #{Setting.registry_swift}"

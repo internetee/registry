@@ -1,3 +1,19 @@
+06.05.2026
+* OIDC auth for Accreditation API https://github.com/internetee/registry/pull/2911
+
+04.05.2026
+* Invoice generation for domain reservation API https://github.com/internetee/registry/pull/2918
+
+08.04.2026
+* Fix for handling new ECC based business registry certificates https://github.com/internetee/registry/pull/2914
+
+02.04.2026
+* Check contact phone for publishing on domain registration https://github.com/internetee/registry/issues/2908
+
+12.03.2026
+* Update ForceDelete notes according to the currently active reason https://github.com/internetee/registry/pull/2901
+* Status info for business registry reserved domains https://github.com/internetee/registry/pull/2904
+
 22.01.2026
 * Fixed duplicate legaldoc creation issue https://github.com/internetee/registry/issues/336
 * Improved test vocerage to mass_actions_controller https://github.com/internetee/registry/pull/2858

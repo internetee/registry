@@ -8,11 +8,13 @@ class DomainsTest < ApplicationIntegrationTest
 
     # Enable the accreditation endpoints feature for testing
     ENV['allow_accr_endspoints'] = 'true'
+    ENV['accreditation_center_allowed_ips'] = '127.0.0.1,::1'
   end
 
   def teardown
     # Clean up environment variable
     ENV.delete('allow_accr_endspoints')
+    ENV.delete('accreditation_center_allowed_ips')
     super
   end
 
@@ -20,7 +22,7 @@ class DomainsTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/domains/?name=shop.test', headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:domain][:name], 'shop.test'
+    assert_equal json[:data][:domain][:name], 'shop.test'
   end
 
   def test_return_error_if_domain_not_found
@@ -28,7 +30,7 @@ class DomainsTest < ApplicationIntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response 404
-    assert_equal json[:errors], 'Domain not found'
+    assert_equal json[:message], 'Domain not found'
   end
 
   def test_return_error_without_authentication
@@ -36,7 +38,6 @@ class DomainsTest < ApplicationIntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response 401
-    assert_equal json[:code], 2202
     assert_equal json[:message], 'Invalid authorization information'
   end
 
@@ -47,7 +48,7 @@ class DomainsTest < ApplicationIntegrationTest
     get '/api/v1/accreditation_center/domains/?name=shop.test', headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:errors], 'Accreditation Center API is not allowed'
+    assert_equal json[:message], 'Accreditation Center API is not allowed'
     assert_equal response.status, 403
   end
 
@@ -56,7 +57,16 @@ class DomainsTest < ApplicationIntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response 404
-    assert_equal json[:errors], 'Domain not found'
+    assert_equal json[:message], 'Domain not found'
+  end
+
+  def test_return_unauthorized_for_non_whitelisted_ip
+    get '/api/v1/accreditation_center/domains/?name=shop.test',
+        headers: @header.merge('REMOTE_ADDR' => '10.10.10.10')
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response 401
+    assert_equal json[:message], 'IP address 10.10.10.10 is not authorized'
   end
 
   private

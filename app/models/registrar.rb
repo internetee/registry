@@ -207,13 +207,19 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def accredited?
-    api_users.any? do |a|
-      return true unless a.accreditation_date.nil?
-    end
+    !accreditation_date.nil?
   end
 
   def accreditation_expired?
-    api_users.all? { |api| api.accreditation_expired? }
+    return false if accreditation_expire_date.nil?
+
+    accreditation_expire_date < Time.zone.now
+  end
+
+  def accreditation_expires_soon?(days)
+    return false if accreditation_expire_date.nil?
+
+    accreditation_expire_date - days.days < Time.zone.now
   end
 
   # Audit log is needed, therefore no raw SQL
