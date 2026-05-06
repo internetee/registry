@@ -1,3 +1,6 @@
+04.05.2026
+* Invoice generation for domain reservation API https://github.com/internetee/registry/pull/2918
+
 08.04.2026
 * Fix for handling new ECC based business registry certificates https://github.com/internetee/registry/pull/2914
 

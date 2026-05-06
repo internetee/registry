@@ -183,6 +183,7 @@ Rails.application.routes.draw do
       namespace :business_registry do
         get 'domain_names/:organization_name', to: 'domain_names#show', as: 'domain_names'
         get 'long_reserve_domains_status', to: 'long_reserve_domains_status#show', as: 'long_reserve_domains_status'
+        get 'reserved_domains_invoice_pdf', to: 'reserved_domains_invoice_pdf#show', as: 'reserved_domains_invoice_pdf'
         post 'reserve_domains', to: 'reserve_domains#create', as: 'reserve_domains'
         get 'reserve_domains/:user_unique_id', to: 'reserve_domains#show', as: 'reserve_domains_data'
         post 'long_reserve_domains', to: 'long_reserve_domains#create', as: 'long_reserve_domains'
