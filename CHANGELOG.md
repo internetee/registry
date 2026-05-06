@@ -1,3 +1,6 @@
+06.05.2026
+* OIDC auth for Accreditation API https://github.com/internetee/registry/pull/2911
+
 04.05.2026
 * Invoice generation for domain reservation API https://github.com/internetee/registry/pull/2918
 
