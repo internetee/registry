@@ -23,11 +23,9 @@ module Admin
       end
     end
 
-    def show;
-    end
+    def show; end
 
-    def edit;
-    end
+    def edit; end
 
     def update
       @api_user.attributes = api_user_params
@@ -45,46 +43,7 @@ module Admin
       redirect_to admin_registrar_path(@api_user.registrar), notice: t('.deleted')
     end
 
-    def set_test_date_to_api_user
-      user_api = User.find(params[:user_api_id])
-
-      uri = URI.parse((ENV['registry_demo_registrar_api_user_url']) + "?username=#{user_api.username}&identity_code=#{user_api.identity_code}")
-
-      response = base_get_request(uri: uri, port: ENV['registry_demo_registrar_port'])
-
-      case response.code
-      when "200"
-        result = JSON.parse(response.body)
-        demo_user_api = result['user_api']
-
-        Actions::RecordDateOfTest.record_result_to_api_user(api_user:user_api,
-                                                            date: demo_user_api['accreditation_date']) unless demo_user_api.empty?
-        
-        redirect_to request.referrer, notice: 'User API found'                                                    
-      when "404"
-        redirect_to request.referrer, notice: 'User API not found or not accredited yet'
-      else
-        redirect_to request.referrer, notice: 'Something went wrong'
-      end
-    end
-
-    def remove_test_date_to_api_user
-      user_api = User.find(params[:user_api_id])
-      user_api.accreditation_date = nil
-      user_api.accreditation_expire_date = nil
-      user_api.save
-
-      redirect_to request.referrer
-    end
-
     private
-
-    def base_get_request(uri:, port:)
-      http = Net::HTTP.new(uri.host, port)
-      req = Net::HTTP::Get.new(uri.request_uri)
-
-      http.request(req)
-    end
 
     def api_user_params
       params.require(:api_user).permit(:username, :plain_text_password, :active,

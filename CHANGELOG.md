@@ -1,3 +1,35 @@
+06.05.2026
+* OIDC auth for Accreditation API https://github.com/internetee/registry/pull/2911
+
+04.05.2026
+* Invoice generation for domain reservation API https://github.com/internetee/registry/pull/2918
+
+08.04.2026
+* Fix for handling new ECC based business registry certificates https://github.com/internetee/registry/pull/2914
+
+02.04.2026
+* Check contact phone for publishing on domain registration https://github.com/internetee/registry/issues/2908
+
+12.03.2026
+* Update ForceDelete notes according to the currently active reason https://github.com/internetee/registry/pull/2901
+* Status info for business registry reserved domains https://github.com/internetee/registry/pull/2904
+
+22.01.2026
+* Fixed duplicate legaldoc creation issue https://github.com/internetee/registry/issues/336
+* Improved test vocerage to mass_actions_controller https://github.com/internetee/registry/pull/2858
+* Added exception handler for business registry reponses https://github.com/internetee/registry/pull/2883
+
+21.01.2026
+* Disclose phone nr in whois for org owned domain registrations https://github.com/internetee/registry/pull/2818
+* Improved handling of multi-year soft domain Force Delete procedure https://github.com/internetee/registry/pull/2890
+
+31.12.2025
+* Fixed domain search with contact indent in admin https://github.com/internetee/registry/issues/2877
+
+11.12.2025
+* Prevent Force Delete from being canceled on unrelated updates https://github.com/internetee/registry/pull/2867
+* Fixes for accreditation api https://github.com/internetee/registry/pull/2875
+
 14.11.2025
 * API endpoint for Estonian Business Registry integration https://github.com/internetee/registry/pull/2676
 

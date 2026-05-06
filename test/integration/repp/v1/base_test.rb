@@ -66,7 +66,7 @@ class ReppV1BaseTest < ActionDispatch::IntegrationTest
     whiteip.update(interfaces: ['api'])
 
     Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
-      Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient, true) do
         get repp_v1_contacts_path, headers: @auth_headers.merge!({ 'Request-IP' => whiteip.ipv4 })
       end
     end
@@ -82,7 +82,7 @@ class ReppV1BaseTest < ActionDispatch::IntegrationTest
     @auth_headers.merge!({ 'User-Certificate' => cert.crt, 'User-Certificate-CN' => cert.common_name })
 
     Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
-      Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient, true) do
         get repp_v1_registrar_auth_index_path, headers: @auth_headers
       end
     end
@@ -92,7 +92,7 @@ class ReppV1BaseTest < ActionDispatch::IntegrationTest
 
   def test_validates_webclient_user_certificate_if_missing
     Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
-      Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient, true) do
         get repp_v1_registrar_auth_index_path, headers: @auth_headers
       end
     end
@@ -106,7 +106,7 @@ class ReppV1BaseTest < ActionDispatch::IntegrationTest
     @auth_headers.merge!({ 'User-Certificate' => cert.crt, 'User-Certificate-CN' => cert.common_name })
 
     Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
-      Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient, true) do
         get repp_v1_registrar_auth_index_path, headers: @auth_headers
       end
     end

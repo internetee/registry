@@ -94,7 +94,7 @@ module Repp
         end
 
         @current_user = new_user
-        data = auth_values_to_data(registrar: current_user.registrar)
+        data = auth_values_to_data(mode: 'registrar')
         message = I18n.t('registrar.current_user.switch.switched', new_user: new_user)
         token = Base64.urlsafe_encode64("#{new_user.username}:#{new_user.plain_text_password}")
         render_success(data: { token: token, registrar: data }, message: message)

@@ -18,6 +18,7 @@ module Actions
       # domain.attach_default_contacts
       assign_expiry_time
       maybe_attach_legal_doc
+      maybe_validate_phone_number
 
       commit
     end
@@ -209,6 +210,10 @@ module Actions
 
     def current_registrar
       Registrar.find(params[:registrar])
+    end
+
+    def maybe_validate_phone_number
+      OrgRegistrantPhoneCheckerJob.perform_later(type: 'single', registrant_user_code: domain.registrant.code)
     end
   end
 end
