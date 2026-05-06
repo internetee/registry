@@ -4,14 +4,15 @@ module Api
   module V1
     module AccreditationCenter
       class InvoiceStatusController < BaseController
+        api :GET, 'api/v1/accreditation_center/invoice_status'
+        desc 'get invoice status'
         def index
           @invoices = @current_user.registrar.invoices.reject { |invoice| invoice.cancelled_at.nil? }
 
           if @invoices
-            render json: { invoices: serialize_invoices(@invoices) },
-                   status: :ok
+            render_success(data: { invoices: serialize_invoices(@invoices) })
           else
-            render json: { errors: 'No cancelled invoices' }, status: :not_found
+            render_error('No cancelled invoices', :not_found)
           end
         end
 

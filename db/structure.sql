@@ -2648,7 +2648,9 @@ CREATE TABLE public.registrars (
     legaldoc_optout boolean DEFAULT false NOT NULL,
     legaldoc_optout_comment text,
     email_history character varying,
-    accept_pdf_invoices boolean DEFAULT true
+    accept_pdf_invoices boolean DEFAULT true,
+    accreditation_date timestamp without time zone,
+    accreditation_expire_date timestamp without time zone
 );
 
 
@@ -4941,6 +4943,13 @@ CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_ve
 
 
 --
+-- Name: index_registrars_on_accreditation_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registrars_on_accreditation_date ON public.registrars USING btree (accreditation_date);
+
+
+--
 -- Name: index_reserve_domain_invoices_on_invoice_number; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5796,6 +5805,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250314133357'),
 ('20250319104749'),
 ('20250627084536'),
-('20251230104312');
+('20260406125446');
 
 

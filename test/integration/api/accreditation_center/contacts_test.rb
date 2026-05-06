@@ -10,11 +10,13 @@ class ContactsTest < ApplicationIntegrationTest
 
     # Enable the accreditation endpoints feature for testing
     ENV['allow_accr_endspoints'] = 'true'
+    ENV['accreditation_center_allowed_ips'] = '127.0.0.1,::1'
   end
 
   def teardown
     # Clean up environment variable
     ENV.delete('allow_accr_endspoints')
+    ENV.delete('accreditation_center_allowed_ips')
     super
   end
 
@@ -22,7 +24,7 @@ class ContactsTest < ApplicationIntegrationTest
     get "/api/v1/accreditation_center/contacts/?id=#{@contact.code}", headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:contact][:name], 'John'
+    assert_equal json[:data][:contact][:name], 'John'
   end
 
   def test_return_error_if_contact_not_found
@@ -30,7 +32,7 @@ class ContactsTest < ApplicationIntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response 404
-    assert_equal json[:errors], 'Contact not found'
+    assert_equal json[:message], 'Contact not found'
   end
 
   def test_return_error_without_authentication
@@ -38,7 +40,6 @@ class ContactsTest < ApplicationIntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response 401
-    assert_equal json[:code], 2202
     assert_equal json[:message], 'Invalid authorization information'
   end
 
@@ -49,7 +50,7 @@ class ContactsTest < ApplicationIntegrationTest
     get "/api/v1/accreditation_center/contacts/?id=#{@contact.code}", headers: @header
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_equal json[:errors], 'Accreditation Center API is not allowed'
+    assert_equal json[:message], 'Accreditation Center API is not allowed'
     assert_equal response.status, 403
   end
 
@@ -58,7 +59,16 @@ class ContactsTest < ApplicationIntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response 404
-    assert_equal 'Contact not found', json[:errors]
+    assert_equal json[:message], 'Contact not found'
+  end
+
+  def test_return_unauthorized_for_non_whitelisted_ip
+    get "/api/v1/accreditation_center/contacts/?id=#{@contact.code}",
+        headers: @header.merge('REMOTE_ADDR' => '10.10.10.10')
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response 401
+    assert_equal json[:message], 'IP address 10.10.10.10 is not authorized'
   end
 
   private

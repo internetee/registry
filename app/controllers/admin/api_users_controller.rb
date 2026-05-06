@@ -43,22 +43,6 @@ module Admin
       redirect_to admin_registrar_path(@api_user.registrar), notice: t('.deleted')
     end
 
-    def set_test_date_to_api_user
-      user_api = User.find(params[:user_api_id])
-      Actions::RecordDateOfTest.record_result_to_api_user(api_user: user_api, date: Time.zone.now)
-
-      redirect_to request.referrer, notice: 'Accreditation status set successfully'
-    end
-
-    def remove_test_date_to_api_user
-      user_api = User.find(params[:user_api_id])
-      user_api.accreditation_date = nil
-      user_api.accreditation_expire_date = nil
-      user_api.save
-
-      redirect_to request.referrer, notice: 'Accreditation status removed successfully'
-    end
-
     private
 
     def api_user_params
