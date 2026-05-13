@@ -17,9 +17,7 @@ class AdminAreaPendingDeleteIntegrationTest < JavaScriptApplicationSystemTestCas
   def test_accept_pending_delete
     visit edit_admin_domain_path(id: @domain.id)
 
-    click_on 'Accept'
-    page.driver.browser.switch_to.alert.accept
-
+    accept_confirm { click_on 'Accept' }
     assert_text 'Pending was successfully applied.'
   end
 
@@ -30,18 +28,14 @@ class AdminAreaPendingDeleteIntegrationTest < JavaScriptApplicationSystemTestCas
 
     visit edit_admin_domain_path(id: @domain.id)
 
-    click_on 'Accept'
-    page.driver.browser.switch_to.alert.accept
-
+    accept_confirm { click_on 'Accept' }
     assert_text 'Not success'
   end
 
   def test_reject_panding_delete
     visit edit_admin_domain_path(id: @domain.id)
 
-    click_on 'Reject'
-    page.driver.browser.switch_to.alert.accept
-
+    accept_confirm { click_on 'Reject' }
     assert_text 'Pending was successfully removed.'
   end
 
@@ -52,9 +46,7 @@ class AdminAreaPendingDeleteIntegrationTest < JavaScriptApplicationSystemTestCas
 
     visit edit_admin_domain_path(id: @domain.id)
 
-    click_on 'Reject'
-    page.driver.browser.switch_to.alert.accept
-    
+    accept_confirm { click_on 'Reject' }
     assert_text 'Not success'
   end
 end

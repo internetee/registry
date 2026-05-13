@@ -12,15 +12,15 @@ class AdminAreaAdminUsersIntegrationTest < JavaScriptApplicationSystemTestCase
   end
 
   def test_create_new_admin_user
-    createNewAdminUser(true)
+    create_admin_user(valid: true)
   end
 
   def test_create_with_invalid_data_new_admin_user
-    createNewAdminUser(false)
+    create_admin_user(valid: false)
   end
 
   def test_edit_successfully_exist_record
-    createNewAdminUser(true)
+    create_admin_user(valid: true)
 
     visit admin_admin_users_path
     assert_selector 'a', text: 'test_user_name'
@@ -38,7 +38,7 @@ class AdminAreaAdminUsersIntegrationTest < JavaScriptApplicationSystemTestCase
   end
 
   def test_edit_exist_record_with_invalid_data
-    createNewAdminUser(true)
+    create_admin_user(valid: true)
 
     visit admin_admin_users_path
     click_on 'test_user_name'
@@ -54,26 +54,24 @@ class AdminAreaAdminUsersIntegrationTest < JavaScriptApplicationSystemTestCase
   end
 
   def test_delete_exist_record
-    createNewAdminUser(true)
+    create_admin_user(valid: true)
 
     visit admin_admin_users_path
     click_on 'test_user_name'
     assert_text 'General'
-    click_on 'Delete'
 
-    page.driver.browser.switch_to.alert.accept
+    accept_confirm { click_on 'Delete' }
 
     assert_text 'Record deleted'
   end
 
   private
 
-  def createNewAdminUser(valid)
+  def create_admin_user(valid:)
     visit admin_admin_users_path
     click_on 'New admin user'
 
     fill_in 'Username', with: 'test_user_name'
-    # If valid=true creating valid user, if else, then with invalid data
     if valid
       fill_in 'Password', with: 'test_password'
       fill_in 'Password confirmation', with: 'test_password'
@@ -86,11 +84,8 @@ class AdminAreaAdminUsersIntegrationTest < JavaScriptApplicationSystemTestCase
 
     select 'Estonia', from: 'admin_user_country_code', match: :first
 
-    select_element = find(:xpath, "/html/body/div[2]/form/div[2]/div/div[7]/div[2]/div/div[1]")
-    select_element.click
-
-    option_element = find(:xpath, "/html/body/div[2]/form/div[2]/div/div[7]/div[2]/div/div[2]/div/div[1]")
-    option_element.click
+    find('form.form-horizontal .selectize-control .selectize-input').click
+    find('.selectize-dropdown .option', match: :first).click
 
     click_on 'Save'
 
