@@ -56,11 +56,6 @@ gem 'digidoc_client',
     github: 'tarmotalu/digidoc_client',
     ref: '1645e83a5a548addce383f75703b0275c5310c32'
 
-# TARA
-gem 'omniauth-rails_csrf_protection'
-gem 'omniauth-tara', github: 'internetee/omniauth-tara'
-# gem 'omniauth-tara', path: 'vendor/gems/omniauth-tara'
-
 gem 'airbrake'
 gem 'company_register', github: 'internetee/company_register', branch: 'master'
 gem 'directo', github: 'internetee/directo', branch: 'master'
