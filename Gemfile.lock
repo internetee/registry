@@ -37,12 +37,12 @@ GIT
 
 GIT
   remote: https://github.com/internetee/epp.git
-  revision: af7cefda37ac81d14b1d12641cde410776082d59
-  branch: master
+  revision: 884b614f4e94f1141ef8ed2ed40304e771699302
+  branch: use-nokogiri
   specs:
-    epp (1.5.0)
-      hpricot
+    epp (1.5.1)
       libxml-ruby
+      nokogiri (>= 1.8)
 
 GIT
   remote: https://github.com/internetee/lhv.git
@@ -269,7 +269,6 @@ GEM
       thor
       tilt
     hashdiff (1.0.1)
-    hpricot (0.8.6)
     http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -306,7 +305,7 @@ GEM
       activerecord
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
-    libxml-ruby (3.2.1)
+    libxml-ruby (5.0.6)
     logger (1.6.5)
     loofah (2.24.0)
       crass (~> 1.0.2)
