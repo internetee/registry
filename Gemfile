@@ -104,7 +104,7 @@ gem 'ruby-openai'
 
 # profiles
 gem 'pghero'
-gem 'pg_query', '>= 0.9.0'
+gem 'pg_query', '>= 2.2'
 
 # token
 gem 'jwt'
