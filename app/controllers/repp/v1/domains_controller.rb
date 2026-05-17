@@ -7,6 +7,7 @@ module Repp
       before_action :validate_registrar_authorization, only: %i[transfer_info destroy]
       before_action :forward_registrar_id, only: %i[create update destroy]
       before_action :set_domain, only: %i[update]
+      before_action :transaform_period_value_to_integer, only: %i[create]
 
       THROTTLED_ACTIONS = %i[transfer_info transfer index create show update destroy].freeze
       include Shunter::Integration::Throttle
@@ -255,6 +256,10 @@ module Repp
         return dup_params unless dup_params[:contacts]
 
         modify_contact_params(dup_params)
+      end
+
+      def transaform_period_value_to_integer
+        params[:domain][:period] = params[:domain][:period].to_i
       end
 
       def modify_contact_params(params)
