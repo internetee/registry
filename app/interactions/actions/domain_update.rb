@@ -269,8 +269,18 @@ module Actions
     end
 
     def validate_dispute_case
+      unless @changes_registrant
+        domain.add_epp_error(
+          '2304', nil, nil, %i[base dispute_update_requires_registrant_change]
+        )
+        return false
+      end
+
       dispute = Dispute.active.find_by(domain_name: domain.name, password: params[:reserved_pw])
-      Dispute.close_by_domain(domain.name) and return false if dispute
+      if dispute
+        Dispute.close_by_domain(domain.name)
+        return false
+      end
 
       if params[:reserved_pw].present?
         domain.add_epp_error(
@@ -281,7 +291,7 @@ module Actions
           '2304', nil, nil, 'Required parameter missing; reservedpw element required for dispute domains'
         )
       end
-      true
+      false
     end
 
     def commit

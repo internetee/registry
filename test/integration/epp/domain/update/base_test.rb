@@ -3,6 +3,7 @@ require 'test_helper'
 class EppDomainUpdateBaseTest < EppTestCase
   include ActionMailer::TestHelper
   include ActiveJob::TestHelper
+  include Epp::DomainUpdateFrame
 
   setup do
     @domain = domains(:shop)
@@ -554,45 +555,22 @@ class EppDomainUpdateBaseTest < EppTestCase
 
   def test_skips_verification_when_registrant_changed_with_dispute_password
     Setting.request_confirmation_on_registrant_change_enabled = true
-    dispute = disputes(:expired)
-    dispute.update!(starts_at: Time.zone.now, expires_at: Time.zone.now + 5.days, closed: nil)
+    dispute = activate_dispute_on_domain(@domain)
     new_registrant = contacts(:william)
-
     old_transfer_code = @domain.transfer_code
 
     assert @domain.disputed?
 
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
-        <command>
-          <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
-              <domain:name>#{@domain.name}</domain:name>
-                <domain:chg>
-                  <domain:registrant>#{new_registrant.code}</domain:registrant>
-                </domain:chg>
-            </domain:update>
-          </update>
-          <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
-              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
-              <eis:reserved>
-                <eis:pw>#{dispute.password}</eis:pw>
-              </eis:reserved>
-            </eis:extdata>
-          </extension>
-        </command>
-      </epp>
-    XML
-
-    post epp_update_path, params: { frame: request_xml },
-                          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    post_epp_domain_update(
+      epp_domain_update_xml(
+        domain_name: @domain.name,
+        chg: domain_chg_body(registrant: new_registrant.code),
+        extension: eis_extdata_extension(legal_document: true, reserved_pw: dispute.password)
+      )
+    )
     @domain.reload
 
-    response_xml = Nokogiri::XML(response.body)
-    assert_correct_against_schema response_xml
-    assert_epp_response :completed_successfully
+    assert_epp_domain_update(:completed_successfully)
     assert new_registrant, @domain.registrant
     assert_not @domain.registrant_verification_asked?
     assert_not @domain.disputed?
@@ -602,46 +580,136 @@ class EppDomainUpdateBaseTest < EppTestCase
 
   def test_dispute_password_mandatory_when_registrant_changed
     Setting.request_confirmation_on_registrant_change_enabled = true
-    dispute = disputes(:expired)
-    dispute.update!(starts_at: Time.zone.now, expires_at: Time.zone.now + 5.days, closed: nil)
+    activate_dispute_on_domain(@domain)
     new_registrant = contacts(:william)
 
     assert @domain.disputed?
 
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
-        <command>
-          <update>
-            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
-              <domain:name>#{@domain.name}</domain:name>
-                <domain:chg>
-                  <domain:registrant verified="yes">#{new_registrant.code}</domain:registrant>
-                </domain:chg>
-            </domain:update>
-          </update>
-          <extension>
-            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
-              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
-              <eis:reserved>
-                <eis:pw>'123456'</eis:pw>
-              </eis:reserved>
-            </eis:extdata>
-          </extension>
-        </command>
-      </epp>
-    XML
-
-    post epp_update_path, params: { frame: request_xml },
-         headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    post_epp_domain_update(
+      epp_domain_update_xml(
+        domain_name: @domain.name,
+        chg: domain_chg_body(registrant: new_registrant.code, registrant_verified: 'yes'),
+        extension: eis_extdata_extension(legal_document: true, reserved_pw: "'123456'")
+      )
+    )
     @domain.reload
 
-    response_xml = Nokogiri::XML(response.body)
-    assert_correct_against_schema response_xml
-    assert_epp_response :invalid_authorization_information
+    assert_epp_domain_update(:invalid_authorization_information)
     assert_not_equal new_registrant, @domain.registrant
     assert @domain.disputed?
     assert_no_emails
+  end
+
+  def test_rejects_disputed_domain_update_without_registrant_change
+    activate_dispute_on_domain(@domain)
+    old_transfer_code = @domain.transfer_code
+
+    assert @domain.disputed?
+
+    post_epp_domain_update(
+      epp_domain_update_xml(
+        domain_name: @domain.name,
+        chg: domain_chg_body(auth_pw: 'new-transfer-code')
+      )
+    )
+    @domain.reload
+
+    assert_epp_domain_update(:object_status_prohibits_operation)
+    assert_equal old_transfer_code, @domain.transfer_code
+    assert @domain.disputed?
+  end
+
+  def test_rejects_disputed_domain_update_with_valid_pw_but_without_registrant_change
+    dispute = activate_dispute_on_domain(@domain)
+    old_transfer_code = @domain.transfer_code
+
+    assert @domain.disputed?
+
+    post_epp_domain_update(
+      epp_domain_update_xml(
+        domain_name: @domain.name,
+        chg: domain_chg_body(auth_pw: 'new-transfer-code'),
+        extension: eis_extdata_extension(reserved_pw: dispute.password)
+      )
+    )
+    @domain.reload
+
+    assert_epp_domain_update(:object_status_prohibits_operation)
+    assert_equal old_transfer_code, @domain.transfer_code
+    assert @domain.disputed?
+  end
+
+  def test_updates_disputed_domain_when_registrant_and_other_fields_changed_with_dispute_password
+    Setting.request_confirmation_on_registrant_change_enabled = true
+    dispute = activate_dispute_on_domain(@domain)
+    new_registrant = contacts(:william)
+    old_transfer_code = @domain.transfer_code
+
+    assert @domain.disputed?
+
+    post_epp_domain_update(
+      epp_domain_update_xml(
+        domain_name: @domain.name,
+        chg: domain_chg_body(
+          registrant: new_registrant.code,
+          auth_pw: 'new-transfer-code'
+        ),
+        extension: eis_extdata_extension(legal_document: true, reserved_pw: dispute.password)
+      )
+    )
+    @domain.reload
+
+    assert_epp_domain_update(:completed_successfully)
+    assert_equal new_registrant.code, @domain.registrant.code
+    assert_not @domain.disputed?
+    refute_equal old_transfer_code, @domain.transfer_code
+  end
+
+  def test_rejects_disputed_domain_registrant_change_without_dispute_password
+    activate_dispute_on_domain(@domain)
+    new_registrant = contacts(:william)
+    old_transfer_code = @domain.transfer_code
+
+    assert @domain.disputed?
+
+    post_epp_domain_update(
+      epp_domain_update_xml(
+        domain_name: @domain.name,
+        chg: domain_chg_body(registrant: new_registrant.code),
+        extension: eis_extdata_extension(legal_document: true)
+      )
+    )
+    @domain.reload
+
+    assert_epp_domain_update(:object_status_prohibits_operation)
+    assert_not_equal new_registrant.code, @domain.registrant.code
+    assert_equal old_transfer_code, @domain.transfer_code
+    assert @domain.disputed?
+  end
+
+  def test_rejects_disputed_domain_registrant_and_auth_change_without_dispute_password
+    activate_dispute_on_domain(@domain)
+    new_registrant = contacts(:william)
+    old_transfer_code = @domain.transfer_code
+
+    assert @domain.disputed?
+
+    post_epp_domain_update(
+      epp_domain_update_xml(
+        domain_name: @domain.name,
+        chg: domain_chg_body(
+          registrant: new_registrant.code,
+          auth_pw: 'new-transfer-code'
+        ),
+        extension: eis_extdata_extension(legal_document: true)
+      )
+    )
+    @domain.reload
+
+    assert_epp_domain_update(:object_status_prohibits_operation)
+    assert_not_equal new_registrant.code, @domain.registrant.code
+    assert_equal old_transfer_code, @domain.transfer_code
+    assert @domain.disputed?
   end
 
   def test_skips_verification_when_disabled
