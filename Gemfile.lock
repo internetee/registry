@@ -37,8 +37,8 @@ GIT
 
 GIT
   remote: https://github.com/internetee/epp.git
-  revision: 884b614f4e94f1141ef8ed2ed40304e771699302
-  branch: use-nokogiri
+  revision: 934c25da36293a5760a30d227faed99ba8da419d
+  branch: master
   specs:
     epp (1.5.1)
       libxml-ruby
@@ -325,7 +325,7 @@ GEM
       nokogiri (~> 1)
       rake
     mini_mime (1.1.5)
-    mini_portile2 (2.8.8)
+    mini_portile2 (2.8.9)
     minitest (5.25.4)
     minitest-stub_any_instance (1.0.3)
     monetize (1.9.4)

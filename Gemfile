@@ -64,9 +64,7 @@ gem 'dry-struct'
 gem 'dry-types'
 gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 
-# Test epp changes locally; after merge switch back to:
-#   gem 'epp', github: 'internetee/epp', branch: :master
-gem 'epp', github: 'internetee/epp', branch: 'use-nokogiri'
+gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
 gem 'haml', '~> 6.0'
 gem 'jquery-ui-rails', '6.0.1'
