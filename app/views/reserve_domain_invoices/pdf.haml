@@ -164,14 +164,16 @@
         .col-md-6.right
           %h4 Arve saaja
           %hr
-          - if @pdf.private_individual?
+          - if @pdf.customer_name.present?
+            %p= @pdf.customer_name
+            - if @pdf.customer_address.present?
+              %p= @pdf.customer_address
+            - if @pdf.customer_vat_no.present?
+              %p
+                KMKR / VAT nr
+                = @pdf.customer_vat_no
+          - elsif @pdf.private_individual?
             %p eraisik
-          - else
-            %p= @pdf.customer_name.presence || '[Kliendi nimi]'
-            %p= @pdf.customer_address.presence || '[Kliendi aadress]'
-            %p
-              KMKR / VAT nr
-              = @pdf.customer_vat_no.presence || '[Kliendi VAT number]'
 
       .clear
       .row.pull-down
