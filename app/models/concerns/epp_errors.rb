@@ -98,7 +98,7 @@ module EppErrors
       end
     end
     nil
-  rescue NameError
+  rescue NameError, I18n::MissingInterpolationArgument
     nil
   end
 

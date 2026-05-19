@@ -114,6 +114,8 @@ module Actions
     end
 
     def maybe_validate_phone_number
+      return if @error || !contact.persisted?
+
       OrgRegistrantPhoneCheckerJob.perform_later(type: 'single', registrant_user_code: contact.code)
     end
   end
