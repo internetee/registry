@@ -1,3 +1,6 @@
+18.05.2026
+* Fixes for Business Registry API invoicing issues https://github.com/internetee/registry/issues/2921
+
 06.05.2026
 * OIDC auth for Accreditation API https://github.com/internetee/registry/pull/2911
 
