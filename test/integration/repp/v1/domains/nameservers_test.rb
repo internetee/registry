@@ -109,4 +109,33 @@ class ReppV1DomainsNameserversTest < ActionDispatch::IntegrationTest
     assert_equal 'Data management policy violation; Nameserver count must be between 2-11 for active ' \
                  'domains [nameservers]', json[:message]
   end
+
+  def test_bulk_update_nameservers_with_valid_csv
+    csv_file = fixture_file_upload('files/nameserver_change_valid.csv', 'text/csv')
+    
+    post "/repp/v1/domains/nameservers/bulk", headers: @auth_headers, 
+         params: { csv_file: csv_file, new_hostname: 'ns1.newserver.ee' }
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+    assert_equal 1, json[:data][:success].length
+    assert_equal @domain.name, json[:data][:success][0][:domain_name]
+  end
+
+  def test_returns_error_with_invalid_csv_headers_bulk
+    csv_file = fixture_file_upload('files/nameserver_change_invalid.csv', 'text/csv')
+    
+    post "/repp/v1/domains/nameservers/bulk", headers: @auth_headers,
+         params: { csv_file: csv_file, new_hostname: 'ns1.newserver.ee' }
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal 2304, json[:code]
+    assert_includes json[:message], 'changes failed'
+    assert_equal 1, json[:data][:failed].length
+    assert_equal 'csv_error', json[:data][:failed][0][:type]
+    assert_includes json[:data][:failed][0][:message], 'CSV file is empty or missing required header'
+  end
 end
