@@ -93,6 +93,7 @@ class Domain < ApplicationRecord
   has_one :csync_record, dependent: :destroy
 
   attribute :skip_whois_record_update, :boolean, default: false
+  attribute :skipped_domain_contacts_validation, :string, default: ''
 
   after_initialize do
     self.pending_json = {} if pending_json.blank?
