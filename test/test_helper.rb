@@ -46,6 +46,15 @@ class CompanyRegisterClientStub
   def company_details(registration_number:)
     []
   end
+
+  def e_invoice_recipients(registration_numbers:)
+    if ::Registrar.exists?(reg_no: registration_numbers)
+      registrar = ::Registrar.find_by(reg_no: registration_numbers)
+      status = registrar.name.include?('einvoice') ? 'OK' : 'MR'
+      return [Struct.new(:status).new(status)]
+    end
+    [Struct.new(:status).new('OK')]
+  end
 end
 
 CompanyRegister::Client = CompanyRegisterClientStub

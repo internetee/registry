@@ -38,6 +38,7 @@ module Repp
                             api_users: serialized_users(current_user.api_users),
                             white_ips: serialized_ips(registrar.white_ips),
                             balance_auto_reload: type,
+                            accept_pdf_invoices: registrar.accept_pdf_invoices,
                             min_deposit: Setting.minimum_deposit },
                  roles: ApiUser::ROLES,
                  interfaces: WhiteIp::INTERFACES }
@@ -117,7 +118,7 @@ module Repp
       private
 
       def account_params
-        params.require(:account).permit(:billing_email, :iban, :new_user_id)
+        params.require(:account).permit(:billing_email, :iban, :new_user_id, :accept_pdf_invoices)
       end
 
       def index_params
