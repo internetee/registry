@@ -1,5 +1,6 @@
 27.05.2026
 * Option to skip pdf invoices in case of e-invoicing https://github.com/internetee/registry/issues/2881
+* New poll messages for expired pending operations https://github.com/internetee/registry/issues/2924
 
 18.05.2026
 * Fixes for Business Registry API invoicing issues https://github.com/internetee/registry/issues/2921
