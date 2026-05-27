@@ -652,6 +652,8 @@ en:
   poll_pending_update_rejected_by_registrant: 'Registrant rejected domain update'
   poll_pending_delete_rejected_by_registrant: 'Registrant rejected domain deletion'
   poll_pending_delete_confirmed_by_registrant: 'Registrant confirmed domain deletion'
+  poll_pending_update_expired_by_registrant: 'Registrant did not confirm domain update'
+  poll_pending_delete_expired_by_registrant: 'Registrant did not confirm domain deletion'
   manage: Manage
   pending_epp: Pending epp
   id: ID
