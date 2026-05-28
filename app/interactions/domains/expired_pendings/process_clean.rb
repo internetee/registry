@@ -20,10 +20,12 @@ module Domains
                                        registrant: domain.registrant,
                                        send_to: [domain.new_registrant_email,
                                                  domain.registrant.email]).deliver_later
+        domain.notify_registrar(:poll_pending_update_expired_by_registrant)
       end
 
       def notify_pending_delete
         DomainDeleteMailer.expired(domain).deliver_later
+        domain.notify_registrar(:poll_pending_delete_expired_by_registrant)
       end
 
       def clean_pendings
