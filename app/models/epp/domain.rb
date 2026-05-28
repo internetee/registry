@@ -140,6 +140,9 @@ class Epp::Domain < Domain
     }
   end
 
+  # Legacy helper: auto-assigned registrant as tech (org) or admin (non-org) when missing.
+  # Superseded by .ee rules effective 1 Feb 2025 (optional tech/admin). Not used by
+  # DomainCreate/REPP; kept until callers are removed.
   def attach_default_contacts
     return if registrant.blank?
 
