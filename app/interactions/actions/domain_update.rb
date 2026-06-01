@@ -7,6 +7,7 @@ module Actions
       @params = params
       @bypass_verify = bypass_verify
       @changes_registrant = false
+      @dispute_validated = false
     end
 
     def call
@@ -139,6 +140,7 @@ module Actions
 
     def validate_email(email)
       return true if Rails.env.test?
+      return true if domain.disputed?
 
       %i[regex mx].each do |m|
         result = Actions::SimpleMailValidator.run(email: email, level: m)
@@ -278,7 +280,7 @@ module Actions
 
       dispute = Dispute.active.find_by(domain_name: domain.name, password: params[:reserved_pw])
       if dispute
-        Dispute.close_by_domain(domain.name)
+        @dispute_validated = true
         return false
       end
 
@@ -296,8 +298,10 @@ module Actions
 
     def commit
       return false if any_errors?
+      return false unless domain.save
 
-      domain.save
+      Dispute.close_by_domain(domain.name) if @dispute_validated
+      true
     end
 
     def any_errors?

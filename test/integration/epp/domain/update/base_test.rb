@@ -639,6 +639,27 @@ class EppDomainUpdateBaseTest < EppTestCase
     assert @domain.disputed?
   end
 
+  def test_rejects_disputed_priv_to_org_without_admin_and_keeps_disputed_status
+    Setting.request_confirmation_on_registrant_change_enabled = false
+    @domain.admin_domain_contacts.destroy_all
+    dispute = activate_dispute_on_domain(@domain)
+    org = contacts(:acme_ltd)
+    old_registrant = @domain.registrant
+
+    post_epp_domain_update(
+      epp_domain_update_xml(
+        domain_name: @domain.name,
+        chg: domain_chg_body(registrant: org.code),
+        extension: eis_extdata_extension(legal_document: true, reserved_pw: dispute.password)
+      )
+    )
+    @domain.reload
+
+    assert_epp_domain_update(:parameter_value_policy_error)
+    assert_equal old_registrant.code, @domain.registrant.code
+    assert @domain.disputed?
+  end
+
   def test_updates_disputed_domain_when_registrant_and_other_fields_changed_with_dispute_password
     Setting.request_confirmation_on_registrant_change_enabled = true
     dispute = activate_dispute_on_domain(@domain)

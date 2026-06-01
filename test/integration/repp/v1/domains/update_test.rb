@@ -89,6 +89,28 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
     assert @domain.disputed?
   end
 
+  def test_rejects_disputed_priv_to_org_without_admin_and_keeps_disputed_status
+    Setting.request_confirmation_on_registrant_change_enabled = false
+    @domain.admin_domain_contacts.destroy_all
+    dispute = create_dispute
+    org = contacts(:acme_ltd)
+    old_registrant = @domain.registrant
+
+    json = update_domain(
+      registrant: { code: org.code },
+      reserved_pw: dispute.password
+    )
+
+    assert_repp_error(
+      json,
+      http_status: :bad_request,
+      code: 2306,
+      message: 'Admin contact is required'
+    )
+    assert_equal old_registrant.code, @domain.registrant.code
+    assert @domain.disputed?
+  end
+
   def test_updates_disputed_domain_when_registrant_changed_with_valid_reserved_pw
     dispute = create_dispute
     new_registrant = contacts(:william)
