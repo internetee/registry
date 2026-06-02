@@ -29,6 +29,7 @@ en:
               invalid_auth_information_reserved: 'Invalid authorization information; invalid reserved>pw value'
               required_parameter_missing_disputed: 'Required parameter missing; disputed pw element required for dispute domains'
               invalid_auth_information_disputed: 'Invalid authorization information; invalid disputed>pw value'
+              dispute_update_requires_registrant_change: 'Object status prohibits operation; disputed domain update requires registrant change'
               domain_name_blocked: 'Data management policy violation: Domain name is blocked [name]'
             name_dirty:
               invalid: 'Domain name is invalid'

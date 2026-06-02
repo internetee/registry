@@ -7,6 +7,7 @@ module Actions
       @params = params
       @bypass_verify = bypass_verify
       @changes_registrant = false
+      @dispute_validated = false
     end
 
     def call
@@ -139,6 +140,7 @@ module Actions
 
     def validate_email(email)
       return true if Rails.env.test?
+      return true if domain.disputed?
 
       %i[regex mx].each do |m|
         result = Actions::SimpleMailValidator.run(email: email, level: m)
@@ -269,8 +271,18 @@ module Actions
     end
 
     def validate_dispute_case
+      unless @changes_registrant
+        domain.add_epp_error(
+          '2304', nil, nil, %i[base dispute_update_requires_registrant_change]
+        )
+        return false
+      end
+
       dispute = Dispute.active.find_by(domain_name: domain.name, password: params[:reserved_pw])
-      Dispute.close_by_domain(domain.name) and return false if dispute
+      if dispute
+        @dispute_validated = true
+        return false
+      end
 
       if params[:reserved_pw].present?
         domain.add_epp_error(
@@ -281,13 +293,15 @@ module Actions
           '2304', nil, nil, 'Required parameter missing; reservedpw element required for dispute domains'
         )
       end
-      true
+      false
     end
 
     def commit
       return false if any_errors?
+      return false unless domain.save
 
-      domain.save
+      Dispute.close_by_domain(domain.name) if @dispute_validated
+      true
     end
 
     def any_errors?
