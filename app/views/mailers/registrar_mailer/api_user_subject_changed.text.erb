@@ -1,0 +1,26 @@
+Tere,
+
+Anname teada, et järgmise API kasutaja sisselogimise identifikaatorit muudeti.
+Seetõttu nulliti kasutaja isikutuvastuse staatus ja kasutaja peab läbima isikutuvastuse uuesti.
+
+API kasutaja andmed:
+- Kasutajanimi: <%= @api_user.username %>
+- Varasem identifikaator: <%= @old_subject %>
+- Uus identifikaator: <%= @new_subject %>
+
+Parimate soovidega,
+<%= render 'mailers/shared/signatures/signature.et.text' %>
+---
+
+Hi,
+
+We are writing to inform you that the login subject for the following API user was changed.
+As a result, the identity verification status was reset and the user must complete verification again.
+
+API user details:
+- Username: <%= @api_user.username %>
+- Previous subject: <%= @old_subject %>
+- New subject: <%= @new_subject %>
+
+Best regards,
+<%= render 'mailers/shared/signatures/signature.en.text' %>

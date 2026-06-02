@@ -1,0 +1,17 @@
+et:
+  activerecord:
+    attributes:
+      api_user:
+        email: E-post
+    errors:
+      models:
+        api_user:
+          attributes:
+            email:
+              blank: on vajalik isikutuvastamiseks
+            base:
+              verification_error: Identifitseerimistaotluse saatmine ebaõnnestus
+              not_pending_verification: Kinnitamist ootavat identifitseerimist pole
+              missing_subject: Sisselogimise identifikaator on kinnitamiseks kohustuslik
+            subject:
+              taken: on selle registripidaja juures juba teise API kasutaja poolt kasutusel

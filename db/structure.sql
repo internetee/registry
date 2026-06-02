@@ -1,8 +1,7 @@
-\restrict OgpBVS4LcDZVV6fZTwmnzAAWL70pwHISsUhjW2gqrf2CNdzHNtVCcfzYehS3JFu
-
+\restrict UcsiEKfHzXBZIZHqjYwWEEWgCcCXbG1YFqBmhSq7V4X0gwin7b9h3ziY4zklaPe
 
 -- Dumped from database version 13.4 (Debian 13.4-4.pgdg110+1)
--- Dumped by pg_dump version 13.22 (Debian 13.22-0+deb11u1)
+-- Dumped by pg_dump version 13.23 (Debian 13.23-1.pgdg11+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -734,11 +733,11 @@ CREATE TABLE public.contacts (
     disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     email_history character varying,
     registrant_publishable boolean DEFAULT false,
-    checked_company_at timestamp without time zone,
-    company_register_status character varying,
     ident_request_sent_at timestamp without time zone,
     verified_at timestamp without time zone,
     verification_id character varying,
+    checked_company_at timestamp without time zone,
+    company_register_status character varying,
     system_disclosed_attributes character varying[] DEFAULT '{}'::character varying[]
 );
 
@@ -2649,9 +2648,9 @@ CREATE TABLE public.registrars (
     legaldoc_optout boolean DEFAULT false NOT NULL,
     legaldoc_optout_comment text,
     email_history character varying,
-    accept_pdf_invoices boolean DEFAULT true,
     accreditation_date timestamp without time zone,
-    accreditation_expire_date timestamp without time zone
+    accreditation_expire_date timestamp without time zone,
+    accept_pdf_invoices boolean DEFAULT true
 );
 
 
@@ -2672,6 +2671,25 @@ CREATE SEQUENCE public.registrars_id_seq
 --
 
 ALTER SEQUENCE public.registrars_id_seq OWNED BY public.registrars.id;
+
+
+--
+-- Name: reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.reports_id_seq OWNED BY public.admin_reports.id;
 
 
 --
@@ -2760,9 +2778,7 @@ CREATE TABLE public.reserved_domains (
     legacy_id integer,
     name character varying NOT NULL,
     password character varying NOT NULL,
-    expire_at timestamp without time zone,
-    access_token character varying,
-    token_created_at timestamp without time zone
+    expire_at timestamp without time zone
 );
 
 
@@ -2898,7 +2914,13 @@ CREATE TABLE public.users (
     legacy_id integer,
     accreditation_date timestamp without time zone,
     accreditation_expire_date timestamp without time zone,
-    uuid uuid DEFAULT public.gen_random_uuid()
+    uuid uuid DEFAULT public.gen_random_uuid(),
+    ident_request_sent_at timestamp without time zone,
+    verified_at timestamp without time zone,
+    verification_id character varying,
+    verification_pending_at timestamp without time zone,
+    verification_snapshot jsonb DEFAULT '{}'::jsonb,
+    subject character varying
 );
 
 
@@ -3129,7 +3151,7 @@ ALTER TABLE ONLY public.actions ALTER COLUMN id SET DEFAULT nextval('public.acti
 -- Name: admin_reports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.admin_reports ALTER COLUMN id SET DEFAULT nextval('public.admin_reports_id_seq'::regclass);
+ALTER TABLE ONLY public.admin_reports ALTER COLUMN id SET DEFAULT nextval('public.reports_id_seq'::regclass);
 
 
 --
@@ -4986,6 +5008,34 @@ CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_
 
 
 --
+-- Name: index_users_on_registrar_id_and_subject; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_registrar_id_and_subject ON public.users USING btree (registrar_id, subject) WHERE ((subject IS NOT NULL) AND ((subject)::text <> ''::text));
+
+
+--
+-- Name: index_users_on_subject; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_subject ON public.users USING btree (subject);
+
+
+--
+-- Name: index_users_on_verification_pending_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_verification_pending_at ON public.users USING btree (verification_pending_at);
+
+
+--
+-- Name: index_users_on_verified_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_verified_at ON public.users USING btree (verified_at);
+
+
+--
 -- Name: index_validation_events_on_event_data; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5296,12 +5346,11 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict OgpBVS4LcDZVV6fZTwmnzAAWL70pwHISsUhjW2gqrf2CNdzHNtVCcfzYehS3JFu
+\unrestrict UcsiEKfHzXBZIZHqjYwWEEWgCcCXbG1YFqBmhSq7V4X0gwin7b9h3ziY4zklaPe
 
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('0'),
 ('20140616073945'),
 ('20140620130107'),
 ('20140627082711'),
@@ -5780,19 +5829,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221214073933'),
 ('20221214074252'),
 ('20230531111154'),
-('20230612094319'),
-('20230612094326'),
-('20230612094335'),
 ('20230707084741'),
 ('20230710120154'),
 ('20230711083811'),
-('20240722085530'),
-('20240723110208'),
 ('20240816091049'),
 ('20240816092636'),
+('20240903131540'),
 ('20240924103554'),
 ('20241015071505'),
-('20241022121525'),
 ('20241030095636'),
 ('20241104104620'),
 ('20241112093540'),
@@ -5803,9 +5847,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250219102811'),
 ('20250310133151'),
 ('20250313122119'),
-('20250314133357'),
 ('20250319104749'),
 ('20250627084536'),
-('20260406125446'),
 ('20251230104312'),
-('20260220111500');
+('20260220111500'),
+('20260406125446'),
+('20260529120000'),
+('20260601120000');
+
+

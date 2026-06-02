@@ -47,7 +47,7 @@ module Admin
 
     def api_user_params
       params.require(:api_user).permit(:username, :plain_text_password, :active,
-                                       :identity_code, { roles: [] })
+                                       :subject, { roles: [] })
     end
 
     def registrar

@@ -1,6 +1,14 @@
 en:
   activerecord:
-    attributes:
-      api_user:
-        plain_text_password: Password
-        roles: Role
+    errors:
+      models:
+        api_user:
+          attributes:
+            email:
+              blank: is required for identity verification
+            base:
+              verification_error: Sending identification request failed
+              not_pending_verification: No pending verification to approve or reject
+              missing_subject: Login subject is required to approve verification
+            subject:
+              taken: is already used by another api user at this registrar

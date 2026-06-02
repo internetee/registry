@@ -82,14 +82,14 @@ module Repp
       def authenticate_user
         username, password = Base64.urlsafe_decode64(basic_token).split(':', 2)
         @current_user ||= ApiUser.find_by(username: username, plain_text_password: password)
-        user_active = @current_user.active?
+        user_eligible = @current_user&.eligible_for_sign_in?
 
-        return if @current_user && user_active
+        return if @current_user && user_eligible
 
         raise(ArgumentError)
       rescue NoMethodError, ArgumentError
         @response = { code: 2202, message: 'Invalid authorization information',
-                      data: { username: username, password: password, active: user_active } }
+                      data: { username: username, password: password, eligible_for_sign_in: user_eligible } }
         render(json: @response, status: :unauthorized)
       end
 

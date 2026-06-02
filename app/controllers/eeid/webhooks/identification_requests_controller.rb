@@ -15,21 +15,46 @@ module Eeid
       def create
         return render_unauthorized unless ip_allowed?(request.remote_ip)
 
-        contact = Contact.find_by_code(permitted_params[:reference])
-        return render_invalid_signature unless valid_hmac_signature?(contact.ident_type, request.headers['X-HMAC-Signature'])
+        entity = resolve_entity
+        return render_not_found unless entity
 
-        poi = catch_poi(contact)
-        verify_contact(contact)
-        inform_registrar(contact, poi)
-        render json: { status: 'success' }, status: :ok
+        return render_invalid_signature unless valid_hmac_signature?(ident_type_for(entity), request.headers['X-HMAC-Signature'])
+
+        ::PaperTrail.request(whodunnit: webhook_whodunnit(entity)) do
+          poi = catch_poi(entity)
+          process_verification(entity)
+          inform_registrar(entity, poi)
+          render json: { status: 'success' }, status: :ok
+        end
       rescue StandardError => e
         handle_error(e)
       end
 
-      private 
+      private
 
       def permitted_params
         params.permit(:identification_request_id, :reference, :client_id)
+      end
+
+      def resolve_entity
+        reference = permitted_params[:reference]
+        return nil if reference.blank?
+
+        Contact.find_by(code: reference) || ApiUser.find_by(uuid: reference)
+      end
+
+      def ident_type_for(entity)
+        entity.is_a?(ApiUser) ? 'priv' : entity.ident_type
+      end
+
+      def webhook_whodunnit(entity)
+        identifier = entity.is_a?(ApiUser) ? entity.username : entity.code
+        "eeid-webhook:#{entity.class.name}:#{identifier}"
+      end
+
+      def render_not_found
+        Rails.logger.error("Webhook reference not found: #{permitted_params[:reference]}")
+        render json: { error: 'Reference not found' }, status: :not_found
       end
 
       def render_unauthorized
@@ -63,6 +88,14 @@ module Eeid
         result
       end
 
+      def process_verification(entity)
+        if entity.is_a?(ApiUser)
+          process_api_user(entity)
+        else
+          verify_contact(entity)
+        end
+      end
+
       def verify_contact(contact)
         ref = permitted_params[:reference]
         if contact&.ident_request_sent_at.present?
@@ -73,20 +106,43 @@ module Eeid
         end
       end
 
-      def catch_poi(contact)
-        ident_service = Eeid::IdentificationService.new(contact.ident_type)
+      def process_api_user(api_user)
+        ident_service = Eeid::IdentificationService.new('priv')
+        response = ident_service.get_identification_request(permitted_params[:identification_request_id])
+        result = response[:result] || response['result'] || {}
+
+        @api_user_outcome = Actions::ProcessApiUserIdentificationWebhook.new(
+          api_user,
+          identification_request_id: permitted_params[:identification_request_id],
+          result: result
+        ).call
+      end
+
+      def catch_poi(entity)
+        ident_service = Eeid::IdentificationService.new(ident_type_for(entity))
         response = ident_service.get_proof_of_identity(permitted_params[:identification_request_id])
         raise StandardError, response[:error] if response[:error].present?
 
         response[:data]
       end
 
-      def inform_registrar(contact, poi)
-        email = contact&.registrar&.email
+      def inform_registrar(entity, poi)
+        email = entity&.registrar&.email
         return unless email
 
-        RegistrarMailer.contact_verified(email: email, contact: contact, poi: poi)
-                       .deliver_now
+        if entity.is_a?(ApiUser)
+          inform_registrar_api_user(email, entity, poi)
+        else
+          RegistrarMailer.contact_verified(email: email, contact: entity, poi: poi).deliver_now
+        end
+      end
+
+      def inform_registrar_api_user(email, api_user, poi)
+        if api_user.verification_pending_at.present?
+          RegistrarMailer.api_user_verification_pending(email: email, api_user: api_user, poi: poi).deliver_now
+        elsif api_user.verified_at.present?
+          RegistrarMailer.api_user_verified(email: email, api_user: api_user, poi: poi).deliver_now
+        end
       end
 
       def ip_allowed?(ip)

@@ -78,6 +78,132 @@ class Eeid::IdentificationRequestsWebhookTest < ActionDispatch::IntegrationTest
     assert_nil @contact.reload.verified_at
   end
 
+  test 'should auto verify api user when sub is present' do
+    api_user = users(:api_bestnames_epp)
+    api_user.update!(email: 'api@example.test', ident_request_sent_at: 1.day.ago)
+    payload = {
+      identification_request_id: '456',
+      reference: api_user.uuid
+    }
+    signature = OpenSSL::HMAC.hexdigest('SHA256', @secret, payload.to_json)
+
+    ident_body = {
+      id: '456',
+      status: 'completed',
+      result: {
+        sub: 'EE60001019906',
+        given_name: 'Test',
+        family_name: 'User'
+      }
+    }.to_json
+    stub_request(:get, %r{api/ident/v1/identification_requests/456})
+      .to_return(status: 200, body: ident_body, headers: { 'Content-Type' => 'application/json' })
+
+    post '/eeid/webhooks/identification_requests', params: payload, as: :json,
+                                                     headers: { 'X-HMAC-Signature' => signature }
+
+    assert_response :ok
+    api_user.reload
+    assert api_user.verified_at.present?
+    assert_equal 'EE', api_user.country_code
+    assert_equal 'EE60001019906', api_user.subject
+    assert_equal "eeid-webhook:ApiUser:#{api_user.username}", api_user.updator_str
+    assert_nil api_user.identity_code
+    assert_nil api_user.verification_pending_at
+  end
+
+  test 'should auto verify api user with document-only sub' do
+    api_user = users(:api_bestnames_epp)
+    api_user.update!(email: 'api@example.test', ident_request_sent_at: 1.day.ago)
+    payload = {
+      identification_request_id: '457',
+      reference: api_user.uuid
+    }
+    signature = OpenSSL::HMAC.hexdigest('SHA256', @secret, payload.to_json)
+
+    ident_body = {
+      id: '457',
+      status: 'completed',
+      result: {
+        sub: 'GBAB123456',
+        given_name: 'Test',
+        family_name: 'User'
+      }
+    }.to_json
+    stub_request(:get, %r{api/ident/v1/identification_requests/457})
+      .to_return(status: 200, body: ident_body, headers: { 'Content-Type' => 'application/json' })
+
+    post '/eeid/webhooks/identification_requests', params: payload, as: :json,
+                                                     headers: { 'X-HMAC-Signature' => signature }
+
+    assert_response :ok
+    api_user.reload
+    assert api_user.verified_at.present?
+    assert_equal 'GBAB123456', api_user.subject
+    assert_nil api_user.identity_code
+    assert_nil api_user.verification_pending_at
+  end
+
+  test 'should pending review api user when subject cannot be resolved' do
+    api_user = users(:api_bestnames_epp)
+    api_user.update!(email: 'api@example.test', ident_request_sent_at: 1.day.ago)
+    payload = {
+      identification_request_id: '789',
+      reference: api_user.uuid
+    }
+    signature = OpenSSL::HMAC.hexdigest('SHA256', @secret, payload.to_json)
+
+    ident_body = {
+      id: '789',
+      status: 'completed',
+      result: { given_name: 'Test', family_name: 'User', country: 'GB' }
+    }.to_json
+    stub_request(:get, %r{api/ident/v1/identification_requests/789})
+      .to_return(status: 200, body: ident_body, headers: { 'Content-Type' => 'application/json' })
+
+    post '/eeid/webhooks/identification_requests', params: payload, as: :json,
+                                                     headers: { 'X-HMAC-Signature' => signature }
+
+    assert_response :ok
+    api_user.reload
+    assert_nil api_user.verified_at
+    assert api_user.verification_pending_at.present?
+    assert_equal 'User', api_user.verification_snapshot['family_name']
+    assert_nil api_user.subject
+    assert_emails 1
+    assert_includes ActionMailer::Base.deliveries.last.subject, api_user.username
+  end
+
+  test 'should pending review api user when subject conflicts with another user' do
+    existing = users(:api_bestnames)
+    existing.update!(subject: 'GBAB999999', registrar: users(:api_bestnames_epp).registrar)
+
+    api_user = users(:api_bestnames_epp)
+    api_user.update!(email: 'api@example.test', ident_request_sent_at: 1.day.ago)
+    payload = {
+      identification_request_id: '790',
+      reference: api_user.uuid
+    }
+    signature = OpenSSL::HMAC.hexdigest('SHA256', @secret, payload.to_json)
+
+    ident_body = {
+      id: '790',
+      status: 'completed',
+      result: { sub: 'GBAB999999' }
+    }.to_json
+    stub_request(:get, %r{api/ident/v1/identification_requests/790})
+      .to_return(status: 200, body: ident_body, headers: { 'Content-Type' => 'application/json' })
+
+    post '/eeid/webhooks/identification_requests', params: payload, as: :json,
+                                                     headers: { 'X-HMAC-Signature' => signature }
+
+    assert_response :ok
+    api_user.reload
+    assert_nil api_user.verified_at
+    assert api_user.verification_pending_at.present?
+    assert_nil api_user.subject
+  end
+
   test 'returns error response if throttled' do
     ENV['shunter_default_threshold'] = '1'
     ENV['shunter_enabled'] = 'true'

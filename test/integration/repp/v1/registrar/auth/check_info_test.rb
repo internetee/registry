@@ -39,6 +39,16 @@ class ReppV1RegistrarAuthCheckInfoTest < ActionDispatch::IntegrationTest
     assert_equal json[:message], 'Invalid authorization information'
   end
 
+  def test_rejects_unverified_user_login_even_with_valid_password
+    @user.update_columns(verified_at: nil)
+
+    get '/repp/v1/registrar/auth', headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :unauthorized
+    assert_equal 'Invalid authorization information', json[:message]
+  end
+
   def test_returns_error_response_if_throttled
     ENV['shunter_default_threshold'] = '1'
     ENV['shunter_enabled'] = 'true'

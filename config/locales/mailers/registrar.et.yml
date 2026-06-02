@@ -1,0 +1,8 @@
+et:
+  registrar_mailer:
+    api_user_verified:
+      subject: 'Teade: API kasutaja [%{username}] isikutuvastus kinnitatud automaatselt'
+    api_user_verification_pending:
+      subject: 'Teade: API kasutaja [%{username}] isikutuvastus vajab registripidaja kinnitust'
+    api_user_subject_changed:
+      subject: 'Teade: API kasutaja [%{username}] sisselogimise identifikaator muudeti'

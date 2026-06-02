@@ -2,10 +2,10 @@ require 'serializers/repp/api_user'
 module Repp
   module V1
     class ApiUsersController < BaseController
-      before_action :find_api_user, only: %i[show update destroy]
+      before_action :find_api_user, only: %i[show update destroy verify download_poi approve_verification reject_verification]
       load_and_authorize_resource
 
-      THROTTLED_ACTIONS = %i[index show create update destroy].freeze
+      THROTTLED_ACTIONS = %i[index show create update destroy verify download_poi approve_verification reject_verification].freeze
       include Shunter::Integration::Throttle
 
       api :GET, '/repp/v1/api_users'
@@ -59,6 +59,64 @@ module Repp
         render_success
       end
 
+      api :POST, '/repp/v1/api_users/verify/:id'
+      desc 'Generate and send identification request to an api user'
+      def verify
+        authorize! :verify, ApiUser
+        action = Actions::ApiUserVerify.new(@api_user)
+
+        unless action.call
+          handle_non_epp_errors(@api_user)
+          return
+        end
+
+        render_success(data: { api_user: { id: @api_user.id } })
+      end
+
+      api :GET, '/repp/v1/api_users/download_poi/:id'
+      desc 'Get proof of identity pdf file for an api user'
+      def download_poi
+        authorize! :verify, ApiUser
+        ident_service = Eeid::IdentificationService.new('priv')
+        response = ident_service.get_proof_of_identity(@api_user.verification_id)
+
+        send_data response[:data], filename: "proof_of_identity_#{@api_user.verification_id}.pdf",
+                                   type: 'application/pdf', disposition: 'inline'
+      rescue Eeid::IdentError => e
+        handle_non_epp_errors(@api_user, e.message)
+      end
+
+      api :POST, '/repp/v1/api_users/approve_verification/:id'
+      desc 'Manually approve pending api user identification'
+      def approve_verification
+        authorize! :verify, ApiUser
+        action = Actions::ApiUserApproveVerification.new(
+          @api_user,
+          subject: approve_verification_params[:subject]
+        )
+
+        unless action.call
+          handle_non_epp_errors(@api_user)
+          return
+        end
+
+        render_success(data: { api_user: { id: @api_user.id } })
+      end
+
+      api :POST, '/repp/v1/api_users/reject_verification/:id'
+      desc 'Reject pending api user identification'
+      def reject_verification
+        authorize! :verify, ApiUser
+        action = Actions::ApiUserRejectVerification.new(@api_user)
+
+        unless action.call
+          handle_non_epp_errors(@api_user)
+          return
+        end
+
+        render_success(data: { api_user: { id: @api_user.id } })
+      end
+
       private
 
       def find_api_user
@@ -67,7 +125,11 @@ module Repp
 
       def api_user_params
         params.require(:api_user).permit(:username, :plain_text_password, :active,
-                                         :identity_code, { roles: [] })
+                                         :subject, :email, { roles: [] })
+      end
+
+      def approve_verification_params
+        params.fetch(:api_user, {}).permit(:subject)
       end
 
       def serialized_users(users)
