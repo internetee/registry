@@ -1,3 +1,7 @@
+02.06.2026
+* Disputed domains can now only be reneed before registrant change is done https://github.com/internetee/registry/pull/2923
+* Issuer contact person is removed from invoices https://github.com/internetee/registry/issues/2926
+
 27.05.2026
 * Option to skip pdf invoices in case of e-invoicing https://github.com/internetee/registry/issues/2881
 * Fixed internal error in admin for deleted domains' history https://github.com/internetee/registry/issues/2897

@@ -114,7 +114,8 @@ class Epp::Domain < Domain
         [:name_dirty, :blocked, { value: { obj: 'name', val: name_dirty } }]
       ],
       '2304' => [ # Object status prohibits operation
-        [:base, :domain_status_prohibits_operation]
+        [:base, :domain_status_prohibits_operation],
+        %i[base dispute_update_requires_registrant_change],
       ],
       '2306' => [ # Parameter policy error
         [:base, :ds_data_with_key_not_allowed],
