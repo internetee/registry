@@ -1,0 +1,8 @@
+et:
+  repp:
+    command_completed_successfully: Käsk edukalt täidetud
+    object_does_not_exist: Objekti ei ole olemas
+    object_does_not_exist_with_name: 'Objekti ei ole olemas: %{name}'
+    errors:
+      invalid_authorization_information: Vigane autoriseerimisteave
+      object_not_eligible_for_transfer: Objekt ei ole ülekandmiseks sobilik

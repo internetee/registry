@@ -23,6 +23,7 @@ api_bestnames_epp:
 api_goodnames:
   username: test_goodnames
   plain_text_password: testtest
+  verified_at: <%= Time.zone.parse('2024-01-01 12:00:00') %>
   type: ApiUser
   registrar: goodnames
   active: true
@@ -46,6 +47,7 @@ registrant:
 accr_bot:
   username: accr_bot
   plain_text_password: accr_bot
+  verified_at: <%= Time.zone.parse('2024-01-01 12:00:00') %>
   type: ApiUser
   registrar: goodnames
   active: true

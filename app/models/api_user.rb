@@ -41,7 +41,6 @@ class ApiUser < User
   scope :eligible_for_sign_in, lambda {
     where(active: true)
       .where.not(verified_at: nil)
-      .where.not(subject: [nil, ''])
   }
 
   def identity_verified?
@@ -49,7 +48,7 @@ class ApiUser < User
   end
 
   def eligible_for_sign_in?
-    active? && identity_verified? && subject.present?
+    active? && identity_verified?
   end
 
   def verification_pending?

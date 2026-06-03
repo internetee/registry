@@ -1,8 +1,12 @@
 require 'test_helper'
 
 class ApiUserTest < ActiveSupport::TestCase
+  include ActionMailer::TestHelper
+
   setup do
     @user = users(:api_bestnames)
+    @user.reload
+    ActionMailer::Base.deliveries.clear
   end
 
   def test_valid_user_fixture_is_valid
@@ -17,18 +21,20 @@ class ApiUserTest < ActiveSupport::TestCase
 
   def test_invalid_when_username_is_already_taken
     user = valid_user
-    another_user = user.dup
+    another_user = duplicate_as_new_record(user)
 
     assert another_user.invalid?
 
-    another_user.username = 'another'
-    another_user.identity_code = ''
-    assert another_user.valid?
+    another_user.username = 'another_username_not_taken'
+    another_user.identity_code = nil
+    another_user.subject = nil
+    another_user.registrar = user.registrar
+    assert another_user.valid?, another_user.errors.full_messages
   end
 
   def test_invalid_when_one_registrar_and_identity_code_is_already_taken
     user = valid_user
-    another_user = user.dup
+    another_user = duplicate_as_new_record(user)
 
     assert another_user.invalid?
 
@@ -69,20 +75,23 @@ class ApiUserTest < ActiveSupport::TestCase
     assert ApiUser.new.active?
   end
 
-  def test_linked_users_by_subject_same_registrar
-    login_subject = 'EE60001019906'
+  def test_invalid_when_subject_already_used_at_registrar
+    login_subject = 'EE1234'
     @user.update_columns(subject: login_subject)
-    linked = ApiUser.create!(
-      username: 'linked_by_subject',
+
+    another_user = ApiUser.new(
+      username: 'another_subject_user',
       plain_text_password: 'secret1',
-      registrar: @user.registrar,
+      registrar_id: @user.registrar_id,
       roles: ['epp'],
-      subject: login_subject,
-      verified_at: Time.zone.now,
-      active: true
+      subject: login_subject
     )
 
-    assert_includes @user.linked_users, linked
+    assert another_user.invalid?, another_user.errors.full_messages
+    assert_match(
+      /already used by another api user at this registrar/i,
+      another_user.errors[:subject].join
+    )
   end
 
   def test_linked_users_by_subject_across_registrars
@@ -110,14 +119,15 @@ class ApiUserTest < ActiveSupport::TestCase
   def test_linked_users_excludes_inactive_users
     login_subject = 'EE99999999999'
     @user.update_columns(subject: login_subject)
-    ApiUser.create!(
+    linked = ApiUser.create!(
       username: 'linked_inactive',
       plain_text_password: 'secret1',
-      registrar: @user.registrar,
+      registrar: registrars(:goodnames),
       roles: ['epp'],
       subject: login_subject,
-      active: false
+      verified_at: Time.zone.now
     )
+    linked.update_columns(active: false)
 
     assert_empty @user.linked_users
   end
@@ -128,7 +138,7 @@ class ApiUserTest < ActiveSupport::TestCase
     ApiUser.create!(
       username: 'linked_unverified',
       plain_text_password: 'secret1',
-      registrar: @user.registrar,
+      registrar: registrars(:goodnames),
       roles: ['epp'],
       subject: login_subject,
       verified_at: nil,
@@ -149,8 +159,8 @@ class ApiUserTest < ActiveSupport::TestCase
     assert_not @user.linked_with?(nil)
   end
 
-  def test_eligible_for_sign_in_requires_active_verified_subject
-    @user.update_columns(active: true, verified_at: Time.zone.now, subject: 'EE1234')
+  def test_eligible_for_sign_in_requires_active_and_verified
+    @user.update_columns(active: true, verified_at: Time.zone.now, subject: nil)
     assert @user.eligible_for_sign_in?
 
     @user.update_columns(verified_at: nil)
@@ -159,8 +169,8 @@ class ApiUserTest < ActiveSupport::TestCase
     @user.update_columns(verified_at: Time.zone.now, active: false)
     assert_not @user.eligible_for_sign_in?
 
-    @user.update_columns(active: true, subject: nil)
-    assert_not @user.eligible_for_sign_in?
+    @user.update_columns(active: true, subject: 'EE1234')
+    assert @user.eligible_for_sign_in?
   end
 
   def test_subject_change_clears_verification_status_when_subject_previously_present
@@ -249,5 +259,11 @@ class ApiUserTest < ActiveSupport::TestCase
 
   def valid_user
     users(:api_bestnames)
+  end
+
+  def duplicate_as_new_record(user)
+    ApiUser.new(
+      user.attributes.except('id', 'created_at', 'updated_at', 'uuid', 'subject')
+    )
   end
 end

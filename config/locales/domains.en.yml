@@ -1,0 +1,132 @@
+en:
+  activerecord:
+    models:
+      domain:
+        one: Domain
+        other: Domains
+    attributes:
+      epp_domain: &epp_domain_attributes
+        name_dirty: Domain name
+        name: Domain name
+        name_puny: Domain name
+        puny_label: Domain name
+        period: Period
+        transfer_code: Transfer code
+        registrant: Registrant
+        registrar: Registrar
+        nameservers: Nameservers
+        dnskeys: DNS keys
+        admin_domain_contacts: Admin contacts
+        admin_contacts: Admin contacts
+        tech_domain_contacts: Technical contacts
+        tech_contacts: Technical contacts
+        domain_contacts: Contacts
+        statuses: Statuses
+        domain_statuses: Statuses
+        reserved_pw: Reserved password
+      domain:
+        <<: *epp_domain_attributes
+      nameserver:
+        hostname: Hostname
+        ipv4: IPv4
+        ipv6: IPv6
+      domain_contact:
+        contact: Contact
+      domain_status:
+        value: Status
+    errors:
+      models:
+        epp_domain: &epp_domain_errors
+          attributes:
+            base:
+              domain_status_prohibits_operation: Domain status prohibits operation
+              domain_already_belongs_to_the_querying_registrar: Domain already belongs to the querying registrar
+              ds_data_not_allowed: dsData object is not allowed
+              ds_data_with_key_not_allowed: dsData object with key data is not allowed
+              key_data_not_allowed: keyData object is not allowed
+              required_parameter_missing_reserved: Required parameter missing; reserved>pw element required for reserved domains
+              invalid_auth_information_reserved: Invalid authorization information; invalid reserved>pw value
+              required_parameter_missing_disputed: Required parameter missing; disputed pw element required for dispute domains
+              invalid_auth_information_disputed: Invalid authorization information; invalid disputed>pw value
+              domain_name_blocked: 'Data management policy violation: Domain name is blocked [name]'
+              session_limit_exceeded: Session limit exceeded; server closing connection
+              domain_at_auction: 'Parameter value policy error: domain is at auction'
+              reserved_pw_element_required: 'Required parameter missing; reserved>pw element is required'
+            name_dirty:
+              blank: Domain name is missing
+              invalid: Domain name is invalid
+              reserved: Domain name is reserved
+              taken: Domain name already exists
+              blocked: Domain name is blocked
+            puny_label:
+              too_long: Domain name is too long (maximum is 63 characters)
+            period:
+              blank: Period is missing
+              not_a_number: Period is not a number
+              not_an_integer: Period must be an integer
+            transfer_code:
+              blank: Transfer code is missing
+              wrong_pw: Authorization error
+            registrant:
+              blank: Registrant is missing
+              not_found: Registrant not found
+              cannot_be_missing: 'Parameter value policy error: registrant cannot be missing'
+            domain_contacts:
+              invalid: Contacts are invalid
+              not_found: Contact was not found
+              admin_contact_can_be_only_private_person: Admin contact can be private person only
+            admin_domain_contacts:
+              out_of_range: Admin contacts count must be between %{min}-%{max}
+            admin_contacts:
+              out_of_range: Admin contacts count must be between %{min}-%{max}
+              less_than_or_equal_to: Admin contacts count must be less than or equal to %{count}
+              greater_than_or_equal_to: Admin contacts count must be greater than or equal to %{count}
+              invalid_ident_type: Admin contact can be private person only
+            tech_domain_contacts:
+              out_of_range: Tech contacts count must be between %{min}-%{max}
+            tech_contacts:
+              out_of_range: Tech contacts count must be between %{min}-%{max}
+            nameservers:
+              invalid: Nameservers are invalid
+              out_of_range: Data management policy violation; Nameserver count must be between %{min}-%{max} for active domains
+              not_found: Nameserver was not found
+              taken: Nameserver already exists on this domain
+              less_than_or_equal_to: Nameservers count must be less than or equal to %{count}
+              greater_than_or_equal_to: Nameservers count must be greater than or equal to %{count}
+            domain_statuses:
+              invalid: Statuses are invalid
+              not_found: Status was not found
+              taken: Status already exists on this domain
+            statuses:
+              taken: Status already exists on this domain
+            registrar:
+              blank: Registrar is missing
+            dnskeys:
+              not_found: DS was not found
+              invalid: DNS keys are invalid
+              out_of_range: DNS keys count must be between %{min}-%{max}
+            domains:
+              invalid: Object status prohibits operation
+        domain:
+          <<: *epp_domain_errors
+          admin_contact_invalid_ident_type: Admin contact can be private person only (ident type %{ident_type} is not allowed)
+        nameserver:
+          attributes:
+            hostname:
+              invalid: Hostname is invalid
+              taken: Nameserver already exists on this domain
+              puny_to_long: Hostname puny label is too long (maximum is 63 characters)
+            ipv4:
+              blank: IP is missing
+              invalid: IPv4 is invalid
+            ipv6:
+              invalid: IPv6 is invalid
+        domain_contact:
+          attributes:
+            contact:
+              blank: Contact was not found
+              taken: Contact already exists on this domain
+        domain_status:
+          attributes:
+            value:
+              taken: Status already exists on this domain

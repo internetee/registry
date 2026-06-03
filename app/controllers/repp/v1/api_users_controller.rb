@@ -125,7 +125,7 @@ module Repp
 
       def api_user_params
         params.require(:api_user).permit(:username, :plain_text_password, :active,
-                                         :subject, :email, { roles: [] })
+                                         :subject, :email, :identity_code, { roles: [] })
       end
 
       def approve_verification_params

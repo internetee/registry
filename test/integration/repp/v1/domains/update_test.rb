@@ -101,7 +101,7 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
     assert_response :bad_request
     assert_equal 2304, json[:code]
-    assert_equal 'Required parameter missing; reservedpw element required for dispute domains', json[:message]
+    assert_equal 'Required parameter missing; reserved_pw element required for dispute domains', json[:message]
   end
 
   def test_adds_epp_error_when_reserved_pw_is_invalid_for_disputed_domain
@@ -119,6 +119,6 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
     assert_response :bad_request
     assert_equal 2202, json[:code]
-    assert_equal 'Invalid authorization information; invalid reserved>pw value', json[:message]
+    assert_equal 'Invalid authorization information; invalid reserved_pw value', json[:message]
   end
 end

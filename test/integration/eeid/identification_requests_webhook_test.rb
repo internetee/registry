@@ -55,8 +55,12 @@ class Eeid::IdentificationRequestsWebhookTest < ActionDispatch::IntegrationTest
   end
 
   test 'should handle internal server error gracefully' do
-    # Simulate an error in the verify_contact method
-    Contact.stub :find_by_code, ->(_) { raise StandardError, 'Simulated error' } do
+    @contact.update!(ident_request_sent_at: Time.zone.now - 1.day)
+
+    Eeid::Webhooks::IdentificationRequestsController.stub_any_instance(
+      :verify_contact,
+      proc { |_contact| raise StandardError, 'Simulated error' }
+    ) do
       post '/eeid/webhooks/identification_requests', params: { identification_request_id: '123', reference: @contact.code }, as: :json, headers: { 'X-HMAC-Signature' => @valid_hmac_signature }
 
       assert_response :internal_server_error

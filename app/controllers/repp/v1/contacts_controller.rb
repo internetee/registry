@@ -206,7 +206,7 @@ module Repp
       def create_update_success_body
         { code: opt_addr? ? 1100 : nil,
           data: { contact: { code: @contact.code } },
-          message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : nil }
+          message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : I18n.t('repp.command_completed_successfully') }
       end
 
       def opt_addr?

@@ -1,0 +1,8 @@
+en:
+  repp:
+    command_completed_successfully: Command completed successfully
+    object_does_not_exist: Object does not exist
+    object_does_not_exist_with_name: 'Object does not exist: %{name}'
+    errors:
+      invalid_authorization_information: Invalid authorization information
+      object_not_eligible_for_transfer: Object is not eligible for transfer

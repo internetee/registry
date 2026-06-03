@@ -46,6 +46,21 @@ class ReppV1ApiUsersUpdateTest < ActionDispatch::IntegrationTest
     assert json[:message].include? 'Identity code already exists'
   end
 
+  def test_can_not_change_subject_if_already_exists_per_registrar
+    epp_user = users(:api_bestnames_epp)
+    request_body = {
+      api_user: {
+        subject: @user.subject,
+      },
+    }
+
+    put "/repp/v1/api_users/#{epp_user.id}", headers: @auth_headers, params: request_body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert json[:message].include? 'already used by another api user at this registrar'
+  end
+
   def test_returns_error_if_password_wrong_format
     request_body = {
       api_user: {
