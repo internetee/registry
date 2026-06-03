@@ -51,7 +51,7 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
       json,
       http_status: :bad_request,
       code: 2304,
-      message: 'Object status prohibits operation; disputed domain update requires registrant change'
+      message: I18n.t('activerecord.errors.models.epp_domain.attributes.base.dispute_update_requires_registrant_change')
     )
     assert_equal old_auth_code, @domain.auth_info
     assert @domain.disputed?
@@ -67,7 +67,7 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
       json,
       http_status: :bad_request,
       code: 2304,
-      message: 'Required parameter missing; reservedpw element required for dispute domains'
+      message: I18n.t('activerecord.errors.models.epp_domain.attributes.base.required_parameter_missing_disputed')
     )
     refute_equal new_registrant.code, @domain.registrant.code
     assert @domain.disputed?
@@ -83,7 +83,7 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
       json,
       http_status: :bad_request,
       code: 2304,
-      message: 'Object status prohibits operation; disputed domain update requires registrant change'
+      message: I18n.t('activerecord.errors.models.epp_domain.attributes.base.dispute_update_requires_registrant_change')
     )
     assert_equal old_auth_code, @domain.auth_info
     assert @domain.disputed?
@@ -141,7 +141,7 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
       json,
       http_status: :bad_request,
       code: 2202,
-      message: 'Invalid authorization information; invalid reserved>pw value'
+      message: I18n.t('activerecord.errors.models.epp_domain.attributes.base.invalid_auth_information_disputed')
     )
     refute_equal new_registrant.code, @domain.registrant.code
     assert @domain.disputed?
@@ -161,7 +161,7 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
       json,
       http_status: :bad_request,
       code: 2304,
-      message: 'Required parameter missing; reservedpw element required for dispute domains'
+      message: I18n.t('activerecord.errors.models.epp_domain.attributes.base.required_parameter_missing_disputed')
     )
     refute_equal new_registrant.code, @domain.registrant.code
     assert_equal old_transfer_code, @domain.transfer_code
@@ -194,10 +194,18 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
         params: { domain: domain_params }.to_json
 
     @domain.reload
-    json = JSON.parse(response.body, symbolize_names: true)
-    assert_response :bad_request
-    assert_equal 2304, json[:code]
-    assert_equal 'Required parameter missing; reserved_pw element required for dispute domains', json[:message]
+    JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def assert_repp_success(json)
+    assert_response :ok
+    assert_equal 1000, json[:code]
+  end
+
+  def assert_repp_error(json, http_status:, code:, message:)
+    assert_response http_status
+    assert_equal code, json[:code]
+    assert_equal message, json[:message]
   end
 
   def json_headers
@@ -211,13 +219,5 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
       starts_at: Time.zone.now,
       expires_at: Time.zone.now + 5.days
     )
-  end
-
-    put "/repp/v1/domains/#{@domain.name}", headers: @auth_headers, params: payload.to_json
-    @domain.reload
-    json = JSON.parse(response.body, symbolize_names: true)
-    assert_response :bad_request
-    assert_equal 2202, json[:code]
-    assert_equal 'Invalid authorization information; invalid reserved_pw value', json[:message]
   end
 end
