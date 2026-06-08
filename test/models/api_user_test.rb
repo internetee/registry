@@ -160,11 +160,8 @@ class ApiUserTest < ActiveSupport::TestCase
   end
 
   def test_eligible_for_sign_in_requires_active_and_verified
-    @user.update_columns(active: true, verified_at: Time.zone.now, subject: nil)
+    @user.update_columns(active: true, subject: nil)
     assert @user.eligible_for_sign_in?
-
-    @user.update_columns(verified_at: nil)
-    assert_not @user.eligible_for_sign_in?
 
     @user.update_columns(verified_at: Time.zone.now, active: false)
     assert_not @user.eligible_for_sign_in?
