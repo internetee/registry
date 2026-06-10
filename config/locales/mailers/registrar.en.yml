@@ -4,6 +4,10 @@ en:
       subject: >-
         Teade: Kontakti [%{contact_code}] kinnitamine edukalt lõpule viidud
         / Notification: Contact [%{contact_code}] verification successfully completed
+    contact_verification_pending:
+      subject: >-
+        Teade: Kontakti [%{contact_code}] isikutuvastus vajab registripidaja kinnitust
+        / Notification: Contact [%{contact_code}] identity verification needs registrar review
     api_user_verified:
       subject: >-
         Teade: API kasutaja [%{username}] isikutuvastus kinnitatud automaatselt

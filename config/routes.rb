@@ -77,6 +77,8 @@ Rails.application.routes.draw do
             get 'search(/:id)', to: 'contacts#search'
             post 'verify/:id', to: 'contacts#verify'
             get 'download_poi/:id', to: 'contacts#download_poi'
+            post 'approve_verification/:id', to: 'contacts#approve_verification'
+            post 'reject_verification/:id', to: 'contacts#reject_verification'
           end
         end
       end

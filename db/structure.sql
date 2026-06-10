@@ -1,4 +1,4 @@
-\restrict UcsiEKfHzXBZIZHqjYwWEEWgCcCXbG1YFqBmhSq7V4X0gwin7b9h3ziY4zklaPe
+\restrict WmlyozFAnc1c6zHWXudb7s2jRC1uKwHPlCMDikRGHsbNPX1TGBaq3KQ01YXVO8T
 
 -- Dumped from database version 13.4 (Debian 13.4-4.pgdg110+1)
 -- Dumped by pg_dump version 13.23 (Debian 13.23-1.pgdg11+1)
@@ -738,7 +738,9 @@ CREATE TABLE public.contacts (
     verification_id character varying,
     checked_company_at timestamp without time zone,
     company_register_status character varying,
-    system_disclosed_attributes character varying[] DEFAULT '{}'::character varying[]
+    system_disclosed_attributes character varying[] DEFAULT '{}'::character varying[],
+    verification_pending_at timestamp without time zone,
+    verification_snapshot jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -4448,6 +4450,13 @@ CREATE INDEX index_contacts_on_registrar_id_and_ident_type ON public.contacts US
 
 
 --
+-- Name: index_contacts_on_verification_pending_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contacts_on_verification_pending_at ON public.contacts USING btree (verification_pending_at);
+
+
+--
 -- Name: index_contacts_on_verified_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5346,7 +5355,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict UcsiEKfHzXBZIZHqjYwWEEWgCcCXbG1YFqBmhSq7V4X0gwin7b9h3ziY4zklaPe
+\unrestrict WmlyozFAnc1c6zHWXudb7s2jRC1uKwHPlCMDikRGHsbNPX1TGBaq3KQ01YXVO8T
 
 SET search_path TO "$user", public;
 
@@ -5853,6 +5862,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260220111500'),
 ('20260406125446'),
 ('20260529120000'),
-('20260601120000');
+('20260601120000'),
+('20260608120000');
 
 

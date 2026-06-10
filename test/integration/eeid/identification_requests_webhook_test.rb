@@ -16,9 +16,16 @@ class Eeid::IdentificationRequestsWebhookTest < ActionDispatch::IntegrationTest
         status: 200,
         body: { access_token: 'token', token_type: 'Bearer', expires_in: 100 }.to_json, headers: {}
       )
-    pdf_content = File.read(Rails.root.join('test/fixtures/files/legaldoc.pdf'))
-    stub_request(:get, %r{api/ident/v1/identification_requests})
+    pdf_content = File.binread(Rails.root.join('test/fixtures/files/legaldoc.pdf'))
+    stub_request(:get, %r{api/ident/v1/identification_requests/.+/proof_of_identity})
       .to_return(status: 200, body: pdf_content, headers: { 'Content-Type' => 'application/pdf' })
+    default_ident_body = {
+      id: '123',
+      status: 'completed',
+      result: { sub: 'US1234' }
+    }.to_json
+    stub_request(:get, %r{api/ident/v1/identification_requests/[^/]+$})
+      .to_return(status: 200, body: default_ident_body, headers: { 'Content-Type' => 'application/json' })
 
     adapter = ENV['shunter_default_adapter'].constantize.new
     adapter&.clear!
@@ -26,6 +33,14 @@ class Eeid::IdentificationRequestsWebhookTest < ActionDispatch::IntegrationTest
 
   test 'should verify contact with valid signature and parameters' do
     @contact.update!(ident_request_sent_at: Time.zone.now - 1.day)
+    ident_body = {
+      id: '123',
+      status: 'completed',
+      result: { sub: 'US1234' }
+    }.to_json
+    stub_request(:get, %r{api/ident/v1/identification_requests/123$})
+      .to_return(status: 200, body: ident_body, headers: { 'Content-Type' => 'application/json' })
+
     post '/eeid/webhooks/identification_requests', params: { identification_request_id: '123', reference: @contact.code }, as: :json, headers: { 'X-HMAC-Signature' => @valid_hmac_signature }
 
     assert_response :ok
@@ -58,7 +73,7 @@ class Eeid::IdentificationRequestsWebhookTest < ActionDispatch::IntegrationTest
     @contact.update!(ident_request_sent_at: Time.zone.now - 1.day)
 
     Eeid::Webhooks::IdentificationRequestsController.stub_any_instance(
-      :verify_contact,
+      :process_contact,
       proc { |_contact| raise StandardError, 'Simulated error' }
     ) do
       post '/eeid/webhooks/identification_requests', params: { identification_request_id: '123', reference: @contact.code }, as: :json, headers: { 'X-HMAC-Signature' => @valid_hmac_signature }
@@ -70,7 +85,7 @@ class Eeid::IdentificationRequestsWebhookTest < ActionDispatch::IntegrationTest
   end
 
   test 'should handle error from ident response' do
-    stub_request(:get, %r{api/ident/v1/identification_requests})
+    stub_request(:get, %r{api/ident/v1/identification_requests/.+/proof_of_identity})
       .to_return(status: :not_found, body: { error: 'Proof of identity not found' }.to_json, headers: { 'Content-Type' => 'application/json' })
 
     @contact.update!(ident_request_sent_at: Time.zone.now - 1.day)
@@ -178,6 +193,107 @@ class Eeid::IdentificationRequestsWebhookTest < ActionDispatch::IntegrationTest
     assert_includes ActionMailer::Base.deliveries.last.subject, api_user.username
   end
 
+  test 'should pending review contact when sub mismatches contact ident' do
+    @contact.update!(ident_request_sent_at: Time.zone.now - 1.day)
+    request_id = '321'
+    payload = { identification_request_id: request_id, reference: @contact.code }
+    ident_body = {
+      id: request_id,
+      status: 'completed',
+      claims_matched: false,
+      result: { sub: 'US9999', given_name: 'John' }
+    }.to_json
+    stub_request(:get, %r{api/ident/v1/identification_requests/#{request_id}$})
+      .to_return(status: 200, body: ident_body, headers: { 'Content-Type' => 'application/json' })
+
+    post '/eeid/webhooks/identification_requests',
+         params: payload,
+         as: :json,
+         headers: { 'X-HMAC-Signature' => hmac_signature_for(payload) }
+
+    assert_response :ok
+    assert_equal({ 'status' => 'success' }, JSON.parse(response.body))
+
+    @contact.reload
+    assert_nil @contact.verified_at
+    assert @contact.verification_pending_at.present?
+    assert_equal request_id, @contact.verification_id
+    assert_equal 'US9999', @contact.verification_snapshot['sub']
+    assert_equal 'John', @contact.verification_snapshot['given_name']
+
+    assert_notify_registrar_pending_review(
+      "Teade: Kontakti [#{@contact.code}] isikutuvastus vajab registripidaja kinnitust " \
+        "/ Notification: Contact [#{@contact.code}] identity verification needs registrar review"
+    )
+  end
+
+  test 'contact verify to mismatch webhook ends in pending review with downloadable POI' do
+    user = users(:api_bestnames)
+    auth_headers = { 'Authorization' => repp_basic_auth(user) }
+
+    stub_request(:post, %r{api/ident/v1/identification_requests})
+      .with(
+        body: {
+          claims_required: [{ type: 'sub', value: 'US1234' }],
+          reference: @contact.code
+        }
+      ).to_return(
+        status: 200,
+        body: { id: '555', link: 'http://link' }.to_json,
+        headers: { 'Content-Type' => 'application/json' }
+      )
+
+    post "/repp/v1/contacts/verify/#{@contact.code}", headers: auth_headers
+
+    assert_response :ok
+    @contact.reload
+    assert @contact.ident_request_sent_at.present?
+    assert_nil @contact.verified_at
+    assert_nil @contact.verification_pending_at
+
+    request_id = '555'
+    payload = { identification_request_id: request_id, reference: @contact.code }
+    ident_body = {
+      id: request_id,
+      status: 'completed',
+      claims_matched: false,
+      result: { sub: 'US9999', given_name: 'John', family_name: 'Doe' }
+    }.to_json
+    stub_request(:get, %r{api/ident/v1/identification_requests/#{request_id}$})
+      .to_return(status: 200, body: ident_body, headers: { 'Content-Type' => 'application/json' })
+
+    ActionMailer::Base.deliveries.clear
+
+    post '/eeid/webhooks/identification_requests',
+         params: payload,
+         as: :json,
+         headers: { 'X-HMAC-Signature' => hmac_signature_for(payload) }
+
+    assert_response :ok
+    assert_equal({ 'status' => 'success' }, JSON.parse(response.body))
+
+    @contact.reload
+    assert_nil @contact.verified_at
+    assert @contact.verification_pending_at.present?
+    assert_equal request_id, @contact.verification_id
+    assert_equal 'US9999', @contact.verification_snapshot['sub']
+
+    assert_notify_registrar_pending_review(
+      "Teade: Kontakti [#{@contact.code}] isikutuvastus vajab registripidaja kinnitust " \
+        "/ Notification: Contact [#{@contact.code}] identity verification needs registrar review"
+    )
+
+    get "/repp/v1/contacts/download_poi/#{@contact.code}", headers: auth_headers
+
+    assert_response :ok
+    assert_equal 'application/pdf', response.headers['Content-Type']
+    assert_equal(
+      "inline; filename=\"proof_of_identity_#{request_id}.pdf\"; filename*=UTF-8''proof_of_identity_#{request_id}.pdf",
+      response.headers['Content-Disposition']
+    )
+    assert_not_empty response.body
+  end
+
   test 'should pending review api user when subject conflicts with another user' do
     existing = users(:api_bestnames)
     existing.update!(subject: 'GBAB999999', registrar: users(:api_bestnames_epp).registrar)
@@ -223,6 +339,15 @@ class Eeid::IdentificationRequestsWebhookTest < ActionDispatch::IntegrationTest
 
   private
 
+  def hmac_signature_for(payload)
+    OpenSSL::HMAC.hexdigest('SHA256', @secret, payload.to_json)
+  end
+
+  def repp_basic_auth(user)
+    token = Base64.encode64("#{user.username}:#{user.plain_text_password}")
+    "Basic #{token}"
+  end
+
   def assert_notify_registrar(subject)
     assert_emails 1
     email = ActionMailer::Base.deliveries.last
@@ -230,5 +355,15 @@ class Eeid::IdentificationRequestsWebhookTest < ActionDispatch::IntegrationTest
     assert_equal subject, email.subject
     assert_equal 1, email.attachments.size
     assert_equal 'proof_of_identity.pdf', email.attachments.first.filename
+  end
+
+  def assert_notify_registrar_pending_review(subject)
+    assert_emails 1
+    email = ActionMailer::Base.deliveries.last
+    assert_equal [@contact.registrar.email], email.to
+    assert_equal subject, email.subject
+    assert_equal 1, email.attachments.size
+    assert_equal 'proof_of_identity.pdf', email.attachments.first.filename
+    assert_not_empty email.attachments.first.body.raw_source
   end
 end

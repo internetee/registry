@@ -31,6 +31,9 @@ et:
             base:
               verification_exists: Kontakt on juba kinnitatud
               verification_error: Identifitseerimistaotluse saatmine ebaõnnestus
+              not_pending_verification: Kinnitamist ootavat identifitseerimist pole
+              missing_subject: Isiku identifikaator on kinnitamiseks kohustuslik
+              missing_claims: Kinnitamiseks vajalikud isikuandmed puuduvad
             code:
               blank: Kohustuslik parameeter puudub – kood
               invalid: Kontakti kood on vigane

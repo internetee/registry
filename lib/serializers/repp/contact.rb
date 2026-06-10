@@ -19,7 +19,9 @@ module Serializers
                  created_at: obj.created_at, auth_info: obj.auth_info, email: obj.email,
                  statuses: statuses, disclosed_attributes: obj.disclosed_attributes,
                  registrar: registrar, ident_request_sent_at: obj.ident_request_sent_at,
-                 verified_at: obj.verified_at, verification_id: obj.verification_id }
+                 verified_at: obj.verified_at, verification_id: obj.verification_id,
+                 verification_pending_at: obj.verification_pending_at,
+                 verification_snapshot: obj.verification_snapshot }
         json[:address] = address if @show_address
         if @domain_params
           json[:domains] = domains

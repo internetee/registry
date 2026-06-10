@@ -1,5 +1,7 @@
 et:
   registrar_mailer:
+    contact_verification_pending:
+      subject: 'Teade: Kontakti [%{contact_code}] isikutuvastus vajab registripidaja kinnitust'
     api_user_verified:
       subject: 'Teade: API kasutaja [%{username}] isikutuvastus kinnitatud automaatselt'
     api_user_verification_pending:

@@ -92,18 +92,20 @@ module Eeid
         if entity.is_a?(ApiUser)
           process_api_user(entity)
         else
-          verify_contact(entity)
+          process_contact(entity)
         end
       end
 
-      def verify_contact(contact)
-        ref = permitted_params[:reference]
-        if contact&.ident_request_sent_at.present?
-          contact.update(verified_at: Time.zone.now, verification_id: permitted_params[:identification_request_id])
-          Rails.logger.info("Contact verified: #{ref}")
-        else
-          Rails.logger.error("Valid contact not found for reference: #{ref}")
-        end
+      def process_contact(contact)
+        ident_service = Eeid::IdentificationService.new(contact.ident_type)
+        response = ident_service.get_identification_request(permitted_params[:identification_request_id])
+        result = response[:result] || response['result'] || {}
+
+        @contact_outcome = Actions::ProcessContactIdentificationWebhook.new(
+          contact,
+          identification_request_id: permitted_params[:identification_request_id],
+          result: result
+        ).call
       end
 
       def process_api_user(api_user)
@@ -133,7 +135,15 @@ module Eeid
         if entity.is_a?(ApiUser)
           inform_registrar_api_user(email, entity, poi)
         else
-          RegistrarMailer.contact_verified(email: email, contact: entity, poi: poi).deliver_now
+          inform_registrar_contact(email, entity, poi)
+        end
+      end
+
+      def inform_registrar_contact(email, contact, poi)
+        if contact.verification_pending_at.present?
+          RegistrarMailer.contact_verification_pending(email: email, contact: contact, poi: poi).deliver_now
+        elsif contact.verified_at.present?
+          RegistrarMailer.contact_verified(email: email, contact: contact, poi: poi).deliver_now
         end
       end
 
