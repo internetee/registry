@@ -16,6 +16,7 @@ module Actions
       end
 
       api_user.update!(
+        ident_request_sent_at: nil,
         verification_pending_at: nil,
         verification_id: nil,
         verification_snapshot: {}
