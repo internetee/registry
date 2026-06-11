@@ -39,15 +39,16 @@ class ReppV1RegistrarAuthCheckInfoTest < ActionDispatch::IntegrationTest
     assert_equal json[:message], 'Invalid authorization information'
   end
 
-  def test_allows_unverified_user_login_with_valid_password
+  def test_rejects_unverified_user_login_with_valid_password
     @user.update_columns(verified_at: nil)
 
     get '/repp/v1/registrar/auth', headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
-    assert_response :ok
-    assert_equal 1000, json[:code]
-    assert_equal json[:data][:username], @user.username
+    assert_response :unauthorized
+    assert_equal 2202, json[:code]
+    assert_equal I18n.t('registrar.authorization.identity_not_verified'), json[:message]
+    assert_equal false, json[:data][:eligible_for_sign_in]
   end
 
   def test_returns_error_response_if_throttled

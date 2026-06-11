@@ -89,9 +89,20 @@ module Repp
 
         raise(ArgumentError)
       rescue NoMethodError, ArgumentError
-        @response = { code: 2202, message: 'Invalid authorization information',
-                      data: { username: username, password: password, eligible_for_sign_in: user_eligible } }
+        @response = {
+          code: 2202,
+          message: authentication_failure_message,
+          data: { username: username, password: password, eligible_for_sign_in: user_eligible }
+        }
         render(json: @response, status: :unauthorized)
+      end
+
+      def authentication_failure_message
+        if @current_user&.active? && !@current_user.identity_verified?
+          I18n.t('registrar.authorization.identity_not_verified')
+        else
+          I18n.t('registrar.authorization.invalid_authorization_information')
+        end
       end
 
       def check_api_ip_restriction

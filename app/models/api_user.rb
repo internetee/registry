@@ -47,7 +47,7 @@ class ApiUser < User
   end
 
   def eligible_for_sign_in?
-    active?
+    active? && identity_verified?
   end
 
   def verification_pending?

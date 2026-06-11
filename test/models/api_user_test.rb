@@ -159,15 +159,15 @@ class ApiUserTest < ActiveSupport::TestCase
     assert_not @user.linked_with?(nil)
   end
 
-  def test_eligible_for_sign_in_requires_active
-    @user.update_columns(active: true, subject: nil)
+  def test_eligible_for_sign_in_requires_active_and_verified
+    @user.update_columns(active: true, verified_at: Time.zone.now)
     assert @user.eligible_for_sign_in?
 
     @user.update_columns(active: false)
     assert_not @user.eligible_for_sign_in?
 
     @user.update_columns(active: true, subject: 'EE1234', verified_at: nil)
-    assert @user.eligible_for_sign_in?
+    assert_not @user.eligible_for_sign_in?
   end
 
   def test_subject_change_clears_verification_status_when_subject_previously_present
