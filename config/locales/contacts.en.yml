@@ -5,36 +5,74 @@ en:
       registrant: Registrant
       admin_domain_contact: Administrative contact
       tech_domain_contact: Technical contact
+      contact:
+        one: Contact
+        other: Contacts
+    attributes:
+      contact:
+        name: Name
+        email: Email
+        phone: Phone
+        street: Street
+        city: City
+        zip: Postcode
+        country_code: Country code
+        code: Contact code
+        registrant_publishable: Registrant publishable
+        disclosed_attributes: Disclosed attributes
+        statuses: Statuses
+        domains: Domains
     errors:
+      messages:
+        epp_id_taken: Contact id already exists
       models:
         contact:
           attributes:
             base:
               verification_exists: Contact already verified
               verification_error: Sending identification request failed
+              not_pending_verification: No pending verification to approve or reject
+              missing_subject: Identity subject is required to approve verification
+              missing_claims: Required identity claims are missing to approve verification
+              id_number_requires_priv_contact: Identification returned a national ID number. Birthday contacts cannot be approved with an ID number — change the contact type to private (priv) and approve again.
             code:
-              blank: "Required parameter missing - code"
-              too_long_contact_code: "Contact code is too long, max 100 characters"
+              blank: Required parameter missing - code
+              invalid: Contact code is invalid
+              too_long_contact_code: Contact code is too long, max 100 characters
+              epp_id_taken: Contact id already exists
             name:
-              blank: "Required parameter missing - name"
-              invalid: "Name is invalid"
-              too_long_contact_name: "Contact name is too long, max 255 characters"
+              blank: Required parameter missing - name
+              invalid: Name is invalid
+              too_long_contact_name: Contact name is too long, max 255 characters
             phone:
-              blank: "Required parameter missing - phone"
-              invalid: "Phone nr is invalid"
+              blank: Required parameter missing - phone
+              invalid: Phone nr is invalid
+              too_long: Phone nr is too long, max 17 characters
             email:
-              blank: "Required parameter missing - email"
-              invalid: "Email is invalid"
+              blank: Required parameter missing - email
+              invalid: Email is invalid
               email_smtp_check_error: SMTP check error
               email_mx_check_error: Mail domain not found
               email_regex_check_error: Invalid format
+            street:
+              blank: Required parameter missing - street
+              invalid: Street is invalid
+            city:
+              blank: Required parameter missing - city
+              invalid: City is invalid
+            zip:
+              blank: Required parameter missing - zip
+              invalid: Postcode is invalid
             domains:
-              exist: 'Object association prohibits operation'
+              exist: Object association prohibits operation
               delete_prohibited: Contact delete prohibited by status
             statuses:
-              not_uniq: 'not uniq'
+              not_uniq: not uniq
               delete_prohibited: Contact delete prohibited by status
             country_code:
+              blank: Required parameter missing - country code
               invalid: Country code is not valid, should be in ISO_3166-1 alpha 2 format (%{value})
             disclosed_attributes:
               invalid: contain unsupported attribute(s)
+            registrant_publishable:
+              inclusion: is not included in the list

@@ -30,6 +30,11 @@ en:
         api_users:
           header: API Users
           new_btn: New API user
+          verification_status: Verification status
+          verified: Verified
+          pending_review: Pending registrar review
+          requested: Requested
+          unverified: Unverified
           set_test_btn: Set Accreditation
           remove_test_btn: Remove Accreditation
 

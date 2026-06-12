@@ -1,6 +1,4 @@
 class FillEmailVerifications < ActiveRecord::Migration[6.0]
-  include Concerns::EmailVerifable
-
   def up
     # registrar_billing_emails = Registrar.pluck(:billing_email).uniq.reject(&:blank?)
     # registrar_emails = Registrar.pluck(:email).uniq.reject(&:blank?)
@@ -17,6 +15,6 @@ class FillEmailVerifications < ActiveRecord::Migration[6.0]
   end
 
   def down
-    EmailAddressVerification.delete_all
+    # EmailAddressVerification table removed in 20220413073315_remove_email_address_verifications
   end
 end
