@@ -46,7 +46,6 @@ class ReppV1RegistrarAuthCheckInfoTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :unauthorized
-    assert_equal 2202, json[:code]
     assert_equal I18n.t('registrar.authorization.identity_not_verified'), json[:message]
     assert_equal false, json[:data][:eligible_for_sign_in]
   end

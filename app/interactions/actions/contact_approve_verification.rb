@@ -53,6 +53,11 @@ module Actions
     private
 
     def birthday_attrs_from_snapshot(snapshot)
+      if snapshot[:id_number].to_s.strip.present?
+        contact.errors.add(:base, :id_number_requires_priv_contact)
+        return nil
+      end
+
       birthdate = snapshot[:birthdate].presence || snapshot[:date_of_birth].presence
       name = snapshot[:name].presence ||
              [snapshot[:given_name], snapshot[:family_name]].compact.join(' ').strip.presence

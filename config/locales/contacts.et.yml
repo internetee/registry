@@ -34,6 +34,7 @@ et:
               not_pending_verification: Kinnitamist ootavat identifitseerimist pole
               missing_subject: Isiku identifikaator on kinnitamiseks kohustuslik
               missing_claims: Kinnitamiseks vajalikud isikuandmed puuduvad
+              id_number_requires_priv_contact: Isikutuvastus tagastas isikukoodi. Sünnikuupäeva tüüpi kontakti ei saa isikukoodiga kinnitada — muutke kontakti tüübiks eraisik (priv) ja kinnitage uuesti.
             code:
               blank: Kohustuslik parameeter puudub – kood
               invalid: Kontakti kood on vigane

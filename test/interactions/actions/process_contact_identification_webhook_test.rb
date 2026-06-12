@@ -39,4 +39,32 @@ class Actions::ProcessContactIdentificationWebhookTest < ActiveSupport::TestCase
     assert @contact.verification_pending_at.present?
     assert_equal 'US9999', @contact.verification_snapshot['sub']
   end
+
+  test 'pending review for birthday contact when result contains id_number' do
+    @contact.update!(
+      ident_type: Contact::BIRTHDAY,
+      ident: '2010-07-05',
+      ident_country_code: 'EE',
+      name: 'Child Example'
+    )
+
+    action = Actions::ProcessContactIdentificationWebhook.new(
+      @contact,
+      identification_request_id: '125',
+      result: {
+        date_of_birth: '2010-07-05',
+        given_name: 'Child',
+        family_name: 'Example',
+        country: 'EE',
+        id_number: '30303039914'
+      }
+    )
+
+    assert action.call
+    assert_equal :pending_review, action.outcome
+
+    @contact.reload
+    assert @contact.verification_pending_at.present?
+    assert_equal '30303039914', @contact.verification_snapshot['id_number']
+  end
 end

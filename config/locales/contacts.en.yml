@@ -34,6 +34,7 @@ en:
               not_pending_verification: No pending verification to approve or reject
               missing_subject: Identity subject is required to approve verification
               missing_claims: Required identity claims are missing to approve verification
+              id_number_requires_priv_contact: Identification returned a national ID number. Birthday contacts cannot be approved with an ID number — change the contact type to private (priv) and approve again.
             code:
               blank: Required parameter missing - code
               invalid: Contact code is invalid

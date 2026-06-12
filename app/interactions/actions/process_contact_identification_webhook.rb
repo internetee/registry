@@ -37,6 +37,7 @@ module Actions
 
     def compute_pending_reason
       if contact.ident_type == Contact::BIRTHDAY
+        return :id_number_requires_priv if id_number_from_result.present?
         return :missing_claims if birthday_claims_incomplete?
         return :claim_mismatch if birthday_claim_mismatch?
       else
@@ -87,6 +88,10 @@ module Actions
       @result[:country].to_s.strip.upcase.presence
     end
 
+    def id_number_from_result
+      @result[:id_number].to_s.strip.presence
+    end
+
     def normalize(value)
       value.to_s.strip.upcase
     end
@@ -113,7 +118,7 @@ module Actions
 
     def verification_snapshot
       @result.slice(:sub, :given_name, :family_name, :name, :date_of_birth, :birthdate, :country,
-                    :authentication_type).compact
+                    :authentication_type, :id_number, :document_number).compact
     end
   end
 end
