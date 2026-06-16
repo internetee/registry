@@ -107,19 +107,12 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def issue_prepayment_invoice(amount, description = nil, payable: true)
-    # Invoice creation and the billing push must be atomic: if the deposit
-    # cannot be registered in the billing system, the registry invoice (and the
-    # invoice number reserved for it) must be rolled back, otherwise the billing
-    # number sequence drifts and later invoices collide on `unique_number`.
     invoice = transaction do
       new_invoice = create_prepayment_invoice!(amount, description)
       send_prepayment_invoice_to_billing(new_invoice)
       new_invoice
     end
 
-    # Side effects below are best-effort and intentionally kept OUTSIDE the
-    # transaction: an external e-invoice/Business Registry hiccup must never roll
-    # back an already-registered invoice nor hold the DB transaction open.
     unless payable && (accepts_e_invoices? && !accept_pdf_invoices?)
       InvoiceMailer.invoice_email(invoice: invoice, recipient: billing_email, paid: !payable)
                    .deliver_later(wait: 1.minute)
