@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'csv'
 
 class AdminAreaRegistrarsIntegrationTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
@@ -18,5 +19,26 @@ class AdminAreaRegistrarsIntegrationTest < ActionDispatch::IntegrationTest
     @registrar.reload
 
     assert_equal new_iban, @registrar.iban
+  end
+
+  def test_exports_registrars_as_csv_with_default_fields
+    get admin_registrars_path(format: :csv)
+
+    assert_response :ok
+    assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
+
+    csv = CSV.parse(response.body, headers: true)
+    assert_includes csv.headers, 'code'
+    assert_includes csv.headers, 'name'
+    assert(csv.find { |row| row['code'] == @registrar.code })
+  end
+
+  def test_exports_registrars_as_csv_with_selected_fields
+    get admin_registrars_path(format: :csv), params: { csv_fields: %w[reg_no email] }
+
+    assert_response :ok
+
+    csv = CSV.parse(response.body, headers: true)
+    assert_equal %w[code reg_no email], csv.headers
   end
 end

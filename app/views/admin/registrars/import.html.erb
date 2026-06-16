@@ -1,0 +1,25 @@
+<% fields = Array(@csv_sync_fields || @fields) %>
+<% selected_fields = Array(@selected_fields).presence || fields %>
+<% field_groups = @csv_sync_field_groups || @field_groups %>
+
+<ol class="breadcrumb">
+  <li><%= link_to t('admin.registrars.index.header'), admin_registrars_path %></li>
+  <li class="active"><%= t('.header') %></li>
+</ol>
+
+<div class="page-header">
+  <h1><%= t('.header') %></h1>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading"><%= t('.panel_title') %></div>
+  <div class="panel-body">
+    <%= render 'admin/csv_sync/import_form',
+        url: import_preview_admin_registrars_path,
+        fields: fields,
+        selected_fields: selected_fields,
+        model_name: :registrar,
+        field_groups: field_groups,
+        cancel_url: admin_registrars_path %>
+  </div>
+</div>
