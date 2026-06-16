@@ -107,7 +107,31 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def issue_prepayment_invoice(amount, description = nil, payable: true)
-    invoice = invoices.create!(
+    # Invoice creation and the billing push must be atomic: if the deposit
+    # cannot be registered in the billing system, the registry invoice (and the
+    # invoice number reserved for it) must be rolled back, otherwise the billing
+    # number sequence drifts and later invoices collide on `unique_number`.
+    invoice = transaction do
+      new_invoice = create_prepayment_invoice!(amount, description)
+      send_prepayment_invoice_to_billing(new_invoice)
+      new_invoice
+    end
+
+    # Side effects below are best-effort and intentionally kept OUTSIDE the
+    # transaction: an external e-invoice/Business Registry hiccup must never roll
+    # back an already-registered invoice nor hold the DB transaction open.
+    unless payable && (accepts_e_invoices? && !accept_pdf_invoices?)
+      InvoiceMailer.invoice_email(invoice: invoice, recipient: billing_email, paid: !payable)
+                   .deliver_later(wait: 1.minute)
+    end
+
+    SendEInvoiceJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
+
+    invoice
+  end
+
+  def create_prepayment_invoice!(amount, description)
+    invoices.create!(
       issue_date: Time.zone.today,
       due_date: (Time.zone.now + Setting.days_to_keep_invoices_active.days).to_date,
       description: description,
@@ -150,21 +174,13 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
         },
       ]
     )
+  end
 
-    unless payable && (accepts_e_invoices? && !accept_pdf_invoices?)
-      InvoiceMailer.invoice_email(invoice: invoice, recipient: billing_email, paid: !payable)
-                   .deliver_later(wait: 1.minute)
-    end
-
-    add_invoice_instance = EisBilling::AddDeposits.new(invoice)
-    result = add_invoice_instance.call
-
+  def send_prepayment_invoice_to_billing(invoice)
+    result = EisBilling::AddDeposits.new(invoice).call
     link = JSON.parse(result.body)['everypay_link']
 
-    invoice.update(payment_link: link)
-    SendEInvoiceJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
-
-    invoice
+    invoice.update!(payment_link: link)
   end
   # rubocop:enable Metrics/MethodLength
 
@@ -318,7 +334,10 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
     result = company_register.e_invoice_recipients(registration_numbers: reg_no).first
     result.status == 'OK'
-  rescue CompanyRegister::NotAvailableError, CompanyRegister::SOAPFaultError => e
+  rescue StandardError => e
+    # Any failure to determine e-invoice status (Business Registry SOAP fault,
+    # network/SSL error, unexpected response) must degrade safely to "send PDF"
+    # and never break invoice creation.
     Rails.logger.error("Error checking e-invoice status for #{reg_no}: #{e.message}")
     false
   end
