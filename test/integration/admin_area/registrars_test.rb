@@ -25,7 +25,7 @@ class AdminAreaRegistrarsIntegrationTest < ActionDispatch::IntegrationTest
     get admin_registrars_path(format: :csv)
 
     assert_response :ok
-    assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
+    assert_equal 'text/csv', response.headers['Content-Type']
 
     csv = CSV.parse(response.body, headers: true)
     assert_includes csv.headers, 'code'
