@@ -1,0 +1,48 @@
+et:
+  cannot get access: Arveldusteenusele juurdepääsu ei õnnestunud saada
+  failed_to_generate_invoice_invoice_number_limit_reached: Arve genereerimine ebaõnnestus – arve numbri limiit on täis
+  invoice_no: 'Arve nr %{no}'
+  cancelled: Tühistatud
+  unpaid: Maksmata
+  activerecord:
+    models:
+      invoice:
+        one: Arve
+        other: Arved
+      invoice_item:
+        one: Arve rida
+        other: Arve read
+    attributes:
+      invoice:
+        due_date: Tähtaeg
+        currency: Valuuta
+        seller_name: Müüja nimi
+        seller_iban: Müüja IBAN
+        buyer_name: Ostja nimi
+        buyer_vat_no: Ostja käibemaksukohustuslase number
+        number: Arve number
+        total: Summa
+        items: Arve read
+      invoice_item:
+        price: Hind
+        quantity: Kogus
+        description: Kirjeldus
+    errors:
+      models:
+        invoice:
+          attributes:
+            base:
+              invoice_status_prohibits_operation: Arve staatus keelab toimingu
+              invalid_state: 'Vigane staatus %{status}'
+            due_date:
+              blank: Tähtaeg on kohustuslik
+            currency:
+              blank: Valuuta on kohustuslik
+            seller_name:
+              blank: Müüja nimi on kohustuslik
+            seller_iban:
+              blank: Müüja IBAN on kohustuslik
+            buyer_name:
+              blank: Ostja nimi on kohustuslik
+            items:
+              blank: Arvel peab olema vähemalt üks rida

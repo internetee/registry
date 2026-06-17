@@ -6,8 +6,9 @@
     <table class="table table-hover table-bordered table-condensed">
         <thead>
             <tr>
-                <th class="col-xs-6"><%= ApiUser.human_attribute_name :username %></th>
-                <th class="col-xs-6 text-right"><%= ApiUser.human_attribute_name :active %></th>
+                <th class="col-xs-4"><%= ApiUser.human_attribute_name :username %></th>
+                <th class="col-xs-4 text-right"><%= t('.verification_status') %></th>
+                <th class="col-xs-4 text-right"><%= ApiUser.human_attribute_name :active %></th>
             </tr>
         </thead>
 
@@ -15,6 +16,17 @@
             <% registrar.api_users.each do |api_user| %>
                 <tr>
                     <td><%= link_to api_user, admin_registrar_api_user_path(registrar, api_user) %></td>
+                    <td class="text-right">
+                        <% if api_user.verified_at.present? %>
+                            <%= t('.verified') %>
+                        <% elsif api_user.verification_pending_at.present? %>
+                            <%= t('.pending_review') %>
+                        <% elsif api_user.ident_request_sent_at.present? %>
+                            <%= t('.requested') %>
+                        <% else %>
+                            <%= t('.unverified') %>
+                        <% end %>
+                    </td>
                     <td class="text-right"><%= api_user.active %></td>
                 </tr>
             <% end %>

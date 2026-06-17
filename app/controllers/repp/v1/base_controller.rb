@@ -35,7 +35,8 @@ module Repp
       end
 
       def render_success(code: nil, message: nil, data: nil)
-        @response = { code: code || 1000, message: message || 'Command completed successfully',
+        @response = { code: code || 1000,
+                      message: message || I18n.t('repp.command_completed_successfully'),
                       data: data || {} }
 
         render(json: @response, status: :ok)
@@ -82,15 +83,26 @@ module Repp
       def authenticate_user
         username, password = Base64.urlsafe_decode64(basic_token).split(':', 2)
         @current_user ||= ApiUser.find_by(username: username, plain_text_password: password)
-        user_active = @current_user.active?
+        user_eligible = @current_user&.eligible_for_sign_in?
 
-        return if @current_user && user_active
+        return if @current_user && user_eligible
 
         raise(ArgumentError)
       rescue NoMethodError, ArgumentError
-        @response = { code: 2202, message: 'Invalid authorization information',
-                      data: { username: username, password: password, active: user_active } }
+        @response = {
+          code: 2202,
+          message: authentication_failure_message,
+          data: { username: username, password: password, eligible_for_sign_in: user_eligible }
+        }
         render(json: @response, status: :unauthorized)
+      end
+
+      def authentication_failure_message
+        if @current_user&.active? && !@current_user.identity_verified?
+          I18n.t('registrar.authorization.identity_not_verified')
+        else
+          I18n.t('registrar.authorization.invalid_authorization_information')
+        end
       end
 
       def check_api_ip_restriction

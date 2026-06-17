@@ -7,6 +7,7 @@ module Actions
       @params = params
       @bypass_verify = bypass_verify
       @changes_registrant = false
+      @dispute_validated = false
     end
 
     def call
@@ -43,7 +44,7 @@ module Actions
 
       return unless domain.discarded?
 
-      domain.add_epp_error('2304', nil, nil, 'Object status prohibits operation')
+      domain.add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     end
 
     def assign_new_registrant
@@ -139,13 +140,18 @@ module Actions
 
     def validate_email(email)
       return true if Rails.env.test?
+      return true if domain.disputed?
 
       %i[regex mx].each do |m|
         result = Actions::SimpleMailValidator.run(email: email, level: m)
         next if result
 
-        err_text = "email #{email} didn't pass validation"
-        domain.add_epp_error('2005', nil, nil, "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
+        domain.add_epp_error(
+          '2005',
+          nil,
+          nil,
+          "#{I18n.t(:parameter_value_syntax_error)} #{I18n.t(:email_did_not_pass_validation, email: email)}"
+        )
         @error = true
         return false
       end
@@ -269,25 +275,33 @@ module Actions
     end
 
     def validate_dispute_case
+      unless @changes_registrant
+        domain.add_epp_error(
+          '2304', nil, nil, %i[base dispute_update_requires_registrant_change]
+        )
+        return false
+      end
+
       dispute = Dispute.active.find_by(domain_name: domain.name, password: params[:reserved_pw])
-      Dispute.close_by_domain(domain.name) and return false if dispute
+      if dispute
+        @dispute_validated = true
+        return false
+      end
 
       if params[:reserved_pw].present?
-        domain.add_epp_error(
-          '2202', nil, nil, 'Invalid authorization information; invalid reserved>pw value'
-        )
+        domain.add_epp_error('2202', nil, nil, %i[base invalid_auth_information_disputed])
       else
-        domain.add_epp_error(
-          '2304', nil, nil, 'Required parameter missing; reservedpw element required for dispute domains'
-        )
+        domain.add_epp_error('2304', nil, nil, %i[base required_parameter_missing_disputed])
       end
-      true
+      false
     end
 
     def commit
       return false if any_errors?
+      return false unless domain.save
 
-      domain.save
+      Dispute.close_by_domain(domain.name) if @dispute_validated
+      true
     end
 
     def any_errors?
