@@ -1,0 +1,5 @@
+et:
+  epp:
+    contacts:
+      completed: Käsk edukalt täidetud
+      completed_without_address: Käsk edukalt täidetud; postiaadressi andmed jäeti arvestamata

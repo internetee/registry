@@ -45,8 +45,8 @@ class InvoiceTest < ActiveSupport::TestCase
     InvoiceStateMachine.new(invoice: @invoice, status: 'cancelled').call
     @invoice.reload
 
-    assert_equal @invoice.errors.full_messages.join, 'Inavalid state cancelled'
     assert @invoice.errors.present?
+    assert_equal invalid_state_message('cancelled'), @invoice.errors.full_messages.join
   end
 
   def test_cancelled_invoiced_cannot_be_unpaid
@@ -63,7 +63,7 @@ class InvoiceTest < ActiveSupport::TestCase
     assert @unpaid.cancelled?
 
     assert @unpaid.errors.present?
-    assert_equal @unpaid.errors.full_messages.join, 'Inavalid state unpaid'
+    assert_equal invalid_state_message('unpaid'), @unpaid.errors.full_messages.join
   end
 
   def test_if_paid_invoice_not_have_response_from_everypay_it_can_be_unpaid_back
@@ -100,6 +100,12 @@ class InvoiceTest < ActiveSupport::TestCase
 
     assert @unpaid.paid?
     assert @unpaid.errors.present?
-    assert_equal @unpaid.errors.full_messages.join, 'Inavalid state unpaid'
+    assert_equal invalid_state_message('unpaid'), @unpaid.errors.full_messages.join
+  end
+
+  private
+
+  def invalid_state_message(status)
+    I18n.t('activerecord.errors.models.invoice.attributes.base.invalid_state', status: status)
   end
 end

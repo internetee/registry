@@ -1,0 +1,132 @@
+et:
+  activerecord:
+    models:
+      domain:
+        one: Domeen
+        other: Domeenid
+    attributes:
+      epp_domain: &epp_domain_attributes
+        name_dirty: Domeeninimi
+        name: Domeeninimi
+        name_puny: Domeeninimi
+        puny_label: Domeeninimi
+        period: Periood
+        transfer_code: Ülekande kood
+        registrant: Registreerija
+        registrar: Registripidaja
+        nameservers: Nimeserverid
+        dnskeys: DNS võtmed
+        admin_domain_contacts: Halduskontaktid
+        admin_contacts: Halduskontaktid
+        tech_domain_contacts: Tehnilised kontaktid
+        tech_contacts: Tehnilised kontaktid
+        domain_contacts: Kontaktid
+        statuses: Staatused
+        domain_statuses: Staatused
+        reserved_pw: Reserveeritud domeeni parool
+      domain:
+        <<: *epp_domain_attributes
+      nameserver:
+        hostname: Hostinimi
+        ipv4: IPv4
+        ipv6: IPv6
+      domain_contact:
+        contact: Kontakt
+      domain_status:
+        value: Staatus
+    errors:
+      models:
+        epp_domain: &epp_domain_errors
+          attributes:
+            base:
+              domain_status_prohibits_operation: Domeeni staatus keelab toimingu
+              domain_already_belongs_to_the_querying_registrar: Domeen kuulub juba päringu teinud registripidajale
+              ds_data_not_allowed: dsData objekt pole lubatud
+              ds_data_with_key_not_allowed: dsData objekt võtmega pole lubatud
+              key_data_not_allowed: keyData objekt pole lubatud
+              required_parameter_missing_reserved: Kohustuslik parameeter puudub; reserveeritud domeenide puhul on nõutav reserved>pw element
+              invalid_auth_information_reserved: Vigane autoriseerimisteave; vigane reserved>pw väärtus
+              required_parameter_missing_disputed: Kohustuslik parameeter puudub; vaidlustatud domeenide puhul on nõutav disputed pw element
+              invalid_auth_information_disputed: Vigane autoriseerimisteave; vigane disputed pw väärtus
+              domain_name_blocked: 'Andmehalduse poliitika rikkumine: domeeninimi on blokeeritud [name]'
+              session_limit_exceeded: Seansi limiit on ületatud; server sulgeb ühenduse
+              domain_at_auction: 'Parameetriväärtuse poliitika viga: domeen on oksjonil'
+              reserved_pw_element_required: 'Kohustuslik parameeter puudub; reserved>pw element on nõutav'
+            name_dirty:
+              blank: Domeeninimi on kohustuslik
+              invalid: Domeeninimi on vigane
+              reserved: Domeeninimi on reserveeritud
+              taken: Domeeninimi on juba olemas
+              blocked: Domeeninimi on blokeeritud
+            puny_label:
+              too_long: Domeeninimi on liiga pikk (maksimaalselt 63 tähemärki)
+            period:
+              blank: Periood on kohustuslik
+              not_a_number: Periood ei ole number
+              not_an_integer: Periood peab olema täisarv
+            transfer_code:
+              blank: Ülekande kood on kohustuslik
+              wrong_pw: Autoriseerimisviga
+            registrant:
+              blank: Registreerija puudub
+              not_found: Registreerijat ei leitud
+              cannot_be_missing: 'Parameetriväärtuse poliitika viga: registreerija ei tohi puududa'
+            domain_contacts:
+              invalid: Kontaktid on vigased
+              not_found: Kontakti ei leitud
+              admin_contact_can_be_only_private_person: Halduskontakt võib olla ainult eraisik
+            admin_domain_contacts:
+              out_of_range: Halduskontaktide arv peab olema vahemikus %{min}–%{max}
+            admin_contacts:
+              out_of_range: Halduskontaktide arv peab olema vahemikus %{min}–%{max}
+              less_than_or_equal_to: Halduskontaktide arv peab olema väiksem või võrdne %{count}-ga
+              greater_than_or_equal_to: Halduskontaktide arv peab olema suurem või võrdne %{count}-ga
+              invalid_ident_type: Halduskontakt võib olla ainult eraisik
+            tech_domain_contacts:
+              out_of_range: Tehniliste kontaktide arv peab olema vahemikus %{min}–%{max}
+            tech_contacts:
+              out_of_range: Tehniliste kontaktide arv peab olema vahemikus %{min}–%{max}
+            nameservers:
+              invalid: Nimeserverid on vigased
+              out_of_range: Andmehalduse poliitika rikkumine; aktiivsete domeenide nimeserverite arv peab olema vahemikus %{min}–%{max}
+              not_found: Nimeserverit ei leitud
+              taken: Nimeserver on sellel domeenil juba olemas
+              less_than_or_equal_to: Nimeserverite arv peab olema väiksem või võrdne %{count}-ga
+              greater_than_or_equal_to: Nimeserverite arv peab olema suurem või võrdne %{count}-ga
+            domain_statuses:
+              invalid: Staatused on vigased
+              not_found: Staatust ei leitud
+              taken: Staatus on sellel domeenil juba olemas
+            statuses:
+              taken: Staatus on sellel domeenil juba olemas
+            registrar:
+              blank: Registripidaja puudub
+            dnskeys:
+              not_found: DS kirjet ei leitud
+              invalid: DNS võtmed on vigased
+              out_of_range: DNS võtmete arv peab olema vahemikus %{min}–%{max}
+            domains:
+              invalid: Objekti staatus keelab toimingu
+        domain:
+          <<: *epp_domain_errors
+          admin_contact_invalid_ident_type: Halduskontakt võib olla ainult eraisik (identifikaatori tüüp %{ident_type} pole lubatud)
+        nameserver:
+          attributes:
+            hostname:
+              invalid: Hostinimi on vigane
+              taken: Nimeserver on sellel domeenil juba olemas
+              puny_to_long: Hostinime puny label on liiga pikk (maksimaalselt 63 tähemärki)
+            ipv4:
+              blank: IP-aadress puudub
+              invalid: IPv4 on vigane
+            ipv6:
+              invalid: IPv6 on vigane
+        domain_contact:
+          attributes:
+            contact:
+              blank: Kontakti ei leitud
+              taken: Kontakt on sellel domeenil juba olemas
+        domain_status:
+          attributes:
+            value:
+              taken: Staatus on sellel domeenil juba olemas

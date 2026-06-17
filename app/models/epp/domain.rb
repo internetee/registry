@@ -242,7 +242,7 @@ class Epp::Domain < Domain
 
   def transfer(frame, action, current_user)
     if discarded?
-      add_epp_error('2106', nil, nil, 'Object is not eligible for transfer')
+      add_epp_error('2106', nil, nil, I18n.t('repp.errors.object_not_eligible_for_transfer'))
       return
     end
 

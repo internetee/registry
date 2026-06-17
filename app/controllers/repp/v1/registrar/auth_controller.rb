@@ -22,17 +22,30 @@ module Repp
         def tara_callback
           user = ApiUser.from_omniauth(auth_params)
           response = { code: 401, message: I18n.t(:no_such_user), data: {} }
-          unless user&.active && webclient_request?
+          unless user && webclient_request?
             render(json: response, status: :unauthorized)
             return
           end
 
+          ::PaperTrail.request(whodunnit: eeid_auto_verify_whodunnit(user)) do
+            auto_verify_from_eeid!(user)
+          end
           token = Base64.urlsafe_encode64("#{user.username}:#{user.plain_text_password}")
           data = auth_values_to_data(user, mode: 'accreditation').merge(token: token)
           render_success(data: data)
         end
 
         private
+
+        def eeid_auto_verify_whodunnit(user)
+          "eeid-auto-verify:#{user.username}"
+        end
+
+        def auto_verify_from_eeid!(user)
+          return if user.verified_at.present?
+
+          user.update!(verified_at: Time.zone.now, verification_pending_at: nil)
+        end
 
         def auth_params
           params.require(:auth).permit(:uid, :new_user_id)

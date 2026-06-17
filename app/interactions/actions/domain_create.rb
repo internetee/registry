@@ -49,10 +49,9 @@ module Actions
 
       dn = DNS::DomainName.new(domain.name)
       if dn.at_auction? || dn.is_deadline_is_reached?
-        domain.add_epp_error('2306', nil, nil, 'Parameter value policy error: domain is at auction')
+        domain.add_epp_error('2306', nil, nil, %i[base domain_at_auction])
       elsif dn.awaiting_payment?
-        domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw element' \
-        ' required for reserved domains')
+        domain.add_epp_error('2003', nil, nil, %i[base required_parameter_missing_reserved])
       elsif dn.pending_registration?
         validate_reserved_password(dn)
       end
@@ -60,12 +59,10 @@ module Actions
 
     def validate_reserved_password(domain_name)
       if params[:reserved_pw].blank?
-        domain.add_epp_error('2003', nil, nil, 'Required parameter missing; reserved>pw ' \
-        'element is required')
+        domain.add_epp_error('2003', nil, nil, %i[base reserved_pw_element_required])
       else
         unless domain_name.available_with_code?(params[:reserved_pw])
-          domain.add_epp_error('2202', nil, nil, 'Invalid authorization information; invalid ' \
-          'reserved>pw value')
+          domain.add_epp_error('2202', nil, nil, %i[base invalid_auth_information_reserved])
         end
       end
     end
