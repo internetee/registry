@@ -25,10 +25,10 @@ en:
               ds_data_not_allowed: 'dsData object is not allowed'
               ds_data_with_key_not_allowed: 'dsData object with key data is not allowed'
               key_data_not_allowed: 'keyData object is not allowed'
-              required_parameter_missing_reserved: 'Required parameter missing; reserved>pw element required for reserved domains'
-              invalid_auth_information_reserved: 'Invalid authorization information; invalid reserved>pw value'
-              required_parameter_missing_disputed: 'Required parameter missing; disputed pw element required for dispute domains'
-              invalid_auth_information_disputed: 'Invalid authorization information; invalid disputed>pw value'
+              required_parameter_missing_reserved: 'Required parameter missing; reserved_pw element required for reserved domains'
+              invalid_auth_information_reserved: 'Invalid authorization information; invalid reserved_pw value'
+              required_parameter_missing_disputed: 'Required parameter missing; reserved_pw element required for dispute domains'
+              invalid_auth_information_disputed: 'Invalid authorization information; invalid reserved_pw value'
               dispute_update_requires_registrant_change: 'Object status prohibits operation; disputed domain update requires registrant change'
               domain_name_blocked: 'Data management policy violation: Domain name is blocked [name]'
             name_dirty:
@@ -208,6 +208,7 @@ en:
       failed_epp_conn: 'Failed to open connection to EPP server!'
       epp_conn_error: 'CONNECTION ERROR - Is the EPP server running?'
       company_not_registered: 'Company is not registered'
+      invalid_ident_type: Invalid ident type
       domain_name_blocked: 'Data management policy violation: Domain name is blocked [name]'
   code: 'Code'
   action: 'Action'
@@ -406,6 +407,7 @@ en:
   internal_error: 'Internal error'
   client_side_status_editing_error: 'Parameter value policy error. Client-side object status management not supported'
   parameter_value_syntax_error: 'Parameter value syntax error:'
+  email_did_not_pass_validation: "email '%{email}' didn't pass validation"
 
   username: 'Username'
   register: 'Register'
@@ -568,6 +570,8 @@ en:
   not_valid_domain_verification_body: This could mean your verification has been expired or done already.<br><br>Please contact us if you think something is wrong.
   upload_crt: 'Upload CRT'
   crt_or_csr_must_be_present: 'CRT or CSR must be present'
+  csr_cn_mismatch: 'CSR common name (CN) must match API user username'
+  csr_country_mismatch: 'CSR country (C) must match registrar country'
   white_ip: 'White IP'
   edit_white_ip: 'Edit white IP'
   confirm_domain_delete: 'Confirm domain delete'
