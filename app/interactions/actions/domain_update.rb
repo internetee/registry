@@ -44,7 +44,7 @@ module Actions
 
       return unless domain.discarded?
 
-      domain.add_epp_error('2304', nil, nil, 'Object status prohibits operation')
+      domain.add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     end
 
     def assign_new_registrant
@@ -146,8 +146,12 @@ module Actions
         result = Actions::SimpleMailValidator.run(email: email, level: m)
         next if result
 
-        err_text = "email #{email} didn't pass validation"
-        domain.add_epp_error('2005', nil, nil, "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
+        domain.add_epp_error(
+          '2005',
+          nil,
+          nil,
+          "#{I18n.t(:parameter_value_syntax_error)} #{I18n.t(:email_did_not_pass_validation, email: email)}"
+        )
         @error = true
         return false
       end
@@ -285,13 +289,9 @@ module Actions
       end
 
       if params[:reserved_pw].present?
-        domain.add_epp_error(
-          '2202', nil, nil, 'Invalid authorization information; invalid reserved>pw value'
-        )
+        domain.add_epp_error('2202', nil, nil, %i[base invalid_auth_information_disputed])
       else
-        domain.add_epp_error(
-          '2304', nil, nil, 'Required parameter missing; reservedpw element required for dispute domains'
-        )
+        domain.add_epp_error('2304', nil, nil, %i[base required_parameter_missing_disputed])
       end
       false
     end

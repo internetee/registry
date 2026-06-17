@@ -84,7 +84,7 @@ module Repp
               next if domain
 
               @epp_errors.add(:epp_errors,
-                              msg: "Object does not exist: #{idn}",
+                              msg: I18n.t('repp.object_does_not_exist_with_name', name: idn),
                               code: '2304')
             end
           else

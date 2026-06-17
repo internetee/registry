@@ -55,6 +55,24 @@ class ReppV1ApiUsersCreateTest < ActionDispatch::IntegrationTest
     assert json[:message].include? 'Identity code already exists'
   end
 
+  def test_validates_subject_per_registrar
+    request_body = {
+      api_user: {
+        username: 'username',
+        plain_text_password: 'password',
+        active: true,
+        subject: @user.subject,
+        roles: ['super'],
+      },
+    }
+
+    post '/repp/v1/api_users', headers: @auth_headers, params: request_body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert json[:message].include? 'already used by another api user at this registrar'
+  end
+
   def test_returns_error_response_if_throttled
     ENV['shunter_default_threshold'] = '1'
     ENV['shunter_enabled'] = 'true'
