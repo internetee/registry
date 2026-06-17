@@ -32,16 +32,19 @@ module Actions
         return false
       end
 
-      attrs = {
-        verified_at: Time.zone.now,
-        verification_pending_at: nil,
-        subject: subject
-      }
-
       country_code = country_code_from_subject(subject)
-      attrs[:country_code] = country_code if country_code.present?
+      subject_attrs = { subject: subject }
+      subject_attrs[:country_code] = country_code if country_code.present?
 
-      api_user.update!(attrs)
+      ApiUser.transaction do
+        # Persist subject first to avoid subject-change callback clearing
+        # the verification state set during registrar approval.
+        api_user.update_columns(subject_attrs.merge(updated_at: Time.zone.now))
+        api_user.update!(
+          verified_at: Time.zone.now,
+          verification_pending_at: nil
+        )
+      end
       true
     end
 

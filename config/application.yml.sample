@@ -265,6 +265,7 @@ priv_ident_service_client_id: 123
 priv_ident_service_client_secret: 321
 birthday_ident_service_client_id: 456
 birthday_ident_service_client_secret: 654
+birthday_ident_restricted_country_codes: 'BE,HR,CZ,DK,FI,IT,LV,LT,LU,MT,NL,NO,PL,PT,RO,SK,SI,ES,SE,EE'
 
 allow_validate_business_contacts: 'true'
 ident_service_client_id: 123
