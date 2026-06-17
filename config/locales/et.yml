@@ -50,3 +50,7 @@ et:
               taken: 'on juba lisatud'
 
   invalid_ident: 'Jõustatud kustutamine määratud domainile %{domain_name}. Jõustatud kustutamine tüüp: %{force_delete_type}. Jõustatud kustutamise algus kuupäev: %{force_delete_start_date}. Väljaandmise kuupäev: %{outzone_date}. Kustutamise kuupäev: %{purge_date}. Vigane ident %{ident}'
+  crt_or_csr_must_be_present: 'CRT või CSR peab olema esitatud'
+  invalid_csr_or_crt: 'Vigane CSR või CRT'
+  csr_cn_mismatch: 'CSR common name (CN) peab kattuma API kasutaja kasutajanimega'
+  csr_country_mismatch: 'CSR country (C) peab kattuma registripidaja riigiga'

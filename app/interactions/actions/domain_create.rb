@@ -15,6 +15,10 @@ module Actions
       assign_registrant
       assign_nameservers
       assign_domain_contacts
+      # Do not call attach_default_contacts: from 1 Feb 2025 .ee domain rules, admin and
+      # technical contacts are optional (tech is always optional; admin only under
+      # specific conditions). Previously, org registrants were auto-assigned as tech
+      # contact when none were provided; that behaviour is no longer valid.
       # domain.attach_default_contacts
       assign_expiry_time
       maybe_attach_legal_doc
