@@ -21,6 +21,8 @@ module Repp
         @api_user = current_user.registrar.api_users.find(cert_params[:api_user_id])
 
         csr = decode_cert_params(cert_params[:csr])
+        validation_error = validate_csr_subject(csr, @api_user)
+        return handle_non_epp_errors(@certificate || Certificate.new, validation_error) if validation_error.present?
 
         @certificate = @api_user.certificates.build(csr: csr)
 
@@ -37,22 +39,22 @@ module Repp
       param :type, String, required: true, desc: 'Type of certificate (csr or crt)'
       def download
         extension = case params[:type]
-                   when 'p12' then 'p12'
-                   when 'private_key' then 'key'
-                   when 'csr' then 'csr.pem'
-                   when 'crt' then 'crt.pem'
-                   else 'pem'
-                   end
+                    when 'p12' then 'p12'
+                    when 'private_key' then 'key'
+                    when 'csr' then 'csr.pem'
+                    when 'crt' then 'crt.pem'
+                    else 'pem'
+                    end
 
         filename = "#{@api_user.username}_#{Time.zone.today.strftime('%y%m%d')}_portal.#{extension}"
 
         data = if params[:type] == 'p12' && @certificate.p12.present?
-          decoded = Base64.decode64(@certificate.p12)
-          decoded
-        else
-          @certificate[params[:type].to_s]
-        end
-        
+                 decoded = Base64.decode64(@certificate.p12)
+                 decoded
+               else
+                 @certificate[params[:type].to_s]
+               end
+
         send_data data, filename: filename
       end
 
@@ -83,14 +85,36 @@ module Repp
 
       def sanitize_base64(text)
         return '' if text.blank?
-        
+
         text = text.to_s.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
         text.gsub(/\s+/, '')
       end
 
+      def validate_csr_subject(csr, api_user)
+        return I18n.t(:crt_or_csr_must_be_present) if csr.blank?
+
+        request = OpenSSL::X509::Request.new(csr)
+        csr_cn = csr_subject_value(request, 'CN')
+        return I18n.t(:csr_cn_mismatch) unless csr_cn == api_user.username
+
+        csr_country = csr_subject_value(request, 'C')
+        return if csr_country.blank?
+
+        registrar_country = api_user.registrar.address_country_code.to_s.upcase
+        return if csr_country.upcase == registrar_country
+
+        I18n.t(:csr_country_mismatch)
+      rescue OpenSSL::X509::RequestError
+        I18n.t(:invalid_csr_or_crt)
+      end
+
+      def csr_subject_value(request, key)
+        request.subject.to_a.find { |entry| entry[0] == key }&.[](1)&.to_s&.strip
+      end
+
       def notify_admins
         admin_users_emails = AdminUser.pluck(:email).reject(&:blank?)
-        
+
         return if admin_users_emails.empty?
 
         admin_users_emails.each do |email|
