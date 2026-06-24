@@ -1,4 +1,5 @@
 require 'serializers/repp/domain'
+require 'csv'
 module Repp
   module V1
     class DomainsController < BaseController # rubocop:disable Metrics/ClassLength
@@ -124,16 +125,94 @@ module Repp
       end
 
       api :POST, '/repp/v1/domains/transfer'
-      desc 'Transfer multiple domains'
-      def transfer
-        authorize! :transfer, Epp::Domain
-        @errors ||= []
-        @successful = []
-        transfer_params[:domain_transfers].each do |transfer|
-          initiate_transfer(transfer)
+      desc 'Transfer multiple domains (supports JSON data or CSV file upload)'
+      param :data, Hash, required: false, desc: 'JSON data for domain transfers' do
+        param :domain_transfers, Array, required: true, desc: 'Array of domain transfers' do
+          param :domain_name, String, required: true, desc: 'Domain name'
+          param :transfer_code, String, required: true, desc: 'Transfer authorization code'
         end
+      end
+      def transfer
+        Rails.logger.info "[REPP Transfer] Starting transfer request"
+        Rails.logger.info "[REPP Transfer] Request params: #{params.inspect}"
+        Rails.logger.info "[REPP Transfer] Content-Type: #{request.content_type}"
+        Rails.logger.info "[REPP Transfer] Raw body: #{request.raw_post}"
+        
+        begin
+          authorize! :transfer, Epp::Domain
+          
+          @errors ||= []
+          @successful = []
 
-        render_success(data: { success: @successful, failed: @errors })
+          domain_transfers = if is_csv_request?
+            parse_transfer_csv_from_body(request.raw_post)
+          elsif params[:csv_file].present?
+            parse_transfer_csv(params[:csv_file])
+          else
+            transfer_params[:domain_transfers]
+          end
+          
+
+          domain_transfers.each { |transfer| initiate_transfer(transfer) }
+
+          if @errors.any? && @successful.empty?
+            
+            error_summary = analyze_transfer_errors(@errors)
+            message = build_error_message(error_summary, domain_transfers.count)
+            
+            @response = { 
+              code: 2304, 
+              message: message, 
+              data: { 
+                success: @successful, 
+                failed: @errors,
+                summary: {
+                  total: domain_transfers.count,
+                  successful: @successful.count,
+                  failed: @errors.count,
+                  error_breakdown: error_summary
+                }
+              } 
+            }
+            render(json: @response, status: :bad_request)
+          elsif @errors.any? && @successful.any?
+            
+            error_summary = analyze_transfer_errors(@errors)
+            message = "#{@successful.count} domains transferred successfully, #{@errors.count} failed. " + 
+                     build_error_message(error_summary, @errors.count, partial: true)
+            
+            @response = { 
+              code: 2400, 
+              message: message, 
+              data: { 
+                success: @successful, 
+                failed: @errors,
+                summary: {
+                  total: domain_transfers.count,
+                  successful: @successful.count,
+                  failed: @errors.count,
+                  error_breakdown: error_summary
+                }
+              } 
+            }
+            render(json: @response, status: :multi_status) # 207 Multi-Status
+          else
+            render_success(data: { 
+              success: @successful, 
+              failed: @errors,
+              summary: {
+                total: domain_transfers.count,
+                successful: @successful.count,
+                failed: @errors.count
+              }
+            })
+          end
+          
+        rescue StandardError => e
+          
+          @response = { code: 2304, message: "Transfer failed: #{e.message}", data: {} }
+          render(json: @response, status: :bad_request)
+        end
       end
 
       api :DELETE, '/repp/v1/domains/:domain_name'
@@ -166,21 +245,61 @@ module Repp
       end
 
       def initiate_transfer(transfer)
+        
         domain = Epp::Domain.find_or_initialize_by(name: transfer[:domain_name])
+        
         action = Actions::DomainTransfer.new(domain, transfer[:transfer_code],
                                              current_user.registrar)
 
         if action.call
           @successful << { type: 'domain_transfer', domain_name: domain.name }
         else
-          @errors << { type: 'domain_transfer', domain_name: domain.name,
-                       errors: domain.errors.where(:epp_errors).first.options }
+          
+          epp_error = domain.errors.where(:epp_errors).first
+          error_details = epp_error&.options || { message: 'Unknown error' }
+          
+          error_info = {
+            type: 'domain_transfer',
+            domain_name: domain.name,
+            error_code: error_details[:code] || 'UNKNOWN',
+            error_message: error_details[:msg] || error_details[:message] || 'Unknown error',
+            details: error_details
+          }
+          
+          @errors << error_info
         end
       end
 
       def transfer_params
-        params.require(:data).require(:domain_transfers)
-        params.require(:data).permit(domain_transfers: [%i[domain_name transfer_code]])
+        
+        params.permit(:csv_file)
+        return {} if params[:csv_file].present?
+        
+        
+        begin
+          data_params = params.require(:data)
+          
+          unless data_params.key?(:domain_transfers)
+            raise ActionController::ParameterMissing.new(:domain_transfers)
+          end
+          
+          domain_transfers_array = data_params[:domain_transfers]
+          
+          if domain_transfers_array.blank? || !domain_transfers_array.is_a?(Array)
+            raise ActionController::ParameterMissing.new(:domain_transfers, "domain_transfers cannot be empty")
+          end
+          
+          Rails.logger.info "[REPP Transfer] Required params validation passed"
+          result = data_params.permit(domain_transfers: [%i[domain_name transfer_code]])
+          Rails.logger.info "[REPP Transfer] Permitted params result: #{result.inspect}"
+          result
+        rescue ActionController::ParameterMissing => e
+          Rails.logger.error "[REPP Transfer] Parameter missing error: #{e.message}"
+          raise e
+        rescue StandardError => e
+          Rails.logger.error "[REPP Transfer] transfer_params error: #{e.class} - #{e.message}"
+          raise e
+        end
       end
 
       def transfer_info_params
@@ -281,6 +400,112 @@ module Repp
                                        admin_contacts: [], tech_contacts: [],
                                        dnskeys_attributes: [%i[flags alg protocol public_key]],
                                        delete: [:verified])
+      end
+
+      def is_csv_request?
+        request.content_type&.include?('text/csv') || request.content_type&.include?('application/csv')
+      end
+
+      def parse_transfer_csv_from_body(csv_data)
+        domain_transfers = []
+        
+        begin
+          CSV.parse(csv_data, headers: true) do |row|
+            next if row['Domain'].blank? || row['Transfer code'].blank?
+            
+            domain_transfers << {
+              domain_name: row['Domain'].strip,
+              transfer_code: row['Transfer code'].strip
+            }
+          end
+        rescue CSV::MalformedCSVError => e
+          @errors << { type: 'csv_error', message: "Invalid CSV format: #{e.message}" }
+          return []
+        rescue StandardError => e
+          @errors << { type: 'csv_error', message: "Error processing CSV: #{e.message}" }
+          return []
+        end
+
+        if domain_transfers.empty?
+          @errors << { type: 'csv_error', message: 'CSV file is empty or missing required headers: Domain, Transfer code' }
+        end
+
+        Rails.logger.info "[REPP Transfer] Parsed #{domain_transfers.count} domains from CSV"
+        domain_transfers
+      end
+
+      def parse_transfer_csv(csv_file)
+        domain_transfers = []
+        
+        begin
+          CSV.foreach(csv_file.path, headers: true) do |row|
+            next if row['Domain'].blank? || row['Transfer code'].blank?
+            
+            domain_transfers << {
+              domain_name: row['Domain'].strip,
+              transfer_code: row['Transfer code'].strip
+            }
+          end
+        rescue CSV::MalformedCSVError => e
+          @errors << { type: 'csv_error', message: "Invalid CSV format: #{e.message}" }
+          return []
+        rescue StandardError => e
+          @errors << { type: 'csv_error', message: "Error processing CSV: #{e.message}" }
+          return []
+        end
+
+        if domain_transfers.empty?
+          @errors << { type: 'csv_error', message: 'CSV file is empty or missing required headers: Domain, Transfer code' }
+        end
+
+        domain_transfers
+      end
+
+      def analyze_transfer_errors(errors)
+        error_counts = {}
+        
+        errors.each do |error|
+          error_code = error[:error_code] || 'UNKNOWN'
+          error_message = error[:error_message] || 'Unknown error'
+          
+          key = "#{error_code}:#{error_message}"
+          error_counts[key] ||= { 
+            code: error_code, 
+            message: error_message, 
+            count: 0, 
+            domains: [] 
+          }
+          error_counts[key][:count] += 1
+          error_counts[key][:domains] << error[:domain_name]
+        end
+        
+        error_counts.values
+      end
+
+      def build_error_message(error_summary, total_count, partial: false)
+        return "All #{total_count} domain transfers failed" if error_summary.empty?
+        
+        messages = []
+        
+        error_summary.each do |error_info|
+          case error_info[:code]
+          when '2303'
+            messages << "#{error_info[:count]} domain#{'s' if error_info[:count] > 1} not found"
+          when '2202'
+            messages << "#{error_info[:count]} domain#{'s' if error_info[:count] > 1} with invalid transfer code"
+          when '2002'
+            messages << "#{error_info[:count]} domain#{'s' if error_info[:count] > 1} already belong to your registrar"
+          when '2304'
+            messages << "#{error_info[:count]} domain#{'s' if error_info[:count] > 1} prohibited from transfer"
+          when '2106'
+            messages << "#{error_info[:count]} domain#{'s' if error_info[:count] > 1} not eligible for transfer"
+          else
+            messages << "#{error_info[:count]} domain#{'s' if error_info[:count] > 1} failed (#{error_info[:message]})"
+          end
+        end
+        
+        prefix = partial ? "Failures: " : "All #{total_count} transfers failed: "
+        prefix + messages.join(', ')
       end
     end
   end
