@@ -43,10 +43,12 @@ on the existing internal peer API `app/controllers/api/v1/accreditation_center/`
    (`disclosed_attributes`, `system_disclosed_attributes`, `registrant_publishable`). RDAP applies the
    disclosure policy; the registry MUST NOT decide what a caller sees.
 4. **Read-only** except the optional grant `touch`.
-5. **Authenticated + confidential + not public.** Choose an existing pattern: HTTP Basic + `ApiUser` +
-   IP-allowlist (`accreditation_center/base_controller.rb:41-49,69-85`), pre-shared key
-   (`api/v1/base_controller.rb:14-16`), and/or mTLS client-cert (`repp/v1/base_controller.rb:158-177`,
-   `api_user.rb#pki_ok?`). mTLS is the recommended production hardening.
+5. **Authenticated + confidential + not public.** **DECIDED (2026-06-25): pre-shared key +
+   IP-allowlist** — the `api/v1/base_controller.rb:14-16` `authenticate_shared_key` pattern:
+   `Authorization: Basic <ENV['rdap_internal_api_shared_key']>` compared via
+   `ActiveSupport::SecurityUtils.secure_compare`; IP checked against
+   `ENV['rdap_internal_api_allowed_ips']`. mTLS client-cert (`repp/v1/base_controller.rb:158-177`,
+   `api_user.rb#pki_ok?`) is a LATER production-hardening step, not built now.
 
 ## Endpoint shapes & field→column mapping
 
@@ -134,11 +136,13 @@ Server computes "active" authoritatively: `status='active'` AND `valid_from<=now
    tests modeled on `test/integration/repp/v1/base_test.rb`.
 8. Open a PR for human review. **Do not merge to master.**
 
-## Open questions (confirm with the RDAP team / lead — see RDAP requirements.txt §5)
-- **Q1** auth baseline (Basic+ApiUser / shared-key / mTLS; is mTLS required in prod?).
-- **Q2** namespace/URL (`/api/v1/internal/rdap/*` ok?).
-- **Q3** admin CRUD UI in this spec, or model+API now + UI fast-follow?
-- **Q4** confirm categories (police/cert/ria/eis_internal), states (active/revoked/suspended), and the
-  exact "active" rule; any four-eyes/approval on grant creation?
-- **Q5** keep or drop the optional grant `touch` write?
-- **Q6** send `delete_date` raw or effective-min; return the disclosure union or both arrays separately?
+## Decisions (resolved 2026-06-25)
+- **Q1 auth** → **pre-shared key + IP-allowlist** (see global rule 5); mTLS later.
+- **Q2 namespace** → `/api/v1/internal/rdap/*` (new `internal` namespace).
+- **Q3 scope** → **BACKEND ONLY**: model + table + the 4 endpoints + resolution + tests. **No admin
+  CRUD UI** in this spec (separate later spec). Grants seeded via fixtures / console until then.
+- **Q4 categories/states** → confirmed `police/cert/ria/eis_internal` + `active/revoked/suspended`;
+  active rule as above; no extra categories, no four-eyes for now.
+- **Q5 touch** → keep the optional best-effort `POST .../grants/:id/touch` (204).
+- **Q6** → `delete_date` = effective `[delete_date, force_delete_date].compact.min`; `disclosed_attributes`
+  = union of the registrant + system arrays in one field.
