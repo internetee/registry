@@ -101,6 +101,10 @@ rwhois_bounces_api_shared_key: testkey
 # Link to REST-WHOIS API
 rwhois_internal_api_shared_key: testkey
 
+# Internal RDAP data API (machine-to-machine; pre-shared key + IP-allowlist)
+rdap_internal_api_shared_key: testkey
+rdap_internal_api_allowed_ips: '' # 192.0.2.0, 192.0.2.1
+
 # Base URL (inc. https://) of REST registrant portal
 # Leave blank to use internal registrant portal
 registrant_portal_verifications_base_url: ''
@@ -196,6 +200,8 @@ test:
   payments_seb_seller_private: 'test/fixtures/files/seb_seller_key.pem'
   release_domains_to_auction: 'false'
   auction_api_allowed_ips: ''
+  rdap_internal_api_shared_key: 'testkey'
+  rdap_internal_api_allowed_ips: ''
   action_mailer_default_host: 'registry.test'
   action_mailer_default_from: 'no-reply@registry.test'
   action_mailer_force_delete_from: 'legal@registry.test'
