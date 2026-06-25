@@ -16,7 +16,12 @@ module Api
         private
 
         def authenticate_shared_key
-          expected = "Basic #{ENV['rdap_internal_api_shared_key']}"
+          key = ENV['rdap_internal_api_shared_key'].to_s
+          # Fail closed when the key is not configured — never let a blank/unset
+          # secret degrade into an "everyone matches Basic " bypass.
+          return render_error('Invalid authorization information', :unauthorized) if key.empty?
+
+          expected = "Basic #{key}"
           provided = request.authorization.to_s
 
           return if ActiveSupport::SecurityUtils.secure_compare(expected, provided)
