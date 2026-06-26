@@ -5352,6 +5352,81 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: rdap_privilege_grants; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rdap_privilege_grants (
+    id bigint NOT NULL,
+    eeid_subject character varying NOT NULL,
+    category character varying NOT NULL,
+    organization character varying,
+    status character varying DEFAULT 'active'::character varying NOT NULL,
+    valid_from timestamp without time zone NOT NULL,
+    valid_until timestamp without time zone,
+    last_used_at timestamp without time zone,
+    uuid character varying,
+    notes character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: rdap_privilege_grants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rdap_privilege_grants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rdap_privilege_grants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rdap_privilege_grants_id_seq OWNED BY public.rdap_privilege_grants.id;
+
+
+--
+-- Name: rdap_privilege_grants id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_privilege_grants ALTER COLUMN id SET DEFAULT nextval('public.rdap_privilege_grants_id_seq'::regclass);
+
+
+--
+-- Name: rdap_privilege_grants rdap_privilege_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_privilege_grants
+    ADD CONSTRAINT rdap_privilege_grants_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_rdap_privilege_grants_on_eeid_subject_and_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_privilege_grants_on_eeid_subject_and_status ON public.rdap_privilege_grants USING btree (eeid_subject, status);
+
+
+--
+-- Name: index_rdap_privilege_grants_on_uuid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rdap_privilege_grants_on_uuid ON public.rdap_privilege_grants USING btree (uuid);
+
+
+--
+-- Name: index_rdap_privilege_grants_on_valid_until; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_privilege_grants_on_valid_until ON public.rdap_privilege_grants USING btree (valid_until);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -5863,6 +5938,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260406125446'),
 ('20260529120000'),
 ('20260601120000'),
-('20260608120000');
+('20260608120000'),
+('20260625120000');
 
 

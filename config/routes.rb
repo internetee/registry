@@ -223,6 +223,16 @@ Rails.application.routes.draw do
         get 'auth', to: 'auth#index'
       end
 
+      namespace :internal do
+        namespace :rdap do
+          get 'domains/:name', to: 'domains#show', constraints: { name: /[^\/]+/ }
+          get 'registrars/:code', to: 'registrars#show'
+          get 'nameservers/:host', to: 'nameservers#show', constraints: { host: /[^\/]+/ }
+          get 'grants/active', to: 'grants#active'
+          post 'grants/:id/touch', to: 'grants#touch'
+        end
+      end
+
       resources :auctions, only: %i[index show update], param: :uuid
       resources :contact_requests, only: %i[create update], param: :id
       resources :bounces, only: %i[create]

@@ -1,0 +1,58 @@
+# Subject form is the dash-free, country-prefixed eeID subject (EE38001085718),
+# matching users.subject — NOT the dashed registrant_ident form.
+
+police_active:
+  eeid_subject: EE38001085718
+  category: police
+  organization: police
+  status: active
+  valid_from: <%= 10.days.ago.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000001
+
+# Same subject as police_active, but a NEWER valid_from — this one must win the
+# "multiple active -> latest valid_from" selection.
+police_active_newer:
+  eeid_subject: EE38001085718
+  category: cert
+  organization: cert_team
+  status: active
+  valid_from: <%= 1.day.ago.to_s(:db) %>
+  valid_until: <%= 30.days.from_now.to_s(:db) %>
+  uuid: a1b2c3d4-0000-0000-0000-000000000002
+
+revoked:
+  eeid_subject: EE10001001000
+  category: police
+  organization: police
+  status: revoked
+  valid_from: <%= 10.days.ago.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000003
+
+suspended:
+  eeid_subject: EE10001001001
+  category: cert
+  organization: cert
+  status: suspended
+  valid_from: <%= 10.days.ago.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000004
+
+expired:
+  eeid_subject: EE10001001002
+  category: ria
+  organization: ria
+  status: active
+  valid_from: <%= 30.days.ago.to_s(:db) %>
+  valid_until: <%= 1.day.ago.to_s(:db) %>
+  uuid: a1b2c3d4-0000-0000-0000-000000000005
+
+not_yet_valid:
+  eeid_subject: EE10001001003
+  category: eis_internal
+  organization: eis
+  status: active
+  valid_from: <%= 5.days.from_now.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000006
