@@ -23,10 +23,13 @@ class ApiV1InternalRdapRegistrarsTest < ApplicationIntegrationTest
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
-    assert_equal 'BESTNAMES', json[:code]
-    assert_equal @registrar.name, json[:name]
-    assert_equal @registrar.phone, json[:phone]
-    assert_equal @registrar.website, json[:website]
+    # Full-hash equality: proves the response is EXACTLY the narrow 4-key shape
+    # (no email/reg_no leak) and avoids the assert_nil deprecation when a fixture
+    # field is nil.
+    assert_equal(
+      { code: 'BESTNAMES', name: @registrar.name, phone: @registrar.phone, website: @registrar.website },
+      json
+    )
   end
 
   def test_does_not_expose_email_or_reg_no
