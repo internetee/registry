@@ -30,6 +30,7 @@ class Ability
     epp
     billing
     can :manage, ApiUser
+    can :verify, ApiUser
     can :manage, WhiteIp
     can :manage, Certificate
   end

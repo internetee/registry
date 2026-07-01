@@ -77,6 +77,8 @@ Rails.application.routes.draw do
             get 'search(/:id)', to: 'contacts#search'
             post 'verify/:id', to: 'contacts#verify'
             get 'download_poi/:id', to: 'contacts#download_poi'
+            post 'approve_verification/:id', to: 'contacts#approve_verification'
+            post 'reject_verification/:id', to: 'contacts#reject_verification'
           end
         end
       end
@@ -112,6 +114,12 @@ Rails.application.routes.draw do
         end
       end
       resources :api_users, only: %i[index show update create destroy] do
+        collection do
+          post 'verify/:id', to: 'api_users#verify'
+          get 'download_poi/:id', to: 'api_users#download_poi'
+          post 'approve_verification/:id', to: 'api_users#approve_verification'
+          post 'reject_verification/:id', to: 'api_users#reject_verification'
+        end
         resources :certificates, only: %i[show] do
           member do
             get 'download'

@@ -25,6 +25,14 @@ et:
   you_have_a_new_invoice: 'Teil on uus arve.'
   monthly_invoice: "Siit tuleb aruanne möödunud kuul ettemaksukontoga seotud tasuliste toimingutega."
   sincerely: 'Lugupidamisega'
+  client_side_status_editing_error: 'Parameetriväärtuse poliitika viga. Kliendipoolne objekti staatuse haldus pole toetatud'
+  parameter_value_syntax_error: 'Parameetri väärtuse süntaksiviga:'
+  email_did_not_pass_validation: "e-posti aadress '%{email}' ei läbinud valideerimist"
+  object_status_prohibits_operation: 'Objekti staatus keelab toimingu'
+  domain_already_belongs_to_the_querying_registrar: Domeen kuulub juba päringu teinud registripidajale
+  billing_failure_credit_balance_low: Arveldus ebaõnnestus – ettemaksukonto saldo on liiga madal
+  active_price_missing_for_this_operation: Selle toimingu aktiivne hind puudub!
+  create: Loomine
 
   activerecord:
     errors:
@@ -42,3 +50,7 @@ et:
               taken: 'on juba lisatud'
 
   invalid_ident: 'Jõustatud kustutamine määratud domainile %{domain_name}. Jõustatud kustutamine tüüp: %{force_delete_type}. Jõustatud kustutamise algus kuupäev: %{force_delete_start_date}. Väljaandmise kuupäev: %{outzone_date}. Kustutamise kuupäev: %{purge_date}. Vigane ident %{ident}'
+  crt_or_csr_must_be_present: 'CRT või CSR peab olema esitatud'
+  invalid_csr_or_crt: 'Vigane CSR või CRT'
+  csr_cn_mismatch: 'CSR common name (CN) peab kattuma API kasutaja kasutajanimega'
+  csr_country_mismatch: 'CSR country (C) peab kattuma registripidaja riigiga'
