@@ -5427,6 +5427,73 @@ CREATE INDEX index_rdap_privilege_grants_on_valid_until ON public.rdap_privilege
 
 
 --
+-- Name: rdap_api_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rdap_api_tokens (
+    id bigint NOT NULL,
+    token_hash character varying NOT NULL,
+    subject character varying NOT NULL,
+    token_class character varying NOT NULL,
+    label character varying,
+    issued_at timestamp without time zone NOT NULL,
+    expires_at timestamp without time zone NOT NULL,
+    last_used_at timestamp without time zone,
+    revoked_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: rdap_api_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rdap_api_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rdap_api_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rdap_api_tokens_id_seq OWNED BY public.rdap_api_tokens.id;
+
+
+--
+-- Name: rdap_api_tokens id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_api_tokens ALTER COLUMN id SET DEFAULT nextval('public.rdap_api_tokens_id_seq'::regclass);
+
+
+--
+-- Name: rdap_api_tokens rdap_api_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_api_tokens
+    ADD CONSTRAINT rdap_api_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_rdap_api_tokens_on_subject_and_revoked_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_api_tokens_on_subject_and_revoked_at ON public.rdap_api_tokens USING btree (subject, revoked_at);
+
+
+--
+-- Name: index_rdap_api_tokens_on_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rdap_api_tokens_on_token_hash ON public.rdap_api_tokens USING btree (token_hash);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -5939,6 +6006,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260529120000'),
 ('20260601120000'),
 ('20260608120000'),
-('20260625120000');
+('20260625120000'),
+('20260707120000');
 
 

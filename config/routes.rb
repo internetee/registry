@@ -230,6 +230,12 @@ Rails.application.routes.draw do
           get 'nameservers/:host', to: 'nameservers#show', constraints: { host: /[^\/]+/ }
           get 'grants/active', to: 'grants#active'
           post 'grants/:id/touch', to: 'grants#touch'
+          get 'tokens/active', to: 'tokens#active'
+          get 'tokens', to: 'tokens#index'
+          post 'tokens', to: 'tokens#create'
+          post 'tokens/revoke_all', to: 'tokens#revoke_all'
+          post 'tokens/revoke', to: 'tokens#revoke'
+          post 'tokens/touch', to: 'tokens#touch'
         end
       end
 
