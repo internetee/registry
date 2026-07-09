@@ -275,7 +275,4 @@ staging:
   action_mailer_default_from: 'no-reply@registry.staging.test'
   action_mailer_force_delete_from: 'legal@registry.staging.test'
 
-staging:
-  action_mailer_default_host: 'registry.staging.test'
-  action_mailer_default_from: 'no-reply@registry.staging.test'
-  action_mailer_force_delete_from: 'legal@registry.staging.test'
+rdap_api_token_hmac_secret: 'testkey'
