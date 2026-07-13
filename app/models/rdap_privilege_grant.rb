@@ -1,4 +1,6 @@
 class RdapPrivilegeGrant < ApplicationRecord
+  include Versions
+
   CATEGORIES = %w[police cert ria eis_internal].freeze
   STATUSES = %w[active revoked suspended].freeze
 
@@ -8,6 +10,8 @@ class RdapPrivilegeGrant < ApplicationRecord
   validates :category, presence: true, inclusion: { in: CATEGORIES }
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :valid_from, presence: true
+  validates :full_name, presence: true
+  validates :legal_basis_ref, presence: true
   validate :valid_until_after_valid_from
 
   # The single authoritative "active" rule (mirrors the RDAP contract §4):
@@ -23,6 +27,21 @@ class RdapPrivilegeGrant < ApplicationRecord
 
   def grant_id
     uuid.presence || id.to_s
+  end
+
+  # Expiry is DERIVED from valid_until at read time; it is never a stored status.
+  # STATUSES stays %w[active revoked suspended] (see AC15) so the frozen RDAP
+  # contract is untouched.
+  def expired?
+    valid_until.present? && valid_until <= Time.zone.now
+  end
+
+  # The status to present in the admin UI: an active grant whose valid_until has
+  # passed reads as "expired" without any stored status change.
+  def display_status
+    return 'expired' if status == 'active' && expired?
+
+    status
   end
 
   private

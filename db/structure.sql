@@ -1,4 +1,4 @@
-\restrict Kw0FlFjOo7AUyExjfwpZoGQ0hCDF4IfnRBjP2hurV0W6vKi33me7sPJaQhQwWkF
+\restrict 3yuhOd8UVvUalnyP7ubMzaEoYQt7050auMhPKG9bKziR1D2CEgysZBGz4HrmcuY
 
 -- Dumped from database version 13.4 (Debian 13.4-4.pgdg110+1)
 -- Dumped by pg_dump version 13.23 (Debian 13.23-0+deb11u4)
@@ -2046,6 +2046,44 @@ ALTER SEQUENCE public.log_prices_id_seq OWNED BY public.log_prices.id;
 
 
 --
+-- Name: log_rdap_privilege_grants; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.log_rdap_privilege_grants (
+    id bigint NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    object_changes json,
+    created_at timestamp without time zone,
+    session character varying,
+    children json,
+    uuid character varying
+);
+
+
+--
+-- Name: log_rdap_privilege_grants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.log_rdap_privilege_grants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_rdap_privilege_grants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.log_rdap_privilege_grants_id_seq OWNED BY public.log_rdap_privilege_grants.id;
+
+
+--
 -- Name: log_registrant_verifications; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2628,7 +2666,12 @@ CREATE TABLE public.rdap_privilege_grants (
     uuid character varying,
     notes character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    full_name character varying NOT NULL,
+    legal_basis_ref character varying NOT NULL,
+    personal_id_code character varying,
+    creator_str character varying,
+    updator_str character varying
 );
 
 
@@ -3511,6 +3554,13 @@ ALTER TABLE ONLY public.log_prices ALTER COLUMN id SET DEFAULT nextval('public.l
 
 
 --
+-- Name: log_rdap_privilege_grants id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_rdap_privilege_grants ALTER COLUMN id SET DEFAULT nextval('public.log_rdap_privilege_grants_id_seq'::regclass);
+
+
+--
 -- Name: log_registrant_verifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4087,6 +4137,14 @@ ALTER TABLE ONLY public.log_payment_orders
 
 ALTER TABLE ONLY public.log_prices
     ADD CONSTRAINT log_prices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: log_rdap_privilege_grants log_rdap_privilege_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_rdap_privilege_grants
+    ADD CONSTRAINT log_rdap_privilege_grants_pkey PRIMARY KEY (id);
 
 
 --
@@ -5480,7 +5538,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Kw0FlFjOo7AUyExjfwpZoGQ0hCDF4IfnRBjP2hurV0W6vKi33me7sPJaQhQwWkF
+\unrestrict 3yuhOd8UVvUalnyP7ubMzaEoYQt7050auMhPKG9bKziR1D2CEgysZBGz4HrmcuY
 
 SET search_path TO "$user", public;
 
@@ -5999,6 +6057,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260601120000'),
 ('20260608120000'),
 ('20260625120000'),
-('20260707120000');
+('20260707120000'),
+('20260713120000'),
+('20260713120001');
 
 

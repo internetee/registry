@@ -26,6 +26,25 @@ class ApiV1InternalRdapGrantsTest < ApplicationIntegrationTest
 
   # Two active grants share EE38001085718; the latest valid_from wins
   # (police_active_newer, category cert, valid_from 1.day.ago).
+  # The serializer is a frozen contract: admin-only columns added by spec
+  # 09-registry-privileged-admin (full_name, legal_basis_ref, personal_id_code,
+  # creator_str/updator_str) MUST NOT surface in the RDAP-facing output.
+  def test_serializer_exposes_no_admin_only_or_pii_fields
+    # Value chosen so it is NOT a substring of the eeid_subject the serializer
+    # legitimately returns (EE38001085718).
+    rdap_privilege_grants(:police_active_newer).update!(personal_id_code: '49001010001')
+
+    get '/api/v1/internal/rdap/grants/active', params: { subject: 'EE38001085718' },
+                                               headers: @header
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    %i[full_name legal_basis_ref personal_id_code creator_str updator_str].each do |field|
+      assert_not_includes json.keys, field
+    end
+    assert_no_match '49001010001', response.body
+  end
+
   def test_multiple_active_returns_latest_valid_from
     get '/api/v1/internal/rdap/grants/active', params: { subject: 'EE38001085718' },
                                                headers: @header

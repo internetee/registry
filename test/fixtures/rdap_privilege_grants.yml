@@ -3,6 +3,8 @@
 
 police_active:
   eeid_subject: EE38001085718
+  full_name: Police Officer One
+  legal_basis_ref: MoU-2026-001
   category: police
   organization: police
   status: active
@@ -14,6 +16,8 @@ police_active:
 # "multiple active -> latest valid_from" selection.
 police_active_newer:
   eeid_subject: EE38001085718
+  full_name: Cert Analyst Two
+  legal_basis_ref: MoU-2026-002
   category: cert
   organization: cert_team
   status: active
@@ -23,6 +27,8 @@ police_active_newer:
 
 revoked:
   eeid_subject: EE10001001000
+  full_name: Revoked Grantee
+  legal_basis_ref: MoU-2026-003
   category: police
   organization: police
   status: revoked
@@ -32,6 +38,8 @@ revoked:
 
 suspended:
   eeid_subject: EE10001001001
+  full_name: Suspended Grantee
+  legal_basis_ref: MoU-2026-004
   category: cert
   organization: cert
   status: suspended
@@ -41,6 +49,8 @@ suspended:
 
 expired:
   eeid_subject: EE10001001002
+  full_name: Expired Grantee
+  legal_basis_ref: MoU-2026-005
   category: ria
   organization: ria
   status: active
@@ -50,6 +60,8 @@ expired:
 
 not_yet_valid:
   eeid_subject: EE10001001003
+  full_name: Future Grantee
+  legal_basis_ref: MoU-2026-006
   category: eis_internal
   organization: eis
   status: active

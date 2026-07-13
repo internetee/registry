@@ -1,0 +1,5 @@
+- content_for :actions do
+  = link_to(t(:back), [:admin, @rdap_privilege_grant], class: 'btn btn-default')
+= render 'shared/title', name: "#{t(:edit)}: #{@rdap_privilege_grant.full_name}"
+
+= render 'form'

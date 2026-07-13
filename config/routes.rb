@@ -383,6 +383,16 @@ Rails.application.routes.draw do
     end
 
     resources :admin_users
+
+    # Privileged RDAP grants (RPD §9). No destroy: grants end via suspend/revoke,
+    # never a hard delete, consistent with the immutable-audit framing.
+    resources :rdap_privilege_grants, except: %i[destroy] do
+      member do
+        post :suspend
+        post :revoke
+      end
+    end
+
     # /admin/api_users is mainly for manual testing
     resources :api_users, only: %i[index show] do
       resources :certificates do
