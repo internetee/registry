@@ -156,6 +156,22 @@ class AdminAreaRdapPrivilegeGrantsIntegrationTest < ActionDispatch::IntegrationT
     assert_no_match '49001010001', response.body
   end
 
+  # --- AC23: personal_id_code never leaks to the show page (incl. audit history) --
+  def test_personal_id_code_absent_from_show_and_audit_history
+    # Set the PII, then make an audit-generating change so the grant has
+    # paper_trail versions whose object/object_changes snapshots contain it.
+    @grant.update!(personal_id_code: '49001010001')
+    @grant.update!(organization: 'leak-probe-org')
+
+    get admin_rdap_privilege_grant_path(@grant)
+
+    assert_response :success
+    # The show page renders an audit-history table sourced from object_changes;
+    # the sensitive code must never appear there or anywhere on the page.
+    assert_no_match '49001010001', response.body
+    assert_no_match(/personal_id_code/i, response.body)
+  end
+
   # --- AC27: no missing translations on rendered pages -------------------------
   def test_rendered_pages_have_no_missing_translations
     [admin_rdap_privilege_grants_path,
