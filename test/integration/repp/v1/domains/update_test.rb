@@ -22,7 +22,7 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
 
     json = update_domain(registrant: { code: new_registrant.code })
 
-    assert_repp_success(json)
+    assert_repp_action_pending(json)
     refute_equal new_registrant.code, @domain.registrant.code
     assert_includes @domain.statuses, DomainStatus::PENDING_UPDATE
   end
@@ -200,6 +200,12 @@ class ReppV1DomainsUpdateTest < ActionDispatch::IntegrationTest
   def assert_repp_success(json)
     assert_response :ok
     assert_equal 1000, json[:code]
+  end
+
+  def assert_repp_action_pending(json)
+    assert_response :ok
+    assert_equal 1001, json[:code]
+    assert_equal Epp::Response::Result::Code.default_descriptions[1001], json[:message]
   end
 
   def assert_repp_error(json, http_status:, code:, message:)

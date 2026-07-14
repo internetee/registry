@@ -42,6 +42,21 @@ module Repp
         render(json: @response, status: :ok)
       end
 
+      def render_action_pending_success(data: nil)
+        render_success(
+          code: Epp::Response::Result::Code.codes[:completed_successfully_action_pending],
+          message: Epp::Response::Result::Code.default_descriptions[1001],
+          data: data
+        )
+      end
+
+      def render_domain_command_success(pending:)
+        data = { domain: { name: @domain.name } }
+        return render_action_pending_success(data: data) if pending
+
+        render_success(data: data)
+      end
+
       def epp_errors
         @epp_errors ||= ActiveModel::Errors.new(self)
       end
