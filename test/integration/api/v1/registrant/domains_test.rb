@@ -21,8 +21,9 @@ class RegistrantApiV1DomainsTest < ActionDispatch::IntegrationTest
     assert_response :ok
 
     response_json = JSON.parse(response.body)
-    assert_equal response_json['total'], 4
-    assert_equal response_json['count'], 4
+    # +2: spec-13 mytenure/capdomain fixtures (both registrant: john)
+    assert_equal response_json['total'], 6
+    assert_equal response_json['count'], 6
   end
 
   def test_get_default_counts_of_direct_domains
@@ -32,8 +33,9 @@ class RegistrantApiV1DomainsTest < ActionDispatch::IntegrationTest
     end
 
     response_json = JSON.parse(response.body)
-    assert_equal response_json['total'], 4
-    assert_equal response_json['count'], 4
+    # +2: spec-13 mytenure/capdomain fixtures (both registrant: john)
+    assert_equal response_json['total'], 6
+    assert_equal response_json['count'], 6
   end
 
   private

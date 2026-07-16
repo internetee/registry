@@ -109,7 +109,7 @@ john_tenure_create:
   event: create
   object_changes:
     name: [null, 'mytenure.test']
-    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:spec13_registrar) %>]
     registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:jane) %>]
   created_at: <%= Time.zone.parse('2020-01-01') %>
 
@@ -145,6 +145,6 @@ capdomain_create:
   event: create
   object_changes:
     name: [null, 'capdomain.test']
-    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:spec13_registrar) %>]
     registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:john) %>]
   created_at: <%= Time.zone.parse('2020-01-01') %>

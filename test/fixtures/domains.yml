@@ -82,7 +82,7 @@ mytenure:
   name: mytenure.test
   name_puny: mytenure.test
   name_dirty: mytenure.test
-  registrar: bestnames
+  registrar: spec13_registrar
   registrant: john
   transfer_code: 9f13ab7
   valid_to: 2035-07-05
@@ -97,7 +97,7 @@ capdomain:
   name: capdomain.test
   name_puny: capdomain.test
   name_dirty: capdomain.test
-  registrar: bestnames
+  registrar: spec13_registrar
   registrant: john
   transfer_code: 3ac71f9
   valid_to: 2035-07-05
