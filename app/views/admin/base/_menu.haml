@@ -17,6 +17,8 @@
           %li.dropdown-header= t('.users')
           %li= link_to t('.api_users'), admin_api_users_path
           %li= link_to t('.admin_users'), admin_admin_users_path
+          - if can? :read, RdapPrivilegeGrant
+            %li= link_to t('.rdap_privilege_grants'), admin_rdap_privilege_grants_path
           %li.divider
           %li.dropdown-header= t(:billing)
           - if can? :view, Billing::Price

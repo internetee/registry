@@ -205,6 +205,7 @@ Rails.application.routes.draw do
 
         resources :domains, only: %i[index show], param: :uuid do
           resource :registry_lock, only: %i[create destroy]
+          resources :access_events, only: %i[index]
         end
         resources :contacts, only: %i[index show update], param: :uuid do
           get 'do_need_update_contacts', to: 'contacts#do_need_update_contacts',
@@ -221,6 +222,23 @@ Rails.application.routes.draw do
         resource :domains, only: [:show], param: :name
         resource :contacts, only: [:show], param: :id
         get 'auth', to: 'auth#index'
+      end
+
+      namespace :internal do
+        namespace :rdap do
+          get 'domains/:name', to: 'domains#show', constraints: { name: /[^\/]+/ }
+          get 'registrars/:code', to: 'registrars#show'
+          get 'nameservers/:host', to: 'nameservers#show', constraints: { host: /[^\/]+/ }
+          get 'grants/active', to: 'grants#active'
+          post 'grants/:id/touch', to: 'grants#touch'
+          get 'tokens/active', to: 'tokens#active'
+          get 'tokens', to: 'tokens#index'
+          post 'tokens', to: 'tokens#create'
+          post 'tokens/revoke_all', to: 'tokens#revoke_all'
+          post 'tokens/revoke', to: 'tokens#revoke'
+          post 'tokens/touch', to: 'tokens#touch'
+          post 'access-events', to: 'access_events#create'
+        end
       end
 
       resources :auctions, only: %i[index show update], param: :uuid
@@ -367,6 +385,16 @@ Rails.application.routes.draw do
     end
 
     resources :admin_users
+
+    # Privileged RDAP grants (RPD §9). No destroy: grants end via suspend/revoke,
+    # never a hard delete, consistent with the immutable-audit framing.
+    resources :rdap_privilege_grants, except: %i[destroy] do
+      member do
+        post :suspend
+        post :revoke
+      end
+    end
+
     # /admin/api_users is mainly for manual testing
     resources :api_users, only: %i[index show] do
       resources :certificates do
