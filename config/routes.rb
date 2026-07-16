@@ -205,6 +205,7 @@ Rails.application.routes.draw do
 
         resources :domains, only: %i[index show], param: :uuid do
           resource :registry_lock, only: %i[create destroy]
+          resources :access_events, only: %i[index]
         end
         resources :contacts, only: %i[index show update], param: :uuid do
           get 'do_need_update_contacts', to: 'contacts#do_need_update_contacts',

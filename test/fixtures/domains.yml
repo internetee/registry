@@ -74,3 +74,34 @@ invalid:
   registrar: bestnames
   registrant: invalid
   uuid: 3c430ead-bb17-4b5b-aaa1-caa7dde7e138
+
+# spec 13 (RDAP access transparency): a domain currently owned by :john (== users(:registrant))
+# whose id is the item_id referenced by the log_domains timeline fixtures (john_tenure_*) and
+# matched by rdap_access_events.domain_name = mytenure.test.
+mytenure:
+  name: mytenure.test
+  name_puny: mytenure.test
+  name_dirty: mytenure.test
+  registrar: bestnames
+  registrant: john
+  transfer_code: 9f13ab7
+  valid_to: 2035-07-05
+  period: 1
+  period_unit: m
+  uuid: 7d1f6b2c-0e3a-4c5d-9b8e-1a2b3c4d5e6f
+  created_at: <%= Time.zone.parse('2020-01-01') %>
+
+# spec 13: a second john-owned domain used only for the DESC + 100-cap test (AC12), so its
+# >100 events do not pollute the mytenure.test count assertions.
+capdomain:
+  name: capdomain.test
+  name_puny: capdomain.test
+  name_dirty: capdomain.test
+  registrar: bestnames
+  registrant: john
+  transfer_code: 3ac71f9
+  valid_to: 2035-07-05
+  period: 1
+  period_unit: m
+  uuid: 5c9a0d1e-2f3b-4a6c-8d7e-9f0a1b2c3d4e
+  created_at: <%= Time.zone.parse('2020-01-01') %>

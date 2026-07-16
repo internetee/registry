@@ -24,3 +24,132 @@ cert_lookup:
   grant_ref: a1b2c3d4-0000-0000-0000-000000000002
   request_id:
   created_at: <%= 1.day.ago.to_s(:db) %>
+
+# --- spec 13 (RDAP access transparency) events for domains(:mytenure) = mytenure.test ---
+# john's tenure intervals on this item_id: [2021-01-01, 2022-01-01) and [2023-01-01, now).
+# All requested_at values below are absolute so they land deterministically relative to the
+# tenure boundaries; those meant to be disclosable are also older than the 5-minute delay cutoff.
+
+# AC4 + AC7(first interval): inside john's first tenure [2021-01-01, 2022-01-01) -> PRESENT.
+mytenure_in_first_tenure:
+  requested_at: <%= Time.zone.parse('2021-06-01 10:00:00') %>
+  domain_name: mytenure.test
+  caller_ip: 192.0.2.30
+  result_code: 200
+  organization_name: police
+  accessor_name: Officer Alpha
+  category: police
+  grant_ref: b2c3d4e5-0000-0000-0000-000000000010
+  request_id: req-0010
+  created_at: <%= Time.zone.parse('2021-06-01 10:00:00') %>
+
+# AC5: before john's earliest tenure start (prior owner jane's interval) -> ABSENT.
+mytenure_prior_owner:
+  requested_at: <%= Time.zone.parse('2020-06-01 10:00:00') %>
+  domain_name: mytenure.test
+  caller_ip: 192.0.2.31
+  result_code: 200
+  organization_name: cert_team
+  accessor_name: Prior Owner Access
+  category: cert
+  grant_ref: b2c3d4e5-0000-0000-0000-000000000011
+  request_id: req-0011
+  created_at: <%= Time.zone.parse('2020-06-01 10:00:00') %>
+
+# AC6: EXACTLY at the transfer instant end=2022-01-01 -> belongs to the acquiring owner (jane),
+# excluded from the departing caller (half-open) -> ABSENT.
+mytenure_transfer_instant:
+  requested_at: <%= Time.zone.parse('2022-01-01 00:00:00') %>
+  domain_name: mytenure.test
+  caller_ip: 192.0.2.32
+  result_code: 200
+  organization_name: police
+  accessor_name: Transfer Instant Access
+  category: police
+  grant_ref: b2c3d4e5-0000-0000-0000-000000000012
+  request_id: req-0012
+  created_at: <%= Time.zone.parse('2022-01-01 00:00:00') %>
+
+# AC6 + AC7(intervening): inside jane's intervening interval [2022-01-01, 2023-01-01) -> ABSENT.
+mytenure_intervening_owner:
+  requested_at: <%= Time.zone.parse('2022-06-01 10:00:00') %>
+  domain_name: mytenure.test
+  caller_ip: 192.0.2.33
+  result_code: 200
+  organization_name: cert_team
+  accessor_name: Intervening Owner Access
+  category: cert
+  grant_ref: b2c3d4e5-0000-0000-0000-000000000013
+  request_id: req-0013
+  created_at: <%= Time.zone.parse('2022-06-01 10:00:00') %>
+
+# AC7(second interval): inside john's re-acquired tenure [2023-01-01, now) -> PRESENT.
+# Also the AC13 null-organization case (organization_name is nil).
+mytenure_in_second_tenure_null_org:
+  requested_at: <%= Time.zone.parse('2023-06-01 10:00:00') %>
+  domain_name: mytenure.test
+  caller_ip: 192.0.2.34
+  result_code: 200
+  organization_name:
+  accessor_name: Officer Beta
+  category: emergency
+  grant_ref: b2c3d4e5-0000-0000-0000-000000000014
+  request_id: req-0014
+  created_at: <%= Time.zone.parse('2023-06-01 10:00:00') %>
+
+# AC8: same domain_name = mytenure.test but requested_at (2015) is OUTSIDE every interval of
+# THIS item_id (a deleted namesake on a different item_id) -> ABSENT.
+mytenure_namesake:
+  requested_at: <%= Time.zone.parse('2015-06-01 10:00:00') %>
+  domain_name: mytenure.test
+  caller_ip: 192.0.2.35
+  result_code: 200
+  organization_name: police
+  accessor_name: Namesake Access
+  category: police
+  grant_ref: b2c3d4e5-0000-0000-0000-000000000015
+  request_id: req-0015
+  created_at: <%= Time.zone.parse('2015-06-01 10:00:00') %>
+
+# AC10/AC11: inside john's current tenure, PAST the delay cutoff (2 hours old) -> PRESENT.
+mytenure_current_past_cutoff:
+  requested_at: <%= 2.hours.ago.to_s(:db) %>
+  domain_name: mytenure.test
+  caller_ip: 192.0.2.36
+  result_code: 200
+  organization_name: police
+  accessor_name: Recent Officer
+  category: police
+  grant_ref: b2c3d4e5-0000-0000-0000-000000000016
+  request_id: req-0016
+  created_at: <%= 2.hours.ago.to_s(:db) %>
+
+# AC10/AC11: inside john's current tenure but NEWER than now-delay (1 minute old) -> ABSENT
+# (suppressed by the disclosure delay, and by the 5-minute fallback when the Setting is absent).
+mytenure_current_in_window:
+  requested_at: <%= 1.minute.ago.to_s(:db) %>
+  domain_name: mytenure.test
+  caller_ip: 192.0.2.37
+  result_code: 200
+  organization_name: police
+  accessor_name: Just Now Officer
+  category: police
+  grant_ref: b2c3d4e5-0000-0000-0000-000000000017
+  request_id: req-0017
+  created_at: <%= 1.minute.ago.to_s(:db) %>
+
+# --- AC12: >100 disclosable events on domains(:capdomain) = capdomain.test (john's whole life),
+# all past the delay cutoff, so the response is capped at 100 most-recent DESC. ---
+<% (1..101).each do |i| %>
+capdomain_event_<%= i %>:
+  requested_at: <%= (i + 1).hours.ago.to_s(:db) %>
+  domain_name: capdomain.test
+  caller_ip: 192.0.2.100
+  result_code: 200
+  organization_name: police
+  accessor_name: Cap Officer <%= i %>
+  category: police
+  grant_ref: <%= format('c3d4e5f6-0000-0000-0000-%012d', i) %>
+  request_id: cap-<%= i %>
+  created_at: <%= (i + 1).hours.ago.to_s(:db) %>
+<% end %>

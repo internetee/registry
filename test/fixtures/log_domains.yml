@@ -96,3 +96,55 @@ create_seven:
     registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:goodnames) %>]
     registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:jack) %>]
   created_at: <%= Time.zone.parse('2023-09-05') %>
+
+# spec 13: the registrant timeline for domains(:mytenure) (item_id = identify(:mytenure)).
+# john == users(:registrant); jane is the "other" (prior/intervening) owner.
+#   [2020-01-01, 2021-01-01) jane   (prior owner)
+#   [2021-01-01, 2022-01-01) john   (caller interval s1..e1)   -> AC4/AC5 boundary
+#   [2022-01-01, 2023-01-01) jane   (intervening owner)        -> AC6/AC7 excluded
+#   [2023-01-01, now)        john   (caller re-acquired, live) -> AC7 second interval
+john_tenure_create:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:mytenure) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'mytenure.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:jane) %>]
+  created_at: <%= Time.zone.parse('2020-01-01') %>
+
+john_tenure_acquire_1:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:mytenure) %>
+  item_type: Domain
+  event: update
+  object_changes:
+    registrant_id: [<%= ActiveRecord::FixtureSet.identify(:jane) %>, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2021-01-01') %>
+
+john_tenure_transfer_away:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:mytenure) %>
+  item_type: Domain
+  event: update
+  object_changes:
+    registrant_id: [<%= ActiveRecord::FixtureSet.identify(:john) %>, <%= ActiveRecord::FixtureSet.identify(:jane) %>]
+  created_at: <%= Time.zone.parse('2022-01-01') %>
+
+john_tenure_reacquire:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:mytenure) %>
+  item_type: Domain
+  event: update
+  object_changes:
+    registrant_id: [<%= ActiveRecord::FixtureSet.identify(:jane) %>, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2023-01-01') %>
+
+# spec 13: domains(:capdomain) is john's for its whole life [2020-01-01, now) — used for the
+# DESC ordering + 100-cap test (AC12).
+capdomain_create:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:capdomain) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'capdomain.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:bestnames) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2020-01-01') %>
