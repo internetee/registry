@@ -236,6 +236,7 @@ Rails.application.routes.draw do
           post 'tokens/revoke_all', to: 'tokens#revoke_all'
           post 'tokens/revoke', to: 'tokens#revoke'
           post 'tokens/touch', to: 'tokens#touch'
+          post 'access-events', to: 'access_events#create'
         end
       end
 

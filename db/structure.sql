@@ -1,4 +1,4 @@
-\restrict 3yuhOd8UVvUalnyP7ubMzaEoYQt7050auMhPKG9bKziR1D2CEgysZBGz4HrmcuY
+\restrict 1fCvfWjQ1zhTOaPmInGUCh1mebjUY2V6m45AIX5B6cYbXOlD6RkTGCWhgcWyQMA
 
 -- Dumped from database version 13.4 (Debian 13.4-4.pgdg110+1)
 -- Dumped by pg_dump version 13.23 (Debian 13.23-0+deb11u4)
@@ -2613,6 +2613,44 @@ ALTER SEQUENCE public.que_jobs_job_id_seq OWNED BY public.que_jobs.job_id;
 
 
 --
+-- Name: rdap_access_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rdap_access_events (
+    id bigint NOT NULL,
+    requested_at timestamp with time zone NOT NULL,
+    domain_name character varying NOT NULL,
+    caller_ip character varying NOT NULL,
+    result_code integer NOT NULL,
+    organization_name character varying,
+    accessor_name character varying NOT NULL,
+    category character varying NOT NULL,
+    grant_ref character varying NOT NULL,
+    request_id character varying,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rdap_access_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rdap_access_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rdap_access_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rdap_access_events_id_seq OWNED BY public.rdap_access_events.id;
+
+
+--
 -- Name: rdap_api_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3659,6 +3697,13 @@ ALTER TABLE ONLY public.que_jobs ALTER COLUMN job_id SET DEFAULT nextval('public
 
 
 --
+-- Name: rdap_access_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_access_events ALTER COLUMN id SET DEFAULT nextval('public.rdap_access_events_id_seq'::regclass);
+
+
+--
 -- Name: rdap_api_tokens id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4257,6 +4302,14 @@ ALTER TABLE ONLY public.prices
 
 ALTER TABLE ONLY public.que_jobs
     ADD CONSTRAINT que_jobs_pkey PRIMARY KEY (queue, priority, run_at, job_id);
+
+
+--
+-- Name: rdap_access_events rdap_access_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_access_events
+    ADD CONSTRAINT rdap_access_events_pkey PRIMARY KEY (id);
 
 
 --
@@ -5109,6 +5162,27 @@ CREATE INDEX index_prices_on_zone_id ON public.prices USING btree (zone_id);
 
 
 --
+-- Name: index_rdap_access_events_on_domain_name_and_requested_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_access_events_on_domain_name_and_requested_at ON public.rdap_access_events USING btree (domain_name, requested_at);
+
+
+--
+-- Name: index_rdap_access_events_on_grant_ref_and_requested_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_access_events_on_grant_ref_and_requested_at ON public.rdap_access_events USING btree (grant_ref, requested_at);
+
+
+--
+-- Name: index_rdap_access_events_on_requested_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_access_events_on_requested_at ON public.rdap_access_events USING btree (requested_at);
+
+
+--
 -- Name: index_rdap_api_tokens_on_subject_and_revoked_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5538,7 +5612,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 3yuhOd8UVvUalnyP7ubMzaEoYQt7050auMhPKG9bKziR1D2CEgysZBGz4HrmcuY
+\unrestrict 1fCvfWjQ1zhTOaPmInGUCh1mebjUY2V6m45AIX5B6cYbXOlD6RkTGCWhgcWyQMA
 
 SET search_path TO "$user", public;
 
@@ -6059,6 +6133,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260625120000'),
 ('20260707120000'),
 ('20260713120000'),
-('20260713120001');
+('20260713120001'),
+('20260716120000');
 
 

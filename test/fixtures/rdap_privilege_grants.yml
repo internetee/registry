@@ -68,3 +68,30 @@ not_yet_valid:
   valid_from: <%= 5.days.from_now.to_s(:db) %>
   valid_until:
   uuid: a1b2c3d4-0000-0000-0000-000000000006
+
+# Grant with a NULL organization — the access-event snapshot must persist
+# organization_name NULL (spec 11 AC8) while accessor_name/category/grant_ref stay set.
+no_organization:
+  eeid_subject: EE10001001004
+  full_name: No Org Grantee
+  legal_basis_ref: MoU-2026-007
+  category: police
+  organization:
+  status: active
+  valid_from: <%= 10.days.ago.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000007
+
+# Grant with eeid_subject AND personal_id_code populated — the access-event row
+# must copy NEITHER into any column (spec 11 AC16 PII gate).
+with_personal_id:
+  eeid_subject: EE49001010002
+  full_name: Personal Id Grantee
+  legal_basis_ref: MoU-2026-008
+  category: cert
+  organization: cert
+  personal_id_code: '49001010002'
+  status: active
+  valid_from: <%= 10.days.ago.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000008
