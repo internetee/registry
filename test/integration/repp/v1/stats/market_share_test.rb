@@ -34,11 +34,17 @@ class ReppV1StatsMarketShareTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
+    # domains counts are unchanged: the spec-13 mytenure/capdomain fixtures sit on a
+    # test_registrar, which serialize_growth_rate_result excludes. calculate_market_share,
+    # however, divides by the total across ALL registrars (test ones included), so the two
+    # extra domains enlarge the denominator and lower each shown share:
+    #   prev  (2023-11): Good 3 / (3 + 0 + 2 spec13) = 60.0 %
+    #   today (07.26):   Good 2 / (2 + 4 + 2 spec13) = 25.0 %, Best 4 / 8 = 50.0 %
     assert_equal json[:data], prev_data: { name: prev_date,
                                            domains: [['Good Names', 3], ['Best Names', 0]],
-                                           market_share: [['Good Names', 100.0], ['Best Names', 0.0]] },
+                                           market_share: [['Good Names', 60.0], ['Best Names', 0.0]] },
                               data: { name: @today,
                                       domains: [['Good Names', 2], ['Best Names', 4]],
-                                      market_share: [['Good Names', 33.3], ['Best Names', 66.7]] }
+                                      market_share: [['Good Names', 25.0], ['Best Names', 50.0]] }
   end
 end
