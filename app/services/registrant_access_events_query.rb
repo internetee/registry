@@ -51,7 +51,8 @@ class RegistrantAccessEventsQuery
   # the effective registrant of item_id = @domain.id was one of @own_ids. Built from the
   # ordered log_domains timeline for this item_id.
   def own_tenure_intervals
-    rows = Version::DomainVersion.where(item_id: @domain.id).order(:created_at)
+    rows = Version::DomainVersion.where(item_type: 'Domain', item_id: @domain.id)
+                                 .order(:created_at, :id)
                                  .pluck(:created_at,
                                         Arel.sql("object_changes->>'registrant_id'"),
                                         Arel.sql("object->>'registrant_id'"))
@@ -85,11 +86,22 @@ class RegistrantAccessEventsQuery
       current_owned = owned_now
     end
 
-    # The live tail: whoever domain.registrant_id currently is closes at @now. Trust the
-    # live domain over the reconstructed run so the open interval is anchored to reality.
+    # The live tail: whoever domain.registrant_id currently is closes at @now.
     if own?(@domain.registrant_id)
-      current_start ||= rows.first&.first
-      intervals << [current_start, @now]
+      if current_start
+        # The walk already established the caller's current, still-open tenure — close it at @now.
+        intervals << [current_start, @now]
+      else
+        # FAIL CLOSED (R5c/R7/N3): the LIVE domain says the caller owns, but the reconstructed
+        # timeline never left the caller as the effective registrant (e.g. the acquiring version
+        # row is missing, or its object_changes was empty so carry-forward kept the prior owner).
+        # Do NOT anchor to rows.first (the whole-domain start) — that would span every prior
+        # owner's tenure and leak their accesses. Anchor only to the most recent version the
+        # timeline actually shows the caller as effective registrant; if none exists, emit NO
+        # open interval (under-disclose rather than risk exposing a prior owner's events).
+        anchor = last_own_registrant_change(rows)
+        intervals << [anchor, @now] if anchor
+      end
     elsif current_owned && current_start
       # Reconstructed run left the caller owning but the live domain is no longer theirs
       # without a closing version row — close at @now defensively (should not normally happen).
@@ -97,6 +109,22 @@ class RegistrantAccessEventsQuery
     end
 
     intervals
+  end
+
+  # Backward scan over the ordered timeline for the created_at of the most recent version whose
+  # EFFECTIVE registrant (same derivation as the forward walk: object_changes new value, else
+  # object scalar, else carry-forward) is one of the caller's own contact ids. Returns nil when
+  # the caller never appears as the effective registrant anywhere in the recorded history.
+  def last_own_registrant_change(rows)
+    effective = nil
+    last = nil
+
+    rows.each do |created_at, changes_registrant, object_registrant|
+      effective = effective_registrant(changes_registrant, object_registrant, effective)
+      last = created_at if own?(effective)
+    end
+
+    last
   end
 
   # Effective registrant AFTER an event. object_changes.registrant_id is a [old, new]

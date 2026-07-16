@@ -105,3 +105,38 @@ capdomain:
   period_unit: m
   uuid: 5c9a0d1e-2f3b-4a6c-8d7e-9f0a1b2c3d4e
   created_at: <%= Time.zone.parse('2020-01-01') %>
+
+# spec 13 FAIL-CLOSED regression: john CURRENTLY owns this domain (registrant: john) but its
+# log_domains timeline NEVER records john becoming registrant — the only recorded registrant is
+# the prior owner (jane). The old fail-OPEN code anchored the live tail to rows.first (2020) and
+# leaked jane's prior-tenure access event; the fail-closed fix emits NO interval here.
+orphan:
+  name: orphan.test
+  name_puny: orphan.test
+  name_dirty: orphan.test
+  registrar: spec13_registrar
+  registrant: john
+  transfer_code: 7be21ac
+  valid_to: 2035-07-05
+  period: 1
+  period_unit: m
+  uuid: 8e2f7c3d-1f4b-4d6e-ac8f-2b3c4d5e6f70
+  created_at: <%= Time.zone.parse('2020-01-01') %>
+
+# spec 13 FAIL-CLOSED sub-case: john CURRENTLY owns this domain, and the timeline DOES show john
+# as effective registrant earlier (2021), but the LAST recorded registrant-change hands it back
+# to jane (2022) with no row recording john re-acquiring. The fail-closed fix anchors the live
+# tail to john's most-recent effective-registrant version (2021), so only events at/after 2021
+# are disclosable and jane's pre-2021 prior-tenure event stays excluded.
+partial:
+  name: partial.test
+  name_puny: partial.test
+  name_dirty: partial.test
+  registrar: spec13_registrar
+  registrant: john
+  transfer_code: 4de89bc
+  valid_to: 2035-07-05
+  period: 1
+  period_unit: m
+  uuid: 9f3a8d4e-2a5c-4e7f-bd90-3c4d5e6f7081
+  created_at: <%= Time.zone.parse('2020-01-01') %>

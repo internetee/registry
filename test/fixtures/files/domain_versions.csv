@@ -10,7 +10,11 @@ cinema.test,John,Good Names,create,2023-09-04 21:00:00
 metro.test,Jack,Good Names,create,2023-09-04 21:00:00
 ,John,,update,2022-12-31 22:00:00
 ,Jane,,update,2021-12-31 22:00:00
+,Jane,,update,2021-12-31 22:00:00
 ,John,,update,2020-12-31 22:00:00
+,John,,update,2020-12-31 22:00:00
+orphan.test,Jane,Spec13 Registrar,create,2019-12-31 22:00:00
+partial.test,Jane,Spec13 Registrar,create,2019-12-31 22:00:00
 mytenure.test,Jane,Spec13 Registrar,create,2019-12-31 22:00:00
 capdomain.test,John,Spec13 Registrar,create,2019-12-31 22:00:00
 ,test_code,Best Names,update,2018-04-23 15:50:48

@@ -148,3 +148,48 @@ capdomain_create:
     registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:spec13_registrar) %>]
     registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:john) %>]
   created_at: <%= Time.zone.parse('2020-01-01') %>
+
+# spec 13 FAIL-CLOSED regression: domains(:orphan). The ONLY recorded registrant-change is the
+# create → jane (prior owner). No row records john (the CURRENT live registrant) acquiring it, so
+# the reconstructed walk never leaves the caller as the effective registrant. Fail-closed: emit
+# no interval; jane's prior-tenure access event must NOT leak to john.
+orphan_create:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:orphan) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'orphan.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:spec13_registrar) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:jane) %>]
+  created_at: <%= Time.zone.parse('2020-01-01') %>
+
+# spec 13 FAIL-CLOSED sub-case: domains(:partial). jane creates (2020), john acquires (2021),
+# then it is transferred back to jane (2022) — and NO row records john re-acquiring even though
+# the live domain says john owns it now. Fail-closed anchors the live tail to john's last
+# effective-registrant version (2021), so an event at/after 2021 is disclosed while jane's
+# pre-2021 prior-tenure event stays excluded.
+partial_create:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:partial) %>
+  item_type: Domain
+  event: create
+  object_changes:
+    name: [null, 'partial.test']
+    registrar_id: [null, <%= ActiveRecord::FixtureSet.identify(:spec13_registrar) %>]
+    registrant_id: [null, <%= ActiveRecord::FixtureSet.identify(:jane) %>]
+  created_at: <%= Time.zone.parse('2020-01-01') %>
+
+partial_to_john:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:partial) %>
+  item_type: Domain
+  event: update
+  object_changes:
+    registrant_id: [<%= ActiveRecord::FixtureSet.identify(:jane) %>, <%= ActiveRecord::FixtureSet.identify(:john) %>]
+  created_at: <%= Time.zone.parse('2021-01-01') %>
+
+partial_back_to_jane:
+  item_id: <%= ActiveRecord::FixtureSet.identify(:partial) %>
+  item_type: Domain
+  event: update
+  object_changes:
+    registrant_id: [<%= ActiveRecord::FixtureSet.identify(:john) %>, <%= ActiveRecord::FixtureSet.identify(:jane) %>]
+  created_at: <%= Time.zone.parse('2022-01-01') %>

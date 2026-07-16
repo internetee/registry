@@ -103,7 +103,8 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
     response_json = JSON.parse(response.body, symbolize_names: true)
     assert_equal response_json[:domains].length, response_json[:count]
     # +2: spec-13 mytenure/capdomain fixtures (both registrant: john)
-    assert_equal response_json[:total], 7
+    # +2: spec-13 fail-closed regression fixtures orphan/partial (both registrant: john)
+    assert_equal response_json[:total], 9
   end
 
   def test_root_accepts_limit_and_offset_parameters
@@ -118,7 +119,8 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
     response_json = JSON.parse(response.body, symbolize_names: true)
 
     # +2: spec-13 mytenure/capdomain fixtures (both registrant: john)
-    assert_equal(6, response_json[:domains].count)
+    # +2: spec-13 fail-closed regression fixtures orphan/partial (both registrant: john)
+    assert_equal(8, response_json[:domains].count)
   end
 
   def test_root_does_not_accept_limit_higher_than_200

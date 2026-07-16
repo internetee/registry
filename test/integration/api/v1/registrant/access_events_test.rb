@@ -188,6 +188,34 @@ class RegistrantApiV1AccessEventsTest < ActionDispatch::IntegrationTest
     end
   end
 
+  # FAIL-CLOSED regression (M1): the caller CURRENTLY owns domains(:orphan) but the log_domains
+  # timeline never records john becoming registrant — only the prior owner (jane) appears. The old
+  # fail-OPEN live tail anchored to rows.first (2020) and emitted [2020, now), leaking jane's
+  # prior-tenure police lookup. The fix emits NO interval, so nothing is disclosed.
+  def test_fail_closed_caller_never_in_timeline_excludes_prior_owner_event
+    orphan_uuid = domains(:orphan).uuid
+    body = get_events(orphan_uuid)
+
+    assert_equal [], body,
+                 'caller absent from the recorded timeline must disclose NO events (fail closed)'
+    refute_includes accessed_ats(body), iso('2020-06-01 10:00:00')
+  end
+
+  # FAIL-CLOSED sub-case (M1): the caller CURRENTLY owns domains(:partial) and DID appear as
+  # effective registrant earlier (2021), but the last recorded change hands it back to jane (2022)
+  # with no john re-acquire row. The fix anchors the live tail to john's last effective-registrant
+  # version (2021): only events at/after 2021 are disclosed, jane's pre-2021 event stays excluded.
+  def test_fail_closed_caller_earlier_in_timeline_anchors_to_last_own_version
+    partial_uuid = domains(:partial).uuid
+    body = get_events(partial_uuid)
+    ats = accessed_ats(body)
+
+    assert_includes ats, iso('2021-06-01 10:00:00'),
+                    'event after the caller last-own version (2021) must be disclosed'
+    refute_includes ats, iso('2020-06-01 10:00:00'),
+                    'prior-owner event before the caller last-own version must be excluded'
+  end
+
   def test_owned_domain_zero_events_returns_200_empty_array
     # domains(:hospital) is john's but has no rdap_access_events rows (hospital.test).
     empty_domain = domains(:hospital)
