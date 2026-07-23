@@ -1,0 +1,33 @@
+<% panel_title = local_assigns.fetch(:panel_title, t('admin.csv_sync.field_checkboxes.panel_title')) %>
+<% field_groups = local_assigns[:field_groups].presence || { t('admin.csv_sync.field_checkboxes.default_group') => fields } %>
+<% selected_set = Array(selected_fields).map(&:to_s) %>
+<% input_name = local_assigns.fetch(:input_name, 'fields[]') %>
+
+<div class="panel panel-default">
+  <div class="panel-heading"><%= panel_title %></div>
+  <div class="panel-body">
+    <% field_groups.each do |group_name, group_fields| %>
+      <div class="row">
+        <div class="col-md-12">
+          <h5><%= group_name %></h5>
+        </div>
+      </div>
+      <div class="row">
+        <% Array(group_fields).each do |field| %>
+          <% field_name = field.to_s %>
+          <div class="col-md-3">
+            <div class="checkbox">
+              <label>
+                <%= check_box_tag input_name, field_name, selected_set.include?(field_name), id: "#{input_name.to_s.parameterize(separator: '_')}_#{field_name}" %>
+                <%= t("activerecord.attributes.#{model_name}.#{field_name}", default: field_name.humanize) %>
+              </label>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <% unless group_name == field_groups.keys.last %>
+        <hr>
+      <% end %>
+    <% end %>
+  </div>
+</div>
