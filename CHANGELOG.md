@@ -1,3 +1,6 @@
+23.07.2026
+* Fixed case sensitivity issue for REPP requests https://github.com/internetee/registry/issues/2943
+
 17.06.2026
 * Disabled birthday option for contact ident data for additional 19 EU countries https://github.com/internetee/registry/issues/2933
 * CSR upload localisation fix https://github.com/internetee/registry/pull/2928
