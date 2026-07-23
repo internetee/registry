@@ -33,7 +33,7 @@ module Repp
       api :GET, '/repp/v1/domains/:domain_name'
       desc 'Get a specific domain'
       def show
-        @domain = Epp::Domain.find_by(name: params[:id])
+        @domain = Epp::Domain.find_repp_by_name(params[:id])
         authorize! :info, @domain
 
         sponsor = @domain.registrar == current_user.registrar
@@ -166,7 +166,8 @@ module Repp
       end
 
       def initiate_transfer(transfer)
-        domain = Epp::Domain.find_or_initialize_by(name: transfer[:domain_name])
+        domain = Epp::Domain.find_repp_by_name(transfer[:domain_name])
+        domain ||= Epp::Domain.new(name: transfer[:domain_name])
         action = Actions::DomainTransfer.new(domain, transfer[:transfer_code],
                                              current_user.registrar)
 
@@ -195,14 +196,7 @@ module Repp
       end
 
       def set_domain
-        registrar = current_user.registrar
-
-        @domain = Epp::Domain.find_by(registrar: registrar, name: params[:id])
-        @domain ||= Epp::Domain.find_by!(registrar: registrar, name_puny: params[:id])
-
-        return @domain if @domain
-
-        raise ActiveRecord::RecordNotFound
+        @domain = Epp::Domain.find_repp_by_name!(params[:id], registrar: current_user.registrar)
       end
 
       def find_password
@@ -228,7 +222,7 @@ module Repp
         entry = params[:id]
         return Epp::Domain.find(entry) if entry.match?(/\A[0-9]+\z/)
 
-        Epp::Domain.find_by!('name = ? OR name_puny = ?', entry, entry)
+        Epp::Domain.find_repp_by_name!(entry)
       end
 
       def limit
