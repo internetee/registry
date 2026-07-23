@@ -104,7 +104,7 @@ module Repp
           return
         end
 
-        render_success(data: { domain: { name: @domain.name } })
+        render_domain_command_success(pending: @domain.epp_pending_update.present?)
       end
 
       api :GET, '/repp/v1/domains/:domain_name/transfer_info'
@@ -153,7 +153,7 @@ module Repp
         handle_errors(@domain) and return unless action.call
         # rubocop:enable Style/AndOr
 
-        render_success(data: { domain: { name: @domain.name } })
+        render_domain_command_success(pending: @domain.epp_pending_delete.present?)
       end
 
       private
