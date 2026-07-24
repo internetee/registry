@@ -53,12 +53,16 @@ module Api
         end
 
         def current_user_domains_total_count
+          return current_registrant_user.direct_domains.count unless company_register_api_enabled?
+
           current_registrant_user.domains.count
         rescue CompanyRegister::NotAvailableError
           current_registrant_user.direct_domains.count
         end
 
         def current_user_domains
+          return init_count_of_direct_domains unless company_register_api_enabled?
+
           init_count_of_domains
         rescue CompanyRegister::NotAvailableError
           init_count_of_direct_domains
