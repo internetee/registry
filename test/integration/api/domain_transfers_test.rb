@@ -80,10 +80,24 @@ class APIDomainTransfersTest < ApplicationIntegrationTest
                 JSON.parse(response.body, symbolize_names: true)
   end
 
+  def test_bulk_transfer_with_uppercase_domain_name
+    post '/repp/v1/domains/transfer', params: uppercase_request_params, as: :json,
+         headers: { 'HTTP_AUTHORIZATION' => http_auth_key }
+
+    assert_response :ok
+    json = JSON.parse(response.body, symbolize_names: true)
+    assert_equal 'shop.test', json[:data][:success][0][:domain_name]
+    assert_equal @new_registrar, @domain.reload.registrar
+  end
+
   private
 
   def request_params
     { data: { domain_transfers: [{ domain_name: 'shop.test', transfer_code: '65078d5' }] } }
+  end
+
+  def uppercase_request_params
+    { data: { domain_transfers: [{ domain_name: 'SHOP.TEST', transfer_code: '65078d5' }] } }
   end
 
   def http_auth_key

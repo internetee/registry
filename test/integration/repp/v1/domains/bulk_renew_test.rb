@@ -40,6 +40,26 @@ class ReppV1DomainsBulkRenewTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_renews_domains_with_uppercase_names
+    payload = {
+      "domains": [
+        'SHOP.TEST',
+        'AIRPORT.TEST',
+        'LIBRARY.TEST'
+      ],
+      "renew_period": "1y"
+    }
+
+    post "/repp/v1/domains/renew/bulk", headers: @auth_headers, params: payload
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert json[:data][:updated_domains].include? 'shop.test'
+    assert json[:data][:updated_domains].include? 'airport.test'
+    assert json[:data][:updated_domains].include? 'library.test'
+  end
+
   def test_keeps_update_prohibited_status
     domain = domains(:shop)
     domain.update(statuses: [DomainStatus::CLIENT_UPDATE_PROHIBITED, DomainStatus::SERVER_UPDATE_PROHIBITED])

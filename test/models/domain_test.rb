@@ -373,6 +373,31 @@ class DomainTest < ActiveSupport::TestCase
     assert_equal unnormalized_name, domain.name_dirty
   end
 
+  def test_find_repp_by_name_normalizes_uppercase_and_whitespace
+    domain = domains(:shop)
+
+    assert_equal domain, Domain.find_repp_by_name('SHOP.TEST')
+    assert_equal domain, Domain.find_repp_by_name(' shop.test ')
+  end
+
+  def test_find_repp_by_name_finds_by_punycode
+    domain = domains(:shop)
+    domain.update!(name_puny: 'xn--prototp-s2aa.ee')
+
+    assert_equal domain, Domain.find_repp_by_name('XN--PROTOTP-S2AA.EE')
+  end
+
+  def test_find_repp_by_name_scopes_by_registrar
+    domain = domains(:shop)
+
+    assert_equal domain, Domain.find_repp_by_name('SHOP.TEST', registrar: domain.registrar)
+    assert_nil Domain.find_repp_by_name('SHOP.TEST', registrar: registrars(:goodnames))
+  end
+
+  def test_find_repp_by_name_returns_nil_when_missing
+    assert_nil Domain.find_repp_by_name('missing.test')
+  end
+
   def test_converts_name_to_punycode
     domain = Domain.new(name: 'münchen.test')
     assert_equal 'xn--mnchen-3ya.test', domain.name_puny

@@ -388,6 +388,22 @@ class Domain < ApplicationRecord
     domain
   end
 
+  def self.normalize_repp_domain_name(name)
+    name.to_s.strip.downcase.presence
+  end
+
+  def self.find_repp_by_name(name, registrar: nil)
+    normalized = normalize_repp_domain_name(name)
+    return nil unless normalized
+
+    relation = registrar ? where(registrar: registrar) : all
+    relation.find_by_idn(normalized) || relation.find_by(name_puny: normalized)
+  end
+
+  def self.find_repp_by_name!(name, registrar: nil)
+    find_repp_by_name(name, registrar: registrar) || raise(ActiveRecord::RecordNotFound)
+  end
+
   def puny_label
     name_puny.to_s.split('.').first
   end
