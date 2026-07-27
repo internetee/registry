@@ -107,7 +107,7 @@ module Repp
       end
 
       def authentication_failure_message
-        if @current_user&.active? && !@current_user.identity_verified?
+        if @current_user&.active? && @current_user.subject.present? && !@current_user.identity_verified?
           I18n.t('registrar.authorization.identity_not_verified')
         else
           I18n.t('registrar.authorization.invalid_authorization_information')
