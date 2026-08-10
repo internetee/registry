@@ -36,7 +36,23 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
     assert_equal(@domain.registrar.notifications.last.text, "Domain #{@domain.name} has been unlocked by registrant")
   end
 
+  # The registrant decision may reach us after the registrar has already cancelled
+  # the pending update, or after the expiry cron has cleaned it up.
+  def test_skips_confirmation_when_pending_update_is_already_gone
+    set_pending_update
+    old_registrant_code = @domain.registrant.code
+    @domain.update!(statuses: [DomainStatus::OK])
+
+    assert_no_difference '@domain.registrar.notifications.count' do
+      DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::CONFIRMED)
+    end
+    @domain.reload
+
+    assert_equal old_registrant_code, @domain.registrant.code
+  end
+
   def test_rejected_registrant_verification_notifies_registrar
+    set_pending_update
     DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::REJECTED)
 
     last_registrar_notification = @domain.registrar.notifications.last
@@ -45,6 +61,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
   end
 
   def test_accepted_registrant_verification_notifies_registrar
+    set_pending_update
     DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::CONFIRMED)
 
     last_registrar_notification = @domain.registrar.notifications.last
@@ -61,6 +78,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
 
     @domain.pending_json['frame'] = parsed_frame
     @domain.update(pending_json: @domain.pending_json)
+    set_pending_update
 
     @domain.reload
     DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::CONFIRMED)
@@ -79,6 +97,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
 
     @domain.pending_json['frame'] = parsed_frame
     @domain.update(pending_json: @domain.pending_json)
+    set_pending_update
 
     DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::REJECTED)
     @domain.reload
@@ -96,7 +115,8 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
 
     @domain.pending_json['frame'] = parsed_frame
     @domain.update(pending_json: @domain.pending_json)
-    @domain.update(statuses: [DomainStatus::DELETE_CANDIDATE, DomainStatus::DISPUTED])
+    @domain.update(statuses: [DomainStatus::DELETE_CANDIDATE, DomainStatus::DISPUTED,
+                              DomainStatus::PENDING_UPDATE])
 
     DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::REJECTED)
     @domain.reload
@@ -116,7 +136,8 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
 
     @domain.pending_json['frame'] = parsed_frame
     @domain.update(pending_json: @domain.pending_json)
-    @domain.update(statuses: [DomainStatus::DELETE_CANDIDATE, DomainStatus::DISPUTED])
+    @domain.update(statuses: [DomainStatus::DELETE_CANDIDATE, DomainStatus::DISPUTED,
+                              DomainStatus::PENDING_UPDATE])
 
     DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::CONFIRMED)
     @domain.reload
@@ -137,7 +158,8 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
     @domain.pending_json['frame'] = parsed_frame
     @domain.pending_json['current_user_id'] = { key: 'some_value'}
     @domain.update(pending_json: @domain.pending_json)
-    @domain.update(statuses: [DomainStatus::DELETE_CANDIDATE, DomainStatus::DISPUTED])
+    @domain.update(statuses: [DomainStatus::DELETE_CANDIDATE, DomainStatus::DISPUTED,
+                              DomainStatus::PENDING_UPDATE])
 
     assert_nothing_raised do
       DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::CONFIRMED)
@@ -190,5 +212,13 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
     assert_not @domain.statuses.include? DomainStatus::PENDING_DELETE
     assert_not @domain.statuses.include? DomainStatus::PENDING_UPDATE
     assert @domain.statuses.include? DomainStatus::OK
+  end
+
+  private
+
+  def set_pending_update
+    @domain.statuses = [DomainStatus::PENDING_UPDATE]
+    @domain.save(validate: false)
+    @domain.reload
   end
 end

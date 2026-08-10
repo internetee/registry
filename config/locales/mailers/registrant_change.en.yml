@@ -20,3 +20,7 @@ en:
       subject: >-
         Domeeni %{domain_name} registreerija vahetuse taotlus on tühistatud
         / %{domain_name} registrant change cancelled
+    cancelled:
+      subject: >-
+        Registripidaja tühistas domeeni %{domain_name} registreerija vahetuse taotluse
+        / %{domain_name} registrant change request was cancelled by the registrar
