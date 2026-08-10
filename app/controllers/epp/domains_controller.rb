@@ -9,6 +9,12 @@ module Epp
     THROTTLED_ACTIONS = %i[info create check renew update transfer delete].freeze
     include Shunter::Integration::Throttle
 
+    # Everything Deserializers::Xml::DomainUpdate can emit besides the registrant itself.
+    # :domain and :registrar_id are always present, :legal_document may be mandatory for
+    # the registrar even when cancelling.
+    UPDATE_KEYS_BESIDES_REGISTRANT = %i[contacts nameservers dns_keys statuses transfer_code
+                                        reserved_pw].freeze
+
     def info
       authorize! :info, @domain
 
@@ -47,6 +53,9 @@ module Epp
       registrar_id = current_user.registrar.id
       update_params = ::Deserializers::Xml::DomainUpdate.new(params[:parsed_frame],
                                                              registrar_id).call
+
+      return cancel_pending_update if cancels_pending_update?(update_params)
+
       action = Actions::DomainUpdate.new(@domain, update_params, false)
       unless action.call
         handle_errors(@domain)
@@ -133,6 +142,33 @@ module Epp
     end
 
     private
+
+    # EPP has no command to manipulate pending operations (RFC 3731 covers transfer only),
+    # so a domain:update requesting the registrant the domain already has is treated as a
+    # request to cancel the pending registrant change. Same idea as domain:renew cancelling
+    # pendingDelete in Epp::Domain#renew.
+    def cancels_pending_update?(update_params)
+      return false unless @domain.pending_update?
+      return false if update_params[:registrant].blank?
+
+      requested = Registrant.find_by(code: update_params[:registrant][:code])
+      return false unless requested&.id == @domain.registrant_id
+
+      (update_params.keys & UPDATE_KEYS_BESIDES_REGISTRANT).empty?
+    end
+
+    def cancel_pending_update
+      result = ::Domains::CancelPendingUpdate.run(domain: @domain,
+                                                  initiator: current_user.username)
+      unless result.valid?
+        @domain.add_epp_error('2304', 'status', DomainStatus::PENDING_UPDATE,
+                              result.errors.full_messages.join(', '))
+        handle_errors(@domain)
+        return
+      end
+
+      render_epp_response('/epp/domains/success')
+    end
 
     def validate_info
       @prefix = 'info > info >'

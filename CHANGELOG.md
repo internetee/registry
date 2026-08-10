@@ -1,3 +1,6 @@
+10.08.2026
+* Registrars can now cancel a pending registrant change https://github.com/internetee/registry/issues/2939
+
 23.07.2026
 * Operations with pending status now return result code 1001 in REPP https://github.com/internetee/registry/issues/2940
 * Fixed case sensitivity issue for REPP requests https://github.com/internetee/registry/issues/2943
