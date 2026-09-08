@@ -1,37 +1,119 @@
-name: Notify Auto-Merged PRs
+name: Notify Mattermost on merged PRs
 
 on:
   workflow_run:
     workflows: ["Auto approve & merge Dependabot and Renovate PRs"]
     types: [completed]
+  push:
     branches: [master]
 
 permissions:
   contents: read
   pull-requests: read
+  actions: read
 
 jobs:
   notify:
-    if: github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    env:
+      GH_REPO: ${{ github.repository }}
     steps:
+      - name: Find merged bot PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          RUN_STARTED: ${{ github.event.workflow_run.run_started_at }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_run" ]; then
+            PR=$(gh pr list --repo "$REPO" --head "$HEAD_BRANCH" --base master --state merged --json number,title,url,author,labels,mergedAt --jq '.[0] // empty')
+            if [ -n "$PR" ] && [ -n "$RUN_STARTED" ]; then
+              MERGED_AT=$(echo "$PR" | jq -r '.mergedAt // .merged_at')
+              MERGED_EPOCH=$(date -d "$MERGED_AT" +%s)
+              STARTED_EPOCH=$(date -d "$RUN_STARTED" +%s)
+              if [ "$MERGED_EPOCH" -lt $((STARTED_EPOCH - 60)) ]; then
+                echo "notify=false" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+            fi
+          else
+            if [ "${{ github.actor }}" = "github-actions[bot]" ]; then
+              echo "notify=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            PR=$(gh api "repos/${REPO}/commits/${SHA}/pulls" --jq '[.[] | select(.base.ref == "master" and .merged_at != null)] | .[0] // empty')
+          fi
+          if [ -z "$PR" ]; then
+            echo "notify=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          AUTHOR=$(echo "$PR" | jq -r '.user.login // .author.login')
+          IS_BOT=$(echo "$PR" | jq -r '.author.is_bot // (.user.type == "Bot") // false')
+          LABELS=$(echo "$PR" | jq -r '[.labels[].name] | join(" ")')
+          echo "author=$AUTHOR is_bot=$IS_BOT labels=$LABELS"
+          if [[ "$IS_BOT" == "true" ]] || [[ "$AUTHOR" == "dependabot" || "$AUTHOR" == "dependabot[bot]" || "$AUTHOR" == "app/dependabot" || "$AUTHOR" == "renovate" || "$AUTHOR" == "renovate[bot]" || "$AUTHOR" == "app/renovate" || "$AUTHOR" == *"[bot]" || "$AUTHOR" == app/* ]] || [[ "$LABELS" == *"auto-merge"* ]] || [[ "$LABELS" == *"patch"* ]] || [[ "$LABELS" == *"minor"* ]]; then
+            echo "notify=true" >> "$GITHUB_OUTPUT"
+            echo "author=$AUTHOR" >> "$GITHUB_OUTPUT"
+            echo "number=$(echo "$PR" | jq -r '.number')" >> "$GITHUB_OUTPUT"
+            echo "title=$(echo "$PR" | jq -r '.title')" >> "$GITHUB_OUTPUT"
+            echo "url=$(echo "$PR" | jq -r '.html_url // .url')" >> "$GITHUB_OUTPUT"
+            echo "merged_at=$(echo "$PR" | jq -r '.merged_at // .mergedAt')" >> "$GITHUB_OUTPUT"
+          else
+            echo "notify=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build short changelog
+        if: steps.pr.outputs.notify == 'true'
+        id: changelog
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          TEXT=$(gh pr view "$PR_NUMBER" --repo "$GH_REPO" --json commits --jq '.commits[:10] | map("- " + .messageHeadline) | join("\n")')
+          if [ -z "$TEXT" ]; then
+            TEXT="No commit messages found"
+          fi
+          {
+            echo "text<<CHANGELOG_EOF"
+            echo "$TEXT"
+            echo "CHANGELOG_EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Send Mattermost notification
+        if: steps.pr.outputs.notify == 'true'
         env:
           MATTERMOST_BOT_TOKEN: ${{ secrets.MATTERMOST_BOT_TOKEN }}
           MATTERMOST_CHANNEL_ID: ${{ secrets.MATTERMOST_CHANNEL_ID }}
           MATTERMOST_BASE_URL: ${{ secrets.MATTERMOST_BASE_URL }}
           REPO: ${{ github.repository }}
-          WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
-          WORKFLOW_URL: ${{ github.event.workflow_run.html_url }}
-          COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
-          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          PR_TITLE: ${{ steps.pr.outputs.title }}
+          PR_URL: ${{ steps.pr.outputs.url }}
+          MERGED_AT: ${{ steps.pr.outputs.merged_at }}
+          CHANGELOG: ${{ steps.changelog.outputs.text }}
+          MERGE_TYPE: ${{ steps.pr.outputs.author }}
         run: |
           if [ -z "$MATTERMOST_BOT_TOKEN" ] || [ -z "$MATTERMOST_CHANNEL_ID" ] || [ -z "$MATTERMOST_BASE_URL" ]; then
             echo "Missing Mattermost secrets (MATTERMOST_BOT_TOKEN, MATTERMOST_CHANNEL_ID, MATTERMOST_BASE_URL)" >&2
             exit 1
           fi
-          curl -sS -X POST \
+          jq -n \
+            --arg channel "$MATTERMOST_CHANNEL_ID" \
+            --arg repo "$REPO" \
+            --arg number "$PR_NUMBER" \
+            --arg title "$PR_TITLE" \
+            --arg merge_type "$MERGE_TYPE" \
+            --arg merged_at "$MERGED_AT" \
+            --arg url "$PR_URL" \
+            --arg changelog "$CHANGELOG" \
+            '{channel_id:$channel, message:("[" + $repo + "] PR #" + $number + ": \"" + $title + "\" was auto-merged by " + $merge_type + ".\nMerged at: " + $merged_at + "\nLink: " + $url + "\nChangelog:\n" + $changelog)}' \
+          | curl -sS -X POST \
             -H "Authorization: Bearer $MATTERMOST_BOT_TOKEN" \
             -H "Content-Type: application/json" \
-            -d "{\"channel_id\":\"$MATTERMOST_CHANNEL_ID\",\"message\":\"🤖 [$REPO] Auto-merge workflow completed successfully!\\nWorkflow: $WORKFLOW_NAME\\nBranch: $BRANCH\\nCommit: $COMMIT_SHA\\nLink: $WORKFLOW_URL\"}" \
+            -d @- \
             "$MATTERMOST_BASE_URL/api/v4/posts"

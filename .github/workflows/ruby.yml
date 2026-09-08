@@ -20,20 +20,33 @@ jobs:
         ruby: ['3.0.3']
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
+    env:
+      BUNDLE_WITHOUT: "development:staging:production"
+      BUNDLE_FROZEN: "true"
     steps:
       - uses: actions/checkout@v6
+
+      - name: Assert Ruby matches .ruby-version
+        run: |
+          expected=$(tr -d '[:space:]' < .ruby-version)
+          if [ "${{ matrix.ruby }}" != "$expected" ]; then
+            echo "CI ruby ${{ matrix.ruby }} does not match .ruby-version ($expected)"
+            exit 1
+          fi
 
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          bundler: Gemfile.lock
+          bundler-cache: true
 
-      - name: Config bundler
+      - name: Verify gems match Gemfile.lock
         run: |
           bundle config set without 'development staging production'
-          bundle config set deployment '[secure]'
+          bundle config set frozen true
+          bundle check
           bundle env
-          head -n1 $(which bundle)
+          bundle list
 
       - name: Run Tests
         env:

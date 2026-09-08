@@ -8,13 +8,15 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  checks: read
+  statuses: read
 
 jobs:
   auto-approve-merge:
+    if: github.repository == 'internetee/registry'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        if: github.repository == 'internetee/registry'
         uses: actions/checkout@v6
 
       - name: Install GitHub CLI
@@ -24,14 +26,14 @@ jobs:
 
       - name: Auto approve PR
         if: |
-          github.actor == 'dependabot[bot]' ||
-          github.actor == 'renovate[bot]'
+          github.event.pull_request.user.login == 'dependabot[bot]' ||
+          github.event.pull_request.user.login == 'renovate[bot]'
         uses: hmarr/auto-approve-action@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch Dependabot metadata
-        if: github.actor == 'dependabot[bot]'
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
         id: metadata
         uses: dependabot/fetch-metadata@v1
         with:
@@ -40,10 +42,10 @@ jobs:
       - name: Check if PR should be auto-merged
         id: check_auto_merge
         run: |
-          # Set default UPDATE_TYPE to avoid unbound variable errors
+          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
           UPDATE_TYPE="${{ steps.metadata.outputs.update-type || 'unknown' }}"
-          
-          if [ "${{ github.actor }}" == "dependabot[bot]" ]; then
+
+          if [ "$PR_AUTHOR" == "dependabot[bot]" ]; then
             if [[ "$UPDATE_TYPE" == "version-update:semver-patch" ]]; then
               echo "auto_merge=true" >> $GITHUB_OUTPUT
               echo "update_type=${UPDATE_TYPE}" >> $GITHUB_OUTPUT
@@ -53,8 +55,7 @@ jobs:
               echo "update_type=${UPDATE_TYPE}" >> $GITHUB_OUTPUT
               echo "Auto-merge: Dependabot non-patch update, skipping"
             fi
-          elif [ "${{ github.actor }}" == "renovate[bot]" ]; then
-            # Check if the PR has the 'patch' label but NOT 'minor' or 'major' labels
+          elif [ "$PR_AUTHOR" == "renovate[bot]" ]; then
             LABELS=$(gh pr view ${{ github.event.pull_request.number }} --json labels -q '.labels[].name' | tr '\n' ' ')
             if [[ "$LABELS" == *"patch"* ]] && [[ "$LABELS" != *"minor"* ]] && [[ "$LABELS" != *"major"* ]]; then
               echo "auto_merge=true" >> $GITHUB_OUTPUT
@@ -66,10 +67,10 @@ jobs:
           else
             echo "auto_merge=false" >> $GITHUB_OUTPUT
             echo "update_type=${UPDATE_TYPE}" >> $GITHUB_OUTPUT
-            echo "Auto-merge: Unknown actor, skipping"
+            echo "Auto-merge: Unknown author ${PR_AUTHOR}, skipping"
           fi
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
 
       - name: Wait for CI checks
@@ -79,15 +80,47 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 30
+          running-workflow-name: Auto approve & merge Dependabot and Renovate PRs
+          check-regexp: '^test'
+          checks-discovery-timeout: 300
 
-      - name: Auto-merge PR
+      - name: Check CI status
         if: steps.check_auto_merge.outputs.auto_merge == 'true'
+        id: ci_status
         run: |
-          echo "Attempting to auto-merge PR #${{ github.event.pull_request.number }}"
-          gh pr merge --auto --merge ${{ github.event.pull_request.number }} || {
-            echo "Auto-merge failed, but continuing..."
-            exit 0
-          }
+          PR_NUMBER='${{ github.event.pull_request.number }}'
+          NON_SUCCESS=$(gh pr checks "$PR_NUMBER" --required --json name,state -q '.[] | select(.state != "SUCCESS") | "\(.name):\(.state)"' || true)
+          if [ -z "$NON_SUCCESS" ]; then
+            echo "ci_passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "ci_passed=false" >> $GITHUB_OUTPUT
+            echo "CI checks failed or pending, skipping auto-merge"
+            echo "$NON_SUCCESS"
+            exit 1
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+
+      - name: Auto-merge PR
+        if: steps.check_auto_merge.outputs.auto_merge == 'true' && steps.ci_status.outputs.ci_passed == 'true'
+        run: |
+          PR_NUMBER='${{ github.event.pull_request.number }}'
+          if gh pr merge --merge "$PR_NUMBER"; then
+            echo "Merged PR #$PR_NUMBER"
+            exit 0
+          fi
+          STATE=$(gh pr view "$PR_NUMBER" --json state -q .state)
+          if [ "$STATE" = "MERGED" ]; then
+            echo "PR #$PR_NUMBER was already merged"
+            exit 0
+          fi
+          gh pr merge --auto --merge "$PR_NUMBER"
+          STATE=$(gh pr view "$PR_NUMBER" --json state -q .state)
+          if [ "$STATE" = "MERGED" ]; then
+            echo "Merged PR #$PR_NUMBER via auto-merge"
+            exit 0
+          fi
+          echo "Failed to merge PR #$PR_NUMBER (state=$STATE)" >&2
+          exit 1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
