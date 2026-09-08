@@ -84,12 +84,43 @@ jobs:
           check-regexp: '^test'
           checks-discovery-timeout: 300
 
-      - name: Auto-merge PR
+      - name: Check CI status
         if: steps.check_auto_merge.outputs.auto_merge == 'true'
+        id: ci_status
         run: |
-          echo "Attempting to auto-merge PR #${{ github.event.pull_request.number }}"
-          if ! gh pr merge --merge --auto ${{ github.event.pull_request.number }}; then
-            gh pr merge --merge ${{ github.event.pull_request.number }}
+          PR_NUMBER='${{ github.event.pull_request.number }}'
+          NON_SUCCESS=$(gh pr checks "$PR_NUMBER" --required --json name,state -q '.[] | select(.state != "SUCCESS") | "\(.name):\(.state)"' || true)
+          if [ -z "$NON_SUCCESS" ]; then
+            echo "ci_passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "ci_passed=false" >> $GITHUB_OUTPUT
+            echo "CI checks failed or pending, skipping auto-merge"
+            echo "$NON_SUCCESS"
+            exit 1
           fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge PR
+        if: steps.check_auto_merge.outputs.auto_merge == 'true' && steps.ci_status.outputs.ci_passed == 'true'
+        run: |
+          PR_NUMBER='${{ github.event.pull_request.number }}'
+          if gh pr merge --merge "$PR_NUMBER"; then
+            echo "Merged PR #$PR_NUMBER"
+            exit 0
+          fi
+          STATE=$(gh pr view "$PR_NUMBER" --json state -q .state)
+          if [ "$STATE" = "MERGED" ]; then
+            echo "PR #$PR_NUMBER was already merged"
+            exit 0
+          fi
+          gh pr merge --auto --merge "$PR_NUMBER"
+          STATE=$(gh pr view "$PR_NUMBER" --json state -q .state)
+          if [ "$STATE" = "MERGED" ]; then
+            echo "Merged PR #$PR_NUMBER via auto-merge"
+            exit 0
+          fi
+          echo "Failed to merge PR #$PR_NUMBER (state=$STATE)" >&2
+          exit 1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
