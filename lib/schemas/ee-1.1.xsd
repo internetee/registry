@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema
- targetNamespace="https://epp.tld.ee/schema/eis-1.0.xsd"
- xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
+ targetNamespace="https://epp.tld.ee/schema/ee-1.1.xsd"
+ xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd"
  xmlns="http://www.w3.org/2001/XMLSchema"
  elementFormDefault="qualified">
 
   <annotation>
     <documentation>
-     EIS Extensible Provisioning Protocol v1.0 extension schema.
+     Extensible Provisioning Protocol v1.0 extension schema.
     </documentation>
   </annotation>
 
