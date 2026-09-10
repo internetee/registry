@@ -167,6 +167,7 @@ Rails.application.routes.draw do
         resources :renew, only: %i[create], constraints: { id: /.*/ }, controller: 'domains/renews'
         resources :transfer, only: %i[create], constraints: { id: /.*/ }, controller: 'domains/transfers'
         resources :statuses, only: %i[update destroy], constraints: { id: /.*/ }, controller: 'domains/statuses'
+        resource :pending_update, only: %i[destroy], controller: 'domains/pending_updates'
         match 'dnssec', to: 'domains/dnssec#destroy', via: 'delete', defaults: { id: nil }
         match 'contacts', to: 'domains/contacts#destroy', via: 'delete', defaults: { id: nil }
         collection do
