@@ -1,7 +1,7 @@
-\restrict WmlyozFAnc1c6zHWXudb7s2jRC1uKwHPlCMDikRGHsbNPX1TGBaq3KQ01YXVO8T
+\restrict 1fCvfWjQ1zhTOaPmInGUCh1mebjUY2V6m45AIX5B6cYbXOlD6RkTGCWhgcWyQMA
 
 -- Dumped from database version 13.4 (Debian 13.4-4.pgdg110+1)
--- Dumped by pg_dump version 13.23 (Debian 13.23-1.pgdg11+1)
+-- Dumped by pg_dump version 13.23 (Debian 13.23-0+deb11u4)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -733,11 +733,11 @@ CREATE TABLE public.contacts (
     disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     email_history character varying,
     registrant_publishable boolean DEFAULT false,
+    checked_company_at timestamp without time zone,
+    company_register_status character varying,
     ident_request_sent_at timestamp without time zone,
     verified_at timestamp without time zone,
     verification_id character varying,
-    checked_company_at timestamp without time zone,
-    company_register_status character varying,
     system_disclosed_attributes character varying[] DEFAULT '{}'::character varying[],
     verification_pending_at timestamp without time zone,
     verification_snapshot jsonb DEFAULT '{}'::jsonb
@@ -2046,6 +2046,44 @@ ALTER SEQUENCE public.log_prices_id_seq OWNED BY public.log_prices.id;
 
 
 --
+-- Name: log_rdap_privilege_grants; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.log_rdap_privilege_grants (
+    id bigint NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    object_changes json,
+    created_at timestamp without time zone,
+    session character varying,
+    children json,
+    uuid character varying
+);
+
+
+--
+-- Name: log_rdap_privilege_grants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.log_rdap_privilege_grants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_rdap_privilege_grants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.log_rdap_privilege_grants_id_seq OWNED BY public.log_rdap_privilege_grants.id;
+
+
+--
 -- Name: log_registrant_verifications; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2575,6 +2613,126 @@ ALTER SEQUENCE public.que_jobs_job_id_seq OWNED BY public.que_jobs.job_id;
 
 
 --
+-- Name: rdap_access_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rdap_access_events (
+    id bigint NOT NULL,
+    requested_at timestamp with time zone NOT NULL,
+    domain_name character varying NOT NULL,
+    caller_ip character varying NOT NULL,
+    result_code integer NOT NULL,
+    organization_name character varying,
+    accessor_name character varying NOT NULL,
+    category character varying NOT NULL,
+    grant_ref character varying NOT NULL,
+    request_id character varying,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rdap_access_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rdap_access_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rdap_access_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rdap_access_events_id_seq OWNED BY public.rdap_access_events.id;
+
+
+--
+-- Name: rdap_api_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rdap_api_tokens (
+    id bigint NOT NULL,
+    token_hash character varying NOT NULL,
+    subject character varying NOT NULL,
+    token_class character varying NOT NULL,
+    label character varying,
+    issued_at timestamp without time zone NOT NULL,
+    expires_at timestamp without time zone NOT NULL,
+    last_used_at timestamp without time zone,
+    revoked_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: rdap_api_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rdap_api_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rdap_api_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rdap_api_tokens_id_seq OWNED BY public.rdap_api_tokens.id;
+
+
+--
+-- Name: rdap_privilege_grants; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rdap_privilege_grants (
+    id bigint NOT NULL,
+    eeid_subject character varying NOT NULL,
+    category character varying NOT NULL,
+    organization character varying,
+    status character varying DEFAULT 'active'::character varying NOT NULL,
+    valid_from timestamp without time zone NOT NULL,
+    valid_until timestamp without time zone,
+    last_used_at timestamp without time zone,
+    uuid character varying,
+    notes character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    full_name character varying NOT NULL,
+    legal_basis_ref character varying NOT NULL,
+    personal_id_code character varying,
+    creator_str character varying,
+    updator_str character varying
+);
+
+
+--
+-- Name: rdap_privilege_grants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rdap_privilege_grants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rdap_privilege_grants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rdap_privilege_grants_id_seq OWNED BY public.rdap_privilege_grants.id;
+
+
+--
 -- Name: registrant_verifications; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2650,9 +2808,9 @@ CREATE TABLE public.registrars (
     legaldoc_optout boolean DEFAULT false NOT NULL,
     legaldoc_optout_comment text,
     email_history character varying,
+    accept_pdf_invoices boolean DEFAULT true,
     accreditation_date timestamp without time zone,
-    accreditation_expire_date timestamp without time zone,
-    accept_pdf_invoices boolean DEFAULT true
+    accreditation_expire_date timestamp without time zone
 );
 
 
@@ -2673,25 +2831,6 @@ CREATE SEQUENCE public.registrars_id_seq
 --
 
 ALTER SEQUENCE public.registrars_id_seq OWNED BY public.registrars.id;
-
-
---
--- Name: reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.reports_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.reports_id_seq OWNED BY public.admin_reports.id;
 
 
 --
@@ -2780,7 +2919,9 @@ CREATE TABLE public.reserved_domains (
     legacy_id integer,
     name character varying NOT NULL,
     password character varying NOT NULL,
-    expire_at timestamp without time zone
+    expire_at timestamp without time zone,
+    access_token character varying,
+    token_created_at timestamp without time zone
 );
 
 
@@ -3153,7 +3294,7 @@ ALTER TABLE ONLY public.actions ALTER COLUMN id SET DEFAULT nextval('public.acti
 -- Name: admin_reports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.admin_reports ALTER COLUMN id SET DEFAULT nextval('public.reports_id_seq'::regclass);
+ALTER TABLE ONLY public.admin_reports ALTER COLUMN id SET DEFAULT nextval('public.admin_reports_id_seq'::regclass);
 
 
 --
@@ -3451,6 +3592,13 @@ ALTER TABLE ONLY public.log_prices ALTER COLUMN id SET DEFAULT nextval('public.l
 
 
 --
+-- Name: log_rdap_privilege_grants id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_rdap_privilege_grants ALTER COLUMN id SET DEFAULT nextval('public.log_rdap_privilege_grants_id_seq'::regclass);
+
+
+--
 -- Name: log_registrant_verifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3546,6 +3694,27 @@ ALTER TABLE ONLY public.prices ALTER COLUMN id SET DEFAULT nextval('public.price
 --
 
 ALTER TABLE ONLY public.que_jobs ALTER COLUMN job_id SET DEFAULT nextval('public.que_jobs_job_id_seq'::regclass);
+
+
+--
+-- Name: rdap_access_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_access_events ALTER COLUMN id SET DEFAULT nextval('public.rdap_access_events_id_seq'::regclass);
+
+
+--
+-- Name: rdap_api_tokens id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_api_tokens ALTER COLUMN id SET DEFAULT nextval('public.rdap_api_tokens_id_seq'::regclass);
+
+
+--
+-- Name: rdap_privilege_grants id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_privilege_grants ALTER COLUMN id SET DEFAULT nextval('public.rdap_privilege_grants_id_seq'::regclass);
 
 
 --
@@ -4016,6 +4185,14 @@ ALTER TABLE ONLY public.log_prices
 
 
 --
+-- Name: log_rdap_privilege_grants log_rdap_privilege_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_rdap_privilege_grants
+    ADD CONSTRAINT log_rdap_privilege_grants_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: log_registrant_verifications log_registrant_verifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4125,6 +4302,30 @@ ALTER TABLE ONLY public.prices
 
 ALTER TABLE ONLY public.que_jobs
     ADD CONSTRAINT que_jobs_pkey PRIMARY KEY (queue, priority, run_at, job_id);
+
+
+--
+-- Name: rdap_access_events rdap_access_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_access_events
+    ADD CONSTRAINT rdap_access_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rdap_api_tokens rdap_api_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_api_tokens
+    ADD CONSTRAINT rdap_api_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rdap_privilege_grants rdap_privilege_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rdap_privilege_grants
+    ADD CONSTRAINT rdap_privilege_grants_pkey PRIMARY KEY (id);
 
 
 --
@@ -4961,6 +5162,62 @@ CREATE INDEX index_prices_on_zone_id ON public.prices USING btree (zone_id);
 
 
 --
+-- Name: index_rdap_access_events_on_domain_name_and_requested_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_access_events_on_domain_name_and_requested_at ON public.rdap_access_events USING btree (domain_name, requested_at);
+
+
+--
+-- Name: index_rdap_access_events_on_grant_ref_and_requested_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_access_events_on_grant_ref_and_requested_at ON public.rdap_access_events USING btree (grant_ref, requested_at);
+
+
+--
+-- Name: index_rdap_access_events_on_requested_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_access_events_on_requested_at ON public.rdap_access_events USING btree (requested_at);
+
+
+--
+-- Name: index_rdap_api_tokens_on_subject_and_revoked_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_api_tokens_on_subject_and_revoked_at ON public.rdap_api_tokens USING btree (subject, revoked_at);
+
+
+--
+-- Name: index_rdap_api_tokens_on_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rdap_api_tokens_on_token_hash ON public.rdap_api_tokens USING btree (token_hash);
+
+
+--
+-- Name: index_rdap_privilege_grants_on_eeid_subject_and_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_privilege_grants_on_eeid_subject_and_status ON public.rdap_privilege_grants USING btree (eeid_subject, status);
+
+
+--
+-- Name: index_rdap_privilege_grants_on_uuid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_rdap_privilege_grants_on_uuid ON public.rdap_privilege_grants USING btree (uuid);
+
+
+--
+-- Name: index_rdap_privilege_grants_on_valid_until; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_rdap_privilege_grants_on_valid_until ON public.rdap_privilege_grants USING btree (valid_until);
+
+
+--
 -- Name: index_registrant_verifications_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5355,11 +5612,12 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict WmlyozFAnc1c6zHWXudb7s2jRC1uKwHPlCMDikRGHsbNPX1TGBaq3KQ01YXVO8T
+\unrestrict 1fCvfWjQ1zhTOaPmInGUCh1mebjUY2V6m45AIX5B6cYbXOlD6RkTGCWhgcWyQMA
 
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('0'),
 ('20140616073945'),
 ('20140620130107'),
 ('20140627082711'),
@@ -5838,14 +6096,19 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221214073933'),
 ('20221214074252'),
 ('20230531111154'),
+('20230612094319'),
+('20230612094326'),
+('20230612094335'),
 ('20230707084741'),
 ('20230710120154'),
 ('20230711083811'),
+('20240722085530'),
+('20240723110208'),
 ('20240816091049'),
 ('20240816092636'),
-('20240903131540'),
 ('20240924103554'),
 ('20241015071505'),
+('20241022121525'),
 ('20241030095636'),
 ('20241104104620'),
 ('20241112093540'),
@@ -5856,13 +6119,22 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250219102811'),
 ('20250310133151'),
 ('20250313122119'),
+('20250314133357'),
 ('20250319104749'),
 ('20250627084536'),
 ('20251230104312'),
 ('20260220111500'),
 ('20260406125446'),
+('20260410130124'),
+('20260413125925'),
 ('20260529120000'),
 ('20260601120000'),
-('20260608120000');
+('20260608120000'),
+('20260625120000'),
+('20260707120000'),
+('20260713120000'),
+('20260713120001'),
+('20260716120000'),
+('20260716123000');
 
 

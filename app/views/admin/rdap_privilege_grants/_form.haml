@@ -1,0 +1,57 @@
+= form_for([:admin, @rdap_privilege_grant], html: { class: 'form-horizontal', autocomplete: 'off' }) do |f|
+  = render 'shared/full_errors', object: @rdap_privilege_grant
+
+  .row
+    .col-md-8
+      .form-group
+        .col-md-4.control-label
+          = f.label :full_name, nil, class: 'required'
+        .col-md-8
+          = f.text_field :full_name, required: true, autofocus: true, class: 'form-control'
+      .form-group
+        .col-md-4.control-label
+          = f.label :eeid_subject, nil, class: 'required'
+        .col-md-8
+          = f.text_field :eeid_subject, required: true, class: 'form-control'
+      .form-group
+        .col-md-4.control-label
+          = f.label :organization
+        .col-md-8
+          = f.text_field :organization, class: 'form-control'
+      .form-group
+        .col-md-4.control-label
+          = f.label :category, nil, class: 'required'
+        .col-md-8
+          = f.select :category, RdapPrivilegeGrant::CATEGORIES.map { |c| [t("rdap_privilege_grant_category.#{c}", default: c), c] }, { include_blank: true }, required: true, class: 'form-control'
+      %hr
+      .form-group
+        .col-md-4.control-label
+          = f.label :valid_from, nil, class: 'required'
+        .col-md-8
+          = f.datetime_field :valid_from, required: true, class: 'form-control'
+      .form-group
+        .col-md-4.control-label
+          = f.label :valid_until
+        .col-md-8
+          = f.datetime_field :valid_until, class: 'form-control'
+      %hr
+      .form-group
+        .col-md-4.control-label
+          = f.label :legal_basis_ref, nil, class: 'required'
+        .col-md-8
+          = f.text_field :legal_basis_ref, required: true, class: 'form-control'
+      .form-group
+        .col-md-4.control-label
+          = f.label :personal_id_code
+        .col-md-8
+          = f.text_field :personal_id_code, class: 'form-control'
+      .form-group
+        .col-md-4.control-label
+          = f.label :notes
+        .col-md-8
+          = f.text_area :notes, rows: 3, class: 'form-control'
+
+  %hr
+  .row
+    .col-md-8.text-right
+      = button_tag(t(:save), class: 'btn btn-primary')

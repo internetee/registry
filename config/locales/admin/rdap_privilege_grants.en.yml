@@ -1,0 +1,36 @@
+en:
+  admin:
+    rdap_privilege_grants:
+      index:
+        title: RDAP privilege grants
+        new_btn: New privilege grant
+      new:
+        title: New privilege grant
+      show:
+        suspend: Suspend
+        revoke: Revoke
+        audit_history: Audit history
+        event: Event
+        whodunnit: Changed by
+        changed_at: Changed at
+        changes: Changes
+      grant_suspended: Grant suspended
+      grant_revoked: Grant revoked
+  activerecord:
+    attributes:
+      rdap_privilege_grant:
+        full_name: Full name
+        eeid_subject: eeID subject
+        organization: Organization
+        category: Category
+        status: Status
+        valid_from: Valid from
+        valid_until: Valid until
+        legal_basis_ref: Legal basis / agreement reference
+        personal_id_code: Personal identification code
+        notes: Purpose / notes
+  rdap_privilege_grant_category:
+    police: Police
+    cert: CERT
+    ria: RIA
+    eis_internal: EIS internal

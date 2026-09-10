@@ -75,6 +75,7 @@ ActiveRecord::Base.transaction do
   SettingEntry.create(code: 'registry_whois_disclaimer', value: 'Search results may not be used for commercial, advertising, recompilation, repackaging,  redistribution, reuse, obscuring or other similar activities.', format: 'string', group: 'contacts')
   SettingEntry.create(code: 'legal_document_is_mandatory', value: 'true', format: 'boolean', group: 'domain_validation')
   SettingEntry.create(code: 'ip_whitelist_max_count', value: '256', format: 'integer', group: 'other')
+  SettingEntry.create(code: 'rdap_access_transparency_disclosure_delay', value: '5', format: 'integer', group: 'rdap')
 
   AdminUser.where(username: 'admin').first_or_create!(
     username: 'admin',
