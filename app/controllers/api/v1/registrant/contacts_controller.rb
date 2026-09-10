@@ -35,11 +35,21 @@ module Api
         end
 
         def do_need_update_contacts
+          unless company_register_api_enabled?
+            render json: { update_contacts: false, counter: 0 }
+            return
+          end
+
           result = current_registrant_user.do_need_update_contacts?
           render json: { update_contacts: result[:result], counter: result[:counter] }
         end
 
         def update_contacts
+          unless company_register_api_enabled?
+            render json: { message: 'get it', contacts: [] }
+            return
+          end
+
           contacts = current_registrant_user.update_contacts
 
           render json: { message: 'get it', contacts: contacts }
@@ -85,6 +95,7 @@ module Api
           contact = Contact.find_by(uuid: uuid, ident: current_registrant_user.ident,
                                     ident_type: 'priv', ident_country_code: country)
           return contact if contact
+          return nil unless company_register_api_enabled?
 
           Contact.find_by(uuid: uuid, ident_type: 'org', ident: company_codes,
                           ident_country_code: country)
@@ -97,6 +108,8 @@ module Api
         end
 
         def current_user_contacts
+          return current_registrant_user.direct_contacts unless company_register_api_enabled?
+
           current_registrant_user.contacts(representable: false)
         rescue CompanyRegister::NotAvailableError
           current_registrant_user.direct_contacts

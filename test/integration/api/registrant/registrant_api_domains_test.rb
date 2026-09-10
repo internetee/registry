@@ -153,6 +153,18 @@ class RegistrantApiDomainsTest < ApplicationIntegrationTest
     assert_equal({ errors: [base: ['Not authorized']] }, json_body)
   end
 
+  def test_returns_only_direct_domains_when_company_register_api_disabled
+    Setting.company_register_api_enabled = 'false'
+
+    get '/api/v1/registrant/domains', headers: @auth_headers
+    assert_equal(200, response.status)
+
+    response_json = JSON.parse(response.body, symbolize_names: true)
+    assert response_json[:domains].is_a?(Array)
+  ensure
+    Setting.company_register_api_enabled = 'true'
+  end
+
   private
 
   def auth_token
