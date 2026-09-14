@@ -1,0 +1,37 @@
+<div class="table-responsive">
+  <table class="table table-hover table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th><%= t('admin.csv_sync.preview_table.line') %></th>
+        <th><%= t('admin.csv_sync.preview_table.key') %></th>
+        <th><%= t('admin.csv_sync.preview_table.action') %></th>
+        <th><%= t('admin.csv_sync.preview_table.changes') %></th>
+        <th><%= t('admin.csv_sync.preview_table.error') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% row_results.each do |row| %>
+        <% action = row[:action].to_s %>
+        <% action_class = action == 'error' ? 'text-danger' : (action == 'unchanged' ? '' : 'text-success') %>
+        <tr>
+          <td><%= row[:line_number] %></td>
+          <td>
+            <% key_fields.each do |field| %>
+              <% value = row.fetch(:key_values, {})[field.to_sym] || row.fetch(:key_values, {})[field.to_s] %>
+              <%= "#{field}: #{value}" %><br>
+            <% end %>
+          </td>
+          <td class="<%= action_class %>"><%= t("admin.csv_sync.actions.#{action}", default: action.humanize) %></td>
+          <td>
+            <% if row[:changes].present? %>
+              <%= row[:changes].map { |field| t("activerecord.attributes.#{model_name}.#{field}", default: field.to_s.humanize) }.join(', ') %>
+            <% else %>
+              <span class="text-muted">-</span>
+            <% end %>
+          </td>
+          <td class="text-danger"><%= row[:error] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

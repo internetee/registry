@@ -1,0 +1,17 @@
+<% export_label = local_assigns.fetch(:export_label, t('admin.csv_sync.export_actions.export_btn')) %>
+<% reset_label = local_assigns.fetch(:reset_label, t('admin.csv_sync.export_actions.reset_btn')) %>
+
+<div class="panel panel-default">
+  <div class="panel-heading"><%= t('admin.csv_sync.export_actions.panel_title') %></div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12">
+        <%= hidden_field_tag export_selected_param, '1' %>
+        <%= submit_tag export_label, class: 'btn btn-default' %>
+        <% if local_assigns[:reset_url].present? %>
+          <%= link_to reset_label, reset_url, class: 'btn btn-default' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
