@@ -38,3 +38,7 @@ AGENT.md
 own
 AGENT.md
 
+# repowise local index and generated notes
+.repowise/
+docs/
+
