@@ -36,7 +36,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <%= f.label "Registrar" %>
-                        <%= f.select :buyer_id_in, Registrar.all.map { |x| [x, x.id] }, {}, class: 'form-control js-combobox', placeholder: t(:choose), multiple: true %>
+                        <%= f.select :buyer_id_in, registrar_options, {}, class: 'form-control js-combobox', placeholder: t(:choose), multiple: true %>
                     </div>
                 </div>
 
