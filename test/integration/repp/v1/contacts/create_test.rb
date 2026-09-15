@@ -222,7 +222,7 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
   end
 
   def test_skip_company_validation_if_flag_is_set
-    ENV['allow_validate_business_contacts'] = 'false'
+    Setting.validate_business_contacts = false
     original_new_method = CompanyRegister::Client.method(:new)
     CompanyRegister::Client.define_singleton_method(:new) do
       object = original_new_method.call
@@ -253,7 +253,7 @@ class ReppV1ContactsCreateTest < ActionDispatch::IntegrationTest
     assert_equal 'Command completed successfully', json[:message]
 
     CompanyRegister::Client.define_singleton_method(:new, original_new_method)
-    ENV['allow_validate_business_contacts'] = 'true'
+    Setting.validate_business_contacts = true
   end
 
 

@@ -54,6 +54,10 @@ module Api
         def show_invalid_record_error(exception)
           render json: { errors: exception.record.errors }, status: :bad_request
         end
+
+        def company_register_api_enabled?
+          Setting.company_register_api_enabled
+        end
       end
     end
   end

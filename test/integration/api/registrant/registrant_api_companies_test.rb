@@ -34,6 +34,18 @@ class RegistrantApiCompaniesTest < ApplicationIntegrationTest
     assert_equal(:companies, response_json.keys.first)
   end
 
+  def test_returns_empty_companies_when_company_register_api_disabled
+    Setting.company_register_api_enabled = 'false'
+
+    get '/api/v1/registrant/companies', headers: @auth_headers
+    response_json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_equal(200, response.status)
+    assert_equal([], response_json[:companies])
+  ensure
+    Setting.company_register_api_enabled = 'true'
+  end
+
   private
 
   def auth_token
