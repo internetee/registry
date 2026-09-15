@@ -108,4 +108,4 @@ gem 'pg_query', '>= 2.2'
 gem 'jwt'
 
 # https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
-gem 'concurrent-ruby', '1.3.5'
+gem 'concurrent-ruby', '1.3.7'
