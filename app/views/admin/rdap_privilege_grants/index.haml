@@ -1,0 +1,40 @@
+- content_for :actions do
+  = link_to(t('.new_btn'), new_admin_rdap_privilege_grant_path, class: 'btn btn-primary')
+= render 'shared/title', name: t('.title')
+= render 'application/pagination'
+
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'full_name', RdapPrivilegeGrant.human_attribute_name(:full_name))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'eeid_subject', RdapPrivilegeGrant.human_attribute_name(:eeid_subject))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'organization', RdapPrivilegeGrant.human_attribute_name(:organization))
+            %th{class: 'col-xs-1'}
+              = sort_link(@q, 'category', RdapPrivilegeGrant.human_attribute_name(:category))
+            %th{class: 'col-xs-1'}
+              = sort_link(@q, 'status', RdapPrivilegeGrant.human_attribute_name(:status))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'valid_from', RdapPrivilegeGrant.human_attribute_name(:valid_from))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'valid_until', RdapPrivilegeGrant.human_attribute_name(:valid_until))
+        %tbody
+          - @rdap_privilege_grants.each do |grant|
+            %tr
+              %td= link_to(grant.full_name, [:admin, grant])
+              %td= grant.eeid_subject
+              %td= grant.organization
+              %td= grant.category
+              %td= grant.display_status
+              %td= grant.valid_from
+              %td= grant.valid_until
+.row
+  .col-md-6
+    = paginate @rdap_privilege_grants
+  .col-md-6.text-right
+    = t(:result_count, count: @count)

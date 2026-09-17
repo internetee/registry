@@ -1,0 +1,97 @@
+# Subject form is the dash-free, country-prefixed eeID subject (EE38001085718),
+# matching users.subject — NOT the dashed registrant_ident form.
+
+police_active:
+  eeid_subject: EE38001085718
+  full_name: Police Officer One
+  legal_basis_ref: MoU-2026-001
+  category: police
+  organization: police
+  status: active
+  valid_from: <%= 10.days.ago.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000001
+
+# Same subject as police_active, but a NEWER valid_from — this one must win the
+# "multiple active -> latest valid_from" selection.
+police_active_newer:
+  eeid_subject: EE38001085718
+  full_name: Cert Analyst Two
+  legal_basis_ref: MoU-2026-002
+  category: cert
+  organization: cert_team
+  status: active
+  valid_from: <%= 1.day.ago.to_s(:db) %>
+  valid_until: <%= 30.days.from_now.to_s(:db) %>
+  uuid: a1b2c3d4-0000-0000-0000-000000000002
+
+revoked:
+  eeid_subject: EE10001001000
+  full_name: Revoked Grantee
+  legal_basis_ref: MoU-2026-003
+  category: police
+  organization: police
+  status: revoked
+  valid_from: <%= 10.days.ago.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000003
+
+suspended:
+  eeid_subject: EE10001001001
+  full_name: Suspended Grantee
+  legal_basis_ref: MoU-2026-004
+  category: cert
+  organization: cert
+  status: suspended
+  valid_from: <%= 10.days.ago.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000004
+
+expired:
+  eeid_subject: EE10001001002
+  full_name: Expired Grantee
+  legal_basis_ref: MoU-2026-005
+  category: ria
+  organization: ria
+  status: active
+  valid_from: <%= 30.days.ago.to_s(:db) %>
+  valid_until: <%= 1.day.ago.to_s(:db) %>
+  uuid: a1b2c3d4-0000-0000-0000-000000000005
+
+not_yet_valid:
+  eeid_subject: EE10001001003
+  full_name: Future Grantee
+  legal_basis_ref: MoU-2026-006
+  category: eis_internal
+  organization: eis
+  status: active
+  valid_from: <%= 5.days.from_now.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000006
+
+# Grant with a NULL organization — the access-event snapshot must persist
+# organization_name NULL (spec 11 AC8) while accessor_name/category/grant_ref stay set.
+no_organization:
+  eeid_subject: EE10001001004
+  full_name: No Org Grantee
+  legal_basis_ref: MoU-2026-007
+  category: police
+  organization:
+  status: active
+  valid_from: <%= 10.days.ago.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000007
+
+# Grant with eeid_subject AND personal_id_code populated — the access-event row
+# must copy NEITHER into any column (spec 11 AC16 PII gate).
+with_personal_id:
+  eeid_subject: EE49001010002
+  full_name: Personal Id Grantee
+  legal_basis_ref: MoU-2026-008
+  category: cert
+  organization: cert
+  personal_id_code: '49001010002'
+  status: active
+  valid_from: <%= 10.days.ago.to_s(:db) %>
+  valid_until:
+  uuid: a1b2c3d4-0000-0000-0000-000000000008

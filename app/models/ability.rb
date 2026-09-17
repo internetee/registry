@@ -114,6 +114,7 @@ class Ability
     can :manage, BankTransaction
     can :manage, Invoice
     can :manage, WhiteIp
+    can :manage, RdapPrivilegeGrant
     can :manage, Account
     can :manage, AccountActivity
     can :manage, Dispute

@@ -6,6 +6,7 @@ en:
         users: Users
         api_users: API users
         admin_users: Admin users
+        rdap_privilege_grants: RDAP privilege grants
         prices: Prices
         archive: Archive
         domain_history: Domain history
