@@ -1,0 +1,4 @@
+et:
+  api_user_mailer:
+    identification_requested:
+      subject: Palun kinnitage oma isik API kasutaja kontoga seotud toimingute jaoks

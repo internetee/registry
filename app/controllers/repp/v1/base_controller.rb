@@ -21,13 +21,7 @@ module Repp
       private
 
       def set_domain
-        registrar = current_user.registrar
-        @domain = Epp::Domain.find_by(registrar: registrar, name: params[:domain_id])
-        @domain ||= Epp::Domain.find_by!(registrar: registrar, name_puny: params[:domain_id])
-
-        return @domain if @domain
-
-        raise ActiveRecord::RecordNotFound
+        @domain = Epp::Domain.find_repp_by_name!(params[:domain_id], registrar: current_user.registrar)
       end
 
       def set_paper_trail_whodunnit
@@ -35,10 +29,26 @@ module Repp
       end
 
       def render_success(code: nil, message: nil, data: nil)
-        @response = { code: code || 1000, message: message || 'Command completed successfully',
+        @response = { code: code || 1000,
+                      message: message || I18n.t('repp.command_completed_successfully'),
                       data: data || {} }
 
         render(json: @response, status: :ok)
+      end
+
+      def render_action_pending_success(data: nil)
+        render_success(
+          code: Epp::Response::Result::Code.codes[:completed_successfully_action_pending],
+          message: Epp::Response::Result::Code.default_descriptions[1001],
+          data: data
+        )
+      end
+
+      def render_domain_command_success(pending:)
+        data = { domain: { name: @domain.name } }
+        return render_action_pending_success(data: data) if pending
+
+        render_success(data: data)
       end
 
       def epp_errors
@@ -82,15 +92,26 @@ module Repp
       def authenticate_user
         username, password = Base64.urlsafe_decode64(basic_token).split(':', 2)
         @current_user ||= ApiUser.find_by(username: username, plain_text_password: password)
-        user_active = @current_user.active?
+        user_eligible = @current_user&.eligible_for_sign_in?
 
-        return if @current_user && user_active
+        return if @current_user && user_eligible
 
         raise(ArgumentError)
       rescue NoMethodError, ArgumentError
-        @response = { code: 2202, message: 'Invalid authorization information',
-                      data: { username: username, password: password, active: user_active } }
+        @response = {
+          code: 2202,
+          message: authentication_failure_message,
+          data: { username: username, password: password, eligible_for_sign_in: user_eligible }
+        }
         render(json: @response, status: :unauthorized)
+      end
+
+      def authentication_failure_message
+        if @current_user&.active? && @current_user.subject.present? && !@current_user.identity_verified?
+          I18n.t('registrar.authorization.identity_not_verified')
+        else
+          I18n.t('registrar.authorization.invalid_authorization_information')
+        end
       end
 
       def check_api_ip_restriction
@@ -115,7 +136,7 @@ module Repp
       end
 
       def webclient_request?
-        return false if Rails.env.test? || Rails.env.development?
+        return false if Rails.env.test?
 
         Rails.logger.debug "[webclient_request?] Requester: #{request.headers['Requester']}"
         webclient_ip_allowed?(request.ip) && WEBCLIENT_REQUESTERS.include?(request.headers['Requester'])
@@ -133,6 +154,8 @@ module Repp
       end
 
       def webclient_cn_valid?
+        return true if Rails.env.test? || Rails.env.development?
+
         request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']
         webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
         Rails.logger.debug "[webclient_cn_valid?] HTTP_SSL_CLIENT_S_DN_CN: #{request.env['HTTP_SSL_CLIENT_S_DN_CN']}"
@@ -188,15 +211,27 @@ module Repp
       end
 
       def skip_webclient_user_cert_validation?
-        !webclient_request? || request.headers['Requester'] == 'tara'
+        Rails.env.development? ||
+          !webclient_request? || request.headers['Requester'] == 'tara'
       end
 
-      def auth_values_to_data(registrar:)
-        data = current_user.as_json(only: %i[id username roles])
+      def auth_values_to_data(user = current_user, mode:)
+        data = user.as_json(only: %i[id username roles])
+        registrar = user.registrar
         data[:registrar_name] = registrar.name
         data[:legaldoc_mandatory] = registrar.legaldoc_mandatory?
         data[:address_processing] = Contact.address_processing?
-        data[:abilities] = Ability.new(current_user).permissions
+        data[:abilities] = Ability.new(user).permissions
+
+        if mode == 'accreditation'
+          data[:name] = user.name
+          data[:accreditation_date] = registrar.accreditation_date
+          data[:accreditation_expire_date] = registrar.accreditation_expire_date
+          data[:registrar_reg_no] = registrar.reg_no
+          data[:registrar_email] = registrar.email
+          data[:code] = registrar.code
+        end
+
         data
       end
 

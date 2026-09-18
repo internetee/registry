@@ -1,0 +1,21 @@
+et:
+  activerecord:
+    models:
+      account:
+        one: Konto
+        other: Kontod
+    attributes:
+      account:
+        account_type: Kontotüüp
+        registrar: Registraator
+        balance: Saldo
+        currency: Valuuta
+    errors:
+      models:
+        account:
+          attributes:
+            account_type:
+              blank: Kontotüüp on kohustuslik
+            registrar:
+              blank: Registraator on kohustuslik
+              required: Registraator on kohustuslik

@@ -4,6 +4,8 @@ module Api
   module V1
     module AccreditationCenter
       class AuthController < BaseController
+        api :GET, 'api/v1/accreditation_center/auth'
+        desc 'get accreditation center auth info'
         def index
           login = @current_user
           registrar = @current_user.registrar
@@ -28,13 +30,6 @@ module Api
           data[:registrar_email] = registrar.email
           data[:code] = registrar.code
           data
-        end
-
-        def render_success(code: nil, message: nil, data: nil)
-          @response = { code: code || 1000, message: message || 'Command completed successfully',
-                        data: data || {} }
-
-          render(json: @response, status: :ok)
         end
       end
     end

@@ -27,7 +27,7 @@ module Actions
     def verify_not_discarded
       return unless domain.discarded?
 
-      domain.add_epp_error('2304', nil, nil, 'Object status prohibits operation')
+      domain.add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     end
 
     def verify?

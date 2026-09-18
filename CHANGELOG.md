@@ -1,3 +1,30 @@
+23.07.2026
+* Operations with pending status now return result code 1001 in REPP https://github.com/internetee/registry/issues/2940
+* Fixed case sensitivity issue for REPP requests https://github.com/internetee/registry/issues/2943
+
+17.06.2026
+* Disabled birthday option for contact ident data for additional 19 EU countries https://github.com/internetee/registry/issues/2933
+* CSR upload localisation fix https://github.com/internetee/registry/pull/2928
+* Remove legacy code and EPP upgrade https://github.com/internetee/registry/pull/2920
+
+02.06.2026
+* Disputed domains can now only be reneed before registrant change is done https://github.com/internetee/registry/pull/2923
+* Issuer contact person is removed from invoices https://github.com/internetee/registry/issues/2926
+
+27.05.2026
+* Option to skip pdf invoices in case of e-invoicing https://github.com/internetee/registry/issues/2881
+* Fixed internal error in admin for deleted domains' history https://github.com/internetee/registry/issues/2897
+* New poll messages for expired pending operations https://github.com/internetee/registry/issues/2924
+
+18.05.2026
+* Fixes for Business Registry API invoicing issues https://github.com/internetee/registry/issues/2921
+
+06.05.2026
+* OIDC auth for Accreditation API https://github.com/internetee/registry/pull/2911
+
+04.05.2026
+* Invoice generation for domain reservation API https://github.com/internetee/registry/pull/2918
+
 08.04.2026
 * Fix for handling new ECC based business registry certificates https://github.com/internetee/registry/pull/2914
 

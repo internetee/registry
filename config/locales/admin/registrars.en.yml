@@ -30,12 +30,24 @@ en:
         api_users:
           header: API Users
           new_btn: New API user
+          verification_status: Verification status
+          verified: Verified
+          pending_review: Pending registrar review
+          requested: Requested
+          unverified: Unverified
           set_test_btn: Set Accreditation
           remove_test_btn: Remove Accreditation
 
         white_ips:
           header: Whitelisted IPs
           new_btn: New whitelisted IP
+
+        accreditation:
+          header: Accreditation
+          accreditation_not_accredited: Not accredited
+          accreditation_expired: Expired
+          accreditation_expires_soon: Expires soon
+          accreditation_accredited: Accredited
 
       edit:
         header: Edit registrar

@@ -1,0 +1,21 @@
+en:
+  activerecord:
+    models:
+      account:
+        one: Account
+        other: Accounts
+    attributes:
+      account:
+        account_type: Account type
+        registrar: Registrar
+        balance: Balance
+        currency: Currency
+    errors:
+      models:
+        account:
+          attributes:
+            account_type:
+              blank: Account type is missing
+            registrar:
+              blank: Registrar is missing
+              required: Registrar is missing

@@ -1,0 +1,16 @@
+Tere <%= @api_user.username %>,
+<br><br>
+Teie registripidaja <%= @api_user.registrar.name %> on palunud Teil kinnitada oma isikut API kasutaja konto jaoks.
+<br><br>
+<a href="<%= @verification_link + "?ui_locales=et" %>" style="display: inline-block; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px;">Jätka eeID-ga</a>
+<br><br>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+<hr>
+<br><br>
+Hi <%= @api_user.username %>,
+<br><br>
+Your registrar <%= @api_user.registrar.name %> has requested that you verify your identity for your API user account.
+<br><br>
+<a href="<%= @verification_link + "?ui_locales=en" %>" style="display: inline-block; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px;">Continue with eeID</a>
+<br><br>
+<%= render 'mailers/shared/signatures/signature.en.html' %>

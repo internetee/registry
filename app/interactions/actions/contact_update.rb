@@ -30,8 +30,12 @@ module Actions
         result = Actions::SimpleMailValidator.run(email: @new_attributes[:email], level: m)
         next if result
 
-        err_text = "email '#{new_attributes[:email]}' didn't pass validation"
-        contact.add_epp_error('2005', nil, nil, "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
+        contact.add_epp_error(
+          '2005',
+          nil,
+          nil,
+          "#{I18n.t(:parameter_value_syntax_error)} #{I18n.t(:email_did_not_pass_validation, email: new_attributes[:email])}"
+        )
         @error = true
         return
       end

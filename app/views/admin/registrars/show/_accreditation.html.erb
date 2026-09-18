@@ -1,0 +1,28 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <%= t '.header' %>
+    </div>
+
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt><%= Registrar.human_attribute_name :accreditation_date %></dt>
+            <dd><%= registrar.accreditation_date %></dd>
+
+            <dt><%= Registrar.human_attribute_name :accreditation_expire_date %></dt>
+            <dd><%= registrar.accreditation_expire_date %></dd>
+
+            <dt><%= Registrar.human_attribute_name :accreditation_status %></dt>
+            <dd>
+                <% if !registrar.accredited? %>
+                    <span class="badge badge-default"><%= t('.accreditation_not_accredited') %></span>
+                <% elsif registrar.accreditation_expired? %>
+                    <span class="badge badge-danger"><%= t('.accreditation_expired') %>: <%= l(registrar.accreditation_expire_date.to_date) %></span>
+                <% elsif registrar.accreditation_expires_soon?(30) %>
+                    <span class="badge badge-warning"><%= t('.accreditation_expires_soon') %>: <%= l(registrar.accreditation_expire_date.to_date) %></span>
+                <% else %>
+                    <span class="badge badge-success"><%= t('.accreditation_accredited') %></span>
+                <% end %>
+            </dd>
+        </dl>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+Tere,
+
+Anname teada, et järgmise API kasutaja isikutuvastus vajab registripidaja käsitsi kinnitust.
+Automaatne kinnitamine ei olnud võimalik (nt isikukood puudus tulemuses või andmed ei ole üheselt seostatavad).
+
+API kasutaja andmed:
+- Kasutajanimi: <%= @api_user.username %>
+<% if @verification_snapshot.present? %>
+eeID tulemus:
+<% @verification_snapshot.each do |key, value| %><% next if value.blank? %>- <%= key %>: <%= value %>
+<% end %>
+<% end %>
+Palun kinnitage või lükake isikutuvastus tagasi registripidaja portaalis.
+
+Parimate soovidega,
+<%= render 'mailers/shared/signatures/signature.et.text' %>
+---
+
+Hi,
+
+We are writing to inform you that the identity verification for the following API user requires manual registrar confirmation.
+Automatic verification was not possible (e.g. identity code missing in the result or data not unambiguously matchable).
+
+API user details:
+- Username: <%= @api_user.username %>
+<% if @verification_snapshot.present? %>
+eeID result:
+<% @verification_snapshot.each do |key, value| %><% next if value.blank? %>- <%= key %>: <%= value %>
+<% end %>
+<% end %>
+Please confirm or reject the identity verification in the Registrar Portal.
+
+Best regards,
+<%= render 'mailers/shared/signatures/signature.en.text' %>

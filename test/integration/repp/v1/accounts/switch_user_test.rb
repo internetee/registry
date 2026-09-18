@@ -14,7 +14,7 @@ class ReppV1AccountsSwitchUserTest < ActionDispatch::IntegrationTest
 
   def test_switches_to_linked_api_user
     new_user = users(:api_goodnames)
-    new_user.update(identity_code: '1234')
+    new_user.update(subject: @user.subject)
     request_body = {
       account: {
         new_user_id: new_user.id,
@@ -38,7 +38,7 @@ class ReppV1AccountsSwitchUserTest < ActionDispatch::IntegrationTest
 
   def test_switches_to_unlinked_api_user
     new_user = users(:api_goodnames)
-    new_user.update(identity_code: '4444')
+    new_user.update(subject: 'EE44444444444')
     request_body = {
       account: {
         new_user_id: new_user.id,
@@ -57,7 +57,7 @@ class ReppV1AccountsSwitchUserTest < ActionDispatch::IntegrationTest
     ENV['shunter_enabled'] = 'true'
 
     new_user = users(:api_goodnames)
-    new_user.update(identity_code: '1234')
+    new_user.update(subject: @user.subject)
     request_body = {
       account: {
         new_user_id: new_user.id,

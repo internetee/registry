@@ -12,15 +12,13 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
   end
 
   def test_remove_reserved_domain
-    visit admin_reserved_domains_path
-    click_link_or_button 'Delete', match: :first
-    page.driver.browser.switch_to.alert.accept
-
+    visit_reserved_domains
+    delete_first_reserved_domain
     assert_text 'Domain deleted!'
   end
 
   def test_add_invalid_domain
-    visit admin_reserved_domains_path
+    visit_reserved_domains
     click_on 'New reserved domain'
     fill_in "Name", with: "@##@$"
     click_on 'Save'
@@ -29,7 +27,7 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
   end
 
   def test_update_reserved_domain
-    visit admin_reserved_domains_path
+    visit_reserved_domains
     click_link_or_button 'Edit', match: :first
     fill_in 'Password', with: '12345678'
     click_on 'Save'
@@ -51,8 +49,7 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
   end
 
   def test_release_to_auction
-    visit admin_reserved_domains_path
-  
+    visit_reserved_domains
     first("input[type='checkbox']").set(true)
   
     click_on 'Send to the auction list'
@@ -61,5 +58,15 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
   
     assert_text 'reserved.test'
     assert_text 'started'
+  end
+
+  private
+
+  def visit_reserved_domains
+    visit admin_reserved_domains_path
+  end
+
+  def delete_first_reserved_domain
+    accept_confirm { click_link_or_button 'Delete', match: :first }
   end
 end

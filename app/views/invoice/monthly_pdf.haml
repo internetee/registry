@@ -161,9 +161,6 @@
             - else
               %dd= l @invoice.due_date
 
-            %dt= t(:issuer)
-            %dd= @invoice.seller_contact_name
-
             - if @invoice.description.present?
               %dt= t(:description)
               %dd=@invoice.description

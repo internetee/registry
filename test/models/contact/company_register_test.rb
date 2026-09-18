@@ -5,6 +5,8 @@ Company = Struct.new(:registration_number, :company_name, :status)
 class CompanyRegisterTest < ActiveSupport::TestCase
   def setup
     @acme_ltd = contacts(:acme_ltd)
+    @acme_ltd.update!(ident_country_code: 'EE', ident_type: 'org', ident: '12345678')
+
     @john = contacts(:john)
     @company_register_stub = CompanyRegister::Client.new
   end

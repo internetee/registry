@@ -114,7 +114,8 @@ class Epp::Domain < Domain
         [:name_dirty, :blocked, { value: { obj: 'name', val: name_dirty } }]
       ],
       '2304' => [ # Object status prohibits operation
-        [:base, :domain_status_prohibits_operation]
+        [:base, :domain_status_prohibits_operation],
+        %i[base dispute_update_requires_registrant_change],
       ],
       '2306' => [ # Parameter policy error
         [:base, :ds_data_with_key_not_allowed],
@@ -140,6 +141,9 @@ class Epp::Domain < Domain
     }
   end
 
+  # Legacy helper: auto-assigned registrant as tech (org) or admin (non-org) when missing.
+  # Superseded by .ee rules effective 1 Feb 2025 (optional tech/admin). Not used by
+  # DomainCreate/REPP; kept until callers are removed.
   def attach_default_contacts
     return if registrant.blank?
 
@@ -238,7 +242,7 @@ class Epp::Domain < Domain
 
   def transfer(frame, action, current_user)
     if discarded?
-      add_epp_error('2106', nil, nil, 'Object is not eligible for transfer')
+      add_epp_error('2106', nil, nil, I18n.t('repp.errors.object_not_eligible_for_transfer'))
       return
     end
 

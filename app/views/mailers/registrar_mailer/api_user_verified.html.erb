@@ -1,0 +1,37 @@
+Tere,
+<br><br>
+<p>
+Anname teada, et järgmise API kasutaja isikutuvastus on automaatselt edukalt lõpule viidud.
+</p>
+<h3>API kasutaja andmed:</h3>
+<ul>
+  <li><strong>Kasutajanimi:</strong> <%= @api_user.username %></li>
+  <li><strong>Isikukood:</strong> <%= @api_user.identity_code %></li>
+</ul>
+<p>
+Täielikud tulemused leiate manuses olevast PDF-failist.
+</p>
+<p>
+Parimate soovidega,
+</p>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+<hr>
+<br><br>
+
+Hi,
+<br><br>
+<p>
+We are writing to inform you that the identity verification for the following API user has been automatically completed.
+</p>
+<h3>API user details:</h3>
+<ul>
+  <li><strong>Username:</strong> <%= @api_user.username %></li>
+  <li><strong>Identity code:</strong> <%= @api_user.identity_code %></li>
+</ul>
+<p>
+The full result can be found in the attached PDF file.
+</p>
+<p>
+Best regards,
+</p>
+<%= render 'mailers/shared/signatures/signature.en.html' %>

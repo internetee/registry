@@ -61,10 +61,12 @@ module Admin
         @domain = Domain.find(params[:domain_id] || params[:id])
       else
         @version = Version::DomainVersion.find(params[:id])
-        @domain = Domain.find(@version.item_id)
+        @resolver = Version::DomainVersion::Resolver.new(@version)
+        @domain = @resolver.domain
       end
 
-      @versions = Version::DomainVersion.where(item_id: @domain.id).order(created_at: :desc, id: :desc)
+      item_id = @resolver&.item_id || @domain.id
+      @versions = Version::DomainVersion.where(item_id: item_id).order(created_at: :desc, id: :desc)
       @versions_map = @versions.all.map(&:id)
 
       get_page if params[:page].blank?

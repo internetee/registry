@@ -145,7 +145,7 @@ class CsyncRecordTest < ActiveSupport::TestCase
     assert_equal scanner_result[:pub], @domain.dnskeys.last.public_key
 
     mail = ActionMailer::Base.deliveries.last
-    assert_equal (@domain.contacts.map(&:email) << @domain.registrant.email).uniq, mail.to
+    assert_equal (@domain.contacts.map(&:email) << @domain.registrant.email).uniq.sort, mail.to.sort
     assert_equal mail.subject, "Teie domeeni #{@domain.name} DNSSEC andmed on uuendatud / DNSSEC data for #{@domain.name} has been updated"
   end
 
@@ -167,7 +167,7 @@ class CsyncRecordTest < ActiveSupport::TestCase
     assert_equal scanner_result[:pub], @domain.dnskeys.last.public_key
 
     mail = ActionMailer::Base.deliveries.last
-    assert_equal (@domain.contacts.map(&:email) << @domain.registrant.email).uniq, mail.to
+    assert_equal (@domain.contacts.map(&:email) << @domain.registrant.email).uniq.sort, mail.to.sort
     assert_equal mail.subject, "Teie domeeni #{@domain.name} DNSSEC andmed on uuendatud / DNSSEC data for #{@domain.name} has been updated"
   end
 

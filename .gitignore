@@ -36,3 +36,7 @@ AGENT.md
 .claude/
 .memory-bank
 own/
+
+# repowise local index and generated notes
+.repowise/
+docs/

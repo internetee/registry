@@ -8,7 +8,13 @@ class ApiUser < User
   def epp_code_map
     {
       '2306' => [ # Parameter policy error
-        %i[plain_text_password blank]
+        %i[plain_text_password blank],
+        %i[email blank],
+        %i[base verification_error],
+        %i[base not_pending_verification],
+        %i[identity_code taken],
+        %i[subject taken],
+        %i[base missing_subject]
       ]
     }
   end
@@ -21,10 +27,32 @@ class ApiUser < User
   belongs_to :registrar
   has_many :certificates
 
+  VALID_EMAIL_REGEX = /\A([\w+\-]\.?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i.freeze
+
   validates :username, :plain_text_password, :registrar, :roles, presence: true
   validates :plain_text_password, length: { minimum: min_password_length }
   validates :username, uniqueness: true
+  validates :email, format: { with: VALID_EMAIL_REGEX, allow_blank: true }
   validates :identity_code, uniqueness: { scope: :registrar_id }, if: -> { identity_code.present? }
+  validates :subject, uniqueness: { scope: :registrar_id }, if: -> { subject.present? }
+  before_validation :clear_verification_status_on_subject_change, if: :subject_changed_from_existing?
+  after_commit :notify_registrar_subject_changed, on: :update
+
+  scope :eligible_for_sign_in, lambda {
+    where(active: true).where('subject IS NULL OR subject = ? OR verified_at IS NOT NULL', '')
+  }
+
+  def identity_verified?
+    verified_at.present?
+  end
+
+  def eligible_for_sign_in?
+    active? && (subject.blank? || identity_verified?)
+  end
+
+  def verification_pending?
+    verification_pending_at.present?
+  end
 
   delegate :code, :name, to: :registrar, prefix: true
   delegate :legaldoc_mandatory?, to: :registrar
@@ -59,16 +87,6 @@ class ApiUser < User
     username
   end
 
-  def accredited?
-    !accreditation_date.nil?
-  end
-
-  def accreditation_expired?
-    return false if accreditation_expire_date.nil?
-
-    accreditation_expire_date < Time.zone.now
-  end
-
   def unread_notifications
     registrar.notifications.unread
   end
@@ -84,8 +102,10 @@ class ApiUser < User
   end
 
   def linked_users
-    self.class.where(identity_code: identity_code, active: true)
-        .where("identity_code IS NOT NULL AND identity_code != ''")
+    return self.class.none if subject.blank?
+
+    self.class.where(subject: subject, active: true)
+        .where.not(verified_at: nil)
         .where.not(id: id)
         .includes(:registrar)
   end
@@ -95,7 +115,9 @@ class ApiUser < User
   end
 
   def linked_with?(another_api_user)
-    another_api_user.identity_code == identity_code
+    return false if another_api_user.blank? || subject.blank?
+
+    another_api_user.subject == subject
   end
 
   def as_csv_row
@@ -105,15 +127,13 @@ class ApiUser < User
       identity_code,
       roles.join(', '),
       active,
-      accredited?,
-      accreditation_expire_date,
       created_at, updated_at
     ]
   end
 
   def self.csv_header
-    ['Username', 'Password', 'Identity Code', 'Role', 'Active', 'Accredited',
-     'Accreditation Expire Date', 'Created', 'Updated']
+    ['Username', 'Password', 'Identity Code', 'Role', 'Active',
+     'Created', 'Updated']
   end
 
   def self.ransackable_associations(*)
@@ -125,6 +145,43 @@ class ApiUser < User
   end
 
   private
+
+  def subject_changed_from_existing?
+    return false unless persisted?
+    return false unless will_save_change_to_subject?
+    return false if subject_in_database.to_s.blank?
+
+    subject.to_s != subject_in_database.to_s
+  end
+
+  def clear_verification_status_on_subject_change
+    @subject_change_notification_data = {
+      old_subject: subject_in_database.to_s,
+      new_subject: subject.to_s
+    }
+
+    self.ident_request_sent_at = nil
+    self.verified_at = nil
+    self.verification_id = nil
+    self.verification_pending_at = nil
+    self.verification_snapshot = {}
+  end
+
+  def notify_registrar_subject_changed
+    data = @subject_change_notification_data
+    @subject_change_notification_data = nil
+    return if data.blank?
+
+    email = registrar&.email
+    return if email.blank?
+
+    RegistrarMailer.api_user_subject_changed(
+      email: email,
+      api_user: self,
+      old_subject: data[:old_subject],
+      new_subject: data[:new_subject]
+    ).deliver_now
+  end
 
   def machine_readable_certificate(cert)
     Rails.logger.debug "[machine_readable_certificate] Original cert: #{cert}"

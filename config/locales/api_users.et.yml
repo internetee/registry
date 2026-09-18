@@ -1,0 +1,40 @@
+et:
+  activerecord:
+    models:
+      api_user:
+        one: API kasutaja
+        other: API kasutajad
+    attributes:
+      api_user:
+        username: Kasutajanimi
+        plain_text_password: Parool
+        email: E-post
+        identity_code: Isikukood
+        subject: Sisselogimise identifikaator
+        registrar: Registripidaja
+        roles: Rollid
+    errors:
+      models:
+        api_user:
+          attributes:
+            username:
+              blank: on kohustuslik
+              taken: on juba kasutusel
+            plain_text_password:
+              blank: on kohustuslik
+              too_short: on liiga lühike (peab olema vähemalt %{count} tähemärki)
+            email:
+              blank: on vajalik isikutuvastamiseks
+              invalid: on vigane
+            identity_code:
+              taken: on selle registripidaja juures juba olemas
+            subject:
+              taken: on selle registripidaja juures juba teise API kasutaja poolt kasutusel
+            registrar:
+              blank: on kohustuslik
+            roles:
+              blank: on kohustuslik
+            base:
+              verification_error: Identifitseerimistaotluse saatmine ebaõnnestus
+              not_pending_verification: Kinnitamist ootavat identifitseerimist pole
+              missing_subject: Sisselogimise identifikaator on kinnitamiseks kohustuslik

@@ -2,3 +2,5 @@ en:
   registrar:
     authorization:
       ip_not_allowed: Access denied from IP %{ip}
+      invalid_authorization_information: Invalid authorization information
+      identity_not_verified: Identity verification is required before signing in with a password. Sign in with eeID or complete the verification request first.

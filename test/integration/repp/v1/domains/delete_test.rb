@@ -26,8 +26,8 @@ class ReppV1DomainsDeleteTest < ActionDispatch::IntegrationTest
     @domain.reload
     json = JSON.parse(response.body, symbolize_names: true)
     assert_response :ok
-    assert_equal 1000, json[:code]
-    assert_equal 'Command completed successfully', json[:message]
+    assert_equal 1001, json[:code]
+    assert_equal Epp::Response::Result::Code.default_descriptions[1001], json[:message]
 
     assert @domain.statuses.include? DomainStatus::PENDING_DELETE_CONFIRMATION
     assert_not @domain.statuses.include? DomainStatus::PENDING_DELETE

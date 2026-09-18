@@ -1,0 +1,48 @@
+en:
+  cannot get access: Cannot get access to billing service
+  failed_to_generate_invoice_invoice_number_limit_reached: Failed to generate invoice - invoice number limit reached
+  invoice_no: 'Invoice no. %{no}'
+  cancelled: Cancelled
+  unpaid: Unpaid
+  activerecord:
+    models:
+      invoice:
+        one: Invoice
+        other: Invoices
+      invoice_item:
+        one: Invoice line
+        other: Invoice lines
+    attributes:
+      invoice:
+        due_date: Due date
+        currency: Currency
+        seller_name: Seller name
+        seller_iban: Seller IBAN
+        buyer_name: Buyer name
+        buyer_vat_no: Buyer VAT no
+        number: Invoice number
+        total: Total
+        items: Invoice items
+      invoice_item:
+        price: Price
+        quantity: Quantity
+        description: Description
+    errors:
+      models:
+        invoice:
+          attributes:
+            base:
+              invoice_status_prohibits_operation: Invoice status prohibits operation
+              invalid_state: 'Invalid state %{status}'
+            due_date:
+              blank: Due date is missing
+            currency:
+              blank: Currency is missing
+            seller_name:
+              blank: Seller name is missing
+            seller_iban:
+              blank: Seller IBAN is missing
+            buyer_name:
+              blank: Buyer name is missing
+            items:
+              blank: Invoice must have at least one line item

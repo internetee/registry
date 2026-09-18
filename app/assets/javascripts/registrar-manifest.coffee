@@ -15,4 +15,5 @@
 #= require text_field_trimmer
 #= require shared/general
 #= require registrar/autocomplete
+#= require registrar/birthday_restricted_countries
 #= require registrar/application

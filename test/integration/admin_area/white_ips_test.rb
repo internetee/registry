@@ -43,6 +43,7 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
   def test_update_whitelisted_ip
     visit_info_whitelisted_ip_page
     click_on 'Edit'
+    assert_text 'Edit white IP'
 
     fill_in 'IPv4', with: '127.0.0.2'
     find(:css, '#white_ip_interfaces_api').set(false)
@@ -66,8 +67,9 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
   def test_failed_to_update_whitelisted_ip
     visit_info_whitelisted_ip_page
     click_on 'Edit'
-    fill_in 'IPv4', with: 'asdadad#'
+    assert_text 'Edit white IP'
 
+    fill_in 'IPv4', with: 'asdadad#'
     click_on 'Save'
 
     assert_text 'Failed to update record'
@@ -79,10 +81,7 @@ class AdminAreaWhiteIpsIntegrationTest < JavaScriptApplicationSystemTestCase
 
   def test_delete_whitelisted_ip
     visit_info_whitelisted_ip_page
-    click_on 'Delete'
-
-    page.driver.browser.switch_to.alert.accept
-
+    accept_confirm { click_on 'Delete' }
     assert_text 'Record deleted'
   end
 

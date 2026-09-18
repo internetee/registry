@@ -27,8 +27,12 @@ module Actions
         @result = Actions::SimpleMailValidator.run(email: contact.email, level: m)
         next if @result
 
-        err_text = "email '#{contact.email}' didn't pass validation"
-        contact.add_epp_error('2005', nil, nil, "#{I18n.t(:parameter_value_syntax_error)} #{err_text}")
+        contact.add_epp_error(
+          '2005',
+          nil,
+          nil,
+          "#{I18n.t(:parameter_value_syntax_error)} #{I18n.t(:email_did_not_pass_validation, email: contact.email)}"
+        )
         @error = true
         return
       end
@@ -62,10 +66,10 @@ module Actions
 
       if ident[:ident_type].blank?
         contact.add_epp_error('2003', nil, 'ident_type',
-                              I18n.t('errors.messages.required_ident_attribute_missing'))
+                              I18n.t('errors.messages.required_ident_attribute_missing', key: 'ident_type'))
         @error = true
       elsif !%w[priv org birthday].include?(ident[:ident_type])
-        contact.add_epp_error('2003', nil, 'ident_type', 'Invalid ident type')
+        contact.add_epp_error('2003', nil, 'ident_type', I18n.t('errors.messages.invalid_ident_type'))
         @error = true
       end
     end
@@ -75,7 +79,7 @@ module Actions
       return unless ident[:ident_type] != 'birthday' && ident[:ident_country_code].blank?
 
       contact.add_epp_error('2003', nil, 'ident_country_code',
-                            I18n.t('errors.messages.required_ident_attribute_missing'))
+                            I18n.t('errors.messages.required_ident_attribute_missing', key: 'ident_country_code'))
       @error = true
     end
 

@@ -180,6 +180,10 @@ class ReserveDomainInvoice < ApplicationRecord
     EisBilling::GetReservedDomainsInvoiceStatus.call(invoice_number: invoice_number, user_unique_id: metainfo)
   end
 
+  def as_pdf(context = {})
+    PdfGenerator.new(self, context).as_pdf
+  end
+
   def create_paid_reserved_domains
     domain_names.map do |name| 
       next if ReservedDomain.find_by(name: name).present?
@@ -205,4 +209,5 @@ class ReserveDomainInvoice < ApplicationRecord
       end
     end
   end
+
 end

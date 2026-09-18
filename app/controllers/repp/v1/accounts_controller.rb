@@ -38,6 +38,7 @@ module Repp
                             api_users: serialized_users(current_user.api_users),
                             white_ips: serialized_ips(registrar.white_ips),
                             balance_auto_reload: type,
+                            accept_pdf_invoices: registrar.accept_pdf_invoices,
                             min_deposit: Setting.minimum_deposit },
                  roles: ApiUser::ROLES,
                  interfaces: WhiteIp::INTERFACES }
@@ -94,7 +95,7 @@ module Repp
         end
 
         @current_user = new_user
-        data = auth_values_to_data(registrar: current_user.registrar)
+        data = auth_values_to_data(mode: 'registrar')
         message = I18n.t('registrar.current_user.switch.switched', new_user: new_user)
         token = Base64.urlsafe_encode64("#{new_user.username}:#{new_user.plain_text_password}")
         render_success(data: { token: token, registrar: data }, message: message)
@@ -117,7 +118,7 @@ module Repp
       private
 
       def account_params
-        params.require(:account).permit(:billing_email, :iban, :new_user_id)
+        params.require(:account).permit(:billing_email, :iban, :new_user_id, :accept_pdf_invoices)
       end
 
       def index_params
