@@ -285,6 +285,10 @@ class Contact < ApplicationRecord
              contacts.id)')
     end
 
+    def org_contacts_by_codes(company_codes, country_alpha2)
+      where(ident_type: ORG, ident: company_codes, ident_country_code: country_alpha2)
+    end
+
     def registrant_user_company_contacts(registrant_user)
       ident = registrant_user.companies.collect(&:registration_number)
 

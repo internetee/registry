@@ -32,13 +32,11 @@ certs/ca/private/ca_*.pem
 certs/
 Dockerfile.dev.v2
 CLAUDE.md
+AGENT.md
 .claude/
 .memory-bank
-AGENT.md
-own
-AGENT.md
+own/
 
 # repowise local index and generated notes
 .repowise/
 docs/
-
