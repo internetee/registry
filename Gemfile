@@ -62,7 +62,9 @@ gem 'omniauth-tara', github: 'internetee/omniauth-tara'
 # gem 'omniauth-tara', path: 'vendor/gems/omniauth-tara'
 
 gem 'airbrake'
-gem 'company_register', github: 'internetee/company_register', branch: 'master'
+# TODO: point back to master once internetee/company_register#<PR> is merged.
+gem 'company_register', github: 'internetee/company_register',
+                        branch: 'fix/165-transport-errors-not-available'
 gem 'directo', github: 'internetee/directo', branch: 'master'
 gem 'domain_name'
 gem 'dry-struct'

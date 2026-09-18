@@ -8,9 +8,9 @@ class ListingCompanyCodesResolver
   STALE_GRACE_PERIOD = 24.hours
   FALLBACK_TTL = 1.day
 
-  # Network-level errors that indicate the business registry is unreachable.
-  # The company_register gem does NOT wrap these into CompanyRegister::NotAvailableError —
-  # depending on the HTTP adapter in use (HTTPI or Net::HTTP), raw errors bubble up.
+  # Second line of defence. The company_register gem normalises transport failures into
+  # CompanyRegister::NotAvailableError, but the gem is an external dependency pinned by
+  # branch: a new adapter or a new failure class must degrade the listing, never 500 it.
   NETWORK_ERRORS = [
     Net::OpenTimeout,
     Net::ReadTimeout,

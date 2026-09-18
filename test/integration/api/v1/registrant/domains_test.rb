@@ -123,6 +123,23 @@ class RegistrantApiV1DomainsTest < ActionDispatch::IntegrationTest
     assert_kind_of Array, response_json['domains']
   end
 
+  # `show` deliberately keeps using `current_user_domains`, which degrades through the
+  # controller's own `rescue CompanyRegister::NotAvailableError`. That rescue is only
+  # reachable because the gem normalises every transport failure (refused connections,
+  # timeouts, DNS and TLS errors) into NotAvailableError - see
+  # internetee/company_register branch fix/165-transport-errors-not-available.
+  def test_show_returns_direct_domain_when_business_registry_is_unavailable
+    stub = build_company_register_stub(raise_error: CompanyRegister::NotAvailableError)
+
+    CompanyRegister::Client.stub(:new, stub) do
+      get api_v1_registrant_domain_path(domains(:shop).uuid), as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    end
+
+    assert_response :ok
+    assert_equal 'shop.test', JSON.parse(response.body)['name']
+  end
+
   private
 
   def auth_token
