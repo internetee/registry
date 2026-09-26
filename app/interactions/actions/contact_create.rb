@@ -57,7 +57,24 @@ module Actions
       identifier = ::Contact::Ident.new(code: ident[:ident], type: ident[:ident_type],
                                         country_code: ident[:ident_country_code])
 
-      identifier.validate
+      unless identifier.valid?
+        identifier.errors.details.each do |attr, error_details|
+          error_details.each do |error_detail|
+            ::Contact::Ident.epp_code_map.each do |epp_code, attr_to_error|
+              next unless attr_to_error.any? { |i| i == [attr, error_detail[:error]] }
+
+              message = identifier.errors.generate_message(attr, error_detail[:error], error_detail)
+              message = identifier.errors.full_message(attr, message)
+              message = "#{identifier.model_name.human} #{message.camelize(:lower)}" if attr != :base
+
+              contact.add_epp_error(epp_code, nil, attr.to_s, message)
+            end
+          end
+        end
+        @error = true
+        return
+      end
+
       contact.identifier = identifier
     end
 
@@ -84,6 +101,7 @@ module Actions
     end
 
     def maybe_company_is_relevant
+      return true if @error
       return true if ENV['allow_validate_business_contacts'] && ENV['allow_validate_business_contacts'] == 'false'
       return true unless contact.org?
       return true unless contact.ident_country_code == 'EE'
@@ -91,6 +109,7 @@ module Actions
       company_status = contact.return_company_status
 
       return true if [Contact::REGISTERED, Contact::LIQUIDATED].include? company_status
+
       contact.add_epp_error('2003', nil, 'ident', I18n.t('errors.messages.company_not_registered'))
 
       @error = true
@@ -112,7 +131,7 @@ module Actions
     def maybe_validate_contact
       return if @error || !contact.valid?
 
-      [:regex, :mx].each do |m|
+      %i[regex mx].each do |m|
         contact.verify_email(check_level: m, single_email: true)
       end
     end
