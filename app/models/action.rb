@@ -29,16 +29,21 @@ class Action < ApplicationRecord
   end
 
   def to_non_available_contact_codes
-    return [serialized_contact(contact)] unless bulk_action?
+    return subaction_contact_codes if bulk_action?
 
-    subactions.map do |a|
-      serialized_contact(a.contact)
-    end
+    contact_code = serialized_contact(contact)
+    contact_code ? [contact_code] : []
   end
 
   private
 
+  def subaction_contact_codes
+    subactions.filter_map { |a| serialized_contact(a.contact) }
+  end
+
   def serialized_contact(contact)
+    return unless contact
+
     {
       code: contact.code,
       avail: 0,
