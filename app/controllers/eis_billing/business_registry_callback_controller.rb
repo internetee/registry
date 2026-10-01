@@ -18,7 +18,10 @@ module EisBilling
 
         reserved_domains = []
         filtered_domains.each do |domain|
-          reserved_domains << ReservedDomain.create(name: domain)
+          reserved_domains << ReservedDomain.create(
+            name: domain,
+            expire_at: ReservedDomain.expire_at_for(ReservedDomain::PAID_RESERVATION_EXPIRY)
+          )
         end
         reserve_domain_invoice.paid!
         ReserveDomainInvoice.cancel_intersecting_invoices(reserve_domain_invoice)
