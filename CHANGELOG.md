@@ -1,3 +1,6 @@
+01.10.2026
+* Business registry reservations expire at the end of the last full day (23:59:59) instead of exact activation time https://github.com/internetee/registry/issues/2961
+
 23.07.2026
 * Operations with pending status now return result code 1001 in REPP https://github.com/internetee/registry/issues/2940
 * Fixed case sensitivity issue for REPP requests https://github.com/internetee/registry/issues/2943

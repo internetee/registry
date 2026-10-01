@@ -104,19 +104,21 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
       user_unique_id: @invoice.metainfo
     )
 
-    get api_v1_business_registry_long_reserve_domains_status_path(
-      invoice_number: @invoice.invoice_number, 
-      user_unique_id: @invoice.metainfo
-    ),
-    headers: @auth_headers
+    travel_to Time.zone.parse('2026-10-01 13:43:00') do
+      get api_v1_business_registry_long_reserve_domains_status_path(
+        invoice_number: @invoice.invoice_number,
+        user_unique_id: @invoice.metainfo
+      ),
+      headers: @auth_headers
+    end
 
     assert_response :success
     json_response = JSON.parse(response.body)
-    
+
     assert_equal 'paid', json_response['status']
     assert_equal 'Payment received', json_response['message']
-    
-    # Проверяем структуру reserved_domains
+
+    # Check reserved_domains structure
     reserved_domain = json_response['reserved_domains'].find { |d| d['status'] == 'reserved' }
     assert_not_nil reserved_domain
     assert_not_nil reserved_domain['name']
@@ -124,9 +126,9 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
     assert_not_nil reserved_domain['expire_at']
     assert_equal 'reserved', reserved_domain['status']
 
-    # Проверяем, что expire_at установлен на 1 год
+    # expire_at is the end of the last full day of the 1-year period
     expire_at = Time.parse(reserved_domain['expire_at'])
-    assert_in_delta Time.current + ReservedDomain::PAID_RESERVATION_EXPIRY, expire_at, 5.seconds
+    assert_equal Time.zone.parse('2027-10-01 23:59:59'), expire_at
   end
 
   private
