@@ -1,0 +1,18 @@
+Tere
+<br><br>
+Registripidaja tühistas domeeni <%= @domain.name %> registreerija vahetuse taotluse. Varem saadetud kinnituslink ei kehti enam.
+<br><br>
+Küsimuste korral palun võtke ühendust oma registripidajaga:
+
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+<hr>
+<br><br>
+Hi,
+<br><br>
+The registrar has cancelled the registrant change request for the domain <%= @domain.name %>. The confirmation link sent earlier is no longer valid.
+<br><br>
+Please contact your registrar if you have any questions:
+
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+<%= render 'mailers/shared/signatures/signature.en.html' %>
