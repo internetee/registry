@@ -213,21 +213,15 @@ class ReservedDomainTest < ActiveSupport::TestCase
     assert ReservedDomain.exists?(domain.id)
   end
 
-  test "release_expired should continue after a failing record and report it to Airbrake" do
+  test "release_expired should continue after a failing record" do
     failing_domain = ReservedDomain.create!(name: 'failing.test', expire_at: 1.day.ago)
     expired_domain = ReservedDomain.create!(name: 'expired.test', expire_at: 1.day.ago)
     # update_all bypasses validations, so the audit update! fails on the invalid name
     ReservedDomain.where(id: failing_domain.id).update_all(name: 'not a domain name')
 
-    notified = []
-    Airbrake.stub(:notify, ->(error, _params = {}) { notified << error }) do
-      assert_equal 1, ReservedDomain.release_expired
-    end
-
+    assert_equal 1, ReservedDomain.release_expired
     assert ReservedDomain.exists?(failing_domain.id)
     assert_not ReservedDomain.exists?(expired_domain.id)
-    assert_equal 1, notified.size
-    assert_kind_of ActiveRecord::RecordInvalid, notified.first
   end
 
   test "release_expired should enqueue whois record update for released domains" do

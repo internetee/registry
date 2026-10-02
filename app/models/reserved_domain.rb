@@ -91,8 +91,9 @@ class ReservedDomain < ApplicationRecord
         next
       rescue StandardError => e
         failed += 1
-        ToStdout.msg "Failed to release reserved domain #{reserved_domain.id} (#{reserved_domain.name}): #{e.class} - #{e.message}"
-        Airbrake.notify(e, reserved_domain_id: reserved_domain.id, reserved_domain_name: reserved_domain.name)
+        message = "Failed to release reserved domain #{reserved_domain.id} (#{reserved_domain.name}): #{e.class} - #{e.message}"
+        ToStdout.msg message
+        Rails.logger.error message
       end
 
       ToStdout.msg "Released #{released} expired reserved domains (failed: #{failed})"
