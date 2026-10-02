@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 2018_11_02_124618) do
     t.json "json"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_domains_on_name"
+    t.index ["name"], name: "index_domains_on_name", unique: true
   end
 
 end
