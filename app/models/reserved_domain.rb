@@ -4,11 +4,13 @@ class ReservedDomain < ApplicationRecord
   before_save :fill_empty_passwords
   before_save :generate_data
   before_save :sync_dispute_password
-  after_destroy :remove_data
+  after_destroy_commit :remove_data
 
   validates :name, domain_name: true, uniqueness: true
 
   alias_attribute :registration_code, :password
+
+  scope :expired, ->(at = Time.current) { where('expire_at < ?', at) }
 
   ransacker :expire_date do
     Arel.sql('DATE(expire_at)')
@@ -20,6 +22,10 @@ class ReservedDomain < ApplicationRecord
 
   FREE_RESERVATION_EXPIRY = 7.days
   PAID_RESERVATION_EXPIRY = 1.year
+
+  EXPIRED_RELEASE_REASON = 'Expired reservation deadline reached'.freeze
+  DAILY_CLEANUP_PROCESS = 'Automated daily cleanup job'.freeze
+  AVAILABILITY_CHECK_PROCESS = 'Business registry availability check'.freeze
 
   class << self
     def ransackable_associations(*)
@@ -74,14 +80,53 @@ class ReservedDomain < ApplicationRecord
       unique_id = FreeDomainReservationHolder.create!(domain_names: available_domains).user_unique_id
       wrap_reserved_domains_to_struct(reserved_domains, true, unique_id)
     end
+
+    def release_expired(at: Time.current)
+      released = 0
+      failed = 0
+
+      expired(at).find_each do |reserved_domain|
+        released += 1 if reserved_domain.release_if_expired(process: DAILY_CLEANUP_PROCESS, at: at)
+      rescue ActiveRecord::RecordNotFound
+        next
+      rescue StandardError => e
+        failed += 1
+        ToStdout.msg "Failed to release reserved domain #{reserved_domain.id} (#{reserved_domain.name}): #{e.class} - #{e.message}"
+        Airbrake.notify(e, reserved_domain_id: reserved_domain.id, reserved_domain_name: reserved_domain.name)
+      end
+
+      ToStdout.msg "Released #{released} expired reserved domains (failed: #{failed})"
+      released
+    end
   end
 
-  def expired?
-    expire_at.present? && expire_at < Time.current
+  def expired?(at = Time.current)
+    expire_at.present? && expire_at < at
+  end
+
+  # with_lock reloads the row with FOR UPDATE, so a reservation extended
+  # after this record was loaded is not released.
+  def release_if_expired(process:, at: Time.current)
+    released = false
+
+    with_lock do
+      if expired?(at)
+        audit = release_audit_message(process)
+
+        PaperTrail.request(whodunnit: audit) do
+          update!(updator_str: audit)
+          destroy!
+        end
+
+        released = true
+      end
+    end
+
+    released
   end
 
   def destroy_if_expired
-    destroy if expired?
+    release_if_expired(process: AVAILABILITY_CHECK_PROCESS)
   end
 
   def name=(val)
@@ -113,5 +158,11 @@ class ReservedDomain < ApplicationRecord
 
   def remove_data
     UpdateWhoisRecordJob.perform_later name, 'reserved'
+  end
+
+  private
+
+  def release_audit_message(process)
+    "#{process} - #{EXPIRED_RELEASE_REASON} - #{Time.current.iso8601}"
   end
 end

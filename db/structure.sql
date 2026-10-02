@@ -4989,6 +4989,13 @@ CREATE INDEX index_reserve_domain_invoices_on_invoice_number ON public.reserve_d
 
 
 --
+-- Name: index_reserved_domains_on_expire_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserved_domains_on_expire_at ON public.reserved_domains USING btree (expire_at);
+
+
+--
 -- Name: index_setting_entries_on_code; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5863,6 +5870,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260406125446'),
 ('20260529120000'),
 ('20260601120000'),
-('20260608120000');
+('20260608120000'),
+('20261002120000');
 
 

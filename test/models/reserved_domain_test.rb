@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class ReservedDomainTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @reserved_domain = reserved_domains(:one)
     
@@ -113,14 +115,14 @@ class ReservedDomainTest < ActiveSupport::TestCase
   end
 
   test "destroy_if_expired should destroy domain when expired" do
-    @reserved_domain.expire_at = 1.day.ago
+    @reserved_domain.update!(expire_at: 1.day.ago)
     assert_difference 'ReservedDomain.count', -1 do
       @reserved_domain.destroy_if_expired
     end
   end
 
   test "destroy_if_expired should not destroy domain when not expired" do
-    @reserved_domain.expire_at = 1.day.from_now
+    @reserved_domain.update!(expire_at: 1.day.from_now)
     assert_no_difference 'ReservedDomain.count' do
       @reserved_domain.destroy_if_expired
     end
@@ -146,13 +148,109 @@ class ReservedDomainTest < ActiveSupport::TestCase
 
   test "reserve_domains_without_payment should return error when no domains available" do
     domain_names = ['test1.test']
-    
+
     BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, [] do
       result = ReservedDomain.reserve_domains_without_payment(domain_names)
-      
+
       assert_not result.success
       assert_nil result.user_unique_id
       assert_equal "No available domains", result.errors
+    end
+  end
+
+  test "release_expired should remove expired reservations and return released count" do
+    expired_one = ReservedDomain.create!(name: 'expired-one.test', expire_at: 1.day.ago)
+    expired_two = ReservedDomain.create!(name: 'expired-two.test', expire_at: 1.hour.ago)
+    future_domain = ReservedDomain.create!(name: 'future.test', expire_at: 1.day.from_now)
+
+    released = nil
+    assert_difference 'ReservedDomain.count', -2 do
+      released = ReservedDomain.release_expired
+    end
+
+    assert_equal 2, released
+    assert_not ReservedDomain.exists?(expired_one.id)
+    assert_not ReservedDomain.exists?(expired_two.id)
+    assert ReservedDomain.exists?(future_domain.id)
+    assert ReservedDomain.exists?(@reserved_domain.id)
+  end
+
+  test "release_expired should keep reservation expiring exactly at the boundary" do
+    at = Time.current
+    boundary_domain = ReservedDomain.create!(name: 'boundary.test', expire_at: at)
+
+    assert_no_difference 'ReservedDomain.count' do
+      assert_equal 0, ReservedDomain.release_expired(at: at)
+    end
+    assert ReservedDomain.exists?(boundary_domain.id)
+  end
+
+  test "release_expired should record release reason in version history" do
+    domain = ReservedDomain.create!(name: 'audited.test', expire_at: 1.day.ago)
+    frozen_time = Time.zone.parse('2026-10-02 00:35:00')
+
+    travel_to frozen_time do
+      ReservedDomain.release_expired
+    end
+
+    versions = Version::ReservedDomainVersion.where(item_id: domain.id).order(:id).last(2)
+    assert_equal %w[update destroy], versions.map(&:event)
+
+    destroy_version = versions.last
+    assert_includes destroy_version.object['updator_str'], 'Automated daily cleanup job'
+    assert_includes destroy_version.object['updator_str'], 'Expired reservation deadline reached'
+    assert_includes destroy_version.object['updator_str'], frozen_time.iso8601
+    assert_includes destroy_version.whodunnit, 'Automated daily cleanup job'
+    assert_includes destroy_version.whodunnit, 'Expired reservation deadline reached'
+    assert_includes destroy_version.whodunnit, frozen_time.iso8601
+  end
+
+  test "release_if_expired should return false when reservation was extended after loading" do
+    domain = ReservedDomain.create!(name: 'extended.test', expire_at: 1.day.ago)
+    ReservedDomain.where(id: domain.id).update_all(expire_at: 1.day.from_now)
+
+    assert_not domain.release_if_expired(process: 'Concurrent extension')
+    assert ReservedDomain.exists?(domain.id)
+  end
+
+  test "release_expired should continue after a failing record and report it to Airbrake" do
+    failing_domain = ReservedDomain.create!(name: 'failing.test', expire_at: 1.day.ago)
+    expired_domain = ReservedDomain.create!(name: 'expired.test', expire_at: 1.day.ago)
+    # update_all bypasses validations, so the audit update! fails on the invalid name
+    ReservedDomain.where(id: failing_domain.id).update_all(name: 'not a domain name')
+
+    notified = []
+    Airbrake.stub(:notify, ->(error, _params = {}) { notified << error }) do
+      assert_equal 1, ReservedDomain.release_expired
+    end
+
+    assert ReservedDomain.exists?(failing_domain.id)
+    assert_not ReservedDomain.exists?(expired_domain.id)
+    assert_equal 1, notified.size
+    assert_kind_of ActiveRecord::RecordInvalid, notified.first
+  end
+
+  test "release_expired should enqueue whois record update for released domains" do
+    ReservedDomain.create!(name: 'whois-release.test', expire_at: 1.day.ago)
+
+    assert_enqueued_with(job: UpdateWhoisRecordJob, args: ['whois-release.test', 'reserved']) do
+      ReservedDomain.release_expired
+    end
+  end
+
+  test "destroy_if_expired should mark release as business registry availability check" do
+    domain = ReservedDomain.create!(name: 'availability-check.test', expire_at: 1.day.ago)
+
+    domain.destroy_if_expired
+
+    version = Version::ReservedDomainVersion.where(item_id: domain.id).order(:id).last
+    assert_equal 'destroy', version.event
+    assert_includes version.whodunnit, 'Business registry availability check'
+  end
+
+  test "release_expired should return zero when no reservations are expired" do
+    assert_no_difference 'ReservedDomain.count' do
+      assert_equal 0, ReservedDomain.release_expired
     end
   end
 end

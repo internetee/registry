@@ -34,6 +34,10 @@ if @cron_group == 'registry'
     runner 'DomainCron.clean_expired_pendings'
   end
 
+  every :day, at: '12:35am' do
+    runner 'ReservedDomain.release_expired'
+  end
+
   every 3.hours do
     runner 'Certificate.update_crl'
   end
