@@ -56,9 +56,9 @@ class Dispute < ApplicationRecord # rubocop:disable Metrics/ClassLength
     domain&.mark_as_disputed
     return true if domain
 
-    wr = Whois::Record.find_or_initialize_by(name: domain_name)
-    wr.json = @json = generate_json(wr, domain_status: 'disputed')
-    wr.save
+    Whois::Record.save_by_name(domain_name) do |wr|
+      wr.json = @json = generate_json(wr, domain_status: 'disputed')
+    end
   end
 
   def close(initiator: 'Unknown')
