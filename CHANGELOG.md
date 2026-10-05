@@ -1,3 +1,7 @@
+05.10.2026
+* Reserved domain changes are recorded with source (Business Registry API, EIS billing callback, admin, registrar, dispute, expiry job, availability check) and reason in log_reserved_domains; admin edit and delete of a reserved domain require a reason https://github.com/internetee/registry/issues/2962
+* New admin page Settings > Archive > Reserved domains history: every reservation lifecycle (active, expired, released to auction, deleted, removed) with filters, change timeline and CSV export https://github.com/internetee/registry/issues/2962
+* Deploy: run migrations before restarting app servers; then run 'bundle exec rake reserved_domains:backfill_audit' once to fill audit data on existing history rows https://github.com/internetee/registry/issues/2962
 02.10.2026
 * Expired domain reservations are removed daily at 00:35 by cron (ReservedDomain.release_expired); removal reason is recorded in the reservation audit log https://github.com/internetee/registry/issues/2963
 01.10.2026
