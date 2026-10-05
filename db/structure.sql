@@ -2790,6 +2790,122 @@ CREATE TABLE public.reserved_domains (
 
 
 --
+-- Name: reserved_domain_lifecycles; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.reserved_domain_lifecycles AS
+ WITH versions AS NOT MATERIALIZED (
+         SELECT v.id,
+            v.item_id,
+            v.event,
+            v.whodunnit,
+            v.created_at,
+            v.source,
+            v.reason,
+            v.reason_note,
+            v.object,
+            v.object_changes,
+            COALESCE(v.domain_name, (
+                CASE
+                    WHEN ((v.event)::text = 'destroy'::text) THEN (v.object ->> 'name'::text)
+                    ELSE COALESCE(((v.object_changes -> 'name'::text) ->> 1), (v.object ->> 'name'::text))
+                END)::character varying) AS resolved_name
+           FROM public.log_reserved_domains v
+          WHERE ((v.item_type)::text = 'ReservedDomain'::text)
+        ), first_events AS (
+         SELECT DISTINCT ON (versions.item_id) versions.item_id,
+            versions.object
+           FROM versions
+          ORDER BY versions.item_id, versions.id
+        ), create_events AS (
+         SELECT DISTINCT ON (versions.item_id) versions.item_id,
+            versions.created_at,
+            versions.whodunnit,
+            versions.source,
+            versions.reason
+           FROM versions
+          WHERE ((versions.event)::text = 'create'::text)
+          ORDER BY versions.item_id, versions.id
+        ), last_events AS (
+         SELECT DISTINCT ON (versions.item_id) versions.item_id,
+            versions.event,
+            versions.created_at,
+            versions.whodunnit,
+            versions.source,
+            versions.reason,
+            versions.reason_note,
+            versions.resolved_name,
+                CASE
+                    WHEN ((versions.event)::text = 'destroy'::text) THEN (versions.object ->> 'expire_at'::text)
+                    WHEN ((versions.object_changes -> 'expire_at'::text) IS NOT NULL) THEN ((versions.object_changes -> 'expire_at'::text) ->> 1)
+                    ELSE (versions.object ->> 'expire_at'::text)
+                END AS known_expire_at
+           FROM versions
+          ORDER BY versions.item_id, versions.id DESC
+        ), registrations AS (
+         SELECT versions.item_id,
+            bool_or(((versions.reason)::text = 'domain_registered'::text)) AS registration_recorded
+           FROM versions
+          GROUP BY versions.item_id
+        ), lifecycle_ids AS (
+         SELECT versions.item_id AS id
+           FROM versions
+        UNION
+         SELECT reserved_domains.id
+           FROM public.reserved_domains
+        )
+ SELECT ids.id,
+    COALESCE(rd.name, le.resolved_name) AS domain_name,
+    COALESCE(rd.created_at, ce.created_at,
+        CASE
+            WHEN ((fe.object ->> 'created_at'::text) ~ '^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}'::text) THEN timezone('UTC'::text, ((fe.object ->> 'created_at'::text))::timestamp with time zone)
+            ELSE NULL::timestamp without time zone
+        END) AS created_at,
+    COALESCE(rd.creator_str, ce.whodunnit, ((fe.object ->> 'creator_str'::text))::character varying) AS created_by,
+    ce.source AS creation_source,
+    ce.reason AS creation_reason,
+    COALESCE(le.created_at, rd.updated_at) AS last_changed_at,
+    COALESCE(le.whodunnit, rd.updator_str) AS last_changed_by,
+    le.source AS last_source,
+    le.reason AS last_reason,
+    le.reason_note AS last_reason_note,
+        CASE
+            WHEN (rd.id IS NOT NULL) THEN rd.expire_at
+            ELSE
+            CASE
+                WHEN (le.known_expire_at ~ '^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}'::text) THEN timezone('UTC'::text, (le.known_expire_at)::timestamp with time zone)
+                ELSE NULL::timestamp without time zone
+            END
+        END AS expire_at,
+        CASE
+            WHEN ((rd.id IS NULL) AND ((le.event)::text = 'destroy'::text)) THEN le.created_at
+            ELSE NULL::timestamp without time zone
+        END AS ended_at,
+        CASE
+            WHEN ((rd.id IS NULL) AND ((le.event)::text = 'destroy'::text)) THEN le.reason
+            ELSE NULL::character varying
+        END AS end_reason,
+    COALESCE(r.registration_recorded, false) AS registration_recorded,
+    (EXISTS ( SELECT 1
+           FROM public.domains d
+          WHERE ((d.name)::text = (COALESCE(rd.name, le.resolved_name))::text))) AS domain_exists,
+        CASE
+            WHEN ((rd.id IS NOT NULL) AND (rd.expire_at IS NOT NULL) AND (rd.expire_at < timezone('UTC'::text, now()))) THEN 'expired'::text
+            WHEN (rd.id IS NOT NULL) THEN 'active'::text
+            WHEN ((le.reason)::text = 'reservation_expired'::text) THEN 'expired'::text
+            WHEN ((le.reason)::text = 'released_to_auction'::text) THEN 'released_to_auction'::text
+            WHEN ((le.reason)::text = 'admin_deleted'::text) THEN 'deleted'::text
+            ELSE 'removed'::text
+        END AS status
+   FROM (((((lifecycle_ids ids
+     LEFT JOIN public.reserved_domains rd ON ((rd.id = ids.id)))
+     LEFT JOIN first_events fe ON ((fe.item_id = ids.id)))
+     LEFT JOIN create_events ce ON ((ce.item_id = ids.id)))
+     LEFT JOIN last_events le ON ((le.item_id = ids.id)))
+     LEFT JOIN registrations r ON ((r.item_id = ids.id)));
+
+
+--
 -- Name: reserved_domains_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -5906,6 +6022,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260608120000'),
 ('20261002120000'),
 ('20261005090000'),
-('20261005090100');
+('20261005090100'),
+('20261005090200');
 
 
