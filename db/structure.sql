@@ -2135,7 +2135,12 @@ CREATE TABLE public.log_reserved_domains (
     created_at timestamp without time zone,
     session character varying,
     children json,
-    uuid character varying
+    uuid character varying,
+    source character varying,
+    reason character varying,
+    reason_note text,
+    domain_name character varying,
+    registrar_id integer
 );
 
 
@@ -4863,10 +4868,38 @@ CREATE INDEX index_log_registrars_on_whodunnit ON public.log_registrars USING bt
 
 
 --
+-- Name: index_log_reserved_domains_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_reserved_domains_on_created_at ON public.log_reserved_domains USING btree (created_at);
+
+
+--
+-- Name: index_log_reserved_domains_on_domain_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_reserved_domains_on_domain_name ON public.log_reserved_domains USING btree (domain_name);
+
+
+--
 -- Name: index_log_reserved_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_reserved_domains_on_item_type_and_item_id ON public.log_reserved_domains USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_reserved_domains_on_reason; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_reserved_domains_on_reason ON public.log_reserved_domains USING btree (reason);
+
+
+--
+-- Name: index_log_reserved_domains_on_source; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_reserved_domains_on_source ON public.log_reserved_domains USING btree (source);
 
 
 --
@@ -5871,6 +5904,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260529120000'),
 ('20260601120000'),
 ('20260608120000'),
-('20261002120000');
+('20261002120000'),
+('20261005090000'),
+('20261005090100');
 
 

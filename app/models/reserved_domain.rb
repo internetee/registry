@@ -27,6 +27,16 @@ class ReservedDomain < ApplicationRecord
   DAILY_CLEANUP_PROCESS = 'Automated daily cleanup job'.freeze
   AVAILABILITY_CHECK_PROCESS = 'Business registry availability check'.freeze
 
+  AUDIT_SOURCES = %w[
+    business_registry eis_billing admin registrar dispute
+    expiry_job availability_check console rake unknown
+  ].freeze
+
+  AUDIT_REASONS = %w[
+    free_reservation paid_reservation admin_created admin_updated admin_deleted
+    released_to_auction domain_registered dispute_password_sync reservation_expired
+  ].freeze
+
   class << self
     def ransackable_associations(*)
       authorizable_ransackable_associations
@@ -167,7 +177,33 @@ class ReservedDomain < ApplicationRecord
     UpdateWhoisRecordJob.perform_later name, 'reserved'
   end
 
+  def audit_source
+    Audit.source || audit_source_from_whodunnit
+  end
+
+  def audit_reason
+    Audit.reason
+  end
+
+  def audit_reason_note
+    Audit.reason_note
+  end
+
+  def audit_registrar_id
+    Audit.registrar_id
+  end
+
   private
+
+  def audit_source_from_whodunnit
+    case ::PaperTrail.request.whodunnit.to_s
+    when /\A\d+-AdminUser:/ then 'admin'
+    when /\A\d+-ApiUser:/ then 'registrar'
+    when /\Aconsole-/ then 'console'
+    when /\Arake-/ then 'rake'
+    else 'unknown'
+    end
+  end
 
   def release_audit_message(process)
     "#{process} - #{EXPIRED_RELEASE_REASON} - #{Time.current.iso8601}"
