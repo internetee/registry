@@ -11,6 +11,10 @@ permissions:
   checks: read
   statuses: read
 
+concurrency:
+  group: auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   auto-approve-merge:
     if: github.repository == 'internetee/registry'
@@ -73,15 +77,41 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
 
-      - name: Wait for CI checks
+      - name: Wait for lockfile sync
         if: steps.check_auto_merge.outputs.auto_merge == 'true'
         uses: lewagon/wait-on-check-action@v1.9.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 15
+          running-workflow-name: Auto approve & merge Dependabot and Renovate PRs
+          ignore-checks: auto-approve-merge,Summary
+          check-name: sync-lockfile
+          fail-on-no-checks: false
+          allowed-conclusions: success,skipped,cancelled
+          checks-discovery-timeout: 180
+
+      - name: Resolve latest PR SHA
+        if: steps.check_auto_merge.outputs.auto_merge == 'true'
+        id: head
+        run: |
+          SHA=$(gh pr view "${{ github.event.pull_request.number }}" --json headRefOid -q .headRefOid)
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+
+      - name: Wait for CI checks
+        if: steps.check_auto_merge.outputs.auto_merge == 'true'
+        uses: lewagon/wait-on-check-action@v1.9.1
+        with:
+          ref: ${{ steps.head.outputs.sha }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 30
           running-workflow-name: Auto approve & merge Dependabot and Renovate PRs
+          ignore-checks: auto-approve-merge,Summary,sync-lockfile
           check-regexp: '^test'
+          allowed-conclusions: success,skipped
           checks-discovery-timeout: 300
 
       - name: Check CI status

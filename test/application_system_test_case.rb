@@ -2,6 +2,32 @@ require 'test_helper'
 
 require 'database_cleaner'
 require 'selenium/webdriver'
+require 'capybara/selenium/nodes/chrome_node'
+
+module CapybaraRetryDetachedChromeNode
+  MESSAGE = 'Node with given id does not belong to the document'
+
+  protected
+
+  def catch_error?(error, errors = nil)
+    super || (
+      error.is_a?(::Selenium::WebDriver::Error::UnknownError) &&
+        error.message.include?(MESSAGE)
+    )
+  end
+end
+
+module CapybaraHideDetachedChromeNode
+  def visible?
+    super
+  rescue ::Selenium::WebDriver::Error::UnknownError => e
+    raise unless e.message.include?(CapybaraRetryDetachedChromeNode::MESSAGE)
+    false
+  end
+end
+
+Capybara::Node::Base.prepend(CapybaraRetryDetachedChromeNode)
+Capybara::Selenium::ChromeNode.prepend(CapybaraHideDetachedChromeNode)
 
 class ApplicationSystemTestCase < ActionDispatch::IntegrationTest
   include Capybara::DSL
