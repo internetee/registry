@@ -6,6 +6,8 @@ en:
         new_btn: New reserved domain
         reset_btn: Reset
         csv_btn: CSV
+        delete_reason_prompt: Reason for deleting this reserved domain
 
       form:
         password_hint: Generated automatically if left blank
+        reason_note: Reason

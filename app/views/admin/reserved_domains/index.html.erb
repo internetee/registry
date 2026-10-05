@@ -120,7 +120,7 @@
                 </td>
                 <td>
                   <%= link_to(t(:edit), edit_admin_reserved_domain_path(id: x.id), class: 'btn btn-primary btn-xs') %>
-                  <%= link_to(t(:delete), delete_admin_reserved_domain_path(id: x.id), data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger btn-xs') %>
+                  <%= link_to(t(:delete), delete_admin_reserved_domain_path(id: x.id), class: 'btn btn-danger btn-xs js-delete-reserved-domain') %>
                 </td>
               </tr>
             <% end %>
@@ -151,6 +151,19 @@
       for (var i = 0; i < checkboxes.length; i++) {
               checkboxes[i].checked = !checkboxes[i].checked;
       }
-  }); 
+  });
+
+  document.querySelectorAll('.js-delete-reserved-domain').forEach(function(link) {
+      link.addEventListener('click', function(event) {
+          event.preventDefault();
+
+          var reason = window.prompt('<%= j t('.delete_reason_prompt') %>');
+          if (reason === null || reason.trim() === '') {
+              return;
+          }
+
+          window.location.href = link.href + '?reason_note=' + encodeURIComponent(reason);
+      });
+  });
 })();
 </script>

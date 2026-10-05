@@ -37,6 +37,11 @@ class ReservedDomain < ApplicationRecord
     released_to_auction domain_registered dispute_password_sync reservation_expired
   ].freeze
 
+  AUDIT_SOURCE_BY_PROCESS = {
+    DAILY_CLEANUP_PROCESS => 'expiry_job',
+    AVAILABILITY_CHECK_PROCESS => 'availability_check'
+  }.freeze
+
   class << self
     def ransackable_associations(*)
       authorizable_ransackable_associations
@@ -81,14 +86,16 @@ class ReservedDomain < ApplicationRecord
       available_domains = BusinessRegistry::DomainAvailabilityCheckerService.filter_available(domain_names)
 
       reserved_domains = []
-      available_domains.each do |domain_name|
-        reserved_domain = ReservedDomain.new(
-          name: domain_name,
-          expire_at: expire_at_for(FREE_RESERVATION_EXPIRY)
-        )
-        reserved_domain.regenerate_password
-        reserved_domain.save
-        reserved_domains << reserved_domain
+      Audit.set(reason: 'free_reservation', reason_note: nil, registrar_id: nil) do
+        available_domains.each do |domain_name|
+          reserved_domain = ReservedDomain.new(
+            name: domain_name,
+            expire_at: expire_at_for(FREE_RESERVATION_EXPIRY)
+          )
+          reserved_domain.regenerate_password
+          reserved_domain.save
+          reserved_domains << reserved_domain
+        end
       end
 
       return wrap_reserved_domains_to_struct(reserved_domains, false, nil, "No available domains") if reserved_domains.empty?
@@ -131,8 +138,11 @@ class ReservedDomain < ApplicationRecord
         audit = release_audit_message(process)
 
         PaperTrail.request(whodunnit: audit) do
-          update!(updator_str: audit)
-          destroy!
+          Audit.set(source: AUDIT_SOURCE_BY_PROCESS.fetch(process, 'unknown'),
+                    reason: 'reservation_expired', reason_note: nil, registrar_id: nil) do
+            update!(updator_str: audit)
+            destroy!
+          end
         end
 
         released = true

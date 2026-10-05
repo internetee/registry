@@ -242,6 +242,48 @@ class ReservedDomainTest < ActiveSupport::TestCase
     assert_includes version.whodunnit, 'Business registry availability check'
   end
 
+  test "release_expired records expiry_job audit on versions" do
+    domain = ReservedDomain.create!(name: 'expiry-audit.test', expire_at: 1.day.ago)
+
+    ReservedDomain.release_expired
+
+    version = Version::ReservedDomainVersion.where(item_id: domain.id).order(:id).last
+    assert_equal 'destroy', version.event
+    assert_equal 'expiry_job', version.source
+    assert_equal 'reservation_expired', version.reason
+    assert_equal 'expiry-audit.test', version.domain_name
+  end
+
+  test "destroy_if_expired records availability_check audit on versions" do
+    domain = ReservedDomain.create!(name: 'lazy-audit.test', expire_at: 1.day.ago)
+
+    domain.destroy_if_expired
+
+    version = Version::ReservedDomainVersion.where(item_id: domain.id).order(:id).last
+    assert_equal 'destroy', version.event
+    assert_equal 'availability_check', version.source
+    assert_equal 'reservation_expired', version.reason
+    assert_equal 'lazy-audit.test', version.domain_name
+  end
+
+  test "lazy expiry inside business registry context keeps availability_check source" do
+    domain = ReservedDomain.create!(name: 'nested-expiry.test', expire_at: 1.day.ago)
+
+    PaperTrail.request(whodunnit: 'Business Registry API') do
+      ReservedDomain::Audit.set(source: 'business_registry', reason: nil,
+                              reason_note: nil, registrar_id: nil) do
+        domain.destroy_if_expired
+      end
+    end
+
+    version = Version::ReservedDomainVersion.where(item_id: domain.id).order(:id).last
+    assert_equal 'destroy', version.event
+    assert_equal 'availability_check', version.source
+    assert_equal 'reservation_expired', version.reason
+    assert_includes version.whodunnit, 'Business registry availability check'
+    assert_includes version.whodunnit, 'Expired reservation deadline reached'
+  end
+
   test "release_expired should return zero when no reservations are expired" do
     assert_no_difference 'ReservedDomain.count' do
       assert_equal 0, ReservedDomain.release_expired

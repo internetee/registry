@@ -30,6 +30,7 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
     visit_reserved_domains
     click_link_or_button 'Edit', match: :first
     fill_in 'Password', with: '12345678'
+    fill_in 'reason_note', with: 'Password rotation'
     click_on 'Save'
 
     assert_text 'Domain updated!'
@@ -67,6 +68,6 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
   end
 
   def delete_first_reserved_domain
-    accept_confirm { click_link_or_button 'Delete', match: :first }
+    accept_prompt(with: 'No longer reserved') { click_link_or_button 'Delete', match: :first }
   end
 end

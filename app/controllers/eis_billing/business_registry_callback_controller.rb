@@ -1,6 +1,7 @@
 module EisBilling
   class BusinessRegistryCallbackController < ApplicationController
     skip_authorization_check
+    around_action :set_audit_context
 
     def callback
       result = EisBilling::SendCallbackService.call(reference_number: params[:payment_reference])
@@ -17,11 +18,13 @@ module EisBilling
         end
 
         reserved_domains = []
-        filtered_domains.each do |domain|
-          reserved_domains << ReservedDomain.create(
-            name: domain,
-            expire_at: ReservedDomain.expire_at_for(ReservedDomain::PAID_RESERVATION_EXPIRY)
-          )
+        ReservedDomain::Audit.set(reason: 'paid_reservation', reason_note: nil, registrar_id: nil) do
+          filtered_domains.each do |domain|
+            reserved_domains << ReservedDomain.create(
+              name: domain,
+              expire_at: ReservedDomain.expire_at_for(ReservedDomain::PAID_RESERVATION_EXPIRY)
+            )
+          end
         end
         reserve_domain_invoice.paid!
         ReserveDomainInvoice.cancel_intersecting_invoices(reserve_domain_invoice)
@@ -31,6 +34,15 @@ module EisBilling
         render status: :internal_server_error, json: { message: 'Callback failed' }
       end
 
+    end
+
+    private
+
+    def set_audit_context
+      ::PaperTrail.request(whodunnit: 'EIS billing callback') do
+        ReservedDomain::Audit.set(source: 'eis_billing', reason: nil,
+                                  reason_note: nil, registrar_id: nil) { yield }
+      end
     end
   end
 end
