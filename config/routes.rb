@@ -339,6 +339,7 @@ Rails.application.routes.draw do
         post 'release_to_auction', to: 'reserved_domains#release_to_auction', as: 'release_to_auction'
       end
     end
+    resources :reserved_domain_lifecycles, only: %i[index show]
     resources :disputes do
       member do
         get 'delete'

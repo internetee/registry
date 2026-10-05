@@ -120,6 +120,7 @@
                 </td>
                 <td>
                   <%= link_to(t(:edit), edit_admin_reserved_domain_path(id: x.id), class: 'btn btn-primary btn-xs') %>
+                  <%= link_to(t(:history), admin_reserved_domain_lifecycle_path(x.id), class: 'btn btn-default btn-xs') %>
                   <%= link_to(t(:delete), delete_admin_reserved_domain_path(id: x.id), class: 'btn btn-danger btn-xs js-delete-reserved-domain') %>
                 </td>
               </tr>

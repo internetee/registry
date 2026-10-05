@@ -1,0 +1,97 @@
+= render 'shared/title', name: @lifecycle.domain_name
+
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title
+          = t('.title')
+          %span.label{class: lifecycle_status_css_class(@lifecycle.status)}
+            = lifecycle_status_label(@lifecycle.status)
+      .panel-body
+        %dl.dl-horizontal
+          %dt= t(:id)
+          %dd= @lifecycle.id
+
+          %dt= t(:domain_name)
+          %dd= @lifecycle.domain_name
+
+          %dt= t(:created_at)
+          %dd= @lifecycle.created_at ? l(@lifecycle.created_at, format: :short) : t('admin.reserved_domain_lifecycles.unknown')
+
+          %dt= t('.created_by')
+          %dd= @lifecycle.created_by.presence || t('admin.reserved_domain_lifecycles.unknown')
+
+          %dt= t('.creation_source')
+          %dd= lifecycle_source_label(@lifecycle.creation_source)
+
+          %dt= t('.creation_reason')
+          %dd= lifecycle_reason_label(@lifecycle.creation_reason)
+
+          %dt= t('.last_changed_at')
+          %dd= @lifecycle.last_changed_at ? l(@lifecycle.last_changed_at, format: :short) : t('admin.reserved_domain_lifecycles.unknown')
+
+          %dt= t('.last_changed_by')
+          %dd= @lifecycle.last_changed_by.presence || t('admin.reserved_domain_lifecycles.unknown')
+
+          %dt= t('.last_source')
+          %dd= lifecycle_source_label(@lifecycle.last_source)
+
+          %dt= t('.last_reason')
+          %dd= lifecycle_reason_label(@lifecycle.last_reason)
+
+          %dt= t('.last_reason_note')
+          %dd= @lifecycle.last_reason_note.presence || '-'
+
+          %dt= t(:expire_at)
+          %dd= @lifecycle.expire_at ? l(@lifecycle.expire_at, format: :short) : t(:not_set)
+
+          %dt= t('.ended_at')
+          %dd= @lifecycle.ended_at ? l(@lifecycle.ended_at, format: :short) : '-'
+
+          %dt= t('.end_reason')
+          %dd= @lifecycle.end_reason.present? ? lifecycle_reason_label(@lifecycle.end_reason) : '-'
+
+          %dt= t('.registration_recorded')
+          %dd= lifecycle_yes_no(@lifecycle.registration_recorded)
+
+          %dt= t('.domain_exists')
+          %dd= lifecycle_yes_no(@lifecycle.domain_exists)
+
+.row
+  .col-md-12
+    %h4= t('.timeline')
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-1'}= t(:created_at)
+            %th{class: 'col-xs-1'}= t(:action)
+            %th{class: 'col-xs-2'}= t('.whodunnit')
+            %th{class: 'col-xs-1'}= t('.source')
+            %th{class: 'col-xs-1'}= t(:reason)
+            %th{class: 'col-xs-2'}= t('.reason_note')
+            %th{class: 'col-xs-1'}= t(:registrar_name)
+            %th{class: 'col-xs-3'}= t('.changed_fields')
+        %tbody
+          - @versions.each do |version|
+            %tr
+              %td= l(version.created_at, format: :short) if version.created_at
+              %td= version.event
+              %td= version.whodunnit
+              %td= lifecycle_source_label(version.source)
+              %td= lifecycle_reason_label(version.reason)
+              %td= version.reason_note.presence || '-'
+              %td
+                - if (registrar = @registrars[version.registrar_id])
+                  = link_to(registrar.name, admin_registrar_path(registrar))
+              %td
+                - changes = version.object_changes.is_a?(Hash) ? version.object_changes : {}
+                - changes.except('id', 'created_at', 'updated_at').each do |field, change|
+                  - old_value, new_value = change
+                  .version-change
+                    %strong= "#{field}:"
+                    - if field == 'password'
+                      = t('.password_changed')
+                    - else
+                      = "#{old_value} → #{new_value}"

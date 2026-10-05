@@ -238,6 +238,17 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     assert_raises(ActiveRecord::ReadOnlyRecord) { lifecycle.update(domain_name: 'x.test') }
   end
 
+  test 'csv export neutralizes cells that spreadsheets would run as formulas' do
+    record = create_reservation('formula.test')
+    destroy_with_audit(record, reason: 'admin_deleted', reason_note: '=HYPERLINK("http://evil.test")')
+
+    rows = CSV.parse(ReservedDomain::Lifecycle.to_csv(ReservedDomain::Lifecycle.where(id: record.id)),
+                     headers: true)
+
+    assert_equal %q('=HYPERLINK("http://evil.test")), rows.first['last_reason_note']
+    assert_equal 'formula.test', rows.first['domain_name']
+  end
+
   private
 
   def create_reservation(name, expire_at: 5.years.from_now)
