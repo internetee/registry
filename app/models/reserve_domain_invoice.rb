@@ -190,7 +190,7 @@ class ReserveDomainInvoice < ApplicationRecord
       
       ReservedDomain.create(
         name: name,
-        expire_at: Time.current + ReservedDomain::PAID_RESERVATION_EXPIRY
+        expire_at: ReservedDomain.expire_at_for(ReservedDomain::PAID_RESERVATION_EXPIRY)
       )
     end
   end

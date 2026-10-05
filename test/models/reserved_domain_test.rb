@@ -247,4 +247,41 @@ class ReservedDomainTest < ActiveSupport::TestCase
       assert_equal 0, ReservedDomain.release_expired
     end
   end
+
+  test "expire_at_for returns 23:59:59 of the last full day" do
+    from = Time.zone.parse('2026-10-01 13:43:00')
+
+    assert_equal Time.zone.parse('2026-10-08 23:59:59'),
+                 ReservedDomain.expire_at_for(ReservedDomain::FREE_RESERVATION_EXPIRY, from: from)
+  end
+
+  test "expire_at_for keeps full calendar days across DST change" do
+    from = Time.zone.parse('2026-10-23 13:43:00')
+
+    assert_equal Time.zone.parse('2026-10-30 23:59:59'),
+                 ReservedDomain.expire_at_for(ReservedDomain::FREE_RESERVATION_EXPIRY, from: from)
+  end
+
+  test "expire_at_for keeps full calendar days across leap day" do
+    from = Time.zone.parse('2028-02-29 13:43:00')
+
+    assert_equal Time.zone.parse('2029-02-28 23:59:59'),
+                 ReservedDomain.expire_at_for(ReservedDomain::PAID_RESERVATION_EXPIRY, from: from)
+  end
+
+  test "expire_at_for keeps full calendar days across year boundary" do
+    from = Time.zone.parse('2026-12-28 10:00:00')
+
+    assert_equal Time.zone.parse('2027-01-04 23:59:59'),
+                 ReservedDomain.expire_at_for(ReservedDomain::FREE_RESERVATION_EXPIRY, from: from)
+  end
+
+  test "reserve_domains_without_payment sets expire_at to the end of the last full day" do
+    travel_to Time.zone.parse('2026-10-01 13:43:00') do
+      result = ReservedDomain.reserve_domains_without_payment(['new-reserved.test'])
+
+      assert result.success
+      assert_equal Time.zone.parse('2026-10-08 23:59:59'), result.reserved_domains.first.expire_at
+    end
+  end
 end

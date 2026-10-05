@@ -57,6 +57,12 @@ class ReservedDomain < ApplicationRecord
       Struct.new(:reserved_domains, :success, :user_unique_id, :errors).new(reserved_domains, success, user_unique_id, errors)
     end
 
+    # Reservation lasts full calendar days: the activation day is not counted,
+    # the period starts at 00:00 of the next day and ends at 23:59:59 of its last day.
+    def expire_at_for(period, from: Time.zone.now)
+      (from + period).end_of_day.change(usec: 0)
+    end
+
     def reserve_domains_without_payment(domain_names)
       if domain_names.count > MAX_DOMAIN_NAME_PER_REQUEST
         return wrap_reserved_domains_to_struct(domain_names, false, nil, "The maximum number of domain names per request is #{MAX_DOMAIN_NAME_PER_REQUEST}")
@@ -68,7 +74,7 @@ class ReservedDomain < ApplicationRecord
       available_domains.each do |domain_name|
         reserved_domain = ReservedDomain.new(
           name: domain_name,
-          expire_at: Time.current + FREE_RESERVATION_EXPIRY
+          expire_at: expire_at_for(FREE_RESERVATION_EXPIRY)
         )
         reserved_domain.regenerate_password
         reserved_domain.save
