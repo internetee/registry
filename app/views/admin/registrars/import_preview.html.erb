@@ -1,0 +1,37 @@
+<% key_fields = Array(@key_fields).presence || %i[code] %>
+<% selected_fields = Array(@selected_fields) %>
+<% row_results = @result&.row_results || @row_results || [] %>
+
+<ol class="breadcrumb">
+  <li><%= link_to t('admin.registrars.index.header'), admin_registrars_path %></li>
+  <li><%= link_to t('admin.registrars.import.header'), import_admin_registrars_path %></li>
+  <li class="active"><%= t('.header') %></li>
+</ol>
+
+<div class="page-header">
+  <h1><%= t('.header') %></h1>
+</div>
+
+<%= render 'admin/csv_sync/preview_summary', result: @result %>
+
+<div class="panel panel-default">
+  <div class="panel-heading"><%= t('.changes_panel_title') %></div>
+  <div class="panel-body">
+    <%= render 'admin/csv_sync/preview_table',
+        row_results: row_results,
+        key_fields: key_fields,
+        model_name: :registrar %>
+  </div>
+  <div class="panel-footer text-right">
+    <%= form_tag import_apply_admin_registrars_path, method: :post, multipart: true, style: 'display: inline-block;' do %>
+      <% selected_fields.each do |field| %>
+        <%= hidden_field_tag 'fields[]', field %>
+      <% end %>
+      <% if @import_token.present? %>
+        <%= hidden_field_tag :import_token, @import_token %>
+      <% end %>
+      <%= submit_tag t('.confirm_btn'), class: 'btn btn-primary' %>
+    <% end %>
+    <%= link_to t('.back_btn'), import_admin_registrars_path, class: 'btn btn-default' %>
+  </div>
+</div>
