@@ -41,6 +41,16 @@ class ReservedDomainsTaskTest < ActiveSupport::TestCase
     assert_equal after_first_run, version.reload.attributes
   end
 
+  test 'backfill_audit rebuilds the history with backfilled metadata' do
+    version = legacy_version('task-history.test', whodunnit: '12-AdminUser: administrator')
+    ReservedDomain::Lifecycle.sync!
+    assert_nil ReservedDomain::Lifecycle.find(version.item_id).creation_source
+
+    run_task
+
+    assert_equal 'admin', ReservedDomain::Lifecycle.find(version.item_id).creation_source
+  end
+
   private
 
   def legacy_version(name, whodunnit: nil)

@@ -1,5 +1,8 @@
 module Admin
   class ReservedDomainLifecyclesController < BaseController
+    # Runs before the resource is loaded so show finds lifecycles created
+    # since the previous catch-up.
+    before_action :sync_lifecycles, only: %i[index show]
     load_and_authorize_resource class: 'ReservedDomain::Lifecycle'
 
     def index
@@ -15,11 +18,7 @@ module Admin
 
       respond_to do |format|
         format.html { render 'admin/reserved_domain_lifecycles/index' }
-        format.csv do
-          send_data ReservedDomain::Lifecycle.to_csv(@result),
-                    filename: "reserved_domains_history_#{Time.zone.now.to_formatted_s(:number)}.csv",
-                    type: "#{Mime[:csv]}; charset=utf-8"
-        end
+        format.csv { stream_csv }
       end
     end
 
@@ -27,9 +26,30 @@ module Admin
       @lifecycle = @reserved_domain_lifecycle
       @versions = @lifecycle.versions.to_a
       @registrars = Registrar.where(id: @versions.map(&:registrar_id).compact).index_by(&:id)
+      @domain_exists = ReservedDomain::Lifecycle.registered_names([@lifecycle.domain_name])
+                                                .include?(@lifecycle.domain_name)
     end
 
     private
+
+    # A failed catch-up must never break the page: serve what the table has.
+    def sync_lifecycles
+      ReservedDomain::Lifecycle.sync!
+    rescue StandardError => e
+      Rails.logger.error("Reserved domain lifecycle sync failed: #{e.class}: #{e.message}")
+      flash.now[:warning] = t('admin.reserved_domain_lifecycles.sync_failed')
+    end
+
+    # Last-Modified keeps Rack::ETag from buffering the body.
+    def stream_csv
+      filename = "reserved_domains_history_#{Time.zone.now.to_formatted_s(:number)}.csv"
+      response.headers['Content-Type'] = "#{Mime[:csv]}; charset=utf-8"
+      response.headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
+      response.headers['Cache-Control'] = 'no-cache'
+      response.headers['Last-Modified'] = Time.now.httpdate
+      response.headers['X-Accel-Buffering'] = 'no'
+      self.response_body = ReservedDomain::Lifecycle.csv_lines(@result)
+    end
 
     # Domain names are stored in unicode; accept punycode input too.
     def normalize_domain_name_param

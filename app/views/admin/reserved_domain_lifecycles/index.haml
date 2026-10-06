@@ -15,7 +15,7 @@
         .col-md-3
           .form-group
             = f.label t(:status)
-            = f.select :status_eq, options_for_select(status_options, params[:q][:status_eq]), { include_blank: t(:choose) }, class: 'form-control js-combobox'
+            = f.select :with_status, options_for_select(status_options, params[:q][:with_status]), { include_blank: t(:choose) }, class: 'form-control js-combobox'
         .col-md-3
           .form-group
             = f.label t(:created_at_from)

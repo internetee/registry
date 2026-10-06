@@ -7,7 +7,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
   test 'live reservation shows as active' do
     record = create_reservation('active-lc.test', expire_at: 1.year.from_now)
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'active', lifecycle.status
     assert_equal 'active-lc.test', lifecycle.domain_name
     assert_equal record.expire_at.to_i, lifecycle.expire_at.to_i
@@ -22,7 +22,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
   test 'live reservation past expiry shows as expired' do
     record = create_reservation('live-expired.test', expire_at: 1.day.ago)
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'expired', lifecycle.status
     assert_nil lifecycle.ended_at
     assert_nil lifecycle.end_reason
@@ -31,7 +31,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
   test 'permanent reservation keeps NULL expire_at and stays active' do
     record = create_reservation('permanent-lc.test', expire_at: nil)
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'active', lifecycle.status
     assert_nil lifecycle.expire_at
   end
@@ -40,7 +40,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     record = create_reservation('cron-expired.test', expire_at: 1.day.ago)
     assert record.release_if_expired(process: ReservedDomain::DAILY_CLEANUP_PROCESS)
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'expired', lifecycle.status
     assert_equal 'reservation_expired', lifecycle.end_reason
     assert_equal 'expiry_job', lifecycle.last_source
@@ -53,7 +53,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     record = create_reservation('lazy-expired.test', expire_at: 1.day.ago)
     assert record.destroy_if_expired
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'expired', lifecycle.status
     assert_equal 'availability_check', lifecycle.last_source
   end
@@ -62,7 +62,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     record = create_reservation('auctioned.test')
     destroy_with_audit(record, reason: 'released_to_auction')
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'released_to_auction', lifecycle.status
     assert_equal 'released_to_auction', lifecycle.end_reason
     assert lifecycle.ended_at.present?
@@ -72,7 +72,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     record = create_reservation('deleted.test')
     destroy_with_audit(record, reason: 'admin_deleted', reason_note: 'court order')
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'deleted', lifecycle.status
     assert_equal 'admin_deleted', lifecycle.end_reason
     assert_equal 'court order', lifecycle.last_reason_note
@@ -82,7 +82,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     record = create_reservation('removed.test')
     record.destroy!
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'removed', lifecycle.status
     assert_nil lifecycle.end_reason
     assert lifecycle.ended_at.present?
@@ -103,7 +103,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     update_version = Version::ReservedDomainVersion.where(item_id: record.id, event: 'update').last
     destroy_version = Version::ReservedDomainVersion.where(item_id: record.id, event: 'destroy').last
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'admin_deleted', lifecycle.end_reason
     assert_equal 'deleted', lifecycle.status
     assert_equal destroy_version.created_at.to_i, lifecycle.ended_at.to_i
@@ -115,7 +115,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     nullify_meta_for(record)
     record.delete # removes the live row without a destroy version
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'legacy-create.test', lifecycle.domain_name
   end
 
@@ -124,7 +124,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     record.destroy!
     nullify_meta_for(record)
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'legacy-destroy.test', lifecycle.domain_name
     assert_equal 'removed', lifecycle.status
   end
@@ -135,7 +135,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     nullify_meta_for(record)
     record.delete
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'legacy-new.test', lifecycle.domain_name
   end
 
@@ -146,7 +146,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
       record.destroy!
     end
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'console-creator', lifecycle.created_by
     assert_equal 'console-creator', lifecycle.last_changed_by
   end
@@ -161,7 +161,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     Version::ReservedDomainVersion.where(item_id: record.id, event: 'create').delete_all
     assert_equal 1, Version::ReservedDomainVersion.where(item_id: record.id).count
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'console-creator', lifecycle.created_by
   end
 
@@ -173,7 +173,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
 
     assert_equal 0, Version::ReservedDomainVersion.where(item_id: record.id).count
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'unversioned.test', lifecycle.domain_name
     assert_equal 'console-import', lifecycle.created_by
     assert_equal 'console-import', lifecycle.last_changed_by
@@ -190,7 +190,7 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
       ReservedDomain.new_password_for('registered.test')
     end
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert lifecycle.registration_recorded
     assert_equal 'domain_registered', lifecycle.last_reason
     assert_equal 'registrar', lifecycle.last_source
@@ -199,14 +199,14 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
   test 'registration_recorded is false without a domain_registered event' do
     record = create_reservation('never-registered.test')
 
-    assert_not ReservedDomain::Lifecycle.find(record.id).registration_recorded
+    assert_not synced_lifecycle(record).registration_recorded
   end
 
   test 'versions returns the full ordered version history' do
     record = create_reservation('versioned.test')
     record.update!(expire_at: 2.years.from_now)
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal %w[create update], lifecycle.versions.map(&:event)
   end
 
@@ -224,32 +224,162 @@ class ReservedDomainLifecycleTest < ActiveSupport::TestCase
     ReservedDomain.where(id: record.id).delete_all
     assert_equal 0, Version::ReservedDomainVersion.where(item_id: record.id, event: 'destroy').count
 
-    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    lifecycle = synced_lifecycle(record)
     assert_equal 'removed', lifecycle.status
     assert_nil lifecycle.ended_at
     assert_equal new_expire_at.to_i, lifecycle.expire_at.to_i
   end
 
   test 'lifecycle rows are read-only' do
-    lifecycle = ReservedDomain::Lifecycle.find(reserved_domains(:one).id)
+    lifecycle = synced_lifecycle(reserved_domains(:one))
 
     assert lifecycle.readonly?
     assert_raises(ActiveRecord::ReadOnlyRecord) { lifecycle.destroy }
     assert_raises(ActiveRecord::ReadOnlyRecord) { lifecycle.update(domain_name: 'x.test') }
   end
 
-  test 'csv export neutralizes cells that spreadsheets would run as formulas' do
+  test 'sync picks up a change made after the previous sync' do
+    record = create_reservation('sync-later.test')
+    assert_equal 'active', synced_lifecycle(record).status
+
+    destroy_with_audit(record, reason: 'admin_deleted')
+    assert_equal 'active', ReservedDomain::Lifecycle.find(record.id).status
+
+    assert ReservedDomain::Lifecycle.sync!
+    lifecycle = ReservedDomain::Lifecycle.find(record.id)
+    assert_equal 'deleted', lifecycle.status
+    assert_not lifecycle.live
+  end
+
+  test 'second sync with nothing new leaves rows unchanged' do
+    create_reservation('sync-twice.test')
+    ReservedDomain::Lifecycle.sync!
+    before = lifecycle_rows
+
+    assert ReservedDomain::Lifecycle.sync!
+
+    assert_equal before, lifecycle_rows
+  end
+
+  test 'rebuild produces the same rows as sync' do
+    create_reservation('rebuild-live.test')
+    destroy_with_audit(create_reservation('rebuild-gone.test'), reason: 'released_to_auction')
+    PaperTrail.request(enabled: false) { ReservedDomain.create!(name: 'rebuild-unversioned.test') }
+    ReservedDomain::Lifecycle.sync!
+    synced = lifecycle_rows
+
+    ReservedDomain::Lifecycle.rebuild!
+
+    assert_equal synced, lifecycle_rows
+  end
+
+  test 'rebuild repairs rows changed without versions' do
+    record = nil
+    PaperTrail.request(enabled: false) { record = ReservedDomain.create!(name: 'rebuild-repair.test') }
+    assert synced_lifecycle(record).live
+
+    record.delete
+    ReservedDomain::Lifecycle.sync!
+    assert ReservedDomain::Lifecycle.exists?(record.id), 'catch-up only sees versioned changes'
+
+    ReservedDomain::Lifecycle.rebuild!
+    assert_not ReservedDomain::Lifecycle.exists?(record.id)
+  end
+
+  test 'sync returns false and changes nothing while another session holds the lock' do
+    record = create_reservation('sync-locked.test')
+    other = ActiveRecord::Base.connection_pool.checkout
+    begin
+      other.execute("SELECT pg_advisory_lock(#{ReservedDomain::Lifecycle::SYNC_LOCK_KEY})")
+
+      assert_equal false, ReservedDomain::Lifecycle.sync!
+      assert_not ReservedDomain::Lifecycle.exists?(record.id)
+    ensure
+      other.execute("SELECT pg_advisory_unlock(#{ReservedDomain::Lifecycle::SYNC_LOCK_KEY})")
+      ActiveRecord::Base.connection_pool.checkin(other)
+    end
+  end
+
+  test 'status method and with_status scope agree for every status' do
+    freeze_time do
+      records = [
+        create_reservation('agree-future.test', expire_at: 1.day.from_now),
+        create_reservation('agree-boundary.test', expire_at: Time.zone.now),
+        create_reservation('agree-permanent.test', expire_at: nil),
+        create_reservation('agree-past.test', expire_at: 1.second.ago),
+        create_reservation('agree-auction.test').tap { |r| destroy_with_audit(r, reason: 'released_to_auction') },
+        create_reservation('agree-deleted.test').tap { |r| destroy_with_audit(r, reason: 'admin_deleted') },
+        create_reservation('agree-cron.test', expire_at: 1.day.ago)
+          .tap { |r| r.release_if_expired(process: ReservedDomain::DAILY_CLEANUP_PROCESS) },
+        create_reservation('agree-removed.test').tap(&:destroy!)
+      ]
+      ReservedDomain::Lifecycle.sync!
+      lifecycles = ReservedDomain::Lifecycle.where(id: records.map(&:id))
+      csv_statuses = CSV.parse(ReservedDomain::Lifecycle.csv_lines(lifecycles).to_a.join, headers: true)
+                        .to_h { |row| [row['id'].to_i, row['status']] }
+
+      assert_equal 'active', lifecycles.find(records[1].id).status, 'expire_at == now is not yet expired'
+      assert_equal 'active', lifecycles.find(records[2].id).status
+      ReservedDomain::Lifecycle::STATUSES.each do |status|
+        expected = lifecycles.select { |lifecycle| lifecycle.status == status }.map(&:id).sort
+        assert_not_empty expected, "no fixture covers #{status}"
+        assert_equal expected, lifecycles.with_status(status).pluck(:id).sort, status
+        assert_equal expected, csv_statuses.select { |_id, csv_status| csv_status == status }.keys.sort,
+                     "csv #{status}"
+      end
+      assert_empty lifecycles.with_status('bogus')
+    end
+  end
+
+  test 'csv lines neutralize formulas and fill status and domain_exists' do
     record = create_reservation('formula.test')
     destroy_with_audit(record, reason: 'admin_deleted', reason_note: '=HYPERLINK("http://evil.test")')
+    registered = create_reservation(domains(:shop).name, expire_at: Time.utc(2031, 6, 1, 12, 34, 56))
+    ReservedDomain::Lifecycle.sync!
 
-    rows = CSV.parse(ReservedDomain::Lifecycle.to_csv(ReservedDomain::Lifecycle.where(id: record.id)),
-                     headers: true)
+    relation = ReservedDomain::Lifecycle.where(id: [record.id, registered.id]).order(last_changed_at: :desc)
+    rows = CSV.parse(ReservedDomain::Lifecycle.csv_lines(relation).to_a.join, headers: true)
 
-    assert_equal %q('=HYPERLINK("http://evil.test")), rows.first['last_reason_note']
-    assert_equal 'formula.test', rows.first['domain_name']
+    assert_equal ReservedDomain::Lifecycle::CSV_COLUMNS, rows.headers
+    formula_row = rows.find { |row| row['id'] == record.id.to_s }
+    assert_equal %q('=HYPERLINK("http://evil.test")), formula_row['last_reason_note']
+    assert_equal 'formula.test', formula_row['domain_name']
+    assert_equal 'deleted', formula_row['status']
+    assert_equal 'false', formula_row['domain_exists']
+    registered_row = rows.find { |row| row['id'] == registered.id.to_s }
+    assert_equal 'active', registered_row['status']
+    assert_equal 'true', registered_row['domain_exists']
+    assert_equal '2031-06-01T12:34:56Z', registered_row['expire_at']
+    assert_equal 'false', registered_row['registration_recorded']
+  end
+
+  test 'csv lines keep the caller filters' do
+    create_reservation('csv-active.test', expire_at: 1.year.from_now)
+    expired = create_reservation('csv-expired.test', expire_at: 1.day.ago)
+    ReservedDomain::Lifecycle.sync!
+
+    relation = ReservedDomain::Lifecycle.with_status('expired').where(domain_name: %w[csv-active.test csv-expired.test])
+    rows = CSV.parse(ReservedDomain::Lifecycle.csv_lines(relation).to_a.join, headers: true)
+
+    assert_equal [expired.id.to_s], rows.map { |row| row['id'] }
+  end
+
+  test 'registered_names returns only names of existing domains' do
+    names = ReservedDomain::Lifecycle.registered_names([domains(:shop).name, 'not-registered.test', nil])
+
+    assert_equal Set[domains(:shop).name], names
   end
 
   private
+
+  def synced_lifecycle(record)
+    ReservedDomain::Lifecycle.sync!
+    ReservedDomain::Lifecycle.find(record.id)
+  end
+
+  def lifecycle_rows
+    ReservedDomain::Lifecycle.order(:id).map(&:attributes)
+  end
 
   def create_reservation(name, expire_at: 5.years.from_now)
     record = nil

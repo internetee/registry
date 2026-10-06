@@ -4,6 +4,7 @@ en:
       unknown: Unknown
       'yes': 'Yes'
       'no': 'No'
+      sync_failed: History could not be refreshed; showing the last synced data.
 
       statuses:
         active: Active

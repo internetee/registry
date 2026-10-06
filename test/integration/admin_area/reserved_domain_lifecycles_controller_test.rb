@@ -38,7 +38,7 @@ class AdminAreaReservedDomainLifecyclesControllerTest < ApplicationIntegrationTe
     active = create_reservation('lifecycle-active.test', expire_at: 1.year.from_now)
     expired = create_reservation('lifecycle-expired.test', expire_at: 1.day.ago)
 
-    get admin_reserved_domain_lifecycles_path, params: { q: { status_eq: 'expired' } }
+    get admin_reserved_domain_lifecycles_path, params: { q: { with_status: 'expired' } }
 
     assert_response :ok
     assert_includes response.body, expired.name
@@ -115,10 +115,34 @@ class AdminAreaReservedDomainLifecyclesControllerTest < ApplicationIntegrationTe
     assert_not_includes response.body, 'rotated-secret-pw'
   end
 
+  def test_show_finds_reservation_created_after_previous_sync
+    get admin_reserved_domain_lifecycles_path
+    record = create_reservation('lifecycle-after-sync.test')
+
+    get admin_reserved_domain_lifecycle_path(record.id)
+
+    assert_response :ok
+    assert_includes response.body, 'lifecycle-after-sync.test'
+  end
+
+  def test_index_renders_with_warning_when_sync_fails
+    create_reservation('lifecycle-stale.test')
+    ReservedDomain::Lifecycle.sync!
+
+    ReservedDomain::Lifecycle.stub(:sync!, -> { raise ActiveRecord::StatementInvalid, 'boom' }) do
+      get admin_reserved_domain_lifecycles_path
+    end
+
+    assert_response :ok
+    assert_includes response.body, 'lifecycle-stale.test'
+    assert_includes response.body, I18n.t('admin.reserved_domain_lifecycles.sync_failed')
+  end
+
   def test_csv_export
     record = create_reservation('lifecycle-csv.test', password: 'csv-secret-pw',
                                                     source: 'admin', reason: 'admin_created',
                                                     reason_note: 'Manual csv note')
+    registered = create_reservation(domains(:shop).name)
 
     get admin_reserved_domain_lifecycles_path(format: :csv)
 
@@ -126,6 +150,7 @@ class AdminAreaReservedDomainLifecyclesControllerTest < ApplicationIntegrationTe
     assert_equal 'text/csv; charset=utf-8', response.headers['Content-Type']
     assert_includes response.headers['Content-Disposition'],
                     'attachment; filename="reserved_domains_history_'
+    assert_nil response.headers['ETag'], 'a buffered body would get an ETag'
 
     rows = CSV.parse(response.body)
     assert_equal ReservedDomain::Lifecycle::CSV_COLUMNS.map(&:to_s), rows.first
@@ -137,6 +162,8 @@ class AdminAreaReservedDomainLifecyclesControllerTest < ApplicationIntegrationTe
     assert_equal 'admin', row[header.index('creation_source')]
     assert_equal 'admin_created', row[header.index('creation_reason')]
     assert_equal 'Manual csv note', row[header.index('last_reason_note')]
+    assert_equal 'false', row[header.index('domain_exists')]
+    assert_equal 'true', rows.find { |r| r[1] == registered.name }[header.index('domain_exists')]
     refute_includes response.body, 'csv-secret-pw'
   end
 

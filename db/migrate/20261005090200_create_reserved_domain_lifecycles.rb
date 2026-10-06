@@ -1,91 +1,140 @@
+# Admin reservation history read model: one row per reservation (live or
+# ended), derived from log_reserved_domains versions plus live rows that have
+# no versions yet. reserved_domain_lifecycle_rows() is the single source of
+# truth for the derivation; the table is maintained by ReservedDomain::Lifecycle
+# (catch-up on admin reads, nightly rebuild, rake) and never by write paths.
 class CreateReservedDomainLifecycles < ActiveRecord::Migration[6.1]
   def up
     safety_assured do
-      execute <<~SQL
-        CREATE VIEW public.reserved_domain_lifecycles AS
-        WITH versions AS NOT MATERIALIZED (
-          SELECT v.id, v.item_id, v.event, v.whodunnit, v.created_at, v.source, v.reason, v.reason_note,
-                 v.object, v.object_changes,
-                 COALESCE(
-                   v.domain_name,
-                   CASE WHEN v.event = 'destroy' THEN v.object ->> 'name'
-                        ELSE COALESCE(v.object_changes -> 'name' ->> 1, v.object ->> 'name')
-                   END
-                 ) AS resolved_name
-          FROM public.log_reserved_domains v
-          WHERE v.item_type = 'ReservedDomain'
-        ),
-        first_events AS (
-          SELECT DISTINCT ON (item_id) item_id, object
-          FROM versions
-          ORDER BY item_id, id
-        ),
-        create_events AS (
-          SELECT DISTINCT ON (item_id) item_id, created_at, whodunnit, source, reason
-          FROM versions
-          WHERE event = 'create'
-          ORDER BY item_id, id
-        ),
-        last_events AS (
-          SELECT DISTINCT ON (item_id) item_id, event, created_at, whodunnit, source, reason, reason_note,
-                 resolved_name,
-                 CASE WHEN event = 'destroy' THEN object ->> 'expire_at'
-                      WHEN object_changes -> 'expire_at' IS NOT NULL THEN object_changes -> 'expire_at' ->> 1
-                      ELSE object ->> 'expire_at'
-                 END AS known_expire_at
-          FROM versions
-          ORDER BY item_id, id DESC
-        ),
-        registrations AS (
-          SELECT item_id, bool_or(reason = 'domain_registered') AS registration_recorded
-          FROM versions
-          GROUP BY item_id
-        ),
-        lifecycle_ids AS (
-          SELECT item_id AS id FROM versions
-          UNION
-          SELECT id FROM public.reserved_domains
+      execute <<~'SQL'
+        CREATE FUNCTION public.reserved_domain_lifecycle_rows(lifecycle_ids bigint[])
+        RETURNS TABLE (
+          id bigint, domain_name character varying, created_at timestamp without time zone,
+          created_by character varying, creation_source character varying, creation_reason character varying,
+          last_changed_at timestamp without time zone, last_changed_by character varying,
+          last_source character varying, last_reason character varying, last_reason_note text,
+          expire_at timestamp without time zone, ended_at timestamp without time zone,
+          end_reason character varying, registration_recorded boolean, live boolean
         )
-        SELECT
-          ids.id,
-          COALESCE(rd.name, le.resolved_name) AS domain_name,
-          COALESCE(rd.created_at, ce.created_at,
-                   (CASE WHEN fe.object ->> 'created_at' ~ '^\\d{4}-\\d{2}-\\d{2}[ T]\\d{2}:\\d{2}:\\d{2}' THEN (fe.object ->> 'created_at')::timestamptz AT TIME ZONE 'UTC' END)) AS created_at,
-          COALESCE(rd.creator_str, ce.whodunnit, fe.object ->> 'creator_str') AS created_by,
-          ce.source AS creation_source,
-          ce.reason AS creation_reason,
-          COALESCE(le.created_at, rd.updated_at) AS last_changed_at,
-          COALESCE(le.whodunnit, rd.updator_str) AS last_changed_by,
-          le.source AS last_source,
-          le.reason AS last_reason,
-          le.reason_note AS last_reason_note,
-          CASE WHEN rd.id IS NOT NULL THEN rd.expire_at
-               ELSE (CASE WHEN le.known_expire_at ~ '^\\d{4}-\\d{2}-\\d{2}[ T]\\d{2}:\\d{2}:\\d{2}' THEN le.known_expire_at::timestamptz AT TIME ZONE 'UTC' END)
-          END AS expire_at,
-          CASE WHEN rd.id IS NULL AND le.event = 'destroy' THEN le.created_at END AS ended_at,
-          CASE WHEN rd.id IS NULL AND le.event = 'destroy' THEN le.reason END AS end_reason,
-          COALESCE(r.registration_recorded, false) AS registration_recorded,
-          EXISTS (SELECT 1 FROM public.domains d WHERE d.name = COALESCE(rd.name, le.resolved_name)) AS domain_exists,
-          CASE
-            WHEN rd.id IS NOT NULL AND rd.expire_at IS NOT NULL
-                 AND rd.expire_at < (now() AT TIME ZONE 'UTC') THEN 'expired'
-            WHEN rd.id IS NOT NULL THEN 'active'
-            WHEN le.reason = 'reservation_expired' THEN 'expired'
-            WHEN le.reason = 'released_to_auction' THEN 'released_to_auction'
-            WHEN le.reason = 'admin_deleted' THEN 'deleted'
-            ELSE 'removed'
-          END AS status
-        FROM lifecycle_ids ids
-        LEFT JOIN public.reserved_domains rd ON rd.id = ids.id
-        LEFT JOIN first_events fe ON fe.item_id = ids.id
-        LEFT JOIN create_events ce ON ce.item_id = ids.id
-        LEFT JOIN last_events le ON le.item_id = ids.id
-        LEFT JOIN registrations r ON r.item_id = ids.id;
+        LANGUAGE sql STABLE
+        AS $$
+          SELECT
+            ids.id,
+            COALESCE(rd.name, le.resolved_name)::character varying,
+            COALESCE(rd.created_at, ce.created_at,
+                     CASE WHEN fe.object ->> 'created_at' ~ '^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}'
+                          THEN (fe.object ->> 'created_at')::timestamptz AT TIME ZONE 'UTC' END),
+            COALESCE(rd.creator_str, ce.whodunnit, fe.object ->> 'creator_str')::character varying,
+            ce.source,
+            ce.reason,
+            COALESCE(le.created_at, rd.updated_at),
+            COALESCE(le.whodunnit, rd.updator_str)::character varying,
+            le.source,
+            le.reason,
+            le.reason_note,
+            CASE WHEN rd.id IS NOT NULL THEN rd.expire_at
+                 WHEN le.known_expire_at ~ '^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}'
+                 THEN le.known_expire_at::timestamptz AT TIME ZONE 'UTC' END,
+            CASE WHEN rd.id IS NULL AND le.event = 'destroy' THEN le.created_at END,
+            CASE WHEN rd.id IS NULL AND le.event = 'destroy' THEN le.reason END,
+            COALESCE(r.registration_recorded, false),
+            rd.id IS NOT NULL
+          FROM unnest(lifecycle_ids) AS ids(id)
+          LEFT JOIN public.reserved_domains rd ON rd.id = ids.id
+          LEFT JOIN LATERAL (
+            SELECT v.event, v.created_at, v.whodunnit, v.source, v.reason, v.reason_note,
+                   COALESCE(v.domain_name,
+                            CASE WHEN v.event = 'destroy' THEN v.object ->> 'name'
+                                 ELSE COALESCE(v.object_changes -> 'name' ->> 1, v.object ->> 'name') END) AS resolved_name,
+                   CASE WHEN v.event = 'destroy' THEN v.object ->> 'expire_at'
+                        WHEN v.object_changes -> 'expire_at' IS NOT NULL THEN v.object_changes -> 'expire_at' ->> 1
+                        ELSE v.object ->> 'expire_at' END AS known_expire_at
+            FROM public.log_reserved_domains v
+            WHERE v.item_type = 'ReservedDomain' AND v.item_id = ids.id
+            ORDER BY v.id DESC LIMIT 1
+          ) le ON true
+          LEFT JOIN LATERAL (
+            SELECT v.object FROM public.log_reserved_domains v
+            WHERE v.item_type = 'ReservedDomain' AND v.item_id = ids.id
+            ORDER BY v.id LIMIT 1
+          ) fe ON true
+          LEFT JOIN LATERAL (
+            SELECT v.created_at, v.whodunnit, v.source, v.reason FROM public.log_reserved_domains v
+            WHERE v.item_type = 'ReservedDomain' AND v.item_id = ids.id AND v.event = 'create'
+            ORDER BY v.id LIMIT 1
+          ) ce ON true
+          LEFT JOIN LATERAL (
+            SELECT bool_or(v.reason = 'domain_registered') AS registration_recorded
+            FROM public.log_reserved_domains v
+            WHERE v.item_type = 'ReservedDomain' AND v.item_id = ids.id
+          ) r ON true
+        $$;
+
+        CREATE TABLE public.reserved_domain_lifecycles (
+          id bigint PRIMARY KEY,
+          domain_name character varying,
+          created_at timestamp without time zone,
+          created_by character varying,
+          creation_source character varying,
+          creation_reason character varying,
+          last_changed_at timestamp without time zone,
+          last_changed_by character varying,
+          last_source character varying,
+          last_reason character varying,
+          last_reason_note text,
+          expire_at timestamp without time zone,
+          ended_at timestamp without time zone,
+          end_reason character varying,
+          registration_recorded boolean NOT NULL DEFAULT false,
+          live boolean NOT NULL DEFAULT false
+        );
+
+        CREATE INDEX index_reserved_domain_lifecycles_on_last_changed
+          ON public.reserved_domain_lifecycles (last_changed_at DESC, id DESC);
+        CREATE INDEX index_reserved_domain_lifecycles_on_created_at
+          ON public.reserved_domain_lifecycles (created_at);
+        CREATE INDEX index_reserved_domain_lifecycles_on_domain_name
+          ON public.reserved_domain_lifecycles (domain_name);
+        CREATE INDEX index_reserved_domain_lifecycles_on_live_and_expire_at
+          ON public.reserved_domain_lifecycles (live, expire_at);
+        CREATE INDEX index_reserved_domain_lifecycles_on_end_reason
+          ON public.reserved_domain_lifecycles (end_reason);
+        CREATE INDEX index_reserved_domain_lifecycles_on_last_reason
+          ON public.reserved_domain_lifecycles (last_reason);
+        CREATE INDEX index_reserved_domain_lifecycles_on_creation_source
+          ON public.reserved_domain_lifecycles (creation_source);
+        CREATE INDEX index_reserved_domain_lifecycles_on_last_source
+          ON public.reserved_domain_lifecycles (last_source);
+
+        CREATE TABLE public.reserved_domain_lifecycle_syncs (
+          id integer PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+          synced_at timestamp without time zone NOT NULL
+        );
+      SQL
+
+      # Initial fill. The sync mark is taken before the fill so that the
+      # first catch-up re-reads anything written while the fill ran.
+      execute <<~SQL
+        INSERT INTO public.reserved_domain_lifecycle_syncs (id, synced_at)
+        VALUES (1, now() AT TIME ZONE 'UTC');
+
+        INSERT INTO public.reserved_domain_lifecycles
+        SELECT * FROM public.reserved_domain_lifecycle_rows(ARRAY(
+          SELECT item_id::bigint FROM public.log_reserved_domains WHERE item_type = 'ReservedDomain'
+          UNION
+          SELECT id::bigint FROM public.reserved_domains
+        ));
       SQL
     end
   end
 
   def down
-    safety_assured { execute 'DROP VIEW IF EXISTS public.reserved_domain_lifecycles' }
+    safety_assured do
+      execute <<~SQL
+        DROP TABLE public.reserved_domain_lifecycle_syncs;
+        DROP TABLE public.reserved_domain_lifecycles;
+        DROP FUNCTION public.reserved_domain_lifecycle_rows(bigint[]);
+      SQL
+    end
   end
 end

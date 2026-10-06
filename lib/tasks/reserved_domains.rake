@@ -17,5 +17,14 @@ namespace :reserved_domains do
 
     leftovers = scope.count
     ToStdout.msg "#{leftovers} reserved domain versions still lack provable audit metadata" if leftovers.positive?
+
+    ReservedDomain::Lifecycle.rebuild!
+    ToStdout.msg 'Rebuilt reserved domains history'
+  end
+
+  desc 'Rebuilds the admin reserved domains history from reservation versions'
+  task rebuild_lifecycles: :environment do
+    ReservedDomain::Lifecycle.rebuild!
+    ToStdout.msg 'Rebuilt reserved domains history'
   end
 end
