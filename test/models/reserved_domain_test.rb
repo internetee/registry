@@ -186,8 +186,8 @@ class ReservedDomainTest < ActiveSupport::TestCase
   end
 
   test "release_expired should record release reason in version history" do
-    domain = ReservedDomain.create!(name: 'audited.test', expire_at: 1.day.ago)
     frozen_time = Time.zone.parse('2026-10-02 00:35:00')
+    domain = ReservedDomain.create!(name: 'audited.test', expire_at: frozen_time - 1.day)
 
     travel_to frozen_time do
       ReservedDomain.release_expired
