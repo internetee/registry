@@ -79,7 +79,7 @@ module Repp
           domains = []
           if bulk_renew_params[:domains].instance_of?(Array)
             bulk_renew_params[:domains].each do |idn|
-              domain = Epp::Domain.find_by(name: idn)
+              domain = Epp::Domain.find_repp_by_name(idn)
               domains << domain if domain
               next if domain
 

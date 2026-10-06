@@ -39,6 +39,15 @@ class ReppV1DomainsDnssecTest < ActionDispatch::IntegrationTest
     assert_equal 1, json[:data][:dns_keys].length
   end
 
+  def test_shows_dnssec_keys_with_uppercase_domain_name
+    get "/repp/v1/domains/#{@domain.name.upcase}/dnssec", headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_empty json[:data][:dns_keys]
+  end
+
   def test_creates_dnssec_key_successfully
     assert @domain.dnskeys.empty?
     payload = {

@@ -68,6 +68,18 @@ class ReppV1DomainsListTest < ActionDispatch::IntegrationTest
     assert_equal serialized_domain.as_json, json[:data][:domain].as_json
   end
 
+  def test_returns_specific_domain_details_by_uppercase_name
+    domain = domains(:shop)
+    get "/repp/v1/domains/#{domain.name.upcase}", headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+
+    serialized_domain = Serializers::Repp::Domain.new(domain).to_json
+    assert_equal serialized_domain.as_json, json[:data][:domain].as_json
+  end
+
   def test_returns_detailed_registrar_domains_by_search_query
     search_params = {
       name_matches: '%library%',
