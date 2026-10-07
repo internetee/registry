@@ -1,0 +1,2 @@
+code,name,reg_no,email,address_street,address_city,address_country_code,accounting_customer_code,language
+CSVNEW,Csv New Registrar,99999,csvnew@example.test,CSV Street 1,Tallinn,US,csvnew,en

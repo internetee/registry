@@ -1,3 +1,6 @@
+06.10.2026
+* CSV based sync of users between environments https://github.com/internetee/registry/pull/2932
+
 01.10.2026
 * Business registry reservations expire at the end of the last full day (23:59:59) instead of exact activation time https://github.com/internetee/registry/issues/2961
 
