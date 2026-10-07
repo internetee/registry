@@ -1,4 +1,7 @@
 <% content_for :actions do %>
+  <%= link_to(t('.history_btn'),
+              admin_reserved_domain_lifecycles_path(q: { domain_name_matches: params.dig(:q, :name_matches).presence }.compact),
+              class: 'btn btn-default') %>
   <%= link_to(t('.new_btn'), new_admin_reserved_domain_path, class: 'btn btn-primary') %>
 <% end %>
 
