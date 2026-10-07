@@ -47,10 +47,15 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
 
   test "creates reserved domains after payment" do
     invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
-    
-    assert_difference 'ReservedDomain.count', 2 do
-      invoice.create_paid_reserved_domains
+
+    travel_to Time.zone.parse('2026-10-01 13:43:00') do
+      assert_difference 'ReservedDomain.count', 2 do
+        invoice.create_paid_reserved_domains
+      end
     end
+
+    domain = ReservedDomain.find_by(name: @domain_names.first)
+    assert_equal Time.zone.parse('2027-10-01 23:59:59'), domain.expire_at
   end
 
   test "builds correct output for reserved domains with status" do
