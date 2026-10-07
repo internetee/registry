@@ -1,3 +1,6 @@
+06.10.2026
+* CSV based sync of users between environments https://github.com/internetee/registry/pull/2932
+
 02.10.2026
 * Expired domain reservations are removed daily at 00:35 by cron (ReservedDomain.release_expired); removal reason is recorded in the reservation audit log https://github.com/internetee/registry/issues/2963
 
