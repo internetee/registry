@@ -88,4 +88,35 @@ namespace :whois do
       puts "\n-----> #{orphans} orphaned whois records deleted"
     end
   end
+
+  desc 'List duplicate whois server records, the most recently updated one per name is kept; ' \
+       'DRY_RUN=false deletes them'
+  task remove_duplicates: :environment do
+    dry_run = ENV['DRY_RUN'] != 'false'
+    duplicated_names = Whois::Record.where.not(name: nil).group(:name).having('count(*) > 1')
+                                    .pluck(:name)
+
+    duplicates = 0
+    duplicated_names.each do |name|
+      Whois::Record.transaction do
+        # Writers update whichever row they find first, the most recently updated one is current
+        kept, *extras = Whois::Record.where(name: name).order(updated_at: :desc, id: :desc).lock.to_a
+
+        extras.each do |record|
+          duplicates += 1
+          puts "#{record.id}\t#{record.name}\t#{record.updated_at.iso8601}\tkept: #{kept.id}"
+          next if dry_run
+
+          ContactRequest.where(whois_record_id: record.id).update_all(whois_record_id: kept.id)
+          record.destroy!
+        end
+      end
+    end
+
+    if dry_run
+      puts "\n-----> #{duplicates} duplicate whois records found, run with DRY_RUN=false to delete"
+    else
+      puts "\n-----> #{duplicates} duplicate whois records deleted"
+    end
+  end
 end
