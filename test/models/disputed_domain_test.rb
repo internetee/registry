@@ -37,6 +37,11 @@ class DisputedDomainTest < ActiveSupport::TestCase
     dispute.save
     dispute.reload
     assert_equal dispute.password, ReservedDomain.find_by(name: dispute.domain_name).password
+
+    version = Version::ReservedDomainVersion.where(item_id: reserved_domains(:one).id).order(:id).last
+    assert_equal 'update', version.event
+    assert_equal 'dispute', version.source
+    assert_equal 'dispute_password_sync', version.reason
   end
 
   def test_domain_name_zone_is_validated
