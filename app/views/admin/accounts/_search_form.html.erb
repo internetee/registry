@@ -5,7 +5,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <%= f.label t(:registrar_name) %>
-                        <%= f.select :registrar_id_in, Registrar.all.map { |x| [x, x.id] }, {}, class: 'form-control js-combobox', placeholder: t(:choose), multiple: true %>
+                        <%= f.select :registrar_id_in, registrar_options, {}, class: 'form-control js-combobox', placeholder: t(:choose), multiple: true %>
                     </div>
                 </div>
                 <div class="col-md-3">
