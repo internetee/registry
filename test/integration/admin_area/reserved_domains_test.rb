@@ -30,6 +30,7 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
     visit_reserved_domains
     click_link_or_button 'Edit', match: :first
     fill_in 'Password', with: '12345678'
+    fill_in 'reason_note', with: 'Password rotation'
     click_on 'Save'
 
     assert_text 'Domain updated!'
@@ -60,6 +61,21 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
     assert_text 'started'
   end
 
+  def test_history_button_opens_history_filtered_by_searched_name
+    visit admin_reserved_domains_path(q: { name_matches: @reserved_domain.name })
+    click_link_or_button 'Reserved domains history'
+
+    assert_current_path admin_reserved_domain_lifecycles_path(q: { domain_name_matches: @reserved_domain.name })
+    assert_field 'q_domain_name_matches', with: @reserved_domain.name
+  end
+
+  def test_history_button_opens_unfiltered_history_without_search
+    visit_reserved_domains
+    click_link_or_button 'Reserved domains history'
+
+    assert_current_path admin_reserved_domain_lifecycles_path
+  end
+
   private
 
   def visit_reserved_domains
@@ -67,6 +83,6 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
   end
 
   def delete_first_reserved_domain
-    accept_confirm { click_link_or_button 'Delete', match: :first }
+    accept_prompt(with: 'No longer reserved') { click_link_or_button 'Delete', match: :first }
   end
 end

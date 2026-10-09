@@ -1,17 +1,27 @@
 # Papertrail concerns is mainly tested at country spec
 module Versions
   extend ActiveSupport::Concern
-  WITH_CHILDREN = %w[Domain Contact].freeze
+
+  # ReservedDomain meta uses lambdas: a symbol naming a changed attribute
+  # resolves to its previous value on update.
+  META = {
+    'Domain' => { children: :children_log },
+    'Contact' => { children: :children_log },
+    'ReservedDomain' => {
+      source: ->(record) { record.audit_source },
+      reason: ->(record) { record.audit_reason },
+      reason_note: ->(record) { record.audit_reason_note },
+      domain_name: ->(record) { record.name },
+      registrar_id: ->(record) { record.audit_registrar_id }
+    }
+  }.freeze
 
   included do
     attr_accessor :version_loader
 
-    if WITH_CHILDREN.include?(model_name.name)
-      has_paper_trail versions: { class_name: "Version::#{model_name}Version" },
-                      meta: { children: :children_log }
-    else
-      has_paper_trail versions: { class_name: "Version::#{model_name}Version" }
-    end
+    options = { versions: { class_name: "Version::#{model_name}Version" } }
+    options[:meta] = META[model_name.name] if META.key?(model_name.name)
+    has_paper_trail options
 
     # add creator and updator
     before_create :add_creator

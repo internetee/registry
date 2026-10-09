@@ -93,41 +93,61 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
 
   test "should reserve multiple domains successfully with correct expiration" do
     domain_names = ["new1.test", "new2.test"]
-    
+
     assert_difference 'ReservedDomain.count', 2 do
-      post api_v1_business_registry_reserve_domains_path,
-           params: { domain_names: domain_names },
-           headers: @auth_headers
+      travel_to Time.zone.parse('2026-10-01 13:43:00') do
+        post api_v1_business_registry_reserve_domains_path,
+             params: { domain_names: domain_names },
+             headers: @auth_headers
+      end
     end
 
     assert_response :created
     json_response = JSON.parse(response.body)
     assert_equal "Domains reserved successfully", json_response['message']
     assert_equal 2, json_response['reserved_domains'].length
-    
+
     json_response['reserved_domains'].each do |domain|
       assert domain_names.include?(domain['name'])
       assert_not_nil domain['password']
       assert_not_nil domain['expire_at']
-      
+
       expire_at = Time.parse(domain['expire_at'])
-      assert_in_delta Time.current + ReservedDomain::FREE_RESERVATION_EXPIRY, expire_at, 5.seconds
+      assert_equal Time.zone.parse('2026-10-08 23:59:59'), expire_at
     end
   end
 
   test "should set correct expiration time for free reservations" do
     domain_name = "new1.test"
-    
-    post api_v1_business_registry_reserve_domains_path,
-         params: { domain_names: [domain_name] },
-         headers: @auth_headers
+
+    travel_to Time.zone.parse('2026-10-01 13:43:00') do
+      post api_v1_business_registry_reserve_domains_path,
+           params: { domain_names: [domain_name] },
+           headers: @auth_headers
+    end
 
     assert_response :created
     json_response = JSON.parse(response.body)
     domain = json_response['reserved_domains'].first
-    
+
     expire_at = Time.parse(domain['expire_at'])
-    assert_in_delta Time.current + ReservedDomain::FREE_RESERVATION_EXPIRY, expire_at, 5.seconds
+    assert_equal Time.zone.parse('2026-10-08 23:59:59'), expire_at
+  end
+
+  test "free reservation records business_registry audit on versions" do
+    post api_v1_business_registry_reserve_domains_path,
+         params: { domain_names: ["audit-br.test"] },
+         headers: @auth_headers
+
+    assert_response :created
+
+    reserved_domain = ReservedDomain.find_by(name: 'audit-br.test')
+    version = Version::ReservedDomainVersion.where(item_id: reserved_domain.id).last
+    assert_equal 'create', version.event
+    assert_equal 'business_registry', version.source
+    assert_equal 'free_reservation', version.reason
+    assert_equal 'audit-br.test', version.domain_name
+    assert_equal 'Business Registry API', version.whodunnit
   end
 
   test "should return error when no domains are available" do
