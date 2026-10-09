@@ -1,3 +1,6 @@
+09.10.2026
+* Audit trail for business registry reservations https://github.com/internetee/registry/issues/2962
+
 06.10.2026
 * CSV based sync of users between environments https://github.com/internetee/registry/pull/2932
 
