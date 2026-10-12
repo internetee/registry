@@ -21,6 +21,15 @@ class WhoisRemoveOrphansTaskTest < ActiveSupport::TestCase
     end
   end
 
+  def test_reports_number_and_likely_origin_of_orphans
+    auctions(:one).update!(domain: 'orphan.test', status: Auction.statuses[:no_bids])
+    output = run_task
+
+    assert_match(/orphan\.test\t.*status: serverHold\torigin: finished auction/, output)
+    assert_match(/1 of 2 whois server records are orphaned/, output)
+    assert_match(/1  finished auction/, output)
+  end
+
   def test_deletes_orphans_when_dry_run_is_disabled
     ENV['DRY_RUN'] = 'false'
     run_task

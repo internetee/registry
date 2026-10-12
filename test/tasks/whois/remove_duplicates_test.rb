@@ -25,10 +25,21 @@ class WhoisRemoveDuplicatesTaskTest < ActiveSupport::TestCase
     assert_no_difference -> { Whois::Record.count } do
       output = run_task
 
-      assert_match(/^#{@stale.id}\tduplicate\.test/, output)
-      assert_match(/^#{@older.id}\tduplicate\.test/, output)
-      assert_match(/2 duplicate whois records found/, output)
+      assert_match(/^duplicate\.test: 3 records, keeping ##{@current.id} /, output)
+      assert_match(/would delete ##{@stale.id} .*status: stale\) - differs in: status/, output)
+      assert_match(/would delete ##{@older.id} /, output)
+      assert_match(/1 names have more than one whois server record, 2 extra records/, output)
+      assert_no_match(/single\.test/, output)
     end
+  end
+
+  def test_tells_identical_duplicates_from_stale_ones
+    @older.update_columns(json: @current.json)
+    output = run_task
+
+    assert_match(/would delete ##{@older.id} .* - same data as the kept one/, output)
+    assert_match(/1  same data as the kept record/, output)
+    assert_match(/1  different \(older\) data than the kept record/, output)
   end
 
   def test_keeps_most_recently_updated_record_when_dry_run_is_disabled
