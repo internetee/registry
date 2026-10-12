@@ -175,30 +175,53 @@ class RegistrantApiV1ContactUpdateTest < ActionDispatch::IntegrationTest
     assert_empty @contact.disclosed_attributes
   end
 
-  def test_legal_persons_disclosed_attributes_cannot_be_changed
+  def test_legal_persons_disclosed_attributes_cannot_include_address_or_fax
     @contact = contacts(:acme_ltd)
 
-    contacts(:acme_ltd).ident
-    assert_equal '1234567', @contact.ident
-
     assert_equal Contact::ORG, @contact.ident_type
-    assert_equal 'US', @contact.ident_country_code
     @contact.update!(disclosed_attributes: %w[])
-    assert_equal 'US-1234', @user.registrant_ident
 
     assert_no_changes -> { @contact.disclosed_attributes } do
       patch api_v1_registrant_contact_path(@contact.uuid),
-            params: { disclosed_attributes: %w[name] },
+            params: { disclosed_attributes: %w[address fax] },
             as: :json,
             headers: { 'HTTP_AUTHORIZATION' => auth_token }
       @contact.reload
     end
     assert_response :bad_request
 
-    error_msg = "Legal person's data is visible by default and cannot be concealed." \
+    error_msg = 'Legal person can only disclose name, email and phone.' \
                 ' Please remove this parameter.'
     assert_equal ({ errors: [{ disclosed_attributes: [error_msg] }] }),
                  JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def test_legal_persons_can_disclose_name_and_email
+    @contact = contacts(:acme_ltd)
+    @contact.update!(disclosed_attributes: %w[])
+
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { disclosed_attributes: %w[name email] },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    @contact.reload
+
+    assert_response :ok
+    assert_equal %w[name email], @contact.disclosed_attributes
+  end
+
+  def test_legal_persons_can_conceal_name_and_email
+    @contact = contacts(:acme_ltd)
+    @contact.update!(disclosed_attributes: %w[name email phone])
+
+    patch api_v1_registrant_contact_path(@contact.uuid),
+          params: { disclosed_attributes: %w[phone] },
+          as: :json,
+          headers: { 'HTTP_AUTHORIZATION' => auth_token }
+    @contact.reload
+
+    assert_response :ok
+    assert_equal %w[phone], @contact.disclosed_attributes
   end
 
   def test_legal_persons_disclosed_attributes_change_when_phone

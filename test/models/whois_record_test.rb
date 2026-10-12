@@ -93,4 +93,68 @@ class WhoisRecordTest < ActiveSupport::TestCase
     assert_equal '2010-07-05T00:00:00+03:00', tech_contact_json[:changed]
     assert_equal %w[name], tech_contact_json[:disclosed_attributes]
   end
+
+  def test_generates_json_with_registrant_system_disclosed_attributes
+    registrant = domains(:shop).registrant
+    registrant.update!(system_disclosed_attributes: %w[phone])
+
+    whois_record = whois_records(:shop)
+    whois_record.update!(json: {})
+
+    generated_json = whois_record.generate_json
+    assert_equal %w[phone], generated_json[:registrant_system_disclosed_attributes]
+  end
+
+  def test_generates_json_with_empty_system_disclosed_attributes
+    generated_json = @record.generate_json
+    assert_equal [], generated_json[:registrant_system_disclosed_attributes]
+  end
+
+  def test_generates_json_with_registrar_email_and_address
+    generated_json = @record.generate_json
+
+    assert_equal 'info@bestnames.test', generated_json[:registrar_email]
+    assert_equal 'Main Street 1, NY', generated_json[:registrar_address]
+  end
+
+  def test_generates_json_with_nameserver_records
+    generated_json = @record.generate_json
+    nameserver_records = generated_json[:nameserver_records]
+
+    assert_equal generated_json[:nameservers],
+                 nameserver_records.map { |record| record[:hostname] }
+
+    ns1 = nameserver_records.detect { |record| record[:hostname] == 'ns1.bestnames.test' }
+    assert_equal %w[192.0.2.1], ns1[:ipv4]
+    assert_equal %w[2001:db8::1], ns1[:ipv6]
+  end
+
+  def test_generates_json_with_org_contact_kind_and_reg_no
+    org_contact = contacts(:acme_ltd)
+    domain = domains(:shop)
+    domain.admin_contacts = [org_contact]
+    domain.tech_contacts = [org_contact]
+
+    whois_record = whois_records(:shop)
+    whois_record.update!(json: {})
+
+    admin_contact_json = whois_record.generate_json[:admin_contacts].first
+    assert_equal 'org', admin_contact_json[:kind]
+    assert_equal org_contact.ident, admin_contact_json[:reg_no]
+    assert_equal org_contact.ident_country_code, admin_contact_json[:ident_country_code]
+  end
+
+  def test_generates_json_with_priv_contact_kind_and_no_reg_no
+    priv_contact = contacts(:john)
+    domain = domains(:shop)
+    domain.admin_contacts = [priv_contact]
+
+    whois_record = whois_records(:shop)
+    whois_record.update!(json: {})
+
+    admin_contact_json = whois_record.generate_json[:admin_contacts].first
+    assert_equal 'priv', admin_contact_json[:kind]
+    refute admin_contact_json.key?(:reg_no)
+    refute admin_contact_json.key?(:ident_country_code)
+  end
 end

@@ -1,3 +1,7 @@
+12.10.2026
+* Whois JSON blob carries registrar email/address, nameserver IP records, contact kind and registrant system-disclosed attributes for the new disclosure policy; org contacts can disclose name, email and phone via registrant API https://github.com/internetee/registry/issues/2969
+* Registrar whois records are regenerated when registrar name, email, phone, website or address changes https://github.com/internetee/registry/issues/2969
+
 17.06.2026
 * Disabled birthday option for contact ident data for additional 19 EU countries https://github.com/internetee/registry/issues/2933
 * CSR upload localisation fix https://github.com/internetee/registry/pull/2928
