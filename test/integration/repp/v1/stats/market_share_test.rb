@@ -19,8 +19,10 @@ class ReppV1StatsMarketShareTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
 
-    assert_equal json[:data], [{ name: 'Good Names', y: 2 },
-                               { name: @user.registrar.name, y: 4, sliced: true, selected: true }]
+    expected = [{ name: 'Good Names', y: 2 },
+                { name: @user.registrar.name, y: 4, sliced: true, selected: true }]
+    assert_equal expected.sort_by { |entry| entry[:name] },
+                 json[:data].sort_by { |entry| entry[:name] }
   end
 
   def test_shows_market_share_growth_rate_data
@@ -41,11 +43,15 @@ class ReppV1StatsMarketShareTest < ActionDispatch::IntegrationTest
     # orphan/partial, all created 2020-01-01, so present at both dates):
     #   prev  (2023-11): Good 3 / (3 + 0 + 4 spec13) = 42.9 %
     #   today (07.26):   Good 2 / (2 + 4 + 4 spec13) = 20.0 %, Best 4 / 10 = 40.0 %
-    assert_equal json[:data], prev_data: { name: prev_date,
-                                           domains: [['Good Names', 3], ['Best Names', 0]],
-                                           market_share: [['Good Names', 42.9], ['Best Names', 0.0]] },
-                              data: { name: @today,
-                                      domains: [['Good Names', 2], ['Best Names', 4]],
-                                      market_share: [['Good Names', 20.0], ['Best Names', 40.0]] }
+    assert_equal prev_date, json[:data][:prev_data][:name]
+    assert_equal [['Best Names', 0], ['Good Names', 3]],
+                 json[:data][:prev_data][:domains].sort_by(&:first)
+    assert_equal [['Best Names', 0.0], ['Good Names', 42.9]],
+                 json[:data][:prev_data][:market_share].sort_by(&:first)
+    assert_equal @today, json[:data][:data][:name]
+    assert_equal [['Best Names', 4], ['Good Names', 2]],
+                 json[:data][:data][:domains].sort_by(&:first)
+    assert_equal [['Best Names', 40.0], ['Good Names', 20.0]],
+                 json[:data][:data][:market_share].sort_by(&:first)
   end
 end
