@@ -35,6 +35,16 @@
                             <%= f.text_field :expire_at, class: 'form-control js-datepicker', value: f.object.expire_at.present? ? l(f.object.expire_at, format: :short) : nil %>
                         </div>
                     </div>
+                    <% if f.object.persisted? %>
+                        <div class="form-group">
+                            <div class="col-md-4 control-label">
+                                <%= label_tag :reason_note, t('.reason_note') %>
+                            </div>
+                            <div class="col-md-7">
+                                <%= text_area_tag :reason_note, nil, class: 'form-control', required: true %>
+                            </div>
+                        </div>
+                    <% end %>
                 </div>
             </div>
         </div>

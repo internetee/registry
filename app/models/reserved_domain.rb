@@ -27,6 +27,21 @@ class ReservedDomain < ApplicationRecord
   DAILY_CLEANUP_PROCESS = 'Automated daily cleanup job'.freeze
   AVAILABILITY_CHECK_PROCESS = 'Business registry availability check'.freeze
 
+  AUDIT_SOURCES = %w[
+    business_registry eis_billing admin registrar dispute
+    expiry_job availability_check console rake unknown
+  ].freeze
+
+  AUDIT_REASONS = %w[
+    free_reservation paid_reservation admin_created admin_updated admin_deleted
+    released_to_auction domain_registered dispute_password_sync reservation_expired
+  ].freeze
+
+  AUDIT_SOURCE_BY_PROCESS = {
+    DAILY_CLEANUP_PROCESS => 'expiry_job',
+    AVAILABILITY_CHECK_PROCESS => 'availability_check'
+  }.freeze
+
   class << self
     def ransackable_associations(*)
       authorizable_ransackable_associations
@@ -57,6 +72,12 @@ class ReservedDomain < ApplicationRecord
       Struct.new(:reserved_domains, :success, :user_unique_id, :errors).new(reserved_domains, success, user_unique_id, errors)
     end
 
+    # Reservation lasts full calendar days: the activation day is not counted,
+    # the period starts at 00:00 of the next day and ends at 23:59:59 of its last day.
+    def expire_at_for(period, from: Time.zone.now)
+      (from + period).end_of_day.change(usec: 0)
+    end
+
     def reserve_domains_without_payment(domain_names)
       if domain_names.count > MAX_DOMAIN_NAME_PER_REQUEST
         return wrap_reserved_domains_to_struct(domain_names, false, nil, "The maximum number of domain names per request is #{MAX_DOMAIN_NAME_PER_REQUEST}")
@@ -65,14 +86,16 @@ class ReservedDomain < ApplicationRecord
       available_domains = BusinessRegistry::DomainAvailabilityCheckerService.filter_available(domain_names)
 
       reserved_domains = []
-      available_domains.each do |domain_name|
-        reserved_domain = ReservedDomain.new(
-          name: domain_name,
-          expire_at: Time.current + FREE_RESERVATION_EXPIRY
-        )
-        reserved_domain.regenerate_password
-        reserved_domain.save
-        reserved_domains << reserved_domain
+      Audit.set(reason: 'free_reservation', reason_note: nil, registrar_id: nil) do
+        available_domains.each do |domain_name|
+          reserved_domain = ReservedDomain.new(
+            name: domain_name,
+            expire_at: expire_at_for(FREE_RESERVATION_EXPIRY)
+          )
+          reserved_domain.regenerate_password
+          reserved_domain.save
+          reserved_domains << reserved_domain
+        end
       end
 
       return wrap_reserved_domains_to_struct(reserved_domains, false, nil, "No available domains") if reserved_domains.empty?
@@ -115,8 +138,11 @@ class ReservedDomain < ApplicationRecord
         audit = release_audit_message(process)
 
         PaperTrail.request(whodunnit: audit) do
-          update!(updator_str: audit)
-          destroy!
+          Audit.set(source: AUDIT_SOURCE_BY_PROCESS.fetch(process, 'unknown'),
+                    reason: 'reservation_expired', reason_note: nil, registrar_id: nil) do
+            update!(updator_str: audit)
+            destroy!
+          end
         end
 
         released = true
@@ -161,7 +187,33 @@ class ReservedDomain < ApplicationRecord
     UpdateWhoisRecordJob.perform_later name, 'reserved'
   end
 
+  def audit_source
+    Audit.source || audit_source_from_whodunnit
+  end
+
+  def audit_reason
+    Audit.reason
+  end
+
+  def audit_reason_note
+    Audit.reason_note
+  end
+
+  def audit_registrar_id
+    Audit.registrar_id
+  end
+
   private
+
+  def audit_source_from_whodunnit
+    case ::PaperTrail.request.whodunnit.to_s
+    when /\A\d+-AdminUser:/ then 'admin'
+    when /\A\d+-ApiUser:/ then 'registrar'
+    when /\Aconsole-/ then 'console'
+    when /\Arake-/ then 'rake'
+    else 'unknown'
+    end
+  end
 
   def release_audit_message(process)
     "#{process} - #{EXPIRED_RELEASE_REASON} - #{Time.current.iso8601}"
