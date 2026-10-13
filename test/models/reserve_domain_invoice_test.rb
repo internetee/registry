@@ -58,6 +58,20 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
     assert_equal Time.zone.parse('2027-10-01 23:59:59'), domain.expire_at
   end
 
+  test "paid reserved domains record audit reason and inherit caller source" do
+    invoice = ReserveDomainInvoice.create(invoice_number: '12346', domain_names: ['paid-audit.test'], metainfo: TEST_USER_UNIQUE_ID)
+
+    ReservedDomain::Audit.set(source: 'eis_billing', reason: nil, reason_note: nil, registrar_id: nil) do
+      invoice.create_paid_reserved_domains
+    end
+
+    version = Version::ReservedDomainVersion.where(item_id: ReservedDomain.find_by(name: 'paid-audit.test').id).last
+    assert_equal 'create', version.event
+    assert_equal 'eis_billing', version.source
+    assert_equal 'paid_reservation', version.reason
+    assert_equal 'paid-audit.test', version.domain_name
+  end
+
   test "builds correct output for reserved domains with status" do
     invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
     ReservedDomain.create(

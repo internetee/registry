@@ -118,7 +118,12 @@ class Domain < ApplicationRecord
 
   after_create :update_reserved_domains
   def update_reserved_domains
-    ReservedDomain.new_password_for(name) if in_reserved_list?
+    return unless in_reserved_list?
+
+    ReservedDomain::Audit.set(source: 'registrar', reason: 'domain_registered',
+                              reason_note: nil, registrar_id: registrar_id) do
+      ReservedDomain.new_password_for(name)
+    end
   end
 
   validates :name_dirty, domain_name: true, uniqueness: true

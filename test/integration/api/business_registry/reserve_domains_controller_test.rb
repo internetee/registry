@@ -134,6 +134,22 @@ class Api::V1::BusinessRegistry::ReserveDomainsControllerTest < ActionDispatch::
     assert_equal Time.zone.parse('2026-10-08 23:59:59'), expire_at
   end
 
+  test "free reservation records business_registry audit on versions" do
+    post api_v1_business_registry_reserve_domains_path,
+         params: { domain_names: ["audit-br.test"] },
+         headers: @auth_headers
+
+    assert_response :created
+
+    reserved_domain = ReservedDomain.find_by(name: 'audit-br.test')
+    version = Version::ReservedDomainVersion.where(item_id: reserved_domain.id).last
+    assert_equal 'create', version.event
+    assert_equal 'business_registry', version.source
+    assert_equal 'free_reservation', version.reason
+    assert_equal 'audit-br.test', version.domain_name
+    assert_equal 'Business Registry API', version.whodunnit
+  end
+
   test "should return error when no domains are available" do
     domain_names = ["new1.test", "new2.test"]
     

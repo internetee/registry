@@ -43,6 +43,33 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
     assert_not_nil json_response['reserved_domains']
   end
 
+  test "paid invoice records paid_reservation audit on versions" do
+    stub_billing_request(
+      status: 200,
+      body: {
+        message: 'Payment received',
+        invoice_status: 'paid',
+        invoice_number: @invoice.invoice_number,
+        reserved_domain_names: @invoice.domain_names
+      },
+      user_unique_id: @invoice.metainfo
+    )
+
+    get api_v1_business_registry_long_reserve_domains_status_path(invoice_number: @invoice.invoice_number, user_unique_id: @invoice.metainfo),
+        headers: @auth_headers
+
+    assert_response :success
+
+    reserved_domain = ReservedDomain.find_by(name: @domain_names.first)
+    assert reserved_domain.present?
+
+    version = Version::ReservedDomainVersion.where(item_id: reserved_domain.id).last
+    assert_equal 'create', version.event
+    assert_equal 'business_registry', version.source
+    assert_equal 'paid_reservation', version.reason
+    assert_equal @domain_names.first, version.domain_name
+  end
+
   test "shows unpaid status" do
     stub_billing_request(
       status: 200,

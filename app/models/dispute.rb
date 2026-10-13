@@ -105,7 +105,10 @@ class Dispute < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
     unless reserved_domain.nil?
       reserved_domain.password = password
-      reserved_domain.save!
+      ReservedDomain::Audit.set(source: 'dispute', reason: 'dispute_password_sync',
+                                reason_note: nil, registrar_id: nil) do
+        reserved_domain.save!
+      end
     end
 
     generate_data

@@ -1,0 +1,74 @@
+en:
+  admin:
+    reserved_domain_lifecycles:
+      unknown: Unknown
+      'yes': 'Yes'
+      'no': 'No'
+      sync_failed: History could not be refreshed; showing the last synced data.
+
+      statuses:
+        active: Active
+        expired: Expired
+        released_to_auction: Released to auction
+        deleted: Deleted
+        removed: Removed
+
+      sources:
+        business_registry: Business Registry
+        eis_billing: EIS billing
+        admin: Admin
+        registrar: Registrar
+        dispute: Dispute
+        expiry_job: Expiry job
+        availability_check: Availability check
+        console: Console
+        rake: Rake task
+        unknown: Unknown
+
+      reasons:
+        free_reservation: Free reservation
+        paid_reservation: Paid reservation
+        admin_created: Admin created
+        admin_updated: Admin updated
+        admin_deleted: Admin deleted
+        released_to_auction: Released to auction
+        domain_registered: Domain registered
+        dispute_password_sync: Dispute password sync
+        reservation_expired: Reservation expired
+
+      index:
+        title: Reserved domains history
+        csv_btn: CSV
+        reset_btn: Reset
+        created_by: Created by
+        creation_source: Creation source
+        last_changed_at: Last changed at
+        last_changed_at_from: Last changed from
+        last_changed_at_until: Last changed until
+        last_changed_by: Last changed by
+        last_source: Last source
+        last_reason: Last reason
+        ended_at: Ended at
+        registration_recorded: Registration recorded
+        registered: Registered
+
+      show:
+        title: Reserved domain lifecycle
+        timeline: History
+        created_by: Created by
+        creation_source: Creation source
+        creation_reason: Creation reason
+        last_changed_at: Last changed at
+        last_changed_by: Last changed by
+        last_source: Last source
+        last_reason: Last reason
+        last_reason_note: Last reason note
+        ended_at: Ended at
+        end_reason: End reason
+        registration_recorded: Registration recorded
+        domain_exists: Domain exists
+        whodunnit: Who
+        source: Source
+        reason_note: Reason note
+        changed_fields: Changed fields
+        password_changed: changed

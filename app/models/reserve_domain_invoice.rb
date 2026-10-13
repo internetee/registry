@@ -185,13 +185,15 @@ class ReserveDomainInvoice < ApplicationRecord
   end
 
   def create_paid_reserved_domains
-    domain_names.map do |name| 
-      next if ReservedDomain.find_by(name: name).present?
-      
-      ReservedDomain.create(
-        name: name,
-        expire_at: ReservedDomain.expire_at_for(ReservedDomain::PAID_RESERVATION_EXPIRY)
-      )
+    ReservedDomain::Audit.set(reason: 'paid_reservation', reason_note: nil, registrar_id: nil) do
+      domain_names.map do |name|
+        next if ReservedDomain.find_by(name: name).present?
+
+        ReservedDomain.create(
+          name: name,
+          expire_at: ReservedDomain.expire_at_for(ReservedDomain::PAID_RESERVATION_EXPIRY)
+        )
+      end
     end
   end
 
