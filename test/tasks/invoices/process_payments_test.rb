@@ -234,10 +234,13 @@ class ProcessPaymentsTaskTest < ActiveJob::TestCase
     assert_equal 0.1, registrar.invoices.last.total
   end
 
+  # The task's progress logger is memoized on the first call in the process, so
+  # its lines land in this test's stdout only when this test runs first.
+  # Assert on the summary line alone to keep the result independent of order.
   def test_output
-    assert_output "Transactions processed: 1\n" do
-      run_task
-    end
+    out, = capture_io { run_task }
+
+    assert_match(/^Transactions processed: 1$/, out)
   end
 
   def test_parses_keystore_properly
