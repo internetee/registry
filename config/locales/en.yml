@@ -284,6 +284,7 @@ en:
   add_another: 'Add another'
   domain_updated: 'Domain updated!'
   failed_to_update_domain: 'Failed to update domain'
+  reason_note_required: 'Reason is required'
   edit_contact: 'Edit contact'
   failed_to_update_contact: 'Failed to update contact'
   contact_updated: 'Contact updated'

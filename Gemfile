@@ -45,7 +45,7 @@ gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
 gem 'money-rails'
 gem 'simpleidn', '0.2.3' # For punycode
-gem 'whenever', '1.0.0', require: false
+gem 'whenever', '1.1.2', require: false
 
 # country listing
 gem 'countries', require: 'countries/global'
@@ -108,4 +108,4 @@ gem 'pg_query', '>= 2.2'
 gem 'jwt'
 
 # https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
-gem 'concurrent-ruby', '1.3.5'
+gem 'concurrent-ruby', '1.3.7'

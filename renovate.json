@@ -23,7 +23,7 @@
     {
       "matchDepTypes": ["ruby", "bundler", "Gemfile", "Gemfile.lock"],
       "matchUpdateTypes": ["patch"],
-      "addLabels": ["bundler", "dependencies"],
+      "addLabels": ["bundler", "dependencies", "patch"],
       "automerge": false,
       "automergeType": "pr",
       "requiredStatusChecks": null

@@ -100,9 +100,11 @@ class Ability
     can :manage, Setting
     can :manage, BlockedDomain
     can :manage, ReservedDomain
+    can :read, ReservedDomain::Lifecycle
     can :manage, DNS::Zone
     can :manage, Version::DomainVersion
     can :manage, Version::ContactVersion
+    can :read, Version::ReservedDomainVersion
     can :manage, Billing::Price
     can :manage, User
     can :manage, ApiUser

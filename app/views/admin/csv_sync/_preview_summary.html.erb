@@ -1,0 +1,23 @@
+<div class="panel panel-default">
+  <div class="panel-heading"><%= t('admin.csv_sync.preview_summary.panel_title') %></div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-3">
+        <strong><%= t('admin.csv_sync.preview_summary.created') %>:</strong>
+        <%= result.created %>
+      </div>
+      <div class="col-sm-3">
+        <strong><%= t('admin.csv_sync.preview_summary.updated') %>:</strong>
+        <%= result.updated %>
+      </div>
+      <div class="col-sm-3">
+        <strong><%= t('admin.csv_sync.preview_summary.unchanged') %>:</strong>
+        <%= result.unchanged %>
+      </div>
+      <div class="col-sm-3">
+        <strong><%= t('admin.csv_sync.preview_summary.errors') %>:</strong>
+        <span class="<%= result.errors.positive? ? 'text-danger' : 'text-success' %>"><%= result.errors %></span>
+      </div>
+    </div>
+  </div>
+</div>
