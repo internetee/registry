@@ -1,3 +1,10 @@
+14:10.2026
+* Handle missing contacts in contact update action serialization https://github.com/internetee/registry/pull/2934
+* Fix 500 error on contact create with invalid ident https://github.com/internetee/registry/pull/2945
+* Fixed sorting admin registrar dropdowns https://github.com/internetee/registry/pull/2947
+* Business Registry reservation period is now based on full days https://github.com/internetee/registry/issues/2961
+* Added daily cron job to remove expired reservations https://github.com/internetee/registry/issues/2963
+
 09.10.2026
 * Audit trail for business registry reservations https://github.com/internetee/registry/issues/2962
 
