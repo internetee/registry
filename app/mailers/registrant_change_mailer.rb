@@ -38,6 +38,15 @@ class RegistrantChangeMailer < ApplicationMailer
     mail(to: domain.new_registrant_email, subject: subject)
   end
 
+  def cancelled(domain:, registrar:, registrant:, send_to:)
+    @domain = DomainPresenter.new(domain: domain, view: view_context)
+    @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
+    @registrant = RegistrantPresenter.new(registrant: registrant, view: view_context)
+
+    subject = default_i18n_subject(domain_name: domain.name)
+    mail(to: send_to, subject: subject)
+  end
+
   def expired(domain:, registrar:, registrant:, send_to:)
     @domain = DomainPresenter.new(domain: domain, view: view_context)
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)

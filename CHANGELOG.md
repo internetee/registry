@@ -1,3 +1,6 @@
+10.08.2026
+* Registrars can now cancel a pending registrant change https://github.com/internetee/registry/issues/2939
+
 14:10.2026
 * Handle missing contacts in contact update action serialization https://github.com/internetee/registry/pull/2934
 * Fix 500 error on contact create with invalid ident https://github.com/internetee/registry/pull/2945
