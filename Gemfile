@@ -45,7 +45,7 @@ gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
 gem 'money-rails'
 gem 'simpleidn', '0.2.3' # For punycode
-gem 'whenever', '1.0.0', require: false
+gem 'whenever', '1.1.2', require: false
 
 # country listing
 gem 'countries', require: 'countries/global'

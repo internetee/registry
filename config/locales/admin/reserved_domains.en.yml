@@ -4,8 +4,11 @@ en:
       index:
         title: Reserved domains
         new_btn: New reserved domain
+        history_btn: Reserved domains history
         reset_btn: Reset
         csv_btn: CSV
+        delete_reason_prompt: Reason for deleting this reserved domain
 
       form:
         password_hint: Generated automatically if left blank
+        reason_note: Reason

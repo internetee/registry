@@ -818,6 +818,13 @@ class EppDomainCreateBaseTest < EppTestCase
 
     reserved_domain.reload
     assert_not_equal registration_code, reserved_domain.registration_code
+
+    version = Version::ReservedDomainVersion.where(item_id: reserved_domain.id).order(:id).last
+    assert_equal 'update', version.event
+    assert_equal 'registrar', version.source
+    assert_equal 'domain_registered', version.reason
+    assert_equal registrars(:bestnames).id, version.registrar_id
+    assert_equal reserved_domain.name, version.domain_name
   end
 
   def test_respects_custom_transfer_code
