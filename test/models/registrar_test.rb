@@ -328,6 +328,17 @@ class RegistrarTest < ActiveJob::TestCase
     end
   end
 
+  def test_ordered_returns_registrars_sorted_by_name
+    registrars(:bestnames).update_columns(name: 'Zulu Names')
+    registrars(:goodnames).update_columns(name: 'Alpha Names')
+
+    ordered_names = Registrar.ordered.pluck(:name).reject(&:blank?)
+
+    assert_equal ordered_names.sort, ordered_names
+    assert_equal 'Alpha Names', ordered_names.first
+    assert_equal 'Zulu Names', ordered_names.last
+  end
+
   private
 
   def valid_registrar
