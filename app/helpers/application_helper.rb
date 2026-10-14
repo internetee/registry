@@ -107,4 +107,8 @@ module ApplicationHelper
     end
     result
   end
+
+  def registrar_options(value: :id)
+    Registrar.ordered.map { |registrar| [registrar.name, registrar.public_send(value)] }
+  end
 end
