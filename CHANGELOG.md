@@ -1,5 +1,6 @@
 14:10.2026
 * Fix 500 error on contact create with invalid ident https://github.com/internetee/registry/pull/2945
+* Business Registry reservation period is now based on full days https://github.com/internetee/registry/issues/2961
 
 09.10.2026
 * Audit trail for business registry reservations https://github.com/internetee/registry/issues/2962
