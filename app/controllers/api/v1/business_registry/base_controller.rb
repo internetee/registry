@@ -16,6 +16,7 @@ module Api
         ].freeze
 
         before_action :authenticate_token!
+        around_action :set_reserved_domain_audit_context
 
         rescue_from AuthorizationError, with: :render_unauthorized
         rescue_from(*BILLING_NETWORK_ERRORS, with: :render_billing_unavailable)
@@ -33,6 +34,13 @@ module Api
         end
 
         private
+
+        def set_reserved_domain_audit_context
+          ::PaperTrail.request(whodunnit: 'Business Registry API') do
+            ReservedDomain::Audit.set(source: 'business_registry', reason: nil,
+                                      reason_note: nil, registrar_id: nil) { yield }
+          end
+        end
 
         def authenticate_token!
           token = request.headers['Authorization']&.split(' ')&.last

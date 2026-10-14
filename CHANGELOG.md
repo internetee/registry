@@ -1,3 +1,19 @@
+09.10.2026
+* Audit trail for business registry reservations https://github.com/internetee/registry/issues/2962
+
+06.10.2026
+* CSV based sync of users between environments https://github.com/internetee/registry/pull/2932
+
+05.10.2026
+* Reserved domain changes are recorded with source (Business Registry API, EIS billing callback, admin, registrar, dispute, expiry job, availability check) and reason in log_reserved_domains; admin edit and delete of a reserved domain require a reason https://github.com/internetee/registry/issues/2962
+* New admin page Settings > Archive > Reserved domains history: every reservation lifecycle (active, expired, released to auction, deleted, removed) with filters, change timeline and CSV export https://github.com/internetee/registry/issues/2962
+* Deploy: run migrations before restarting app servers; then run 'bundle exec rake reserved_domains:backfill_audit' once to fill audit data on existing history rows https://github.com/internetee/registry/issues/2962
+* Reserved domains history is a table refreshed on every admin read and rebuilt nightly at 03:15 by cron (ReservedDomain::Lifecycle.rebuild!); 'rake reserved_domains:backfill_audit' also rebuilds it, 'rake reserved_domains:rebuild_lifecycles' rebuilds it on demand https://github.com/internetee/registry/issues/2962
+02.10.2026
+* Expired domain reservations are removed daily at 00:35 by cron (ReservedDomain.release_expired); removal reason is recorded in the reservation audit log https://github.com/internetee/registry/issues/2963
+01.10.2026
+* Business registry reservations expire at the end of the last full day (23:59:59) instead of exact activation time https://github.com/internetee/registry/issues/2961
+
 23.07.2026
 * Operations with pending status now return result code 1001 in REPP https://github.com/internetee/registry/issues/2940
 * Fixed case sensitivity issue for REPP requests https://github.com/internetee/registry/issues/2943

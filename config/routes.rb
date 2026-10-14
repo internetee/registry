@@ -339,6 +339,7 @@ Rails.application.routes.draw do
         post 'release_to_auction', to: 'reserved_domains#release_to_auction', as: 'release_to_auction'
       end
     end
+    resources :reserved_domain_lifecycles, only: %i[index show]
     resources :disputes do
       member do
         get 'delete'
@@ -350,6 +351,9 @@ Rails.application.routes.draw do
       resources :white_ips
 
       collection do
+        get 'import'
+        post 'import_preview'
+        post 'import_apply'
         post 'set_test_date_to_api_user', to: 'api_users#set_test_date_to_api_user', as: 'set_test_date_to_api_user'
         post 'remove_test_date_to_api_user', to: 'api_users#remove_test_date_to_api_user', as: 'remove_test_date_to_api_user'
       end

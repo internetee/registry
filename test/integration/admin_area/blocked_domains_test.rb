@@ -62,7 +62,7 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
     assert_text 'Add domain to blocked list'
 
     fill_in 'Name', with: @domain.name
-    safe_click_on 'Save'
+    click_on 'Save'
 
     if success
       assert_text 'Domain added!'
@@ -79,20 +79,10 @@ class AdminAreaBlockedDomainsIntegrationTest < JavaScriptApplicationSystemTestCa
 
   def delete_first_blocked_domain
     accept_confirm { click_link_or_button 'Delete', match: :first }
-  rescue Selenium::WebDriver::Error::UnknownError => e
-    raise unless e.message.include?('Node with given id does not belong to the document')
-    accept_confirm { click_link_or_button 'Delete', match: :first }
   end
 
   def search_blocked_domain(name)
     fill_in 'Name', with: name
     find('.glyphicon-search').click
-  end
-
-  def safe_click_on(locator, **options)
-    click_on locator, **options
-  rescue Selenium::WebDriver::Error::UnknownError => e
-    raise unless e.message.include?('Node with given id does not belong to the document')
-    click_on locator, **options
   end
 end
