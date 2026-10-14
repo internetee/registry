@@ -57,7 +57,9 @@ gem 'digidoc_client',
     ref: '1645e83a5a548addce383f75703b0275c5310c32'
 
 gem 'airbrake'
-gem 'company_register', github: 'internetee/company_register', branch: 'master'
+# TODO: point back to master once internetee/company_register#12 is merged.
+gem 'company_register', github: 'internetee/company_register',
+                        branch: 'fix/165-transport-errors-not-available'
 gem 'directo', github: 'internetee/directo', branch: 'master'
 gem 'domain_name'
 gem 'dry-struct'

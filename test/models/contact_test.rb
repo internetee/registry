@@ -445,6 +445,22 @@ class ContactTest < ActiveJob::TestCase
     @contact
   end
 
+  def test_org_contacts_by_codes_returns_matching_org_contacts
+    result = Contact.org_contacts_by_codes(%w[1234567], 'US')
+    assert_includes result, contacts(:acme_ltd)
+    assert_not_includes result, contacts(:john)
+  end
+
+  def test_org_contacts_by_codes_returns_empty_for_empty_codes
+    result = Contact.org_contacts_by_codes([], 'US')
+    assert_empty result
+  end
+
+  def test_org_contacts_by_codes_filters_by_country
+    result = Contact.org_contacts_by_codes(%w[1234567], 'EE')
+    assert_empty result
+  end
+
   def valid_contact
     contacts(:john)
   end
