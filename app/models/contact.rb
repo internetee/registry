@@ -87,6 +87,10 @@ class Contact < ApplicationRecord
 
   after_commit :update_related_whois_records
   before_validation :clear_address_modifications, if: -> { !self.class.address_processing? }
+  # 'phone' in system_disclosed_attributes is set by OrgRegistrantPhoneCheckerJob
+  # after a business registry match. The job runs async, so a stale match is
+  # dropped here in the same save; the job re-adds it if it still matches.
+  before_save :reset_system_disclosed_phone, if: :phone_match_source_changed?
 
   # TODO: remove after testing
   after_save do
@@ -165,6 +169,8 @@ class Contact < ApplicationRecord
   ].freeze
 
   OPEN_LEGAL_ATTRIBUTES = %w[
+    name
+    email
     phone
   ].freeze
 
@@ -642,6 +648,19 @@ class Contact < ApplicationRecord
   end
 
   private
+
+  def phone_match_source_changed?
+    will_save_change_to_phone? || will_save_change_to_ident? ||
+      will_save_change_to_ident_type? || will_save_change_to_ident_country_code?
+  end
+
+  def reset_system_disclosed_phone
+    system_disclosed = Array(system_disclosed_attributes)
+    return unless system_disclosed.include?('phone')
+
+    self.system_disclosed_attributes = system_disclosed - ['phone']
+    self.disclosed_attributes = Array(disclosed_attributes) - ['phone']
+  end
 
   def group_by_id_and_type(domains_hash_array)
     domains_hash_array.group_by { |d| d[:id] }

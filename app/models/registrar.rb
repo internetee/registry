@@ -40,11 +40,12 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   alias_attribute :contact_email, :email
 
-  WHOIS_TRIGGERS = %w[name email phone street city state zip].freeze
+  WHOIS_TRIGGERS = %w[name email phone website address_street address_city
+                      address_state address_zip].freeze
 
   after_commit :update_whois_records
   def update_whois_records
-    return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present?
+    return true unless (saved_changes.keys & WHOIS_TRIGGERS).present?
 
     RegenerateRegistrarWhoisesJob.perform_later id
   end

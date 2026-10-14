@@ -1,0 +1,42 @@
+# RDAP-issued API token store fixtures. token_hash stands in for the keyed
+# HMAC-SHA-256 digest RDAP would send (the raw token never reaches the registry).
+# Subjects reuse the grant fixtures' eeID subjects.
+
+session_active:
+  token_hash: digest-session-active
+  subject: EE38001085718
+  token_class: session
+  label: browser
+  issued_at: <%= 1.hour.ago %>
+  expires_at: <%= 7.hours.from_now %>
+
+machine_active:
+  token_hash: digest-machine-active
+  subject: EE38001085718
+  token_class: machine
+  label: ci-runner
+  issued_at: <%= 2.days.ago %>
+  expires_at: <%= 88.days.from_now %>
+
+revoked:
+  token_hash: digest-revoked
+  subject: EE38001085718
+  token_class: session
+  issued_at: <%= 3.hours.ago %>
+  expires_at: <%= 5.hours.from_now %>
+  revoked_at: <%= 1.hour.ago %>
+
+expired:
+  token_hash: digest-expired
+  subject: EE38001085718
+  token_class: session
+  issued_at: <%= 2.days.ago %>
+  expires_at: <%= 1.hour.ago %>
+
+other_subject_active:
+  token_hash: digest-other-subject
+  subject: EE10001001000
+  token_class: machine
+  label: partner-backend
+  issued_at: <%= 1.day.ago %>
+  expires_at: <%= 30.days.from_now %>

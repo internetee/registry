@@ -1,3 +1,7 @@
+12.10.2026
+* Whois JSON blob carries registrar email/address, nameserver IP records, contact kind and registrant system-disclosed attributes for the new disclosure policy; org contacts can disclose name, email and phone via registrant API https://github.com/internetee/registry/issues/2969
+* Registrar whois records are regenerated when registrar name, email, phone, website or address changes https://github.com/internetee/registry/issues/2969
+
 14:10.2026
 * Handle missing contacts in contact update action serialization https://github.com/internetee/registry/pull/2934
 * Fix 500 error on contact create with invalid ident https://github.com/internetee/registry/pull/2945

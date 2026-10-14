@@ -1,7 +1,25 @@
 FROM --platform=linux/amd64 ruby:3.0.3-bullseye
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN apt-get update > /dev/null && apt-get install -y --no-install-recommends > /dev/null \
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Two workarounds are needed before apt can run on this pinned 2022 base image:
+#
+# 1. The amd64 variant of ruby:3.0.3-bullseye ships /var/lib/dpkg/info/format as a ZERO-byte
+#    file (the arm64 variant of the same tag correctly contains "1"). dpkg reads it first and
+#    aborts with "corrupt info database format file" / error code 2. Restoring the single byte
+#    is enough. Verified by pulling the image fresh (digest sha256:7c57b474...) — it is how the
+#    image is published, not local cache corruption.
+#
+# 2. bullseye has had point releases since this image was built, so `dist-upgrade` now wants to
+#    replace /etc/debian_version and stops at dpkg's interactive conffile prompt (error code 1)
+#    because a build has no TTY. --force-confold keeps the shipped config, --force-confdef lets
+#    dpkg take the default where there is no local edit.
+#
+# Both go away if the base image is ever moved off EOL Ruby 3.0.3.
+RUN printf '1\n' > /var/lib/dpkg/info/format \
+    && apt-get update > /dev/null && apt-get install -y --no-install-recommends > /dev/null \
     build-essential=* \
     imagemagick=* \
     curl \
@@ -9,7 +27,9 @@ RUN apt-get update > /dev/null && apt-get install -y --no-install-recommends > /
     gnupg2 \
     git \
     apt-utils \
-    && apt-get dist-upgrade -yf\
+    && apt-get dist-upgrade -yf \
+       -o Dpkg::Options::=--force-confold \
+       -o Dpkg::Options::=--force-confdef \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

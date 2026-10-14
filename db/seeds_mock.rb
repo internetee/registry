@@ -93,7 +93,11 @@ ActiveRecord::Base.transaction do
       r.address_country_code = "EE"
       r.accounting_customer_code = "MOCK#{reg_i+1}"
       r.language = "en"
-      r.reference_no = Billing::ReferenceNo.generate(owner: r) rescue "123456#{reg_i+1}"
+      # Billing::ReferenceNo.generate does an HTTP call to eis_billing_system, which is not
+      # part of a minimal local stack. Offline it RETURNS nil rather than raising, so a bare
+      # `rescue` never fires and nil reaches the `\A\d{2,20}\z` format validation. Keep the
+      # rescue for a genuine transport error, but fall back on nil too.
+      r.reference_no = (Billing::ReferenceNo.generate(owner: r) rescue nil) || "123456#{reg_i + 1}"
     end
     
     # Ensure account

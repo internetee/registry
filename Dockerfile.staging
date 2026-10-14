@@ -109,6 +109,13 @@ RUN apt-get update -qq && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# bullseye's ca-certificates (20210119) predates Sectigo Public Server
+# Authentication Root E46. Business Registry (ariregxmlv6.rik.ee) moved to a
+# certificate under that root on 2026-09-22, and without it every company
+# lookup fails certificate verification.
+COPY config/ca-certificates/*.crt /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+
 # Set up locale
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 RUN sed -i -e 's/# et_EE.UTF-8 UTF-8/et_EE.UTF-8 UTF-8/' /etc/locale.gen && \

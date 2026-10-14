@@ -310,6 +310,24 @@ class RegistrarTest < ActiveJob::TestCase
     Setting.legal_document_is_mandatory = old_value
   end
 
+  def test_enqueues_whois_regeneration_when_website_changes
+    assert_enqueued_with(job: RegenerateRegistrarWhoisesJob, args: [@registrar.id]) do
+      @registrar.update!(website: 'https://registrar.test')
+    end
+  end
+
+  def test_enqueues_whois_regeneration_when_address_changes
+    assert_enqueued_with(job: RegenerateRegistrarWhoisesJob, args: [@registrar.id]) do
+      @registrar.update!(address_street: 'New Street 5', address_city: 'Tallinn')
+    end
+  end
+
+  def test_does_not_enqueue_whois_regeneration_when_other_attribute_changes
+    assert_no_enqueued_jobs(only: RegenerateRegistrarWhoisesJob) do
+      @registrar.update!(vat_no: 'EE123456789')
+    end
+  end
+
   def test_ordered_returns_registrars_sorted_by_name
     registrars(:bestnames).update_columns(name: 'Zulu Names')
     registrars(:goodnames).update_columns(name: 'Alpha Names')

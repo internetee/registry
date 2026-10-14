@@ -55,6 +55,7 @@ class WhoisRecord < ApplicationRecord
     h[:registrant_publishable] = registrant.publishable?
     h[:registrant_changed] = registrant.updated_at.try(:to_s, :iso8601)
     h[:registrant_disclosed_attributes] = registrant.disclosed_attributes
+    h[:registrant_system_disclosed_attributes] = registrant.system_disclosed_attributes || []
 
     h[:admin_contacts] = []
 
@@ -72,9 +73,13 @@ class WhoisRecord < ApplicationRecord
     h[:registrar]         = domain.registrar.name
     h[:registrar_website] = domain.registrar.website
     h[:registrar_phone]   = domain.registrar.phone
+    h[:registrar_email]   = domain.registrar.email
+    h[:registrar_address] = domain.registrar.address
     h[:registrar_changed] = domain.registrar.updated_at.try(:to_s, :iso8601)
 
-    h[:nameservers]         = domain.nameservers.hostnames.uniq.select(&:present?)
+    nameservers = domain.nameservers.select { |ns| ns.hostname.present? }.uniq(&:hostname)
+    h[:nameservers]         = nameservers.map(&:hostname)
+    h[:nameserver_records]  = nameservers.map { |ns| nameserver_json_hash(ns) }
     h[:nameservers_changed] = domain.nameservers.pluck(:updated_at).max.try(:to_s, :iso8601)
 
     h[:dnssec_keys]    = domain.dnskeys.map { |key| "#{key.flags} #{key.protocol} #{key.alg} #{key.public_key}" }
@@ -110,13 +115,29 @@ class WhoisRecord < ApplicationRecord
   end
 
   def contact_json_hash(contact)
-    {
+    hash = {
       name: contact.name,
       email: contact.email,
       phone: contact.phone,
       changed: contact.updated_at.try(:to_s, :iso8601),
       disclosed_attributes: contact.disclosed_attributes,
       contact_publishable: contact.registrant_publishable?,
+      kind: contact.ident_type,
+    }
+
+    if contact.org?
+      hash[:reg_no] = contact.reg_no
+      hash[:ident_country_code] = contact.ident_country_code
+    end
+
+    hash
+  end
+
+  def nameserver_json_hash(nameserver)
+    {
+      hostname: nameserver.hostname,
+      ipv4: Array(nameserver.ipv4),
+      ipv6: Array(nameserver.ipv6),
     }
   end
 end

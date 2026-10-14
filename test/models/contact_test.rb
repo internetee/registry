@@ -428,6 +428,65 @@ class ContactTest < ActiveJob::TestCase
     assert_equal contact_2.validation_events.count, 1
   end
 
+  def test_resets_system_disclosed_phone_when_phone_changes
+    @contact.update!(system_disclosed_attributes: %w[phone],
+                     disclosed_attributes: %w[phone])
+
+    @contact.update!(phone: '+372.555666777')
+
+    assert_empty @contact.system_disclosed_attributes
+    assert_empty @contact.disclosed_attributes
+  end
+
+  def test_resets_system_disclosed_phone_when_ident_changes
+    @contact.update!(system_disclosed_attributes: %w[phone],
+                     disclosed_attributes: %w[phone])
+
+    @contact.update!(ident: '9999')
+
+    assert_empty @contact.system_disclosed_attributes
+    assert_empty @contact.disclosed_attributes
+  end
+
+  def test_resets_system_disclosed_phone_when_ident_type_changes
+    @contact.update!(system_disclosed_attributes: %w[phone],
+                     disclosed_attributes: %w[phone])
+
+    @contact.update!(ident_type: Contact::ORG)
+
+    assert_empty @contact.system_disclosed_attributes
+    assert_empty @contact.disclosed_attributes
+  end
+
+  def test_resets_system_disclosed_phone_when_ident_country_code_changes
+    @contact.update!(system_disclosed_attributes: %w[phone],
+                     disclosed_attributes: %w[phone])
+
+    @contact.update!(ident_country_code: 'FI')
+
+    assert_empty @contact.system_disclosed_attributes
+    assert_empty @contact.disclosed_attributes
+  end
+
+  def test_keeps_volunteered_phone_disclosure_when_phone_changes
+    @contact.update!(system_disclosed_attributes: [],
+                     disclosed_attributes: %w[phone])
+
+    @contact.update!(phone: '+372.555666777')
+
+    assert_equal %w[phone], @contact.disclosed_attributes
+  end
+
+  def test_keeps_system_disclosed_phone_when_unrelated_attribute_changes
+    @contact.update!(system_disclosed_attributes: %w[phone],
+                     disclosed_attributes: %w[phone])
+
+    @contact.update!(name: 'New Name')
+
+    assert_equal %w[phone], @contact.system_disclosed_attributes
+    assert_equal %w[phone], @contact.disclosed_attributes
+  end
+
   private
 
   def make_contact_free_of_domains_where_it_acts_as_a_registrant(contact)

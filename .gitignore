@@ -40,5 +40,5 @@ AGENT.md
 
 # repowise local index and generated notes
 .repowise/
+.playwright-cli/
 docs/
-

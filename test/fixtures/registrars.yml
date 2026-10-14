@@ -51,3 +51,21 @@ invalid:
   accounting_customer_code: any
   language: en
   reference_no: 42
+
+# spec 13 (RDAP access transparency): a test_registrar that carries the mytenure/capdomain
+# fixtures so they stay OUT of the registrar market-share stats (serialize_* skips any
+# registrar with test_registrar: true), while still being real, john-owned domains for the
+# access-events tenure fixtures.
+spec13_registrar:
+  name: Spec13 Registrar
+  reg_no: 90013
+  code: spec13
+  email: info@spec13.test
+  address_street: Main Street 1
+  address_city: NY
+  address_country_code: US
+  vat_no: any
+  accounting_customer_code: spec13
+  language: en
+  reference_no: 13013
+  test_registrar: true
