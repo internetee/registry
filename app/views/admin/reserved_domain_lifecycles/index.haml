@@ -1,0 +1,120 @@
+= render 'shared/title', name: t('.title')
+
+- status_options = ReservedDomain::Lifecycle::STATUSES.map { |s| [t("admin.reserved_domain_lifecycles.statuses.#{s}"), s] }
+- source_options = ReservedDomain::AUDIT_SOURCES.map { |s| [t("admin.reserved_domain_lifecycles.sources.#{s}"), s] }
+- reason_options = ReservedDomain::AUDIT_REASONS.map { |r| [t("admin.reserved_domain_lifecycles.reasons.#{r}"), r] }
+
+.row
+  .col-md-12
+    = search_form_for @q, url: admin_reserved_domain_lifecycles_path, html: { style: 'margin-bottom: 0;', class: 'js-form', autocomplete: 'off' } do |f|
+      .row
+        .col-md-3
+          .form-group
+            = f.label t(:domain_name)
+            = f.search_field :domain_name_matches, value: params[:q][:domain_name_matches], class: 'form-control', placeholder: t(:domain_name)
+        .col-md-3
+          .form-group
+            = f.label t(:status)
+            = f.select :with_status, options_for_select(status_options, params[:q][:with_status]), { include_blank: t(:choose) }, class: 'form-control js-combobox'
+        .col-md-3
+          .form-group
+            = f.label t(:created_at_from)
+            = f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control js-datepicker', placeholder: t(:created_at_from)
+        .col-md-3
+          .form-group
+            = f.label t(:created_at_until)
+            = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control js-datepicker', placeholder: t(:created_at_until)
+      .row
+        .col-md-3
+          .form-group
+            = f.label t('.last_changed_at_from')
+            = f.search_field :last_changed_at_gteq, value: params[:q][:last_changed_at_gteq], class: 'form-control js-datepicker', placeholder: t('.last_changed_at_from')
+        .col-md-3
+          .form-group
+            = f.label t('.last_changed_at_until')
+            = f.search_field :last_changed_at_lteq, value: params[:q][:last_changed_at_lteq], class: 'form-control js-datepicker', placeholder: t('.last_changed_at_until')
+        .col-md-3
+          .form-group
+            = f.label t('.creation_source')
+            = f.select :creation_source_eq, options_for_select(source_options, params[:q][:creation_source_eq]), { include_blank: t(:choose) }, class: 'form-control js-combobox'
+        .col-md-3
+          .form-group
+            = f.label t('.last_source')
+            = f.select :last_source_eq, options_for_select(source_options, params[:q][:last_source_eq]), { include_blank: t(:choose) }, class: 'form-control js-combobox'
+      .row
+        .col-md-3
+          .form-group
+            = f.label t('.last_reason')
+            = f.select :last_reason_eq, options_for_select(reason_options, params[:q][:last_reason_eq]), { include_blank: t(:choose) }, class: 'form-control js-combobox'
+        .col-md-3
+          .form-group
+            = f.label t('.created_by')
+            = f.search_field :created_by_matches, value: params[:q][:created_by_matches], class: 'form-control', placeholder: t('.created_by')
+        .col-md-3
+          .form-group
+            = f.label t('.last_changed_by')
+            = f.search_field :last_changed_by_matches, value: params[:q][:last_changed_by_matches], class: 'form-control', placeholder: t('.last_changed_by')
+        .col-md-3
+          .form-group
+            = f.label t('.registration_recorded')
+            = f.select :registration_recorded_eq, options_for_select([[t('admin.reserved_domain_lifecycles.yes'), 'true'], [t('admin.reserved_domain_lifecycles.no'), 'false']], params[:q][:registration_recorded_eq]), { include_blank: t(:choose) }, class: 'form-control js-combobox'
+      .row
+        .col-md-3
+          .form-group
+            = label_tag t(:results_per_page)
+            = text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page)
+        .col-md-4{style: 'padding-top: 25px;'}
+          %button.btn.btn-primary
+            &nbsp;
+            %span.glyphicon.glyphicon-search
+            &nbsp;
+          = link_to(t('.csv_btn'), admin_reserved_domain_lifecycles_path(format: :csv, params: params.permit!), class: 'btn btn-default')
+          = link_to(t('.reset_btn'), admin_reserved_domain_lifecycles_path, class: 'btn btn-default')
+%hr
+
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-1'}= t(:domain_name)
+            %th{class: 'col-xs-1'}= t(:status)
+            %th{class: 'col-xs-1'}= t(:created_at)
+            %th{class: 'col-xs-2'}= t('.created_by')
+            %th{class: 'col-xs-1'}= t('.last_changed_at')
+            %th{class: 'col-xs-2'}= t('.last_changed_by')
+            %th{class: 'col-xs-2'}= t('.last_reason')
+            %th{class: 'col-xs-1'}= t(:expire_at)
+            %th{class: 'col-xs-1'}= t('.ended_at')
+            %th{class: 'col-xs-1'}= t('.registered')
+        %tbody
+          - @lifecycles.each do |lifecycle|
+            %tr
+              %td= link_to(lifecycle.domain_name, admin_reserved_domain_lifecycle_path(lifecycle.id))
+              %td
+                %span.label{class: lifecycle_status_css_class(lifecycle.status)}
+                  = lifecycle_status_label(lifecycle.status)
+              %td= l(lifecycle.created_at, format: :short) if lifecycle.created_at
+              %td
+                = lifecycle.created_by.presence || t('admin.reserved_domain_lifecycles.unknown')
+                - if lifecycle.creation_source.present?
+                  %br
+                  %small.text-muted= lifecycle_source_label(lifecycle.creation_source)
+              %td= l(lifecycle.last_changed_at, format: :short) if lifecycle.last_changed_at
+              %td= lifecycle.last_changed_by.presence || t('admin.reserved_domain_lifecycles.unknown')
+              %td
+                = lifecycle_reason_label(lifecycle.last_reason)
+                - if lifecycle.last_reason_note.present?
+                  %br
+                  %small.text-muted= lifecycle.last_reason_note
+              %td= l(lifecycle.expire_at, format: :short) if lifecycle.expire_at
+              %td= l(lifecycle.ended_at, format: :short) if lifecycle.ended_at
+              %td= lifecycle_yes_no(lifecycle.registration_recorded)
+
+.row
+  .col-md-6
+    = paginate @lifecycles
+  .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @lifecycles.total_count)

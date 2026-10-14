@@ -39,7 +39,7 @@ class ApiUser < User
   after_commit :notify_registrar_subject_changed, on: :update
 
   scope :eligible_for_sign_in, lambda {
-    where(active: true).where.not(verified_at: nil)
+    where(active: true).where('subject IS NULL OR subject = ? OR verified_at IS NOT NULL', '')
   }
 
   def identity_verified?
@@ -47,7 +47,7 @@ class ApiUser < User
   end
 
   def eligible_for_sign_in?
-    active? && identity_verified?
+    active? && (subject.blank? || identity_verified?)
   end
 
   def verification_pending?

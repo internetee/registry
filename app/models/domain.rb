@@ -118,7 +118,12 @@ class Domain < ApplicationRecord
 
   after_create :update_reserved_domains
   def update_reserved_domains
-    ReservedDomain.new_password_for(name) if in_reserved_list?
+    return unless in_reserved_list?
+
+    ReservedDomain::Audit.set(source: 'registrar', reason: 'domain_registered',
+                              reason_note: nil, registrar_id: registrar_id) do
+      ReservedDomain.new_password_for(name)
+    end
   end
 
   validates :name_dirty, domain_name: true, uniqueness: true
@@ -386,6 +391,22 @@ class Domain < ApplicationRecord
       domain = find_by(name: unicode)
     end
     domain
+  end
+
+  def self.normalize_repp_domain_name(name)
+    name.to_s.strip.downcase.presence
+  end
+
+  def self.find_repp_by_name(name, registrar: nil)
+    normalized = normalize_repp_domain_name(name)
+    return nil unless normalized
+
+    relation = registrar ? where(registrar: registrar) : all
+    relation.find_by_idn(normalized) || relation.find_by(name_puny: normalized)
+  end
+
+  def self.find_repp_by_name!(name, registrar: nil)
+    find_repp_by_name(name, registrar: registrar) || raise(ActiveRecord::RecordNotFound)
   end
 
   def puny_label
