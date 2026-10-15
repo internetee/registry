@@ -5283,7 +5283,7 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 -- Name: index_whois_records_on_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_whois_records_on_domain_id ON public.whois_records USING btree (domain_id);
+CREATE UNIQUE INDEX index_whois_records_on_domain_id ON public.whois_records USING btree (domain_id);
 
 
 --
@@ -6074,6 +6074,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261002120000'),
 ('20261005090000'),
 ('20261005090100'),
-('20261005090200');
+('20261005090200'),
+('20261012120000');
 
 
