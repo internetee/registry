@@ -111,7 +111,7 @@ module Api
         end
 
         def render_disclosed_attributes_error
-          error_msg = "Legal person's data is visible by default and cannot be concealed." \
+          error_msg = 'Legal person can only disclose name, email and phone.' \
                       ' Please remove this parameter.'
           render json: { errors: [{ disclosed_attributes: [error_msg] }] }, status: :bad_request
         end
