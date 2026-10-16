@@ -1,4 +1,5 @@
 15.10.2026
+* Registrant API accepts name and email in org contacts' disclosed attributes, so registrant center saves no longer fail with 400 for legal persons
 * Fix for whois duplicate records https://github.com/internetee/registry/pull/2966
 
 14:10.2026

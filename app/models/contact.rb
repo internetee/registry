@@ -165,6 +165,8 @@ class Contact < ApplicationRecord
   ].freeze
 
   OPEN_LEGAL_ATTRIBUTES = %w[
+    name
+    email
     phone
   ].freeze
 
