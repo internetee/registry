@@ -82,6 +82,13 @@ if @cron_group == 'registry'
   every :day, at: '12:01am' do
     rake 'invoices:process_payments'
   end
+
+  # Population Register death open data omits the newest 7 days, so a weekly
+  # rebuild is enough; DeathRegistry::Lookup treats the file as stale after
+  # death_registry_max_file_age_days.
+  every :monday, at: '4:00am' do
+    runner 'DeathRegistryFileBuildJob.perform_now'
+  end
 end
 
 every 10.minutes do

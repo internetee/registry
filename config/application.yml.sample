@@ -264,6 +264,12 @@ business_registry_allowed_origins: "http://registry.test,https://registry.test"
 business_registry_allowed_ips: "127.0.0.1,0.0.0.0,192.168.65.1"
 business_registry_api_tokens: "token1,token2"
 
+# Local copy of the Population Register death open data (DeathRegistry)
+death_registry_file_path: '' # defaults to tmp/death_registry/deaths.txt
+death_registry_source_urls: '' # comma-separated; defaults to the opendata.smit.ee CSVs
+death_registry_max_file_age_days: '8'
+death_registry_min_records: '100000'
+
 staging:
   action_mailer_default_host: 'registry.staging.test'
   action_mailer_default_from: 'no-reply@registry.staging.test'
