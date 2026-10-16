@@ -154,8 +154,22 @@
       .row
         .col-md-6.left
           %dl.dl-horizontal
+            %dt Arve number
+            %dd= @pdf.invoice.invoice_number
+
             %dt Arve kuupäev
             %dd= l(@pdf.invoice_date)
+
+            - if @pdf.due_date
+              %dt Maksetähtaeg
+              %dd= l(@pdf.due_date)
+
+            - if @pdf.reference_no.present?
+              %dt Viitenumber
+              %dd= @pdf.reference_no
+
+            %dt Makse staatus
+            %dd= @pdf.paid? ? 'Tasutud' : 'Tasumata'
 
             - if @pdf.payment_date
               %dt Makse kuupäev
@@ -190,7 +204,7 @@
                 - @pdf.rows.each do |row|
                   %tr
                     %td= row[:name]
-                    %td= row[:reserved] ? 'Reserveeritud' : 'Reserveerimine ebaõnnestus'
+                    %td= row[:reserved] ? 'Reserveeritud' : 'Ootab tasumist'
                     %td.text-right= eur.(row[:price])
               %tfoot
                 %tr
@@ -202,9 +216,14 @@
                 %tr
                   %th.no-border.text-right{colspan: 2} Summa kokku
                   %td.text-right= eur.(@pdf.grand_total)
-                %tr
-                  %th.no-border.text-right{colspan: 2} Tasutud summa
-                  %td.text-right= eur.(@pdf.amount_paid)
+                - if @pdf.paid?
+                  %tr
+                    %th.no-border.text-right{colspan: 2} Tasutud summa
+                    %td.text-right= eur.(@pdf.amount_paid)
+                - else
+                  %tr
+                    %th.no-border.text-right{colspan: 2} Tasuda
+                    %td.text-right= eur.(@pdf.grand_total)
 
       #footer
         %hr

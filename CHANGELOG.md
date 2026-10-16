@@ -1,3 +1,9 @@
+16.10.2026
+* Business Registry reservation invoices get a reference number and due date; invoice PDF is available before payment so it can be paid by bank transfer
+* New billing endpoint PUT /eis_billing/business_registry_payment reserves domains when EIS billing matches a bank transfer by reference number
+* Fixed cancelling of intersecting reservation invoices after a paid callback
+* Deploy: run migrations; set business_registry_payment_url in eis_billing_system
+
 15.10.2026
 * Fix for whois duplicate records https://github.com/internetee/registry/pull/2966
 

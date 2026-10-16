@@ -6,6 +6,7 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     
     stub_invoice_number_request
     stub_add_deposits_request
+    stub_reference_number_request
     stub_oneoff_request
 
     @valid_ip = '127.0.0.1'
@@ -196,6 +197,20 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     end
   end
 
+  test "should return bank transfer details in response" do
+    travel_to Time.zone.parse('2026-10-16 12:00') do
+      post api_v1_business_registry_long_reserve_domains_path,
+        params: { domain_names: @valid_domain_names },
+        headers: @auth_headers
+    end
+
+    assert_response :created
+    json_response = JSON.parse(response.body)
+    assert_equal '1234566', json_response['reference_no']
+    assert_equal '2026-11-15', json_response['due_date']
+    assert_equal '1234566', ReserveDomainInvoice.last.reference_no
+  end
+
   private
 
   def stub_invoice_number_request
@@ -206,6 +221,11 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
   def stub_add_deposits_request
     stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
       .to_return(status: 201, body: { everypay_link: 'https://pay.test' }.to_json)
+  end
+
+  def stub_reference_number_request
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/reference_number_generator")
+      .to_return(status: 200, body: { reference_number: '1234566' }.to_json, headers: {})
   end
 
   def stub_oneoff_request
