@@ -208,6 +208,7 @@ en:
       failed_epp_conn: 'Failed to open connection to EPP server!'
       epp_conn_error: 'CONNECTION ERROR - Is the EPP server running?'
       company_not_registered: 'Company is not registered'
+      ident_invalid: 'Ident is invalid'
       invalid_ident_type: Invalid ident type
       domain_name_blocked: 'Data management policy violation: Domain name is blocked [name]'
   code: 'Code'

@@ -4,6 +4,9 @@ en:
       index:
         reset_btn: Reset
         csv_btn: CSV
+        death_registry: Death registry
+        deceased: Deceased
+        not_checked: Not checked
 
       edit:
         new_status_btn: Add new status
@@ -13,6 +16,8 @@ en:
         general:
           created: Created
           updated: Updated
+          death_date: Death date
+          death_registry_checked_at: Death registry checked
 
         domains:
           roles: Roles
