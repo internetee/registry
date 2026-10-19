@@ -269,6 +269,7 @@ death_registry_file_path: '' # defaults to tmp/death_registry/deaths.txt
 death_registry_source_urls: '' # comma-separated; defaults to the opendata.smit.ee CSVs
 death_registry_max_file_age_days: '8'
 death_registry_min_records: '100000'
+validate_deceased_contacts: 'false' # reject new EE private contacts found in the death registry
 
 staging:
   action_mailer_default_host: 'registry.staging.test'
