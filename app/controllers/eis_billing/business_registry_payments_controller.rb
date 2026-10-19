@@ -16,6 +16,8 @@ module EisBilling
       when :already_paid
         render status: :ok, json: { message: 'Invoice already paid' }
       else
+        # First-come-first-served: billing refunds the payment of a cancelled invoice
+        reserve_domain_invoice.cancelled!
         render status: :unprocessable_entity, json: { message: 'Failed to reserve domains' }
       end
     end

@@ -101,7 +101,7 @@ class EisBilling::BusinessRegistryPaymentsTest < ApplicationIntegrationTest
 
     assert_response :unprocessable_entity
     assert_equal 'Failed to reserve domains', JSON.parse(response.body)['message']
-    assert @invoice.reload.pending?
+    assert @invoice.reload.cancelled?
   end
 
   private

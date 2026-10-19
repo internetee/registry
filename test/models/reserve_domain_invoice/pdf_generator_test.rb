@@ -85,6 +85,7 @@ class ReserveDomainInvoice::PdfGeneratorTest < ActiveSupport::TestCase
     refute_includes html, 'Tasutud summa'
     refute_includes html, 'Reserveeritud'
     refute_includes html, 'Makse kuupäev'
+    assert_includes html, 'first-come-first-served'
   end
 
   test 'renders paid invoice with paid amount and payment date' do
@@ -98,6 +99,7 @@ class ReserveDomainInvoice::PdfGeneratorTest < ActiveSupport::TestCase
     assert_includes html, I18n.l(Date.new(2026, 10, 20))
     refute_includes html, 'Tasumata'
     refute_includes html, 'Tasuda'
+    refute_includes html, 'first-come-first-served'
   end
 
   test 'hides reference number and due date for older invoices' do

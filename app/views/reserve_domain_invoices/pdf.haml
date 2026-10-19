@@ -225,6 +225,17 @@
                     %th.no-border.text-right{colspan: 2} Tasuda
                     %td.text-right= eur.(@pdf.grand_total)
 
+          - unless @pdf.paid?
+            %p
+              Arve väljastamine ei taga domeeninimede broneerimist. Broneerimine, nagu ka
+              registreerimine, toimub põhimõttel "kes ees, see mees". Kui makse laekumise ajaks
+              ei ole broneerimine enam võimalik, arve tühistatakse ja makstud summa tagastatakse.
+            %p
+              Issuing this invoice does not guarantee the reservation of the domain names.
+              Reservation, like registration, is first-come-first-served. If the reservation is
+              no longer possible when the payment arrives, the invoice is cancelled and the
+              payment is refunded.
+
       #footer
         %hr
         .row
