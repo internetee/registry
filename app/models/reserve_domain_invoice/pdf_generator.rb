@@ -1,6 +1,8 @@
 class ReserveDomainInvoice
   class PdfGenerator
-    attr_reader :invoice, :customer_name, :customer_address, :customer_vat_no, :payment_date
+    attr_reader :invoice, :customer_name, :customer_address, :customer_vat_no
+
+    delegate :reference_no, :due_date, to: :invoice
 
     def initialize(invoice, context = {})
       @invoice = invoice
@@ -9,6 +11,15 @@ class ReserveDomainInvoice
       @customer_vat_no = context[:customer_vat_no]
       @private_individual = context[:private_individual]
       @payment_date = context[:payment_date]
+      @paid = context[:paid]
+    end
+
+    def paid?
+      !!@paid
+    end
+
+    def payment_date
+      @payment_date if paid?
     end
 
     def amount_paid
@@ -20,7 +31,7 @@ class ReserveDomainInvoice
     end
 
     def rows
-      invoice.domain_names.map { |name| { name: name, reserved: true, price: net_price_per_domain } }
+      invoice.domain_names.map { |name| { name: name, reserved: paid?, price: net_price_per_domain } }
     end
 
     def rows_sum
