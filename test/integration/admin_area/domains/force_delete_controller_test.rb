@@ -231,4 +231,17 @@ class AdminAreaDomainsForceDeleteControllerTest < ActionDispatch::IntegrationTes
 
     assert_equal Date.new(2026, 1, 1), registrant.reload.death_date
   end
+
+  def test_cancelling_deceased_admin_contact_force_delete_clears_death_date
+    domain = domains(:library)
+    admin_contact = domain.admin_contacts.first
+    admin_contact.update_columns(death_date: Date.new(2026, 1, 1))
+    domain.schedule_force_delete(type: :soft, reason: 'deceased_admin_contact', notify_by_email: true,
+                                 notes: 'Admin contact has died')
+
+    delete admin_domain_force_delete_path(domain)
+
+    assert_not domain.reload.force_delete_scheduled?
+    assert_nil admin_contact.reload.death_date
+  end
 end

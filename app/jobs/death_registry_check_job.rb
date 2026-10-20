@@ -11,6 +11,9 @@ require 'csv'
 # before that, and every day during the force delete; a person who is no longer
 # in the file has the death date cleared and the force delete cancelled.
 #
+# Deceased admin and tech contacts are handled by
+# DeathRegistry::DeceasedDomainContacts.
+#
 # The job also rebuilds the death registry file when it is older than
 # FILE_REBUILD_AGE, so production needs a single cron line.
 #
@@ -37,6 +40,7 @@ class DeathRegistryCheckJob < ApplicationJob
     @checked = 0
     @force_deletes = 0
     @cancelled = 0
+    @contacts_removed = 0
 
     rebuild_file_if_old
     lookup = DeathRegistry::Lookup.new
@@ -47,11 +51,13 @@ class DeathRegistryCheckJob < ApplicationJob
         unless dry_run
           start_force_deletes(lookup)
           cancel_force_deletes_of_living(lookup)
+          handle_deceased_domain_contacts(lookup)
         end
       end
       report_dry_run if dry_run
       Rails.logger.info("#{self.class.name}: checked #{@checked} contacts, found #{@findings.size} " \
-                        "deceased, started #{@force_deletes} and cancelled #{@cancelled} force deletes" \
+                        "deceased, started #{@force_deletes} and cancelled #{@cancelled} force deletes, " \
+                        "removed #{@contacts_removed} admin and tech contacts" \
                         "#{' (dry run)' if dry_run}")
     else
       @problems << "Death registry file #{lookup.path} is missing, stale or malformed. " \
@@ -156,11 +162,15 @@ class DeathRegistryCheckJob < ApplicationJob
     end
   end
 
+  def handle_deceased_domain_contacts(lookup)
+    result = DeathRegistry::DeceasedDomainContacts.new(lookup: lookup).call
+    @contacts_removed += result.removed
+    @force_deletes += result.force_deletes
+  end
+
   def clear_death_date(contact)
     Rails.logger.info("#{self.class.name}: contact #{contact.code} is no longer in the death registry")
-    contact.death_date = nil
-    contact.death_registry_checked_at = Time.zone.now
-    contact.save!(validate: false)
+    contact.clear_death_date!
   end
 
   def force_delete_due?(death_date)

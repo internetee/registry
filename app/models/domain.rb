@@ -893,6 +893,10 @@ class Domain < ApplicationRecord
     registrant.underage? && Setting.admin_contacts_required_for_minors
   end
 
+  def required_admin_contacts_count
+    require_admin_contacts? ? Setting.admin_contacts_min_count : 0
+  end
+
   def require_tech_contacts?
     registrant.present? && registrant.org?
   end

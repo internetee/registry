@@ -17,20 +17,21 @@ module Admin
 
       def destroy
         authorize! :manage, domain
-        deceased_registrant = domain.registrant if domain.template_name == 'deceased_person'
+        deceased_contacts = deceased_contacts_of_force_delete
         domain.cancel_force_delete
-        clear_death_date(deceased_registrant) if deceased_registrant
+        # Otherwise the death registry check would start it again the next day
+        deceased_contacts.each(&:clear_death_date!)
         redirect_to edit_admin_domain_url(domain), notice: t('.cancelled')
       end
 
       private
 
-      # Without this the death registry check would start the force delete
-      # again the next day. The contact is checked again in a year.
-      def clear_death_date(contact)
-        contact.death_date = nil
-        contact.death_registry_checked_at = Time.zone.now
-        contact.save!(validate: false)
+      def deceased_contacts_of_force_delete
+        case domain.template_name
+        when 'deceased_person' then [domain.registrant]
+        when 'deceased_admin_contact' then domain.admin_contacts.select(&:death_date)
+        else []
+        end
       end
 
       def domain
