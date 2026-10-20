@@ -85,12 +85,13 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
     assert texts.all? { |text| text.include?((@recent_death + 6.months + 1.day).to_s) }
   end
 
-  def test_saves_only_death_date_for_deceased_admin_contact
+  def test_removes_deceased_admin_contact_found_in_same_run
     ENV['death_registry_dry_run'] = 'false'
 
     DeathRegistryCheckJob.perform_now
 
     assert_equal @recent_death, @admin.reload.death_date
+    assert_not_includes domains(:shop).reload.admin_contacts, @admin
     assert_empty Notification.where('text LIKE ?', "%#{ADMIN_IDENT}%")
   end
 
@@ -145,9 +146,9 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
     ENV['death_registry_dry_run'] = 'false'
     @registrant.update_columns(death_date: @recent_death)
 
-    assert_no_difference 'Notification.count' do
-      DeathRegistryCheckJob.perform_now
-    end
+    DeathRegistryCheckJob.perform_now
+
+    assert_not Notification.where('text LIKE ?', "%(ident #{REGISTRANT_IDENT}) died%").exists?
 
     assert_nil @registrant.reload.death_registry_checked_at
   end
@@ -246,7 +247,7 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
   def test_clears_death_date_instead_of_force_delete_when_person_left_registry
     ENV['death_registry_dry_run'] = 'false'
     mark_deceased(@registrant, Time.zone.today - 7.months)
-    write_death_file(ADMIN_IDENT => @recent_death)
+    write_death_file(UNLINKED_IDENT => @recent_death)
 
     assert_no_difference 'Notification.count' do
       DeathRegistryCheckJob.perform_now

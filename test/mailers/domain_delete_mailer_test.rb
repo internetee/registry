@@ -88,4 +88,24 @@ class DomainDeleteMailerTest < ActionMailer::TestCase
     assert_equal 'Domeen shop.test on kustutusmenetluses' \
                  ' / Domain shop.test is in deletion process', email.subject
   end
+
+  def test_forced_deceased_admin_contact
+    email = DomainDeleteMailer.forced(domain: @domain,
+                                      registrar: @domain.registrar,
+                                      registrant: @domain.registrant,
+                                      template_name: 'deceased_admin_contact').deliver_now
+
+    assert_emails 1
+    assert_includes email.text_part.body.to_s, 'halduskontakt on surnud'
+    assert_includes email.html_part.body.to_s, 'administrative contact of the domain shop.test has died'
+  end
+
+  def test_forced_deceased_person_uses_private_person_letter
+    email = DomainDeleteMailer.forced(domain: @domain,
+                                      registrar: @domain.registrar,
+                                      registrant: @domain.registrant,
+                                      template_name: 'deceased_person').deliver_now
+
+    assert_includes email.text_part.body.to_s, 'on surnud ja sellest on möödunud vähemalt 6 kuud'
+  end
 end
