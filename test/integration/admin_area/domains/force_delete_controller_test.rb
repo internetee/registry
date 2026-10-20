@@ -207,4 +207,28 @@ class AdminAreaDomainsForceDeleteControllerTest < ActionDispatch::IntegrationTes
   def admin_domain_force_delete_path(domain)
     "/admin/domains/#{domain.id}/force_delete"
   end
+
+  def test_cancelling_deceased_registrant_force_delete_clears_death_date
+    registrant = @domain.registrant
+    registrant.update_columns(death_date: Date.new(2026, 1, 1), death_registry_checked_at: 1.year.ago)
+    @domain.schedule_force_delete(type: :fast_track, reason: 'deceased_person', notify_by_email: true,
+                                  notes: 'Deceased registrant')
+
+    delete admin_domain_force_delete_path(@domain)
+
+    assert_not @domain.reload.force_delete_scheduled?
+    registrant.reload
+    assert_nil registrant.death_date
+    assert_in_delta Time.zone.now, registrant.death_registry_checked_at, 1.minute
+  end
+
+  def test_cancelling_other_force_delete_keeps_death_date
+    registrant = @domain.registrant
+    registrant.update_columns(death_date: Date.new(2026, 1, 1))
+    @domain.schedule_force_delete(type: :fast_track, reason: 'invalid_company', notify_by_email: true)
+
+    delete admin_domain_force_delete_path(@domain)
+
+    assert_equal Date.new(2026, 1, 1), registrant.reload.death_date
+  end
 end

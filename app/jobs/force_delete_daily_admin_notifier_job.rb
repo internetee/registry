@@ -51,10 +51,12 @@ class ForceDeleteDailyAdminNotifierJob < ApplicationJob
   end
 
   def determine_reason(domain)
+    notes = domain.status_notes[DomainStatus::FORCE_DELETE]
+
     if domain.template_name.present?
-      domain.template_name
-    elsif domain.status_notes[DomainStatus::FORCE_DELETE].present?
-      "Manual force delete: #{domain.status_notes[DomainStatus::FORCE_DELETE]}"
+      [domain.template_name, notes.presence].compact.join(': ')
+    elsif notes.present?
+      "Manual force delete: #{notes}"
     else
       'Unknown reason'
     end

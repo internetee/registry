@@ -94,16 +94,16 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
     assert_empty Notification.where('text LIKE ?', "%#{ADMIN_IDENT}%")
   end
 
-  def test_no_poll_when_six_months_have_passed
+  def test_starts_force_delete_instead_of_death_poll_when_six_months_have_passed
     ENV['death_registry_dry_run'] = 'false'
     old_death = Time.zone.today - 6.months
     write_death_file(REGISTRANT_IDENT => old_death)
 
-    assert_no_difference 'Notification.count' do
-      DeathRegistryCheckJob.perform_now
-    end
+    DeathRegistryCheckJob.perform_now
 
     assert_equal old_death, @registrant.reload.death_date
+    assert_not Notification.where('text LIKE ?', 'According to the Estonian Population Register%').exists?
+    assert domains(:shop).reload.force_delete_scheduled?
   end
 
   def test_saves_check_time_for_alive_contact_without_version
@@ -141,15 +141,15 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
     assert_equal @recent_death, @registrant.reload.death_date
   end
 
-  def test_skips_contacts_with_death_date
+  def test_does_not_check_contacts_with_death_date_again
     ENV['death_registry_dry_run'] = 'false'
-    @registrant.update_columns(death_date: Date.new(2020, 1, 1))
+    @registrant.update_columns(death_date: @recent_death)
 
     assert_no_difference 'Notification.count' do
       DeathRegistryCheckJob.perform_now
     end
 
-    assert_equal Date.new(2020, 1, 1), @registrant.reload.death_date
+    assert_nil @registrant.reload.death_registry_checked_at
   end
 
   def test_rebuilds_file_older_than_seven_days
@@ -194,7 +194,127 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
     assert_includes mail.body.to_s, 'Contacts were not checked'
   end
 
+  def test_starts_fast_track_force_delete_six_months_after_death
+    ENV['death_registry_dry_run'] = 'false'
+    death_date = Time.zone.today - 6.months
+    mark_deceased(@registrant, death_date)
+
+    DeathRegistryCheckJob.perform_now
+
+    @registrant.registrant_domains.each do |domain|
+      assert domain.force_delete_scheduled?, domain.name
+      assert_equal 'fast_track', domain.force_delete_type
+      assert_equal 'deceased_person', domain.template_name
+      assert_equal Time.zone.tomorrow, domain.force_delete_start.to_date
+      assert_includes domain.status_notes[DomainStatus::FORCE_DELETE], REGISTRANT_IDENT
+    end
+
+    polls = Notification.where('text LIKE ?', 'Force delete set on domain % because%').pluck(:text)
+    assert_equal @registrant.registrant_domains.count, polls.size
+    assert polls.all? { |text| text.include?("(ident #{REGISTRANT_IDENT}) has died") }
+
+    mail = ActionMailer::Base.deliveries.find { |m| m.subject.include?('shop.test') }
+    assert_includes mail.text_part.body.to_s, 'on surnud ja sellest on möödunud vähemalt 6 kuud'
+  end
+
+  def test_force_delete_starts_on_last_day_of_shorter_month
+    ENV['death_registry_dry_run'] = 'false'
+    mark_deceased(@registrant, Date.new(2026, 8, 31))
+
+    travel_to Time.zone.parse('2027-02-27 05:00') do
+      File.utime(Time.now, Time.now, @path)
+      DeathRegistryCheckJob.perform_now
+      assert_not domains(:shop).reload.force_delete_scheduled?
+    end
+
+    travel_to Time.zone.parse('2027-02-28 05:00') do
+      File.utime(Time.now, Time.now, @path)
+      DeathRegistryCheckJob.perform_now
+      assert_equal Date.new(2027, 3, 1), domains(:shop).reload.force_delete_start.to_date
+    end
+  end
+
+  def test_no_force_delete_before_six_months
+    ENV['death_registry_dry_run'] = 'false'
+    mark_deceased(@registrant, Time.zone.today - 6.months + 1.day)
+
+    DeathRegistryCheckJob.perform_now
+
+    assert_not domains(:shop).reload.force_delete_scheduled?
+  end
+
+  def test_clears_death_date_instead_of_force_delete_when_person_left_registry
+    ENV['death_registry_dry_run'] = 'false'
+    mark_deceased(@registrant, Time.zone.today - 7.months)
+    write_death_file(ADMIN_IDENT => @recent_death)
+
+    assert_no_difference 'Notification.count' do
+      DeathRegistryCheckJob.perform_now
+    end
+
+    assert_nil @registrant.reload.death_date
+    assert_not_nil @registrant.death_registry_checked_at
+    assert_not domains(:shop).reload.force_delete_scheduled?
+  end
+
+  def test_leaves_existing_force_delete_alone
+    ENV['death_registry_dry_run'] = 'false'
+    domain = domains(:shop)
+    domain.schedule_force_delete(type: :soft, notify_by_email: true, reason: 'invalid_email',
+                                 email: 'john@inbox.test')
+    mark_deceased(@registrant, Time.zone.today - 7.months)
+
+    DeathRegistryCheckJob.perform_now
+
+    assert_equal 'invalid_email', domain.reload.template_name
+    assert_equal 'soft', domain.force_delete_type
+    assert_equal 'deceased_person', domains(:airport).reload.template_name
+  end
+
+  def test_cancels_force_delete_when_person_leaves_registry
+    ENV['death_registry_dry_run'] = 'false'
+    mark_deceased(@registrant, Time.zone.today - 7.months)
+    DeathRegistryCheckJob.perform_now
+    assert domains(:shop).reload.force_delete_scheduled?
+
+    write_death_file(ADMIN_IDENT => @recent_death)
+    DeathRegistryCheckJob.perform_now
+
+    domain = domains(:shop).reload
+    assert_not domain.force_delete_scheduled?
+    assert_nil domain.template_name
+    assert_nil @registrant.reload.death_date
+    assert Notification.exists?(text: 'Force delete is cancelled on domain shop.test')
+  end
+
+  def test_keeps_force_delete_while_person_is_in_registry
+    ENV['death_registry_dry_run'] = 'false'
+    mark_deceased(@registrant, Time.zone.today - 7.months)
+    DeathRegistryCheckJob.perform_now
+
+    assert_no_difference 'Notification.count' do
+      DeathRegistryCheckJob.perform_now
+    end
+
+    assert domains(:shop).reload.force_delete_scheduled?
+  end
+
+  def test_valid_contact_email_does_not_cancel_deceased_registrant_force_delete
+    ENV['death_registry_dry_run'] = 'false'
+    mark_deceased(@registrant, Time.zone.today - 7.months)
+    DeathRegistryCheckJob.perform_now
+
+    @registrant.reload.remove_force_delete_for_valid_contact
+
+    assert domains(:shop).reload.force_delete_scheduled?
+  end
+
   private
+
+  def mark_deceased(contact, death_date)
+    contact.update_columns(death_date: death_date, death_registry_checked_at: Time.zone.now)
+    write_death_file(contact.ident => death_date)
+  end
 
   def make_estonian_person(contact, ident)
     contact.update_columns(ident: ident, ident_type: 'priv', ident_country_code: 'EE',

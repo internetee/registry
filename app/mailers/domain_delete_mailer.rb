@@ -1,4 +1,7 @@
 class DomainDeleteMailer < ApplicationMailer
+  # Force delete templates that share the email of another template
+  FORCED_TEMPLATE_VIEWS = { 'deceased_person' => 'private_person' }.freeze
+
   def confirmation_request(domain:, registrar:, registrant:)
     @domain = DomainPresenter.new(domain: domain, view: view_context)
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
@@ -43,7 +46,7 @@ class DomainDeleteMailer < ApplicationMailer
          to: domain.force_delete_contact_emails,
          subject: subject,
          template_path: 'mailers/domain_delete_mailer/forced',
-         template_name: template_name)
+         template_name: FORCED_TEMPLATE_VIEWS.fetch(template_name, template_name))
   end
 
   private
