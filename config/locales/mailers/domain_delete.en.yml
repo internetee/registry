@@ -20,4 +20,3 @@ en:
       subject: >-
         Domeen %{domain_name} on kustutusmenetluses
         / Domain %{domain_name} is in deletion process
-        / Домен %{domain_name} в процессе удаления

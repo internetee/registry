@@ -6,6 +6,11 @@ require 'csv'
 # registry file. Every contact linked to a domain is checked once a year; a run
 # only takes the contacts whose last check is older than CHECK_INTERVAL.
 #
+# When six months have passed since a registrant's death, a fast track force
+# delete starts on the registrant's domains. The person is looked up again
+# before that, and every day during the force delete; a person who is no longer
+# in the file has the death date cleared and the force delete cancelled.
+#
 # The job also rebuilds the death registry file when it is older than
 # FILE_REBUILD_AGE, so production needs a single cron line.
 #
@@ -17,6 +22,7 @@ class DeathRegistryCheckJob < ApplicationJob
   FILE_REBUILD_AGE = 7.days
   BATCH_SIZE = 1000
   REPORT_HEADERS = %w[contact_code ident death_date roles domains registrars six_months_passed].freeze
+  FORCE_DELETE_REASON = 'deceased_person'
 
   queue_as :default
 
@@ -29,15 +35,24 @@ class DeathRegistryCheckJob < ApplicationJob
     @problems = []
     @findings = []
     @checked = 0
+    @force_deletes = 0
+    @cancelled = 0
 
     rebuild_file_if_old
     lookup = DeathRegistry::Lookup.new
 
     if lookup.available?
-      ::PaperTrail.request(whodunnit: "cron - #{self.class.name}") { check_contacts(lookup) }
+      ::PaperTrail.request(whodunnit: "cron - #{self.class.name}") do
+        check_contacts(lookup)
+        unless dry_run
+          start_force_deletes(lookup)
+          cancel_force_deletes_of_living(lookup)
+        end
+      end
       report_dry_run if dry_run
       Rails.logger.info("#{self.class.name}: checked #{@checked} contacts, found #{@findings.size} " \
-                        "deceased#{' (dry run)' if dry_run}")
+                        "deceased, started #{@force_deletes} and cancelled #{@cancelled} force deletes" \
+                        "#{' (dry run)' if dry_run}")
     else
       @problems << "Death registry file #{lookup.path} is missing, stale or malformed. " \
                    'Contacts were not checked.'
@@ -94,6 +109,58 @@ class DeathRegistryCheckJob < ApplicationJob
     contact.save!(validate: false)
 
     notify_registrars(contact, registrant_domains) unless force_delete_due?(death_date)
+  end
+
+  # Registrants whose death is at least FORCE_DELETE_DELAY old and who have a
+  # domain without a force delete. Domains that already have a force delete for
+  # another reason are left alone.
+  def start_force_deletes(lookup)
+    # Same date arithmetic as force_delete_due?: 31.08 + 6 months is 28.02
+    Contact.where("(contacts.death_date + INTERVAL '6 months')::date <= ?", Time.zone.today)
+           .where('EXISTS (SELECT 1 FROM domains WHERE domains.registrant_id = contacts.id)')
+           .find_each do |contact|
+      domains = contact.registrant_domains.reject(&:force_delete_scheduled?)
+      next if domains.empty?
+
+      death_date = lookup.death_date(contact.ident)
+      next clear_death_date(contact) unless death_date
+
+      if death_date != contact.death_date
+        contact.death_date = death_date
+        contact.save!(validate: false)
+        next unless force_delete_due?(death_date)
+      end
+
+      domains.each { |domain| schedule_force_delete(domain, contact) }
+    end
+  end
+
+  def schedule_force_delete(domain, contact)
+    result = domain.schedule_force_delete(type: :fast_track, notify_by_email: true, reason: FORCE_DELETE_REASON,
+                                          notes: "Deceased registrant: #{contact.ident}, " \
+                                                 "death date #{contact.death_date.iso8601}")
+    return Rails.logger.warn("#{self.class.name}: #{domain.name}: #{result.errors.full_messages.join(', ')}") \
+      unless result.valid?
+
+    @force_deletes += 1
+  end
+
+  def cancel_force_deletes_of_living(lookup)
+    Domain.where("force_delete_data->'template_name' = ?", FORCE_DELETE_REASON)
+          .includes(:registrant).find_each do |domain|
+      next if lookup.deceased?(domain.registrant.ident)
+
+      domain.cancel_force_delete
+      clear_death_date(domain.registrant) if domain.registrant.death_date
+      @cancelled += 1
+    end
+  end
+
+  def clear_death_date(contact)
+    Rails.logger.info("#{self.class.name}: contact #{contact.code} is no longer in the death registry")
+    contact.death_date = nil
+    contact.death_registry_checked_at = Time.zone.now
+    contact.save!(validate: false)
   end
 
   def force_delete_due?(death_date)
