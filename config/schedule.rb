@@ -83,11 +83,11 @@ if @cron_group == 'registry'
     rake 'invoices:process_payments'
   end
 
-  # Population Register death open data omits the newest 7 days, so a weekly
-  # rebuild is enough; DeathRegistry::Lookup treats the file as stale after
-  # death_registry_max_file_age_days.
-  every :monday, at: '4:00am' do
-    runner 'DeathRegistryFileBuildJob.perform_now'
+  # Checks EE private contacts against the death registry once a year each.
+  # The job rebuilds the death registry file itself when it is older than 7
+  # days; the open data omits the newest 7 days, so weekly is enough.
+  every :day, at: '5:00am' do
+    runner 'DeathRegistryCheckJob.perform_now'
   end
 end
 
