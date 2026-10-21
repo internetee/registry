@@ -22,12 +22,11 @@ class CreateDomainAutoRenewals < ActiveRecord::Migration[6.1]
       t.datetime :closed_at
       t.datetime :funding_warning_sent_at
       t.datetime :blocked_warning_sent_at
-      t.datetime :overdue_notice_sent_at
       t.string :creator_str
       t.string :updator_str
       t.timestamps
 
-      t.check_constraint "state IN ('awaiting_funds', 'grace', 'completed', 'reversed', 'cancelled')",
+      t.check_constraint "state IN ('awaiting_funds', 'grace', 'completed', 'reversed', 'failed', 'cancelled')",
                          name: 'domain_auto_renewals_state_check'
       t.index :uuid, unique: true
       t.index [:domain_id, :original_expire_at], unique: true

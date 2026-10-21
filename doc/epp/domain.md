@@ -264,18 +264,23 @@ extensions are independent of DNSSEC and share one wrapper when present:
 ```
 
 Cycle states are `fundingRetry`, `autoRenewPeriod`, `completed`, `reversed`,
-and `cancelled`. `exDate` is absent until a renewal succeeds.
+`failed`, and `cancelled`. `exDate` is absent until a renewal succeeds.
 `cycle` is absent when the domain has no renewal history. RGP `autoRenewPeriod`
 is never an ordinary `domain:status`; it disappears at the cancellation deadline,
 even if background processing has not closed the cycle yet.
 
-Unpaid or blocked renewals remain in `fundingRetry` after the cancellation
-deadline, with the preference enabled and retries continuing until success,
-opt-out, manual renewal, sponsor change, or domain deletion. Enabling the
-preference on an already expired domain also allows automatic renewal, including
-while it is out of zone. Success at or after the deadline renews from the original
-expiry by one year, restores ordinary expiry and zone fields, and immediately
-becomes `completed`, with no RGP status or reversal window.
+Unpaid or blocked renewals stay in `fundingRetry` and are retried once a day
+until the cancellation deadline. The first attempt happens when the cycle opens
+at expiry. A late success enters `autoRenewPeriod` with only the remaining
+cancellation window: success two days after expiry leaves 13 calendar days to
+reverse, and the deadline stays 15 calendar days after the original expiry.
+
+At the deadline an unpaid or still blocked cycle becomes terminal state `failed`
+and sends exactly one `renewalFailed` poll explaining the reason. Attempts for
+that expiry stop, while the preference stays enabled for future expiries, for
+example after a manual renewal. A later top-up or re-enabling the preference does
+not reopen the failed cycle. Enabling the preference at or after the cancellation
+deadline opens no cycle for that expiry.
 
 | Code | Automatic renewal error |
 | --- | --- |

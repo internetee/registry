@@ -5,8 +5,9 @@ class DomainAutoRenewal < ApplicationRecord
   GRACE = 'grace'.freeze
   COMPLETED = 'completed'.freeze
   REVERSED = 'reversed'.freeze
+  FAILED = 'failed'.freeze
   CANCELLED = 'cancelled'.freeze
-  STATES = [AWAITING_FUNDS, GRACE, COMPLETED, REVERSED, CANCELLED].freeze
+  STATES = [AWAITING_FUNDS, GRACE, COMPLETED, REVERSED, FAILED, CANCELLED].freeze
   OPEN_STATES = [AWAITING_FUNDS, GRACE].freeze
 
   INSUFFICIENT_FUNDS = 'insufficient_funds'.freeze
@@ -16,6 +17,7 @@ class DomainAutoRenewal < ApplicationRecord
   RGP_AUTO_RENEW_PERIOD = 'autoRenewPeriod'.freeze
   CANCELLATION_PERIOD_DAYS = 15
   RENEWAL_PERIOD_YEARS = 1
+  RETRY_INTERVAL = 1.day
 
   belongs_to :domain, optional: true
   belongs_to :registrar
@@ -29,6 +31,10 @@ class DomainAutoRenewal < ApplicationRecord
 
   scope :open_cycles, -> { where(state: OPEN_STATES) }
   scope :awaiting_funds, -> { where(state: AWAITING_FUNDS) }
+  scope :due_for_attempt, lambda { |now = Time.zone.now|
+    awaiting_funds.where('last_attempt_at IS NULL OR last_attempt_at <= ?', now - RETRY_INTERVAL)
+                  .where('cancellation_deadline_at > ?', now)
+  }
   scope :in_grace, -> { where(state: GRACE) }
   scope :due_for_closing, lambda { |now = Time.zone.now|
     open_cycles.where('cancellation_deadline_at <= ?', now)
@@ -75,6 +81,7 @@ class DomainAutoRenewal < ApplicationRecord
     when GRACE then grace_active?(at) ? RGP_AUTO_RENEW_PERIOD : 'completed'
     when COMPLETED then 'completed'
     when REVERSED then 'reversed'
+    when FAILED then 'failed'
     when CANCELLED then 'cancelled'
     end
   end

@@ -6,10 +6,12 @@ module Domains
       def execute
         domain = Domain.find_by(id: cycle.domain_id)
         with_locks(domain: domain, cycle: cycle) do
-          next cycle unless cycle.awaiting_funds?
+          now = Time.zone.now
+          next cycle unless cycle.awaiting_funds? && now < cycle.cancellation_deadline_at
+          next cycle if cycle.last_attempt_at && cycle.last_attempt_at > now - DomainAutoRenewal::RETRY_INTERVAL
 
           cycle.attempts_count += 1
-          cycle.last_attempt_at = Time.zone.now
+          cycle.last_attempt_at = now
           if domain.nil? || domain.registrar_id != cycle.registrar_id || !domain.auto_renew? ||
              domain.valid_to != cycle.original_expire_at
             cancel(cycle)
@@ -35,6 +37,7 @@ module Domains
 
         account = cycle.account
         account.lock!
+        return cycle.reload if Time.zone.now >= cycle.cancellation_deadline_at
 
         unless account.registrar_id == cycle.registrar_id && cycle.registrar.cash_account&.id == account.id
           raise ActiveRecord::RecordNotFound, "Automatic renewal payer account changed for cycle #{cycle.uuid}"
@@ -51,10 +54,7 @@ module Domains
         cycle.renewed_expire_at = cycle.original_expire_at.advance(years: DomainAutoRenewal::RENEWAL_PERIOD_YEARS)
         domain.assign_renewal_expiry(cycle.renewed_expire_at)
         domain.save!(validate: false)
-        renewed_at = Time.zone.now
-        completed = renewed_at >= cycle.cancellation_deadline_at
-        cycle.update!(state: completed ? DomainAutoRenewal::COMPLETED : DomainAutoRenewal::GRACE,
-                      renewed_at: renewed_at, closed_at: completed ? renewed_at : nil, failure_reason: nil)
+        cycle.update!(state: DomainAutoRenewal::GRACE, renewed_at: Time.zone.now, failure_reason: nil)
         notify(cycle, :renewed)
       end
 

@@ -366,36 +366,27 @@ class ReppV1DomainsAutoRenewTest < ActionDispatch::IntegrationTest
     refute response_json[:data][:domain].key?(:auto_renew)
   end
 
-  def test_enabling_out_of_zone_domain_renews_to_completed_and_cannot_be_reversed
+  def test_enabling_after_deadline_keeps_preference_without_opening_a_cycle
     original_expiry = 20.days.ago
     @domain.update_columns(auto_renew: false, valid_to: original_expiry,
                            statuses: [DomainStatus::EXPIRED, DomainStatus::SERVER_HOLD],
                            status_notes: {}, outzone_at: 5.days.ago, delete_date: 25.days.from_now,
                            force_delete_date: nil)
-    billing_prices(:renew_one_year).update!(valid_from: original_expiry.beginning_of_year, valid_to: nil)
     update_auto_renew(enabled: true)
     assert_response :ok
-    DomainCron.process_auto_renewals
-    cycle = @domain.auto_renewals.first!
+    assert_no_difference ['DomainAutoRenewal.count', 'AccountActivity.count', 'Notification.count'] do
+      DomainCron.process_auto_renewals
+    end
 
     get "/repp/v1/domains/#{@domain.name}", headers: @headers
     assert_response :ok
     data = response_json[:data][:domain]
-    assert_equal 'completed', data[:auto_renew][:cycle][:state]
-    assert_equal original_expiry.advance(years: 1).iso8601, data[:auto_renew][:cycle][:expire_time]
+    assert_nil data[:auto_renew][:cycle]
     assert_equal true, data[:auto_renew][:enabled]
     assert_empty data[:rgp_statuses]
-    refute data[:statuses].key?(:expired)
-    refute data[:statuses].key?(:serverHold)
-    assert_nil data[:outzone_at]
-    assert_nil data[:delete_date]
-    assert_no_difference 'AccountActivity.count' do
-      json = update_auto_renew(cycle_id: cycle.uuid)
-      assert_response :bad_request
-      assert_equal 2304, json[:code]
-    end
-    assert @domain.reload.auto_renew?
-    assert_nil cycle.reload.refund_activity_id
+    assert data[:statuses].key?(:expired)
+    assert data[:statuses].key?(:serverHold)
+    assert_equal original_expiry, @domain.reload.valid_to
   end
 
   private

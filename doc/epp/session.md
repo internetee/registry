@@ -91,15 +91,20 @@ text. Sessions negotiating the automatic-renewal URI also receive
 </extension>
 ```
 
-`event` is `renewed`, `fundingWarning`, `renewProhibited`, or `renewalOverdue`.
+`event` is `renewed`, `fundingWarning`, `renewProhibited`, or `renewalFailed`.
 A funding warning indicates insufficient funds; renew-prohibited includes blocking
-statuses or missing renewal pricing. An unpaid cycle has no `exDate`. At the cancellation
-deadline, the registrar receives exactly one `renewalOverdue` notice explaining
-the failure and ordinary removal from the zone. The preference remains enabled
-and the cycle stays in `fundingRetry`; attempts continue until success, opt-out,
-manual renewal, sponsor change, or domain deletion. A renewal at or after the
-deadline produces `renewed` with cycle state `completed` and text without a
-cancellation offer. The attached cycle shows its current
-state when the message is read. Acknowledge these messages with the usual poll
-`ack` command. Normal grace expiry and registrar-requested preference changes or
-reversals do not create these notifications.
+statuses or missing renewal pricing. An unpaid cycle has no `exDate`. Attempts
+start at expiry and repeat once a day until the cancellation deadline, fixed at
+15 calendar days after the original expiry. A late success produces `renewed`
+with state `autoRenewPeriod` and only the remaining reversal window: success two
+days after expiry leaves 13 calendar days to cancel.
+
+At the deadline an unpaid or still blocked cycle becomes `failed`. The registrar
+receives exactly one `renewalFailed` notice with the deadline and failure reason,
+explaining that attempts for this expiry have stopped and the preference remains
+enabled for future expiries. A later top-up or re-enabling the preference does
+not reopen that cycle; enabling after the deadline opens no cycle for that expiry.
+The attached cycle shows its current state when the message is read. Acknowledge
+these messages with the usual poll `ack` command. Normal grace expiry and
+registrar-requested preference changes or reversals do not create these
+notifications.

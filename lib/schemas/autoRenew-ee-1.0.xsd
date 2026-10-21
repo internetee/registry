@@ -31,6 +31,7 @@
       <enumeration value="autoRenewPeriod"/>
       <enumeration value="completed"/>
       <enumeration value="reversed"/>
+      <enumeration value="failed"/>
       <enumeration value="cancelled"/>
     </restriction>
   </simpleType>
@@ -72,7 +73,7 @@
       <enumeration value="renewed"/>
       <enumeration value="fundingWarning"/>
       <enumeration value="renewProhibited"/>
-      <enumeration value="renewalOverdue"/>
+      <enumeration value="renewalFailed"/>
     </restriction>
   </simpleType>
   <element name="pollData">

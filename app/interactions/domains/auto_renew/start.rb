@@ -11,7 +11,7 @@ module Domains
               isolated(domain) { OpenCycle.run!(domain: domain) }
             end
           end
-          DomainAutoRenewal.awaiting_funds.find_each do |cycle|
+          DomainAutoRenewal.due_for_attempt.find_each do |cycle|
             isolated(cycle) { AttemptRenewal.run!(cycle: cycle) }
           end
         end

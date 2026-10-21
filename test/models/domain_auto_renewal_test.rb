@@ -54,6 +54,7 @@ class DomainAutoRenewalTest < ActiveSupport::TestCase
       DomainAutoRenewal::GRACE => 'autoRenewPeriod',
       DomainAutoRenewal::COMPLETED => 'completed',
       DomainAutoRenewal::REVERSED => 'reversed',
+      DomainAutoRenewal::FAILED => 'failed',
       DomainAutoRenewal::CANCELLED => 'cancelled'
     }
 
@@ -128,6 +129,15 @@ class DomainAutoRenewalTest < ActiveSupport::TestCase
 
     assert_equal [@cycle.id, grace.id].sort, DomainAutoRenewal.open_cycles.ids.sort
     assert_equal [@cycle.id], DomainAutoRenewal.awaiting_funds.ids
+    assert_equal [@cycle.id], DomainAutoRenewal.due_for_attempt.ids
+    @cycle.update!(last_attempt_at: Time.zone.now)
+    assert_empty DomainAutoRenewal.due_for_attempt
+    assert_empty DomainAutoRenewal.due_for_attempt(Time.zone.now + 23.hours)
+    assert_equal [@cycle.id], DomainAutoRenewal.due_for_attempt(Time.zone.now + 24.hours).ids
+    assert_empty DomainAutoRenewal.due_for_attempt(@cycle.cancellation_deadline_at)
+    @cycle.update!(state: DomainAutoRenewal::FAILED)
+    assert_empty DomainAutoRenewal.due_for_attempt(Time.zone.now + 24.hours)
+    @cycle.update!(state: DomainAutoRenewal::AWAITING_FUNDS)
     assert_equal [grace.id], DomainAutoRenewal.in_grace.ids
     assert_equal [grace.id], DomainAutoRenewal.due_for_closing.ids
     assert_empty DomainAutoRenewal.due_for_closing(Time.zone.now - 1.second)
@@ -167,8 +177,8 @@ class DomainAutoRenewalTest < ActiveSupport::TestCase
     end
   end
 
-  def test_terminal_cycle_allows_a_new_cycle_for_a_later_expiry
-    @cycle.state = DomainAutoRenewal::COMPLETED
+  def test_failed_cycle_allows_a_new_cycle_for_a_later_expiry
+    @cycle.state = DomainAutoRenewal::FAILED
     @cycle.save!
     next_cycle = @cycle.dup
     next_cycle.uuid = SecureRandom.uuid

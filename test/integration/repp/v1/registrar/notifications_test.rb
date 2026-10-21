@@ -139,38 +139,35 @@ class ReppV1RegistrarNotificationsTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def test_overdue_event_survives_late_success_in_notifications_and_summary
+  def test_failed_renewal_event_and_state_are_exposed_in_notifications_and_summary
     travel_to Time.zone.local(2027, 3, 5, 12)
     domain = domains(:shop)
     cycle = domain.auto_renewals.create!(
       domain_name: domain.name, registrar: @user.registrar, account: @user.registrar.cash_account,
       original_expire_at: 16.days.ago, cancellation_deadline_at: 1.day.ago,
-      overdue_notice_sent_at: Time.zone.now
+      state: DomainAutoRenewal::FAILED, closed_at: Time.zone.now
     )
     notification = @user.registrar.notifications.create!(
-      event: 'renewalOverdue', text: 'Automatic renewal overdue',
+      event: 'renewalFailed', text: 'Automatic renewal failed',
       attached_obj_type: 'DomainAutoRenewal', attached_obj_id: cycle.id
     )
-    [DomainAutoRenewal::AWAITING_FUNDS, DomainAutoRenewal::COMPLETED].each do |state|
-      cycle.update!(state: state)
-      ['/repp/v1/registrar/notifications',
-       '/repp/v1/registrar/notifications/all_notifications',
-       "/repp/v1/registrar/notifications/#{notification.id}",
-       '/repp/v1/registrar/summary'].each do |path|
-        get path, headers: @auth_headers
-        json = JSON.parse(response.body, symbolize_names: true)
-        assert_response :ok
-        data = if json[:data].is_a?(Array)
-                 json[:data].find { |item| item[:id] == notification.id }
-               elsif path.end_with?('/summary')
-                 json[:data][:notification]
-               else
-                 json[:data]
-               end
-        assert_equal notification.id, data[:id]
-        assert_equal({ event: 'renewalOverdue', domain: domain.name, cycle: cycle.as_protocol_json },
-                     data[:attached_obj_data])
-      end
+    ['/repp/v1/registrar/notifications',
+     '/repp/v1/registrar/notifications/all_notifications',
+     "/repp/v1/registrar/notifications/#{notification.id}",
+     '/repp/v1/registrar/summary'].each do |path|
+      get path, headers: @auth_headers
+      json = JSON.parse(response.body, symbolize_names: true)
+      assert_response :ok
+      data = if json[:data].is_a?(Array)
+               json[:data].find { |item| item[:id] == notification.id }
+             elsif path.end_with?('/summary')
+               json[:data][:notification]
+             else
+               json[:data]
+             end
+      assert_equal notification.id, data[:id]
+      assert_equal({ event: 'renewalFailed', domain: domain.name, cycle: cycle.as_protocol_json },
+                   data[:attached_obj_data])
     end
   end
 
@@ -178,18 +175,18 @@ class ReppV1RegistrarNotificationsTest < ActionDispatch::IntegrationTest
     domain = domains(:shop)
     cycle = DomainAutoRenewal.create!(
       domain_name: domain.name, registrar: @user.registrar, account: @user.registrar.cash_account,
-      state: DomainAutoRenewal::CANCELLED, original_expire_at: 16.days.ago,
+      state: DomainAutoRenewal::FAILED, original_expire_at: 16.days.ago,
       cancellation_deadline_at: 1.day.ago, attempts_count: 3, domain_id: nil
     )
     notification = @user.registrar.notifications.create!(
-      event: 'renewalOverdue', text: 'Automatic renewal overdue',
+      event: 'renewalFailed', text: 'Automatic renewal failed',
       attached_obj_type: 'DomainAutoRenewal', attached_obj_id: cycle.id
     )
     get "/repp/v1/registrar/notifications/#{notification.id}", headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)
 
     assert_response :ok
-    assert_equal({ event: 'renewalOverdue', domain: domain.name, cycle: cycle.as_protocol_json },
+    assert_equal({ event: 'renewalFailed', domain: domain.name, cycle: cycle.as_protocol_json },
                  json[:data][:attached_obj_data])
   end
 end

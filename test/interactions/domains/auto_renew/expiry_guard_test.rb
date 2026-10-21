@@ -17,6 +17,30 @@ class AutoRenewExpiryGuardTest < AutoRenewTestCase
     end
   end
 
+  def test_missing_cycle_only_delays_ordinary_expiry_before_the_cancellation_deadline
+    with_feature do
+      deadline = DomainAutoRenewal.cancellation_deadline_for(@expiry)
+      travel_to deadline - 1.second
+      Domains::ExpirePeriod::ProcessExpired.run!(domain: @domain)
+      assert_not_includes @domain.reload.statuses, DomainStatus::EXPIRED
+      assert_nil @domain.outzone_at
+      assert_nil @domain.delete_date
+
+      [deadline, deadline + 1.second].each do |at|
+        @domain.update_columns(statuses: [], outzone_at: nil, delete_date: nil)
+        travel_to at
+        Domains::ExpirePeriod::Start.run!
+        assert_includes @domain.reload.statuses, DomainStatus::EXPIRED
+        @domain.update_columns(statuses: [], outzone_at: nil, delete_date: nil)
+        Domains::ExpirePeriod::ProcessExpired.run!(domain: @domain)
+        assert_empty @domain.auto_renewals
+        assert_includes @domain.reload.statuses, DomainStatus::EXPIRED
+        assert_equal @expiry + Domain.expire_warning_period, @domain.outzone_at
+        assert_equal (@domain.outzone_at + Domain.redemption_grace_period).to_date, @domain.delete_date
+      end
+    end
+  end
+
   def test_feature_off_allows_normal_expiry_without_a_cycle
     with_feature(false) do
       Domains::ExpirePeriod::ProcessExpired.run!(domain: @domain)

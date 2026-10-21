@@ -66,27 +66,6 @@ class AutoRenewEngineTest < AutoRenewTestCase
     end
   end
 
-  def test_missing_cycle_only_delays_ordinary_expiry_before_the_cancellation_deadline
-    with_feature do
-      deadline = DomainAutoRenewal.cancellation_deadline_for(@expiry)
-      travel_to deadline - 1.second
-      Domains::ExpirePeriod::ProcessExpired.run!(domain: @domain)
-      assert_not_includes @domain.reload.statuses, DomainStatus::EXPIRED
-      assert_nil @domain.outzone_at
-      assert_nil @domain.delete_date
-
-      [deadline, deadline + 1.second].each do |at|
-        @domain.update_columns(statuses: [], outzone_at: nil, delete_date: nil)
-        travel_to at
-        Domains::ExpirePeriod::ProcessExpired.run!(domain: @domain)
-        assert_empty @domain.auto_renewals
-        assert_includes @domain.reload.statuses, DomainStatus::EXPIRED
-        assert_equal @expiry + Domain.expire_warning_period, @domain.outzone_at
-        assert_equal (@domain.outzone_at + Domain.redemption_grace_period).to_date, @domain.delete_date
-      end
-    end
-  end
-
   def test_success_debits_once_and_clears_expiry_fields_and_unnoted_hold
     with_feature do
       @domain.update_columns(statuses: [DomainStatus::EXPIRED, DomainStatus::SERVER_HOLD],
@@ -133,25 +112,42 @@ class AutoRenewEngineTest < AutoRenewTestCase
     end
   end
 
-  def test_insufficient_funds_retries_once_warns_then_late_success_keeps_deadline
+  def test_sweep_attempts_immediately_then_only_once_every_twenty_four_hours
+    with_feature do
+      @account.update!(balance: 0)
+      DomainCron.process_auto_renewals
+      cycle = @domain.auto_renewals.first!
+      assert_equal 1, cycle.attempts_count
+      assert_equal @expiry, cycle.last_attempt_at
+      assert_equal 1, polls.count
+
+      travel_to @expiry + 23.hours
+      DomainCron.process_auto_renewals
+      attempt(cycle)
+      assert_equal 1, cycle.reload.attempts_count
+      travel_to @expiry + 24.hours
+      DomainCron.process_auto_renewals
+      assert_equal 2, cycle.reload.attempts_count
+      assert_equal Time.zone.now, cycle.last_attempt_at
+      assert_equal 1, polls.count
+      assert_equal 'fundingWarning', polls.first!.event
+    end
+  end
+
+  def test_success_two_days_after_expiry_has_only_the_remaining_reversal_window
     with_feature do
       @account.update!(balance: 0)
       cycle = open_cycle
-      deadline = cycle.cancellation_deadline_at
-      2.times { attempt(cycle) }
-      assert_equal 1, polls.count
-      assert_equal 'fundingWarning', polls.order(:id).last.event
-      warning = polls.order(:id).last
-      assert_equal 2, cycle.attempts_count
-      assert_nil cycle.charge_activity
-      assert_equal @expiry, @domain.reload.valid_to
-
-      Domains::ExpirePeriod::ProcessExpired.run!(domain: @domain)
-      travel_to @expiry.advance(days: 10)
-      @account.account_activities.create!(sum: 20, currency: 'EUR', activity_type: AccountActivity::ADD_CREDIT)
       attempt(cycle)
+      warning = polls.first!
+      Domains::ExpirePeriod::ProcessExpired.run!(domain: @domain)
+      travel_to @expiry.advance(days: 2)
+      @account.account_activities.create!(sum: 20, currency: 'EUR', activity_type: AccountActivity::ADD_CREDIT)
+      DomainCron.process_auto_renewals
       assert cycle.reload.grace?
-      assert_equal deadline, cycle.cancellation_deadline_at
+      assert cycle.reversible?
+      assert_equal @expiry.advance(days: 15), cycle.cancellation_deadline_at
+      assert_equal Time.zone.now.advance(days: 13), cycle.cancellation_deadline_at
       assert_equal @expiry.advance(years: 1), @domain.reload.valid_to
       assert_nil @domain.outzone_at
       assert_nil @domain.delete_date
@@ -160,127 +156,120 @@ class AutoRenewEngineTest < AutoRenewTestCase
       assert_equal 2, polls.count
       assert_equal 'fundingWarning', warning.reload.event
       assert_equal 'renewed', polls.order(:id).last.event
-      assert_equal 3, cycle.attempts_count
+      assert_equal 2, cycle.attempts_count
+      assert change_preference(reverse_cycle_id: cycle.uuid).valid?
+      assert cycle.reload.reversed?
     end
   end
 
-  def test_unpaid_deadline_keeps_preference_and_retries_with_exactly_one_overdue_notice
+  def test_unpaid_deadline_fails_once_and_top_up_or_reenable_cannot_reopen_that_expiry
     with_feature do
       @account.update!(balance: 0)
       cycle = open_cycle
       attempt(cycle)
       deadline = cycle.cancellation_deadline_at
       travel_to deadline
-      assert_difference -> { polls.count }, 1 do
-        3.times do
-          DomainCron.process_auto_renewals
-          travel_to Time.zone.now + 1.day
+      assert_no_difference 'AccountActivity.count' do
+        attempt(cycle)
+        assert_equal 1, cycle.reload.attempts_count
+        assert_difference -> { polls.count }, 1 do
+          3.times do
+            DomainCron.process_auto_renewals
+            travel_to Time.zone.now + 1.day
+          end
         end
       end
-      assert cycle.reload.awaiting_funds?
-      assert_equal 'fundingRetry', cycle.protocol_state
+      assert_equal DomainAutoRenewal::FAILED, cycle.reload.state
+      assert_equal 'failed', cycle.protocol_state
+      assert cycle.terminal?
       assert @domain.reload.auto_renew?
-      assert_nil cycle.closed_at
-      assert_equal deadline, cycle.overdue_notice_sent_at
-      assert_equal 4, cycle.attempts_count
-      assert_equal 1, polls.where(event: 'renewalOverdue').count
+      assert_equal deadline, cycle.closed_at
+      assert_equal 1, cycle.attempts_count
+      assert_equal 1, polls.where(event: 'renewalFailed').count
       assert_equal @expiry, @domain.valid_to
-      assert_equal I18n.t('auto_renew.notifications.renewal_overdue', domain: @domain.name,
+      assert_equal I18n.t('auto_renew.notifications.renewal_failed', domain: @domain.name,
                           deadline: deadline.iso8601, cycle_id: cycle.uuid,
                           reason: I18n.t('auto_renew.failure_reasons.insufficient_funds')),
-                   polls.find_by!(event: 'renewalOverdue').text
-    end
-  end
+                   polls.find_by!(event: 'renewalFailed').text
 
-  [0, 2.days].each do |delay|
-    define_method("test_top_up_#{delay}_seconds_after_deadline_completes_and_restores_zone_without_reversal") do
-      with_feature do
-        @account.update!(balance: 0)
-        cycle = open_cycle
+      @account.account_activities.create!(sum: 20, currency: 'EUR', activity_type: AccountActivity::ADD_CREDIT)
+      assert change_preference(enabled: false).valid?
+      assert change_preference(enabled: true).valid?
+      assert_no_difference ['DomainAutoRenewal.count', 'AccountActivity.count', 'Notification.count'] do
+        2.times { DomainCron.process_auto_renewals }
         attempt(cycle)
-        travel_to cycle.cancellation_deadline_at + delay
-        Domains::ExpirePeriod::ProcessExpired.run!(domain: @domain)
-        @domain.reload.update_columns(statuses: [DomainStatus::EXPIRED, DomainStatus::SERVER_HOLD])
-        @account.account_activities.create!(sum: 20, currency: 'EUR', activity_type: AccountActivity::ADD_CREDIT)
-        DomainCron.process_auto_renewals
-        assert_equal DomainAutoRenewal::COMPLETED, cycle.reload.state
-        assert_equal Time.zone.now, cycle.renewed_at
-        assert_equal cycle.renewed_at, cycle.closed_at
-        assert_equal @expiry.advance(years: 1), @domain.reload.valid_to
-        assert @domain.auto_renew?
-        assert_nil @domain.outzone_at
-        assert_nil @domain.delete_date
-        assert_not_includes @domain.statuses, DomainStatus::EXPIRED
-        assert_not_includes @domain.statuses, DomainStatus::SERVER_HOLD
-        assert_empty @domain.rgp_statuses
-        assert_equal 10, @account.reload.balance
-        assert_not cycle.reversible?
-        assert_no_difference ['AccountActivity.count', 'Notification.count'] do
-          assert_command_error(change_preference(reverse_cycle_id: cycle.uuid), 2304)
-          DomainCron.process_auto_renewals
-        end
-        assert_equal 'renewed', polls.order(:id).last.event
-        assert_equal I18n.t('auto_renew.notifications.renewed_after_deadline', domain: @domain.name,
-                            expire_date: cycle.renewed_expire_at.iso8601, amount: '10.00', cycle_id: cycle.uuid),
-                     polls.order(:id).last.text
       end
+      assert_equal DomainAutoRenewal::FAILED, cycle.reload.state
+      assert_equal @expiry, @domain.reload.valid_to
+      assert @domain.auto_renew?
+      assert_equal 20, @account.reload.balance
     end
   end
 
   [DomainStatus::SERVER_RENEW_PROHIBITED, DomainStatus::PENDING_DELETE, DomainStatus::PENDING_UPDATE].each do |status|
-    define_method("test_#{status}_keeps_retrying_past_deadline_and_succeeds_when_lifted") do
+    define_method("test_#{status}_renews_when_lifted_within_the_window") do
       with_feature do
         @domain.update_columns(statuses: [status])
-        cycle = open_cycle
-        2.times { attempt(cycle) }
-        assert_equal DomainAutoRenewal::RENEW_PROHIBITED, cycle.reload.failure_reason
-        assert_equal 'renewProhibited', polls.order(:id).last.event
-        assert_equal 1, polls.count
-        travel_to cycle.cancellation_deadline_at + 1.day
-        3.times { DomainCron.process_auto_renewals }
-        assert cycle.reload.awaiting_funds?
-        assert @domain.reload.auto_renew?
-        assert_equal 5, cycle.attempts_count
-        assert_equal 100, @account.reload.balance
-        assert_equal 1, polls.where(event: 'renewalOverdue').count
-        assert_equal 2, polls.count
-        assert_includes polls.find_by!(event: 'renewalOverdue').text,
-                        I18n.t('auto_renew.failure_reasons.renew_prohibited')
-        @domain.update_columns(statuses: [])
         DomainCron.process_auto_renewals
-        assert_equal DomainAutoRenewal::COMPLETED, cycle.reload.state
+        cycle = @domain.auto_renewals.first!
+        assert_equal DomainAutoRenewal::RENEW_PROHIBITED, cycle.failure_reason
+        assert_equal 'renewProhibited', polls.first!.event
+        travel_to @expiry.advance(days: 2)
+        DomainCron.process_auto_renewals
+        assert cycle.reload.awaiting_funds?
+        assert_equal 2, cycle.attempts_count
+        assert_equal 1, polls.count
+        assert_equal 100, @account.reload.balance
+        @domain.update_columns(statuses: [])
+        travel_to @expiry.advance(days: 3)
+        DomainCron.process_auto_renewals
+        assert cycle.reload.grace?
         assert_nil cycle.failure_reason
         assert_equal @expiry.advance(years: 1), @domain.reload.valid_to
         assert_equal 90, @account.reload.balance
-        assert_equal 3, polls.count
+        assert_equal 2, polls.count
+      end
+    end
+
+    define_method("test_#{status}_still_blocked_at_deadline_fails") do
+      with_feature do
+        @domain.update_columns(statuses: [status])
+        cycle = open_cycle
+        attempt(cycle)
+        travel_to cycle.cancellation_deadline_at
+        3.times { DomainCron.process_auto_renewals }
+        assert_equal DomainAutoRenewal::FAILED, cycle.reload.state
+        assert_equal Time.zone.now, cycle.closed_at
+        assert_equal 1, cycle.attempts_count
+        assert @domain.reload.auto_renew?
+        assert_equal 100, @account.reload.balance
+        assert_equal 1, polls.where(event: 'renewalFailed').count
+        assert_includes polls.find_by!(event: 'renewalFailed').text,
+                        I18n.t('auto_renew.failure_reasons.renew_prohibited')
+        @domain.update_columns(statuses: [])
+        travel_to Time.zone.now + 1.day
+        assert_no_difference ['AccountActivity.count', 'Notification.count'] do
+          DomainCron.process_auto_renewals
+        end
+        assert_equal DomainAutoRenewal::FAILED, cycle.reload.state
       end
     end
   end
 
-  def test_enabling_preference_on_an_out_of_zone_domain_opens_and_renews_a_cycle
-    with_feature do
-      @domain.update_columns(auto_renew: false)
-      travel_to @expiry.advance(days: 20)
-      Domains::ExpirePeriod::ProcessExpired.run!(domain: @domain)
-      @domain.reload.update_columns(statuses: [DomainStatus::EXPIRED, DomainStatus::SERVER_HOLD])
-      assert @domain.outzone_at < Time.zone.now
-      assert_empty @domain.auto_renewals
-      assert change_preference(enabled: true).valid?
-      DomainCron.process_auto_renewals
-      assert_equal 1, @domain.auto_renewals.count
-      cycle = @domain.auto_renewals.first
-      assert_equal DomainAutoRenewal::COMPLETED, cycle.state
-      assert_equal @expiry, cycle.original_expire_at
-      assert_equal @expiry.advance(days: 15), cycle.cancellation_deadline_at
-      assert_equal @expiry.advance(years: 1), @domain.reload.valid_to
-      assert @domain.auto_renew?
-      assert_nil @domain.outzone_at
-      assert_nil @domain.delete_date
-      assert_not_includes @domain.statuses, DomainStatus::EXPIRED
-      assert_not_includes @domain.statuses, DomainStatus::SERVER_HOLD
-      assert_empty @domain.rgp_statuses
-      assert_no_difference ['DomainAutoRenewal.count', 'AccountActivity.count', 'Notification.count'] do
-        DomainCron.process_auto_renewals
+  [15, 20].each do |days|
+    define_method("test_enabling_preference_#{days}_days_after_expiry_opens_no_cycle") do
+      with_feature do
+        @domain.update_columns(auto_renew: false)
+        travel_to @expiry.advance(days: days)
+        Domains::ExpirePeriod::ProcessExpired.run!(domain: @domain)
+        assert change_preference(enabled: true).valid?
+        assert_no_difference ['DomainAutoRenewal.count', 'AccountActivity.count', 'Notification.count'] do
+          assert_nil open_cycle
+          DomainCron.process_auto_renewals
+        end
+        assert @domain.reload.auto_renew?
+        assert_equal @expiry, @domain.valid_to
+        assert_includes @domain.statuses, DomainStatus::EXPIRED
       end
     end
   end
@@ -301,7 +290,7 @@ class AutoRenewEngineTest < AutoRenewTestCase
     end
   end
 
-  def test_overdue_notification_failure_rolls_back_its_deduplication_timestamp
+  def test_failure_notification_failure_rolls_back_the_terminal_transition
     with_feature do
       @account.update!(balance: 0)
       cycle = open_cycle
@@ -312,11 +301,11 @@ class AutoRenewEngineTest < AutoRenewTestCase
           Domains::AutoRenew::CloseCycle.run!(cycle: cycle)
         end
       end
-      assert_nil cycle.reload.overdue_notice_sent_at
+      assert_nil cycle.reload.closed_at
       assert cycle.awaiting_funds?
       assert @domain.reload.auto_renew?
       DomainCron.process_auto_renewals
-      assert_equal 1, polls.where(event: 'renewalOverdue').count
+      assert_equal 1, polls.where(event: 'renewalFailed').count
     end
   end
 
@@ -326,6 +315,7 @@ class AutoRenewEngineTest < AutoRenewTestCase
       cycle = open_cycle
       attempt(cycle)
       @domain.update_columns(statuses: [])
+      travel_to @expiry + 1.day
       attempt(cycle)
       assert cycle.reload.grace?
       assert_nil cycle.failure_reason
@@ -344,6 +334,7 @@ class AutoRenewEngineTest < AutoRenewTestCase
       assert_equal 1, polls.count
       assert_equal 100, @account.reload.balance
       @price.update!(valid_to: nil)
+      travel_to @expiry + 1.day
       attempt(cycle)
       assert cycle.reload.grace?
     end
@@ -451,7 +442,7 @@ class AutoRenewEngineTest < AutoRenewTestCase
     end
   end
 
-  def test_crossing_the_deadline_while_waiting_for_the_account_lock_completes_without_grace
+  def test_crossing_the_deadline_while_waiting_for_the_account_lock_does_not_renew
     with_feature do
       cycle = open_cycle
       account = cycle.account
@@ -462,15 +453,19 @@ class AutoRenewEngineTest < AutoRenewTestCase
       end
       cycle.stub(:account, account) do
         account.stub(:lock!, replacement) do
-          assert_difference ['AccountActivity.count', 'Notification.count'], 1 do
+          assert_no_difference ['AccountActivity.count', 'Notification.count'] do
             attempt(cycle)
           end
         end
       end
-      assert_equal DomainAutoRenewal::COMPLETED, cycle.reload.state
-      assert_equal Time.zone.now, cycle.closed_at
-      assert_equal @expiry.advance(years: 1), @domain.reload.valid_to
-      assert_equal 90, @account.reload.balance
+      assert cycle.reload.awaiting_funds?
+      assert_equal 0, cycle.attempts_count
+      assert_nil cycle.last_attempt_at
+      assert_equal @expiry, @domain.reload.valid_to
+      assert_equal 100, @account.reload.balance
+      DomainCron.process_auto_renewals
+      assert_equal DomainAutoRenewal::FAILED, cycle.reload.state
+      assert_equal 'renewalFailed', polls.first!.event
     end
   end
 

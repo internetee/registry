@@ -13,9 +13,9 @@ module Domains
           elsif domain.nil? || domain.registrar_id != cycle.registrar_id || !domain.auto_renew? ||
                 domain.valid_to != cycle.original_expire_at
             cancel(cycle)
-          elsif cycle.overdue_notice_sent_at.nil?
-            cycle.update!(overdue_notice_sent_at: Time.zone.now)
-            notify(cycle, :renewal_overdue)
+          else
+            cycle.update!(state: DomainAutoRenewal::FAILED, closed_at: Time.zone.now)
+            notify(cycle, :renewal_failed)
           end
           cycle
         end

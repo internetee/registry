@@ -46,12 +46,13 @@ class EppAutoRenewPollTest < EppTestCase
       [DomainAutoRenewal::AWAITING_FUNDS, DomainAutoRenewal::INSUFFICIENT_FUNDS, 'fundingWarning'],
       [DomainAutoRenewal::AWAITING_FUNDS, DomainAutoRenewal::RENEW_PROHIBITED, 'renewProhibited'],
       [DomainAutoRenewal::AWAITING_FUNDS, DomainAutoRenewal::MISSING_PRICE, 'renewProhibited'],
-      [DomainAutoRenewal::AWAITING_FUNDS, DomainAutoRenewal::INSUFFICIENT_FUNDS, 'renewalOverdue'],
+      [DomainAutoRenewal::FAILED, DomainAutoRenewal::INSUFFICIENT_FUNDS, 'renewalFailed'],
     ].each do |state, reason, event|
       @cycle.update!(state: state, failure_reason: reason, renewed_expire_at: nil)
       @notification.update!(event: event)
       request_poll
       assert_equal event, response_xml.at_xpath('//ar:pollData', ar: AUTO_RENEW_URI)['event']
+      assert_equal @cycle.protocol_state, response_xml.at_xpath('//ar:cycle', ar: AUTO_RENEW_URI)['state']
       assert_nil response_xml.at_xpath('//ar:cycle', ar: AUTO_RENEW_URI)['exDate']
       assert_correct_against_schema response_xml
     end
@@ -77,18 +78,16 @@ class EppAutoRenewPollTest < EppTestCase
     assert_correct_against_schema response_xml
   end
 
-  def test_queued_overdue_notice_keeps_its_event_after_late_success_or_deletion
-    @notification.update!(event: 'renewalOverdue')
-    @cycle.update!(cancellation_deadline_at: 1.day.ago, overdue_notice_sent_at: 1.day.ago)
-    [DomainAutoRenewal::AWAITING_FUNDS, DomainAutoRenewal::COMPLETED, DomainAutoRenewal::CANCELLED].each do |state|
-      @cycle.update!(state: state)
-      @domain.destroy! if state == DomainAutoRenewal::CANCELLED
-      request_poll
-      poll_data = response_xml.at_xpath('//ar:pollData', ar: AUTO_RENEW_URI)
-      assert_equal 'renewalOverdue', poll_data['event']
-      assert_equal @cycle.protocol_state, poll_data.at_xpath('ar:cycle', ar: AUTO_RENEW_URI)['state']
-      assert_correct_against_schema response_xml
-    end
+  def test_failed_renewal_notice_survives_domain_deletion
+    @notification.update!(event: 'renewalFailed')
+    @cycle.update!(state: DomainAutoRenewal::FAILED, cancellation_deadline_at: 1.day.ago,
+                   closed_at: 1.day.ago, renewed_expire_at: nil)
+    @domain.destroy!
+    request_poll
+    poll_data = response_xml.at_xpath('//ar:pollData', ar: AUTO_RENEW_URI)
+    assert_equal 'renewalFailed', poll_data['event']
+    assert_equal 'failed', poll_data.at_xpath('ar:cycle', ar: AUTO_RENEW_URI)['state']
+    assert_correct_against_schema response_xml
   end
 
   private
