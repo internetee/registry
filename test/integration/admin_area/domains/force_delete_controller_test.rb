@@ -244,4 +244,22 @@ class AdminAreaDomainsForceDeleteControllerTest < ActionDispatch::IntegrationTes
     assert_not domain.reload.force_delete_scheduled?
     assert_nil admin_contact.reload.death_date
   end
+
+  def test_cancelling_deceased_registrant_force_delete_restores_replaced_force_delete
+    @domain.update_columns(valid_to: Time.zone.today + 3.years)
+    @domain.reload.schedule_force_delete(type: :soft)
+    @domain.reload.update_columns(status_notes: { DomainStatus::FORCE_DELETE => 'Manual' })
+    @domain.reload
+    DeathRegistry::ForceDeletePriority.new(@domain).replace_current_force_delete do
+      @domain.schedule_force_delete(type: :fast_track, reason: 'deceased_person', notify_by_email: true,
+                                    notes: 'Deceased registrant')
+    end
+
+    delete admin_domain_force_delete_path(@domain)
+
+    @domain.reload
+    assert @domain.force_delete_scheduled?
+    assert_equal 'soft', @domain.force_delete_type
+    assert_equal 'Manual', @domain.status_notes[DomainStatus::FORCE_DELETE]
+  end
 end

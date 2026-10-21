@@ -18,7 +18,12 @@ module Admin
       def destroy
         authorize! :manage, domain
         deceased_contacts = deceased_contacts_of_force_delete
-        domain.cancel_force_delete
+        if domain.template_name == 'deceased_person'
+          # Restores the force delete it replaced, if any
+          DeathRegistry::ForceDeletePriority.new(domain).stop
+        else
+          domain.cancel_force_delete
+        end
         # Otherwise the death registry check would start it again the next day
         deceased_contacts.each(&:clear_death_date!)
         redirect_to edit_admin_domain_url(domain), notice: t('.cancelled')
