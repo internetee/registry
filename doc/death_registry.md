@@ -12,13 +12,19 @@ The registry (EIS) checks Estonian private-person contacts against the death ope
 - **Deceased admin or tech contact:** an optional contact is removed from the domain. A required admin contact (organisation or minor registrant) puts the domain into a soft force delete until a new admin contact is added.
 - **Notifications:** registrars get a poll message for every action. Registrants and contacts get only the existing force delete emails; no new email to the registrant is sent.
 
-| Reader | Sections |
-| --- | --- |
-| Lawyer | 2 Legal basis and data handling, 3 How it works, 4 Timeline, 9 Messages |
-| System administrator | 5 Production setup, 6 Go-live, 7 Operation, 8 Settings |
-| Text reviewers | 9 Messages and notification texts |
+
+| Reader               | Sections                                                                |
+| -------------------- | ----------------------------------------------------------------------- |
+| Lawyer               | 2 Legal basis and data handling, 3 How it works, 4 Timeline, 9 Messages |
+| System administrator | 5 Production setup, 6 Go-live, 7 Operation, 8 Settings                  |
+| Text reviewers       | 9 Messages and notification texts                                       |
+
+
+
 
 ## 2. Legal basis and data handling
+
+
 
 ### Legal basis
 
@@ -33,21 +39,25 @@ Decisions: Helen and Timo, 20.10.2026 and 21.10.2026.
 
 ### Data source
 
-- Population Register death data on the Estonian open data portal: https://andmed.eesti.ee/datasets/surmaandmed
+- Population Register death data on the Estonian open data portal: [https://andmed.eesti.ee/datasets/surmaandmed](https://andmed.eesti.ee/datasets/surmaandmed)
 - Files used (published by SMIT):
   - `https://opendata.smit.ee/etl/rahvastik/surmaandmed_1926_kuni_eelmise_aasta_lopuni.csv` (1926 to end of last year)
   - `https://opendata.smit.ee/etl/rahvastik/surmaandmed_jooksev_aasta.csv` (current year)
 - Licence: CC BY 4.0. The data is used only inside the registry and not redistributed (see open question 1).
 - The open data omits roughly the last 7 days of deaths, so the copy is refreshed weekly.
 
+
+
 ### What is stored
 
-| Data | Where | Kept for |
-| --- | --- | --- |
-| Personal identity code + death date of every deceased person in the open data | Local file (`deaths.txt`) on the registry server | Replaced weekly by a fresh copy; no older copies are kept |
-| Death date of a matching contact | `contacts.death_date` | Until the contact is deleted (contact archiving), or cleared when the person is no longer in the open data |
-| Time of the last check | `contacts.death_registry_checked_at` | Same as the contact |
-| Dry run report (CSV: contact code, ident, death date, roles, domains, registrars) | `reports/` next to the death file, and emailed to the admin address | Until deleted manually |
+
+| Data                                                                              | Where                                                               | Kept for                                                                                                   |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Personal identity code + death date of every deceased person in the open data     | Local file (`deaths.txt`) on the registry server                    | Replaced weekly by a fresh copy; no older copies are kept                                                  |
+| Death date of a matching contact                                                  | `contacts.death_date`                                               | Until the contact is deleted (contact archiving), or cleared when the person is no longer in the open data |
+| Time of the last check                                                            | `contacts.death_registry_checked_at`                                | Same as the contact                                                                                        |
+| Dry run report (CSV: contact code, ident, death date, roles, domains, registrars) | `reports/` next to the death file, and emailed to the admin address | Until deleted manually                                                                                     |
+
 
 No names, addresses or other fields of the source data are stored. Data protection rules do not grant rights to deceased persons, so no legal assessment was deemed necessary for keeping the copy (decided earlier; see section 10 for the licence question).
 
@@ -58,6 +68,8 @@ No names, addresses or other fields of the source data are stored. Data protecti
 - Registrars learn of a death only through poll messages about their own domains (texts in section 9). The poll for a deceased registrant includes the ident and death date.
 - The force delete status note on the domain (visible in admin) contains the ident and death date.
 
+
+
 ### Corrections in the Population Register
 
 If a person was wrongly marked as deceased and later disappears from the open data:
@@ -66,7 +78,11 @@ If a person was wrongly marked as deceased and later disappears from the open da
 - during the force delete: it is stopped and the registrar gets a poll message (A4, or A5 when an earlier force delete is restored);
 - the person is re-checked from a fresh file right before the force delete starts and every day while it runs.
 
+
+
 ## 3. How it works
+
+
 
 ### 3.1 Check at contact creation
 
@@ -97,21 +113,25 @@ Volume: after the first full run, about 1/365 of the linked contacts per night; 
 
 - At discovery (death < 6 months ago): poll **A1** to the registrar with the expected force delete start date. No email to the registrant.
 - At death + 6 months + 1 day: the person is looked up again in the fresh file, then a **fast-track force delete** starts on every domain where the person is registrant:
-  - reason `deceased_person`, status note "Deceased registrant: <ident>, death date <date>";
+  - reason `deceased_person`, status note `Deceased registrant: <ident>, death date <YYYY-MM-DD>`;
   - starts the next day; outzone after 15 days; deletion (auction) after another 30 + 1 days (current settings);
   - registrar gets poll **A3**; registrant and admin contacts get the existing "deceased person" force delete email (**E1**, template `private_person`).
 - If the registrant is changed (e.g. to an heir), every force delete on the domain is cancelled, as for any registrant change.
 - If the run on the due day is missed, the next run picks the contact up and the start moves by a day.
 
+
+
 ### 3.4 Deceased admin or tech contact
 
-| Situation | Action | Message |
-| --- | --- | --- |
-| Tech contact dies | Removed from the domain (domain history and WHOIS updated; the contact object stays) | Poll **B1** |
-| Admin contact dies, domain still has enough admin contacts (private registrant, or organisation with another admin) | Removed from the domain | Poll **C1** |
-| Last required admin contact of an organisation or minor registrant dies | Soft force delete, reason `deceased_admin_contact`; statuses `serverForceDelete`, `serverRenewProhibited`, `serverTransferProhibited` | Poll **C2**; email **E2** at the force delete start |
-| A new admin contact is added afterwards | `CheckForceDeleteLift` cancels the soft force delete | Poll **A4** (standard cancel text) |
-| Domain already has a force delete | Left alone | — |
+
+| Situation                                                                                                           | Action                                                                                                                                | Message                                             |
+| ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| Tech contact dies                                                                                                   | Removed from the domain (domain history and WHOIS updated; the contact object stays)                                                  | Poll **B1**                                         |
+| Admin contact dies, domain still has enough admin contacts (private registrant, or organisation with another admin) | Removed from the domain                                                                                                               | Poll **C1**                                         |
+| Last required admin contact of an organisation or minor registrant dies                                             | Soft force delete, reason `deceased_admin_contact`; statuses `serverForceDelete`, `serverRenewProhibited`, `serverTransferProhibited` | Poll **C2**; email **E2** at the force delete start |
+| A new admin contact is added afterwards                                                                             | `CheckForceDeleteLift` cancels the soft force delete                                                                                  | Poll **A4** (standard cancel text)                  |
+| Domain already has a force delete                                                                                   | Left alone                                                                                                                            | —                                                   |
+
 
 Soft force delete start: if the domain expires more than a year from now, the start moves to the nearest registration anniversary; if it expires within a year, there is no start date and the domain simply cannot be renewed (open question 2).
 
@@ -131,6 +151,8 @@ The force delete that releases the domain **earlier** wins (Timo, 21.10.2026).
   - if the reason is gone, or nothing was saved, the force delete is cancelled completely (poll **A4**).
 - A registrant change cancels all force deletes, the saved one included.
 
+
+
 ### 3.6 Admin actions
 
 - **Schedule force delete** requires a reason, which selects the email: registrant (private person) has died, registrant (company) deleted from the Business Register, invalid email, invalid phone, or other (no email). Before, the email was guessed from the domain data, and any private registrant got the "registrant has died" letter.
@@ -141,28 +163,36 @@ The force delete that releases the domain **earlier** wins (Timo, 21.10.2026).
 - The domain page shows the force delete start date, deletion date and the status note with the reason.
 - The daily admin force delete summary shows the reason and note (for example `deceased_person: Deceased registrant: …`).
 
+
+
 ## 4. Timeline example
 
 Registrant dies on 15.03.2026; the yearly check finds it on 02.05.2026.
 
-| Date | Event |
-| --- | --- |
-| 15.03.2026 | Death |
-| ~22.03.2026 | Appears in the open data (about a week's delay) |
-| 02.05.2026 | Found by the daily job; death date saved; poll A1 to the registrar ("force delete will start on 16.09.2026") |
-| 15.09.2026 | 6 months after death; person looked up again |
-| 16.09.2026 | Fast-track force delete starts; poll A3; email E1 to registrant and admin contacts |
-| 01.10.2026 | Outzone: domain removed from the zone (`clientHold`) |
-| 31.10.2026 | Deletion date: domain goes to auction (start day − 1 + 15 + 30 + 1 days) |
+
+| Date        | Event                                                                                                        |
+| ----------- | ------------------------------------------------------------------------------------------------------------ |
+| 15.03.2026  | Death                                                                                                        |
+| ~22.03.2026 | Appears in the open data (about a week's delay)                                                              |
+| 02.05.2026  | Found by the daily job; death date saved; poll A1 to the registrar ("force delete will start on 16.09.2026") |
+| 15.09.2026  | 6 months after death; person looked up again                                                                 |
+| 16.09.2026  | Fast-track force delete starts; poll A3; email E1 to registrant and admin contacts                           |
+| 01.10.2026  | Outzone: domain removed from the zone (`clientHold`)                                                         |
+| 31.10.2026  | Deletion date: domain goes to auction (start day − 1 + 15 + 30 + 1 days)                                     |
+
 
 A registrant change at any point before the deletion date cancels the force delete. If the yearly check finds the death only after 6 months have passed, A1 is skipped and the force delete starts the next day.
 
 ## 5. Production setup
 
+
+
 ### 5.1 Release
 
 1. Deploy the release.
 2. Run migrations: `bin/rails db:migrate RAILS_ENV=production`. They add `contacts.death_date`, `contacts.death_registry_checked_at` and indexes. Existing data is not changed.
+
+
 
 ### 5.2 Configuration (`config/application.yml`)
 
@@ -176,12 +206,16 @@ death_registry_dry_run: 'true'        # turned off at go-live
 admin_notification_email: 'admin@…'   # receives problems and dry run reports (existing setting)
 ```
 
+
+
 ### 5.3 File location
 
 - The file must be readable by **every** process that creates contacts (EPP and REPP app servers) and by the server that runs the job. Use a shared disk if they are on different machines.
 - The job's user must be able to write to the directory: the file is written as `deaths.txt.<pid>.tmp` and renamed over the old one. The `reports/` subdirectory is created next to it.
 - Size: 23 bytes per record (`<11-digit ident>;<YYYY-MM-DD>\n`), sorted by ident.
 - The server needs outbound HTTPS to `opendata.smit.ee`.
+
+
 
 ### 5.4 Cron
 
@@ -198,19 +232,19 @@ The existing `CheckForceDeleteLift` cron line (already in the production crontab
 ## 6. Go-live
 
 1. **Build the file** on the production server and check it:
-   ```
+  ```
    bin/rails r -e production "DeathRegistryFileBuildJob.perform_now"
    ls -l /shared/death_registry/deaths.txt   # size divisible by 23, fresh mtime
-   ```
+  ```
 2. **Dry run** (`death_registry_dry_run: 'true'`), run once by hand:
-   ```
+  ```
    bin/rails r -e production "DeathRegistryCheckJob.perform_now"
-   ```
+  ```
    The admin address receives "Death registry dry run report" with a CSV of every deceased contact found, their roles, domains, registrars and whether 6 months have passed. The first run checks all linked contacts, not 1/365.
 3. **Review the report** (Timo, Helen):
-   - check a random sample of 10–20 rows against the Population Register;
-   - compare with recent manual ENTITY_BURIED cases;
-   - count rows with `six_months_passed = true`: each of their domains gets a fast-track force delete on the first real run. Decide whether registrars are warned beforehand or the start is spread out (open question 8).
+  - check a random sample of 10–20 rows against the Population Register;
+  - compare with recent manual ENTITY_BURIED cases;
+  - count rows with `six_months_passed = true`: each of their domains gets a fast-track force delete on the first real run. Decide whether registrars are warned beforehand or the start is spread out (open question 8).
 4. **Add the cron line** (5.4).
 5. **Turn on the creation check:** `validate_deceased_contacts: 'true'`, restart the app servers.
 6. **Turn off dry run:** `death_registry_dry_run: 'false'`. The next night's run saves death dates, sends polls and starts force deletes.
@@ -219,15 +253,19 @@ The existing `CheckForceDeleteLift` cron line (already in the production crontab
 
 ## 7. Operation
 
+
+
 ### 7.1 Monitoring
 
 - **Log line** after each run (`log/production.log`):
-  `DeathRegistryCheckJob: checked N contacts, found N deceased, started N and cancelled N force deletes, removed N admin and tech contacts`
-- **Problem email** "Death registry check problem - <date>" to `admin_notification_email` when:
+`DeathRegistryCheckJob: checked N contacts, found N deceased, started N and cancelled N force deletes, removed N admin and tech contacts`
+- **Problem email** `Death registry check problem - <date>` to `admin_notification_email` when:
   - the file rebuild failed (download error, HTTP error, missing columns, fewer than `death_registry_min_records` records); the old file is kept;
   - the file is missing, stale (older than `death_registry_max_file_age_days`) or malformed; contacts are not checked that night;
   - the dry run report could not be written or sent.
 - A stale file never blocks contact creation; it only logs a warning per contact.
+
+
 
 ### 7.2 Commands
 
@@ -251,39 +289,51 @@ bin/rails r -e production "p Contact.where.not(death_date: nil).count"
 bin/rails r -e production "puts Domain.where(\"force_delete_data->'template_name' = 'deceased_person'\").pluck(:name)"
 ```
 
+
+
 ### 7.3 Manual actions
 
-| Case | What to do |
-| --- | --- |
-| Person is alive (registrant or heir contacts EIS) | Admin → domain → Edit → Cancel force delete. The death date is cleared and the contact is not checked again for a year. |
-| Person is alive but the open data is not yet corrected | Same; also ask the Population Register to correct the data, otherwise the person is found again in a year. |
-| Restored earlier force delete is not wanted | Cancel force delete once more. |
-| Soft force delete for a deceased admin contact should be lifted | Add a living admin contact; `CheckForceDeleteLift` lifts it the next run, or cancel by hand. |
+
+| Case                                                            | What to do                                                                                                              |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Person is alive (registrant or heir contacts EIS)               | Admin → domain → Edit → Cancel force delete. The death date is cleared and the contact is not checked again for a year. |
+| Person is alive but the open data is not yet corrected          | Same; also ask the Population Register to correct the data, otherwise the person is found again in a year.              |
+| Restored earlier force delete is not wanted                     | Cancel force delete once more.                                                                                          |
+| Soft force delete for a deceased admin contact should be lifted | Add a living admin contact; `CheckForceDeleteLift` lifts it the next run, or cancel by hand.                            |
+
+
+
 
 ### 7.4 Troubleshooting
 
-| Symptom | Cause / fix |
-| --- | --- |
-| Problem email "file is missing, stale or malformed" | Rebuild failed for 2+ weeks or the path is wrong. Run the rebuild by hand and read the error. |
-| "only N records, expected at least 100000" | Source returned partial data. Old file kept; retry later. Check the source URLs. |
-| "CSV is missing columns" | SMIT changed the file format. Code change needed in `DeathRegistry::FileBuilder`. |
-| Contacts created without check | `validate_deceased_contacts` off, or the file is not readable from the EPP/REPP server. |
+
+| Symptom                                                               | Cause / fix                                                                                                                        |
+| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Problem email "file is missing, stale or malformed"                   | Rebuild failed for 2+ weeks or the path is wrong. Run the rebuild by hand and read the error.                                      |
+| "only N records, expected at least 100000"                            | Source returned partial data. Old file kept; retry later. Check the source URLs.                                                   |
+| "CSV is missing columns"                                              | SMIT changed the file format. Code change needed in `DeathRegistry::FileBuilder`.                                                  |
+| Contacts created without check                                        | `validate_deceased_contacts` off, or the file is not readable from the EPP/REPP server.                                            |
 | Domain stays in `deceased_admin_contact` after admin contact replaced | Check that the `CheckForceDeleteLift` cron line ran; the domain needs as many living admin contacts as `admin_contacts_min_count`. |
+
+
+
 
 ## 8. Settings
 
-| Setting | Default | Purpose |
-| --- | --- | --- |
-| `death_registry_file_path` | `tmp/death_registry/deaths.txt` | Location of the local copy; use a shared disk in production |
-| `death_registry_source_urls` | the two opendata.smit.ee CSVs | Comma-separated source URLs |
-| `death_registry_max_file_age_days` | 8 | Older file counts as stale; lookups refuse it |
-| `death_registry_min_records` | 100000 | A download with fewer records is rejected |
-| `validate_deceased_contacts` | false | Refuse deceased persons at contact creation |
-| `death_registry_dry_run` | true | Job only reports; saves nothing and sends nothing |
-| `admin_notification_email` | existing | Receives problem emails and dry run reports |
-| `expire_warning_period` | existing (15) | Days from force delete start to outzone |
-| `redemption_grace_period` | existing (30) | Days from outzone to deletion |
-| `admin_contacts_min_count` | existing | Required admin contacts for organisation and minor registrants |
+
+| Setting                            | Default                         | Purpose                                                        |
+| ---------------------------------- | ------------------------------- | -------------------------------------------------------------- |
+| `death_registry_file_path`         | `tmp/death_registry/deaths.txt` | Location of the local copy; use a shared disk in production    |
+| `death_registry_source_urls`       | the two opendata.smit.ee CSVs   | Comma-separated source URLs                                    |
+| `death_registry_max_file_age_days` | 8                               | Older file counts as stale; lookups refuse it                  |
+| `death_registry_min_records`       | 100000                          | A download with fewer records is rejected                      |
+| `validate_deceased_contacts`       | false                           | Refuse deceased persons at contact creation                    |
+| `death_registry_dry_run`           | true                            | Job only reports; saves nothing and sends nothing              |
+| `admin_notification_email`         | existing                        | Receives problem emails and dry run reports                    |
+| `expire_warning_period`            | existing (15)                   | Days from force delete start to outzone                        |
+| `redemption_grace_period`          | existing (30)                   | Days from outzone to deletion                                  |
+| `admin_contacts_min_count`         | existing                        | Required admin contacts for organisation and minor registrants |
+
 
 Fixed in code: check interval 1 year, force delete 6 months after death, file rebuild after 7 days.
 
@@ -293,26 +343,32 @@ All poll texts are **English drafts** and need review (Helen, Mare). Estonian ve
 
 ### Registrar poll messages
 
-| Code | When | Text |
-| --- | --- | --- |
-| **A1** | Registrant found deceased, less than 6 months ago | According to the Estonian Population Register, the registrant of domain %{domain_name} (ident %{ident}) died on %{death_date}. Force delete will start on %{force_delete_start} unless the registrant is changed. An heir can take over the domain by a registrant change with a certificate of succession. |
-| **A3** | Fast-track force delete started | Force delete set on domain %{domain_name} because, according to the Estonian Population Register, the registrant (ident %{ident}) has died. Force Delete Type: Fast Track. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}. |
-| **A4** | Force delete cancelled (person alive, admin cancel, admin contact replaced) — existing text | Force delete is cancelled on domain %{domain_name} |
-| **A5** | Death force delete stopped, earlier force delete restored | Force delete because of the registrant's death was stopped on domain %{domain_name}. The earlier force delete continues: %{reason}. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}. |
-| **B1** | Deceased tech contact removed | Tech contact %{contact_code} was removed from domain %{domain_name} because, according to the Estonian Population Register, the person has died. Add a new tech contact if needed. |
-| **C1** | Deceased admin contact removed | Admin contact %{contact_code} was removed from domain %{domain_name} because, according to the Estonian Population Register, the person has died. |
-| **C2** | Soft force delete for the last required admin contact | Force delete set on domain %{domain_name}. Admin contact %{contact_code} has died according to the Estonian Population Register. Add a new admin contact; until then the domain cannot be renewed or transferred to another registrar. Force Delete Type: Soft. Force Delete Start Date: %{force_delete_start_date}. Expire date: %{valid_to}. |
+
+| Code   | When                                                                                        | Text                                                                                                                                                                                                                                                                                                                                           |
+| ------ | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **A1** | Registrant found deceased, less than 6 months ago                                           | According to the Estonian Population Register, the registrant of domain %{domain_name} (ident %{ident}) died on %{death_date}. Force delete will start on %{force_delete_start} unless the registrant is changed. An heir can take over the domain by a registrant change with a certificate of succession.                                    |
+| **A3** | Fast-track force delete started                                                             | Force delete set on domain %{domain_name} because, according to the Estonian Population Register, the registrant (ident %{ident}) has died. Force Delete Type: Fast Track. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}.                                                      |
+| **A4** | Force delete cancelled (person alive, admin cancel, admin contact replaced) — existing text | Force delete is cancelled on domain %{domain_name}                                                                                                                                                                                                                                                                                             |
+| **A5** | Death force delete stopped, earlier force delete restored                                   | Force delete because of the registrant's death was stopped on domain %{domain_name}. The earlier force delete continues: %{reason}. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}.                                                                                             |
+| **B1** | Deceased tech contact removed                                                               | Tech contact %{contact_code} was removed from domain %{domain_name} because, according to the Estonian Population Register, the person has died. Add a new tech contact if needed.                                                                                                                                                             |
+| **C1** | Deceased admin contact removed                                                              | Admin contact %{contact_code} was removed from domain %{domain_name} because, according to the Estonian Population Register, the person has died.                                                                                                                                                                                              |
+| **C2** | Soft force delete for the last required admin contact                                       | Force delete set on domain %{domain_name}. Admin contact %{contact_code} has died according to the Estonian Population Register. Add a new admin contact; until then the domain cannot be renewed or transferred to another registrar. Force Delete Type: Soft. Force Delete Start Date: %{force_delete_start_date}. Expire date: %{valid_to}. |
+
 
 Notes for reviewers:
 
 - A5 `%{reason}` is a technical reason code (`invalid_email`, `deceased_admin_contact`, …) or the manual status note. Consider mapping it to readable words.
 - A4 is the existing generic cancel text and does not say why.
 
+
+
 ### EPP / REPP error
 
-| When | Code | Text (en / et) |
-| --- | --- | --- |
+
+| When                                          | Code | Text (en / et)                          |
+| --------------------------------------------- | ---- | --------------------------------------- |
 | Contact create with a deceased person's ident | 2003 | Ident is invalid / Isikukood on kehtetu |
+
 
 The error deliberately does not say that the person is deceased.
 
@@ -320,7 +376,7 @@ The error deliberately does not say that the person is deceased.
 
 Subject (all force delete emails): "Domeen %{domain_name} on kustutusmenetluses / Domain %{domain_name} is in deletion process". The Russian line was removed from the subject.
 
-**E1 — deceased registrant (existing template `private_person`, unchanged), sent at the fast-track start:**
+**E1 — deceased registrant (existing template** `private_person`**, unchanged), sent at the fast-track start:**
 
 > Lugupeetud domeeni %{domain} registreerija/halduskontakt
 >
@@ -330,7 +386,7 @@ Subject (all force delete emails): "Domeen %{domain_name} on kustutusmenetluses 
 >
 > Domeeni suhtes õigust omaval isikul on võimalus esitada domeeni %{domain} registripidajale %{registrar} domeeni üleandmise taotlus, millele tuleb lisada pärimisõiguse tõend. Dokumentatsioon tuleb esitada registripidajale %{delete_period_length} päeva jooksul.
 >
-> Kui üleandmine ei ole %{delete_period_length} päeva jooksul toimunud, läheb domeen %{domain} %{force_delete_date} domeenioksjonile .ee oksjonikeskkonda https://auction.internet.ee. …
+> Kui üleandmine ei ole %{delete_period_length} päeva jooksul toimunud, läheb domeen %{domain} %{force_delete_date} domeenioksjonile .ee oksjonikeskkonda [https://auction.internet.ee](https://auction.internet.ee). …
 >
 > ---
 >
@@ -344,17 +400,17 @@ Subject (all force delete emails): "Domeen %{domain_name} on kustutusmenetluses 
 >
 > If the transfer is not made within %{delete_period_length} days, the domain %{domain} will go to domain auction on %{force_delete_date} … (auction paragraph, registrar contacts and signature as in the existing template)
 
-**E2 — deceased admin contact (new template `deceased_admin_contact`, draft), sent at the soft force delete start:**
+**E2 — deceased admin contact (new template** `deceased_admin_contact`**, draft), sent at the soft force delete start:**
 
 > Lugupeetud domeeni %{domain} registreerija/halduskontakt
 >
 > Eesti Interneti Sihtasutusele (EIS) on Rahvastikuregistri andmetel saanud teatavaks, et domeeni %{domain} halduskontakt on surnud. Domeenil peab olema kehtiv halduskontakt.
 >
-> Et see olukord on vastuolus .ee domeenireeglitega (https://www.internet.ee/domains/ee-domain-regulation), algatas EIS %{delete_period_length} päeva pikkuse kustutusmenetluse. Kuni uus halduskontakt pole lisatud, ei saa domeeni pikendada ega registripidajat vahetada. Menetluse käigus on domeen %{expire_warning_period} esimest päeva internetis kättesaadav.
+> Et see olukord on vastuolus .ee domeenireeglitega ([https://www.internet.ee/domains/ee-domain-regulation](https://www.internet.ee/domains/ee-domain-regulation)), algatas EIS %{delete_period_length} päeva pikkuse kustutusmenetluse. Kuni uus halduskontakt pole lisatud, ei saa domeeni pikendada ega registripidajat vahetada. Menetluse käigus on domeen %{expire_warning_period} esimest päeva internetis kättesaadav.
 >
 > Uue halduskontakti lisamiseks pöörduge palun oma registripidaja %{registrar} poole.
 >
-> Kui uut halduskontakti ei ole %{delete_period_length} päeva jooksul lisatud, läheb domeen %{domain} %{force_delete_date} domeenioksjonile .ee oksjonikeskkonda https://auction.internet.ee. …
+> Kui uut halduskontakti ei ole %{delete_period_length} päeva jooksul lisatud, läheb domeen %{domain} %{force_delete_date} domeenioksjonile .ee oksjonikeskkonda [https://auction.internet.ee](https://auction.internet.ee). …
 >
 > ---
 >
@@ -362,7 +418,7 @@ Subject (all force delete emails): "Domeen %{domain_name} on kustutusmenetluses 
 >
 > According to the Estonian Population Register, the administrative contact of the domain %{domain} has died. The domain must have a valid administrative contact.
 >
-> Since this is a violation of Estonian domain regulations (https://www.internet.ee/domains/ee-domain-regulation), %{delete_period_length}-day deletion process has started for the %{domain} domain. Until a new administrative contact is added, the domain cannot be renewed or transferred to another registrar. For the first %{expire_warning_period} days the domain will remain available on the Internet during the deletion process.
+> Since this is a violation of Estonian domain regulations ([https://www.internet.ee/domains/ee-domain-regulation](https://www.internet.ee/domains/ee-domain-regulation)), %{delete_period_length}-day deletion process has started for the %{domain} domain. Until a new administrative contact is added, the domain cannot be renewed or transferred to another registrar. For the first %{expire_warning_period} days the domain will remain available on the Internet during the deletion process.
 >
 > To add a new administrative contact, please contact your registrar %{registrar}.
 >
@@ -372,38 +428,45 @@ No email is sent for: A1 (discovery), removal of an optional contact (B1, C1), a
 
 ### Admin emails (to `admin_notification_email`)
 
-| Subject | When | Body |
-| --- | --- | --- |
-| Death registry check problem - %{date} | File rebuild failed, file unusable, or report failed | List of problems, e.g. "Rebuilding the death registry file failed: …", "Death registry file … is missing, stale or malformed. Contacts were not checked." |
-| Death registry dry run report - %{date} | Every run in dry run mode | "Checked contacts: N. Deceased contacts found: N. The attached CSV lists the deceased contacts. Nothing was saved and no poll messages were sent." + CSV attachment |
+
+| Subject                                 | When                                                 | Body                                                                                                                                                                |
+| --------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Death registry check problem - %{date}  | File rebuild failed, file unusable, or report failed | List of problems, e.g. "Rebuilding the death registry file failed: …", "Death registry file … is missing, stale or malformed. Contacts were not checked."           |
+| Death registry dry run report - %{date} | Every run in dry run mode                            | "Checked contacts: N. Deceased contacts found: N. The attached CSV lists the deceased contacts. Nothing was saved and no poll messages were sent." + CSV attachment |
+
+
+
 
 ### Admin interface
 
-| Where | Text |
-| --- | --- |
-| Domain page, force delete status note | "Deceased registrant: <ident>, death date <YYYY-MM-DD>" or "Admin contact <code> has died" |
-| Domain page | "Force delete start" (new row, next to the force delete date) |
-| Contact page | "Death date", "Death registry checked" (shown only when set) |
-| Contact list filter | "Death registry": "Deceased" / "Not checked" |
-| Daily force delete summary email (reason column) | "deceased_person: Deceased registrant: <ident>, death date <date>", "deceased_admin_contact: Admin contact <code> has died" |
+
+| Where                                            | Text                                                                                                    |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| Domain page, force delete status note            | `Deceased registrant: <ident>, death date <YYYY-MM-DD>` or `Admin contact <code> has died` |
+| Domain page                                      | "Force delete start" (new row, next to the force delete date)                                           |
+| Contact page                                     | "Death date", "Death registry checked" (shown only when set)                                            |
+| Contact list filter                              | "Death registry": "Deceased" / "Not checked"                                                            |
+| Daily force delete summary email (reason column) | `deceased_person: Deceased registrant: <ident>, death date <date>`, `deceased_admin_contact: Admin contact <code> has died` |
+
 
 **Schedule force delete dialog** (admin → domain → Edit → Schedule force delete):
 
-| Element | Text |
-| --- | --- |
-| Field | Reason (required) |
-| Option → email | "Registrant (private person) has died" → E1 `private_person` |
-| Option → email | "Registrant (company) is deleted from the Business Register" → `legal_person` |
-| Option → email | "Invalid email" → `invalid_email` (failing addresses go into the status note) |
-| Option → email | "Invalid phone" → `invalid_phone` |
-| Option → email | "Other (no email)" → no email to registrant and contacts |
-| Hint | The reason selects the email to the registrant and administrative contacts. "Other" sends no email. |
-| Error, no reason chosen | Choose the reason of the force delete |
-| Error, "Invalid email" chosen but no contact email fails verification | No contact of the domain has an invalid email |
 
-The automatic reasons `deceased_person` and `deceased_admin_contact` are not offered manually: the death registry check would stop such a force delete when the person is not in the open data.
+| Element                                                               | Text                                                                                                |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Field                                                                 | Reason (required)                                                                                   |
+| Option → email                                                        | "Registrant (private person) has died" → E1 `private_person`                                        |
+| Option → email                                                        | "Registrant (company) is deleted from the Business Register" → `legal_person`                       |
+| Option → email                                                        | "Invalid email" → `invalid_email` (failing addresses go into the status note)                       |
+| Option → email                                                        | "Invalid phone" → `invalid_phone`                                                                   |
+| Option → email                                                        | "Other (no email)" → no email to registrant and contacts                                            |
+| Hint                                                                  | The reason selects the email to the registrant and administrative contacts. "Other" sends no email. |
+| Error, no reason chosen                                               | Choose the reason of the force delete                                                               |
+| Error, "Invalid email" chosen but no contact email fails verification | No contact of the domain has an invalid email                                                       |
 
-## 10. Open questions
 
-6. **ENTITY_BURIED manual force delete** (admin Mass actions, always soft): switch it to fast track too, now that deceased registrants and deleted companies are handled automatically with fast track? Its letter is already fixed: it now always uses `private_person` or `legal_person` by registrant type, never the invalid email letter.
-9. **Existing deceased contact on a new domain or registrant change:** refuse via EPP/REPP? Not checked today.
+The automatic reasons `deceased_person` and `deceased_admin_contact` are not offered manually: the death registry check would stop such a force delete when the person is not in the open dat10. Open questions
+
+1. **ENTITY_BURIED manual force delete:** switch it to fast track too, now that deceased registrants are handled automatically?
+2. **Existing deceased contact on a new domain or registrant change:** refuse via EPP/REPP? Not checked today.
+
