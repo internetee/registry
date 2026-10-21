@@ -100,7 +100,7 @@ One run does, in order:
 
 1. **Refresh the file** if it is older than 7 days (download, validate, atomic replace). On failure the old file is kept and the admin gets an email.
 2. **Yearly check:** EE private contacts linked to at least one domain (as registrant, admin or tech), without a death date, whose last check is empty or older than 1 year. Each is looked up; living persons get `death_registry_checked_at = now`, deceased ones get `death_date`.
-   - For a deceased registrant whose death is less than 6 months ago, the registrar gets poll **A1** for each of the person's domains.
+  - For a deceased registrant whose death is less than 6 months ago, the registrar gets poll **A1** for each of the person's domains.
 3. **Start fast-track force deletes** for registrants who died at least 6 months ago (see 3.3).
 4. **Stop force deletes of persons no longer in the file** (see 3.5).
 5. **Handle deceased admin and tech contacts** (see 3.4).
@@ -113,7 +113,7 @@ Volume: after the first full run, about 1/365 of the linked contacts per night; 
 
 - At discovery (death < 6 months ago): poll **A1** to the registrar with the expected force delete start date. No email to the registrant.
 - At death + 6 months + 1 day: the person is looked up again in the fresh file, then a **fast-track force delete** starts on every domain where the person is registrant:
-  - reason `deceased_person`, status note `Deceased registrant: <ident>, death date <YYYY-MM-DD>`;
+  - reason `deceased_person`, status note "Deceased registrant: , death date ";
   - starts the next day; outzone after 15 days; deletion (auction) after another 30 + 1 days (current settings);
   - registrar gets poll **A3**; registrant and admin contacts get the existing "deceased person" force delete email (**E1**, template `private_person`).
 - If the registrant is changed (e.g. to an heir), every force delete on the domain is cancelled, as for any registrant change.
@@ -259,7 +259,7 @@ The existing `CheckForceDeleteLift` cron line (already in the production crontab
 
 - **Log line** after each run (`log/production.log`):
 `DeathRegistryCheckJob: checked N contacts, found N deceased, started N and cancelled N force deletes, removed N admin and tech contacts`
-- **Problem email** `Death registry check problem - <date>` to `admin_notification_email` when:
+- **Problem email** "Death registry check problem - " to `admin_notification_email` when:
   - the file rebuild failed (download error, HTTP error, missing columns, fewer than `death_registry_min_records` records); the old file is kept;
   - the file is missing, stale (older than `death_registry_max_file_age_days`) or malformed; contacts are not checked that night;
   - the dry run report could not be written or sent.
@@ -442,11 +442,11 @@ No email is sent for: A1 (discovery), removal of an optional contact (B1, C1), a
 
 | Where                                            | Text                                                                                                    |
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| Domain page, force delete status note            | `Deceased registrant: <ident>, death date <YYYY-MM-DD>` or `Admin contact <code> has died` |
+| Domain page, force delete status note            | "Deceased registrant: , death date " or "Admin contact has died"                                        |
 | Domain page                                      | "Force delete start" (new row, next to the force delete date)                                           |
 | Contact page                                     | "Death date", "Death registry checked" (shown only when set)                                            |
 | Contact list filter                              | "Death registry": "Deceased" / "Not checked"                                                            |
-| Daily force delete summary email (reason column) | `deceased_person: Deceased registrant: <ident>, death date <date>`, `deceased_admin_contact: Admin contact <code> has died` |
+| Daily force delete summary email (reason column) | "deceased_person: Deceased registrant: , death date ", "deceased_admin_contact: Admin contact has died" |
 
 
 **Schedule force delete dialog** (admin → domain → Edit → Schedule force delete):
@@ -465,7 +465,9 @@ No email is sent for: A1 (discovery), removal of an optional contact (B1, C1), a
 | Error, "Invalid email" chosen but no contact email fails verification | No contact of the domain has an invalid email                                                       |
 
 
-The automatic reasons `deceased_person` and `deceased_admin_contact` are not offered manually: the death registry check would stop such a force delete when the person is not in the open dat10. Open questions
+The automatic reasons `deceased_person` and `deceased_admin_contact` are not offered manually: the death registry check would stop such a force delete when the person is not in the open data.
+
+## 10. Open questions
 
 1. **ENTITY_BURIED manual force delete:** switch it to fast track too, now that deceased registrants are handled automatically?
 2. **Existing deceased contact on a new domain or registrant change:** refuse via EPP/REPP? Not checked today.
