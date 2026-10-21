@@ -258,7 +258,7 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
     assert_not domains(:shop).reload.force_delete_scheduled?
   end
 
-  def test_leaves_existing_force_delete_alone
+  def test_keeps_existing_force_delete_with_earlier_purge_date
     ENV['death_registry_dry_run'] = 'false'
     domain = domains(:shop)
     domain.schedule_force_delete(type: :soft, notify_by_email: true, reason: 'invalid_email',
@@ -270,6 +270,27 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
     assert_equal 'invalid_email', domain.reload.template_name
     assert_equal 'soft', domain.force_delete_type
     assert_equal 'deceased_person', domains(:airport).reload.template_name
+  end
+
+  def test_replaces_later_force_delete_and_restores_it_when_person_leaves_registry
+    ENV['death_registry_dry_run'] = 'false'
+    domain = domains(:shop)
+    # The soft force delete starts at the registration anniversary in two months
+    domain.update_columns(valid_to: Time.zone.today + 3.years + 2.months)
+    domain.reload.schedule_force_delete(type: :soft)
+    mark_deceased(@registrant, Time.zone.today - 7.months)
+
+    DeathRegistryCheckJob.perform_now
+    assert_equal 'deceased_person', domain.reload.template_name
+
+    write_death_file(UNLINKED_IDENT => @recent_death)
+    DeathRegistryCheckJob.perform_now
+
+    domain.reload
+    assert domain.force_delete_scheduled?
+    assert_equal 'soft', domain.force_delete_type
+    assert_nil domain.template_name
+    assert Notification.where('text LIKE ?', "%death was stopped on domain shop.test%").exists?
   end
 
   def test_cancels_force_delete_when_person_leaves_registry

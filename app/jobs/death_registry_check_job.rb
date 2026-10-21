@@ -9,7 +9,8 @@ require 'csv'
 # When six months have passed since a registrant's death, a fast track force
 # delete starts on the registrant's domains. The person is looked up again
 # before that, and every day during the force delete; a person who is no longer
-# in the file has the death date cleared and the force delete cancelled.
+# in the file has the death date cleared and the force delete stopped (an
+# earlier force delete it replaced is restored).
 #
 # Deceased admin and tech contacts are handled by
 # DeathRegistry::DeceasedDomainContacts.
@@ -118,14 +119,17 @@ class DeathRegistryCheckJob < ApplicationJob
   end
 
   # Registrants whose death is at least FORCE_DELETE_DELAY old and who have a
-  # domain without a force delete. Domains that already have a force delete for
-  # another reason are left alone.
+  # domain without a death force delete. A force delete for another reason is
+  # replaced only when the fast track releases the domain earlier
+  # (DeathRegistry::ForceDeletePriority).
   def start_force_deletes(lookup)
     # Same date arithmetic as force_delete_due?: 31.08 + 6 months is 28.02
     Contact.where("(contacts.death_date + INTERVAL '6 months')::date <= ?", Time.zone.today)
            .where('EXISTS (SELECT 1 FROM domains WHERE domains.registrant_id = contacts.id)')
            .find_each do |contact|
-      domains = contact.registrant_domains.reject(&:force_delete_scheduled?)
+      domains = contact.registrant_domains.select do |domain|
+        domain.template_name != FORCE_DELETE_REASON && DeathRegistry::ForceDeletePriority.new(domain).takes_priority?
+      end
       next if domains.empty?
 
       death_date = lookup.death_date(contact.ident)
@@ -142,9 +146,11 @@ class DeathRegistryCheckJob < ApplicationJob
   end
 
   def schedule_force_delete(domain, contact)
-    result = domain.schedule_force_delete(type: :fast_track, notify_by_email: true, reason: FORCE_DELETE_REASON,
-                                          notes: "Deceased registrant: #{contact.ident}, " \
-                                                 "death date #{contact.death_date.iso8601}")
+    result = DeathRegistry::ForceDeletePriority.new(domain).replace_current_force_delete do
+      domain.schedule_force_delete(type: :fast_track, notify_by_email: true, reason: FORCE_DELETE_REASON,
+                                   notes: "Deceased registrant: #{contact.ident}, " \
+                                          "death date #{contact.death_date.iso8601}")
+    end
     return Rails.logger.warn("#{self.class.name}: #{domain.name}: #{result.errors.full_messages.join(', ')}") \
       unless result.valid?
 
@@ -156,7 +162,7 @@ class DeathRegistryCheckJob < ApplicationJob
           .includes(:registrant).find_each do |domain|
       next if lookup.deceased?(domain.registrant.ident)
 
-      domain.cancel_force_delete
+      DeathRegistry::ForceDeletePriority.new(domain).stop
       clear_death_date(domain.registrant) if domain.registrant.death_date
       @cancelled += 1
     end

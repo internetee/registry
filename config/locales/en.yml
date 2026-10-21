@@ -699,6 +699,7 @@ en:
   force_delete_deceased_admin_contact: 'Force delete set on domain %{domain_name}. %{notes} according to the Estonian Population Register. Add a new admin contact; until then the domain cannot be renewed or transferred to another registrar. Force Delete Type: Soft. Force Delete Start Date: %{force_delete_start_date}. Expire date: %{valid_to}.'
   death_registry_admin_contact_removed: 'Admin contact %{contact_code} was removed from domain %{domain_name} because, according to the Estonian Population Register, the person has died.'
   death_registry_tech_contact_removed: 'Tech contact %{contact_code} was removed from domain %{domain_name} because, according to the Estonian Population Register, the person has died. Add a new tech contact if needed.'
+  death_registry_force_delete_restored: 'Force delete because of the registrant''s death was stopped on domain %{domain_name}. The earlier force delete continues: %{reason}. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}.'
   death_registry_registrant_deceased: 'According to the Estonian Population Register, the registrant of domain %{domain_name} (ident %{ident}) died on %{death_date}. Force delete will start on %{force_delete_start} unless the registrant is changed. An heir can take over the domain by a registrant change with a certificate of succession.'
 
   number:
