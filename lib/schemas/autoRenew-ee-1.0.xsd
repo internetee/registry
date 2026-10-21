@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:autoRenew="https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd"
+        targetNamespace="https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd"
+        elementFormDefault="qualified">
+  <element name="create" type="autoRenew:preferenceType"/>
+  <element name="update">
+    <complexType>
+      <choice>
+        <element name="enabled" type="boolean"/>
+        <element name="reverse" type="autoRenew:reverseType"/>
+      </choice>
+    </complexType>
+  </element>
+  <complexType name="preferenceType">
+    <sequence>
+      <element name="enabled" type="boolean"/>
+    </sequence>
+  </complexType>
+  <simpleType name="cycleIdType">
+    <restriction base="token">
+      <minLength value="1"/>
+    </restriction>
+  </simpleType>
+  <complexType name="reverseType">
+    <attribute name="cycleId" type="autoRenew:cycleIdType" use="required"/>
+  </complexType>
+  <simpleType name="stateType">
+    <restriction base="token">
+      <enumeration value="fundingRetry"/>
+      <enumeration value="autoRenewPeriod"/>
+      <enumeration value="completed"/>
+      <enumeration value="reversed"/>
+      <enumeration value="fundingFailed"/>
+      <enumeration value="cancelled"/>
+    </restriction>
+  </simpleType>
+  <complexType name="cycleType">
+    <attribute name="id" type="autoRenew:cycleIdType" use="required"/>
+    <attribute name="state" type="autoRenew:stateType" use="required"/>
+    <attribute name="originalExDate" type="dateTime" use="required"/>
+    <attribute name="exDate" type="dateTime"/>
+    <attribute name="cancelUntil" type="dateTime" use="required"/>
+    <attribute name="attempts" type="nonNegativeInteger" use="required"/>
+  </complexType>
+  <element name="infData">
+    <complexType>
+      <sequence>
+        <element name="enabled" type="boolean"/>
+        <element name="cycle" type="autoRenew:cycleType" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="creData" type="autoRenew:preferenceType"/>
+  <element name="updData">
+    <complexType>
+      <sequence>
+        <element name="enabled" type="boolean"/>
+        <element name="reversed" minOccurs="0">
+          <complexType>
+            <attribute name="cycleId" type="autoRenew:cycleIdType" use="required"/>
+            <attribute name="exDate" type="dateTime" use="required"/>
+            <attribute name="refund" type="decimal" use="required"/>
+            <attribute name="currency" type="token" use="required"/>
+            <attribute name="repeated" type="boolean" use="required"/>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+  <simpleType name="eventType">
+    <restriction base="token">
+      <enumeration value="renewed"/>
+      <enumeration value="fundingWarning"/>
+      <enumeration value="renewProhibited"/>
+      <enumeration value="fundingFailed"/>
+    </restriction>
+  </simpleType>
+  <element name="pollData">
+    <complexType>
+      <sequence>
+        <element name="name" type="token"/>
+        <element name="cycle" type="autoRenew:cycleType"/>
+      </sequence>
+      <attribute name="event" type="autoRenew:eventType" use="required"/>
+    </complexType>
+  </element>
+</schema>

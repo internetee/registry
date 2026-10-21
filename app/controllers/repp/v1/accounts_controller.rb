@@ -164,9 +164,10 @@ module Repp
 
       def serialized_activities(activities)
         arr = []
+        credit_types = [AccountActivity::ADD_CREDIT, AccountActivity::REFUND]
         activities.each do |a|
           arr << { created_at: a.created_at, description: a.description,
-                   type: a.activity_type == 'add_credit' ? 'credit' : 'debit',
+                   type: credit_types.include?(a.activity_type) ? 'credit' : 'debit',
                    sum: a.sum, balance: a.new_balance, currency: a.currency,
                    updator: a.updator_str }
         end

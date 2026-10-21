@@ -1,6 +1,9 @@
 require 'deserializers/xml/domain_delete'
+require 'deserializers/xml/auto_renew'
 module Epp
   class DomainsController < BaseController
+    rescue_from Deserializers::Xml::AutoRenew::Error, with: :respond_with_auto_renew_error
+
     before_action :find_domain, only: %i[info renew update transfer delete]
     before_action :find_password, only: %i[info update transfer delete]
     before_action :set_paper_trail_whodunnit
@@ -35,7 +38,10 @@ module Epp
 
       registrar_id = current_user.registrar.id
       @domain = Epp::Domain.new
-      data = ::Deserializers::Xml::DomainCreate.new(params[:parsed_frame], registrar_id).call
+      data = ::Deserializers::Xml::DomainCreate.new(
+        params[:parsed_frame], registrar_id, nokogiri_frame: params[:nokogiri_frame]
+      ).call
+      @auto_renew_requested = data[:auto_renew].present?
       action = Actions::DomainCreate.new(@domain, data)
 
       action.call ? render_epp_response('/epp/domains/create') : handle_errors(@domain)
@@ -45,14 +51,17 @@ module Epp
       authorize!(:update, @domain, @password)
 
       registrar_id = current_user.registrar.id
-      update_params = ::Deserializers::Xml::DomainUpdate.new(params[:parsed_frame],
-                                                             registrar_id).call
+      update_params = ::Deserializers::Xml::DomainUpdate.new(
+        params[:parsed_frame], registrar_id, nokogiri_frame: params[:nokogiri_frame]
+      ).call
+      @auto_renew_requested = update_params[:auto_renew].present?
       action = Actions::DomainUpdate.new(@domain, update_params, false)
       unless action.call
         handle_errors(@domain)
         return
       end
 
+      @auto_renew_result = action.auto_renew_result
       pending = @domain.epp_pending_update.present?
       render_epp_response("/epp/domains/success#{'_pending' if pending}")
     end
@@ -133,6 +142,11 @@ module Epp
     end
 
     private
+
+    def respond_with_auto_renew_error(error)
+      epp_errors.add(:epp_errors, code: error.code, msg: error.message)
+      handle_errors
+    end
 
     def validate_info
       @prefix = 'info > info >'

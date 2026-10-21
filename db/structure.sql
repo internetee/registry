@@ -983,6 +983,58 @@ ALTER SEQUENCE public.dnskeys_id_seq OWNED BY public.dnskeys.id;
 
 
 --
+-- Name: domain_auto_renewals; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.domain_auto_renewals (
+    id bigint NOT NULL,
+    uuid uuid DEFAULT gen_random_uuid() NOT NULL,
+    domain_id integer,
+    domain_name character varying NOT NULL,
+    registrar_id integer NOT NULL,
+    account_id integer NOT NULL,
+    state character varying DEFAULT 'awaiting_funds'::character varying NOT NULL,
+    original_expire_at timestamp without time zone NOT NULL,
+    renewed_expire_at timestamp without time zone,
+    cancellation_deadline_at timestamp without time zone NOT NULL,
+    price_id integer,
+    charge_activity_id integer,
+    refund_activity_id integer,
+    failure_reason character varying,
+    attempts_count integer DEFAULT 0 NOT NULL,
+    last_attempt_at timestamp without time zone,
+    renewed_at timestamp without time zone,
+    closed_at timestamp without time zone,
+    funding_warning_sent_at timestamp without time zone,
+    blocked_warning_sent_at timestamp without time zone,
+    creator_str character varying,
+    updator_str character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT domain_auto_renewals_state_check CHECK (((state)::text = ANY ((ARRAY['awaiting_funds'::character varying, 'grace'::character varying, 'completed'::character varying, 'reversed'::character varying, 'funding_failed'::character varying, 'cancelled'::character varying])::text[])))
+);
+
+
+--
+-- Name: domain_auto_renewals_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.domain_auto_renewals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: domain_auto_renewals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.domain_auto_renewals_id_seq OWNED BY public.domain_auto_renewals.id;
+
+
+--
 -- Name: domain_contacts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1092,7 +1144,8 @@ CREATE TABLE public.domains (
     locked_by_registrant_at timestamp without time zone,
     force_delete_start timestamp without time zone,
     force_delete_data public.hstore,
-    json_statuses_history jsonb
+    json_statuses_history jsonb,
+    auto_renew boolean DEFAULT false NOT NULL
 );
 
 
@@ -1255,7 +1308,8 @@ CREATE TABLE public.epp_sessions (
     session_id character varying NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    user_id integer NOT NULL
+    user_id integer NOT NULL,
+    ext_uris character varying[] DEFAULT '{}'::character varying[] NOT NULL
 );
 
 
@@ -1799,6 +1853,45 @@ CREATE SEQUENCE public.log_dnskeys_id_seq
 --
 
 ALTER SEQUENCE public.log_dnskeys_id_seq OWNED BY public.log_dnskeys.id;
+
+
+--
+-- Name: log_domain_auto_renewals; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.log_domain_auto_renewals (
+    id integer NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object jsonb,
+    object_changes json,
+    created_at timestamp without time zone,
+    session character varying,
+    children json,
+    uuid character varying
+);
+
+
+--
+-- Name: log_domain_auto_renewals_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.log_domain_auto_renewals_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_domain_auto_renewals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.log_domain_auto_renewals_id_seq OWNED BY public.log_domain_auto_renewals.id;
 
 
 --
@@ -2431,7 +2524,8 @@ CREATE TABLE public.notifications (
     updated_at timestamp without time zone,
     creator_str character varying,
     updator_str character varying,
-    action_id integer
+    action_id integer,
+    event character varying
 );
 
 
@@ -3348,6 +3442,13 @@ ALTER TABLE ONLY public.dnskeys ALTER COLUMN id SET DEFAULT nextval('public.dnsk
 
 
 --
+-- Name: domain_auto_renewals id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_auto_renewals ALTER COLUMN id SET DEFAULT nextval('public.domain_auto_renewals_id_seq'::regclass);
+
+
+--
 -- Name: domain_contacts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3492,6 +3593,13 @@ ALTER TABLE ONLY public.log_contacts ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.log_dnskeys ALTER COLUMN id SET DEFAULT nextval('public.log_dnskeys_id_seq'::regclass);
+
+
+--
+-- Name: log_domain_auto_renewals id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_domain_auto_renewals ALTER COLUMN id SET DEFAULT nextval('public.log_domain_auto_renewals_id_seq'::regclass);
 
 
 --
@@ -3884,6 +3992,14 @@ ALTER TABLE ONLY public.dnskeys
 
 
 --
+-- Name: domain_auto_renewals domain_auto_renewals_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_auto_renewals
+    ADD CONSTRAINT domain_auto_renewals_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: domain_contacts domain_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4049,6 +4165,14 @@ ALTER TABLE ONLY public.log_contacts
 
 ALTER TABLE ONLY public.log_dnskeys
     ADD CONSTRAINT log_dnskeys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: log_domain_auto_renewals log_domain_auto_renewals_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.log_domain_auto_renewals
+    ADD CONSTRAINT log_domain_auto_renewals_pkey PRIMARY KEY (id);
 
 
 --
@@ -4608,6 +4732,55 @@ CREATE INDEX index_dnskeys_on_legacy_domain_id ON public.dnskeys USING btree (le
 
 
 --
+-- Name: index_domain_auto_renewals_on_charge_activity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_domain_auto_renewals_on_charge_activity_id ON public.domain_auto_renewals USING btree (charge_activity_id);
+
+
+--
+-- Name: index_domain_auto_renewals_on_domain_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_domain_auto_renewals_on_domain_id ON public.domain_auto_renewals USING btree (domain_id) WHERE ((state)::text = ANY ((ARRAY['awaiting_funds'::character varying, 'grace'::character varying])::text[]));
+
+
+--
+-- Name: index_domain_auto_renewals_on_domain_id_and_original_expire_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_domain_auto_renewals_on_domain_id_and_original_expire_at ON public.domain_auto_renewals USING btree (domain_id, original_expire_at);
+
+
+--
+-- Name: index_domain_auto_renewals_on_refund_activity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_domain_auto_renewals_on_refund_activity_id ON public.domain_auto_renewals USING btree (refund_activity_id);
+
+
+--
+-- Name: index_domain_auto_renewals_on_registrar_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domain_auto_renewals_on_registrar_id ON public.domain_auto_renewals USING btree (registrar_id);
+
+
+--
+-- Name: index_domain_auto_renewals_on_state_and_deadline; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domain_auto_renewals_on_state_and_deadline ON public.domain_auto_renewals USING btree (state, cancellation_deadline_at);
+
+
+--
+-- Name: index_domain_auto_renewals_on_uuid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_domain_auto_renewals_on_uuid ON public.domain_auto_renewals USING btree (uuid);
+
+
+--
 -- Name: index_domain_contacts_on_contact_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4843,6 +5016,20 @@ CREATE INDEX index_log_dnskeys_on_item_type_and_item_id ON public.log_dnskeys US
 --
 
 CREATE INDEX index_log_dnskeys_on_whodunnit ON public.log_dnskeys USING btree (whodunnit);
+
+
+--
+-- Name: index_log_domain_auto_renewals_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_domain_auto_renewals_on_item_type_and_item_id ON public.log_domain_auto_renewals USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_domain_auto_renewals_on_whodunnit; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_domain_auto_renewals_on_whodunnit ON public.log_domain_auto_renewals USING btree (whodunnit);
 
 
 --
@@ -5407,11 +5594,27 @@ ALTER TABLE ONLY public.domain_transfers
 
 
 --
+-- Name: domain_auto_renewals fk_rails_5dbbc25f36; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_auto_renewals
+    ADD CONSTRAINT fk_rails_5dbbc25f36 FOREIGN KEY (refund_activity_id) REFERENCES public.account_activities(id);
+
+
+--
 -- Name: csync_records fk_rails_5df85aeb13; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.csync_records
     ADD CONSTRAINT fk_rails_5df85aeb13 FOREIGN KEY (domain_id) REFERENCES public.domains(id);
+
+
+--
+-- Name: domain_auto_renewals fk_rails_62fb61b3b9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_auto_renewals
+    ADD CONSTRAINT fk_rails_62fb61b3b9 FOREIGN KEY (registrar_id) REFERENCES public.registrars(id);
 
 
 --
@@ -5471,6 +5674,14 @@ ALTER TABLE ONLY public.actions
 
 
 --
+-- Name: domain_auto_renewals fk_rails_a9fa033af7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_auto_renewals
+    ADD CONSTRAINT fk_rails_a9fa033af7 FOREIGN KEY (domain_id) REFERENCES public.domains(id) ON DELETE SET NULL;
+
+
+--
 -- Name: epp_sessions fk_rails_adff2dc8e3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5479,11 +5690,27 @@ ALTER TABLE ONLY public.epp_sessions
 
 
 --
+-- Name: domain_auto_renewals fk_rails_b59f8eec7c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_auto_renewals
+    ADD CONSTRAINT fk_rails_b59f8eec7c FOREIGN KEY (price_id) REFERENCES public.prices(id);
+
+
+--
 -- Name: account_activities fk_rails_b80dbb973d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.account_activities
     ADD CONSTRAINT fk_rails_b80dbb973d FOREIGN KEY (bank_transaction_id) REFERENCES public.bank_transactions(id);
+
+
+--
+-- Name: domain_auto_renewals fk_rails_bf6b89e32d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_auto_renewals
+    ADD CONSTRAINT fk_rails_bf6b89e32d FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
@@ -5508,6 +5735,14 @@ ALTER TABLE ONLY public.account_activities
 
 ALTER TABLE ONLY public.account_activities
     ADD CONSTRAINT fk_rails_d2cc3c2fa9 FOREIGN KEY (price_id) REFERENCES public.prices(id);
+
+
+--
+-- Name: domain_auto_renewals fk_rails_d51b0d72f3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_auto_renewals
+    ADD CONSTRAINT fk_rails_d51b0d72f3 FOREIGN KEY (charge_activity_id) REFERENCES public.account_activities(id);
 
 
 --
@@ -6075,6 +6310,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261005090000'),
 ('20261005090100'),
 ('20261005090200'),
-('20261012120000');
+('20261012120000'),
+('20261021100000'),
+('20261021100100'),
+('20261021100200'),
+('20261021100300'),
+('20261021100400');
 
 

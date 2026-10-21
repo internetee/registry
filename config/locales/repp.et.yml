@@ -4,5 +4,7 @@ et:
     object_does_not_exist: Objekt puudub
     object_does_not_exist_with_name: "Objekt puudub: %{name}"
     errors:
+      invalid_auto_renew_boolean: Automaatne pikendamine peab olema true või false
+      auto_renew_parameter_missing: Automaatse pikendamise enabled või cycle_id on kohustuslik
       invalid_authorization_information: Vigane autoriseerimisteave
       object_not_eligible_for_transfer: Objekt ei ole üleandmiseks sobilik

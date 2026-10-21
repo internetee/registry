@@ -62,13 +62,13 @@ module Billing
       where(condition, now: Time.zone.now)
     end
 
-    def self.valid
-      where('valid_from <= ? AND (valid_to >= ? OR valid_to IS NULL)', Time.zone.now.end_of_day,
-            Time.zone.now.beginning_of_day)
+    def self.valid(at = Time.zone.now)
+      where('valid_from <= ? AND (valid_to >= ? OR valid_to IS NULL)', at.end_of_day,
+            at.beginning_of_day)
     end
 
-    def self.price_for(zone, operation_category, duration)
-      lists = valid.where(zone: zone, operation_category: operation_category, duration: duration)
+    def self.price_for(zone, operation_category, duration, at: Time.zone.now)
+      lists = valid(at).where(zone: zone, operation_category: operation_category, duration: duration)
       return lists.first if lists.count == 1
 
       lists.order(valid_from: :desc).first

@@ -21,10 +21,11 @@ module Serializers
           outzone_at: obj.outzone_at, delete_date: obj.delete_date,
           force_delete_date: obj.force_delete_date, contacts: contacts,
           nameservers: nameservers, dnssec_keys: dnssec_keys,
-          statuses: statuses, registrar: registrar,
+          statuses: statuses, registrar: registrar, rgp_statuses: obj.rgp_statuses,
           dispute: Dispute.active.exists?(domain_name: obj.name)
         }
         json[:transfer_code] = obj.auth_info if @sponsored
+        json[:auto_renew] = auto_renew if @sponsored
         json
       end
       # rubocop:enable Metrics/MethodLength
@@ -36,6 +37,22 @@ module Serializers
           { code: contact.code, type: dc.type,
             name: contact.name_disclosed_by_registrar(domain.registrar_id) }
         end
+      end
+
+      def auto_renew
+        { enabled: domain.auto_renew?, cycle: domain.current_auto_renewal&.as_protocol_json }
+      end
+
+      def reversal(result)
+        return unless result&.reversed_cycle
+
+        refund = result.refund_activity
+        {
+          cycle_id: result.reversed_cycle.uuid,
+          expire_time: domain.expire_time.iso8601,
+          refund: { amount: format('%.2f', refund.sum), currency: refund.currency },
+          repeated: result.already_reversed
+        }
       end
 
       def nameservers
@@ -75,8 +92,10 @@ module Serializers
           expire_time: domain.expire_time,
           registrant: registrant,
           statuses: statuses,
+          rgp_statuses: domain.rgp_statuses,
         }
         json[:transfer_code] = domain.auth_info if @sponsored
+        json[:auto_renew] = auto_renew if @sponsored
         json
       end
     end

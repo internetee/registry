@@ -1,4 +1,7 @@
 class EppSession < ApplicationRecord
+  AUTO_RENEW_URI = 'https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd'.freeze
+  RGP_URI = 'urn:ietf:params:xml:ns:rgp-1.0'.freeze
+
   belongs_to :user, required: true
 
   validates :session_id, uniqueness: true, presence: true
@@ -27,6 +30,10 @@ class EppSession < ApplicationRecord
 
   def self.expired
     where(':now > (updated_at + interval :interval)', now: Time.zone.now, interval: interval)
+  end
+
+  def extension?(uri)
+    ext_uris.include?(uri)
   end
 
   def update_last_access

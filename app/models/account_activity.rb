@@ -7,17 +7,21 @@ class AccountActivity < ApplicationRecord
 
   CREATE = 'create'.freeze
   RENEW = 'renew'.freeze
+  REFUND = 'refund'.freeze
   ADD_CREDIT = 'add_credit'.freeze
   UPDATE_CREDIT = 'update_credit'.freeze
 
   after_create :update_balance
 
   def update_balance
-    account.balance += sum
-    account.save
+    # Activity inserts may already hold foreign-key key-share locks on the account.
+    account.with_lock('FOR NO KEY UPDATE') do
+      account.balance += sum
+      account.save!
 
-    self.new_balance = account.balance
-    save
+      self.new_balance = account.balance
+      save!
+    end
   end
 
   def as_csv_row
@@ -34,7 +38,7 @@ class AccountActivity < ApplicationRecord
     end
 
     def types_for_select
-      [CREATE, RENEW, ADD_CREDIT, UPDATE_CREDIT].map { |x| [I18n.t(x), x] }
+      [CREATE, RENEW, REFUND, ADD_CREDIT, UPDATE_CREDIT].map { |x| [I18n.t(x), x] }
     end
 
     def csv_header

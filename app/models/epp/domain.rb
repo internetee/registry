@@ -218,15 +218,7 @@ class Epp::Domain < Domain
 
     return false if errors.any?
 
-    self.expire_time = renewed_expire_time
-    self.outzone_at = nil
-    self.delete_date = nil
-    self.period = period
-    self.period_unit = unit
-
-    statuses.delete(DomainStatus::SERVER_HOLD) if self.status_notes["serverHold"].blank?
-    statuses.delete(DomainStatus::EXPIRED)
-    cancel_pending_delete
+    assign_renewal_expiry(renewed_expire_time, period: period, unit: unit)
 
     save
   end

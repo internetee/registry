@@ -81,6 +81,7 @@ class Domain < ApplicationRecord
                                               reject_if: proc { |attrs| attrs[:hostname].blank? }
 
   has_many :transfers, class_name: 'DomainTransfer', dependent: :destroy
+  has_many :auto_renewals, class_name: 'DomainAutoRenewal', dependent: nil
 
   has_many :dnskeys, dependent: :destroy
 
@@ -101,6 +102,8 @@ class Domain < ApplicationRecord
   end
 
   before_save :manage_automatic_statuses
+  before_save :disable_auto_renew_on_sponsor_change
+  after_save :settle_auto_renewal_on_sponsor_change, if: :saved_change_to_registrar_id?
   before_save :touch_always_version
   def touch_always_version
     self.updated_at = Time.zone.now
@@ -285,6 +288,27 @@ class Domain < ApplicationRecord
 
     def ransackable_attributes(*)
       authorizable_ransackable_attributes
+    end
+
+    def ransackable_scopes(_auth = nil)
+      %i[auto_renew_grace auto_renew_funding_retry]
+    end
+
+    def auto_renew_grace(flag = true)
+      return all unless flag
+
+      cycles = DomainAutoRenewal.in_grace
+                                .where('domain_auto_renewals.domain_id = domains.id')
+                                .where('cancellation_deadline_at > ?', Time.zone.now)
+      where(cycles.arel.exists)
+    end
+
+    def auto_renew_funding_retry(flag = true)
+      return all unless flag
+
+      cycles = DomainAutoRenewal.awaiting_funds
+                                .where('domain_auto_renewals.domain_id = domains.id')
+      where(cycles.arel.exists)
     end
 
     def nameserver_required?
@@ -562,7 +586,31 @@ class Domain < ApplicationRecord
     self.delete_date = nil
   end
 
-  def pricelist(operation_category, period_i = nil, unit = nil)
+  def current_auto_renewal
+    auto_renewals.order(original_expire_at: :desc).first
+  end
+
+  def auto_renew_grace_active?(at = Time.zone.now)
+    current_auto_renewal&.grace_active?(at) || false
+  end
+
+  def rgp_statuses
+    auto_renew_grace_active? ? [DomainAutoRenewal::RGP_AUTO_RENEW_PERIOD] : []
+  end
+
+  def assign_renewal_expiry(new_expire_time, period: 1, unit: 'y')
+    self.valid_to = new_expire_time
+    self.outzone_at = nil
+    self.delete_date = nil
+    self.period = period
+    self.period_unit = unit
+
+    statuses.delete(DomainStatus::SERVER_HOLD) if status_notes['serverHold'].blank?
+    statuses.delete(DomainStatus::EXPIRED)
+    cancel_pending_delete
+  end
+
+  def pricelist(operation_category, period_i = nil, unit = nil, at: Time.zone.now)
     period_i ||= period
     unit ||= period_unit
 
@@ -571,7 +619,7 @@ class Domain < ApplicationRecord
 
     duration = "P#{period_i}#{unit.upcase}"
 
-    Billing::Price.price_for(zone, operation_category, duration)
+    Billing::Price.price_for(zone, operation_category, duration, at: at)
   end
 
   ### VALIDATIONS ###
@@ -898,6 +946,14 @@ class Domain < ApplicationRecord
   end
 
   private
+
+  def settle_auto_renewal_on_sponsor_change
+    Domains::AutoRenew::HandleTransfer.run!(domain: self)
+  end
+
+  def disable_auto_renew_on_sponsor_change
+    self.auto_renew = false if persisted? && registrar_id_changed?
+  end
 
   def underage_registrant?
     registrant.underage?

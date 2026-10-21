@@ -14,6 +14,14 @@ xml.epp_head do
       end
     end
 
+    if @auto_renew_requested && epp_session.extension?(EppSession::AUTO_RENEW_URI)
+      xml.extension do
+        xml.tag!('autoRenew:creData', 'xmlns:autoRenew' => EppSession::AUTO_RENEW_URI) do
+          xml.tag!('autoRenew:enabled', @domain.auto_renew.to_s)
+        end
+      end
+    end
+
     render('epp/shared/trID', builder: xml)
   end
 end

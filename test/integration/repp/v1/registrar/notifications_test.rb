@@ -110,4 +110,51 @@ class ReppV1RegistrarNotificationsTest < ActionDispatch::IntegrationTest
     assert_equal notification.id, json[:data][:notification_id]
     assert_equal notification.read, json[:data][:read]
   end
+
+  def test_queued_funding_warning_keeps_event_after_renewal_in_index_list_and_show
+    travel_to Time.zone.local(2027, 3, 5, 12)
+    domain = domains(:shop)
+    cycle = domain.auto_renewals.create!(
+      domain_name: domain.name, registrar: @user.registrar, account: @user.registrar.cash_account,
+      state: DomainAutoRenewal::GRACE, original_expire_at: 1.day.ago,
+      renewed_expire_at: 1.day.ago.advance(years: 1), cancellation_deadline_at: 14.days.from_now,
+      attempts_count: 1, charge_activity: account_activities(:renew_cash)
+    )
+    notification = @user.registrar.notifications.create!(
+      event: 'fundingWarning', text: 'Insufficient funds for automatic renewal',
+      attached_obj_type: 'DomainAutoRenewal', attached_obj_id: cycle.id
+    )
+    expected = { event: 'fundingWarning', domain: domain.name, cycle: cycle.as_protocol_json }
+
+    ['/repp/v1/registrar/notifications',
+     '/repp/v1/registrar/notifications/all_notifications',
+     "/repp/v1/registrar/notifications/#{notification.id}"].each do |path|
+      get path, headers: @auth_headers
+      json = JSON.parse(response.body, symbolize_names: true)
+
+      assert_response :ok
+      data = json[:data].is_a?(Array) ? json[:data].find { |item| item[:id] == notification.id } : json[:data]
+      assert_equal notification.id, data[:id]
+      assert_equal expected, data[:attached_obj_data]
+    end
+  end
+
+  def test_auto_renewal_notification_survives_domain_deletion
+    domain = domains(:shop)
+    cycle = DomainAutoRenewal.create!(
+      domain_name: domain.name, registrar: @user.registrar, account: @user.registrar.cash_account,
+      state: DomainAutoRenewal::FUNDING_FAILED, original_expire_at: 16.days.ago,
+      cancellation_deadline_at: 1.day.ago, attempts_count: 3, domain_id: nil
+    )
+    notification = @user.registrar.notifications.create!(
+      event: 'fundingFailed', text: 'Automatic renewal failed',
+      attached_obj_type: 'DomainAutoRenewal', attached_obj_id: cycle.id
+    )
+    get "/repp/v1/registrar/notifications/#{notification.id}", headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal({ event: 'fundingFailed', domain: domain.name, cycle: cycle.as_protocol_json },
+                 json[:data][:attached_obj_data])
+  end
 end

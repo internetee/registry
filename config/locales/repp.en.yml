@@ -4,5 +4,7 @@ en:
     object_does_not_exist: Object does not exist
     object_does_not_exist_with_name: "Object does not exist: %{name}"
     errors:
+      invalid_auto_renew_boolean: Automatic renewal must be true or false
+      auto_renew_parameter_missing: Automatic renewal enabled or cycle_id is required
       invalid_authorization_information: Invalid authorization information
       object_not_eligible_for_transfer: Object is not eligible for transfer

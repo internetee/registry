@@ -1,0 +1,17 @@
+en:
+  auto_renew:
+    activity:
+      renew: 'Automatic renewal %{domain}'
+      refund: 'Automatic renewal refund %{domain}'
+    errors:
+      expiry_changed: 'Domain expiry changed during renewal, retry with the current expiry date'
+      not_sponsor: 'Only the sponsoring registrar may change automatic renewal'
+      unavailable: 'Automatic renewal is not available'
+      enable_and_reverse: 'Enabling automatic renewal and reversing a cycle cannot be combined'
+      unknown_cycle: 'Automatic renewal cycle does not exist for this domain'
+      not_reversible: 'Automatic renewal cycle cannot be reversed'
+    notifications:
+      renewed: '%{domain} was automatically renewed until %{expire_date} for %{amount} EUR. Cycle %{cycle_id} may be reversed before %{deadline}.'
+      funding_warning: 'Insufficient funds to automatically renew %{domain} (expiry %{expire_date}, amount %{amount} EUR). Cycle %{cycle_id} will be retried until %{deadline}.'
+      renew_prohibited: 'Automatic renewal of %{domain} (expiry %{expire_date}, amount %{amount} EUR) is currently unavailable. Cycle %{cycle_id} will be retried until %{deadline}.'
+      funding_failed: 'Automatic renewal of %{domain} (expiry %{expire_date}, amount %{amount} EUR) failed at %{deadline}. Automatic renewal is disabled. Cycle %{cycle_id} is closed.'

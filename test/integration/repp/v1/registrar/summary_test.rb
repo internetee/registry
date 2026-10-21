@@ -76,4 +76,28 @@ class ReppV1RegistrarSummaryTest < ActionDispatch::IntegrationTest
     assert_equal 1000, json[:code]
     assert_equal [], json[:data][:notification][:attached_obj_data][:contacts]
   end
+
+  def test_auto_renewal_notification_attached_data
+    travel_to Time.zone.local(2027, 3, 5, 12)
+    domain = domains(:shop)
+    cycle = domain.auto_renewals.create!(
+      domain_name: domain.name, registrar: @user.registrar, account: @user.registrar.cash_account,
+      state: DomainAutoRenewal::AWAITING_FUNDS, failure_reason: DomainAutoRenewal::INSUFFICIENT_FUNDS,
+      original_expire_at: 1.day.ago, cancellation_deadline_at: 14.days.from_now, attempts_count: 2
+    )
+    notification = @user.registrar.notifications.create!(
+      event: 'fundingWarning', text: 'Insufficient funds for automatic renewal',
+      attached_obj_type: 'DomainAutoRenewal', attached_obj_id: cycle.id
+    )
+
+    travel_to Time.zone.now + 1.hour
+    cycle.update!(state: DomainAutoRenewal::CANCELLED)
+    get '/repp/v1/registrar/summary', headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal notification.id, json[:data][:notification][:id]
+    assert_equal({ event: 'fundingWarning', domain: domain.name, cycle: cycle.as_protocol_json },
+                 json[:data][:notification][:attached_obj_data])
+  end
 end

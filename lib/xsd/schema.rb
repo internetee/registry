@@ -8,6 +8,8 @@ module Xsd
 
     PREFIXES = %w[
       domain-ee
+      autoRenew-ee
+      rgp
       domain-eis
       all-ee
       changePoll

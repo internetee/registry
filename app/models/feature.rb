@@ -18,4 +18,8 @@ class Feature
   def self.allow_accr_endspoints?
     ENV['allow_accr_endspoints'] == 'true'
   end
+
+  def self.auto_renew_enabled?
+    ENV['auto_renew_enabled'] == 'true'
+  end
 end
