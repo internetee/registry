@@ -540,7 +540,8 @@ class Contact < ApplicationRecord
 
   def update_related_whois_records
     # not doing anything if no real changes
-    ignored_columns = %w[updated_at created_at statuses status_notes checked_company_at company_register_status]
+    ignored_columns = %w[updated_at created_at statuses status_notes checked_company_at company_register_status
+                         death_date death_registry_checked_at]
 
     return if (previous_changes.keys - ignored_columns).empty?
 
@@ -576,6 +577,14 @@ class Contact < ApplicationRecord
 
   def linked?
     registrant_domains.any? || domain_contacts.any?
+  end
+
+  # For a person who is no longer in the death registry, or whose death force
+  # delete an admin cancelled. The next death registry check is in a year.
+  def clear_death_date!
+    self.death_date = nil
+    self.death_registry_checked_at = Time.zone.now
+    save!(validate: false)
   end
 
   def domain_names_with_roles

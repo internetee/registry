@@ -800,7 +800,9 @@ CREATE TABLE public.contacts (
     company_register_status character varying,
     system_disclosed_attributes character varying[] DEFAULT '{}'::character varying[],
     verification_pending_at timestamp without time zone,
-    verification_snapshot jsonb DEFAULT '{}'::jsonb
+    verification_snapshot jsonb DEFAULT '{}'::jsonb,
+    death_date date,
+    death_registry_checked_at timestamp without time zone
 );
 
 
@@ -4545,6 +4547,20 @@ CREATE INDEX index_contacts_on_code ON public.contacts USING btree (code);
 
 
 --
+-- Name: index_contacts_on_death_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contacts_on_death_date ON public.contacts USING btree (death_date) WHERE (death_date IS NOT NULL);
+
+
+--
+-- Name: index_contacts_on_death_registry_checked_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contacts_on_death_registry_checked_at ON public.contacts USING btree (death_registry_checked_at) WHERE (((ident_type)::text = 'priv'::text) AND ((ident_country_code)::text = 'EE'::text));
+
+
+--
 -- Name: index_contacts_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6075,6 +6091,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261005090000'),
 ('20261005090100'),
 ('20261005090200'),
-('20261012120000');
+('20261012120000'),
+('20261019120000'),
+('20261019120100');
 
 

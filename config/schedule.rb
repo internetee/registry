@@ -82,6 +82,13 @@ if @cron_group == 'registry'
   every :day, at: '12:01am' do
     rake 'invoices:process_payments'
   end
+
+  # Checks EE private contacts against the death registry once a year each.
+  # The job rebuilds the death registry file itself when it is older than 7
+  # days; the open data omits the newest 7 days, so weekly is enough.
+  every :day, at: '5:00am' do
+    runner 'DeathRegistryCheckJob.perform_now'
+  end
 end
 
 every 10.minutes do

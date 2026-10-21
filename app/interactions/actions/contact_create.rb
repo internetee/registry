@@ -15,6 +15,7 @@ module Actions
       maybe_validate_ident
       maybe_change_email
       maybe_company_is_relevant
+      maybe_person_is_alive
       commit
       maybe_validate_phone_number
       maybe_validate_contact
@@ -113,6 +114,24 @@ module Actions
       contact.add_epp_error('2003', nil, 'ident', I18n.t('errors.messages.company_not_registered'))
 
       @error = true
+    end
+
+    # A missing or stale death registry file must not block contact creation:
+    # the contact is created unchecked and the daily death registry check picks it up.
+    def maybe_person_is_alive
+      return true if @error
+      return true unless ENV['validate_deceased_contacts'] == 'true'
+      return true unless contact.ident_type == 'priv' && contact.ident_country_code == 'EE'
+
+      if DeathRegistry::Lookup.new.deceased?(contact.ident)
+        contact.add_epp_error('2003', nil, 'ident', I18n.t('errors.messages.ident_invalid'))
+        @error = true
+      else
+        contact.death_registry_checked_at = Time.zone.now
+      end
+    rescue DeathRegistry::FileUnavailable => e
+      Rails.logger.warn("Death registry check skipped for new contact: #{e.message}")
+      true
     end
 
     def maybe_attach_legal_doc
