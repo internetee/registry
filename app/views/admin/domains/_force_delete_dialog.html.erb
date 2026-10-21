@@ -10,6 +10,16 @@
 
             <%= form_tag admin_domain_force_delete_path(domain), id: 'domain-force-delete-form',
                          class: 'modal-body form-horizontal' do %>
+                <div class="form-group">
+                    <div class="col-md-9">
+                        <%= label_tag 'reason', t('.reason') %>
+                        <%= select_tag 'reason',
+                                       options_for_select(Admin::Domains::ForceDeleteController::REASONS.map { |reason| [t(".reasons.#{reason}"), reason] }),
+                                       include_blank: true, required: true, class: 'form-control' %>
+                        <p class="help-block"><%= t '.reason_hint' %></p>
+                    </div>
+                </div>
+
                 <div class="form-group force-delete-type">
                     <div class="col-md-9">
                         <div class="checkbox">
