@@ -4,6 +4,8 @@ en:
       force_delete:
         create:
           scheduled: Force delete procedure has been scheduled
+          reason_missing: Choose the reason of the force delete
+          no_invalid_emails: No contact of the domain has an invalid email
 
         destroy:
           cancelled: Force delete procedure has been cancelled

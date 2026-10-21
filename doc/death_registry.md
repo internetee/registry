@@ -133,6 +133,7 @@ The force delete that releases the domain **earlier** wins (Timo, 21.10.2026).
 
 ### 3.6 Admin actions
 
+- **Schedule force delete** requires a reason, which selects the email: registrant (private person) has died, registrant (company) deleted from the Business Register, invalid email, invalid phone, or other (no email). Before, the email was guessed from the domain data, and any private registrant got the "registrant has died" letter.
 - **Cancel force delete** (admin → domain → Edit → Cancel force delete) on a death force delete:
   - restores a saved earlier force delete (3.5), otherwise cancels;
   - clears the contact's death date and marks it checked now, so the job does not restart the force delete; the person is checked again in a year.
@@ -378,18 +379,31 @@ No email is sent for: A1 (discovery), removal of an optional contact (B1, C1), a
 
 ### Admin interface
 
-- Domain status note: "Deceased registrant: <ident>, death date <YYYY-MM-DD>" or "Admin contact <code> has died".
-- Contact page: "Death date", "Death registry checked".
+| Where | Text |
+| --- | --- |
+| Domain page, force delete status note | "Deceased registrant: <ident>, death date <YYYY-MM-DD>" or "Admin contact <code> has died" |
+| Domain page | "Force delete start" (new row, next to the force delete date) |
+| Contact page | "Death date", "Death registry checked" (shown only when set) |
+| Contact list filter | "Death registry": "Deceased" / "Not checked" |
+| Daily force delete summary email (reason column) | "deceased_person: Deceased registrant: <ident>, death date <date>", "deceased_admin_contact: Admin contact <code> has died" |
+
+**Schedule force delete dialog** (admin → domain → Edit → Schedule force delete):
+
+| Element | Text |
+| --- | --- |
+| Field | Reason (required) |
+| Option → email | "Registrant (private person) has died" → E1 `private_person` |
+| Option → email | "Registrant (company) is deleted from the Business Register" → `legal_person` |
+| Option → email | "Invalid email" → `invalid_email` (failing addresses go into the status note) |
+| Option → email | "Invalid phone" → `invalid_phone` |
+| Option → email | "Other (no email)" → no email to registrant and contacts |
+| Hint | The reason selects the email to the registrant and administrative contacts. "Other" sends no email. |
+| Error, no reason chosen | Choose the reason of the force delete |
+| Error, "Invalid email" chosen but no contact email fails verification | No contact of the domain has an invalid email |
+
+The automatic reasons `deceased_person` and `deceased_admin_contact` are not offered manually: the death registry check would stop such a force delete when the person is not in the open data.
 
 ## 10. Open questions
 
-1. **Licence (Helen):** does CC BY 4.0 impose obligations when the data is used only internally? Likely not.
-2. **Soft force delete on a domain expiring within a year** (also affects ENTITY_BURIED and invalid email): no start date, so no `clientHold` and no force delete email; the domain just cannot be renewed and expires. Acceptable?
-3. **Combined check (Timo):** death + email + phone in one yearly check? Decides whether the field stays `death_registry_checked_at` or becomes a shared `contact_checked_at`. Better decided before go-live.
-4. **Manual fast track without a reason:** the email template is then chosen from the domain's data and may be the invalid email letter. Make the reason mandatory on the admin form?
-5. **Source URLs:** keep them in code (overridable by setting) with an admin alert on failure?
-6. **ENTITY_BURIED manual force delete:** switch it to fast track too, now that deceased registrants are handled automatically?
-7. **Dry run review:** who reviews, and at what number of findings do we warn registrars or spread force deletes over days (would need a daily limit setting)?
-8. **New year:** if SMIT updates the historical file late in January, last year's deaths may be missing for a few days. Keep the old file when the record count drops sharply?
+6. **ENTITY_BURIED manual force delete** (admin Mass actions, always soft): switch it to fast track too, now that deceased registrants and deleted companies are handled automatically with fast track? Its letter is already fixed: it now always uses `private_person` or `legal_person` by registrant type, never the invalid email letter.
 9. **Existing deceased contact on a new domain or registrant change:** refuse via EPP/REPP? Not checked today.
-10. **Text review:** poll texts A1–C2 and email E2 (section 9), plus Estonian versions of the polls.
