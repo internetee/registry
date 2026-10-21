@@ -10,8 +10,14 @@ en:
       enable_and_reverse: 'Enabling automatic renewal and reversing a cycle cannot be combined'
       unknown_cycle: 'Automatic renewal cycle does not exist for this domain'
       not_reversible: 'Automatic renewal cycle cannot be reversed'
+    failure_reasons:
+      insufficient_funds: 'insufficient funds'
+      renew_prohibited: 'domain status prohibits renewal'
+      missing_price: 'renewal price unavailable'
+      not_attempted: 'renewal has not yet been attempted'
     notifications:
+      renewed_after_deadline: '%{domain} was automatically renewed until %{expire_date} for %{amount} EUR. Cycle %{cycle_id} is completed.'
+      renewal_overdue: 'Automatic renewal of %{domain} was not performed by %{deadline} (%{reason}). The domain goes out of zone. Renewal attempts continue until the domain is deleted. Cycle %{cycle_id}.'
       renewed: '%{domain} was automatically renewed until %{expire_date} for %{amount} EUR. Cycle %{cycle_id} may be reversed before %{deadline}.'
-      funding_warning: 'Insufficient funds to automatically renew %{domain} (expiry %{expire_date}, amount %{amount} EUR). Cycle %{cycle_id} will be retried until %{deadline}.'
-      renew_prohibited: 'Automatic renewal of %{domain} (expiry %{expire_date}, amount %{amount} EUR) is currently unavailable. Cycle %{cycle_id} will be retried until %{deadline}.'
-      funding_failed: 'Automatic renewal of %{domain} (expiry %{expire_date}, amount %{amount} EUR) failed at %{deadline}. Automatic renewal is disabled. Cycle %{cycle_id} is closed.'
+      funding_warning: 'Insufficient funds to automatically renew %{domain} (expiry %{expire_date}, amount %{amount} EUR). Cycle %{cycle_id} will be retried until the domain is deleted.'
+      renew_prohibited: 'Automatic renewal of %{domain} (expiry %{expire_date}, amount %{amount} EUR) is currently unavailable. Cycle %{cycle_id} will be retried until the domain is deleted.'

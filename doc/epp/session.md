@@ -91,11 +91,15 @@ text. Sessions negotiating the automatic-renewal URI also receive
 </extension>
 ```
 
-`event` is `renewed`, `fundingWarning`, `renewProhibited`, or `fundingFailed`.
+`event` is `renewed`, `fundingWarning`, `renewProhibited`, or `renewalOverdue`.
 A funding warning indicates insufficient funds; renew-prohibited includes blocking
-statuses or missing renewal pricing. An unpaid cycle has no `exDate`. If funding
-has still failed at the cancellation deadline, automatic renewal is disabled and
-the registrar receives `fundingFailed`. The attached cycle shows its current
+statuses or missing renewal pricing. An unpaid cycle has no `exDate`. At the cancellation
+deadline, the registrar receives exactly one `renewalOverdue` notice explaining
+the failure and ordinary removal from the zone. The preference remains enabled
+and the cycle stays in `fundingRetry`; attempts continue until success, opt-out,
+manual renewal, sponsor change, or domain deletion. A renewal at or after the
+deadline produces `renewed` with cycle state `completed` and text without a
+cancellation offer. The attached cycle shows its current
 state when the message is read. Acknowledge these messages with the usual poll
 `ack` command. Normal grace expiry and registrar-requested preference changes or
 reversals do not create these notifications.

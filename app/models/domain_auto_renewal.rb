@@ -5,9 +5,8 @@ class DomainAutoRenewal < ApplicationRecord
   GRACE = 'grace'.freeze
   COMPLETED = 'completed'.freeze
   REVERSED = 'reversed'.freeze
-  FUNDING_FAILED = 'funding_failed'.freeze
   CANCELLED = 'cancelled'.freeze
-  STATES = [AWAITING_FUNDS, GRACE, COMPLETED, REVERSED, FUNDING_FAILED, CANCELLED].freeze
+  STATES = [AWAITING_FUNDS, GRACE, COMPLETED, REVERSED, CANCELLED].freeze
   OPEN_STATES = [AWAITING_FUNDS, GRACE].freeze
 
   INSUFFICIENT_FUNDS = 'insufficient_funds'.freeze
@@ -76,7 +75,6 @@ class DomainAutoRenewal < ApplicationRecord
     when GRACE then grace_active?(at) ? RGP_AUTO_RENEW_PERIOD : 'completed'
     when COMPLETED then 'completed'
     when REVERSED then 'reversed'
-    when FUNDING_FAILED then 'fundingFailed'
     when CANCELLED then 'cancelled'
     end
   end

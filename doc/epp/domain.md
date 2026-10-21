@@ -264,10 +264,18 @@ extensions are independent of DNSSEC and share one wrapper when present:
 ```
 
 Cycle states are `fundingRetry`, `autoRenewPeriod`, `completed`, `reversed`,
-`fundingFailed`, and `cancelled`. `exDate` is absent until a renewal succeeds.
+and `cancelled`. `exDate` is absent until a renewal succeeds.
 `cycle` is absent when the domain has no renewal history. RGP `autoRenewPeriod`
 is never an ordinary `domain:status`; it disappears at the cancellation deadline,
 even if background processing has not closed the cycle yet.
+
+Unpaid or blocked renewals remain in `fundingRetry` after the cancellation
+deadline, with the preference enabled and retries continuing until success,
+opt-out, manual renewal, sponsor change, or domain deletion. Enabling the
+preference on an already expired domain also allows automatic renewal, including
+while it is out of zone. Success at or after the deadline renews from the original
+expiry by one year, restores ordinary expiry and zone fields, and immediately
+becomes `completed`, with no RGP status or reversal window.
 
 | Code | Automatic renewal error |
 | --- | --- |

@@ -30,11 +30,13 @@ module Domains
 
       def notify(cycle, event)
         amount = cycle.charge_activity&.sum&.abs || cycle.price&.price&.amount
+        message = event == :renewed && !cycle.grace? ? :renewed_after_deadline : event
         cycle.registrar.notifications.create!(
-          text: I18n.t("auto_renew.notifications.#{event}", domain: cycle.domain_name,
+          text: I18n.t("auto_renew.notifications.#{message}", domain: cycle.domain_name,
                        expire_date: (cycle.renewed_expire_at || cycle.original_expire_at).iso8601,
                        amount: amount ? format('%.2f', amount) : '-', cycle_id: cycle.uuid,
-                       deadline: cycle.cancellation_deadline_at.iso8601),
+                       deadline: cycle.cancellation_deadline_at.iso8601,
+                       reason: I18n.t("auto_renew.failure_reasons.#{cycle.failure_reason || 'not_attempted'}")),
           event: event.to_s.camelize(:lower),
           attached_obj_type: 'DomainAutoRenewal', attached_obj_id: cycle.id
         )

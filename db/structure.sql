@@ -1007,11 +1007,12 @@ CREATE TABLE public.domain_auto_renewals (
     closed_at timestamp without time zone,
     funding_warning_sent_at timestamp without time zone,
     blocked_warning_sent_at timestamp without time zone,
+    overdue_notice_sent_at timestamp without time zone,
     creator_str character varying,
     updator_str character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    CONSTRAINT domain_auto_renewals_state_check CHECK (((state)::text = ANY ((ARRAY['awaiting_funds'::character varying, 'grace'::character varying, 'completed'::character varying, 'reversed'::character varying, 'funding_failed'::character varying, 'cancelled'::character varying])::text[])))
+    CONSTRAINT domain_auto_renewals_state_check CHECK (((state)::text = ANY ((ARRAY['awaiting_funds'::character varying, 'grace'::character varying, 'completed'::character varying, 'reversed'::character varying, 'cancelled'::character varying])::text[])))
 );
 
 

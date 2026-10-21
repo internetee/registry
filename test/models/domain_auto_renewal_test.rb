@@ -54,7 +54,6 @@ class DomainAutoRenewalTest < ActiveSupport::TestCase
       DomainAutoRenewal::GRACE => 'autoRenewPeriod',
       DomainAutoRenewal::COMPLETED => 'completed',
       DomainAutoRenewal::REVERSED => 'reversed',
-      DomainAutoRenewal::FUNDING_FAILED => 'fundingFailed',
       DomainAutoRenewal::CANCELLED => 'cancelled'
     }
 
@@ -149,7 +148,7 @@ class DomainAutoRenewalTest < ActiveSupport::TestCase
   end
 
   def test_database_rejects_another_cycle_for_the_same_original_expiry
-    @cycle.state = DomainAutoRenewal::FUNDING_FAILED
+    @cycle.state = DomainAutoRenewal::COMPLETED
     @cycle.save!
     duplicate = @cycle.dup
     duplicate.uuid = SecureRandom.uuid

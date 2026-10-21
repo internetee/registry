@@ -313,6 +313,31 @@ class EppDomainAutoRenewTest < EppTestCase
     assert_equal before.to_xml, after.to_xml
   end
 
+  def test_late_automatic_renewal_info_is_completed_without_rgp_and_reversal_is_rejected
+    original_expiry = 16.days.ago
+    @domain.update_columns(auto_renew: true, valid_to: original_expiry,
+                           statuses: [DomainStatus::EXPIRED, DomainStatus::SERVER_HOLD],
+                           status_notes: {}, outzone_at: 1.day.ago, delete_date: 29.days.from_now)
+    billing_prices(:renew_one_year).update!(valid_from: original_expiry.beginning_of_year, valid_to: nil)
+    cycle = Domains::AutoRenew::OpenCycle.run!(domain: @domain)
+    Domains::AutoRenew::AttemptRenewal.run!(cycle: cycle)
+
+    info_domain
+    assert_code 1000
+    assert_equal 'true', response_xml.at_xpath('//ar:enabled', ar: AUTO_RENEW_URI).text
+    data = response_xml.at_xpath('//ar:cycle', ar: AUTO_RENEW_URI)
+    assert_equal 'completed', data['state']
+    assert_equal original_expiry.advance(years: 1).iso8601, data['exDate']
+    assert_empty response_xml.xpath('//rgp:infData', rgp: RGP_URI)
+    assert_empty response_xml.xpath('//domain:status[@s="expired" or @s="serverHold"]', domain: domain_uri)
+    assert_no_difference 'AccountActivity.count' do
+      update_domain("<autoRenew:reverse cycleId=\"#{cycle.uuid}\"/>")
+      assert_code 2304
+    end
+    assert @domain.reload.auto_renew?
+    assert_nil cycle.reload.refund_activity_id
+  end
+
   private
 
   def response_xml

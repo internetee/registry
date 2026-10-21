@@ -46,7 +46,7 @@ class EppAutoRenewPollTest < EppTestCase
       [DomainAutoRenewal::AWAITING_FUNDS, DomainAutoRenewal::INSUFFICIENT_FUNDS, 'fundingWarning'],
       [DomainAutoRenewal::AWAITING_FUNDS, DomainAutoRenewal::RENEW_PROHIBITED, 'renewProhibited'],
       [DomainAutoRenewal::AWAITING_FUNDS, DomainAutoRenewal::MISSING_PRICE, 'renewProhibited'],
-      [DomainAutoRenewal::FUNDING_FAILED, DomainAutoRenewal::INSUFFICIENT_FUNDS, 'fundingFailed'],
+      [DomainAutoRenewal::AWAITING_FUNDS, DomainAutoRenewal::INSUFFICIENT_FUNDS, 'renewalOverdue'],
     ].each do |state, reason, event|
       @cycle.update!(state: state, failure_reason: reason, renewed_expire_at: nil)
       @notification.update!(event: event)
@@ -59,7 +59,7 @@ class EppAutoRenewPollTest < EppTestCase
 
   def test_queued_funding_warning_keeps_its_event_after_success_cancellation_and_closure
     @notification.update!(event: 'fundingWarning', text: 'Insufficient funds for automatic renewal')
-    [DomainAutoRenewal::GRACE, DomainAutoRenewal::CANCELLED, DomainAutoRenewal::FUNDING_FAILED].each do |state|
+    [DomainAutoRenewal::GRACE, DomainAutoRenewal::CANCELLED, DomainAutoRenewal::COMPLETED].each do |state|
       @cycle.update!(state: state, failure_reason: nil)
       travel_to Time.zone.now + 1.second
       request_poll
@@ -75,6 +75,20 @@ class EppAutoRenewPollTest < EppTestCase
     assert_equal @notification.text, response_xml.at_css('msgQ > msg').text
     assert_empty response_xml.xpath('//ar:pollData', ar: AUTO_RENEW_URI)
     assert_correct_against_schema response_xml
+  end
+
+  def test_queued_overdue_notice_keeps_its_event_after_late_success_or_deletion
+    @notification.update!(event: 'renewalOverdue')
+    @cycle.update!(cancellation_deadline_at: 1.day.ago, overdue_notice_sent_at: 1.day.ago)
+    [DomainAutoRenewal::AWAITING_FUNDS, DomainAutoRenewal::COMPLETED, DomainAutoRenewal::CANCELLED].each do |state|
+      @cycle.update!(state: state)
+      @domain.destroy! if state == DomainAutoRenewal::CANCELLED
+      request_poll
+      poll_data = response_xml.at_xpath('//ar:pollData', ar: AUTO_RENEW_URI)
+      assert_equal 'renewalOverdue', poll_data['event']
+      assert_equal @cycle.protocol_state, poll_data.at_xpath('ar:cycle', ar: AUTO_RENEW_URI)['state']
+      assert_correct_against_schema response_xml
+    end
   end
 
   private

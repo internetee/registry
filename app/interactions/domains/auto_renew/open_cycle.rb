@@ -8,7 +8,7 @@ module Domains
           next unless Feature.auto_renew_enabled? && domain.auto_renew?
           now = Time.zone.now
           deadline = DomainAutoRenewal.cancellation_deadline_for(domain.valid_to)
-          next unless domain.valid_to <= now && now < deadline
+          next unless domain.valid_to <= now
 
           existing = domain.auto_renewals.find_by(original_expire_at: domain.valid_to)
           next existing if existing

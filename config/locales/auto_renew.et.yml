@@ -10,8 +10,14 @@ et:
       enable_and_reverse: 'Automaatse pikendamise lubamist ja tsükli tagasipööramist ei saa ühendada'
       unknown_cycle: 'Selle domeeni automaatse pikendamise tsüklit ei ole olemas'
       not_reversible: 'Automaatse pikendamise tsüklit ei saa tagasi pöörata'
+    failure_reasons:
+      insufficient_funds: 'raha ei ole piisavalt'
+      renew_prohibited: 'domeeni staatus keelab pikendamise'
+      missing_price: 'pikendamise hind ei ole saadaval'
+      not_attempted: 'pikendamist ei ole veel proovitud'
     notifications:
+      renewed_after_deadline: '%{domain} pikendati automaatselt kuni %{expire_date}, tasu %{amount} EUR. Tsükkel %{cycle_id} on lõpetatud.'
+      renewal_overdue: 'Domeeni %{domain} automaatset pikendamist ei tehtud tähtajaks %{deadline} (%{reason}). Domeen läheb tsoonist välja. Pikendamiskatsed jätkuvad kuni domeeni kustutamiseni. Tsükkel %{cycle_id}.'
       renewed: '%{domain} pikendati automaatselt kuni %{expire_date}, tasu %{amount} EUR. Tsükli %{cycle_id} saab tagasi pöörata enne %{deadline}.'
-      funding_warning: 'Domeeni %{domain} automaatseks pikendamiseks ei ole piisavalt raha (aegumine %{expire_date}, tasu %{amount} EUR). Tsüklit %{cycle_id} proovitakse uuesti kuni %{deadline}.'
-      renew_prohibited: 'Domeeni %{domain} automaatne pikendamine (aegumine %{expire_date}, tasu %{amount} EUR) ei ole praegu võimalik. Tsüklit %{cycle_id} proovitakse uuesti kuni %{deadline}.'
-      funding_failed: 'Domeeni %{domain} automaatne pikendamine (aegumine %{expire_date}, tasu %{amount} EUR) ebaõnnestus tähtajal %{deadline}. Automaatne pikendamine on välja lülitatud. Tsükkel %{cycle_id} on suletud.'
+      funding_warning: 'Domeeni %{domain} automaatseks pikendamiseks ei ole piisavalt raha (aegumine %{expire_date}, tasu %{amount} EUR). Tsüklit %{cycle_id} proovitakse uuesti kuni domeeni kustutamiseni.'
+      renew_prohibited: 'Domeeni %{domain} automaatne pikendamine (aegumine %{expire_date}, tasu %{amount} EUR) ei ole praegu võimalik. Tsüklit %{cycle_id} proovitakse uuesti kuni domeeni kustutamiseni.'
