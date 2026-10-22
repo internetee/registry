@@ -104,6 +104,7 @@ class Domain < ApplicationRecord
   before_save :manage_automatic_statuses
   before_save :disable_auto_renew_on_sponsor_change
   after_save :settle_auto_renewal_on_sponsor_change, if: :saved_change_to_registrar_id?
+  after_save :settle_auto_renewal_on_registrant_change, if: :saved_change_to_registrant_id?
   before_save :touch_always_version
   def touch_always_version
     self.updated_at = Time.zone.now
@@ -949,6 +950,10 @@ class Domain < ApplicationRecord
 
   def settle_auto_renewal_on_sponsor_change
     Domains::AutoRenew::HandleTransfer.run!(domain: self)
+  end
+
+  def settle_auto_renewal_on_registrant_change
+    Domains::AutoRenew::HandleRegistrantChange.run!(domain: self)
   end
 
   def disable_auto_renew_on_sponsor_change

@@ -267,7 +267,8 @@ Cycle states are `fundingRetry`, `autoRenewPeriod`, `completed`, `reversed`,
 `failed`, and `cancelled`. `exDate` is absent until a renewal succeeds.
 `cycle` is absent when the domain has no renewal history. RGP `autoRenewPeriod`
 is never an ordinary `domain:status`; it disappears at the cancellation deadline,
-even if background processing has not closed the cycle yet.
+even if background processing has not closed the cycle yet, or when a transfer
+or completed registrant change ends the cancellation period earlier.
 
 Unpaid or blocked renewals stay in `fundingRetry` and are retried once a day
 until the cancellation deadline. The first attempt happens when the cycle opens
@@ -294,5 +295,14 @@ deadline opens no cycle for that expiry.
 
 Disabling and reversal remain available when new opt-ins are disabled. Registrar
 commands do not create automatic-renewal poll notifications. Transfer completion
-disables the preference; a paid year remains registered without a refund or a
-charge to the gaining registrar.
+ends paid grace (cycle `completed`) and disables the preference; a paid year
+remains registered without a refund or a charge to the gaining registrar.
+
+A completed registrant identity change (the old and new registrants have different
+`ident` values) also ends the paid renewal's cancellation period: the cycle becomes
+`completed`, the paid year stays, and reversal is no longer available. There is no
+refund or automatic-renewal poll, and the preference stays unchanged. Swapping
+contacts with the same `ident` does not end the cancellation period. A registrant
+change awaiting verification blocks renewal while pending and leaves paid grace
+reversible until confirmation; an unpaid `fundingRetry` cycle remains open for
+daily retries after the registrant change completes.

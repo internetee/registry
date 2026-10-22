@@ -158,6 +158,30 @@ class EppDomainAutoRenewTest < EppTestCase
     assert_code 2303
   end
 
+  def test_reversal_after_completed_registrant_change_is_not_reversible
+    Setting.request_confirmation_on_registrant_change_enabled = false
+    cycle = auto_renew_cycle(@domain, charge: true)
+    expiry = @domain.valid_to
+    balance = cycle.account.reload.balance
+    body = "<domain:chg><domain:registrant>#{contacts(:william).code}</domain:registrant></domain:chg>"
+
+    assert_no_difference ['AccountActivity.count', 'Notification.count'] do
+      update_domain(body: body, legal_document: true)
+      assert_code 1000
+      assert_equal contacts(:william).id, @domain.reload.registrant_id
+      assert_equal DomainAutoRenewal::COMPLETED, cycle.reload.state
+
+      update_domain("<autoRenew:reverse cycleId=\"#{cycle.uuid}\"/>")
+      assert_code 2304
+      assert_includes response.body, I18n.t('auto_renew.errors.not_reversible')
+    end
+
+    assert_nil cycle.reload.refund_activity_id
+    assert_equal balance, cycle.account.reload.balance
+    assert_equal expiry, @domain.reload.valid_to
+    assert @domain.auto_renew?
+  end
+
   def test_non_sponsor_with_auth_info_cannot_change_preference
     epp_sessions(:api_goodnames).touch
     update_domain('<autoRenew:enabled>true</autoRenew:enabled>',
