@@ -9,7 +9,11 @@ module Domains
 
       private
 
+      # A deadlock or serialization failure aborts the whole database transaction, and Rails
+      # discards the connection when it happens inside a savepoint. A retry is therefore only
+      # safe when this block owns the outermost transaction (cron); nested callers re-raise.
       def with_locks(domain:, cycle: nil)
+        retryable = !Domain.connection.transaction_open?
         attempts = 0
         begin
           attempts += 1
@@ -19,7 +23,7 @@ module Domains
             yield
           end
         rescue ActiveRecord::SerializationFailure, ActiveRecord::Deadlocked
-          retry if attempts < MAX_TRANSACTION_ATTEMPTS
+          retry if retryable && attempts < MAX_TRANSACTION_ATTEMPTS
           raise
         end
       end

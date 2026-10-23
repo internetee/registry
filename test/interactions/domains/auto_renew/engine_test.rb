@@ -418,16 +418,22 @@ class AutoRenewEngineTest < AutoRenewTestCase
     end
   end
 
-  def test_only_serialization_and_deadlock_failures_are_retried_at_most_three_times
+  # Raising a TransactionRollbackError inside a real (savepoint) transaction makes Rails throw
+  # the connection away, so the failure is raised by the stubbed transaction itself.
+  def test_only_serialization_and_deadlock_failures_are_retried_at_most_three_times_at_top_level
     with_feature do
       [ActiveRecord::SerializationFailure, ActiveRecord::Deadlocked, RuntimeError].each do |error_class|
-        attempts = 0
-        @domain.stub(:reload, lambda { |**_options| attempts += 1; raise error_class, 'retry test' }) do
-          assert_raises(error_class) { open_cycle }
-        end
-        assert_equal(error_class == RuntimeError ? 1 : 3, attempts)
+        assert_equal(error_class == RuntimeError ? 1 : 3, failed_open_attempts(error_class, outermost: true))
       end
       assert_equal 0, @domain.auto_renewals.count
+    end
+  end
+
+  def test_transaction_conflicts_are_not_retried_inside_an_outer_transaction
+    with_feature do
+      [ActiveRecord::SerializationFailure, ActiveRecord::Deadlocked].each do |error_class|
+        assert_equal 1, failed_open_attempts(error_class, outermost: false)
+      end
     end
   end
 
@@ -481,5 +487,18 @@ class AutoRenewEngineTest < AutoRenewTestCase
       assert_equal 100, @account.reload.balance
       assert_equal 100, replacement.reload.balance
     end
+  end
+
+  private
+
+  def failed_open_attempts(error_class, outermost:)
+    attempts = 0
+    failing_transaction = lambda { |**_options| attempts += 1; raise error_class, 'retry test' }
+    Domain.connection.stub(:transaction_open?, !outermost) do
+      Domain.stub(:transaction, failing_transaction) do
+        assert_raises(error_class) { open_cycle }
+      end
+    end
+    attempts
   end
 end
