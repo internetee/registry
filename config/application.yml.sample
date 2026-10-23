@@ -52,6 +52,9 @@ webclient_cert_common_name: 'webclient'
 # and returns 2306 "Parameter value policy error"
 contact_org_enabled: 'false'
 
+# Allow new automatic-renewal opt-ins and cycles; existing cycles can still be settled.
+auto_renew_enabled: 'false'
+
 # Enable iptables counter updater
 # iptables_counter_enabled: 'true'
 # iptables_server_ip: '127.0.0.1'

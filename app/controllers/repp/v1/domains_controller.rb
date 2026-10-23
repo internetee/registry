@@ -7,12 +7,21 @@ module Repp
       before_action :validate_registrar_authorization, only: %i[transfer_info destroy]
       before_action :forward_registrar_id, only: %i[create update destroy]
       before_action :set_domain, only: %i[update]
+      before_action :validate_auto_renew, only: %i[create update]
 
       THROTTLED_ACTIONS = %i[transfer_info transfer index create show update destroy].freeze
       include Shunter::Integration::Throttle
 
       api :GET, '/repp/v1/domains'
       desc 'Get all existing domains'
+      param :q, Hash, required: false, desc: 'Domain filters' do
+        param :auto_renew_eq, [true, false, 'true', 'false'], required: false,
+                                                            desc: 'Automatic renewal preference'
+        param :auto_renew_grace, [true, false, 'true', 'false'], required: false,
+                                                               desc: 'Active automatic renewal grace period'
+        param :auto_renew_funding_retry, [true, false, 'true', 'false'], required: false,
+                                                                       desc: 'Awaiting automatic renewal funds'
+      end
       def index
         authorize! :info, Epp::Domain
         records = current_user.registrar.domains.includes(:registrar, :registrant)
@@ -48,6 +57,8 @@ module Repp
         param :registrant, String, required: true, desc: 'Registrant contact code'
         param :reserved_pw, String, required: false, desc: 'Reserved password for domain'
         param :transfer_code, String, required: false, desc: 'Desired transfer code for domain'
+        param :auto_renew, [true, false, 'true', 'false'], required: false,
+                                                        desc: 'Enable automatic renewal (default false)'
         # param :period, Integer, required: true, desc: 'Registration period in months or years'
         param :period_unit, String, required: true, desc: 'Period type (month m) or (year y)'
         param :nameservers_attributes, Array, required: false, desc: 'Domain nameservers' do
@@ -95,6 +106,10 @@ module Repp
                                                            desc: 'Registrant change is already verified'
         end
         param :transfer_code, String, required: false, desc: 'New authorization code'
+        param :auto_renew, [true, false, 'true', 'false'], required: false,
+                                                        desc: 'Automatic renewal preference; omitted leaves unchanged'
+        param :auto_renew_cycle_id, String, required: false,
+                                            desc: 'Automatic renewal cycle UUID to reverse and refund'
       end
       def update
         authorize!(:update, @domain, @password)
@@ -104,7 +119,14 @@ module Repp
           return
         end
 
-        render_domain_command_success(pending: @domain.epp_pending_update.present?)
+        return render_domain_command_success(pending: @domain.epp_pending_update.present?) unless auto_renew_requested?
+
+        serializer = Serializers::Repp::Domain.new(@domain)
+        data = { domain: { name: @domain.name }, auto_renew: serializer.auto_renew,
+                 reversal: serializer.reversal(action.auto_renew_result) }
+        return render_action_pending_success(data: data) if @domain.epp_pending_update.present?
+
+        render_success(data: data)
       end
 
       api :GET, '/repp/v1/domains/:domain_name/transfer_info'
@@ -237,7 +259,8 @@ module Repp
         params.permit(:limit, :offset, :details, :simple, :q,
                       q: %i[s name_matches registrant_code_eq contacts_ident_eq
                             nameservers_hostname_eq valid_to_gteq valid_to_lteq
-                            statuses_contains_array] + [s: []])
+                            statuses_contains_array auto_renew_eq auto_renew_grace
+                            auto_renew_funding_retry] + [s: []])
       end
 
       def search_params
@@ -245,7 +268,7 @@ module Repp
       end
 
       def update_params
-        dup_params = domain_params.to_h.dup
+        dup_params = domain_params.dup
         return dup_params unless dup_params[:contacts]
 
         modify_contact_params(dup_params)
@@ -265,16 +288,37 @@ module Repp
       end
 
       def domain_params
-        params.require(:domain).permit(:name, :period, :period_unit, :registrar, :transfer_code,
-                                       :reserved_pw, :legal_document, :registrant,
-                                       legal_document: %i[body type], registrant: [%i[code verified]],
-                                       dns_keys: [%i[id flags alg protocol public_key action]],
-                                       nameservers: [[:id, :hostname, :action, { ipv4: [], ipv6: [] }]],
-                                       contacts: [%i[code type action]],
-                                       nameservers_attributes: [[:hostname, { ipv4: [], ipv6: [] }]],
-                                       admin_contacts: [], tech_contacts: [],
-                                       dnskeys_attributes: [%i[flags alg protocol public_key]],
-                                       delete: [:verified])
+        permitted = params.require(:domain).permit(
+          :name, :period, :period_unit, :registrar, :transfer_code, :auto_renew, :auto_renew_cycle_id,
+          :reserved_pw, :legal_document, :registrant,
+          legal_document: %i[body type], registrant: [%i[code verified]],
+          dns_keys: [%i[id flags alg protocol public_key action]],
+          nameservers: [[:id, :hostname, :action, { ipv4: [], ipv6: [] }]],
+          contacts: [%i[code type action]],
+          nameservers_attributes: [[:hostname, { ipv4: [], ipv6: [] }]],
+          admin_contacts: [], tech_contacts: [],
+          dnskeys_attributes: [%i[flags alg protocol public_key]],
+          delete: [:verified]
+        ).to_h
+        cycle_id = permitted.delete(:auto_renew_cycle_id)
+        if auto_renew_requested?
+          enabled = permitted.delete(:auto_renew)
+          permitted[:auto_renew] = { enabled: enabled.nil? ? nil : [true, 'true'].include?(enabled),
+                                     reverse_cycle_id: cycle_id }
+        end
+        permitted
+      end
+
+      def auto_renew_requested?
+        params[:domain]&.key?(:auto_renew) || params[:domain]&.key?(:auto_renew_cycle_id)
+      end
+
+      def validate_auto_renew
+        return unless params[:domain]&.key?(:auto_renew)
+        return if [true, false, 'true', 'false'].include?(params[:domain][:auto_renew])
+
+        epp_errors.add(:epp_errors, code: '2005', msg: I18n.t('repp.errors.invalid_auto_renew_boolean'))
+        handle_errors
       end
     end
   end

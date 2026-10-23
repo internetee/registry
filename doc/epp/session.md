@@ -47,3 +47,64 @@ Here are functions like login, logout, hello, poll
     <clTRID>                 0-1      Client transaction id 
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-poll-queues-and-dequeues-messages)
+
+### Automatic renewal extension negotiation
+
+The greeting advertises both extension URIs:
+
+- `https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd`
+- `urn:ietf:params:xml:ns:rgp-1.0`
+
+Include each desired URI in the EPP login `svcs/svcExtension` list. The registry
+stores this selection for the session and emits each new response extension only
+when its URI was requested. Commands containing the automatic-renewal extension
+are accepted even without negotiation, but their responses then omit its data.
+Existing sessions without these URIs continue receiving their usual responses.
+
+```xml
+<svcs xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+  <objURI>https://epp.tld.ee/schema/domain-ee-1.2.xsd</objURI>
+  <svcExtension>
+    <extURI>https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd</extURI>
+    <extURI>urn:ietf:params:xml:ns:rgp-1.0</extURI>
+  </svcExtension>
+</svcs>
+```
+
+See [domain automatic renewal](domain.md#automatic-renewal-and-registry-grace-period)
+for create, update, reversal, info, and error-code details.
+
+### Automatic renewal poll messages
+
+Background automatic-renewal events always produce ordinary human-readable poll
+text. Sessions negotiating the automatic-renewal URI also receive
+`autoRenew:pollData` in the response extension, without `resData`:
+
+```xml
+<extension>
+  <autoRenew:pollData xmlns:autoRenew="https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd" event="renewed">
+    <autoRenew:name>example.ee</autoRenew:name>
+    <autoRenew:cycle id="3f7c2a5e-0000-0000-0000-000000000000" state="autoRenewPeriod"
+      originalExDate="2027-03-01T00:00:00+02:00" exDate="2028-03-01T00:00:00+02:00"
+      cancelUntil="2027-03-16T00:00:00+02:00" attempts="1"/>
+  </autoRenew:pollData>
+</extension>
+```
+
+`event` is `renewed`, `fundingWarning`, `renewProhibited`, or `renewalFailed`.
+A funding warning indicates insufficient funds; renew-prohibited includes blocking
+statuses or missing renewal pricing. An unpaid cycle has no `exDate`. Attempts
+start at expiry and repeat once a day until the cancellation deadline, fixed at
+15 calendar days after the original expiry. A late success produces `renewed`
+with state `autoRenewPeriod` and only the remaining reversal window: success two
+days after expiry leaves 13 calendar days to cancel.
+
+At the deadline an unpaid or still blocked cycle becomes `failed`. The registrar
+receives exactly one `renewalFailed` notice with the deadline and failure reason,
+explaining that attempts for this expiry have stopped and the preference remains
+enabled for future expiries. A later top-up or re-enabling the preference does
+not reopen that cycle; enabling after the deadline opens no cycle for that expiry.
+The attached cycle shows its current state when the message is read. Acknowledge
+these messages with the usual poll `ack` command. Normal grace expiry and
+registrar-requested preference changes or reversals do not create these
+notifications.

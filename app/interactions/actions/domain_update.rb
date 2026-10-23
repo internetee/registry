@@ -1,6 +1,6 @@
 module Actions
   class DomainUpdate # rubocop:disable Metrics/ClassLength
-    attr_reader :domain, :params, :bypass_verify
+    attr_reader :domain, :params, :bypass_verify, :auto_renew_result
 
     def initialize(domain, params, bypass_verify)
       @domain = domain
@@ -11,6 +11,27 @@ module Actions
     end
 
     def call
+      return apply_update unless params[:auto_renew].present?
+
+      committed = ActiveRecord::Base.transaction(requires_new: true) do
+        domain.reload(lock: true)
+        outcome = Domains::AutoRenew::ChangePreference.run(
+          domain: domain,
+          registrar: Registrar.find(params[:registrar] || params[:registrar_id]),
+          **params[:auto_renew].symbolize_keys
+        )
+        raise ActiveRecord::Rollback unless outcome.valid?
+
+        @auto_renew_result = outcome.result
+        raise ActiveRecord::Rollback unless apply_update
+
+        true
+      end
+      @auto_renew_result = nil unless committed
+      !!committed
+    end
+
+    def apply_update
       validate_domain_integrity
       assign_new_registrant if params[:registrant]
       assign_relational_modifications
@@ -263,7 +284,7 @@ module Actions
     def ask_registrant_verification
       if verify_registrant_change? && !bypass_verify &&
          Setting.request_confirmation_on_registrant_change_enabled
-        domain.registrant_verification_asked!(params, params[:registrar])
+        domain.registrant_verification_asked!(params.except(:auto_renew, 'auto_renew'), params[:registrar])
       end
     end
 

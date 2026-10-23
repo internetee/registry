@@ -16,7 +16,7 @@ module Repp
           render_success(data: nil) and return unless @notification
           # rubocop:enable Style/AndOr
 
-          data = @notification.as_json(only: %i[id text attached_obj_id attached_obj_type])
+          data = serialized_notification(@notification)
 
           render_success(data: data)
         end
@@ -31,7 +31,7 @@ module Repp
           render_success(data: nil) and return unless @notification
           # rubocop:enable Style/AndOr
 
-          data = @notification.as_json(only: %i[id text attached_obj_id attached_obj_type])
+          data = @notification.map { |notification| serialized_notification(notification) }
 
           message = 'Command completed successfully.'\
                     " Returning #{@notification.count} out of #{records.count}."\
@@ -42,7 +42,7 @@ module Repp
         api :GET, '/repp/v1/registrar/notifications/:notification_id'
         desc 'Get a specific poll message'
         def show
-          data = @notification.as_json(only: %i[id text attached_obj_id attached_obj_type read])
+          data = serialized_notification(@notification, include_read: true)
 
           render_success(data: data)
         end
@@ -62,6 +62,20 @@ module Repp
         end
 
         private
+
+        def serialized_notification(notification, include_read: false)
+          fields = %i[id text attached_obj_id attached_obj_type]
+          fields << :read if include_read
+          data = notification.as_json(only: fields)
+          if notification.attached_obj_type == 'DomainAutoRenewal'
+            cycle = DomainAutoRenewal.find_by(id: notification.attached_obj_id)
+            data[:attached_obj_data] = if cycle
+                                         { event: notification.event, domain: cycle.domain_name,
+                                           cycle: cycle.as_protocol_json }
+                                       end
+          end
+          data
+        end
 
         def set_notification
           @notification = current_user.unread_notifications.find(params[:id])

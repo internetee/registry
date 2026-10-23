@@ -1,4 +1,8 @@
 class DomainCron
+  def self.process_auto_renewals
+    Domains::AutoRenew::Start.run!
+  end
+
   def self.clean_expired_pendings
     Domains::ExpiredPendings::CleanAll.run!
   end

@@ -3,6 +3,7 @@ xml.epp_head do
     xml.result('code' => '1001') do
       xml.msg 'Command completed successfully; action pending'
     end
+    render('epp/domains/partials/auto_renew_update', builder: xml) if @auto_renew_requested
     render('epp/shared/trID', builder: xml)
   end
 end

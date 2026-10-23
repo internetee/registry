@@ -26,7 +26,16 @@ xml.epp_head do
       end
     end
 
-    if @notification.action || @notification.registry_lock?
+    if @notification.attached_obj_type == 'DomainAutoRenewal' && @object && @notification.event &&
+       epp_session.extension?(EppSession::AUTO_RENEW_URI)
+      xml.extension do
+        xml.tag!('autoRenew:pollData', 'xmlns:autoRenew' => EppSession::AUTO_RENEW_URI,
+                                     'event' => @notification.event) do
+          xml.tag!('autoRenew:name', @object.domain_name)
+          render('epp/domains/partials/auto_renew_cycle', builder: xml, cycle: @object)
+        end
+      end
+    elsif @notification.action || @notification.registry_lock?
       if @notification.registry_lock?
         state = @notification.text.include?('unlocked') ? 'unlock' : 'lock'
         render(partial: 'epp/poll/extension',

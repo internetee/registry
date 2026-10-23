@@ -9,6 +9,7 @@ module Actions
 
     def call
       assign_domain_attributes
+      assign_auto_renew
       validate_domain_integrity
       return false if domain.errors[:epp_errors].any?
 
@@ -25,6 +26,16 @@ module Actions
       maybe_validate_phone_number
 
       commit
+    end
+
+    def assign_auto_renew
+      preference = params[:auto_renew] || {}
+      domain.auto_renew = preference[:enabled] == true
+      if preference[:reverse_cycle_id].present?
+        domain.add_epp_error('2306', nil, nil, I18n.t('epp.auto_renew.create_reversal'))
+      elsif domain.auto_renew && !Feature.auto_renew_enabled?
+        domain.add_epp_error('2306', nil, nil, I18n.t('epp.auto_renew.unavailable'))
+      end
     end
 
     def check_contact_duplications

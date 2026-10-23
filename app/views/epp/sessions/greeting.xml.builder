@@ -10,6 +10,8 @@ xml.epp_head do
       xml.objURI 'urn:ietf:params:xml:ns:host-1.0'
       xml.svcExtension do
         xml.extURI 'urn:ietf:params:xml:ns:secDNS-1.1'
+        xml.extURI EppSession::AUTO_RENEW_URI
+        xml.extURI EppSession::RGP_URI
         xml.extURI Xsd::Schema.filename(for_prefix: 'eis', for_version: @schema_version)
       end
     end

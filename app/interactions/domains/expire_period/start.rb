@@ -7,6 +7,7 @@ module Domains
 
         Domain.expired.each do |domain|
           next unless domain.expirable?
+          next if ProcessExpired.waiting_for_auto_renew?(domain)
 
           count += 1
           Domains::ExpirePeriod::ProcessExpired.run(domain: domain)

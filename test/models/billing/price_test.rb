@@ -98,6 +98,39 @@ class Billing::PriceTest < ActiveSupport::TestCase
     assert_equal statuses, Billing::Price.statuses
   end
 
+  def test_price_for_selects_tariff_at_requested_past_or_future_date
+    travel_to Time.zone.parse('2027-06-01 12:00')
+    past = billing_prices(:renew_one_year)
+    past.update!(valid_from: Time.zone.parse('2026-01-01'),
+                 valid_to: Time.zone.parse('2026-12-31'))
+    current = past.dup
+    current.update!(price_cents: 1200, valid_from: Time.zone.parse('2027-01-01'),
+                    valid_to: Time.zone.parse('2027-12-31'))
+    future = current.dup
+    future.update!(price_cents: 1500, valid_from: Time.zone.parse('2028-01-01'), valid_to: nil)
+
+    assert_equal past, Billing::Price.price_for(past.zone, 'renew', 1.year,
+                                               at: Time.zone.parse('2026-06-01'))
+    assert_equal future, Billing::Price.price_for(past.zone, 'renew', 1.year,
+                                                 at: Time.zone.parse('2028-06-01'))
+    assert_equal current, Billing::Price.price_for(past.zone, 'renew', 1.year)
+  end
+
+  def test_valid_uses_the_requested_day_boundaries
+    travel_to Time.zone.parse('2027-06-01 12:00')
+    at = Time.zone.parse('2026-07-05 12:00')
+    price = billing_prices(:renew_one_year)
+    price.update!(valid_from: at.beginning_of_day, valid_to: at.beginning_of_day)
+
+    assert_includes Billing::Price.valid(at), price
+    assert_equal price, Billing::Price.price_for(price.zone, 'renew', 1.year, at: at)
+    refute_includes Billing::Price.valid(at.advance(days: 1)), price
+
+    price.update!(valid_from: at.end_of_day, valid_to: nil)
+    assert_equal price, Billing::Price.price_for(price.zone, 'renew', 1.year, at: at)
+    refute_includes Billing::Price.valid(at.advance(days: -1)), price
+  end
+
   private
 
   def valid_price

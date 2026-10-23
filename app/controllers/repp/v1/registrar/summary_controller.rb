@@ -43,6 +43,10 @@ module Repp
           }
         end
 
+        def serialized_domain_auto_renewal(object, event)
+          { event: event, domain: object.domain_name, cycle: object.as_protocol_json }
+        end
+
         private
 
         # rubocop:disable Style/RescueStandardError
@@ -102,15 +106,19 @@ module Repp
           return unless notification
 
           notification.created_at = notification.created_at.utc.xmlschema
-          obj_data = serialized_object(object, notification.attached_obj_type)
+          obj_data = serialized_object(object, notification)
           notification.as_json(only: %i[id text created_at attached_obj_id attached_obj_type])
                       .merge({ attached_obj_data: obj_data })
         end
 
-        def serialized_object(object, obj_type)
+        def serialized_object(object, notification)
           return unless object
 
-          try("serialized_#{obj_type.underscore}", object)
+          if notification.attached_obj_type == 'DomainAutoRenewal'
+            serialized_domain_auto_renewal(object, notification.event)
+          else
+            try("serialized_#{notification.attached_obj_type.underscore}", object)
+          end
         end
       end
     end

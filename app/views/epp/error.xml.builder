@@ -27,7 +27,7 @@ xml.epp_head do
           else
             xml.tag!("#{model_name}:#{x[:value][:obj]}", val, attrs)
           end
-        end if x[:value]
+        end if x[:value] && x[:value][:obj] != 'autoRenew'
 
         x[:ext_values].each do |y|
           xml.extValue do
