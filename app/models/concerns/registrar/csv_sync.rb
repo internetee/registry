@@ -16,7 +16,7 @@ module Registrar::CsvSync
     phone: { default_export: true, default_import: true, type: :string },
     website: { default_export: true, default_import: true, type: :string },
     language: { default_export: true, default_import: true, type: :string },
-    test_registrar: { default_export: true, default_import: false, type: :boolean },
+    test_registrar: { default_export: true, default_import: true, type: :boolean },
     address_street: { default_export: true, default_import: true, type: :string },
     address_zip: { default_export: true, default_import: true, type: :string },
     address_city: { default_export: true, default_import: true, type: :string },
