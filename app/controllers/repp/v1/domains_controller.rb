@@ -14,7 +14,7 @@ module Repp
 
       api :GET, '/repp/v1/domains'
       desc 'Get all existing domains'
-      param :q, Hash, required: false, desc: 'Domain filters' do
+      param :q, Hash, required: false, allow_nil: true, desc: 'Domain filters' do
         param :auto_renew_eq, [true, false, 'true', 'false'], required: false,
                                                             desc: 'Automatic renewal preference'
         param :auto_renew_grace, [true, false, 'true', 'false'], required: false,
