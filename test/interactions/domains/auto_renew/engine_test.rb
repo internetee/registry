@@ -354,6 +354,27 @@ class AutoRenewEngineTest < AutoRenewTestCase
     end
   end
 
+  def test_manual_renewal_closes_an_already_attempted_awaiting_cycle_at_once
+    with_feature do
+      @account.update!(balance: 0)
+      cycle = renew_automatically
+      assert cycle.awaiting_funds?
+      @account.update!(balance: 100)
+
+      outcome = Domains::BulkRenew::SingleDomainRenew.run(
+        domain: Epp::Domain.find(@domain.id), registrar: @registrar, period: 1, unit: 'y'
+      )
+
+      assert outcome.valid?, outcome.errors.full_messages.inspect
+      assert_equal DomainAutoRenewal::CANCELLED, cycle.reload.state
+      assert_equal 90, @account.reload.balance
+      assert_no_difference 'AccountActivity.count' do
+        travel 1.day
+        DomainCron.process_auto_renewals
+      end
+    end
+  end
+
   def test_grace_end_completes_without_money_preference_or_poll_changes
     with_feature do
       cycle = renew_automatically

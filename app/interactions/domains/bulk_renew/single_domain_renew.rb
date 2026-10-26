@@ -23,7 +23,8 @@ module Domains
           success = domain.renew(renewed_expire_time, period, unit)
           if success
             check_balance
-            reduce_balance
+            cancel_unpaid_auto_renewal
+            reduce_balance # its value is the interaction result BulkRenew::Start checks
           else
             add_error
           end
@@ -44,6 +45,13 @@ module Domains
                          description: "#{I18n.t('renew')} #{domain.name}",
                          activity_type: AccountActivity::RENEW,
                          price: domain_pricelist)
+      end
+
+      # The manual renewal replaces an unpaid automatic one for the old expiry.
+      def cancel_unpaid_auto_renewal
+        domain.auto_renewals.awaiting_funds.find_each do |cycle|
+          cycle.update!(state: DomainAutoRenewal::CANCELLED, closed_at: Time.zone.now)
+        end
       end
 
       def in_transaction_with_retries(&block)
