@@ -122,10 +122,44 @@ class AdminAreaRegistrarsCsvSyncTest < ActionDispatch::IntegrationTest
     assert_not_nil created.cash_account
   end
 
+  def test_import_preview_accepts_new_registrar_from_full_export_with_default_fields
+    Billing::ReferenceNo.stub(:generate, ->(**) { raise 'billing must not be called in preview' }) do
+      result = CsvSync::Importer.preview(model_class: Registrar, file: StringIO.new(full_export_csv))
+
+      assert_equal 0, result.errors, result.row_results.map { |row| row[:error] }.compact.to_sentence
+      assert_equal 1, result.created
+    end
+  end
+
+  def test_import_apply_creates_new_registrar_from_full_export_with_default_fields
+    Billing::ReferenceNo.stub(:generate, '998877665544332211') do
+      post import_apply_admin_registrars_path, params: {
+        file: Rack::Test::UploadedFile.new(StringIO.new(full_export_csv), 'text/csv', original_filename: 'registrars.csv')
+      }
+    end
+
+    assert_redirected_to admin_registrars_path
+    assert_includes flash[:notice], '1 created'
+
+    created = Registrar.find_by(code: 'CSV-TEST')
+    assert_equal 'CSVTEST', created.accounting_customer_code
+    assert_equal '998877665544332211', created.reference_no
+    assert_equal 'AW', created.address_country_code
+  end
+
   def test_import_apply_redirects_when_file_missing
     post import_apply_admin_registrars_path, params: { fields: %w[name email] }
 
     assert_redirected_to import_admin_registrars_path
     assert_equal I18n.t('admin.registrars.import_apply.file_not_found'), flash[:alert]
+  end
+
+  private
+
+  def full_export_csv
+    <<~CSV
+      code,name,reg_no,email,billing_email,phone,website,language,test_registrar,address_street,address_zip,address_city,address_state,address_country_code,vat_no,vat_rate,iban,accounting_customer_code,reference_no,legaldoc_optout,legaldoc_optout_comment,accept_pdf_invoices,settings,accreditation_date,accreditation_expire_date
+      CSV-TEST,CSV Test,423526,csv-test@example.test,csv-test@example.test,"","",en,false,Tänav,"",Linn,"",AW,433g2,,"",CSVTEST,2567075,false,"",true,{},,
+    CSV
   end
 end

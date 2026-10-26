@@ -25,7 +25,7 @@ module Registrar::CsvSync
     vat_no: { default_export: true, default_import: true, type: :string },
     vat_rate: { default_export: true, default_import: true, type: :decimal },
     iban: { default_export: true, default_import: true, type: :string },
-    accounting_customer_code: { default_export: true, default_import: false, type: :string },
+    accounting_customer_code: { default_export: true, default_import: true, type: :string },
     reference_no: { default_export: true, default_import: false, type: :string },
     legaldoc_optout: { default_export: true, default_import: true, type: :boolean },
     legaldoc_optout_comment: { default_export: true, default_import: true, type: :string },
