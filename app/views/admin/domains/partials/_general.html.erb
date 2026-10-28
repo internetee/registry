@@ -25,6 +25,9 @@
             <dt><%= t(:valid_to) %></dt>
             <dd><%= l(@domain.valid_to) %></dd>
 
+            <dt><%= t('.auto_renew') %></dt>
+            <dd><%= t(@domain.auto_renew? ? '.auto_renew_enabled' : '.auto_renew_disabled') %></dd>
+
             <dt><%= t('.outzone_time') %></dt>
             <dd><%= l(@domain.outzone_at) %></dd>
 

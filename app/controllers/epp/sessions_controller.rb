@@ -100,6 +100,10 @@ module Epp
         epp_session = EppSession.new
         epp_session.session_id = epp_session_id
         epp_session.user = @api_user
+        epp_session.ext_uris = params[:nokogiri_frame].xpath(
+          '/epp:epp/epp:command/epp:login/epp:svcs/epp:svcExtension/epp:extURI',
+          'epp' => Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')
+        ).map { |uri| uri.text.strip }.uniq
         epp_session.save!
         render_epp_response('login_success')
       else

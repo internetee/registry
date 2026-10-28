@@ -6,16 +6,28 @@ module Domains
              description: 'Domain to set expiration'
 
       def execute
-        set_graceful_expired
-        to_stdout("start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}")
+        Domain.transaction do
+          domain.reload(lock: true)
+          next unless domain.expirable?
+          next if self.class.waiting_for_auto_renew?(domain)
 
-        saved = domain.save(validate: false)
+          set_graceful_expired
+          to_stdout("start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}")
 
-        return unless saved
+          saved = domain.save(validate: false)
 
-        recipients.each do |recipient|
-          DomainExpireEmailJob.set(wait_until: send_time).perform_later(domain.id, recipient)
+          next unless saved
+
+          recipients.each do |recipient|
+            DomainExpireEmailJob.set(wait_until: send_time).perform_later(domain.id, recipient)
+          end
         end
+      end
+
+      def self.waiting_for_auto_renew?(domain)
+        domain.auto_renew? && Feature.auto_renew_enabled? &&
+          Time.zone.now < DomainAutoRenewal.cancellation_deadline_for(domain.valid_to) &&
+          !domain.auto_renewals.exists?(original_expire_at: domain.valid_to)
       end
 
       def set_graceful_expired

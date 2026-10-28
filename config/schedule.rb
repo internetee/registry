@@ -48,6 +48,10 @@ if @cron_group == 'registry'
     runner 'Certificate.update_crl'
   end
 
+  every 15.minutes do
+    runner 'DomainCron.process_auto_renewals'
+  end
+
   every 45.minutes do
     runner 'DomainCron.start_expire_period'
   end

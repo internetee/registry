@@ -18,6 +18,14 @@ class Version::DomainVersion < PaperTrail::Version
     ]
   end
 
+  # :automatic or :registrar when this version extended the expiry; reversals shorten it.
+  def renewal_source
+    old_to, new_to = object_changes.to_h['valid_to']
+    return unless old_to && new_to && Time.zone.parse(new_to.to_s) > Time.zone.parse(old_to.to_s)
+
+    whodunnit == Domains::AutoRenew::Start::WHODUNNIT ? :automatic : :registrar
+  end
+
   def self.ransackable_associations(*)
     authorizable_ransackable_associations
   end

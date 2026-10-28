@@ -59,12 +59,14 @@ xml.epp_head do
       end
     end
 
-    if @domain.dnskeys.any?
-      ds_data = Setting.ds_data_allowed ?
-                    @domain.dnskeys.find_all { |key| key.ds_digest.present? } : []
-      key_data = Setting.key_data_allowed ?
-                     @domain.dnskeys.find_all { |key| key.public_key.present? } : []
+    ds_data = Setting.ds_data_allowed ? @domain.dnskeys.find_all { |key| key.ds_digest.present? } : []
+    key_data = Setting.key_data_allowed ? @domain.dnskeys.find_all { |key| key.public_key.present? } : []
+    dnssec = key_data.present? || ds_data.present?
+    rgp = epp_session.extension?(EppSession::RGP_URI) && @domain.rgp_statuses.present?
+    auto_renew = epp_session.extension?(EppSession::AUTO_RENEW_URI) &&
+                @domain.registrar == current_user.registrar
 
+    if dnssec || rgp || auto_renew
       xml.extension do
         def tag_key_data(xml, key)
           xml.tag!('secDNS:keyData') do
@@ -85,18 +87,33 @@ xml.epp_head do
           end
         end
 
-        xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
-          if Setting.ds_data_allowed
-            ds_data.sort.each do |key|
-              tag_ds_data(xml, key)
-            end
-          else
-            key_data.sort.each do |key|
-              tag_key_data(xml, key)
+        if dnssec
+          xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
+            if Setting.ds_data_allowed
+              ds_data.sort.each do |key|
+                tag_ds_data(xml, key)
+              end
+            else
+              key_data.sort.each do |key|
+                tag_key_data(xml, key)
+              end
             end
           end
         end
-      end if key_data.present? || ds_data.present?
+        if rgp
+          xml.tag!('rgp:infData', 'xmlns:rgp' => EppSession::RGP_URI) do
+            @domain.rgp_statuses.each { |status| xml.tag!('rgp:rgpStatus', 's' => status) }
+          end
+        end
+        if auto_renew
+          xml.tag!('autoRenew:infData', 'xmlns:autoRenew' => EppSession::AUTO_RENEW_URI) do
+            xml.tag!('autoRenew:enabled', @domain.auto_renew.to_s)
+            if (cycle = @domain.current_auto_renewal)
+              render('epp/domains/partials/auto_renew_cycle', builder: xml, cycle: cycle)
+            end
+          end
+        end
+      end
     end
     render('epp/shared/trID', builder: xml)
   end

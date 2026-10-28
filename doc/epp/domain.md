@@ -174,3 +174,135 @@ Domain name mapping protocol short version:
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp_examples.md#epp-domain-with-valid-domain-checks-a-domain)
+
+### Automatic renewal and registry grace period
+
+The optional [autoRenew-ee-1.0 schema](/lib/schemas/autoRenew-ee-1.0.xsd) uses
+`https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd`. The sponsoring registrar can opt
+in during domain creation or change the preference with domain update. An omitted
+preference defaults to false on create and leaves the current value unchanged on
+update. Enabling requires automatic renewal to be available at the registry.
+
+Put the extension next to any secDNS or EIS elements inside the command's single
+`<extension>` wrapper. The following create fragment enables automatic renewal:
+
+```xml
+<extension>
+  <autoRenew:create xmlns:autoRenew="https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd">
+    <autoRenew:enabled>true</autoRenew:enabled>
+  </autoRenew:create>
+</extension>
+```
+
+The update fragment changes future renewal preference. The accepted boolean
+values are `true`, `false`, `1`, and `0`.
+
+```xml
+<extension>
+  <autoRenew:update xmlns:autoRenew="https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd">
+    <autoRenew:enabled>false</autoRenew:enabled>
+  </autoRenew:update>
+</extension>
+```
+
+Automatic renewal purchases one year from the original expiry. A paid renewal
+has a cancellation deadline 15 calendar days after the original expiry in the
+registry time zone. Plain disable prevents future automatic renewals and cancels
+an unpaid funding retry; it does not refund a paid renewal. To reverse a paid
+renewal before its deadline, submit that cycle's ID instead of `enabled`:
+
+```xml
+<extension>
+  <autoRenew:update xmlns:autoRenew="https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd">
+    <autoRenew:reverse cycleId="3f7c2a5e-0000-0000-0000-000000000000"/>
+  </autoRenew:update>
+</extension>
+```
+
+Reversal disables the preference, removes the automatically purchased year, and
+refunds the original charge. The domain remains registered and follows its
+ordinary expiry lifecycle if it is expired. Repeating a successful reversal with
+the same cycle ID succeeds without another refund. Preference changes and
+reversals remain sponsor-only even when another registrar has domain authInfo.
+A failed reversal fails the entire update, including nameserver, DNSSEC, contact,
+and registrant changes in that command. Automatic renewal is applied immediately
+when combined with a registrant change awaiting verification; the verification
+replay does not repeat the automatic-renewal operation.
+
+Response extensions require the relevant URI in the session's login
+`svcExtension/extURI` list; see [session negotiation](session.md#automatic-renewal-extension-negotiation).
+When the create/update command carried this extension, successful responses carry
+`creData`/`updData` with the effective preference. For example, a reversal returns:
+
+```xml
+<extension>
+  <autoRenew:updData xmlns:autoRenew="https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd">
+    <autoRenew:enabled>false</autoRenew:enabled>
+    <autoRenew:reversed cycleId="3f7c2a5e-0000-0000-0000-000000000000"
+      exDate="2027-03-01T00:00:00+02:00" refund="12.00" currency="EUR" repeated="false"/>
+  </autoRenew:updData>
+</extension>
+```
+
+Domain info returns the preference and most recent cycle only to the sponsor.
+During active paid grace, anyone authorized to request domain info can also
+receive the [RFC 3915](https://www.rfc-editor.org/rfc/rfc3915) RGP status. Both
+extensions are independent of DNSSEC and share one wrapper when present:
+
+```xml
+<extension>
+  <rgp:infData xmlns:rgp="urn:ietf:params:xml:ns:rgp-1.0">
+    <rgp:rgpStatus s="autoRenewPeriod"/>
+  </rgp:infData>
+  <autoRenew:infData xmlns:autoRenew="https://epp.tld.ee/schema/autoRenew-ee-1.0.xsd">
+    <autoRenew:enabled>true</autoRenew:enabled>
+    <autoRenew:cycle id="3f7c2a5e-0000-0000-0000-000000000000" state="autoRenewPeriod"
+      originalExDate="2027-03-01T00:00:00+02:00" exDate="2028-03-01T00:00:00+02:00"
+      cancelUntil="2027-03-16T00:00:00+02:00" attempts="1"/>
+  </autoRenew:infData>
+</extension>
+```
+
+Cycle states are `fundingRetry`, `autoRenewPeriod`, `completed`, `reversed`,
+`failed`, and `cancelled`. `exDate` is absent until a renewal succeeds.
+`cycle` is absent when the domain has no renewal history. RGP `autoRenewPeriod`
+is never an ordinary `domain:status`; it disappears at the cancellation deadline,
+even if background processing has not closed the cycle yet, or when a transfer
+or completed registrant change ends the cancellation period earlier.
+
+Unpaid or blocked renewals stay in `fundingRetry` and are retried once a day
+until the cancellation deadline. The first attempt happens when the cycle opens
+at expiry. A late success enters `autoRenewPeriod` with only the remaining
+cancellation window: success two days after expiry leaves 13 calendar days to
+reverse, and the deadline stays 15 calendar days after the original expiry.
+
+At the deadline an unpaid or still blocked cycle becomes terminal state `failed`
+and sends exactly one `renewalFailed` poll explaining the reason. Attempts for
+that expiry stop, while the preference stays enabled for future expiries, for
+example after a manual renewal. A later top-up or re-enabling the preference does
+not reopen the failed cycle. Enabling the preference at or after the cancellation
+deadline opens no cycle for that expiry.
+
+| Code | Automatic renewal error |
+| --- | --- |
+| 2001 | Duplicate extension blocks, conflicting operations, or malformed structure. |
+| 2003 | Missing enabled/reverse operation or missing reversal cycle ID. |
+| 2005 | Invalid boolean value. |
+| 2201 | Requesting registrar is not the domain sponsor. |
+| 2303 | Unknown cycle ID or a cycle belonging to another domain. |
+| 2304 | Cycle cannot be reversed, including an elapsed cancellation deadline. |
+| 2306 | Automatic renewal is unavailable for opt-in, or reversal was requested on create. |
+
+Disabling and reversal remain available when new opt-ins are disabled. Registrar
+commands do not create automatic-renewal poll notifications. Transfer completion
+ends paid grace (cycle `completed`) and disables the preference; a paid year
+remains registered without a refund or a charge to the gaining registrar.
+
+A completed registrant identity change (the old and new registrants have different
+`ident` values) also ends the paid renewal's cancellation period: the cycle becomes
+`completed`, the paid year stays, and reversal is no longer available. There is no
+refund or automatic-renewal poll, and the preference stays unchanged. Swapping
+contacts with the same `ident` does not end the cancellation period. A registrant
+change awaiting verification blocks renewal while pending and leaves paid grace
+reversible until confirmation; an unpaid `fundingRetry` cycle remains open for
+daily retries after the registrant change completes.

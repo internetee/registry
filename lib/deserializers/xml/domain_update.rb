@@ -1,3 +1,4 @@
+require 'deserializers/xml/auto_renew'
 require 'deserializers/xml/legal_document'
 require 'deserializers/xml/domain'
 require 'deserializers/xml/nameserver'
@@ -7,9 +8,10 @@ module Deserializers
     class DomainUpdate
       attr_reader :frame, :registrar
 
-      def initialize(frame, registrar)
+      def initialize(frame, registrar, nokogiri_frame: frame)
         @frame = frame
         @registrar = registrar
+        @nokogiri_frame = nokogiri_frame
         @legal_document ||= ::Deserializers::Xml::LegalDocument.new(frame).call
       end
 
@@ -18,6 +20,8 @@ module Deserializers
                 transfer_code: if_present('authInfo > pw'), nameservers: nameservers,
                 registrar_id: registrar, statuses: statuses, dns_keys: dns_keys,
                 reserved_pw: if_present('reserved > pw'), legal_document: @legal_document }
+
+        obj[:auto_renew] = AutoRenew.new(@nokogiri_frame, command: :update).call
 
         obj.reject { |_key, val| val.blank? }
       end

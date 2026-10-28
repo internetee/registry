@@ -24,6 +24,14 @@ class ReppV1DomainsListTest < ActionDispatch::IntegrationTest
     assert json[:data][:domains][0].is_a? String
   end
 
+  # Registrar portal sends a bare `q` when no filter is set.
+  def test_accepts_empty_search_param
+    get '/repp/v1/domains?details=true&q&simple=true', headers: @auth_headers
+
+    assert_response :ok
+    assert_equal @user.registrar.domains.count, JSON.parse(response.body)['data']['count']
+  end
+
   def test_returns_detailed_registrar_domains
     get repp_v1_domains_path(details: true), headers: @auth_headers
     json = JSON.parse(response.body, symbolize_names: true)

@@ -1,0 +1,10 @@
+en:
+  epp:
+    auto_renew:
+      errors:
+        '2001': 'Command syntax error in automatic renewal extension'
+        '2003': 'Required parameter missing in automatic renewal extension'
+        '2005': 'Automatic renewal enabled must be true, false, 1 or 0'
+        '2306': 'Automatic renewal cannot be reversed on create'
+      unavailable: 'Automatic renewal is not available'
+      create_reversal: 'Automatic renewal cannot be reversed on create'

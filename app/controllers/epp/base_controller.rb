@@ -17,6 +17,7 @@ module Epp
 
     helper_method :current_user
     helper_method :resource
+    helper_method :epp_session
 
     rescue_from StandardError, with: :respond_with_command_failed_error
     rescue_from AuthorizationError, with: :respond_with_authorization_error

@@ -1,3 +1,4 @@
+require 'deserializers/xml/auto_renew'
 require 'deserializers/xml/legal_document'
 require 'deserializers/xml/domain'
 require 'deserializers/xml/nameserver'
@@ -7,9 +8,10 @@ module Deserializers
     class DomainCreate
       attr_reader :frame, :registrar
 
-      def initialize(frame, registrar)
+      def initialize(frame, registrar, nokogiri_frame: frame)
         @frame = frame
         @registrar = registrar
+        @nokogiri_frame = nokogiri_frame
       end
 
       def call
@@ -19,6 +21,7 @@ module Deserializers
         obj[:nameservers_attributes] = nameservers
         obj[:dnskeys_attributes] = dns_keys
         obj[:legal_document] = legal_document
+        obj[:auto_renew] = AutoRenew.new(@nokogiri_frame, command: :create).call
 
         obj
       end

@@ -14,6 +14,7 @@
 - [RFC5734 - Transport over TCP](http://tools.ietf.org/html/rfc5734)  
 - [RFC5910 - DNSSEC Mapping](http://tools.ietf.org/html/rfc5910)  
 - [RFC3735 - Guidelines for Extending the EPP](http://tools.ietf.org/html/rfc3735)
+- [RFC3915 - Registry Grace Period Mapping](https://www.rfc-editor.org/rfc/rfc3915)
 - [RFC8590 - Change Poll](https://www.rfc-editor.org/rfc/rfc8590)
 
 ## XML schemas
@@ -25,10 +26,12 @@
 * [eppcom-1.0.xsd](/lib/schemas/eppcom-1.0.xsd)
 * [host-1.0.xsd](/lib/schemas/host-1.0.xsd)
 * [secDNS-1.1.xsd](/lib/schemas/secDNS-1.1.xsd)
+* [rgp-1.0.xsd](/lib/schemas/rgp-1.0.xsd)
 * [changePoll-1.0.xsd](/lib/schemas/changePoll-1.0.xsd)
 
 ### .ee-specific
-* [all-ee-1.3.xsd](/lib/schemas/all-ee-1.3.xsd)
+* [all-ee-1.4.xsd](/lib/schemas/all-ee-1.4.xsd)
+* [autoRenew-ee-1.0.xsd](/lib/schemas/autoRenew-ee-1.0.xsd)
 * [eis-1.0.xsd](/lib/schemas/eis-1.0.xsd)
 * [epp-ee-1.0.xsd](/lib/schemas/epp-ee-1.0.xsd)
 * [domain-ee-1.2.xsd](/lib/schemas/domain-ee-1.2.xsd)

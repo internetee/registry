@@ -69,7 +69,8 @@ module Registrar::BookKeeping
   def monthly_activities(month)
     AccountActivity.where(account_id: account_ids)
                    .where(created_at: month.beginning_of_month..month.end_of_month)
-                   .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW])
+                   .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW,
+                                          AccountActivity::REFUND])
   end
 
   def new_monthly_invoice_line(activity)
@@ -77,9 +78,9 @@ module Registrar::BookKeeping
     duration = price.duration.in_years.to_i
     {
       'product_id': DOMAIN_TO_PRODUCT[price.zone_name.to_sym],
-      'quantity': 1,
+      'quantity': activity.activity_type == AccountActivity::REFUND ? -1 : 1,
       'unit': language == 'en' ? 'pc' : 'tk',
-      'price': price.price.amount.to_f,
+      'price': activity.activity_type == AccountActivity::REFUND ? activity.sum.abs.to_f : price.price.amount.to_f,
       'duration_in_years': duration,
       'description': description_in_language(price: price, yearly: duration >= 1),
     }.with_indifferent_access

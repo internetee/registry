@@ -33,6 +33,7 @@ et:
   billing_failure_credit_balance_low: Arveldus ebaõnnestus – ettemaksukonto saldo on liiga madal
   active_price_missing_for_this_operation: Selle toimingu aktiivne hind puudub!
   create: Loomine
+  refund: 'Tagasimakse'
 
   activerecord:
     errors:
