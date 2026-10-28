@@ -72,6 +72,9 @@
       = "#{domain.period}#{domain.period_unit}"
       %br
       = "#{l(domain.valid_to, format: :date)}"
+      - if version && (renewal_source = version.renewal_source)
+        %br
+        %strong= t(".renewal.#{renewal_source}")
 
   %td
     - Array(registrant).each do |r|

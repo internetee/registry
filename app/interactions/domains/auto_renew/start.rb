@@ -1,8 +1,10 @@
 module Domains
   module AutoRenew
     class Start < Base
+      WHODUNNIT = "cron - #{name}".freeze
+
       def execute
-        ::PaperTrail.request(whodunnit: "cron - #{self.class.name}") do
+        ::PaperTrail.request(whodunnit: WHODUNNIT) do
           DomainAutoRenewal.due_for_closing.find_each do |cycle|
             isolated(cycle) { CloseCycle.run!(cycle: cycle) }
           end

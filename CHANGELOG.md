@@ -1,6 +1,7 @@
 21.10.2026
 * Per-domain automatic renewal (opt-in, default off) with RFC 3915 autoRenewPeriod grace: EPP autoRenew-ee-1.0 / rgp-1.0 extensions (all-ee-1.4), REPP auto_renew params and /repp/v1/domains/:id/auto_renew, reversal with exact refund, registry-initiated poll messages, refund lines in monthly invoices https://github.com/internetee/registry/issues/2968
 * A completed registrant identity change ends paid auto-renewal grace without refund or poll and preserves the preference; pending changes and same-ident contact swaps leave grace reversible https://github.com/internetee/registry/issues/2968
+* Admin: automatic renewal shown on domain page, domain list filter by automatic renewal, history marks renewals as automatic (registry) or by registrar https://github.com/internetee/registry/issues/2968
 * Deploy: run migrations; new cron job DomainCron.process_auto_renewals every 15 minutes (update whenever crontab); enable with ENV auto_renew_enabled=true https://github.com/internetee/registry/issues/2968
 
 15.10.2026

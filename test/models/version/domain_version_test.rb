@@ -102,4 +102,22 @@ class DomainVersionTest < ActiveSupport::TestCase
     Version::DomainVersion.delete_all
     assert_not Version::DomainVersion.contact_unlinked_more_than?(contact_id: @contact.id, period: 1.day)
   end
+
+  def test_renewal_source_distinguishes_automatic_and_registrar_renewals
+    extended = { 'valid_to' => ['2026-07-05T00:00:00.000Z', '2027-07-05T00:00:00.000Z'] }
+
+    @domain_version.update!(object_changes: extended, whodunnit: Domains::AutoRenew::Start::WHODUNNIT)
+    assert_equal :automatic, @domain_version.renewal_source
+
+    @domain_version.update!(whodunnit: '1-ApiUser: test_bestnames')
+    assert_equal :registrar, @domain_version.renewal_source
+  end
+
+  def test_renewal_source_ignores_shortened_or_unchanged_expiry
+    @domain_version.update!(object_changes: { 'valid_to' => ['2027-07-05T00:00:00.000Z', '2026-07-05T00:00:00.000Z'] })
+    assert_nil @domain_version.renewal_source
+
+    @domain_version.update!(object_changes: { 'statuses' => [[], ['ok']] })
+    assert_nil @domain_version.renewal_source
+  end
 end

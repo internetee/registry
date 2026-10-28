@@ -68,7 +68,12 @@
 
 <div class="row">
     <div class="col-md-5">Tip: Use format *text* for exact match!</div>
-    <div class="col-md-3"></div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <%= label_tag 'q[auto_renew_eq]', t('.auto_renew') %>
+            <%= select_tag 'q[auto_renew_eq]', options_for_select([[t('.auto_renew_enabled'), true], [t('.auto_renew_disabled'), false]], params[:q][:auto_renew_eq]), { include_blank: true, class: 'form-control' } %>
+        </div>
+    </div>
     <div class="col-md-4">
         <div class="form-group">
             <%= label_tag t(:results_per_page) %>

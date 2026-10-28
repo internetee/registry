@@ -13,6 +13,9 @@ en:
       search_form:
         reset_btn: Reset
         download_csv_btn: CSV
+        auto_renew: Automatic renewal
+        auto_renew_enabled: Enabled
+        auto_renew_disabled: Disabled
 
       form:
         pending_delete: &pending_delete
@@ -55,6 +58,14 @@ en:
         general:
           outzone_time: Outzone time
           locked_by_registrant_at: Registry lock time
+          auto_renew: Automatic renewal
+          auto_renew_enabled: Enabled
+          auto_renew_disabled: Disabled
+
+        version:
+          renewal:
+            automatic: Renewed automatically by registry
+            registrar: Renewed by registrar
 
         admin_contacts:
           title: Admin. contacts
