@@ -2,6 +2,7 @@ require 'test_helper'
 
 class ReserveDomainInvoiceTest < ActiveSupport::TestCase
   TEST_USER_UNIQUE_ID = 'test123'
+  REFERENCE_NO = '1234566'
   INVOICE_NUMBER = '12345'
   
   def setup
@@ -9,6 +10,7 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
     
     stub_invoice_number_request
     stub_add_deposits_request
+    stub_reference_number_request
     stub_reserved_domains_invoice_status
     
     # Mock generate_unique_id to return consistent value
@@ -244,6 +246,70 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
     assert ReservedDomain.exists?(id: permanent_domain.id)
   end
 
+  test "stores business registry reference number and due date on new invoice" do
+    WebMock::RequestRegistry.instance.reset!
+
+    travel_to Time.zone.parse('2026-10-16 12:00') do
+      result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+
+      invoice = ReserveDomainInvoice.last
+      assert_equal REFERENCE_NO, invoice.reference_no
+      assert_equal Date.new(2026, 11, 15), invoice.due_date
+      assert_equal REFERENCE_NO, result.reference_no
+      assert_equal Date.new(2026, 11, 15), result.due_date
+    end
+
+    assert_requested :post, "https://eis_billing_system:3000/api/v1/invoice_generator/reference_number_generator",
+                     body: { initiator: 'business_registry', owner: TEST_USER_UNIQUE_ID }.to_json
+    assert_requested(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator") do |request|
+      JSON.parse(request.body)['reference_number'] == REFERENCE_NO
+    end
+  end
+
+  test "reserves domains and marks invoice paid" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12347', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
+
+    BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, @domain_names do
+      assert_difference 'ReservedDomain.count', 2 do
+        assert_equal :reserved, invoice.reserve_paid_domains
+      end
+    end
+
+    assert invoice.reload.paid?
+  end
+
+  test "reserving paid domains cancels pending invoices with intersecting domains" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12348', domain_names: [@domain_names.first], metainfo: TEST_USER_UNIQUE_ID)
+    intersecting_invoice = ReserveDomainInvoice.create!(invoice_number: '12349', domain_names: @domain_names, metainfo: 'other')
+
+    BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, [@domain_names.first] do
+      invoice.reserve_paid_domains
+    end
+
+    assert intersecting_invoice.reload.cancelled?
+  end
+
+  test "does not reserve domains again for already paid invoice" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12350', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID,
+                                           status: :paid)
+
+    assert_no_difference 'ReservedDomain.count' do
+      assert_equal :already_paid, invoice.reserve_paid_domains
+    end
+  end
+
+  test "reserves nothing when some domain is unavailable" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12351', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
+
+    BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, [@domain_names.first] do
+      assert_no_difference 'ReservedDomain.count' do
+        assert_equal :unavailable, invoice.reserve_paid_domains
+      end
+    end
+
+    assert invoice.reload.pending?
+  end
+
   private
 
   def stub_invoice_number_request
@@ -254,6 +320,11 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
   def stub_add_deposits_request
     stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
       .to_return(status: 201, body: { everypay_link: 'https://pay.test' }.to_json)
+  end
+
+  def stub_reference_number_request
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/reference_number_generator")
+      .to_return(status: 200, body: { reference_number: REFERENCE_NO }.to_json, headers: {})
   end
 
   def stub_reserved_domains_invoice_status

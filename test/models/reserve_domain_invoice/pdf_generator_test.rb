@@ -5,7 +5,9 @@ class ReserveDomainInvoice::PdfGeneratorTest < ActiveSupport::TestCase
     @invoice = ReserveDomainInvoice.create!(
       invoice_number: '67890',
       domain_names: ['unregistered.test', 'sample.test'],
-      metainfo: 'meta-uid'
+      metainfo: 'meta-uid',
+      reference_no: '6789012',
+      due_date: Date.new(2026, 11, 15)
     )
   end
 
@@ -67,6 +69,47 @@ class ReserveDomainInvoice::PdfGeneratorTest < ActiveSupport::TestCase
 
     assert_includes html, 'Override Company OÜ'
     refute_includes html, 'eraisik'
+  end
+
+  test 'renders unpaid invoice with bank transfer details and amount due' do
+    html = render_for(paid: false, payment_date: Date.new(2026, 10, 20))
+
+    assert_includes html, 'Arve number'
+    assert_includes html, 'Viitenumber'
+    assert_includes html, '6789012'
+    assert_includes html, 'Maksetähtaeg'
+    assert_includes html, I18n.l(@invoice.due_date)
+    assert_includes html, 'Tasumata'
+    assert_includes html, 'Tasuda'
+    assert_includes html, 'Ootab tasumist'
+    refute_includes html, 'Tasutud summa'
+    refute_includes html, 'Reserveeritud'
+    refute_includes html, 'Makse kuupäev'
+    assert_includes html, 'first-come-first-served'
+  end
+
+  test 'renders paid invoice with paid amount and payment date' do
+    html = render_for(paid: true, payment_date: Date.new(2026, 10, 20))
+
+    assert_includes html, 'Viitenumber'
+    assert_includes html, 'Maksetähtaeg'
+    assert_includes html, 'Tasutud summa'
+    assert_includes html, 'Reserveeritud'
+    assert_includes html, 'Makse kuupäev'
+    assert_includes html, I18n.l(Date.new(2026, 10, 20))
+    refute_includes html, 'Tasumata'
+    refute_includes html, 'Tasuda'
+    refute_includes html, 'first-come-first-served'
+  end
+
+  test 'hides reference number and due date for older invoices' do
+    @invoice.update!(reference_no: nil, due_date: nil)
+
+    html = render_for(paid: true)
+
+    refute_includes html, 'Viitenumber'
+    refute_includes html, 'Maksetähtaeg'
+    assert_includes html, 'Tasutud summa'
   end
 
   private
