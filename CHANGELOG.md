@@ -1,3 +1,6 @@
+29.10.2026
+* BusinessReg: Add option for payments with an invoice https://github.com/internetee/registry/issues/2970
+
 16.10.2026
 * Business Registry reservation invoices get a reference number and due date; invoice PDF is available before payment so it can be paid by bank transfer https://github.com/internetee/registry/pull/2972
 * New billing endpoint PUT /eis_billing/business_registry_payment reserves domains when EIS billing matches a bank transfer by reference number https://github.com/internetee/registry/pull/2972
