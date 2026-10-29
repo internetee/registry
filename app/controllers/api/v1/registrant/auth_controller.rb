@@ -15,7 +15,7 @@ module Api
         end
 
         def eid
-          user = RegistrantUser.find_or_create_by_api_data(eid_params.to_h)
+          user = RegistrantUser.find_or_create_by_api_data(eid_params.except(:authenticated_at).to_h)
           token = create_token(user)
 
           if token
@@ -40,11 +40,11 @@ module Api
             obj.require(key)
           end
 
-          params.permit(required_params + [:country_code])
+          params.permit(required_params + %i[country_code authenticated_at])
         end
 
         def create_token(user)
-          token_creator = AuthTokenCreator.create_with_defaults(user)
+          token_creator = AuthTokenCreator.create_with_defaults(user, eid_params[:authenticated_at])
           token_creator.token_in_hash
         end
 

@@ -39,11 +39,11 @@ module Domain::RegistryLockable
     (statuses & LOCK_STATUSES).count == 3
   end
 
-  def remove_registry_lock
+  def remove_registry_lock(actor: nil)
     return unless locked_by_registrant?
 
     transaction do
-      remove_statuses_from_locked_domain
+      remove_statuses_from_locked_domain(actor: actor)
     end
   end
 
@@ -53,7 +53,10 @@ module Domain::RegistryLockable
     save!
   end
 
-  def remove_statuses_from_locked_domain
+  def remove_statuses_from_locked_domain(actor: nil)
+    operation_id = PendingOperationEvent.operation_id(registrant_verification_token)
+    operation = pending_update? ? RegistrantVerification::DOMAIN_REGISTRANT_CHANGE : RegistrantVerification::DOMAIN_DELETE
+    was_pending = pending_update? || pending_delete_confirmation?
     fd_flag = force_delete_scheduled?
     LOCK_STATUSES.each do |domain_status|
       statuses.delete([domain_status])
@@ -67,6 +70,11 @@ module Domain::RegistryLockable
     alert_registrar_lock_changes!(lock: false)
 
     save!
+    if was_pending && !pending_update? && !pending_delete_confirmation?
+      PendingOperationEvent.record(domain: self, event: 'cancelled', operation_id: operation_id, operation: operation,
+                                   actor: actor || PendingOperationEvent.current_actor)
+    end
+    true
   end
 
   def alert_registrar_lock_changes!(lock: true)

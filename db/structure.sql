@@ -2492,6 +2492,47 @@ ALTER SEQUENCE public.payment_orders_id_seq OWNED BY public.payment_orders.id;
 
 
 --
+-- Name: pending_operation_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pending_operation_events (
+    id bigint NOT NULL,
+    pending_operation_id uuid NOT NULL,
+    domain_id bigint,
+    domain_name character varying,
+    operation character varying,
+    event character varying NOT NULL,
+    occurred_at timestamp without time zone NOT NULL,
+    actor_type character varying,
+    actor_id character varying,
+    actor_name character varying,
+    recipient_email character varying,
+    identity jsonb,
+    authenticated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: pending_operation_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pending_operation_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pending_operation_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pending_operation_events_id_seq OWNED BY public.pending_operation_events.id;
+
+
+--
 -- Name: pghero_query_stats; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3623,6 +3664,13 @@ ALTER TABLE ONLY public.payment_orders ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: pending_operation_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pending_operation_events ALTER COLUMN id SET DEFAULT nextval('public.pending_operation_events_id_seq'::regclass);
+
+
+--
 -- Name: pghero_query_stats id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4195,6 +4243,14 @@ ALTER TABLE ONLY public.notifications
 
 ALTER TABLE ONLY public.payment_orders
     ADD CONSTRAINT payment_orders_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pending_operation_events pending_operation_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pending_operation_events
+    ADD CONSTRAINT pending_operation_events_pkey PRIMARY KEY (id);
 
 
 --
@@ -5083,6 +5139,27 @@ CREATE INDEX index_notifications_on_registrar_id ON public.notifications USING b
 --
 
 CREATE INDEX index_payment_orders_on_invoice_id ON public.payment_orders USING btree (invoice_id);
+
+
+--
+-- Name: index_pending_operation_events_on_pending_operation_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pending_operation_events_on_pending_operation_id ON public.pending_operation_events USING btree (pending_operation_id);
+
+
+--
+-- Name: index_pending_operation_events_one_authentication; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_pending_operation_events_one_authentication ON public.pending_operation_events USING btree (pending_operation_id, ((identity ->> 'registrant_ident'::text)), COALESCE(authenticated_at, 'infinity'::timestamp without time zone)) WHERE ((event)::text = 'authenticated'::text);
+
+
+--
+-- Name: index_pending_operation_events_one_terminal; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_pending_operation_events_one_terminal ON public.pending_operation_events USING btree (pending_operation_id) WHERE ((event)::text = ANY ((ARRAY['approved'::character varying, 'denied'::character varying, 'cancelled'::character varying, 'expired'::character varying])::text[]));
 
 
 --
@@ -6085,6 +6162,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261005090100'),
 ('20261005090200'),
 ('20261012120000'),
-('20261016100000');
+('20261016100000'),
+('20261029120000'),
+('20261029120100'),
+('20261029120200');
 
 

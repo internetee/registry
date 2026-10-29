@@ -9,3 +9,5 @@ Main communication specification through Registrant API:
 [Domains](registrant-api/v1/domain.md)
 [Registry Lock](registrant-api/v1/registry_lock.md)
 [Contacts](registrant-api/v1/contact.md)
+
+[Pending confirmations](registrant-api/v1/confirms.md)

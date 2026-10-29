@@ -5,6 +5,7 @@ class DomainDeleteMailer < ApplicationMailer
     @confirmation_url = registrant_confirm_url(domain: domain, method: 'delete')
 
     subject = default_i18n_subject(domain_name: domain.name)
+    headers['X-Pending-Operation-ID'] = PendingOperationEvent.operation_id(domain.registrant_verification_token)
     mail(to: registrant.email, subject: subject)
   end
 

@@ -36,12 +36,19 @@ module Admin
     end
 
     def update
+      pending_id = PendingOperationEvent.operation_id(@domain.registrant_verification_token)
+      pending_operation = @domain.pending_update? ? RegistrantVerification::DOMAIN_REGISTRANT_CHANGE : RegistrantVerification::DOMAIN_DELETE
+      was_pending = @domain.pending_update? || @domain.pending_delete_confirmation?
       rollback_history = @domain.json_statuses_history&.[]('admin_store_statuses_history')
       dp = ignore_empty_statuses
       @domain.is_admin = true
       @domain.admin_status_update dp[:statuses]
 
       if @domain.update(dp)
+        if was_pending && !@domain.pending_update? && !@domain.pending_delete_confirmation?
+          PendingOperationEvent.record(domain: @domain, event: 'cancelled', operation_id: pending_id, operation: pending_operation,
+                                       actor: { type: 'admin', id: current_admin_user.id, name: current_admin_user.username })
+        end
         flash[:notice] = I18n.t('domain_updated')
         inform_registrar_about_status_changes
         redirect_to [:admin, @domain]

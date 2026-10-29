@@ -114,6 +114,15 @@ class Domain < ApplicationRecord
     true
   end
 
+  before_destroy :audit_pending_destruction
+
+  def audit_pending_destruction
+    return if registrant_verification_token.blank?
+
+    operation = pending_delete_confirmation? ? RegistrantVerification::DOMAIN_DELETE : RegistrantVerification::DOMAIN_REGISTRANT_CHANGE
+    PendingOperationEvent.record(domain: self, event: 'cancelled', operation: operation, actor: PendingOperationEvent.current_actor)
+  end
+
   after_commit :update_whois_record
 
   after_create :update_reserved_domains
@@ -512,20 +521,31 @@ class Domain < ApplicationRecord
     # thus automatic statuses has already executed by this point
     # and we need to trigger automatic statuses manually (second time).
     manage_automatic_statuses
+    PendingOperationEvent.record(domain: self, event: 'started', operation: RegistrantVerification::DOMAIN_REGISTRANT_CHANGE, actor: pending_operation_registrar)
+  end
+
+  def pending_operation_registrar
+    { type: 'registrar', id: registrar.id, name: registrar.name }
+  rescue StandardError => e
+    Rails.logger.warn("Pending operation registrar audit failed: #{e.class}: #{e.message}")
+    { type: 'registrar' }
   end
 
   def registrant_update_confirmable?(token)
     return false if statuses.include? DomainStatus::DELETE_CANDIDATE
     return false unless pending_update?
     return false unless registrant_verification_asked?
+    return false unless registrant_verification_asked_at > Setting.expire_pending_confirmation.hours.ago
     return false unless registrant_verification_token == token
 
     true
   end
 
   def registrant_delete_confirmable?(token)
-    return false unless pending_delete?
+    return false unless pending_delete_confirmation?
+    return false if statuses.include?(DomainStatus::PENDING_DELETE)
     return false unless registrant_verification_asked?
+    return false unless registrant_verification_asked_at > Setting.expire_pending_confirmation.hours.ago
     return false unless registrant_verification_token == token
 
     true
@@ -553,6 +573,7 @@ class Domain < ApplicationRecord
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
+    PendingOperationEvent.record(domain: self, event: 'started', operation: RegistrantVerification::DOMAIN_DELETE, actor: pending_operation_registrar)
     Domains::DeleteConfirmEmail::SendRequest.run(domain: self)
   end
 

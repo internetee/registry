@@ -198,6 +198,7 @@ class Epp::Domain < Domain
   end
 
   def set_pending_delete!
+    operation_id = PendingOperationEvent.operation_id(registrant_verification_token) if pending_delete_confirmation?
     unless pending_deletable?
       add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
       return
@@ -206,7 +207,12 @@ class Epp::Domain < Domain
     self.delete_date = Time.zone.today + Setting.redemption_grace_period.days + 1.day
     set_pending_delete
     set_server_hold if server_holdable?
-    save(validate: false)
+    result = save(validate: false)
+    if result && operation_id
+      PendingOperationEvent.record(domain: self, event: 'cancelled', operation_id: operation_id,
+                                   operation: RegistrantVerification::DOMAIN_DELETE, actor: pending_operation_registrar)
+    end
+    result
   end
 
   ### RENEW ###

@@ -3,22 +3,25 @@ class AuthTokenCreator
 
   attr_reader :user, :key, :expires_at
 
-  def self.create_with_defaults(user)
-    new(user, Rails.application.config.secret_key_base, Time.now + DEFAULT_VALIDITY)
+  def self.create_with_defaults(user, authenticated_at = nil)
+    new(user, Rails.application.config.secret_key_base, Time.now + DEFAULT_VALIDITY, authenticated_at)
   end
 
-  def initialize(user, key, expires_at)
+  def initialize(user, key, expires_at, authenticated_at = nil)
+    @authenticated_at = authenticated_at
     @user = user
     @key = key
     @expires_at = expires_at.utc.strftime('%F %T %Z')
   end
 
   def hashable
-    {
+    data = {
       user_ident: user.registrant_ident,
       user_username: user.username,
       expires_at: expires_at,
-    }.to_json
+    }
+    data[:authenticated_at] = @authenticated_at if @authenticated_at.present?
+    data.to_json
   end
 
   def encrypted_token

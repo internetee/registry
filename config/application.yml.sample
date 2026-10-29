@@ -190,8 +190,12 @@ shunter_redis_port: "6379"
 shunter_default_timespan: '60'
 shunter_default_threshold: '100'
 
+# Blank defaults to 2027-01-18T00:00:00+02:00; .ee test environment: 2026-12-01T00:00:00+02:00
+registrant_confirmation_eeid_required_from: ''
+
 # Since the keys for staging are absent from the repo, we need to supply them separate for testing.
 test:
+  registrant_confirmation_eeid_required_from: ''
   payments_seb_bank_certificate: 'test/fixtures/files/seb_bank_cert.pem'
   payments_seb_seller_private: 'test/fixtures/files/seb_seller_key.pem'
   release_domains_to_auction: 'false'

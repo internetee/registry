@@ -1,10 +1,13 @@
 class DomainDeleteConfirmJob < ApplicationJob
-  def perform(domain_id, action, initiator = nil)
-    domain = Epp::Domain.find(domain_id)
+  def perform(domain_id, action, initiator = nil, actor = nil, operation_id = nil)
+    domain = Epp::Domain.find_by(id: domain_id)
+    return unless domain
 
     Domains::DeleteConfirm::ProcessAction.run(domain: domain,
                                               action: action,
-                                              initiator: initiator)
+                                              initiator: initiator,
+                                               actor: actor,
+                                               operation_id: operation_id)
   end
 
   private

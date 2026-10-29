@@ -4,6 +4,7 @@ require 'auth_token/auth_token_creator'
 class RegistrantApiVerificationsTest < ApplicationIntegrationTest
   def setup
     super
+    travel_to Time.zone.parse('2026-10-01 12:00:00')
 
     @domain = domains(:hospital)
     @registrant = @domain.registrant
@@ -293,4 +294,29 @@ class RegistrantApiVerificationsTest < ApplicationIntegrationTest
 
   #  assert_equal({ errors: [base: ['Not authorized']] }, json_body)
   #end
+end
+
+class RegistrantConfirmationAuthenticationTest < ApplicationIntegrationTest
+  test 'active requirement rejects anonymous requests before lookup and without side effects' do
+    domain = domains(:hospital)
+    domain.update!(statuses: [DomainStatus::PENDING_UPDATE], registrant_verification_asked_at: Time.current,
+                   registrant_verification_token: 'confirmation-token')
+    asked_at = domain.reload.registrant_verification_asked_at
+    Feature.stub(:registrant_confirmation_eeid_required?, true) do
+      assert_no_difference 'RegistrantVerification.count' do
+        assert_no_enqueued_jobs do
+          get "/api/v1/registrant/confirms/#{domain.name}/change/confirmation-token"
+          assert_response :unauthorized
+          assert_equal({ 'errors' => [{ 'base' => ['Not authorized'] }] }, JSON.parse(response.body))
+          post "/api/v1/registrant/confirms/#{domain.name}/change/confirmation-token/confirmed"
+          assert_response :unauthorized
+          get '/api/v1/registrant/confirms/nonexistent.test/change/invalid'
+          assert_response :unauthorized
+        end
+      end
+    end
+    domain.reload
+    assert_equal asked_at, domain.registrant_verification_asked_at
+    assert_includes domain.statuses, DomainStatus::PENDING_UPDATE
+  end
 end

@@ -2,6 +2,7 @@ module Domains
   module UpdateConfirm
     class ProcessUpdateConfirmed < Base
       def execute
+        operation_id = PendingOperationEvent.operation_id(domain.registrant_verification_token)
         ActiveRecord::Base.transaction do
           old_registrant = domain.registrant
           notify_registrar(:poll_pending_update_confirmed_by_registrant)
@@ -9,6 +10,7 @@ module Domains
           apply_pending_update!
           raise_errors!(domain)
           RegistrantChange.new(domain: domain, old_registrant: old_registrant).confirm
+          PendingOperationEvent.record(domain: domain, event: 'approved', operation_id: operation_id, operation: RegistrantVerification::DOMAIN_REGISTRANT_CHANGE, actor: actor || { type: 'system' })
         end
       end
 

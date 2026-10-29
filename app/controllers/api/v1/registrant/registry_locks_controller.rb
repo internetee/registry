@@ -19,7 +19,7 @@ module Api
         end
 
         def destroy
-          if @domain.remove_registry_lock
+          if @domain.remove_registry_lock(actor: { type: 'registrant', id: current_registrant_user.id, name: current_registrant_user.username })
             render json: serialized_domain(@domain)
           else
             render json: { errors: [{ base: ['Domain is not locked'] }] },

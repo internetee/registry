@@ -2,9 +2,11 @@ module Domains
   module DeleteConfirm
     class ProcessDeleteConfirmed < Base
       def execute
+        operation_id = PendingOperationEvent.operation_id(domain.registrant_verification_token)
         notify_registrar(:poll_pending_delete_confirmed_by_registrant)
         domain.apply_pending_delete!
         raise_errors!(domain)
+        PendingOperationEvent.record(domain: domain, event: 'approved', operation_id: operation_id, operation: RegistrantVerification::DOMAIN_DELETE, actor: actor || { type: 'system' })
       end
 
       def apply_pending_delete!
