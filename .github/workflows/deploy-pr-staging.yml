@@ -96,7 +96,7 @@ jobs:
       
       - name: 🔐 Mint GitHub App installation token (for IaC repo)
         id: app-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ vars.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
