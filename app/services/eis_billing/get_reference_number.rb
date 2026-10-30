@@ -1,14 +1,15 @@
 module EisBilling
   class GetReferenceNumber < EisBilling::Base
-    attr_reader :owner
+    attr_reader :owner, :initiator
 
     # rubocop:disable Lint/MissingSuper
-    def initialize(owner:)
+    def initialize(owner:, initiator: INITIATOR)
       @owner = owner
+      @initiator = initiator
     end
 
-    def self.call(owner:)
-      new(owner: owner).call
+    def self.call(owner:, initiator: INITIATOR)
+      new(owner: owner, initiator: initiator).call
     end
 
     def call
@@ -18,7 +19,7 @@ module EisBilling
 
     def payload
       {
-        initiator: INITIATOR,
+        initiator: initiator,
         owner: owner
       }
     end

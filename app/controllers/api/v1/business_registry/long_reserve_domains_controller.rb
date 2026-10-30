@@ -22,6 +22,8 @@ module Api
               linkpay_url: decode_linkpay_url(result.linkpay_url),
               invoice_number: result.invoice_number,
               user_unique_id: result.user_unique_id,
+              reference_no: result.reference_no,
+              due_date: result.due_date,
               available_domains: ReserveDomainInvoice.filter_available_domains(@domain_names)
             }, :created)
           else

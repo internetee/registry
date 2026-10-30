@@ -1,18 +1,9 @@
 require 'test_helper'
 
-class StubAuthorization < ApplicationController
-  skip_authorization_check
-
-  def authorized
-    true
-  end
-end
-
-EisBilling::BaseController = StubAuthorization
-
-class EInvoiceResponseTest < ApplicationIntegrationTest
+class EisBillingInvoicesTest < ApplicationIntegrationTest
   setup do
     sign_in users(:api_bestnames)
+    Spy.on_instance_method(EisBilling::BaseController, :authorized).and_return(true)
     @invoice = invoices(:one)
 
     response_message = {

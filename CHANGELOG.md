@@ -1,3 +1,13 @@
+29.10.2026
+* BusinessReg: Add option for payments with an invoice https://github.com/internetee/registry/issues/2970
+
+16.10.2026
+* Business Registry reservation invoices get a reference number and due date; invoice PDF is available before payment so it can be paid by bank transfer https://github.com/internetee/registry/pull/2972
+* New billing endpoint PUT /eis_billing/business_registry_payment reserves domains when EIS billing matches a bank transfer by reference number https://github.com/internetee/registry/pull/2972
+* Reservation is first-come-first-served: unpaid invoice PDF warns that it does not guarantee the reservation; a bank payment for domains that are no longer available cancels the invoice and EIS billing asks admin to refund it https://github.com/internetee/registry/pull/2972
+* Fixed cancelling of intersecting reservation invoices after a paid callback https://github.com/internetee/registry/pull/2972
+* Deploy: run migrations; set business_registry_payment_url in eis_billing_system (https://github.com/internetee/eis_billing_system/pull/268)
+
 15.10.2026
 * Registrant API accepts name and email in org contacts' disclosed attributes, so registrant center saves no longer fail with 400 for legal persons
 * Fix for whois duplicate records https://github.com/internetee/registry/pull/2966
