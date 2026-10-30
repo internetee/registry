@@ -92,9 +92,7 @@ class WhoisRecord < ApplicationRecord
   end
 
   def update_whois_server
-    wd = Whois::Record.find_or_initialize_by(name: name)
-    wd.json = json
-    wd.save
+    Whois::Record.save_by_name(name) { |wd| wd.json = json }
   end
 
   def destroy_whois_record

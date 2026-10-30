@@ -26,9 +26,9 @@ class BlockedDomain < ApplicationRecord
   def generate_data
     return if Domain.where(name: name).any?
 
-    wr = Whois::Record.find_or_initialize_by(name: name)
-    wr.json = @json = generate_json # we need @json to bind to class
-    wr.save
+    Whois::Record.save_by_name(name) do |wr|
+      wr.json = @json = generate_json # we need @json to bind to class
+    end
   end
 
   alias_method :update_whois_record, :generate_data

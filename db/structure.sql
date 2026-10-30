@@ -2809,7 +2809,9 @@ CREATE TABLE public.reserve_domain_invoices (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     status integer DEFAULT 0,
-    metainfo character varying
+    metainfo character varying,
+    reference_no character varying,
+    due_date date
 );
 
 
@@ -5133,6 +5135,13 @@ CREATE INDEX index_reserve_domain_invoices_on_invoice_number ON public.reserve_d
 
 
 --
+-- Name: index_reserve_domain_invoices_on_reference_no; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_reserve_domain_invoices_on_reference_no ON public.reserve_domain_invoices USING btree (reference_no) WHERE (reference_no IS NOT NULL);
+
+
+--
 -- Name: index_reserved_domain_lifecycles_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5283,7 +5292,7 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 -- Name: index_whois_records_on_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_whois_records_on_domain_id ON public.whois_records USING btree (domain_id);
+CREATE UNIQUE INDEX index_whois_records_on_domain_id ON public.whois_records USING btree (domain_id);
 
 
 --
@@ -6074,6 +6083,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261002120000'),
 ('20261005090000'),
 ('20261005090100'),
-('20261005090200');
+('20261005090200'),
+('20261012120000'),
+('20261016100000');
 
 

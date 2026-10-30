@@ -54,3 +54,4 @@ et:
   invalid_csr_or_crt: 'Vigane CSR või CRT'
   csr_cn_mismatch: 'CSR common name (CN) peab kattuma API kasutaja kasutajanimega'
   csr_country_mismatch: 'CSR country (C) peab kattuma registripidaja riigiga'
+  no_such_user: 'Sellist kasutajat ei ole'

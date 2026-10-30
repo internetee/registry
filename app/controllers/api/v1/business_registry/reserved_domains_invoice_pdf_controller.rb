@@ -5,14 +5,14 @@ module Api
         include ReservedDomainInvoiceScoped
 
         def show
-          result = @reserved_domain_invoice.invoice_state
+          paid = @reserved_domain_invoice.invoice_state.paid?
 
-          unless result.paid?
-            render_error('Invoice is not paid', :unprocessable_entity, { status: result.status, message: result.message })
+          unless paid || @reserved_domain_invoice.pending?
+            render_error('Invoice is cancelled', :unprocessable_entity, { status: @reserved_domain_invoice.status })
             return
           end
 
-          send_data @reserved_domain_invoice.as_pdf(invoice_context),
+          send_data @reserved_domain_invoice.as_pdf(invoice_context.merge(paid: paid)),
                     filename: "invoice-#{@reserved_domain_invoice.invoice_number}.pdf",
                     type: 'application/pdf',
                     disposition: 'attachment'

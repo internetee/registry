@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     put '/e_invoice_response', to: 'e_invoice_response#update', as: 'e_invoice_response'
     post '/lhv_connect_transactions', to: 'lhv_connect_transactions#create', as: 'lhv_connect_transactions'
     get 'callback', to: 'business_registry_callback#callback', as: 'callback'
+    put '/business_registry_payment', to: 'business_registry_payments#update', as: 'business_registry_payment'
     resource :invoices, only: [:update]
   end
 

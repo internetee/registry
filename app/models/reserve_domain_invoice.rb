@@ -7,7 +7,7 @@ class ReserveDomainInvoice < ApplicationRecord
   end
 
   class InvoiceResponseStruct < Struct.new(:status_code_success, :linkpay_url, :invoice_number, :details, :reserved_domain_names, :user_unique_id,
-    keyword_init: true)
+    :reference_no, :due_date, keyword_init: true)
   end
 
   INITIATOR = 'business_registry'
@@ -30,18 +30,20 @@ class ReserveDomainInvoice < ApplicationRecord
 
       return build_error_response('Some intersecting invoices are paid') if is_any_intersecting_invoice_paid?(available_names)
 
-      user_unique_id = generate_unique_id      
+      user_unique_id = generate_unique_id
+      reference_no = fetch_reference_no(user_unique_id)
 
       invoice = if are_domains_intersect?(available_names)
         invoice_number = get_invoice_number_from_intersecting_invoice(available_names).to_i
-        create_invoice_with_domains(available_names, invoice_number: invoice_number, user_unique_id: user_unique_id)
+        create_invoice_with_domains(available_names, invoice_number: invoice_number, user_unique_id: user_unique_id,
+                                                     reference_no: reference_no)
       else
-        create_invoice_with_domains(available_names, user_unique_id: user_unique_id)
+        create_invoice_with_domains(available_names, user_unique_id: user_unique_id, reference_no: reference_no)
       end
 
       result = process_invoice(invoice)
-      create_reserve_domain_invoice(invoice.number, available_names, invoice.user_unique_id)
-      build_response(result, invoice.number, invoice.user_unique_id, available_names)
+      reserve_domain_invoice = create_reserve_domain_invoice(invoice, available_names)
+      build_response(result, invoice, reserve_domain_invoice)
     end
 
     def are_domains_intersect?(domain_names)
@@ -100,12 +102,13 @@ class ReserveDomainInvoice < ApplicationRecord
       SimpleIDN.to_unicode(name).mb_chars.downcase.strip.to_s
     end
 
-    def create_invoice_with_domains(domain_names, invoice_number: nil, user_unique_id: nil)
+    def create_invoice_with_domains(domain_names, invoice_number: nil, user_unique_id: nil, reference_no: nil)
       invoice_number = fetch_invoice_number if invoice_number.nil?
       
       build_invoice(
         total: domain_price_calculation(domain_names),
         number: invoice_number,
+        reference_no: reference_no,
         reserved_domain_names: domain_names,
         user_unique_id: user_unique_id
       )
@@ -116,6 +119,11 @@ class ReserveDomainInvoice < ApplicationRecord
       JSON.parse(response.body).fetch('invoice_number').to_i
     end
 
+    def fetch_reference_no(owner)
+      response = EisBilling::GetReferenceNumber.call(owner: owner, initiator: INITIATOR)
+      JSON.parse(response.body).fetch('reference_number')
+    end
+
     def build_invoice(attributes)
       InvoiceStruct.new(
         total: attributes[:total],
@@ -124,7 +132,7 @@ class ReserveDomainInvoice < ApplicationRecord
         buyer_email: nil,
         description: 'description',
         initiator: INITIATOR,
-        reference_no: nil,
+        reference_no: attributes[:reference_no],
         reserved_domain_names: attributes[:reserved_domain_names],
         user_unique_id: attributes[:user_unique_id]
       )
@@ -138,24 +146,28 @@ class ReserveDomainInvoice < ApplicationRecord
       EisBilling::AddDeposits.new(invoice).call
     end
 
-    def create_reserve_domain_invoice(invoice_number, domain_names, user_unique_id)
+    def create_reserve_domain_invoice(invoice, domain_names)
       create(
-        invoice_number: invoice_number,
+        invoice_number: invoice.number,
         domain_names: domain_names,
-        metainfo: user_unique_id
+        metainfo: invoice.user_unique_id,
+        reference_no: invoice.reference_no,
+        due_date: (Time.zone.now + Setting.days_to_keep_invoices_active.days).to_date
       )
     end
 
-    def build_response(result, invoice_number, user_unique_id, domain_names)
+    def build_response(result, invoice, reserve_domain_invoice)
       parsed_result = JSON.parse(result.body)
       # link = JSON.parse(result.body)['everypay_link']
       
       InvoiceResponseStruct.new(
         status_code_success: success_status?(result.code),
         linkpay_url: parsed_result['everypay_link'],
-        invoice_number: invoice_number,
-        user_unique_id: user_unique_id,
-        reserved_domain_names: domain_names,
+        invoice_number: invoice.number,
+        user_unique_id: invoice.user_unique_id,
+        reserved_domain_names: invoice.reserved_domain_names,
+        reference_no: reserve_domain_invoice.reference_no,
+        due_date: reserve_domain_invoice.due_date,
         details: parsed_result
       )
     end
@@ -197,6 +209,22 @@ class ReserveDomainInvoice < ApplicationRecord
     end
   end
 
+  # Returns :reserved, :already_paid or :unavailable (nothing is reserved when any domain is taken)
+  def reserve_paid_domains
+    with_lock do
+      if paid?
+        :already_paid
+      elsif all_domains_available?
+        create_paid_reserved_domains
+        paid!
+        self.class.cancel_intersecting_invoices(domain_names)
+        :reserved
+      else
+        :unavailable
+      end
+    end
+  end
+
   def build_reserved_domains_output
     domain_names.map do |name|
       domain = ReservedDomain.find_by(name: name)
@@ -212,4 +240,9 @@ class ReserveDomainInvoice < ApplicationRecord
     end
   end
 
+  private
+
+  def all_domains_available?
+    self.class.filter_available_domains(domain_names).size == domain_names.size
+  end
 end
