@@ -8,6 +8,9 @@ module Domains
       string :initiator,
              default: nil
 
+      hash :actor, default: nil, strip: false
+      string :operation_id, default: nil
+
       validates :domain, :action, presence: true
       validates :action, inclusion: { in: [RegistrantVerification::CONFIRMED,
                                            RegistrantVerification::REJECTED] }

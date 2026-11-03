@@ -6,7 +6,7 @@ module Admin
     def update
       authorize! :update, :pending
 
-      if registrant_verification.domain_registrant_change_confirm!("admin #{current_admin_user.username}")
+      if registrant_verification.domain_registrant_change_confirm!("admin #{current_admin_user.username}", admin_actor)
         redirect_to admin_domain_path(@domain.id), notice: t(:pending_applied)
       else
         redirect_to edit_admin_domain_path(@domain.id), alert: t(:failure)
@@ -15,11 +15,15 @@ module Admin
 
     def destroy
       authorize! :destroy, :pending
-      if registrant_verification.domain_registrant_change_reject!("admin #{current_admin_user.username}")
+      if registrant_verification.domain_registrant_change_reject!("admin #{current_admin_user.username}", admin_actor)
         redirect_to admin_domain_path(@domain.id), notice: t(:pending_removed)
       else
         redirect_to admin_domain_path(@domain.id), alert: t(:failure)
       end
+    end
+
+    def admin_actor
+      { type: 'admin', id: current_admin_user.id, name: current_admin_user.username }
     end
 
     def registrant_verification

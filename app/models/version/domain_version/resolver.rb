@@ -32,6 +32,11 @@ class Version::DomainVersion < PaperTrail::Version
       version.item_id
     end
 
+    # State right after this version's change; the live domain only holds the latest state.
+    def value_after_change(key)
+      changes_value(key) || object_value(key)
+    end
+
     private
 
     def live_domain

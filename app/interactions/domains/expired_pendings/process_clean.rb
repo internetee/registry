@@ -5,8 +5,11 @@ module Domains
              class: Domain
 
       def execute
+        operation_id = PendingOperationEvent.operation_id(domain.registrant_verification_token)
+        operation = domain.pending_update? ? RegistrantVerification::DOMAIN_REGISTRANT_CHANGE : RegistrantVerification::DOMAIN_DELETE
         check_notify
         clean_pendings
+        PendingOperationEvent.record(domain: domain, event: 'expired', operation_id: operation_id, operation: operation, actor: { type: 'system' }) if domain.errors.empty?
 
         to_stdout("DomainCron.clean_expired_pendings: ##{domain.id} (#{domain.name})")
         UpdateWhoisRecordJob.perform_later domain.name, 'domain'

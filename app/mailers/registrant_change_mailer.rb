@@ -8,6 +8,7 @@ class RegistrantChangeMailer < ApplicationMailer
     @confirmation_url = registrant_confirm_url(domain: domain, method: 'change')
 
     subject = default_i18n_subject(domain_name: domain.name)
+    headers['X-Pending-Operation-ID'] = PendingOperationEvent.operation_id(domain.registrant_verification_token)
     mail(to: current_registrant.email, subject: subject)
   end
 

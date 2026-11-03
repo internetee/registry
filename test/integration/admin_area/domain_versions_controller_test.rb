@@ -81,6 +81,38 @@ class AdminAreaDomainVersionsControllerIntegrationTest < ApplicationIntegrationT
     assert_includes response.body, @version.event
   end
 
+  def test_show_version_renders_statuses_from_that_version_not_live_domain
+    version = Version::DomainVersion.create!(
+      item_type: 'Domain', item_id: @domain.id, event: 'update', whodunnit: users(:admin).id.to_s,
+      object: { 'name' => @domain.name, 'statuses' => %w[ok], 'status_notes' => {} },
+      object_changes: { 'statuses' => [%w[ok], %w[ok pendingUpdate]],
+                        'status_notes' => [{}, { 'pendingUpdate' => 'awaiting registrant' }] }
+    )
+
+    get admin_domain_version_path(version.id)
+
+    assert_includes response.body, 'ok pendingUpdate'
+    assert_includes response.body, 'pendingUpdate: awaiting registrant'
+  end
+
+  def test_show_lists_registrant_confirmation_log
+    operation_id = SecureRandom.uuid
+    PendingOperationEvent.create!(pending_operation_id: operation_id, domain_id: @domain.id, domain_name: @domain.name,
+                                  operation: 'domain_registrant_change', event: 'email_sent', occurred_at: Time.current,
+                                  actor_type: 'system', recipient_email: 'old-registrant@inbox.test')
+    PendingOperationEvent.create!(pending_operation_id: operation_id, domain_id: @domain.id, domain_name: @domain.name,
+                                  operation: 'domain_registrant_change', event: 'approved', occurred_at: Time.current,
+                                  actor_type: 'registrant', actor_name: 'Old Registrant',
+                                  identity: { 'registrant_ident' => 'EE-38903110313' }, authenticated_at: Time.current)
+
+    get admin_domain_version_path(@version.id)
+
+    assert_includes response.body, 'Registrant confirmation log'
+    assert_includes response.body, 'old-registrant@inbox.test'
+    assert_includes response.body, 'registrant: Old Registrant'
+    assert_includes response.body, '(EE-38903110313)'
+  end
+
   def test_show_with_page_parameter
     get admin_domain_version_path(@version.id), params: { page: 2 }
     

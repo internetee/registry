@@ -13,6 +13,7 @@ class DomainDeleteConfirmJobTest < ActiveSupport::TestCase
   end
 
   def test_rejected_registrant_verification_notifies_registrar
+    @domain.update!(statuses: [DomainStatus::PENDING_DELETE_CONFIRMATION], registrant_verification_token: 'test-token', registrant_verification_asked_at: Time.current)
     @domain.update!(pending_json: { new_registrant_id: @new_registrant.id,
       new_registrant_name: @new_registrant.name,
       new_registrant_email: @new_registrant.email,
@@ -26,6 +27,7 @@ class DomainDeleteConfirmJobTest < ActiveSupport::TestCase
   end
 
   def test_accepted_registrant_verification_notifies_registrar
+    @domain.update!(statuses: [DomainStatus::PENDING_DELETE_CONFIRMATION], registrant_verification_token: 'test-token', registrant_verification_asked_at: Time.current)
     @domain.update!(pending_json: { new_registrant_id: @new_registrant.id,
       new_registrant_name: @new_registrant.name,
       new_registrant_email: @new_registrant.email,

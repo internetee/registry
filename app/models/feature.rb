@@ -1,4 +1,13 @@
 class Feature
+  def self.registrant_confirmation_eeid_required?
+    value = ENV['registrant_confirmation_eeid_required_from'].presence || '2027-01-18T00:00:00+02:00'
+    return true unless value.match?(/(?:Z|[+-]\d{2}:\d{2})\z/)
+
+    Time.zone.now >= Time.iso8601(value)
+  rescue ArgumentError
+    true
+  end
+
   def self.billing_system_integrated?
     return false if ENV['billing_system_integrated'] == 'false'
 

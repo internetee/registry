@@ -15,27 +15,27 @@ class RegistrantVerification < ApplicationRecord
 
   validates :verification_token, :domain, :action, :action_type, presence: true
 
-  def domain_registrant_change_confirm!(initiator)
+  def domain_registrant_change_confirm!(initiator, actor = nil)
     self.action_type = DOMAIN_REGISTRANT_CHANGE
     self.action = CONFIRMED
-    DomainUpdateConfirmJob.perform_later domain.id, CONFIRMED, initiator if save
+    DomainUpdateConfirmJob.perform_later domain.id, CONFIRMED, initiator, actor, PendingOperationEvent.operation_id(verification_token) if save
   end
 
-  def domain_registrant_change_reject!(initiator)
+  def domain_registrant_change_reject!(initiator, actor = nil)
     self.action_type = DOMAIN_REGISTRANT_CHANGE
     self.action = REJECTED
-    DomainUpdateConfirmJob.perform_later domain.id, REJECTED, initiator if save
+    DomainUpdateConfirmJob.perform_later domain.id, REJECTED, initiator, actor, PendingOperationEvent.operation_id(verification_token) if save
   end
 
-  def domain_registrant_delete_confirm!(initiator)
+  def domain_registrant_delete_confirm!(initiator, actor = nil)
     self.action_type = DOMAIN_DELETE
     self.action = CONFIRMED
-    DomainDeleteConfirmJob.perform_later(domain.id, CONFIRMED, initiator) if save
+    DomainDeleteConfirmJob.perform_later(domain.id, CONFIRMED, initiator, actor, PendingOperationEvent.operation_id(verification_token)) if save
   end
 
-  def domain_registrant_delete_reject!(initiator)
+  def domain_registrant_delete_reject!(initiator, actor = nil)
     self.action_type = DOMAIN_DELETE
     self.action = REJECTED
-    DomainDeleteConfirmJob.perform_later(domain.id, REJECTED, initiator) if save
+    DomainDeleteConfirmJob.perform_later(domain.id, REJECTED, initiator, actor, PendingOperationEvent.operation_id(verification_token)) if save
   end
 end

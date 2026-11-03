@@ -49,17 +49,18 @@
 
           %br
 
+          - statuses = Array(@resolver ? @resolver.value_after_change('statuses') : @domain.statuses)
+          - status_notes = (@resolver ? @resolver.value_after_change('status_notes') : @domain.status_notes) || {}
           %dt= t(:statuses)
           %dd{class: changing_css_class(@version,"statuses")}
-            - if @domain.statuses.present?
-              - @domain.statuses.each do |s|
-                = s
+            = statuses.join(' ')
 
           %dt= "Status notes"
-          %dd{class: changing_css_class(@version,"statuses")}
-            - if @domain.status_notes.present?
-              - @domain.status_notes.each do |s|
-                = s
+          %dd{class: changing_css_class(@version,"status_notes")}
+            - statuses.each do |s|
+              - if status_notes[s].present?
+                = "#{s}: #{status_notes[s]}"
+                %br
 
           %dt= t('.registrant')
           %dd{class: changing_css_class(@version,"registrant_id")}
@@ -153,3 +154,32 @@
               = vs.event
       %span{:style => "padding-left:10px; position: absolute; bottom: 10px;"}
         = paginate @versions
+
+- if @pending_operation_events.any?
+  .row
+    .col-md-12
+      .panel.panel-default
+        .panel-heading
+          %h3.panel-title Registrant confirmation log
+        %table.table.table-condensed
+          %thead
+            %tr
+              %th Time
+              %th Operation
+              %th Event
+              %th By
+              %th Email
+          %tbody
+            - @pending_operation_events.each do |e|
+              %tr
+                %td= l(e.occurred_at)
+                %td= e.operation
+                %td= e.event
+                %td
+                  = [e.actor_type, e.actor_name].compact.join(': ')
+                  - if (ident = e.identity&.dig('registrant_ident')).present?
+                    = "(#{ident})"
+                  - if e.authenticated_at
+                    %br
+                    = "eeID login #{l(e.authenticated_at)}"
+                %td= e.recipient_email

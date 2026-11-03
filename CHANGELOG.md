@@ -1,3 +1,9 @@
+02.11.2026
+* Require eeID authentication for pending registrant change and domain deletion confirmations https://github.com/internetee/registry/issues/2975
+* Deploy: run migrations before restarting; set registrant_confirmation_eeid_required_from for the .ee test environment; eeID login is required in registrant_center after activation https://github.com/internetee/registry/issues/2975
+* Admin domain history: each version shows its own statuses and status notes instead of the current ones; blank notes are hidden https://github.com/internetee/registry/issues/2975
+* Admin domain history shows the registrant confirmation log: request, email recipient, eeID login and the registrant's decision with time and identity https://github.com/internetee/registry/issues/2975
+
 29.10.2026
 * BusinessReg: Add option for payments with an invoice https://github.com/internetee/registry/issues/2970
 

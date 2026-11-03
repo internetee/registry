@@ -68,6 +68,7 @@ module Admin
       item_id = @resolver&.item_id || @domain.id
       @versions = Version::DomainVersion.where(item_id: item_id).order(created_at: :desc, id: :desc)
       @versions_map = @versions.all.map(&:id)
+      @pending_operation_events = PendingOperationEvent.where(domain_id: item_id).order(:occurred_at, :id)
 
       get_page if params[:page].blank?
       @versions = @versions.page(params[:page]).per(PER_PAGE)

@@ -22,12 +22,21 @@ class AuthTokenDecryptor
     plain = decipher.update(base64_decoded) + decipher.final
 
     @decrypted_data = JSON.parse(plain, symbolize_names: true)
-  rescue OpenSSL::Cipher::CipherError, ArgumentError
+  rescue OpenSSL::Cipher::CipherError, ArgumentError, JSON::ParserError, TypeError
     false
   end
 
+  def authenticated_at
+    value = decrypted_data&.dig(:authenticated_at)
+    return if value.blank?
+
+    value.to_s.match?(/\A\d+\z/) ? Time.at(value.to_i).utc : Time.iso8601(value.to_s)
+  rescue ArgumentError, RangeError
+    nil
+  end
+
   def valid?
-    decrypted_data && valid_user? && still_valid?
+    decrypted_data.is_a?(Hash) && valid_user? && still_valid?
   end
 
   private
@@ -38,6 +47,8 @@ class AuthTokenDecryptor
   end
 
   def still_valid?
-    decrypted_data[:expires_at] > Time.now
+    Time.parse(decrypted_data[:expires_at].to_s) > Time.now
+  rescue ArgumentError, TypeError
+    false
   end
 end

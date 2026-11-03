@@ -10,7 +10,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
     @user = users(:api_bestnames)
     @legal_doc_path = "#{'test' * 2000}"
 
-    @domain.update!(pending_json: { new_registrant_id: @new_registrant.id,
+    @domain.update!(registrant_verification_token: 'test-token', registrant_verification_asked_at: Time.current, pending_json: { new_registrant_id: @new_registrant.id,
                                     new_registrant_name: @new_registrant.name,
                                     new_registrant_email: @new_registrant.email,
                                     current_user_id: @user.id })
@@ -37,6 +37,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
   end
 
   def test_rejected_registrant_verification_notifies_registrar
+    @domain.update!(statuses: [DomainStatus::PENDING_UPDATE])
     DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::REJECTED)
 
     last_registrar_notification = @domain.registrar.notifications.last
@@ -45,6 +46,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
   end
 
   def test_accepted_registrant_verification_notifies_registrar
+    @domain.update!(statuses: [DomainStatus::PENDING_UPDATE])
     DomainUpdateConfirmJob.perform_now(@domain.id, RegistrantVerification::CONFIRMED)
 
     last_registrar_notification = @domain.registrar.notifications.last
@@ -53,6 +55,7 @@ class DomainUpdateConfirmJobTest < ActiveSupport::TestCase
   end
 
   def test_changes_domain_registrant_after_approval
+    @domain.update!(statuses: [DomainStatus::PENDING_UPDATE])
     epp_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<epp>\n  <command>\n    <update>\n      <update>\n        <name>#{@domain.name}</name>\n" \
     "        <chg>\n          <registrant>#{@new_registrant.code}</registrant>\n        </chg>\n      </update>\n    </update>\n    <extension>\n      <update/>\n" \
     "      <extdata>\n        <legalDocument type=\"pdf\">#{@legal_doc_path}</legalDocument>\n      </extdata>\n" \
