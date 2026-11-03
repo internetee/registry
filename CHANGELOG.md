@@ -1,5 +1,6 @@
-10.08.2026
-* Registrars can now cancel a pending registrant change https://github.com/internetee/registry/issues/2939
+03.11.2026
+* Allow legal persons to send name and email in disclosed attributes https://github.com/internetee/registry/pull/2971
+* Enable registrars to cancel pending registrant change https://github.com/internetee/registry/issues/2939
 
 29.10.2026
 * BusinessReg: Add option for payments with an invoice https://github.com/internetee/registry/issues/2970
@@ -37,6 +38,9 @@
 * Expired domain reservations are removed daily at 00:35 by cron (ReservedDomain.release_expired); removal reason is recorded in the reservation audit log https://github.com/internetee/registry/issues/2963
 01.10.2026
 * Business registry reservations expire at the end of the last full day (23:59:59) instead of exact activation time https://github.com/internetee/registry/issues/2961
+
+10.08.2026
+* Registrars can now cancel a pending registrant change https://github.com/internetee/registry/issues/2939
 
 23.07.2026
 * Operations with pending status now return result code 1001 in REPP https://github.com/internetee/registry/issues/2940
