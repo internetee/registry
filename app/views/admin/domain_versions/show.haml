@@ -49,17 +49,18 @@
 
           %br
 
+          - statuses = Array(@resolver ? @resolver.value_after_change('statuses') : @domain.statuses)
+          - status_notes = (@resolver ? @resolver.value_after_change('status_notes') : @domain.status_notes) || {}
           %dt= t(:statuses)
           %dd{class: changing_css_class(@version,"statuses")}
-            - if @domain.statuses.present?
-              - @domain.statuses.each do |s|
-                = s
+            = statuses.join(' ')
 
           %dt= "Status notes"
-          %dd{class: changing_css_class(@version,"statuses")}
-            - if @domain.status_notes.present?
-              - @domain.status_notes.each do |s|
-                = s
+          %dd{class: changing_css_class(@version,"status_notes")}
+            - statuses.each do |s|
+              - if status_notes[s].present?
+                = "#{s}: #{status_notes[s]}"
+                %br
 
           %dt= t('.registrant')
           %dd{class: changing_css_class(@version,"registrant_id")}
