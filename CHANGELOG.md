@@ -1,3 +1,6 @@
+10.08.2026
+* Registrars can now cancel a pending registrant change https://github.com/internetee/registry/issues/2939
+
 29.10.2026
 * BusinessReg: Add option for payments with an invoice https://github.com/internetee/registry/issues/2970
 
