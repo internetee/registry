@@ -517,6 +517,14 @@ class EppDomainUpdateBaseTest < EppTestCase
     refute_includes @domain.statuses, DomainStatus::PENDING_UPDATE
   end
 
+  def test_asks_verification_when_registrant_has_same_ident_but_different_country_code
+    assert_registrant_change_verification_asked(ident_country_code: 'LV')
+  end
+
+  def test_asks_verification_when_registrant_has_same_ident_but_different_ident_type
+    assert_registrant_change_verification_asked(ident_type: 'org')
+  end
+
   def test_skips_verification_when_provided_registrant_is_the_same_as_current_one
     Setting.request_confirmation_on_registrant_change_enabled = true
 
@@ -1184,5 +1192,45 @@ class EppDomainUpdateBaseTest < EppTestCase
 
   def assert_verification_and_notification_emails
     assert_emails 2
+  end
+
+  def assert_registrant_change_verification_asked(different_attrs)
+    Setting.request_confirmation_on_registrant_change_enabled = true
+
+    current = @domain.registrant
+    new_registrant = contacts(:william)
+    new_registrant.update_columns(
+      { ident: current.ident, ident_type: current.ident_type,
+        ident_country_code: current.ident_country_code }.merge(different_attrs)
+    )
+
+    request_xml = <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="#{Xsd::Schema.filename(for_prefix: 'epp-ee', for_version: '1.0')}">
+        <command>
+          <update>
+            <domain:update xmlns:domain="#{Xsd::Schema.filename(for_prefix: 'domain-ee', for_version: '1.2')}">
+              <domain:name>#{@domain.name}</domain:name>
+              <domain:chg>
+                <domain:registrant>#{new_registrant.code}</domain:registrant>
+              </domain:chg>
+            </domain:update>
+          </update>
+          <extension>
+            <eis:extdata xmlns:eis="#{Xsd::Schema.filename(for_prefix: 'eis', for_version: '1.0')}">
+              <eis:legalDocument type="pdf">#{'test' * 2000}</eis:legalDocument>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+
+    post epp_update_path, params: { frame: request_xml },
+                          headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    @domain.reload
+
+    assert_epp_response :completed_successfully_action_pending
+    assert_includes @domain.statuses, DomainStatus::PENDING_UPDATE
+    assert_equal current, @domain.registrant
   end
 end
