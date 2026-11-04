@@ -66,7 +66,7 @@ module Actions
     def replace_domain_registrant(new_registrant)
       return if domain.registrant == new_registrant
 
-      @changes_registrant = true if domain.registrant.ident != new_registrant.ident
+      @changes_registrant = true unless domain.registrant.identical_to?(new_registrant)
       if @changes_registrant && domain.registrant_change_prohibited?
         domain.add_epp_error(2304, 'status', DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED,
                              I18n.t(:object_status_prohibits_operation))
