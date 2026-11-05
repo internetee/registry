@@ -90,6 +90,7 @@ class Domain < ApplicationRecord
 
   has_many :legal_documents, as: :documentable
   has_many :registrant_verifications, dependent: :destroy
+  has_many :pending_notifications, class_name: 'DomainPendingNotification', dependent: :delete_all
   has_one :csync_record, dependent: :destroy
 
   attribute :skip_whois_record_update, :boolean, default: false

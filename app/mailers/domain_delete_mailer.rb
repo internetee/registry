@@ -5,6 +5,8 @@ class DomainDeleteMailer < ApplicationMailer
     @confirmation_url = registrant_confirm_url(domain: domain, method: 'delete')
 
     subject = default_i18n_subject(domain_name: domain.name)
+    log_pending_notification(domain, DomainPendingNotification::DELETE_CONFIRMATION,
+                             registrant.email)
     mail(to: registrant.email, subject: subject)
   end
 
