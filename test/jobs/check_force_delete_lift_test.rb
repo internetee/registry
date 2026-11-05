@@ -159,4 +159,34 @@ class CheckForceDeleteLiftTest < ActiveSupport::TestCase
     assert_equal original_notes, @domain.status_notes[DomainStatus::FORCE_DELETE],
                  'Status notes for invalid_company should not be modified'
   end
+
+  def test_lifts_deceased_admin_contact_force_delete_when_living_admin_contact_is_added
+    domain = deceased_admin_contact_force_delete
+    domain.admin_domain_contacts.create!(contact: contacts(:william))
+
+    CheckForceDeleteLift.perform_now
+
+    domain.reload
+    assert_not domain.force_delete_scheduled?
+    assert_nil domain.template_name
+  end
+
+  def test_keeps_deceased_admin_contact_force_delete_while_only_deceased_admin_contact_remains
+    domain = deceased_admin_contact_force_delete
+
+    CheckForceDeleteLift.perform_now
+
+    assert domain.reload.force_delete_scheduled?
+  end
+
+  private
+
+  def deceased_admin_contact_force_delete
+    domain = domains(:library)
+    domain.admin_contacts.each { |contact| contact.update_columns(death_date: Date.new(2026, 1, 1)) }
+    domain.schedule_force_delete(type: :soft, notify_by_email: true, reason: 'deceased_admin_contact',
+                                 notes: 'Admin contact acme-ltd-001 has died')
+    assert_equal 'deceased_admin_contact', domain.reload.template_name
+    domain
+  end
 end
