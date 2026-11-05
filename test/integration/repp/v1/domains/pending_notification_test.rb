@@ -59,6 +59,15 @@ class ReppV1DomainsPendingNotificationTest < ActionDispatch::IntegrationTest
                  show_pending[:notifications].map { |n| n[:kind] }
   end
 
+  def test_list_filters_domains_with_pending_operation
+    request_registrant_change
+
+    get '/repp/v1/domains', headers: @auth_headers, params: { details: true, q: { with_pending_operation: true } }
+    names = JSON.parse(response.body, symbolize_names: true)[:data][:domains].map { |d| d[:name] }
+
+    assert_equal [@domain.name], names
+  end
+
   def test_returns_error_without_pending_operation
     post "/repp/v1/domains/#{@domain.name}/pending_notification", headers: @auth_headers
 

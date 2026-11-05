@@ -279,7 +279,18 @@ class Domain < ApplicationRecord
     statuses.include? DomainStatus::SERVER_TECH_CHANGE_PROHIBITED
   end
 
+  PENDING_OPERATION_STATUSES = [DomainStatus::PENDING_UPDATE,
+                                DomainStatus::PENDING_DELETE_CONFIRMATION,
+                                DomainStatus::PENDING_DELETE].freeze
+
+  # Ransack scope: statuses_contains_array is AND-only, "any pending status" needs overlap
+  scope :with_pending_operation, -> { where('domains.statuses && ARRAY[?]::varchar[]', PENDING_OPERATION_STATUSES) }
+
   class << self
+    def ransackable_scopes(*)
+      %i[with_pending_operation]
+    end
+
     def ransackable_associations(*)
       authorizable_ransackable_associations
     end
