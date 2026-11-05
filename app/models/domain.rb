@@ -284,7 +284,9 @@ class Domain < ApplicationRecord
                                 DomainStatus::PENDING_DELETE].freeze
 
   # Ransack scope: statuses_contains_array is AND-only, "any pending status" needs overlap
-  scope :with_pending_operation, -> { where('domains.statuses && ARRAY[?]::varchar[]', PENDING_OPERATION_STATUSES) }
+  scope :with_pending_operation, lambda {
+    where('domains.statuses && ARRAY[?]::varchar[]', PENDING_OPERATION_STATUSES)
+  }
 
   class << self
     def ransackable_scopes(*)

@@ -8,7 +8,8 @@ module Domains
 
     def execute
       if domain.pending_update?
-        RegistrantChangeConfirmEmailJob.perform_later(domain.id, domain.pending_json['new_registrant_id'])
+        RegistrantChangeConfirmEmailJob.perform_later(domain.id,
+                                                      domain.pending_json['new_registrant_id'])
       else
         Domains::DeleteConfirmEmail::SendRequest.run(domain: domain)
       end
