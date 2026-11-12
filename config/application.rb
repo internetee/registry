@@ -75,6 +75,7 @@ module DomainNameRegistry
     config.action_mailer.default_options = { from: ENV['action_mailer_default_from'] }
 
     config.action_mailer.interceptors = ["Interceptors::PunycodeInterceptor"]
+    config.action_mailer.observers = ["Observers::PendingNotificationObserver"]
 
     config.action_view.default_form_builder = 'DefaultFormBuilder'
     config.secret_key_base = Figaro.env.secret_key_base

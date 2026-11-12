@@ -86,6 +86,31 @@ class ReppV1DomainsPendingNotificationTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  class FailingDelivery
+    def initialize(*); end
+
+    def deliver!(_mail)
+      raise Net::SMTPFatalError, 'rejected'
+    end
+  end
+
+  def test_does_not_log_email_that_failed_to_deliver
+    request_registrant_change
+    travel 2.minutes
+    ActionMailer::Base.add_delivery_method :failing, FailingDelivery
+    ActionMailer::Base.raise_delivery_errors = true
+    ActionMailer::Base.delivery_method = :failing
+
+    assert_raises(Net::SMTPFatalError) do
+      RegistrantChangeConfirmEmailJob.perform_now(@domain.id, @domain.pending_json['new_registrant_id'])
+    end
+
+    assert_equal 0, @domain.pending_notifications.count
+  ensure
+    ActionMailer::Base.raise_delivery_errors = false
+    ActionMailer::Base.delivery_method = :test
+  end
+
   private
 
   def request_registrant_change

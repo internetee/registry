@@ -2,8 +2,10 @@ class ApplicationMailer < ActionMailer::Base
   append_view_path Rails.root.join('app/views/mailers')
   layout 'mailer'
 
-  def log_pending_notification(domain, kind, recipients)
-    DomainPendingNotification.create!(domain: domain, kind: kind, recipients: Array(recipients))
+  # Header read by Observers::PendingNotificationObserver, which logs the email
+  # only after it was actually delivered.
+  def pending_notification(domain, kind)
+    { Observers::PendingNotificationObserver::HEADER => "#{domain.id}:#{kind}" }
   end
 
   def registrant_confirm_url(domain:, method:)
