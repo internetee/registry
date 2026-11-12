@@ -25,6 +25,7 @@ module Serializers
           dispute: Dispute.active.exists?(domain_name: obj.name)
         }
         json[:transfer_code] = obj.auth_info if @sponsored
+        json[:pending] = pending if @sponsored
         json
       end
       # rubocop:enable Metrics/MethodLength
@@ -65,6 +66,20 @@ module Serializers
           statuses_with_notes.merge!({ "#{status}": status_note })
         end
         statuses_with_notes.with_indifferent_access
+      end
+
+      # Present only while a registrant confirmation is awaited; the log is limited to
+      # the emails sent for the current request.
+      def pending
+        return unless domain.registrant_verification_asked?
+
+        asked_at = domain.registrant_verification_asked_at
+        notifications = domain.pending_notifications.where('created_at >= ?', asked_at)
+                              .order(:created_at)
+        { requested_at: asked_at,
+          notifications: notifications.map do |n|
+            { kind: n.kind, sent_at: n.created_at, recipients: n.recipients }
+          end }
       end
 
       private

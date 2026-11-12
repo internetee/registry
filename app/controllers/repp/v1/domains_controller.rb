@@ -237,7 +237,7 @@ module Repp
         params.permit(:limit, :offset, :details, :simple, :q,
                       q: %i[s name_matches registrant_code_eq contacts_ident_eq
                             nameservers_hostname_eq valid_to_gteq valid_to_lteq
-                            statuses_contains_array] + [s: []])
+                            statuses_contains_array with_pending_operation] + [s: []])
       end
 
       def search_params

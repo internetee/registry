@@ -1020,6 +1020,38 @@ ALTER SEQUENCE public.domain_contacts_id_seq OWNED BY public.domain_contacts.id;
 
 
 --
+-- Name: domain_pending_notifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.domain_pending_notifications (
+    id bigint NOT NULL,
+    domain_id integer NOT NULL,
+    kind character varying NOT NULL,
+    recipients character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: domain_pending_notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.domain_pending_notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: domain_pending_notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.domain_pending_notifications_id_seq OWNED BY public.domain_pending_notifications.id;
+
+
+--
 -- Name: domain_transfers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3357,6 +3389,13 @@ ALTER TABLE ONLY public.domain_contacts ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: domain_pending_notifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_pending_notifications ALTER COLUMN id SET DEFAULT nextval('public.domain_pending_notifications_id_seq'::regclass);
+
+
+--
 -- Name: domain_transfers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3891,6 +3930,14 @@ ALTER TABLE ONLY public.dnskeys
 
 ALTER TABLE ONLY public.domain_contacts
     ADD CONSTRAINT domain_contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: domain_pending_notifications domain_pending_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_pending_notifications
+    ADD CONSTRAINT domain_pending_notifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -4621,6 +4668,13 @@ CREATE INDEX index_domain_contacts_on_contact_id ON public.domain_contacts USING
 --
 
 CREATE INDEX index_domain_contacts_on_domain_id ON public.domain_contacts USING btree (domain_id);
+
+
+--
+-- Name: index_domain_pending_notifications_on_domain_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domain_pending_notifications_on_domain_id ON public.domain_pending_notifications USING btree (domain_id);
 
 
 --
@@ -5432,6 +5486,14 @@ ALTER TABLE ONLY public.prices
 
 
 --
+-- Name: domain_pending_notifications fk_rails_7d8e096d15; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_pending_notifications
+    ADD CONSTRAINT fk_rails_7d8e096d15 FOREIGN KEY (domain_id) REFERENCES public.domains(id) ON DELETE CASCADE;
+
+
+--
 -- Name: domain_transfers fk_rails_833ed7f3c0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6085,6 +6147,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261005090100'),
 ('20261005090200'),
 ('20261012120000'),
-('20261016100000');
+('20261016100000'),
+('20261105100000');
 
 
