@@ -33,6 +33,11 @@ module Admin
         contacts = contacts.where("ident_country_code is null or ident_country_code=''")
       end
 
+      case params[:death_registry]
+      when 'deceased' then contacts = contacts.where.not(death_date: nil)
+      when 'not_checked' then contacts = contacts.where(death_registry_checked_at: nil)
+      end
+
       contacts
     end
 

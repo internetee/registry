@@ -23,12 +23,21 @@ class MassAction
       dn = Domain.find_by(name_puny: e['domain_name'])
       log[:fail] << e['domain_name'] and next unless dn
 
-      dn.schedule_force_delete(type: :soft, notify_by_email: true, reason: e['delete_reason'])
+      dn.schedule_force_delete(type: :soft, notify_by_email: true, reason: force_delete_reason(dn, e['delete_reason']))
 
       log[:ok] << dn.name
     end
 
     log
+  end
+
+  # ENTITY_BURIED has no letter of its own. Without an explicit letter the
+  # template is guessed from the domain data, and a contact with a failing
+  # email would get the invalid email letter instead.
+  def self.force_delete_reason(domain, delete_reason)
+    return delete_reason unless delete_reason == 'ENTITY_BURIED'
+
+    domain.registrant.org? ? 'legal_person' : 'private_person'
   end
 
   def self.force_delete_entries_valid?(entries)

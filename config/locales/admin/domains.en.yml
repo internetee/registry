@@ -35,6 +35,14 @@ en:
         notify_by_email: Notify registrant and administrative contacts by email
         use_soft_delete: Use soft delete procedure
         email_template: Email template
+        reason: Reason
+        reason_hint: The reason selects the email to the registrant and administrative contacts. "Other" sends no email.
+        reasons:
+          private_person: Registrant (private person) has died
+          legal_person: Registrant (company) is deleted from the Business Register
+          invalid_email: Invalid email
+          invalid_phone: Invalid phone
+          other: Other (no email)
         close_btn: Close dialog
         submit_btn: Force delete domain
 

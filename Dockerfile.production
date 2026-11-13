@@ -11,6 +11,11 @@ ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle"
 
+# bullseye is EOL: its packages were moved from deb.debian.org/security.debian.org to archive.debian.org
+RUN sed -i -e 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' \
+    -e 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' \
+    /etc/apt/sources.list
+
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 

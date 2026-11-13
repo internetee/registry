@@ -2,6 +2,9 @@ module Domains
   module ForceDelete
     class NotifyRegistrar < Base
       def execute
+        return notify_deceased_person if reason == 'deceased_person'
+        return notify_deceased_admin_contact if reason == 'deceased_admin_contact'
+
         email.present? ? notify_with_email : notify_without_email
       end
 
@@ -15,6 +18,27 @@ module Domains
         else
           (Time.zone.today + Setting.expire_warning_period.days)&.strftime('%d.%m.%Y')
         end
+      end
+
+      def notify_deceased_person
+        domain.registrar.notifications.create!(
+          text: I18n.t('force_delete_deceased_person',
+                       domain_name: domain.name,
+                       ident: domain.registrant.ident,
+                       force_delete_start_date: force_delete_start_date,
+                       outzone_date: domain.outzone_date,
+                       purge_date: domain.purge_date)
+        )
+      end
+
+      def notify_deceased_admin_contact
+        domain.registrar.notifications.create!(
+          text: I18n.t('force_delete_deceased_admin_contact',
+                       domain_name: domain.name,
+                       notes: notes,
+                       force_delete_start_date: domain.force_delete_start&.strftime('%d.%m.%Y') || '-',
+                       valid_to: domain.valid_to.strftime('%d.%m.%Y'))
+        )
       end
 
       def notify_without_email
