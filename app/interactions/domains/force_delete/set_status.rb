@@ -21,7 +21,11 @@ module Domains
 
       def force_delete_soft
         years = (domain.valid_to.to_date - Time.zone.today).to_i / 365
-        soft_forcedelete_dates(years) if years.positive?
+        if years.positive?
+          soft_forcedelete_dates(years)
+        elsif reason == 'deceased_admin_contact'
+          deceased_admin_contact_dates
+        end
       end
 
       private
@@ -34,6 +38,16 @@ module Domains
 
       def soft_forcedelete_dates(years)
         domain.force_delete_start = domain.valid_to - years.years
+        domain.force_delete_date = domain.force_delete_start +
+                                   Setting.expire_warning_period.days +
+                                   Setting.redemption_grace_period.days
+      end
+
+      # A domain expiring within a year gets no soft force delete dates, but the
+      # deceased admin contact email must name the deletion date. The process
+      # starts at expiry, or tomorrow if the domain has already expired.
+      def deceased_admin_contact_dates
+        domain.force_delete_start = [domain.valid_to, Time.zone.now.beginning_of_day + 1.day].max
         domain.force_delete_date = domain.force_delete_start +
                                    Setting.expire_warning_period.days +
                                    Setting.redemption_grace_period.days

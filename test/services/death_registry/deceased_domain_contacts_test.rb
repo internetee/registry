@@ -59,6 +59,51 @@ class DeathRegistryDeceasedDomainContactsTest < ActiveSupport::TestCase
                                              'has died according to the Estonian Population Register.%').exists?
   end
 
+  def test_soft_force_delete_dates_follow_expiry_anniversary_for_multiyear_domain
+    Setting.expire_warning_period = 15
+    Setting.redemption_grace_period = 30
+    travel_to Time.zone.parse('2026-11-13')
+    domain = domains(:library)
+    domain.update_columns(valid_to: Time.zone.parse('2029-03-01'))
+    domain_contacts(:library_acme_admin).update_columns(contact_id: @deceased.id)
+
+    call
+
+    domain.reload
+    assert_equal Time.zone.parse('2027-03-01'), domain.force_delete_start
+    assert_equal Date.new(2027, 4, 15), domain.force_delete_date
+  end
+
+  def test_soft_force_delete_starts_at_expiry_when_domain_expires_within_a_year
+    Setting.expire_warning_period = 15
+    Setting.redemption_grace_period = 30
+    travel_to Time.zone.parse('2026-11-13')
+    domain = domains(:library)
+    domain.update_columns(valid_to: Time.zone.parse('2027-02-01'))
+    domain_contacts(:library_acme_admin).update_columns(contact_id: @deceased.id)
+
+    call
+
+    domain.reload
+    assert_equal Time.zone.parse('2027-02-01'), domain.force_delete_start
+    assert_equal Date.new(2027, 3, 18), domain.force_delete_date
+  end
+
+  def test_soft_force_delete_starts_tomorrow_when_domain_has_expired
+    Setting.expire_warning_period = 15
+    Setting.redemption_grace_period = 30
+    travel_to Time.zone.parse('2026-11-13')
+    domain = domains(:library)
+    domain.update_columns(valid_to: Time.zone.parse('2026-11-01'))
+    domain_contacts(:library_acme_admin).update_columns(contact_id: @deceased.id)
+
+    call
+
+    domain.reload
+    assert_equal Time.zone.parse('2026-11-14'), domain.force_delete_start
+    assert_equal Date.new(2026, 12, 29), domain.force_delete_date
+  end
+
   def test_removes_deceased_admin_contact_when_organisation_has_another
     domain = domains(:library)
     domain_contacts(:library_acme_admin).update_columns(contact_id: @deceased.id)

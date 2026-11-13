@@ -100,6 +100,26 @@ class DomainDeleteMailerTest < ActionMailer::TestCase
     assert_includes email.html_part.body.to_s, 'administrative contact of the domain shop.test has died'
   end
 
+  def test_forced_deceased_admin_contact_names_dates_not_day_count
+    Setting.expire_warning_period = 15
+    @domain.update_columns(statuses: [DomainStatus::FORCE_DELETE],
+                           force_delete_start: Time.zone.parse('2027-03-01'),
+                           force_delete_date: Date.new(2027, 4, 15))
+
+    email = DomainDeleteMailer.forced(domain: @domain,
+                                      registrar: @domain.registrar,
+                                      registrant: @domain.registrant,
+                                      template_name: 'deceased_admin_contact').deliver_now
+
+    text = email.text_part.body.to_s
+    assert_includes text, 'Kui uut halduskontakti ei ole lisatud enne 2027-04-15'
+    assert_includes text, 'internetis kättesaadav kuni 2027-03-16'
+    assert_includes text, 'If no new administrative contact is added before 2027-04-15'
+    assert_includes text, 'remain available on the Internet until 2027-03-16'
+    assert_not_includes text, 'päeva jooksul'
+    assert_not_includes text, 'päeva pikkuse'
+  end
+
   def test_forced_deceased_person_uses_private_person_letter
     email = DomainDeleteMailer.forced(domain: @domain,
                                       registrar: @domain.registrar,

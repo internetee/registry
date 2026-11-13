@@ -400,17 +400,17 @@ Subject (all force delete emails): "Domeen %{domain_name} on kustutusmenetluses 
 >
 > If the transfer is not made within %{delete_period_length} days, the domain %{domain} will go to domain auction on %{force_delete_date} … (auction paragraph, registrar contacts and signature as in the existing template)
 
-**E2 — deceased admin contact (new template** `deceased_admin_contact`**, draft), sent at the soft force delete start:**
+**E2 — deceased admin contact (new template** `deceased_admin_contact`**, draft), sent at the soft force delete start.** The email names dates, not a day count: a soft force delete starts at the next anniversary of `valid_to`, so "45 days" would be wrong. `%{outzone_date}` = `force_delete_start` + `expire_warning_period`. If the domain expires within a year, the force delete starts at `valid_to` (tomorrow if already expired), so `%{force_delete_date}` is never empty:
 
 > Lugupeetud domeeni %{domain} registreerija/halduskontakt
 >
 > Eesti Interneti Sihtasutusele (EIS) on Rahvastikuregistri andmetel saanud teatavaks, et domeeni %{domain} halduskontakt on surnud. Domeenil peab olema kehtiv halduskontakt.
 >
-> Et see olukord on vastuolus .ee domeenireeglitega ([https://www.internet.ee/domains/ee-domain-regulation](https://www.internet.ee/domains/ee-domain-regulation)), algatas EIS %{delete_period_length} päeva pikkuse kustutusmenetluse. Kuni uus halduskontakt pole lisatud, ei saa domeeni pikendada ega registripidajat vahetada. Menetluse käigus on domeen %{expire_warning_period} esimest päeva internetis kättesaadav.
+> Et see olukord on vastuolus .ee domeenireeglitega ([https://www.internet.ee/domains/ee-domain-regulation](https://www.internet.ee/domains/ee-domain-regulation)), algatas EIS domeeni %{domain} suhtes kustutusmenetluse. Kuni uus halduskontakt pole lisatud, ei saa domeeni pikendada ega registripidajat vahetada. Menetluse käigus on domeen internetis kättesaadav kuni %{outzone_date}.
 >
 > Uue halduskontakti lisamiseks pöörduge palun oma registripidaja %{registrar} poole.
 >
-> Kui uut halduskontakti ei ole %{delete_period_length} päeva jooksul lisatud, läheb domeen %{domain} %{force_delete_date} domeenioksjonile .ee oksjonikeskkonda [https://auction.internet.ee](https://auction.internet.ee). …
+> Kui uut halduskontakti ei ole lisatud enne %{force_delete_date}, läheb domeen %{domain} %{force_delete_date} domeenioksjonile .ee oksjonikeskkonda [https://auction.internet.ee](https://auction.internet.ee). …
 >
 > ---
 >
@@ -418,11 +418,11 @@ Subject (all force delete emails): "Domeen %{domain_name} on kustutusmenetluses 
 >
 > According to the Estonian Population Register, the administrative contact of the domain %{domain} has died. The domain must have a valid administrative contact.
 >
-> Since this is a violation of Estonian domain regulations ([https://www.internet.ee/domains/ee-domain-regulation](https://www.internet.ee/domains/ee-domain-regulation)), %{delete_period_length}-day deletion process has started for the %{domain} domain. Until a new administrative contact is added, the domain cannot be renewed or transferred to another registrar. For the first %{expire_warning_period} days the domain will remain available on the Internet during the deletion process.
+> Since this is a violation of Estonian domain regulations ([https://www.internet.ee/domains/ee-domain-regulation](https://www.internet.ee/domains/ee-domain-regulation)), a deletion process has started for the %{domain} domain. Until a new administrative contact is added, the domain cannot be renewed or transferred to another registrar. During the deletion process the domain will remain available on the Internet until %{outzone_date}.
 >
 > To add a new administrative contact, please contact your registrar %{registrar}.
 >
-> If no new administrative contact is added within %{delete_period_length} days, the domain %{domain} will go to domain auction on %{force_delete_date} … (auction paragraph, registrar contacts and signature as in the existing templates)
+> If no new administrative contact is added before %{force_delete_date}, the domain %{domain} will go to domain auction on %{force_delete_date} … (auction paragraph, registrar contacts and signature as in the existing templates)
 
 No email is sent for: A1 (discovery), removal of an optional contact (B1, C1), a stopped or restored force delete (A4, A5).
 
