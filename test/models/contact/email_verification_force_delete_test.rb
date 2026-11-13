@@ -108,6 +108,59 @@ class EmailVerificationForceDeleteTest < ActiveJob::TestCase
     end
   end
 
+  def test_fast_track_invalid_company_is_not_lifted_by_tech_contact_validation
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    travel_to Time.zone.parse('2010-07-05')
+
+    @domain.schedule_force_delete(
+      type: :fast_track,
+      notify_by_email: false,
+      reason: 'invalid_company',
+      notes: 'Contact has status deleted + Kustutamiskanne'
+    )
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+    assert_nil @domain.template_name
+    assert_includes @domain.status_notes[DomainStatus::FORCE_DELETE],
+                    "Company no: #{@domain.registrant.ident}"
+
+    tech = contacts(:william)
+    assert_includes tech.domains, @domain
+    assert tech.need_to_lift_force_delete?
+
+    tech.remove_force_delete_for_valid_contact
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+    assert_includes @domain.statuses, DomainStatus::FORCE_DELETE
+    assert_includes @domain.statuses, DomainStatus::SERVER_RENEW_PROHIBITED
+    assert_includes @domain.statuses, DomainStatus::SERVER_TRANSFER_PROHIBITED
+    assert_not_includes @domain.statuses, DomainStatus::OK
+  end
+
+  def test_fast_track_invalid_email_is_lifted_when_contacts_are_valid
+    @domain.update(valid_to: Time.zone.parse('2012-08-05'))
+    travel_to Time.zone.parse('2010-07-05')
+
+    @domain.schedule_force_delete(
+      type: :fast_track,
+      notify_by_email: false,
+      reason: 'invalid_email',
+      email: @domain.registrant.email
+    )
+    @domain.reload
+
+    assert @domain.force_delete_scheduled?
+    assert_nil @domain.template_name
+
+    contacts(:william).remove_force_delete_for_valid_contact
+    @domain.reload
+
+    assert_not @domain.force_delete_scheduled?
+    assert_not_includes @domain.statuses, DomainStatus::FORCE_DELETE
+  end
+
   def test_cancel_force_delete_if_domain_attributes_are_valid_proceeds_for_invalid_email
     @domain.update(
       valid_to: Time.zone.parse('2012-08-05'),
