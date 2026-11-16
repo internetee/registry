@@ -16,7 +16,7 @@ class ReppV1DomainsPendingNotificationTest < ActionDispatch::IntegrationTest
   end
 
   def test_logs_sent_emails_and_shows_them_in_pending
-    perform_enqueued_jobs { request_registrant_change }
+    request_registrant_change
     travel 2.minutes
     perform_enqueued_jobs
 
