@@ -38,3 +38,5 @@ et:
               verification_error: Identifitseerimistaotluse saatmine ebaõnnestus
               not_pending_verification: Kinnitamist ootavat identifitseerimist pole
               missing_subject: Sisselogimise identifikaator on kinnitamiseks kohustuslik
+              subject_taken_by_user: "Isik %{subject} on selle registripidaja juures juba seotud API kasutajaga %{username}"
+              update_failed: "API kasutaja andmete salvestamine ebaõnnestus: %{reason}"

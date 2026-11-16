@@ -21,6 +21,24 @@ class AdminAreaReppLogsIntegrationTest < ApplicationSystemTestCase
     assert_text 'REPP log'
   end
 
+  def test_filters_and_marks_failed_identity_verifications
+    ApiLog::ReppLog.create!(request_path: '/repp/v1/contacts', request_method: 'GET', response_code: '200')
+    ApiLog::ReppLog.create!(
+      request_path: '/repp/v1/api_users/approve_verification/1', request_method: 'POST',
+      response_code: '400', api_user_name: 'approver',
+      response: { message: 'Identity EE1 is already linked to API user bob at this registrar',
+                  data: { verification_failed: true,
+                          api_user: { username: 'machine_user', identity_code: nil, subject: 'EE1' } } }.to_json
+    )
+
+    visit admin_repp_logs_path(failed_verifications: '1')
+
+    assert_text 'Identity verification failed'
+    assert_text 'machine_user (EE1)'
+    assert_text 'already linked to API user bob'
+    assert_no_link '/repp/v1/contacts'
+  end
+
   def test_download_repp_logs
     now = Time.zone.parse('2010-07-05 08:00')
     travel_to now

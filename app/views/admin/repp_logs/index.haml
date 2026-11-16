@@ -41,6 +41,12 @@
             &nbsp;
           = link_to(t('.csv_btn'), admin_repp_logs_path(format: :csv, params: params.permit!), class: 'btn btn-default')
           = link_to(t('.reset_btn'), admin_repp_logs_path, class: 'btn btn-default')
+      .row
+        .col-md-3
+          .checkbox
+            %label
+              = check_box_tag :failed_verifications, '1', params[:failed_verifications] == '1'
+              = t('.failed_verifications')
 %hr
 .row
   .col-md-12
@@ -63,7 +69,16 @@
         %tbody
           - @repp_logs.each do |x|
             %tr
-              %td= link_to(x.request_path, admin_repp_log_path(x))
+              %td
+                = link_to(x.request_path, admin_repp_log_path(x))
+                - if (failure = x.identity_verification_failure)
+                  %br
+                  %span.label.label-danger= t('.verification_failed')
+                  %div
+                    - if failure[:username].present?
+                      %strong= failure[:username]
+                      = "(#{failure[:identity_code].presence || failure[:subject].presence || '-'})"
+                    = failure[:message]
               %td= x.request_method
               %td= x.response_code
               %td= x.api_user_name
