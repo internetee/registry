@@ -1,3 +1,6 @@
+17.11.2026
+* Pending operations: notification log, resend and filter https://github.com/internetee/registry/pull/2981
+
 05.11.2026
 * Registrars can see the date and sent confirmation emails of a pending registrant change or delete, and resend the confirmation email (POST /repp/v1/domains/:name/pending_notification) https://github.com/internetee/registrar_center2/issues/237
 * GET /repp/v1/domains accepts q[with_pending_operation]=true to list only domains with pending operations https://github.com/internetee/registrar_center2/issues/237
