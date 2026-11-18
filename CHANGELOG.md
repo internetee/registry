@@ -1,3 +1,6 @@
+18.11.2026
+* Allow 1 character domains in email addresses https://github.com/internetee/registry/issues/2959
+
 17.11.2026
 * Pending operations: notification log, resend and filter https://github.com/internetee/registry/pull/2981
 
