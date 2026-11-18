@@ -8,7 +8,8 @@ class RegistrantChangeMailer < ApplicationMailer
     @confirmation_url = registrant_confirm_url(domain: domain, method: 'change')
 
     subject = default_i18n_subject(domain_name: domain.name)
-    mail(to: current_registrant.email, subject: subject)
+    mail(to: current_registrant.email, subject: subject,
+         **pending_notification(domain, DomainPendingNotification::REGISTRANT_CHANGE_CONFIRMATION))
   end
 
   def notification(domain:, registrar:, current_registrant:, new_registrant:)
@@ -18,7 +19,8 @@ class RegistrantChangeMailer < ApplicationMailer
     @new_registrant = RegistrantPresenter.new(registrant: new_registrant, view: view_context)
 
     subject = default_i18n_subject(domain_name: domain.name)
-    mail(to: new_registrant.email, subject: subject)
+    mail(to: new_registrant.email, subject: subject,
+         **pending_notification(domain, DomainPendingNotification::REGISTRANT_CHANGE_NOTICE))
   end
 
   def accepted(domain:, old_registrant:)
