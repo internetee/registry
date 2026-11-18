@@ -4,6 +4,7 @@ module Api
       class LongReserveDomainsController < BaseController
         before_action :domain_names
         before_action :validate_params
+        before_action :validate_buyer, only: [:create]
         before_action :available_domains?, only: [:create]
 
         def create
@@ -14,7 +15,7 @@ module Api
             return
           end
 
-          result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+          result = ReserveDomainInvoice.create_list_of_domains(@domain_names, buyer_params)
 
           if result.status_code_success
             render_success({ 
@@ -36,6 +37,22 @@ module Api
         def decode_linkpay_url(url)
           return url if url.blank?
           CGI.unescape(url.gsub('\u0026', '&'))
+        end
+
+        # Optional; same names as the invoice PDF endpoint takes
+        def buyer_params
+          {
+            buyer_name: params[:customer_name].presence,
+            buyer_email: params[:customer_email].presence,
+            buyer_address: params[:customer_address].presence,
+            buyer_country_code: params[:customer_country_code].presence&.upcase,
+            buyer_vat_no: params[:customer_vat_no].presence
+          }
+        end
+
+        def validate_buyer
+          buyer = ReserveDomainInvoice.new(buyer_params)
+          render_error(buyer.errors.full_messages.to_sentence, :bad_request) unless buyer.valid?
         end
 
         def domain_names

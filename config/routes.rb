@@ -343,6 +343,9 @@ Rails.application.routes.draw do
       end
     end
     resources :reserved_domain_lifecycles, only: %i[index show]
+    resources :reserve_domain_invoices, only: :index do
+      get 'download', on: :member
+    end
     resources :disputes do
       member do
         get 'delete'

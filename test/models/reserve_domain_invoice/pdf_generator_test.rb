@@ -112,6 +112,16 @@ class ReserveDomainInvoice::PdfGeneratorTest < ActiveSupport::TestCase
     assert_includes html, 'Tasutud summa'
   end
 
+  test 'renders stored buyer and payment date when the request brings none' do
+    @invoice.update!(buyer_name: 'Stored Buyer OÜ', buyer_vat_no: 'EE102', paid_at: Time.zone.parse('2026-10-21 10:00'))
+
+    html = render_for(paid: true)
+
+    assert_includes html, 'Stored Buyer OÜ'
+    assert_includes html, 'EE102'
+    assert_includes html, I18n.l(Date.new(2026, 10, 21))
+  end
+
   private
 
   def render_for(context = {})

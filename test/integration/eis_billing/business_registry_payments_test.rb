@@ -17,6 +17,7 @@ class EisBilling::BusinessRegistryPaymentsTest < ApplicationIntegrationTest
     assert_response :ok
     assert_equal 'Payment processed', JSON.parse(response.body)['message']
     assert @invoice.reload.paid?
+    assert_equal Date.new(2026, 10, 16), @invoice.paid_at.to_date
 
     reserved_domain = ReservedDomain.find_by(name: 'bank-transfer.test')
     assert reserved_domain.present?

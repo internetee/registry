@@ -2843,7 +2843,16 @@ CREATE TABLE public.reserve_domain_invoices (
     status integer DEFAULT 0,
     metainfo character varying,
     reference_no character varying,
-    due_date date
+    due_date date,
+    buyer_name character varying,
+    buyer_email character varying,
+    buyer_address character varying,
+    buyer_country_code character varying,
+    buyer_vat_no character varying,
+    total numeric(10,2),
+    vat_rate numeric(4,3),
+    paid_at timestamp without time zone,
+    in_directo boolean DEFAULT false NOT NULL
 );
 
 
@@ -6148,6 +6157,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261005090200'),
 ('20261012120000'),
 ('20261016100000'),
-('20261105100000');
+('20261105100000'),
+('20261118120000'),
+('20261118120100');
 
 
