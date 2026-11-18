@@ -1,6 +1,9 @@
 class RegistrantChangeNoticeEmailJob < ApplicationJob
   def perform(domain_id, new_registrant_id)
     domain = Domain.find(domain_id)
+    # Sent with a delay; the change may already be cancelled, confirmed or rejected.
+    return unless domain.pending_update?
+
     new_registrant = Registrant.find(new_registrant_id)
     log(domain, new_registrant)
     RegistrantChangeMailer.notification(domain: domain,
