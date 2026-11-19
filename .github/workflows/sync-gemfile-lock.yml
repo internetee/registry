@@ -34,7 +34,7 @@ jobs:
           owner: internetee
           repositories: registry
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.head_ref }}
           token: ${{ steps.app-token.outputs.token }}
