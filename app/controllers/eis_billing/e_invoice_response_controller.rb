@@ -1,17 +1,16 @@
 class EisBilling::EInvoiceResponseController < EisBilling::BaseController
   def update
-    invoice_number = params[:invoice_number]
+    invoice = find_invoice(params[:invoice_number])
+    return render status: :not_found, json: { message: 'Invoice not found' } if invoice.nil?
 
-    mark_e_invoice_sent_at(invoice_number)
+    invoice.update(e_invoice_sent_at: Time.zone.now)
     render status: :ok, json: { message: 'Response received' }
   end
 
   private
 
-  def mark_e_invoice_sent_at(invoice_number)
-    invoice = Invoice.find_by(number: invoice_number)
-    invoice = Invoice.find_by(number: invoice_number['invoice_number']) if invoice.nil?
-
-    invoice.update(e_invoice_sent_at: Time.zone.now)
+  def find_invoice(invoice_number)
+    Invoice.find_by(number: invoice_number) ||
+      Invoice.find_by(number: invoice_number.try(:[], 'invoice_number'))
   end
 end
