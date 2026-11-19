@@ -56,6 +56,29 @@ class LongReserveDomainsControllerTest < ApplicationIntegrationTest
     end
   end
 
+  test "stores buyer details sent with the reservation" do
+    post api_v1_business_registry_long_reserve_domains_path,
+      params: { domain_names: @valid_domain_names, customer_name: 'Future Company OÜ',
+                customer_email: 'founder@example.test', customer_country_code: 'ee' },
+      headers: @auth_headers
+
+    assert_response :created
+    invoice = ReserveDomainInvoice.last
+    assert_equal 'Future Company OÜ', invoice.buyer_name
+    assert_equal 'founder@example.test', invoice.buyer_email
+    assert_equal 'EE', invoice.buyer_country_code
+  end
+
+  test "rejects an invalid buyer country code" do
+    assert_no_difference 'ReserveDomainInvoice.count' do
+      post api_v1_business_registry_long_reserve_domains_path,
+        params: { domain_names: @valid_domain_names, customer_country_code: 'Estonia' },
+        headers: @auth_headers
+    end
+
+    assert_response :bad_request
+  end
+
   test "should return error when domain names parameter is missing" do
     post api_v1_business_registry_long_reserve_domains_path,
       headers: @auth_headers

@@ -1,0 +1,64 @@
+= render 'shared/title', name: t('.title')
+
+.row
+  .col-md-12
+    = search_form_for @q, url: admin_reserve_domain_invoices_path, html: { style: 'margin-bottom: 0;', autocomplete: 'off' } do |f|
+      .row
+        .col-md-3
+          .form-group
+            = f.label :invoice_number_eq, t('.number')
+            = f.search_field :invoice_number_eq, class: 'form-control'
+        .col-md-3
+          .form-group
+            = f.label :buyer_name_matches, t('.buyer')
+            = f.search_field :buyer_name_matches, class: 'form-control'
+        .col-md-3
+          .form-group
+            = f.label :status_eq, t(:status)
+            = f.select :status_eq, ReserveDomainInvoice.statuses.to_a, { include_blank: t(:choose) }, class: 'form-control'
+        .col-md-3{style: 'padding-top: 25px;'}
+          %button.btn.btn-primary
+            %span.glyphicon.glyphicon-search
+          = link_to(t('.reset_btn'), admin_reserve_domain_invoices_path, class: 'btn btn-default')
+%hr
+
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th= sort_link(@q, :invoice_number, t('.number'))
+            %th= sort_link(@q, :buyer_name, t('.buyer'))
+            %th= t('.domains')
+            %th= t('.total')
+            %th= sort_link(@q, :status, t(:status))
+            %th= sort_link(@q, :created_at, t('.issue_date'))
+            %th= t('.due_date')
+            %th= sort_link(@q, :paid_at, t('.paid_at'))
+            %th= t('.in_directo')
+            %th
+        %tbody
+          - @reserve_domain_invoices.each do |invoice|
+            %tr
+              %td= invoice.invoice_number
+              %td
+                = invoice.buyer_name
+                - if invoice.buyer_email.present?
+                  %br
+                  %small.text-muted= invoice.buyer_email
+              %td= invoice.domain_names.join(', ')
+              %td= number_to_currency(invoice.total, unit: '€')
+              %td= invoice.status
+              %td= l(invoice.created_at.to_date)
+              %td= l(invoice.due_date) if invoice.due_date
+              %td= l(invoice.paid_at, format: :short) if invoice.paid_at
+              %td= invoice.in_directo ? t('.yes') : t('.no')
+              %td= link_to(t(:download), download_admin_reserve_domain_invoice_path(invoice), class: 'btn btn-default btn-xs')
+
+.row
+  .col-md-6
+    = paginate @reserve_domain_invoices
+  .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @reserve_domain_invoices.total_count)

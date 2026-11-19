@@ -101,6 +101,8 @@ class Ability
     can :manage, BlockedDomain
     can :manage, ReservedDomain
     can :read, ReservedDomain::Lifecycle
+    can :read, ReserveDomainInvoice
+    can :download, ReserveDomainInvoice
     can :manage, DNS::Zone
     can :manage, Version::DomainVersion
     can :manage, Version::ContactVersion

@@ -123,6 +123,36 @@ class Api::V1::BusinessRegistry::ReservedDomainsInvoicePdfControllerTest < Actio
     assert_equal true, captured_context[:paid]
   end
 
+  test 'stores buyer details sent with the pdf request when the invoice has none' do
+    stub_unpaid_billing_status
+
+    ReserveDomainInvoice.stub_any_instance(:as_pdf, '%PDF-1.4 fake') do
+      get api_v1_business_registry_reserved_domains_invoice_pdf_path(invoice_number: @invoice.invoice_number,
+                                                                     user_unique_id: @invoice.metainfo,
+                                                                     customer_name: 'Name Surname (12345678901)',
+                                                                     customer_address: 'Tallinn'),
+          headers: @auth_headers
+    end
+
+    assert_response :success
+    assert_equal 'Name Surname (12345678901)', @invoice.reload.buyer_name
+    assert_equal 'Tallinn', @invoice.buyer_address
+  end
+
+  test 'keeps buyer details given when the reservation was made' do
+    @invoice.update!(buyer_name: 'Original OÜ')
+    stub_unpaid_billing_status
+
+    ReserveDomainInvoice.stub_any_instance(:as_pdf, '%PDF-1.4 fake') do
+      get api_v1_business_registry_reserved_domains_invoice_pdf_path(invoice_number: @invoice.invoice_number,
+                                                                     user_unique_id: @invoice.metainfo,
+                                                                     customer_name: 'Other OÜ'),
+          headers: @auth_headers
+    end
+
+    assert_equal 'Original OÜ', @invoice.reload.buyer_name
+  end
+
   test 'returns error when unpaid invoice is cancelled' do
     @invoice.cancelled!
     stub_unpaid_billing_status

@@ -41,6 +41,8 @@ class Api::V1::BusinessRegistry::LongReserveDomainsStatusControllerTest < Action
     assert_equal 'paid', json_response['status']
     assert_equal 'Payment received', json_response['message']
     assert_not_nil json_response['reserved_domains']
+    assert @invoice.reload.paid?
+    assert_not_nil @invoice.paid_at
   end
 
   test "paid invoice records paid_reservation audit on versions" do

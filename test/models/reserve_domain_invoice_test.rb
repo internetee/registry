@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class ReserveDomainInvoiceTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   TEST_USER_UNIQUE_ID = 'test123'
   REFERENCE_NO = '1234566'
   INVOICE_NUMBER = '12345'
@@ -276,6 +278,59 @@ class ReserveDomainInvoiceTest < ActiveSupport::TestCase
     end
 
     assert invoice.reload.paid?
+  end
+
+  test "stores buyer, price and VAT rate when the invoice is issued" do
+    buyer = { buyer_name: 'Future Company OÜ', buyer_email: 'founder@example.test', buyer_address: 'Tallinn',
+              buyer_country_code: 'EE', buyer_vat_no: nil }
+
+    ReserveDomainInvoice.create_list_of_domains(@domain_names, buyer)
+
+    invoice = ReserveDomainInvoice.last
+    assert_equal 'Future Company OÜ', invoice.buyer_name
+    assert_equal 'founder@example.test', invoice.buyer_email
+    assert_equal 'EE', invoice.buyer_country_code
+    assert_equal 20, invoice.total
+    assert_equal BigDecimal('0.2'), invoice.vat_rate
+    assert_requested(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator") do |request|
+      JSON.parse(request.body)['customer_name'] == 'Future Company OÜ'
+    end
+  end
+
+  test "keeps the issued price when the VAT rate changes later" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12360', domain_names: @domain_names, metainfo: 'vat')
+    Setting.registry_vat_prc = 0.24
+
+    assert_equal BigDecimal('0.2'), invoice.reload.vat_rate
+    assert_equal BigDecimal('8.33'), invoice.net_price_per_domain
+  end
+
+  test "records the payment date and queues the Directo forwarding" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12361', domain_names: @domain_names, metainfo: 'paid-at')
+    paid_at = Time.zone.parse('2026-11-10 12:00')
+
+    BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, @domain_names do
+      assert_enqueued_with(job: DirectoReserveDomainInvoiceForwardJob) do
+        invoice.reserve_paid_domains(paid_at: paid_at)
+      end
+    end
+
+    assert_equal paid_at, invoice.reload.paid_at
+  end
+
+  test "Directo lines and VAT add up to the paid total" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12362', domain_names: %w[a.test b.test c.test],
+                                           metainfo: 'directo', status: :paid, paid_at: Time.zone.parse('2026-11-10'),
+                                           buyer_name: 'Buyer OÜ', buyer_vat_no: 'EE101')
+
+    json = invoice.as_directo_json
+    lines_sum = json['invoice_lines'].sum { |line| BigDecimal(line['price']) }
+
+    assert_equal 12_362, json['number']
+    assert_equal '2026-11-10', json['transaction_date']
+    assert_equal({ 'name' => 'Buyer OÜ', 'code' => 'ERA', 'destination' => 'EE', 'vat_reg_no' => 'EE101' }, json['customer'])
+    assert_equal BigDecimal(json['total_wo_vat']), lines_sum
+    assert_equal invoice.total, lines_sum + BigDecimal(json['vat_amount'])
   end
 
   test "reserving paid domains cancels pending invoices with intersecting domains" do
