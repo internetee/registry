@@ -51,7 +51,37 @@ class Actions::ApiUserApproveVerificationTest < ActiveSupport::TestCase
       registrar: @api_user.registrar
     )
 
-    assert_not Actions::ApiUserApproveVerification.new(@api_user).call
-    assert @api_user.errors.added?(:subject, :taken)
+    action = Actions::ApiUserApproveVerification.new(@api_user)
+
+    assert_not action.call
+    assert_equal :subject_taken_by_user, action.failure_reason
+    assert @api_user.errors.added?(:base, :subject_taken_by_user,
+                                   subject: 'GBMANUAL123', username: users(:api_bestnames).username)
+    assert_includes action.failure_message, users(:api_bestnames).username
+  end
+
+  test 'approve returns validation errors instead of raising when user data is invalid' do
+    @api_user.update_columns(plain_text_password: '123')
+    action = Actions::ApiUserApproveVerification.new(@api_user)
+
+    assert_not action.call
+    assert_equal :update_failed, action.failure_reason
+    assert_equal 1, @api_user.errors.count
+    assert_match(/Saving API user data failed: Password is too short/, action.failure_message)
+
+    @api_user.reload
+    assert_nil @api_user.verified_at
+    assert @api_user.verification_pending_at.present?
+    assert_not_equal 'GBMANUAL123', @api_user.subject
+  end
+
+  test 'approve logs the failure reason' do
+    @api_user.update!(verification_snapshot: {})
+    logged = []
+    Rails.logger.stub(:warn, ->(msg) { logged << msg }) do
+      Actions::ApiUserApproveVerification.new(@api_user).call
+    end
+
+    assert(logged.any? { |msg| msg.include?('Manual approval failed') && msg.include?('reason=missing_subject') })
   end
 end

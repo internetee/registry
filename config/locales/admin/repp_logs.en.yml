@@ -5,6 +5,8 @@ en:
         title: REPP log
         reset_btn: Reset
         csv_btn: CSV
+        failed_verifications: Failed identity verifications only
+        verification_failed: Identity verification failed
       show:
         title: REPP log
 

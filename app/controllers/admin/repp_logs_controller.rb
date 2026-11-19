@@ -8,6 +8,7 @@ module Admin
       @q = ApiLog::ReppLog.ransack(PartialSearchFormatter.format(params[:q]))
       @q.sorts = 'id desc' if @q.sorts.empty?
       @result = @q.result
+      @result = @result.failed_identity_verifications if params[:failed_verifications] == '1'
       @repp_logs = @result
       if params[:q][:created_at_gteq].present?
         @repp_logs = @repp_logs.where("extract(epoch from created_at) >= extract(epoch from ?::timestamp)",
@@ -18,7 +19,7 @@ module Admin
                                       Time.parse(params[:q][:created_at_lteq]))
       end
       @repp_logs = @repp_logs.page(params[:page])
-      @count = @q.result.count
+      @count = @result.count
       @repp_logs = @repp_logs.per(params[:results_per_page]) if paginate?
 
       render_by_format('admin/repp_logs/index', 'repp_logs')

@@ -61,6 +61,47 @@ class ReppV1ApiUsersVerificationStateFlowTest < ActionDispatch::IntegrationTest
     assert_response :ok
   end
 
+  def test_failed_approval_returns_reason_and_is_logged_as_failed_verification
+    @api_user.update_columns(
+      verified_at: nil,
+      verification_pending_at: Time.zone.now,
+      verification_snapshot: { 'sub' => 'EE5555' }
+    )
+    @approver.update_columns(subject: 'EE5555')
+
+    post "/repp/v1/api_users/approve_verification/#{@api_user.id}", headers: @approver_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_includes json[:message], @approver.username
+    assert json[:data][:verification_failed]
+    assert_equal 'subject_taken_by_user', json[:data][:reason]
+    assert_equal @api_user.username, json[:data][:api_user][:username]
+    assert_equal 'EE5555', json[:data][:api_user][:subject]
+
+    log = ApiLog::ReppLog.failed_identity_verifications.order(:id).last
+    assert log.failed_identity_verification?
+    assert_equal @api_user.username, log.identity_verification_failure[:username]
+    assert_includes log.identity_verification_failure[:message], @approver.username
+  end
+
+  def test_approval_with_invalid_user_data_returns_bad_request_instead_of_server_error
+    @api_user.update_columns(
+      verified_at: nil,
+      verification_pending_at: Time.zone.now,
+      verification_snapshot: { 'sub' => 'EE5555' },
+      plain_text_password: '123'
+    )
+
+    post "/repp/v1/api_users/approve_verification/#{@api_user.id}", headers: @approver_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_equal 'update_failed', json[:data][:reason]
+    assert_match(/Password is too short/, json[:message])
+    assert_nil @api_user.reload.verified_at
+  end
+
   private
 
   def auth_headers_for(api_user)

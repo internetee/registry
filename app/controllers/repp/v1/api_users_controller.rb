@@ -95,12 +95,9 @@ module Repp
           subject: approve_verification_params[:subject]
         )
 
-        unless action.call
-          handle_non_epp_errors(@api_user)
-          return
-        end
+        return render_success(data: { api_user: { id: @api_user.id } }) if action.call
 
-        render_success(data: { api_user: { id: @api_user.id } })
+        render_verification_failure(action)
       end
 
       api :POST, '/repp/v1/api_users/reject_verification/:id'
@@ -130,6 +127,21 @@ module Repp
 
       def approve_verification_params
         params.fetch(:api_user, {}).permit(:subject)
+      end
+
+      # The response is stored in the REPP log, so it carries everything needed
+      # to find failed identity verifications there.
+      def render_verification_failure(action)
+        @response = {
+          message: action.failure_message,
+          data: {
+            verification_failed: true,
+            reason: action.failure_reason,
+            api_user: { id: @api_user.id, username: @api_user.username,
+                        identity_code: @api_user.identity_code, subject: action.subject },
+          },
+        }
+        render(json: @response, status: :bad_request)
       end
 
       def serialized_users(users)

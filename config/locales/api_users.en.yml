@@ -38,3 +38,5 @@ en:
               verification_error: Sending identification request failed
               not_pending_verification: No pending verification to approve or reject
               missing_subject: Login subject is required to approve verification
+              subject_taken_by_user: "Identity %{subject} is already linked to API user %{username} at this registrar"
+              update_failed: "Saving API user data failed: %{reason}"

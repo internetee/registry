@@ -14,7 +14,9 @@ class ApiUser < User
         %i[base not_pending_verification],
         %i[identity_code taken],
         %i[subject taken],
-        %i[base missing_subject]
+        %i[base missing_subject],
+        %i[base subject_taken_by_user],
+        %i[base update_failed]
       ]
     }
   end
