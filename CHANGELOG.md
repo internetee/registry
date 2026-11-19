@@ -1,3 +1,6 @@
+19.11.2026
+* Fix for auto-topup timeout issue https://github.com/internetee/registry/issues/2948
+
 18.11.2026
 * Allow 1 character domains in email addresses https://github.com/internetee/registry/issues/2959
 
