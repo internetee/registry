@@ -25,9 +25,12 @@ module EmailVerifable
   end
 
   def is_domain_has_invalid_org_contact?(domain)
-    return unless domain.force_delete_scheduled?
+    return false unless domain.force_delete_scheduled?
 
-    domain.status_notes.any? { |note| note.include?("Company no: #{domain.registrant.identifier.code}") }
+    note = domain.status_notes[DomainStatus::FORCE_DELETE]
+    return false if note.blank?
+
+    note.include?("Company no: #{domain.registrant.ident}")
   end
 
   def contact_emails_valid?(domain)
