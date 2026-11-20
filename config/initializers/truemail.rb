@@ -8,7 +8,8 @@ Truemail.configure do |config|
   # By default verifier domain based on verifier email
   # config.verifier_domain = 'internet.ee'
 
-  config.email_pattern = /\A(?=[\p{L}0-9!#$%&'*+\/=?^_{|}~-]*[\p{L}0-9])([\p{L}0-9!#$%&'*+\/=?^_{|}~-]+(?:\.[\p{L}0-9!#$%&'*+\/=?^_{|}~-]+)*)@(?i:(xn--)?(?:[\p{L}0-9][\p{L}0-9-]{0,61}[\p{L}0-9]\.)+[\p{L}]{2,63}|\[[\d.a-fA-F:]+\])\z/
+  # Host labels may be 1 char (smth@e.ee, smth@a.domain.ee); TLD stays 2+ letters.
+  config.email_pattern = /\A(?=[\p{L}0-9!#$%&'*+\/=?^_{|}~-]*[\p{L}0-9])([\p{L}0-9!#$%&'*+\/=?^_{|}~-]+(?:\.[\p{L}0-9!#$%&'*+\/=?^_{|}~-]+)*)@(?i:(xn--)?(?:[\p{L}0-9](?:[\p{L}0-9-]{0,61}[\p{L}0-9])?\.)+[\p{L}]{2,63}|\[[\d.a-fA-F:]+\])\z/
 
   # config.smtp_error_body_pattern = /regex_pattern/
 

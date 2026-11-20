@@ -7,6 +7,7 @@ en:
         api_users: API users
         admin_users: Admin users
         prices: Prices
+        reservation_invoices: Reservation invoices
         archive: Archive
         domain_history: Domain history
         contact_history: Contact history
