@@ -1,6 +1,12 @@
 FROM --platform=linux/amd64 ruby:3.0.3-bullseye
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# bullseye is EOL: its packages were moved from deb.debian.org/security.debian.org to archive.debian.org
+RUN sed -i -e 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' \
+    -e 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' \
+    /etc/apt/sources.list
+
 RUN apt-get update > /dev/null && apt-get install -y --no-install-recommends > /dev/null \
     build-essential=* \
     imagemagick=* \

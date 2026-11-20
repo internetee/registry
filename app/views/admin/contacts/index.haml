@@ -63,6 +63,11 @@
           .form-group
             = label_tag :only_no_country_code, "Ident CC missing"
             = check_box_tag :only_no_country_code, '1',params[:only_no_country_code].eql?('1'), style: 'width:auto;height:auto;float:right'
+      .row
+        .col-md-3
+          .form-group
+            = label_tag :death_registry, t('.death_registry')
+            = select_tag :death_registry, options_for_select([[t('.deceased'), 'deceased'], [t('.not_checked'), 'not_checked']], params[:death_registry]), { include_blank: true, class: 'form-control' }
 
       .row
         .col-md-3{style: 'padding-top: 25px;float:right;padding-right: 0px'}

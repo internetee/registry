@@ -3,4 +3,5 @@ et:
     messages:
       required_ident_attribute_missing: 'Kohustuslik ident atribuut puudub: %{key}'
       company_not_registered: Ettevõte pole registreeritud
+      ident_invalid: Isikukood on kehtetu
       invalid_ident_type: Vigane identi tüüp

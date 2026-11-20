@@ -53,6 +53,20 @@ class ForceDeleteTest < ActionMailer::TestCase
     assert_equal Date.parse('2010-07-06'), @domain.force_delete_start.to_date
   end
 
+  def test_fast_track_email_uses_template_of_reason
+    @domain.registrant.update_columns(ident_type: 'org')
+
+    # Without the reason, a failed contact email would select the invalid_email letter
+    @domain.stub(:contact_emails_verification_failed, ['bad@inbox.test']) do
+      @domain.schedule_force_delete(type: :fast_track, notify_by_email: true, reason: 'invalid_company')
+    end
+
+    assert_equal 'invalid_company', @domain.reload.template_name
+    body = ActionMailer::Base.deliveries.last.text_part.body.to_s
+    assert_includes body, 'äriregistrist kustutatud'
+    assert_not_includes body, 'kontaktandmed on puudulikud'
+  end
+
   def test_schedules_force_delete_soft_year_ahead
     @domain.update(valid_to: Time.zone.parse('2012-08-05'))
     assert_not @domain.force_delete_scheduled?

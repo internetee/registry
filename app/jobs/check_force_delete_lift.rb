@@ -13,9 +13,23 @@ class CheckForceDeleteLift < ApplicationJob
     end
 
     sync_force_delete_status_notes
+    lift_deceased_admin_contact_force_deletes
   end
 
   private
+
+  # Started by DeathRegistry::DeceasedDomainContacts when the last required
+  # admin contact of a domain died. The deceased contact itself is removed by
+  # DeathRegistryCheckJob once it is no longer required.
+  def lift_deceased_admin_contact_force_deletes
+    Domain.where("force_delete_data->'template_name' = ?", 'deceased_admin_contact')
+          .includes(:admin_contacts, :registrant).find_each do |domain|
+      living_admin_contacts = domain.admin_contacts.count { |contact| contact.death_date.nil? }
+      next if living_admin_contacts < domain.required_admin_contacts_count
+
+      domain.cancel_force_delete
+    end
+  end
 
   def find_domains_to_lift_force_delete
     Domain.where("'#{DomainStatus::FORCE_DELETE}' = ANY (statuses)").includes(:registrant, :contacts)
