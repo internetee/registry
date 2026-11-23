@@ -22,6 +22,8 @@ smtp_enable_starttls_auto: 'true' # 'false'
 # If your mail server requires authentication, please change.
 smtp_authentication: 'plain' # 'plain', 'login', 'cram_md5'
 
+log_level: 'warn' # 'debug', 'info', 'warn', 'error', 'fatal', 'unknown
+
 #
 # ADMIN server
 #
