@@ -2,10 +2,11 @@ require 'serializers/repp/contact'
 module Repp
   module V1
     class ContactsController < BaseController # rubocop:disable Metrics/ClassLength
-      before_action :find_contact, only: %i[show update destroy verify download_poi approve_verification reject_verification]
+      before_action :find_contact, only: %i[show update destroy copy verify download_poi approve_verification
+                                            reject_verification]
       skip_around_action :log_request, only: %i[search]
 
-      THROTTLED_ACTIONS = %i[index check search create show update destroy verify download_poi
+      THROTTLED_ACTIONS = %i[index check search create show update destroy copy verify download_poi
                              approve_verification reject_verification].freeze
       include Shunter::Integration::Throttle
 
@@ -114,6 +115,22 @@ module Repp
         end
 
         render_success
+      end
+
+      api :POST, '/repp/v1/contacts/copy/:contact_code'
+      desc 'Create a new contact under the same registrar as a copy of an existing contact'
+      def copy
+        authorize! :create, Epp::Contact
+        source = @contact
+        @contact = source.copy
+        ident = source.slice(:ident, :ident_type, :ident_country_code)
+
+        unless Actions::ContactCreate.new(@contact, nil, ident).call
+          handle_errors(@contact)
+          return
+        end
+
+        render_success(data: { contact: { code: @contact.code } })
       end
 
       api :POST, '/repp/v1/contacts/verify/:contact_code'
