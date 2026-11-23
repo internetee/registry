@@ -28,14 +28,21 @@
     const groups = parameterContainer.querySelectorAll('.parameter-group');
     const newIndex = groups.length;
     const template = groups[0].cloneNode(true);
-    
+
     // Update all input names and values
     template.querySelectorAll('input').forEach(input => {
       const name = input.getAttribute('name');
       input.setAttribute('name', name.replace(/\[\d+\]/, `[${newIndex}]`));
       input.value = input.defaultValue; // Reset to default value
     });
-    
+
+    // Update all select names and reset to default values
+    template.querySelectorAll('select').forEach(select => {
+      const name = select.getAttribute('name');
+      select.setAttribute('name', name.replace(/\[\d+\]/, `[${newIndex}]`));
+      select.selectedIndex = 0; // Reset to first option (default)
+    });
+
     parameterContainer.appendChild(template);
     updateParameterSetTitles();
     updateRemoveButtonVisibility();
