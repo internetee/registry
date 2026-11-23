@@ -70,7 +70,6 @@
       <enumeration value="adoc"/>
       <enumeration value="bdoc"/>
       <enumeration value="edoc"/>
-      <enumeration value="ddoc"/>
       <enumeration value="zip"/>
       <enumeration value="rar"/>
       <enumeration value="gz"/>

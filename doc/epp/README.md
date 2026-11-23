@@ -33,6 +33,7 @@
 * [epp-ee-1.0.xsd](/lib/schemas/epp-ee-1.0.xsd)
 * [domain-ee-1.2.xsd](/lib/schemas/domain-ee-1.2.xsd)
 * [contact-ee-1.1.xsd](/lib/schemas/contact-ee-1.1.xsd)
+* [ee-1.1.xsd](/lib/schemas/ee-1.1.xsd)
 
 More info about The Extensible Provisioning Protocol (EPP):
 http://en.wikipedia.org/wiki/Extensible_Provisioning_Protocol
