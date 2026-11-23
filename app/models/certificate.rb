@@ -43,6 +43,23 @@ class Certificate < ApplicationRecord
     errors.add(:base, I18n.t(:invalid_csr_or_crt))
   end
 
+  validate :validate_csr_parameters, if: -> { new_record? && csr.present? && parsed_csr.present? }
+  def validate_csr_parameters
+    subject = parsed_csr.subject.to_s
+    common_name = subject.scan(%r{/CN=([^/]+)}).flatten.first
+    country = subject.scan(%r{/C=([^/]+)}).flatten.first
+
+    unless common_name == api_user.username
+      errors.add(:base, I18n.t(:csr_common_name_must_match_username))
+    end
+
+    if country.present? && api_user.registrar.address_country_code.present?
+      unless country == api_user.registrar.address_country_code
+        errors.add(:base, I18n.t(:csr_country_must_match_registrar_country))
+      end
+    end
+  end
+
   validate :assign_metadata, on: :create
   def assign_metadata
     return if errors.any?
