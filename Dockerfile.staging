@@ -83,9 +83,12 @@ RUN RAILS_ENV=staging SECRET_KEY_BASE=dummy_for_assets \
 # Final stage for app image
 FROM base
 
-# Install packages needed for deployment (incl. wkhtmltopdf runtime deps)
+# Install packages needed for deployment (incl. wkhtmltopdf runtime deps).
+# ca-certificates is listed to upgrade the base image's 2021 bundle, which lacks
+# Sectigo Public Server Authentication Root E46 (Äriregister TLS chain).
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
+    ca-certificates \
     curl \
     git \
     postgresql-client \
