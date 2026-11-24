@@ -695,12 +695,20 @@ en:
   contact_has_been_archived: 'Contact with code %{contact_code} has been archieved because it has been orphaned for longer than %{orphan_months} months.'
   dns_policy_violation: "Data management policy violation: DNSKEY does not match or not found in the authoritative nameservers"
   invalid_ident: 'Force delete set on domain %{domain_name}. Force Delete Type: %{force_delete_type}. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}. Invalid ident %{ident}. %{notes}'
-  force_delete_deceased_person: 'Force delete set on domain %{domain_name} because, according to the Estonian Population Register, the registrant (ident %{ident}) has died. Force Delete Type: Fast Track. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}.'
-  force_delete_deceased_admin_contact: 'Force delete set on domain %{domain_name}. %{notes} according to the Estonian Population Register. Add a new admin contact; until then the domain cannot be renewed or transferred to another registrar. Force Delete Type: Soft. Force Delete Start Date: %{force_delete_start_date}. Expire date: %{valid_to}.'
-  death_registry_admin_contact_removed: 'Admin contact %{contact_code} was removed from domain %{domain_name} because, according to the Estonian Population Register, the person has died.'
-  death_registry_tech_contact_removed: 'Tech contact %{contact_code} was removed from domain %{domain_name} because, according to the Estonian Population Register, the person has died. Add a new tech contact if needed.'
-  death_registry_force_delete_restored: 'Force delete because of the registrant''s death was stopped on domain %{domain_name}. The earlier force delete continues: %{reason}. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}.'
-  death_registry_registrant_deceased: 'According to the Estonian Population Register, the registrant of domain %{domain_name} (ident %{ident}) died on %{death_date}. Force delete will start on %{force_delete_start} unless the registrant is changed. An heir can take over the domain by a registrant change with a certificate of succession.'
+  force_delete_deceased_person: 'Force delete set on domain %{domain_name}: according to the Estonian Population Register, the registrant (ident %{ident}) died on %{death_date}. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}.'
+  force_delete_deceased_admin_contact: 'Force delete set on domain %{domain_name}: according to the Estonian Population Register, the admin contact (ident %{ident}) has died. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}.'
+  death_registry_admin_contact_removed: 'Admin contact %{contact_code} was removed from domain %{domain_name}: according to the Estonian Population Register, the person has died.'
+  death_registry_tech_contact_removed: 'Tech contact %{contact_code} was removed from domain %{domain_name}: according to the Estonian Population Register, the person has died.'
+  death_registry_force_delete_restored: 'Force delete due to the death of the registrant was stopped on domain %{domain_name}. The earlier force delete is restored: %{reason}. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}.'
+  death_registry_restored_reasons:
+    invalid_email: 'invalid email address'
+    invalid_phone: 'invalid phone number'
+    invalid_company: 'the registrant company is not valid in the Estonian Business Register'
+    deceased_admin_contact: 'the admin contact has died'
+    manual: 'force delete set by the registry'
+    manual_with_note: 'force delete set by the registry (%{note})'
+  death_registry_admin_contact_added: 'Force delete is cancelled on domain %{domain_name} because a new admin contact has been added.'
+  death_registry_registrant_deceased: 'According to the Estonian Population Register, the registrant (ident %{ident} of domain %{domain_name}) died on %{death_date}. Force delete will start on %{force_delete_start} unless the registrant is changed.'
 
   number:
     currency:

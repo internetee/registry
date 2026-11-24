@@ -25,9 +25,8 @@ class DeathRegistryDeceasedDomainContactsTest < ActiveSupport::TestCase
     end
 
     assert_not_includes domain.reload.tech_contacts, @deceased
-    assert Notification.exists?(text: 'Tech contact jane-001 was removed from domain shop.test because, ' \
-                                      'according to the Estonian Population Register, the person has died. ' \
-                                      'Add a new tech contact if needed.')
+    assert Notification.exists?(text: 'Tech contact jane-001 was removed from domain shop.test: ' \
+                                      'according to the Estonian Population Register, the person has died.')
   end
 
   def test_removes_deceased_admin_contact_of_private_registrant
@@ -38,7 +37,7 @@ class DeathRegistryDeceasedDomainContactsTest < ActiveSupport::TestCase
 
     assert_not_includes domain.reload.admin_contacts, @deceased
     assert_not domain.force_delete_scheduled?
-    assert Notification.exists?(text: 'Admin contact jane-001 was removed from domain shop.test because, ' \
+    assert Notification.exists?(text: 'Admin contact jane-001 was removed from domain shop.test: ' \
                                       'according to the Estonian Population Register, the person has died.')
   end
 
@@ -55,8 +54,11 @@ class DeathRegistryDeceasedDomainContactsTest < ActiveSupport::TestCase
     assert_equal 'deceased_admin_contact', domain.template_name
     assert_equal 'Admin contact jane-001 has died', domain.status_notes[DomainStatus::FORCE_DELETE]
     assert_includes domain.statuses, DomainStatus::SERVER_RENEW_PROHIBITED
-    assert Notification.where('text LIKE ?', 'Force delete set on domain library.test. Admin contact jane-001 ' \
-                                             'has died according to the Estonian Population Register.%').exists?
+    assert Notification.exists?(text: 'Force delete set on domain library.test: according to the Estonian ' \
+                                      "Population Register, the admin contact (ident #{@deceased.ident}) has died. " \
+                                      "Force Delete Start Date: #{domain.force_delete_start.strftime('%d.%m.%Y')}. " \
+                                      "Outzone date: #{domain.outzone_date.strftime('%d.%m.%Y')}. " \
+                                      "Purge date: #{domain.purge_date.strftime('%d.%m.%Y')}.")
   end
 
   def test_soft_force_delete_dates_follow_expiry_anniversary_for_multiyear_domain

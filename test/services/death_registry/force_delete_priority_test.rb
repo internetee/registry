@@ -53,9 +53,9 @@ class DeathRegistryForceDeletePriorityTest < ActiveSupport::TestCase
     assert_equal @original_statuses, @domain.force_delete_domain_statuses_history
     assert_nil @domain.force_delete_data['previous_force_delete']
     assert_not_includes @domain.statuses, DomainStatus::CLIENT_HOLD
-    assert Notification.where('text LIKE ?', "Force delete because of the registrant's death was stopped " \
-                                             'on domain shop.test. The earlier force delete continues: ' \
-                                             'invalid_email.%').exists?
+    assert Notification.where('text LIKE ?', 'Force delete due to the death of the registrant was stopped ' \
+                                             'on domain shop.test. The earlier force delete is restored: ' \
+                                             'invalid email address.%').exists?
   end
 
   def test_cancels_both_force_deletes_when_replaced_reason_is_gone
@@ -78,6 +78,8 @@ class DeathRegistryForceDeletePriorityTest < ActiveSupport::TestCase
     assert_equal :restored, priority.stop
 
     assert_equal 'Manual', @domain.reload.status_notes[DomainStatus::FORCE_DELETE]
+    assert Notification.where('text LIKE ?', '%The earlier force delete is restored: ' \
+                                             'force delete set by the registry (Manual).%').exists?
     assert_equal 'soft', @domain.force_delete_type
   end
 

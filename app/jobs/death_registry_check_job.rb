@@ -193,8 +193,8 @@ class DeathRegistryCheckJob < ApplicationJob
         text: I18n.t('death_registry_registrant_deceased',
                      domain_name: domain.name,
                      ident: contact.ident,
-                     death_date: contact.death_date,
-                     force_delete_start: force_delete_start),
+                     death_date: contact.death_date.strftime('%d.%m.%Y'),
+                     force_delete_start: force_delete_start.strftime('%d.%m.%Y')),
         attached_obj_id: domain.id,
         attached_obj_type: domain.class.name
       )

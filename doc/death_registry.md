@@ -129,7 +129,7 @@ Volume: after the first full run, about 1/365 of the linked contacts per night; 
 | Tech contact dies                                                                                                   | Removed from the domain (domain history and WHOIS updated; the contact object stays)                                                  | Poll **B1**                                         |
 | Admin contact dies, domain still has enough admin contacts (private registrant, or organisation with another admin) | Removed from the domain                                                                                                               | Poll **C1**                                         |
 | Last required admin contact of an organisation or minor registrant dies                                             | Soft force delete, reason `deceased_admin_contact`; statuses `serverForceDelete`, `serverRenewProhibited`, `serverTransferProhibited` | Poll **C2**; email **E2** at the force delete start |
-| A new admin contact is added afterwards                                                                             | `CheckForceDeleteLift` cancels the soft force delete                                                                                  | Poll **A4** (standard cancel text)                  |
+| A new admin contact is added afterwards                                                                             | `CheckForceDeleteLift` cancels the soft force delete                                                                                  | Poll **C3**                                         |
 | Domain already has a force delete                                                                                   | Left alone                                                                                                                            | —                                                   |
 
 
@@ -344,21 +344,24 @@ All poll texts are **English drafts** and need review (Helen, Mare). Estonian ve
 ### Registrar poll messages
 
 
-| Code   | When                                                                                        | Text                                                                                                                                                                                                                                                                                                                                           |
-| ------ | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **A1** | Registrant found deceased, less than 6 months ago                                           | According to the Estonian Population Register, the registrant of domain %{domain_name} (ident %{ident}) died on %{death_date}. Force delete will start on %{force_delete_start} unless the registrant is changed. An heir can take over the domain by a registrant change with a certificate of succession.                                    |
-| **A3** | Fast-track force delete started                                                             | Force delete set on domain %{domain_name} because, according to the Estonian Population Register, the registrant (ident %{ident}) has died. Force Delete Type: Fast Track. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}.                                                      |
-| **A4** | Force delete cancelled (person alive, admin cancel, admin contact replaced) — existing text | Force delete is cancelled on domain %{domain_name}                                                                                                                                                                                                                                                                                             |
-| **A5** | Death force delete stopped, earlier force delete restored                                   | Force delete because of the registrant's death was stopped on domain %{domain_name}. The earlier force delete continues: %{reason}. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}.                                                                                             |
-| **B1** | Deceased tech contact removed                                                               | Tech contact %{contact_code} was removed from domain %{domain_name} because, according to the Estonian Population Register, the person has died. Add a new tech contact if needed.                                                                                                                                                             |
-| **C1** | Deceased admin contact removed                                                              | Admin contact %{contact_code} was removed from domain %{domain_name} because, according to the Estonian Population Register, the person has died.                                                                                                                                                                                              |
-| **C2** | Soft force delete for the last required admin contact                                       | Force delete set on domain %{domain_name}. Admin contact %{contact_code} has died according to the Estonian Population Register. Add a new admin contact; until then the domain cannot be renewed or transferred to another registrar. Force Delete Type: Soft. Force Delete Start Date: %{force_delete_start_date}. Expire date: %{valid_to}. |
+| Code   | When | Text |
+| ------ | ---- | ---- |
+| **A1** | Registrant found deceased, less than 6 months ago | According to the Estonian Population Register, the registrant (ident %{ident} of domain %{domain_name}) died on %{death_date}. Force delete will start on %{force_delete_start} unless the registrant is changed. |
+| **A3** | Fast-track force delete started | Force delete set on domain %{domain_name}: according to the Estonian Population Register, the registrant (ident %{ident}) died on %{death_date}. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}. |
+| **A4** | Force delete cancelled (person alive, admin cancel, registrant changed) — existing text | Force delete is cancelled on domain %{domain_name} |
+| **A5** | Death force delete stopped, earlier force delete restored | Force delete due to the death of the registrant was stopped on domain %{domain_name}. The earlier force delete is restored: %{reason}. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}. |
+| **B1** | Deceased tech contact removed | Tech contact %{contact_code} was removed from domain %{domain_name}: according to the Estonian Population Register, the person has died. |
+| **C1** | Deceased admin contact removed | Admin contact %{contact_code} was removed from domain %{domain_name}: according to the Estonian Population Register, the person has died. |
+| **C2** | Soft force delete for the last required admin contact | Force delete set on domain %{domain_name}: according to the Estonian Population Register, the admin contact (ident %{ident}) has died. Force Delete Start Date: %{force_delete_start_date}. Outzone date: %{outzone_date}. Purge date: %{purge_date}. |
+| **C3** | New admin contact added, soft force delete lifted by `CheckForceDeleteLift` | Force delete is cancelled on domain %{domain_name} because a new admin contact has been added. |
 
 
 Notes for reviewers:
 
-- A5 `%{reason}` is a technical reason code (`invalid_email`, `deceased_admin_contact`, …) or the manual status note. Consider mapping it to readable words.
-- A4 is the existing generic cancel text and does not say why.
+- All dates are in the format `dd.mm.yyyy`.
+- A5 `%{reason}` is readable text: "invalid email address", "invalid phone number", "the registrant company is not valid in the Estonian Business Register", "the admin contact has died", or for a manual force delete "force delete set by the registry" with the admin's note in brackets when there is one.
+- A4 is the existing generic cancel text and does not say why. C3 is used only when a new admin contact lifts a `deceased_admin_contact` force delete; an admin cancelling it by hand still sends A4.
+- C2: if more than one admin contact has died, their idents are listed separated by commas.
 
 
 

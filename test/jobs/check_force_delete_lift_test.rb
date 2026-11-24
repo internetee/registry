@@ -169,6 +169,8 @@ class CheckForceDeleteLiftTest < ActiveSupport::TestCase
     domain.reload
     assert_not domain.force_delete_scheduled?
     assert_nil domain.template_name
+    assert_equal "Force delete is cancelled on domain #{domain.name} because a new admin contact has been added.",
+                 domain.registrar.notifications.last.text
   end
 
   def test_keeps_deceased_admin_contact_force_delete_while_only_deceased_admin_contact_remains

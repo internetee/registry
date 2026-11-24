@@ -53,8 +53,8 @@ module Domain::ForceDelete
                                              notify_by_email: notify_by_email, email: email, notes: notes)
   end
 
-  def cancel_force_delete
-    Domains::CancelForceDelete::CancelForceDelete.run(domain: self)
+  def cancel_force_delete(notification_key: 'force_delete_cancelled')
+    Domains::CancelForceDelete::CancelForceDelete.run(domain: self, notification_key: notification_key)
   end
 
   def outzone_date

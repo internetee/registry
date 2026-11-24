@@ -118,13 +118,27 @@ module DeathRegistry
       domain.registrar.notifications.create!(
         text: I18n.t('death_registry_force_delete_restored',
                      domain_name: domain.name,
-                     reason: domain.template_name.presence || domain.status_notes[DomainStatus::FORCE_DELETE],
+                     reason: restored_reason,
                      force_delete_start_date: domain.force_delete_start&.strftime('%d.%m.%Y') || '-',
-                     outzone_date: domain.outzone_date,
-                     purge_date: domain.purge_date),
+                     outzone_date: domain.outzone_date&.strftime('%d.%m.%Y'),
+                     purge_date: domain.purge_date&.strftime('%d.%m.%Y')),
         attached_obj_id: domain.id,
         attached_obj_type: domain.class.name
       )
+    end
+
+    # Readable reason of the restored force delete for poll A5. The
+    # private_person and legal_person templates mean a manual force delete.
+    def restored_reason
+      template = domain.template_name
+      if template.present? && %w[private_person legal_person].exclude?(template)
+        return I18n.t("death_registry_restored_reasons.#{template}", default: template.humanize.downcase)
+      end
+
+      note = domain.status_notes[DomainStatus::FORCE_DELETE].presence
+      return I18n.t('death_registry_restored_reasons.manual') unless note
+
+      I18n.t('death_registry_restored_reasons.manual_with_note', note: note)
     end
   end
 end

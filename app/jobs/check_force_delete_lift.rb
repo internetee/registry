@@ -27,7 +27,7 @@ class CheckForceDeleteLift < ApplicationJob
       living_admin_contacts = domain.admin_contacts.count { |contact| contact.death_date.nil? }
       next if living_admin_contacts < domain.required_admin_contacts_count
 
-      domain.cancel_force_delete
+      domain.cancel_force_delete(notification_key: 'death_registry_admin_contact_added')
     end
   end
 

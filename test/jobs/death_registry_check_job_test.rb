@@ -79,10 +79,11 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
     assert_equal @recent_death, @registrant.death_date
     assert_not_nil @registrant.death_registry_checked_at
 
-    texts = Notification.where('text LIKE ?', "%(ident #{REGISTRANT_IDENT})%").pluck(:text)
+    texts = Notification.where('text LIKE ?', "%(ident #{REGISTRANT_IDENT} of domain %").pluck(:text)
     assert_equal @registrant.registrant_domains.count, texts.size
     assert texts.any? { |text| text.include?('domain shop.test') }
-    assert texts.all? { |text| text.include?((@recent_death + 6.months + 1.day).to_s) }
+    assert texts.all? { |text| text.include?("died on #{@recent_death.strftime('%d.%m.%Y')}. Force delete will start on " \
+                                           "#{(@recent_death + 6.months + 1.day).strftime('%d.%m.%Y')} ") }
   end
 
   def test_removes_deceased_admin_contact_found_in_same_run
@@ -210,9 +211,9 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
       assert_includes domain.status_notes[DomainStatus::FORCE_DELETE], REGISTRANT_IDENT
     end
 
-    polls = Notification.where('text LIKE ?', 'Force delete set on domain % because%').pluck(:text)
+    polls = Notification.where('text LIKE ?', 'Force delete set on domain %: according to%').pluck(:text)
     assert_equal @registrant.registrant_domains.count, polls.size
-    assert polls.all? { |text| text.include?("(ident #{REGISTRANT_IDENT}) has died") }
+    assert polls.all? { |text| text.include?("(ident #{REGISTRANT_IDENT}) died on #{@registrant.death_date.strftime('%d.%m.%Y')}") }
 
     mail = ActionMailer::Base.deliveries.find { |m| m.subject.include?('shop.test') }
     assert_includes mail.text_part.body.to_s, 'on surnud ja sellest on möödunud vähemalt 6 kuud'
@@ -290,7 +291,7 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
     assert domain.force_delete_scheduled?
     assert_equal 'soft', domain.force_delete_type
     assert_nil domain.template_name
-    assert Notification.where('text LIKE ?', "%death was stopped on domain shop.test%").exists?
+    assert Notification.where('text LIKE ?', "%death of the registrant was stopped on domain shop.test%").exists?
   end
 
   def test_cancels_force_delete_when_person_leaves_registry
