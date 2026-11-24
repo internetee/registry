@@ -216,7 +216,7 @@ class DeathRegistryCheckJobTest < ActiveJob::TestCase
     assert polls.all? { |text| text.include?("(ident #{REGISTRANT_IDENT}) died on #{@registrant.death_date.strftime('%d.%m.%Y')}") }
 
     mail = ActionMailer::Base.deliveries.find { |m| m.subject.include?('shop.test') }
-    assert_includes mail.text_part.body.to_s, 'on surnud ja sellest on möödunud vähemalt 6 kuud'
+    assert_includes mail.text_part.body.to_s, 'on surnud ja sellest on möödunud enam kui 6 kuud'
   end
 
   def test_force_delete_starts_on_last_day_of_shorter_month

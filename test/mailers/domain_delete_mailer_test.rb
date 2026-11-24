@@ -97,7 +97,7 @@ class DomainDeleteMailerTest < ActionMailer::TestCase
 
     assert_emails 1
     assert_includes email.text_part.body.to_s, 'halduskontakt on surnud'
-    assert_includes email.html_part.body.to_s, 'administrative contact of the domain shop.test has died'
+    assert_includes email.html_part.body.to_s, 'administrative contact of the domain shop.test has passed away'
   end
 
   def test_forced_deceased_admin_contact_names_dates_not_day_count
@@ -111,13 +111,16 @@ class DomainDeleteMailerTest < ActionMailer::TestCase
                                       registrant: @domain.registrant,
                                       template_name: 'deceased_admin_contact').deliver_now
 
-    text = email.text_part.body.to_s
-    assert_includes text, 'Kui uut halduskontakti ei ole lisatud enne 2027-04-15'
-    assert_includes text, 'internetis kättesaadav kuni 2027-03-16'
-    assert_includes text, 'If no new administrative contact is added before 2027-04-15'
-    assert_includes text, 'remain available on the Internet until 2027-03-16'
-    assert_not_includes text, 'päeva jooksul'
-    assert_not_includes text, 'päeva pikkuse'
+    [email.text_part.body.to_s, email.html_part.body.to_s].each do |text|
+      assert_includes text, 'kustutusmenetluse tähtajaga 2027-04-14'
+      assert_includes text, 'internetis kättesaadav kuni 2027-03-16'
+      assert_includes text, 'kustutusmenetluse lõppedes 2027-04-15'
+      assert_includes text, 'with a deadline of 2027-04-14'
+      assert_includes text, 'remain available on the Internet until 2027-03-16'
+      assert_includes text, 'end of the deletion process on 2027-04-15'
+      assert_not_includes text, 'päeva jooksul'
+      assert_not_includes text, 'päeva pikkuse'
+    end
   end
 
   def test_forced_deceased_person_uses_private_person_letter
@@ -126,6 +129,24 @@ class DomainDeleteMailerTest < ActionMailer::TestCase
                                       registrant: @domain.registrant,
                                       template_name: 'deceased_person').deliver_now
 
-    assert_includes email.text_part.body.to_s, 'on surnud ja sellest on möödunud vähemalt 6 kuud'
+    assert_includes email.text_part.body.to_s, 'on surnud ja sellest on möödunud enam kui 6 kuud'
+  end
+
+  def test_forced_deceased_person_names_last_day_and_auction_date
+    @domain.update!(force_delete_date: Date.new(2027, 1, 10), statuses: [DomainStatus::FORCE_DELETE])
+
+    email = DomainDeleteMailer.forced(domain: @domain,
+                                      registrar: @domain.registrar,
+                                      registrant: @domain.registrant,
+                                      template_name: 'deceased_person').deliver_now
+
+    [email.text_part.body.to_s, email.html_part.body.to_s].each do |body|
+      assert_includes body, 'tuleb parandada hiljemalt 2027-01-09.'
+      assert_includes body, 'läheb domeen 2027-01-10 domeenioksjonile'
+      assert_includes body, 'must be transferred by 2027-01-09 at the latest'
+      assert_includes body, 'will go to auction on 2027-01-10'
+      assert_includes body, @domain.registrant.ident
+      assert_not_includes body, 'päeva jooksul'
+    end
   end
 end

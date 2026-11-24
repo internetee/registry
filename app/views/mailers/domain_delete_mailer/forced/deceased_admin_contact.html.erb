@@ -1,12 +1,12 @@
 <p>Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt</p>
 
-<p>Eesti Interneti Sihtasutusele (EIS) on Rahvastikuregistri andmetel saanud teatavaks, et domeeni <%= @domain.name %> halduskontakt on surnud. Domeenil peab olema kehtiv halduskontakt.</p>
+<p>Eesti Interneti Sihtasutusele (EIS) on Rahvastikuregistri andmetel saanud teatavaks, et domeeni <%= @domain.name %> halduskontakt on surnud.</p>
 
-<p>Et see olukord on vastuolus .ee <a href='https://www.internet.ee/domains/ee-domain-regulation'>domeenireeglitega</a>, algatas EIS domeeni <%= @domain.name %> suhtes kustutusmenetluse. Kuni uus halduskontakt pole lisatud, ei saa domeeni pikendada ega registripidajat vahetada. Menetluse käigus on domeen internetis kättesaadav kuni <%= @domain.force_delete_outzone_date %>.</p>
+<p>Vastavalt <a href="https://www.internet.ee/domeenid/ee-domeenireeglid">.ee domeenireeglitele</a> peab juriidilisele isikule kuuluval domeenil olema kehtiv halduskontakt. Selle puudumise tõttu algatas EIS domeeni osas kustutusmenetluse tähtajaga <%= @domain.force_delete_last_day %>. Kehtiva halduskontakti uuendamiseni on blokeeritud domeeni pikendamise ja registripidaja vahetuse toimingud.</p>
 
 <p>Uue halduskontakti lisamiseks pöörduge palun oma registripidaja <%= @registrar.name %> poole.</p>
 
-<p>Kui uut halduskontakti ei ole lisatud enne <%= @domain.force_delete_date %>, läheb domeen <%= @domain.name %> <%= @domain.force_delete_date %> domeenioksjonile <a href="https://auction.internet.ee">.ee oksjonikeskkonda</a>. Juhul kui domeenile <%= @domain.name %> ei tehta oksjonil 24h möödudes pakkumist, domeen vabaneb ja on registreerimiseks vabalt kättesaadav kõigile huvilistele. Muude võimalike oksjoni tulemuste kohta loe <a href="https://www.internet.ee/domeenid/domeenide-oksjonikeskkonna-kasutajatingimused#3-oksjonikeskkonna-enampakkumisel-osalemise-tingimused">siit</a>.</p>
+<p>Domeen on internetis kättesaadav kuni <%= @domain.force_delete_outzone_date %>. Juhul, kui domeeni halduskontakti pole õigeaegselt uuendatud, suunatakse domeen kustutusmenetluse lõppedes <%= @domain.force_delete_date %> <a href="https://auction.internet.ee">avalikule domeenioksjonile</a>. Kui domeen ei leia oksjonilt uut omanikku, vabaneb see registreerimiseks kõigile huvilistele "kes ees, see mees" põhimõttel.</p>
 
 <p>Lisaküsimuste korral võtke palun ühendust oma registripidajaga:</p>
 <%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
@@ -14,15 +14,15 @@
 
 <hr>
 
-<p>Dear registrant/administrative contact of .ee domain,</p>
+<p>Dear registrant/administrative contact of <%= @domain.name %> domain,</p>
 
-<p>According to the Estonian Population Register, the administrative contact of the domain <%= @domain.name %> has died. The domain must have a valid administrative contact.</p>
+<p>According to the Estonian Population Register, the Estonian Internet Foundation (EIF) has been informed that the administrative contact of the domain <%= @domain.name %> has passed away.</p>
 
-<p>Since this is a violation of <a href='https://www.internet.ee/domains/ee-domain-regulation'>Estonian domain regulations</a>, a deletion process has started for the <%= @domain.name %> domain. Until a new administrative contact is added, the domain cannot be renewed or transferred to another registrar. During the deletion process the domain will remain available on the Internet until <%= @domain.force_delete_outzone_date %>.</p>
+<p>According to the <a href="https://www.internet.ee/domains/ee-domain-regulation">.ee Domain Regulation</a>, a domain owned by a legal entity must have a valid administrative contact. As the domain has no valid administrative contact, EIF has started the deletion process of the domain with a deadline of <%= @domain.force_delete_last_day %>. Until a valid administrative contact is added, the domain cannot be renewed or transferred to another registrar.</p>
 
 <p>To add a new administrative contact, please contact your registrar <%= @registrar.name %>.</p>
 
-<p>If no new administrative contact is added before <%= @domain.force_delete_date %>, the domain <%= @domain.name %> will go to domain auction on <%= @domain.force_delete_date %> in the <a href="https://auction.internet.ee">.ee auction environment</a>. If no offer is made for the domain <%= @domain.name %> at auction within 24 hours, the domain will be released and made freely available for registration to anyone interested on a first-come, first-served basis. Read more about other potential auction results <a href="https://www.internet.ee/domains/auction-environment-user-agreement#3-terms-and-conditions-for-participation-in-the-auction-of-the-auction-environment">here</a>.</p>
+<p>The domain will remain available on the Internet until <%= @domain.force_delete_outzone_date %>. If the administrative contact has not been updated in time, the domain will go to a <a href="https://auction.internet.ee">public domain auction</a> at the end of the deletion process on <%= @domain.force_delete_date %>. If the domain does not find a new owner through the auction, it becomes available for registration to anyone on a first-come, first-served basis.</p>
 
 <p>Should you have additional questions, please contact your registrar:</p>
 <%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
