@@ -1,3 +1,6 @@
+24.11.2026
+* Fixed registrar CSV import of new registrars https://github.com/internetee/registry/pull/2976
+
 19.11.2026
 * Fix for auto-topup timeout issue https://github.com/internetee/registry/issues/2948
 * BusinessReg reserv invoices are now properly stored and shared with accounting system https://github.com/internetee/registry/issues/2987
