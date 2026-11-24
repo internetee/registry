@@ -15,6 +15,10 @@ class EmailCheckTest < ActiveSupport::TestCase
       'hello.world@example.com',
       '_user.email@domain.com',
       '__user.email@domain.com',
+      'smth@e.ee',
+      'smth@a.domain.ee',
+      'smth@sub.b.domain.ee',
+      'smth@1.ee',
     ]
 
     valid_emails.each_with_index do |email, index|
@@ -29,7 +33,11 @@ class EmailCheckTest < ActiveSupport::TestCase
       'user.@domain.com',
       'us"er@domain.com',
       'user@domain..com',
-      '~@internet.ee'
+      '~@internet.ee',
+      'smth@domain.e',
+      'smth@a.domain.e',
+      'smth@-.ee',
+      'smth@a-.ee'
     ]
 
     invalid_emails.each do |email|

@@ -10,7 +10,7 @@ module EisBilling
         return render status: :unprocessable_entity, json: { message: 'Invoice is cancelled' }
       end
 
-      case reserve_domain_invoice.reserve_paid_domains
+      case reserve_domain_invoice.reserve_paid_domains(paid_at: paid_at)
       when :reserved
         render status: :ok, json: { message: 'Payment processed' }
       when :already_paid
@@ -28,6 +28,12 @@ module EisBilling
       return if params[:reference_number].blank?
 
       ReserveDomainInvoice.find_by(reference_no: params[:reference_number])
+    end
+
+    def paid_at
+      Time.zone.parse(params[:paid_at].to_s) || Time.zone.now
+    rescue ArgumentError
+      Time.zone.now
     end
 
     def set_audit_context

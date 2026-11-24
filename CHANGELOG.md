@@ -1,3 +1,22 @@
+24.11.2026
+* Fixed registrar CSV import of new registrars https://github.com/internetee/registry/pull/2976
+
+19.11.2026
+* Fix for auto-topup timeout issue https://github.com/internetee/registry/issues/2948
+* BusinessReg reserv invoices are now properly stored and shared with accounting system https://github.com/internetee/registry/issues/2987
+
+18.11.2026
+* Allow 1 character domains in email addresses https://github.com/internetee/registry/issues/2959
+
+17.11.2026
+* Pending operations: notification log, resend and filter https://github.com/internetee/registry/pull/2981
+
+05.11.2026
+* Registrars can see the date and sent confirmation emails of a pending registrant change or delete, and resend the confirmation email (POST /repp/v1/domains/:name/pending_notification) https://github.com/internetee/registrar_center2/issues/237
+* GET /repp/v1/domains accepts q[with_pending_operation]=true to list only domains with pending operations https://github.com/internetee/registrar_center2/issues/237
+* Delayed registrant change confirmation and notice emails are no longer sent when the change was cancelled, confirmed or rejected in the meantime https://github.com/internetee/registrar_center2/issues/237
+* Deploy: run migrations
+
 03.11.2026
 * Allow legal persons to send name and email in disclosed attributes https://github.com/internetee/registry/pull/2971
 * Enable registrars to cancel pending registrant change https://github.com/internetee/registry/issues/2939

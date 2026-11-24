@@ -36,4 +36,16 @@ class DirectoResponseTest < ApplicationIntegrationTest
     @invoice.reload
     assert @invoice.in_directo
   end
+
+  def test_should_mark_business_registry_invoice_as_sent
+    invoice = ReserveDomainInvoice.create!(invoice_number: '555010', domain_names: ['directo.test'], metainfo: 'uid',
+                                           status: :paid, paid_at: Time.zone.now)
+    response_xml = "<?xml version='1.0' encoding='UTF-8'?><results><Result Type='0' Desc='OK' docid='555010' doctype='ARVE' submit='Invoices'/></results>"
+
+    put eis_billing_directo_response_path, params: { response: response_xml },
+                                           headers: { 'HTTP_COOKIE' => 'session=api_bestnames' }
+
+    assert invoice.reload.in_directo
+    assert_equal invoice, Directo.last.item
+  end
 end

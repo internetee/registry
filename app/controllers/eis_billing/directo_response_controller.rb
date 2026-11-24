@@ -16,7 +16,9 @@ class EisBilling::DirectoResponseController < EisBilling::BaseController
       if @month
         mark_invoice_as_sent(res: res, req: req)
       else
-        inv = Invoice.find_by(number: res.attributes['docid'].value.to_i)
+        number = res.attributes['docid'].value.to_i
+        # Business registry invoices share the billing number sequence with registrar invoices
+        inv = Invoice.find_by(number: number) || ReserveDomainInvoice.paid.find_by(invoice_number: number.to_s)
 
         mark_invoice_as_sent(invoice: inv, res: res, req: req)
       end
