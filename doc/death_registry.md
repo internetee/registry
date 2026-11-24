@@ -115,7 +115,7 @@ Volume: after the first full run, about 1/365 of the linked contacts per night; 
 - At death + 6 months + 1 day: the person is looked up again in the fresh file, then a **fast-track force delete** starts on every domain where the person is registrant:
   - reason `deceased_person`, status note "Deceased registrant: , death date ";
   - starts the next day; outzone after 15 days; deletion (auction) after another 30 + 1 days (current settings);
-  - registrar gets poll **A3**; registrant and admin contacts get the existing "deceased person" force delete email (**E1**, template `private_person`).
+  - registrar gets poll **A3**; registrant and admin contacts get the "deceased person" force delete email (**E1**, template `private_person`).
 - If the registrant is changed (e.g. to an heir), every force delete on the domain is cancelled, as for any registrant change.
 - If the run on the due day is missed, the next run picks the contact up and the start moves by a day.
 
@@ -339,7 +339,7 @@ Fixed in code: check interval 1 year, force delete 6 months after death, file re
 
 ## 9. Messages and notification texts for review
 
-All poll texts are **English drafts** and need review (Helen, Mare). Estonian versions are to be added. Placeholders are in `%{…}`. Dates in polls follow the existing force delete messages.
+The poll texts follow the review in the Google doc "Surmaandmete kontroll – teavitused" (Helen, Mare). Polls are sent in English only: they are stored as text when created, and the default locale is `en`. Estonian versions would need a code change to send both languages in one message. Placeholders are in `%{…}`; the texts are in `config/locales/en.yml`.
 
 ### Registrar poll messages
 
@@ -379,55 +379,65 @@ The error deliberately does not say that the person is deceased.
 
 Subject (all force delete emails): "Domeen %{domain_name} on kustutusmenetluses / Domain %{domain_name} is in deletion process". The Russian line was removed from the subject.
 
-**E1 — deceased registrant (existing template** `private_person`**, unchanged), sent at the fast-track start:**
+The emails name dates, not day counts. Placeholders:
+
+- `%{force_delete_date}`: the auction date (end of the force delete).
+- `%{last_day}`: the day before the auction date, the last day to fix the registration (`DomainPresenter#force_delete_last_day`).
+- `%{outzone_date}`: `force_delete_start` + `expire_warning_period`, the last day the domain stays in the zone.
+
+Dates are in the default locale format `yyyy-mm-dd`, like in the other emails. Registrar contacts and the signature come from the shared partials.
+
+**E1 — deceased registrant (template** `private_person`**), sent at the fast-track start.** The same template is used for a manual force delete with the reason "Registrant (private person) has died".
 
 > Lugupeetud domeeni %{domain} registreerija/halduskontakt
 >
-> Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et füüsiline isik isikukoodiga %{ident} on surnud ja sellest on möödunud vähemalt 6 kuud.
+> Eesti Interneti Sihtasutusele (EIS) on Rahvastikuregistri andmetel saanud teatavaks, et füüsiline isik isikukoodiga %{ident} on surnud ja sellest on möödunud enam kui 6 kuud.
 >
-> Kuna surnud isik ei saa olla domeeni registreerijaks, algas domeeni %{domain} suhtes %{delete_period_length} päevane kustutusmenetlus. Menetluse käigus on domeen %{expire_warning_period} esimest päeva internetis kättesaadav.
+> Tulenevalt .ee domeenireeglitest ([https://www.internet.ee/domeenid/ee-domeenireeglid](https://www.internet.ee/domeenid/ee-domeenireeglid)) ei saa surnud isik olla domeeni registreerijaks - seetõttu algatati domeeni %{domain} osas kustutusmenetlus.
 >
-> Domeeni suhtes õigust omaval isikul on võimalus esitada domeeni %{domain} registripidajale %{registrar} domeeni üleandmise taotlus, millele tuleb lisada pärimisõiguse tõend. Dokumentatsioon tuleb esitada registripidajale %{delete_period_length} päeva jooksul.
+> Domeeni suhtes õigust omaval isikul on võimalus esitada registripidajale %{registrar} domeeni üleandmise taotlus, millele tuleb lisada pärimisõiguse tõend. Registreerimise andmed tuleb parandada hiljemalt %{last_day}.
 >
-> Kui üleandmine ei ole %{delete_period_length} päeva jooksul toimunud, läheb domeen %{domain} %{force_delete_date} domeenioksjonile .ee oksjonikeskkonda [https://auction.internet.ee](https://auction.internet.ee). …
+> Juhul, kui üleandmine ei ole selle aja jooksul toimunud, läheb domeen %{force_delete_date} domeenioksjonile .ee oksjonikeskkonda [https://auction.internet.ee](https://auction.internet.ee). Kui domeen ei leia oksjoni vahendusel uut omanikku, vabaneb see kõigile registreerimiseks "kes ees, see mees" põhimõttel.
 >
 > ---
 >
-> Dear registrant/administrative contact of %{domain} domain
+> Dear registrant/administrative contact of %{domain} domain,
 >
-> Estonian Internet Foundation (EIF) has learned that the natural person with identification code %{ident} has been deceased more than 6 months.
+> According to the Estonian Population Register, the Estonian Internet Foundation (EIF) has been informed that the natural person with personal identification code %{ident} has passed away and that more than 6 months have passed since then.
 >
-> The registrant holding a right to the domain name %{domain} can submit a domain name transfer application to the registrar %{registrar}. The application must be submitted together with succession evidence certifying the acquisition of the domain. The relevant documents should be submitted to the registrar within %{delete_period_length} days.
+> According to the .ee Domain Regulation ([https://www.internet.ee/domains/ee-domain-regulation](https://www.internet.ee/domains/ee-domain-regulation)), a deceased person cannot be the registrant of a domain. Therefore, EIF has started the deletion process of the domain %{domain}.
 >
-> As a deceased natural person can not be the registrant of a domain, a %{delete_period_length}-day deletion process of %{domain} domain has started. For the first %{expire_warning_period} days the domain will remain available on the Internet during the deletion process.
+> A person entitled to the domain can submit a domain transfer application to the registrar %{registrar}, together with proof of the right of succession. The registration must be transferred by %{last_day} at the latest.
 >
-> If the transfer is not made within %{delete_period_length} days, the domain %{domain} will go to domain auction on %{force_delete_date} … (auction paragraph, registrar contacts and signature as in the existing template)
+> If the transfer has not been completed by then, the domain will go to auction on %{force_delete_date} in the .ee auction environment [https://auction.internet.ee](https://auction.internet.ee). If the domain does not find a new owner through the auction, it becomes available for registration to anyone on a first-come, first-served basis.
 
-**E2 — deceased admin contact (new template** `deceased_admin_contact`**, draft), sent at the soft force delete start.** The email names dates, not a day count: a soft force delete starts at the next anniversary of `valid_to`, so "45 days" would be wrong. `%{outzone_date}` = `force_delete_start` + `expire_warning_period`. If the domain expires within a year, the force delete starts at `valid_to` (tomorrow if already expired), so `%{force_delete_date}` is never empty:
+**E2 — deceased admin contact (template** `deceased_admin_contact`**), sent at the soft force delete start.** A soft force delete starts at the next anniversary of `valid_to`; if the domain expires within a year, it starts at `valid_to` (tomorrow if already expired), so `%{force_delete_date}` is never empty. The deceased admin's personal code is not included.
 
 > Lugupeetud domeeni %{domain} registreerija/halduskontakt
 >
-> Eesti Interneti Sihtasutusele (EIS) on Rahvastikuregistri andmetel saanud teatavaks, et domeeni %{domain} halduskontakt on surnud. Domeenil peab olema kehtiv halduskontakt.
+> Eesti Interneti Sihtasutusele (EIS) on Rahvastikuregistri andmetel saanud teatavaks, et domeeni %{domain} halduskontakt on surnud.
 >
-> Et see olukord on vastuolus .ee domeenireeglitega ([https://www.internet.ee/domains/ee-domain-regulation](https://www.internet.ee/domains/ee-domain-regulation)), algatas EIS domeeni %{domain} suhtes kustutusmenetluse. Kuni uus halduskontakt pole lisatud, ei saa domeeni pikendada ega registripidajat vahetada. Menetluse käigus on domeen internetis kättesaadav kuni %{outzone_date}.
+> Vastavalt .ee domeenireeglitele ([https://www.internet.ee/domeenid/ee-domeenireeglid](https://www.internet.ee/domeenid/ee-domeenireeglid)) peab juriidilisele isikule kuuluval domeenil olema kehtiv halduskontakt. Selle puudumise tõttu algatas EIS domeeni osas kustutusmenetluse tähtajaga %{last_day}. Kehtiva halduskontakti uuendamiseni on blokeeritud domeeni pikendamise ja registripidaja vahetuse toimingud.
 >
 > Uue halduskontakti lisamiseks pöörduge palun oma registripidaja %{registrar} poole.
 >
-> Kui uut halduskontakti ei ole lisatud enne %{force_delete_date}, läheb domeen %{domain} %{force_delete_date} domeenioksjonile .ee oksjonikeskkonda [https://auction.internet.ee](https://auction.internet.ee). …
+> Domeen on internetis kättesaadav kuni %{outzone_date}. Juhul, kui domeeni halduskontakti pole õigeaegselt uuendatud, suunatakse domeen kustutusmenetluse lõppedes %{force_delete_date} avalikule domeenioksjonile [https://auction.internet.ee](https://auction.internet.ee). Kui domeen ei leia oksjonilt uut omanikku, vabaneb see registreerimiseks kõigile huvilistele "kes ees, see mees" põhimõttel.
 >
 > ---
 >
-> Dear registrant/administrative contact of .ee domain,
+> Dear registrant/administrative contact of %{domain} domain,
 >
-> According to the Estonian Population Register, the administrative contact of the domain %{domain} has died. The domain must have a valid administrative contact.
+> According to the Estonian Population Register, the Estonian Internet Foundation (EIF) has been informed that the administrative contact of the domain %{domain} has passed away.
 >
-> Since this is a violation of Estonian domain regulations ([https://www.internet.ee/domains/ee-domain-regulation](https://www.internet.ee/domains/ee-domain-regulation)), a deletion process has started for the %{domain} domain. Until a new administrative contact is added, the domain cannot be renewed or transferred to another registrar. During the deletion process the domain will remain available on the Internet until %{outzone_date}.
+> According to the .ee Domain Regulation ([https://www.internet.ee/domains/ee-domain-regulation](https://www.internet.ee/domains/ee-domain-regulation)), a domain owned by a legal entity must have a valid administrative contact. As the domain has no valid administrative contact, EIF has started the deletion process of the domain with a deadline of %{last_day}. Until a valid administrative contact is added, the domain cannot be renewed or transferred to another registrar.
 >
 > To add a new administrative contact, please contact your registrar %{registrar}.
 >
-> If no new administrative contact is added before %{force_delete_date}, the domain %{domain} will go to domain auction on %{force_delete_date} … (auction paragraph, registrar contacts and signature as in the existing templates)
+> The domain will remain available on the Internet until %{outzone_date}. If the administrative contact has not been updated in time, the domain will go to a public domain auction [https://auction.internet.ee](https://auction.internet.ee) at the end of the deletion process on %{force_delete_date}. If the domain does not find a new owner through the auction, it becomes available for registration to anyone on a first-come, first-served basis.
 
-No email is sent for: A1 (discovery), removal of an optional contact (B1, C1), a stopped or restored force delete (A4, A5).
+Open question for reviewers: E2 says "a domain owned by a legal entity", but it is also sent when the only admin contact of a minor registrant dies.
+
+No email is sent for: A1 (discovery), removal of an optional contact (B1, C1), a stopped, restored or lifted force delete (A4, A5, C3).
 
 ### Admin emails (to `admin_notification_email`)
 
