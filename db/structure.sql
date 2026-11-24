@@ -1020,6 +1020,38 @@ ALTER SEQUENCE public.domain_contacts_id_seq OWNED BY public.domain_contacts.id;
 
 
 --
+-- Name: domain_pending_notifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.domain_pending_notifications (
+    id bigint NOT NULL,
+    domain_id integer NOT NULL,
+    kind character varying NOT NULL,
+    recipients character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: domain_pending_notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.domain_pending_notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: domain_pending_notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.domain_pending_notifications_id_seq OWNED BY public.domain_pending_notifications.id;
+
+
+--
 -- Name: domain_transfers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2809,7 +2841,18 @@ CREATE TABLE public.reserve_domain_invoices (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     status integer DEFAULT 0,
-    metainfo character varying
+    metainfo character varying,
+    reference_no character varying,
+    due_date date,
+    buyer_name character varying,
+    buyer_email character varying,
+    buyer_address character varying,
+    buyer_country_code character varying,
+    buyer_vat_no character varying,
+    total numeric(10,2),
+    vat_rate numeric(4,3),
+    paid_at timestamp without time zone,
+    in_directo boolean DEFAULT false NOT NULL
 );
 
 
@@ -3355,6 +3398,13 @@ ALTER TABLE ONLY public.domain_contacts ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: domain_pending_notifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_pending_notifications ALTER COLUMN id SET DEFAULT nextval('public.domain_pending_notifications_id_seq'::regclass);
+
+
+--
 -- Name: domain_transfers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3889,6 +3939,14 @@ ALTER TABLE ONLY public.dnskeys
 
 ALTER TABLE ONLY public.domain_contacts
     ADD CONSTRAINT domain_contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: domain_pending_notifications domain_pending_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_pending_notifications
+    ADD CONSTRAINT domain_pending_notifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -4622,6 +4680,13 @@ CREATE INDEX index_domain_contacts_on_domain_id ON public.domain_contacts USING 
 
 
 --
+-- Name: index_domain_pending_notifications_on_domain_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domain_pending_notifications_on_domain_id ON public.domain_pending_notifications USING btree (domain_id);
+
+
+--
 -- Name: index_domain_transfers_on_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5133,6 +5198,13 @@ CREATE INDEX index_reserve_domain_invoices_on_invoice_number ON public.reserve_d
 
 
 --
+-- Name: index_reserve_domain_invoices_on_reference_no; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_reserve_domain_invoices_on_reference_no ON public.reserve_domain_invoices USING btree (reference_no) WHERE (reference_no IS NOT NULL);
+
+
+--
 -- Name: index_reserved_domain_lifecycles_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5420,6 +5492,14 @@ ALTER TABLE ONLY public.csync_records
 
 ALTER TABLE ONLY public.prices
     ADD CONSTRAINT fk_rails_78c376257f FOREIGN KEY (zone_id) REFERENCES public.zones(id);
+
+
+--
+-- Name: domain_pending_notifications fk_rails_7d8e096d15; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_pending_notifications
+    ADD CONSTRAINT fk_rails_7d8e096d15 FOREIGN KEY (domain_id) REFERENCES public.domains(id) ON DELETE CASCADE;
 
 
 --
@@ -6075,6 +6155,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261005090000'),
 ('20261005090100'),
 ('20261005090200'),
-('20261012120000');
+('20261012120000'),
+('20261016100000'),
+('20261105100000'),
+('20261118120000'),
+('20261118120100');
 
 

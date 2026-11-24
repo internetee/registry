@@ -2,6 +2,10 @@ module Domains
   module UpdateConfirm
     class ProcessAction < Base
       def execute
+        # The registrant decision arrives asynchronously, so the pending update may already
+        # be gone by now - cancelled by the registrar or cleaned up by the expiry cron.
+        return unless domain.pending_update?
+
         ::PaperTrail.request.whodunnit = "interaction - #{self.class.name} - #{action} by"\
           " #{initiator}"
 

@@ -1,0 +1,16 @@
+en:
+  admin:
+    reserve_domain_invoices:
+      index:
+        title: Reservation invoices
+        number: Invoice number
+        buyer: Buyer
+        domains: Domains
+        total: Total
+        issue_date: Issue date
+        due_date: Due date
+        paid_at: Paid at
+        in_directo: In Directo
+        reset_btn: Reset
+        'yes': 'Yes'
+        'no': 'No'

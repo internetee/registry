@@ -1,4 +1,35 @@
+19.11.2026
+* Fix for auto-topup timeout issue https://github.com/internetee/registry/issues/2948
+* BusinessReg reserv invoices are now properly stored and shared with accounting system https://github.com/internetee/registry/issues/2987
+
+18.11.2026
+* Allow 1 character domains in email addresses https://github.com/internetee/registry/issues/2959
+
+17.11.2026
+* Pending operations: notification log, resend and filter https://github.com/internetee/registry/pull/2981
+
+05.11.2026
+* Registrars can see the date and sent confirmation emails of a pending registrant change or delete, and resend the confirmation email (POST /repp/v1/domains/:name/pending_notification) https://github.com/internetee/registrar_center2/issues/237
+* GET /repp/v1/domains accepts q[with_pending_operation]=true to list only domains with pending operations https://github.com/internetee/registrar_center2/issues/237
+* Delayed registrant change confirmation and notice emails are no longer sent when the change was cancelled, confirmed or rejected in the meantime https://github.com/internetee/registrar_center2/issues/237
+* Deploy: run migrations
+
+03.11.2026
+* Allow legal persons to send name and email in disclosed attributes https://github.com/internetee/registry/pull/2971
+* Enable registrars to cancel pending registrant change https://github.com/internetee/registry/issues/2939
+
+29.10.2026
+* BusinessReg: Add option for payments with an invoice https://github.com/internetee/registry/issues/2970
+
+16.10.2026
+* Business Registry reservation invoices get a reference number and due date; invoice PDF is available before payment so it can be paid by bank transfer https://github.com/internetee/registry/pull/2972
+* New billing endpoint PUT /eis_billing/business_registry_payment reserves domains when EIS billing matches a bank transfer by reference number https://github.com/internetee/registry/pull/2972
+* Reservation is first-come-first-served: unpaid invoice PDF warns that it does not guarantee the reservation; a bank payment for domains that are no longer available cancels the invoice and EIS billing asks admin to refund it https://github.com/internetee/registry/pull/2972
+* Fixed cancelling of intersecting reservation invoices after a paid callback https://github.com/internetee/registry/pull/2972
+* Deploy: run migrations; set business_registry_payment_url in eis_billing_system (https://github.com/internetee/eis_billing_system/pull/268)
+
 15.10.2026
+* Registrant API accepts name and email in org contacts' disclosed attributes, so registrant center saves no longer fail with 400 for legal persons
 * Fix for whois duplicate records https://github.com/internetee/registry/pull/2966
 
 14:10.2026
@@ -23,6 +54,9 @@
 * Expired domain reservations are removed daily at 00:35 by cron (ReservedDomain.release_expired); removal reason is recorded in the reservation audit log https://github.com/internetee/registry/issues/2963
 01.10.2026
 * Business registry reservations expire at the end of the last full day (23:59:59) instead of exact activation time https://github.com/internetee/registry/issues/2961
+
+10.08.2026
+* Registrars can now cancel a pending registrant change https://github.com/internetee/registry/issues/2939
 
 23.07.2026
 * Operations with pending status now return result code 1001 in REPP https://github.com/internetee/registry/issues/2940

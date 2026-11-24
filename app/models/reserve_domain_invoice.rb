@@ -7,7 +7,7 @@ class ReserveDomainInvoice < ApplicationRecord
   end
 
   class InvoiceResponseStruct < Struct.new(:status_code_success, :linkpay_url, :invoice_number, :details, :reserved_domain_names, :user_unique_id,
-    keyword_init: true)
+    :reference_no, :due_date, keyword_init: true)
   end
 
   INITIATOR = 'business_registry'
@@ -15,12 +15,29 @@ class ReserveDomainInvoice < ApplicationRecord
   HTTP_CREATED = '201'
   ONE_OFF_CUSTOMER_URL = 'https://registry.test/eis_billing/callback'
   DEFAULT_AMOUNT = 10.00 # this need to move to the admin panel
-
+  BUYER_ATTRIBUTES = %i[buyer_name buyer_email buyer_address buyer_country_code buyer_vat_no].freeze
 
   enum status: { pending: 0, paid: 1, cancelled: 2, failed: 3 }
 
+  # Directo picks the VAT treatment by the buyer country
+  validates :buyer_country_code, iso31661_alpha2: true, allow_nil: true
+
+  def self.ransackable_attributes(*)
+    %w[invoice_number buyer_name status created_at paid_at]
+  end
+
+  def self.ransackable_associations(*)
+    []
+  end
+
+  # The price is fixed when the invoice is issued, later price or VAT changes must not alter it
+  before_create do
+    self.total ||= domain_names.size * DEFAULT_AMOUNT
+    self.vat_rate ||= Setting.registry_vat_prc
+  end
+
   class << self
-    def create_list_of_domains(domain_names)
+    def create_list_of_domains(domain_names, buyer = {})
       # TODO: need to refactor this
       normalized_names = normalize_domain_names(domain_names)
       available_names = filter_available_domains(normalized_names)
@@ -30,18 +47,21 @@ class ReserveDomainInvoice < ApplicationRecord
 
       return build_error_response('Some intersecting invoices are paid') if is_any_intersecting_invoice_paid?(available_names)
 
-      user_unique_id = generate_unique_id      
+      user_unique_id = generate_unique_id
+      reference_no = fetch_reference_no(user_unique_id)
 
       invoice = if are_domains_intersect?(available_names)
         invoice_number = get_invoice_number_from_intersecting_invoice(available_names).to_i
-        create_invoice_with_domains(available_names, invoice_number: invoice_number, user_unique_id: user_unique_id)
+        create_invoice_with_domains(available_names, invoice_number: invoice_number, user_unique_id: user_unique_id,
+                                                     reference_no: reference_no, buyer: buyer)
       else
-        create_invoice_with_domains(available_names, user_unique_id: user_unique_id)
+        create_invoice_with_domains(available_names, user_unique_id: user_unique_id, reference_no: reference_no,
+                                                     buyer: buyer)
       end
 
       result = process_invoice(invoice)
-      create_reserve_domain_invoice(invoice.number, available_names, invoice.user_unique_id)
-      build_response(result, invoice.number, invoice.user_unique_id, available_names)
+      reserve_domain_invoice = create_reserve_domain_invoice(invoice, available_names, buyer)
+      build_response(result, invoice, reserve_domain_invoice)
     end
 
     def are_domains_intersect?(domain_names)
@@ -72,7 +92,7 @@ class ReserveDomainInvoice < ApplicationRecord
 
         if invoice.pending? && result.paid?
 
-          invoice.paid!
+          invoice.update!(status: :paid, paid_at: Time.zone.now)
           invoice.create_paid_reserved_domains
           ReserveDomainInvoice.cancel_intersecting_invoices(domain_names)
 
@@ -100,14 +120,16 @@ class ReserveDomainInvoice < ApplicationRecord
       SimpleIDN.to_unicode(name).mb_chars.downcase.strip.to_s
     end
 
-    def create_invoice_with_domains(domain_names, invoice_number: nil, user_unique_id: nil)
+    def create_invoice_with_domains(domain_names, invoice_number: nil, user_unique_id: nil, reference_no: nil, buyer: {})
       invoice_number = fetch_invoice_number if invoice_number.nil?
-      
+
       build_invoice(
         total: domain_price_calculation(domain_names),
         number: invoice_number,
+        reference_no: reference_no,
         reserved_domain_names: domain_names,
-        user_unique_id: user_unique_id
+        user_unique_id: user_unique_id,
+        buyer: buyer
       )
     end
 
@@ -116,15 +138,20 @@ class ReserveDomainInvoice < ApplicationRecord
       JSON.parse(response.body).fetch('invoice_number').to_i
     end
 
+    def fetch_reference_no(owner)
+      response = EisBilling::GetReferenceNumber.call(owner: owner, initiator: INITIATOR)
+      JSON.parse(response.body).fetch('reference_number')
+    end
+
     def build_invoice(attributes)
       InvoiceStruct.new(
         total: attributes[:total],
         number: attributes[:number],
-        buyer_name: nil,
-        buyer_email: nil,
+        buyer_name: attributes[:buyer][:buyer_name],
+        buyer_email: attributes[:buyer][:buyer_email],
         description: 'description',
         initiator: INITIATOR,
-        reference_no: nil,
+        reference_no: attributes[:reference_no],
         reserved_domain_names: attributes[:reserved_domain_names],
         user_unique_id: attributes[:user_unique_id]
       )
@@ -138,24 +165,29 @@ class ReserveDomainInvoice < ApplicationRecord
       EisBilling::AddDeposits.new(invoice).call
     end
 
-    def create_reserve_domain_invoice(invoice_number, domain_names, user_unique_id)
+    def create_reserve_domain_invoice(invoice, domain_names, buyer)
       create(
-        invoice_number: invoice_number,
+        invoice_number: invoice.number,
         domain_names: domain_names,
-        metainfo: user_unique_id
+        metainfo: invoice.user_unique_id,
+        reference_no: invoice.reference_no,
+        due_date: (Time.zone.now + Setting.days_to_keep_invoices_active.days).to_date,
+        **buyer.slice(*BUYER_ATTRIBUTES)
       )
     end
 
-    def build_response(result, invoice_number, user_unique_id, domain_names)
+    def build_response(result, invoice, reserve_domain_invoice)
       parsed_result = JSON.parse(result.body)
       # link = JSON.parse(result.body)['everypay_link']
       
       InvoiceResponseStruct.new(
         status_code_success: success_status?(result.code),
         linkpay_url: parsed_result['everypay_link'],
-        invoice_number: invoice_number,
-        user_unique_id: user_unique_id,
-        reserved_domain_names: domain_names,
+        invoice_number: invoice.number,
+        user_unique_id: invoice.user_unique_id,
+        reserved_domain_names: invoice.reserved_domain_names,
+        reference_no: reserve_domain_invoice.reference_no,
+        due_date: reserve_domain_invoice.due_date,
         details: parsed_result
       )
     end
@@ -197,6 +229,57 @@ class ReserveDomainInvoice < ApplicationRecord
     end
   end
 
+  # Returns :reserved, :already_paid or :unavailable (nothing is reserved when any domain is taken)
+  def reserve_paid_domains(paid_at: Time.zone.now)
+    result = with_lock do
+      if paid?
+        :already_paid
+      elsif all_domains_available?
+        create_paid_reserved_domains
+        update!(status: :paid, paid_at: paid_at)
+        self.class.cancel_intersecting_invoices(domain_names)
+        :reserved
+      else
+        :unavailable
+      end
+    end
+
+    DirectoReserveDomainInvoiceForwardJob.perform_later if result == :reserved
+    result
+  end
+
+  # Lines are net per domain and the VAT is the remainder, so lines + VAT always equal the paid total
+  def net_price_per_domain
+    (total / domain_names.size / (1 + vat_rate)).round(2)
+  end
+
+  def subtotal
+    net_price_per_domain * domain_names.size
+  end
+
+  def vat_amount
+    total - subtotal
+  end
+
+  def as_directo_json
+    {
+      'number' => invoice_number.to_i,
+      'issue_date' => created_at.to_date.iso8601,
+      'transaction_date' => paid_at.to_date.iso8601,
+      'language' => '',
+      'currency' => 'EUR',
+      'total_wo_vat' => subtotal.to_s,
+      'vat_amount' => vat_amount.to_s,
+      # 'ERA' is the Directo code for one-off customers, as auction invoices use it
+      'customer' => { 'name' => buyer_name, 'code' => 'ERA', 'destination' => buyer_country_code || 'EE',
+                      'vat_reg_no' => buyer_vat_no },
+      'invoice_lines' => domain_names.map do |name|
+        { 'product_id' => Setting.directo_reservation_product_name, 'description' => name,
+          'quantity' => 1, 'unit' => 1, 'price' => net_price_per_domain.to_s }
+      end
+    }
+  end
+
   def build_reserved_domains_output
     domain_names.map do |name|
       domain = ReservedDomain.find_by(name: name)
@@ -212,4 +295,9 @@ class ReserveDomainInvoice < ApplicationRecord
     end
   end
 
+  private
+
+  def all_domains_available?
+    self.class.filter_available_domains(domain_names).size == domain_names.size
+  end
 end

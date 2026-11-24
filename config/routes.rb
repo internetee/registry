@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     put '/e_invoice_response', to: 'e_invoice_response#update', as: 'e_invoice_response'
     post '/lhv_connect_transactions', to: 'lhv_connect_transactions#create', as: 'lhv_connect_transactions'
     get 'callback', to: 'business_registry_callback#callback', as: 'callback'
+    put '/business_registry_payment', to: 'business_registry_payments#update', as: 'business_registry_payment'
     resource :invoices, only: [:update]
   end
 
@@ -167,6 +168,8 @@ Rails.application.routes.draw do
         resources :renew, only: %i[create], constraints: { id: /.*/ }, controller: 'domains/renews'
         resources :transfer, only: %i[create], constraints: { id: /.*/ }, controller: 'domains/transfers'
         resources :statuses, only: %i[update destroy], constraints: { id: /.*/ }, controller: 'domains/statuses'
+        resource :pending_update, only: %i[destroy], controller: 'domains/pending_updates'
+        resource :pending_notification, only: %i[create], controller: 'domains/pending_notifications'
         match 'dnssec', to: 'domains/dnssec#destroy', via: 'delete', defaults: { id: nil }
         match 'contacts', to: 'domains/contacts#destroy', via: 'delete', defaults: { id: nil }
         collection do
@@ -340,6 +343,9 @@ Rails.application.routes.draw do
       end
     end
     resources :reserved_domain_lifecycles, only: %i[index show]
+    resources :reserve_domain_invoices, only: :index do
+      get 'download', on: :member
+    end
     resources :disputes do
       member do
         get 'delete'

@@ -163,7 +163,7 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
     link = JSON.parse(result.body)['everypay_link']
 
     invoice.update(payment_link: link)
-    SendEInvoiceJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
+    SendEInvoiceJob.set(wait: 1.minute).perform_later(invoice.id, payable: payable)
 
     invoice
   end

@@ -89,7 +89,87 @@ class Api::V1::BusinessRegistry::ReservedDomainsInvoicePdfControllerTest < Actio
     assert_response :not_found
   end
 
-  test 'returns error when invoice is not paid' do
+  test 'returns unpaid pdf when invoice is pending' do
+    stub_unpaid_billing_status
+
+    captured_context = nil
+    generator = ->(_invoice, context) { captured_context = context; Struct.new(:as_pdf).new('%PDF-1.4 unpaid') }
+
+    ReserveDomainInvoice::PdfGenerator.stub :new, generator do
+      get api_v1_business_registry_reserved_domains_invoice_pdf_path(invoice_number: @invoice.invoice_number,
+                                                                     user_unique_id: @invoice.metainfo),
+          headers: @auth_headers
+    end
+
+    assert_response :success
+    assert_equal 'application/pdf', response.headers['Content-Type']
+    assert_includes response.body, '%PDF-1.4 unpaid'
+    assert_equal false, captured_context[:paid]
+  end
+
+  test 'passes paid flag when billing reports invoice as paid' do
+    stub_billing_request(status: 200, body: { invoice_status: 'paid' }, user_unique_id: @invoice.metainfo)
+
+    captured_context = nil
+    generator = ->(_invoice, context) { captured_context = context; Struct.new(:as_pdf).new('%PDF-1.4 paid') }
+
+    ReserveDomainInvoice::PdfGenerator.stub :new, generator do
+      get api_v1_business_registry_reserved_domains_invoice_pdf_path(invoice_number: @invoice.invoice_number,
+                                                                     user_unique_id: @invoice.metainfo),
+          headers: @auth_headers
+    end
+
+    assert_response :success
+    assert_equal true, captured_context[:paid]
+  end
+
+  test 'stores buyer details sent with the pdf request when the invoice has none' do
+    stub_unpaid_billing_status
+
+    ReserveDomainInvoice.stub_any_instance(:as_pdf, '%PDF-1.4 fake') do
+      get api_v1_business_registry_reserved_domains_invoice_pdf_path(invoice_number: @invoice.invoice_number,
+                                                                     user_unique_id: @invoice.metainfo,
+                                                                     customer_name: 'Name Surname (12345678901)',
+                                                                     customer_address: 'Tallinn'),
+          headers: @auth_headers
+    end
+
+    assert_response :success
+    assert_equal 'Name Surname (12345678901)', @invoice.reload.buyer_name
+    assert_equal 'Tallinn', @invoice.buyer_address
+  end
+
+  test 'keeps buyer details given when the reservation was made' do
+    @invoice.update!(buyer_name: 'Original OÜ')
+    stub_unpaid_billing_status
+
+    ReserveDomainInvoice.stub_any_instance(:as_pdf, '%PDF-1.4 fake') do
+      get api_v1_business_registry_reserved_domains_invoice_pdf_path(invoice_number: @invoice.invoice_number,
+                                                                     user_unique_id: @invoice.metainfo,
+                                                                     customer_name: 'Other OÜ'),
+          headers: @auth_headers
+    end
+
+    assert_equal 'Original OÜ', @invoice.reload.buyer_name
+  end
+
+  test 'returns error when unpaid invoice is cancelled' do
+    @invoice.cancelled!
+    stub_unpaid_billing_status
+
+    get api_v1_business_registry_reserved_domains_invoice_pdf_path(invoice_number: @invoice.invoice_number,
+                                                                   user_unique_id: @invoice.metainfo),
+        headers: @auth_headers
+
+    assert_response :unprocessable_entity
+    json_response = JSON.parse(response.body)
+    assert_equal 'Invoice is cancelled', json_response['error']
+    assert_equal 'cancelled', json_response.dig('details', 'status')
+  end
+
+  private
+
+  def stub_unpaid_billing_status
     stub_billing_request(
       status: 200,
       body: {
@@ -99,19 +179,7 @@ class Api::V1::BusinessRegistry::ReservedDomainsInvoicePdfControllerTest < Actio
       },
       user_unique_id: @invoice.metainfo
     )
-
-    get api_v1_business_registry_reserved_domains_invoice_pdf_path(invoice_number: @invoice.invoice_number,
-                                                                   user_unique_id: @invoice.metainfo),
-        headers: @auth_headers
-
-    assert_response :unprocessable_entity
-    json_response = JSON.parse(response.body)
-    assert_equal 'Invoice is not paid', json_response['error']
-    assert_equal 'unpaid', json_response.dig('details', 'status')
-    assert_equal 'Payment pending', json_response.dig('details', 'message')
   end
-
-  private
 
   def stub_billing_request(status:, body:, user_unique_id: nil)
     stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{@invoice.invoice_number}&user_unique_id=#{user_unique_id}")
