@@ -374,7 +374,8 @@ GEM
       activerecord (>= 6.0)
       request_store (~> 1.4)
     pdfkit (0.8.7.2)
-    pg (1.5.9)
+    pg (1.6.3)
+    pg (1.6.3-x86_64-linux)
     pg_query (5.1.0)
       google-protobuf (>= 3.22.3)
     pghero (3.1.0)
@@ -583,7 +584,7 @@ DEPENDENCIES
   openssl
   paper_trail (~> 14.0)
   pdfkit
-  pg (= 1.5.9)
+  pg (= 1.6.3)
   pg_query (>= 2.2)
   pghero
   pry (= 0.15.2)
