@@ -370,8 +370,8 @@ GEM
       bigdecimal
     openssl (3.3.0)
     orm_adapter (0.5.0)
-    paper_trail (14.0.0)
-      activerecord (>= 6.0)
+    paper_trail (16.0.0)
+      activerecord (>= 6.1)
       request_store (~> 1.4)
     pdfkit (0.8.7.2)
     pg (1.5.9)
@@ -428,7 +428,7 @@ GEM
     redis-client (0.14.1)
       connection_pool
     regexp_parser (2.9.2)
-    request_store (1.5.1)
+    request_store (1.7.0)
       rack (>= 1.4)
     responders (3.0.1)
       actionpack (>= 5.0)
@@ -581,7 +581,7 @@ DEPENDENCIES
   newrelic_rpm
   nokogiri (~> 1.16.0)
   openssl
-  paper_trail (~> 14.0)
+  paper_trail (~> 16.0)
   pdfkit
   pg (= 1.5.9)
   pg_query (>= 2.2)
