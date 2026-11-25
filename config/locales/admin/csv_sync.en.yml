@@ -1,0 +1,34 @@
+en:
+  admin:
+    csv_sync:
+      actions:
+        created: Created
+        updated: Updated
+        unchanged: Unchanged
+        error: Error
+      field_checkboxes:
+        panel_title: CSV fields
+        default_group: Fields
+      import_form:
+        instructions: Upload a CSV file and choose which fields to apply.
+        file_label: CSV file
+        submit_btn: Preview import
+        cancel_btn: Cancel
+        fields_panel_title: Fields to apply
+      preview_summary:
+        panel_title: Import preview summary
+        created: Created
+        updated: Updated
+        unchanged: Unchanged
+        errors: Errors
+      preview_table:
+        line: Row
+        key: Key
+        action: Action
+        changes: Changed fields
+        error: Error details
+      export_actions:
+        panel_title: CSV export
+        export_btn: Export CSV
+        export_selected_btn: Export selected
+        reset_btn: Reset

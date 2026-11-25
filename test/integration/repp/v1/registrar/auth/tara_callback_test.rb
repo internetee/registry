@@ -19,7 +19,7 @@ class ReppV1RegistrarAuthTaraCallbackTest < ActionDispatch::IntegrationTest
     }
 
     Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
-      Repp::V1::BaseController.stub_any_instance(:validate_webclient_ca, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient, true) do
         post '/repp/v1/registrar/auth/tara_callback', headers: @auth_headers, params: request_body
       end
     end
@@ -33,6 +33,26 @@ class ReppV1RegistrarAuthTaraCallbackTest < ActionDispatch::IntegrationTest
     user_token = Base64.urlsafe_encode64("#{@user.username}:#{@user.plain_text_password}")
     assert_equal json[:data][:username], @user.username
     assert_equal json[:data][:token], user_token
+  end
+
+  def test_auto_verifies_unverified_api_user_with_matching_subject
+    @user.update_columns(verified_at: nil)
+
+    request_body = { auth: { uid: 'EE1234' } }
+
+    Repp::V1::BaseController.stub_any_instance(:webclient_request?, true) do
+      Repp::V1::BaseController.stub_any_instance(:validate_webclient, true) do
+        post '/repp/v1/registrar/auth/tara_callback', headers: @auth_headers, params: request_body
+      end
+    end
+
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    @user.reload
+    assert @user.verified_at.present?
+    assert_equal "eeid-auto-verify:#{@user.username}", @user.updator_str
   end
 
   def test_invalidates_user_with_wrong_omniauth_params

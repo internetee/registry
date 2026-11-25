@@ -1,3 +1,8 @@
+\restrict WmlyozFAnc1c6zHWXudb7s2jRC1uKwHPlCMDikRGHsbNPX1TGBaq3KQ01YXVO8T
+
+-- Dumped from database version 13.4 (Debian 13.4-4.pgdg110+1)
+-- Dumped by pg_dump version 13.23 (Debian 13.23-1.pgdg11+1)
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -228,6 +233,66 @@ CREATE FUNCTION public.generate_zonefile(i_origin character varying) RETURNS tex
       $_$;
 
 
+--
+-- Name: reserved_domain_lifecycle_rows(bigint[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.reserved_domain_lifecycle_rows(lifecycle_ids bigint[]) RETURNS TABLE(id bigint, domain_name character varying, created_at timestamp without time zone, created_by character varying, creation_source character varying, creation_reason character varying, last_changed_at timestamp without time zone, last_changed_by character varying, last_source character varying, last_reason character varying, last_reason_note text, expire_at timestamp without time zone, ended_at timestamp without time zone, end_reason character varying, registration_recorded boolean, live boolean)
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT
+    ids.id,
+    COALESCE(rd.name, le.resolved_name)::character varying,
+    COALESCE(rd.created_at, ce.created_at,
+             CASE WHEN fe.object ->> 'created_at' ~ '^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}'
+                  THEN (fe.object ->> 'created_at')::timestamptz AT TIME ZONE 'UTC' END),
+    COALESCE(rd.creator_str, ce.whodunnit, fe.object ->> 'creator_str')::character varying,
+    ce.source,
+    ce.reason,
+    COALESCE(le.created_at, rd.updated_at),
+    COALESCE(le.whodunnit, rd.updator_str)::character varying,
+    le.source,
+    le.reason,
+    le.reason_note,
+    CASE WHEN rd.id IS NOT NULL THEN rd.expire_at
+         WHEN le.known_expire_at ~ '^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}'
+         THEN le.known_expire_at::timestamptz AT TIME ZONE 'UTC' END,
+    CASE WHEN rd.id IS NULL AND le.event = 'destroy' THEN le.created_at END,
+    CASE WHEN rd.id IS NULL AND le.event = 'destroy' THEN le.reason END,
+    COALESCE(r.registration_recorded, false),
+    rd.id IS NOT NULL
+  FROM unnest(lifecycle_ids) AS ids(id)
+  LEFT JOIN public.reserved_domains rd ON rd.id = ids.id
+  LEFT JOIN LATERAL (
+    SELECT v.event, v.created_at, v.whodunnit, v.source, v.reason, v.reason_note,
+           COALESCE(v.domain_name,
+                    CASE WHEN v.event = 'destroy' THEN v.object ->> 'name'
+                         ELSE COALESCE(v.object_changes -> 'name' ->> 1, v.object ->> 'name') END) AS resolved_name,
+           CASE WHEN v.event = 'destroy' THEN v.object ->> 'expire_at'
+                WHEN v.object_changes -> 'expire_at' IS NOT NULL THEN v.object_changes -> 'expire_at' ->> 1
+                ELSE v.object ->> 'expire_at' END AS known_expire_at
+    FROM public.log_reserved_domains v
+    WHERE v.item_type = 'ReservedDomain' AND v.item_id = ids.id
+    ORDER BY v.id DESC LIMIT 1
+  ) le ON true
+  LEFT JOIN LATERAL (
+    SELECT v.object FROM public.log_reserved_domains v
+    WHERE v.item_type = 'ReservedDomain' AND v.item_id = ids.id
+    ORDER BY v.id LIMIT 1
+  ) fe ON true
+  LEFT JOIN LATERAL (
+    SELECT v.created_at, v.whodunnit, v.source, v.reason FROM public.log_reserved_domains v
+    WHERE v.item_type = 'ReservedDomain' AND v.item_id = ids.id AND v.event = 'create'
+    ORDER BY v.id LIMIT 1
+  ) ce ON true
+  LEFT JOIN LATERAL (
+    SELECT bool_or(v.reason = 'domain_registered') AS registration_recorded
+    FROM public.log_reserved_domains v
+    WHERE v.item_type = 'ReservedDomain' AND v.item_id = ids.id
+  ) r ON true
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -340,6 +405,41 @@ CREATE SEQUENCE public.actions_id_seq
 --
 
 ALTER SEQUENCE public.actions_id_seq OWNED BY public.actions.id;
+
+
+--
+-- Name: admin_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.admin_reports (
+    id bigint NOT NULL,
+    name character varying,
+    description text,
+    sql_query text,
+    parameters json,
+    created_by integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: admin_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.admin_reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: admin_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.admin_reports_id_seq OWNED BY public.admin_reports.id;
 
 
 --
@@ -693,11 +793,14 @@ CREATE TABLE public.contacts (
     disclosed_attributes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     email_history character varying,
     registrant_publishable boolean DEFAULT false,
-    checked_company_at timestamp without time zone,
-    company_register_status character varying,
     ident_request_sent_at timestamp without time zone,
     verified_at timestamp without time zone,
-    verification_id character varying
+    verification_id character varying,
+    checked_company_at timestamp without time zone,
+    company_register_status character varying,
+    system_disclosed_attributes character varying[] DEFAULT '{}'::character varying[],
+    verification_pending_at timestamp without time zone,
+    verification_snapshot jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -914,6 +1017,38 @@ CREATE SEQUENCE public.domain_contacts_id_seq
 --
 
 ALTER SEQUENCE public.domain_contacts_id_seq OWNED BY public.domain_contacts.id;
+
+
+--
+-- Name: domain_pending_notifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.domain_pending_notifications (
+    id bigint NOT NULL,
+    domain_id integer NOT NULL,
+    kind character varying NOT NULL,
+    recipients character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: domain_pending_notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.domain_pending_notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: domain_pending_notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.domain_pending_notifications_id_seq OWNED BY public.domain_pending_notifications.id;
 
 
 --
@@ -2092,7 +2227,12 @@ CREATE TABLE public.log_reserved_domains (
     created_at timestamp without time zone,
     session character varying,
     children json,
-    uuid character varying
+    uuid character varying,
+    source character varying,
+    reason character varying,
+    reason_note text,
+    domain_name character varying,
+    registrar_id integer
 );
 
 
@@ -2606,7 +2746,10 @@ CREATE TABLE public.registrars (
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
     legaldoc_optout boolean DEFAULT false NOT NULL,
     legaldoc_optout_comment text,
-    email_history character varying
+    email_history character varying,
+    accreditation_date timestamp without time zone,
+    accreditation_expire_date timestamp without time zone,
+    accept_pdf_invoices boolean DEFAULT true
 );
 
 
@@ -2627,6 +2770,25 @@ CREATE SEQUENCE public.registrars_id_seq
 --
 
 ALTER SEQUENCE public.registrars_id_seq OWNED BY public.registrars.id;
+
+
+--
+-- Name: reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.reports_id_seq OWNED BY public.admin_reports.id;
 
 
 --
@@ -2679,7 +2841,18 @@ CREATE TABLE public.reserve_domain_invoices (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     status integer DEFAULT 0,
-    metainfo character varying
+    metainfo character varying,
+    reference_no character varying,
+    due_date date,
+    buyer_name character varying,
+    buyer_email character varying,
+    buyer_address character varying,
+    buyer_country_code character varying,
+    buyer_vat_no character varying,
+    total numeric(10,2),
+    vat_rate numeric(4,3),
+    paid_at timestamp without time zone,
+    in_directo boolean DEFAULT false NOT NULL
 );
 
 
@@ -2700,6 +2873,41 @@ CREATE SEQUENCE public.reserve_domain_invoices_id_seq
 --
 
 ALTER SEQUENCE public.reserve_domain_invoices_id_seq OWNED BY public.reserve_domain_invoices.id;
+
+
+--
+-- Name: reserved_domain_lifecycle_syncs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.reserved_domain_lifecycle_syncs (
+    id integer DEFAULT 1 NOT NULL,
+    synced_at timestamp without time zone NOT NULL,
+    CONSTRAINT reserved_domain_lifecycle_syncs_id_check CHECK ((id = 1))
+);
+
+
+--
+-- Name: reserved_domain_lifecycles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.reserved_domain_lifecycles (
+    id bigint NOT NULL,
+    domain_name character varying,
+    created_at timestamp without time zone,
+    created_by character varying,
+    creation_source character varying,
+    creation_reason character varying,
+    last_changed_at timestamp without time zone,
+    last_changed_by character varying,
+    last_source character varying,
+    last_reason character varying,
+    last_reason_note text,
+    expire_at timestamp without time zone,
+    ended_at timestamp without time zone,
+    end_reason character varying,
+    registration_recorded boolean DEFAULT false NOT NULL,
+    live boolean DEFAULT false NOT NULL
+);
 
 
 --
@@ -2851,7 +3059,13 @@ CREATE TABLE public.users (
     legacy_id integer,
     accreditation_date timestamp without time zone,
     accreditation_expire_date timestamp without time zone,
-    uuid uuid DEFAULT public.gen_random_uuid()
+    uuid uuid DEFAULT public.gen_random_uuid(),
+    ident_request_sent_at timestamp without time zone,
+    verified_at timestamp without time zone,
+    verification_id character varying,
+    verification_pending_at timestamp without time zone,
+    verification_snapshot jsonb DEFAULT '{}'::jsonb,
+    subject character varying
 );
 
 
@@ -3079,6 +3293,13 @@ ALTER TABLE ONLY public.actions ALTER COLUMN id SET DEFAULT nextval('public.acti
 
 
 --
+-- Name: admin_reports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_reports ALTER COLUMN id SET DEFAULT nextval('public.reports_id_seq'::regclass);
+
+
+--
 -- Name: auctions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3174,6 +3395,13 @@ ALTER TABLE ONLY public.dnskeys ALTER COLUMN id SET DEFAULT nextval('public.dnsk
 --
 
 ALTER TABLE ONLY public.domain_contacts ALTER COLUMN id SET DEFAULT nextval('public.domain_contacts_id_seq'::regclass);
+
+
+--
+-- Name: domain_pending_notifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_pending_notifications ALTER COLUMN id SET DEFAULT nextval('public.domain_pending_notifications_id_seq'::regclass);
 
 
 --
@@ -3586,6 +3814,14 @@ ALTER TABLE ONLY public.actions
 
 
 --
+-- Name: admin_reports admin_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_reports
+    ADD CONSTRAINT admin_reports_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3703,6 +3939,14 @@ ALTER TABLE ONLY public.dnskeys
 
 ALTER TABLE ONLY public.domain_contacts
     ADD CONSTRAINT domain_contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: domain_pending_notifications domain_pending_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_pending_notifications
+    ADD CONSTRAINT domain_pending_notifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -4074,6 +4318,22 @@ ALTER TABLE ONLY public.reserve_domain_invoices
 
 
 --
+-- Name: reserved_domain_lifecycle_syncs reserved_domain_lifecycle_syncs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reserved_domain_lifecycle_syncs
+    ADD CONSTRAINT reserved_domain_lifecycle_syncs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reserved_domain_lifecycles reserved_domain_lifecycles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reserved_domain_lifecycles
+    ADD CONSTRAINT reserved_domain_lifecycles_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: reserved_domains reserved_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4364,6 +4624,13 @@ CREATE INDEX index_contacts_on_registrar_id_and_ident_type ON public.contacts US
 
 
 --
+-- Name: index_contacts_on_verification_pending_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contacts_on_verification_pending_at ON public.contacts USING btree (verification_pending_at);
+
+
+--
 -- Name: index_contacts_on_verified_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4410,6 +4677,13 @@ CREATE INDEX index_domain_contacts_on_contact_id ON public.domain_contacts USING
 --
 
 CREATE INDEX index_domain_contacts_on_domain_id ON public.domain_contacts USING btree (domain_id);
+
+
+--
+-- Name: index_domain_pending_notifications_on_domain_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_domain_pending_notifications_on_domain_id ON public.domain_pending_notifications USING btree (domain_id);
 
 
 --
@@ -4770,10 +5044,38 @@ CREATE INDEX index_log_registrars_on_whodunnit ON public.log_registrars USING bt
 
 
 --
+-- Name: index_log_reserved_domains_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_reserved_domains_on_created_at ON public.log_reserved_domains USING btree (created_at);
+
+
+--
+-- Name: index_log_reserved_domains_on_domain_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_reserved_domains_on_domain_name ON public.log_reserved_domains USING btree (domain_name);
+
+
+--
 -- Name: index_log_reserved_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_log_reserved_domains_on_item_type_and_item_id ON public.log_reserved_domains USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_reserved_domains_on_reason; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_reserved_domains_on_reason ON public.log_reserved_domains USING btree (reason);
+
+
+--
+-- Name: index_log_reserved_domains_on_source; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_log_reserved_domains_on_source ON public.log_reserved_domains USING btree (source);
 
 
 --
@@ -4882,10 +5184,87 @@ CREATE INDEX index_registrant_verifications_on_domain_id ON public.registrant_ve
 
 
 --
+-- Name: index_registrars_on_accreditation_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registrars_on_accreditation_date ON public.registrars USING btree (accreditation_date);
+
+
+--
 -- Name: index_reserve_domain_invoices_on_invoice_number; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_reserve_domain_invoices_on_invoice_number ON public.reserve_domain_invoices USING btree (invoice_number);
+
+
+--
+-- Name: index_reserve_domain_invoices_on_reference_no; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_reserve_domain_invoices_on_reference_no ON public.reserve_domain_invoices USING btree (reference_no) WHERE (reference_no IS NOT NULL);
+
+
+--
+-- Name: index_reserved_domain_lifecycles_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserved_domain_lifecycles_on_created_at ON public.reserved_domain_lifecycles USING btree (created_at);
+
+
+--
+-- Name: index_reserved_domain_lifecycles_on_creation_source; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserved_domain_lifecycles_on_creation_source ON public.reserved_domain_lifecycles USING btree (creation_source);
+
+
+--
+-- Name: index_reserved_domain_lifecycles_on_domain_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserved_domain_lifecycles_on_domain_name ON public.reserved_domain_lifecycles USING btree (domain_name);
+
+
+--
+-- Name: index_reserved_domain_lifecycles_on_end_reason; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserved_domain_lifecycles_on_end_reason ON public.reserved_domain_lifecycles USING btree (end_reason);
+
+
+--
+-- Name: index_reserved_domain_lifecycles_on_last_changed; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserved_domain_lifecycles_on_last_changed ON public.reserved_domain_lifecycles USING btree (last_changed_at DESC, id DESC);
+
+
+--
+-- Name: index_reserved_domain_lifecycles_on_last_reason; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserved_domain_lifecycles_on_last_reason ON public.reserved_domain_lifecycles USING btree (last_reason);
+
+
+--
+-- Name: index_reserved_domain_lifecycles_on_last_source; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserved_domain_lifecycles_on_last_source ON public.reserved_domain_lifecycles USING btree (last_source);
+
+
+--
+-- Name: index_reserved_domain_lifecycles_on_live_and_expire_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserved_domain_lifecycles_on_live_and_expire_at ON public.reserved_domain_lifecycles USING btree (live, expire_at);
+
+
+--
+-- Name: index_reserved_domains_on_expire_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reserved_domains_on_expire_at ON public.reserved_domains USING btree (expire_at);
 
 
 --
@@ -4914,6 +5293,34 @@ CREATE INDEX index_users_on_identity_code ON public.users USING btree (identity_
 --
 
 CREATE INDEX index_users_on_registrar_id ON public.users USING btree (registrar_id);
+
+
+--
+-- Name: index_users_on_registrar_id_and_subject; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_registrar_id_and_subject ON public.users USING btree (registrar_id, subject) WHERE ((subject IS NOT NULL) AND ((subject)::text <> ''::text));
+
+
+--
+-- Name: index_users_on_subject; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_subject ON public.users USING btree (subject);
+
+
+--
+-- Name: index_users_on_verification_pending_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_verification_pending_at ON public.users USING btree (verification_pending_at);
+
+
+--
+-- Name: index_users_on_verified_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_verified_at ON public.users USING btree (verified_at);
 
 
 --
@@ -4948,7 +5355,7 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 -- Name: index_whois_records_on_domain_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_whois_records_on_domain_id ON public.whois_records USING btree (domain_id);
+CREATE UNIQUE INDEX index_whois_records_on_domain_id ON public.whois_records USING btree (domain_id);
 
 
 --
@@ -5085,6 +5492,14 @@ ALTER TABLE ONLY public.csync_records
 
 ALTER TABLE ONLY public.prices
     ADD CONSTRAINT fk_rails_78c376257f FOREIGN KEY (zone_id) REFERENCES public.zones(id);
+
+
+--
+-- Name: domain_pending_notifications fk_rails_7d8e096d15; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.domain_pending_notifications
+    ADD CONSTRAINT fk_rails_7d8e096d15 FOREIGN KEY (domain_id) REFERENCES public.domains(id) ON DELETE CASCADE;
 
 
 --
@@ -5227,10 +5642,11 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
+\unrestrict WmlyozFAnc1c6zHWXudb7s2jRC1uKwHPlCMDikRGHsbNPX1TGBaq3KQ01YXVO8T
+
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('0'),
 ('20140616073945'),
 ('20140620130107'),
 ('20140627082711'),
@@ -5709,14 +6125,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221214073933'),
 ('20221214074252'),
 ('20230531111154'),
-('20230612094319'),
-('20230612094326'),
-('20230612094335'),
 ('20230707084741'),
 ('20230710120154'),
 ('20230711083811'),
 ('20240816091049'),
 ('20240816092636'),
+('20240903131540'),
 ('20240924103554'),
 ('20241015071505'),
 ('20241030095636'),
@@ -5727,7 +6141,24 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241206085817'),
 ('20250204094550'),
 ('20250219102811'),
+('20250310133151'),
 ('20250313122119'),
-('20250319104749');
+('20250319104749'),
+('20250627084536'),
+('20251230104312'),
+('20260220111500'),
+('20260406125446'),
+('20260529120000'),
+('20260601120000'),
+('20260608120000'),
+('20261002120000'),
+('20261005090000'),
+('20261005090100'),
+('20261005090200'),
+('20261012120000'),
+('20261016100000'),
+('20261105100000'),
+('20261118120000'),
+('20261118120100');
 
 

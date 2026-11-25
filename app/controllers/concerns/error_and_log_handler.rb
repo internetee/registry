@@ -26,7 +26,7 @@ module ErrorAndLogHandler
   # rubocop:enable Metrics/MethodLength
 
   def handle_record_not_found
-    @response = { code: 2303, message: 'Object does not exist' }
+    @response = { code: 2303, message: I18n.t('repp.object_does_not_exist') }
     render(json: @response, status: :not_found)
   end
 

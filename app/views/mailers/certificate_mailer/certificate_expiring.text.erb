@@ -1,0 +1,33 @@
+CERTIFICATE EXPIRING SOON - ACTION REQUIRED
+===========================================
+
+⚠️  WARNING: Your certificate is approaching its expiration date and requires immediate attention.
+
+CERTIFICATE DETAILS:
+--------------------
+Common Name:    <%= @certificate.common_name %>
+Serial Number:  <%= @certificate.serial %>
+Interface:      <%= @certificate.interface.capitalize %>
+Expires At:     <%= @certificate.expires_at.strftime("%B %d, %Y at %H:%M UTC") %>
+<% days_left = (@certificate.expires_at.to_date - Date.current).to_i -%>
+Days Left:      <%= days_left %> days <%= days_left <= 7 ? '(CRITICAL!)' : '(WARNING)' %>
+
+REQUIRED ACTIONS:
+-----------------
+1. Generate a new Certificate Signing Request (CSR)
+2. Submit the CSR through your registrar interface  
+3. Install the new certificate before the current one expires
+
+IMPORTANT NOTICE:
+-----------------
+If you don't renew your certificate before it expires, your services may become 
+unavailable and cause disruption to your operations.
+
+Please take immediate action to avoid service interruption.
+
+---
+This is an automated notification from the Registry System.
+If you have any questions, please contact your registry administrator.
+
+Certificate ID: <%= @certificate.id %>
+Generated: <%= Time.current.strftime("%Y-%m-%d %H:%M UTC") %>

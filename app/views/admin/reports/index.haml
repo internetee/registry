@@ -1,0 +1,32 @@
+- content_for :actions do
+  = link_to(t('.create_report'), new_admin_report_path, class: 'btn btn-primary')
+  = link_to(t('.generate_ai_report'), new_admin_report_path(ai: true), class: 'btn btn-primary')
+= render 'shared/title', name: t(:reports)
+= render 'admin/reports/partials/search_form'
+
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-4'}
+              = sort_link(@q, :name)
+            %th{class: 'col-xs-6'}
+              = sort_link(@q, :description)
+            %th{class: 'col-xs-2 text-right'}
+        %tbody
+          - @reports.each do |report|
+            %tr
+              %td= link_to(report.name, admin_report_path(report))
+              %td= report.description
+              %td
+                %div{class: 'action-buttons'}
+                  = link_to(t(:edit), edit_admin_report_path(report), class: "btn btn-primary btn-xs") 
+                  = link_to(t(:delete), admin_report_path(report), method: :delete, class: "btn btn-danger btn-xs", data: { confirm: 'Are you sure?' })
+.row
+  .col-md-6
+    = paginate @reports
+  .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @q.result.count)

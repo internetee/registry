@@ -1,11 +1,11 @@
 module EisBilling
   class GetInvoiceNumber < EisBilling::Base
-    def self.send_invoice
+    def self.call
       send_request
     end
 
     def self.send_request
-      http = EisBilling::Base.base_request(url: invoice_number_generator_url)
+      http = EisBilling::Base.base_request
       http.post(invoice_number_generator_url, nil, EisBilling::Base.headers)
     end
 

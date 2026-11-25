@@ -1,3 +1,184 @@
+24.11.2026
+* Fixed registrar CSV import of new registrars https://github.com/internetee/registry/pull/2976
+
+19.11.2026
+* Fix for auto-topup timeout issue https://github.com/internetee/registry/issues/2948
+* BusinessReg reserv invoices are now properly stored and shared with accounting system https://github.com/internetee/registry/issues/2987
+
+18.11.2026
+* Allow 1 character domains in email addresses https://github.com/internetee/registry/issues/2959
+
+17.11.2026
+* Pending operations: notification log, resend and filter https://github.com/internetee/registry/pull/2981
+
+05.11.2026
+* Registrars can see the date and sent confirmation emails of a pending registrant change or delete, and resend the confirmation email (POST /repp/v1/domains/:name/pending_notification) https://github.com/internetee/registrar_center2/issues/237
+* GET /repp/v1/domains accepts q[with_pending_operation]=true to list only domains with pending operations https://github.com/internetee/registrar_center2/issues/237
+* Delayed registrant change confirmation and notice emails are no longer sent when the change was cancelled, confirmed or rejected in the meantime https://github.com/internetee/registrar_center2/issues/237
+* Deploy: run migrations
+
+03.11.2026
+* Allow legal persons to send name and email in disclosed attributes https://github.com/internetee/registry/pull/2971
+* Enable registrars to cancel pending registrant change https://github.com/internetee/registry/issues/2939
+
+29.10.2026
+* BusinessReg: Add option for payments with an invoice https://github.com/internetee/registry/issues/2970
+
+16.10.2026
+* Business Registry reservation invoices get a reference number and due date; invoice PDF is available before payment so it can be paid by bank transfer https://github.com/internetee/registry/pull/2972
+* New billing endpoint PUT /eis_billing/business_registry_payment reserves domains when EIS billing matches a bank transfer by reference number https://github.com/internetee/registry/pull/2972
+* Reservation is first-come-first-served: unpaid invoice PDF warns that it does not guarantee the reservation; a bank payment for domains that are no longer available cancels the invoice and EIS billing asks admin to refund it https://github.com/internetee/registry/pull/2972
+* Fixed cancelling of intersecting reservation invoices after a paid callback https://github.com/internetee/registry/pull/2972
+* Deploy: run migrations; set business_registry_payment_url in eis_billing_system (https://github.com/internetee/eis_billing_system/pull/268)
+
+15.10.2026
+* Registrant API accepts name and email in org contacts' disclosed attributes, so registrant center saves no longer fail with 400 for legal persons
+* Fix for whois duplicate records https://github.com/internetee/registry/pull/2966
+
+14:10.2026
+* Handle missing contacts in contact update action serialization https://github.com/internetee/registry/pull/2934
+* Fix 500 error on contact create with invalid ident https://github.com/internetee/registry/pull/2945
+* Fixed sorting admin registrar dropdowns https://github.com/internetee/registry/pull/2947
+* Business Registry reservation period is now based on full days https://github.com/internetee/registry/issues/2961
+* Added daily cron job to remove expired reservations https://github.com/internetee/registry/issues/2963
+
+09.10.2026
+* Audit trail for business registry reservations https://github.com/internetee/registry/issues/2962
+
+06.10.2026
+* CSV based sync of users between environments https://github.com/internetee/registry/pull/2932
+
+05.10.2026
+* Reserved domain changes are recorded with source (Business Registry API, EIS billing callback, admin, registrar, dispute, expiry job, availability check) and reason in log_reserved_domains; admin edit and delete of a reserved domain require a reason https://github.com/internetee/registry/issues/2962
+* New admin page Settings > Archive > Reserved domains history: every reservation lifecycle (active, expired, released to auction, deleted, removed) with filters, change timeline and CSV export https://github.com/internetee/registry/issues/2962
+* Deploy: run migrations before restarting app servers; then run 'bundle exec rake reserved_domains:backfill_audit' once to fill audit data on existing history rows https://github.com/internetee/registry/issues/2962
+* Reserved domains history is a table refreshed on every admin read and rebuilt nightly at 03:15 by cron (ReservedDomain::Lifecycle.rebuild!); 'rake reserved_domains:backfill_audit' also rebuilds it, 'rake reserved_domains:rebuild_lifecycles' rebuilds it on demand https://github.com/internetee/registry/issues/2962
+02.10.2026
+* Expired domain reservations are removed daily at 00:35 by cron (ReservedDomain.release_expired); removal reason is recorded in the reservation audit log https://github.com/internetee/registry/issues/2963
+01.10.2026
+* Business registry reservations expire at the end of the last full day (23:59:59) instead of exact activation time https://github.com/internetee/registry/issues/2961
+
+10.08.2026
+* Registrars can now cancel a pending registrant change https://github.com/internetee/registry/issues/2939
+
+23.07.2026
+* Operations with pending status now return result code 1001 in REPP https://github.com/internetee/registry/issues/2940
+* Fixed case sensitivity issue for REPP requests https://github.com/internetee/registry/issues/2943
+
+17.06.2026
+* Disabled birthday option for contact ident data for additional 19 EU countries https://github.com/internetee/registry/issues/2933
+* CSR upload localisation fix https://github.com/internetee/registry/pull/2928
+* Remove legacy code and EPP upgrade https://github.com/internetee/registry/pull/2920
+
+02.06.2026
+* Disputed domains can now only be reneed before registrant change is done https://github.com/internetee/registry/pull/2923
+* Issuer contact person is removed from invoices https://github.com/internetee/registry/issues/2926
+
+27.05.2026
+* Option to skip pdf invoices in case of e-invoicing https://github.com/internetee/registry/issues/2881
+* Fixed internal error in admin for deleted domains' history https://github.com/internetee/registry/issues/2897
+* New poll messages for expired pending operations https://github.com/internetee/registry/issues/2924
+
+18.05.2026
+* Fixes for Business Registry API invoicing issues https://github.com/internetee/registry/issues/2921
+
+06.05.2026
+* OIDC auth for Accreditation API https://github.com/internetee/registry/pull/2911
+
+04.05.2026
+* Invoice generation for domain reservation API https://github.com/internetee/registry/pull/2918
+
+08.04.2026
+* Fix for handling new ECC based business registry certificates https://github.com/internetee/registry/pull/2914
+
+02.04.2026
+* Check contact phone for publishing on domain registration https://github.com/internetee/registry/issues/2908
+
+12.03.2026
+* Update ForceDelete notes according to the currently active reason https://github.com/internetee/registry/pull/2901
+* Status info for business registry reserved domains https://github.com/internetee/registry/pull/2904
+
+22.01.2026
+* Fixed duplicate legaldoc creation issue https://github.com/internetee/registry/issues/336
+* Improved test vocerage to mass_actions_controller https://github.com/internetee/registry/pull/2858
+* Added exception handler for business registry reponses https://github.com/internetee/registry/pull/2883
+
+21.01.2026
+* Disclose phone nr in whois for org owned domain registrations https://github.com/internetee/registry/pull/2818
+* Improved handling of multi-year soft domain Force Delete procedure https://github.com/internetee/registry/pull/2890
+
+31.12.2025
+* Fixed domain search with contact indent in admin https://github.com/internetee/registry/issues/2877
+
+11.12.2025
+* Prevent Force Delete from being canceled on unrelated updates https://github.com/internetee/registry/pull/2867
+* Fixes for accreditation api https://github.com/internetee/registry/pull/2875
+
+14.11.2025
+* API endpoint for Estonian Business Registry integration https://github.com/internetee/registry/pull/2676
+
+19.09.2025
+* Migrated from codeclimate.yml to qlty.toml https://github.com/internetee/registry/pull/2841
+* Sending merge notifications to Mattermost https://github.com/internetee/registry/pull/2857
+* Improved test coverage to force_delete_controller https://github.com/internetee/registry/pull/2849
+
+15.09.2025
+* Fixed ident request webhook hmac validation https://github.com/internetee/registry/pull/2856
+
+12.09.2025
+* Automated pull request merging https://github.com/internetee/registry/pull/2846
+
+10.09.2025
+* Improved test coverage of admin/settings_controller https://github.com/internetee/registry/pull/2852
+* Improved test coverage of registry_lock_controller https://github.com/internetee/registry/pull/2850
+* Domain Versions Controller Tests https://github.com/internetee/registry/pull/2844
+* Added test coverage/admin/contacts controller https://github.com/internetee/registry/pull/2843
+
+05.09.2025
+* Added reports module to admin https://github.com/internetee/registry/issues/2749
+
+18.08.2025
+* Added test coverage for admin/contact_versions_controller https://github.com/internetee/registry/pull/2836 
+
+08.08.2025
+* Upload coverage to qlty https://github.com/internetee/registry/pull/2840
+* Adding test coverage for bounced_mail_addresses_controller https://github.com/internetee/registry/pull/2835
+* Adding tests for admin/billing/prices_controller https://github.com/internetee/registry/pull/2834
+* Adding tests for admin/bank_transactions_controller https://github.com/internetee/registry/pull/2833
+
+06.08.2025
+*  Replacing codeclimate with qlty.sh https://github.com/internetee/registry/pull/2837
+*  Adding tests for admin/bank_statements_controller https://github.com/internetee/registry/pull/2832
+*  Adding test coverage to app/controllers/admin/accounts_controller https://github.com/internetee/registry/pull/2831
+*  Adding test coverage/repp/v1/certificates/p12 controller https://github.com/internetee/registry/pull/2830
+*  Added new tests for admin/domains_controller https://github.com/internetee/registry/pull/2829
+*  Added new tests for Admin certificates_controller methods coverage https://github.com/internetee/registry/pull/2827
+
+31.07.2025
+* Poll messages for registry admin initiated domain status changes https://github.com/internetee/registry/issues/2823
+
+30.07.2025
+* Fixed domain history presentation offset in admin https://github.com/internetee/registry/issues/2822
+
+29.07.2025
+* Added extra test coverage for validate_dnssec_job https://github.com/internetee/registry/pull/2811
+* Added new tests for zones_controller https://github.com/internetee/registry/pull/2813
+* Updated test coverage/api users controller https://github.com/internetee/registry/pull/2819
+* Added new test for model models/concerns/contact/archivable https://github.com/internetee/registry/pull/2820
+* Added extra test coverage for accreditation_center/base_controller https://github.com/internetee/registry/pull/2821
+
+18.07.2025
+* Update actions/upload-artifact action to v4.6.2 https://github.com/internetee/registry/pull/2800
+* Added extra test coverage for LhvConnectTransactionsController https://github.com/internetee/registry/pull/2815
+* Updated set_test_date_to_api_user method on api_users_controller https://github.com/internetee/registry/issues/2816
+
+06.06.2025
+* Improvments to ent-to-end id processing https://github.com/internetee/registry/pull/2796
+* Fix stale data in Whois update job https://github.com/internetee/registry/pull/2808
+
+03.06.2025
+* removed build_deploy_staging.yml from workflow as deprecated https://github.com/internetee/registry/issues/2797
+
 30.05.2025
 * Improvements for daily FD domains report https://github.com/internetee/registry/issues/2781
 * Fixed duplicate domain history records in admin: https://github.com/internetee/registry/issues/2792

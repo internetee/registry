@@ -12,15 +12,13 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
   end
 
   def test_remove_reserved_domain
-    visit admin_reserved_domains_path
-    click_link_or_button 'Delete', match: :first
-    page.driver.browser.switch_to.alert.accept
-
+    visit_reserved_domains
+    delete_first_reserved_domain
     assert_text 'Domain deleted!'
   end
 
   def test_add_invalid_domain
-    visit admin_reserved_domains_path
+    visit_reserved_domains
     click_on 'New reserved domain'
     fill_in "Name", with: "@##@$"
     click_on 'Save'
@@ -29,9 +27,10 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
   end
 
   def test_update_reserved_domain
-    visit admin_reserved_domains_path
-    click_link_or_button 'Edit Pw', match: :first
+    visit_reserved_domains
+    click_link_or_button 'Edit', match: :first
     fill_in 'Password', with: '12345678'
+    fill_in 'reason_note', with: 'Password rotation'
     click_on 'Save'
 
     assert_text 'Domain updated!'
@@ -48,5 +47,42 @@ class AdminAreaReservedDomainsIntegrationTest < JavaScriptApplicationSystemTestC
     assert_equal %(attachment; filename="reserved_domains_#{Time.zone.now.to_formatted_s(:number)}.csv"; filename*=UTF-8''reserved_domains_#{Time.zone.now.to_formatted_s(:number)}.csv),
                  response.headers['Content-Disposition']
     assert_not_empty response.body
+  end
+
+  def test_release_to_auction
+    visit_reserved_domains
+    first("input[type='checkbox']").set(true)
+  
+    click_on 'Send to the auction list'
+  
+    assert_current_path admin_auctions_path
+  
+    assert_text 'reserved.test'
+    assert_text 'started'
+  end
+
+  def test_history_button_opens_history_filtered_by_searched_name
+    visit admin_reserved_domains_path(q: { name_matches: @reserved_domain.name })
+    click_link_or_button 'Reserved domains history'
+
+    assert_current_path admin_reserved_domain_lifecycles_path(q: { domain_name_matches: @reserved_domain.name })
+    assert_field 'q_domain_name_matches', with: @reserved_domain.name
+  end
+
+  def test_history_button_opens_unfiltered_history_without_search
+    visit_reserved_domains
+    click_link_or_button 'Reserved domains history'
+
+    assert_current_path admin_reserved_domain_lifecycles_path
+  end
+
+  private
+
+  def visit_reserved_domains
+    visit admin_reserved_domains_path
+  end
+
+  def delete_first_reserved_domain
+    accept_prompt(with: 'No longer reserved') { click_link_or_button 'Delete', match: :first }
   end
 end

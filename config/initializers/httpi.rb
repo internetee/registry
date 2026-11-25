@@ -1,0 +1,1 @@
+HTTPI.adapter = :net_http

@@ -51,7 +51,7 @@ class AdminRegistrarsApiUsersSystemTest < ApplicationSystemTestCase
     assert_text "Username #{api_user.username}"
     assert_text "Password #{api_user.plain_text_password}"
     assert_link api_user.registrar.name, href: admin_registrar_path(api_user.registrar)
-    assert_text "Role #{api_user.roles.first}"
+    assert_text "#{ApiUser.human_attribute_name(:roles)} #{api_user.roles.join(', ')}"
     assert_text "Active #{api_user.active}"
   end
 
@@ -83,11 +83,16 @@ class AdminRegistrarsApiUsersSystemTest < ApplicationSystemTestCase
   private
 
   def unassociated_api_user
-    new_api_user = users(:api_bestnames).dup
-    new_api_user.username = "unique-#{rand(100)}"
-    new_api_user.identity_code = rand(10)
-    new_api_user.save!
-    new_api_user
+    source = users(:api_bestnames)
+    ApiUser.create!(
+      username: "unique-#{SecureRandom.hex(4)}",
+      plain_text_password: source.plain_text_password,
+      identity_code: SecureRandom.random_number(10_000_000),
+      registrar: source.registrar,
+      roles: source.roles,
+      active: true,
+      subject: nil
+    )
   end
 
   def valid_password

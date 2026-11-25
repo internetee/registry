@@ -1,0 +1,45 @@
+Tere,
+
+Anname teada, et järgmise kontakti isikutuvastus vajab registripidaja käsitsi kinnitust.
+Automaatne kinnitamine ei olnud võimalik (nt isikukood puudus tulemuses või andmed ei ühti kontakti andmetega).
+
+Kontakti kood: <%= @contact.code %>
+Nimi: <%= @contact.name %>
+
+<% if @verification_snapshot.present? %>
+eeID tulemus:
+<% @verification_snapshot.each do |key, value| %>
+<% next if value.blank? %>
+<%= key %>: <%= value %>
+<% end %>
+<% end %>
+
+Palun kinnitage või lükake isikutuvastus tagasi registripidaja portaalis.
+
+Parimate soovidega,
+
+<%= render 'mailers/shared/signatures/signature.et.text' %>
+
+---
+
+Hi,
+
+We are writing to inform you that the identity verification for the following contact requires manual registrar confirmation.
+Automatic verification was not possible (e.g. identity code missing in the result or data does not match the contact record).
+
+Contact code: <%= @contact.code %>
+Name: <%= @contact.name %>
+
+<% if @verification_snapshot.present? %>
+eeID result:
+<% @verification_snapshot.each do |key, value| %>
+<% next if value.blank? %>
+<%= key %>: <%= value %>
+<% end %>
+<% end %>
+
+Please confirm or reject the identity verification in the Registrar Portal.
+
+Best regards,
+
+<%= render 'mailers/shared/signatures/signature.en.text' %>

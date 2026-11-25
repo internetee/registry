@@ -7,9 +7,11 @@ en:
         api_users: API users
         admin_users: Admin users
         prices: Prices
+        reservation_invoices: Reservation invoices
         archive: Archive
         domain_history: Domain history
         contact_history: Contact history
+        reserved_domains_history: Reserved domains history
         zones: Zones
         blocked_domains: Blocked domains
         reserved_domains: Reserved domains

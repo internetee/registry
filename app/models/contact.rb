@@ -85,7 +85,7 @@ class Contact < ApplicationRecord
                                                                                 country_code: country_code) },
               mapping: [%w[ident code], %w[ident_type type], %w[ident_country_code country_code]]
 
-  after_save :update_related_whois_records
+  after_commit :update_related_whois_records
   before_validation :clear_address_modifications, if: -> { !self.class.address_processing? }
 
   # TODO: remove after testing
@@ -165,6 +165,8 @@ class Contact < ApplicationRecord
   ].freeze
 
   OPEN_LEGAL_ATTRIBUTES = %w[
+    name
+    email
     phone
   ].freeze
 
@@ -540,8 +542,9 @@ class Contact < ApplicationRecord
 
   def update_related_whois_records
     # not doing anything if no real changes
-    ignored_columns = %w[updated_at created_at statuses status_notes]
-    return if saved_changes.slice(*(self.class.column_names - ignored_columns)).empty?
+    ignored_columns = %w[updated_at created_at statuses status_notes checked_company_at company_register_status]
+
+    return if (previous_changes.keys - ignored_columns).empty?
 
     names = related_domain_descriptions.keys
     UpdateWhoisRecordJob.perform_later(names, 'domain') if names.present?

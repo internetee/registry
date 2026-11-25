@@ -128,7 +128,12 @@ module Admin
     def remove_from_reserved(auction)
       domain = ReservedDomain.find_by(name: auction.domain)
 
-      domain.destroy if domain.present?
+      return unless domain.present?
+
+      ReservedDomain::Audit.set(source: 'admin', reason: 'released_to_auction',
+                                reason_note: nil, registrar_id: nil) do
+        domain.destroy
+      end
     end
 
     def normalize_search_parameters

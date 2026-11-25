@@ -58,4 +58,22 @@ class ReppV1RegistrarSummaryTest < ActionDispatch::IntegrationTest
     ENV["shunter_default_threshold"] = '10000'
     ENV["shunter_enabled"] = 'false'
   end
+
+  def test_handles_contact_update_notification_with_missing_contact
+    action = actions(:contact_update)
+    action.update!(contact: nil)
+    notifications(:complete).update!(
+      action: action,
+      attached_obj_type: 'ContactUpdateAction',
+      attached_obj_id: action.id,
+      text: 'Contact update notification'
+    )
+
+    get '/repp/v1/registrar/summary', headers: @auth_headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal [], json[:data][:notification][:attached_obj_data][:contacts]
+  end
 end

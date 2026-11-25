@@ -37,7 +37,7 @@
         .col-md-3
           .form-group
             = f.label t(:registrar_name)
-            = f.select :registrar_id_eq, Registrar.all.map { |x| [x, x.id] }, { include_blank: true }, class: 'form-control', placeholder: t(:choose)
+            = f.select :registrar_id_eq, registrar_options, { include_blank: true }, class: 'form-control', placeholder: t(:choose)
         .col-md-3
           .form-group
             = f.label t(:created_at_from)

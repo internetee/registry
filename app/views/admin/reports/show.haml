@@ -1,0 +1,9 @@
+- content_for :actions do
+  = link_to(t(:back), admin_reports_path, class: "btn btn-default")
+  = link_to(t(:edit), edit_admin_report_path(@report), class: "btn btn-primary")
+  = link_to(t(:delete), admin_report_path(@report), method: :delete, class: "btn btn-danger")
+  = link_to(t(:duplicate), duplicate_admin_report_path(@report), method: :post, class: "btn btn-primary")
+- content_for :page_name do
+  = @report.name
+= render "shared/title", name: @report.name
+= render "admin/reports/partials/parameters_form"

@@ -63,7 +63,7 @@ class Invoice < ApplicationRecord
   end
 
   def set_invoice_number
-    result = EisBilling::GetInvoiceNumber.send_invoice
+    result = EisBilling::GetInvoiceNumber.call
     validate_invoice_number(result)
 
     self.number = JSON.parse(result.body)['invoice_number'].to_i

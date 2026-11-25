@@ -2,3 +2,6 @@ en:
   api:
     authorization:
       ip_not_allowed: Access denied from IP %{ip}
+      invalid_oidc_token: Invalid OIDC token
+      missing_token: Missing token
+      forbidden: Forbidden

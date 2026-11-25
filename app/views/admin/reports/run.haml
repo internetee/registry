@@ -1,0 +1,36 @@
+- content_for :actions do
+  = link_to(t(:back), admin_reports_path, class: "btn btn-default")
+  = link_to(t(:edit), edit_admin_report_path(@report), class: "btn btn-primary")
+- content_for :page_name do
+  = @page_title
+= render "shared/title", name: @report.name
+= render "admin/reports/partials/parameters_form"
+
+%br
+.row
+  .col-md-12
+    - if @unified_results.present? && @unified_results.is_a?(ActiveRecord::Result)
+      - if @unified_results.rows.any?
+        .table-responsive
+          %table.table.table-hover.table-bordered.table-condensed
+            %thead
+              %tr
+                - @unified_results.columns.each do |column|
+                  %th= column
+            %tbody
+              - @unified_results.rows.each do |row|
+                %tr
+                  - row.each do |value|
+                    %td= value
+        .text-muted.mt-2
+          = t('.total_rows', count: @unified_results.rows.length)
+      - else
+        .alert.alert-info
+          = t('.no_data')
+    - elsif flash[:alert].present?
+      .alert.alert-danger
+        = flash[:alert]
+    - else
+      .alert.alert-info
+        = t('.no_results')
+

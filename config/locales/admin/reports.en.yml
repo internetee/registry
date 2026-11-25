@@ -1,0 +1,40 @@
+en:
+  admin:
+    reports:
+      created: "Report created successfully."
+      updated: "Report updated successfully."
+      deleted: "Report deleted successfully."
+      index:
+        new_report: "New Report"
+        generate_ai_report: "Generate AI Report"
+        create_report: "Create Report"
+        run: "Run"
+      new:
+        title: "Create New Report"
+        ai_report: "Generate AI Report"
+      edit:
+        title: "Edit Report"
+      run:
+        title: "Report Results: %{name}"
+        csv_btn: "Export as CSV"
+        total_rows:
+          zero: "No rows found"
+          one: "1 row found"
+          other: "%{count} rows found"
+        no_data: "The query returned no data"
+        no_results: "No results found or error running the report"
+      partials:
+        parameters_form:
+          parameter_set: "Parameter Set %{number}"
+          run_report: "Run Report"
+          add_parameter_set: "Add Parameter Set"
+          csv_btn: "Download CSV"
+          no_parameters: "This report has no parameters and will run directly."
+        ai_form:
+          prompt: Describe the report you want to create
+          prompt_placeholder: E.g., Daily count of domain deletions from the log_domains table before a specific date (as a parameter). It groups deletions by day and orders the results chronologically.
+          schema: Database Schema (optional)
+          schema_placeholder: Leave blank to use auto-detected schema
+          submit: Generate with AI
+
+

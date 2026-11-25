@@ -13,6 +13,9 @@
             <dt><%= ApiUser.human_attribute_name :plain_text_password %></dt>
             <dd><%= @api_user.plain_text_password %></dd>
 
+            <dt><%= ApiUser.human_attribute_name :subject %></dt>
+            <dd><%= @api_user.subject %></dd>
+
             <dt><%= Registrar.model_name.human %></dt>
             <dd><%= link_to(@api_user.registrar, admin_registrar_path(@api_user.registrar)) %></dd>
 
@@ -21,6 +24,18 @@
 
             <dt><%= ApiUser.human_attribute_name :active %></dt>
             <dd><%= @api_user.active %></dd>
+
+            <dt><%= ApiUser.human_attribute_name :ident_request_sent_at %></dt>
+            <dd><%= @api_user.ident_request_sent_at %></dd>
+
+            <dt><%= ApiUser.human_attribute_name :verified_at %></dt>
+            <dd><%= @api_user.verified_at %></dd>
+
+            <dt><%= ApiUser.human_attribute_name :verification_pending_at %></dt>
+            <dd><%= @api_user.verification_pending_at %></dd>
+
+            <dt><%= ApiUser.human_attribute_name :verification_id %></dt>
+            <dd><%= @api_user.verification_id %></dd>
         </dl>
     </div>
 </div>

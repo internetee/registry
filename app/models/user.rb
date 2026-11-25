@@ -14,10 +14,9 @@ class User < ApplicationRecord
   end
 
   def self.from_omniauth(omniauth_hash)
-    uid = omniauth_hash['uid']
-    identity_code = uid&.slice(2..-1)
-    # country_code = uid.slice(0..1)
+    uid = omniauth_hash['uid'] || omniauth_hash[:uid]
+    return if uid.blank?
 
-    find_by(identity_code: identity_code, active: true)
+    ApiUser.find_by(subject: uid, active: true)
   end
 end

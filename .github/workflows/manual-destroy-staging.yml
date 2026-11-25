@@ -1,0 +1,35 @@
+name: 02 Manual Destroy Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Number of PR to destroy (only digits, e.g., 2890)'
+        required: true
+        type: string
+
+jobs:
+  destroy-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔐 Mint GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: internetee
+          repositories: Ry_AWS_IaC
+
+      - name: 🚀 Send Destroy Signal to IaC
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: internetee/Ry_AWS_IaC
+          event-type: cleanup-service-staging
+          client-payload: |
+            {
+              "app_name": "registry",
+              "namespace": "${{ github.event.repository.name }}-pr-${{ github.event.inputs.pr_number }}",
+              "pr_number": "${{ github.event.inputs.pr_number }}"
+            }

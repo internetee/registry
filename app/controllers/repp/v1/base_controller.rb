@@ -1,28 +1,27 @@
+require 'ipaddr'
+
 module Repp
   module V1
     class BaseController < ActionController::API # rubocop:disable Metrics/ClassLength
       attr_reader :current_user
 
       include ErrorAndLogHandler
+      include WebclientIpHelper
 
       before_action :authenticate_user
       before_action :set_locale
-      before_action :validate_webclient_ca
+      before_action :validate_webclient
       before_action :validate_api_user_cert
       before_action :check_registrar_ip_restriction
       before_action :check_api_ip_restriction
       before_action :set_paper_trail_whodunnit
 
+      WEBCLIENT_REQUESTERS = %w[webclient tara].freeze
+
       private
 
       def set_domain
-        registrar = current_user.registrar
-        @domain = Epp::Domain.find_by(registrar: registrar, name: params[:domain_id])
-        @domain ||= Epp::Domain.find_by!(registrar: registrar, name_puny: params[:domain_id])
-
-        return @domain if @domain
-
-        raise ActiveRecord::RecordNotFound
+        @domain = Epp::Domain.find_repp_by_name!(params[:domain_id], registrar: current_user.registrar)
       end
 
       def set_paper_trail_whodunnit
@@ -30,10 +29,26 @@ module Repp
       end
 
       def render_success(code: nil, message: nil, data: nil)
-        @response = { code: code || 1000, message: message || 'Command completed successfully',
+        @response = { code: code || 1000,
+                      message: message || I18n.t('repp.command_completed_successfully'),
                       data: data || {} }
 
         render(json: @response, status: :ok)
+      end
+
+      def render_action_pending_success(data: nil)
+        render_success(
+          code: Epp::Response::Result::Code.codes[:completed_successfully_action_pending],
+          message: Epp::Response::Result::Code.default_descriptions[1001],
+          data: data
+        )
+      end
+
+      def render_domain_command_success(pending:)
+        data = { domain: { name: @domain.name } }
+        return render_action_pending_success(data: data) if pending
+
+        render_success(data: data)
       end
 
       def epp_errors
@@ -77,15 +92,26 @@ module Repp
       def authenticate_user
         username, password = Base64.urlsafe_decode64(basic_token).split(':', 2)
         @current_user ||= ApiUser.find_by(username: username, plain_text_password: password)
-        user_active = @current_user.active?
+        user_eligible = @current_user&.eligible_for_sign_in?
 
-        return if @current_user && user_active
+        return if @current_user && user_eligible
 
         raise(ArgumentError)
       rescue NoMethodError, ArgumentError
-        @response = { code: 2202, message: 'Invalid authorization information',
-                      data: { username: username, password: password, active: user_active } }
+        @response = {
+          code: 2202,
+          message: authentication_failure_message,
+          data: { username: username, password: password, eligible_for_sign_in: user_eligible }
+        }
         render(json: @response, status: :unauthorized)
+      end
+
+      def authentication_failure_message
+        if @current_user&.active? && @current_user.subject.present? && !@current_user.identity_verified?
+          I18n.t('registrar.authorization.identity_not_verified')
+        else
+          I18n.t('registrar.authorization.invalid_authorization_information')
+        end
       end
 
       def check_api_ip_restriction
@@ -110,26 +136,32 @@ module Repp
       end
 
       def webclient_request?
-        return false if Rails.env.test? || Rails.env.development?
+        return false if Rails.env.test?
 
-        webclient_ips.include?(request.ip)
+        Rails.logger.debug "[webclient_request?] Requester: #{request.headers['Requester']}"
+        webclient_ip_allowed?(request.ip) && WEBCLIENT_REQUESTERS.include?(request.headers['Requester'])
       end
 
-      def webclient_ips
-        ENV['webclient_ips'].to_s.split(',').map(&:strip)
-      end
-
-      def validate_webclient_ca
+      def validate_webclient
         return unless webclient_request?
+        return if (Rails.env.staging? || Rails.env.development?) && ENV['BYPASS_WEBCLIENT_CERT'] == 'true'
 
-        request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']
-
-        webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
-        return if request_name == webclient_cn
+        return if webclient_cn_valid?
 
         @response = { code: 2202, message: 'Invalid webclient certificate' }
 
         render(json: @response, status: :unauthorized)
+      end
+
+      def webclient_cn_valid?
+        return true if Rails.env.test? || Rails.env.development?
+
+        request_name = request.env['HTTP_SSL_CLIENT_S_DN_CN']
+        webclient_cn = ENV['webclient_cert_common_name'] || 'webclient'
+        Rails.logger.debug "[webclient_cn_valid?] HTTP_SSL_CLIENT_S_DN_CN: #{request.env['HTTP_SSL_CLIENT_S_DN_CN']}"
+        Rails.logger.debug "[webclient_cn_valid?] All request.env keys: #{request.env.keys.select { |k| k.to_s.include?('SSL') || k.to_s.include?('HTTP') }}"
+
+        request_name == webclient_cn
       end
 
       def validate_api_user_cert
@@ -139,7 +171,16 @@ module Repp
         crt = request.env['HTTP_SSL_CLIENT_CERT']
         com = request.env['HTTP_SSL_CLIENT_S_DN_CN']
 
-        return if @current_user.pki_ok?(crt, com)
+        Rails.logger.debug "[validate_api_user_cert] Certificate present: #{crt.present?}"
+        Rails.logger.debug "[validate_api_user_cert] Certificate CN present: #{com.present?}"
+        Rails.logger.debug "[validate_api_user_cert] Certificate CN: #{com}"
+        Rails.logger.debug "[validate_api_user_cert] Current user: #{@current_user&.username}"
+        Rails.logger.debug "[validate_api_user_cert] All SSL-related env vars: #{request.env.keys.select { |k| k.to_s.include?('SSL') || k.to_s.include?('HTTP_SSL') }}"
+
+        pki_result = @current_user.pki_ok?(crt, com)
+        Rails.logger.debug "[validate_api_user_cert] PKI validation result: #{pki_result}"
+
+        return if pki_result
 
         render_invalid_cert_response
       end
@@ -150,7 +191,16 @@ module Repp
         crt = request.headers['User-Certificate']
         com = request.headers['User-Certificate-CN']
 
-        return if @current_user.pki_ok?(crt, com, api: false)
+        Rails.logger.debug "[validate_webclient_user_cert] Certificate header present: #{crt.present?}"
+        Rails.logger.debug "[validate_webclient_user_cert] Certificate CN header present: #{com.present?}"
+        Rails.logger.debug "[validate_webclient_user_cert] Certificate CN: #{com}"
+        Rails.logger.debug "[validate_webclient_user_cert] Current user: #{@current_user&.username}"
+        Rails.logger.debug "[validate_webclient_user_cert] All headers: #{request.headers.to_h.select { |k, v| k.to_s.include?('Certificate') || k.to_s.include?('User') }}"
+
+        pki_result = @current_user.pki_ok?(crt, com, api: false)
+        Rails.logger.debug "[validate_webclient_user_cert] PKI validation result: #{pki_result}"
+
+        return if pki_result
 
         render_invalid_cert_response
       end
@@ -161,16 +211,27 @@ module Repp
       end
 
       def skip_webclient_user_cert_validation?
-        !webclient_request? || request.headers['Requester'] == 'tara' ||
-          Rails.env.development?
+        Rails.env.development? ||
+          !webclient_request? || request.headers['Requester'] == 'tara'
       end
 
-      def auth_values_to_data(registrar:)
-        data = current_user.as_json(only: %i[id username roles])
+      def auth_values_to_data(user = current_user, mode:)
+        data = user.as_json(only: %i[id username roles])
+        registrar = user.registrar
         data[:registrar_name] = registrar.name
         data[:legaldoc_mandatory] = registrar.legaldoc_mandatory?
         data[:address_processing] = Contact.address_processing?
-        data[:abilities] = Ability.new(current_user).permissions
+        data[:abilities] = Ability.new(user).permissions
+
+        if mode == 'accreditation'
+          data[:name] = user.name
+          data[:accreditation_date] = registrar.accreditation_date
+          data[:accreditation_expire_date] = registrar.accreditation_expire_date
+          data[:registrar_reg_no] = registrar.reg_no
+          data[:registrar_email] = registrar.email
+          data[:code] = registrar.code
+        end
+
         data
       end
 

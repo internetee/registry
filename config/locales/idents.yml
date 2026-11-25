@@ -1,5 +1,10 @@
 en:
   activemodel:
+    attributes:
+      contact/ident:
+        code: Code
+        type: Ident type
+        country_code: Country code
     errors:
       models:
         contact/ident:
@@ -7,6 +12,40 @@ en:
             base:
               mismatch: Ident type "%{type}" is invalid for %{country}
             code:
+              blank: is missing
               invalid_national_id: does not conform to national identification number format of %{country}
               invalid_reg_no: does not conform to registration number format of %{country}
               invalid_birth_date: Birth date is invalid, age must be over 0 and under 150
+              invalid_iso8601_date: has invalid date format YYYY-MM-DD (ISO 8601)
+            type:
+              blank: is missing
+              inclusion: is not included in the list
+            country_code:
+              blank: is missing
+              invalid_iso31661_alpha2: does not conform to ISO 3166-1 alpha-2 standard
+
+et:
+  activemodel:
+    attributes:
+      contact/ident:
+        code: Kood
+        type: Identifikaatori tüüp
+        country_code: Riigikood
+    errors:
+      models:
+        contact/ident:
+          attributes:
+            base:
+              mismatch: Identifikaatori tüüp "%{type}" on kehtetu riigi %{country} jaoks
+            code:
+              blank: on kohustuslik
+              invalid_national_id: ei vasta riigi %{country} isikukoodi vormingule
+              invalid_reg_no: ei vasta riigi %{country} registrinumbri vormingule
+              invalid_birth_date: Sünnikuupäev on vigane, vanus peab olema üle 0 ja alla 150 aasta
+              invalid_iso8601_date: on vigane kuupäeva vorming YYYY-MM-DD (ISO 8601)
+            type:
+              blank: on kohustuslik
+              inclusion: ei ole lubatud väärtuste hulgas
+            country_code:
+              blank: on kohustuslik
+              invalid_iso31661_alpha2: ei vasta ISO 3166-1 alpha-2 standardile

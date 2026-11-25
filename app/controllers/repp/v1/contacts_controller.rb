@@ -2,10 +2,11 @@ require 'serializers/repp/contact'
 module Repp
   module V1
     class ContactsController < BaseController # rubocop:disable Metrics/ClassLength
-      before_action :find_contact, only: %i[show update destroy verify download_poi]
+      before_action :find_contact, only: %i[show update destroy verify download_poi approve_verification reject_verification]
       skip_around_action :log_request, only: %i[search]
 
-      THROTTLED_ACTIONS = %i[index check search create show update destroy verify download_poi].freeze
+      THROTTLED_ACTIONS = %i[index check search create show update destroy verify download_poi
+                             approve_verification reject_verification].freeze
       include Shunter::Integration::Throttle
 
       api :get, '/repp/v1/contacts'
@@ -144,6 +145,34 @@ module Repp
         handle_non_epp_errors(@contact, e.message)
       end
 
+      api :POST, '/repp/v1/contacts/approve_verification/:contact_code'
+      desc 'Manually approve pending contact identification'
+      def approve_verification
+        authorize! :verify, Epp::Contact
+        action = Actions::ContactApproveVerification.new(@contact)
+
+        unless action.call
+          handle_non_epp_errors(@contact)
+          return
+        end
+
+        render_success(data: { contact: { code: @contact.code } })
+      end
+
+      api :POST, '/repp/v1/contacts/reject_verification/:contact_code'
+      desc 'Reject pending contact identification'
+      def reject_verification
+        authorize! :verify, Epp::Contact
+        action = Actions::ContactRejectVerification.new(@contact)
+
+        unless action.call
+          handle_non_epp_errors(@contact)
+          return
+        end
+
+        render_success(data: { contact: { code: @contact.code } })
+      end
+
       private
 
       def index_params
@@ -206,7 +235,7 @@ module Repp
       def create_update_success_body
         { code: opt_addr? ? 1100 : nil,
           data: { contact: { code: @contact.code } },
-          message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : nil }
+          message: opt_addr? ? I18n.t('epp.contacts.completed_without_address') : I18n.t('repp.command_completed_successfully') }
       end
 
       def opt_addr?

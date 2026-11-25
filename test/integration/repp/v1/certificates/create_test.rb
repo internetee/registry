@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'openssl'
 
 class ReppV1CertificatesCreateTest < ActionDispatch::IntegrationTest
   def setup
@@ -23,6 +24,26 @@ class ReppV1CertificatesCreateTest < ActionDispatch::IntegrationTest
     assert_response :ok
     assert_equal 1000, json[:code]
     assert_equal 'Command completed successfully', json[:message]
+  end
+
+  def test_returns_error_when_csr_cn_does_not_match_api_username
+    body = request_body(username: 'wrong_user')
+
+    post repp_v1_certificates_path, headers: @auth_headers, params: body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_includes json[:message], I18n.t(:csr_cn_mismatch)
+  end
+
+  def test_returns_error_when_csr_country_does_not_match_registrar_country
+    body = request_body(country: 'LV')
+
+    post repp_v1_certificates_path, headers: @auth_headers, params: body
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :bad_request
+    assert_includes json[:message], I18n.t(:csr_country_mismatch)
   end
 
   def test_return_error_when_invalid_certificate
@@ -58,37 +79,30 @@ class ReppV1CertificatesCreateTest < ActionDispatch::IntegrationTest
     ENV['shunter_enabled'] = 'false'
   end
 
-  def request_body
+  def request_body(username: @user.username, country: @user.registrar.address_country_code)
+    csr_body = Base64.strict_encode64(generate_csr_pem(username: username, country: country))
+
     {
       certificate: {
         api_user_id: @user.id,
         csr: {
-          body: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ3dqQ0NB\n" \
-            "YW9DQVFBd2ZURUxNQWtHQTFVRUJoTUNSVlF4RVRBUEJnTlZCQWdNQ0VoaGNt\n" \
-            "cDFiV0ZoTVJBdwpEZ1lEVlFRSERBZFVZV3hzYVc1dU1SUXdFZ1lEVlFRS0RB\n" \
-            "dEpiblJsY201bGRDNWxaVEVRTUE0R0ExVUVBd3dICmFHOXpkQzVsWlRFaE1C\n" \
-            "OEdDU3FHU0liM0RRRUpBUllTYzJWeVoyVnBkRFpBWjIxaGFXd3VZMjl0TUlJ\n" \
-            "QklqQU4KQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBdk80\n" \
-            "UWltNlFxUzFRWVVRNjFUbGk0UG9DTTlhZgp4dUI5ZFM4endMb2hsOWhSOWdI\n" \
-            "dGJmcHpwSk5hLzlGeW0zcUdUZ3V0eVd3VGtWV3FzL0o3UjVpckxaY1pKaXI4\n" \
-            "CnZMZEo4SWlKL3ZTRDdNeS9oNzRRdHFGZlNNSi85bzAyUkJRdVFSWUU4Z3hU\n" \
-            "ZTRiMjU5NUJVQnZIUTFyczQxaGoKLzJ6SytuRDBsbHVvUFdrNnBCZ1NGZkN1\n" \
-            "Y0tWcE44Tm5vZUdGUjRnWHJQT0t2bkMwb3BxNi9SWmJxYm9hbTkxZwpWYWJ0\n" \
-            "Y0t4d3pmd2kxUlYzUUVxRXRUY0QvS0NwTzJRMTVXR3FtN2ZFYVMwVlZCckZw\n" \
-            "bzZWanZCSXUxRXJvcWJZCnBRaE9MZSt2RUh2bXFTS2JhZmFGTC9ZNHZyaU9P\n" \
-            "aU5yS01LTnR3cmVzeUI5TVh4YlNlMG9LSE1IVndJREFRQUIKb0FBd0RRWUpL\n" \
-            "b1pJaHZjTkFRRUxCUUFEZ2dFQkFKdEViWnlXdXNaeis4amVLeVJzL1FkdXNN\n" \
-            "bEVuV0RQTUdhawp3cllBbTVHbExQSEEybU9TUjkwQTY5TFBtY1FUVUtTTVRa\n" \
-            "NDBESjlnS2IwcVM3czU2UVFzblVQZ0hPMlFpWDlFCjZRcnVSTzNJN2kwSHZO\n" \
-            "K3g1Q29qUHBwQTNHaVdBb0dObG5uaWF5ZTB1UEhwVXFLbUcwdWFmVUpXS2tL\n" \
-            "Vi9vN3cKQXBIQWlQU0lLNHFZZ1FtZDBOTTFmM0FBL21pRi9xa3lZVGMya05s\n" \
-            "bG5DNm9vdldmV2hvSjdUdWluaE9Ka3BaaAp6YksxTHVoQ0FtWkNCVHowQmRt\n" \
-            "R2szUmVKL2dGTGpHWC9qd3BQRURPRGJHdkpYSzFuZzBwbXFlOFZzSms2SVYz\n" \
-            "Ckw0T3owY1JzTTc1UGtQbGloQ3RJOEJGQk04YVhCZjJ6QXZiV0NpY3piWTRh\n" \
-            "enBzc3VMbz0KLS0tLS1FTkQgQ0VSVElGSUNBVEUgUkVRVUVTVC0tLS0tCg==\n",
+          body: csr_body,
           type: 'csr',
         },
       },
     }
+  end
+
+  def generate_csr_pem(username:, country:)
+    key = OpenSSL::PKey::RSA.new(2048)
+    request = OpenSSL::X509::Request.new
+    request.version = 0
+    request.subject = OpenSSL::X509::Name.new([
+      ['CN', username, OpenSSL::ASN1::UTF8STRING],
+      ['C', country.to_s.upcase, OpenSSL::ASN1::PRINTABLESTRING],
+    ])
+    request.public_key = key.public_key
+    request.sign(key, OpenSSL::Digest.new('SHA256'))
+    request.to_pem
   end
 end

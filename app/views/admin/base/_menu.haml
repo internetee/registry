@@ -6,6 +6,8 @@
       %li= link_to t(:contacts), admin_contacts_path
     - if can? :show, Registrar
       %li= link_to t(:registrars), admin_registrars_path
+    - if can?(:show, Report)
+      %li= link_to t(:reports), admin_reports_path
     - if can?(:access, :settings_menu)
       %li.dropdown
         %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
@@ -21,12 +23,14 @@
             %li= link_to t('.prices'), admin_prices_path
           %li= link_to t(:bank_statements), admin_bank_statements_path
           %li= link_to t(:invoices), admin_invoices_path
+          %li= link_to t('.reservation_invoices'), admin_reserve_domain_invoices_path
           %li= link_to t(:accounts), admin_accounts_path
           %li= link_to t(:account_activities), admin_account_activities_path(created_after: 'today')
           %li.divider
           %li.dropdown-header= t('.archive')
           %li= link_to t('.domain_history'), admin_domain_versions_path
           %li= link_to t('.contact_history'), admin_contact_versions_path
+          %li= link_to t('.reserved_domains_history'), admin_reserved_domain_lifecycles_path
           %li.divider
           %li.dropdown-header= t(:system)
           %li= link_to t('.settings'), admin_settings_path

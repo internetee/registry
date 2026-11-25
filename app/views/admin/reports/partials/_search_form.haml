@@ -1,0 +1,19 @@
+.row
+  .col-md-12
+    = search_form_for [:admin, @q], html: { style: 'margin-bottom: 0;', class: 'js-form', autocomplete: 'off' } do |f|
+      .row
+        .col-md-4
+          .form-group
+            = label_tag :name
+            = f.search_field :name_cont, value: params[:q][:name_cont], class: 'form-control', placeholder: t(:name)
+        .col-md-6
+          .form-group
+            = label_tag :description
+            = f.search_field :description_cont, value: params[:q][:description_cont], class: 'form-control', placeholder: t(:description)
+        .col-md-2{style: 'padding-top: 25px;float:right;padding-right: 0px;'}
+          %button.btn.btn-primary
+            &nbsp;
+            %span.glyphicon.glyphicon-search
+            &nbsp;
+          = link_to(t(:reset), admin_reports_path, class: 'btn btn-default')
+%hr

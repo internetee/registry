@@ -79,12 +79,12 @@ module Repp
           domains = []
           if bulk_renew_params[:domains].instance_of?(Array)
             bulk_renew_params[:domains].each do |idn|
-              domain = Epp::Domain.find_by(name: idn)
+              domain = Epp::Domain.find_repp_by_name(idn)
               domains << domain if domain
               next if domain
 
               @epp_errors.add(:epp_errors,
-                              msg: "Object does not exist: #{idn}",
+                              msg: I18n.t('repp.object_does_not_exist_with_name', name: idn),
                               code: '2304')
             end
           else

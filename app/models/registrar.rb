@@ -1,6 +1,7 @@
 class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include Versions # version/registrar_version.rb
   include Registrar::BookKeeping
+  include Registrar::CsvSync
   include EmailVerifable
   include Registrar::LegalDoc
 
@@ -151,18 +152,18 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
       ]
     )
 
-    unless payable
+    unless payable && (accepts_e_invoices? && !accept_pdf_invoices?)
       InvoiceMailer.invoice_email(invoice: invoice, recipient: billing_email, paid: !payable)
                    .deliver_later(wait: 1.minute)
     end
 
     add_invoice_instance = EisBilling::AddDeposits.new(invoice)
-    result = add_invoice_instance.send_invoice
+    result = add_invoice_instance.call
 
     link = JSON.parse(result.body)['everypay_link']
 
     invoice.update(payment_link: link)
-    SendEInvoiceJob.set(wait: 1.minute).perform_now(invoice.id, payable: payable)
+    SendEInvoiceJob.set(wait: 1.minute).perform_later(invoice.id, payable: payable)
 
     invoice
   end
@@ -207,13 +208,19 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def accredited?
-    api_users.any? do |a|
-      return true unless a.accreditation_date.nil?
-    end
+    !accreditation_date.nil?
   end
 
   def accreditation_expired?
-    api_users.all? { |api| api.accreditation_expired? }
+    return false if accreditation_expire_date.nil?
+
+    accreditation_expire_date < Time.zone.now
+  end
+
+  def accreditation_expires_soon?(days)
+    return false if accreditation_expire_date.nil?
+
+    accreditation_expire_date - days.days < Time.zone.now
   end
 
   # Audit log is needed, therefore no raw SQL
@@ -305,6 +312,20 @@ class Registrar < ApplicationRecord # rubocop:disable Metrics/ClassLength
     return contact_email if self[:billing_email].blank?
 
     self[:billing_email]
+  end
+
+  def accepts_e_invoices?
+    return false unless address_country_code == 'EE'
+
+    result = company_register.e_invoice_recipients(registration_numbers: reg_no).first
+    result.status == 'OK'
+  rescue CompanyRegister::NotAvailableError, CompanyRegister::SOAPFaultError => e
+    Rails.logger.error("Error checking e-invoice status for #{reg_no}: #{e.message}")
+    false
+  end
+
+  def company_register
+    @company_register ||= CompanyRegister::Client.new
   end
 
   private

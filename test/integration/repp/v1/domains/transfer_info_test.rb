@@ -28,6 +28,18 @@ class ReppV1DomainsTransferInfoTest < ActionDispatch::IntegrationTest
     assert json[:data][:tech_contacts].present?
   end
 
+  def test_can_query_domain_info_with_uppercase_name
+    headers = @auth_headers
+    headers['Auth-Code'] = @domain.transfer_code
+
+    get "/repp/v1/domains/#{@domain.name.upcase}/transfer_info", headers: headers
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal @domain.name, json[:data][:domain]
+  end
+
   def test_respects_domain_authorization_code
     headers = @auth_headers
     headers['Auth-Code'] = 'jhfgifhdg'

@@ -1,0 +1,389 @@
+require 'test_helper'
+
+class ReserveDomainInvoiceTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
+  TEST_USER_UNIQUE_ID = 'test123'
+  REFERENCE_NO = '1234566'
+  INVOICE_NUMBER = '12345'
+  
+  def setup
+    @domain_names = ['example1.test', 'example2.test']
+    
+    stub_invoice_number_request
+    stub_add_deposits_request
+    stub_reference_number_request
+    stub_reserved_domains_invoice_status
+    
+    # Mock generate_unique_id to return consistent value
+    ReserveDomainInvoice.singleton_class.class_eval do
+      alias_method :original_generate_unique_id, :generate_unique_id
+      define_method(:generate_unique_id) { TEST_USER_UNIQUE_ID }
+    end
+  end
+
+  def teardown
+    # Restore original method
+    ReserveDomainInvoice.singleton_class.class_eval do
+      alias_method :generate_unique_id, :original_generate_unique_id
+      remove_method :original_generate_unique_id
+    end
+  end
+
+  test "normalizes domain names" do
+    mixed_case_domains = ['EXAMPLE1.TEST', ' example2.test ']
+    result = ReserveDomainInvoice.create_list_of_domains(
+      mixed_case_domains
+    )
+    
+    invoice = ReserveDomainInvoice.last
+    assert_equal ['example1.test', 'example2.test'], invoice.domain_names
+  end
+
+  test "filters out unavailable domains" do
+    domain_names = ['domain-one.test', 'domain-two.test']
+    ReservedDomain.create!(name: domain_names.first)
+    result = ReserveDomainInvoice.create_list_of_domains(domain_names)
+    
+    invoice = ReserveDomainInvoice.last
+    assert_equal [domain_names.last], invoice.domain_names
+  end
+
+  test "creates reserved domains after payment" do
+    invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
+
+    travel_to Time.zone.parse('2026-10-01 13:43:00') do
+      assert_difference 'ReservedDomain.count', 2 do
+        invoice.create_paid_reserved_domains
+      end
+    end
+
+    domain = ReservedDomain.find_by(name: @domain_names.first)
+    assert_equal Time.zone.parse('2027-10-01 23:59:59'), domain.expire_at
+  end
+
+  test "paid reserved domains record audit reason and inherit caller source" do
+    invoice = ReserveDomainInvoice.create(invoice_number: '12346', domain_names: ['paid-audit.test'], metainfo: TEST_USER_UNIQUE_ID)
+
+    ReservedDomain::Audit.set(source: 'eis_billing', reason: nil, reason_note: nil, registrar_id: nil) do
+      invoice.create_paid_reserved_domains
+    end
+
+    version = Version::ReservedDomainVersion.where(item_id: ReservedDomain.find_by(name: 'paid-audit.test').id).last
+    assert_equal 'create', version.event
+    assert_equal 'eis_billing', version.source
+    assert_equal 'paid_reservation', version.reason
+    assert_equal 'paid-audit.test', version.domain_name
+  end
+
+  test "builds correct output for reserved domains with status" do
+    invoice = ReserveDomainInvoice.create(invoice_number: '12345', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
+    ReservedDomain.create(
+      name: @domain_names.first,
+      password: 'test123',
+      expire_at: Time.current + ReservedDomain::PAID_RESERVATION_EXPIRY
+    )
+
+    output = invoice.build_reserved_domains_output
+    assert_equal @domain_names.count, output.length
+
+    reserved_output = output.find { |d| d[:name] == @domain_names.first }
+    assert_equal 'test123', reserved_output[:password]
+    assert_not_nil reserved_output[:expire_at]
+    assert_equal 'reserved', reserved_output[:status]
+
+    expired_output = output.find { |d| d[:name] == @domain_names.second }
+    assert_equal 'expired', expired_output[:status]
+    assert_nil expired_output[:password]
+  end
+
+  test "handles intersecting domains" do
+    existing_invoice = ReserveDomainInvoice.create(
+      invoice_number: '12345',
+      domain_names: [@domain_names.first],
+      status: :pending,
+      metainfo: TEST_USER_UNIQUE_ID
+    )
+
+    assert ReserveDomainInvoice.are_domains_intersect?(@domain_names)
+    assert_equal '12345', ReserveDomainInvoice.get_invoice_number_from_intersecting_invoice(@domain_names)
+  end
+
+  test "checks if any intersecting invoice is paid" do
+    ReserveDomainInvoice.create(
+      invoice_number: '12345',
+      domain_names: [@domain_names.first],
+      status: :paid,
+      metainfo: TEST_USER_UNIQUE_ID
+    )
+
+    assert ReserveDomainInvoice.is_any_intersecting_invoice_paid?(@domain_names)
+  end
+
+  test "cancels intersecting invoices" do
+    invoice1 = ReserveDomainInvoice.create(
+      invoice_number: '12345',
+      domain_names: [@domain_names.first],
+      status: :pending,
+      metainfo: TEST_USER_UNIQUE_ID
+    )
+    
+    invoice2 = ReserveDomainInvoice.create(
+      invoice_number: '12346',
+      domain_names: [@domain_names.first],
+      status: :pending,
+      metainfo: TEST_USER_UNIQUE_ID
+    )
+
+    ReserveDomainInvoice.cancel_intersecting_invoices(@domain_names)
+    
+    assert invoice1.reload.cancelled?
+    assert invoice2.reload.cancelled?
+  end
+
+  test "checks state of intersecting invoices" do
+    invoice = ReserveDomainInvoice.create(
+      invoice_number: '12345',
+      domain_names: [@domain_names.first],
+      status: :pending,
+      metainfo: TEST_USER_UNIQUE_ID
+    )
+
+    # Mock invoice_state to return paid status
+    mock_result = Struct.new(:paid?, :status).new(true, 'paid')
+    invoice.stub :invoice_state, mock_result do
+      ReserveDomainInvoice.check_state_of_intersecting_invoices(@domain_names)
+      
+      assert invoice.reload.paid?
+      # Verify that reserved domains were created
+      assert_not_nil ReservedDomain.find_by(name: @domain_names.first)
+    end
+  end
+
+  test "creates list of domains with existing invoice number" do
+    existing_invoice = ReserveDomainInvoice.create(
+      invoice_number: '12345',
+      domain_names: [@domain_names.first],
+      status: :pending,
+      metainfo: TEST_USER_UNIQUE_ID
+    )
+
+    stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{INVOICE_NUMBER}&user_unique_id=#{TEST_USER_UNIQUE_ID}")
+      .to_return(status: 200, body: { invoice_status: 'pending' }.to_json, headers: {})
+
+    result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+    
+    assert result.status_code_success
+    assert_equal 12345, result.invoice_number
+  end
+
+  test "returns error when intersecting invoice is paid" do
+    ReserveDomainInvoice.create(
+      invoice_number: '12345',
+      domain_names: [@domain_names.first],
+      status: :paid,
+      metainfo: TEST_USER_UNIQUE_ID
+    )
+
+    result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+    
+    refute result.status_code_success
+    assert_equal 'Some intersecting invoices are paid', result.details
+  end
+
+  test "generates unique user id for new invoice" do
+    result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+    
+    assert result.status_code_success
+    assert_not_nil result.user_unique_id
+    assert_equal TEST_USER_UNIQUE_ID.length, result.user_unique_id.length
+  end
+
+  test "returns error when no domains are available" do
+    BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, [] do
+      result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+      
+      refute result.status_code_success
+      assert_equal 'No available domains', result.details
+    end
+  end
+
+  test "should handle expired reserved domains in domain filtering" do
+    expired_domain = ReservedDomain.create!(
+      name: @domain_names.first,
+      expire_at: 1.day.ago
+    )
+    
+    result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+    
+    assert result.status_code_success
+    assert_includes result.reserved_domain_names, @domain_names.second
+    assert_nil ReservedDomain.find_by(id: expired_domain.id)
+  end
+
+  test "should not affect non-expired reserved domains in domain filtering" do
+    active_domain = ReservedDomain.create!(
+      name: @domain_names.first,
+      expire_at: 1.day.from_now
+    )
+    
+    result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+    
+    assert result.status_code_success
+    refute_includes result.reserved_domain_names, @domain_names.first
+    assert ReservedDomain.exists?(id: active_domain.id)
+  end
+
+  test "should not affect permanent reserved domains in domain filtering" do
+    permanent_domain = ReservedDomain.create!(
+      name: @domain_names.first,
+      expire_at: nil
+    )
+    
+    result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+    
+    assert result.status_code_success
+    puts result
+    refute_includes result.reserved_domain_names, @domain_names.first
+    assert ReservedDomain.exists?(id: permanent_domain.id)
+  end
+
+  test "stores business registry reference number and due date on new invoice" do
+    WebMock::RequestRegistry.instance.reset!
+
+    travel_to Time.zone.parse('2026-10-16 12:00') do
+      result = ReserveDomainInvoice.create_list_of_domains(@domain_names)
+
+      invoice = ReserveDomainInvoice.last
+      assert_equal REFERENCE_NO, invoice.reference_no
+      assert_equal Date.new(2026, 11, 15), invoice.due_date
+      assert_equal REFERENCE_NO, result.reference_no
+      assert_equal Date.new(2026, 11, 15), result.due_date
+    end
+
+    assert_requested :post, "https://eis_billing_system:3000/api/v1/invoice_generator/reference_number_generator",
+                     body: { initiator: 'business_registry', owner: TEST_USER_UNIQUE_ID }.to_json
+    assert_requested(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator") do |request|
+      JSON.parse(request.body)['reference_number'] == REFERENCE_NO
+    end
+  end
+
+  test "reserves domains and marks invoice paid" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12347', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
+
+    BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, @domain_names do
+      assert_difference 'ReservedDomain.count', 2 do
+        assert_equal :reserved, invoice.reserve_paid_domains
+      end
+    end
+
+    assert invoice.reload.paid?
+  end
+
+  test "stores buyer, price and VAT rate when the invoice is issued" do
+    buyer = { buyer_name: 'Future Company OÜ', buyer_email: 'founder@example.test', buyer_address: 'Tallinn',
+              buyer_country_code: 'EE', buyer_vat_no: nil }
+
+    ReserveDomainInvoice.create_list_of_domains(@domain_names, buyer)
+
+    invoice = ReserveDomainInvoice.last
+    assert_equal 'Future Company OÜ', invoice.buyer_name
+    assert_equal 'founder@example.test', invoice.buyer_email
+    assert_equal 'EE', invoice.buyer_country_code
+    assert_equal 20, invoice.total
+    assert_equal BigDecimal('0.2'), invoice.vat_rate
+    assert_requested(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator") do |request|
+      JSON.parse(request.body)['customer_name'] == 'Future Company OÜ'
+    end
+  end
+
+  test "keeps the issued price when the VAT rate changes later" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12360', domain_names: @domain_names, metainfo: 'vat')
+    Setting.registry_vat_prc = 0.24
+
+    assert_equal BigDecimal('0.2'), invoice.reload.vat_rate
+    assert_equal BigDecimal('8.33'), invoice.net_price_per_domain
+  end
+
+  test "records the payment date and queues the Directo forwarding" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12361', domain_names: @domain_names, metainfo: 'paid-at')
+    paid_at = Time.zone.parse('2026-11-10 12:00')
+
+    BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, @domain_names do
+      assert_enqueued_with(job: DirectoReserveDomainInvoiceForwardJob) do
+        invoice.reserve_paid_domains(paid_at: paid_at)
+      end
+    end
+
+    assert_equal paid_at, invoice.reload.paid_at
+  end
+
+  test "Directo lines and VAT add up to the paid total" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12362', domain_names: %w[a.test b.test c.test],
+                                           metainfo: 'directo', status: :paid, paid_at: Time.zone.parse('2026-11-10'),
+                                           buyer_name: 'Buyer OÜ', buyer_vat_no: 'EE101')
+
+    json = invoice.as_directo_json
+    lines_sum = json['invoice_lines'].sum { |line| BigDecimal(line['price']) }
+
+    assert_equal 12_362, json['number']
+    assert_equal '2026-11-10', json['transaction_date']
+    assert_equal({ 'name' => 'Buyer OÜ', 'code' => 'ERA', 'destination' => 'EE', 'vat_reg_no' => 'EE101' }, json['customer'])
+    assert_equal BigDecimal(json['total_wo_vat']), lines_sum
+    assert_equal invoice.total, lines_sum + BigDecimal(json['vat_amount'])
+  end
+
+  test "reserving paid domains cancels pending invoices with intersecting domains" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12348', domain_names: [@domain_names.first], metainfo: TEST_USER_UNIQUE_ID)
+    intersecting_invoice = ReserveDomainInvoice.create!(invoice_number: '12349', domain_names: @domain_names, metainfo: 'other')
+
+    BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, [@domain_names.first] do
+      invoice.reserve_paid_domains
+    end
+
+    assert intersecting_invoice.reload.cancelled?
+  end
+
+  test "does not reserve domains again for already paid invoice" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12350', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID,
+                                           status: :paid)
+
+    assert_no_difference 'ReservedDomain.count' do
+      assert_equal :already_paid, invoice.reserve_paid_domains
+    end
+  end
+
+  test "reserves nothing when some domain is unavailable" do
+    invoice = ReserveDomainInvoice.create!(invoice_number: '12351', domain_names: @domain_names, metainfo: TEST_USER_UNIQUE_ID)
+
+    BusinessRegistry::DomainAvailabilityCheckerService.stub :filter_available, [@domain_names.first] do
+      assert_no_difference 'ReservedDomain.count' do
+        assert_equal :unavailable, invoice.reserve_paid_domains
+      end
+    end
+
+    assert invoice.reload.pending?
+  end
+
+  private
+
+  def stub_invoice_number_request
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_number_generator")
+      .to_return(status: 200, body: { invoice_number: INVOICE_NUMBER }.to_json, headers: {})
+  end
+
+  def stub_add_deposits_request
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/invoice_generator")
+      .to_return(status: 201, body: { everypay_link: 'https://pay.test' }.to_json)
+  end
+
+  def stub_reference_number_request
+    stub_request(:post, "https://eis_billing_system:3000/api/v1/invoice_generator/reference_number_generator")
+      .to_return(status: 200, body: { reference_number: REFERENCE_NO }.to_json, headers: {})
+  end
+
+  def stub_reserved_domains_invoice_status
+    stub_request(:get, "https://eis_billing_system:3000/api/v1/invoice/reserved_domains_invoice_statuses?invoice_number=#{INVOICE_NUMBER}&user_unique_id=#{TEST_USER_UNIQUE_ID}")
+      .to_return(status: 200, body: { invoice_status: 'paid' }.to_json, headers: {})
+  end
+end

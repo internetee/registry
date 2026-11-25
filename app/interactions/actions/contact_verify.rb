@@ -63,7 +63,9 @@ module Actions
       @contact.update(
         ident_request_sent_at: Time.zone.now,
         verified_at: nil,
-        verification_id: nil
+        verification_id: nil,
+        verification_pending_at: nil,
+        verification_snapshot: {}
       )
     end
   end

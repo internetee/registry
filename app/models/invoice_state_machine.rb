@@ -46,7 +46,7 @@ class InvoiceStateMachine
   end
 
   def push_error
-    invoice.errors.add(:base, "Inavalid state #{status}")
+    invoice.errors.add(:base, :invalid_state, status: status)
 
     false
   end

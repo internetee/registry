@@ -111,6 +111,43 @@ class ReppV1DomainsCreateTest < ActionDispatch::IntegrationTest
     assert_equal admin_contact, domain.admin_domain_contacts.first.contact
   end
 
+  def test_registers_reserved_domain_with_reserved_password
+    @auth_headers['Content-Type'] = 'application/json'
+    contact = contacts(:john)
+    reserved_domain = reserved_domains(:one)
+    registration_code = reserved_domain.registration_code
+
+    payload = {
+      domain: {
+        name: reserved_domain.name,
+        registrant: contact.code,
+        period: 1,
+        period_unit: 'y',
+        reserved_pw: registration_code
+      }
+    }
+
+    assert_difference 'Domain.count' do
+      post "/repp/v1/domains", headers: @auth_headers, params: payload.to_json
+    end
+    json = JSON.parse(response.body, symbolize_names: true)
+    assert_response :ok
+    assert_equal 1000, json[:code]
+    assert_equal 'Command completed successfully', json[:message]
+
+    assert @user.registrar.domains.find_by(name: reserved_domain.name).present?
+
+    reserved_domain.reload
+    assert_not_equal registration_code, reserved_domain.registration_code
+
+    version = Version::ReservedDomainVersion.where(item_id: reserved_domain.id).order(:id).last
+    assert_equal 'update', version.event
+    assert_equal 'registrar', version.source
+    assert_equal 'domain_registered', version.reason
+    assert_equal @user.registrar.id, version.registrar_id
+    assert_equal reserved_domain.name, version.domain_name
+  end
+
   def test_creates_new_domain_with_desired_transfer_code
     @auth_headers['Content-Type'] = 'application/json'
     contact = contacts(:john)

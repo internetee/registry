@@ -7,7 +7,8 @@ class WhoisRecordTest < ActiveSupport::TestCase
     super
 
     @domain = domains(:shop)
-    @record = WhoisRecord.new(domain: @domain)
+    # Assigned by id, otherwise saving @domain would insert a second record of the domain
+    @record = WhoisRecord.new(domain_id: @domain.id)
     @record.populate
   end
 

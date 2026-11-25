@@ -129,8 +129,8 @@ class DomainTest < ActiveSupport::TestCase
     domain.name = reserved_domain.name
 
     assert domain.invalid?
-    assert_includes domain.errors.full_messages, 'Required parameter missing; reserved>' \
-                                                 'pw element required for reserved domains'
+    assert_includes domain.errors.full_messages,
+                    I18n.t('activerecord.errors.models.domain.attributes.base.required_parameter_missing_reserved')
   end
 
   def test_invalid_without_registration_period
@@ -373,6 +373,31 @@ class DomainTest < ActiveSupport::TestCase
     assert_equal unnormalized_name, domain.name_dirty
   end
 
+  def test_find_repp_by_name_normalizes_uppercase_and_whitespace
+    domain = domains(:shop)
+
+    assert_equal domain, Domain.find_repp_by_name('SHOP.TEST')
+    assert_equal domain, Domain.find_repp_by_name(' shop.test ')
+  end
+
+  def test_find_repp_by_name_finds_by_punycode
+    domain = domains(:shop)
+    domain.update!(name_puny: 'xn--prototp-s2aa.ee')
+
+    assert_equal domain, Domain.find_repp_by_name('XN--PROTOTP-S2AA.EE')
+  end
+
+  def test_find_repp_by_name_scopes_by_registrar
+    domain = domains(:shop)
+
+    assert_equal domain, Domain.find_repp_by_name('SHOP.TEST', registrar: domain.registrar)
+    assert_nil Domain.find_repp_by_name('SHOP.TEST', registrar: registrars(:goodnames))
+  end
+
+  def test_find_repp_by_name_returns_nil_when_missing
+    assert_nil Domain.find_repp_by_name('missing.test')
+  end
+
   def test_converts_name_to_punycode
     domain = Domain.new(name: 'münchen.test')
     assert_equal 'xn--mnchen-3ya.test', domain.name_puny
@@ -537,7 +562,7 @@ class DomainTest < ActiveSupport::TestCase
     
     domain.admin_domain_contacts.clear
     assert domain.invalid?
-    assert_includes domain.errors.full_messages, 'Admin domain contacts Admin contacts count must be between 1-10'
+    assert_includes domain.errors.full_messages, admin_contacts_count_out_of_range_message
     
     domain.admin_domain_contacts.build(contact: contacts(:john))
     assert domain.valid?
@@ -585,7 +610,7 @@ class DomainTest < ActiveSupport::TestCase
     
     domain.admin_domain_contacts.clear
     assert domain.invalid?
-    assert_includes domain.errors.full_messages, 'Admin domain contacts Admin contacts count must be between 1-10'
+    assert_includes domain.errors.full_messages, admin_contacts_count_out_of_range_message
     
     admin_contact = contacts(:john)
     admin_contact.update!(
@@ -637,8 +662,7 @@ class DomainTest < ActiveSupport::TestCase
     Setting.admin_contacts_required_for_org = true
     domain.admin_domain_contacts.clear
     assert domain.invalid?
-    assert_includes domain.errors.full_messages, 
-                    'Admin domain contacts Admin contacts count must be between 1-10'
+    assert_includes domain.errors.full_messages, admin_contacts_count_out_of_range_message
 
     # When setting is false
     Setting.admin_contacts_required_for_org = false
@@ -655,8 +679,7 @@ class DomainTest < ActiveSupport::TestCase
     Setting.admin_contacts_required_for_minors = true
     domain.admin_domain_contacts.clear
     assert domain.invalid?
-    assert_includes domain.errors.full_messages, 
-                    'Admin domain contacts Admin contacts count must be between 1-10'
+    assert_includes domain.errors.full_messages, admin_contacts_count_out_of_range_message
 
     # When setting is false
     Setting.admin_contacts_required_for_minors = false
@@ -665,6 +688,14 @@ class DomainTest < ActiveSupport::TestCase
   end
 
   private
+
+  def admin_contacts_count_out_of_range_message
+    min = Setting.admin_contacts_min_count
+    max = Setting.admin_contacts_max_count
+    Domain.new.tap do |domain|
+      domain.errors.add(:admin_domain_contacts, :out_of_range, min: min, max: max)
+    end.errors.full_messages.first
+  end
 
   def valid_domain
     domains(:shop)

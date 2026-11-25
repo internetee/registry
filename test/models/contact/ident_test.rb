@@ -95,9 +95,17 @@ class ContactIdentTest < ActiveSupport::TestCase
 
   def test_validates_for_mismatches
     ident = valid_ident
-    mismatch = Contact::Ident::MismatchValidator.mismatches.first
-    ident.type = mismatch.type
-    ident.country_code = mismatch.country.alpha2
+    ident.type = 'birthday'
+    ident.country_code = 'EE'
+
+    assert ident.invalid?
+    assert_includes ident.errors.full_messages, %(Ident type "#{ident.type}" is invalid for #{ident.country})
+  end
+
+  def test_validates_for_newly_restricted_birthday_country
+    ident = valid_ident
+    ident.type = 'birthday'
+    ident.country_code = 'FI'
 
     assert ident.invalid?
     assert_includes ident.errors.full_messages, %(Ident type "#{ident.type}" is invalid for #{ident.country})

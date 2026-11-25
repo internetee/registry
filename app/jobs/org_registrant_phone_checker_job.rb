@@ -54,9 +54,10 @@ class OrgRegistrantPhoneCheckerJob < ApplicationJob
     if is_phone_number_matching
       disclose_phone_number(contact)
       log("Phone number disclosed for registrant user #{contact.code}. Phone number: #{contact.phone}")
-    elsif contact.disclosed_attributes.include?('phone')
+    elsif contact.disclosed_attributes.include?('phone') || contact.system_disclosed_attributes.include?('phone')
       log("Removing phone number from disclosed attributes for registrant user #{contact.code}. Phone number: #{contact.phone}")
       contact.disclosed_attributes.delete('phone')
+      contact.system_disclosed_attributes.delete('phone')
       contact.save!
     else
       log("Phone number not disclosed for registrant user #{contact.code}. Phone number: #{contact.phone}")
@@ -69,6 +70,7 @@ class OrgRegistrantPhoneCheckerJob < ApplicationJob
 
   def disclose_phone_number(contact)
     contact.disclosed_attributes << 'phone'
+    contact.system_disclosed_attributes << 'phone'
     contact.save!
   end
 

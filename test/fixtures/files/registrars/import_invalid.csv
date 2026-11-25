@@ -1,0 +1,2 @@
+code,name,reg_no,email,address_street,address_city,address_country_code,accounting_customer_code,language
+,Invalid Registrar,77777,invalid@example.test,Invalid Street 5,Tallinn,EE,invalid,en

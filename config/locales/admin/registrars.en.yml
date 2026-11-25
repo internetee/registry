@@ -1,11 +1,50 @@
 en:
   admin:
+    csv_sync:
+      actions:
+        created: Created
+        updated: Updated
+        unchanged: Unchanged
+        error: Error
+      field_checkboxes:
+        panel_title: Fields
+        default_group: Fields
+      import_form:
+        submit_btn: Preview import
+        file_label: CSV file
+        instructions: Upload a CSV file and choose fields to import.
+        fields_panel_title: Fields to import
+        toggle_fields_btn: Show/Hide import fields
+        cancel_btn: Cancel
+      preview_summary:
+        panel_title: Import summary
+        created: Created
+        updated: Updated
+        unchanged: Unchanged
+        errors: Errors
+      preview_table:
+        line: Line
+        key: Key
+        action: Action
+        changes: Changed fields
+        error: Error
+      export_actions:
+        panel_title: CSV export
+        export_btn: Export CSV
+        export_selected_btn: Export selected
+        reset_btn: Reset
+
     registrars:
       index:
         header: Registrars
         new_btn: New registrar
-        set_test_btn: Set Test
-        remove_test_btn: Remove Test
+        import_btn: Import CSV
+        download_btn: Export CSV
+        export_selected_btn: Export selected
+        toggle_csv_fields_btn: Show/Hide CSV fields
+        csv_fields_label: CSV fields
+        set_test_btn: Set Accreditation
+        remove_test_btn: Remove Accreditation
 
       new:
         header: New registrar
@@ -30,15 +69,44 @@ en:
         api_users:
           header: API Users
           new_btn: New API user
-          set_test_btn: Set Test
-          remove_test_btn: Remove Test
+          verification_status: Verification status
+          verified: Verified
+          pending_review: Pending registrar review
+          requested: Requested
+          unverified: Unverified
+          set_test_btn: Set Accreditation
+          remove_test_btn: Remove Accreditation
 
         white_ips:
           header: Whitelisted IPs
           new_btn: New whitelisted IP
 
+        accreditation:
+          header: Accreditation
+          accreditation_not_accredited: Not accredited
+          accreditation_expired: Expired
+          accreditation_expires_soon: Expires soon
+          accreditation_accredited: Accredited
+
       edit:
         header: Edit registrar
+
+      import:
+        header: Import registrars from CSV
+        panel_title: CSV import
+
+      import_preview:
+        header: Import preview
+        changes_panel_title: Row changes
+        confirm_btn: Apply import
+        back_btn: Back
+        file_required: Please select a CSV file.
+        failed: Failed to generate import preview
+
+      import_apply:
+        completed: "CSV import completed: %{created} created, %{updated} updated, %{unchanged} unchanged, %{errors} failed"
+        file_not_found: Import file was not found. Please upload the CSV again.
+        failed: Failed to apply import
 
       create:
         created: Registrar has been successfully created
@@ -76,5 +144,4 @@ en:
           header: Preferences
 
       search_form:
-        download_btn: Download CSV
         reset_btn: Reset

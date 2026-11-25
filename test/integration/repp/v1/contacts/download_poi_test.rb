@@ -41,6 +41,21 @@ class ReppV1ContactsDownloadPoiTest < ActionDispatch::IntegrationTest
     assert_not_empty response.body
   end
 
+  def test_downloads_poi_for_contact_pending_registrar_review
+    @contact.update!(
+      ident_request_sent_at: 1.day.ago,
+      verification_pending_at: Time.zone.now,
+      verification_id: '321',
+      verification_snapshot: { sub: 'US9999', given_name: 'John' }
+    )
+    get "/repp/v1/contacts/download_poi/#{@contact.code}", headers: @auth_headers
+
+    assert_response :ok
+    assert_equal 'application/pdf', response.headers['Content-Type']
+    assert_equal "inline; filename=\"proof_of_identity_321.pdf\"; filename*=UTF-8''proof_of_identity_321.pdf", response.headers['Content-Disposition']
+    assert_not_empty response.body
+  end
+
   def test_handles_non_epp_error
     stub_request(:get, %r{api/ident/v1/identification_requests})
       .to_return(

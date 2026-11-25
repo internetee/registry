@@ -1,0 +1,6 @@
+et:
+  errors:
+    messages:
+      required_ident_attribute_missing: 'Kohustuslik ident atribuut puudub: %{key}'
+      company_not_registered: Ettevõte pole registreeritud
+      invalid_ident_type: Vigane identi tüüp

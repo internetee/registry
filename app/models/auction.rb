@@ -121,7 +121,7 @@ class Auction < ApplicationRecord
 
   def whois_create
     Whois::Record.transaction do
-      whois_record = Whois::Record.find_or_create_by!(name: domain)
+      whois_record = Whois::Record.find_or_create_by_name!(domain)
       whois_record.update_from_auction(self)
     end
   end

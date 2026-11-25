@@ -1,0 +1,18 @@
+en:
+  accreditation_mailer:
+    test_was_successfully_passed_admin:
+      subject: >-
+        Teade: Registripidaja akrediteerimise staatus uuendatud
+        / Notification: Registrar accreditation status updated
+    test_was_successfully_passed_registrar:
+      subject: >-
+        Teade: Teie registripidaja akrediteerimise staatus uuendatud
+        / Notification: Your registrar accreditation status has been updated
+    test_results_will_expired_in_one_month:
+      subject: >-
+        Teade: Registripidaja akrediteerimise tulemused aeguvad 1 kuu jooksul
+        / Notification: Registrar accreditation results will expire in one month
+    test_results_are_expired:
+      subject: >-
+        Teade: Registripidaja akrediteerimise tulemused on aegunud
+        / Notification: Registrar accreditation results have expired

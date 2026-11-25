@@ -1,0 +1,13 @@
+Tere <%= @api_user.username %>,
+
+Teie registripidaja <%= @api_user.registrar.name %> on palunud Teil kinnitada oma isikut API kasutaja konto jaoks.
+
+<%= @verification_link + "?ui_locales=et" %>
+
+---
+
+Hi <%= @api_user.username %>,
+
+Your registrar <%= @api_user.registrar.name %> has requested that you verify your identity for your API user account.
+
+<%= @verification_link + "?ui_locales=en" %>

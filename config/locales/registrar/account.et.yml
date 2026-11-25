@@ -1,0 +1,32 @@
+et:
+  registrar:
+    account:
+      show:
+        header: Teie konto
+
+      edit:
+        header: Muuda oma kontot
+
+      form:
+        iban_hint: Vajalik e-arvete saatmiseks panka
+        submit_btn: Salvesta muudatused
+
+      update:
+        saved: Teie konto on uuendatud
+
+      details:
+        header: Andmed
+        edit_btn: Muuda
+
+      linked_users:
+        header: Seotud kasutajad
+        switch_btn: Vaheta
+
+      balance_auto_reload:
+        header: Saldo automaatne täiendamine
+        enabled: Lubatud
+        enabled_state_details: Täienda %{amount}, kui saldo langeb alla %{threshold}
+        disabled: Keelatud
+        enable_btn: Luba
+        disable_btn: Keela
+        edit_btn: Muuda

@@ -29,9 +29,7 @@ class AdminAreaPendingUpdateIntegrationTest < JavaScriptApplicationSystemTestCas
 
     visit edit_admin_domain_path(id: @domain.id)
 
-    click_on 'Accept'
-    page.driver.browser.switch_to.alert.accept
-
+    accept_confirm { click_on 'Accept' }
     assert_text 'Pending was successfully applied.'
   end
 
@@ -51,8 +49,7 @@ class AdminAreaPendingUpdateIntegrationTest < JavaScriptApplicationSystemTestCas
 
     visit edit_admin_domain_path(id: @domain.id)
 
-    click_on 'Accept'
-    page.driver.browser.switch_to.alert.accept
+    accept_confirm { click_on 'Accept' }
     assert_text 'Not success'
   end
 
@@ -68,8 +65,7 @@ class AdminAreaPendingUpdateIntegrationTest < JavaScriptApplicationSystemTestCas
 
     visit edit_admin_domain_path(id: @domain.id)
 
-    click_on 'Reject'
-    page.driver.browser.switch_to.alert.accept
+    accept_confirm { click_on 'Reject' }
     assert_text 'Pending was successfully removed.'
   end
 
@@ -89,8 +85,7 @@ class AdminAreaPendingUpdateIntegrationTest < JavaScriptApplicationSystemTestCas
 
     visit edit_admin_domain_path(id: @domain.id)
 
-    click_on 'Reject'
-    page.driver.browser.switch_to.alert.accept
+    accept_confirm { click_on 'Reject' }
     assert_text 'Not success'
   end
 end

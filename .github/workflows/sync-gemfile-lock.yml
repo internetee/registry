@@ -1,0 +1,76 @@
+name: Sync Gemfile.lock
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - Gemfile
+      - Gemfile.lock
+      - .ruby-version
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-gemfile-lock-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync-lockfile:
+    if: |
+      github.repository == 'internetee/registry' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      (github.event.pull_request.user.login == 'renovate[bot]' ||
+       github.event.pull_request.user.login == 'dependabot[bot]')
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Mint GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: internetee
+          repositories: registry
+
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ steps.app-token.outputs.token }}
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler: Gemfile.lock
+          bundler-cache: false
+
+      - name: Refresh lockfile when Gemfile changed
+        id: lock
+        env:
+          BUNDLE_FROZEN: "false"
+          BUNDLE_DEPLOYMENT: "false"
+        run: |
+          bundle config unset --local frozen || true
+          bundle config unset --local deployment || true
+          bundle lock
+          if git diff --quiet -- Gemfile.lock; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit Gemfile.lock
+        if: steps.lock.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Gemfile.lock
+          if git diff --cached --quiet; then
+            echo "No lockfile changes to commit"
+            exit 0
+          fi
+          git commit -m "Update Gemfile.lock to match Gemfile"
+          git push

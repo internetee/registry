@@ -16,7 +16,6 @@ task verify_domain: :environment do
                                                      banner: banner,
                                                      hash: opts_hash)
 
-  
   domain = Domain.find_by(name: options[:domain_name])
   check_level = options[:check_level]
 

@@ -189,6 +189,12 @@ Download CRT file and create p12 file.
 Add api_user.p12 to your browser.
 NB! Try adding the option `-legacy` to `openssl pkcs12` if you get wrong password message.
 
+If you don’t want to be prompted, pass the export password using the -passout option:
+
+```
+openssl pkcs12 -export -inkey private/api-user.key.pem -in certs/api-user.crt.pem -out pkcs/api-user.p12 -passout pass:YourExportPassword
+```
+
 ID card login
 ---------------
 

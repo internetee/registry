@@ -1,6 +1,40 @@
 en:
   activerecord:
+    models:
+      api_user:
+        one: API user
+        other: API users
     attributes:
       api_user:
+        username: Username
         plain_text_password: Password
-        roles: Role
+        email: Email
+        identity_code: Identity code
+        subject: Login subject
+        registrar: Registrar
+        roles: Roles
+    errors:
+      models:
+        api_user:
+          attributes:
+            username:
+              blank: is missing
+              taken: already exists
+            plain_text_password:
+              blank: is missing
+              too_short: is too short (minimum is %{count} characters)
+            email:
+              blank: is required for identity verification
+              invalid: is invalid
+            identity_code:
+              taken: already exists at this registrar
+            subject:
+              taken: is already used by another api user at this registrar
+            registrar:
+              blank: is missing
+            roles:
+              blank: is missing
+            base:
+              verification_error: Sending identification request failed
+              not_pending_verification: No pending verification to approve or reject
+              missing_subject: Login subject is required to approve verification

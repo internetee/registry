@@ -68,7 +68,7 @@ class Certificate < ApplicationRecord
 
   def parsed_private_key
     return nil if private_key.blank?
-    
+
     OpenSSL::PKey::RSA.new(private_key)
   rescue StandardError => e
     Rails.logger.error("Failed to parse private key: #{e.message}")
@@ -77,7 +77,7 @@ class Certificate < ApplicationRecord
 
   def parsed_p12
     return nil if p12.blank?
-    
+
     decoded_p12 = Base64.decode64(p12)
     OpenSSL::PKCS12.new(decoded_p12, p12_password)
   rescue StandardError => e
@@ -97,7 +97,7 @@ class Certificate < ApplicationRecord
     return UNSIGNED if crt.blank?
     return REVOKED if revoked?
     return EXPIRED if expires_at && expires_at < Time.current
-    
+
     SIGNED
   end
 

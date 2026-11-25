@@ -15,9 +15,7 @@ module Zone::WhoisQueryable
   end
 
   def generate_data
-    wr = Whois::Record.find_or_initialize_by(name: origin)
-    wr.json = generate_json
-    wr.save
+    Whois::Record.save_by_name(origin) { |wr| wr.json = generate_json }
   end
 
   def generate_json

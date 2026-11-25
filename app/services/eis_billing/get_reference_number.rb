@@ -1,24 +1,25 @@
 module EisBilling
   class GetReferenceNumber < EisBilling::Base
-    attr_reader :owner
+    attr_reader :owner, :initiator
 
     # rubocop:disable Lint/MissingSuper
-    def initialize(owner:)
+    def initialize(owner:, initiator: INITIATOR)
       @owner = owner
+      @initiator = initiator
     end
 
-    def self.call(owner:)
-      new(owner: owner).call
+    def self.call(owner:, initiator: INITIATOR)
+      new(owner: owner, initiator: initiator).call
     end
 
     def call
-      http = EisBilling::Base.base_request(url: reference_number_generator_url)
+      http = EisBilling::Base.base_request
       http.post(reference_number_generator_url, payload.to_json, EisBilling::Base.headers)
     end
 
     def payload
       {
-        initiator: INITIATOR,
+        initiator: initiator,
         owner: owner
       }
     end

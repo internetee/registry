@@ -57,7 +57,7 @@ class AdminAreaCertificatesIntegrationTest < JavaScriptApplicationSystemTestCase
 
     fill_in 'Username', with: 'testapiuser'
     fill_in 'Password', with: 'secretpassword'
-    fill_in 'Identity code', with: '60305062718'
+    fill_in 'Login subject', with: 'EE60305062718'
 
     click_on 'Create API user'
 

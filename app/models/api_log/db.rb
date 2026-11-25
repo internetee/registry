@@ -1,5 +1,5 @@
 module ApiLog
-  class Db < ApplicationRecord
+  class Db < ActiveRecord::Base
     self.abstract_class = true
     # to_sym is needed because passing a string to ActiveRecord::Base.establish_connection
     # for a configuration lookup is deprecated

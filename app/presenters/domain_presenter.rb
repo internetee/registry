@@ -42,6 +42,10 @@ class DomainPresenter
     view.l(domain.force_delete_date) if domain.force_delete_scheduled?
   end
 
+  def force_delete_start
+    domain.force_delete_start
+  end
+
   def force_delete_toggle_btn
     return inactive_schedule_force_delete_btn if domain.discarded?
 

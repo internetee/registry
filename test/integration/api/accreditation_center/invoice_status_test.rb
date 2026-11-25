@@ -1,33 +1,79 @@
 require 'test_helper'
 
-class DomainsTest < ApplicationIntegrationTest
+class InvoiceStatusTest < ApplicationIntegrationTest
   def setup
     super
 
-		@user = users(:api_bestnames)
-		@header = { 'Authorization' => "Basic #{generate_base64}" }
+    @user = users(:api_bestnames)
+    @header = { 'Authorization' => "Basic #{generate_base64}" }
+
+    # Enable the accreditation endpoints feature for testing
+    ENV['allow_accr_endspoints'] = 'true'
+    ENV['accreditation_center_allowed_ips'] = '127.0.0.1,::1'
   end
 
-	def test_should_return_cancelled_invoices
-		date_now = Time.now
+  def teardown
+    # Clean up environment variable
+    ENV.delete('allow_accr_endspoints')
+    ENV.delete('accreditation_center_allowed_ips')
+    super
+  end
 
-		get "/api/v1/accreditation_center/invoice_status", headers: @header
-		json = JSON.parse(response.body, symbolize_names: true)
+  def test_should_return_cancelled_invoices
+    date_now = Time.now
 
-		assert_equal json[:invoices].count, 0
+    get '/api/v1/accreditation_center/invoice_status', headers: @header
+    json = JSON.parse(response.body, symbolize_names: true)
 
-		invoice = @user.registrar.invoices.last
-		invoice.update(cancelled_at: date_now)
+    assert_equal json[:data][:invoices].count, 0
 
-		get "/api/v1/accreditation_center/invoice_status", headers: @header
-		json = JSON.parse(response.body, symbolize_names: true)
+    invoice = @user.registrar.invoices.last
+    invoice.update(cancelled_at: date_now)
 
-		assert_equal json[:invoices].count, 1
-	end
+    get '/api/v1/accreditation_center/invoice_status', headers: @header
+    json = JSON.parse(response.body, symbolize_names: true)
 
-	private
+    assert_equal json[:data][:invoices].count, 1
+  end
 
-	def generate_base64
+  def test_return_error_without_authentication
+    get '/api/v1/accreditation_center/invoice_status'
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response 401
+    assert_equal json[:message], 'Invalid authorization information'
+  end
+
+  def test_return_forbidden_when_feature_disabled
+    # Disable the feature
+    ENV['allow_accr_endspoints'] = 'false'
+
+    get '/api/v1/accreditation_center/invoice_status', headers: @header
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_equal json[:message], 'Accreditation Center API is not allowed'
+    assert_equal response.status, 403
+  end
+
+  def test_return_successful_with_no_cancelled_invoices
+    get '/api/v1/accreditation_center/invoice_status', headers: @header
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_equal json[:data][:invoices].count, 0
+  end
+
+  def test_return_unauthorized_for_non_whitelisted_ip
+    get '/api/v1/accreditation_center/invoice_status',
+        headers: @header.merge('REMOTE_ADDR' => '10.10.10.10')
+    json = JSON.parse(response.body, symbolize_names: true)
+
+    assert_response 401
+    assert_equal json[:message], 'IP address 10.10.10.10 is not authorized'
+  end
+
+  private
+
+  def generate_base64
     Base64.encode64("#{@user.username}:#{@user.plain_text_password}")
   end
 end

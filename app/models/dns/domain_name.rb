@@ -103,7 +103,7 @@ module DNS
     end
 
     def update_whois_from_auction(auction)
-      whois_record = Whois::Record.find_or_create_by!(name: name) do |record|
+      whois_record = Whois::Record.find_or_create_by_name!(name) do |record|
         record.json = {}
       end
       ToStdout.msg "Starting to update WHOIS record #{whois_record.inspect}\n\n"\

@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     put '/directo_response', to: 'directo_response#update', as: 'directo_response'
     put '/e_invoice_response', to: 'e_invoice_response#update', as: 'e_invoice_response'
     post '/lhv_connect_transactions', to: 'lhv_connect_transactions#create', as: 'lhv_connect_transactions'
+    get 'callback', to: 'business_registry_callback#callback', as: 'callback'
+    put '/business_registry_payment', to: 'business_registry_payments#update', as: 'business_registry_payment'
     resource :invoices, only: [:update]
   end
 
@@ -76,6 +78,8 @@ Rails.application.routes.draw do
             get 'search(/:id)', to: 'contacts#search'
             post 'verify/:id', to: 'contacts#verify'
             get 'download_poi/:id', to: 'contacts#download_poi'
+            post 'approve_verification/:id', to: 'contacts#approve_verification'
+            post 'reject_verification/:id', to: 'contacts#reject_verification'
           end
         end
       end
@@ -111,6 +115,12 @@ Rails.application.routes.draw do
         end
       end
       resources :api_users, only: %i[index show update create destroy] do
+        collection do
+          post 'verify/:id', to: 'api_users#verify'
+          get 'download_poi/:id', to: 'api_users#download_poi'
+          post 'approve_verification/:id', to: 'api_users#approve_verification'
+          post 'reject_verification/:id', to: 'api_users#reject_verification'
+        end
         resources :certificates, only: %i[show] do
           member do
             get 'download'
@@ -131,7 +141,6 @@ Rails.application.routes.draw do
         end
         resource :accreditation, only: [:index] do
           collection do
-            get '/get_info', to: 'accreditation_info#index'
             post '/push_results', to: 'accreditation_results#create'
           end
         end
@@ -159,6 +168,8 @@ Rails.application.routes.draw do
         resources :renew, only: %i[create], constraints: { id: /.*/ }, controller: 'domains/renews'
         resources :transfer, only: %i[create], constraints: { id: /.*/ }, controller: 'domains/transfers'
         resources :statuses, only: %i[update destroy], constraints: { id: /.*/ }, controller: 'domains/statuses'
+        resource :pending_update, only: %i[destroy], controller: 'domains/pending_updates'
+        resource :pending_notification, only: %i[create], controller: 'domains/pending_notifications'
         match 'dnssec', to: 'domains/dnssec#destroy', via: 'delete', defaults: { id: nil }
         match 'contacts', to: 'domains/contacts#destroy', via: 'delete', defaults: { id: nil }
         collection do
@@ -180,6 +191,16 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      namespace :business_registry do
+        get 'domain_names/:organization_name', to: 'domain_names#show', as: 'domain_names'
+        get 'long_reserve_domains_status', to: 'long_reserve_domains_status#show', as: 'long_reserve_domains_status'
+        get 'reserved_domains_invoice_pdf', to: 'reserved_domains_invoice_pdf#show', as: 'reserved_domains_invoice_pdf'
+        post 'reserve_domains', to: 'reserve_domains#create', as: 'reserve_domains'
+        get 'reserve_domains/:user_unique_id', to: 'reserve_domains#show', as: 'reserve_domains_data'
+        post 'long_reserve_domains', to: 'long_reserve_domains#create', as: 'long_reserve_domains'
+        get 'registration_code', to: 'registration_code#show', as: 'registration_code'
+      end
+
       namespace :registrant do
         post 'auth/eid', to: 'auth#eid'
         get 'confirms/:name/:template/:token', to: 'confirms#index', constraints: { name: /[^\/]+/ }
@@ -199,13 +220,9 @@ Rails.application.routes.draw do
       namespace :accreditation_center do
         # At the moment invoice_status endpoint returns only cancelled invoices. But in future logic of this enpoint can change.
         # And it will need to return invoices of different statuses. I decided to leave the name of the endpoint "invoice_status"
-        resources :invoice_status, only: [ :index ]
-        resource :domains, only: [ :show ], param: :name
-        resource :contacts, only: [ :show ], param: :id
-        resource :results, only: [ :show ], param: :name
-        # resource :auth, only: [ :index ]
-        get 'show_api_user', to: 'results#show_api_user'
-        get 'list_accreditated_api_users', to: 'results#list_accreditated_api_users'
+        resources :invoice_status, only: [:index]
+        resource :domains, only: [:show], param: :name
+        resource :contacts, only: [:show], param: :id
         get 'auth', to: 'auth#index'
       end
 
@@ -325,6 +342,10 @@ Rails.application.routes.draw do
         post 'release_to_auction', to: 'reserved_domains#release_to_auction', as: 'release_to_auction'
       end
     end
+    resources :reserved_domain_lifecycles, only: %i[index show]
+    resources :reserve_domain_invoices, only: :index do
+      get 'download', on: :member
+    end
     resources :disputes do
       member do
         get 'delete'
@@ -336,8 +357,9 @@ Rails.application.routes.draw do
       resources :white_ips
 
       collection do
-        post 'set_test_date', to: 'registrars#set_test_date', as: 'set_test_date'
-        post 'remove_test_date', to: 'registrars#remove_test_date', as: 'remove_test_date'
+        get 'import'
+        post 'import_preview'
+        post 'import_apply'
         post 'set_test_date_to_api_user', to: 'api_users#set_test_date_to_api_user', as: 'set_test_date_to_api_user'
         post 'remove_test_date_to_api_user', to: 'api_users#remove_test_date_to_api_user', as: 'remove_test_date_to_api_user'
       end
@@ -373,6 +395,14 @@ Rails.application.routes.draw do
     resources :mass_actions, only: %i[index create]
     resources :bounced_mail_addresses, only: %i[index show destroy]
 
+    resources :reports do
+      post :generate_with_ai, on: :collection
+      member do
+        post :run
+        post :duplicate
+      end
+    end
+
     authenticate :admin_user do
       mount Sidekiq::Web, at: 'sidekiq'
     end
@@ -386,4 +416,6 @@ Rails.application.routes.draw do
 
   # To prevent users seeing the default welcome message "Welcome aboard" from Rails
   root to: redirect('admin/sign_in')
+
+  get '/health', to: 'health_check#show'
 end

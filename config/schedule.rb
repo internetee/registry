@@ -34,6 +34,16 @@ if @cron_group == 'registry'
     runner 'DomainCron.clean_expired_pendings'
   end
 
+  every :day, at: '12:35am' do
+    runner 'ReservedDomain.release_expired'
+  end
+
+  # Repairs reservation history rows changed without versions; admin reads
+  # only catch up on versioned changes.
+  every :day, at: '3:15am' do
+    runner 'ReservedDomain::Lifecycle.rebuild!'
+  end
+
   every 3.hours do
     runner 'Certificate.update_crl'
   end

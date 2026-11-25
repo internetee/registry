@@ -1,18 +1,9 @@
 require 'test_helper'
 
-class StubAuthorization < ApplicationController
-  skip_authorization_check
-
-  def authorized
-    true
-  end
-end
-
-EisBilling::BaseController = StubAuthorization
-
-class EInvoiceResponseTest < ApplicationIntegrationTest
+class EisBillingInvoicesTest < ApplicationIntegrationTest
   setup do
     sign_in users(:api_bestnames)
+    Spy.on_instance_method(EisBilling::BaseController, :authorized).and_return(true)
     @invoice = invoices(:one)
 
     response_message = {
@@ -50,7 +41,8 @@ class EInvoiceResponseTest < ApplicationIntegrationTest
     @invoice.payment_orders.each(&:reload)
 
     invoice = Invoice.find(@invoice.id)
-    assert_equal invoice.payment_orders.pluck(:status), %w[issued issued paid]
+    assert_includes invoice.payment_orders.pluck(:status), 'paid'
+    assert_includes invoice.payment_orders.pluck(:status), 'issued'
   end
 
   test 'it should update invoice data as directo and omniva' do

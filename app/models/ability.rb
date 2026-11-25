@@ -1,5 +1,6 @@
 class Ability
   include CanCan::Ability
+
   def initialize(user, ip = nil)
     @ip = ip
     alias_action :show, to: :view
@@ -29,6 +30,7 @@ class Ability
     epp
     billing
     can :manage, ApiUser
+    can :verify, ApiUser
     can :manage, WhiteIp
     can :manage, Certificate
   end
@@ -98,9 +100,13 @@ class Ability
     can :manage, Setting
     can :manage, BlockedDomain
     can :manage, ReservedDomain
+    can :read, ReservedDomain::Lifecycle
+    can :read, ReserveDomainInvoice
+    can :download, ReserveDomainInvoice
     can :manage, DNS::Zone
     can :manage, Version::DomainVersion
     can :manage, Version::ContactVersion
+    can :read, Version::ReservedDomainVersion
     can :manage, Billing::Price
     can :manage, User
     can :manage, ApiUser
@@ -123,6 +129,7 @@ class Ability
     can :access, :settings_menu
     can :manage, :mass_actions
     can :manage, BouncedMailAddress
+    can :manage, Report
   end
 
   def static_registrant

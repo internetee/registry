@@ -1,0 +1,5 @@
+one:
+  name: Test Report
+  parameters: [{"name":"start_date","type":"date", "default":"2023-01-01"}]
+  sql_query: SELECT event, COUNT(*) as count FROM log_domains WHERE created_at > :start_date GROUP BY event;
+  created_at: <%= Time.zone.parse('2010-07-04') %>

@@ -45,7 +45,7 @@ gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
 gem 'money-rails'
 gem 'simpleidn', '0.2.3' # For punycode
-gem 'whenever', '1.0.0', require: false
+gem 'whenever', '1.1.3', require: false
 
 # country listing
 gem 'countries', require: 'countries/global'
@@ -56,32 +56,28 @@ gem 'digidoc_client',
     github: 'tarmotalu/digidoc_client',
     ref: '1645e83a5a548addce383f75703b0275c5310c32'
 
-# TARA
-gem 'omniauth-rails_csrf_protection'
-gem 'omniauth-tara', github: 'internetee/omniauth-tara'
-# gem 'omniauth-tara', path: 'vendor/gems/omniauth-tara'
-
 gem 'airbrake'
+gem 'company_register', github: 'internetee/company_register', branch: 'master'
+gem 'directo', github: 'internetee/directo', branch: 'master'
+gem 'domain_name'
+gem 'dry-struct'
+gem 'dry-types'
+gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
+
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
+gem 'haml', '~> 6.0'
 gem 'jquery-ui-rails', '6.0.1'
+gem 'lhv', github: 'internetee/lhv', branch: 'master'
+gem 'openssl'
 gem 'pdfkit'
 gem 'redis'
-gem 'sidekiq', '~> 7.0'
-gem 'company_register', github: 'internetee/company_register', branch: :master
-gem 'domain_name'
-gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
-gem 'haml', '~> 6.0'
-gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'rexml'
+gem 'sidekiq', '~> 7.0'
+gem 'strong_migrations'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
 
-gem 'directo', github: 'internetee/directo', branch: 'master'
-
-gem 'strong_migrations'
-gem 'dry-types'
-gem 'dry-struct'
-gem 'openssl'
+gem 'net-ftp'
 
 group :development, :test do
   gem 'pry', '0.15.2'
@@ -102,14 +98,14 @@ end
 gem 'aws-sdk-sesv2', '~> 1.19'
 gem 'newrelic-infinite_tracing'
 gem 'newrelic_rpm'
+gem 'ruby-openai'
 
 # profiles
 gem 'pghero'
-gem 'pg_query', '>= 0.9.0'
+gem 'pg_query', '>= 2.2'
 
 # token
 gem 'jwt'
-gem 'net-ftp'
 
 # https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
-gem 'concurrent-ruby', '1.3.4'
+gem 'concurrent-ruby', '1.3.7'
