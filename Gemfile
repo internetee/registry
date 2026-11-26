@@ -1,14 +1,14 @@
 source 'https://rubygems.org'
 
 # core
-gem 'active_interaction', '~> 4.0'
-gem 'apipie-rails', '~> 0.6.0'
+gem 'active_interaction', '~> 5.0', '>= 5.0.0'
+gem 'apipie-rails', '~> 0.7.0'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'iso8601', '0.13.0' # for dates and times
 gem 'mimemagic', '0.4.3'
 gem 'mime-types-data'
 gem 'puma'
-gem 'rails', '~> 6.1.4'
+gem 'rails', '~> 8.0.5', '>= 8.0.5.2'
 gem 'rest-client'
 gem 'rubyzip', require: 'zip'
 gem 'uglifier'
@@ -17,10 +17,10 @@ gem 'uglifier'
 gem 'figaro', '~> 1.2'
 
 # model related
-gem 'paper_trail', '~> 14.0'
+gem 'paper_trail', '~> 15.0', '>= 15.0.0'
 gem 'pg', '1.6.3'
 # 1.8 is for Rails < 5.0
-gem 'ransack', '~> 4.0.0'
+gem 'ransack', '~> 4.1.0'
 gem 'truemail', '~> 3.0' # validates email by regexp, mail server existence and address existence
 gem 'validates_email_format_of', '1.8.2' # validates email against RFC 2822 and RFC 3696
 
@@ -32,18 +32,18 @@ gem 'nokogiri', '~> 1.16.0'
 gem 'bootstrap-sass', '~> 3.4'
 gem 'cancancan'
 gem 'coffee-rails', '>= 5.0'
-gem 'devise', '~> 4.8'
-gem 'jquery-rails'
-gem 'kaminari'
+gem 'devise', '~> 4.8', '>= 4.8.1'
+gem 'jquery-rails', '>= 4.5.0'
+gem 'kaminari', '>= 1.2.2'
 gem 'sass-rails'
 gem 'select2-rails', '4.0.13' # for autocomplete
 gem 'selectize-rails', '0.12.6' # include selectize.js for select
 
 # registry specfic
-gem 'data_migrate', '~> 9.0'
+gem 'data_migrate', '~> 9.1', '>= 9.1.0'
 gem 'dnsruby', '~> 1.61'
 gem 'isikukood' # for EE-id validation
-gem 'money-rails'
+gem 'money-rails', '>= 1.15.0'
 gem 'simpleidn', '0.2.3' # For punycode
 gem 'whenever', '1.1.3', require: false
 
@@ -67,14 +67,14 @@ gem 'e_invoice', github: 'internetee/e_invoice', branch: :master
 gem 'epp', github: 'internetee/epp', branch: :master
 gem 'epp-xml', '1.2.0', github: 'internetee/epp-xml', branch: :master
 gem 'haml', '~> 6.0'
-gem 'jquery-ui-rails', '6.0.1'
+gem 'jquery-ui-rails', '7.0.0'
 gem 'lhv', github: 'internetee/lhv', branch: 'master'
 gem 'openssl'
 gem 'pdfkit'
 gem 'redis'
 gem 'rexml'
-gem 'sidekiq', '~> 7.0'
-gem 'strong_migrations'
+gem 'sidekiq', '~> 7.1', '>= 7.1.5'
+gem 'strong_migrations', '>= 1.4.1'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.1'
 
 gem 'net-ftp'
@@ -85,7 +85,7 @@ end
 
 group :test do
   gem 'capybara', '~> 3.40.0'
-  gem 'database_cleaner'
+  gem 'database_cleaner', '>= 2.0.2'
   gem 'minitest', '~> 5.17'
   gem 'minitest-stub_any_instance'
   gem 'selenium-webdriver', '~> 4.26'
@@ -101,7 +101,7 @@ gem 'newrelic_rpm'
 gem 'ruby-openai'
 
 # profiles
-gem 'pghero'
+gem 'pghero', '>= 3.2.0'
 gem 'pg_query', '>= 2.2'
 
 # token
