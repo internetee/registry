@@ -1,5 +1,6 @@
 26.11.2026
 * Whole set of identity data is checked now for registrant change https://github.com/internetee/registry/issues/2977
+* Fixed Force Delete removal bug on domain update request https://github.com/internetee/registry/pull/2982
 
 24.11.2026
 * Fixed registrar CSV import of new registrars https://github.com/internetee/registry/pull/2976
