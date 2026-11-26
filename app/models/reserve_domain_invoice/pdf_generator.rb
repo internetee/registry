@@ -2,15 +2,16 @@ class ReserveDomainInvoice
   class PdfGenerator
     attr_reader :invoice, :customer_name, :customer_address, :customer_vat_no
 
-    delegate :reference_no, :due_date, to: :invoice
+    delegate :reference_no, :due_date, :vat_amount, :net_price_per_domain, to: :invoice
 
+    # Buyer details sent with the request win over the stored ones
     def initialize(invoice, context = {})
       @invoice = invoice
-      @customer_name = context[:customer_name]
-      @customer_address = context[:customer_address]
-      @customer_vat_no = context[:customer_vat_no]
+      @customer_name = context[:customer_name] || invoice.buyer_name
+      @customer_address = context[:customer_address] || invoice.buyer_address
+      @customer_vat_no = context[:customer_vat_no] || invoice.buyer_vat_no
       @private_individual = context[:private_individual]
-      @payment_date = context[:payment_date]
+      @payment_date = context[:payment_date] || invoice.paid_at&.to_date
       @paid = context[:paid]
     end
 
@@ -35,19 +36,15 @@ class ReserveDomainInvoice
     end
 
     def rows_sum
-      rows.sum { |row| row[:price] }
+      invoice.subtotal
     end
 
     def vat_rate
-      Setting.registry_vat_prc.to_f
-    end
-
-    def vat_amount
-      (grand_total - rows_sum).round(2)
+      invoice.vat_rate.to_f
     end
 
     def grand_total
-      (invoice.domain_names.size * ReserveDomainInvoice::DEFAULT_AMOUNT).round(2)
+      invoice.total
     end
 
     def invoice_date
@@ -59,10 +56,6 @@ class ReserveDomainInvoice
     end
 
     private
-
-    def net_price_per_domain
-      (ReserveDomainInvoice::DEFAULT_AMOUNT / (1 + vat_rate)).round(2)
-    end
 
     def html
       ApplicationController.render(template: 'reserve_domain_invoices/pdf', assigns: { pdf: self })
