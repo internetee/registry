@@ -1,0 +1,29 @@
+<p>Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt</p>
+
+<p>Eesti Interneti Sihtasutusele (EIS) on Rahvastikuregistri andmetel saanud teatavaks, et domeeni <%= @domain.name %> halduskontakt on surnud.</p>
+
+<p>Vastavalt <a href="https://www.internet.ee/domeenid/ee-domeenireeglid">.ee domeenireeglitele</a> peab juriidilisele isikule kuuluval domeenil olema kehtiv halduskontakt. Selle puudumise tõttu algatas EIS domeeni osas kustutusmenetluse tähtajaga <%= @domain.force_delete_last_day %>. Kehtiva halduskontakti uuendamiseni on blokeeritud domeeni pikendamise ja registripidaja vahetuse toimingud.</p>
+
+<p>Uue halduskontakti lisamiseks pöörduge palun oma registripidaja <%= @registrar.name %> poole.</p>
+
+<p>Domeen on internetis kättesaadav kuni <%= @domain.force_delete_outzone_date %>. Juhul, kui domeeni halduskontakti pole õigeaegselt uuendatud, suunatakse domeen kustutusmenetluse lõppedes <%= @domain.force_delete_date %> <a href="https://auction.internet.ee">avalikule domeenioksjonile</a>. Kui domeen ei leia oksjonilt uut omanikku, vabaneb see registreerimiseks kõigile huvilistele "kes ees, see mees" põhimõttel.</p>
+
+<p>Lisaküsimuste korral võtke palun ühendust oma registripidajaga:</p>
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+<%= render 'mailers/shared/signatures/signature.et.html' %>
+
+<hr>
+
+<p>Dear registrant/administrative contact of <%= @domain.name %> domain,</p>
+
+<p>According to the Estonian Population Register, the Estonian Internet Foundation (EIF) has been informed that the administrative contact of the domain <%= @domain.name %> has passed away.</p>
+
+<p>According to the <a href="https://www.internet.ee/domains/ee-domain-regulation">.ee Domain Regulation</a>, a domain owned by a legal entity must have a valid administrative contact. As the domain has no valid administrative contact, EIF has started the deletion process of the domain with a deadline of <%= @domain.force_delete_last_day %>. Until a valid administrative contact is added, the domain cannot be renewed or transferred to another registrar.</p>
+
+<p>To add a new administrative contact, please contact your registrar <%= @registrar.name %>.</p>
+
+<p>The domain will remain available on the Internet until <%= @domain.force_delete_outzone_date %>. If the administrative contact has not been updated in time, the domain will go to a <a href="https://auction.internet.ee">public domain auction</a> at the end of the deletion process on <%= @domain.force_delete_date %>. If the domain does not find a new owner through the auction, it becomes available for registration to anyone on a first-come, first-served basis.</p>
+
+<p>Should you have additional questions, please contact your registrar:</p>
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+<%= render 'mailers/shared/signatures/signature.en.html' %>

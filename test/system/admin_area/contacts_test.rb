@@ -19,6 +19,37 @@ class AdminContactsTest < ApplicationSystemTestCase
     assert_text 'Contact updated'
   end
 
+  def test_display_death_registry_data
+    @contact.update_columns(death_date: Date.new(2026, 1, 1),
+                            death_registry_checked_at: Time.zone.parse('2026-10-19 10:00'))
+
+    visit admin_contact_path(@contact)
+
+    assert_text 'Death date'
+    assert_text 'Death registry checked'
+  end
+
+  def test_filters_deceased_contacts
+    @contact.update_columns(death_date: Date.new(2026, 1, 1))
+
+    visit admin_contacts_path
+    select 'Deceased', from: 'death_registry'
+    find('.btn.btn-primary').click
+
+    assert_text @contact.code
+    assert_no_text contacts(:acme_ltd).code
+  end
+
+  def test_filters_contacts_not_checked_against_death_registry
+    Contact.update_all(death_registry_checked_at: Time.zone.now)
+    @contact.update_columns(death_registry_checked_at: nil)
+
+    visit admin_contacts_path(death_registry: 'not_checked')
+
+    assert_text @contact.code
+    assert_no_text contacts(:acme_ltd).code
+  end
+
   def test_display_list
     visit admin_contacts_path
 

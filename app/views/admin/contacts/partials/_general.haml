@@ -26,6 +26,14 @@
         %dt.left_25= t(:fax)
         %dd.left_25= @contact.fax
 
+      - if @contact.death_date
+        %dt.left_25= t('.death_date')
+        %dd.left_25= l(@contact.death_date)
+
+      - if @contact.death_registry_checked_at
+        %dt.left_25= t('.death_registry_checked_at')
+        %dd.left_25= l(@contact.death_registry_checked_at, format: :short)
+
       %br
 
       %dt.left_25= t('.created')

@@ -13,6 +13,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     refute @domain.force_delete_scheduled?
 
     visit edit_admin_domain_url(@domain)
+    select 'Registrant (private person) has died', from: 'reason'
     click_link_or_button 'Force delete domain'
     @domain.reload
 
@@ -25,6 +26,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     refute @domain.force_delete_scheduled?
 
     visit edit_admin_domain_url(@domain)
+    select 'Registrant (private person) has died', from: 'reason'
     click_link_or_button 'Force delete domain'
     @domain.reload
 
@@ -50,6 +52,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
   def test_notifies_registrar
     assert_difference '@domain.registrar.notifications.size' do
       visit edit_admin_domain_url(@domain)
+      select 'Registrant (private person) has died', from: 'reason'
       click_link_or_button 'Force delete domain'
     end
   end
@@ -58,6 +61,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     assert_emails 1 do
       visit edit_admin_domain_url(@domain)
       find(:css, '#soft_delete').set(false)
+      select 'Registrant (private person) has died', from: 'reason'
       click_link_or_button 'Force delete domain'
     end
   end
@@ -66,6 +70,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     assert_emails 0 do
       visit edit_admin_domain_url(@domain)
       find(:css, '#soft_delete').set(true)
+      select 'Registrant (private person) has died', from: 'reason'
       click_link_or_button 'Force delete domain'
     end
 
@@ -79,11 +84,12 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     assert_emails 0 do
       visit edit_admin_domain_url(@domain)
       find(:css, '#soft_delete').set(true)
+      select 'Registrant (company) is deleted from the Business Register', from: 'reason'
       click_link_or_button 'Force delete domain'
     end
 
     @domain.reload
-    assert_equal @domain.notification_template, @domain.template_name
+    assert_equal 'legal_person', @domain.template_name
   end
 
   # def test_uses_legal_template_if_invalid_email
@@ -111,6 +117,7 @@ class AdminAreaDomainForceDeleteTest < ApplicationSystemTestCase
     assert_no_emails do
       visit edit_admin_domain_url(@domain)
       uncheck 'notify_by_email'
+      select 'Registrant (private person) has died', from: 'reason'
       click_link_or_button 'Force delete domain'
     end
   end

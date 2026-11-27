@@ -32,7 +32,8 @@ module Domain::ForceDelete
 
   def notification_template(explicit: nil)
     reason = explicit&.downcase
-    return reason if %w[invalid_email invalid_phone invalid_company].include?(reason)
+    return reason if %w[invalid_email invalid_phone invalid_company deceased_person
+                        deceased_admin_contact private_person legal_person].include?(reason)
 
     if contact_emails_verification_failed.present?
       'invalid_email'
@@ -52,8 +53,8 @@ module Domain::ForceDelete
                                              notify_by_email: notify_by_email, email: email, notes: notes)
   end
 
-  def cancel_force_delete
-    Domains::CancelForceDelete::CancelForceDelete.run(domain: self)
+  def cancel_force_delete(notification_key: 'force_delete_cancelled')
+    Domains::CancelForceDelete::CancelForceDelete.run(domain: self, notification_key: notification_key)
   end
 
   def outzone_date
